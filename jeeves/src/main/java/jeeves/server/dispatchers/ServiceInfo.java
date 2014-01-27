@@ -32,6 +32,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Vector;
@@ -217,7 +218,7 @@ public class ServiceInfo {
     }
 
     //--------------------------------------------------------------------------
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     private Element execService(final Service service, final Element params, final ServiceContext context) throws Exception {
         try {
             Element response = service.exec(params, context);
