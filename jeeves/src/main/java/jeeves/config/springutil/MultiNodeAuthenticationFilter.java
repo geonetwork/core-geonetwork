@@ -2,7 +2,9 @@ package jeeves.config.springutil;
 
 import com.google.common.escape.Escaper;
 import com.google.common.net.UrlEscapers;
+import jeeves.constants.Jeeves;
 import jeeves.server.sources.ServiceRequestFactory;
+import jeeves.server.sources.http.JeevesServlet;
 import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.domain.User;
@@ -17,6 +19,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -49,7 +52,7 @@ public class MultiNodeAuthenticationFilter extends GenericFilterBean {
 
                 final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
-                final String lang = getRequestLanguage(httpServletRequest);
+                final String lang = getRequestLanguage(appContext, httpServletRequest);
                 final String redirectedFrom = httpServletRequest.getRequestURI();
 
                 String oldNodeId = null;
@@ -93,14 +96,30 @@ public class MultiNodeAuthenticationFilter extends GenericFilterBean {
         chain.doFilter(request, response);
     }
 
-    private String getRequestLanguage(HttpServletRequest request) {
-        if (request.getParameter("hl") != null) {
-            return request.getParameter("hl");
-        } else {
-            String pathInfo = request.getPathInfo();
-            return ServiceRequestFactory.extractLanguage(pathInfo);
+    private String getRequestLanguage(ConfigurableApplicationContext appContext, HttpServletRequest request) {
+        String language = request.getParameter("hl");
+        if (language == null) {
+            final Cookie[] cookies = request.getCookies();
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(Jeeves.LANG_COOKIE)) {
+                    language = cookie.getValue();
+                    break;
+                }
+            }
         }
 
+        if (language == null) {
+            String pathInfo = request.getPathInfo();
+            language = ServiceRequestFactory.extractLanguage(pathInfo);
+        }
+
+        if (language == null) {
+            language = appContext.getBean("defaultLanguage", String.class);
+        }
+        if (language == null) {
+            language = "eng";
+        }
+        return language;
     }
 
     private void throwAuthError() {
