@@ -1,58 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans default-lazy-init="true"
-	xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xsi:schemaLocation="
+	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
-" >
+">
 
 
-	<import resource="config-security/config-security.xml"/>
-	<import resource="classpath*:/config-spring-geonetwork.xml"/>
-	<import resource="classpath:JZkitApplicationContext.xml"/>
+	<import resource="config-security/config-security.xml" />
+	<import resource="classpath*:/config-spring-geonetwork.xml" />
+	<import resource="classpath:JZkitApplicationContext.xml" />
 
-    <import resource="config-db/database_migration.xml"/>
-    <import resource="config-db/initial_data.xml"/>
-    <import resource="config-versioning.xml"/>
+	<import resource="config-db/database_migration.xml" />
+	<import resource="config-db/initial_data.xml" />
+	<import resource="config-versioning.xml" />
 
-    <!-- Uncomment the database configuration you need to use -->
-    <import resource="config-db/h2.xml"/>
- 	<!--<import resource="config-db/jndi-postgres-postgis.xml"/> -->
- 	<!--<import resource="config-db/oracle.xml"/>-->
- 	<!--<import resource="config-db/mysql.xml"/> -->
- 	<!--<import resource="config-db/db2.xml"/> -->
- 	<!--<import resource="config-db/postgres.xml"/>-->
- 	<!--<import resource="config-db/sqlserver.xml"/> -->
- 	
-	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
-	  <property name="mediaTypes">
-	  <map>
-	    <entry key="html" value="text/html"/>
-	    <entry key="json" value="application/json"/>
-	    <entry key="xml" value="application/xml"/>
-	  </map>
-	 </property>
-	 </bean>
-    <!--
-        Choose the XmlSerializer to use.
-        If the XmlSerializer is the SvnSerializer then subversion versioning will be enabled
-        otherwiser it will be disabled
-    -->
-    <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerSvn" lazy-init="true" />
-    <!-- <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerDb"  lazy-init="true" /> -->
+	<!-- Uncomment the database configuration you need to use -->
+	<import resource="config-db/h2.xml" />
+	<!--<import resource="config-db/jndi-postgres-postgis.xml"/> -->
+	<!--<import resource="config-db/oracle.xml"/> -->
+	<!--<import resource="config-db/mysql.xml"/> -->
+	<!--<import resource="config-db/db2.xml"/> -->
+	<!--<import resource="config-db/postgres.xml"/> -->
+	<!--<import resource="config-db/sqlserver.xml"/> -->
 
-    <bean id="scheduler"
-          class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-        <property name="applicationContextSchedulerContextKey" value="applicationContext"/>
-    </bean>
-    <bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory" lazy-init="true"/>
-    <bean id="httpRequestFactor" class="org.fao.geonet.utils.GeonetHttpRequestFactory" />
+	<bean
+		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<property name="mediaTypes">
+			<map>
+				<entry key="html" value="text/html" />
+				<entry key="json" value="application/json" />
+				<entry key="xml" value="application/xml" />
+			</map>
+		</property>
+	</bean>
+	<!-- Choose the XmlSerializer to use. If the XmlSerializer is the SvnSerializer 
+		then subversion versioning will be enabled otherwiser it will be disabled -->
+	<bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerSvn"
+		lazy-init="true" />
+	<!-- <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerDb" 
+		lazy-init="true" /> -->
 
-    <!-- Define the languages in the UI.  Seems like these should come from database at some point but at the moment they
-         are needed here.
-     -->
+	<bean id="scheduler"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="applicationContextSchedulerContextKey" value="applicationContext" />
+	</bean>
+	<bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory"
+		lazy-init="true" />
+	<bean id="httpRequestFactor" class="org.fao.geonet.utils.GeonetHttpRequestFactory" />
+
+	<!-- Define the languages in the UI. Seems like these should come from database 
+		at some point but at the moment they are needed here. -->
 	<util:set id="languages">
 		<value>ara</value>
 		<value>cat</value>
@@ -70,4 +70,26 @@
 		<value>spa</value>
 		<value>tur</value>
 	</util:set>
+
+	<bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+		<property name="defaultLocale" value="eng" />
+	</bean>
+
+	<bean id="localeChangeInterceptor"
+		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+		<property name="paramName" value="language" />
+	</bean>
+	<bean id="urlLocaleChangeInterceptor" class="org.fao.geonet.i18n.UrlLocaleChangeInterceptor">
+		<property name="urlPosition" value="0" />
+	</bean>
+
+	<mvc:interceptors>
+		<ref bean="localeChangeInterceptor" />
+		<ref bean="urlLocaleChangeInterceptor" />
+	</mvc:interceptors>
+
+	<!-- <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"> 
+		<property name="basename" value="translations" /> </bean> -->
+
 </beans>
