@@ -877,14 +877,14 @@ INSERT INTO Regions VALUES (371,43.58,41.82,18.196,20.396);
 -- === Table: Settings
 -- ======================================================================
 
-INSERT INTO settings (name, value, datatype, position) VALUES ('system/site/name', 'My GeoNetwork catalogue', 0, 110);
-INSERT INTO settings (name, value, datatype, position) VALUES ('system/site/siteId', 'Dummy', 0, 120);
-INSERT INTO settings (name, value, datatype, position) VALUES ('system/site/organization', 'My organization', 0, 130);
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/site/name', 'Catalogue Sextant - MyOcean', 0, 110);
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/site/siteId', '52d62b80-a2a4-11e2-9e96-0800200c9a66', 0, 120);
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/site/organization', 'Ifremer', 0, 130);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/platform/version', '2.11.0', 0, 150);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/platform/subVersion', 'SNAPSHOT', 0, 160);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/site/svnUuid', '', 0, 170);
-INSERT INTO settings (name, value, datatype, position) VALUES ('system/server/host', 'localhost', 0, 210);
-INSERT INTO settings (name, value, datatype, position) VALUES ('system/server/port', '8080', 1, 220);
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/server/host', 'www.ifremer.fr', 0, 210);
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/server/port', '80', 1, 220);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/server/protocol', 'http', 0, 230);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/server/securePort', '8443', 1, 240);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/intranet/network', '127.0.0.1', 0, 310);
@@ -960,13 +960,13 @@ INSERT INTO settings (name, value, datatype, position) VALUES ('system/hidewithh
 
 INSERT INTO HarvesterSettings VALUES  (1,NULL,'harvesting',NULL);
 
-INSERT INTO Settings VALUES (960,1,'wiki',NULL);
-INSERT INTO Settings VALUES (961,960,'markup','none');
-INSERT INTO Settings VALUES (962,960,'output','strip');
-INSERT INTO Settings VALUES (963,960,'mefoutput','strip');
 
-INSERT INTO Settings VALUES (964,1,'wysiwyg',NULL);
-INSERT INTO Settings VALUES (965,964,'enable','false');
+-- INSERT INTO Settings VALUES (960,1,'wiki',NULL);
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/wiki/markup','none', 0, 10000);
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/wiki/output','strip', 0, 10001);
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/wiki/mefoutput','strip', 0, 10002);
+
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/wysiwyg/enable','false', 2, 11000);
 
 -- ======================================================================
 -- === Table: Users
