@@ -107,7 +107,7 @@
             classes: 'btn-primary', icon: 'fa-archive'},
           {name: 'io',
             // Metadata import is made in the widget apps
-            url: 'home?insert',
+            url: '../../home?insert&hl='+$scope.lang,
             classes: 'btn-primary',
             icon: 'fa-upload'},
           {name: 'harvesters', route: '#harvest', //url: 'harvesting',
