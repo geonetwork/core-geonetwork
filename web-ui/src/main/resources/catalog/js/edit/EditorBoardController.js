@@ -5,12 +5,12 @@
       []);
 
   /**
-   * 
+   *
    */
   module.controller('GnEditorBoardController', [
     '$scope',
     function($scope) {
-      
+
     }
   ]);
 })();

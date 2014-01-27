@@ -34,12 +34,13 @@
              $scope.changeKey = gnUtilityService.getUrlParameter('changeKey');
            }
           }
-          
+
           // TODO: https://github.com/angular/angular.js/issues/1460
           // Browser autofill does not work properly
           $timeout(function() {
-            $( 'input[data-ng-model], select[data-ng-model]' ).each( function() {
-              angular.element( this ).controller( 'ngModel' ).$setViewValue( $( this ).val() );
+            $('input[data-ng-model], select[data-ng-model]').each(function() {
+              angular.element(this).controller('ngModel')
+                .$setViewValue($(this).val());
             });
           }, 300);
 

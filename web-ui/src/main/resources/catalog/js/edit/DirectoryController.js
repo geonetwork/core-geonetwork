@@ -33,7 +33,7 @@
       $scope.ownerGroup = null;
       // TODO: Use paging
       $scope.maxEntries = 500;
-      
+
       var dataTypesToExclude = [];
 
       // A map of icon to use for each types

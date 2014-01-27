@@ -5,10 +5,17 @@
 
 
 
+
+
+
+
+
+
+
   goog.require('gn_directory_controller');
+  goog.require('gn_editorboard_controller');
   goog.require('gn_fields');
   goog.require('gn_new_metadata_controller');
-  goog.require('gn_editorboard_controller');
   goog.require('gn_scroll_spy');
   goog.require('gn_thesaurus');
   goog.require('gn_utility_directive');
