@@ -34,7 +34,7 @@
       </xsl:with-param>
       <xsl:with-param name="relatedResources">
         <xsl:apply-templates mode="relatedResources"
-          select="gmd:distributionInfo"
+          select="."
         />
       </xsl:with-param>
       <xsl:with-param name="tabs" select="$tabs"/>
@@ -517,13 +517,13 @@
   <!-- List of related resources defined in the online resource section of the metadata record.
 -->
   <xsl:template mode="relatedResources"
-    match="gmd:distributionInfo">
+    match="*">
     <table class="related">
       <tbody>
         <tr style="display:none;"><!-- FIXME needed by JS to append other type of relation from xml.relation service -->
           <td class="main"></td><td></td>
         </tr>
-        <xsl:for-each-group select="descendant::gmd:onLine[gmd:CI_OnlineResource/gmd:linkage/gmd:URL!='']" group-by="gmd:CI_OnlineResource/gmd:protocol">
+        <xsl:for-each-group select="gmd:distributionInfo/descendant::gmd:onLine[gmd:CI_OnlineResource/gmd:linkage/gmd:URL!='']" group-by="gmd:CI_OnlineResource/gmd:protocol">
         <tr>
           <td class="main">
             <!-- Usually, protocole format is OGC:WMS-version-blahblah, remove ':' and get
