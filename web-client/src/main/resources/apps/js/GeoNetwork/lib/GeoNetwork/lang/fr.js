@@ -311,7 +311,7 @@ GeoNetwork.Lang.fr = {
     'add-onlinesrc': 'Associer une ressource en ligne',
     'add-parent': 'Associer une fiche parent',
     'add-service': 'Associer un service',
-    'add-dataset': 'Associer un jeux de données',
+    'add-dataset': 'Associer un jeu de données',
     'add-sources': 'Associer une donnée source',
     'add-fcats': 'Associer un catalogue d\'attributs',
     'add-sibling': 'Associer une ressource',
