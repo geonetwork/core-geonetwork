@@ -9,9 +9,11 @@
    *    Take care of login action, reset and update password.
    */
   module.controller('GnLoginController',
-      ['$scope', '$http', '$rootScope', '$translate', '$location', '$window',
+      ['$scope', '$http', '$rootScope', '$translate',
+       '$location', '$window', '$timeout',
        'gnUtilityService', 'gnConfig',
-       function($scope, $http, $rootScope, $translate, $location, $window,
+       function($scope, $http, $rootScope, $translate, 
+           $location, $window, $timeout,
                gnUtilityService, gnConfig) {
           $scope.registrationStatus = null;
           $scope.passwordReminderStatus = null;
@@ -32,6 +34,14 @@
              $scope.changeKey = gnUtilityService.getUrlParameter('changeKey');
            }
           }
+          
+          // TODO: https://github.com/angular/angular.js/issues/1460
+          // Browser autofill does not work properly
+          $timeout(function() {
+            $( 'input[data-ng-model], select[data-ng-model]' ).each( function() {
+              angular.element( this ).controller( 'ngModel' ).$setViewValue( $( this ).val() );
+            });
+          }, 300);
 
           $scope.setSendPassword = function(value) {
            $scope.sendPassword = value;
