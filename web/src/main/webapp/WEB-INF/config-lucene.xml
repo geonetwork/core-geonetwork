@@ -278,6 +278,7 @@
   <tokenized>
     <Field name="any"/>
     <Field name="abstract"/>
+    <Field name="defaultAbstract"/>
     <Field name="title"/>
     <!-- <Field name="altTitle"/> -->
     <Field name="keywordType"/>
