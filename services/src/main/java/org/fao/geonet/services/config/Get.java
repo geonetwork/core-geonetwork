@@ -61,19 +61,29 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * 
  */
 @Controller
-public class Get implements Service{
+public class Get implements Service {
 
 	@Autowired
 	private SpringSettingManager sm;
 
-	@RequestMapping(value = "{lang}/admin.config.list", produces = "application/xml")
+	
+	@RequestMapping(value = "/{lang}/admin.config.list@json", produces = "application/json")
 	public @ResponseBody
-	ReturnType exec(
+	ReturnType json(
 			@PathVariable String lang,
 			@RequestParam(required = false, defaultValue = "false") Boolean asTree) {
 
-		//TODO lang internationalization
-		
+		return xml(lang, asTree);
+	}
+
+	@RequestMapping(value = "/{lang}/admin.config.list", produces = "application/xml")
+	public @ResponseBody
+	ReturnType xml(
+			@PathVariable String lang,
+			@RequestParam(required = false, defaultValue = "false") Boolean asTree) {
+
+		// TODO lang internationalization
+
 		List<org.fao.geonet.domain.Setting> res = sm.getAllAsList();
 
 		if (asTree) {
@@ -89,7 +99,7 @@ public class Get implements Service{
 				String tmppath = null;
 
 				for (String step : path) {
-					if(tmppath == null) {
+					if (tmppath == null) {
 						tmppath = step;
 					} else {
 						tmppath = tmppath + "/" + step;
@@ -119,7 +129,8 @@ public class Get implements Service{
 				SettingChild child = new SettingChild();
 				child.setValue(s.getValue());
 				child.setDataTypeName(s.getDataType().toString());
-				child.setDataType(Integer.valueOf(s.getDataType().ordinal()).toString());
+				child.setDataType(Integer.valueOf(s.getDataType().ordinal())
+						.toString());
 				child.setName(s.getName());
 				child.setPosition(s.getPosition());
 
