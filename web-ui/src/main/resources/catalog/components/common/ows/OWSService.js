@@ -56,13 +56,12 @@
               //send request and decode result
               if (gnUrlUtils.isValid(url)) {
                 var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
-                console.log('Send getCapabilities : ' + url);
                 $http.get(proxyUrl)
                   .success(function(data, status, headers, config) {
                       defer.resolve(displayFileContent(data));
                     })
                   .error(function(data, status, headers, config) {
-                      defer.reject(error);
+                      defer.reject(status);
                     });
               }
             }

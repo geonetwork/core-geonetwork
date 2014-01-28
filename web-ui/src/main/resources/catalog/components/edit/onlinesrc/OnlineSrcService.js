@@ -62,7 +62,7 @@
 
           angular.forEach(params.layers, function(layer) {
             names.push(layer.name);
-            descs.push(encodeURIComponent(layer.title));
+            descs.push(layer.title);
           });
 
           angular.extend(params, {
@@ -369,7 +369,7 @@
          */
         removeService: function(onlinesrc) {
           var params = {
-            uuid: onlinesrc.uuid,
+            uuid: onlinesrc['geonet:info'].uuid,
             uuidref: gnCurrentEdit.uuid
           };
           runProcess(this,
@@ -383,7 +383,7 @@
         removeDataset: function(onlinesrc) {
           var params = {
             uuid: gnCurrentEdit.uuid,
-            uuidref: onlinesrc.uuid
+            uuidref: onlinesrc['geonet:info'].uuid
           };
           runProcess(this,
               setParams('datasets-remove', params));
@@ -395,7 +395,7 @@
          */
         removeMdLink: function(mode, onlinesrc) {
           var params = {};
-          params[mode + 'Uuid'] = onlinesrc.uuid;
+          params[mode + 'Uuid'] = onlinesrc['geonet:info'].uuid;
           runProcess(this,
               setParams(mode + '-remove', params));
         },

@@ -123,6 +123,11 @@
                   scope.paginationInfo.hitsPerPage, 0);
             }
           });
+          
+          scope.$on('resetSelection', function(evt) {
+            scope.selection = [];
+          });
+
 
           // Default settings for pagination
           // TODO: put parameters in directive

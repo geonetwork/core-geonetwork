@@ -95,6 +95,7 @@
           $scope.paginationInfo.currentPage = 1;
         }
         $scope.triggerSearch();
+        $scope.$broadcast('resetSelection');
       });
     }
   ]);

@@ -254,7 +254,7 @@
               scope.popupid = '#linkto' + scope.mode + '-popup';
 
               gnOnlinesrc.register(scope.mode, function() {
-                $('#linktoservice-popup').modal('show');
+                $(scope.popupid).modal('show');
 
                 // parameters of the online resource form
                 scope.srcParams = {};
@@ -263,6 +263,7 @@
                   type: scope.mode
                 };
                 scope.$broadcast('resetSearch', searchParams);
+                scope.layers = [];
               });
 
               // This object is used to share value between this
