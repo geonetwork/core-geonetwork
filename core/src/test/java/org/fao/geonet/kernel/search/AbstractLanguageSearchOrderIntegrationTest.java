@@ -127,6 +127,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
 
     @Before
     public void importMetadata() throws Exception {
+        _timestamp = System.currentTimeMillis();
         this._serviceContext = createServiceContext();
         loginAsAdmin(_serviceContext);
         for (String element : SettingManager.METADATA_TO_IMPORT) {
