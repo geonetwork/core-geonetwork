@@ -337,43 +337,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             hidden: true
         });
         this.actionMenu.addItem(this.otherItem);
-        this.createMetadataAction = new Ext.menu.Item({
-            text: OpenLayers.i18n('newMetadata'),
-            ctCls: 'gn-bt-main',
-            iconCls: 'addIcon',
-            handler: function(){
-                // FIXME : could be improved. Here we clean the window
-                // A simple template reload could be enough probably
-                if (this.newMetadataWindow) {
-                    this.newMetadataWindow.close();
-                    this.newMetadataWindow = undefined;
-                }
-                
-                // Create a window to choose the template and the group
-                if (!this.newMetadataWindow) {
-                    var newMetadataPanel = new GeoNetwork.editor.NewMetadataPanel({
-                                getGroupUrl: this.catalogue.services.getGroups,
-                                catalogue: this.catalogue
-                            });
-                    
-                    this.newMetadataWindow = new Ext.Window({
-                        title: OpenLayers.i18n('newMetadataTitle'),
-                        width: 600,
-                        height: 420,
-                        layout: 'fit',
-                        modal: true,
-                        items: newMetadataPanel,
-                        closeAction: 'hide',
-                        constrain: true,
-                        iconCls: 'addIcon'
-                    });
-                }
-                this.newMetadataWindow.show();
-            },
-            scope: this,
-            hidden: hide
-        });
-        var createMetadataAction2 = new Ext.menu.Item({text: OpenLayers.i18n('newMetadataNew'),
+        this.createMetadataAction = new Ext.menu.Item({text: OpenLayers.i18n('newMetadata'),
             ctCls: 'gn-bt-main',
             iconCls: 'addIcon',
             handler: function() {
@@ -382,7 +346,6 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         });
         if(!this.catalogue.isReadOnly()) {
             this.actionMenu.addItem(this.createMetadataAction);
-            this.actionMenu.addItem(createMetadataAction2);
         }
 
         this.mdImportAction = new Ext.menu.Item({
