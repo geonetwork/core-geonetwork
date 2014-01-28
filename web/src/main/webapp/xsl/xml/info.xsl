@@ -99,7 +99,7 @@
 		</xsl:copy>
 	</xsl:template>
 	
-	<xsl:template match="statusvalues">
+	<xsl:template match="statusvalue">
 		<xsl:copy>
 			<xsl:for-each select="record">
 				<xsl:sort select="name" order="ascending"/>

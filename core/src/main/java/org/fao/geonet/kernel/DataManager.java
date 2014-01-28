@@ -2487,7 +2487,7 @@ public class DataManager {
      *
      * @return the saved status entity object
      */
-    public MetadataStatus setStatus(ServiceContext context, int id, int status, String changeDate, String changeMessage) throws Exception {
+    public MetadataStatus setStatus(ServiceContext context, int id, int status, ISODate changeDate, String changeMessage) throws Exception {
         MetadataStatus statusObject = setStatusExt(context, id, status, changeDate, changeMessage);
         indexMetadata(Integer.toString(id));
         return statusObject;
@@ -2506,7 +2506,7 @@ public class DataManager {
      *
      * @return the saved status entity object
      */
-    public MetadataStatus setStatusExt(ServiceContext context, int id, int status, String changeDate, String changeMessage) throws Exception {
+    public MetadataStatus setStatusExt(ServiceContext context, int id, int status, ISODate changeDate, String changeMessage) throws Exception {
         final StatusValueRepository statusValueRepository = _applicationContext.getBean(StatusValueRepository.class);
 
         MetadataStatus metatatStatus = new MetadataStatus();
@@ -2516,6 +2516,7 @@ public class DataManager {
         MetadataStatusId mdStatusId = new MetadataStatusId()
                 .setStatusId(status)
                 .setMetadataId(id)
+                .setChangeDate(changeDate)
                 .setUserId(userId);
 
         metatatStatus.setId(mdStatusId);

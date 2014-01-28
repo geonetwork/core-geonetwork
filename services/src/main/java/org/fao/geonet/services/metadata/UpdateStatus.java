@@ -84,7 +84,7 @@ public class UpdateStatus extends NotInReadOnlyModeService {
 
 		String status = Util.getParam(params, Params.STATUS);
 		String changeMessage = Util.getParam(params, Params.CHANGE_MESSAGE);
-		String changeDate = new ISODate().toString();
+		ISODate changeDate = new ISODate();
 
 		//--- use StatusActionsFactory and StatusActions class to 
 		//--- change status and carry out behaviours for status changes

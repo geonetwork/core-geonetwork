@@ -9,4 +9,5 @@ import org.fao.geonet.domain.StatusValue;
  */
 public interface StatusValueRepository extends GeonetRepository<StatusValue, Integer> {
     StatusValue findOneByName(String statusValueName);
+    StatusValue findOneById(int statusValueId);
 }
