@@ -183,9 +183,7 @@
              scope.$watch('gnCurrentEdit.version', function(newValue) {
                map.setTarget(scope.mapId);
                drawBbox();
-               if (scope.extent.map &&
-                   scope.extent.map[0] && scope.extent.map[1] &&
-                   scope.extent.map[2] && scope.extent.map[3]) {
+               if (gnMap.isValidExtent(scope.extent.map)) {
                  map.getView().fitExtent(scope.extent.map, map.getSize());
                }
              });

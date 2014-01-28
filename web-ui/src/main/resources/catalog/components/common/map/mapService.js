@@ -74,6 +74,24 @@
               source: source
             });
           },
+          
+          /**
+           * Check if the extent is valid or not.
+           */
+          isValidExtent: function(extent) {
+            var valid = true;
+            if(extent && angular.isArray(extent)) {
+              angular.forEach(extent, function(value, key){
+                if(!value || value == Infinity || value == -Infinity) {
+                  valid = false;
+                }
+              });
+            }
+            else {
+              valid = false;
+            }
+            return valid;
+          },
 
           /**
            * Transform map extent into dublin-core schema for
