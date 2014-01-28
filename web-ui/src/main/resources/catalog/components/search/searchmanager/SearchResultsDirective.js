@@ -123,7 +123,7 @@
                   scope.paginationInfo.hitsPerPage, 0);
             }
           });
-          
+
           scope.$on('resetSelection', function(evt) {
             scope.selection = [];
           });
