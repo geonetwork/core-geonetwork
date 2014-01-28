@@ -237,7 +237,7 @@
     <xlink.newGeographic js="true">New (Geographic only)</xlink.newGeographic>
     <noXlink js="true">Invalid selected element.</noXlink>
 	<displayValidationReport>Validation report</displayValidationReport>
-	<publishOnlyIfAdminOrValid>Metadata could be published only if valid against ISO rules or if you're an administrator.</publishOnlyIfAdminOrValid>
+	<publishOnlyIfAdminOrValid>Metadata could be published only if valid against mandatory rules or if you're an administrator.</publishOnlyIfAdminOrValid>
 	<xsdValid>XSD valid</xsdValid>
 	<isoValid>ISO valid</isoValid>
 	<gm03Valid>GM03 valid</gm03Valid>
@@ -585,10 +585,10 @@
 	<errorsOnly>View errors only</errorsOnly>
 	<schematronReport>Compliance to metadata recommandations (Schematron)</schematronReport>
 	<xsdReport>Compliance to metadata standard (XML Schema)</xsdReport>
-	<rules name="schematron-rules-inspire">INSPIRE implementing rules</rules>
+<!-- 	<rules name="schematron-rules-inspire">INSPIRE implementing rules</rules>
 	<rules name="schematron-rules-iso-che">GM03 implementing rules</rules>
 	<rules name="schematron-rules-iso">ISO 19115/19119 rules</rules>
-	<rules name="schematron-rules-geonetwork">GeoNetwork recommandations</rules>	
+	<rules name="schematron-rules-geonetwork">GeoNetwork recommandations</rules> -->	
 	<getCapabilitiesLayer js="true">GetCapabilities layer</getCapabilitiesLayer>
 	<ServiceUpdateError js="true">Error during service metadata update</ServiceUpdateError>
 	<NotOwnerError js="true">You don't have privileges to update this related record.</NotOwnerError>

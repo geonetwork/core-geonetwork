@@ -104,6 +104,13 @@ public class SchemaDao {
 		return schematrons;
 	}
 
+	/**
+	 * Return the schematrons associated to a schema
+	 * @param dbms
+	 * @param schemaname
+	 * @return
+	 * @throws SQLException
+	 */
 	public static List<Element> selectSchema(Dbms dbms, String schemaname)
 			throws SQLException {
 		@SuppressWarnings("unchecked")

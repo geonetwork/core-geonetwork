@@ -1,4 +1,5 @@
 <strings>
+  <schematron.title>GM03 implementing rules</schematron.title>
   <M100>[GM03_2] - Basic geodata</M100>
   <alert.M100><div><h2>Basic geodata type is mandatory if basic geodata identifier is defined.</h2></div></alert.M100>
   <report.M100><div><h2>Basic geodata type is mandatory if basic geodata identifier is defined.</h2></div></report.M100>

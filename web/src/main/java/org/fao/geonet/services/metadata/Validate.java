@@ -23,67 +23,110 @@
 
 package org.fao.geonet.services.metadata;
 
+import java.io.File;
+import java.util.List;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.SchemaDao;
 import org.fao.geonet.services.Utils;
+import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.input.SAXBuilder;
 
 //=============================================================================
 
 /**
- *  For editing : update leaves information. Access is restricted
- *  Validate current metadata record in session.
- *  
- *  FIXME : id MUST be the id of the current metadata record in session ?
+ * For editing : update leaves information. Access is restricted Validate
+ * current metadata record in session.
+ * 
+ * FIXME : id MUST be the id of the current metadata record in session ?
  */
-public class Validate implements Service
-{
+public class Validate implements Service {
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
+	// ---
+	// --- Init
+	// ---
+	// --------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(String appPath, ServiceConfig params) throws Exception {
+	}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
+	// ---
+	// --- Service
+	// ---
+	// --------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+	public Element exec(Element params, ServiceContext context)
+			throws Exception {
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dataMan = gc.getDataManager();
+		GeonetContext gc = (GeonetContext) context
+				.getHandlerContext(Geonet.CONTEXT_NAME);
+		DataManager dataMan = gc.getDataManager();
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+		Dbms dbms = (Dbms) context.getResourceManager()
+				.open(Geonet.Res.MAIN_DB);
 
 		UserSession session = context.getUserSession();
 
 		String id = Utils.getIdentifierFromParameters(params, context);
+		String schemaname = dataMan.getMetadataSchema(dbms, id);
 
-		//--- validate metadata from session
-		Element errorReport = new AjaxEditUtils(context).validateMetadataEmbedded(context, dbms, id, context.getLanguage());
+		// --- validate metadata from session
+		Element errorReport = new AjaxEditUtils(context)
+				.validateMetadataEmbedded(context, dbms, id,
+						context.getLanguage());
 
-		//--- update element and return status
+		// --- update element and return status
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
-		elResp.addContent(new Element("schema").setText(dataMan.getMetadataSchema(dbms, id)));
+		elResp.addContent(new Element("schema").setText(schemaname));
 		elResp.addContent(errorReport);
+
+		Element schematronTranslations = new Element("schematronTranslations");
+
+		// --- add translations for schematrons
+		final List<Element> schematrons = SchemaDao.selectSchema(dbms,
+				schemaname);
+
+		DataManager dm = gc.getDataManager();
+		MetadataSchema metadataSchema = dm.getSchema(schemaname);
+		String schemaDir = metadataSchema.getSchemaDir();
+		SAXBuilder builder = new SAXBuilder();
+		for (Element schematron : schematrons) {
+			// it contains absolute path to the xsl file
+			String rule = schematron.getChildText("file");
+			String ident = SchemaDao.toRuleName(rule);
+
+			String file = schemaDir + File.separator + "loc" + File.separator
+					+ context.getLanguage() + "/" + ident + ".xml";
+
+			Document document = (Document) builder.build(file);
+			Element element = document.getRootElement();
+
+			Element s = new Element(ident);
+			element.detach();
+			s.addContent(element);
+			schematronTranslations.addContent(s);
+
+		}
+		elResp.addContent(schematronTranslations);
 
 		return elResp;
 	}
 }
 
-//=============================================================================
+// =============================================================================
 
