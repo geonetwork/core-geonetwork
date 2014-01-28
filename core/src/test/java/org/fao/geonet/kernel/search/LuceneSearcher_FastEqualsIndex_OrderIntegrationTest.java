@@ -12,7 +12,7 @@ import java.util.List;
  *
  * Created by Jesse on 1/27/14.
  */
-public class BasicSearchOrderIntegrationTest extends AbstractLanguageSearchOrderIntegrationTest {
+public class LuceneSearcher_FastEqualsIndex_OrderIntegrationTest extends AbstractLanguageSearchOrderIntegrationTest {
     @Override
     protected String[] doSearch(String lang) throws Exception {
         _serviceContext.setLanguage(lang);
