@@ -18,11 +18,11 @@
   module.directive('gnDirectoryEntrySelector',
       ['$rootScope', '$timeout', '$q', '$http',
         'gnEditor', 'gnSchemaManagerService',
-        'gnEditorXMLService', 'gnUrlUtils', 'gnConfig',
+        'gnEditorXMLService', 'gnHttp', 'gnConfig',
         'gnCurrentEdit',
         function($rootScope, $timeout, $q, $http, 
             gnEditor, gnSchemaManagerService, 
-            gnEditorXMLService, gnUrlUtils, gnConfig, 
+            gnEditorXMLService, gnHttp, gnConfig, 
             gnCurrentEdit) {
 
          return {
@@ -101,14 +101,8 @@
                    params.process =
                    'gmd:role/gmd:CI_RoleCode/@codeListValue~' + role;
                  }
-                 var url = gnUrlUtils.append(
-                     // TODO: Get URL from gnHttp
-                     'http://localhost:8080/geonetwork/srv/eng/' +
-                     'subtemplate',
-                     gnUrlUtils.toKeyValue(params));
-
-                 // FIXME: this call is useless when using XLink
-                 $http.get(url).success(function(xml) {
+                 gnHttp.callService(
+                     'subtemplate', params).success(function(xml) {
                    if (usingXlink) {
                      snippets.push(gnEditorXMLService.
                      buildXMLForXlink(scope.elementName, url));
@@ -118,7 +112,6 @@
                    }
                    checkState();
                  });
-
                });
 
                return false;

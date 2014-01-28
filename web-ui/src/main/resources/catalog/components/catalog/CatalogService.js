@@ -80,6 +80,7 @@
     processXml: 'xml.metadata.processing@json', // TODO: CHANGE
     getRelations: 'md.relations@json',
     getValidation: 'md.validate@json',
+    subtemplate: 'subtemplate',
     lang: 'lang@json',
     country: 'regions.list@json?categoryId=' +
         'http://geonetwork-opensource.org/regions%23country',
