@@ -1,4 +1,5 @@
 <strings>
+  <schematron.title>GM03 implementing rules</schematron.title>
   <M100>[GM03_2] - Géodonnées de base</M100>
   <alert.M100><div><h2>Le type de géodonnées de base est obligatoire si un identifiant a été saisi.</h2></div></alert.M100>
   <report.M100><div><h2>Le type de géodonnées de base est obligatoire si un identifiant a été saisi.</h2></div></report.M100>

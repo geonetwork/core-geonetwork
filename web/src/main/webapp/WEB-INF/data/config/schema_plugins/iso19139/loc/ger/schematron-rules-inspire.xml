@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
   
+	<schematron.title>INSPIRE implementing rules</schematron.title>
     <!-- List of pattern title -->
     <identification>Basisinformation</identification>
     <dataIdentification>Basisinformation zum Datenbestand</dataIdentification>    

@@ -1,4 +1,5 @@
 <strings>
+	<schematron.title>INSPIRE complete implementing rules</schematron.title>
     <title.M8.1.Access>Conditions for Access</title.M8.1.Access>
     <alert.M8.1.Access>
         <div>Inspire requires Access Constraints to be defined.</div>

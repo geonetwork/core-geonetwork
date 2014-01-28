@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+	<schematron.title>INSPIRE implementing rules</schematron.title>
     <!-- INSPIRE metadata rules translation / START -->
     <identification>Identification</identification>
     <dataIdentification>Identification des données ou collections</dataIdentification>        

@@ -1,4 +1,5 @@
 <strings>
+  <schematron.title>GM03 implementing rules</schematron.title>
   <M100>[GM03_2] - Geodati di base</M100>
   <alert.M100><div><h2>Il tipo di Geodati di base e obbligatorio se c'è un'identificatore di Geodati di base.</h2></div></alert.M100>
   <report.M100><div><h2>Il tipo di Geodati di base e obbligatorio se c'è un'identificatore di Geodati di base.</h2></div></report.M100>
