@@ -127,7 +127,7 @@ public class Insert extends NotInReadOnlyModeService {
         DataManager dm = gc.getBean(DataManager.class);
 
 		// Import record
-        Importer.importRecord(uuid, localId , uuidAction, md, schema, 0,
+        Importer.importRecord(uuid, uuidAction, md, schema, 0,
                 gc.getBean(SettingManager.class).getSiteId(), gc.getBean(SettingManager.class).getSiteName(), context, id, date,
 				date, group, isTemplate);
 		

@@ -24,10 +24,7 @@
 package org.fao.geonet.kernel.setting;
 
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
@@ -58,8 +55,20 @@ public class SettingManager {
 
     public static final String SYSTEM_SITE_SITE_ID_PATH = "system/site/siteId";
     public static final String SYSTEM_SITE_NAME_PATH = "system/site/name";
-    public static final String SYSTEM_LUCENE_IGNORECHARS = "system/lucene/ignorechars";
     public static final String CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS = "system/csw/transactionUpdateCreateXPath";
+
+    public static final String SYSTEM_PROXY_USE = "system/proxy/use";
+    public static final String SYSTEM_PROXY_HOST = "system/proxy/host";
+    public static final String SYSTEM_PROXY_PORT = "system/proxy/port";
+    public static final String SYSTEM_PROXY_USERNAME = "system/proxy/username";
+    public static final String SYSTEM_PROXY_PASSWORD = "system/proxy/password";
+
+    public static final String SYSTEM_LUCENE_IGNORECHARS = "system/lucene/ignorechars";
+    public static final String SYSTEM_REQUESTED_LANGUAGE_SORTED = "system/requestedLanguage/sorted";
+    public static final String SYSTEM_REQUESTED_LANGUAGE_ONLY = "system/requestedLanguage/only";
+    public static List<String> METADATA_TO_IMPORT = new ArrayList<String>(10);
+
+
 
     @Autowired
     private SettingRepository _repo;

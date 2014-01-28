@@ -8,16 +8,17 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.ServiceRequest;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.User;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.repository.AbstractSpringDataTest;
+import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.TransformerFactoryFactory;
@@ -45,15 +46,15 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.apache.commons.io.FileUtils.copyDirectory;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * A helper class for testing services.  This super-class loads in the spring beans for Spring-data repositories and mocks for
@@ -82,7 +83,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         System.setProperty(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD, Boolean.toString(true));
         // clear out datastore
         for (Name name : _datastore.getNames()) {
-            ((FeatureStore<?,?>) _datastore.getFeatureSource(name)).removeFeatures(Filter.INCLUDE);
+            ((FeatureStore<?, ?>) _datastore.getFeatureSource(name)).removeFeatures(Filter.INCLUDE);
         }
         final String initializedString = "initialized";
         final String webappDir = getWebappDir(getClass());
@@ -97,7 +98,8 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
             _applicationContext.getBean(initializedString);
         } catch (NoSuchBeanDefinitionException e) {
             SimpleFeatureTypeBuilder builder = new SimpleFeatureTypeBuilder();
-            AttributeDescriptor geomDescriptor = new AttributeTypeBuilder().crs(DefaultGeographicCRS.WGS84).binding(MultiPolygon.class).buildDescriptor("the_geom");
+            AttributeDescriptor geomDescriptor = new AttributeTypeBuilder().crs(DefaultGeographicCRS.WGS84).binding(MultiPolygon.class)
+                    .buildDescriptor("the_geom");
             builder.setName("spatialIndex");
             builder.add(geomDescriptor);
             builder.add(SpatialIndexWriter._IDS_ATTRIBUTE_NAME, String.class);
@@ -125,7 +127,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         geonetworkDataDirectory.init("geonetwork", webappDir, dataDir.getAbsolutePath(),
                 serviceConfig, null);
 
-        _applicationContext.getBean(LuceneConfig.class).configure("luceneConfig.xml");
+        _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
         SchemaManager.registerXmlCatalogFiles(webappDir, schemaPluginsCatalogFile);
 
         final SchemaManager schemaManager = _applicationContext.getBean(SchemaManager.class);
@@ -192,9 +194,9 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     /**
      * Check if an element exists and if it has the expected test.
      *
-     * @param expected the expected text
-     * @param xml      the xml to search
-     * @param xpath    the xpath to the element to check
+     * @param expected   the expected text
+     * @param xml        the xml to search
+     * @param xpath      the xpath to the element to check
      * @param namespaces the namespaces required for xpath
      */
     protected void assertEqualsText(String expected, Element xml, String xpath, Namespace... namespaces) throws JDOMException {
@@ -232,7 +234,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
             here = here.getParentFile();
         }
 
-        return new File(here.getParentFile(), "web/src/main/webapp/").getAbsolutePath()+File.separator;
+        return new File(here.getParentFile(), "web/src/main/webapp/").getAbsolutePath() + File.separator;
     }
 
     private static File getClassFile(Class<?> cl) {
@@ -253,5 +255,34 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         return Xml.loadStream(resource.openStream());
     }
 
+    /**
+     *
+     * @param uuidAction  Either: Params.GENERATE_UUID, Params.NOTHING, or Params.OVERWRITE
+     * @return
+     * @throws Exception
+     */
+    protected int importMetadataXML(ServiceContext context, String uuid, InputStream xmlInputStream, MetadataType metadataType,
+                                    int groupId, String uuidAction) throws Exception {
+        final Element metadata = Xml.loadStream(xmlInputStream);
+        final DataManager dataManager = _applicationContext.getBean(DataManager.class);
+        String schema = dataManager.autodetectSchema(metadata);
+        final SourceRepository sourceRepository = _applicationContext.getBean(SourceRepository.class);
+        List<Source> sources = sourceRepository.findAll();
+        if (sources.isEmpty()) {
+            sources = new ArrayList<Source>(1);
+            sources.add(sourceRepository.save(new Source().setLocal(true).setName("Name").setUuid("sourceUUID")));
 
+        }
+        Source source = sources.get(0);
+        ArrayList<String> id = new ArrayList<String>(1);
+        String createDate = new ISODate().getDateAndTime();
+        Importer.importRecord(uuid,
+                uuidAction, Lists.newArrayList(metadata), schema, 0,
+                source.getUuid(), source.getName(), context,
+                id, createDate, createDate,
+                ""+groupId, metadataType);
+
+        dataManager.indexMetadata(id.get(0));
+        return Integer.parseInt(id.get(0));
+    }
 }

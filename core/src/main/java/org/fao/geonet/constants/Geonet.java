@@ -406,8 +406,9 @@ public final class Geonet {
 		public static final String RESULT_TYPE = "resultType";
 
 		public static final String FAST = "fast";
-		public static final String BUILD_SUMMARY = "buildSummary";
-		public static final String SUMMARY_ONLY = "summaryOnly";
+        public static final String INDEX = "index";
+        public static final String BUILD_SUMMARY = "buildSummary";
+        public static final String SUMMARY_ONLY = "summaryOnly";
         public static final String REQUESTED_LANGUAGE = "requestedLanguage";
 
         /**
