@@ -19,6 +19,8 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
 GeoNetwork.Lang.en = {
+    'unsupportedBrowser': 'Unsupported browser',
+    'editorBrowserRestriction': "You're using an old version of Internet Explorer which is not compatible with latest GeoNetwork functionnalities (metadata editing, admin console). Some features may not work correctly. Upgrade <a href='http://www.whatbrowser.org/'>to a more modern browser</a>.",
     'metadataRecordPublishedTitle': 'Metadata publication',
     'metadataRecordPublished': '${title} is now visible to everyone.',
     'metadataRecordUnPublished': '${title} is not published to everyone anymore.',

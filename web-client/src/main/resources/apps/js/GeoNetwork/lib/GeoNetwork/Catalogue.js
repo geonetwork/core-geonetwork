@@ -996,6 +996,18 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         var url = this.services.mdMEF + '?version=2&uuid=' + uuid;
         location.replace(url);
     },
+    /**
+     * Return true if browser is supported.
+     * Display an error message if not and return false.
+     */
+    isSupportedBrowser: function(msg) {
+      if (Ext.isIE6 || Ext.isIE7 || Ext.isIE8) {
+        this.showError(OpenLayers.i18n('unsupportedBrowser'), msg);
+        return false;
+      } else {
+        return true;
+      }
+    },
     /** api: method[metadataEdit]
      *  :param uuid: ``String`` Uuid of the metadata record to edit
      *
@@ -1024,11 +1036,13 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         }
     },
     metadataEdit2: function(id, create, group, child, isTemplate, schema){
+      if (this.isSupportedBrowser(OpenLayers.i18n('editorBrowserRestriction'))) {
         if (create) {
             window.open('../../srv/' + catalogue.lang + '/catalog.edit', '_blank');
         } else {
             window.open('../../srv/' + catalogue.lang + '/catalog.edit#/metadata/' + id, '_blank');
         }
+      }
     },
     /** api: method[metadataDuplicate]
      *  :param uuid: ``String`` Uuid of the metadata to duplicate
@@ -1347,7 +1361,9 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Open the administration interface according to adminAppUrl properties.
      */
     admin: function(){
+      if (this.isSupportedBrowser(OpenLayers.i18n('editorBrowserRestriction'))) {
         location.href = this.adminAppUrl;
+      }
     },
     /** api: method[admin]
     *
