@@ -150,7 +150,7 @@
 
 		<fieldset class="validation-report">
 			<legend class="block-legend">
-				<xsl:value-of select="/root/gui/strings/rules[@name=$rule]"/><xsl:text> </xsl:text>
+			    <xsl:value-of select="/root/response/schematronTranslations/*[name()=$rule]/strings/schematron.title/text()"/><xsl:text> </xsl:text>
 				<xsl:choose>
 					<xsl:when test="$count != 0"> (
 						<img src="../../images/schematron.gif" alt="failed" title="failed"/>
