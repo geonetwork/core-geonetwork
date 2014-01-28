@@ -25,4 +25,9 @@
 *.png binary
 *.jpg binary
 
+# Related to font files
+*.ttf binary
+*.eot binary
+*.woff binary
+
 *.xsd text eol=lf
