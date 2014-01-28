@@ -3,6 +3,8 @@
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:gn="http://www.fao.org/geonetwork"
   xmlns:saxon="http://saxon.sf.net/" extension-element-prefixes="saxon"
+  xmlns:gmd="http://www.isotc211.org/2005/gmd"
+  xmlns:srv="http://www.isotc211.org/2005/srv"
   >
   <!-- Global XSL variables about the metadata record. This should be included for
   service dealing with one metadata record (eg. viewing, editing). -->
@@ -31,6 +33,7 @@
   <xsl:variable name="metadataUuid" select="$metadata/gn:info/uuid"/>
   <xsl:variable name="metadataId" select="$metadata/gn:info/id"/>
   <xsl:variable name="isTemplate" select="$metadata/gn:info/isTemplate"/>
+  <xsl:variable name="isService" select="count($metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
   
   <!-- The labels, codelists and profiles specific strings -->
   <!-- TODO : label inheritance between profiles - maybe in Java ? -->

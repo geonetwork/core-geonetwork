@@ -183,11 +183,11 @@
        * Set type of record. Update the matching form element.
        */
       $scope.setTemplate = function(isTemplate) {
-        gnCurrentEdit.mdType = isTemplate ? 'y' : 'n';
-        $('#template')[0].value = gnCurrentEdit.mdType;
+        gnCurrentEdit.isTemplate = isTemplate ? 'y' : 'n';
+        $('#template')[0].value = gnCurrentEdit.isTemplate;
       };
       $scope.isTemplate = function() {
-        return gnCurrentEdit.mdType === 'y';
+        return gnCurrentEdit.isTemplate === 'y';
       };
 
       /**

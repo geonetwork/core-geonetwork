@@ -55,6 +55,7 @@
 
       <input type="hidden" id="schema" value="{$schema}"/>
       <input type="hidden" id="template" name="template" value="{$isTemplate}"/>
+      <input type="hidden" id="isService" name="type" value="{$isService}"/>
       <input type="hidden" id="uuid" value="{$metadataUuid}"/>
       <input type="hidden" name="id" value="{$metadataId}"/>
       <input type="hidden" id="language" value="{$metadataLanguage}"/>

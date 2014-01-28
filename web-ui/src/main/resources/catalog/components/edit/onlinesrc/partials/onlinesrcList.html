@@ -24,11 +24,11 @@
             class="fa fa-sitemap"></i> <i class="icon-external-link"></i>
             <span data-translate="">linkToParent</span>
         </a></li>
-        <li><a href="" data-ng-click="onlinesrcService.onOpenPopup('service')"> 
+        <li data-ng-hide="gnCurrentEdit.isService"><a href="" data-ng-click="onlinesrcService.onOpenPopup('service')"> 
           <i class="fa fa-cloud"></i> <i
             class="icon-external-link"></i> <span data-translate="">linkToService</span>
         </a></li>
-        <li><a href="" data-ng-click="onlinesrcService.onOpenPopup('dataset')"> <i
+        <li data-ng-show="gnCurrentEdit.isService"><a href="" data-ng-click="onlinesrcService.onOpenPopup('dataset')"> <i
             class="fa fa-files-o"></i> <i class="icon-external-link"></i>
             <span data-translate="">linkToDataset</span>
         </a></li>

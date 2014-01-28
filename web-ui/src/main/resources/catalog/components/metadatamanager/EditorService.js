@@ -237,7 +237,8 @@
              };
 
              angular.extend(gnCurrentEdit, {
-               mdType: getInputValue('template'),
+               isService: getInputValue('isService') == 'true',
+               isTemplate: getInputValue('template'),
                mdLanguage: getInputValue('language'),
                mdOtherLanguages: getInputValue('otherLanguages'),
                showValidationErrors: getInputValue('showvalidationerrors'),
