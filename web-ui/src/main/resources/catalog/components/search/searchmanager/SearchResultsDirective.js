@@ -101,6 +101,9 @@
            * search results contains information if a record is selected or not.
            */
           scope.isSelected = function(md) {
+            if(!scope.options.selection || !scope.options.selection.mode) {
+              return false;
+            }
             var targetUuid = md['geonet:info'].uuid;
             var selected = false;
             if (scope.options.selection.mode.indexOf('local') >= 0) {
