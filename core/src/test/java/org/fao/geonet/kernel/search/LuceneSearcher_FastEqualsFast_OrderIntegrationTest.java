@@ -3,7 +3,6 @@ package org.fao.geonet.kernel.search;
 import jeeves.server.ServiceConfig;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Xml;
-import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.Text;
@@ -24,7 +23,7 @@ public class LuceneSearcher_FastEqualsFast_OrderIntegrationTest extends Abstract
                 .addContent(new Element("fast").setText(Geonet.SearchResult.FAST))
                 .addContent(new Element("from").setText("1"))
                 .addContent(new Element("to").setText("50"))
-                .addContent(new Element("abstract").setText(""+_timestamp))
+                .addContent(new Element("abstract").setText(""+ _abstractSearchTerm))
                 .addContent(new Element("sortOrder").setText("reverse"))
                 .addContent(new Element("sortBy").setText("_title"));
         final ServiceConfig config = new ServiceConfig();

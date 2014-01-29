@@ -336,7 +336,7 @@ public class GeonetworkDataDirectory {
                 final File srcFile = new File(path,  "WEB-INF" + File.separator + Geonet.File.SCHEMA_PLUGINS_CATALOG);
                 FileUtils.copyFile(srcFile, schemaCatFile);
 
-                FileUtils.copyDirectory(new File(path, GEONETWORK_DEFAULT_DATA_DIR + "config" + File.separator + "schema_plugins"),
+                BinaryFile.copyDirectory(new File(path, GEONETWORK_DEFAULT_DATA_DIR + "config" + File.separator + "schema_plugins"),
                         schemaPluginsDir);
 			} catch (IOException e) {
 				Log.info(

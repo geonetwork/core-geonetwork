@@ -167,9 +167,6 @@ public class Geonetwork implements ApplicationHandler {
         @SuppressWarnings("unchecked")
         Class<StatusActions> statusActionsClass = (Class<StatusActions>) Class.forName(statusActionsClassName);
 
-        String languageProfilesDir = handlerConfig
-                .getMandatoryValue(Geonet.Config.LANGUAGE_PROFILES_DIR);
-
         JeevesJCS.setConfigFilename(appPath + "WEB-INF/classes/cache.ccf");
 
         // force caches to be config'd so shutdown hook works correctly
@@ -330,7 +327,7 @@ public class Geonetwork implements ApplicationHandler {
         /**
          * Initialize language detector
          */
-        LanguageDetector.init(appPath + languageProfilesDir);
+        LanguageDetector.init(appPath + _applicationContext.getBean(Geonet.Config.LANGUAGE_PROFILES_DIR, String.class));
 
         //------------------------------------------------------------------------
         //--- Initialize thesaurus
