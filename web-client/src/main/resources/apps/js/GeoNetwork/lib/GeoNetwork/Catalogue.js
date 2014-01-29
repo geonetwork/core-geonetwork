@@ -1037,11 +1037,21 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     },
     metadataEdit2: function(id, create, group, child, isTemplate, schema){
       if (this.isSupportedBrowser(OpenLayers.i18n('editorBrowserRestriction'))) {
+        var url = '../../srv/' + catalogue.lang + '/catalog.edit#/';
         if (create) {
-            window.open('../../srv/' + catalogue.lang + '/catalog.edit#/create', '_blank');
+          if (id) {
+            if (child) {
+              url += 'create?childOf=' + id;
+            } else {
+              url += 'create?from=' + id;
+            }
+          } else {
+            url += 'create';
+          }
         } else {
-            window.open('../../srv/' + catalogue.lang + '/catalog.edit#/metadata/' + id, '_blank');
+          url += 'metadata/' + id;
         }
+        window.open(url, '_blank');
       }
     },
     /** api: method[metadataDuplicate]
