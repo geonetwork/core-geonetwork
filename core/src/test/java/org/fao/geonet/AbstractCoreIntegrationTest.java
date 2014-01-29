@@ -119,15 +119,14 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
         final File dataDir = _testTemporaryFolder.getRoot();
 
-        final File configDir = new File(dataDir, "config");
-        final String schemaPluginsDir = new File(configDir, "schema_plugins").getPath();
-        final String resourcePath = new File(dataDir, "data/resources").getPath();
-        final String schemaPluginsCatalogFile = new File(schemaPluginsDir, "/schemaplugin-uri-catalog.xml").getPath();
-
         TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
 
         geonetworkDataDirectory.init("geonetwork", webappDir, dataDir.getAbsolutePath(),
                 serviceConfig, null);
+
+        final String schemaPluginsDir = geonetworkDataDirectory.getSchemaPluginsDir().getPath();
+        final String resourcePath = geonetworkDataDirectory.getResourcesDir().getPath();
+        final String schemaPluginsCatalogFile = new File(schemaPluginsDir, "/schemaplugin-uri-catalog.xml").getPath();
 
         _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
         SchemaManager.registerXmlCatalogFiles(webappDir, schemaPluginsCatalogFile);

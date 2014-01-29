@@ -109,11 +109,11 @@ public class SettingManager {
     private void buildXmlTree(Element env, Map<String, Element> pathElements, Setting setting) {
         String[] segments = setting.getName().split("/");
         Element parent = env;
-        String path = "";
+        StringBuilder path = new StringBuilder();
         for (int i = 0; i < segments.length; i++) {
             String segment = segments[i];
-            path = path + "/" + segment;
-            Element currentElement = pathElements.get(path);
+            path.append("/").append(segment);
+            Element currentElement = pathElements.get(path.toString());
             if (currentElement == null) {
                 currentElement = new Element(segment);
                 currentElement.setAttribute("name", path.substring(1));
@@ -124,7 +124,7 @@ public class SettingManager {
                     currentElement.setText(setting.getValue());
                 }
                 parent.addContent(currentElement);
-                pathElements.put(path, currentElement);
+                pathElements.put(path.toString(), currentElement);
             }
 
             parent = currentElement;

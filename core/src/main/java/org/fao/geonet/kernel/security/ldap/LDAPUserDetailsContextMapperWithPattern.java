@@ -67,8 +67,8 @@ public class LDAPUserDetailsContextMapperWithPattern extends
                     String group = m.group(groupIndexInPattern);
                     Profile profile = Profile.valueOf(m.group(profilIndexInPattern));
 
-                    if (group != null && profile != null && profile != null) {
-                        if (!group.equals(LDAPConstants.ALL_GROUP_INDICATOR)) {
+                    if (profile != null) {
+                        if (!LDAPConstants.ALL_GROUP_INDICATOR.equals(group)) {
                             if (Log.isDebugEnabled(Geonet.LDAP)) {
                                 Log.debug(Geonet.LDAP, "  Adding profile "
                                         + profile + " for group " + group);

@@ -67,8 +67,12 @@ public final class GeoNetworkAnalyzer extends Analyzer {
         } else {
             this.stopwords = new CharArraySet(Geonet.LUCENE_VERSION, stopwords, true);
         }
-        this.charsToIgnore = charsToIgnore;
-        if (charsToIgnore != null) {
+
+        if (charsToIgnore == null) {
+            this.charsToIgnore = new char[0];
+        } else {
+            this.charsToIgnore = new char[charsToIgnore.length];
+            System.arraycopy(charsToIgnore, 0, this.charsToIgnore, 0, charsToIgnore.length);
             for (char s : charsToIgnore) {
                 Log.debug(getClass().getName(), "character to ignore: " + s);
             }

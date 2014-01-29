@@ -1144,7 +1144,7 @@ public class DataManager {
      * @throws NoSchemaMatchesException
      * @return
      */
-    public @Nonnull String autodetectSchema(Element md) throws SchemaMatchConflictException, NoSchemaMatchesException {
+    public @CheckForNull String autodetectSchema(Element md) throws SchemaMatchConflictException, NoSchemaMatchesException {
         return autodetectSchema(md, schemaMan.getDefaultSchema());
     }
 

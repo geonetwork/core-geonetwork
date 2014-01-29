@@ -78,7 +78,7 @@ public class Insert extends NotInReadOnlyModeService {
 
 		String data       = Util.getParam(params, Params.DATA);
 		String group      = Util.getParam(params, Params.GROUP);
-		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
+        MetadataType metadataType = MetadataType.lookup(Util.getParam(params, Params.TEMPLATE, "n"));
 		String style      = Util.getParam(params, Params.STYLESHEET, "_none_");
 
 		boolean validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
@@ -106,7 +106,7 @@ public class Insert extends NotInReadOnlyModeService {
 		//--- if the uuid does not exist and is not a template we generate it
 
 		String uuid;
-		if (isTemplate.equals("n"))
+		if (metadataType == MetadataType.TEMPLATE)
 		{
 			uuid = dataMan.extractUUID(schema, xml);
 			if (uuid.length() == 0) uuid = UUID.randomUUID().toString();
@@ -120,7 +120,6 @@ public class Insert extends NotInReadOnlyModeService {
 
 		final List<String> id = new ArrayList<String>();
 		final List<Element> md = new ArrayList<Element>();
-		String localId = null;
 		md.add(xml);
 		
 
@@ -129,13 +128,13 @@ public class Insert extends NotInReadOnlyModeService {
 		// Import record
         Importer.importRecord(uuid, uuidAction, md, schema, 0,
                 gc.getBean(SettingManager.class).getSiteId(), gc.getBean(SettingManager.class).getSiteName(), context, id, date,
-				date, group, isTemplate);
+				date, group, metadataType);
 		
 		int iId = Integer.parseInt(id.get(0));
 		
 		
 		// Set template
-		dm.setTemplate(iId, MetadataType.lookup(isTemplate), null);
+		dm.setTemplate(iId, metadataType, null);
 
 		
 		// Import category

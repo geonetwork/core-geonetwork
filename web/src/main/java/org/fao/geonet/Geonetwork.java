@@ -31,11 +31,9 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.kernel.*;
-import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.metadata.StatusActions;
@@ -45,7 +43,6 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.languages.LanguageDetector;
 import org.fao.geonet.lib.DbLib;
 import org.fao.geonet.lib.ServerLib;
@@ -74,7 +71,6 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import javax.persistence.EntityManager;
 import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 import java.io.File;
@@ -83,7 +79,6 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.sql.Connection;
-import java.sql.Statement;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -368,7 +363,7 @@ public class Geonetwork implements ApplicationHandler {
         // Notify unregistered metadata at startup. Needed, for example, when the user enables the notifier config
         // to notify the existing metadata in database
         // TODO: Fix DataManager.getUnregisteredMetadata and uncomment next lines
-        metadataNotifierControl = new MetadataNotifierControl(context, gnContext);
+        metadataNotifierControl = new MetadataNotifierControl(context);
         metadataNotifierControl.runOnce();
 
         //--- load proxy information from settings into Jeeves for observers such

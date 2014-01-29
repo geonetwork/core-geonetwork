@@ -97,6 +97,8 @@ import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
@@ -481,7 +483,10 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
      * @param srvContext
      * @param request
      */
-    public static LanguageSelection determineLanguage(ServiceContext srvContext, Element request, SettingInfo settingInfo) {
+    public static LanguageSelection determineLanguage(
+            @Nullable ServiceContext srvContext,
+            @Nonnull Element request,
+            @Nonnull SettingInfo settingInfo) {
         if (settingInfo != null && settingInfo.getIgnoreRequestedLanguage()) {
             if (Log.isDebugEnabled(Geonet.LUCENE)) {
                 Log.debug(Geonet.LUCENE, "requestedlanguage ignored");

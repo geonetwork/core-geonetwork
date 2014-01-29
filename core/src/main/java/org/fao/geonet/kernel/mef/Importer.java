@@ -120,9 +120,9 @@ public class Importer {
                 	Log.debug(Geonet.MEF, "info.xml says schema should be "+infoSchema);
 
 
-				Element metadataValidForImport = null;
+				Element metadataValidForImport;
 
-								Map<String,Pair<String,Element>> mdFiles = new HashMap<String,Pair<String,Element>>();
+                Map<String,Pair<String,Element>> mdFiles = new HashMap<String,Pair<String,Element>>();
                 for (File file : Files) {
                     if (file != null && !file.isDirectory()) {
                         Element metadata = Xml.loadFile(file);
@@ -143,7 +143,6 @@ public class Importer {
                             Log.debug(Geonet.MEF, "No schema match for "
                                 + lastUnknownMetadataFolderName + file.getName() 
                                 + ".");
-                            continue;
                         }
                     }
                 }
@@ -276,10 +275,10 @@ public class Importer {
 					privileges.addContent(new Element("operation")
 							.setAttribute("name", "featured"));
 
-					// Get the Metadata uuid if it's not a template.
-					if (isTemplate.equals("n")) {
-						uuid = dm.extractUUID(schema, md.get(index));
-					} else if (isTemplate.equals("s")) {
+					if (isTemplate == MetadataType.METADATA) {
+                        // Get the Metadata uuid if it's not a template.
+                        uuid = dm.extractUUID(schema, md.get(index));
+					} else if (isTemplate== MetadataType.SUB_TEMPLATE) {
 					    // Get subtemplate uuid if defined in @uuid at root
                         uuid = md.get(index).getAttributeValue("uuid");
 					}
