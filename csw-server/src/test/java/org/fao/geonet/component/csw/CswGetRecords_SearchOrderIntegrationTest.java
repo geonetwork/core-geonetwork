@@ -22,6 +22,23 @@ public class CswGetRecords_SearchOrderIntegrationTest extends AbstractLanguageSe
     protected String[] doSearch(String lang) throws Exception {
         _serviceContext.setLanguage(lang);
 
+        String[] parts = _abstractSearchTerm.split(" ");
+        Element filter = new Element("And", Csw.NAMESPACE_OGC);
+        for (String part : parts) {
+            Element isEqualTo = new Element("PropertyIsEqualTo", Csw.NAMESPACE_OGC)
+                    .addContent(new Element("PropertyName",
+                            Csw.NAMESPACE_OGC).setText("abstract"))
+                    .addContent(new Element("Literal",
+                            Csw.NAMESPACE_OGC).setText("" + part));
+
+            filter.addContent(isEqualTo);
+        }
+
+        if (parts.length == 1) {
+            filter = (Element) filter.getChildren().get(0);
+            filter.detach();
+        }
+
         Element request = new Element("GetRecords", Csw.NAMESPACE_CSW)
                 .setAttribute("service", "CSW")
                 .setAttribute("version", "2.0.2")
@@ -42,13 +59,7 @@ public class CswGetRecords_SearchOrderIntegrationTest extends AbstractLanguageSe
                                         .setAttribute("version", "1.0.0")
                                         .addContent(
                                                 new Element("Filter", Csw.NAMESPACE_OGC)
-                                                        .addContent(
-                                                                new Element("PropertyIsEqualTo", Csw.NAMESPACE_OGC)
-                                                                        .addContent(new Element("PropertyName",
-                                                                                Csw.NAMESPACE_OGC).setText("abstract"))
-                                                                        .addContent(new Element("Literal",
-                                                                                Csw.NAMESPACE_OGC).setText("" + _timestamp))
-                                                        )
+                                                        .addContent(filter)
                                         )
                         )
                 );
