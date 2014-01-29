@@ -16,6 +16,8 @@
     "map": "Carte",
     "service": "Service",
     "createA": "Décrire un(e) ",
+    "createChildOf": "Créer une fiche enfant de",
+    "createCopyOf": "Créer une copie de",
     "noTemplatesAvailable": "Attention ! Il n'y a aucun modèle de saisie dans ce catalogue. Vous devriez en ajouter ou <a href='admin.console#/metadata'>en importer</a>.",
     "fromTemplate": "à partir de ",
     "inGroup": "dans",

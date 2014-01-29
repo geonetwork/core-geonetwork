@@ -19,7 +19,7 @@
             gnUtilityService,
             gnNewMetadata) {
 
-      $scope.isTemplate = 'n';
+      $scope.isTemplate = false;
       $scope.hasTemplates = true;
       $scope.mdList = null;
 
@@ -58,11 +58,22 @@
               $routeParams.group,
               fullPrivileges,
               $routeParams.template);
-          // TODO: add fullPrivileges
+          // TODO: add fullPrivileges param in UI ?
         } else {
+
+          // Metadata creation could be on a template
+          // or by duplicating an existing record
+          var query = '';
+          if ($routeParams.childOf || $routeParams.from) {
+            query = '_id=' + ($routeParams.childOf || $routeParams.from);
+          } else {
+            query = 'template=y';
+          }
+
+
           // TODO: Better handling of lots of templates
           gnSearchManagerService.search('qi@json?' +
-              'template=y&fast=index&from=1&to=200').
+              query + '&fast=index&from=1&to=200').
               then(function(data) {
 
                 $scope.mdList = data;
@@ -129,13 +140,22 @@
 
         $scope.tpls = tpls;
         $scope.activeType = type;
-        $scope.activeTpl = null;
+        $scope.setActiveTpl($scope.tpls[0]);
         return false;
       };
 
       $scope.setActiveTpl = function(tpl) {
         $scope.activeTpl = tpl;
       };
+
+
+      if ($routeParams.childOf) {
+        $scope.title = $translate('createChildOf');
+      } else if ($routeParams.from) {
+        $scope.title = $translate('createCopyOf');
+      } else {
+        $scope.title = $translate('createA');
+      }
 
       $scope.createNewMetadata = function() {
         gnNewMetadata.createNewMetadata(

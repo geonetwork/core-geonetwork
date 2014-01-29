@@ -13,6 +13,8 @@
     "toggleAttributes": "More details",
     "toggleTooltips": "Tooltips",
     "createA": "Create a ",
+    "createChildOf": "Create a child record",
+    "createCopyOf": "Create copy of",
     "noTemplatesAvailable": "Warning! There is no templates available in the catalog. You should add or <a href='admin.console#/metadata'>import</a> some.",
     "fromTemplate": "From ",
     "metadataType": "Type of record",

@@ -21,14 +21,15 @@
                 );
             return $http.get(url);
           },
-          copyMetadata: function(id, groupId, fullPrivileges, 
-              template, tab) {
+          copyMetadata: function(id, groupId, withFullPrivileges, 
+              isTemplate, tab, isChild) {
             var url = gnUrlUtils.append('md.create@json',
                 gnUrlUtils.toKeyValue({
                   group: groupId,
                   id: id,
-                  template: template || 'n',
-                  fullPrivileges: fullPrivileges || true
+                  template: isTemplate ? 'y' : 'n',
+                  child: isChild ? 'y' : 'n',
+                  fullPrivileges: withFullPrivileges ? 'true' : 'false'
                 })
                 );
             return $http.get(url);
@@ -41,8 +42,8 @@
               headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             });
           },
-          createNewMetadata: function(id, groupId, fullPrivileges, 
-              template, tab) {
+          createNewMetadata: function(id, groupId, withFullPrivileges, 
+              isTemplate, tab, isChild) {
             //            $http.get(url).success(function(data) {
             //              // TODO: If using NRT in Lucene, the record
             //              // will not be indexed straight away. Add a
@@ -60,8 +61,8 @@
             //
             //            });
             // NRT is turned off by default.
-            this.copyMetadata(id, groupId, fullPrivileges,
-                template, tab).success(function(data) {
+            this.copyMetadata(id, groupId, withFullPrivileges,
+                isTemplate, tab, isChild).success(function(data) {
               $location.path('/metadata/' + data.id);
             });
             // TODO : handle creation error
