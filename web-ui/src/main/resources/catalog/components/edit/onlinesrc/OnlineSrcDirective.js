@@ -133,12 +133,21 @@
   .directive('gnAddOnlinesrc', ['gnOnlinesrc',
         'gnOwsCapabilities',
         'gnEditor',
-        function(gnOnlinesrc, gnOwsCapabilities, gnEditor) {
+        'gnCurrentEdit',
+        function(gnOnlinesrc, gnOwsCapabilities, gnEditor, gnCurrentEdit) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
                 'partials/addOnlinesrc.html',
             link: function(scope, element, attrs) {
+
+              scope.popupid = attrs['gnPopupid'];
+
+              gnOnlinesrc.register('onlinesrc', function() {
+                scope.metadataId = gnCurrentEdit.id;
+                $(scope.popupid).modal('show');
+
+              });
 
               // mode can be 'url' or 'upload'
               scope.mode = 'url';
@@ -152,14 +161,14 @@
 
               scope.onlinesrcService = gnOnlinesrc;
 
-              scope.popupid = attrs['gnPopupid'];
-
               /**
                * Onlinesrc uploaded with success, close the popup,
                * refresh the metadata.
                */
               var uploadOnlinesrcDone = function(data) {
                 scope.clear(scope.queue);
+                gnEditor.refreshEditorForm();
+                gnOnlinesrc.reload = true;
                 $(scope.popupid).modal('hide');
               };
 

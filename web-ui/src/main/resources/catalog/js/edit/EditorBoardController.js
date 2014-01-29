@@ -8,13 +8,13 @@
     '$scope',
     function($scope) {
       $scope.params = {};
-      
-      $scope.$watch('user.id', function(val){
-        if(val) {
-          $scope.params["_owner"] = val;
+
+      $scope.$watch('user.id', function(val) {
+        if (val) {
+          $scope.params['_owner'] = val;
           $scope.$broadcast('resetSearch', $scope.params);
         }
-      })
+      });
     }
   ]);
 })();

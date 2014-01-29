@@ -185,10 +185,19 @@
           return defer.promise;
         },
 
+
+        /**
+         * Open onlinesrc popup and call registered
+         * function (from the directive).
+         */
         onOpenPopup: function(type) {
           openCb[type]();
         },
 
+        /**
+         * onlinesrc directive can register a function
+         * on the open window event.
+         */
         register: function(type, fn) {
           openCb[type] = fn;
         },
@@ -424,6 +433,35 @@
           };
           runProcess(this,
               setParams('sibling-remove', params));
+        },
+        
+        /**
+         * Specific method used by the geopublisher.
+         * Compute online resource XML for the given protocols.
+         * 
+         * return the XML snippet to include to the form.
+         */
+        addFromGeoPublisher: function(layerName, node, protocols) {
+          
+          var xml = '';
+          layerName = 
+              (node.id.indexOf('mapserver') === -1 ? 
+                  node.namespacePrefix + ':' : '') + layerName;
+
+          for (var p in protocols) {
+              if (protocols.hasOwnProperty(p) && protocols[p].checked === true) {
+                xml +=
+                  '<gmd:onLine xmlns:gmd="http://www.isotc211.org/2005/gmd" ' +
+                  'xmlns:gco="http://www.isotc211.org/2005/gco"><gmd:CI_OnlineResource>' + 
+                  '<gmd:linkage><gmd:URL>'+node[p + 'Url']+'</gmd:URL></gmd:linkage>' + 
+                  '<gmd:protocol><gco:CharacterString>'+protocols[p].label+'</gco:CharacterString></gmd:protocol>' + 
+                  '<gmd:name><gco:CharacterString>'+layerName+'</gco:CharacterString></gmd:name>' + 
+                  '<gmd:description><gco:CharacterString>TITLE</gco:CharacterString></gmd:description>' + 
+                  '</gmd:CI_OnlineResource></gmd:onLine>';
+                + "&&&";
+              }
+          }
+          return xml;
         }
       };
     }]);

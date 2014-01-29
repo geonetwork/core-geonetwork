@@ -3,6 +3,9 @@
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:saxon="http://saxon.sf.net/" xmlns:gn="http://www.fao.org/geonetwork"
   xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
+  xmlns:gmd="http://www.isotc211.org/2005/gmd"
+  xmlns:gco="http://www.isotc211.org/2005/gco"
+  xmlns:gmx="http://www.isotc211.org/2005/gmx"
   extension-element-prefixes="saxon" exclude-result-prefixes="#all">
 
   <!-- The editor form.
@@ -76,7 +79,15 @@
           <xsl:with-param name="config" select="$editorConfig"/>
         </xsl:call-template>
       </xsl:if>
-      
+      <xsl:if test="count(//gmd:protocol[matches(gco:CharacterString,'^WWW:DOWNLOAD-.*-http--download.*')]) > 0">
+        <xsl:for-each select="//gmd:onLine[matches(gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString,'^WWW:DOWNLOAD-.*-http--download.*')]">
+        <div gn-geo-publisher=""
+          data-ref="{gn:element/@ref}"
+          data-ref-parent="{gn:element/@parent}"
+          data-file-name="{gmd:CI_OnlineResource/gmd:name/gmx:MimeFileType}"
+          data-lang="lang"></div>
+        </xsl:for-each>
+      </xsl:if>
       <xsl:choose>
         <xsl:when test="$service != 'md.element.add' and $tabConfig/section">
           <xsl:apply-templates mode="form-builder" select="$tabConfig/section">

@@ -87,7 +87,9 @@
         'http://geonetwork-opensource.org/regions%23country',
     removeThumbnail: 'md.thumbnail.remove@json',
     removeOnlinesrc: 'resource.del.and.detach', // TODO: CHANGE
-    suggestionsList: 'md.suggestion@json'
+    suggestionsList: 'md.suggestion@json',
+    geoserverNodes: 'geoserver.publisher@json' // TODO: CHANGE
+
   });
 
   module.provider('gnHttp', function() {

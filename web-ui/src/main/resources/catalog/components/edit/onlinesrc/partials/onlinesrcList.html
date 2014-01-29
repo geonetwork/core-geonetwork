@@ -14,8 +14,7 @@
             class="fa fa-picture-o"></i> <i class="icon-external-link"></i>
             <span data-translate="">addThumbnail</span>
         </a></li>
-        <li><a href="" data-toggle="modal"
-          data-target="#addonlinesrc-popup"> <i class="fa fa-link"></i>
+        <li><a href="" data-ng-click="onlinesrcService.onOpenPopup('onlinesrc')"> <i class="fa fa-link"></i>
             <i class="icon-external-link"></i> <span data-translate="">addOnlinesrc</span>
         </a></li>
         <li class="divider"></li>
@@ -68,7 +67,7 @@
       <!-- ******* List of online resources ******* -->
       <h4 class="onlinesrc-title" data-ng-show="relations.onlinesrc">
         <a href=""
-           data-toggle="modal" data-target="#addonlinesrc-popup">
+           data-ng-click="onlinesrcService.onOpenPopup('onlinesrc')">
           <i class="fa fa-link"></i><i class="icon-external-link"></i>
           <span data-translate="">onlinesrc</span>  
           <i class="fa fa-plus"></i>

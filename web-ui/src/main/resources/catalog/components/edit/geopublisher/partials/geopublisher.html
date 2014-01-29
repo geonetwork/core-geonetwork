@@ -1,0 +1,84 @@
+<div class="gn-geopublisher-panel">
+  <button class="btn btn-warning" data-ng-click="showPanel()">
+    <i class="fa fa-globe text-danger"></i>&nbsp;<span
+      data-translate="">geopublisher</span>
+  </button>
+
+  <div class="panel panel-default" data-ng-hide="hidden">
+    <div class="panel-body">
+
+      <!-- Header with projection selection, draw button and area list -->
+      <form class="form-inline" data-role="form">
+        <div class="col-sm-5">
+          <label class="sr-only" data-translate="">nodes</label>
+          <select data-ng-model="nodeId"
+            data-ng-change="checkNode(nodeId)">
+            <option data-ng-repeat="node in nodes" value="{{node.id}}">
+              {{node.name}}
+            </option>
+          </select>
+        </div>
+        <button class="btn btn-success"
+          data-ng-click="checkNode(nodeId)"
+          data-ng-class="{'disabled': (!nodeId)}">
+          <i class="fa fa-chain"></i>&nbsp;<span data-translate="">check</span>
+        </button>
+        <button class="btn btn-success" data-ng-click="publish(nodeId)"
+          data-ng-class="{'disabled': (isPublished || !nodeId)}">
+          <i class="fa fa-globe"></i>&nbsp;<span data-translate="">publish</span>
+        </button>
+        <button class="btn btn-success" data-ng-click="unpublish(nodeId)"
+          data-ng-class="{'disabled': (!isPublished || !nodeId)}">
+          <i class="fa fa-globe text-danger"></i>&nbsp;<span
+            data-translate="">unpublish</span>
+        </button>
+      </form>
+        
+        
+        <!-- DROP DOWN CHECKBOX -->
+      <div class="dropdown">
+        <button class="btn btn-success" data-toggle="dropdown" data-ng-click="publish(nodeId)"
+          data-ng-class="{'disabled': (!isPublished || !nodeId)}">
+          <i class="fa fa-clipboard"></i>&nbsp;<span data-translate="">linkService</span>
+        </button>
+        <ul class="dropdown-menu">
+          <li>
+            <a data-ng-click="setCheckBox('wms', $event)" href=""> 
+              <i class="fa fa-check-square-o" data-ng-show="protocols.wms.checked"></i>
+              <i class="fa fa-square-o" data-ng-hide="protocols.wms.checked"></i>
+              {{protocols.wms.label}}
+            </a>
+          </li>
+          <li>
+            <a data-ng-click="setCheckBox('wfs', $event)" href=""> 
+              <i class="fa fa-check-square-o" data-ng-show="protocols.wfs.checked"></i>
+              <i class="fa fa-square-o" data-ng-hide="protocols.wfs.checked"></i>
+              {{protocols.wfs.label}}
+            </a>
+          </li>
+          <li>
+            <a data-ng-click="setCheckBox('wcs', $event)" href=""> 
+              <i class="fa fa-check-square-o" data-ng-show="protocols.wcs.checked"></i>
+              <i class="fa fa-square-o" data-ng-hide="protocols.wcs.checked"></i>
+              {{protocols.wms.label}}
+            </a>
+          </li>
+          <li data-role="presentation" class="divider"></li>
+          <li data-role="presentation">
+            <a data-role="menuitem" tabindex="-1" href=""
+               data-ng-click="linkService()">Action
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div id="{{mapId}}" class="map"></div>
+      <div>{{statusCode}}</div>
+    </div>
+  </div>
+  
+  <div data-ng-if="snippet">
+    <input name="{{snippetRef}}" class="hidden" value="{{snippet}}"/>
+  </div>
+  
+</div>
