@@ -315,7 +315,7 @@
                         System.setProperty('geonetwork.jeeves.configuration.overrides.file', overridesFile.absolutePath)
                       ]]></source>
                                 </configuration>
-                            </execution>
+                            </execution>                                                                                                                  \
                         </executions>
                     </plugin>
                     <plugin>

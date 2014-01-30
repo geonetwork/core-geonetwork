@@ -26,6 +26,7 @@ package jeeves.server.context;
 import jeeves.component.ProfileManager;
 import jeeves.server.JeevesEngine;
 import jeeves.server.UserSession;
+import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.server.local.LocalServiceRequest;
 import jeeves.server.sources.ServiceRequest.InputMethod;
@@ -204,30 +205,46 @@ public class ServiceContext extends BasicContext {
         return _servlet;
     }
 
-	public Element execute(LocalServiceRequest request) throws Exception {
-		ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), htContexts, getEntityManager());
-		
-		UserSession session = _userSession;
-		if(_userSession == null) {
-			session = new UserSession();
-		} 
-		
-		try {
-            context.getBean(JeevesEngine.class).getServiceManager().dispatch(request,session,context);
-		} catch (Exception e) {
-			Log.error(Log.XLINK_PROCESSOR,"Failed to parse result xml"+ request.getService());
-			throw new ServiceExecutionFailedException(request.getService(),e);
-		} finally {
-			// set old context back as thread local
-			setAsThreadLocal();
-		}
-		try {
-			return request.getResult();
-		} catch (Exception e) {
-			Log.error(Log.XLINK_PROCESSOR,"Failed to parse result xml from service:"+request.getService()+"\n"+ request.getResultString());
-			throw new ServiceExecutionFailedException(request.getService(),e);
-		}
-	}
+    /**
+     * Execute a service but _don't_ parse the result.  This is used if in one of two cases.
+     *
+     * <ol>
+     *     <li>If the service is side-effect only and the result doesn't matter</li>
+     *     <li>If the response is not XML, for example if it is JSON or a string</li>
+     * </ol>
+     */
+    public void executeOnly(LocalServiceRequest request) throws Exception {
+        ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), htContexts, getEntityManager());
+        UserSession session = this._userSession;
+        if (session == null) {
+            session = new UserSession();
+        }
+
+        try {
+            final ServiceManager serviceManager = context.getBean(ServiceManager.class);
+            serviceManager.dispatch(request, session, context);
+        } catch (Exception e) {
+            Log.error(Log.XLINK_PROCESSOR, "Failed to parse result xml" + request.getService());
+            throw new ServiceExecutionFailedException(request.getService(), e);
+        } finally {
+            // set old context back as thread local
+            setAsThreadLocal();
+        }
+    }
+
+    /**
+     * Call {@link #executeOnly(jeeves.server.local.LocalServiceRequest)} and return the response as XML.
+     */
+    public Element execute(LocalServiceRequest request) throws Exception {
+        executeOnly(request);
+        try {
+            return request.getResult();
+        } catch (Exception e) {
+            Log.error(Log.XLINK_PROCESSOR, "Failed to parse result xml from service:" + request.getService() + "\n"
+                                           + request.getResultString());
+            throw new ServiceExecutionFailedException(request.getService(), e);
+        }
+    }
 
     /**
      * Get the XmlCacheManager instance.
