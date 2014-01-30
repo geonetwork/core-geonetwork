@@ -554,12 +554,7 @@ cat.app = function() {
                         this.remove(cmp);
                     }, this);
                     
-                    searchForm.find('id', 'E__groupPublished')[0].getStore().load({
-                        callback: function() {
-                            this.fireEvent('search');
-                        },
-                        scope: this
-                    });
+                    searchForm.find('id', 'E__groupPublished')[0].getStore().load();
                 }
             },
             items : formItems
