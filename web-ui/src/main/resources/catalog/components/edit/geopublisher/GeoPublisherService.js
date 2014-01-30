@@ -41,7 +41,7 @@
             });
           }
         },
-        
+
         unpublishNode: function(node, fileName) {
           if (node) {
             return gnHttp.callService('geoserverNodes', {
