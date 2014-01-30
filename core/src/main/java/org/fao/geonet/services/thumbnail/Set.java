@@ -286,7 +286,7 @@ public class Set extends NotInReadOnlyModeService {
 
 		DataManager dataMan = gc.getBean(DataManager.class);
 
-		Element result = dataMan.getThumbnails(id);
+		Element result = dataMan.getThumbnails(context, id);
 
 		if (result == null)
 			throw new IllegalArgumentException("Metadata not found --> " + id);

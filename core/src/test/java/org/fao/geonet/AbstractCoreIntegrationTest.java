@@ -21,6 +21,7 @@ import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.DirectoryFactory;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.LanguageDetector;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.SourceRepository;
@@ -141,6 +142,15 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
         _applicationContext.getBean(SearchManager.class).init(false, false, "", 100);
         _applicationContext.getBean(DataManager.class).init(createServiceContext(), false);
+        String siteUuid = _testTemporaryFolder.getRoot().getName();
+        _applicationContext.getBean(SettingManager.class).setSiteUuid(siteUuid);
+        final SourceRepository sourceRepository = _applicationContext.getBean(SourceRepository.class);
+        List<Source> sources = sourceRepository.findAll();
+        if (sources.isEmpty()) {
+            sources = new ArrayList<Source>(1);
+            sources.add(sourceRepository.save(new Source().setLocal(true).setName("Name").setUuid(siteUuid)));
+
+        }
 
     }
 
@@ -273,11 +283,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         String schema = dataManager.autodetectSchema(metadata);
         final SourceRepository sourceRepository = _applicationContext.getBean(SourceRepository.class);
         List<Source> sources = sourceRepository.findAll();
-        if (sources.isEmpty()) {
-            sources = new ArrayList<Source>(1);
-            sources.add(sourceRepository.save(new Source().setLocal(true).setName("Name").setUuid("sourceUUID")));
 
-        }
         Source source = sources.get(0);
         ArrayList<String> id = new ArrayList<String>(1);
         String createDate = new ISODate().getDateAndTime();

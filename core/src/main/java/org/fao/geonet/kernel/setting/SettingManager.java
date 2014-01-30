@@ -68,6 +68,7 @@ public class SettingManager {
     public static final String SYSTEM_REQUESTED_LANGUAGE_ONLY = "system/requestedLanguage/only";
     public static final String SYSTEM_AUTODETECT_ENABLE = "system/autodetect/enable";
     public static final String SYSTEM_LUCENE_PREFER_UI_LANGUAGE = "system/requestedLanguage/preferUiLanguage";
+    public static final String SYSTEM_XLINKRESOLVER_ENABLE = "system/xlinkResolver/enable";
 
 
     @Autowired
