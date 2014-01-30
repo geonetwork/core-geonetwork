@@ -30,6 +30,8 @@ import jeeves.constants.Jeeves;
 import org.apache.lucene.util.Version;
 import org.jdom.Namespace;
 
+import java.util.List;
+
 /**
  * TODO javadoc.
  */
@@ -407,8 +409,9 @@ public final class Geonet {
 		public static final String RESULT_TYPE = "resultType";
 
 		public static final String FAST = "fast";
-		public static final String BUILD_SUMMARY = "buildSummary";
-		public static final String SUMMARY_ONLY = "summaryOnly";
+        public static final String INDEX = "index";
+        public static final String BUILD_SUMMARY = "buildSummary";
+        public static final String SUMMARY_ONLY = "summaryOnly";
         public static final String REQUESTED_LANGUAGE = "requestedLanguage";
 
         /**
@@ -598,5 +601,6 @@ public final class Geonet {
 		public static final Namespace XSD = Namespace.getNamespace("xsd", XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		public static final Namespace XSI = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
         public static final Namespace OWS = Namespace.getNamespace("ows", "http://www.opengis.net/ows");
-	}
+        public static final Namespace OGC = Namespace.getNamespace("ogc", "http://www.opengis.net/ogc");
+    }
 }

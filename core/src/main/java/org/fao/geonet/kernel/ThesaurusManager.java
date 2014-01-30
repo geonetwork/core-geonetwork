@@ -262,7 +262,7 @@ public class ThesaurusManager implements ThesaurusFinder {
         Integer id = mdInfo.getId();
         final DataManager dataManager = context.getBean(DataManager.class);
         Element md = dataManager.getMetadata("" + id);
-        Processor.detachXLink(md);
+        Processor.detachXLink(md, context);
         final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
         Element env = Lib.prepareTransformEnv(mdInfo.getUuid(), mdInfo.getDataInfo().getChangeDate().getDateAndTime(),
                 "", siteURL, "");

@@ -403,7 +403,7 @@ public class Aligner extends BaseAligner
     private boolean foundDuplicateForResource(String uuid, Element response) {
         String schema = dataMan.autodetectSchema(response);
         
-        if(schema.startsWith("iso19139")) {
+        if(schema != null && schema.startsWith("iso19139")) {
             String resourceIdentifierXPath = "gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:identifier/*/gmd:code/gco:CharacterString";
             String resourceIdentifierLuceneIndexField = "identifier";
             String defaultLanguage = "eng";
@@ -440,7 +440,7 @@ public class Aligner extends BaseAligner
                         }
                     }
                 }
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 log.warning("      - Error when searching for resource duplicate " + uuid + ". Error is: " + e.getMessage());
                 e.printStackTrace();
             }

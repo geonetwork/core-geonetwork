@@ -78,13 +78,11 @@ import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Propagation;
@@ -397,7 +395,7 @@ public class DataManager {
                         sb.append(xlink.getValue()); sb.append(" ");
                     }
                     moreFields.add(SearchManager.makeField("_xlink", sb.toString(), true, true));
-                    Processor.detachXLink(md);
+                    Processor.detachXLink(md, servContext);
                 } else {
                     moreFields.add(SearchManager.makeField("_hasxlinks", "0", true, true));
                 }
@@ -1225,7 +1223,7 @@ public class DataManager {
      * @throws NoSchemaMatchesException
      * @return
      */
-    public @Nonnull String autodetectSchema(Element md) throws SchemaMatchConflictException, NoSchemaMatchesException {
+    public @CheckForNull String autodetectSchema(Element md) throws SchemaMatchConflictException, NoSchemaMatchesException {
         return autodetectSchema(md, schemaMan.getDefaultSchema());
     }
 
@@ -1390,6 +1388,7 @@ public class DataManager {
      * Inserts a metadata into the database, optionally indexing it, and optionally applying automatic changes to it (update-fixed-info).
      *
      *
+     *
      * @param context the context describing the user and service
      * @param schema XSD this metadata conforms to
      * @param metadataXml the metadata to store
@@ -1397,7 +1396,7 @@ public class DataManager {
      * @param owner user who owns this metadata
      * @param groupOwner group this metadata belongs to
      * @param source id of the origin of this metadata (harvesting source, etc.)
-     * @param isTemplate whether this metadata is a template
+     * @param metadataType whether this metadata is a template
      * @param docType ?!
      * @param category category of this metadata
      * @param createDate date of creation
@@ -1408,7 +1407,7 @@ public class DataManager {
      * @throws Exception hmm
      */
     public String insertMetadata(ServiceContext context, String schema, Element metadataXml, String uuid, int owner, String groupOwner, String source,
-                                 String isTemplate, String docType, String category, String createDate, String changeDate, boolean ufo, boolean index) throws Exception {
+                                 String metadataType, String docType, String category, String createDate, String changeDate, boolean ufo, boolean index) throws Exception {
 
         boolean notifyChange = true;
 
@@ -1416,8 +1415,8 @@ public class DataManager {
             source = settingMan.getSiteId();
         }
 
-        if(StringUtils.isBlank(isTemplate)) {
-            isTemplate = MetadataType.METADATA.codeString;
+        if(StringUtils.isBlank(metadataType)) {
+            metadataType = MetadataType.METADATA.codeString;
         }
         final Metadata newMetadata = new Metadata().setUuid(uuid);
         final ISODate isoChangeDate = changeDate != null ? new ISODate(changeDate) : new ISODate();
@@ -1428,7 +1427,7 @@ public class DataManager {
                 .setSchemaId(schema)
                 .setDoctype(docType)
                 .setRoot(metadataXml.getQualifiedName())
-                .setType(MetadataType.lookup(isTemplate));
+                .setType(MetadataType.lookup(metadataType));
         newMetadata.getSourceInfo()
                 .setOwner(owner)
                 .setSourceId(source);
@@ -1554,7 +1553,7 @@ public class DataManager {
                 if (keepXlinkAttributes) {
                     Processor.processXLink(metadataXml, srvContext);
                 } else {
-                    Processor.detachXLink(metadataXml);
+                    Processor.detachXLink(metadataXml, srvContext);
                 }
             }
         }
@@ -2020,8 +2019,8 @@ public class DataManager {
      * @return
      * @throws Exception
      */
-    public Element getThumbnails(String metadataId) throws Exception {
-        Element md = xmlSerializer.select(metadataId);
+    public Element getThumbnails(ServiceContext context, String metadataId) throws Exception {
+        Element md = xmlSerializer.select(context, metadataId);
 
         if (md == null)
             return null;
@@ -2206,7 +2205,7 @@ public class DataManager {
      */
     private void manageCommons(ServiceContext context, String id, Element env, String styleSheet) throws Exception {
         Lib.resource.checkEditPrivilege(context, id);
-        Element md = xmlSerializer.select(id);
+        Element md = xmlSerializer.select(context, id);
 
         if (md == null) return;
 

@@ -374,7 +374,7 @@ public class Info implements Service {
 			if (profile != null) {
                 spec = spec.and(UserGroupSpecs.hasProfile(profile));
             }
-            Set<Integer> ids = new HashSet<Integer>(userGroupRepository.findGroupIds(UserGroupSpecs.hasUserId(session.getUserIdAsInt())));
+            Set<Integer> ids = new HashSet<Integer>(userGroupRepository.findGroupIds(spec));
 
             // include system groups if requested (used in harvesters)
             if (includingSystemGroups) {

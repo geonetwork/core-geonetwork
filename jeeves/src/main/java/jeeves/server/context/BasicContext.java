@@ -32,6 +32,7 @@ import org.fao.geonet.NodeInfo;
 import org.fao.geonet.utils.Log;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
 import java.util.Collections;
 import java.util.Map;
@@ -114,7 +115,7 @@ public class BasicContext implements Logger {
     }
     //--------------------------------------------------------------------------
 
-    public final <T> T getBean(Class<T> beanType) {
+    public final @Nonnull <T> T getBean(Class<T> beanType) {
         return jeevesApplicationContext.getBean(beanType);
     }
 

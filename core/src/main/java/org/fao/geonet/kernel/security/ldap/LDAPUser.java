@@ -35,13 +35,14 @@ import com.google.common.collect.Multimap;
 public class LDAPUser implements UserDetails {
 	
     private static final long serialVersionUID = -879282571127799714L;
+    private final String _userName;
 
     private Multimap<String, Profile> _groupsAndProfile = HashMultimap.create();
 
 	private User _user;
 
 	public LDAPUser(String username) {
-		_user.setUsername(username);
+        this._userName = username;
 		// FIXME Should we here populate the LDAP user with LDAP attributes instead of in the GNLDAPUserDetailsMapper ?
 		// TODO : populate userId which should be in session
 	}
@@ -61,6 +62,7 @@ public class LDAPUser implements UserDetails {
     }
 	public void setUser(User user) {
         this._user = user;
+        user.setUsername(_userName);
     }
 
     @Override

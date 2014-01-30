@@ -28,12 +28,10 @@ import com.google.common.collect.Lists;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
-import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
@@ -44,6 +42,7 @@ import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.util.MailSender;
 import org.jdom.JDOMException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.io.IOException;
@@ -56,7 +55,6 @@ public class DefaultStatusActions implements StatusActions {
 
     private String host, port, username, password, from, fromDescr, replyTo, replyToDescr;
     private boolean useSSL;    protected ServiceContext context;
-    protected AccessManager am;
     protected String language;
     protected DataManager dm;
     protected String siteUrl;
@@ -87,7 +85,6 @@ public class DefaultStatusActions implements StatusActions {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager sm = gc.getBean(SettingManager.class);
-        am = gc.getBean(AccessManager.class);
 
         siteName = sm.getSiteName();
         host = sm.getValue("system/feedback/mailServer/host");
@@ -221,8 +218,8 @@ public class DefaultStatusActions implements StatusActions {
         List<User> users = Lists.transform(results, new Function<Pair<Integer, User>, User>() {
             @Nullable
             @Override
-            public User apply(@Nullable Pair<Integer, User> input) {
-                return input.two();
+            public User apply(@Nonnull Pair<Integer, User> input) {
+                    return input.two();
             }
         });
 

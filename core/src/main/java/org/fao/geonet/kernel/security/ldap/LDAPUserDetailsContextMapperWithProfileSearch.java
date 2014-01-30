@@ -101,7 +101,7 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
                     if (b) {
                         Profile p = Profile.findProfileIgnoreCase(m.group(1));
                         if (profileMapping != null) {
-                            Profile mapped = profileMapping.get(p);
+                            Profile mapped = profileMapping.get(p.name());
                             if (mapped != null) {
                                 p = mapped;
                             }
@@ -116,7 +116,7 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
                 }
                 
                 // TODO: This is broken.  
-                Profile highestUserProfile = ProfileManager.getHighestProfile(profileList.toArray(new Profile[0]));
+                Profile highestUserProfile = ProfileManager.getHighestProfile(profileList.toArray(new Profile[profileList.size()]));
                 if (highestUserProfile != null) {
                     if (Log.isDebugEnabled(Geonet.LDAP)) {
                         Log.debug(Geonet.LDAP, "  Highest user profile is "

@@ -25,12 +25,14 @@ package org.fao.geonet.kernel.mef;
 
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Constants;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.Log;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -111,6 +113,7 @@ class MEFExporter {
 				MEFLib.savePrivate(zos, priDir, null);
 			} catch (Exception e) {
 				// Current user could not download private data
+                Log.warning(Geonet.MEF, "Error encounteres while trying to import private resources of MEF file. MEF UUID: "+uuid, e);
 			}
 		}
 		// --- cleanup and exit

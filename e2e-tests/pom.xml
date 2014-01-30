@@ -301,6 +301,18 @@
                         // This provision makes it easier to tell when the failure is with Geonetwork start up or
                         // with e2e-tests or selenium configuration
                         System.setProperty("geonetwork.shutdown.on.startup.error", "true");
+
+                        // edit the configuration so that the h2 database is created in the workspace (so it is correctly cleaned up after runs)
+                        def overridesFile = new File(datadir, 'e2e-tests-overrides.xml')
+                        overridesFile.withWriter { writer ->
+                            def xml = new groovy.xml.MarkupBuilder(writer)
+                            xml.overrides {
+                                spring {
+                                    set (bean: "jdbcDataSource", property:"Url", value:"jdbc:h2:${datadir.path}/e2egeonetwork;LOCK_TIMEOUT=20000;DB_CLOSE_ON_EXIT=FALSE;MVCC=TRUE")
+                                }
+                            }
+                        }
+                        System.setProperty('geonetwork.jeeves.configuration.overrides.file', overridesFile.absolutePath)
                       ]]></source>
                                 </configuration>
                             </execution>
@@ -360,7 +372,6 @@
                             </webAppConfig>
                             <stopKey>GEONETWORK_E2E_TEST_STOP</stopKey>
                             <stopPort>${jetty.stop.port}</stopPort>
-                            <stopWait>false</stopWait>
                         </configuration>
                         <executions>
                             <execution>
