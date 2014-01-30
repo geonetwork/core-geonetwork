@@ -1,6 +1,5 @@
 package jeeves.server.overrides;
 
-import jeeves.config.springutil.JeevesApplicationContext;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -12,6 +11,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.*;
 import org.jdom.filter.Filter;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
@@ -135,8 +135,9 @@ public class ConfigurationOverrides {
 
 
     private static final String CONFIG_OVERRIDES_FILENAME = "config-overrides.xml";
+    private SpringPropertyOverrides springPropertyOverrides;
 
-	enum Updates {
+    enum Updates {
         REPLACEATT,
         REPLACEXML,
         ADDXML,
@@ -904,7 +905,7 @@ public class ConfigurationOverrides {
      * and the specifics for a particular platform can be configured using overrides
      * 
      * @param configFilePath The path to the files to be loaded and overriden.  IE /WEB-INF/server.prop
-     * @param contex the servlet context that is loaded (maybe null.  If null appPath is used to resolve configuration files like: /WEB-INF/configuration-overrides.xml
+     * @param context the servlet context that is loaded (maybe null.  If null appPath is used to resolve configuration files like: /WEB-INF/configuration-overrides.xml
      * @param appPath The path to the webapplication root.  If servlet is null (and therefore getResource cannot be used, this path is used to file files)
      * @param reader a buffered reader opened to the file to be loaded.
      * 
@@ -1012,31 +1013,48 @@ public class ConfigurationOverrides {
         
     }
 
+    public void postProcessSpringBeanFactory(ConfigurableListableBeanFactory beanFactory, ServletContext servletContext,
+                                             String appPath) throws JDOMException, IOException {
+
+        final SpringPropertyOverrides springPropertyOverrides = getSpringPropertyOverrides(servletContext, appPath);
+        if (springPropertyOverrides == null) return;
+        springPropertyOverrides.postProcessBeanFactory(beanFactory);
+    }
+
+    public void onSpringApplicationContextFinishedRefresh(ConfigurableListableBeanFactory beanFactory, ServletContext servletContext,
+                                             String appPath) throws JDOMException, IOException {
+
+        final SpringPropertyOverrides springPropertyOverrides = getSpringPropertyOverrides(servletContext, appPath);
+        if (springPropertyOverrides == null) return;
+        springPropertyOverrides.onFinishedRefresh(beanFactory);
+    }
+
     @SuppressWarnings("unchecked")
-    public void applyNonImportSpringOverides(JeevesApplicationContext jeevesApplicationContext, ServletContext servletContext,
-            String appPath) throws JDOMException, IOException {
+    private synchronized SpringPropertyOverrides getSpringPropertyOverrides(ServletContext servletContext, String appPath) throws JDOMException, IOException {
+        if (this.springPropertyOverrides == null) {
+            String overridesResource = lookupOverrideParameter(servletContext, appPath);
 
-        String overridesResource = lookupOverrideParameter(servletContext, appPath);
+            ResourceLoader loader = new ServletResourceLoader(servletContext, appPath);
 
-        ResourceLoader loader = new ServletResourceLoader(servletContext, appPath);
-        
-        Element overrides = loader.loadXmlResource(overridesResource);
-        if (overrides == null) {
-            return;
-        }
-        
-        Properties properties = loadProperties(overrides);
-        List<Element> updateEls = new ArrayList<Element>();
-        List<Element> spring = new ArrayList<Element>(overrides.getChildren("spring"));
-        for (Element el: spring) {
-            for (Element element : (List<Element>) el.getChildren()) {
-                if(!element.getName().equals("import")) {
-                    updateEls.add(element);
-                }
-                
+            Element overrides = loader.loadXmlResource(overridesResource);
+            if (overrides == null) {
+                return null;
             }
+
+            Properties properties = loadProperties(overrides);
+            List<Element> updateEls = new ArrayList<Element>();
+            List<Element> spring = new ArrayList<Element>(overrides.getChildren("spring"));
+            for (Element el : spring) {
+                for (Element element : (List<Element>) el.getChildren()) {
+                    if (!element.getName().equals("import")) {
+                        updateEls.add(element);
+                    }
+
+                }
+            }
+            this.springPropertyOverrides = new SpringPropertyOverrides(updateEls, properties);
         }
-        new SpringPropertyOverrides(updateEls, properties).applyOverrides(jeevesApplicationContext);
+        return springPropertyOverrides;
     }
 
 }

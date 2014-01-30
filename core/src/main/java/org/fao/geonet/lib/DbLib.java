@@ -220,26 +220,4 @@ public class DbLib {
             return Lib.text.load(servletContext, appPath, file, Constants.ENCODING);
 	}
 
-	private String getObjectName(String createStatem) {
-		StringTokenizer st = new StringTokenizer(createStatem, " ");
-		st.nextToken();
-		st.nextToken();
-
-		return st.nextToken();
-	}
-
-	// ---------------------------------------------------------------------------
-
-	private String getObjectType(String createStatem) {
-		StringTokenizer st = new StringTokenizer(createStatem, " ");
-		st.nextToken();
-
-		return st.nextToken();
-	}
-
-	static final class ObjectInfo {
-		public String name;
-		public String type;
-	}
-
 }

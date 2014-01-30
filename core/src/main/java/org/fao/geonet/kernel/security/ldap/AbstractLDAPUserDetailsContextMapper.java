@@ -83,8 +83,12 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
     public UserDetails mapUserFromContext(DirContextOperations userCtx,
             String username, Collection<? extends GrantedAuthority> authorities) {
 
-        Profile defaultProfile = (mapping.get("profile")[1] != null ? Profile.valueOf(mapping
-                .get("profile")[1]) : Profile.RegisteredUser);
+        Profile defaultProfile;
+        if (mapping.get("profile")[1] != null) {
+            defaultProfile = Profile.valueOf(mapping.get("profile")[1]);
+        } else {
+            defaultProfile = Profile.RegisteredUser;
+        }
         String defaultGroup = mapping.get("privilege")[1];
 
         Map<String, ArrayList<String>> userInfo = LDAPUtils

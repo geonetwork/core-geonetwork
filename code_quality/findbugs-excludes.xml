@@ -107,6 +107,31 @@
         <Method name="newLookup"/>
     </Match>
     <Match>
+        <Class name="org.fao.geonet.kernel.security.ldap.AbstractLDAPUserDetailsContextMapper" />
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+        <Method name="mapUserFromContext"/>
+    </Match>
+    <Match>
+        <Class name="org.fao.geonet.kernel.security.ldap.LDAPUserDetailsContextMapperWithProfileSearch" />
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+        <Method name="setProfilesAndPrivileges"/>
+    </Match>
+    <Match>
+        <Class name="org.fao.geonet.kernel.security.ldap.LDAPUserDetailsContextMapper" />
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+        <Method name="setProfilesAndPrivileges"/>
+    </Match>
+    <Match>
+        <Class name="org.fao.geonet.util.XslUtil" />
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" />
+        <Method name="twoCharLangCode"/>
+    </Match>
+    <Match>
+        <Class name="org.fao.geonet.kernel.security.ldap.LDAPUserDetailsContextMapperWithPattern" />
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+        <Method name="setProfilesAndPrivileges"/>
+    </Match>
+    <Match>
         <Bug pattern="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE" />
     </Match>
     <Match>

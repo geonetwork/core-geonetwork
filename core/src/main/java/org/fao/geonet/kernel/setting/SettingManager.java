@@ -24,10 +24,7 @@
 package org.fao.geonet.kernel.setting;
 
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
@@ -58,8 +55,20 @@ public class SettingManager {
 
     public static final String SYSTEM_SITE_SITE_ID_PATH = "system/site/siteId";
     public static final String SYSTEM_SITE_NAME_PATH = "system/site/name";
-    public static final String SYSTEM_LUCENE_IGNORECHARS = "system/lucene/ignorechars";
     public static final String CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS = "system/csw/transactionUpdateCreateXPath";
+
+    public static final String SYSTEM_PROXY_USE = "system/proxy/use";
+    public static final String SYSTEM_PROXY_HOST = "system/proxy/host";
+    public static final String SYSTEM_PROXY_PORT = "system/proxy/port";
+    public static final String SYSTEM_PROXY_USERNAME = "system/proxy/username";
+    public static final String SYSTEM_PROXY_PASSWORD = "system/proxy/password";
+
+    public static final String SYSTEM_LUCENE_IGNORECHARS = "system/requestedLanguage/ignorechars";
+    public static final String SYSTEM_REQUESTED_LANGUAGE_SORTED = "system/requestedLanguage/sorted";
+    public static final String SYSTEM_REQUESTED_LANGUAGE_ONLY = "system/requestedLanguage/only";
+    public static final String SYSTEM_AUTODETECT_ENABLE = "system/autodetect/enable";
+    public static final String SYSTEM_LUCENE_PREFER_UI_LANGUAGE = "system/requestedLanguage/preferUiLanguage";
+
 
     @Autowired
     private SettingRepository _repo;
@@ -98,11 +107,11 @@ public class SettingManager {
     private void buildXmlTree(Element env, Map<String, Element> pathElements, Setting setting) {
         String[] segments = setting.getName().split("/");
         Element parent = env;
-        String path = "";
+        StringBuilder path = new StringBuilder();
         for (int i = 0; i < segments.length; i++) {
             String segment = segments[i];
-            path = path + "/" + segment;
-            Element currentElement = pathElements.get(path);
+            path.append("/").append(segment);
+            Element currentElement = pathElements.get(path.toString());
             if (currentElement == null) {
                 currentElement = new Element(segment);
                 currentElement.setAttribute("name", path.substring(1));
@@ -113,7 +122,7 @@ public class SettingManager {
                     currentElement.setText(setting.getValue());
                 }
                 parent.addContent(currentElement);
-                pathElements.put(path, currentElement);
+                pathElements.put(path.toString(), currentElement);
             }
 
             parent = currentElement;
