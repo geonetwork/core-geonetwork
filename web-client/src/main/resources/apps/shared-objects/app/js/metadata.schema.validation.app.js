@@ -31,9 +31,9 @@ angular.module(
 		} ]);
 
 // Check language on url
-changePageLanguage = function(lang) {
-	window.location.search = '?lang=' + lang;
-};
+//changePageLanguage = function(lang) {
+//	window.location.search = '?lang=' + lang;
+//};
 
 var languageHolder = 'eng';
 var init = function() {
@@ -82,6 +82,24 @@ $(function() {
 			$("#group").show();
 		}
 	});
+	
+	$("select[name=schematron]").change(function() {
+		$("div.schematron_required").hide();
+		var checkbox = $("input", $("div.schematron_required"))[0];
+		
+		$.ajax({
+			url: 'metadata.schema.isMandatory',
+			data: {
+				schematron : $("select[name=schematron] option:selected")[0].value
+			}
+		}).success(function(data) {
+			angular.forEach(data.children, function(child) {
+				var c = child.children[0];
+				checkbox.checked = (c.innerText || c.textContent) == "t";
+			});
+			$("div.schematron_required").show();
+		});
+	 });
 });
 
 // Load javascript translations
@@ -89,6 +107,38 @@ $.ajax('../../srv/' + languageHolder + '/strings.js', {
 	async : false,
 	cache : true,
 	dataType : 'script'
+});
+
+
+var t_requiredSchematron = angular.module('required_schematron', []);
+
+t_requiredSchematron.controller('required_schematron',
+
+// Load existing schematron rules
+function($scope, $http) {
+
+	$scope.toggleRequired = function(a) {
+		if (confirm(confirmToggle) == true) {
+			$("div.schematron_required").hide();
+			var checkbox = $("input", $("div.schematron_required"))[0];
+
+			$http({
+				method : 'GET',
+				url : 'metadata.schema.isMandatory',
+				params : {
+					action : 'toggle',
+					schematron : $("select[name=schematron] option:selected")[0].value
+				}
+			}).success(function(data) {
+				angular.forEach($.parseXML(data).children, function(child) {
+					var c = child.children[0];
+					checkbox.checked = (c.innerText || c.textContent) == "t";
+				});
+				$("div.schematron_required").show();
+				$("#resultTable").scope().update($("#resultTable").scope(), $http);
+			});
+		}
+	};
 });
 
 var t_controller = angular.module('table_module', []);
@@ -126,10 +176,10 @@ function($scope, $http) {
 			$scope.data = data;
 
 			angular.forEach($scope.data, function(item) {
-				if (item.required) {
+				if (item.required && item.required == "true") {
 					item.required = "check";
 				} else {
-					item.required = "";
+					item.required = "unchecked";
 				}
 				if (item.type == 0) {
 					item.type = "group";
@@ -217,7 +267,7 @@ function TypeaheadCtrl($scope, $http, limitToFilter) {
 	};
 }
 
-var app = angular.module('metadataSchemaValidation', [ 'table_module',
+var app = angular.module('metadataSchemaValidation', [ 'table_module', 'required_schematron',
 		'ui.bootstrap' ]);
 
 app.controller('addNewEntry',

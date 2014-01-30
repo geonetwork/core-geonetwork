@@ -1435,7 +1435,7 @@ div#privileges {
 }
 
 div.metadataValidation form {
-	width: 35%;
+	width: 55%;
 	float: left;
 	display: block;
 }
@@ -1447,6 +1447,7 @@ div.metadataValidation form div {
 
 div.metadataValidation form input[type="submit"] {
 	float: right;
+	width: auto;
 }
 
 div.metadataValidation form div label {
@@ -1456,7 +1457,27 @@ div.metadataValidation form div label {
 
 div.metadataValidation form div select,div.metadataValidation form div input
 	{
-	width: 70%;
+	width: 50%;
+}
+
+div.metadataValidation form div.required input {
+	width: 15%;
+}
+
+div.metadataValidation form input[type="checkbox"] {
+  display:none;
+} 
+
+div.metadataValidation form input[type="checkbox"]:checked + span:before {
+  content: "\e067";
+  color: #005700;
+  padding: 4px;
+}
+
+div.metadataValidation form input[type="checkbox"] + span:before {
+  color: #DCE068;
+  content: "\e157";
+  padding: 4px;
 }
 
 div#content_container.angularapp {
@@ -1482,5 +1503,9 @@ div#content_container.angularapp {
 
 #resultTable span.glyphicon-check {
 	color: #005700;
+	padding: 4px;
+}
+#resultTable span.glyphicon-unchecked {
+	color: #DCE068;
 	padding: 4px;
 }

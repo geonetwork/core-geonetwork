@@ -845,16 +845,14 @@
 			<class name=".services.metadata.schema.Validation" />
 			<output sheet="metadata-schema-validation.xsl" />
 		</service>
+		
+		<service name="metadata.schema.isMandatory">
+			<class name=".services.metadata.schema.IsRequired" />
+		</service>
 
          <service name="metadata.validation.status">
            <class name=".services.metadata.GetValidationStatus"/>
        </service>
-    
-	   	<!-- Validation framework extended -->
-		<service name="metadata.schema.validation">
-			<class name=".services.metadata.schema.Validation" />
-			<output sheet="metadata-schema-validation.xsl" />
-		</service>
         
     </services>
 </geonet>

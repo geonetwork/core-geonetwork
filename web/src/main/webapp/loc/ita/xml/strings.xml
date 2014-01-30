@@ -35,6 +35,8 @@
 	<xpathrequired>Required</xpathrequired>
 	<xpathschematron>Schematron</xpathschematron>
 	<xpathconfirm>Are you sure you want to remove this criteria?</xpathconfirm>
+	<schematronRequiredConfirmToggle>Are you sure you want to toggle the mandatory property of this schematron rules?</schematronRequiredConfirmToggle>
+	<schematronMandatoryDes>Indicates if the schematron is mandatory or optional. Click to toggle.</schematronMandatoryDes>
 	
 
 	<local._none_.non_validated>geocat.ch Thesaurus (non confermato)</local._none_.non_validated>

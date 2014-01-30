@@ -105,6 +105,41 @@ public class SchemaDao {
 	}
 
 	/**
+	 * 
+	 * Returns if the schematron is mandatory
+	 * 
+	 * @param dbms
+	 * @param schematronId
+	 * @return
+	 * @throws SQLException
+	 */
+	public static Element isRequired(Dbms dbms, Integer schematronId)
+			throws SQLException {
+		@SuppressWarnings("unchecked")
+		final List<Element> schematrons = dbms.select(
+				"select distinct required from " + TABLE_SCHEMATRON + " where id=? limit 1", schematronId)
+				.getChildren();
+		
+		if(schematrons.isEmpty())
+			return null;
+	
+		return schematrons.get(0);
+	}	
+	
+	/**
+	 * Toggle the mandatory field of the schematron
+	 * @param dbms
+	 * @param schematronId
+	 * @return
+	 * @throws SQLException
+	 */
+	public static void toggleRequired(Dbms dbms, Integer schematronId)
+			throws SQLException {
+		dbms.execute(
+				"update " + TABLE_SCHEMATRON + " set required = not(required) where id=?", schematronId);
+	}
+
+	/**
 	 * Return the schematrons associated to a schema
 	 * @param dbms
 	 * @param schemaname

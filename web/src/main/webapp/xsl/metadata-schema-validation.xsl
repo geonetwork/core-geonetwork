@@ -65,6 +65,13 @@
 										</option>
 									</xsl:for-each>
 								</select>
+								<div ng-controller="required_schematron" class="schematron_required" style="display:none">
+									<input type="checkbox" id="schematron_required"></input>
+									<span class="glyphicon">
+											<xsl:attribute name="title"><xsl:value-of select="/root/gui/strings/schematronMandatoryDes" /></xsl:attribute>
+											<xsl:attribute name="ng-click">toggleRequired(this);</xsl:attribute>
+									</span>
+								</div>
 							</div>
 							<div>
 								<label>
@@ -105,7 +112,10 @@
 									typeahead-editable="false" typeahead-on-select="updateVal($item, $model, $label)"
 									typeahead="group.value as group.label for group in getGroups($viewValue) | filter:$viewValue | limitTo:8" />
 							</div>
-							<input type="submit" />
+							<div>					
+								<input type="submit"></input>
+								<span class="glyphicon"></span>
+							</div>
 						</form>
 					</div>
 					<br/>
@@ -160,6 +170,7 @@
 
 				<script type="text/javascript">
 					confirmDelete = '<xsl:value-of select="/root/gui/strings/xpathconfirm" />';
+					confirmToggle = '<xsl:value-of select="/root/gui/strings/schematronRequiredConfirmToggle" />';
 				</script>
 
 			</body>
