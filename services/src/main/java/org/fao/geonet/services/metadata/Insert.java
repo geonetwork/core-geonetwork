@@ -98,7 +98,7 @@ public class Insert extends NotInReadOnlyModeService {
 
         String schema = dataMan.autodetectSchema(xml);
         if (schema == null)
-        	throw new BadParameterEx("Can't detect schema for metadata automatically.", schema);
+        	throw new BadParameterEx("Can't detect schema for metadata automatically.", "schema is unknown");
 
 		if (validate) DataManager.validateMetadata(schema, xml, context);
 

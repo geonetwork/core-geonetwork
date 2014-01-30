@@ -552,7 +552,7 @@ INSERT INTO Operations (id, name) VALUES  (6,'featured');
 -- ======================================================================
 
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/site/name', 'My GeoNetwork catalogue', 0, 110);
-INSERT INTO Settings (name, value, datatype, position) VALUES ('system/site/siteId', 'Dummy', 0, 120);
+INSERT INTO Settings (name, value, datatype, position) VALUES ('system/site/siteId', '', 0, 120);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/site/organization', 'My organization', 0, 130);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/platform/version', '2.11.0', 0, 150);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/platform/subVersion', 'SNAPSHOT', 0, 160);

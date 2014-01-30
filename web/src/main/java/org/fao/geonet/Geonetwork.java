@@ -405,7 +405,7 @@ public class Geonetwork implements ApplicationHandler {
                         final String appPath = context.getAppPath();
                         final String filePath = pair.one();
                         final String filePrefix = pair.two();
-                        Log.warning(Geonet.DB, "Executing SQL from: "+filePath+" "+filePrefix);
+                        Log.warning(Geonet.DB, "Executing SQL from: " + filePath + " " + filePrefix);
                         dbLib.insertData(servletContext, context, appPath, filePath, filePrefix);
                     }
                 String siteUuid = UUID.randomUUID().toString();

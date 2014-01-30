@@ -22,7 +22,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class ConfigurationOveridesTest {
+public class ConfigurationOverridesTest {
 	private static final ClassLoader classLoader;
     private static final String appPath;
     private static final String falseAppPath;
@@ -30,7 +30,7 @@ public class ConfigurationOveridesTest {
     
     static {
         try {
-            classLoader = ConfigurationOveridesTest.class.getClassLoader();
+            classLoader = ConfigurationOverridesTest.class.getClassLoader();
             String base = URLDecoder.decode(classLoader.getResource("test-config.xml").getFile(), Constants.ENCODING);
             appPath = new File(new File(base).getParentFile(), "correct-webapp").getAbsolutePath();
             falseAppPath = new File(new File(base).getParentFile(), "false-webapp").getAbsolutePath();
@@ -113,7 +113,6 @@ public class ConfigurationOveridesTest {
     @Test //@Ignore
     public void updateSpringConfiguration() throws JDOMException, IOException {
         final ConfigurationOverrides configurationOverrides = new ConfigurationOverrides("/WEB-INF/test-spring-config-overrides.xml");
-        final String nodeId = "srv";
         JeevesApplicationContext applicationContext = new JeevesApplicationContext(configurationOverrides, null, "classpath:test-spring-config.xml"){
 
             @Override
@@ -132,14 +131,25 @@ public class ConfigurationOveridesTest {
     private void updateAndPerformSpringAssertions(JeevesApplicationContext applicationContext) {
         applicationContext.refresh();
 
-        ExampleBean testBean = applicationContext.getBean("testBean", ExampleBean.class); 
-        ExampleBean testBean2 = applicationContext.getBean("testBean2", ExampleBean.class); 
+        ExampleBean testBeanFull = applicationContext.getBean("testBeanFull", ExampleBean.class);
+        ExampleBean testBean = applicationContext.getBean("testBean", ExampleBean.class);
+        ExampleBean testBean2 = applicationContext.getBean("testBean2", ExampleBean.class);
         ExampleBean testBean3 = applicationContext.getBean("testBean3", ExampleBean.class);
         
+        assertNotNull(testBeanFull);
         assertNotNull(testBean);
         assertNotNull(testBean2);
         assertNotNull(testBean3);
-        
+
+        assertEquals("updatedBasicProp", testBeanFull.getBasicProp());
+        assertEquals("updatedBasicProp2", testBeanFull.getBasicProp2());
+        assertEquals(2, testBeanFull.getCollectionProp().size());
+        assertTrue(testBeanFull.getCollectionProp().contains("addedProperty"));
+        assertTrue(testBeanFull.getCollectionProp().contains("value1"));
+        assertEquals(2, testBeanFull.getCollectionRef().size());
+        assertTrue(testBeanFull.getCollectionRef().contains(testBean));
+        assertTrue(testBeanFull.getCollectionRef().contains(testBean2));
+
         assertEquals("overriddenProp", testBean.getBasicProp());
         assertEquals(testBean2, testBean.getSimpleRef());
         assertTrue("testbean should have a testbean added to one of its collections", testBean.getCollectionRef().contains(testBean3));

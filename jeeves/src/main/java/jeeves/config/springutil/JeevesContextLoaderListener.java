@@ -42,7 +42,7 @@ public class JeevesContextLoaderListener implements ServletContextListener {
 
         String parentConfigFile = "/WEB-INF/config-spring-geonetwork-parent.xml";
 
-        JeevesApplicationContext parentAppContext = new JeevesApplicationContext(overrides, null, parentConfigFile);
+        JeevesApplicationContext parentAppContext = new JeevesApplicationContext(null, null, parentConfigFile);
         parentAppContext.setServletContext(servletContext);
         parentAppContext.refresh();
 
