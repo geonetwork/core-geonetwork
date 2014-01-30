@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -32,6 +33,7 @@ import static org.junit.Assert.*;
  * Created by Jesse on 1/27/14.
  */
 public abstract class AbstractLanguageSearchOrderIntegrationTest extends AbstractCoreIntegrationTest {
+    public static List<String> METADATA_TO_IMPORT = new ArrayList<String>(10);
     @Autowired
     private SettingRepository _settingRepository;
 
@@ -43,77 +45,78 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
     protected String _abstractSearchTerm;
 
     @BeforeClass
-    public static void bareMetadataXml() throws IOException, JDOMException {
-        final URL url = AbstractLanguageSearchOrderIntegrationTest.class.getResource("templated-name-lang.iso19139.xml");
-        final String xmlString = IOUtils.toString(url,
-                "UTF-8");
+    public static synchronized void bareMetadataXml() throws IOException, JDOMException {
+        if (METADATA_TO_IMPORT.isEmpty()) {
+            final URL url = AbstractLanguageSearchOrderIntegrationTest.class.getResource("templated-name-lang.iso19139.xml");
+            final String xmlString = IOUtils.toString(url,
+                    "UTF-8");
 
-        SettingManager.METADATA_TO_IMPORT.add(loadMetadata("eng",
-                "<gmd:PT_FreeText>\n"
-                + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#DE\">zz</gmd:LocalisedCharacterString></gmd:textGroup>\n"
-                + "</gmd:PT_FreeText>", xmlString));
-        SettingManager.METADATA_TO_IMPORT.add(loadMetadata("ita",
-                "<gmd:PT_FreeText>\n"
-                + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#DE\">yy</gmd:LocalisedCharacterString></gmd:textGroup>\n"
-                + "</gmd:PT_FreeText>", xmlString));
+            METADATA_TO_IMPORT.add(loadMetadata("eng",
+                    "<gmd:PT_FreeText>\n"
+                    + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#DE\">zz</gmd:LocalisedCharacterString></gmd:textGroup>\n"
+                    + "</gmd:PT_FreeText>", xmlString));
+            METADATA_TO_IMPORT.add(loadMetadata("ita",
+                    "<gmd:PT_FreeText>\n"
+                    + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#DE\">yy</gmd:LocalisedCharacterString></gmd:textGroup>\n"
+                    + "</gmd:PT_FreeText>", xmlString));
 
-        SettingManager.METADATA_TO_IMPORT.add(loadMetadata("ita",
-                "<gmd:PT_FreeText>\n"
-                + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#DE\">xx</gmd:LocalisedCharacterString></gmd:textGroup>\n"
-                + "</gmd:PT_FreeText>", xmlString));
+            METADATA_TO_IMPORT.add(loadMetadata("ita",
+                    "<gmd:PT_FreeText>\n"
+                    + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#DE\">xx</gmd:LocalisedCharacterString></gmd:textGroup>\n"
+                    + "</gmd:PT_FreeText>", xmlString));
 
-        SettingManager.METADATA_TO_IMPORT.add(loadMetadata("eng",
-                "<gmd:PT_FreeText>\n"
-                + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#FR\">A ENG EN and FR is " +
-                "FR</gmd:LocalisedCharacterString></gmd:textGroup>\n"
-                + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#EN\">A ENG EN and FR is " +
-                "EN</gmd:LocalisedCharacterString></gmd:textGroup>\n"
-                + "</gmd:PT_FreeText>", xmlString));
+            METADATA_TO_IMPORT.add(loadMetadata("eng",
+                    "<gmd:PT_FreeText>\n"
+                    + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#FR\">A ENG EN and FR is " +
+                    "FR</gmd:LocalisedCharacterString></gmd:textGroup>\n"
+                    + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#EN\">A ENG EN and FR is " +
+                    "EN</gmd:LocalisedCharacterString></gmd:textGroup>\n"
+                    + "</gmd:PT_FreeText>", xmlString));
 
-        SettingManager.METADATA_TO_IMPORT.add(loadMetadata("eng",
-                "<gmd:PT_FreeText>\n"
-                + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#FR\">E2 ENG EN and FR is " +
-                "FR</gmd:LocalisedCharacterString></gmd:textGroup>\n"
-                + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#EN\">Z2 ENG EN and FR is " +
-                "EN</gmd:LocalisedCharacterString></gmd:textGroup>\n"
-                + "</gmd:PT_FreeText>", xmlString));
+            METADATA_TO_IMPORT.add(loadMetadata("eng",
+                    "<gmd:PT_FreeText>\n"
+                    + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#FR\">E2 ENG EN and FR is " +
+                    "FR</gmd:LocalisedCharacterString></gmd:textGroup>\n"
+                    + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#EN\">Z2 ENG EN and FR is " +
+                    "EN</gmd:LocalisedCharacterString></gmd:textGroup>\n"
+                    + "</gmd:PT_FreeText>", xmlString));
 
-        SettingManager.METADATA_TO_IMPORT.add(loadMetadata("eng",
-                "<gmd:PT_FreeText>\n"
-                + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#FR\">G eng is " +
-                "fr</gmd:LocalisedCharacterString></gmd:textGroup>\n"
-                + "</gmd:PT_FreeText>", xmlString));
+            METADATA_TO_IMPORT.add(loadMetadata("eng",
+                    "<gmd:PT_FreeText>\n"
+                    + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#FR\">G eng is " +
+                    "fr</gmd:LocalisedCharacterString></gmd:textGroup>\n"
+                    + "</gmd:PT_FreeText>", xmlString));
 
-        SettingManager.METADATA_TO_IMPORT.add(loadMetadata("eng",
-                "<gmd:PT_FreeText>\n"
-                + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#FR\">e eng en and fr is " +
-                "fr</gmd:LocalisedCharacterString></gmd:textGroup>\n"
-                + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#EN\">e eng en and fr is " +
-                "en</gmd:LocalisedCharacterString></gmd:textGroup>\n"
-                + "</gmd:PT_FreeText>", xmlString));
+            METADATA_TO_IMPORT.add(loadMetadata("eng",
+                    "<gmd:PT_FreeText>\n"
+                    + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#FR\">e eng en and fr is " +
+                    "fr</gmd:LocalisedCharacterString></gmd:textGroup>\n"
+                    + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#EN\">e eng en and fr is " +
+                    "en</gmd:LocalisedCharacterString></gmd:textGroup>\n"
+                    + "</gmd:PT_FreeText>", xmlString));
 
-        SettingManager.METADATA_TO_IMPORT.add(loadMetadata("fre",
-                "<gmd:PT_FreeText>\n"
-                + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#FR\">é fra is " +
-                "fr</gmd:LocalisedCharacterString></gmd:textGroup>\n"
-                + "</gmd:PT_FreeText>", xmlString));
+            METADATA_TO_IMPORT.add(loadMetadata("fre",
+                    "<gmd:PT_FreeText>\n"
+                    + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#FR\">é fra is " +
+                    "fr</gmd:LocalisedCharacterString></gmd:textGroup>\n"
+                    + "</gmd:PT_FreeText>", xmlString));
 
-        SettingManager.METADATA_TO_IMPORT.add(loadMetadata("fre",
-                "<gmd:PT_FreeText>\n"
-                + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#FR\">A FRA EN and FR is " +
-                "FR</gmd:LocalisedCharacterString></gmd:textGroup>\n"
-                + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#EN\">A FRA EN and FR is " +
-                "EN</gmd:LocalisedCharacterString></gmd:textGroup>\n"
-                + "</gmd:PT_FreeText>", xmlString));
+            METADATA_TO_IMPORT.add(loadMetadata("fre",
+                    "<gmd:PT_FreeText>\n"
+                    + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#FR\">A FRA EN and FR is " +
+                    "FR</gmd:LocalisedCharacterString></gmd:textGroup>\n"
+                    + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#EN\">A FRA EN and FR is " +
+                    "EN</gmd:LocalisedCharacterString></gmd:textGroup>\n"
+                    + "</gmd:PT_FreeText>", xmlString));
 
-        SettingManager.METADATA_TO_IMPORT.add(loadMetadata("fre",
-                "<gmd:PT_FreeText>\n"
-                + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#FR\">Z3 FRA EN and FR is " +
-                "FR</gmd:LocalisedCharacterString></gmd:textGroup>\n"
-                + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#EN\">E3 FRA EN and FR is " +
-                "EN</gmd:LocalisedCharacterString></gmd:textGroup>\n"
-                + "</gmd:PT_FreeText>", xmlString));
-
+            METADATA_TO_IMPORT.add(loadMetadata("fre",
+                    "<gmd:PT_FreeText>\n"
+                    + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#FR\">Z3 FRA EN and FR is " +
+                    "FR</gmd:LocalisedCharacterString></gmd:textGroup>\n"
+                    + "<gmd:textGroup><gmd:LocalisedCharacterString locale=\"#EN\">E3 FRA EN and FR is " +
+                    "EN</gmd:LocalisedCharacterString></gmd:textGroup>\n"
+                    + "</gmd:PT_FreeText>", xmlString));
+        }
     }
 
 
@@ -126,7 +129,7 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
         this._serviceContext = createServiceContext();
         loginAsAdmin(_serviceContext);
         _abstractSearchTerm = searchTerm;
-        for (String element : SettingManager.METADATA_TO_IMPORT) {
+        for (String element : METADATA_TO_IMPORT) {
             byte[] bytes = element.replace("{uuid}", "" + _abstractSearchTerm).getBytes("UTF-8");
             importMetadataXML(_serviceContext, "uuid:" + System.currentTimeMillis(), new ByteArrayInputStream(bytes),
                     MetadataType.METADATA, ReservedGroup.intranet.getId(), Params.GENERATE_UUID);

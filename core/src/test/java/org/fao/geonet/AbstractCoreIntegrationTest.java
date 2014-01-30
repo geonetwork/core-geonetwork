@@ -19,6 +19,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.index.DirectoryFactory;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.languages.LanguageDetector;
 import org.fao.geonet.repository.AbstractSpringDataTest;
@@ -76,11 +77,15 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     protected DataStore _datastore;
     @Autowired
     protected UserRepository _userRepo;
+    @Autowired
+    protected DirectoryFactory _directoryFactory;
 
     @Rule
     public TemporaryFolder _testTemporaryFolder = new TemporaryFolder();
     @Before
     public void configureAppContext() throws Exception {
+        _directoryFactory.resetIndex();
+
         System.setProperty(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD, Boolean.toString(true));
         // clear out datastore
         for (Name name : _datastore.getNames()) {
@@ -90,7 +95,6 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         final String webappDir = getWebappDir(getClass());
         LanguageDetector.init(webappDir + _applicationContext.getBean(Geonet.Config.LANGUAGE_PROFILES_DIR, String.class));
 
-        final File templateDataDir = new File(webappDir, "WEB-INF/data");
         final GeonetworkDataDirectory geonetworkDataDirectory = _applicationContext.getBean(GeonetworkDataDirectory.class);
 
         final ArrayList<Element> params = getServiceConfigParameterElements();

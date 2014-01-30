@@ -68,8 +68,6 @@ public class SettingManager {
     public static final String SYSTEM_REQUESTED_LANGUAGE_ONLY = "system/requestedLanguage/only";
     public static final String SYSTEM_AUTODETECT_ENABLE = "system/autodetect/enable";
     public static final String SYSTEM_LUCENE_PREFER_UI_LANGUAGE = "system/requestedLanguage/preferUiLanguage";
-    public static List<String> METADATA_TO_IMPORT = new ArrayList<String>(10);
-
 
 
     @Autowired
