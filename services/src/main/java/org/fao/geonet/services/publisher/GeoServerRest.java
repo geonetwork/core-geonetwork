@@ -228,7 +228,7 @@ public class GeoServerRest {
 	private void createCoverageForStore(String ws, String cs, String file,
 			String metadataUuid, String metadataTitle, String metadataAbstract)
 			throws IOException {
-		String xml = "<coverageStore><name>" + cs + "</name><title>"
+		String xml = "<coverage><name>" + cs + "</name><title>"
 			+ (metadataTitle != null ? metadataTitle : cs)
 			+ "</title><enabled>true</enabled>"
 			+ (file != null ? "<file>" + file + "</file>" : "")
@@ -261,10 +261,10 @@ public class GeoServerRest {
 					+ "</content>"
 				+ "</metadataLink>"
 			+ "</metadataLinks>"
-		+ "</coverageStore>";
+		+ "</coverage>";
 
 		int statusCoverage = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
-				+ "/coveragestores/" + cs + "/coverages/" + cs + ".xml", xml,
+				+ "/coveragestores/" + cs + "/coverages.xml", xml,
 				null, "text/xml", false);
 
 		checkResponseCode(statusCoverage);
