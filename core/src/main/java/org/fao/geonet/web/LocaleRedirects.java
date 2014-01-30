@@ -24,6 +24,11 @@ import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.fao.geonet.constants.Geonet.DEFAULT_LANGUAGE;
 
 /**
@@ -36,6 +41,21 @@ import static org.fao.geonet.constants.Geonet.DEFAULT_LANGUAGE;
 @Lazy(value = false)
 public class LocaleRedirects {
 
+
+    private static final String LANG_PARAMETER = "hl";
+    private static final String ACCEPT_LANGUAGE_HEADER = "Accept-Language";
+    private static final String REFERER_PARAMETER = "referer";
+    private static final Set<String> SPECIAL_HEADERS;
+
+    static {
+        HashSet<String> headers = new HashSet<String>();
+        headers.add(LANG_PARAMETER);
+        headers.add(REFERER_PARAMETER);
+        SPECIAL_HEADERS = Collections.unmodifiableSet(headers);
+    }
+
+    private static final String NODE_PARAMETER = "node";
+
     @Autowired
     private ApplicationContext _appContext;
 
@@ -46,30 +66,30 @@ public class LocaleRedirects {
     @RequestMapping(value = "/home")
     public ModelAndView home(final HttpServletRequest request,
                              @CookieValue(value = Jeeves.LANG_COOKIE, required = false) String langCookie,
-                             @RequestParam(value = "hl", required = false) String langParam,
-                             @RequestParam(value = "node", required = false) String node,
-                             @RequestHeader(value = "Accept-Language", required = false) final String langHeader) {
+                             @RequestParam(value = LANG_PARAMETER, required = false) String langParam,
+                             @RequestParam(value = NODE_PARAMETER, required = false) String node,
+                             @RequestHeader(value = ACCEPT_LANGUAGE_HEADER, required = false) final String langHeader) {
         String lang = lang(langParam, langCookie, langHeader);
         return redirectURL(createServiceUrl(request, _homeRedirectUrl, lang, node));
     }
 
     @RequestMapping(value = "/login.jsp")
     public ModelAndView login(final HttpServletRequest request,
-                              @RequestParam(value = "hl", required = false) String langParam,
-                              @RequestParam(value = "node", required = false) String node,
+                              @RequestParam(value = LANG_PARAMETER, required = false) String langParam,
+                              @RequestParam(value = NODE_PARAMETER, required = false) String node,
                               @CookieValue(value = Jeeves.LANG_COOKIE, required = false) String langCookie,
-                              @RequestHeader(value = "Accept-Language", required = false) final String langHeader) {
+                              @RequestHeader(value = ACCEPT_LANGUAGE_HEADER, required = false) final String langHeader) {
         String lang = lang(langParam, langCookie, langHeader);
         return redirectURL(createServiceUrl(request, "login.form", lang, node));
     }
 
     @RequestMapping(value = "/accessDenied.jsp")
     public ModelAndView accessDenied(final HttpServletRequest request,
-                                     @RequestParam(value = "hl", required = false) String langParam,
-                                     @RequestParam(value = "node", required = false) String node,
-                                     @CookieValue(value = Jeeves.LANG_COOKIE, required = false) String langCookie,
-                                     @RequestParam(value = "referer", required = false) String referer,
-                                     @RequestHeader(value = "Accept-Language", required = false) final String langHeader) {
+                                     @RequestParam(value = LANG_PARAMETER, required = false) String langParam,
+                                     @RequestParam(value = NODE_PARAMETER, required = false) String node,
+                                         @CookieValue(value = Jeeves.LANG_COOKIE, required = false) String langCookie,
+                                     @RequestParam(value = REFERER_PARAMETER, required = false) String referer,
+                                     @RequestHeader(value = ACCEPT_LANGUAGE_HEADER, required = false) final String langHeader) {
         String lang = lang(langParam, langCookie, langHeader);
         if (referer == null || referer.trim().isEmpty() ||
             referer.contains("accessDenied") || referer.contains("service-not-allowed")) {
@@ -82,8 +102,7 @@ public class LocaleRedirects {
 
         RedirectView rv = new RedirectView(url);
         rv.setStatusCode(HttpStatus.FOUND);
-        ModelAndView mv = new ModelAndView(rv);
-        return mv;
+        return new ModelAndView(rv);
     }
 
     private String createServiceUrl(HttpServletRequest request, String service, String lang, String node) {
@@ -91,8 +110,30 @@ public class LocaleRedirects {
         String currentNode = context.getBean(NodeInfo.class).getId();
         
         node = node == null ? currentNode : node;
-        
-        return request.getContextPath() + "/" + node + "/" + lang + "/" + service;
+
+        final Enumeration parameterNames = request.getParameterNames();
+        StringBuilder headers = new StringBuilder();
+        while (parameterNames.hasMoreElements()) {
+            String paramName = (String) parameterNames.nextElement();
+            if (!SPECIAL_HEADERS.contains(paramName)) {
+                for (String value : request.getParameterValues(paramName)) {
+                    if (headers.length() > 0) {
+                        headers.append('&');
+                    }
+                    headers.append(paramName);
+                    if (!value.isEmpty()){
+                        headers.append('=').append(value);
+                    }
+                }
+            }
+        }
+        final String queryString;
+        if (headers.length() == 0) {
+            queryString = "";
+        } else {
+            queryString = "?" + headers;
+        }
+        return request.getContextPath() + "/" + node + "/" + lang + "/" + service + queryString;
     }
 
     private String lang(String langParam, String langCookie, String langHeader) {
