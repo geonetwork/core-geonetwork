@@ -6,6 +6,7 @@
   xmlns:gmd="http://www.isotc211.org/2005/gmd"
   xmlns:gco="http://www.isotc211.org/2005/gco"
   xmlns:gmx="http://www.isotc211.org/2005/gmx"
+  xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
   extension-element-prefixes="saxon" exclude-result-prefixes="#all">
 
   <!-- The editor form.
@@ -80,31 +81,7 @@
         </xsl:call-template>
       </xsl:if>
       
-      <xsl:for-each select="$metadata/descendant::gmd:onLine[matches(
-        gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString,
-        $geopublishMatchingPattern)]">
-        
-        <xsl:variable name="protocol" select="gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString"/>
-        <xsl:variable name="fileName">
-          <xsl:choose>
-            <xsl:when test="matches($protocol, '^DB:.*')">
-              <xsl:value-of select="concat(gmd:CI_OnlineResource/gmd:linkage/gmd:URL, '#', 
-                gmd:CI_OnlineResource/gmd:name/gco:CharacterString)"/>
-            </xsl:when>
-            <xsl:when test="matches($protocol, '^FILE:.*')">
-              <xsl:value-of select="gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="gmd:CI_OnlineResource/gmd:name/gmx:MimeFileType"/>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:variable>
-        <div gn-geo-publisher=""
-          data-ref="{gn:element/@ref}"
-          data-ref-parent="{gn:element/@parent}"
-          data-file-name="{$fileName}"
-          data-lang="lang"></div>
-      </xsl:for-each>
+      <xsl:call-template name="geopublisher-button"/>
       
       <xsl:choose>
         <xsl:when test="$service != 'md.element.add' and $tabConfig/section">
@@ -123,6 +100,25 @@
       </xsl:choose>
     </form>
 
+  </xsl:template>
+
+
+  <!-- Check if current record has ressources which could be 
+  published in OGC services (eg. onLine resources in ISO19139)
+  and configure a gn-geo-publisher directive. -->
+  <xsl:template name="geopublisher-button">
+    
+    <xsl:variable name="geopublisherConfig">
+      <saxon:call-template name="{concat('get-', $schema, '-geopublisher-config')}"/>
+    </xsl:variable>
+    
+    <xsl:if test="$geopublisherConfig/config/*">
+      <div gn-geo-publisher=""
+        data-config="{java-xsl-util:xmlToJson(
+        saxon:serialize($geopublisherConfig, 'default-serialize-mode'))}"
+        data-lang="lang"></div>
+    </xsl:if>
+    
   </xsl:template>
 
 </xsl:stylesheet>

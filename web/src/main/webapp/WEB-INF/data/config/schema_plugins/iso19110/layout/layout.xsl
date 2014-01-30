@@ -212,4 +212,6 @@
   <xsl:template name="get-iso19110-other-languages"/>
 
   <xsl:template name="get-iso19110-other-languages-as-json"/>
+  
+  <xsl:template name="get-iso19110-geopublisher-config"/>
 </xsl:stylesheet>

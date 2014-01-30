@@ -77,8 +77,4 @@
     else $tabConfig/@mode = 'flat'"/>
   
   
-  <!-- TODO: retrieve from settings -->
-  <xsl:variable name="geopublishMatchingPattern"
-    select="'^WWW:DOWNLOAD.*|^FILE:GEO|FILE:RASTER|^DB:POSTGIS'"/>
-
 </xsl:stylesheet>

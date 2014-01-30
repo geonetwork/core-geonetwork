@@ -1,9 +1,13 @@
 <div class="gn-geopublisher-panel">
-  <button class="btn btn-warning" data-ng-click="showPanel()"
-    title="{{fileName}}">
-    <i class="fa fa-globe text-danger"></i>&nbsp;<span
-      data-translate="">geopublisher</span>
-  </button>
+  <div class="btn-group">
+    <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown">
+      <i class="fa fa-globe text-danger"></i>&nbsp;<span
+        data-translate="">geopublisher</span><span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li data-ng-repeat="r in resources"><a href="" data-ng-click="showPanel(r)">{{r.fileName}}</a></li>
+    </ul>
+  </div>
 
   <div class="panel panel-default" data-ng-hide="hidden">
     <div class="panel-heading">

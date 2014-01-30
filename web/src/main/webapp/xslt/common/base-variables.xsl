@@ -67,4 +67,7 @@
   
   <xsl:variable name="isJsEnabled" select="not(ends-with($service, '-nojs'))"/>
   
+  <!-- TODO: retrieve from settings -->
+  <xsl:variable name="geopublishMatchingPattern"
+    select="'^WWW:DOWNLOAD.*|^FILE:GEO|FILE:RASTER|^DB:POSTGIS'"/>
 </xsl:stylesheet>

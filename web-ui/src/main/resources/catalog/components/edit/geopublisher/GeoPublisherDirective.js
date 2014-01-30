@@ -20,26 +20,11 @@
             templateUrl: '../../catalog/components/edit/geopublisher/' +
                 'partials/geopublisher.html',
             scope: {
-              ref: '@',
-              refParent: '@',
-              fileName: '@'
+              config: '@'
+              // TODO: Add initial bbox
             },
             link: function(scope, element, attrs) {
-              scope.mapId = 'map-geopublisher-' +
-                  scope.ref;
-
-              // Build layer name based on file name
-              scope.layerName = scope.fileName
-                .replace(/.zip$|.tif$|.tiff$/, '');
-              scope.wmsLayerName = scope.layerName;
-              if (scope.layerName.match('^jdbc')) {
-                scope.wmsLayerName = scope.layerName.split('#')[1];
-              } else if (scope.layerName.match('^file')) {
-                scope.wmsLayerName = scope.layerName
-                  .replace(/.*\//, '')
-                  .replace(/.zip$|.tif$|.tiff$/, '');
-              }
-
+              scope.resources = angular.fromJson(scope.config);
               scope.hidden = true;
               scope.loaded = false;
               scope.gnCurrentEdit = gnCurrentEdit;
@@ -121,6 +106,7 @@
                * map.
                */
               var addLayerToMap = function(layer) {
+                // TODO: drop existing layer before adding new
                 map.addLayer(new ol.layer.Tile({
                   source: new ol.source.TileWMS({
                     url: gsNode.wmsUrl,
@@ -139,6 +125,7 @@
                */
               var readResponse = function(data) {
                 if (data['@status'] == '404') {
+                  // TODO: i18n
                   scope.statusCode = 'Dataset not found - 404';
 
                   if (scope.isPublished) {
@@ -212,11 +199,32 @@
                * If first show, load the map and the whole
                * directive.
                */
-              scope.showPanel = function() {
-                scope.hidden = !scope.hidden;
+              scope.showPanel = function(r) {
+                // Improve open/close TODO
+                if (r != null) {
+                  scope.hidden = false;
+                }
+                scope.mapId = 'map-geopublisher';
+                // FIXME: only one publisher in a page ?
+                scope.ref = r.ref;
+                scope.refParent = r.refParent;
+                scope.fileName = r.fileName;
+
                 if (!scope.loaded) {
                   init();
                   scope.loaded = true;
+                }
+
+                // Build layer name based on file name
+                scope.layerName = r.fileName
+                  .replace(/.zip$|.tif$|.tiff$/, '');
+                scope.wmsLayerName = scope.layerName;
+                if (scope.layerName.match('^jdbc')) {
+                  scope.wmsLayerName = scope.layerName.split('#')[1];
+                } else if (scope.layerName.match('^file')) {
+                  scope.wmsLayerName = scope.layerName
+                    .replace(/.*\//, '')
+                    .replace(/.zip$|.tif$|.tiff$/, '');
                 }
               };
             }

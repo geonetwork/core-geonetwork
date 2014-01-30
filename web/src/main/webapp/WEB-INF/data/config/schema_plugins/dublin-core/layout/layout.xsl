@@ -20,6 +20,7 @@
   <!-- Get the list of other languages -->
   <xsl:template name="get-dublin-core-other-languages"/>
 
+  <xsl:template name="get-dublin-core-geopublisher-config"/>
 
   <!-- Visit all tree -->
   <xsl:template mode="mode-dublin-core" match="dc:*|dct:*">
