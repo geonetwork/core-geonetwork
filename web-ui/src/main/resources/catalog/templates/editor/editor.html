@@ -11,6 +11,11 @@
   </div>
   <div class="row gn-editor-container">
     <div class="col-md-8">
+      
+      <div class="alert alert-danger" data-ng-if="unsupportedSchema" 
+        data-translate=""
+        data-translate-values="{title: '{{mdTitle}}', schema: '{{mdSchema}}'}">unsupportedSchemaAlert</div>
+      
       <div data-ng-include="editorFormUrl"
         data-onload="onFormLoad()"></div>
     </div>

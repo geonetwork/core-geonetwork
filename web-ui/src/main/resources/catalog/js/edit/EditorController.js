@@ -87,6 +87,7 @@
       $scope.metadataFound = true;
       $scope.gnConfig = gnConfig;
       $scope.gnSchemaConfig = {};
+      $scope.unsupportedSchema = false;
 
       /**
        * Animation duration for slide up/down
@@ -109,11 +110,27 @@
             $scope.metadataFound = data.count !== '0';
             $scope.metadataNotFoundId = $routeParams.id;
 
-            var mdSchema = data.metadata[0]['geonet:info'].schema;
+            $scope.mdSchema = data.metadata[0]['geonet:info'].schema;
+            $scope.mdTitle = data.metadata[0].title ||
+                data.metadata[0].defaultTitle;
 
+            if ($scope.mdSchema === 'fgdc-std' ||
+                $scope.mdSchema === 'iso19115') {
+              $scope.unsupportedSchema = true;
+              return;
+            }
+
+            // Set default schema configuration in case none is defined
+            var config =
+                gnConfig['metadata.editor.schemaConfig'][$scope.mdSchema];
+            if (!config) {
+              config = {
+                displayToolTip: false
+              };
+            }
             // Get the schema configuration for the current record
-            gnCurrentEdit.schemaConfig = $scope.gnSchemaConfig =
-                gnConfig['metadata.editor.schemaConfig'][mdSchema];
+            gnCurrentEdit.schemaConfig = $scope.gnSchemaConfig = config;
+
 
 
             var defaultTab = 'default';
