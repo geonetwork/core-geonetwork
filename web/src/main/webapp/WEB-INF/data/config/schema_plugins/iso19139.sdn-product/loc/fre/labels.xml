@@ -5,36 +5,29 @@
   xmlns:gml="http://www.opengis.net/gml" xmlns:gts="http://www.isotc211.org/2005/gts"
   xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:xyz="http://my/schema/target/namespace">
   <!-- Overrides iso19139 labels -->
- 
-	<element name="gmd:fileIdentifier">
-		<label>Internal permanent shortname</label>
-		<description></description>
-		<help />
-		<condition />
-	</element>
+
+  <element name="gmd:fileIdentifier">
+    <label>Nom court interne permanent</label>
+    <description></description>
+    <help/>
+    <condition/>
+  </element>
 
 	<element name="gmd:code" context="gmd:MD_Identifier">
-		<label>Internal permanent shortname</label>
-		<description></description>
-		<help />
-		<condition />
-	</element>
-  
-  	<element name="gmd:alternateTitle">
-		<label>External shortname</label>
+		<label>Nom court interne permanent</label>
 		<description></description>
 		<help />
 		<condition />
 	</element>
 
-  	<element name="gmd:abstract">
-		<label>Overview</label>
+	<element name="gmd:alternateTitle">
+		<label>Nom court externe</label>
 		<description></description>
 		<help />
 		<condition />
 	</element>
 
-  	<element name="gmd:edition" context="gmd:CI_Citation">
+	<element name="gmd:edition" context="gmd:CI_Citation">
 		<label>Version</label>
 		<description></description>
 		<help />
@@ -42,10 +35,10 @@
 	</element>
 
 	<element name="gmd:editionDate">
-		<label>Update date</label>
+		<label>Date de mise à jour</label>
 		<description></description>
 		<help />
 		<condition />
 	</element>
-	 
+	
 </labels>

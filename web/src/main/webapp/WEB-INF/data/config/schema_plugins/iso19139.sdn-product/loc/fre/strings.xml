@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <sdnProductTab>SeaDatanet Product</sdnProductTab>
+    <productIdentification>Identification du produit</productIdentification>
+    <descriptiveKeywords>Mots-clés descriptifs</descriptiveKeywords>
+    <spatioTemporalExtent>Étendue spatio-temporelle</spatioTemporalExtent>
+    <geographicalExtent>Étendue géographique</geographicalExtent>
+    <pointOfContact>Organisations responsables de la gestion et du traitement, point de contact</pointOfContact>
+    <featureType>Type d'élément géographique</featureType>
+    <oceanDiscoveryParameters>Ocean Discovery Parameters</oceanDiscoveryParameters>
+    <seaAreas>Zones de mer</seaAreas>
+    <verticalExtent>Étendue verticale</verticalExtent>
+    <nbVerticalLevels>Nombre de niveaux verticaux</nbVerticalLevels>
+    <temporalExtent>Étendue temporelle</temporalExtent>
+    <startDate>Date de début</startDate>
+    <productionCentre>Centre de production</productionCentre>
+    <productManager>Gestionnaire du produit</productManager>
+</strings>

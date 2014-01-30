@@ -57,25 +57,19 @@
     </xsl:choose>
   </xsl:template>
 
-
-
-
-
   <!-- Tab configuration -->
   <xsl:template name="iso19139.sdn-productCompleteTab">
     <xsl:param name="tabLink"/>
     <xsl:param name="schema"/>
 
     <!-- Add custom tab if a custom view is needed -->
-    <!--<xsl:call-template name="mainTab">
-      <xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/sdn-productTab"/>
-      <xsl:with-param name="default">sdn-productTabDiscovery</xsl:with-param>
+    <xsl:call-template name="mainTab">
+       <xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/sdnProductTab"/>
+      <xsl:with-param name="default">sdnProduct</xsl:with-param>
       <xsl:with-param name="menu">
-        <item label="sdn-productTabDiscovery">sdn-productTabDiscovery</item>
-        ...
+        <item label="sdnProductTab">sdnProduct</item>
       </xsl:with-param>
     </xsl:call-template>
-    -->
 
 
     <!-- Preserve iso19139 complete tabs -->
@@ -84,16 +78,6 @@
       <xsl:with-param name="schema" select="$schema"/>
     </xsl:call-template>
 
-	<xsl:call-template name="mainTab">
-		<xsl:with-param name="title"
-			select="/root/gui/schemas/*[name()=$schema]/strings/tab" />
-		<xsl:with-param name="default">
-			sdn-product
-		</xsl:with-param>
-		<xsl:with-param name="menu">
-			<item label="sdnProductTab">sdn-product</item>
-		</xsl:with-param>
-	</xsl:call-template>
   </xsl:template>
 
 
@@ -261,15 +245,15 @@
           <xsl:with-param name="dataset" select="$dataset"/>
         </xsl:call-template>
       </xsl:when>
-      <!--
-        Register your custom tabs here and create the related template
-        <xsl:when test="$currTab='sdn-productTabDiscovery'">
-        <xsl:call-template name="sdn-productTabDiscovery">
+
+        <xsl:when test="$currTab='sdnProduct'">
+        <xsl:call-template name="sdnProduct">
           <xsl:with-param name="schema" select="$schema"/>
           <xsl:with-param name="edit" select="$edit"/>
           <xsl:with-param name="dataset" select="$dataset"/>
         </xsl:call-template>
-      </xsl:when>-->
+      </xsl:when>
+ 
       <!-- default -->
       <xsl:otherwise>
         <xsl:call-template name="iso19139Simple">
@@ -282,15 +266,313 @@
     </xsl:choose>
   </xsl:template>
 
+<!-- SeaDatanet custom tab -->
+	<xsl:template name="sdnProduct">
+		<xsl:param name="schema" />
+		<xsl:param name="edit" />
+		<xsl:param name="dataset" />
+		<xsl:param name="core" />
 
-  <!-- Custom tab -->
-  <!--<xsl:template name="sdn-productTabDiscovery">
-    <xsl:param name="schema"/>
-    <xsl:param name="edit"/>
-    <xsl:param name="dataset"/>
-    <xsl:param name="core"/>
-    
-    <!-\- Do something ... -\->
+		<!-- Product identification -->
+		<xsl:call-template name="complexElementGuiWrapper">
+			<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/productIdentification" />
+			<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/metadataInfoTitle)" />
+
+			<xsl:with-param name="content">
+
+				<!-- title -->
+				<xsl:apply-templates mode="elementEP"
+					select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title">
+					<xsl:with-param name="schema" select="$schema" />
+					<xsl:with-param name="edit" select="$edit" />
+				</xsl:apply-templates>
+
+				<!-- Internal permanent shortname  -->
+				<xsl:apply-templates mode="elementEP"
+					select="gmd:fileIdentifier|gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code">
+					<xsl:with-param name="schema" select="$schema" />
+					<xsl:with-param name="edit" select="false" />
+				</xsl:apply-templates>
+
+				<!-- External shortname -->
+				<xsl:apply-templates mode="elementEP"
+					select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle">
+					<xsl:with-param name="schema" select="$schema" />
+					<xsl:with-param name="edit" select="$edit" />
+				</xsl:apply-templates>
+
+				<!-- Overview -->
+				<xsl:apply-templates mode="elementEP"
+					select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract">
+					<xsl:with-param name="schema" select="$schema" />
+					<xsl:with-param name="edit" select="$edit" />
+				</xsl:apply-templates>
+				
+				<!-- creation date -->
+				<xsl:apply-templates mode="elementEP" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/
+                                                                 gmd:CI_Citation/gmd:date/gmd:CI_Date[gmd:dateType/gmd:CI_DateTypeCode/@codeListValue='creation']">
+                    <xsl:with-param name="schema" select="$schema"/>
+                    <xsl:with-param name="edit"   select="$edit"/>
+                </xsl:apply-templates>
+                
+				<!-- update date -->
+				<xsl:apply-templates mode="elementEP"
+					select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/
+ 					gmd:CI_Citation/gmd:editionDate">
+					<xsl:with-param name="schema" select="$schema" />
+					<xsl:with-param name="edit" select="$edit" />
+				</xsl:apply-templates>
+				
+				<!-- version -->
+				<xsl:apply-templates mode="elementEP"
+					select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:edition">
+					<xsl:with-param name="schema" select="$schema" />
+					<xsl:with-param name="edit" select="$edit" />
+				</xsl:apply-templates>
+				
+			</xsl:with-param>
+		</xsl:call-template>
+		
+		<!-- Descriptive keywords -->
+		<xsl:call-template name="complexElementGuiWrapper">
+			<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/descriptiveKeywords" />
+			<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/descriptiveKeywords)" />
+
+			<xsl:with-param name="content">		
+
+			<!-- Feature type -->
+			
+				<xsl:for-each select="gmd:contentInfo/gmd:MD_FeatureCatalogueDescription[gmd:featureTypes/gco:LocalName]">
+					<xsl:apply-templates mode="simpleElement" select=".">
+						<xsl:with-param name="schema"  select="$schema"/>
+						<xsl:with-param name="edit"   select="$edit"/>
+						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/featureType"/>
+						<xsl:with-param name="text">
+							<xsl:call-template name="snippet-editor">
+								<xsl:with-param name="elementRef" select="../geonet:element/@ref"/>
+								<xsl:with-param name="widgetMode" select="'multiplelist'"/>
+								<xsl:with-param name="thesaurusId" select="'local.feature-type.seadatanet.feature-type'"/>
+								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join(gmd:featureTypes/gco:LocalName/@codeSpace, '!,!'), '''', '\\'''), '!', '''')"/>
+								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-feature-type'''"/>
+								<xsl:with-param name="transformation" select="'to-iso19139.myocean-feature-type'"/>
+								<xsl:with-param name="identificationMode" select="'uri'"/>
+							</xsl:call-template>
+						</xsl:with-param>
+					</xsl:apply-templates>
+				</xsl:for-each>
+
+			<!-- ocean discovery parameters -->
+			
+				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords
+					[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='parameter']/gmd:MD_Keywords">
+					<xsl:apply-templates mode="simpleElement" select=".">
+						<xsl:with-param name="schema"  select="$schema"/>
+						<xsl:with-param name="edit"   select="$edit"/>
+						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/oceanDiscoveryParameters"/>
+						<xsl:with-param name="text">
+							<xsl:call-template name="snippet-editor">
+								<xsl:with-param name="elementRef" select="../geonet:element/@ref"/>
+								<xsl:with-param name="widgetMode" select="'multiplelist'"/>
+								<xsl:with-param name="thesaurusId" select="'local.parameter.seadatanet-parameter'"/>
+								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join(gmd:featureTypes/gco:LocalName/@codeSpace, '!,!'), '''', '\\'''), '!', '''')"/>
+								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-feature-type'''"/>
+								<xsl:with-param name="transformation" select="'to-iso19139.myocean-feature-type'"/>
+								<xsl:with-param name="identificationMode" select="'uri'"/>
+							</xsl:call-template>
+						</xsl:with-param>
+					</xsl:apply-templates>
+				</xsl:for-each>
+
+
+				<!-- sea areas -->
+				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords
+					[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='areaOfBenefit']/gmd:MD_Keywords">
+					<xsl:apply-templates mode="simpleElement" select=".">
+						<xsl:with-param name="schema"  select="$schema"/>
+						<xsl:with-param name="edit"   select="$edit"/>
+						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/seaAreas"/>
+						<xsl:with-param name="text">
+							<xsl:call-template name="snippet-editor">
+								<xsl:with-param name="elementRef" select="../geonet:element/@ref"/>
+								<xsl:with-param name="widgetMode" select="'multiplelist'"/>
+								<xsl:with-param name="thesaurusId" select="'local.reference-geographical-area.seadatanet.reference-geographical-area'"/>
+								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join(gmd:featureTypes/gco:LocalName/@codeSpace, '!,!'), '''', '\\'''), '!', '''')"/>
+								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-feature-type'''"/>
+								<xsl:with-param name="transformation" select="'to-iso19139.myocean-feature-type'"/>
+								<xsl:with-param name="identificationMode" select="'uri'"/>
+							</xsl:call-template>
+						</xsl:with-param>
+					</xsl:apply-templates>
+				</xsl:for-each>
+
+			</xsl:with-param>
+			
+		</xsl:call-template>
+
+		<!-- Spatio-temporal extent -->
+		<xsl:call-template name="complexElementGuiWrapper">
+			<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/spatioTemporalExtent" />
+			<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/spatioTemporalExtent)" />
+
+			<xsl:with-param name="content">		
+
+					<!-- geographical extent -->
+					<xsl:call-template name="complexElementGuiWrapper">
+						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/geographicalExtent" />
+						<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/geographicalExtent)" />
+						<xsl:with-param name="content">
+							<!-- geographic bounding box -->
+							<xsl:apply-templates mode="iso19139"
+								select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/
+												gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
+								<xsl:with-param name="schema" select="$schema" />
+								<xsl:with-param name="edit" select="$edit" />
+							</xsl:apply-templates>
+							<!-- spatial resolution -->
+							<xsl:apply-templates mode="iso19139"
+								select="gmd:identificationInfo/gmd:MD_DataIdentification/
+																gmd:spatialResolution/gmd:MD_Resolution/gmd:distance">
+								<xsl:with-param name="schema" select="$schema" />
+								<xsl:with-param name="edit" select="$edit" />
+							</xsl:apply-templates>		
+							<!-- Coordinate reference system -->
+							<xsl:apply-templates mode="iso19139"
+								select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/
+																gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code">
+								<xsl:with-param name="schema" select="$schema" />
+								<xsl:with-param name="edit" select="$edit" />
+							</xsl:apply-templates>
+						</xsl:with-param>
+					</xsl:call-template>
+									
+					<!-- vertical extent -->
+					<xsl:call-template name="complexElementGuiWrapper">
+						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/verticalExtent" />
+						<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/verticalExtent)" />
+						<xsl:with-param name="content">
+							<xsl:apply-templates mode="iso19139" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/
+								gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:minimumValue|gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/
+								gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent/gmd:maximumValue">
+								<xsl:with-param name="schema" select="$schema"/>
+								<xsl:with-param name="edit"   select="$edit"/>
+							</xsl:apply-templates>
+							<!-- Number of vertical levels -->
+							<xsl:for-each select="gmd:contentInfo/gmd:MD_CoverageDescription/gmd:dimension/
+								gmd:MD_RangeDimension/gmd:descriptor[not(contains(., 'temporal'))]">
+								<xsl:apply-templates mode="simpleElement" select=".">
+									<xsl:with-param name="schema"  select="$schema"/>
+									<xsl:with-param name="edit"   select="$edit"/>
+									<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/nbVerticalLevels"/>
+									<xsl:with-param name="text">
+										<xsl:variable name="vnl_flag">vertical level number: </xsl:variable>
+										<xsl:variable name="vnl" select="substring-after(gco:CharacterString, $vnl_flag)"/>
+										<xsl:variable name="id" select="concat('_', gco:CharacterString/geonet:element/@ref)"/>
+										<input type="hidden" id="{$id}"	name="{$id}" value="{gco:CharacterString}"/>
+									    <input type="number" class="md"	onkeyup="validateNumber(this,true,true);"
+									      onchange="validateNumber(this,true,true); document.getElementById('{$id}').value = '{$vnl_flag}' + this.value;"
+										  value="{$vnl}" size="30"/>
+								   </xsl:with-param>
+							    </xsl:apply-templates>
+						    </xsl:for-each>	
+						</xsl:with-param>
+					</xsl:call-template>
+					
+					
+					<!-- temporal extent -->
+					<xsl:call-template name="complexElementGuiWrapper">
+						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/temporalExtent" />
+						<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/temporalExtent)" />
+						<xsl:with-param name="content">
+							<xsl:apply-templates mode="iso19139" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/
+								gmd:EX_Extent/gmd:temporalElement/
+								gmd:EX_TemporalExtent/gmd:extent//*[gml:beginPosition]">
+								<xsl:with-param name="schema" select="$schema"/>
+								<xsl:with-param name="edit"   select="$edit"/>
+								<xsl:with-param name="title"  select="/root/gui/schemas/*[name()=$schema]/strings/startDate"/>
+							</xsl:apply-templates>
+						</xsl:with-param>
+					</xsl:call-template>
+
+			</xsl:with-param>
+			
+		</xsl:call-template>
+		
+		<!-- Organization responsible for management ... -->
+		<xsl:call-template name="complexElementGuiWrapper">
+			<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/pointOfContact" />
+			<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/pointOfContact)" />
+
+			<xsl:with-param name="content">		
+
+			<!-- production center -->
+			<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
+					gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']">
+					
+					<xsl:variable name="id" select="concat('seadatanet-product-', generate-id(.))"/>
+					
+					<xsl:call-template name="complexElementGuiWrapper">
+					<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/productionCentre"/>
+					<xsl:with-param name="id" select="$id"/>
+						<xsl:with-param name="content">
+							<span class="buttons">
+								<a class="small del" href="javascript:void(0);" 
+									onclick="doRemoveElementActionSimple('metadata.elem.delete.new', {geonet:element/@ref}, {../geonet:element/@ref}, '{$id}');"><span>  Remove</span></a>
+							</span>
+							<!-- Org name -->							
+							<xsl:apply-templates mode="iso19139" select="./gmd:CI_ResponsibleParty/gmd:organisationName">
+								<xsl:with-param name="schema" select="$schema"/>
+								<xsl:with-param name="edit"   select="$edit"/>
+							</xsl:apply-templates>
+							<!-- Indiv. name -->
+<!-- 							<xsl:apply-templates mode="iso19139" select="./gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress"> -->
+<!-- 								<xsl:with-param name="schema" select="$schema"/> -->
+<!-- 								<xsl:with-param name="edit"   select="$edit"/> -->
+<!-- 							</xsl:apply-templates> -->
+							<!-- Electronic mail address -->
+<!-- 							<xsl:apply-templates mode="iso19139" select="./gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress"> -->
+<!-- 								<xsl:with-param name="schema" select="$schema"/> -->
+<!-- 								<xsl:with-param name="edit"   select="$edit"/> -->
+<!-- 							</xsl:apply-templates> -->
+						</xsl:with-param>
+				</xsl:call-template>
+			</xsl:for-each>
+
+			<!-- product manager -->
+			<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
+					gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='originator']">
+					
+					<xsl:variable name="id" select="concat('seadatanet-product-', generate-id(.))"/>
+					
+					<xsl:call-template name="complexElementGuiWrapper">
+					<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/productManager"/>
+					<xsl:with-param name="id" select="$id"/>
+						<xsl:with-param name="content">
+							<span class="buttons">
+								<a class="small del" href="javascript:void(0);" 
+									onclick="doRemoveElementActionSimple('metadata.elem.delete.new', {geonet:element/@ref}, {../geonet:element/@ref}, '{$id}');"><span>  Remove</span></a>
+							</span>
+							<!-- Org name -->							
+							<xsl:apply-templates mode="iso19139" select="./gmd:CI_ResponsibleParty/gmd:organisationName">
+								<xsl:with-param name="schema" select="$schema"/>
+								<xsl:with-param name="edit"   select="$edit"/>
+							</xsl:apply-templates>
+							<!-- Indiv. name -->
+<!-- 							<xsl:apply-templates mode="iso19139" select="./gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress"> -->
+<!-- 								<xsl:with-param name="schema" select="$schema"/> -->
+<!-- 								<xsl:with-param name="edit"   select="$edit"/> -->
+<!-- 							</xsl:apply-templates> -->
+							<!-- Electronic mail address -->
+<!-- 							<xsl:apply-templates mode="iso19139" select="./gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress"> -->
+<!-- 								<xsl:with-param name="schema" select="$schema"/> -->
+<!-- 								<xsl:with-param name="edit"   select="$edit"/> -->
+<!-- 							</xsl:apply-templates> -->
+						</xsl:with-param>
+				</xsl:call-template>
+			</xsl:for-each>
+		</xsl:with-param>
+	</xsl:call-template>	
   </xsl:template>
--->
+
+
+
 </xsl:stylesheet>
