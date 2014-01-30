@@ -1779,6 +1779,9 @@ public class DataManager {
             md = updateFixedInfo(schema, id, null, md, parentUuid, (updateDateStamp ? DataManager.UpdateDatestamp.yes : DataManager.UpdateDatestamp.no), dbms, context);
         }
 
+        //--- force namespace prefix for iso19139 metadata
+        setNamespacePrefixUsingSchemas(schema, md);
+
         String uuid = null;
         if (schemaMan.getSchema(schema).isReadwriteUUID()) {
             uuid = extractUUID(schema, md);
