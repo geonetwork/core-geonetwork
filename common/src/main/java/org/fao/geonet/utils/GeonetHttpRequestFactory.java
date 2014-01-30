@@ -51,6 +51,13 @@ public class GeonetHttpRequestFactory {
         this.numberOfConcurrentRequests = numberOfConcurrentRequests;
     }
 
+    public synchronized int getNumberOfConcurrentRequests() {
+        return this.numberOfConcurrentRequests;
+    }
+    public synchronized HttpClientConnectionManager getNonShutdownableConnectionManager() {
+        return this.nonShutdownableConnectionManager;
+    }
+
     /**
      * Create a default XmlRequest.
      *
@@ -147,7 +154,7 @@ public class GeonetHttpRequestFactory {
         synchronized (this) {
             if (connectionManager == null) {
                 connectionManager = new PoolingHttpClientConnectionManager();
-                connectionManager.setMaxTotal(this.numberOfConcurrentRequests);
+                connectionManager.setMaxTotal(this.getNumberOfConcurrentRequests());
                 nonShutdownableConnectionManager = new HttpClientConnectionManager() {
                     public void closeExpiredConnections() {
                         connectionManager.closeExpiredConnections();
@@ -186,7 +193,7 @@ public class GeonetHttpRequestFactory {
 
         final HttpClientBuilder builder = HttpClientBuilder.create();
         builder.setRedirectStrategy(new LaxRedirectStrategy());
-        builder.setConnectionManager(nonShutdownableConnectionManager);
+        builder.setConnectionManager(this.getNonShutdownableConnectionManager());
 
         builder.disableContentCompression();
         return builder;
