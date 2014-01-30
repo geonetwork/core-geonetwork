@@ -550,8 +550,8 @@ Dans |project_name|, d'autres variables de configuration sont disponibles:
  * <webappname>.jeeves.configuration.overrides.file - Cf. :ref:`adv_configuration_overriddes`
  * jeeves.configuration.overrides.file - Cf. :ref:`adv_configuration_overriddes`
  * mime-mappings -  mime mappings used by jeeves for generating the response content type
- * http.proxyHost - The internal geonetwork Http proxy uses this for configuring how it can access the external network (Note for harvesters there is also a setting in the Settings page of the administration page)
- * http.proxyPort - The internal geonetwork Http proxy uses this for configuring how it can access the external network (Note for harvesters there is also a setting in the Settings page of the administration page)
+ * http.proxyHost - The internal GeoNetwork Http proxy uses this for configuring how it can access the external network (Note for harvesters there is also a setting in the Settings page of the administration page)
+ * http.proxyPort - The internal GeoNetwork Http proxy uses this for configuring how it can access the external network (Note for harvesters there is also a setting in the Settings page of the administration page)
  * geonetwork.sequential.execution - (true,false) Force indexing to occur in current thread rather than being queued in the ThreadPool.  Good for debugging issues.
 
 
@@ -641,7 +641,7 @@ Un exemple de surcharge ::
                  The files are assumed to be property files and all the properties are loaded in order.  
                  The later properties overriding the previously defined parameters. Since the normal
                  log file is not automatically located, the base must be also defined.  It can be the once
-                 shipped with geonetwork or another. -->
+                 shipped with GeoNetwork or another. -->
             <logging>
                 <logFile>/WEB-INF/log4j.cfg</logFile>
                 <logFile>/WEB-INF/log4j-jeichar.cfg</logFile>

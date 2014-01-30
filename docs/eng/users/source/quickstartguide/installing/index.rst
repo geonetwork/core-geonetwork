@@ -53,8 +53,10 @@ On Windows
 
 If you use Windows, the following steps will guide you to complete the installation (other FOSS will follow):
 
-1. Double click on **geonetwork-install-2.8.0.exe** to start the GeoNetwork opensource desktop installer
-2. Follow the instructions on screen. You can choose to install the embedded map server (based on `GeoServer <http://www.geoserver.org>`_, GAST and the European Union Inspire Directive configuration pack. Developers may be interested in installing the source code and installer building tools. Full source code can be found in the GeoNetwork github code repository at http://github.com/geonetwork.
+.. warning:: Avoid installing in a directory containing spaces. Best is to install in ``c:\programs`` and not in ``c:\program files``
+
+1. Double click on **geonetwork-install-2.10.x.exe** to start the GeoNetwork opensource desktop installer
+2. Follow the instructions on screen. You can choose to install the embedded map server (based on `GeoServer <http://www.geoserver.org>`_ and the European Union Inspire Directive configuration pack. Developers may be interested in installing the source code and installer building tools. Full source code can be found in the GeoNetwork github code repository at http://github.com/geonetwork.
 3. After completion of the installation process, a 'GeoNetwork desktop' menu will be added to your Windows Start menu under 'Programs'
 4. Click Start\>Programs\>GeoNetwork desktop\>Start server to start the Geonetwork opensource Web server. The first time you do this, the system will require about 1 minute to complete startup.
 5. Click Start\>Programs\>Geonetwork desktop\>Open GeoNetwork opensource to start using GeoNetwork opensource, or connect your Web browser to `http://localhost:8080/geonetwork/ <http://localhost:8080/geonetwork/>`_
@@ -101,7 +103,7 @@ If you downloaded the platform independent installer (a .jar file), you can perf
 
 To run the installation from the commandline, issue the following command in a terminal window and hit enter to start::
 
-    java -jar geonetwork-install-2.8.0.jar install.xml
+    java -jar geonetwork-install-2.10.0.jar install.xml
     [ Starting automated installation ]
     Read pack list from xml definition.
     Try to add to selection [Name: Core and Index: 0]
@@ -124,7 +126,7 @@ To run the installation from the commandline, issue the following command in a t
 
 You can also run the installation with lots of debug output. To do so run the installer with the flag *-DTRACE=true*::
 
-  java -DTRACE=true -jar geonetwork-install-2.8.0.jar
+  java -DTRACE=true -jar geonetwork-install-2.10.0.jar
 
 .. [#all_os] All = Windows, Linux and Mac OS X
 
