@@ -71,7 +71,7 @@ public class LDAPUtils {
 			String query = "INSERT INTO Users (id, username, password, surname, name, profile, "+
 						"address, city, state, zip, country, email, organisation, kind, authtype) "+
 						"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			dbms.execute(query, Integer.valueOf(id), user.getUsername(), "", user.getSurname(), user.getName(), 
+			dbms.execute(query, Integer.valueOf(id), user.getUsername(), "LDAP_PASSWORD", user.getSurname(), user.getName(), 
 					user.getProfile(), user.getAddress(), user.getCity(), user.getState(), user.getZip(), 
 					user.getCountry(), user.getEmail(), user.getOrganisation(), user.getKind(), LDAPConstants.LDAP_FLAG);
 		} else {
@@ -88,7 +88,7 @@ public class LDAPUtils {
 			// User update
 			String query = "UPDATE Users SET username=?, password=?, surname=?, name=?, profile=?, address=?,"+
 						" city=?, state=?, zip=?, country=?, email=?, organisation=?, kind=? WHERE id=?";
-			dbms.execute (query, user.getUsername(), "", user.getSurname(), user.getName(), 
+			dbms.execute (query, user.getUsername(), "LDAP_PASSWORD", user.getSurname(), user.getName(), 
 					user.getProfile(), user.getAddress(), user.getCity(), user.getState(), user.getZip(), 
 					user.getCountry(), user.getEmail(), user.getOrganisation(), user.getKind(), Integer.valueOf(id));
 			
