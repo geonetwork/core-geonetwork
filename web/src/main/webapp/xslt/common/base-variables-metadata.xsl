@@ -75,4 +75,10 @@
   
   <xsl:variable name="isFlatMode" select="if (/root/request/flat) then /root/request/flat = 'true'
     else $tabConfig/@mode = 'flat'"/>
+  
+  
+  <!-- TODO: retrieve from settings -->
+  <xsl:variable name="geopublishMatchingPattern"
+    select="'^WWW:DOWNLOAD.*|^FILE:GEO|FILE:RASTER|^DB:POSTGIS'"/>
+
 </xsl:stylesheet>

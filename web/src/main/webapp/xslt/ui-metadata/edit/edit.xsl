@@ -79,15 +79,33 @@
           <xsl:with-param name="config" select="$editorConfig"/>
         </xsl:call-template>
       </xsl:if>
-      <xsl:if test="count(//gmd:protocol[matches(gco:CharacterString,'^WWW:DOWNLOAD-.*-http--download.*')]) > 0">
-        <xsl:for-each select="//gmd:onLine[matches(gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString,'^WWW:DOWNLOAD-.*-http--download.*')]">
+      
+      <xsl:for-each select="$metadata/descendant::gmd:onLine[matches(
+        gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString,
+        $geopublishMatchingPattern)]">
+        
+        <xsl:variable name="protocol" select="gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString"/>
+        <xsl:variable name="fileName">
+          <xsl:choose>
+            <xsl:when test="matches($protocol, '^DB:.*')">
+              <xsl:value-of select="concat(gmd:CI_OnlineResource/gmd:linkage/gmd:URL, '#', 
+                gmd:CI_OnlineResource/gmd:name/gco:CharacterString)"/>
+            </xsl:when>
+            <xsl:when test="matches($protocol, '^FILE:.*')">
+              <xsl:value-of select="gmd:CI_OnlineResource/gmd:linkage/gmd:URL"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="gmd:CI_OnlineResource/gmd:name/gmx:MimeFileType"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
         <div gn-geo-publisher=""
           data-ref="{gn:element/@ref}"
           data-ref-parent="{gn:element/@parent}"
-          data-file-name="{gmd:CI_OnlineResource/gmd:name/gmx:MimeFileType}"
+          data-file-name="{$fileName}"
           data-lang="lang"></div>
-        </xsl:for-each>
-      </xsl:if>
+      </xsl:for-each>
+      
       <xsl:choose>
         <xsl:when test="$service != 'md.element.add' and $tabConfig/section">
           <xsl:apply-templates mode="form-builder" select="$tabConfig/section">

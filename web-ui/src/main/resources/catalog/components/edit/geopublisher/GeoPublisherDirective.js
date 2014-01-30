@@ -28,7 +28,17 @@
               scope.mapId = 'map-geopublisher-' +
                   scope.ref;
 
-              scope.layerName = scope.fileName.replace('.zip', '');
+              // Build layer name based on file name
+              scope.layerName = scope.fileName
+                .replace(/.zip$|.tif$|.tiff$/, '');
+              scope.wmsLayerName = scope.layerName;
+              if (scope.layerName.match('^jdbc')) {
+                scope.wmsLayerName = scope.layerName.split('#')[1];
+              } else if (scope.layerName.match('^file')) {
+                scope.wmsLayerName = scope.layerName
+                  .replace(/.*\//, '')
+                  .replace(/.zip$|.tif$|.tiff$/, '');
+              }
 
               scope.hidden = true;
               scope.loaded = false;
@@ -116,7 +126,7 @@
                     url: gsNode.wmsUrl,
                     params: {
                       'LAYERS': gsNode.namespacePrefix +
-                          ':' + scope.layerName
+                          ':' + scope.wmsLayerName
                     }
                   })
                 }));

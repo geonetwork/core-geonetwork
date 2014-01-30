@@ -1,12 +1,15 @@
 <div class="gn-geopublisher-panel">
-  <button class="btn btn-warning" data-ng-click="showPanel()">
+  <button class="btn btn-warning" data-ng-click="showPanel()"
+    title="{{fileName}}">
     <i class="fa fa-globe text-danger"></i>&nbsp;<span
       data-translate="">geopublisher</span>
   </button>
 
   <div class="panel panel-default" data-ng-hide="hidden">
+    <div class="panel-heading">
+      <span data-translate="">publishing</span>&nbsp;<strong>{{fileName}}</strong>
+    </div>
     <div class="panel-body">
-
       <!-- Header with projection selection, draw button and area list -->
       <form class="form-inline" data-role="form">
         <div class="col-sm-5">
@@ -40,6 +43,7 @@
         <button class="btn btn-success" data-toggle="dropdown" data-ng-click="publish(nodeId)"
           data-ng-class="{'disabled': (!isPublished || !nodeId)}">
           <i class="fa fa-clipboard"></i>&nbsp;<span data-translate="">linkService</span>
+          <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
           <li>
@@ -73,7 +77,7 @@
       </div>
 
       <div id="{{mapId}}" class="map"></div>
-      <div>{{statusCode}}</div>
+      <div class="alert alert-info" data-ng-if="statusCode">{{statusCode}}</div>
     </div>
   </div>
   
