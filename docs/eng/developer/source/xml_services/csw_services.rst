@@ -402,7 +402,7 @@ Update operation example
 POST request::
 
   Url:
-  http://localhost:8080/geonetwork/srv/eng/csw
+  http://localhost:8080/geonetwork/srv/eng/csw-publication
 
   Content-type:
   application/xml
@@ -442,7 +442,7 @@ Delete operation example
 POST request::
 
   Url:
-  http://localhost:8080/geonetwork/srv/eng/csw
+  http://localhost:8080/geonetwork/srv/eng/csw-publication
 
   Content-type:
   application/xml

@@ -42,7 +42,7 @@ A schema plugin that can be used in GeoNetwork is a directory of stylesheets, XM
 
 To be used in GeoNetwork, a schema directory can be manually placed in the 
 ``config/schema_plugins`` sub directory of 
-the geonetwork data directory. The default geonetwork data directory location is 
+the GeoNetwork data directory. The default GeoNetwork data directory location is 
 ``INSTALL_DIR/web/geonetwork/WEB-INF/data``. The contents of these schemas are 
 parsed during GeoNetwork initialization. If valid, they will be available for 
 use when GeoNetwork starts up.
@@ -55,7 +55,7 @@ ways using functions in the Administration menu:
 #. HTTP URL (eg. http://somehost/somedirectory/iso19139.mcp.zip)
 #. As an online resource attached to an ISO19115/19139 metadata record
 
-Uploaded schemas are also stored in the ``config/schema_plugins`` sub directory of the geonetwork data directory.
+Uploaded schemas are also stored in the ``config/schema_plugins`` sub directory of the GeoNetwork data directory.
 
 Contents of a GeoNetwork schema
 ```````````````````````````````
@@ -108,7 +108,7 @@ In order to create a schema plugin for GeoNetwork, you should check out the sche
 
 ::
 
-  svn co https://github.com/geonetwork/schema-plugins/branches/2.8.x schemaPlugins
+  svn co https://github.com/geonetwork/schema-plugins/branches/master schemaPlugins
 
 This will create a directory called schemaPlugins with some GeoNetwork schema plugins in it. To work with the example shown here, you should create your new schema plugin in a subdirectory of this directory.
 
