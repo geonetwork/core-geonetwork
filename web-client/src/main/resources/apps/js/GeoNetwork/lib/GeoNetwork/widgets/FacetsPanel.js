@@ -383,7 +383,10 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
             this.breadcrumb.add(new Ext.Button({
                 id: data.bcid,
                 text: (data.label != null ? data.label : data.node),
-                menu: scrollMenu
+                handler: function(b,e) {
+                    this.removeFacet(data.id);
+                },
+                scope: panel
             }));
             this.breadcrumb.doLayout();
         }

@@ -35,6 +35,7 @@ cat.lang.en = {
     ,"click_to_zoom": "click to zoom to area"
     ,"onlineResFromMD": "From metadatas"
     ,"onlineResFromManual": "Manual input "
+    ,"refineSearch": "Refine search"
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, cat.lang.en);

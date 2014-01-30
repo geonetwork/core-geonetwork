@@ -7,6 +7,7 @@
 										xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 										xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 										xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                                        xmlns:java="java:org.fao.geonet.util.XslUtil"
                                         xmlns:skos="http://www.w3.org/2004/02/skos/core#">
 
 	<xsl:include href="convert/functions.xsl"/>
@@ -65,10 +66,16 @@
 			<!-- not tokenized title for sorting, needed for multilingual sorting -->
             <Field name="_title" string="{string($_defaultTitle)}" store="true" index="true" />
 
-			<xsl:apply-templates select="*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" mode="metadata"/>
-			
+            <xsl:variable name="_defaultAbstract">
+                <xsl:call-template name="defaultAbstract">
+                    <xsl:with-param name="isoDocLangId" select="$isoLangId"/>
+                </xsl:call-template>
+            </xsl:variable>
+
+            <Field name="_defaultAbstract" string="{string($_defaultAbstract)}" store="true" index="true" token="false" />
+
+            <xsl:apply-templates select="*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" mode="metadata"/>
 			<xsl:apply-templates mode="index" select="*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']"/>
-			
 		</Document>
 	</xsl:template>
 	
@@ -187,12 +194,12 @@
 	
 			<xsl:for-each select="gmd:abstract/gco:CharacterString">
 				<Field name="abstract" string="{string(.)}" store="true" index="true"/>
-			</xsl:for-each>
-			
+            </xsl:for-each>
+
 			<xsl:for-each select="gmd:credit/gco:CharacterString">
 				<Field name="credit" string="{string(.)}" store="true" index="true"/>
 			</xsl:for-each>
-			
+
 			
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 
