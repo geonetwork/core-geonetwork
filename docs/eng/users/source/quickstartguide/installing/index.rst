@@ -53,7 +53,9 @@ On Windows
 
 If you use Windows, the following steps will guide you to complete the installation (other FOSS will follow):
 
-1. Double click on **geonetwork-install-2.8.0.exe** to start the GeoNetwork opensource desktop installer
+.. warning:: Avoid installing in a directory containing spaces. Best is to install in ``c:\programs`` and not in ``c:\program files``
+
+1. Double click on **geonetwork-install-develop.exe** to start the GeoNetwork opensource desktop installer
 2. Follow the instructions on screen. You can choose to install the embedded map server (based on `GeoServer <http://www.geoserver.org>`_ and the European Union Inspire Directive configuration pack. Developers may be interested in installing the source code and installer building tools. Full source code can be found in the GeoNetwork github code repository at http://github.com/geonetwork.
 3. After completion of the installation process, a 'GeoNetwork desktop' menu will be added to your Windows Start menu under 'Programs'
 4. Click Start\>Programs\>GeoNetwork desktop\>Start server to start the Geonetwork opensource Web server. The first time you do this, the system will require about 1 minute to complete startup.
