@@ -71,7 +71,8 @@ public class SettingManager {
     /**
      * Get all settings as xml.
      *
-     * @param asTree get the settings as a tree
+     * @param asTree get the settings as a tree. If true only settings
+     * from the system family will be returned.
      *
      * @return all settings as xml.
      */
@@ -83,7 +84,9 @@ public class SettingManager {
 
         for (Setting setting : settings) {
             if (asTree) {
-                buildXmlTree(env, pathElements, setting);
+                if (setting.getName().startsWith("system")) {
+                    buildXmlTree(env, pathElements, setting);
+                }
             } else {
                 Element settingEl = new Element("setting");
                 settingEl.setAttribute("name", setting.getName());
