@@ -751,8 +751,11 @@ cat.app = function() {
             var permalinkProvider = new GeoExt.state.PermalinkProvider({encodeType: false});
             if(Object.keys(permalinkProvider.state).length > 0) {
                 cookie.state = permalinkProvider.state;
-                delete cookie.state.s.scaleOn;
-                delete cookie.state.s.timeType;
+                
+                if(cookie.state.s) {
+                    if(cookie.state.s.scaleOn) delete cookie.state.s.scaleOn;
+                    if(cookie.state.s.timeType) delete cookie.state.s.timeType;
+                }
             }
             Ext.state.Manager.setProvider(cookie);
             
@@ -800,7 +803,7 @@ cat.app = function() {
                 searchForm: searchForm,
                 breadcrumb: breadcrumb,
                 bodyCssClass: 'west-panel-body',
-                bodyStyle: 'padding:20px',
+                bodyStyle: 'padding:5px',
                 maxDisplayedItems: GeoNetwork.Settings.facetMaxItems || 7,
                 facetListConfig: GeoNetwork.Settings.facetListConfig || []
             });
@@ -818,6 +821,7 @@ cat.app = function() {
                     headerCssClass : 'search-panel-header',
                     cls: 'sxt-layout-border-white west-panel',
                     split : true,
+                    stateful : false,
                     title : '<span id="searchFormHeaderTitle" class="mainheader">'
                         + OpenLayers.i18n('search-view-form') + ' '
                         + '</span>'

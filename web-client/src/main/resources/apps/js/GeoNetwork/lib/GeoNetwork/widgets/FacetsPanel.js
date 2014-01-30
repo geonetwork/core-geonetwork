@@ -104,7 +104,8 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
          *  to display all values returned by the server for this facet.
          */
         maxDisplayedItem: undefined,
-        autoScroll: true
+        autoScroll: true,
+        cls: 'facets',
     },
     /** private: property[facetsStore]
      * Store containing current facet for the search.
@@ -138,6 +139,8 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
      *   and populate the store. If no filter applied, copy the store to the startFacetStore.
      */
     refresh: function (response) {
+        var scope = this;
+        this.removeAll();
         if(!response.responseXML) {
             var parser = new DOMParser();
             response.responseXML = parser.parseFromString(response.responseText, "application/xml");
@@ -179,12 +182,29 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
                                     }
                                 }, this);
                                 if (facetList !== "") {
-                                    zappette += "<li>" + OpenLayers.i18n(facet.nodeName) + "</li><ul>";
+                                    var zappette = "<ul>";
                                     zappette += facetList;
                                     if (facet.getAttribute('moreAction') === 'true') {
                                         zappette += lessBt;
                                     }
                                     zappette += "</ul>";
+
+                                    scope.add(new Ext.Panel({
+                                        collapsible: true,
+                                        title: OpenLayers.i18n(facet.nodeName),
+                                        html: zappette,
+                                        cls: 'search-form-panel',
+                                        collapsedCls : 'search-form-panel-collapsed',
+                                        bodyStyle: 'padding:15px',
+                                        listeners: {
+                                            'afterrender': function(o) {
+                                                o.header.on('click', function() {
+                                                    if(o.collapsed) o.expand();
+                                                    else o.collapse();
+                                                });
+                                            }
+                                        }
+                                    }));
                                 }
                             }
                         }
@@ -211,23 +231,40 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
                                 }
                             });
                             if (facetList !== "") {
-                                zappette += "<li>" + OpenLayers.i18n(facet.nodeName) + "</li><ul>";
+                                var zappette = "<ul>";
                                 zappette += facetList;
                                 if (facet.getAttribute('moreAction') === 'true') {
                                     zappette += lessBt;
                                 }
                                 zappette += "</ul>";
+                                
+                                scope.add(new Ext.Panel({
+                                    collapsible: true,
+                                    title: OpenLayers.i18n(facet.nodeName),
+                                    html: zappette,
+                                    cls: 'search-form-panel',
+                                    collapsedCls : 'search-form-panel-collapsed',
+                                    bodyStyle: 'padding:15px',
+                                    listeners: {
+                                        'afterrender': function(o) {
+                                            o.header.on('click', function() {
+                                                if(o.collapsed) o.expand();
+                                                else o.collapse();
+                                            });
+                                        }
+                                    }
+                                }));
                             }
                         }
                     }
                 });
             }
         }
-        Ext.getDom('facets').innerHTML = "<ul>" + zappette + "</ul>";
-        
+
+        this.doLayout();
+
         // Register click event
         var items = Ext.DomQuery.select('a.facet-link');
-        var scope = this;
         Ext.each(items, function (input) {
             Ext.get(input).on('click', function () {
                 scope.addFacet(this.id);
@@ -263,6 +300,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
             });
             this.startFacetsStore.add(records);
         }
+
     },
     /** private: method[displayFacetValue]
      *  :param node: ``String`` the key of the facet to add
@@ -447,9 +485,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
      *  Clear all current filter in search form and breadcrumb (if set)
      */
     reset: function () {
-        this.currentFilterStore.each(function (r) {
-            this.removeFacet(r.get('id'), true);
-        }, this);
+        this.removeAll();
     },
     init: function () {
         this.currentFilterStore = new Ext.data.ArrayStore({

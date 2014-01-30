@@ -165,7 +165,7 @@ table, tbody, tr, td, th {
 	background-image: url("../images/icons/vertical_handle.gif");
     background-position: center center;
     background-repeat: no-repeat;
-    margin-left:1px;
+    margin-left:-10px;
     width:11px;
 }
 

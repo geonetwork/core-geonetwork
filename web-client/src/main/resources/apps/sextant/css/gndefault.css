@@ -633,10 +633,9 @@ div.facets * li {
 /**
  * Facet category label
  */
-div.facets > ul > li {
+div.facets * ul > li > a {
 	color: #444;
     margin: 0px 15px 0px 0px;
-    font-weight: bold;
 }
 /**
  * Facet sub elements

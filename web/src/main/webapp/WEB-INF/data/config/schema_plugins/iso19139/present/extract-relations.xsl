@@ -33,7 +33,7 @@
 		        
 		        <!-- Compute title based on online source info-->
 		        <xsl:variable name="title">
-		          <xsl:variable name="title" select="if (../@uuidref) then util:getIndexField(string(/root/gui/app/path), string(../@uuidref), '_title', string(/root/gui/language)) else ''"/>
+		          <xsl:variable name="title" select="''"/>
 		          <xsl:value-of select="if ($title = '' and ../@uuidref) then ../@uuidref else $title"/><xsl:text> </xsl:text>
 		          <xsl:value-of select="if (gmd:name/gco:CharacterString != '') 
 		            then gmd:name/gco:CharacterString 
