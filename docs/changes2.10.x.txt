@@ -1,10 +1,69 @@
 ================================================================================
 ===
-=== GeoNetwork 2.10.2: List of changes
+=== GeoNetwork 2.10.3: List of changes
 ===
 ================================================================================
+- Update version to 2.10.3-0
+- Update version to 2.10.3-0
+- Fix for issue #373
+- Metadata update by XML / record title and abstract not displayed in search results when having a default namespace #372.
+- Search suggestion / some record fields may contains new line and make the JSON invalid.
+- Improve french translation.
+- Widgets / relation panel / display relation if no distribution section (#368).
+- Can't delete a logo (#363).
+- RSS / add the mdlinkonly parameter to only get the link for the record (get from develop branch).
+- CSW test / Drop old out of date samples.
+- Merge pull request #359 from anzmest/pull3
+- Merge pull request #1 from smart-geonetwork/pull
+- Merge remote-tracking branch 'origin/2.10.x' into 2.10.x
+- Autocompletion / value should be analyzed (#357).
+- Widgets / Avoid undefined in results summary if a summary only request is made.
+- Merge pull request #356 from sppigot/2.10.x
+- Move metadata.select calls outside of loop that sets checkboxes to remove unnecessary metadata.select server load
+- Merge remote-tracking branch 'origin/2.10.x' into 2.10.x
+- Editor / Region list / Avoid NoSuchBeanDefinitionException
+- Merge pull request #350 from Delawen/del2.10.x
+- If metadata contains invalid layer name, when trying to add the layer to the map, it shows a wms layer selection window
+- pull in update to maven_repo
+- Fix for #347
+- Use eclipse URIUtils to avoid java7 dependency
+- Updating submodule maven_repo to latest commit
+- Fixes for correct URLs on windows and linux - some fixes are similar to those proposed by fxp in #135 and this patch fixes problems described in #218 Requires patched xml-resolver jar from commit 0e5b1af75f05a00d02bb6c85dbbc573aec7395ff which is a fix for issue #339
+- #340 readwriteUuid usage on metadata creation
+- #338 CSW harvester fails when using http POST and filter query for GetRecords queries
+- Italian translation: improvements and updates to js files (mostly provided by DGuidi)
+- ISO19139 / AggregationInfo / Relations are only displayed from the record defining the aggregate (#335). Improve doc about relation.
+- ISO19110 / Relation display no title (#258).
+- Italian translation: some improvements. Close #277.
+- Merge branch '2.10.x' of github.com:geonetwork/core-geonetwork into 2.10.x
+- #334 Metadata editor: datetimes values are lost in IE after editing and saving the metadata
+- Added uuidAction parameter in xml.metadata.insert and update language in service urls
+- Schematron ruleset titles in schema-plugins. Close #325.
+- Fix for #319
+- Fix for issue #318
+- Italian translation / Update GUI and ISO19139 labels (by DGuidi)
+- Merge pull request #296 from geosolutions-it/2.10.x
+- Widgets / User menu : Fix username display on IE7+ and fix tooltip display on IE9-.
+- #308 CSW ExceptionReport version is incorrect, should be 1.2.0
+- #305 Date filter calendars in Advanced Search (classic UI) render wrongly in Chrome/Safari/IE
+- #305 Date filter calendars in Advanced Search (classic UI) render wrongly in Chrome/Safari/IE
+- Improvements to schema-conversions
+- Improvements to schema-conversions
+- Fix log level in ProfileManager
+- Merge pull request #281 from ianwallen/Fix_Issue_274
+- Merge pull request #280 from ianwallen/Fix_url
+- Improve string handling in xsl back calls
+- #289 getGNServiceURL function adds extra slash if the parameter starts with slash
+- Update docs versions
+- Update version to 2.10.2-SNAPSHOT
+- Update version to 2.10.2-SNAPSHOT
+- Update version to 2.10.2-SNAPSHOT
+- 2.10.2 release changes.
+- 2.10.2 release. Fix for duplicated user info in header.
 - Update version to 2.10.2-0
 - Update version to 2.10.2-0
+- Fixed typo in url.
+- Fix metadata links in the pdf so that it works in the widgets and classic interface.
 - #267 HTML5 UI: Use WMC context in map and allow OSM layers
 - #271 Transfer ownership displays target users repeated
 - #266 HTML5 UI: Hide special groups from New Metadata panel
