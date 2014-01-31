@@ -4,22 +4,16 @@
 
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
-  <headerType>0</headerType>
+  <headerType>gui</headerType>
   <jar>../geonetwork-2.6.0/geonetwork-install.jar</jar>
   <outfile>../geonetwork-2.6.0/geonetwork-install.exe</outfile>
   <errTitle>GeoNetwork opensource Installation Error</errTitle>
-  <jarArgs></jarArgs>
-  <chdir></chdir>
-  <customProcName>false</customProcName>
   <stayAlive>false</stayAlive>
   <icon>../installer.ico</icon>
   <jre>
-<!--    <path>jre1.5.0_12</path> -->
-    <minVersion>1.5.0</minVersion>
-<!--    <maxVersion>1.5.0_15</maxVersion> -->
+    <minVersion>1.6.0</minVersion>
     <initialHeapSize>256</initialHeapSize>
     <maxHeapSize>512</maxHeapSize>
-    <args></args>
   </jre>
   <splash>
     <file>../splash.bmp</file>
