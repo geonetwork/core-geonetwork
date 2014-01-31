@@ -34,13 +34,6 @@ public class UrlLocaleChangeInterceptor extends HandlerInterceptorAdapter {
 		String[] path = url.split("/");
 		String newLocale = null;
 		Integer position = urlPosition;
-		
-		for(int i = 0; i < path.length; i++) {
-			if(path[i].equals("srv")) {
-				position = i + position + 1;
-				break;
-			}
-		}
 
 		if (path.length >= position) {
 			newLocale = path[position];
