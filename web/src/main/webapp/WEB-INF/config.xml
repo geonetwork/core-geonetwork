@@ -1185,7 +1185,6 @@
 	<include>config-harvesting.xml</include>
 	<include>config-portal.xml</include>
 	<include>config-export.xml</include>
-	<include>config-statistics.xml</include>
   <include>config-test.xml</include>
 
 	<!-- ====================================================================== -->

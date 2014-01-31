@@ -22,13 +22,14 @@
 //==============================================================================
 package org.fao.geonet.services.statistics;
 
-import static org.fao.geonet.services.statistics.RequestsByDateParams.*;
+
 import java.util.Hashtable;
 import java.util.List;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.statistic.SearchRequest_;
@@ -36,7 +37,6 @@ import org.fao.geonet.repository.specification.SearchRequestSpecs;
 import org.fao.geonet.repository.statistic.DateInterval;
 import org.fao.geonet.repository.statistic.SearchRequestRepository;
 import org.fao.geonet.Util;
-
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
@@ -47,6 +47,11 @@ import org.jdom.Element;
  * 
  */
 public class RequestsByDateStatistics extends NotInReadOnlyModeService {
+
+  static final String BY_YEAR = "YEAR";
+  static final String BY_MONTH = "MONTH";
+  static final String BY_DAY = "DAY";
+  static final String BY_HOUR = "HOUR";
 
     /** the custom part of the date query; according to user choice for graphic */
     public Hashtable<String, DateInterval> queryFragments;

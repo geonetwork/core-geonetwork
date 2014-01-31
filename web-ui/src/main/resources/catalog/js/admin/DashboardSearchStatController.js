@@ -247,13 +247,13 @@
       }
 
       $scope.searchStatisticExport = function() {
-        $http.get('stat.tableExport?tableToExport=requests')
+        $http.get('statistics-export?tableToExport=requests')
         .success(function(data) {
               $scope.requestsExport = $sce.trustAsHtml(data);
             }).error(function(data) {
               // TODO
             });
-        $http.get('stat.tableExport?tableToExport=params')
+        $http.get('statistics-export?tableToExport=params')
         .success(function(data) {
               $scope.paramsExport = $sce.trustAsHtml(data);
             }).error(function(data) {
