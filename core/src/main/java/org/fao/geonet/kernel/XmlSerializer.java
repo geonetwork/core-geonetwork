@@ -422,7 +422,7 @@ public abstract class XmlSerializer {
 			 throws Exception;
 
 	
-	public abstract Element select(Dbms dbms, String table, String id) 
+	public abstract Element select(Dbms dbms, String table, ServiceContext context, String id)
 			 throws Exception;
 	public abstract Element selectNoXLinkResolver(Dbms dbms, String table, String id, boolean isIndexingTask) 
 			 throws Exception;

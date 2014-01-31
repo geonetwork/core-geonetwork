@@ -611,7 +611,7 @@ public class AjaxEditUtils extends EditUtils {
 	public synchronized boolean addAttribute(Dbms dbms, String id, String ref, String name, String currVersion) throws Exception {
 	    Lib.resource.checkEditPrivilege(context, id);
 
-		Element md = xmlSerializer.select(dbms, "Metadata", id);
+		Element md = xmlSerializer.select(dbms, "Metadata", context, id);
 
 		//--- check if the metadata has been deleted
 		if (md == null)
@@ -670,7 +670,7 @@ public class AjaxEditUtils extends EditUtils {
 	public synchronized boolean deleteAttribute(Dbms dbms, String id, String ref, String name, String currVersion) throws Exception {
 	    Lib.resource.checkEditPrivilege(context, id);
 
-		Element md = xmlSerializer.select(dbms, "Metadata", id);
+		Element md = xmlSerializer.select(dbms, "Metadata", context, id);
 
 		//--- check if the metadata has been deleted
 		if (md == null)
