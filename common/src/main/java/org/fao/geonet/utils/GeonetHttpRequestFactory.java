@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 public class GeonetHttpRequestFactory {
     private int numberOfConcurrentRequests = 20;
     private PoolingHttpClientConnectionManager connectionManager;
-    private HttpClientConnectionManager nonShutdownableConnectionManager;
+    private volatile HttpClientConnectionManager nonShutdownableConnectionManager;
 
     @PreDestroy
     public synchronized void shutdown() {
@@ -151,6 +151,10 @@ public class GeonetHttpRequestFactory {
     }
 
     public HttpClientBuilder getDefaultHttpClientBuilder() {
+        final HttpClientBuilder builder = HttpClientBuilder.create();
+        builder.setRedirectStrategy(new LaxRedirectStrategy());
+        builder.disableContentCompression();
+
         synchronized (this) {
             if (connectionManager == null) {
                 connectionManager = new PoolingHttpClientConnectionManager();
@@ -189,13 +193,9 @@ public class GeonetHttpRequestFactory {
                     }
                 };
             }
+            builder.setConnectionManager(nonShutdownableConnectionManager);
         }
 
-        final HttpClientBuilder builder = HttpClientBuilder.create();
-        builder.setRedirectStrategy(new LaxRedirectStrategy());
-        builder.setConnectionManager(this.getNonShutdownableConnectionManager());
-
-        builder.disableContentCompression();
         return builder;
     }
 

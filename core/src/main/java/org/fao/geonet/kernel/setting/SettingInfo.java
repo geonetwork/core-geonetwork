@@ -235,6 +235,10 @@ public class SettingInfo {
         }
         return ignoreChars.toCharArray();
     }
+
+    public boolean getPreferUILanguage() {
+        return _settingManager.getValueAsBool(SettingManager.SYSTEM_LUCENE_PREFER_UI_LANGUAGE);
+    }
 }
 
 //=============================================================================

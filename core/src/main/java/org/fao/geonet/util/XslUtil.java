@@ -15,6 +15,9 @@ import org.fao.geonet.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+
+import javax.annotation.Nonnull;
+
 /**
  * These are all extension methods for calling from xsl docs.  Note:  All
  * params are objects because it is hard to determine what is passed in from XSLT.
@@ -229,30 +232,31 @@ public final class XslUtil
      * @param iso3LangCode   The 2 iso lang code
      * @return The related 3 iso lang code
      */
-    public static String twoCharLangCode(String iso3LangCode) {
+    public static @Nonnull String twoCharLangCode(String iso3LangCode) {
     	if(iso3LangCode==null || iso3LangCode.length() == 0) {
     		return Geonet.DEFAULT_LANGUAGE;
-    	}
-        String iso2LangCode = null;
+    	} else {
+            String iso2LangCode = null;
 
-        try {
-            if (iso3LangCode.length() == 2){
-                iso2LangCode = iso3LangCode;
-            } else {
-                if (ServiceContext.get() != null) {
-                    final IsoLanguagesMapper mapper = ServiceContext.get().getBean(IsoLanguagesMapper.class);
-                    iso2LangCode = mapper.iso639_2_to_iso639_1(iso3LangCode);
+            try {
+                if (iso3LangCode.length() == 2){
+                    iso2LangCode = iso3LangCode;
+                } else {
+                    if (ServiceContext.get() != null) {
+                        final IsoLanguagesMapper mapper = ServiceContext.get().getBean(IsoLanguagesMapper.class);
+                        iso2LangCode = mapper.iso639_2_to_iso639_1(iso3LangCode);
+                    }
                 }
-            }
-        } catch (Exception ex) {
-            Log.error(Geonet.GEONETWORK, "Failed to get iso 2 language code for " + iso3LangCode + " caused by " + ex.getMessage());
-            
-        }
+            } catch (Exception ex) {
+                Log.error(Geonet.GEONETWORK, "Failed to get iso 2 language code for " + iso3LangCode + " caused by " + ex.getMessage());
 
-        if(iso2LangCode == null) {
-        	return iso3LangCode.substring(0,2);
-        } else {
-        	return iso2LangCode;
+            }
+
+            if(iso2LangCode == null) {
+                return iso3LangCode.substring(0,2);
+            } else {
+                return iso2LangCode;
+            }
         }
     }
     /**
@@ -287,7 +291,7 @@ public final class XslUtil
                    return "Status: " + code;
                } 
             } // TODO : Other type of URLConnection
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
             return e.toString();
         }

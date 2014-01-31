@@ -23,44 +23,29 @@
 
 package org.fao.geonet.kernel.mef;
 
-import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PRIVATE;
-import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PUBLIC;
-import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
-import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
-import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA_19139;
-import static org.fao.geonet.kernel.mef.MEFConstants.FS;
-import static org.fao.geonet.kernel.mef.MEFConstants.MD_DIR;
-import static org.fao.geonet.kernel.mef.MEFConstants.SCHEMA;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.zip.ZipOutputStream;
-
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
-
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataRelation;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
-import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRelationRepository;
-import org.jdom.Element;
 
-import javax.xml.transform.stream.StreamSource;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.zip.ZipOutputStream;
+
+import static org.fao.geonet.kernel.mef.MEFConstants.*;
 
 class MEF2Exporter {
 	/**
@@ -122,7 +107,6 @@ class MEF2Exporter {
 
 		String id = "" + record.getId();
 		String isTemp = record.getDataInfo().getType().codeString;
-		String schema = record.getDataInfo().getSchemaId();
 
 		if (!"y".equals(isTemp) && !"n".equals(isTemp))
 			throw new Exception("Cannot export sub template");

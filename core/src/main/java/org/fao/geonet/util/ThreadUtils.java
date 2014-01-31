@@ -38,7 +38,6 @@ public class ThreadUtils {
 
 	private static SettingManager settingMan;
 	private static boolean dbCanUseMultipleThreads = false;
-	private static String dbUrl;
 
 	// -- No public constructor - static methods class
 	private ThreadUtils() {}
@@ -92,7 +91,7 @@ public class ThreadUtils {
 		int threadCount = setCountFromSettings();
 		if (!dbCanUseMultipleThreads && threadCount > 1) {
 			threadCount = 1;
-			Log.error(Geonet.GEONETWORK,"Theaded Indexing for "+dbUrl+" not supported or hasn't been tested - so only *one* thread will be used");
+			Log.error(Geonet.GEONETWORK,"Theaded Indexing for not supported or hasn't been tested - so only *one* thread will be used");
 		}
 
 		Log.info(Geonet.GEONETWORK,"Using "+threadCount+" thread(s) to process indexing job");

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
+                     xmlns:gml="http://www.opengis.net/gml" gco:isoType="gmd:MD_Metadata">
+	<gmd:fileIdentifier xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<gco:CharacterString>DE-{uuid}</gco:CharacterString>
+	</gmd:fileIdentifier>
+	<gmd:language xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<gco:CharacterString>ger</gco:CharacterString>
+	</gmd:language>
+	<gmd:characterSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>
+	</gmd:characterSet>
+	<gmd:hierarchyLevel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<gmd:MD_ScopeCode codeListValue="dataset" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"/>
+	</gmd:hierarchyLevel>
+	<gmd:dateStamp xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<gco:DateTime>2011-07-04T14:08:21</gco:DateTime>
+	</gmd:dateStamp>
+	<gmd:metadataStandardName xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<gco:CharacterString>GM03 2+</gco:CharacterString>
+	</gmd:metadataStandardName>
+	<gmd:locale xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<gmd:PT_Locale id="DE">
+			<gmd:languageCode>
+				<gmd:LanguageCode codeListValue="ger" codeList="#LanguageCode">German</gmd:LanguageCode>
+			</gmd:languageCode>
+			<gmd:characterEncoding>
+				<gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+			</gmd:characterEncoding>
+		</gmd:PT_Locale>
+	</gmd:locale>
+    <gmd:identificationInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<gmd:MD_DataIdentification gco:isoType="gmd:MD_DataIdentification">
+			<gmd:citation>
+				<gmd:CI_Citation>
+					<gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+						<gmd:PT_FreeText>
+							<gmd:textGroup>
+								<gmd:LocalisedCharacterString locale="#DE">DE {timestamp}NonSpatialSearchQuerySpec DE Title pollüee</gmd:LocalisedCharacterString>
+							</gmd:textGroup>
+						</gmd:PT_FreeText>
+					</gmd:title>
+					<gmd:date>
+						<gmd:CI_Date>
+							<gmd:date>
+								<gco:Date>2011-07-12</gco:Date>
+							</gmd:date>
+							<gmd:dateType>
+								<gmd:CI_DateTypeCode codeListValue="creation" codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"/>
+							</gmd:dateType>
+						</gmd:CI_Date>
+					</gmd:date>
+					<gmd:identifier>
+						<gmd:MD_Identifier>
+							<gmd:code xsi:type="gmd:PT_FreeText_PropertyType">
+								<gco:CharacterString>EN Citation ID</gco:CharacterString>
+								<gmd:PT_FreeText>
+									<gmd:textGroup>
+										<gmd:LocalisedCharacterString locale="#DE">DE Citation ID</gmd:LocalisedCharacterString>
+									</gmd:textGroup>
+								</gmd:PT_FreeText>
+							</gmd:code>
+						</gmd:MD_Identifier>
+					</gmd:identifier>
+				</gmd:CI_Citation>
+			</gmd:citation>
+			<gmd:abstract xsi:type="gmd:PT_FreeText_PropertyType">
+				<gmd:PT_FreeText>
+					<gmd:textGroup>
+						<gmd:LocalisedCharacterString locale="#DE">{timestamp}NonSpatialSearchQuerySpec DEx{timestamp}  abstract 1.1</gmd:LocalisedCharacterString>
+					</gmd:textGroup>
+				</gmd:PT_FreeText>
+			</gmd:abstract>
+			<gmd:language>
+				<gco:CharacterString>ger</gco:CharacterString>
+			</gmd:language>
+			<gmd:characterSet>
+				<gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>
+			</gmd:characterSet>
+			<gmd:topicCategory>
+				<gmd:MD_TopicCategoryCode>elevation</gmd:MD_TopicCategoryCode>
+			</gmd:topicCategory>
+            <gmd:extent>
+                <gmd:EX_Extent>
+                    <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>Vaud</gco:CharacterString>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gco:CharacterString>VD</gco:CharacterString>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="N19268c009e2a4c96a1089bc71e978ef3">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="Nb8f45265ea9f4f3aaa2e8c6faeff1041">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                        <gml:posList>6.431 46.812 6.441 46.816 6.443 46.833 6.46 46.851 6.465 46.851 6.466 46.848 6.482 46.847 6.527 46.859 6.528 46.859 6.538 46.867 6.563 46.876 6.587 46.884 6.599 46.884 6.606 46.887 6.627 46.889 6.63 46.892 6.647 46.911 6.669 46.921 6.721 46.936 6.724 46.931 6.717 46.906 6.74 46.895 6.74 46.892 6.738 46.884 6.74 46.884 6.739 46.879 6.734 46.872 6.755 46.87 6.78 46.853 6.742 46.827 6.767 46.809 6.777 46.803 6.779 46.801 6.784 46.803 6.787 46.8 6.776 46.79 6.783 46.793 6.798 46.783 6.805 46.786 6.814 46.779 6.818 46.778 6.833 46.775 6.84 46.781 6.843 46.779 6.853 46.786 6.864 46.784 6.864 46.781 6.877 46.776 6.894 46.777 6.907 46.783 6.911 46.78 6.917 46.787 6.931 46.806 6.92 46.81 6.913 46.804 6.907 46.805 6.905 46.806 6.911 46.813 6.905 46.824 6.908 46.835 6.919 46.847 6.93 46.854 6.913 46.866 6.896 46.861 6.892 46.865 6.912 46.867 6.921 46.871 6.911 46.881 6.904 46.879 6.891 46.887 6.866 46.909 6.896 46.925 6.922 46.906 6.924 46.904 6.93 46.9 6.924 46.895 6.926 46.893 6.939 46.89 6.965 46.865 6.97 46.867 6.959 46.879 6.962 46.884 6.974 46.887 6.987 46.875 6.989 46.873 6.982 46.867 6.976 46.847 6.983 46.846 6.99 46.85 6.992 46.848 6.985 46.841 6.993 46.83 6.985 46.822 6.971 46.824 6.965 46.828 6.958 46.819 6.958 46.811 6.967 46.803 6.956 46.793 6.959 46.79 6.951 46.785 6.939 46.782 6.929 46.767 6.92 46.76 6.914 46.763 6.908 46.758 6.911 46.753 6.931 46.754 6.938 46.749 6.941 46.745 6.936 46.733 6.934 46.732 6.922 46.724 6.921 46.722 6.898 46.708 6.892 46.703 6.893 46.7 6.881 46.69 6.873 46.683 6.866 46.684 6.863 46.681 6.865 46.676 6.872 46.673 6.863 46.658 6.854 46.656 6.844 46.661 6.838 46.663 6.828 46.66 6.818 46.648 6.799 46.649 6.803 46.645 6.797 46.634 6.804 46.609 6.802 46.601 6.798 46.6 6.801 46.593 6.799 46.584 6.795 46.575 6.799 46.574 6.813 46.578 6.814 46.586 6.829 46.577 6.835 46.575 6.841 46.58 6.842 46.582 6.853 46.582 6.865 46.576 6.872 46.57 6.874 46.565 6.885 46.562 6.898 46.571 6.902 46.561 6.893 46.559 6.888 46.558 6.868 46.542 6.867 46.541 6.861 46.531 6.855 46.541 6.851 46.541 6.832 46.537 6.824 46.541 6.812 46.526 6.824 46.512 6.83 46.512 6.833 46.505 6.848 46.494 6.858 46.493 6.863 46.494 6.866 46.501 6.882 46.513 6.883 46.513 6.897 46.519 6.896 46.508 6.901 46.513 6.91 46.512 6.925 46.508 6.934 46.502 6.948 46.501 6.962 46.497 6.971 46.491 6.975 46.479 6.981 46.475 6.978 46.473 6.98 46.459 6.992 46.449 6.984 46.438 7.018 46.447 7.023 46.462 7.061 46.487 7.066 46.489 7.072 46.486 7.078 46.489 7.1 46.487 7.11 46.495 7.123 46.499 7.136 46.509 7.148 46.528 7.159 46.527 7.171 46.533 7.192 46.547 7.208 46.533 7.223 46.548 7.237 46.554 7.237 46.546 7.247 46.531 7.249 46.513 7.236 46.488 7.224 46.487 7.231 46.453 7.223 46.442 7.205 46.439 7.195 46.441 7.193 46.434 7.21 46.416 7.208 46.403 7.194 46.379 7.208 46.378 7.216 46.362 7.226 46.365 7.23 46.362 7.221 46.353 7.222 46.329 7.2 46.313 7.189 46.304 7.189 46.295 7.197 46.289 7.186 46.283 7.189 46.271 7.178 46.268 7.162 46.254 7.155 46.253 7.151 46.244 7.141 46.238 7.13 46.237 7.124 46.236 7.121 46.223 7.111 46.215 7.088 46.202 7.076 46.199 7.071 46.201 7.033 46.187 7.021 46.201 7.012 46.205 7.008 46.22 7.002 46.226 7.002 46.233 6.99 46.244 6.987 46.253 6.979 46.257 6.97 46.264 6.962 46.28 6.95 46.291 6.936 46.298 6.932 46.324 6.932 46.326 6.919 46.339 6.896 46.341 6.882 46.356 6.887 46.365 6.885 46.376 6.859 46.395 6.821 46.427 6.682 46.454 6.519 46.456 6.426 46.416 6.335 46.404 6.253 46.36 6.241 46.344 6.213 46.353 6.18 46.365 6.174 46.362 6.173 46.355 6.195 46.349 6.193 46.344 6.207 46.339 6.232 46.331 6.22 46.312 6.199 46.284 6.17 46.295 6.141 46.305 6.126 46.317 6.132 46.325 6.139 46.335 6.138 46.339 6.149 46.343 6.158 46.351 6.159 46.357 6.17 46.366 6.159 46.38 6.15 46.377 6.113 46.4 6.106 46.399 6.098 46.409 6.064 46.416 6.075 46.432 6.084 46.44 6.086 46.444 6.074 46.454 6.077 46.458 6.073 46.465 6.097 46.481 6.113 46.51 6.138 46.531 6.144 46.528 6.154 46.537 6.149 46.539 6.157 46.545 6.111 46.576 6.14 46.598 6.161 46.61 6.179 46.616 6.186 46.624 6.219 46.645 6.267 46.676 6.269 46.683 6.282 46.691 6.307 46.699 6.341 46.71 6.36 46.723 6.372 46.724 6.385 46.732 6.392 46.739 6.388 46.743 6.395 46.748 6.417 46.753 6.438 46.762 6.439 46.767 6.452 46.774 6.458 46.789 6.435 46.802 6.431 46.812</gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                            <gml:interior>
+                                                <gml:LinearRing>
+                                                        <gml:posList>6.798 46.734 6.794 46.736 6.788 46.728 6.806 46.727 6.811 46.728 6.817 46.733 6.828 46.735 6.838 46.733 6.852 46.727 6.852 46.726 6.862 46.725 6.868 46.728 6.867 46.733 6.882 46.75 6.873 46.758 6.868 46.76 6.86 46.764 6.86 46.766 6.85 46.775 6.846 46.771 6.844 46.765 6.829 46.756 6.829 46.753 6.816 46.738 6.798 46.734</gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:interior>
+                                            <gml:interior>
+                                                <gml:LinearRing>
+                                                        <gml:posList>6.763 46.717 6.771 46.721 6.784 46.735 6.786 46.748 6.773 46.751 6.768 46.744 6.749 46.732 6.759 46.725 6.759 46.722 6.763 46.717</gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:interior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="N4661acf387e1451c8a18c47f30a77b45">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                        <gml:posList>7.091 46.904 7.083 46.896 7.074 46.895 7.08 46.894 7.062 46.884 7.062 46.88 7.066 46.881 7.071 46.873 7.067 46.869 7.058 46.862 7.05 46.855 7.038 46.845 7.035 46.847 7.029 46.851 7.039 46.859 7.03 46.866 7.036 46.873 7.032 46.876 7.016 46.881 7.007 46.873 6.999 46.874 6.994 46.879 7.009 46.889 6.984 46.908 6.982 46.914 6.988 46.918 6.978 46.923 6.972 46.921 6.962 46.927 6.929 46.953 7.002 46.987 7.036 46.98 7.041 46.979 7.063 46.971 7.06 46.956 7.056 46.955 7.06 46.951 7.06 46.937 7.084 46.913 7.09 46.908 7.091 46.904</gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicBoundingBox>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:westBoundLongitude>
+                                <gco:Decimal>6.064</gco:Decimal>
+                            </gmd:westBoundLongitude>
+                            <gmd:eastBoundLongitude>
+                                <gco:Decimal>7.249</gco:Decimal>
+                            </gmd:eastBoundLongitude>
+                            <gmd:southBoundLatitude>
+                                <gco:Decimal>46.187</gco:Decimal>
+                            </gmd:southBoundLatitude>
+                            <gmd:northBoundLatitude>
+                                <gco:Decimal>46.987</gco:Decimal>
+                            </gmd:northBoundLatitude>
+                        </gmd:EX_GeographicBoundingBox>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </gmd:extent>
+		</gmd:MD_DataIdentification>
+	</gmd:identificationInfo>
+    <gmd:distributionInfo>
+        <gmd:MD_Distribution>
+        </gmd:MD_Distribution>
+    </gmd:distributionInfo>
+</gmd:MD_Metadata>
