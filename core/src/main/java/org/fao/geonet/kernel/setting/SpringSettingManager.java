@@ -60,7 +60,7 @@ public class SpringSettingManager implements ISettingManager {
 	public Element getAllAsXML(boolean asTree) {
         Element env = new Element("settings");
 		List<Setting> settings = getAllAsList();
-		Map<String, Element> pathElements = new HashMap<String, Element>();
+		Map<Object, Element> pathElements = new HashMap<Object, Element>();
 
         for (Setting setting : settings) {
             if (asTree) {
@@ -77,13 +77,14 @@ public class SpringSettingManager implements ISettingManager {
         return env;
 	}
 
-    private void buildXmlTree(Element env, Map<String, Element> pathElements, Setting setting) {
+    private void buildXmlTree(Element env, Map<Object, Element> pathElements, Setting setting) {
         String[] segments = setting.getName().split("/");
         Element parent = env;
-        String path = "";
+        StringBuilder path = new StringBuilder();
         for (int i = 0; i < segments.length; i++) {
             String segment = segments[i];
-            path = path + "/" + segment;
+            path.append("/");
+            path.append(segment);
             Element currentElement = pathElements.get(path);
             if (currentElement == null) {
                 currentElement = new Element(segment);
@@ -95,7 +96,7 @@ public class SpringSettingManager implements ISettingManager {
                     currentElement.setText(setting.getValue());
                 }
                 parent.addContent(currentElement);
-                pathElements.put(path, currentElement);
+                pathElements.put(path.toString(), currentElement);
             }
 
             parent = currentElement;
