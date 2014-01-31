@@ -450,11 +450,13 @@
 
           for (var p in protocols) {
             if (protocols.hasOwnProperty(p) && protocols[p].checked === true) {
+              // TODO : define default description
+              var key = p + 'Url';
               xml +=
                   '<gmd:onLine xmlns:gmd="http://www.isotc211.org/2005/gmd" ' +
                   '            xmlns:gco="http://www.isotc211.org/2005/gco">' +
                   '  <gmd:CI_OnlineResource>' +
-                  '    <gmd:linkage><gmd:URL>' + node[p + 'Url'] +
+                  '    <gmd:linkage><gmd:URL>' + node[key] +
                   '    </gmd:URL></gmd:linkage>' +
                   '    <gmd:protocol><gco:CharacterString>' +
                   protocols[p].label +
@@ -462,12 +464,10 @@
                   '    <gmd:name><gco:CharacterString>' +
                   layerName +
                   '    </gco:CharacterString></gmd:name>' +
-                  // TODO : define default description
                   '    <gmd:description><gco:CharacterString>' +
                   '    </gco:CharacterString></gmd:description>' +
                   '  </gmd:CI_OnlineResource>' +
-                  '</gmd:onLine>';
-              + '&&&';
+                  '</gmd:onLine>' + '&&&';
             }
           }
           return xml;
