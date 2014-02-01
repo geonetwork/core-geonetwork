@@ -5,7 +5,7 @@
     
     <!--  Note CSV export to a file for statistics tables, through a Jeeves service => 
           all tables data are loaded into memory before their processing -->
-    <service name="statistics-export">
+    <service name="stat.tableExport">
       <documentation>CSV export for statistics tables</documentation>
       <output sheet="../xslt/services/statistics/to-csv_from_java.xsl"
         contentType="text/plain; charset=UTF-8">
@@ -22,15 +22,7 @@
         </call>
       </output>
     </service>
-    <!--  delete temp graphic files -->
-    <service name="statistics-delete-export">
-      <documentation><![CDATA[
-        Delete temp graphic files
-        ]]></documentation>
-      <class name=".services.statistics.DeleteTmpGraphics"/>
-    </service>
-    
-    
+
     <service name="statistics-search">
       <documentation><![CDATA[
             Return main metrics for the catalog and search service. Metrics are:
