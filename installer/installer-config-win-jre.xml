@@ -40,6 +40,7 @@
 	<!-- =================================================================================== -->
 	
 	<resources>
+    <res id="TargetPanel.dir.windows" src="../.props/installpath.windows.txt"/>
 		<res id="HTMLLicencePanel.licence" src="../web/geonetwork/docs/license.html"/>
 		<res id="HTMLLicencePanel.licence_fra" src="../web/geonetwork/docs/license_fra.html"/>
         <res id="HTMLLicencePanel.licence_spa" src="../web/geonetwork/docs/license_spa.html"/>
@@ -71,6 +72,7 @@
 	<!-- =================================================================================== -->
 	
 	<native type="izpack" name="ShellLink.dll" />
+	<native type="izpack" name="ShellLink_x64.dll"/>
 	
 	<!-- =================================================================================== -->
 	

@@ -62,6 +62,7 @@
 	<!-- =================================================================================== -->
 	
 	<resources>
+    <res id="TargetPanel.dir.windows" src="../.props/installpath.windows.txt"/>
 		<res id="HTMLLicencePanel.licence"     src="../docs/license.html"/>
 		<res id="HTMLLicencePanel.licence_fra" src="../docs/license_fra.html"/>
         <res id="HTMLLicencePanel.licence_spa" src="../docs/license_spa.html"/>
@@ -98,6 +99,7 @@
 	<!-- =================================================================================== -->
 	
 	<native type="izpack" name="ShellLink.dll" />
+	<native type="izpack" name="ShellLink_x64.dll"/>
 	
 	<!-- =================================================================================== -->
 	

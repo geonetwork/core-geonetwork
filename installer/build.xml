@@ -139,6 +139,15 @@
 			<replacefilter token="@javaVersion@" property="javaVersion"/>
 		</replace>
     	
+	    <!-- Windows installer path -->
+	    <copy 	file="../installer/installpath.windows.txt" 
+	    		tofile="${propsdir}/installpath.windows.txt" 
+	    		filtering="on" overwrite="yes"/>
+		<replace 	file="${propsdir}/installpath.windows.txt" 
+					propertyFile="../web/src/main/webapp/WEB-INF/server.prop">
+			<replacefilter token="@version@" property="version"/>
+    </replace>
+
     	<!-- Modify the config-gui.xml replacing the default view setting with a variable $defaultGUI that can be used to 
     		 configure the selected view during the installation process. The choice depends on the userInputPanel.xml radio selection -->
 
