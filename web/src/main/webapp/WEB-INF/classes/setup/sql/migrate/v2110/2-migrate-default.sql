@@ -18,6 +18,7 @@ ALTER TABLE Settings ALTER name TYPE varchar(512);
 -- 0 is char, 1 is number, 2 is boolean
 ALTER TABLE Settings ADD datatype int;
 ALTER TABLE Settings ADD position int;
+ALTER TABLE Settings ADD internal varchar(1);
 
 UPDATE Settings SET position = id * 10;
 
