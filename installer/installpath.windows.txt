@@ -1,1 +1,1 @@
-C:\geonetwork-anzmest-@version@
+C:\geonetwork-@version@
