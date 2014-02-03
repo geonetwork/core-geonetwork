@@ -278,7 +278,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 
 			String id = dm.getMetadataId(dbms, uuid);
 			Element md = dm.getMetadata(dbms, id);
-			Processor.detachXLink(md, context);
+			Processor.detachXLink(md);
 			MdInfo mdInfo = dm.getMetadataInfo(dbms, id);
 			Element env = Lib.prepareTransformEnv(mdInfo.uuid, mdInfo.changeDate, "", dm.getSiteURL(context), "");
 	

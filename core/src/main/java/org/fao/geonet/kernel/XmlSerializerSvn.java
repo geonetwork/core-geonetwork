@@ -76,9 +76,9 @@ public class XmlSerializerSvn extends XmlSerializer {
      * @return
      * @throws Exception
      */
-	public Element select(Dbms dbms, String table, ServiceContext context, String id) throws Exception {
+	public Element select(Dbms dbms, String table, String id) throws Exception {
 		Element rec = internalSelect(dbms, table, id, false);
-		if (resolveXLinks()) Processor.detachXLink(rec, context);
+		if (resolveXLinks()) Processor.detachXLink(rec);
 		return rec;
 	}
 
