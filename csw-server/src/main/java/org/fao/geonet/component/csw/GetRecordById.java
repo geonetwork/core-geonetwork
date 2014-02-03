@@ -28,6 +28,9 @@ import java.util.Map;
 
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 
@@ -154,9 +157,12 @@ public class GetRecordById extends AbstractOperation implements CatalogService
 
 				// Check if the current user has access 
 			    // to the requested MD 
-			    Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW); 
-				
-				Element md = SearchController.retrieveMetadata(context, id, setName, outSchema, null, null, ResultType.RESULTS, null);
+                Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW);
+
+                final SettingInfo settingInfo = gc.getBean(SearchManager.class).get_settingInfo();
+                final String displayLanguage = LuceneSearcher.determineLanguage(context, request, settingInfo).presentationLanguage;
+				Element md = SearchController.retrieveMetadata(context, id, setName, outSchema, null, null, ResultType.RESULTS, null,
+                        displayLanguage);
 
 				if (md != null)
 					response.addContent(md);

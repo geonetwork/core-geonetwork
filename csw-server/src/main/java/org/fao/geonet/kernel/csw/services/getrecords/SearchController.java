@@ -24,6 +24,9 @@
 package org.fao.geonet.kernel.csw.services.getrecords;
 
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
@@ -118,9 +121,11 @@ public class SearchController {
         Pair<Element, List<ResultItem>> summaryAndSearchResults = searcher .search(context, filterExpr, filterVersion,
                 typeName, sort, resultType, startPos, maxRecords, maxHitsFromSummary, cswServiceSpecificContraint);
 
+        final SettingInfo settingInfo = _applicationContext.getBean(SearchManager.class).get_settingInfo();
+        String displayLanguage = LuceneSearcher.determineLanguage(context, filterExpr, settingInfo).presentationLanguage;
         // retrieve actual metadata for results
         int counter = retrieveMetadataMatchingResults(context, results, summaryAndSearchResults, maxRecords, setName,
-                outSchema, elemNames, typeName, resultType, strategy);
+                outSchema, elemNames, typeName, resultType, strategy, displayLanguage);
 
         //
         // properties of search result
@@ -144,6 +149,7 @@ public class SearchController {
     /**
      * Retrieve actual metadata matching the results. Adds elements to results parameter as a side effect.
      *
+     *
      * @param context Service context
      * @param results retrieved results
      * @param summaryAndSearchResults results from search
@@ -154,15 +160,16 @@ public class SearchController {
      * @param typeName requested typeName
      * @param resultType requested ResultType
      * @param strategy ElementNames strategy
+     * @param displayLanguage
      * @return number of results from search that could be retrieved
      * @throws CatalogException hmm
      */
     private int retrieveMetadataMatchingResults(ServiceContext context,
-                                                    Element results,
-                                                    Pair<Element, List<ResultItem>> summaryAndSearchResults,
-                                                    int maxRecords, ElementSetName elementSetName,
-                                                    OutputSchema outputSchema, Set<String> elementNames,
-                                                    String typeName, ResultType resultType, String strategy)
+                                                Element results,
+                                                Pair<Element, List<ResultItem>> summaryAndSearchResults,
+                                                int maxRecords, ElementSetName elementSetName,
+                                                OutputSchema outputSchema, Set<String> elementNames,
+                                                String typeName, ResultType resultType, String strategy, String displayLanguage)
             throws CatalogException {
 
         List<ResultItem> resultsList = summaryAndSearchResults.two();
@@ -170,7 +177,7 @@ public class SearchController {
         for (int i=0; ( i < maxRecords) && ( i < resultsList.size()); i++) {
             ResultItem resultItem = resultsList.get(i);
             String  id = resultItem.getID();
-            Element md = retrieveMetadata(context, id, elementSetName, outputSchema, elementNames, typeName, resultType, strategy);
+            Element md = retrieveMetadata(context, id, elementSetName, outputSchema, elementNames, typeName, resultType, strategy, displayLanguage);
             // metadata cannot be retrieved
             if (md == null) {
                 context.warning("SearchController : Metadata not found or invalid schema : "+ id);
@@ -191,6 +198,7 @@ public class SearchController {
      * Retrieves metadata from the database. Conversion between metadata record and output schema are defined in
      * xml/csw/schemas/ directory.
      *
+     *
      * @param context service context
      * @param id id of metadata
      * @param setName requested ElementSetName
@@ -199,12 +207,13 @@ public class SearchController {
      * @param typeName requested typeName
      * @param resultType requested ResultType
      * @param strategy ElementNames strategy
+     * @param displayLanguage
      * @return	The XML metadata record if the record could be converted to the required output schema. Null if no
      * conversion available for the schema (eg. fgdc record can not be converted to ISO).
      * @throws CatalogException hmm
      */
-  public static Element retrieveMetadata(ServiceContext context, String id,  ElementSetName setName, OutputSchema
-          outSchema, Set<String> elemNames, String typeName, ResultType resultType, String strategy) throws CatalogException {
+  public static Element retrieveMetadata(ServiceContext context, String id, ElementSetName setName, OutputSchema
+          outSchema, Set<String> elemNames, String typeName, ResultType resultType, String strategy, String displayLanguage) throws CatalogException {
 
 	try	{
 		//--- get metadata from DB
@@ -240,7 +249,7 @@ public class SearchController {
         // OGC 07-045 :
         // Because for this application profile it is not possible that a query includes more than one
         // typename, any value(s) of the typeNames attribute of the elementSetName element are ignored.
-        res = applyElementSetName(context, scm, schema, res, outSchema, setName, resultType, id);
+        res = applyElementSetName(context, scm, schema, res, outSchema, setName, resultType, id, displayLanguage);
 		//
 	    // apply elementnames
         //
@@ -279,7 +288,7 @@ public class SearchController {
      */
     private static Element applyElementSetName(ServiceContext context, SchemaManager schemaManager, String schema,
                                                Element result, OutputSchema outputSchema, ElementSetName elementSetName,
-                                               ResultType resultType, String id) throws InvalidParameterValueEx {
+                                               ResultType resultType, String id, String displayLanguage) throws InvalidParameterValueEx {
         String prefix ;
         if (outputSchema == OutputSchema.OGC_CORE) {
             prefix = "ogc";
@@ -295,7 +304,7 @@ public class SearchController {
 		String styleSheet = schemaDir + prefix +"-"+ elementSetName +".xsl";
 
 		Map<String, String> params = new HashMap<String, String>();
-		params.put("lang", context.getLanguage());
+		params.put("lang", displayLanguage);
 		params.put("displayInfo", resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
 
 		try {
