@@ -458,7 +458,7 @@ public class DataManager {
                         sb.append(xlink.getValue()); sb.append(" ");
                     }
                     moreFields.add(SearchManager.makeField("_xlink", sb.toString(), true, true));
-                    Processor.detachXLink(md);
+                    Processor.detachXLink(md, servContext);
                 }
                 else {
                     moreFields.add(SearchManager.makeField("_hasxlinks", "0", true, true));
@@ -2218,8 +2218,8 @@ public class DataManager {
      * @return
      * @throws Exception
      */
-	public Element getThumbnails(Dbms dbms, String id) throws Exception {
-		Element md = xmlSerializer.select(dbms, "Metadata", id);
+	public Element getThumbnails(Dbms dbms, ServiceContext context, String id) throws Exception {
+		Element md = xmlSerializer.select(dbms, "Metadata", context, id);
 
 		if (md == null)
 			return null;
@@ -2408,7 +2408,7 @@ public class DataManager {
      */
 	private void manageCommons(Dbms dbms, ServiceContext context, String id, Element env, String styleSheet) throws Exception {
         Lib.resource.checkEditPrivilege(context, id);
-		Element md = xmlSerializer.select(dbms, "Metadata", id);
+		Element md = xmlSerializer.select(dbms, "Metadata", context, id);
 
 		if (md == null) return;
 

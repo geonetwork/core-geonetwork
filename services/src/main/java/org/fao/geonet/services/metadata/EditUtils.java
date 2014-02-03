@@ -193,7 +193,7 @@ class EditUtils {
      */
     private Element applyChanges(Dbms dbms, String id, Map<String, String> changes, String currVersion) throws Exception {
         Lib.resource.checkEditPrivilege(context, id);
-        Element md = xmlSerializer.select(dbms, "Metadata", id);
+        Element md = xmlSerializer.select(dbms, "Metadata", context, id);
 
 		//--- check if the metadata has been deleted
 		if (md == null) {
