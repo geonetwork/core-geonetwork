@@ -41,7 +41,6 @@ import javax.annotation.Nonnull;
 
 import jeeves.constants.Jeeves;
 import jeeves.resources.dbms.Dbms;
-import org.fao.geonet.kernel.setting.SettingInfo;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
@@ -126,7 +125,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
 	private Query         _query;
 	private Filter _filter;
 	private Sort          _sort;
-	private LuceneSearcher.LanguageSelection _lang;
+	private String        _lang;
 	private long          _searchToken;
     private final GMLConfiguration   _configuration;
     private ApplicationContext _applicationContext;
@@ -192,9 +191,8 @@ public class CatalogSearcher implements MetadataRecordSelector {
                 if (Log.isDebugEnabled(Geonet.CSW_SEARCH))
                     Log.debug(Geonet.CSW_SEARCH, "after convertphrases:\n" + Xml.getString(luceneExpr));
             }
-            _lang = LuceneSearcher.determineLanguage(context, filterExpr, sm.get_settingInfo());
-
-            indexAndTaxonomy = sm.getIndexReader(_lang.presentationLanguage, _searchToken);
+            _lang = LuceneSearcher.determineLanguage(context, luceneExpr, sm.get_settingInfo());
+            indexAndTaxonomy = sm.getIndexReader(_lang, _searchToken);
             Log.debug(Geonet.CSW_SEARCH, "Found searcher with " + indexAndTaxonomy.version + " comparing with " + _searchToken);
             if (_searchToken != -1L && indexAndTaxonomy.version != _searchToken) {
                 throw new SearchExpiredEx("Search has expired/timed out - start a new search");
@@ -249,7 +247,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
                 throw new SearchExpiredEx("Search has expired/timed out - start a new search");
             }
             GeonetworkMultiReader _reader = indexAndTaxonomy.indexReader;
-            Pair<TopDocs, Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(maxHits, 0, maxHits, _lang.presentationLanguage,
+            Pair<TopDocs, Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(maxHits, 0, maxHits, _lang,
                     luceneConfig.getTaxonomy().get(ResultType.RESULTS.toString()), _reader, _query, wrapSpatialFilter(), _sort, null, false,
                     luceneConfig.isTrackDocScores(), luceneConfig.isTrackMaxScore(), luceneConfig.isDocsScoredInOrder());
             TopDocs tdocs = searchResults.one();
@@ -458,8 +456,8 @@ public class CatalogSearcher implements MetadataRecordSelector {
                 Log.debug(Geonet.CSW_SEARCH, "## Search criteria: null");
         }
 
-
-        boolean requestedLanguageOnTop = sm.get_settingInfo().getRequestedLanguageOnTop();
+                _lang = LuceneSearcher.determineLanguage(context, luceneExpr, sm.get_settingInfo());
+		boolean requestedLanguageOnTop = sm.get_settingInfo().getRequestedLanguageOnTop();
 		
         Query data;
         LuceneConfig luceneConfig = getLuceneConfig();
@@ -467,10 +465,11 @@ public class CatalogSearcher implements MetadataRecordSelector {
             data = null;
             Log.info(Geonet.CSW_SEARCH, "LuceneSearcher made null query");
         } else {
-            PerFieldAnalyzerWrapper analyzer = SearchManager.getAnalyzer(_lang.analyzerLanguage, true);
+            PerFieldAnalyzerWrapper analyzer = SearchManager.getAnalyzer(_lang, true);
             String requestedLanguageOnly = sm.get_settingInfo().getRequestedLanguageOnly();
             data = LuceneSearcher.makeLocalisedQuery(luceneExpr,
-                analyzer, luceneConfig, _lang.presentationLanguage, requestedLanguageOnly);
+                analyzer, luceneConfig,
+                _lang, requestedLanguageOnly);
             Log.info(Geonet.CSW_SEARCH, "LuceneSearcher made query:\n" + data.toString());
         }
 
@@ -484,7 +483,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
 		Query groups = getGroupsQuery(context);
 		if (sort == null) {
 			List<Pair<String, Boolean>> fields = Collections.singletonList(Pair.read(Geonet.SearchResult.SortBy.RELEVANCE, true));
-            sort = LuceneSearcher.makeSort(fields, _lang.presentationLanguage, requestedLanguageOnTop);
+            sort = LuceneSearcher.makeSort(fields, _lang, requestedLanguageOnTop);
 		}
 
 		// --- put query on groups in AND with lucene query
@@ -532,7 +531,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
 	    LuceneSearcher.logSearch(context, config, _query, numHits, _sort, geomWkt, sm);
 
 		Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary(numHits, startPosition - 1,
-                maxRecords, _lang.presentationLanguage, luceneConfig.getTaxonomy().get(resultType.toString()), reader, _query, wrapSpatialFilter(),
+                maxRecords, _lang, luceneConfig.getTaxonomy().get(resultType.toString()), reader, _query, wrapSpatialFilter(),
                 _sort, taxonomyReader, buildSummary, luceneConfig.isTrackDocScores(), luceneConfig.isTrackMaxScore(),
                 luceneConfig.isDocsScoredInOrder()
 		);

@@ -245,10 +245,6 @@ public class SettingInfo
         return sm.getValueAsBool("system/inspire/enable");
     }
 
-    public boolean getPreferUILanguage() {
-        return sm.getValueAsBool(SettingManager.SYSTEM_LUCENE_PREFER_UI_LANGUAGE);
-    }
-
 	//---------------------------------------------------------------------------
 	//---
 	//--- Vars

@@ -147,8 +147,6 @@ public class SettingManager {
         }
         return env;
     }
-    public static final String SYSTEM_LUCENE_PREFER_UI_LANGUAGE = "system/requestedLanguage/preferUiLanguage";
-    public static final String SYSTEM_AUTODETECT_ENABLE = "system/autodetect/enable";
     private void buildTree(Element env, String key, String keyRoot) {
         int separatorIndex = key.indexOf("/");
         // settings
