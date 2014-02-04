@@ -24,7 +24,10 @@
 package org.fao.geonet.kernel.setting;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
@@ -44,6 +47,7 @@ import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 /**
@@ -75,7 +79,7 @@ public class SettingManager implements ISettingManager {
     @Autowired
     private SettingRepository _repo;
 
-    @PersistenceContext
+    @PersistenceContext(unitName="persistence_unit")
     private EntityManager _entityManager;
 
     /**

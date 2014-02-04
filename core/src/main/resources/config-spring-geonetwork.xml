@@ -6,7 +6,7 @@
     xmlns:aop="http://www.springframework.org/schema/aop"
     xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
         http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
@@ -14,7 +14,7 @@
 
     <aop:aspectj-autoproxy proxy-target-class="true"/>
     <tx:annotation-driven proxy-target-class="true"/>
-    <context:component-scan base-package="org.fao.geonet.services"/>
+    <context:component-scan base-package="org.fao.geonet,jeeves"/>
 
     <bean id="AccessManager" class="org.fao.geonet.kernel.AccessManager" lazy-init="true" />
     <bean id="DataManager" class="org.fao.geonet.kernel.DataManager" lazy-init="true" />
@@ -25,8 +25,6 @@
     <bean id="LuceneIndexLanguageTracker" class="org.fao.geonet.kernel.search.index.LuceneIndexLanguageTracker" lazy-init="true"/>
     <bean id="HarvesterSettingsManager" class="org.fao.geonet.kernel.setting.HarvesterSettingsManager" lazy-init="true"/>
     <bean id="SettingInfo" class="org.fao.geonet.kernel.setting.SettingInfo" lazy-init="true"/>
-    <bean id="SettingManager" class="org.fao.geonet.kernel.setting.SettingManager" lazy-init="true"/>
-    <bean id="SpringSettingManager" class="org.fao.geonet.kernel.setting.SpringSettingManager" lazy-init="true"/>
     <bean id="MetadataNotifierManager" class="org.fao.geonet.notifier.MetadataNotifierManager" lazy-init="true"/>
     <bean id="IsoLanguagesMapper" class="org.fao.geonet.languages.IsoLanguagesMapper" lazy-init="true"/>
 

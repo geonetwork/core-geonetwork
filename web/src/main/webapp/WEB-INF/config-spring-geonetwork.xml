@@ -6,11 +6,14 @@
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+" >
 
     <import resource="config-security/config-security.xml"/>
     <import resource="classpath:JZkitApplicationContext.xml"/>
+	<import resource="classpath*:/config-spring-geonetwork.xml"/>
 
     <import resource="config-db/initial_data.xml"/>
 
@@ -57,11 +60,10 @@
         <value>spa</value>
         <value>tur</value>
     </util:set>
-
-	<bean id="localeResolver"
-		class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
-		<property name="defaultLocale" value="eng" />
-	</bean>
+	
+    <bean id="configPath" class="java.lang.String">
+        <constructor-arg index="0" value="/WEB-INF/" />
+    </bean>
 
 	<bean id="localeChangeInterceptor"
 		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
