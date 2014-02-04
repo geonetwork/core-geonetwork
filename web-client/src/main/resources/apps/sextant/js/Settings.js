@@ -60,7 +60,7 @@ GeoNetwork.Settings.facetListConfig = [{name: 'orgNames'},
                                        {name: 'categories'},  
                                        {name: 'createDateYears'}, 
                                        {name: 'keywords'}];
-GeoNetwork.Settings.facetMaxItems = 7;
+GeoNetwork.Settings.facetMaxItems = 5;
 
 // Define if default mode should be used for HTML print output instead of tabs only
 GeoNetwork.printDefaultForTabs = false;
