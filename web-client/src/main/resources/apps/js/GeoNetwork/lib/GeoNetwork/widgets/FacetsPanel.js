@@ -485,7 +485,13 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
      *  Clear all current filter in search form and breadcrumb (if set)
      */
     reset: function () {
+        this.currentFilterStore.each(function (r) {
+            this.removeFacet(r.get('id'), true);
+        }, this);
         this.removeAll();
+        if(this.breadcrumb) {
+            this.breadcrumb.removeAll();
+        }
     },
     init: function () {
         this.currentFilterStore = new Ext.data.ArrayStore({
