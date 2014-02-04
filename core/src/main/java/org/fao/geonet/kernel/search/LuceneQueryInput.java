@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.search;
 
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import org.jdom.Element;
 
 import java.util.HashSet;
@@ -45,13 +46,13 @@ public class LuceneQueryInput extends UserQueryInput {
     private boolean isUserAdmin;
     private boolean isAdmin;
 
-    private String requestedLanguageOnly;
+    private SettingInfo.SearchRequestLanguage requestedLanguageOnly;
 
-    public String isRequestedLanguageOnly() {
+    public SettingInfo.SearchRequestLanguage isRequestedLanguageOnly() {
         return requestedLanguageOnly;
     }
 
-    public void setRequestedLanguageOnly(String requestedLanguageOnly) {
+    public void setRequestedLanguageOnly(SettingInfo.SearchRequestLanguage requestedLanguageOnly) {
         this.requestedLanguageOnly = requestedLanguageOnly;
     }
 
