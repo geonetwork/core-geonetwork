@@ -64,7 +64,9 @@ public class FSDirectoryFactory implements DirectoryFactory {
     @Override
     public void resetIndex() throws IOException {
         init();
-        FileUtils.cleanDirectory(indexFile);
+        if (indexFile.exists()) {
+            FileUtils.cleanDirectory(indexFile);
+        }
     }
 
     @Override
