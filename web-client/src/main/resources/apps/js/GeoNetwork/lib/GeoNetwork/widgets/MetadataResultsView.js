@@ -796,6 +796,9 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                         var p4 = new OpenLayers.Geometry.Point(bbox[0], bbox[1]);
                         
                         if (this.mapsProjection !== 'EPSG:4326') {
+                            if(this.projectionTo.getCode() == 'EPSG:900913') {
+                                this.projectionTo.proj = null;
+                            }
                             p1.transform(this.projectionFrom, this.projectionTo);
                             p2.transform(this.projectionFrom, this.projectionTo);
                             p3.transform(this.projectionFrom, this.projectionTo);
