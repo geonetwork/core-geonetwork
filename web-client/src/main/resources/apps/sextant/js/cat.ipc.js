@@ -78,7 +78,7 @@ cat.ipc = function() {
 				var nbLayersInput = Ext.query("span[id*=nbPanierLayers]")[0];
 				var nbLayers = nbLayersInput.innerHTML;
 				if (nbLayers != '0') {
-					panierMenuItem["obj"].innerHTML = panierMenuItem["key"] + " (+" + nbLayers + ")";
+					panierMenuItem["obj"].innerHTML = panierMenuItem["key"] + " (" + nbLayers + ")";
 				}
 			}
 			
