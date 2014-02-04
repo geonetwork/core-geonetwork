@@ -363,7 +363,12 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 		// To count the number of values added and stop if maxNumberOfTerms reach
 		int counter = 0;
 		String searchValueWithoutWildcard = searchValue.replaceAll("[*?]", "");
-		String analyzedSearchValue = analyzeText(searchField, searchValueWithoutWildcard, SearchManager.getAnalyzer(_language.analyzerLanguage, true));
+        if (_language == null) {
+            final Element request = new Element("request").addContent(new Element("any").setText(searchValue));
+            _language = determineLanguage(srvContext, request, _sm.getSettingInfo());
+        }
+        final PerFieldAnalyzerWrapper analyzer = SearchManager.getAnalyzer(_language.analyzerLanguage, true);
+        String analyzedSearchValue = analyzeText(searchField, searchValueWithoutWildcard, analyzer);
 
 		Map <String, SearchManager.TermFrequency> finalValuesMap = new HashMap<String, SearchManager.TermFrequency>();
 		
