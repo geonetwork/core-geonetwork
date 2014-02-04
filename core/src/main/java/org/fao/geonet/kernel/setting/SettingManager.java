@@ -30,8 +30,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import javax.annotation.Nonnull;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.EntityManagerFactory;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
@@ -47,15 +46,14 @@ import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * A convenience class for updating and accessing settings.  One of the primary needs of this
  * class at the moment is to maintain backwards compatibility so not all code and xsl files
  * that make use of the settings need to be modified.
  */
-@Component
+@Service
 public class SettingManager implements ISettingManager {
 
     public static final String SYSTEM_SITE_SITE_ID_PATH = "system/site/siteId";
@@ -79,8 +77,12 @@ public class SettingManager implements ISettingManager {
     @Autowired
     private SettingRepository _repo;
 
-    @PersistenceContext(unitName="persistence_unit")
-    private EntityManager _entityManager;
+    /**
+     * Do not use @PersistenceContext 
+     * https://weblogs.java.net/blog/ss141213/archive/2005/12/dont_use_persis_1.html
+     */
+    @Autowired
+    private EntityManagerFactory _entityManagerFactory;
 
     /**
      * Get all settings as xml.
@@ -292,7 +294,7 @@ public class SettingManager implements ISettingManager {
      */
     @Override
 	public final boolean refresh() throws SQLException {
-        _entityManager.getEntityManagerFactory().getCache().evict(HarvesterSetting.class);
+        _entityManagerFactory.getCache().evict(HarvesterSetting.class);
         return true;
     }
 
