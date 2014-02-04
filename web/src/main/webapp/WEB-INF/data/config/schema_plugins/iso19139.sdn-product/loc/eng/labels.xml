@@ -47,5 +47,10 @@
 		<help />
 		<condition />
 	</element>
-	 
+	 <element name="gmd:code" context="gmd:RS_Identifier">
+		<label>CRS code</label>
+		<description></description>
+		<help />
+		<condition />	 
+	 </element>
 </labels>

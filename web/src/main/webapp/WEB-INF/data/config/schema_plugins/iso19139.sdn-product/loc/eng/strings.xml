@@ -2,17 +2,22 @@
 <strings>
     <sdnProductTab>SeaDatanet Product</sdnProductTab>
     <productIdentification>Product identification</productIdentification>
+    <quickLooks>Quicklooks</quickLooks>
     <descriptiveKeywords>Descriptive keywords</descriptiveKeywords>
     <spatioTemporalExtent>Spatio-temporal extent</spatioTemporalExtent>
     <geographicalExtent>Geographical extent</geographicalExtent>
     <pointOfContact>Organizations responsible for management and processing, point of contact</pointOfContact>
     <featureType>Feature type</featureType>
+    <usageLicense>Usage license</usageLicense>
     <oceanDiscoveryParameters>Ocean Discovery Parameters</oceanDiscoveryParameters>
     <seaAreas>Sea areas</seaAreas>
     <verticalExtent>Vertical extent</verticalExtent>
     <nbVerticalLevels>Number of vertical levels</nbVerticalLevels>
     <temporalExtent>Temporal extent</temporalExtent>
     <startDate>Start date</startDate>
+    <endDate>End date</endDate>
+    <unknown>Unknown</unknown>
     <productionCentre>Production centre</productionCentre>
     <productManager>Product manager</productManager>
+    <productAccess>Product access</productAccess> 
 </strings>

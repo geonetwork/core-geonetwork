@@ -4,6 +4,7 @@
   xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx"
   xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml"
   xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:geonet="http://www.fao.org/geonetwork"
+  xmlns:sdn-product="http://myocean.org/geonetwork" xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:exslt="http://exslt.org/common"
   exclude-result-prefixes="gmd gco gml gts srv xlink exslt geonet">
 
@@ -23,6 +24,8 @@
 	<xsl:template name="permitMarkup-iso19139.sdn-product">
 		<xsl:value-of select="false()"/>
 	</xsl:template>
+
+
 
 
   <!-- Check if any elements are overriden here in iso19139.sdn-product mode
@@ -273,7 +276,7 @@
 		<xsl:param name="dataset" />
 		<xsl:param name="core" />
 
-		<!-- Product identification -->
+		<!-- 1.1 Product identification -->
 		<xsl:call-template name="complexElementGuiWrapper">
 			<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/productIdentification" />
 			<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/metadataInfoTitle)" />
@@ -287,9 +290,14 @@
 					<xsl:with-param name="edit" select="$edit" />
 				</xsl:apply-templates>
 
-				<!-- Internal permanent shortname  -->
+				<!-- Internal permanent shortname 
+					TODO: built from the Point of contact's domain name, extracted from his email address
+					but which point of contact ? custodian ? originator ?
+					TODO: how to call the elementEP template on other things that nodes ? (pre-built text)
+				 -->
+
 				<xsl:apply-templates mode="elementEP"
-					select="gmd:fileIdentifier|gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code">
+					select="gmd:fileIdentifier">
 					<xsl:with-param name="schema" select="$schema" />
 					<xsl:with-param name="edit" select="false" />
 				</xsl:apply-templates>
@@ -332,8 +340,25 @@
 				
 			</xsl:with-param>
 		</xsl:call-template>
-		
-		<!-- Descriptive keywords -->
+
+		<!-- 1.2 Quicklooks -->
+
+		<xsl:call-template name="complexElementGuiWrapper">
+			<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/quickLooks" />
+			<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/quickLooks)" />
+
+			<xsl:with-param name="content">
+				<!-- Quickview image -->
+				<xsl:apply-templates mode="elementEP"
+					select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName">
+					<xsl:with-param name="schema" select="$schema" />
+					<xsl:with-param name="edit" select="$edit" />
+				</xsl:apply-templates>
+			</xsl:with-param>
+			</xsl:call-template>
+					
+		<!-- 1.3 Descriptive keywords -->
+
 		<xsl:call-template name="complexElementGuiWrapper">
 			<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/descriptiveKeywords" />
 			<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/descriptiveKeywords)" />
@@ -352,6 +377,28 @@
 								<xsl:with-param name="elementRef" select="../geonet:element/@ref"/>
 								<xsl:with-param name="widgetMode" select="'multiplelist'"/>
 								<xsl:with-param name="thesaurusId" select="'local.feature-type.seadatanet.feature-type'"/>
+								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join(gmd:featureTypes/gco:LocalName/@codeSpace, '!,!'), '''', '\\'''), '!', '''')"/>
+								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-feature-type'''"/>
+								<xsl:with-param name="transformation" select="'to-iso19139.myocean-feature-type'"/>
+								<xsl:with-param name="identificationMode" select="'uri'"/>
+							</xsl:call-template>
+						</xsl:with-param>
+					</xsl:apply-templates>
+				</xsl:for-each>
+
+				<!-- sea areas -->
+
+				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords
+					[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='areaOfBenefit']/gmd:MD_Keywords">
+					<xsl:apply-templates mode="simpleElement" select=".">
+						<xsl:with-param name="schema"  select="$schema"/>
+						<xsl:with-param name="edit"   select="$edit"/>
+						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/seaAreas"/>
+						<xsl:with-param name="text">
+							<xsl:call-template name="snippet-editor">
+								<xsl:with-param name="elementRef" select="../geonet:element/@ref"/>
+								<xsl:with-param name="widgetMode" select="'multiplelist'"/>
+								<xsl:with-param name="thesaurusId" select="'local.reference-geographical-area.seadatanet.reference-geographical-area'"/>
 								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join(gmd:featureTypes/gco:LocalName/@codeSpace, '!,!'), '''', '\\'''), '!', '''')"/>
 								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-feature-type'''"/>
 								<xsl:with-param name="transformation" select="'to-iso19139.myocean-feature-type'"/>
@@ -383,33 +430,19 @@
 					</xsl:apply-templates>
 				</xsl:for-each>
 
+			<!-- Usage license -->
+			
+			<xsl:apply-templates mode="elementEP" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation">
+					<xsl:with-param name="schema" select="$schema" />
+					<xsl:with-param name="edit" select="$edit" />
+		    </xsl:apply-templates>
 
-				<!-- sea areas -->
-				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords
-					[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='areaOfBenefit']/gmd:MD_Keywords">
-					<xsl:apply-templates mode="simpleElement" select=".">
-						<xsl:with-param name="schema"  select="$schema"/>
-						<xsl:with-param name="edit"   select="$edit"/>
-						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/seaAreas"/>
-						<xsl:with-param name="text">
-							<xsl:call-template name="snippet-editor">
-								<xsl:with-param name="elementRef" select="../geonet:element/@ref"/>
-								<xsl:with-param name="widgetMode" select="'multiplelist'"/>
-								<xsl:with-param name="thesaurusId" select="'local.reference-geographical-area.seadatanet.reference-geographical-area'"/>
-								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join(gmd:featureTypes/gco:LocalName/@codeSpace, '!,!'), '''', '\\'''), '!', '''')"/>
-								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-feature-type'''"/>
-								<xsl:with-param name="transformation" select="'to-iso19139.myocean-feature-type'"/>
-								<xsl:with-param name="identificationMode" select="'uri'"/>
-							</xsl:call-template>
-						</xsl:with-param>
-					</xsl:apply-templates>
-				</xsl:for-each>
 
 			</xsl:with-param>
 			
 		</xsl:call-template>
 
-		<!-- Spatio-temporal extent -->
+		<!-- 1.4 Spatio-temporal extent -->
 		<xsl:call-template name="complexElementGuiWrapper">
 			<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/spatioTemporalExtent" />
 			<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/spatioTemporalExtent)" />
@@ -434,9 +467,10 @@
 																gmd:spatialResolution/gmd:MD_Resolution/gmd:distance">
 								<xsl:with-param name="schema" select="$schema" />
 								<xsl:with-param name="edit" select="$edit" />
-							</xsl:apply-templates>		
+							</xsl:apply-templates>
+		
 							<!-- Coordinate reference system -->
-							<xsl:apply-templates mode="iso19139"
+							<xsl:apply-templates mode="elementEP"
 								select="gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/
 																gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code">
 								<xsl:with-param name="schema" select="$schema" />
@@ -456,24 +490,16 @@
 								<xsl:with-param name="schema" select="$schema"/>
 								<xsl:with-param name="edit"   select="$edit"/>
 							</xsl:apply-templates>
-							<!-- Number of vertical levels -->
-							<xsl:for-each select="gmd:contentInfo/gmd:MD_CoverageDescription/gmd:dimension/
-								gmd:MD_RangeDimension/gmd:descriptor[not(contains(., 'temporal'))]">
-								<xsl:apply-templates mode="simpleElement" select=".">
-									<xsl:with-param name="schema"  select="$schema"/>
-									<xsl:with-param name="edit"   select="$edit"/>
-									<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/nbVerticalLevels"/>
-									<xsl:with-param name="text">
-										<xsl:variable name="vnl_flag">vertical level number: </xsl:variable>
-										<xsl:variable name="vnl" select="substring-after(gco:CharacterString, $vnl_flag)"/>
-										<xsl:variable name="id" select="concat('_', gco:CharacterString/geonet:element/@ref)"/>
-										<input type="hidden" id="{$id}"	name="{$id}" value="{gco:CharacterString}"/>
-									    <input type="number" class="md"	onkeyup="validateNumber(this,true,true);"
-									      onchange="validateNumber(this,true,true); document.getElementById('{$id}').value = '{$vnl_flag}' + this.value;"
-										  value="{$vnl}" size="30"/>
-								   </xsl:with-param>
-							    </xsl:apply-templates>
-						    </xsl:for-each>	
+
+							<!-- Number of vertical levels (card. 0..1) -->
+							<xsl:apply-templates mode="simpleElement" select="gmd:spatialRepresentationInfo/gmd:MD_Georectified/gmd:axisDimensionProperties/
+							gmd:MD_Dimension[./gmd:dimensionName/gmd:MD_DimensionNameTypeCode/@codeListValue='vertical']/gmd:dimensionSize">
+								<xsl:with-param name="schema"   select="$schema"/>
+								<xsl:with-param name="edit"     select="true"/>
+								<xsl:with-param name="title"    select="/root/gui/schemas/*[name()=$schema]/strings/nbVerticalLevels" />
+								<xsl:with-param name="text"    select="gmd:spatialRepresentationInfo/gmd:MD_Georectified/gmd:axisDimensionProperties/
+							gmd:MD_Dimension[./gmd:dimensionName/gmd:MD_DimensionNameTypeCode/@codeListValue='vertical']/gmd:dimensionSize/gco:Integer" />
+							</xsl:apply-templates>
 						</xsl:with-param>
 					</xsl:call-template>
 					
@@ -492,12 +518,92 @@
 							</xsl:apply-templates>
 						</xsl:with-param>
 					</xsl:call-template>
+					<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/
+							gmd:EX_Extent/gmd:temporalElement/
+							gmd:EX_TemporalExtent/gmd:extent//*[gml:endPosition]">
+							<xsl:for-each select="*">
+								<xsl:apply-templates mode="simpleElement" select=".">
+									<xsl:with-param name="schema"  select="$schema"/>
+									<xsl:with-param name="edit"   select="$edit"/>
+									<xsl:with-param name="title"  select="/root/gui/schemas/*[name()=$schema]/strings/endDate"/>
+									<xsl:with-param name="editAttributes" select="false()"/>
+									<xsl:with-param name="text">
+										<xsl:variable name="ref" select="geonet:element/@ref"/>
+	
+										<xsl:variable name="format">
+											<xsl:choose>
+												<xsl:when test="string-length(text()) = 10"><xsl:text>%Y-%m-%d</xsl:text></xsl:when>
+												<xsl:when test="string-length(text()) > 10"><xsl:text>%Y-%m-%dT%H:%M:00</xsl:text></xsl:when>
+												<xsl:otherwise><xsl:text>%Y-%m-%d</xsl:text></xsl:otherwise>
+											</xsl:choose>
+										</xsl:variable>
 
+										<xsl:call-template name="calendar">
+											<xsl:with-param name="ref" select="$ref"/>
+											<xsl:with-param name="date" select="text()"/>
+											<xsl:with-param name="format" select="$format"/>
+											<xsl:with-param name="disabled" select="@indeterminatePosition = 'unknown'"></xsl:with-param>
+										</xsl:call-template>
+										
+										<xsl:variable name="indeterminatePositionId" select="concat('_', $ref ,'_indeterminatePosition')"/>
+										<div style="margin-left: 168px;">
+											<input type="hidden" id="{$indeterminatePositionId}" name="{$indeterminatePositionId}" value="{@indeterminatePosition}"/>
+											<input type="checkbox" onclick="indeterminatePositionCheck(this.checked, '_{$ref}', '{$indeterminatePositionId}');" id="{$indeterminatePositionId}_ck">
+												<xsl:if test="@indeterminatePosition = 'unknown'">
+													<xsl:attribute name="checked">checked</xsl:attribute>
+												</xsl:if>
+											</input>
+											<label for="{$indeterminatePositionId}_ck"><xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/unknown"/></label>
+										</div>
+									</xsl:with-param>
+								</xsl:apply-templates>
+							</xsl:for-each>
+						</xsl:for-each>
+						<xsl:for-each select="gmd:contentInfo/gmd:MD_CoverageDescription/gmd:dimension/
+													gmd:MD_RangeDimension/gmd:descriptor/gco:CharacterString[contains(., 'temporal')]">
+							<xsl:variable name="text">
+						
+								<xsl:variable name="vnl_flag">
+									temporal resolution:
+								</xsl:variable>
+								<xsl:variable name="vnl" select="substring-after(., $vnl_flag)" />
+								<xsl:variable name="id" select="concat('_', ./geonet:element/@ref)" />
+								<input type="hidden" id="{$id}" name="{$id}" value="{.}" />
+						
+								<xsl:variable name="temporalResolutionCodeList"
+									select="/root/gui/schemas/*[name(.)=$schema]/labels/element[@name='gmd:descriptor']/helper" />
+								<select
+									onchange="document.getElementById('{$id}').value = '{$vnl_flag}' + this.options[this.selectedIndex].value">
+									<option />
+									<xsl:for-each select="$temporalResolutionCodeList/option">
+										<!-- TODO : selected -->
+										<option value="{@value}">
+											<xsl:if test="@value = $vnl">
+												<xsl:attribute name="selected">selected</xsl:attribute>
+											</xsl:if>
+											<xsl:value-of select="." />
+										</option>
+									</xsl:for-each>
+								</select>
+								<!--<input type="number" class="md" onkeyup="validateNumber(this,true,true);" 
+									onchange="validateNumber(this,true,true); document.getElementById('{$id}').value 
+									= '{$vnl_flag}' + this.value;" value="{$vnl}" size="30"/> -->
+								<!-- <xsl:call-template name="getElementText"> <xsl:with-param name="edit" 
+									select="$edit"/> <xsl:with-param name="schema" select="$schema"/> </xsl:call-template> -->
+							</xsl:variable>
+							<xsl:apply-templates mode="simpleElement" select=".">
+								<xsl:with-param name="schema" select="$schema" />
+								<xsl:with-param name="edit" select="$edit" />
+								<xsl:with-param name="title"
+									select="/root/gui/schemas/*[name()=$schema]/strings/temporalResolution" />
+								<xsl:with-param name="text" select="$text" />
+							</xsl:apply-templates>
+						</xsl:for-each>
 			</xsl:with-param>
 			
 		</xsl:call-template>
 		
-		<!-- Organization responsible for management ... -->
+		<!-- 1.5 Organization responsible for management ... -->
 		<xsl:call-template name="complexElementGuiWrapper">
 			<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/pointOfContact" />
 			<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/pointOfContact)" />
@@ -569,8 +675,29 @@
 						</xsl:with-param>
 				</xsl:call-template>
 			</xsl:for-each>
+			
+			
+			
+			
 		</xsl:with-param>
-	</xsl:call-template>	
+	</xsl:call-template>
+
+	<!-- 1.6 product access -->
+	<xsl:call-template name="complexElementGuiWrapper">
+		<xsl:with-param name="title"
+			select="/root/gui/schemas/*[name()=$schema]/strings/productAccess" />
+		<xsl:with-param name="id"
+			select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/productAccess)" />
+
+		<xsl:with-param name="content">
+			<!-- Org name -->
+			<xsl:apply-templates mode="iso19139"
+				select="gmd:distributionInfo">
+				<xsl:with-param name="schema" select="$schema" />
+				<xsl:with-param name="edit" select="$edit" />
+			</xsl:apply-templates>
+		</xsl:with-param>
+	</xsl:call-template>
   </xsl:template>
 
 
