@@ -56,7 +56,7 @@ GeoNetwork.Settings.privileges = {
 };
 
 GeoNetwork.Settings.facetListConfig = [{name: 'orgNames'}, 
-                                       {name: 'inspireThemes'},  
+                                       {name: 'inspirethemes'},  
                                        {name: 'categories'},  
                                        {name: 'createDateYears'}, 
                                        {name: 'keywords'}];

@@ -382,7 +382,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
         var filter = new this.currentFilterStore.recordType(data, id);
         this.currentFilterStore.add(filter);
         
-        form.insert(0, new Ext.form.TextField({
+        form.insert(form.items.length-1, new Ext.form.TextField({
             id: data.fieldid,
             name: 'E_' + data.facet,
             value: data.value,

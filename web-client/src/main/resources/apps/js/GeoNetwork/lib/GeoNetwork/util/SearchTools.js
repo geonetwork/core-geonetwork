@@ -443,7 +443,7 @@ GeoNetwork.util.SearchTools = {
         return result;
     },
     addFieldValue: function (result, name, value) {
-        if (result[name] === undefined) {
+        if (result[name] === undefined || result[name] == '') {
             result[name] = new Array(value);
         } else {
             result[name].push(value);
