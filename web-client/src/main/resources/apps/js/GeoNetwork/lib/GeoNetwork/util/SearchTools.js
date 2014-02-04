@@ -250,7 +250,8 @@ GeoNetwork.util.SearchTools = {
                         fieldLabel: OpenLayers.i18n(searchCriteria.substring(searchCriteria.indexOf('_') + 1)),
                         value: map[searchCriteria],
                         inputType: 'text',
-                        extraCriteria: true
+                        extraCriteria: true,
+                        hidden: true
                     }));
                 }
             }
