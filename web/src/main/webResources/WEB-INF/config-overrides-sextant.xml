@@ -186,6 +186,11 @@
           <param name="filter" value="+_groupPublished:MYOCEAN-DOCUMENTS"/>
         </class>
       </service>
+      <service name="csw-MYOCEAN-EXTERNAL">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:MYOCEAN-EXTERNAL"/>
+        </class>
+      </service>
 	  <service name="csw-MYOCEAN-INTERMEDIATE-PRODUCTS">
         <class name=".services.main.CswDiscoveryDispatcher">
           <param name="filter" value="+_groupPublished:MYOCEAN-INTERMEDIATE-PRODUCTS"/>
@@ -194,6 +199,11 @@
       <service name="csw-MYOCEAN-SERVICES-AND-DATASETS">
         <class name=".services.main.CswDiscoveryDispatcher">
           <param name="filter" value="+_groupPublished:MYOCEAN-SERVICES-AND-DATASETS"/>
+        </class>
+      </service>
+      <service name="csw-MYOCEAN-SPECIFIC-CORE">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:MYOCEAN-SPECIFIC-CORE"/>
         </class>
       </service>
       <service name="csw-MYOCEAN-UPSTREAM-PRODUCTS">
