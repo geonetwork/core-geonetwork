@@ -70,7 +70,11 @@ public class Delete extends NotInReadOnlyModeService {
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String id = Utils.getIdentifierFromParameters(params, context);
-		
+
+        // If send a non existing uuid, Utils.getIdentifierFromParameters returns null
+        if (id == null)
+            throw new IllegalArgumentException("Metadata not found --> " + id);
+
 		//-----------------------------------------------------------------------
 		//--- check access
 
