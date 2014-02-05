@@ -18,27 +18,26 @@
     -->
     <xsl:template name="localised" mode="localised" match="*[gco:CharacterString or gmd:PT_FreeText]">
         <xsl:param name="langId"/>
-        
+
         <xsl:choose>
             <xsl:when
                 test="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId] and
                 gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId] != ''">
-                
+
                 <xsl:value-of
                     select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale=$langId]"
-                />
+                    />
             </xsl:when>
-            <xsl:when test="not(gco:CharacterString) and not(gmx:MimeFileType)">
+            <xsl:when test="not(gco:CharacterString and normalize-space(gco:CharacterString) != '') and not(gmx:MimeFileType and normalize-space(gmx:MimeFileType) != '')">
                 <!-- If no CharacterString, try to use the first textGroup available -->
                 <xsl:value-of
-                    select="gmd:PT_FreeText/gmd:textGroup[position()=1]/gmd:LocalisedCharacterString"
-                />
+                    select="gmd:PT_FreeText/(gmd:textGroup/gmd:LocalisedCharacterString[normalize-space(.) != ''])[position() = 1]"
+                    />
             </xsl:when>
             <xsl:otherwise>
                 <xsl:value-of select="gco:CharacterString|gmx:MimeFileType"/>
             </xsl:otherwise>
         </xsl:choose>
-
     </xsl:template>
 
     <!-- Template used to match any other element eg. gco:Boolean, gco:Date
