@@ -25,7 +25,9 @@
 			<gco:CharacterString>
 				<xsl:value-of select="sdn-product:buildIdentifier(/root/gmd:MD_Metadata/
 					gmd:identificationInfo/gmd:MD_DataIdentification/
-					gmd:pointOfContact[1]/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='originator']/
+					gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='originator'
+					and position() = 1]/
+					gmd:CI_ResponsibleParty/
 					gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/
  					gmd:electronicMailAddress/gco:CharacterString/text() , 
  					/root/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString/text())"/>
