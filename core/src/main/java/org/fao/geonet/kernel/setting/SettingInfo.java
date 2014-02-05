@@ -23,13 +23,14 @@
 
 package org.fao.geonet.kernel.setting;
 
-import org.fao.geonet.constants.Geonet;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.util.Calendar;
 
+import org.fao.geonet.constants.Geonet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 //=============================================================================
+@Service
 public class SettingInfo {
     @Autowired
     private SettingManager _settingManager;

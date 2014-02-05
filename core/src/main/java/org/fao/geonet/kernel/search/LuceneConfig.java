@@ -38,10 +38,10 @@ import javax.servlet.ServletContext;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.server.overrides.ConfigurationOverrides;
+
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-
 import org.apache.lucene.search.TopFieldCollector;
 import org.apache.lucene.util.NumericUtils;
 import org.apache.lucene.util.Version;
@@ -52,6 +52,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * Lucene configuration class load Lucene XML configuration file.
@@ -59,6 +60,7 @@ import org.springframework.stereotype.Component;
  * @author fxprunayre
  * 
  */
+@Service
 public class LuceneConfig {
     public static final String USE_NRT_MANAGER_REOPEN_THREAD = "useNRTManagerReopenThread";
     private static final int ANALYZER_CLASS = 1;

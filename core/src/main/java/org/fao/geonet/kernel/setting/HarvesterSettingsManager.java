@@ -32,14 +32,13 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.fao.geonet.utils.Log;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.repository.HarvesterSettingRepository;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * Allows hierarchical management of harvester settings. The harvester settings API has been designed with the following goals:
@@ -63,6 +62,7 @@ import org.springframework.stereotype.Component;
  * Harvester settings depend on the harvester's protocol.
  * 
  */
+@Service
 public class HarvesterSettingsManager {
 
     @Autowired

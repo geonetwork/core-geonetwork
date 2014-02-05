@@ -77,6 +77,7 @@ import com.yammer.metrics.core.TimerContext;
 
 //=============================================================================
 @Transactional(propagation = Propagation.REQUIRED)
+@org.springframework.stereotype.Service
 public class ServiceManager {
 	private Map<String, ArrayList<ServiceInfo>> htServices = new HashMap<String, ArrayList<ServiceInfo>>(100);
 	private Map<String, Object> htContexts = new HashMap<String, Object>();

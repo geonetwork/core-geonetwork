@@ -3,23 +3,25 @@
 	xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
     xmlns:tx="http://www.springframework.org/schema/tx"
 	xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
-        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
     " >
 
     <aop:aspectj-autoproxy proxy-target-class="true"/>
     <tx:annotation-driven proxy-target-class="true"/>
+    <context:component-scan base-package="jeeves"/>
 
 
-    <bean id="ProfileManager" class="jeeves.component.ProfileManager" lazy-init="true"/>
-    <bean id="MonitorManager" class="jeeves.monitor.MonitorManager" lazy-init="true"/>
-    <bean id="JeevesEngine" class="jeeves.server.JeevesEngine" lazy-init="true"/>
-    <bean id="ScheduleManager" class="jeeves.server.ScheduleManager" lazy-init="true"/>
-    <bean id="ServiceManager" class="jeeves.server.dispatchers.ServiceManager" lazy-init="true"/>
-    <bean id="XmlCacheManager" class="jeeves.server.dispatchers.guiservices.XmlCacheManager" lazy-init="true"/>
+    <bean id="ProfileManager" class="jeeves.component.ProfileManager"/>
+    <bean id="MonitorManager" class="jeeves.monitor.MonitorManager"/>
+    <bean id="JeevesEngine" class="jeeves.server.JeevesEngine"/>
+    <bean id="ScheduleManager" class="jeeves.server.ScheduleManager" />
+    <bean id="XmlCacheManager" class="jeeves.server.dispatchers.guiservices.XmlCacheManager" />
 
 
     <bean id="ServiceInfo" class="jeeves.server.dispatchers.ServiceInfo" scope="prototype"/>

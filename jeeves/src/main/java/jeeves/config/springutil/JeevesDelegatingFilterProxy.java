@@ -35,7 +35,10 @@ public class JeevesDelegatingFilterProxy extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if (request instanceof HttpServletRequest) {
             HttpServletRequest httpRequest = (HttpServletRequest) request;
-            final String nodeName = httpRequest.getServletPath().substring(1);
+            String nodeName = "srv";
+            if(httpRequest.getServletPath().length() > 0) {
+            	nodeName = httpRequest.getServletPath().substring(1);
+            }
             String nodeId = User.NODE_APPLICATION_CONTEXT_KEY + nodeName;
             if (getServletContext().getAttribute(nodeId) == null) {
                 if (nodeId != null && nodeName.equals(getFilterConfig().getInitParameter("loginService"))) {

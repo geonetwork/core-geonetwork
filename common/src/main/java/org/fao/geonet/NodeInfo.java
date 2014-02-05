@@ -11,7 +11,6 @@ import javax.annotation.Resource;
  * Date: 11/27/13
  * Time: 2:35 PM
  */
-@Resource
 public class NodeInfo implements Serializable {
     private String id;
     private boolean defaultNode;

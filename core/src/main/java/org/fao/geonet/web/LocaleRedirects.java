@@ -38,7 +38,6 @@ import static org.fao.geonet.constants.Geonet.DEFAULT_LANGUAGE;
  * Created by Jesse on 12/4/13.
  */
 @Controller
-@Lazy(value = false)
 public class LocaleRedirects {
 
 

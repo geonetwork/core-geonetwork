@@ -17,12 +17,11 @@
     <import resource="classpath:JZkitApplicationContext.xml"/>
 
     <import resource="config-db/initial_data.xml"/>
+    <import resource="config-node/srv.xml"/>
 
-
-    <!-- Uncomment if you want to use a non-shapefile datastore -->
     <import resource="config-db/defaultJdbcDataSource.xml"/>
-     <import resource="config-db/h2.xml"/>
     
+    <!-- Uncomment if you want to use a non-shapefile datastore -->
     <!--<import resource="config-db/postgis-shared-datasource.xml"/>-->
     <!--<import resource="config-db/postgis-alternate-datasource.xml"/>-->
 
@@ -69,6 +68,12 @@
         <constructor-arg index="0" value="/WEB-INF/" />
     </bean>
 
+ 
+	<bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+		<property name="defaultLocale" value="en" />
+	</bean>
+	
 	<bean id="localeChangeInterceptor"
 		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
 		<property name="paramName" value="language" />

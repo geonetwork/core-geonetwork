@@ -5,17 +5,15 @@ import java.io.IOException;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.sources.http.JeevesServlet;
-import org.apache.commons.io.FileUtils;
-import org.fao.geonet.Constants;
+
 import org.fao.geonet.NodeInfo;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
-
-import org.fao.geonet.constants.Geonet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * The GeoNetwork data directory is the location on the file system where
@@ -25,6 +23,7 @@ import org.springframework.stereotype.Component;
  * used by GeoNetwork for various purposes (eg. Lucene index, spatial index,
  * logos).
  */
+@Service
 public class GeonetworkDataDirectory {
 	/**
 	 * The default GeoNetwork data directory location.
