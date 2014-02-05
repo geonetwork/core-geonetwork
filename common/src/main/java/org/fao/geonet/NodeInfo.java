@@ -2,6 +2,8 @@ package org.fao.geonet;
 
 import java.io.Serializable;
 
+import javax.annotation.Resource;
+
 /**
  * Encapsulates informations about the current node such as the node id.
  *
@@ -9,6 +11,7 @@ import java.io.Serializable;
  * Date: 11/27/13
  * Time: 2:35 PM
  */
+@Resource
 public class NodeInfo implements Serializable {
     private String id;
     private boolean defaultNode;

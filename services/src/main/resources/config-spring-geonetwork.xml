@@ -8,9 +8,18 @@
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
 	<context:component-scan base-package="org.fao.geonet.services" />
+
 	<mvc:annotation-driven
-		content-negotiation-manager="contentNegotiationManager" />
-	<context:annotation-config />
+		content-negotiation-manager="contentNegotiationManager">
+		<mvc:message-converters>
+			<bean
+				class="org.springframework.http.converter.ResourceHttpMessageConverter" />
+			<bean
+				class="org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter" />
+			<bean
+				class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+		</mvc:message-converters>
+	</mvc:annotation-driven>
 
 	<bean id="contentNegotiationManager"
 		class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">

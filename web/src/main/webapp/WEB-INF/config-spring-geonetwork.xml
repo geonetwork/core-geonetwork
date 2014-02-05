@@ -11,14 +11,18 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 " >
 
+	<import resource="classpath:/config-spring-geonetwork-parent.xml"/>
+	<import resource="classpath*:/config-spring-geonetwork.xml"/>
     <import resource="config-security/config-security.xml"/>
     <import resource="classpath:JZkitApplicationContext.xml"/>
-	<import resource="classpath*:/config-spring-geonetwork.xml"/>
 
     <import resource="config-db/initial_data.xml"/>
 
 
     <!-- Uncomment if you want to use a non-shapefile datastore -->
+    <import resource="config-db/defaultJdbcDataSource.xml"/>
+     <import resource="config-db/h2.xml"/>
+    
     <!--<import resource="config-db/postgis-shared-datasource.xml"/>-->
     <!--<import resource="config-db/postgis-alternate-datasource.xml"/>-->
 

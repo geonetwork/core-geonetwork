@@ -14,32 +14,6 @@
         http://www.springframework.org/schema/data/jpa 
         http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
 
-	<mvc:annotation-driven
-		content-negotiation-manager="contentNegotiationManager">
-		<mvc:message-converters>
-			<bean
-				class="org.springframework.http.converter.ResourceHttpMessageConverter" />
-			<bean
-				class="org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter" />
-			<bean
-				class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
-		</mvc:message-converters>
-	</mvc:annotation-driven>
-	<bean id="contentNegotiationManager"
-		class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
-		<property name="defaultContentType" value="application/xml" />
-		<property name="mediaTypes">
-			<map>
-				<entry key="xml" value="application/xml" />
-				<entry key="json" value="application/json" />
-				<entry key="rss" value="application/rss+xml" />
-			</map>
-		</property>
-	</bean>
-
-	<context:component-scan base-package="org.fao.geonet" />
-	<tx:annotation-driven />
-
 	<bean class="org.springframework.web.servlet.view.xslt.XsltViewResolver">
 		<property name="prefix" value="/xsl" />
 		<property name="suffix" value=".xsl" />
