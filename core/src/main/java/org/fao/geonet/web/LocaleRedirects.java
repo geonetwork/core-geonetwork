@@ -58,6 +58,9 @@ public class LocaleRedirects {
 
     @Autowired
     private ApplicationContext _appContext;
+    
+    @Autowired
+    private String configPath;
 
     private String _homeRedirectUrl;
 
@@ -189,7 +192,6 @@ public class LocaleRedirects {
 
     @PostConstruct
     public void init() throws BeansException {
-        final String configPath = _appContext.getBean("configPath", String.class);
         final ServletContext servletContext = _appContext.getBean(ServletContext.class);
         try {
             final Element guiConfig = ConfigurationOverrides.DEFAULT.loadXmlFileAndUpdate(configPath + "config-gui.xml", servletContext);

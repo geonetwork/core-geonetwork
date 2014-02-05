@@ -34,7 +34,8 @@ import java.util.Set;
 public class Metadata extends GeonetEntity {
     static final String ID_SEQ_NAME = "metadata_id_seq";
 
-    public static final String METADATA_CATEG_JOIN_TABLE_NAME = "MetadataCateg";
+	private static final long serialVersionUID = -1143579981236249988L;
+	public static final String METADATA_CATEG_JOIN_TABLE_NAME = "MetadataCateg";
     public static final String METADATA_CATEG_JOIN_TABLE_CATEGORY_ID = "categoryId";
     private int _id;
     private String _uuid;

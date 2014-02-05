@@ -6,6 +6,7 @@ import org.springframework.beans.BeanWrapperImpl;
 import javax.annotation.Nonnull;
 import javax.persistence.Embeddable;
 import java.beans.PropertyDescriptor;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -16,9 +17,10 @@ import java.util.Map;
  * Date: 9/10/13
  * Time: 4:33 PM
  */
-public class GeonetEntity {
+public class GeonetEntity implements Serializable {
 
-    public static final String LABEL_EL_NAME = "label";
+	private static final long serialVersionUID = -3882022670065995603L;
+	public static final String LABEL_EL_NAME = "label";
     public static final String RECORD_EL_NAME = "record";
 
     /**

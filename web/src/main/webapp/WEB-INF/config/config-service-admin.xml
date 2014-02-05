@@ -13,11 +13,11 @@
         ]]></documentation>
       <class name=".guiservices.languages.Get"/>
     </service>
-    
+    <!-- 
     <service name="admin.config.list">
       <documentation>Retrieve the catalog settings.</documentation>
       <class name=".services.config.Get"/>
-    </service>
+    </service> -->
     
     
     <service name="admin.config.save">

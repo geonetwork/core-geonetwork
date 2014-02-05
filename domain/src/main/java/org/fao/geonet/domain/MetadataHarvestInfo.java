@@ -1,6 +1,12 @@
 package org.fao.geonet.domain;
 
-import javax.persistence.*;
+import java.io.Serializable;
+
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Transient;
 
 /**
  * Encapsulates the harvest data related to a metadata document. Like whether the metadata was harvested, the uuid of the harvester,
@@ -11,8 +17,9 @@ import javax.persistence.*;
  */
 @Embeddable
 @Access(AccessType.PROPERTY)
-public class MetadataHarvestInfo {
-    private char _harvested = Constants.YN_FALSE;
+public class MetadataHarvestInfo implements Serializable {
+	private static final long serialVersionUID = -3792707448380980096L;
+	private char _harvested = Constants.YN_FALSE;
     private String _uuid;
     private String _uri;
 

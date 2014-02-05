@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
@@ -14,8 +16,9 @@ import javax.persistence.Embeddable;
  */
 @Embeddable
 @Access(AccessType.PROPERTY)
-public class MetadataSourceInfo {
-    private String _sourceId;
+public class MetadataSourceInfo implements Serializable{
+	private static final long serialVersionUID = -1152776956788517120L;
+	private String _sourceId;
     private Integer _groupOwner;
     private int _owner;
 

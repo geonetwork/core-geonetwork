@@ -37,7 +37,8 @@ import java.util.Map;
  */
 public abstract class Localized extends GeonetEntity {
 
-    private Map<String, String> _labelTranslations = new HashMap<String, String>();
+	private static final long serialVersionUID = 2042917967381412158L;
+	private Map<String, String> _labelTranslations = new HashMap<String, String>();
 
     /**
      * Get the map of langid -> label translations for metadata categories.

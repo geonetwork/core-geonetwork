@@ -16,8 +16,9 @@ import java.util.Map;
 @EntityListeners(StatusValueEntityListenerManager.class)
 @SequenceGenerator(name=StatusValue.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class StatusValue extends Localized {
+	private static final long serialVersionUID = 112093471293847L;
+	private int _id;
     static final String ID_SEQ_NAME = "status_value_id_seq";
-    private int _id;
     private String _name;
     private char _reserved = Constants.YN_FALSE;
     private int displayOrder;
