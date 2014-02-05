@@ -138,5 +138,7 @@
     "send": "Send",
     "organization": "Organization",
     "comments": "Comment",
-    "sendAComment": "Send us a comment"
+    "sendAComment": "Send us a comment",
+    "feedbackNotEnable": "Feedback is not enabled.",
+    "feebackSent": "Your message has been sent to the catalog manager."
 }

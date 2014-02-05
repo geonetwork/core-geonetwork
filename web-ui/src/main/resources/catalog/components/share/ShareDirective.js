@@ -19,8 +19,6 @@
            templateUrl: '../../catalog/components/share/' +
            'partials/contactusform.html',
            link: function(scope, element, attrs) {
-             console.log(attrs);
-
              scope.send = function(formId) {
                $http({
                  url: 'contact.send@json',
@@ -29,9 +27,9 @@
                  headers: {'Content-Type': 'application/x-www-form-urlencoded'}
                }).then(
                    function(response) {
-                     console.log(response);
+                     // TODO: report no email sent
                      if (response.status === 200) {
-
+                       scope.success = true;
                      } else {
 
                      }

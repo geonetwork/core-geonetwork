@@ -186,6 +186,7 @@
     key: {
       isXLinkEnabled: 'system.xlinkResolver.enable',
       isSelfRegisterEnabled: 'system.userSelfRegistration.enable',
+      isFeedbackEnabled: 'system.userFeedback.enable',
       isSearchStatEnabled: 'system.searchStats.enable',
       isHideWithHelEnabled: 'system.hidewithheldelements.enable'
     }
