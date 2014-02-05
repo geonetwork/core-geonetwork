@@ -14,7 +14,7 @@
 	<xsl:function name="sdn-product:buildIdentifier" as="xs:string">
 		<xsl:param name="point-of-contact-email"/>
 		<xsl:param name="file-identifier"/>		
-		<xsl:value-of select="concat(substring-after('$email', '@'), $file-identifier)"/>
+		<xsl:value-of select="concat(substring-after($point-of-contact-email, '@'), '/', $file-identifier)"/>
 	</xsl:function>
 
 
@@ -23,10 +23,12 @@
 		<xsl:copy>
 			<xsl:copy-of select="@*"/>
 			<gco:CharacterString>
-					<xsl:value-of select="sdn-product:buildIdentifier(gmd:identificationInfo/gmd:MD_DataIdentification/
- 											gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='originator']/
- 											gmd:CI_ResponsibleParty/gmd:ContactInfo/gmd:CI_Contact/gmd:Address/gmd:CI_Address/
- 											gmd:electronicMailAddress/gco:CharacterString/text() , gmd:fileIdentifier/gco:CharacterString/text())"/>
+				<xsl:value-of select="sdn-product:buildIdentifier(/root/gmd:MD_Metadata/
+					gmd:identificationInfo/gmd:MD_DataIdentification/
+					gmd:pointOfContact[1]/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='originator']/
+					gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/
+ 					gmd:electronicMailAddress/gco:CharacterString/text() , 
+ 					/root/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString/text())"/>
 			</gco:CharacterString>
 		</xsl:copy>
 	</xsl:template>
