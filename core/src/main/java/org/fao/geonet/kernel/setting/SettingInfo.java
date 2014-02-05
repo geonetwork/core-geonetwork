@@ -139,7 +139,7 @@ public class SettingInfo {
         ONLY_DOC_LOCALE("only_docLocale", "_docLocale", MUST),
         PREFER_UI_LOCALE("prefer_ui_locale", "_locale", SHOULD),
         ONLY_UI_LOCALE("only_ui_locale", "_locale", MUST),
-        PREFER_UI_DOC_LOCALE("only_ui_docLocale", "_docLocale", SHOULD),
+        PREFER_UI_DOC_LOCALE("prefer_ui_docLocale", "_docLocale", SHOULD),
         ONLY_UI_DOC_LOCALE("only_ui_docLocale", "_docLocale", MUST);
 
         public final String databaseValue;

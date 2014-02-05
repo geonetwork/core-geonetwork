@@ -1,5 +1,6 @@
 package org.fao.geonet.services.main;
 
+import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -10,6 +11,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 import static org.fao.geonet.domain.Pair.read;
@@ -56,7 +58,13 @@ public class SearchSuggestionIntegrationTest extends AbstractServiceIntegrationT
 
 
         List<Element> items = performQuery(params);
-        assertEquals(3, items.size());
+        assertEquals(Lists.transform(items, new Function<Element, Object>() {
+            @Nullable
+            @Override
+            public Object apply(@Nullable Element input) {
+                return input.getAttributeValue(SearchSuggestion.ATT_TERM);
+            }
+        }).toString() + "Has different values than expected", 3, items.size());
         assertDecreasingFrequency(items);
 
         params.getChild(SearchSuggestion.PARAM_Q).setText("vic");
