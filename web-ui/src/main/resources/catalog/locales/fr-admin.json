@@ -647,5 +647,22 @@
     "targetGroup":"Groupe cible",
     "targetEditor":"Editeur cible",
     "transfertPriv":"Transférer",
-    "transfertPrivilegesFinished": "{{metadata}} fiche(s) transférées."
+    "transfertPrivilegesFinished": "{{metadata}} fiche(s) transférées.",
+    "metadataFormatter": "Mise en page",
+    "addAFormatter": "Ajouter une mise en page",
+    "chooseAFile": "Sélectionner un fichier",
+    "formatter": "Mise en page",
+    "saveFile": "Sauvegarder le fichier",
+    "configureFormatter": "Configurer la mise en page",
+    "testFormatter": "Tester la mise en pager",
+    "formatterFileUpdated": "{{file}} sauvegardé.",
+    "metadataInternalId": "Identifiant de fiche",
+    "viewXML": "Vue XML",
+    "viewHTML": "Vue HTML",
+    "viewDEBUG": "Vue debug",
+    "formatterFileUpdateError": "Erreur lors de la sauvegarde du fichier {{file}}",
+    "chooseFormatter":"Sélectionner une mise en page à installer",
+    "formatterUploadHelp": "Une mise en page est un ZIP contenant des fichiers définissant un rendu particulier.",
+    "formatterRemovalError": "Erreur lors de la suppression de la mise en page."
+    
 }

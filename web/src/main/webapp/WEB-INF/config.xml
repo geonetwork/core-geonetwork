@@ -1073,10 +1073,7 @@
 			<output sheet="crs.xsl" contentType="text/xml; charset=UTF-8" />
 		</service>
 
-		<service name="system.properties.set">
-			<class name=".services.config.SetSystemProperties" />
-		</service>
-
+		
 		<service name="isolanguages" deprecated="true">
 			<class name="org.fao.geonet.guiservices.isolanguages.Get" />
 		</service>
@@ -1180,7 +1177,6 @@
 
 	<include>config-metadata.xml</include>
 	<include>config-metadata-experimental.xml</include>
-	<include>config-subtemplate.xml</include>
 	<include>config-thesaurus.xml</include>
 	<include>config-harvesting.xml</include>
 	<include>config-portal.xml</include>
@@ -1217,6 +1213,7 @@
   <include>config/config-service-admin-user-and-group.xml</include>
   <include>config/config-service-admin-geoserver-publication.xml</include>
   <include>config/config-service-admin-transfert-privileges.xml</include>
+  <include>config/config-service-admin-formatter.xml</include>
   
   <include>config/config-service-statistics.xml</include>
   
@@ -1225,7 +1222,9 @@
   <include>config/config-service-csw-virtual.xml</include>
   
   <include>config/config-service-sitemap.xml</include>
-  
+
+  <include>config/config-service-subtemplate.xml</include>
+
   <include>config/config-ui-search.xml</include>
   <include>config/config-ui-metadata.xml</include>
   <include>config/config-ui-admin.xml</include>

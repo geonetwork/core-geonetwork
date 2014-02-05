@@ -718,6 +718,21 @@
     "targetGroup":"Target group",
     "targetEditor":"Target editor",
     "transfertPriv":"Transfer",
-    "transfertPrivilegesFinished": "{{metadata}} record(s) transfered."
-    
+    "transfertPrivilegesFinished": "{{metadata}} record(s) transfered.",
+    "metadataFormatter": "Formatter",
+    "addAFormatter": "Add a formatter",
+    "chooseAFile": "Choose a file",
+    "formatter": "Formatter",
+    "saveFile": "Save file",
+    "configureFormatter": "Configure formatter",
+    "testFormatter": "Test formatter",
+    "formatterFileUpdated": "{{file}} saved.",
+    "metadataInternalId": "Choose a metadata internal identifier",
+    "viewXML": "View XML",
+    "viewHTML": "View HTML",
+    "viewDEBUG": "View debug",
+    "formatterFileUpdateError": "Error occured while saving {{file}}",
+    "chooseFormatter":"Choose a formatter package to upload",
+    "formatterUploadHelp": "A formatter is a ZIP containing a set of file defining a custom metadata layout.",
+    "formatterRemovalError": "Error occured while removing formatter."
 }

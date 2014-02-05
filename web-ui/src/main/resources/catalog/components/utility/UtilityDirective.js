@@ -107,7 +107,7 @@
    * Source: Comes from grunt ngdoc example.
    */
   module.directive('gnAutogrow', function() {
-    // add helper vor measurement to body
+    // add helper for measurement to body
     var testObj = angular.element('<textarea id="autogrow-helper"' +
         ' style="height: 0; position: absolute; top: -999px"/>');
     angular.element(window.document.body).append(testObj);
