@@ -244,6 +244,7 @@
                showValidationErrors: getInputValue('showvalidationerrors'),
                uuid: getInputValue('uuid'),
                version: getInputValue('version'),
+               geoPublisherConfig: getInputValue('geoPublisherConfig'),
                saving: false
              });
 

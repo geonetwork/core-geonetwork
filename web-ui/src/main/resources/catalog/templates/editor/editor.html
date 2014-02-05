@@ -22,8 +22,14 @@
     <div class="col-md-4" 
       data-ng-if="gnSchemaConfig.related.display === true || gnSchemaConfig.validation.display === true || gnSchemaConfig.suggestion.display === true">
       <div class="gn-editor-tools-container">
+        
         <div data-gn-onlinesrc-list="" data-ng-if="gnSchemaConfig.related.display === true"></div>
-
+        
+        <div data-ng-if="gnCurrentEdit.geoPublisherConfig" gn-geo-publisher=""
+          data-config="{{gnCurrentEdit.geoPublisherConfig}}"
+          data-lang="lang"></div>
+        <br/>
+        
         <div data-gn-validation-report="" data-ng-if="gnSchemaConfig.validation.display === true"></div>
 
         <div data-gn-suggestion-list="" data-ng-if="gnSchemaConfig.suggestion.display === true"></div>

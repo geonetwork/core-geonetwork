@@ -113,10 +113,9 @@
     </xsl:variable>
     
     <xsl:if test="$geopublisherConfig/config/*">
-      <div gn-geo-publisher=""
-        data-config="{java-xsl-util:xmlToJson(
-        saxon:serialize($geopublisherConfig, 'default-serialize-mode'))}"
-        data-lang="lang"></div>
+      <input id="geoPublisherConfig" type="hidden"
+        value="{java-xsl-util:xmlToJson(
+        saxon:serialize($geopublisherConfig, 'default-serialize-mode'))}"/>
     </xsl:if>
     
   </xsl:template>
