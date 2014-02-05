@@ -134,5 +134,9 @@
     "msgNoUserInfo": "Could not retrieve user details.",
     
     "passwordUpdateError": "Error when updating password",
-    "BadParameterEx": "Wrong parameter"
+    "BadParameterEx": "Wrong parameter",
+    "send": "Send",
+    "organization": "Organization",
+    "comments": "Comment",
+    "sendAComment": "Send us a comment"
 }

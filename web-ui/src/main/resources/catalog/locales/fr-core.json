@@ -118,5 +118,9 @@
     "msgNoUserInfo": "Ne peut retrouver les informations utilisateurs",
     
     "passwordUpdateError": "Erreur lors de la mise à jour du mot de passe",
-    "BadParameterEx": "Paramètre incorrect"
+    "BadParameterEx": "Paramètre incorrect",
+    "send": "Envoyer",
+    "organization": "Organisation",
+    "comments": "Commentaire",
+    "sendAComment": "Envoyer nous un commentaire"
 }

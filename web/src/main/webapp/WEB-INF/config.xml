@@ -342,7 +342,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <!-- classic GUI -->
-		<service name="feedback">
+		<service name="feedback" deprecated="true">
 			<output sheet="feedback.xsl" />
 		</service>
 
@@ -398,7 +398,7 @@
 		<!-- Feedback services                                             -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="feedback.insert">
+		<service name="feedback.insert" deprecated="true">
 			<class name=".services.feedback.Insert" />
 
 			<output sheet="info.xsl">

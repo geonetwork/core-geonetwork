@@ -47,5 +47,9 @@
       ]]></documentation>
       <class name=".guiservices.versioning.Get"/>
     </service>
+    
+    <service name="contact.send">
+      <class name=".services.feedback.Insert" />
+    </service>
   </services>
 </geonet>

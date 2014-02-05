@@ -294,7 +294,6 @@
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).then(
             function(response) {
-              console.log(response);
               if (response.status === 200) {
                 $rootScope.$broadcast('StatusUpdated', {
                   msg: $translate('formatterFileUpdated',
