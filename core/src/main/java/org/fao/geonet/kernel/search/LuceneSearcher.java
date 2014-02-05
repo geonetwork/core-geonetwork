@@ -363,7 +363,12 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 		// To count the number of values added and stop if maxNumberOfTerms reach
 		int counter = 0;
 		String searchValueWithoutWildcard = searchValue.replaceAll("[*?]", "");
-		String analyzedSearchValue = analyzeText(searchField, searchValueWithoutWildcard, SearchManager.getAnalyzer(_language.analyzerLanguage, true));
+        if (_language == null) {
+            final Element request = new Element("request").addContent(new Element("any").setText(searchValue));
+            _language = determineLanguage(srvContext, request, _sm.getSettingInfo());
+        }
+        final PerFieldAnalyzerWrapper analyzer = SearchManager.getAnalyzer(_language.analyzerLanguage, true);
+        String analyzedSearchValue = analyzeText(searchField, searchValueWithoutWildcard, analyzer);
 
 		Map <String, SearchManager.TermFrequency> finalValuesMap = new HashMap<String, SearchManager.TermFrequency>();
 		
@@ -487,7 +492,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             @Nullable ServiceContext srvContext,
             @Nonnull Element request,
             @Nonnull SettingInfo settingInfo) {
-        if (settingInfo != null && settingInfo.getIgnoreRequestedLanguage()) {
+        if (settingInfo != null && settingInfo.getRequestedLanguageOnly() == SettingInfo.SearchRequestLanguage.OFF) {
             if (Log.isDebugEnabled(Geonet.LUCENE)) {
                 Log.debug(Geonet.LUCENE, "requestedlanguage ignored");
             }
@@ -580,7 +585,10 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         }
 
         String presentationLanguage = finalDetectedLanguage;
-        if (settingInfo.getPreferUILanguage()) {
+        if (settingInfo.getRequestedLanguageOnly() == SettingInfo.SearchRequestLanguage.ONLY_UI_DOC_LOCALE ||
+            settingInfo.getRequestedLanguageOnly() == SettingInfo.SearchRequestLanguage.ONLY_UI_LOCALE  ||
+            settingInfo.getRequestedLanguageOnly() == SettingInfo.SearchRequestLanguage.PREFER_UI_DOC_LOCALE ||
+            settingInfo.getRequestedLanguageOnly() == SettingInfo.SearchRequestLanguage.PREFER_UI_LOCALE) {
             presentationLanguage = requestedLanguage == null? srvContext.getLanguage(): requestedLanguage;
         }
 
@@ -663,7 +671,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 Log.debug(Geonet.LUCENE, "CRITERIA:\n"+ Xml.getString(request));
 
             SettingInfo settingInfo = _sm.getSettingInfo();
-            String requestedLanguageOnly = settingInfo.getRequestedLanguageOnly();
+            SettingInfo.SearchRequestLanguage requestedLanguageOnly = settingInfo.getRequestedLanguageOnly();
             if(Log.isDebugEnabled(Geonet.LUCENE))
                 Log.debug(Geonet.LUCENE, "requestedLanguageOnly: " + requestedLanguageOnly);
 
@@ -996,7 +1004,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
      */
     public static Query makeLocalisedQuery( Element xmlQuery, PerFieldAnalyzerWrapper analyzer,
                                             LuceneConfig luceneConfig, String langCode,
-                                            String requestedLanguageOnly)
+                                            SettingInfo.SearchRequestLanguage requestedLanguageOnly)
             throws Exception {
         Query returnValue = LuceneSearcher.makeQuery(xmlQuery, analyzer, luceneConfig);
         if(StringUtils.isNotEmpty(langCode)) {

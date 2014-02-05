@@ -303,6 +303,30 @@
 						</xsl:if>
 						<xsl:value-of select="$configStrings/requestedlanguage_docLocaleonly"/>
 					</option>
+					<option value="prefer_ui_locale">
+						<xsl:if test="$value = 'prefer_ui_locale'">
+							<xsl:attribute name="selected">selected</xsl:attribute>
+						</xsl:if>
+						<xsl:value-of select="$configStrings/requestedlanguage_prefer_ui_locale"/>
+					</option>
+					<option value="only_ui_locale">
+						<xsl:if test="$value = 'only_ui_locale'">
+							<xsl:attribute name="selected">selected</xsl:attribute>
+						</xsl:if>
+						<xsl:value-of select="$configStrings/requestedlanguage_only_ui_locale"/>
+					</option>
+					<option value="prefer_ui_docLocale">
+						<xsl:if test="$value = 'prefer_ui_docLocale'">
+							<xsl:attribute name="selected">selected</xsl:attribute>
+						</xsl:if>
+						<xsl:value-of select="$configStrings/requestedlanguage_prefer_ui_docLocale"/>
+					</option>
+					<option value="only_ui_docLocale">
+						<xsl:if test="$value = 'only_ui_docLocale'">
+							<xsl:attribute name="selected">selected</xsl:attribute>
+						</xsl:if>
+						<xsl:value-of select="$configStrings/requestedlanguage_only_ui_docLocale"/>
+					</option>
 				</select>
 				<span>
 					<xsl:value-of select="$settingLabel[@name = $name]"/>

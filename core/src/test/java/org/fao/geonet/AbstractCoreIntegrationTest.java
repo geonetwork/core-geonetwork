@@ -85,7 +85,6 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     public TemporaryFolder _testTemporaryFolder = new TemporaryFolder();
     @Before
     public void configureAppContext() throws Exception {
-        _directoryFactory.resetIndex();
 
         System.setProperty(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD, Boolean.toString(true));
         // clear out datastore
@@ -128,6 +127,8 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
         geonetworkDataDirectory.init("geonetwork", webappDir, dataDir.getAbsolutePath(),
                 serviceConfig, null);
+
+        _directoryFactory.resetIndex();
 
         final String schemaPluginsDir = geonetworkDataDirectory.getSchemaPluginsDir().getPath();
         final String resourcePath = geonetworkDataDirectory.getResourcesDir().getPath();

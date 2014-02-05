@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.search;
 
 import com.google.common.base.Splitter;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.utils.Log;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
@@ -1215,11 +1216,13 @@ public class LuceneQueryBuilder {
     /**
      * TODO javadoc.
      *
+     *
      * @param query
      * @param langCode
+     * @param requestedLanguageOnly
      * @return
      */
-    static Query addLocaleTerm( Query query, String langCode, String requestedLanguageOnly ) {
+    static Query addLocaleTerm( Query query, String langCode, SettingInfo.SearchRequestLanguage requestedLanguageOnly ) {
         if (langCode == null || requestedLanguageOnly == null) {
             return query;
         }
@@ -1233,14 +1236,7 @@ public class LuceneQueryBuilder {
             booleanQuery.add(query, BooleanClause.Occur.MUST);
         }
 
-        if(requestedLanguageOnly.startsWith("only_")) {
-            String fieldName = requestedLanguageOnly.substring("only".length());
-            booleanQuery.add(new TermQuery(new Term(fieldName, langCode)), BooleanClause.Occur.MUST);
-        } else if(requestedLanguageOnly.startsWith("prefer")) {
-            String fieldName = requestedLanguageOnly.substring("prefer".length());
-            booleanQuery.add(new TermQuery(new Term(fieldName, langCode)), BooleanClause.Occur.SHOULD);
-        }
-
+        requestedLanguageOnly.addQuery(booleanQuery, langCode);
         return booleanQuery;
     }
 }

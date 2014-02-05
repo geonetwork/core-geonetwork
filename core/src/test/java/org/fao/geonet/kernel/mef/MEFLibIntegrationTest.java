@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import jeeves.server.context.ServiceContext;
@@ -82,11 +83,14 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
     public static class ImportMetadata {
         private final AbstractCoreIntegrationTest testClass;
         private ServiceContext context;
-        private List<String> metadataIds;
+        private List<String> metadataIds = new ArrayList<String>();
+        private List<String> mefFilesToLoad = new ArrayList<String>();
 
         public ImportMetadata(AbstractCoreIntegrationTest testClass, ServiceContext context) {
             this.context = context;
             this.testClass = testClass;
+            mefFilesToLoad.add("mef1-example.mef");
+
         }
 
         public List<String> getMetadataIds() {
@@ -96,14 +100,20 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
         public ImportMetadata invoke() throws Exception {
             testClass.loginAsAdmin(context);
 
-            InputStream stream = MEFLibIntegrationTest.class.getResourceAsStream("mef1-example.mef");
-            final File mefTestFile = File.createTempFile("mefTestFile", ".mef");
-            FileUtils.copyInputStreamToFile(stream, mefTestFile);
-            stream.close();
+            for (String mefFile : mefFilesToLoad) {
+                InputStream stream = MEFLibIntegrationTest.class.getResourceAsStream(mefFile);
+                final File mefTestFile = File.createTempFile("mefTestFile", ".mef");
+                FileUtils.copyInputStreamToFile(stream, mefTestFile);
+                stream.close();
 
-            Element params = new Element("request");
-            metadataIds = MEFLib.doImport(params, context, mefTestFile, testClass.getStyleSheets());
+                Element params = new Element("request");
+                metadataIds.addAll(MEFLib.doImport(params, context, mefTestFile, testClass.getStyleSheets()));
+            }
             return this;
+        }
+
+        public List<String> getMefFilesToLoad() {
+            return mefFilesToLoad;
         }
     }
 }

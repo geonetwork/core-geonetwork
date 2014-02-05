@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.search;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.index.SpatialIndex;
+import org.apache.lucene.index.*;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.exceptions.JeevesException;
@@ -47,12 +48,7 @@ import org.apache.lucene.document.FloatField;
 import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.LongField;
 import org.apache.lucene.facet.taxonomy.CategoryPath;
-import org.apache.lucene.index.AtomicReader;
 import org.apache.lucene.index.FieldInfo.IndexOptions;
-import org.apache.lucene.index.SlowCompositeReaderWrapper;
-import org.apache.lucene.index.Term;
-import org.apache.lucene.index.Terms;
-import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.util.BytesRef;
 import org.fao.geonet.GeonetContext;
@@ -1032,36 +1028,41 @@ public class SearchManager {
 	 * @throws Exception
 	 */
 	public Collection<TermFrequency> getTermsFequency(String fieldName, String searchValue, int maxNumberOfTerms,
-	                                            int threshold, String language) throws Exception {
+	                                            int threshold, ServiceContext context) throws Exception {
         Collection<TermFrequency> termList = new ArrayList<TermFrequency>();
         IndexAndTaxonomy indexAndTaxonomy = getNewIndexReader(null);
         String searchValueWithoutWildcard = searchValue.replaceAll("[*?]", "");
-        String analyzedSearchValue = LuceneSearcher.analyzeText(fieldName, searchValueWithoutWildcard, SearchManager.getAnalyzer(language, true));
+
+        final Element request = new Element("request").addContent(new Element("any").setText(searchValue));
+        String language = LuceneSearcher.determineLanguage(context, request, _settingInfo).analyzerLanguage;
+        final PerFieldAnalyzerWrapper analyzer = SearchManager.getAnalyzer(language, true);
+        String analyzedSearchValue = LuceneSearcher.analyzeText(fieldName, searchValueWithoutWildcard, analyzer);
         boolean startsWithOnly = !searchValue.startsWith("*") && searchValue.endsWith("*");
         
         try {
             GeonetworkMultiReader multiReader = indexAndTaxonomy.indexReader;
-            @SuppressWarnings("resource")
-            SlowCompositeReaderWrapper atomicReader = new SlowCompositeReaderWrapper(multiReader);
-            Terms terms = atomicReader.terms(fieldName);
-            if (terms != null) {
-                TermsEnum termEnum = terms.iterator(null);
-                int i = 1;
-                    BytesRef term = termEnum.next();
-                    while (term != null && i++ < maxNumberOfTerms) {
-                        String text = term.utf8ToString();
-                        if (termEnum.docFreq() >= threshold) {
-                            String analyzedText = LuceneSearcher.analyzeText(fieldName, text, SearchManager.getAnalyzer(language, true));
-                            if ((startsWithOnly && StringUtils.startsWithIgnoreCase(analyzedText, analyzedSearchValue))
-                                    || (!startsWithOnly && StringUtils.containsIgnoreCase(analyzedText, analyzedSearchValue)) 
-                                    || (startsWithOnly && StringUtils.startsWithIgnoreCase(text, searchValueWithoutWildcard))
-                                    || (!startsWithOnly && StringUtils.containsIgnoreCase(text, searchValueWithoutWildcard))) {
-                                TermFrequency freq = new TermFrequency(text, termEnum.docFreq());
-                                termList.add(freq);
+            for (AtomicReaderContext atomicReaderContext : multiReader.getContext().leaves()) {
+                final AtomicReader reader = atomicReaderContext.reader();
+                Terms terms = reader.terms(fieldName);
+                if (terms != null) {
+                    TermsEnum termEnum = terms.iterator(null);
+                    int i = 1;
+                        BytesRef term = termEnum.next();
+                        while (term != null && i++ < maxNumberOfTerms) {
+                            String text = term.utf8ToString();
+                            if (termEnum.docFreq() >= threshold) {
+                                String analyzedText = LuceneSearcher.analyzeText(fieldName, text, analyzer);
+                                if ((startsWithOnly && StringUtils.startsWithIgnoreCase(analyzedText, analyzedSearchValue))
+                                        || (!startsWithOnly && StringUtils.containsIgnoreCase(analyzedText, analyzedSearchValue))
+                                        || (startsWithOnly && StringUtils.startsWithIgnoreCase(text, searchValueWithoutWildcard))
+                                        || (!startsWithOnly && StringUtils.containsIgnoreCase(text, searchValueWithoutWildcard))) {
+                                    TermFrequency freq = new TermFrequency(text, termEnum.docFreq());
+                                    termList.add(freq);
+                                }
                             }
+                            term = termEnum.next();
                         }
-                        term = termEnum.next();
-                    }
+                }
             }
         } finally {
             releaseIndexReader(indexAndTaxonomy);
