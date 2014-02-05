@@ -26,7 +26,9 @@
       <button type="button" class="btn navbar-btn btn-success"
         data-ng-click="gnOnlinesrc.linkToMd(mode, selectRecords[0], popupid)"
         data-ng-class="{'disabled': (selectRecords.length < 1)}">
-        <i class="fa" data-ng-class="btn.icon" /> <span data-translate="">{{btn.label}}</span>
+        <i class="fa" data-ng-class="btn.icon" />
+        <i class="icon-external-link"></i>
+        {{btn.label}}
       </button>
     </div>
   </form>

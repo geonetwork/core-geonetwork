@@ -339,8 +339,8 @@
             }
           };
         }])
-        .directive('gnLinkToMetadata', ['gnOnlinesrc',
-        function(gnOnlinesrc) {
+        .directive('gnLinkToMetadata', ['gnOnlinesrc', '$translate',
+        function(gnOnlinesrc, $translate) {
           return {
             restrict: 'A',
             scope: {},
@@ -364,19 +364,19 @@
                   };
                   scope.btn = {
                         icon: 'fa-table',
-                        label: 'linkToFeatureCatalog'
+                        label: $translate('linkToFeatureCatalog')
                   };
                 }
                 else if (scope.mode == 'parent') {
                   scope.btn = {
                         icon: 'fa-sitemap',
-                        label: 'linkToParent'
+                        label: $translate('linkToParent')
                   };
                 }
                 else if (scope.mode == 'source') {
                   scope.btn = {
                         icon: 'fa-sitemap fa-rotate-180',
-                        label: 'linkToSource'
+                        label: $translate('linkToSource')
                   };
                 }
                 scope.$broadcast('resetSearch', searchParams);

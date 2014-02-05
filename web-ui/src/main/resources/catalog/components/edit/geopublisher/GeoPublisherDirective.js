@@ -6,14 +6,13 @@
   angular.module('gn_geopublisher_directive', [])
   .directive('gnGeoPublisher', [
         'gnMap',
-        'gnHttp',
-        'gnCurrentEdit',
         'gnOnlinesrc',
         'gnGeoPublisher',
         'gnEditor',
         '$timeout',
-        function(gnMap, gnHttp, gnCurrentEdit, gnOnlinesrc, 
-            gnGeoPublisher, gnEditor, $timeout) {
+        '$translate',
+        function(gnMap, gnOnlinesrc, 
+            gnGeoPublisher, gnEditor, $timeout, $translate) {
           return {
             restrict: 'A',
             replace: true,
@@ -27,7 +26,6 @@
               scope.resources = angular.fromJson(scope.config);
               scope.hidden = true;
               scope.loaded = false;
-              scope.gnCurrentEdit = gnCurrentEdit;
 
               var map, gsNode;
 
@@ -123,19 +121,25 @@
                * Add, remove a layer depending of the case.
                * Update status.
                */
-              var readResponse = function(data) {
+              var readResponse = function(data, action) {
                 if (data['@status'] == '404') {
                   // TODO: i18n
-                  scope.statusCode = 'Dataset not found - 404';
+                  scope.statusCode = $translate('datasetNotFound');
 
                   if (scope.isPublished) {
                     map.getLayerGroup().getLayers().pop();
+                    scope.statusCode = $translate('unpublishSuccess');
                   }
                   scope.isPublished = false;
                 }
                 else if (angular.isObject(data.layer)) {
                   addLayerToMap(data.layer);
                   scope.isPublished = true;
+                  if(action == 'check') {
+                    scope.statusCode = $translate('datasetFound');
+                  } else if (action =='publish') {
+                    scope.statusCode = $translate('publishSuccess');
+                  }
                 }
               };
 
@@ -170,7 +174,9 @@
               scope.checkNode = function(nodeId) {
                 var p = gnGeoPublisher.checkNode(nodeId, scope.fileName);
                 if (p) {
-                  p.success(readResponse);
+                  p.success(function(data){
+                    readResponse(data,'check');
+                  });
                 }
               };
 
@@ -180,7 +186,9 @@
               scope.publish = function(nodeId) {
                 var p = gnGeoPublisher.publishNode(nodeId, scope.fileName);
                 if (p) {
-                  p.success(readResponse);
+                  p.success(function(data){
+                    readResponse(data,'publish');
+                  });
                 }
               };
 

@@ -106,5 +106,15 @@
     "xmlSnippet": "Fragment XML",
     "addRecord": "Ajouter une donnée",
     "yourMetadata": "Vos métadonnées",
-    "unsupportedSchemaAlert": "La fiche <strong>{{title}}</strong> utilise le standard <strong>{{schema}}</strong>. Ce format n'est pas supporté par l'éditeur. <a href='#'>Retourner à la console d'édition</a>."
+    "unsupportedSchemaAlert": "La fiche <strong>{{title}}</strong> utilise le standard <strong>{{schema}}</strong>. Ce format n'est pas supporté par l'éditeur. <a href='#'>Retourner à la console d'édition</a>.",
+    "geopublisher": "Géo Publication",
+    "publish": "Publier",
+    "unpublish": "Dé-publier",
+    "linkService": "Lier le service à la fiche",
+    "addLinks": "Ajouter les liens",
+    "check": "Vérifier",
+    "datasetNotFound": "Jeu de données non trouvé - 404",
+    "unpublishSuccess" : "Dépublication effectuée",
+    "datasetFound": "Jeu de données trouvé et ajouté à la carte",
+    "publishSuccess":"Publication effectuée. Couche ajoutée à la carte"
 }
