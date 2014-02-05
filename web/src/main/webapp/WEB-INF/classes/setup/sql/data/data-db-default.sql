@@ -633,7 +633,6 @@ INSERT INTO Settings (name, value, datatype, position) VALUES ('system/requested
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/hidewithheldelements/enable', 'false', 2, 9570);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/hidewithheldelements/keepMarkedElement', 'true', 2, 9580);
 INSERT INTO Settings (name, value, datatype, position) VALUES ('system/requestedLanguage/ignorechars', '', 0, 9590);
-INSERT INTO Settings (name, value, datatype, position) VALUES ('system/requestedLanguage/preferUiLanguage', 'true', 2, 9595);
 
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES  (1,NULL,'harvesting',NULL);
 
