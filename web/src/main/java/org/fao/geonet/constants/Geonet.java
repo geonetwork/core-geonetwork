@@ -599,6 +599,7 @@ public class Geonet {
 		public static final Namespace XLINK = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
 		public static final Namespace XSD = Namespace.getNamespace("xsd", XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		public static final Namespace XSI = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
+		public static final Namespace GML = Namespace.getNamespace("gml", "http://www.opengis.net/gml");
 		@SuppressWarnings("unchecked")
 		public static List<Namespace> iso19139Namespaces = Arrays.asList(new Namespace[]{GCO, GEONET, GMX, GMD, SRV, XSD, XSI, XLINK});
 	}
