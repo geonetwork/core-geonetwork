@@ -667,6 +667,8 @@
     "formatterFileUpdateError": "Erreur lors de la sauvegarde du fichier {{file}}",
     "chooseFormatter":"Sélectionner une mise en page à installer",
     "formatterUploadHelp": "Une mise en page est un ZIP contenant des fichiers définissant un rendu particulier.",
-    "formatterRemovalError": "Erreur lors de la suppression de la mise en page."
+    "formatterRemovalError": "Erreur lors de la suppression de la mise en page.",
+    "versionHistory": "Historique",
+    "versionning": "Historique"
     
 }
