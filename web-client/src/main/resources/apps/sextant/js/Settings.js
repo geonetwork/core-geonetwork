@@ -40,6 +40,7 @@ GeoNetwork.Settings.editor = {
         'iso19139.myocean': 'myocean',
         'iso19139.myocean.short': 'myocean.simple',
         'iso19139.sextant': 'sextant',
+        'iso19139.sdn-product': 'sdnProduct',
         'iso19139.emodnet.chemistry': 'emodnet.chemistry',
         'iso19139.emodnet.hydrography': 'emodnet.hydrography'
     },
