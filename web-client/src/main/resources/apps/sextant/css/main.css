@@ -689,6 +689,9 @@ div.x-tip-body div.help {
     display: inline-block;
 }
 
+.sdnProduct * .thesaurusInfo {
+    display: none !important;
+}
 .sextant .titleContainer span {
 font-size: 30px;
 }
