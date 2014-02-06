@@ -64,7 +64,7 @@ public class Delete extends BackupFileService {
 
         // If send a non existing uuid, Utils.getIdentifierFromParameters returns null
         if (id == null)
-            throw new IllegalArgumentException("Metadata not found --> " + id);
+            throw new IllegalArgumentException("Metadata internal identifier or UUID not found.");
 
 		//-----------------------------------------------------------------------
 		//--- check access
@@ -72,7 +72,7 @@ public class Delete extends BackupFileService {
         Metadata metadata = context.getBean(MetadataRepository.class).findOne(id);
 
 		if (metadata == null)
-			throw new IllegalArgumentException("Metadata not found --> " + id);
+			throw new IllegalArgumentException("Metadata with identifier " + id + " not found.");
 
 		if (!accessMan.canEdit(context, id))
 			throw new OperationNotAllowedEx();
