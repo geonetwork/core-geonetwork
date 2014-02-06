@@ -387,22 +387,22 @@
 				</xsl:for-each>
 
 				<!-- sea areas -->
-
 				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords
 					[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='areaOfBenefit']/gmd:MD_Keywords">
+					<xsl:variable name="areaOfBenefitKeywords" select="."/>
+					
 					<xsl:apply-templates mode="simpleElement" select=".">
 						<xsl:with-param name="schema"  select="$schema"/>
 						<xsl:with-param name="edit"   select="$edit"/>
 						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/seaAreas"/>
 						<xsl:with-param name="text">
 							<xsl:call-template name="snippet-editor">
-								<xsl:with-param name="elementRef" select="../geonet:element/@ref"/>
+								<xsl:with-param name="elementRef" select="$areaOfBenefitKeywords/../geonet:element/@ref"/>
 								<xsl:with-param name="widgetMode" select="'multiplelist'"/>
-								<xsl:with-param name="thesaurusId" select="'local.reference-geographical-area.seadatanet.reference-geographical-area'"/>
-								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join(gmd:featureTypes/gco:LocalName/@codeSpace, '!,!'), '''', '\\'''), '!', '''')"/>
-								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-feature-type'''"/>
-								<xsl:with-param name="transformation" select="'to-iso19139.myocean-feature-type'"/>
-								<xsl:with-param name="identificationMode" select="'uri'"/>
+								<xsl:with-param name="thesaurusId" select="'local.areaOfBenefit.seadatanet.reference-geographical-area'"/>
+								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join($areaOfBenefitKeywords/gmd:keyword/*[1], '!,!'), '''', '\\'''), '!', '''')"/>
+								<xsl:with-param name="listOfTransformations" select="'''to-iso19139-keyword-with-anchor'''"/>
+								<xsl:with-param name="transformation" select="'to-iso19139-keyword-with-anchor'"/>
 							</xsl:call-template>
 						</xsl:with-param>
 					</xsl:apply-templates>
@@ -412,19 +412,22 @@
 			
 				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords
 					[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='parameter']/gmd:MD_Keywords">
+					<xsl:variable name="oceanDP" select="."/>
+
+
 					<xsl:apply-templates mode="simpleElement" select=".">
 						<xsl:with-param name="schema"  select="$schema"/>
 						<xsl:with-param name="edit"   select="$edit"/>
 						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/oceanDiscoveryParameters"/>
 						<xsl:with-param name="text">
 							<xsl:call-template name="snippet-editor">
-								<xsl:with-param name="elementRef" select="../geonet:element/@ref"/>
+								<xsl:with-param name="elementRef" select="$oceanDP/../geonet:element/@ref"/>
 								<xsl:with-param name="widgetMode" select="'multiplelist'"/>
-								<xsl:with-param name="thesaurusId" select="'local.parameter.seadatanet-parameter'"/>
-								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join(gmd:featureTypes/gco:LocalName/@codeSpace, '!,!'), '''', '\\'''), '!', '''')"/>
-								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-feature-type'''"/>
-								<xsl:with-param name="transformation" select="'to-iso19139.myocean-feature-type'"/>
-								<xsl:with-param name="identificationMode" select="'uri'"/>
+								<xsl:with-param name="thesaurusId" select="'local.parameter.seadatanet-ocean-discovery-parameter'"/>
+								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join($oceanDP/gmd:keyword/*[1], '!,!'), '''', '\\'''), '!', '''')"/>
+								<xsl:with-param name="listOfTransformations" select="'''to-iso19139-keyword-with-anchor'''"/>
+								<xsl:with-param name="transformation" select="'to-iso19139-keyword-with-anchor'"/>
+								<xsl:with-param name="identificationMode" select="''"/>
 							</xsl:call-template>
 						</xsl:with-param>
 					</xsl:apply-templates>
@@ -432,7 +435,7 @@
 
 			<!-- Usage license -->
 			
-			<xsl:apply-templates mode="elementEP" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation">
+			<xsl:apply-templates mode="iso19139.sdn-product" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation">
 					<xsl:with-param name="schema" select="$schema" />
 					<xsl:with-param name="edit" select="$edit" />
 		    </xsl:apply-templates>
@@ -699,7 +702,38 @@
 		</xsl:with-param>
 	</xsl:call-template>
   </xsl:template>
-
-
+	
+	<!-- Match all elements in schema mode and return nothing in 
+	order to delegate to iso19139 mode. See metadata-iso19139.sdn-product
+	dispatcher template. -->
+	<xsl:template mode="iso19139.sdn-product" match="*|@*"/>
+	
+	<!-- Override useLimitation having anchor to not display the xlink:href
+	information. -->
+	<xsl:template mode="iso19139.sdn-product" match="gmd:useLimitation[gmx:Anchor]" priority="99">
+		<xsl:param name="schema" />
+		<xsl:param name="edit" />
+		
+		<xsl:choose>
+			<xsl:when test="$edit=true()">
+				<xsl:variable name="ref" select="gmx:Anchor/geonet:element/@ref"/>
+				
+				<xsl:variable name="text">
+					<input type="text" class="md" name="_{$ref}"
+						value="{gmx:Anchor/text()}" size="30">
+					</input>
+				</xsl:variable>
+				
+				<xsl:apply-templates mode="simpleElement" select=".">
+					<xsl:with-param name="schema" select="$schema"/>
+					<xsl:with-param name="edit"   select="$edit"/>
+					<xsl:with-param name="text"   select="$text"/>
+				</xsl:apply-templates>
+			</xsl:when>
+			<xsl:otherwise>
+				<a href="{gmx:Anchor/@xlink:href}"><xsl:value-of select="gmx:Anchor"/></a>
+			</xsl:otherwise> 
+		</xsl:choose>
+	</xsl:template>
 
 </xsl:stylesheet>
