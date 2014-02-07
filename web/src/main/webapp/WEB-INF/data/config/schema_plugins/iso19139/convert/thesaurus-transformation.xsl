@@ -42,10 +42,11 @@
         which use the thesaurus identifier for initialization. -->
 		<xsl:param name="withThesaurusAnchor" select="true()"/>
 		
-		<!-- Local XLink not supported https://github.com/geonetwork/core-geonetwork/issues/341 -->
-		<xsl:variable name="withLocalXlink" select="false()"/>
+		<!-- Local XLink -->
+		<xsl:variable name="withLocalXlink" select="true()"/>
 		
-		<xsl:variable name="xlinkProtocol" select="if ($withLocalXlink) then 'local:/' else $serviceUrl"/>
+		<!-- TODO : improve language support -->
+		<xsl:variable name="xlinkProtocol" select="if ($withLocalXlink) then concat('local://', /root/gui/language) else $serviceUrl"/>
 		
 		<gmd:MD_Keywords>
 			<xsl:choose>

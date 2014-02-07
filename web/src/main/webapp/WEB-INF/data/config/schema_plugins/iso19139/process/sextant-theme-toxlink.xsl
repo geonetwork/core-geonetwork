@@ -40,7 +40,7 @@ is logged in that case.
 	</gmd:MD_Keywords>
 </gmd:descriptiveKeywords>
 
-to local XLink (not supported):
+to local XLink:
 <gmd:descriptiveKeywords>
   <gmd:MD_Keywords 
   	xlink:href="local://xml.keyword.get?thesaurus=local.theme.sextant-theme&amp;amp;id=http://www.ifremer.fr/thesaurus/category%2379&amp;amp;multiple=false" 
@@ -83,14 +83,13 @@ http://localhost:8080/geonetwork/srv/eng/metadata.batch.processing?process=sexta
 		<xsl:choose>
 			<xsl:when test="$keywordId != ''">
 				<xsl:copy>
-					<gmd:MD_Keywords
+					<!--<gmd:MD_Keywords
 						xlink:href="{$url}{$mainLanguage}/xml.keyword.get?thesaurus=local.theme.sextant-theme&amp;amp;id={replace($keywordId[1], '#', '%23')}&amp;amp;multiple=false"
 						xlink:show="replace"/> 
-					<!--
-				local XLink not supported see https://github.com/geonetwork/core-geonetwork/issues/341
+					-->
 				<gmd:MD_Keywords
-				xlink:href="local://xml.keyword.get?thesaurus=local.theme.sextant-theme&amp;amp;id={replace($keywordId[1], '#', '%23')}&amp;amp;multiple=false"
-				xlink:show="replace"/>-->
+					xlink:href="local://{$mainLanguage}/xml.keyword.get?thesaurus=local.theme.sextant-theme&amp;amp;id={replace($keywordId[1], '#', '%23')}&amp;amp;multiple=false"
+					xlink:show="replace"/>
 				</xsl:copy>
 			</xsl:when>
 			<xsl:otherwise>
