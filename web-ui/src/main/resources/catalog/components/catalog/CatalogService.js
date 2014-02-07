@@ -85,6 +85,8 @@
     lang: 'lang@json',
     country: 'regions.list@json?categoryId=' +
         'http://geonetwork-opensource.org/regions%23country',
+    regionsList: 'regions.category.list@json',
+    region: 'regions.list@json',
     removeThumbnail: 'md.thumbnail.remove@json',
     removeOnlinesrc: 'resource.del.and.detach', // TODO: CHANGE
     suggestionsList: 'md.suggestion@json',

@@ -116,5 +116,8 @@
     "datasetNotFound": "Jeu de données non trouvé - 404",
     "unpublishSuccess" : "Dépublication effectuée",
     "datasetFound": "Jeu de données trouvé et ajouté à la carte",
-    "publishSuccess":"Publication effectuée. Couche ajoutée à la carte"
+    "publishSuccess":"Publication effectuée. Couche ajoutée à la carte",
+    "country": "Pays",
+    "ocean": "Océan",
+    "continent": "Continent"
 }

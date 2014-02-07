@@ -5,6 +5,7 @@
   ]);
 
   /**
+   * DEPECRATED : should use gnRegionPicker instead
    * @ngdoc directive
    * @name gn_fields_directive.directive:gnCountryPicker
    * @function
@@ -51,6 +52,80 @@
         }
       };
     }]);
+  
+  module.directive('gnRegionPicker', ['gnRegionService',
+   function(gnRegionService) {
+     return {
+       restrict: 'A',
+       replace: true,
+       scope: true,
+       templateUrl: '../../catalog/components/utility/' +
+         'partials/regionpicker.html',
+       link: function(scope, element, attrs) {
+         scope.gnRegionService = gnRegionService;
+         
+         /**
+          * Load list on init to fill the dropdown
+          */
+         gnRegionService.loadList().then(function(data){
+           scope.region = data[0];
+         });
+         
+         scope.setRegion = function(region) {
+           scope.region = region;
+         }
+       }
+     };
+   }]);
+
+  /**
+   * Region picker coupled with typeahead.
+   * scope.region will tell what kind of region to load
+   * (country, ocean, continent), inherited from parent scope.
+   * But you can also set it to use the directive in an 
+   * independent way by passing the attribute gn-region.
+   * 
+   * Specify a scope.onRegionSelect function if you want 
+   * to catch event from selection.
+   */
+  module.directive('gnRegionPickerInput', [
+    'gnRegionService',
+    function(gnRegionService) {
+      return {
+        restrict : 'A',
+        link : function(scope, element, attrs) {
+          
+          if(attrs['gnRegion']) {
+            gnRegionService.loadList().then(function(data){
+              for(i=0;i<data.length;++i) {
+                if(attrs['gnRegion'] == data[i].name) {
+                  scope.region = data[i];
+                }
+              }
+            });
+          }
+          scope.$watch('region', function(val){
+            if(scope.region) {
+              gnRegionService.loadRegion(scope.region, scope.lang).then(
+                  function(data) {
+                    $(element).typeahead('destroy');
+                    $(element).typeahead({
+                      valueKey : 'name',
+                      local : data,
+                      minLength : 0,
+                      limit : 30
+                    }).on('typeahead:selected', function(event, datum) {
+                      if (angular.isFunction(scope.onRegionSelect)) {
+                        scope.onRegionSelect(datum);
+                      }
+                    });
+                  });
+            }
+          });
+        }
+      };
+    }]);
+
   /**
    * @ngdoc directive
    * @name gn_fields_directive.directive:gnLanguagePicker

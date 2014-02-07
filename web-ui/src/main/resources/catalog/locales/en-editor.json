@@ -115,5 +115,8 @@
     "datasetNotFound": "Dataset not found - 404",
     "unpublishSuccess" : "Successful unpublication",
     "datasetFound": "Dataset found and added to map preview",
-    "publishSuccess":"Successful publication. Layer added to map preview"
+    "publishSuccess":"Successful publication. Layer added to map preview",
+    "country": "Country",
+    "ocean": "Ocean",
+    "continent": "Continent"
 }
