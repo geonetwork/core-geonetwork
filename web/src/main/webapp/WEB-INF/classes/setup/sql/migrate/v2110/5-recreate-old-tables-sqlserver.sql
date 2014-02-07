@@ -29,7 +29,7 @@ CREATE TABLE Users
     password      varchar(120)  not null,
     surname       varchar(32),
     name          varchar(32),
-    profile       varchar(32)   not null,
+    profile       int not null,
     organisation  varchar(128),
     kind          varchar(16),
     security      varchar(128)  default '',
