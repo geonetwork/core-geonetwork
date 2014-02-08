@@ -4,7 +4,7 @@ var links = [ "../../apps/shared-objects/app/lib/angular/angular-route.js",
 		"../../apps/shared-objects/app/js/filters.js",
 		"../../apps/shared-objects/app/js/directives.js" ];
 
-for (link in links) {
+for (var link in links) {
 	jQuery.ajax(links[link], {
 		async : false,
 		cache : true,
@@ -117,28 +117,6 @@ t_requiredSchematron.controller('required_schematron',
 // Load existing schematron rules
 function($scope, $http) {
 
-	$scope.toggleRequired = function(a) {
-		if (confirm(confirmToggle) == true) {
-			$("div.schematron_required").hide();
-			var checkbox = $("input", $("div.schematron_required"))[0];
-
-			$http({
-				method : 'GET',
-				url : 'metadata.schema.isMandatory',
-				params : {
-					action : 'toggle',
-					schematron : $("select[name=schematron] option:selected")[0].value
-				}
-			}).success(function(data) {
-				angular.forEach($.parseXML(data).children, function(child) {
-					var c = child.children[0];
-					checkbox.checked = (c.innerText || c.textContent) == "t";
-				});
-				$("div.schematron_required").show();
-				$("#resultTable").scope().update($("#resultTable").scope(), $http);
-			});
-		}
-	};
 });
 
 var t_controller = angular.module('table_module', []);
@@ -148,44 +126,90 @@ t_controller.controller('table_controller',
 // Load existing schematron rules
 function($scope, $http) {
 
-	// Remove item from table list
-	$scope.removeItem = function(a) {
-		if (confirm(confirmDelete) == true) {
-			$http({
-				method : 'GET',
-				url : '',
-				params : {
-					action : 'delete',
-					id : a.row.id
-				}
-			}).success(function() {
-				$scope.update($scope, $http);
-			});
-		}
-	};
+    // Remove item from table list
+    $scope.removeItem = function(a) {
+        var id;
+        var url = 'metadata.schema.schematron.criteria';
+        var confirmMsg;
+        if (a.row) {
+            id = a.row.id;
+            confirmMsg = confirmDelete;
+        } else {
+            id = a.group.name;
+            url = url + '.group';
+            confirmMsg = confirmDeleteGroup;
+        }
+        if (confirm(confirmMsg) == true) {
+            $http({
+                method : 'GET',
+                url : url,
+                params : {
+                    action : 'delete',
+                    id : id,
+                    groupName : id
+                }
+            }).success(function() {
+                if (a.row) {
+                    var group = a.row.group;
+                    var index = group.criteria.indexOf(a.row);
+                    group.criteria.splice(index,1);
+                } else {
+                    var index = $scope.data.indexOf(a.group);
+                    $scope.data.splice(index, 1);
+                }
+            });
+        }
+    };
+    $scope.calculateRequired = function(criteria) {
+        if (criteria.requirement === "REQUIRED") {
+            criteria.required = "ok-sign";
+        } else if (criteria.requirement === "DISABLED") {
+            criteria.required = "minus-sign";
+        } else {
+            criteria.required = "info-sign";
+        }
+    }
+    // Remove item from table list
+    $scope.toggleRequirement = function(a) {
+        var requirement;
+        if (a.group.requirement === "REQUIRED") {
+            requirement = "REPORT";
+        }else if (a.group.requirement === "DISABLED") {
+            requirement = "REQUIRED";
+        }else {
+            requirement = "DISABLED";
+        }
+        $http({
+            method : 'GET',
+            url : 'metadata.schema.schematron.criteria.group',
+            params : {
+                action: 'edit',
+                requirement : requirement,
+                name : a.group.name
+            }
+        }).success(function() {
+            a.group.requirement = requirement;
+            $scope.calculateRequired(a.group);
+        });
+    };
 
 	// update items on table list
 	$scope.update = function($scope, $http) {
 		$http({
 			method : 'GET',
-			url : 'reusable.list.js',
-			params : {
-				type : 'schematronrules'
-			}
+			url : 'metadata.schema.schematron.criteria.group@json',
+            params: {
+                includeCriteria: true,
+                includeSchematron: true
+            }
 		}).success(function(data) {
 			$scope.data = data;
 
-			angular.forEach($scope.data, function(item) {
-				if (item.required && item.required == "true") {
-					item.required = "check";
-				} else {
-					item.required = "unchecked";
-				}
-				if (item.type == 0) {
-					item.type = "group";
-				} else {
-					item.type = "keyword";
-				}
+			angular.forEach(data, function(group) {
+                $scope.calculateRequired(group);
+                angular.forEach(group.criteria, function (criteria) {
+                    criteria.group = group;
+                });
 			});
 		});
 	};
@@ -227,43 +251,42 @@ function TypeaheadCtrl($scope, $http, limitToFilter) {
 		});
 	};
 
-	$scope.updateVal = function($item, $model, $label) {
-		$('#xpath').val($item.value);
-	}
-
-	$scope.getGroups = function(val) {
-		return $http.get('xml.group.list', {
-			dataType : "xml"
+	$scope.getCriteriaGroups = function(val) {
+		return $http.get('metadata.schema.schematron.criteria.group@json', {
 		}).then(function(data) {
 			var res = [];
+			angular.forEach(data.data, function(item) {
+				var str = item.name;
 
-			xml = data.responseXML;
-			if (!xml) {
-				xml = data.xml;
-			}
-
-			if (!xml) {
-				if (window.DOMParser) {
-					parser = new DOMParser();
-					xml = parser.parseFromString(data.data, "text/xml");
-				} else // Internet Explorer
-				{
-					xml = new ActiveXObject("Microsoft.XMLDOM");
-					xml.async = false;
-					xml.loadXML(data.data);
+				if(str.toUpperCase().indexOf(val.toUpperCase()) >= 0) {
+					res.push({
+						label : item.name
+					});
 				}
-			}
-
-			angular.forEach(xml.getElementsByTagName("record"), function(item) {
-				var id = item.getElementsByTagName("id")[0];
-				var name = item.getElementsByTagName("name")[0];
-				res.push({
-					label : name.innerText || name.textContent,
-					value : id.innerText || id.textContent
-				});
 			});
 			return limitToFilter(res, 8);
 		});
+    }
+	$scope.getGroups = function(val) {
+		return $http.get('xml.group.list@json', {
+		}).then(function(data) {
+			var res = [];
+			angular.forEach(data.data, function(item) {
+				var str = item.name;
+
+				if(str.toUpperCase().indexOf(val.toUpperCase()) >= 0) {
+					res.push({
+						label : item.name,
+						value : item.id
+					});
+				}
+			});
+			return limitToFilter(res, 8);
+		});
+	};
+
+	$scope.updateVal = function($item, $model, $label) {
+		$('#xpath').val($item.value);
 	};
 }
 
@@ -273,7 +296,13 @@ var app = angular.module('metadataSchemaValidation', [ 'table_module', 'required
 app.controller('addNewEntry',
 // Add new entry on table list
 function($scope, $http) {
-	$scope.submit = function() {
+    $scope.formData = {
+        type: 'KEYWORD',
+        groupName: '',
+        schematron: '',
+        xpath: ''
+    };
+    $scope.submit = function() {
 		checkErrors();
 		
 		//enforce failback: xpath cannot be empty
@@ -288,10 +317,11 @@ function($scope, $http) {
 		
 		$http({
 			method : 'GET',
-			url : '',
+			url : 'metadata.schema.schematron.criteria',
 			params : {
 				action : 'add',
-				schematron : $scope.formData.schematron,
+                schematronId : $scope.formData.schematron,
+                groupName: $scope.formData.groupName,
 				value : $('#xpath').val(),
 				type : $scope.formData.type
 			}

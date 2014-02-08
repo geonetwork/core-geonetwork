@@ -213,8 +213,8 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
         String reportType = report.getAttributeValue("rule", Edit.NAMESPACE);
         reportType = reportType == null ? "No name for rule" : reportType;
         StringBuilder failure = new StringBuilder();
-        
-        boolean isMandatory = checkMandatory(report.getAttributeValue("dbident", Edit.NAMESPACE), dbms);
+
+        boolean isMandatory = Boolean.parseBoolean(report.getAttributeValue("required", Edit.NAMESPACE));
         
         if (isMandatory) {
             @SuppressWarnings("unchecked")
@@ -242,21 +242,6 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
             }
         }
     }
-
-    private boolean checkMandatory(String id, Dbms dbms) {
-        try {
-			@SuppressWarnings("unchecked")
-			List<Element> record = dbms.select("select required from schematron where id = ? LIMIT 1", Integer.valueOf(id))
-					.getChildren();
-			
-			Element r = record.get(0);
-			
-			return "t".equalsIgnoreCase(r.getChildText("required"));
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
 
 	@SuppressWarnings("unchecked")
     private List<MetadataRecord> lookUpMetadataIds(Dbms dbms) throws SQLException {

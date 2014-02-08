@@ -165,7 +165,7 @@ USA.
 			<sch:let name="euLanguage" value="
 				not(gmd:language/@gco:nilReason='missing') and 
 				geonet:contains-any-of($resourceLanguage, 
-				('eng', 'fre', 'ger', 'fra', 'deu', 'spa', 'dut', 'ita', 'cze', 'lav', 'dan', 'lit', 'mlt', 
+				('eng', 'fre', 'ger', 'spa', 'dut', 'ita', 'cze', 'lav', 'dan', 'lit', 'mlt', 
 				'pol', 'est', 'por', 'fin', 'rum', 'slo', 'slv', 'gre', 'bul', 
 				'hun', 'swe', 'gle'))"/>
 			<sch:assert test="$euLanguage">
@@ -258,19 +258,17 @@ USA.
 			<sch:let name="inspire-theme" value="$inspire-thesaurus//skos:Concept"/>
 			
 			<!-- Display error if INSPIRE Theme thesaurus is not available. -->
+			<sch:assert test="count($inspire-theme) > 0">
+				INSPIRE Theme thesaurus not found. Check installation in codelist/external/thesauri/theme.
+				Download thesaurus from https://geonetwork.svn.sourceforge.net/svnroot/geonetwork/utilities/gemet/thesauri/.
+			</sch:assert>
 			
-			<!-- GEOCAT: disabled until geocat metadata has all been migrated to have a theme
-    			<sch:assert test="count($inspire-theme) > 0">
-    				INSPIRE Theme thesaurus not found. Check installation in codelist/external/thesauri/theme.
-    				Download thesaurus from https://geonetwork.svn.sourceforge.net/svnroot/geonetwork/utilities/gemet/thesauri/.
-    			</sch:assert>
-			-->
 			
 			<sch:let name="thesaurus_name" value="gmd:descriptiveKeywords/*/gmd:thesaurusName/*/gmd:title/*/text()"/>
 			<sch:let name="thesaurus_date" value="gmd:descriptiveKeywords/*/gmd:thesaurusName/*/gmd:date/*/gmd:date/*/text()"/>
 			<sch:let name="thesaurus_dateType" value="gmd:descriptiveKeywords/*/gmd:thesaurusName/*/gmd:date/*/gmd:dateType/*/@codeListValue/text()"/>
 			<sch:let name="keyword" 
-				value="gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString | gmd:descriptiveKeywords/*/gmd:keyword//gmd:LocalisedCharacterString) |
+				value="gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString|
 				gmd:descriptiveKeywords/*/gmd:keyword/gmx:Anchor"/>
 			<sch:let name="inspire-theme-found" 
 				value="count($inspire-thesaurus//skos:Concept[skos:prefLabel = $keyword])"/>
@@ -468,7 +466,10 @@ USA.
 		<!-- Search for on quality report result with status ... We don't really know if it's an INSPIRE conformity report or not. -->
 		<sch:rule context="/gmd:MD_Metadata">
 			<sch:let name="degree" value="count(gmd:dataQualityInfo/*/gmd:report/*/gmd:result/*/gmd:pass)"/>
-			<sch:report test="$degree = 0">
+			<sch:assert test="$degree = 0">
+				<sch:value-of select="$loc/strings/alert.M44.nonev/div"/><sch:value-of select="$degree>0"/>
+			</sch:assert>
+			<sch:report test="$degree">
 				<sch:value-of select="$loc/strings/report.M44.nonev/div"/>
 			</sch:report>
 		</sch:rule>
@@ -476,10 +477,16 @@ USA.
 		<!-- Check specification names and status -->
 		<sch:rule context="//gmd:dataQualityInfo/*/gmd:report/*/gmd:result/*">
 			<sch:let name="degree" value="gmd:pass/*/text()"/>
-			<sch:let name="specification_title" value="gmd:specification/*/gmd:title/*/text()"/>
+			<sch:let name="specification_title" value="gmd:specification/*/gmd:title//text()"/>
 			<sch:let name="specification_date" value="gmd:specification/*/gmd:date/*/gmd:date/*/text()"/>
 			<sch:let name="specification_dateType" value="normalize-space(gmd:specification/*/gmd:date/*/gmd:dateType/*/@codeListValue)"/>
 			
+			<sch:assert test="$specification_title">
+			    <sch:value-of select="$loc/strings/report.M44.spec/div"/>
+			</sch:assert>
+			<sch:assert test="$specification_date and $specification_dateType">
+			    <sch:value-of select="$loc/strings/report.M44.spec/div"/>
+			</sch:assert>
 			<sch:report test="$specification_title"><sch:value-of select="$loc/strings/report.M44.spec/div"/>
 				<sch:value-of select="$specification_title"/>, (<sch:value-of select="$specification_date"/>, <sch:value-of select="$specification_dateType"/>)
 			</sch:report>
@@ -568,7 +575,10 @@ USA.
 				<sch:value-of select="$classification"/>
 			</sch:report>
 		</sch:rule>
-		
+	</sch:pattern>
+	
+    <sch:pattern>
+		<sch:title>$loc/strings/constraints</sch:title>
 		<sch:rule context="//gmd:MD_DataIdentification|
 			//*[@gco:isoType='gmd:MD_DataIdentification']|
 			//srv:SV_ServiceIdentification|
@@ -582,10 +592,8 @@ USA.
 				<sch:value-of select="$loc/strings/report.M45.ul/div"/>
 				<sch:value-of select="$useLimitation"/>
 			</sch:report>
-		</sch:rule>		
-	</sch:pattern>
-	
-	
+		</sch:rule>
+    </sch:pattern>
 	
 	<sch:pattern>
 		<sch:title>$loc/strings/org</sch:title>

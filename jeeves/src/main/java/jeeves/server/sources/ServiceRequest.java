@@ -55,6 +55,7 @@ public class ServiceRequest
 	protected InputMethod  input     = InputMethod.GET;
 	protected OutputMethod output    = OutputMethod.DEFAULT;
 	private Map<String, String> headers = new HashMap<String, String>();
+    protected boolean jsonOutput = false;
 
 	//---------------------------------------------------------------------------
 
@@ -128,6 +129,8 @@ public class ServiceRequest
 
 	public void setDebug(boolean yesno) { debug = yesno; }
 
+    public void setJSONOutput(boolean yesno) { jsonOutput = yesno; }
+    public boolean hasJSONOutput() { return jsonOutput; }
 	//---------------------------------------------------------------------------
 
 	public void write(Element response) throws IOException

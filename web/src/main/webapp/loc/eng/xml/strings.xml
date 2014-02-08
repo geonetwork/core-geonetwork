@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<!-- GEOCAT Strings -->
+    <schematroncriteriagroup>Criteria Group</schematroncriteriagroup>
     <metadataValidationConfiguration>Metadata Validation</metadataValidationConfiguration>
     <metadataValidationConfigurationDesc>Configure Metadata Validation</metadataValidationConfigurationDesc>
     <noTitle>No Title</noTitle>
@@ -36,7 +37,8 @@
 	<xpathvalue>Value</xpathvalue>
 	<xpathrequired>Required</xpathrequired>
 	<xpathschematron>Schematron</xpathschematron>
-	<xpathconfirm>Are you sure you want to remove this criteria?</xpathconfirm>
+	<xpathconfirmDeleteCriteria>Are you sure you want to remove this criteria?</xpathconfirmDeleteCriteria>
+	<xpathconfirmDeleteCriteriaGroup>Are you sure you want to remove this criteria group and contained criteria?</xpathconfirmDeleteCriteriaGroup>
 	<schematronRequiredConfirmToggle>Are you sure you want to toggle the mandatory property of this schematron rules?</schematronRequiredConfirmToggle>
 	<schematronMandatoryDes>Indicates if the schematron is mandatory or optional. Click to toggle.</schematronMandatoryDes>
 
@@ -1758,5 +1760,7 @@
     <advancedOptions.hide>Hide advanced options</advancedOptions.hide>
     <unknown>Unknown</unknown>
     
-    <deleteRow>Delete row</deleteRow>
+    <deleteCriteria>Delete Criteria</deleteCriteria>
+    <deleteCriteriaGroup>Delete Criteria Group</deleteCriteriaGroup>
+    <toggleRequirement>Change Requirement</toggleRequirement>
 </strings>

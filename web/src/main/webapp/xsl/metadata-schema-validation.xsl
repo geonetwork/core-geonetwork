@@ -46,8 +46,7 @@
 					</p>
 
 					<div class="metadataValidation">
-						<form method="post" name="criteria" ng-submit="submit()"
-							ng-controller="addNewEntry">
+						<form method="post" name="criteria" ng-submit="submit()" ng-controller="addNewEntry">
 							<div>
 								<label>
 									<xsl:value-of select="/root/gui/strings/xpathschematron" /> :
@@ -55,30 +54,31 @@
 
 								<select ng-model="formData.schematron" name="schematron"
 									autofocus="autofocus" required="true">
-									<xsl:for-each select="/root/schematron/schematron">
+									<xsl:for-each select="/root/schematroncriteriagroup/record/schematron">
 										<option>
 											<xsl:attribute name="value"><xsl:value-of select="id" /></xsl:attribute>
 											<xsl:text>[</xsl:text>
-											<xsl:value-of select="isoschema" />
+											<xsl:value-of select="schemaname" />
                                             <xsl:text>] </xsl:text>
 											<xsl:value-of select="tokenize(file,'/|\\')[last()]" />
 										</option>
 									</xsl:for-each>
 								</select>
-								<div ng-controller="required_schematron" class="schematron_required" style="display:none">
-									<input type="checkbox" id="schematron_required"></input>
-									<span class="glyphicon">
-											<xsl:attribute name="title"><xsl:value-of select="/root/gui/strings/schematronMandatoryDes" /></xsl:attribute>
-											<xsl:attribute name="ng-click">toggleRequired(this);</xsl:attribute>
-									</span>
-								</div>
 							</div>
-							<div>
+                            <div class='container-fluid' ng-controller="TypeaheadCtrl">
+                                <label>
+                                    <xsl:value-of select="/root/gui/strings/schematroncriteriagroup" />
+                                    :
+                                </label>
+                                <input type="text" id="groupName" placeholder="{/root/gui/strings/schematroncriteriagroup}"
+                                    ng-model="formData.groupName" typeahead-editable="true"
+                                    typeahead="criteriagroup.label for criteriagroup in getCriteriaGroups($viewValue) | filter:$viewValue | limitTo:8" />
+                            </div>
+                            <div>
 								<label>
 									<xsl:value-of select="/root/gui/strings/xpathlabel" /> :
 								</label>
-								<select ng-model="formData.type" name="type" id="xpathtype"
-									placeholder="{/root/gui/strings/xpathlabel}" required="true">
+								<select ng-model="formData.type" name="type" id="xpathtype" required="true">
 									<option value="KEYWORD">
 										<xsl:value-of select="/root/gui/strings/capitalKeyword" />
 									</option>
@@ -119,57 +119,52 @@
 						</form>
 					</div>
 					<br/>
-					<div>
-						<table id="resultTable" class="table table-condensed"
-							ng-controller="table_controller">
-							<thead>
-								<tr>
-									<th>
-										<xsl:value-of select="/root/gui/strings/xpathrequired" />
-									</th>
-									<th>
-										<xsl:value-of select="/root/gui/strings/xpathschematron" />
-									</th>
-									<th>
-										<xsl:value-of select="/root/gui/strings/xpathlabel" />
-									</th>
-									<th>
-										<xsl:value-of select="/root/gui/strings/xpathvalue" />
-									</th>
-									<td>
-									</td>
-								</tr>
-							</thead>
-							<tbody>
-								<tr data-ng-repeat="row in data">
-									<td>
-										<span>
-											<xsl:attribute name="class">glyphicon glyphicon-{{row.required}}</xsl:attribute>
-										</span>
-									</td>
-									<td>
-										{{row.desc}}
-									</td>
-									<td>
-										{{row.type}}
-									</td>
-									<td>
-										{{row.value}}
-									</td>
-									<td>
-										<a class="glyphicon glyphicon-remove-circle removeItem">
-											<xsl:attribute name="title"><xsl:value-of select="/root/gui/strings/deleteRow" /></xsl:attribute>
-											<xsl:attribute name="ng-click">removeItem(this);</xsl:attribute>
-										</a>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
+					<br/>
+                <div class="container-fluid" ng-controller="table_controller">
+                    <div data-ng-repeat="group in data">
+                        <div class="row">
+                            <div class="col-md-1">
+                                <a>
+                                    <xsl:attribute name="class">glyphicon glyphicon-{{group.required}}</xsl:attribute>
+                                    <xsl:attribute name="ng-click">toggleRequirement(this);</xsl:attribute>
+                                    <xsl:attribute name="title"><xsl:value-of select="/root/gui/strings/toggleRequirement" /></xsl:attribute>
+                                </a>
+                            </div>
+                            <div class="col-md-10">
+                                {{group.name}}
+                            </div>
+                            <!--<div class="col-md-3">-->
+                                <!--{{group.schematron.ruleName}}-->
+                            <!--</div>-->
+                            <div class="col-md-1">
+                                <a class="glyphicon glyphicon-remove-circle removeItem">
+                                    <xsl:attribute name="title"><xsl:value-of select="/root/gui/strings/deleteCriteriaGroup" /></xsl:attribute>
+                                    <xsl:attribute name="ng-click">removeItem(this);</xsl:attribute>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row" style="background-color: #f5f5f5;" data-ng-repeat="row in group.criteria">
+                            <div class="col-md-5 col-md-offset-2">
+                                {{row.type}}
+                            </div>
+                            <div class="col-md-4">
+                                {{row.value}}
+                            </div>
+                            <div class="col-md-1">
+                                <a class="glyphicon glyphicon-remove-circle removeItem">
+                                    <xsl:attribute name="title"><xsl:value-of select="/root/gui/strings/deleteCriteria" /></xsl:attribute>
+                                    <xsl:attribute name="ng-click">removeItem(this);</xsl:attribute>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 				</div>
 
 				<script type="text/javascript">
-					confirmDelete = '<xsl:value-of select="/root/gui/strings/xpathconfirm" />';
+					confirmDelete = '<xsl:value-of select="/root/gui/strings/xpathconfirmDeleteCriteria" />';
+					confirmDeleteGroup = '<xsl:value-of select="/root/gui/strings/xpathconfirmDeleteCriteriaGroup" />';
 					confirmToggle = '<xsl:value-of select="/root/gui/strings/schematronRequiredConfirmToggle" />';
 				</script>
 

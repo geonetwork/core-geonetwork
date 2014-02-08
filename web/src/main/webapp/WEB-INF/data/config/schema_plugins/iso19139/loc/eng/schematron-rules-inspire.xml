@@ -166,6 +166,9 @@
         harmonisation of administrative boundaries”.
                 
     </div></alert.M44>
+    <alert.M44.title><div>A title is required for the conformance report.</div></alert.M44.title>
+    <alert.M44.date><div>A date is required for the conformance report.</div></alert.M44.date>
+    <alert.M44.nonev><div>The degree of conformity of the resource has not yet been evaluated.</div></alert.M44.nonev>
     <report.M44.nonev><div>The degree of conformity of the resource has not yet been evaluated.</div></report.M44.nonev>
     <report.M44.degree><div>Degree of conformity found:</div></report.M44.degree>
     <report.M44.spec><div>Specification:</div></report.M44.spec>

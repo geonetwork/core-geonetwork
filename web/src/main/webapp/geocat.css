@@ -66,6 +66,7 @@ a {
 a:hover
 {
 	text-decoration: underline;
+    cursor: hand;
 }
 
 a.no-help:hover {
