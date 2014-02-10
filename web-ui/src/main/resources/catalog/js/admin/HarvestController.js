@@ -469,6 +469,23 @@
       });
 
 
+      // Z3950 GetFeature harvester
+      $scope.harvesterZ3950repositories = null;
+      var loadHarvesterZ3950Repositories = function() {
+        $http.get('info@json?type=z3950repositories', {cache: true})
+          .success(function(data) {
+              $scope.harvesterZ3950repositories = data.z3950repositories;
+            });
+      };
+      $scope.$watch('harvesterSelected.site.repositories',
+          function() {
+            if ($scope.harvesterSelected &&
+                $scope.harvesterSelected['@type'] === 'z3950') {
+              loadHarvesterZ3950Repositories();
+            }
+          });
+
+
 
       // Thredds
       $scope.threddsCollectionsMode = 'DIF';
