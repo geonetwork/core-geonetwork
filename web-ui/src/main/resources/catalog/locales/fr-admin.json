@@ -669,6 +669,12 @@
     "formatterUploadHelp": "Une mise en page est un ZIP contenant des fichiers définissant un rendu particulier.",
     "formatterRemovalError": "Erreur lors de la suppression de la mise en page.",
     "versionHistory": "Historique",
-    "versionning": "Historique"
-    
+    "versionning": "Historique",
+    "every": "Fréquence",
+    "cron-0 0 12 * * ?": "à 12:00 tous les jours",
+    "cron-0 15 10 * * ?": "à 10:15 tous les jours",
+    "cron-0 0/5 14 * * ?": "Toutes les 5 minutes entre 14:00 et 15:00",
+    "cron-0 15 10 ? * MON-FRI": "à 10:15 du lundi au vendredi",
+    "cron-0 15 10 15 * ?": "à 10:15 le 15 de chaque mois",
+    "moreExamples": "D'autres exemples ..."
 }
