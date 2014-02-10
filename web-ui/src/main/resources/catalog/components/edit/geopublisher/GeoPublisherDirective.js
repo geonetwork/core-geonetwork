@@ -135,9 +135,9 @@
                 else if (angular.isObject(data.layer)) {
                   addLayerToMap(data.layer);
                   scope.isPublished = true;
-                  if(action == 'check') {
+                  if (action == 'check') {
                     scope.statusCode = $translate('datasetFound');
-                  } else if (action =='publish') {
+                  } else if (action == 'publish') {
                     scope.statusCode = $translate('publishSuccess');
                   }
                 }
@@ -174,8 +174,8 @@
               scope.checkNode = function(nodeId) {
                 var p = gnGeoPublisher.checkNode(nodeId, scope.fileName);
                 if (p) {
-                  p.success(function(data){
-                    readResponse(data,'check');
+                  p.success(function(data) {
+                    readResponse(data, 'check');
                   });
                 }
               };
@@ -186,8 +186,8 @@
               scope.publish = function(nodeId) {
                 var p = gnGeoPublisher.publishNode(nodeId, scope.fileName);
                 if (p) {
-                  p.success(function(data){
-                    readResponse(data,'publish');
+                  p.success(function(data) {
+                    readResponse(data, 'publish');
                   });
                 }
               };
