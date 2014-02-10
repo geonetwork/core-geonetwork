@@ -63,7 +63,8 @@
                */
               var initParams = function() {
                 scope.params = {};
-                var p = gnSuggestion.getCurrent().params;
+                scope.currentSuggestion = gnSuggestion.getCurrent();
+                var p = scope.currentSuggestion.params;
                 for (key in p) {
                   scope.params[key] = p[key].defaultValue;
                 }

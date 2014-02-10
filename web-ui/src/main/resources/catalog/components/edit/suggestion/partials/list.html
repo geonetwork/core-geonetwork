@@ -10,7 +10,7 @@
   <div class="panel-body">
     <div class="list-group">
       <a href="" class="list-group-item" data-ng-repeat="sugg in suggestions | orderBy:'name'"
-        ng-click="gnSuggestion.onSuggestionClick(sugg)"> {{sugg.name}} </a>
+        data-ng-click="gnSuggestion.onSuggestionClick(sugg)"> {{sugg.name['#text'] || sugg.name}} </a>
     </div>
 
   </div>

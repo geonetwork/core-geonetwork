@@ -113,6 +113,8 @@
     "publishIn": "Publish <strong>{{layer}}</strong> in ",
     "addLinks": "Add links",
     "check": "Check",
+    "applySuggestion": "Apply suggestion",
+    "process": "Process",
     "datasetNotFound": "Dataset not found - 404",
     "unpublishSuccess" : "Successful unpublication",
     "datasetFound": "Dataset found and added to map preview",
