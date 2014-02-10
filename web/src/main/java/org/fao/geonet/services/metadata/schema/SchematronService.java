@@ -27,10 +27,14 @@ public class SchematronService implements Service{
 
         String id = Util.getParam(params, "id", null);
 
+        Element result;
         if (id == null) {
-            return dbms.select("SELECT * FROM " + SchemaDao.TABLE_SCHEMATRON);
+            result = dbms.select("SELECT * FROM " + SchemaDao.TABLE_SCHEMATRON);
         } else {
-            return dbms.select("SELECT * FROM " + SchemaDao.TABLE_SCHEMATRON + " WHERE id=?", Integer.parseInt(id));
+            result = dbms.select("SELECT * FROM " + SchemaDao.TABLE_SCHEMATRON + " WHERE id=?", Integer.parseInt(id));
         }
+
+        result.setName("schematron");
+        return result;
     }
 }

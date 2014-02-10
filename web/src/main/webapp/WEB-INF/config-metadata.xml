@@ -842,10 +842,7 @@
 
 		<!-- Validation framework extended -->
 		<service name="metadata.schema.validation">
-			<class name=".services.metadata.schema.SchematronCriteriaGroupService">
-                <param name="includeSchematron" value="true"/>
-                <param name="includeCriteria" value="true"/>
-            </class>
+			<class name=".services.metadata.schema.SchematronAdmin"/>
 			<output sheet="metadata-schema-validation.xsl" />
 		</service>
 

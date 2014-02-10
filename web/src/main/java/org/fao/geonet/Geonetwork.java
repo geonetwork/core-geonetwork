@@ -468,6 +468,9 @@ public class Geonetwork implements ApplicationHandler {
 		gnContext.svnManager  = svnManager;
 		gnContext.statusActionsClass = statusActionsClass;
 
+
+        context.getApplicationContext().getBeanFactory().registerSingleton("schemaManager", schemaMan);
+
 		logger.info("Site ID is : " + gnContext.getSiteId());
 
         // Creates a default site logo, only if the logo image doesn't exists

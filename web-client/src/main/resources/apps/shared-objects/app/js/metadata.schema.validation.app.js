@@ -217,42 +217,14 @@ function($scope, $http) {
 	$scope.update($scope, $http);
 });
 
-function checkErrors() {
-	$("#keyword").removeClass("error");
-	$("#group").removeClass("error");
-	if (criteria.keyword.value == '') {
-		$(criteria.keyword).addClass("error");
-	}
-	if (criteria.group.value == '') {
-		$(criteria.group).addClass("error");
-	}
-}
-
 function TypeaheadCtrl($scope, $http, limitToFilter) {
-	$scope.getKeywords = function(val) {
-		return $http.get('reusable.list.js', {
-			params : {
-				validated : true,
-				type : 'keywords'
-			}
-		}).then(function(data) {
-			var res = [];
-			angular.forEach(data.data, function(item) {
-				var str = item.desc;
-				
-				if(str.toUpperCase().indexOf(val.toUpperCase()) > 0) {
-					res.push({
-						label : str,
-						value : str
-					});
-				}
-			});
-			return limitToFilter(res, 8);
-		});
-	};
-
 	$scope.getCriteriaGroups = function(val) {
-		return $http.get('metadata.schema.schematron.criteria.group@json', {
+		return $http({
+            method : 'GET',
+            url : 'metadata.schema.schematron.criteria.group@json',
+            params: {
+                schematronId: $scope.formData.schematron.id
+            }
 		}).then(function(data) {
 			var res = [];
 			angular.forEach(data.data, function(item) {
@@ -266,28 +238,32 @@ function TypeaheadCtrl($scope, $http, limitToFilter) {
 			});
 			return limitToFilter(res, 8);
 		});
-    }
-	$scope.getGroups = function(val) {
-		return $http.get('xml.group.list@json', {
-		}).then(function(data) {
-			var res = [];
-			angular.forEach(data.data, function(item) {
-				var str = item.name;
+    };
 
-				if(str.toUpperCase().indexOf(val.toUpperCase()) >= 0) {
-					res.push({
-						label : item.name,
-						value : item.id
-					});
-				}
-			});
-			return limitToFilter(res, 8);
-		});
+	$scope.getCriteriaValues = function(val) {
+        var service = $scope.formData.type ? $scope.formData.type.service : undefined;
+        if (service) {
+            var url = service.url.replace(/@@search@@/g, val).replace(/@@lang@@/g, GeoNetworkLang);
+            return $http.get(url).then(function(data) {
+                var res = [];
+                var rawRecords = service.records(data.data);
+                angular.forEach(rawRecords, function(item) {
+                    var str = service.label(item);
+
+                    if(str.toUpperCase().indexOf(val.toUpperCase()) >= 0) {
+                        res.push({
+                            label : service.label(item),
+                            value : service.value(item)
+                        });
+                    }
+                });
+                return limitToFilter(res, 8);
+            });
+        } else {
+            return [];
+        }
 	};
 
-	$scope.updateVal = function($item, $model, $label) {
-		$('#xpath').val($item.value);
-	};
 }
 
 var app = angular.module('metadataSchemaValidation', [ 'table_module', 'required_schematron',
@@ -296,40 +272,92 @@ var app = angular.module('metadataSchemaValidation', [ 'table_module', 'required
 app.controller('addNewEntry',
 // Add new entry on table list
 function($scope, $http) {
+    $scope.schematrons = schematrons;
+    $scope.schemasToCriteriaTypes = schemasToCriteriaTypes;
+
     $scope.formData = {
-        type: 'KEYWORD',
-        groupName: '',
-        schematron: '',
-        xpath: ''
+        showErrors: false,
+        schematron: null,
+        groupName: null,
+        type: null,
+        value: null
     };
+    var dirty = function (elem) {
+        elem.addClass('ng-dirty');
+        elem.removeClass('ng-pristine');
+    }
+    var invalid = function (id) {
+        var elem = $(id);
+        elem.removeClass('ng-valid');
+        elem.addClass('ng-invalid');
+        dirty(elem);
+    };
+    var valid = function (id) {
+        var elem = $(id);
+        elem.addClass('ng-valid');
+        elem.removeClass('ng-invalid');
+        dirty(elem);
+    };
+    $scope.$watch(function () {return $scope.formData.schematron}, function() {
+        $scope.formData.groupName = null;
+        $scope.formData.type = null;
+    });
+    $scope.$watch(function () {return $scope.formData.type}, function() {
+        $scope.formData.value = null;
+    });
+    $scope.$watchCollection(function () { return $scope.formData}, function(newValue, oldValue) {
+        if (!newValue.showErrors) {
+            newValue.showErrors = newValue.schematron !== null || newValue.groupName !== null ||
+                newValue.type !== null || newValue.value !== null;
+        }
+        var enableSubmit = true;
+        if (newValue.showErrors) {
+            if (newValue.schematron === null) {
+                invalid('#schematron');
+                enableSubmit = false;
+            } else {
+                valid('#schematron');
+            }
+            if (newValue.groupName === null) {
+                invalid('#groupName');
+                enableSubmit = false;
+            } else {
+                valid('#groupName');
+            }
+            if (newValue.type === null) {
+                invalid('#xpathtype');
+                enableSubmit = false;
+            } else {
+                valid('#xpathtype');
+            }
+            if (newValue.value === null) {
+                invalid('#xpathValue');
+                enableSubmit = false;
+            } else {
+                valid('#xpathValue');
+            }
+        } else {
+            enableSubmit = false;
+        }
+        $("#addButton")[0].disabled = !enableSubmit;
+
+    });
+
+
     $scope.submit = function() {
-		checkErrors();
-		
-		//enforce failback: xpath cannot be empty
-		if($('#xpath').val() == '') {
-			if($("#keyword").is(":visible")) {
-				$('#xpath').val($("#keyword").val());
-			}
-			else if($("#group").is(":visible")) {
-				$('#xpath').val($("#group").val());
-			}
-		}
-		
-		$http({
-			method : 'GET',
-			url : 'metadata.schema.schematron.criteria',
-			params : {
-				action : 'add',
-                schematronId : $scope.formData.schematron,
+        $http({
+            method : 'POST',
+            url : 'metadata.schema.schematron.criteria',
+            params : {
+                action : 'add',
+                schematronId : $scope.formData.schematron.id,
                 groupName: $scope.formData.groupName,
-				value : $('#xpath').val(),
-				type : $scope.formData.type
-			}
-		}).success(function(data) {
-			$("#resultTable").scope().update($("#resultTable").scope(), $http);
-			$("#xpath").val("");
-			$("#keyword").val("");
-			$("#group").val("");
-		});
+                value : $scope.formData.type.value.replace(/@@value@@/g, $scope.formData.value).replace(/@@lang@@/g, GeoNetworkLang),
+                type : $scope.formData.type.type
+            }
+        }).success(function(data) {
+            $("#resultTable").scope().update($("#resultTable").scope(), $http);
+            $("#xpathValue").val("");
+        });
 	};
 });
