@@ -27,6 +27,7 @@ ALTER TABLE metadatastatus DROP CONSTRAINT IF EXISTS metadatastatus_userid_fkey;
 ALTER TABLE useraddress DROP CONSTRAINT IF EXISTS useraddress_userid_fkey;
 ALTER TABLE email DROP CONSTRAINT IF EXISTS email_user_id_fkey;
 ALTER TABLE groups DROP CONSTRAINT IF EXISTS groups_referrer_fkey;
+ALTER TABLE usergroups DROP CONSTRAINT IF EXISTS usergroups_userid_fkey;
 DROP TABLE Users;
 CREATE TABLE Users
   (
@@ -35,7 +36,7 @@ CREATE TABLE Users
     password      varchar(120)  not null,
     surname       varchar(32),
     name          varchar(32),
-    profile       varchar(32)   not null,
+    profile       int not null,
     organisation  varchar(128),
     kind          varchar(16),
     security      varchar(128)  default '',
