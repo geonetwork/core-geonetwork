@@ -17,7 +17,9 @@
            replace: true,
            scope: {
              processId: '@gnBatchProcessButton',
-             params: '@'
+             params: '@',
+             name: '@',
+             help: '@'
            },
            templateUrl: '../../catalog/components/edit/' +
            'batchprocessbutton/partials/' +
@@ -25,6 +27,7 @@
            link: function(scope, element, attrs) {
              // TODO: handle process parameters.
              scope.paramList = angular.fromJson(scope.params);
+             scope.name = scope.name || scope.processId;
              scope.process = function() {
                var params = {
                  process: scope.processId

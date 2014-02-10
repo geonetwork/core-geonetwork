@@ -913,7 +913,9 @@
     <div class="row">
       <div class="col-lg-12">
         <span data-gn-batch-process-button="{$process-name}"
-          data-params="{$process-params}"/>
+          data-params="{$process-params}"
+          data-name="{$strings/*[name() = $process-name]}"
+          data-help="{$strings/*[name() = concat($process-name, 'Help')]}"/>
       </div>
     </div>
   </xsl:template>
