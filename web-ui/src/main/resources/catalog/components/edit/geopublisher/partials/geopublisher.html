@@ -16,50 +16,37 @@
 
   <div class="panel panel-default" data-ng-hide="hidden">
     <div class="panel-heading">
-      <span data-translate="">publishing</span>&nbsp;<strong>{{fileName}}</strong>
+      <span data-translate="" data-translate-values="{layer: '{{fileName}}'}">publishIn</span>
+
+      <select data-ng-model="nodeId"
+              data-ng-change="checkNode(nodeId)">
+        <option data-ng-repeat="node in nodes" value="{{node.id}}">
+          {{node.name}}
+        </option>
+      </select>
     </div>
     <div class="panel-body">
       <!-- Header with projection selection, draw button and area list -->
       <form class="form" data-role="form">
-        <div class="form-group" class="col-sm-12">
-          <ul class="list-inline">
-            <li>
-              <select data-ng-model="nodeId"
-                data-ng-change="checkNode(nodeId)">
-                <option data-ng-repeat="node in nodes" value="{{node.id}}">
-                  {{node.name}}
-                </option>
-              </select>
-            </li>
-            <li>
-              <button class="btn btn-link"
-                data-ng-click="checkNode(nodeId)"
-                data-ng-class="{'disabled': (!nodeId)}">
-                <i class="fa fa-chain"></i>&nbsp;<span data-translate="">check</span>
-              </button>
-            </li>
-          </ul>
-        </div>
-        
         <div class="form-group" class="col-sm-12 inline">
-          <ul class="list-inline">
-            <li>
-              <button class="btn btn-link" data-ng-click="publish(nodeId)"
+          <div class="btn-toolbar">
+            <button class="btn btn-lin btn-xs"
+                    data-ng-click="checkNode(nodeId)"
+                    data-ng-class="{'disabled': (!nodeId)}">
+              <i class="fa fa-chain"></i>&nbsp;<span data-translate="">check</span>
+            </button>
+            <button class="btn btn-link btn-xs" data-ng-click="publish(nodeId)"
                 data-ng-class="{'disabled': (isPublished || !nodeId)}">
                 <i class="fa fa-globe"></i>&nbsp;<span data-translate="">publish</span>
-              </button>
-            </li>
-            <li>
-              <button class="btn btn-link" data-ng-click="unpublish(nodeId)"
-                data-ng-class="{'disabled': (!isPublished || !nodeId)}">
-                <i class="fa fa-globe text-danger"></i>&nbsp;<span
-                  data-translate="">unpublish</span>
-              </button>
-            </li>
-            <li>
-              <!-- DROP DOWN CHECKBOX -->
-              <div class="dropdown">
-                <button class="btn btn-link" data-toggle="dropdown" data-ng-click="publish(nodeId)"
+            </button>
+            <button class="btn btn-link btn-xs" data-ng-click="unpublish(nodeId)"
+              data-ng-class="{'disabled': (!isPublished || !nodeId)}">
+              <i class="fa fa-globe text-danger"></i>&nbsp;<span
+                data-translate="">unpublish</span>
+            </button>
+            <!-- DROP DOWN CHECKBOX -->
+            <div class="dropdown">
+                <button class="btn btn-link btn-xs" data-toggle="dropdown" data-ng-click="publish(nodeId)"
                   data-ng-class="{'disabled': (!isPublished || !nodeId)}">
                   <i class="fa fa-clipboard"></i>&nbsp;<span data-translate="">linkService</span>
                   <span class="caret"></span>
@@ -95,8 +82,7 @@
                   </li>
                 </ul>
               </div>
-            </li>
-          </ul>
+          </div>
         </div>
       </form>
 
