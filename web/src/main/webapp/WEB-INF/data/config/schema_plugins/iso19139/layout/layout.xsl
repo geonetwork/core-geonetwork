@@ -77,17 +77,15 @@
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
 
     <xsl:variable name="attributes">
-      <xsl:if test="$isEditing">
-        <!-- Create form for all existing attribute (not in gn namespace)
-        and all non existing attributes not already present. -->
-        <xsl:apply-templates mode="render-for-field-for-attribute" 
-          select="
-          @*|
-          gn:attribute[not(@name = parent::node()/@*/name())]">
-          <xsl:with-param name="ref" select="gn:element/@ref"/>
-          <xsl:with-param name="insertRef" select="gn:element/@ref"/>
-        </xsl:apply-templates>
-      </xsl:if>
+      <!-- Create form for all existing attribute (not in gn namespace)
+      and all non existing attributes not already present. -->
+      <xsl:apply-templates mode="render-for-field-for-attribute"
+        select="
+        @*|
+        gn:attribute[not(@name = parent::node()/@*/name())]">
+        <xsl:with-param name="ref" select="gn:element/@ref"/>
+        <xsl:with-param name="insertRef" select="gn:element/@ref"/>
+      </xsl:apply-templates>
     </xsl:variable>
     
     <xsl:variable name="errors">
@@ -156,25 +154,25 @@
     <xsl:variable name="helper" select="gn-fn-metadata:getHelper($labelConfig/helper, .)"/>
     
     <xsl:variable name="attributes">
-      <xsl:if test="$isEditing">
         
-        <!-- Create form for all existing attribute (not in gn namespace)
-        and all non existing attributes not already present for the
-        current element and its children (eg. @uom in gco:Distance). 
-        A list of exception is defined in form-builder.xsl#render-for-field-for-attribute. -->
-        <xsl:apply-templates mode="render-for-field-for-attribute" 
-          select="
-              @*|
-              gn:attribute[not(@name = parent::node()/@*/name())]">
-          <xsl:with-param name="ref" select="gn:element/@ref"/>
-        </xsl:apply-templates>
-        <xsl:apply-templates mode="render-for-field-for-attribute" 
-          select="
-          */@*|
-          */gn:attribute[not(@name = parent::node()/@*/name())]">
-          <xsl:with-param name="ref" select="*/gn:element/@ref"/>
-        </xsl:apply-templates>
-      </xsl:if>
+      <!-- Create form for all existing attribute (not in gn namespace)
+      and all non existing attributes not already present for the
+      current element and its children (eg. @uom in gco:Distance).
+      A list of exception is defined in form-builder.xsl#render-for-field-for-attribute. -->
+      <xsl:apply-templates mode="render-for-field-for-attribute"
+        select="
+            @*|
+            gn:attribute[not(@name = parent::node()/@*/name())]">
+        <xsl:with-param name="ref" select="gn:element/@ref"/>
+        <xsl:with-param name="insertRef" select="$theElement/gn:element/@ref"/>
+      </xsl:apply-templates>
+      <xsl:apply-templates mode="render-for-field-for-attribute"
+        select="
+        */@*|
+        */gn:attribute[not(@name = parent::node()/@*/name())]">
+        <xsl:with-param name="ref" select="*/gn:element/@ref"/>
+        <xsl:with-param name="insertRef" select="$theElement/gn:element/@ref"/>
+      </xsl:apply-templates>
     </xsl:variable>
     
     <xsl:variable name="errors">

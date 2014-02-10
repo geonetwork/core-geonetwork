@@ -397,6 +397,16 @@
              });
              return defer.promise;
            },
+           removeAttribute: function(metadataId, ref) {
+             var defer = $q.defer();
+             $http.get('md.attribute.remove@json?id=' + gnCurrentEdit.id +
+                     '&ref=' + ref.replace('COLON', ':'))
+                 .success(function(data) {
+               var target = $('#gn-attr-' + ref);
+               target.slideUp(duration, function() { $(this).remove();});
+                 });
+             return defer.promise;
+           },
            /**
             * Move an element according to the direction defined.
             * Call the service to apply the change to the metadata,

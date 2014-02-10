@@ -132,7 +132,7 @@
 
     <service name="md.element.add">
       <documentation><![CDATA[
-                Add an element to the metadata record.
+                Add an element or attribute to the metadata record.
                 
                 Parameters are:
                 * ref: parent element reference
@@ -169,7 +169,11 @@
                 ]]></documentation>
       <class name=".services.metadata.DeleteElement"/>
     </service>
-    
+
+    <service name="md.attribute.remove">
+      <class name=".services.metadata.DeleteAttribute"/>
+    </service>
+
     <service name="md.element.down" deprecated="true">
       <documentation><![CDATA[
         Move an element at preceding position.

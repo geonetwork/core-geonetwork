@@ -245,8 +245,21 @@
         return gnEditor[name].$error.required ? 'has-error' : '';
       };
       $scope.add = function(ref, name, insertRef, position, attribute) {
-        gnEditor.add(gnCurrentEdit.id, ref, name,
-            insertRef, position, attribute);
+        if (attribute) {
+          // save the form and add attribute
+          // after save is done. When adding an attribute
+          // the snippet returned contains the current field
+          // and the newly created attributes.
+          // Save to not lose current edits in main field.
+          gnEditor.save(false)
+            .then(function() {
+                gnEditor.add(gnCurrentEdit.id, ref, name,
+                    insertRef, position, attribute);
+              });
+        } else {
+          gnEditor.add(gnCurrentEdit.id, ref, name,
+              insertRef, position, attribute);
+        }
         return false;
       };
       $scope.addChoice = function(ref, name, insertRef, position) {
@@ -256,6 +269,11 @@
       };
       $scope.remove = function(ref, parent, domRef) {
         gnEditor.remove(gnCurrentEdit.id, ref, parent, domRef);
+        return false;
+      };
+      $scope.removeAttribute = function(ref) {
+        gnEditor.removeAttribute(gnCurrentEdit.id, ref);
+        return false;
       };
       $scope.save = function(refreshForm) {
         gnEditor.save(refreshForm)

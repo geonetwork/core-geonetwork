@@ -824,20 +824,19 @@
     Jeeves request parameters. -->
     <xsl:variable name="fieldName" select="concat('_', $ref, '_', replace($attributeName, ':', 'COLON'))"/>
     
-    <div class="form-group">
-      <label class="col-lg-4">
+    <div class="form-group" id="gn-attr-{$fieldName}">
+      <label class="col-sm-4">
         <xsl:value-of select="gn-fn-metadata:getLabel($schema, $attributeName, $labels)/label"/>
       </label>
-      <div class="col-lg-8">
+      <div class="col-sm-7">
         <xsl:if test="$directive">
           <xsl:attribute name="{$directive}"/>
         </xsl:if>
         
         <xsl:choose>
           <xsl:when test="$attributeSpec/gn:text">
-            
             <xsl:variable name="attributeCodeList" select="gn-fn-metadata:getCodeListValues($schema, $attributeName, $codelists)"/>
-            
+
             <select class="" name="{$fieldName}">
               <xsl:for-each select="$attributeSpec/gn:text">
                 <xsl:variable name="optionValue" select="@value"/>
@@ -860,6 +859,9 @@
             </input>
           </xsl:otherwise>
         </xsl:choose>
+      </div>
+      <div class="col-sm-1">
+        <i class="btn pull-right fa fa-times text-danger" data-ng-click="removeAttribute('{$fieldName}')"/>
       </div>
     </div>
   </xsl:template>
@@ -891,11 +893,10 @@
     'xlink:show', 'xlink:actuate', 'xlink:arcrole', 'xlink:role', 'xlink:title', 'xlink:href'))]" priority="4">
     <xsl:param name="ref"/>
     <xsl:param name="insertRef" select="''"/>
-    
+
     <xsl:variable name="attributeLabel" select="gn-fn-metadata:getLabel($schema, @name, $labels)"/>
-    
-    <button type="button" class="btn btn-link btn-xs" 
-      data-ng-click="add('{$ref}', '{@name}', '{$insertRef}', null, true)" 
+    <button type="button" class="btn btn-link btn-xs"
+      data-ng-click="add('{$ref}', '{@name}', '{$insertRef}', null, true)"
       title="{$attributeLabel/description}">
       <i class="fa fa-plus"/>
       <xsl:value-of select="$attributeLabel/label"/>
