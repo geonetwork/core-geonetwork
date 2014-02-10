@@ -854,13 +854,23 @@
 											<xsl:with-param name="ref" select="$ref"/>
 											<xsl:with-param name="date" select="text()"/>
 											<xsl:with-param name="format" select="$format"/>
-											<xsl:with-param name="disabled" select="@indeterminatePosition = 'unknown'"></xsl:with-param>
+											<xsl:with-param name="disabled" select="@indeterminatePosition = 'unknown'"/>
 										</xsl:call-template>
 										
 										<xsl:variable name="indeterminatePositionId" select="concat('_', $ref ,'_indeterminatePosition')"/>
 										<div style="margin-left: 168px;">
-											<input type="hidden" id="{$indeterminatePositionId}" name="{$indeterminatePositionId}" value="{@indeterminatePosition}"/>
+                      <!-- When form field is disabled, they are not posted. Add an empty field
+                      to enable when the calendar field is disabled. -->
+                      <input type="hidden" id="_{$ref}_disabled_field" name="_{$ref}" value="">
+                        <xsl:if test="@indeterminatePosition != 'unknown'">
+                          <xsl:attribute name="disabled">disabled</xsl:attribute>
+                        </xsl:if>
+                      </input>
+                      <input type="hidden" id="{$indeterminatePositionId}" name="{$indeterminatePositionId}" value="{@indeterminatePosition}"/>
 											<input type="checkbox" onclick="indeterminatePositionCheck(this.checked, '_{$ref}', '{$indeterminatePositionId}');" id="{$indeterminatePositionId}_ck">
+												<xsl:if test="$edit = false()">
+													<xsl:attribute name="disabled">disabled</xsl:attribute>
+												</xsl:if>
 												<xsl:if test="@indeterminatePosition = 'unknown'">
 													<xsl:attribute name="checked">checked</xsl:attribute>
 												</xsl:if>

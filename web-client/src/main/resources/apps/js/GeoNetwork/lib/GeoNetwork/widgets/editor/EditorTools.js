@@ -1076,9 +1076,12 @@ function indeterminatePositionCheck(checked, ref, indeterminatePositionId) {
         document.getElementById(indeterminatePositionId).value = 'unknown';
         document.getElementById(ref).value = '';
         Ext.getCmp(ref).setDisabled(true);
+        document.getElementById(ref + "_disabled_field").disabled = false;
     } else {
         document.getElementById(indeterminatePositionId).value = '';
+        document.getElementById(ref).value = '';
         Ext.getCmp(ref).setDisabled(false);
+        document.getElementById(ref + "_disabled_field").disabled = true;
     }
 }
 
