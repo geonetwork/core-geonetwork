@@ -1,6 +1,7 @@
 UPDATE Settings SET value='2.10.1' where id=15;
 update formats set validated='y' where validated is null;
 
+
 CREATE TABLE public.schematron
 (
   id integer NOT NULL,
@@ -15,41 +16,44 @@ ALTER TABLE public.schematron
   OWNER TO "www-data";
 
 
-CREATE TABLE public.schematroncriteria
-(
-  id integer NOT NULL,
-  type integer NOT NULL,
-  value character varying(255) NOT NULL,
-  group_name character varying(255) NOT NULL,
-  CONSTRAINT schematroncriteria_pkey PRIMARY KEY (id),
-  CONSTRAINT fk_6cnta0l4uqjcaypy97f5nnmkm FOREIGN KEY (group_name)
-      REFERENCES public.schematroncriteriagroup (name) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
-)
-WITH (
-  OIDS=FALSE
-);
-ALTER TABLE public.schematroncriteria
-  OWNER TO "www-data";
-
-
 CREATE TABLE public.schematroncriteriagroup
 (
   name character varying(255) NOT NULL,
-  requirement integer NOT NULL,
-  schematron integer NOT NULL,
-  CONSTRAINT schematroncriteriagroup_pkey PRIMARY KEY (name),
-  CONSTRAINT fk_on8ywt18r3quvll6lb0oprga7 FOREIGN KEY (schematron)
-      REFERENCES public.schematron (id) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+  schematronid integer NOT NULL,
+  requirement character varying(255) NOT NULL,
+  CONSTRAINT schematroncriteriagroup_pkey PRIMARY KEY (name, schematronid),
+  CONSTRAINT fk_atfj71dq82he6n77lqofjxui6 FOREIGN KEY (schematronid)
+  REFERENCES public.schematron (id) MATCH SIMPLE
+  ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
-  OIDS=FALSE
+OIDS=FALSE
 );
 ALTER TABLE public.schematroncriteriagroup
-  OWNER TO "www-data";
+OWNER TO "www-data";
 
 
+CREATE TABLE public.schematroncriteria
+(
+  id integer NOT NULL,
+  type character varying(255) NOT NULL,
+  value character varying(255) NOT NULL,
+  group_name character varying(255) NOT NULL,
+  group_schematronid integer NOT NULL,
+  CONSTRAINT schematroncriteria_pkey PRIMARY KEY (id),
+  CONSTRAINT fk_dh2vjs226vjp2anrvj3nuvt8x FOREIGN KEY (group_name, group_schematronid)
+  REFERENCES public.schematroncriteriagroup (name, schematronid) MATCH SIMPLE
+  ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+OIDS=FALSE
+);
+ALTER TABLE public.schematroncriteria
+OWNER TO "www-data";
+
+
+ALTER TABLE public.schematroncriteria
+OWNER TO "www-data";
 
 CREATE TABLE public.schematrondes
 (
