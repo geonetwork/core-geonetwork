@@ -77,8 +77,7 @@ import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.reusable.ProcessParams;
 import org.fao.geonet.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.reusable.log.ReusableObjectLogger;
-import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.kernel.schema.SchemaDao;
+import org.fao.geonet.kernel.schema.*;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -540,7 +539,8 @@ public class DataManager {
 
             if(performValidation) {
                 try {
-                    doValidate(servContext, dbms, schema, id, md, servContext.getLanguage(), false);
+                    Element xlinkResolved = Processor.processXLink((Element) md.clone(), servContext);
+                    doValidate(servContext, dbms, schema, id, xlinkResolved, servContext.getLanguage(), false);
                 } catch (Exception e) {
                     Element stackTrace = JeevesException.toElement(e);
                     Log.error(Geonet.DATA_MANAGER, "error while trying to validating metadata (during indexing), "+id+":\n "+Xml.getString(stackTrace)); //DEBUG
@@ -2090,7 +2090,7 @@ public class DataManager {
         Element xsdErrors = getXSDXmlReport(schema, md);
         if (xsdErrors != null && xsdErrors.getContent().size() > 0) {
             errorReport.addContent(xsdErrors);
-            Integer[] results = {0, 0, 0};
+            Integer[] results = {0, xsdErrors.getChildren().size(), xsdErrors.getChildren("error", Namespaces.GEONET).size()};
             valTypeAndStatus.put("xsd", results);
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER, "  - XSD error: " + Xml.getString(xsdErrors));
@@ -2174,108 +2174,110 @@ public class DataManager {
 				Edit.NAMESPACE);
 		try {
 			String schemaname = metadataSchema.getName();
-			final List<Element> schematroncriteria = SchemaDao.selectSchema(dbms,
-					schemaname);
-			
+			final List<Element> schemas = SchemaDao.selectSchema(dbms, schemaname);
+
 			//Loop through all xsl files
-			for (Element schematron : schematroncriteria) {
-			
-				Boolean required = "t".equalsIgnoreCase(schematron.getChildText("required"));
-				Integer id = Integer.parseInt(schematron.getChildText("id"));
-				//it contains absolute path to the xsl file
-				String rule = schematron.getChildText("file");
-				String dbident = id.toString();
-				Integer ifNotValid = (required? 0 : 2);
-	
-				final List<Element> criterias = SchemaDao.selectCriteriaBySchema(dbms, id);
-				
-				//Loop through all criteria to see if apply schematron
-				//if any criteria does not apply, do not apply at all (AND)
-				boolean apply = true;
-				for(Element criteria : criterias) {
+			for (Element schematron : schemas) {
 
-					Integer type = Integer.valueOf(criteria.getChildText("type"));
-					String value = criteria.getChildText("value");
-					boolean tmpApply = false;
-                    
-					switch(type) {
-					case 0: //group
-						tmpApply = dbms.select(
-								"SELECT * FROM metadata "
-								+ "WHERE groupowner = ? ", 
-								Integer.valueOf(value)).getChildren().size() > 0;
-						break;
-					case 1: //keyword
-                    default: 		                
-	                    tmpApply = checkKeyword(md, value);
-	                      break;
-					}
-					
-					apply = apply && tmpApply;
-					
-					if(!apply) {
-						break;
-					}
-                     
-				}
-				
-				if(apply) {
-		            if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-		                Log.debug(Geonet.DATA_MANAGER, " - rule:" + rule);
-		            }
-		            
-					String ruleId = SchemaDao.toRuleName(rule);
-					
-					Element report = new Element("report", Edit.NAMESPACE);
-					report.setAttribute("rule", ruleId,
-							Edit.NAMESPACE);
-					report.setAttribute("dbident", dbident,
-							Edit.NAMESPACE);
+                int id = Integer.parseInt(schematron.getChildText(SchemaDao.COL_SCHEMATRON_ID));
+                //it contains absolute path to the xsl file
+                final String file = schematron.getChildText(SchemaDao.COL_SCHEMATRON_FILE);
+                String rule = SchemaDao.toRuleName(file);
+                String dbident = ""+id;
 
-					try {
-						Map<String,String> params = new HashMap<String,String>();
-						params.put("lang", lang);
-						params.put("rule", ruleId);
-						params.put("thesaurusDir", this.thesaurusDir);
+                List<SchematronCriteriaGroup> criteriaGroups = SchemaDao.selectCriteriaBySchema(dbms, id);
 
-                        Element xmlReport = Xml.transform(md, rule, params);
-						if (xmlReport != null) {
-							report.addContent(xmlReport);
-						}
-						// add results to persistent validation information
-						int firedRules = 0;
-						Iterator<Element> i = xmlReport.getDescendants(new ElementFilter ("fired-rule", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
-						while (i.hasNext()) {
-		                    i.next();
-		                    firedRules ++;
-		                }
-						int invalidRules = 0;
-		                i = xmlReport.getDescendants(new ElementFilter ("failed-assert", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
-		                while (i.hasNext()) {
-		                    i.next(); 
-		                	invalidRules ++;
-		                }
-						Integer[] results = {invalidRules!=0?ifNotValid:1, firedRules, invalidRules};
-						if (valTypeAndStatus != null) {
-						    valTypeAndStatus.put(ruleId, results);
-						}
-					} catch (Exception e) {
-						Log.error(Geonet.DATA_MANAGER,"WARNING: schematron xslt "+rule+" failed");
+                //Loop through all criteria to see if apply schematron
+                //if any criteria does not apply, do not apply at all (AND)
+                SchematronRequirement requirement = SchematronRequirement.DISABLED;
+                for (SchematronCriteriaGroup criteriaGroup : criteriaGroups) {
+                    if (criteriaGroup.getRequirement() == SchematronRequirement.DISABLED) {
+                        continue;
+                    }
+                    List<SchematronCriteria> criterias = criteriaGroup.getCriteriaList();
+                    boolean apply = false;
+                    for(SchematronCriteria criteria : criterias) {
+                        boolean tmpApply = criteria.accepts(dbms, md, metadataSchema.getSchemaNS());
 
-		                // If an error occurs that prevents to verify schematron rules, add to show in report
-		                Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
-		                errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
-		                report.addContent(errorReport);
+                        if(!tmpApply) {
+                            apply = false;
+                            break;
+                        } else {
+                            apply = true;
+                        }
 
-						e.printStackTrace();
-					}
+                    }
 
-					// -- append report to main XML report.
-					schemaTronXmlOut.addContent(report);
-					
-				
-				}
-	
+                    if (apply) {
+                        if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+                            Log.debug(Geonet.DATA_MANAGER, " - Schematron group is accepted:" + criteriaGroup.getName() + " for schematron: "+rule);
+                        }
+                        requirement = requirement.highestRequirement(criteriaGroup.getRequirement());
+                    }
+                }
+
+                if(requirement != SchematronRequirement.DISABLED) {
+                    if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+                        Log.debug(Geonet.DATA_MANAGER, " - rule:" + rule);
+                    }
+
+
+                    Integer ifNotValid = (requirement == SchematronRequirement.REQUIRED ? 0 : 2);
+
+                    String ruleId = rule;
+
+                    Element report = new Element("report", Edit.NAMESPACE);
+                    report.setAttribute("rule", ruleId,
+                            Edit.NAMESPACE);
+                    report.setAttribute("dbident", dbident,
+                            Edit.NAMESPACE);
+                    report.setAttribute("required", Boolean.toString(requirement == SchematronRequirement.REQUIRED),
+                            Edit.NAMESPACE);
+
+                    try {
+                        Map<String,String> params = new HashMap<String,String>();
+                        params.put("lang", lang);
+                        params.put("rule", ruleId);
+                        params.put("thesaurusDir", this.thesaurusDir);
+
+                        Element xmlReport = Xml.transform(md, file, params);
+                        if (xmlReport != null) {
+                            report.addContent(xmlReport);
+                        }
+                        // add results to persistent validation information
+                        int firedRules = 0;
+                        @SuppressWarnings("unchecked")
+                        Iterator<Element> i = xmlReport.getDescendants(new ElementFilter ("fired-rule", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
+                        while (i.hasNext()) {
+                            i.next();
+                            firedRules ++;
+                        }
+                        int invalidRules = 0;
+                        i = xmlReport.getDescendants(new ElementFilter ("failed-assert", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
+                        while (i.hasNext()) {
+                            i.next();
+                            invalidRules ++;
+                        }
+                        Integer[] results = {invalidRules!=0?ifNotValid:1, firedRules, invalidRules};
+                        if (valTypeAndStatus != null) {
+                            valTypeAndStatus.put(ruleId, results);
+                        }
+                    } catch (Exception e) {
+                        Log.error(Geonet.DATA_MANAGER,"WARNING: schematron xslt "+rule+" failed");
+
+                        // If an error occurs that prevents to verify schematron rules, add to show in report
+                        Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
+                        errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
+                        report.addContent(errorReport);
+
+                        e.printStackTrace();
+                    }
+
+                    // -- append report to main XML report.
+                    schemaTronXmlOut.addContent(report);
+
+                }
+
 			}
 		} catch (SQLException sqle) {
 			sqle.printStackTrace();
@@ -2285,11 +2287,11 @@ public class DataManager {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		
+
 		if(schemaTronXmlOut.getChildren().isEmpty()) {
 			schemaTronXmlOut = null;
 		}
-		
+
 		return schemaTronXmlOut;
 	}
 

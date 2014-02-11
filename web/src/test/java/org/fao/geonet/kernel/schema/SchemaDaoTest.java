@@ -4,12 +4,10 @@ import java.sql.SQLException;
 
 import jeeves.resources.dbms.Dbms;
 
-import org.fao.geonet.domain.SchematronCriteriaType;
 import org.h2.jdbcx.JdbcDataSource;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 /**
  * Based on XmlSerializerTest on the db mock
@@ -18,51 +16,8 @@ public class SchemaDaoTest {
 
 	private static final String JDBC_H2_TEST = "jdbc:h2:schematrontest";
 	private static final String SA = "sa";
-	public static final String TABLE_SCHEMATRON = "schematron";
-	public static final String TABLE_SCHEMATRON_CRITERIA = "schematroncriteria";
-
-	public static final String COL_CRITERIA_ID = "id";
-	public static final String COL_CRITERIA_SCHEMATRON_ID = "schematron";
-	public static final String COL_CRITERIA_TYPE = "type";
-	public static final String COL_CRITERIA_VALUE = "value";
-
-	public static final String COL_SCHEMATRON_ID = "id";
-	public static final String COL_SCHEMATRON_FILE = "file";
-	public static final String COL_SCHEMATRON_ISO_SCHEMA = "isoschema";
-	public static final String COL_SCHEMATRON_REQUIRED = "required";
 
 	private static Dbms dbms;
-
-	@Test
-	public void test() throws SQLException {
-
-		Integer schematron = 1;
-
-		SchemaDao.insertSchematron(null, dbms, "file", "name");
-
-		Assert.assertEquals(1, SchemaDao.selectSchemas(dbms).size());
-		Assert.assertEquals(1, SchemaDao.selectSchemas(dbms, "file").size());
-
-		Assert.assertEquals(0,
-				SchemaDao.selectCriteriaBySchema(dbms, schematron).size());
-
-		int max = 5;
-		for (int id = 1; id < max; id++) {
-			SchemaDao.insertCriteria(dbms, schematron, id,
-					SchematronCriteriaType.GROUP, Integer.toString(id));
-			Assert.assertEquals(id, SchemaDao.selectCriteria(dbms, schematron).size());
-		}
-
-		Assert.assertEquals(max - 1,
-				SchemaDao.selectCriteriaBySchema(dbms, schematron).size());
-
-		for (Integer id = 1; id < max; id++) {
-			SchemaDao.deleteCriteria(dbms, id);
-		}
-		Assert.assertEquals(0,
-				SchemaDao.selectCriteriaBySchema(dbms, schematron).size());
-
-	}
 
 	@Before
 	public void cleanDB() throws Exception {

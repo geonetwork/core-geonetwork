@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<criteriaTypes>
+    <type>
+        <value>//gmd:keyword/gco:CharacterString/text() = '@@value@@'__OR__//gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString/text() = '@@value@@'</value>
+        <type>XPATH</type>
+        <name>Keyword</name>
+        <allowArbitraryValue>false</allowArbitraryValue>
+        <service>
+            <cacheable>false</cacheable>
+            <url>xml.search.keywords@json?pNewSearch=true&amp;maxResults=100&amp;pKeyword=@@search@@&amp;pTypeSearch=CONTAINS</url>
+            <selectRecordArray>function(data) { return data[0] }</selectRecordArray>
+            <selectLabelFunction>function(record) { return record.value['#text'] + ' (' + record.thesaurus.title + ')' }</selectLabelFunction>
+            <selectValueFunction>function(record) { return record.value['#text'] }</selectValueFunction>
+        </service>
+    </type>
+    <type>
+        <value>@@value@@</value>
+        <type>GROUP</type>
+        <name>Group</name>
+        <allowArbitraryValue>true</allowArbitraryValue>
+        <service>
+            <cacheable>true</cacheable>
+            <url>xml.group.list@json</url>
+            <selectRecordArray>function(data) { return data }</selectRecordArray>
+            <selectLabelFunction>function(record) { return record.label[GeoNetworkLang] }</selectLabelFunction>
+            <selectValueFunction>function(record) { return record.id }</selectValueFunction>
+        </service>
+    </type>
+</criteriaTypes>

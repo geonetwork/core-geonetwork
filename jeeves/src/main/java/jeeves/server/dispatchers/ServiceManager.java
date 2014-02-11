@@ -615,11 +615,17 @@ public class ServiceManager
 
 					if (!SOAPUtil.isEnvelope(response))
 						response = SOAPUtil.embed(response);
-				}
-				else
-					req.beginStream("application/xml; charset=UTF-8", cache);
+                } else {
 
-                req.write(response);
+                    if (req.hasJSONOutput()) {
+                        req.beginStream("application/json; charset=UTF-8", cache);
+                        req.getOutputStream().write(Xml.getJSON(response).getBytes("UTF-8"));
+                        req.endStream();
+                    } else {
+                        req.beginStream("application/xml; charset=UTF-8", cache);
+                        req.write(response);
+                    }
+                }
 			}
 		}
 

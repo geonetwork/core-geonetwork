@@ -5,13 +5,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Random;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 
-import org.fao.geonet.domain.SchematronCriteriaType;
 import org.jdom.Element;
-
-import javax.persistence.Transient;
 
 /**
  * This class will probably dissappear with JPA
@@ -23,20 +22,25 @@ public class SchemaDao {
 
 	public static final String TABLE_SCHEMATRON = "schematron";
 	public static final String TABLE_SCHEMATRON_CRITERIA = "schematroncriteria";
+	public static final String TABLE_SCHEMATRON_CRITERIA_GROUP = "schematroncriteriagroup";
 
 	public static final String COL_CRITERIA_ID = "id";
-	public static final String COL_CRITERIA_SCHEMATRON_ID = "schematron";
+	public static final String COL_CRITERIA_GROUP_NAME = "group_name";
+	public static final String COL_CRITERIA_SCHEMATRON_ID = "group_schematronid";
 	public static final String COL_CRITERIA_TYPE = "type";
 	public static final String COL_CRITERIA_VALUE = "value";
 
 	public static final String COL_SCHEMATRON_ID = "id";
 	public static final String COL_SCHEMATRON_FILE = "file";
-	public static final String COL_SCHEMATRON_ISO_SCHEMA = "isoschema";
-	public static final String COL_SCHEMATRON_REQUIRED = "required";
+	public static final String COL_SCHEMATRON_SCHEMA_NAME = "schemaname";
 
-	public static void insertSchematron(ServiceContext context, Dbms dbms,
-			String file, String schemaName) throws SQLException {
-		Integer id = null;
+	public static final String COL_GROUP_NAME= "name";
+	public static final String COL_GROUP_REQUIREMENT = "requirement";
+	public static final String COL_GROUP_SCHEMATRON_ID = "schematronid";
+
+	public static Integer insertSchematron(ServiceContext context, Dbms dbms,
+                                           String file, String schemaName) throws SQLException {
+		Integer id;
 		if(context != null) {
 			id = context.getSerialFactory().getSerial(dbms, TABLE_SCHEMATRON,
 				COL_SCHEMATRON_ID);
@@ -47,8 +51,10 @@ public class SchemaDao {
 		}
 		dbms.execute("insert into " + TABLE_SCHEMATRON + " ("
 				+ COL_SCHEMATRON_ID + "," + COL_SCHEMATRON_FILE + ","
-				+ COL_SCHEMATRON_ISO_SCHEMA + "," + COL_SCHEMATRON_REQUIRED
-				+ ") values (?,?,?,?)", id, file, schemaName, true);
+				+ COL_SCHEMATRON_SCHEMA_NAME
+				+ ") values (?,?,?)", id, file, schemaName);
+
+        return id;
 	}
 
 	public static void deleteCriteria(Dbms dbms, final Integer id)
@@ -57,35 +63,60 @@ public class SchemaDao {
 				+ COL_SCHEMATRON_ID + " = ?", id);
 	}
 
-	public static void insertCriteria(Dbms dbms, final Integer schematronId,
+	public static void insertCriteria(Dbms dbms, final String groupName, int schematronId,
 			final Integer id, final SchematronCriteriaType type,
 			final String value) throws SQLException {
 		dbms.execute("insert into " + TABLE_SCHEMATRON_CRITERIA + " ("
-				+ COL_CRITERIA_ID + "," + COL_CRITERIA_SCHEMATRON_ID + ","
+				+ COL_CRITERIA_ID + "," + COL_CRITERIA_GROUP_NAME + ","+ COL_CRITERIA_SCHEMATRON_ID + ","
 				+ COL_CRITERIA_TYPE + "," + COL_CRITERIA_VALUE
-				+ ") values (?,?,?,?);", id, schematronId, type.ordinal(),
+				+ ") values (?,?,?,?,?);", id, groupName, schematronId, type.name(),
 				value);
 	}
 
-	public static List<Element> selectCriteria(Dbms dbms, Integer id)
+	public static List<SchematronCriteriaGroup> selectCriteriaBySchema(final Dbms dbms, final Integer schematronId)
 			throws SQLException {
-		@SuppressWarnings("unchecked")
-		List<Element> schematronCriteria = dbms.select(
-				"select * from " + TABLE_SCHEMATRON_CRITERIA + " where "
-						+ COL_CRITERIA_SCHEMATRON_ID + "=?", id).getChildren();
-		return schematronCriteria;
-	}
+        final String FIND_GROUP_QUERY = "select * FROM  SchematronCriteriaGroup schematronGroup WHERE schematronGroup."+COL_GROUP_SCHEMATRON_ID+"=?";
+        final String LOAD_GROUP_QUERY = "select \n"
+                                        + "    criteria.id, \n"
+                                        + "    criteria.type, \n"
+                                        + "    criteria.value\n"
+                                        + "from \n"
+                                        + "    SchematronCriteriaGroup schematronGroup \n"
+                                        + "left outer join \n"
+                                        + "    SchematronCriteria criteria on schematronGroup."+COL_GROUP_NAME+"=criteria."+COL_CRITERIA_GROUP_NAME+" AND \n"
+                                        + "                                   schematronGroup."+COL_GROUP_SCHEMATRON_ID+"=criteria."+COL_CRITERIA_SCHEMATRON_ID+" \n"
+                                        + "where \n"
+                                        + "    schematronGroup.name=? AND schematronGroup."+COL_GROUP_SCHEMATRON_ID+"=?";
 
-	public static List<Element> selectCriteriaBySchema(Dbms dbms, Integer id)
-			throws SQLException {
-		@SuppressWarnings("unchecked")
-		final List<Element> criterias = dbms.select(
-				"SELECT DISTINCT " + COL_CRITERIA_TYPE + ", "
-						+ COL_CRITERIA_VALUE + " FROM "
-						+ TABLE_SCHEMATRON_CRITERIA + " WHERE "
-						+ COL_CRITERIA_SCHEMATRON_ID + " = ? ", id)
-				.getChildren();
-		return criterias;
+        @SuppressWarnings("unchecked")
+        List<Element> groupNames = dbms.select(FIND_GROUP_QUERY, schematronId).getChildren();
+
+        return Lists.transform(groupNames , new Function<Element, SchematronCriteriaGroup>() {
+            @Override
+            public SchematronCriteriaGroup apply(Element input) {
+                try {
+                    SchematronCriteriaGroup group = new SchematronCriteriaGroup();
+                    @SuppressWarnings("unchecked")
+                    List<Element> criteriaResult = dbms.select(LOAD_GROUP_QUERY, input.getChildTextTrim(COL_GROUP_NAME), schematronId).getChildren();
+                    for (Element criteriaElement : criteriaResult) {
+                        SchematronCriteria criteria = new SchematronCriteria();
+
+                        criteria.setType(SchematronCriteriaType.valueOf(criteriaElement.getChildText(COL_CRITERIA_TYPE)));
+                        criteria.setValue(criteriaElement.getChildText(COL_CRITERIA_VALUE));
+
+                        group.getCriteriaList().add(criteria);
+
+                        group.setName(input.getChildText(COL_GROUP_NAME));
+                        group.setRequirement(SchematronRequirement.valueOf(input.getChildText(COL_GROUP_REQUIREMENT)));
+                        group.setSchematronId(Integer.parseInt(input.getChildText(COL_GROUP_SCHEMATRON_ID)));
+                    }
+
+                    return group;
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
 	}
 
 	public static List<Element> selectSchemas(Dbms dbms) throws SQLException {
@@ -151,9 +182,9 @@ public class SchemaDao {
 		@SuppressWarnings("unchecked")
 		final List<Element> schematroncriteria = dbms.select(
 				"SELECT DISTINCT " + COL_SCHEMATRON_ID + ", "
-						+ COL_SCHEMATRON_FILE + ", " + COL_SCHEMATRON_REQUIRED
+						+ COL_SCHEMATRON_FILE
 						+ " FROM " + TABLE_SCHEMATRON + " WHERE  "
-						+ COL_SCHEMATRON_ISO_SCHEMA + " like ? ", schemaname)
+						+ COL_SCHEMATRON_SCHEMA_NAME + " like ? ", schemaname)
 				.getChildren();
 		return schematroncriteria;
 	}
@@ -187,6 +218,59 @@ public class SchemaDao {
         }
 
         String rule = file.substring(lastSegmentIndex, file.length() - EXTENSION_LENGTH);
+
+        String lowerCaseRuleName = rule.toLowerCase();
+        for (SchematronRequirement requirement : SchematronRequirement.values()) {
+            if (lowerCaseRuleName.endsWith("."+requirement.name().toLowerCase())) {
+                return rule.substring(0, rule.length() - requirement.name().length() - 1);
+            }
+        }
+
         return rule ;
+    }
+
+    public static SchematronRequirement getDefaultRequirement(String file) {
+        final String lowerCaseFile = file.toLowerCase();
+        for (SchematronRequirement requirement : SchematronRequirement.values()) {
+            if (lowerCaseFile.endsWith("."+requirement.name().toLowerCase() + ".xsl")) {
+                return requirement;
+            }
+        }
+        return SchematronRequirement.REQUIRED;
+    }
+
+
+    public static SchematronCriteriaGroup selectCriteriaGroup(Dbms dbms, String groupName) throws SQLException {
+        @SuppressWarnings("unchecked")
+        List<Element> select = dbms.select("SELECT * from " + TABLE_SCHEMATRON_CRITERIA_GROUP + " WHERE name = ?", groupName).getChildren();
+
+        if (select.isEmpty()) {
+            return null;
+        } else {
+            Element el = select.get(0);
+            return new SchematronCriteriaGroup()
+                    .setName(el.getChildText(COL_GROUP_NAME))
+                    .setRequirement(SchematronRequirement.valueOf(el.getChildText(COL_GROUP_REQUIREMENT)))
+                    .setSchematronId(Integer.parseInt(el.getChildText(COL_GROUP_SCHEMATRON_ID)));
+        }
+    }
+
+    public static void insertGroup(ServiceContext context, Dbms dbms, SchematronCriteriaGroup criteriaGroup) throws SQLException {
+        dbms.execute("INSERT INTO "+TABLE_SCHEMATRON_CRITERIA_GROUP+" ("+COL_GROUP_NAME+","+COL_GROUP_REQUIREMENT+","+COL_GROUP_SCHEMATRON_ID+") VALUES (?,?,?)",
+                criteriaGroup.getName(), criteriaGroup.getRequirement().name(), criteriaGroup.getSchematronId());
+        for (SchematronCriteria criteria : criteriaGroup.getCriteriaList()) {
+            Integer id;
+            if(context != null) {
+                id = context.getSerialFactory().getSerial(dbms, TABLE_SCHEMATRON_CRITERIA,
+                        COL_CRITERIA_ID);
+            } else {
+                //We must be on a testing outside jeeves environment
+                Random r = new Random();
+                id = r.nextInt();
+            }
+
+            insertCriteria(dbms, criteriaGroup.getName(), criteriaGroup.getSchematronId(),
+                    id, criteria.getType(), criteria.getValue());
+        }
     }
 }

@@ -27,8 +27,6 @@
 
 package org.fao.geonet.kernel.schema;
 
-import static org.fao.geonet.services.metadata.schema.Validation.*;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -45,10 +43,8 @@ import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.services.metadata.schema.Validation;
 import org.jdom.Element;
 import org.jdom.Namespace;
-import org.springframework.beans.factory.annotation.Autowired;
 
 //==============================================================================
 
@@ -411,7 +407,17 @@ public class MetadataSchema
 
                 //if schematron not already exists
                 if(schematronRulesInFile.isEmpty()) {
-                    SchemaDao.insertSchematron(context, dbms, file, schemaName);
+                    Integer id = SchemaDao.insertSchematron(context, dbms, file, schemaName);
+                    SchematronCriteriaGroup group = new SchematronCriteriaGroup();
+                    group.setName("*Generated*");
+                    group.setRequirement(SchemaDao.getDefaultRequirement(file));
+                    group.setSchematronId(id);
+                    SchematronCriteria criteria = new SchematronCriteria();
+                    criteria.setType(SchematronCriteriaType.ALWAYS_ACCEPT);
+                    criteria.setValue("");
+
+                    group.getCriteriaList().add(criteria);
+                    SchemaDao.insertGroup(context, dbms, group);
                 }
             }
         }

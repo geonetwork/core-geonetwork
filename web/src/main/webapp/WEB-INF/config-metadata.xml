@@ -839,15 +839,27 @@
 			<error id="illegal-params" sheet="metadata-error.xsl" />
 		</service>
 
+		<service name="metadata.summary.zip">
+			<class name=".services.metadata.ExportMetadataSummary"/>
+            <output file="true" contentType="application/zip" />
+		</service>
 
 		<!-- Validation framework extended -->
 		<service name="metadata.schema.validation">
-			<class name=".services.metadata.schema.Validation" />
+			<class name=".services.metadata.schema.SchematronAdmin"/>
 			<output sheet="metadata-schema-validation.xsl" />
 		</service>
-		
-		<service name="metadata.schema.isMandatory">
-			<class name=".services.metadata.schema.IsRequired" />
+
+		<service name="metadata.schema.schematron">
+			<class name=".services.metadata.schema.SchematronService" />
+		</service>
+
+        <service name="metadata.schema.schematron.criteria">
+            <class name=".services.metadata.schema.SchematronCriteriaService" />
+        </service>
+
+		<service name="metadata.schema.schematron.criteria.group">
+			<class name=".services.metadata.schema.SchematronCriteriaGroupService" />
 		</service>
 
          <service name="metadata.validation.status">

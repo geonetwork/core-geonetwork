@@ -20,6 +20,7 @@ import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
+import jeeves.xlink.Processor;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geocat;
@@ -118,7 +119,8 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
                 String id = "" + metadataRecord.id;
                 dbms = (Dbms) serviceContext.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
                 try {
-                    Record newTodayRecord = validate(gc, metadataRecord, dbms, dataManager);
+
+                    Record newTodayRecord = validate(serviceContext, gc, metadataRecord, dbms, dataManager);
                     if (newTodayRecord != null) {
                         newTodayRecord.insertInto(dbms);
                     }
@@ -136,7 +138,7 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
         }
     }
 
-    private Record validate(GeonetContext gc, MetadataRecord metadataRecord, Dbms dbms, DataManager dataManager) throws Exception {
+    private Record validate(ServiceContext serviceContext, GeonetContext gc, MetadataRecord metadataRecord, Dbms dbms, DataManager dataManager) throws Exception {
         String id = "" + metadataRecord.id;
         Element md = gc.getXmlSerializer().select(dbms, "metadata", id, null);
         String schema = gc.getSchemamanager().autodetectSchema(md);
@@ -144,6 +146,8 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
         boolean published = isPublished(id, dbms);
         
         if (published) {
+
+            md = Processor.processXLink((Element) md.clone(), serviceContext);
             Element report = dataManager.doValidate(null, dbms, schema, id, md, "eng", false).one();
 
             Pair<String,String> failureReport = failureReason(report, dbms);
@@ -213,8 +217,8 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
         String reportType = report.getAttributeValue("rule", Edit.NAMESPACE);
         reportType = reportType == null ? "No name for rule" : reportType;
         StringBuilder failure = new StringBuilder();
-        
-        boolean isMandatory = checkMandatory(report.getAttributeValue("dbident", Edit.NAMESPACE), dbms);
+
+        boolean isMandatory = Boolean.parseBoolean(report.getAttributeValue("required", Edit.NAMESPACE));
         
         if (isMandatory) {
             @SuppressWarnings("unchecked")
@@ -242,21 +246,6 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
             }
         }
     }
-
-    private boolean checkMandatory(String id, Dbms dbms) {
-        try {
-			@SuppressWarnings("unchecked")
-			List<Element> record = dbms.select("select required from schematron where id = ? LIMIT 1", Integer.valueOf(id))
-					.getChildren();
-			
-			Element r = record.get(0);
-			
-			return "t".equalsIgnoreCase(r.getChildText("required"));
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
 
 	@SuppressWarnings("unchecked")
     private List<MetadataRecord> lookUpMetadataIds(Dbms dbms) throws SQLException {

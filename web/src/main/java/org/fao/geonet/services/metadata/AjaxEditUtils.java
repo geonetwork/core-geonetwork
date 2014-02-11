@@ -721,6 +721,8 @@ public class AjaxEditUtils extends EditUtils {
         md = dataManager.updateFixedInfo(schema, id, null, md, parentUuid, DataManager.UpdateDatestamp.no, dbms, context);
 
 		//--- do the validation on the metadata
+
+        md = Processor.processXLink(md, context);
 		return dataManager.doValidate(context, dbms, schema, id, md, lang, false).one();
 
 	}
