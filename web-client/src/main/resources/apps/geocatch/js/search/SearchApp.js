@@ -1703,7 +1703,7 @@ GeoNetwork.searchApp = function() {
                         msg = OpenLayers.i18n("indexSelectionError") + OpenLayers.i18n("error");
                     }
                     Ext.MessageBox.alert(OpenLayers.i18n("error"), msg);
-                },
+                }
             });
         }
     };

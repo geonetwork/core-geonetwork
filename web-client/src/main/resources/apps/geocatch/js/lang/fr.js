@@ -37,6 +37,7 @@ GeoNetwork.GeoCatCh.Lang.fr = {
 	'no': 'Non',
 	'unChecked': 'Non contrôlé',
 	'recordType': 'Type',
+    'exportMetadataSummary': 'Export Summary',
 
 	'includearchived': 'Archives incluses',
 	'excludearchived': 'Archives excluses',

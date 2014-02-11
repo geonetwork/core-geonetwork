@@ -100,6 +100,8 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
     
     updatePrivilegesAction: undefined,
     
+    exportSummary: undefined,
+
     indexSelectionAction: undefined,
 
     updateStatusAction: undefined,
@@ -307,12 +309,21 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             scope: this,
             hidden: hide
         });
-        
+
         this.notifyByMailAction = new Ext.menu.Item({
             text: OpenLayers.i18n('sendmail'),
             id: 'notifyByMailAction',
             handler: function() {
-            	GeoNetwork.NotifyByEmail.openDialog();
+                GeoNetwork.NotifyByEmail.openDialog();
+            },
+            scope: this,
+            hidden: hide
+        });
+        this.exportSummary = new Ext.menu.Item({
+            text: OpenLayers.i18n('exportMetadataSummary'),
+            id: 'exportMetadataSummary',
+            handler: function() {
+                location.replace(catalogue.services.rootUrl + 'metadata.summary.zip');
             },
             scope: this,
             hidden: hide
@@ -379,7 +390,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         });*/
         
         this.selectionActions.push(this.deleteAction,this.notifyByMailAction, this.unpublishSelectionAction, this.ownerAction, this.updateCategoriesAction, 
-                this.updatePrivilegesAction, this.indexSelectionAction); //, this.updateStatusAction, this.updateVersionAction);
+                this.updatePrivilegesAction, this.indexSelectionAction, this.exportSummary); //, this.updateStatusAction, this.updateVersionAction);
         
         this.actionMenu.addItem(this.notifyByMailAction);
         this.actionMenu.addItem(this.unpublishSelectionAction);
@@ -390,6 +401,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         //this.actionMenu.addItem(this.updateVersionAction);
         this.actionMenu.addItem(this.deleteAction);
         this.actionMenu.addItem(this.indexSelectionAction);
+        this.actionMenu.addItem(this.exportSummary);
     },
     /** private: method[createAdminMenu] 
      *  Create quick admin action menu to not require to go to
@@ -679,7 +691,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                         this.updatePrivilegesAction, this.createMetadataAction,
                         this.mdImportAction],
             adminActions = [this.ownerAction],
-            onlyAdminActions = [this.notifyByMailAction, this.unpublishSelectionAction, this.indexSelectionAction],
+            onlyAdminActions = [this.notifyByMailAction, this.unpublishSelectionAction, this.indexSelectionAction, this.exportSummary],
             actions = [this.adminAction, this.otherItem];
         
         Ext.each(actions, function(){
