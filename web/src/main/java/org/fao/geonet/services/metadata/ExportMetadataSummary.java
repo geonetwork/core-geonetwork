@@ -17,7 +17,6 @@ import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.jdom.Element;
-import scala.annotation.target.field;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -59,13 +58,14 @@ public class ExportMetadataSummary implements Service {
             final Set<FieldExporter> fieldExporters = new LinkedHashSet<FieldExporter>();
             fieldExporters.add(new NullWarningFieldExporter("_uuid", "Geonetwork UUID"));
             fieldExporters.add(new NullWarningFieldExporter("_id", "Geonetwork Internal ID"));
-            fieldExporters.add(new NullWarningFieldExporter("_defaultTitle", "Default Title"));
             fieldExporters.add(new NullWarningFieldExporter("_title", "Title"));
             fieldExporters.add(new GroupOwnerFieldExporter(context));
-            fieldExporters.add(new UserInfoFieldExporter());
-            fieldExporters.add(new ValidFieldExporter());
+            fieldExporters.add(new HarvestedFieldExporter());
             fieldExporters.add(new PublishedFieldExporter());
             fieldExporters.add(new TypeFieldExporter());
+            fieldExporters.add(new ValidFieldExporter());
+            fieldExporters.add(new UserInfoFieldExporter());
+            fieldExporters.add(new NullWarningFieldExporter("_defaultTitle", "Default Title"));
 
             final Set<String> fields = new LinkedHashSet<String>((int) (fieldExporters.size() * 0.5));
 
@@ -255,7 +255,7 @@ public class ExportMetadataSummary implements Service {
 
     private class TypeFieldExporter extends FieldExporter {
         public TypeFieldExporter() {
-            super("_isTemplate", "Type (Metadata/Sub-template/Harvested");
+            super("_isTemplate", "Type (Metadata/Sub-template/Template");
         }
 
         @Override
@@ -265,9 +265,25 @@ public class ExportMetadataSummary implements Service {
             } else if ("y".equalsIgnoreCase(super.getFieldValue())) {
                 return "Sub-template";
             } else if ("t".equalsIgnoreCase(super.getFieldValue())) {
-                return "Harvested";
+                return "Template";
             } else {
                 return "unknown";
+            }
+        }
+    }
+
+
+    private class HarvestedFieldExporter extends FieldExporter {
+        public HarvestedFieldExporter() {
+            super("_isHarvested", "Is Harvested");
+        }
+
+        @Override
+        public String getFieldValue() {
+            if ("n".equalsIgnoreCase(super.getFieldValue())) {
+                return "False";
+            } else {
+                return "True";
             }
         }
     }
