@@ -2,7 +2,7 @@
 <gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:gml="http://www.opengis.net/gml" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:xlink="http://www.w3.org/1999/xlink">
     <gmd:fileIdentifier>
         <!-- MANDATORY: DNS name of the product originator / geonetwork internal code -->
-        <gco:CharacterString>ulg.ac.be/ff518971-490c-4f55-9960-cfcb98d7bfa6</gco:CharacterString>
+        <gco:CharacterString>ff518971-490c-4f55-9960-cfcb98d7bfa6</gco:CharacterString>
     </gmd:fileIdentifier>
     <gmd:language>
         <gmd:LanguageCode codeList="resources/Codelist/gmxcodelists.xml#LanguageCode" codeListValue="eng">eng</gmd:LanguageCode>
@@ -147,7 +147,7 @@
                         <gmd:MD_Identifier>
                             <gmd:code>
                                 <!-- MANDATORY: same as fileIdentifier -->
-                                <gco:CharacterString>ulg.ac.be/ff518971-490c-4f55-9960-cfcb98d7bfa6</gco:CharacterString>
+                                <gco:CharacterString>ff518971-490c-4f55-9960-cfcb98d7bfa6</gco:CharacterString>
                             </gmd:code>
                         </gmd:MD_Identifier>
                     </gmd:identifier>
@@ -284,7 +284,7 @@
                     </gmd:keyword>
                     <!-- n keyword may be used -->
                     <gmd:type>
-                        <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="areaOfBenefit"/>
+                        <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="reference-geographical-area"/>
                     </gmd:type>
                     <gmd:thesaurusName>
                         <gmd:CI_Citation>

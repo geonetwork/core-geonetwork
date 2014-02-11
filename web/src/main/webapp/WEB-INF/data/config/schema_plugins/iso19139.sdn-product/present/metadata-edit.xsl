@@ -290,12 +290,7 @@
 					<xsl:with-param name="edit" select="$edit" />
 				</xsl:apply-templates>
 
-				<!-- Internal permanent shortname 
-					TODO: built from the Point of contact's domain name, extracted from his email address
-					but which point of contact ? custodian ? originator ?
-					TODO: how to call the elementEP template on other things that nodes ? (pre-built text)
-				 -->
-
+				<!-- Internal permanent shortname -->
 				<xsl:apply-templates mode="elementEP"
 					select="gmd:fileIdentifier">
 					<xsl:with-param name="schema" select="$schema" />
@@ -388,8 +383,8 @@
 
 				<!-- sea areas -->
 				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords
-					[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='areaOfBenefit']/gmd:MD_Keywords">
-					<xsl:variable name="areaOfBenefitKeywords" select="."/>
+					[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='reference-geographical-area']/gmd:MD_Keywords">
+					<xsl:variable name="refGeoAreaKeywords" select="."/>
 					
 					<xsl:apply-templates mode="simpleElement" select=".">
 						<xsl:with-param name="schema"  select="$schema"/>
@@ -397,10 +392,10 @@
 						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/seaAreas"/>
 						<xsl:with-param name="text">
 							<xsl:call-template name="snippet-editor">
-								<xsl:with-param name="elementRef" select="$areaOfBenefitKeywords/../geonet:element/@ref"/>
+								<xsl:with-param name="elementRef" select="$refGeoAreaKeywords/../geonet:element/@ref"/>
 								<xsl:with-param name="widgetMode" select="'multiplelist'"/>
-								<xsl:with-param name="thesaurusId" select="'local.areaOfBenefit.seadatanet.reference-geographical-area'"/>
-								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join($areaOfBenefitKeywords/gmd:keyword/*[1], '!,!'), '''', '\\'''), '!', '''')"/>
+								<xsl:with-param name="thesaurusId" select="'local.reference-geographical-area.seadatanet.reference-geographical-area'"/>
+								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join($refGeoAreaKeywords/gmd:keyword/*[1], '!,!'), '''', '\\'''), '!', '''')"/>
 								<xsl:with-param name="listOfTransformations" select="'''to-iso19139-keyword-with-anchor'''"/>
 								<xsl:with-param name="transformation" select="'to-iso19139-keyword-with-anchor'"/>
 							</xsl:call-template>
