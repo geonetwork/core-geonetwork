@@ -173,7 +173,7 @@ function($scope, $http) {
     $scope.toggleRequirement = function(a) {
         var requirement;
         if (a.group.requirement === "REQUIRED") {
-            requirement = "REPORT";
+            requirement = "REPORT_ONLY";
         }else if (a.group.requirement === "DISABLED") {
             requirement = "REQUIRED";
         }else {
@@ -185,7 +185,8 @@ function($scope, $http) {
             params : {
                 action: 'edit',
                 requirement : requirement,
-                name : a.group.name
+                name : a.group.name,
+                schematronid: a.group.schematron.id
             }
         }).success(function() {
             a.group.requirement = requirement;

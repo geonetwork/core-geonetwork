@@ -539,7 +539,8 @@ public class DataManager {
 
             if(performValidation) {
                 try {
-                    doValidate(servContext, dbms, schema, id, md, servContext.getLanguage(), false);
+                    Element xlinkResolved = Processor.processXLink((Element) md.clone(), servContext);
+                    doValidate(servContext, dbms, schema, id, xlinkResolved, servContext.getLanguage(), false);
                 } catch (Exception e) {
                     Element stackTrace = JeevesException.toElement(e);
                     Log.error(Geonet.DATA_MANAGER, "error while trying to validating metadata (during indexing), "+id+":\n "+Xml.getString(stackTrace)); //DEBUG
@@ -2089,7 +2090,7 @@ public class DataManager {
         Element xsdErrors = getXSDXmlReport(schema, md);
         if (xsdErrors != null && xsdErrors.getContent().size() > 0) {
             errorReport.addContent(xsdErrors);
-            Integer[] results = {0, 0, 0};
+            Integer[] results = {0, xsdErrors.getChildren().size(), xsdErrors.getChildren("error", Namespaces.GEONET).size()};
             valTypeAndStatus.put("xsd", results);
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER, "  - XSD error: " + Xml.getString(xsdErrors));
@@ -2173,14 +2174,15 @@ public class DataManager {
 				Edit.NAMESPACE);
 		try {
 			String schemaname = metadataSchema.getName();
-			final List<Element> schematroncriteria = SchemaDao.selectSchema(dbms, schemaname);
+			final List<Element> schemas = SchemaDao.selectSchema(dbms, schemaname);
 
 			//Loop through all xsl files
-			for (Element schematron : schematroncriteria) {
+			for (Element schematron : schemas) {
 
                 int id = Integer.parseInt(schematron.getChildText(SchemaDao.COL_SCHEMATRON_ID));
                 //it contains absolute path to the xsl file
-                String rule = SchemaDao.toRuleName(schematron.getChildText(SchemaDao.COL_SCHEMATRON_FILE));
+                final String file = schematron.getChildText(SchemaDao.COL_SCHEMATRON_FILE);
+                String rule = SchemaDao.toRuleName(file);
                 String dbident = ""+id;
 
                 List<SchematronCriteriaGroup> criteriaGroups = SchemaDao.selectCriteriaBySchema(dbms, id);
@@ -2189,6 +2191,9 @@ public class DataManager {
                 //if any criteria does not apply, do not apply at all (AND)
                 SchematronRequirement requirement = SchematronRequirement.DISABLED;
                 for (SchematronCriteriaGroup criteriaGroup : criteriaGroups) {
+                    if (criteriaGroup.getRequirement() == SchematronRequirement.DISABLED) {
+                        continue;
+                    }
                     List<SchematronCriteria> criterias = criteriaGroup.getCriteriaList();
                     boolean apply = false;
                     for(SchematronCriteria criteria : criterias) {
@@ -2208,8 +2213,6 @@ public class DataManager {
                             Log.debug(Geonet.DATA_MANAGER, " - Schematron group is accepted:" + criteriaGroup.getName() + " for schematron: "+rule);
                         }
                         requirement = requirement.highestRequirement(criteriaGroup.getRequirement());
-                    } else {
-                        requirement = SchematronRequirement.DISABLED;
                     }
                 }
 
@@ -2237,7 +2240,7 @@ public class DataManager {
                         params.put("rule", ruleId);
                         params.put("thesaurusDir", this.thesaurusDir);
 
-                        Element xmlReport = Xml.transform(md, rule, params);
+                        Element xmlReport = Xml.transform(md, file, params);
                         if (xmlReport != null) {
                             report.addContent(xmlReport);
                         }

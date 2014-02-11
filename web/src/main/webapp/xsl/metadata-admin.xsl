@@ -32,7 +32,7 @@
 						<xsl:when test="contains(/root/gui/reqService,'metadata.batch')">y</xsl:when>
                         <!-- only apply restriction to iso19139 metadata records that are not templates -->
                         <xsl:when test="/root/response/isMetadata = 'false'">y</xsl:when>
-                        <xsl:when test="/root/response/validation/record[status='2']">n</xsl:when>
+                        <xsl:when test="/root/response/validation/record[status='0']">n</xsl:when>
 						<xsl:otherwise><xsl:text>y</xsl:text></xsl:otherwise>
 					</xsl:choose>                               
 				</xsl:variable>

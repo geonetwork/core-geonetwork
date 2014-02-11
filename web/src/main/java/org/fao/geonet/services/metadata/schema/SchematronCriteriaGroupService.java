@@ -97,8 +97,10 @@ public class SchematronCriteriaGroupService implements Service {
             @SuppressWarnings("unchecked")
             List<Element> groupNameElems = Lists.newArrayList(groups.getDescendants(GROUP_NAME_FILTER));
             for (Element groupNameEl : groupNameElems) {
-                Element criteria = dbms.select("SELECT * FROM " + SchemaDao.TABLE_SCHEMATRON_CRITERIA + " WHERE " + SchemaDao
-                        .COL_CRITERIA_GROUP_NAME + "=?", groupNameEl.getText());
+                final String currentSchematronId = groupNameEl.getParentElement().getChildText(SchemaDao.COL_GROUP_SCHEMATRON_ID);
+                final String query = "SELECT * FROM " + SchemaDao.TABLE_SCHEMATRON_CRITERIA + " WHERE " + SchemaDao
+                        .COL_CRITERIA_GROUP_NAME + "=? and " + SchemaDao.COL_CRITERIA_SCHEMATRON_ID + "=?";
+                Element criteria = dbms.select(query,groupNameEl.getText(), Integer.parseInt(currentSchematronId));
                 criteria.setName("criteria");
 
                 @SuppressWarnings("unchecked")
@@ -135,6 +137,7 @@ public class SchematronCriteriaGroupService implements Service {
         Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
         String groupName = Util.getParam(params, SchemaDao.COL_GROUP_NAME);
+        String schematronId = Util.getParam(params, SchemaDao.COL_GROUP_SCHEMATRON_ID);
         String requirement = Util.getParam(params, SchemaDao.COL_GROUP_REQUIREMENT, null);
 
         if (requirement != null) {
@@ -142,7 +145,9 @@ public class SchematronCriteriaGroupService implements Service {
             // Test that the new requirement is valid
             SchematronRequirement.valueOf(requirement.toUpperCase());
 
-            dbms.execute("UPDATE "+SchemaDao.TABLE_SCHEMATRON_CRITERIA_GROUP+" SET "+SchemaDao.COL_GROUP_REQUIREMENT+"=? WHERE "+SchemaDao.COL_GROUP_NAME+"=?", requirement, groupName);
+            dbms.execute("UPDATE "+SchemaDao.TABLE_SCHEMATRON_CRITERIA_GROUP+" SET "+SchemaDao.COL_GROUP_REQUIREMENT+"=? " +
+                         "WHERE "+SchemaDao.COL_GROUP_NAME+"=? AND "+SchemaDao.COL_GROUP_SCHEMATRON_ID+"=?", requirement, groupName,
+                    Integer.parseInt(schematronId));
             return new Element("ok");
         }
 

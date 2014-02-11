@@ -15,7 +15,7 @@ public enum SchematronRequirement {
      *
      * The schematron can fail and still be considered valid.
      */
-    REPORT,
+    REPORT_ONLY,
     /**
      * Indicates the schematron is disabled and will not be shown in any reports and will be ignored during validation
      */

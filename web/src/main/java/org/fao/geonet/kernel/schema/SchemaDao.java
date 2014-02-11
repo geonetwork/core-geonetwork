@@ -26,6 +26,7 @@ public class SchemaDao {
 
 	public static final String COL_CRITERIA_ID = "id";
 	public static final String COL_CRITERIA_GROUP_NAME = "group_name";
+	public static final String COL_CRITERIA_SCHEMATRON_ID = "group_schematronid";
 	public static final String COL_CRITERIA_TYPE = "type";
 	public static final String COL_CRITERIA_VALUE = "value";
 
@@ -35,7 +36,7 @@ public class SchemaDao {
 
 	public static final String COL_GROUP_NAME= "name";
 	public static final String COL_GROUP_REQUIREMENT = "requirement";
-	public static final String COL_GROUP_SCHEMATRON_ID = "schematron";
+	public static final String COL_GROUP_SCHEMATRON_ID = "schematronid";
 
 	public static Integer insertSchematron(ServiceContext context, Dbms dbms,
                                            String file, String schemaName) throws SQLException {
@@ -62,19 +63,19 @@ public class SchemaDao {
 				+ COL_SCHEMATRON_ID + " = ?", id);
 	}
 
-	public static void insertCriteria(Dbms dbms, final String groupName,
+	public static void insertCriteria(Dbms dbms, final String groupName, int schematronId,
 			final Integer id, final SchematronCriteriaType type,
 			final String value) throws SQLException {
 		dbms.execute("insert into " + TABLE_SCHEMATRON_CRITERIA + " ("
-				+ COL_CRITERIA_ID + "," + COL_CRITERIA_GROUP_NAME + ","
+				+ COL_CRITERIA_ID + "," + COL_CRITERIA_GROUP_NAME + ","+ COL_CRITERIA_SCHEMATRON_ID + ","
 				+ COL_CRITERIA_TYPE + "," + COL_CRITERIA_VALUE
-				+ ") values (?,?,?,?);", id, groupName, type.name(),
+				+ ") values (?,?,?,?,?);", id, groupName, schematronId, type.name(),
 				value);
 	}
 
-	public static List<SchematronCriteriaGroup> selectCriteriaBySchema(final Dbms dbms, Integer schematronId)
+	public static List<SchematronCriteriaGroup> selectCriteriaBySchema(final Dbms dbms, final Integer schematronId)
 			throws SQLException {
-        final String FIND_GROUP_QUERY = "select * FROM  SchematronCriteriaGroup schematronGroup WHERE schematronGroup.schematron=?";
+        final String FIND_GROUP_QUERY = "select * FROM  SchematronCriteriaGroup schematronGroup WHERE schematronGroup."+COL_GROUP_SCHEMATRON_ID+"=?";
         final String LOAD_GROUP_QUERY = "select \n"
                                         + "    criteria.id, \n"
                                         + "    criteria.type, \n"
@@ -82,9 +83,10 @@ public class SchemaDao {
                                         + "from \n"
                                         + "    SchematronCriteriaGroup schematronGroup \n"
                                         + "left outer join \n"
-                                        + "    SchematronCriteria criteria on schematronGroup.name=criteria.group_name \n"
+                                        + "    SchematronCriteria criteria on schematronGroup."+COL_GROUP_NAME+"=criteria."+COL_CRITERIA_GROUP_NAME+" AND \n"
+                                        + "                                   schematronGroup."+COL_GROUP_SCHEMATRON_ID+"=criteria."+COL_CRITERIA_SCHEMATRON_ID+" \n"
                                         + "where \n"
-                                        + "    schematronGroup.name=?\n";
+                                        + "    schematronGroup.name=? AND schematronGroup."+COL_GROUP_SCHEMATRON_ID+"=?";
 
         @SuppressWarnings("unchecked")
         List<Element> groupNames = dbms.select(FIND_GROUP_QUERY, schematronId).getChildren();
@@ -94,7 +96,8 @@ public class SchemaDao {
             public SchematronCriteriaGroup apply(Element input) {
                 try {
                     SchematronCriteriaGroup group = new SchematronCriteriaGroup();
-                    List<Element> criteriaResult = dbms.select(LOAD_GROUP_QUERY, input.getChildTextTrim(COL_GROUP_NAME)).getChildren();
+                    @SuppressWarnings("unchecked")
+                    List<Element> criteriaResult = dbms.select(LOAD_GROUP_QUERY, input.getChildTextTrim(COL_GROUP_NAME), schematronId).getChildren();
                     for (Element criteriaElement : criteriaResult) {
                         SchematronCriteria criteria = new SchematronCriteria();
 
@@ -215,8 +218,27 @@ public class SchemaDao {
         }
 
         String rule = file.substring(lastSegmentIndex, file.length() - EXTENSION_LENGTH);
+
+        String lowerCaseRuleName = rule.toLowerCase();
+        for (SchematronRequirement requirement : SchematronRequirement.values()) {
+            if (lowerCaseRuleName.endsWith("."+requirement.name().toLowerCase())) {
+                return rule.substring(0, rule.length() - requirement.name().length() - 1);
+            }
+        }
+
         return rule ;
     }
+
+    public static SchematronRequirement getDefaultRequirement(String file) {
+        final String lowerCaseFile = file.toLowerCase();
+        for (SchematronRequirement requirement : SchematronRequirement.values()) {
+            if (lowerCaseFile.endsWith("."+requirement.name().toLowerCase() + ".xsl")) {
+                return requirement;
+            }
+        }
+        return SchematronRequirement.REQUIRED;
+    }
+
 
     public static SchematronCriteriaGroup selectCriteriaGroup(Dbms dbms, String groupName) throws SQLException {
         @SuppressWarnings("unchecked")
@@ -247,7 +269,8 @@ public class SchemaDao {
                 id = r.nextInt();
             }
 
-            insertCriteria(dbms, criteriaGroup.getName(), id, criteria.getType(), criteria.getValue());
+            insertCriteria(dbms, criteriaGroup.getName(), criteriaGroup.getSchematronId(),
+                    id, criteria.getType(), criteria.getValue());
         }
     }
 }

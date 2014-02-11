@@ -61,7 +61,7 @@ public class SchematronCriteriaService implements Service {
             group.setRequirement(SchematronRequirement.REQUIRED);
             SchemaDao.insertGroup(context, dbms, group);
         }
-        SchemaDao.insertCriteria(dbms, groupName, id, type, value);
+        SchemaDao.insertCriteria(dbms, groupName, schematronId, id, type, value);
 
         return new Element("ok");
     }

@@ -110,7 +110,7 @@
 					<br/>
 					<br/>
                 <div class="container-fluid" ng-controller="table_controller" id="resultTable">
-                    <div data-ng-repeat="group in data">
+                    <div data-ng-repeat="group in data | orderBy:+schematron.schemaname | orderBy:+schematron.ruleName | orderBy:+name ">
                         <div class="row">
                             <div class="col-md-1">
                                 <a>
@@ -119,7 +119,13 @@
                                     <xsl:attribute name="title"><xsl:value-of select="/root/gui/strings/toggleRequirement" /></xsl:attribute>
                                 </a>
                             </div>
-                            <div class="col-md-10">
+                            <div class="col-md-1">
+                                <b>{{group.schematron.schemaname}}</b>
+                            </div>
+                            <div class="col-md-4">
+                                {{group.schematron.ruleName}}
+                            </div>
+                            <div class="col-md-5">
                                 {{group.name}}
                             </div>
                             <!--<div class="col-md-3">-->

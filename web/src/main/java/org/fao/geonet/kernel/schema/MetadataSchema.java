@@ -409,8 +409,8 @@ public class MetadataSchema
                 if(schematronRulesInFile.isEmpty()) {
                     Integer id = SchemaDao.insertSchematron(context, dbms, file, schemaName);
                     SchematronCriteriaGroup group = new SchematronCriteriaGroup();
-                    group.setName("Generated_" + getName() + "_" + SchemaDao.toRuleName(file));
-                    group.setRequirement(SchematronRequirement.REQUIRED);
+                    group.setName("*Generated*");
+                    group.setRequirement(SchemaDao.getDefaultRequirement(file));
                     group.setSchematronId(id);
                     SchematronCriteria criteria = new SchematronCriteria();
                     criteria.setType(SchematronCriteriaType.ALWAYS_ACCEPT);

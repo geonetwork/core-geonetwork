@@ -20,6 +20,7 @@ import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 
+import jeeves.xlink.Processor;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geocat;
@@ -118,7 +119,8 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
                 String id = "" + metadataRecord.id;
                 dbms = (Dbms) serviceContext.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
                 try {
-                    Record newTodayRecord = validate(gc, metadataRecord, dbms, dataManager);
+
+                    Record newTodayRecord = validate(serviceContext, gc, metadataRecord, dbms, dataManager);
                     if (newTodayRecord != null) {
                         newTodayRecord.insertInto(dbms);
                     }
@@ -136,7 +138,7 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
         }
     }
 
-    private Record validate(GeonetContext gc, MetadataRecord metadataRecord, Dbms dbms, DataManager dataManager) throws Exception {
+    private Record validate(ServiceContext serviceContext, GeonetContext gc, MetadataRecord metadataRecord, Dbms dbms, DataManager dataManager) throws Exception {
         String id = "" + metadataRecord.id;
         Element md = gc.getXmlSerializer().select(dbms, "metadata", id, null);
         String schema = gc.getSchemamanager().autodetectSchema(md);
@@ -144,6 +146,8 @@ public class UnpublishInvalidMetadataJob implements Schedule, Service {
         boolean published = isPublished(id, dbms);
         
         if (published) {
+
+            md = Processor.processXLink((Element) md.clone(), serviceContext);
             Element report = dataManager.doValidate(null, dbms, schema, id, md, "eng", false).one();
 
             Pair<String,String> failureReport = failureReason(report, dbms);
