@@ -839,6 +839,10 @@
 			<error id="illegal-params" sheet="metadata-error.xsl" />
 		</service>
 
+		<service name="metadata.summary.zip">
+			<class name=".services.metadata.ExportMetadataSummary"/>
+            <output file="true" contentType="application/zip" />
+		</service>
 
 		<!-- Validation framework extended -->
 		<service name="metadata.schema.validation">
