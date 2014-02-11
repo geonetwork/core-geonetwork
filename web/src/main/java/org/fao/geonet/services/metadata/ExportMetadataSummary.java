@@ -17,6 +17,7 @@ import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.jdom.Element;
+import scala.annotation.target.field;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -78,7 +79,8 @@ public class ExportMetadataSummary implements Service {
                 if (builder.length() > 0) {
                     builder.append(',');
                 }
-                builder.append(field.getFieldLabel());
+
+                builder.append("\"").append(field.getFieldLabel()).append("\"");
             }
 
             builder.append('\n');
@@ -129,7 +131,7 @@ public class ExportMetadataSummary implements Service {
                     if (builder.length() > 0) {
                         builder.append(',');
                     }
-                    builder.append(fieldExporter.getFieldValue());
+                    builder.append("\"").append(fieldExporter.getFieldValue().replace('"', '\'')).append("\"");
                     fieldExporter.clear();
                 }
                 builder.append('\n');
