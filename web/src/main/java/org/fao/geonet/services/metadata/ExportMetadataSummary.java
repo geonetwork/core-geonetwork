@@ -62,9 +62,9 @@ public class ExportMetadataSummary implements Service {
             fieldExporters.add(new GroupOwnerFieldExporter(context));
             fieldExporters.add(new HarvestedFieldExporter());
             fieldExporters.add(new PublishedFieldExporter());
-            fieldExporters.add(new TypeFieldExporter());
             fieldExporters.add(new ValidFieldExporter());
             fieldExporters.add(new UserInfoFieldExporter());
+            fieldExporters.add(new TypeFieldExporter());
             fieldExporters.add(new NullWarningFieldExporter("_defaultTitle", "Default Title"));
 
             final Set<String> fields = new LinkedHashSet<String>((int) (fieldExporters.size() * 0.5));
@@ -260,11 +260,12 @@ public class ExportMetadataSummary implements Service {
 
         @Override
         public String getFieldValue() {
-            if ("n".equalsIgnoreCase(super.getFieldValue())) {
+            final String type = super.getFieldValue();
+            if ("n".equalsIgnoreCase(type)) {
                 return "Metadata";
-            } else if ("y".equalsIgnoreCase(super.getFieldValue())) {
+            } else if ("s".equalsIgnoreCase(type)) {
                 return "Sub-template";
-            } else if ("t".equalsIgnoreCase(super.getFieldValue())) {
+            } else if ("y".equalsIgnoreCase(type)) {
                 return "Template";
             } else {
                 return "unknown";
