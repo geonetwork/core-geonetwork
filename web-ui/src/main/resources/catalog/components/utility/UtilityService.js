@@ -219,7 +219,7 @@
               angular.forEach(country.label, function(label) {
                 country.tokens.push(label);
               });
-              country.name = country.label[lang];
+              country.name = country.label[lang] || country.label[0];
             });
             defer.resolve(data);
           });
