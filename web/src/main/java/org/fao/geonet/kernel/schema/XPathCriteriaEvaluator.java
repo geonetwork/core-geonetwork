@@ -140,38 +140,67 @@ public class XPathCriteriaEvaluator implements SchematronCriteriaEvaluator {
 
     }
 
-    private boolean doAccept(String value, Element metadata, List<Namespace> metadataNamespaces) {
+    private boolean doAccept(String rawValue, Element metadata, List<Namespace> metadataNamespaces) {
         try {
-            final List<?> nodes = Xml.selectNodes(metadata, value, metadataNamespaces);
-            boolean accept = false;
-            if (nodes.isEmpty()) {
-                accept = false;
-            } else if (nodes.size() == 1 && nodes.get(0) instanceof Boolean) {
-                accept = (Boolean) nodes.get(0);
-            } else {
-                for (Object node : nodes) {
-                    if (node instanceof Boolean) {
-                        accept = (Boolean) nodes.get(0);
-                        if (accept) {
-                            break;
-                        }
-                    }else if (node instanceof Text) {
-                        Text text = (Text) node;
-                        if (!text.getTextTrim().isEmpty()) {
-                            accept = true;
-                            break;
-                        }
-                    } else if (node instanceof Element || node instanceof Attribute) {
+            String value = rawValue;
+
+            if (value.startsWith("/") && ! value.startsWith("//")) {
+                value = value.substring(1);
+            }
+            if (value.startsWith(metadata.getQualifiedName()+"/")) {
+                value = value.substring(metadata.getQualifiedName().length() + 1);
+            }
+            if (value.startsWith("//")) {
+                value = "*" + value;
+            }
+            List<?> nodes = Xml.selectNodes(metadata, value, metadataNamespaces);
+
+            boolean accept = evaluateResult(nodes);
+
+
+            if (!accept && value.startsWith("*//"+metadata.getQualifiedName())) {
+                nodes = Xml.selectNodes(metadata, value.substring(metadata.getQualifiedName().length() + 3), metadataNamespaces);
+                accept = evaluateResult(nodes);
+            }
+
+            if (!accept && rawValue.startsWith("//")) {
+                nodes = Xml.selectNodes(metadata, rawValue.substring(2), metadataNamespaces);
+                accept = evaluateResult(nodes);
+            }
+
+            return accept;
+        } catch (Throwable e) {
+            warn(rawValue, e);
+            return false;
+        }
+    }
+
+    private boolean evaluateResult(List<?> nodes) {
+        boolean accept = false;
+        if (nodes.isEmpty()) {
+            accept = false;
+        } else if (nodes.size() == 1 && nodes.get(0) instanceof Boolean) {
+            accept = (Boolean) nodes.get(0);
+        } else {
+            for (Object node : nodes) {
+                if (node instanceof Boolean) {
+                    accept = (Boolean) nodes.get(0);
+                    if (accept) {
+                        break;
+                    }
+                }else if (node instanceof Text) {
+                    Text text = (Text) node;
+                    if (!text.getTextTrim().isEmpty()) {
                         accept = true;
                         break;
                     }
+                } else if (node instanceof Element || node instanceof Attribute) {
+                    accept = true;
+                    break;
                 }
             }
-            return accept;
-        } catch (Throwable e) {
-            warn(value, e);
-            return false;
         }
+        return accept;
     }
 
     protected void warn(String value, Throwable e) {
@@ -179,60 +208,4 @@ public class XPathCriteriaEvaluator implements SchematronCriteriaEvaluator {
                 "Error occurred while evaluating XPATH during schematron evaluation: \n\t" + value, e);
     }
 
-/**
- *
- private boolean checkKeyword(Element element, String value) {
-
- try {
- return ((Boolean)Xml.selectNodes(element, "//gmd:keyword/gco:CharacterString/text() = '" + value + "' ")
- .get(0)) ||
- ((Boolean) Xml.selectNodes(element, "//gmd:keyword/gmd:PT_FreeText/gmd:textGroup/"
- + "gmd:LocalisedCharacterString/text() = '" + value + "'").get(0));
- } catch (JDOMException e) {
- e.printStackTrace();
- }
-
- //if xpath fails:
- List<Element> children = element.getChildren();
- boolean res = false;
-
- for(Element child : children) {
- if(child.getName().equalsIgnoreCase("keyword")) {
- List<Element> freeTexts = child.getChildren();
- for(Element freeText : freeTexts) {
- if("CharacterString".equals(freeText.getName())) {
- res = res || value.equals(freeText.getText());
- }
- else if("PT_FreeText".equals(freeText.getName())) {
- List<Element> textGroups = freeText.getChildren();
- for(Element textGroup : textGroups) {
- if("textGroup".equals(textGroup.getName())) {
- List<Element> localiseds = textGroup.getChildren();
- for(Element localised : localiseds) {
- res = res || value.equals(localised.getText());
- }
- if(res) {
- break;
- }
- }
- if(res) {
- break;
- }
- }
- }
- }
-
- } else {
- res = res || checkKeyword(child, value);
- }
-
- if(res) {
- break;
- }
- }
-
- return res;
- }
-
- */
 }

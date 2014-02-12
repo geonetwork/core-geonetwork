@@ -95,7 +95,7 @@
 									:
 								</label>
 								<input type="text" id="xpathValue" placeholder="{/root/gui/strings/xpathvalue}"
-									ng-model="formData.value" typeahead-editable="false"
+									ng-model="formData.value" typeahead-editable="true"
                                     typeahead-wait-ms="200"
                                     typeahead-loading="loadingValues"
 									typeahead="value.value as value.label for value in getCriteriaValues($viewValue) | filter:$viewValue | limitTo:8" />
