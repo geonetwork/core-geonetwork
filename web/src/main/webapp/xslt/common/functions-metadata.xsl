@@ -53,13 +53,21 @@
         <xsl:copy-of select="$schemaLabel" copy-namespaces="no"/>
       </xsl:when>
       <xsl:otherwise>
-        <element>
-          <label>
-            <xsl:value-of select="$name"/>
-          </label>
-        </element>
-        <xsl:message>gn-fn-metadata:getLabel | missing translation in schema <xsl:value-of
-            select="$schema"/> for <xsl:value-of select="$name"/>.</xsl:message>
+        <xsl:choose>
+          <xsl:when test="starts-with($schema, 'iso19139.')">
+            <xsl:copy-of select="gn-fn-metadata:getLabel('iso19139', $name, $iso19139labels,
+              $parent, $parentIsoType, $xpath)"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <element>
+              <label>
+                <xsl:value-of select="$name"/>
+              </label>
+            </element>
+            <xsl:message>gn-fn-metadata:getLabel | missing translation in schema <xsl:value-of
+              select="$schema"/> for <xsl:value-of select="$name"/>.</xsl:message>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:otherwise>
     </xsl:choose>
 
