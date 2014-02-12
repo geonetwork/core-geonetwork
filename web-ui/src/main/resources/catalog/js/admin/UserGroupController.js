@@ -271,8 +271,7 @@
               $('#groups_' + $scope.profiles[i])[0].selectedIndex = -1;
             }
           }
-          $scope.userSelected.profile =
-              $scope.userIsAdmin ? 'Administrator' : $scope.profiles[0];
+          $scope.userSelected.profile = 'Administrator';
         } else {
           // Define the highest profile for user
           var newprofile = 'RegisteredUser';
