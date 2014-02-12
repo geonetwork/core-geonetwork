@@ -33,6 +33,18 @@
       <resource>
         <directory>src/main/resources</directory>
         <filtering>true</filtering>
+          <includes>
+              <include>**/*.js</include>
+              <include>**/*.html</include>
+          </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+          <excludes>
+              <exclude>**/*.js</exclude>
+              <exclude>**/*.html</exclude>
+          </excludes>
       </resource>
     </resources>
     <plugins>
