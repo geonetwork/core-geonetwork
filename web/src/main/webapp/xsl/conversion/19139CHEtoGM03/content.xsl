@@ -59,7 +59,7 @@
 	                <modelType>other</modelType>
 	            </xsl:otherwise>
             </xsl:choose>
-            <xsl:apply-templates mode="Content" select="che:dataModel"/>
+            <xsl:apply-templates mode="text" select="che:dataModel"/>
             <xsl:apply-templates mode="Content" select="che:class"/>
             <xsl:apply-templates mode="Content" select="che:domain"/>
             <xsl:apply-templates mode="text" select="che:portrayalCatalogueURL"/>

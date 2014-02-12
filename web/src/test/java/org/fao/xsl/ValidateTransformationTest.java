@@ -66,7 +66,51 @@ public class ValidateTransformationTest
     	rules.put("CHE_MD_Metadata/locale", new Exists(new Attribute("LanguageCode", "codeListValue", "ita")));
     	rules.put("CHE_MD_Metadata/locale", new Exists(new Attribute("LanguageCode", "codeListValue", "eng")));
     	rules.put("CHE_MD_Metadata/locale", new Exists(new Attribute("LanguageCode", "codeListValue", "roh")));
-    	file = testFile(file, Control.GM03_2_ISO, rules, true);
+    	testFile(file, Control.GM03_2_ISO, rules, true);
+    }
+    @Test
+    public void textExportDataModel_SuppInfo_EnvDesc() throws Throwable
+    {
+    	File file = new File(data, "non_validating/ExportGM03_Missing_EnvDes_SuppInfo_DataModel.xml");
+    	Multimap<String, Requirement> rules = ArrayListMultimap.create();
+    	rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification",
+                new Exists(new Finder("environmentDescription",
+                        new Exists(new Finder("plainText", new EqualTrimText("DE Env Desc"))))));
+    	rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification",
+                new Exists(new Finder("environmentDescription",
+                        new Exists(new Finder("plainText", new EqualTrimText("IT Env Desc"))))));
+    	rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification",
+                new Exists(new Finder("environmentDescription",
+                        new Exists(new Finder("plainText", new EqualTrimText("FR Env Desc"))))));
+    	rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification",
+                new Exists(new Finder("environmentDescription",
+                        new Exists(new Finder("plainText", new EqualTrimText("EN DE Env Desc"))))));
+    	rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification",
+                new Exists(new Finder("supplementalInformation",
+                        new Exists(new Finder("plainText", new EqualTrimText("DE Supplemental Information"))))));
+    	rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification",
+                new Exists(new Finder("supplementalInformation",
+                        new Exists(new Finder("plainText", new EqualTrimText("EN Supplemental Information"))))));
+    	rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification",
+                new Exists(new Finder("supplementalInformation",
+                        new Exists(new Finder("plainText", new EqualTrimText("IT  Supplemental Information"))))));
+    	rules.put("GM03_2_1Comprehensive.Comprehensive.MD_DataIdentification",
+                new Exists(new Finder("supplementalInformation",
+                        new Exists(new Finder("plainText", new EqualTrimText("FR Supplemental Information"))))));
+        rules.put("GM03_2_1Comprehensive.Comprehensive.MD_FeatureCatalogueDescription",
+                new Exists(new Finder("dataModel",
+                        new Exists(new Finder("plainURL", new EqualTrimText("DE Data Model"))))));
+        rules.put("GM03_2_1Comprehensive.Comprehensive.MD_FeatureCatalogueDescription",
+                new Exists(new Finder("dataModel",
+                        new Exists(new Finder("plainURL", new EqualTrimText("FR Data Model"))))));
+        rules.put("GM03_2_1Comprehensive.Comprehensive.MD_FeatureCatalogueDescription",
+                new Exists(new Finder("dataModel",
+                        new Exists(new Finder("plainURL", new EqualTrimText("EN Data Model"))))));
+        rules.put("GM03_2_1Comprehensive.Comprehensive.MD_FeatureCatalogueDescription",
+                new Exists(new Finder("dataModel",
+                        new Exists(new Finder("plainURL", new EqualTrimText("IT Data Model"))))));
+    	testFile(file, Control.ISO_GM03, rules, true);
+
     }
     @Test
     public void exportServiceMetadata() throws Throwable

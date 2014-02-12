@@ -52,11 +52,11 @@
             <xsl:apply-templates mode="text" select="che:basicGeodataID"/>
             <xsl:apply-templates mode="DataIdentification" select="che:basicGeodataIDType"/>
             
-            <xsl:if test="normalize-space(text())!=''">
-                <xsl:apply-templates mode="text" select="gmd:environmentDescription"/>
+            <xsl:if test="normalize-space(gmd:environmentDescription)!=''">
+                <xsl:apply-templates mode="textGroup" select="gmd:environmentDescription"/>
             </xsl:if>
-            <xsl:if test="normalize-space(text())!=''">
-                <xsl:apply-templates mode="text" select="gmd:supplementalInformation"/>
+            <xsl:if test="normalize-space(gmd:supplementalInformation)!=''">
+                <xsl:apply-templates mode="textGroup" select="gmd:supplementalInformation"/>
             </xsl:if>
             
             <xsl:apply-templates mode="DataIdentification" select="gmd:pointOfContact"/>
