@@ -269,7 +269,7 @@
         //md.create?id=181&group=2&isTemplate=s&currTab=simple
         gnNewMetadata.copyMetadata(e['geonet:info'].id, $scope.ownerGroup,
             fullPrivileges,
-            $scope.isTemplate).then(searchEntries);
+            's').then(searchEntries);
       };
 
       init();

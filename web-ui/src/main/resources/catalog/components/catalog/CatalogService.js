@@ -27,7 +27,7 @@
                 gnUrlUtils.toKeyValue({
                   group: groupId,
                   id: id,
-                  template: isTemplate ? 'y' : 'n',
+                  template: isTemplate ? (isTemplate === 's' ? 's' : 'y') : 'n',
                   child: isChild ? 'y' : 'n',
                   fullPrivileges: withFullPrivileges ? 'true' : 'false'
                 })
