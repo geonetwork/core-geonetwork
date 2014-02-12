@@ -1037,7 +1037,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     },
     metadataEdit2: function(id, create, group, child, isTemplate, schema){
       if (this.isSupportedBrowser(OpenLayers.i18n('editorBrowserRestriction'))) {
-        var url = '../../srv/' + catalogue.lang + '/catalog.edit#/';
+        var url = 'catalog.edit#/';
         if (create) {
           if (id) {
             if (child) {
