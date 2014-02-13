@@ -1,3 +1,7 @@
+.debug {
+  display: none;
+}
+
 .metadata a {
   font-weight : bold;
 }
