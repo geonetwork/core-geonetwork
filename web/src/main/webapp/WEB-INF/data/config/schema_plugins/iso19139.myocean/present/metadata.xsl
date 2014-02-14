@@ -196,9 +196,6 @@
 					
 					<ProductUpdateDate><xsl:value-of select="if ($isProduct) then gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/
 						gmd:CI_Citation/gmd:editionDate/gco:Date else ''"/></ProductUpdateDate>
-					
-					<FeatureType><xsl:value-of select="if($isProduct) then gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureTypes/gco:LocalName else ''"/></FeatureType>
-
 					<!-- FeatureType column -->
 					<xsl:for-each select="gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureTypes/gco:LocalName">
 						<FeatureType><xsl:value-of select="./text()"/></FeatureType>
