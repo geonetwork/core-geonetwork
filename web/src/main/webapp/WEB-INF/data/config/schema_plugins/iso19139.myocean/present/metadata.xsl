@@ -20,7 +20,7 @@
 				<metadata>
 					
 					<Type><xsl:value-of select="if ($isProduct) then 'PRODUCT' else 'DATASET'"/></Type>
-					
+
 					<!--<Identifier><xsl:value-of select="gmd:fileIdentifier"/></Identifier>
 					-->
 					<ProductionCentre><xsl:value-of select="if ($isProduct) then gmd:identificationInfo/gmd:MD_DataIdentification/
@@ -28,8 +28,8 @@
 						gmd:organisationName/gco:CharacterString else ''"/></ProductionCentre>
 					
 					<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords
-						[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='reference-geographical-area']/gmd:MD_Keywords">
-						<GeographicalReferenceArea><xsl:value-of select="gmd:keyword/*/text()"/></GeographicalReferenceArea>
+						[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='reference-geographical-area']/gmd:MD_Keywords/gmd:keyword">
+						<GeographicalReferenceArea><xsl:value-of select="./*/text()"/></GeographicalReferenceArea>
 					</xsl:for-each>
 					
 					
@@ -42,8 +42,8 @@
 					<xsl:choose>
 						<xsl:when test="$isProduct">
 							<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords
-								[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='temporal-scale']/gmd:MD_Keywords">
-								<TemporalScale><xsl:value-of select="gmd:keyword/*/text()"/></TemporalScale>
+								[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='temporal-scale']/gmd:MD_Keywords/gmd:keyword">
+								<TemporalScale><xsl:value-of select="./*/text()"/></TemporalScale>
 							</xsl:for-each>
 						</xsl:when>
 						<xsl:otherwise>
@@ -184,10 +184,25 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					
+					<!-- ProductOrigins column -->
+					<xsl:choose>
+						<xsl:when test="$isProduct">
+							<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords
+							/gmd:MD_Keywords/gmd:keyword/gmx:Anchor[starts-with(@xlink:href,'http://purl.org/myocean/ontology/vocabulary/discipline')]">
+								<ProductOrigins><xsl:value-of select="./text()"/></ProductOrigins>
+							</xsl:for-each>
+						</xsl:when>
+					</xsl:choose>
+					
 					<ProductUpdateDate><xsl:value-of select="if ($isProduct) then gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/
 						gmd:CI_Citation/gmd:editionDate/gco:Date else ''"/></ProductUpdateDate>
 					
-					<FeatureType><xsl:value-of select="if($isProduct) then '' else gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureTypes/gco:LocalName"/></FeatureType>
+					<FeatureType><xsl:value-of select="if($isProduct) then gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureTypes/gco:LocalName else ''"/></FeatureType>
+
+					<!-- FeatureType column -->
+					<xsl:for-each select="gmd:contentInfo/gmd:MD_FeatureCatalogueDescription/gmd:featureTypes/gco:LocalName">
+						<FeatureType><xsl:value-of select="./text()"/></FeatureType>
+					</xsl:for-each>
 					
 					<MetadataCreationTime><xsl:value-of select="geonet:info/createDate"/></MetadataCreationTime>
 					
