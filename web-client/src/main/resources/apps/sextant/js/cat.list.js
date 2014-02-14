@@ -80,8 +80,11 @@ cat.list = function() {
 			'</div>',
 			'</tpl>',
 			'<tpl if="values.type == \'DB\' || values.type == \'FILE\' || values.type == \'WFS\' || values.type == \'WCS\' || values.type == \'COPYFILE\'">',
-			'<div class="mdHiddenMenu downloadLink download-{parent.download}">{title}<div style="display:none">{values.name}</div></div>',
+			'<div class="mdHiddenMenu downloadLink download-{parent.download}">{title}<div style="display:none">{values.name}|</div></div>',
 			'</tpl>',
+      '<tpl if="values.type == \'WWW:DOWNLOAD-1.0-link--download\'">',
+      '<div class="mdHiddenMenu downloadLink download-{parent.download}">{title}<div style="display:none">|{values.href}</div></div>',
+      '</tpl>',
 			'</tpl>',
 			'<tpl if="this.hasDownloadLinks(values.links)">',
 			'<a href="#" onclick="catalogue.metadataPrepareDownload({id});" class="md-mn downloadAllIcon" title="'

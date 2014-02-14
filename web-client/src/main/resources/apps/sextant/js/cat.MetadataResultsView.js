@@ -120,11 +120,19 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
 	    	window.open(url + '?url=' + context, '_blank');
     	}
     	else if(type=='download') {
-    		Ext.get(Ext.query('input[id*=layername]')[0]).dom.value = link;
-    		Ext.get(Ext.query('input[id*=getrecordbyidurl]')[0]).dom.value = 
-    			this.catalogue.services.mdXMLGet + '?uuid=' + this.getStore().getAt(this.curId).get("uuid");
-    		Ext.query('a[id*=panierButton]')[0].onclick();
-    		url=Ext.get(Ext.query('input[id*=configpanierurl]')[0]).getValue();
+        // Get info : first token is the layername for file, db, wfs ... protocol
+        // second is href for WWW:DOWNLOAD-1.0-link--download
+        var token = link.split('|');
+        if (token[0] === '') {
+          window.open(token[1], '_blank');
+          showPopup = false;
+        } else {
+          Ext.get(Ext.query('input[id*=layername]')[0]).dom.value = token[0];
+          Ext.get(Ext.query('input[id*=getrecordbyidurl]')[0]).dom.value =
+            this.catalogue.services.mdXMLGet + '?uuid=' + this.getStore().getAt(this.curId).get("uuid");
+          Ext.query('a[id*=panierButton]')[0].onclick();
+          url=Ext.get(Ext.query('input[id*=configpanierurl]')[0]).getValue();
+        }
     	}
     	if(this.popup && showPopup) {
     		this.displayPopup(type,url);
