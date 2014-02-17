@@ -89,6 +89,11 @@
   <file name=".*/WEB-INF/config-csw-servers.xml">
     <addXML xpath="services">
       
+      <service name="csw-MYOCEAN-ALL-PRODUCTS">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_cat:MYOCEAN-ALL-PRODUCTS"/>
+        </class>
+      </service>
       <service name="csw-MYOCEAN-CORE-PRODUCTS">
         <class name=".services.main.CswDiscoveryDispatcher">
           <param name="filter" value="+_cat:MYOCEAN-CORE-PRODUCTS"/>
@@ -99,12 +104,7 @@
           <param name="filter" value="+_cat:MYOCEAN-DOCUMENTS"/>
         </class>
       </service>
-      <service name="csw-MYOCEAN-EXTERNAL">
-        <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_groupPublished:MYOCEAN-EXTERNAL"/>
-        </class>
-      </service>
-	    <service name="csw-MYOCEAN-INTERMEDIATE-PRODUCTS">
+      <service name="csw-MYOCEAN-INTERMEDIATE-PRODUCTS">
         <class name=".services.main.CswDiscoveryDispatcher">
           <param name="filter" value="+_groupPublished:MYOCEAN-INTERMEDIATE-PRODUCTS"/>
         </class>
