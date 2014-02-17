@@ -11,7 +11,7 @@
         <span class="caret"/>
       </button>
       <ul class="dropdown-menu">
-        <li data-ng-repeat="t in thesaurus | orderBy:'title'">
+        <li data-ng-repeat="t in thesaurus | orderBy:'props.title'">
           <a href="" data-ng-click="addThesaurus(t.getKey())">{{t.getTitle()}}</a>
         </li>
       </ul>
