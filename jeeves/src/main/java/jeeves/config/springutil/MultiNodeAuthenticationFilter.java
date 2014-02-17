@@ -83,7 +83,7 @@ public class MultiNodeAuthenticationFilter extends GenericFilterBean {
                             requestURI = requestURI.substring(0, requestURI.length() - 1);
                         }
                         final boolean isNodeWarningPage = requestURI.equals(location.split("\\?")[0]);
-                        if (!isNodeWarningPage && (oldNodeId != null && !oldNodeId.equals(nodeId))) {
+                        if (!isNodeWarningPage) {
                                 HttpServletResponse httpServletResponse = (HttpServletResponse) response;
                                 httpServletResponse.sendRedirect(httpServletResponse.encodeRedirectURL(location));
                                 return;
