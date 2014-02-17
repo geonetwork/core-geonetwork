@@ -113,9 +113,9 @@ class GeonetworkNRTManager implements Closeable {
         
     }
 
-    public boolean maybeRefresh() throws IOException {
+    public void maybeRefreshBlocking() throws IOException {
         taxonomyTracker.maybeRefresh();
-        return actualManager.maybeRefresh();
+        actualManager.maybeRefreshBlocking();;
     }
 
     public void release(IndexSearcher searcher) throws IOException {

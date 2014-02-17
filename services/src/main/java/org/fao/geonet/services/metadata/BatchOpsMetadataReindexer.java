@@ -47,7 +47,7 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
 		
 		public Void call() throws Exception {
 			for(int i=beginIndex; i<beginIndex+count; i++) {
-				dm.indexMetadata(ids[i]+"");
+				dm.indexMetadata(ids[i]+"", false);
 			}
 			return null;
 		}
