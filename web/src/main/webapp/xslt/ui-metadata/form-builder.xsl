@@ -375,6 +375,11 @@
                     </xsl:for-each>
                   </select>
                 </xsl:when>
+                <xsl:when test="@use = 'gn-date-picker'">
+                  <input class="form-control" type="hidden" value="" id="{$id}_{@label}"/>
+                  <div data-gn-date-picker="{if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/value else ''}"
+                       data-id="#{$id}_{@label}"/>
+                </xsl:when>
                 <xsl:otherwise>
                   <input class="form-control" type="{if (@use) then @use else 'text'}" value="" id="{$id}_{@label}">
                     <xsl:if test="$helper">
@@ -400,7 +405,7 @@
             </xsl:for-each>
             
             <xsl:if test="not($isExisting)">
-              <input class=" gn-debug" type="text" name="{$xpathFieldId}" value="{@xpath}"/>
+              <input class="gn-debug" type="text" name="{$xpathFieldId}" value="{@xpath}"/>
             </xsl:if>
             <textarea class="form-control input-sm gn-debug" name="{$id}" data-gn-template-field="{$id}"
               data-keys="{string-join($template/values/key/@label, '#')}"

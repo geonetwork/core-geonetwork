@@ -62,7 +62,6 @@
             var xmlSnippet = xmlSnippetTemplate, updated = false;
             angular.forEach(fields, function(field) {
               var value = $('#' + scope.id + '_' + field).val() || '';
-              //  console.log('{{' + field + '}} = ' + value);
               if (value !== undefined) {
                 xmlSnippet = xmlSnippet.replace(
                     '{{' + field + '}}',

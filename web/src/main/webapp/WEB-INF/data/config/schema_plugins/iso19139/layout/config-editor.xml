@@ -34,10 +34,8 @@
     <for name="gco:Boolean" use="checkbox"/>
 
 
-    <for name="gco:Date" use="date"/>
-
-
-    <for name="gco:DateTime" use="datetime"/>
+    <for name="gco:Date" use="data-gn-date-picker"/>
+    <for name="gco:DateTime" use="data-gn-date-picker"/>
 
 
 
@@ -554,14 +552,12 @@
               <template>
                 <!-- TODO: support datetime-->
                 <values>
-                  <key label="date" xpath="gmd:CI_Date/gmd:date/gco:Date" use="date"/>
+                  <key label="date" xpath="gmd:CI_Date/gmd:date/*" use="gn-date-picker"/>
                 </values>
                 <snippet>
                   <gmd:date>
                     <gmd:CI_Date>
-                      <gmd:date>
-                        <gco:Date>{{date}}</gco:Date>
-                      </gmd:date>
+                      <gmd:date>{{date}}</gmd:date>
                       <gmd:dateType>
                         <gmd:CI_DateTypeCode
                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
@@ -577,16 +573,13 @@
               gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'creation']"
               if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
               <template>
-                <!-- TODO: support datetime-->
                 <values>
-                  <key label="date" xpath="gmd:CI_Date/gmd:date/gco:Date" use="date"/>
+                  <key label="date" xpath="gmd:CI_Date/gmd:date/*" use="gn-date-picker"/>
                 </values>
                 <snippet>
                   <gmd:date>
                     <gmd:CI_Date>
-                      <gmd:date>
-                        <gco:Date>{{date}}</gco:Date>
-                      </gmd:date>
+                      <gmd:date>{{date}}</gmd:date>
                       <gmd:dateType>
                         <gmd:CI_DateTypeCode
                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
@@ -604,14 +597,12 @@
               if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
               <template>
                 <values>
-                  <key label="date" xpath="gmd:CI_Date/gmd:date/gco:Date" use="date"/>
+                  <key label="date" xpath="gmd:CI_Date/gmd:date/*" use="gn-date-picker"/>
                 </values>
                 <snippet>
                   <gmd:date>
                     <gmd:CI_Date>
-                      <gmd:date>
-                        <gco:Date>{{date}}</gco:Date>
-                      </gmd:date>
+                      <gmd:date>{{date}}</gmd:date>
                       <gmd:dateType>
                         <gmd:CI_DateTypeCode
                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
@@ -627,16 +618,13 @@
               gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'publication']"
               if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
               <template>
-                <!-- TODO: support datetime-->
                 <values>
-                  <key label="date" xpath="gmd:CI_Date/gmd:date/gco:Date" use="date"/>
+                  <key label="date" xpath="gmd:CI_Date/gmd:date/*" use="gn-date-picker"/>
                 </values>
                 <snippet>
                   <gmd:date>
                     <gmd:CI_Date>
-                      <gmd:date>
-                        <gco:Date>{{date}}</gco:Date>
-                      </gmd:date>
+                      <gmd:date>{{date}}</gmd:date>
                       <gmd:dateType>
                         <gmd:CI_DateTypeCode
                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
@@ -653,14 +641,12 @@
               if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
               <template>
                 <values>
-                  <key label="date" xpath="gmd:CI_Date/gmd:date/gco:Date" use="date"/>
+                  <key label="date" xpath="gmd:CI_Date/gmd:date/*" use="gn-date-picker"/>
                 </values>
                 <snippet>
                   <gmd:date>
                     <gmd:CI_Date>
-                      <gmd:date>
-                        <gco:Date>{{date}}</gco:Date>
-                      </gmd:date>
+                      <gmd:date>{{date}}</gmd:date>
                       <gmd:dateType>
                         <gmd:CI_DateTypeCode
                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
@@ -676,16 +662,13 @@
               gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'revision']"
               if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
               <template>
-                <!-- TODO: support datetime-->
                 <values>
-                  <key label="date" xpath="gmd:CI_Date/gmd:date/gco:Date" use="date"/>
+                  <key label="date" xpath="gmd:CI_Date/gmd:date/*" use="gn-date-picker"/>
                 </values>
                 <snippet>
                   <gmd:date>
                     <gmd:CI_Date>
-                      <gmd:date>
-                        <gco:Date>{{date}}</gco:Date>
-                      </gmd:date>
+                      <gmd:date>{{date}}</gmd:date>
                       <gmd:dateType>
                         <gmd:CI_DateTypeCode
                           codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"

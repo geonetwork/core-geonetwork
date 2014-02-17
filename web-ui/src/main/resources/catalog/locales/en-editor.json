@@ -121,5 +121,8 @@
     "publishSuccess":"Successful publication. Layer added to map preview",
     "country": "Country",
     "ocean": "Ocean",
-    "continent": "Continent"
+    "continent": "Continent",
+    "dateMode": "Date or date time",
+    "yearMode": "Year only",
+    "yearAndMonthMode": "Year and month"
 }

@@ -132,7 +132,15 @@ form.gn-editor {
       font-size: 8px;
     }
   }
-  
+
+  /* Date picker is composed of a date and
+   * a time input. Align them on the same
+   * line instead of 100% width in input group.
+   */
+  .gn-date-picker > input.gn-date {
+    width: 50%
+  }
+
   /* Reset margin in helper for documentation
    * to properly align radios
    */

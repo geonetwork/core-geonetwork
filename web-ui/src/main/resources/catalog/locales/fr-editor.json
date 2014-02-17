@@ -125,5 +125,8 @@
     "publishSuccess":"Publication effectuée. Couche ajoutée à la carte",
     "country": "Pays",
     "ocean": "Océan",
-    "continent": "Continent"
+    "continent": "Continent",
+    "dateMode": "Date ou date et heure",
+    "yearMode": "Année",
+    "yearAndMonthMode": "Année et mois"
 }

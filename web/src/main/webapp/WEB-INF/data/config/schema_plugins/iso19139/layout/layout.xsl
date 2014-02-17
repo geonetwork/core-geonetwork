@@ -139,7 +139,7 @@
     <xsl:variable name="forceDisplayAttributes" select="count(gmx:FileName) > 0"/>
 
     <!-- TODO: Support gmd:LocalisedCharacterString -->
-    <xsl:variable name="theElement" select="gco:CharacterString|gco:Date|gco:DateTime|gco:Integer|gco:Decimal|
+    <xsl:variable name="theElement" select="gco:CharacterString|gco:Integer|gco:Decimal|
       gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
       gco:Scale|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName"/>
     
@@ -232,6 +232,21 @@
 
   </xsl:template>
 
+
+  <xsl:template mode="mode-iso19139" priority="200"
+                match="*[gco:Date|gco:DateTime]">
+    <xsl:param name="schema" select="$schema" required="no"/>
+    <xsl:param name="labels" select="$labels" required="no"/>
+
+    <xsl:variable name="labelConfig"
+                  select="gn-fn-metadata:getLabel($schema, name(), $labels)"/>
+
+    <div data-gn-date-picker="{gco:Date|gco:DateTime}"
+         data-label="{$labelConfig/label}"
+         data-element-name="{name(gco:Date|gco:DateTime)}"
+         data-element-ref="{concat('_X', gn:element/@ref)}">
+    </div>
+  </xsl:template>
 
 
   <!-- Match codelist values.
