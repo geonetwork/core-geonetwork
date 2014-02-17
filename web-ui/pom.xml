@@ -34,9 +34,26 @@
 
   <build>
     <resources>
+        <!-- The resource that are filtered should only be the fewest possible because
+             It makes the build take longer and if a file that should not have replacements done is filtered
+             the resulting file in the webapp can be wrong.  
+             
+             So only include the specific files to be filtered to keep the build as performant as possible
+             and reduce potential for bugs
+        -->
       <resource>
         <directory>src/main/resources</directory>
         <filtering>true</filtering>
+          <includes>
+              <include>**/web-ui-wro-sources.xml</include>
+          </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+          <excludes>
+              <exclude>**/web-ui-wro-sources.xml</exclude>
+          </excludes>
       </resource>
     </resources>
   </build>
