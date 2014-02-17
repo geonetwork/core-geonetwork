@@ -15,10 +15,6 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkNRTManager.AcquireResult;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.*;
@@ -137,6 +133,13 @@ public class LuceneIndexLanguageTracker {
      */
     public synchronized IndexAndTaxonomy acquire(final String preferedLang, final long versionToken) throws IOException {
         lazyInit();
+
+        if (!luceneConfig.useNRTManagerReopenThread()
+            || Boolean.parseBoolean(System.getProperty(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD))) {
+            maybeRefreshBlocking();
+        }
+
+
         long finalVersion = versionToken;
         Map<AcquireResult, GeonetworkNRTManager> searchers = new HashMap<AcquireResult, GeonetworkNRTManager>(
                 (int) (searchManagers.size() * 1.5));
@@ -145,11 +148,6 @@ public class LuceneIndexLanguageTracker {
         boolean tokenExpired = false;
         boolean lastVersionUpToDate = true;
         for (GeonetworkNRTManager manager : searchManagers.values()) {
-            if (!luceneConfig.useNRTManagerReopenThread()
-                || Boolean.parseBoolean(System.getProperty(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD))) {
-                commit();
-                manager.maybeRefresh();
-            }
             AcquireResult result = manager.acquire(versionToken, versionTracker);
             lastVersionUpToDate = lastVersionUpToDate && result.lastVersionUpToDate;
             tokenExpired = tokenExpired || result.newSearcher;
@@ -174,6 +172,16 @@ public class LuceneIndexLanguageTracker {
         }
         return new IndexAndTaxonomy(finalVersion, new GeonetworkMultiReader(readers, searchers),
                 taxonomyIndexTracker.acquire());
+    }
+
+    /**
+     * Block until a fresh index reader can be acquired.
+     */
+    public void maybeRefreshBlocking() throws IOException {
+        commit();
+        for (GeonetworkNRTManager manager : searchManagers.values()) {
+            manager.maybeRefreshBlocking();
+        }
     }
 
     synchronized void commit() throws CorruptIndexException, IOException {

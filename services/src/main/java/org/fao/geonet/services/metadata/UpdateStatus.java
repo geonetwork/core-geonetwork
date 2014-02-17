@@ -98,7 +98,7 @@ public class UpdateStatus extends NotInReadOnlyModeService {
 		sa.statusChange(status, metadataIds, changeDate, changeMessage);
 
 		//--- reindex metadata
-		dataMan.indexMetadata(id);
+		dataMan.indexMetadata(id, true);
 
 		//--- return id for showing
 		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));

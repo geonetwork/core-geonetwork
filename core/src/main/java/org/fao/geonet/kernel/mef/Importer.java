@@ -408,7 +408,7 @@ public class Importer {
                 IO.mkdirs(new File(pubDir), "MEF Importer public resources directory for metadata "+metadataIdMap);
                 IO.mkdirs(new File(priDir), "MEF Importer private resources directory for metadata "+metadataIdMap);
 
-                dm.indexMetadata(metadataIdMap.get(index));
+                dm.indexMetadata(metadataIdMap.get(index), false);
 			}
 
 			// --------------------------------------------------------------------

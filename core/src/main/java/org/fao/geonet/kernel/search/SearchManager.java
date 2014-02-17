@@ -661,9 +661,10 @@ public class SearchManager {
 	 * @param metadata
 	 * @param id
 	 * @param moreFields
+     * @param forceRefreshReaders if true then block all searches until they can obtain a up-to-date reader
 	 * @throws Exception
 	 */
-	public void index(String schemaDir, Element metadata, String id, List<Element> moreFields, MetadataType metadataType)
+	public void index(String schemaDir, Element metadata, String id, List<Element> moreFields, MetadataType metadataType, boolean forceRefreshReaders)
             throws Exception {
         // Update spatial index first and if error occurs, record it to Lucene index
         indexGeometry(schemaDir, metadata, id, moreFields);
@@ -676,6 +677,9 @@ public class SearchManager {
             if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
                 Log.debug(Geonet.INDEX_ENGINE, "adding document in locale " + document.one());
             }
+        }
+        if (forceRefreshReaders) {
+            _tracker.maybeRefreshBlocking();
         }
 	}
 	

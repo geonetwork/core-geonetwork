@@ -237,7 +237,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id);
+        dataMan.indexMetadata(id, false);
 	}
 	/**
 	 * Inserts a metadata into the database. Lucene index is updated after insertion.
@@ -272,7 +272,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id);
+        dataMan.indexMetadata(id, false);
 		return id;
 	}
 	

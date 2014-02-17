@@ -264,7 +264,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
             }
         }
 
-        dataMan.indexMetadata(id);
+        dataMan.indexMetadata(id, false);
 
         fileIds.add(uuid);
 

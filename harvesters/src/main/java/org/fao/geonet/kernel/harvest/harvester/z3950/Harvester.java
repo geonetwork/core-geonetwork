@@ -358,7 +358,7 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 
                 dataMan.flush();
 
-                dataMan.indexMetadata(id);
+                dataMan.indexMetadata(id, false);
 
                 result.addedMetadata++;
             }

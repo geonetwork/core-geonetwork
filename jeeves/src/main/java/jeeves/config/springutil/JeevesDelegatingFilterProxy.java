@@ -3,6 +3,8 @@ package jeeves.config.springutil;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.User;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.GenericFilterBean;
@@ -38,14 +40,11 @@ public class JeevesDelegatingFilterProxy extends GenericFilterBean {
             final String nodeName = httpRequest.getServletPath().substring(1);
             String nodeId = User.NODE_APPLICATION_CONTEXT_KEY + nodeName;
             if (getServletContext().getAttribute(nodeId) == null) {
-                if (nodeId != null && nodeName.equals(getFilterConfig().getInitParameter("loginService"))) {
-                    final String referer = httpRequest.getHeader("referer");
-                    if (urlIfFromThisServer(request, referer)) {
-                        nodeId = User.NODE_APPLICATION_CONTEXT_KEY + extractNodeIdFromUrl(referer);
-                    }
+                nodeId =  User.NODE_APPLICATION_CONTEXT_KEY+request.getParameter("node");
 
+                if (getServletContext().getAttribute(nodeId) == null) {
+                    nodeId = loadNodeIdFromReferrer(request, httpRequest, nodeId);
                 }
-
                 if (nodeId == null || getServletContext().getAttribute(nodeId) == null) {
                     // use default;
                     nodeId = User.NODE_APPLICATION_CONTEXT_KEY;
@@ -60,7 +59,15 @@ public class JeevesDelegatingFilterProxy extends GenericFilterBean {
             response.getWriter().write(request.getClass().getName() + " is not a supported type of request");
         }
     }
-    
+
+    private String loadNodeIdFromReferrer(ServletRequest request, HttpServletRequest httpRequest, String nodeId) {
+        final String referer = httpRequest.getHeader("referer");
+        if (urlIfFromThisServer(request, referer)) {
+            nodeId = User.NODE_APPLICATION_CONTEXT_KEY + extractNodeIdFromUrl(referer);
+        }
+        return nodeId;
+    }
+
     String trustedHost;
     
 
@@ -75,7 +82,12 @@ public class JeevesDelegatingFilterProxy extends GenericFilterBean {
     private String extractNodeIdFromUrl(String referer) {
         final String[] split = referer.split(getServletContext().getContextPath(), 2);
 
-        return split[1].substring(1, split[1].indexOf('/', 1));
+        final int nextSlash = split[1].indexOf('/', 1);
+        if (nextSlash > -1 ) {
+            return split[1].substring(1, nextSlash);
+        } else {
+            return null;
+        }
     }
 
     private boolean urlIfFromThisServer(ServletRequest request, String referer) {

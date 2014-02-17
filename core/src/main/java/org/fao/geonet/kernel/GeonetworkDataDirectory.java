@@ -347,6 +347,7 @@ public class GeonetworkDataDirectory {
                         }
                     }
                 }
+
 			} catch (IOException e) {
 				Log.info(
                         Geonet.DATA_DIRECTORY,
