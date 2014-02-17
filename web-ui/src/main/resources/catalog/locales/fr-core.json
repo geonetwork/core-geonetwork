@@ -81,7 +81,8 @@
     "passwordUpdated": "Mot de passe mis à jour avec succès.",
     "resetPassword": "Changer le mot de passe",
     "resetPasswordTitle": "Modification du mot de passe de {{user}}.",
-    
+    "passwordReminderError": "Erreur lors de la récupération de votre mot de passe",
+   "sendPasswordLinkToMyEmail": "Récupérer mon mot de passe",
     "from": "De",
     "to": " à ",
     "by": "par",

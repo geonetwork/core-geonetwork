@@ -84,7 +84,8 @@
     "by": "by",
     "previous": "Previous",
     "next": "Next",
-    
+    "passwordReminderError": "Error getting password information",
+    "sendPasswordLinkToMyEmail": "Send password link to my email",
     "noRecordFound": "No record found.",
     
     "anyPlaceHolder": "Search ...",
