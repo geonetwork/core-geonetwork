@@ -30,8 +30,7 @@
 			    -->
 			<gmd:fileIdentifier>
 				<gco:CharacterString>
-          <xsl:value-of select="/root/env/uuid"/>
-					<!--<xsl:value-of select="myocean:buildIdentifier(/root/env/id)"/>-->
+					<xsl:value-of select="myocean:buildIdentifier(/root/env/id)"/>
 				</gco:CharacterString>
 			</gmd:fileIdentifier>
 
@@ -368,8 +367,7 @@
 		<xsl:copy>
 			<xsl:copy-of select="@*"/>
 			<gco:CharacterString>
-					<!--<xsl:value-of select="myocean:buildIdentifier(/root/env/id)"/>-->
-        <xsl:value-of select="/root/env/uuid"/>
+					<xsl:value-of select="myocean:buildIdentifier(/root/env/id)"/>
 			</gco:CharacterString>
 		</xsl:copy>
 	</xsl:template>
