@@ -35,13 +35,13 @@ public class PasswordUtil {
 	public static final String PASSWORD_COLUMN = "password";
 
 	/**
-	 * Check the security column for the {@value PasswordUtil.HASH_UPDATE_REQUIRED} tag.
+	 * Check the security column for the {@value org.fao.geonet.domain.UserSecurityNotification.UPDATE_HASH_REQUIRED} tag.
 	 * 
 	 * @param securityField The securityField the
 	 * @return true if the user needs its hash updated
 	 */
 	public static boolean hasOldHash(User user) {
-		return user.getSecurity().getSecurityNotifications().contains(UserSecurityNotification.HASH_UPDATE_REQUIRED);
+		return user.getSecurity().getSecurityNotifications().contains(UserSecurityNotification.UPDATE_HASH_REQUIRED);
 	}
 	/**
 	 * Compare the hash (read from database) to *all* type of hashes used by geonetwork.  This should not be used
@@ -182,8 +182,8 @@ public class PasswordUtil {
 		}
 		String hash = user.getPassword();
 		if (hasOldHash(user)) {
-			if ((matchOldPassword || oldPassword != null) && !matchesOldHash(hash , oldPassword)) {
-				throw new IllegalArgumentException("Old password is not correct");
+			if ((matchOldPassword || newPassword != null) && !matchesOldHash(hash , newPassword)) {
+				throw new IllegalArgumentException("Password is not correct. It does not match old hash.");
 			}
 		} else {
 			if ((matchOldPassword || oldPassword != null) && !encoder.matches(oldPassword, hash)) {
@@ -191,7 +191,7 @@ public class PasswordUtil {
 			}
 		}
 		
-		user.getSecurity().getSecurityNotifications().remove(UserSecurityNotification.HASH_UPDATE_REQUIRED);
+		user.getSecurity().getSecurityNotifications().remove(UserSecurityNotification.UPDATE_HASH_REQUIRED);
 		
 		String newPasswordHash = encoder.encode(newPassword);
 		user.getSecurity().setPassword(newPasswordHash.toCharArray());

@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import junit.framework.Assert;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.UserRepositoryTest;
-import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +13,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -68,7 +66,7 @@ public class UserTest extends AbstractSpringDataTest {
         user.getEmailAddresses().add(email2);
 
         user.getSecurity().setAuthType("authtype");
-        user.getSecurity().getSecurityNotifications().add(UserSecurityNotification.HASH_UPDATE_REQUIRED);
+        user.getSecurity().getSecurityNotifications().add(UserSecurityNotification.UPDATE_HASH_REQUIRED);
 
         Element xml = user.asXml();
 

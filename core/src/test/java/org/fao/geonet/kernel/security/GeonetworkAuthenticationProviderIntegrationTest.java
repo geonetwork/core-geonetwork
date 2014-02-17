@@ -76,7 +76,7 @@ public class GeonetworkAuthenticationProviderIntegrationTest extends AbstractCor
     private User userFoundSetup(boolean oldPassword) throws Exception {
         final User entity = UserRepositoryTest.newUser(_inc);
         if (oldPassword) {
-            entity.getSecurity().getSecurityNotifications().add(UserSecurityNotification.HASH_UPDATE_REQUIRED);
+            entity.getSecurity().getSecurityNotifications().add(UserSecurityNotification.UPDATE_HASH_REQUIRED);
         }
         entity.getSecurity().setPassword(_encoder.encode(PASSWORD));
         return _userRepo.save(entity);

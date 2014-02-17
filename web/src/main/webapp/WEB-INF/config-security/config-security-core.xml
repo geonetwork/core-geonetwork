@@ -15,7 +15,8 @@
 	<bean id="filterChainProxy" class="org.springframework.security.web.FilterChainProxy">
 		<constructor-arg>
 			<list>
-				<sec:filter-chain pattern="/apps/**" filters="" />
+				<sec:filter-chain pattern="/proxy**" filters="" />
+        <sec:filter-chain pattern="/apps/**" filters="" />
 				<sec:filter-chain pattern="/static/**" filters="" />
 			    <sec:filter-chain pattern="/catalog/**" filters="" />
 			    <sec:filter-chain pattern="/test/**" filters="" />
