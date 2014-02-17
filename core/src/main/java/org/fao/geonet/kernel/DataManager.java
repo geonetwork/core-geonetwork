@@ -2520,7 +2520,7 @@ public class DataManager {
                 .setMetadataId(id)
                 .setChangeDate(changeDate)
                 .setUserId(userId);
-        mdStatusId.setChangeDate(new ISODate(changeDate));
+        mdStatusId.setChangeDate(changeDate);
 
         metatatStatus.setId(mdStatusId);
 

@@ -98,7 +98,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
 
         final ISODate changeDate = new ISODate();
         final String changeMessage = "Set to draft";
-        _dataManager.setStatus(serviceContext, metadataId, 0, changeDate.getDateAndTime(), changeMessage);
+        _dataManager.setStatus(serviceContext, metadataId, 0, changeDate, changeMessage);
 
         final MetadataStatus loadedStatus = _dataManager.getStatus(metadataId);
 
