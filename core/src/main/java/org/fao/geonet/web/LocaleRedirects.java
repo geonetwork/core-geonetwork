@@ -45,6 +45,8 @@ public class LocaleRedirects {
     private static final String LANG_PARAMETER = "hl";
     private static final String ACCEPT_LANGUAGE_HEADER = "Accept-Language";
     private static final String REFERER_PARAMETER = "referer";
+    private static final String NODE_PARAMETER = "node";
+
     private static final Set<String> SPECIAL_HEADERS;
 
     static {
@@ -53,8 +55,6 @@ public class LocaleRedirects {
         headers.add(REFERER_PARAMETER);
         SPECIAL_HEADERS = Collections.unmodifiableSet(headers);
     }
-
-    private static final String NODE_PARAMETER = "node";
 
     @Autowired
     private ApplicationContext _appContext;
