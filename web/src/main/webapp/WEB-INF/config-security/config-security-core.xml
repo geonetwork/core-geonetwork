@@ -204,7 +204,9 @@
         <constructor-arg value="${passwordSalt}"/>
     </bean>
 
-    <bean class="org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider" id="geonetworkAuthenticationProvider"/>
+    <bean class="org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider" id="geonetworkAuthenticationProvider">
+      <property name="checkUserNameOrEmail" value="true"/>
+    </bean>
     
     <!-- Check if the preAuthenticationFilter has already authenticated user -->
     <bean class="org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider" id="preFilterAuthenticationProvider">
