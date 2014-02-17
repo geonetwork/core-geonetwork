@@ -49,6 +49,26 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     }
 
     @Override
+    public User findOneByEmailAndSecurityAuthTypeIsNullOrEmpty(final String email) {
+        CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> query = cb.createQuery(User.class);
+        Root<User> root = query.from(User.class);
+
+        final Path<String> authTypePath = root.get(User_.security).get(UserSecurity_.authType);
+        query.where(cb.and(
+                cb.isMember(email, root.get(User_.emailAddresses)),
+                cb.or(cb.isNull(authTypePath), cb.equal(cb.trim(authTypePath), ""))));
+        List<User> results = _entityManager.createQuery(query).getResultList();
+
+
+        if (results.isEmpty()) {
+            return null;
+        } else {
+            return results.get(0);
+        }
+    }
+
+    @Override
     public User findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(final String username) {
         CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         CriteriaQuery<User> query = cb.createQuery(User.class);
