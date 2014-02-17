@@ -2,7 +2,6 @@
   <div class="col-lg-6">
     <form class="form-horizontal" name="gnSigninForm" action="../../j_spring_security_check"
       method="post" role="form" data-ng-if="user['@authenticated'] != 'true'">
-      
       <div class="form-group">
         <label class="col-sm-3 control-label" for="inputUsername" data-translate="">username</label>
         <div class="col-sm-9">
@@ -26,11 +25,12 @@
                     <input type="checkbox"/><span translate>rememberMe</span>
                 </label>
             </div>-->
-      <p/>
+
       <button type="submit" class="btn btn-primary pull-right" data-ng-disabled="!gnSigninForm.$valid">
         <i class="fa fa-signin"/>
         <span data-translate="">signIn</span>
       </button>
+      <div class="clearfix"></div>
     </form>
   </div>
   <div class="col-lg-6">
