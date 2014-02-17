@@ -113,7 +113,10 @@
 		<property name="authenticationDetailsSource" ref="authenticationDetailsSource" />
 		<property name="authenticationFailureHandler">
 			<bean class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
-				<constructor-arg value="/login.jsp?failure=true"></constructor-arg>
+				<constructor-arg value="${loginErrorForm}"></constructor-arg>
+                <property name="redirectStrategy">
+                    <bean class="jeeves.config.springutil.JeevesNodeAwareRedirectStrategy"/>
+                </property>
 			</bean>
 		</property>
 		<property name="authenticationSuccessHandler">
@@ -129,8 +132,8 @@
 
 	<bean id="basicAuthenticationFilter"
 		class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
-		<property name="authenticationManager" ref="authenticationManager" />
-		<property name="authenticationEntryPoint" ref="basicAuthenticationEntryPoint" />
+        <constructor-arg index="0" ref="authenticationManager"/>
+        <constructor-arg index="1" ref="basicAuthenticationEntryPoint"/>
         <property name="authenticationDetailsSource" ref="authenticationDetailsSource" />
 	</bean>
 
@@ -160,20 +163,20 @@
 		<property name="filterProcessesUrl" value="/j_spring_security_logout"/>
 	</bean>
 
-    <bean id="logoutSuccessHandler" class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">
+    <bean id="logoutSuccessHandler" class="jeeves.config.springutil.JeevesNodeAwareLogoutSuccessHandler">
     	<property name="defaultTargetUrl" value="${logout.success.url}"></property>
     </bean>
     <bean id="requestCacheFilter" class="org.springframework.security.web.savedrequest.RequestCacheAwareFilter" />
 
 	<bean id="exceptionTranslationFilter"
 		class="org.springframework.security.web.access.ExceptionTranslationFilter">
-		<property name="authenticationEntryPoint" ref="authenticationEntryPoint" />
+        <constructor-arg index="0" ref="authenticationEntryPoint" />
 		<property name="accessDeniedHandler" ref="accessDeniedHandler" />
 	</bean>
 
 	<bean id="authenticationEntryPoint"
-		class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
-		<property name="loginFormUrl" value="/login.jsp" />
+		class="jeeves.config.springutil.JeevesNodeAwareLoginUrlEntryPoint">
+        <constructor-arg index="0" value="${loginForm}" />
 	</bean>
 
 	<bean id="accessDeniedHandler"

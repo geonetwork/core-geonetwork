@@ -69,23 +69,25 @@ public class MultiNodeAuthenticationFilter extends GenericFilterBean {
                     // the application context associated with the node id doesn't exist so log user out.
                     SecurityContextHolder.clearContext();
                 } else if (_location != null) {
-                    final Escaper escaper = UrlEscapers.urlFormParameterEscaper();
-                    final String location = getServletContext().getContextPath() + _location.replace("@@lang@@", escaper.escape(lang))
-                            .replace("@@nodeId@@", escaper.escape(nodeId))
-                            .replace("@@redirectedFrom@@", escaper.escape(redirectedFrom))
-                            .replace("@@oldNodeId@@", escaper.escape(oldNodeId))
-                            .replace("@@oldUserName@@", escaper.escape(user.getName()));
+                    if (oldNodeId != null && !oldNodeId.equals(nodeId)) {
+                        final Escaper escaper = UrlEscapers.urlFormParameterEscaper();
+                        final String location = getServletContext().getContextPath() + _location.replace("@@lang@@", escaper.escape(lang))
+                                .replace("@@nodeId@@", escaper.escape(nodeId))
+                                .replace("@@redirectedFrom@@", escaper.escape(redirectedFrom))
+                                .replace("@@oldNodeId@@", escaper.escape(oldNodeId))
+                                .replace("@@oldUserName@@", escaper.escape(user.getName()));
 
-                    String requestURI = httpServletRequest.getRequestURI();
-                    // drop the ! at the end so we can view the xml of the warning page
-                    if (requestURI.endsWith("!")) {
-                        requestURI = requestURI.substring(0, requestURI.length() - 1);
-                    }
-                    final boolean isNodeWarningPage = requestURI.equals(location.split("\\?")[0]);
-                    if (!isNodeWarningPage && !oldNodeId.equals(nodeId)) {
-                            HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-                            httpServletResponse.sendRedirect(httpServletResponse.encodeRedirectURL(location));
-                            return;
+                        String requestURI = httpServletRequest.getRequestURI();
+                        // drop the ! at the end so we can view the xml of the warning page
+                        if (requestURI.endsWith("!")) {
+                            requestURI = requestURI.substring(0, requestURI.length() - 1);
+                        }
+                        final boolean isNodeWarningPage = requestURI.equals(location.split("\\?")[0]);
+                        if (!isNodeWarningPage && (oldNodeId != null && !oldNodeId.equals(nodeId))) {
+                                HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+                                httpServletResponse.sendRedirect(httpServletResponse.encodeRedirectURL(location));
+                                return;
+                        }
                     }
                 } else {
                     throwAuthError();
