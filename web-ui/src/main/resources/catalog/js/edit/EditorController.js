@@ -135,7 +135,7 @@
 
             var defaultTab = 'default';
             if (gnCurrentEdit.schemaConfig &&
-                gnCurrentEdit.schemaConfigdefaultTab) {
+                gnCurrentEdit.schemaConfig.defaultTab) {
               defaultTab = gnCurrentEdit.schemaConfig.defaultTab;
             }
 
