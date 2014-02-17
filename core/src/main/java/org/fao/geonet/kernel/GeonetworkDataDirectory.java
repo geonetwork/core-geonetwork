@@ -336,10 +336,18 @@ public class GeonetworkDataDirectory {
                 final File srcFile = new File(path,  "WEB-INF" + File.separator + Geonet.File.SCHEMA_PLUGINS_CATALOG);
                 BinaryFile.copy(srcFile, schemaCatFile);
 
-                if (!schemaPluginsDir.exists()) {
-                    BinaryFile.copyDirectory(new File(path, GEONETWORK_DEFAULT_DATA_DIR + "config" + File.separator + "schema_plugins"),
-                        schemaPluginsDir);
+                // Copy missing schema plugins
+                File srcPluginsDir = new File(path, GEONETWORK_DEFAULT_DATA_DIR + "config" + File.separator + "schema_plugins");
+                final File[] files = srcPluginsDir .listFiles();
+                if (files != null) {
+                    for (File dir : files) {
+                        File destDir = new File(schemaPluginsDir, dir.getName());
+                        if (!destDir.exists()) {
+                            BinaryFile.copyDirectory(dir, destDir);
+                        }
+                    }
                 }
+
 			} catch (IOException e) {
 				Log.info(
                         Geonet.DATA_DIRECTORY,
