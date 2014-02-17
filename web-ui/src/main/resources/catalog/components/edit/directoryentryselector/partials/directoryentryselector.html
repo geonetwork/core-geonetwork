@@ -6,11 +6,6 @@
         <i class="fa fa-plus"/>
         <span>&nbsp;</span>
       </button>
-      <button class="btn btn-default" type="button" data-toggle="modal"
-        data-target="#gn-directory-entry-popup-{{elementRef}}">
-        <i class="fa fa-book"/>
-        <span data-translate="">addFromDictionnary</span>
-      </button>
     </div>
 
     <!-- TODO: could be nice to filter by organisation -->
@@ -19,14 +14,36 @@
 
     <div class="list-group gn-autocomplete-list">
       <li href="" class="list-group-item" data-ng-repeat="r in searchResults.records"> {{r.title}}
-          <span class="pull-right">
-          <!-- Display only if XLink enable -->
-          <a href="" data-ng-click="addContact(r, null, true)" class="fa fa-link pull-right"
-            data-ng-show="gnConfig[gnConfig.key.isXLinkEnabled]"
-            title="{{'addContactAsLink-help' | translate}}"/>
-          <a href="" data-ng-click="addContact(r)" class="fa fa-plus pull-right"
-            title="{{'addContactAsText-help' | translate}}"/>
+        <span class="pull-right">
+          <div class="btn-group"
+               title="{{'addContactAsText-help' | translate}}">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-plus"></i><span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li data-ng-repeat="role in roles">
+                <a href="" data-ng-click="addContact(r, role.code)" title="{{role.description}}">
+                  {{role.label}}
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div data-ng-show="gnConfig[gnConfig.key.isXLinkEnabled]"
+               title="{{'addContactAsLink-help' | translate}}"
+               class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              <i class="fa fa-link"></i><span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li data-ng-repeat="role in roles">
+                <a href="" data-ng-click="addContact(r, role.code, true)" title="{{role.description}}">
+                  {{role.label}}
+                </a>
+              </li>
+            </ul>
+          </div>
         </span>
+        <div class="clearfix"></div>
       </li>
     </div>
     <!-- The contact to insert once received -->

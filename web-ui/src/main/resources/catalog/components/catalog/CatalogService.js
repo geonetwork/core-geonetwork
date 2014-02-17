@@ -221,6 +221,14 @@
             defer.resolve(gnConfig);
           });
           return defer.promise;
+        },
+        getServiceURL: function() {
+          var url = gnConfig['system.server.protocol'] + '://' +
+              gnConfig['system.server.host'] + ':' +
+              gnConfig['system.server.port'] +
+              gnConfig.env.baseURL + '/' +
+              gnConfig.env.node + '/';
+          return url;
         }
       };
     }]);

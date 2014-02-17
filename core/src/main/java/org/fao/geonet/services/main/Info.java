@@ -645,6 +645,7 @@ public class Info implements Service {
 	private Element getEnv(ServiceContext context)
 	{
 		return new Element("env")
-						.addContent(new Element("baseURL").setText(context.getBaseUrl()));
+						.addContent(new Element("baseURL").setText(context.getBaseUrl()))
+                        .addContent(new Element("node").setText(context.getNodeId()));
 	}
 }

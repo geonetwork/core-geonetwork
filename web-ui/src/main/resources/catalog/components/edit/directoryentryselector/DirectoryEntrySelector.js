@@ -19,11 +19,11 @@
       ['$rootScope', '$timeout', '$q', '$http',
         'gnEditor', 'gnSchemaManagerService',
         'gnEditorXMLService', 'gnHttp', 'gnConfig',
-        'gnCurrentEdit',
+        'gnCurrentEdit', 'gnConfigService',
         function($rootScope, $timeout, $q, $http, 
             gnEditor, gnSchemaManagerService, 
             gnEditorXMLService, gnHttp, gnConfig, 
-            gnCurrentEdit) {
+            gnCurrentEdit, gnConfigService) {
 
          return {
            restrict: 'A',
@@ -42,6 +42,9 @@
              // Separator between each contact XML
              // snippet
              var separator = '&&&';
+             // URL used for creating XLink. Could be good to have
+             // that as settings to define local:// or http:// xlinks.
+             var url = gnConfigService.getServiceURL() + 'eng/subtemplate';
              scope.gnConfig = gnConfig;
              scope.templateAddAction = scope.templateAddAction === 'true';
 
@@ -105,7 +108,8 @@
                      'subtemplate', params).success(function(xml) {
                    if (usingXlink) {
                      snippets.push(gnEditorXMLService.
-                     buildXMLForXlink(scope.elementName, url));
+                     buildXMLForXlink(scope.elementName,
+                         url + '?uuid=' + uuid + '&process=' + params.process));
                    } else {
                      snippets.push(gnEditorXMLService.
                      buildXML(scope.elementName, xml));
@@ -127,21 +131,4 @@
            }
          };
        }]);
-
-  module.directive('gnDirectoryEntryMultiSelector',
-      [
-        function() {
-
-         return {
-           restrict: 'A',
-           replace: true,
-           templateUrl: '../../catalog/components/edit/' +
-           'directoryentryselector/partials/' +
-           'directoryentrymultiselector.html',
-           link: function(scope, element, attrs) {
-             scope.selected = [];
-           }
-         };
-       }]);
-
 })();
