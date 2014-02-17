@@ -92,7 +92,7 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
 					if(PasswordUtil.hasOldHash(user)) {
 						String oldPassword = user.getPassword();
 						String newPassword = authentication.getCredentials().toString();
-                        user = PasswordUtil.updatePasswordWithNew(true, oldPassword, newPassword, user.getId(), encoder, _userRepository);
+                        user = PasswordUtil.updatePasswordWithNew(true, oldPassword, newPassword, user, encoder, _userRepository);
 					}
 				}
 

@@ -157,8 +157,13 @@ public class PasswordUtil {
 	public static User updatePasswordWithNew(boolean matchOldPassword, String oldPassword,
 			String newPassword, Integer iUserId, ApplicationContext appContext) throws SQLException, UserNotFoundEx {
 	    UserRepository repo = appContext.getBean(UserRepository.class);
-		PasswordEncoder encoder = encoder(appContext);
-		return updatePasswordWithNew(matchOldPassword, oldPassword, newPassword, iUserId, encoder, repo);
+        User user = repo.findOne(iUserId);
+        if (user == null) {
+            throw new UserNotFoundEx(""+iUserId);
+        }
+
+        PasswordEncoder encoder = encoder(appContext);
+		return updatePasswordWithNew(matchOldPassword, oldPassword, newPassword, user, encoder, repo);
 	}
 	/**
 	 * Updates database with new password if passwords match
@@ -167,7 +172,7 @@ public class PasswordUtil {
 	 * 						   will be updated without checking old password
 	 * @param oldPassword the old password (obtained from user. not a hash)
 	 * @param newPassword the new password
-	 * @param iUserId the user id
+	 * @param user the user to update
 	 * @param encoder the Password encoder
 	 * @return the xml from the database query containing the new password hash
 	 * 
@@ -175,11 +180,7 @@ public class PasswordUtil {
 	 * @throws UserNotFoundEx  if the id does not reference a user
 	 */
 	public static User updatePasswordWithNew(boolean matchOldPassword, String oldPassword,
-			String newPassword, Integer iUserId, PasswordEncoder encoder, UserRepository repository) throws SQLException, UserNotFoundEx {
-		User user = repository.findOne(iUserId);
-		if (user == null) {
-			throw new UserNotFoundEx(""+iUserId);
-		}
+			String newPassword, User user, PasswordEncoder encoder, UserRepository repository) throws SQLException, UserNotFoundEx {
 		String hash = user.getPassword();
 		if (hasOldHash(user)) {
 			if ((matchOldPassword || newPassword != null) && !matchesOldHash(hash , newPassword)) {

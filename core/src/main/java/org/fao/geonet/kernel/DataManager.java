@@ -345,7 +345,7 @@ public class DataManager {
 
     public void indexMetadata(final List<String> metadataIds) throws Exception {
         for (String metadataId : metadataIds) {
-            indexMetadata(metadataId);
+            indexMetadata(metadataId, false);
         }
     }
     /**
@@ -354,7 +354,7 @@ public class DataManager {
      * @param metadataId
      * @throws Exception
      */
-    public void indexMetadata(final String metadataId) throws Exception {
+    public void indexMetadata(final String metadataId, boolean forceRefreshReaders) throws Exception {
         indexLock.lock();
         try {
             if (waitForIndexing.contains(metadataId)) {
@@ -499,7 +499,7 @@ public class DataManager {
                 }
                 moreFields.add(SearchManager.makeField("_valid", isValid, true, true));
             }
-            searchMan.index(schemaMan.getSchemaDir(schema), md, metadataId, moreFields, metadataType, title);
+            searchMan.index(schemaMan.getSchemaDir(schema), md, metadataId, moreFields, metadataType, title, forceRefreshReaders);
         } catch (Exception x) {
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);
         } finally {
@@ -1063,7 +1063,7 @@ public class DataManager {
      */
     public void setTemplate(final int id, final MetadataType type, final String title) throws Exception {
         setTemplateExt(id, type, title);
-        indexMetadata(Integer.toString(id));
+        indexMetadata(Integer.toString(id), true);
     }
 
     /**
@@ -1096,7 +1096,7 @@ public class DataManager {
      */
     public void setHarvested(int id, String harvestUuid) throws Exception {
         setHarvestedExt(id, harvestUuid);
-        indexMetadata(Integer.toString(id));
+        indexMetadata(Integer.toString(id), false);
     }
 
     /**
@@ -1236,7 +1236,7 @@ public class DataManager {
             }
         });
 
-        indexMetadata(Integer.toString(metadataId));
+        indexMetadata(Integer.toString(metadataId), false);
 
         return rating;
     }
@@ -1298,7 +1298,7 @@ public class DataManager {
         newMetadata.getCategories().addAll(filteredCategories);
 
         int finalId = insertMetadata(context, newMetadata, xml, false, true, true, UpdateDatestamp.YES,
-                fullRightsForGroup).getId();
+                fullRightsForGroup, true).getId();
 
         return String.valueOf(finalId);
     }
@@ -1366,14 +1366,14 @@ public class DataManager {
         boolean fullRightsForGroup = false;
 
         int finalId = insertMetadata(context, newMetadata, metadataXml, notifyChange, index, ufo, UpdateDatestamp.NO,
-                fullRightsForGroup).getId();
+                fullRightsForGroup, false).getId();
 
         return String.valueOf(finalId);
     }
 
     private Metadata insertMetadata(ServiceContext context, Metadata newMetadata, Element metadataXml, boolean notifyChange,
                                     boolean index, boolean updateFixedInfo, UpdateDatestamp updateDatestamp,
-                                    boolean fullRightsForGroup) throws Exception {
+                                    boolean fullRightsForGroup, boolean forceRefreshReaders) throws Exception {
         final String schema = newMetadata.getDataInfo().getSchemaId();
 
         //--- force namespace prefix for iso19139 metadata
@@ -1397,7 +1397,7 @@ public class DataManager {
         copyDefaultPrivForGroup(context, stringId, groupId, fullRightsForGroup);
 
         if (index) {
-            indexMetadata(stringId);
+            indexMetadata(stringId, forceRefreshReaders);
         }
 
         if (notifyChange) {
@@ -1613,7 +1613,7 @@ public class DataManager {
         } finally {
             if(index) {
                 //--- update search criteria
-                indexMetadata(metadataId);
+                indexMetadata(metadataId, false);
             }
         }
         return metadata;
@@ -2067,7 +2067,7 @@ public class DataManager {
             notifyMetadataChange(md, metadataId);
 
             //--- update search criteria
-            indexMetadata(metadataId);
+            indexMetadata(metadataId, true);
         }
     }
 
@@ -2409,7 +2409,7 @@ public class DataManager {
      */
     public MetadataStatus setStatus(ServiceContext context, int id, int status, String changeDate, String changeMessage) throws Exception {
         MetadataStatus statusObject = setStatusExt(context, id, status, changeDate, changeMessage);
-        indexMetadata(Integer.toString(id));
+        indexMetadata(Integer.toString(id), true);
         return statusObject;
     }
 
@@ -2437,6 +2437,7 @@ public class DataManager {
                 .setStatusId(status)
                 .setMetadataId(id)
                 .setUserId(userId);
+        mdStatusId.setChangeDate(new ISODate(changeDate));
 
         metatatStatus.setId(mdStatusId);
 
