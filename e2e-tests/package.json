@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "devDependencies": {
     "protractor" : "~0.15.0",
-    "selenium-server": "2.38.0"
+    "selenium-server": "2.38.0",
+    "jasmine-reporters": "0.2.1"
   },
   "engines": {
     "node": ">=0.8.0",
