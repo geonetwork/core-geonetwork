@@ -363,7 +363,7 @@
               
               <xsl:choose>
                 <xsl:when test="@use = 'textarea'">
-                  <textarea class="form-control input-sm" id="{$id}_{@label}"></textarea>
+                  <textarea class="form-control" id="{$id}_{@label}"></textarea>
                 </xsl:when>
                 <xsl:when test="$codelist != ''">
                   <select class="form-control input-sm" id="{$id}_{@label}">
@@ -407,7 +407,7 @@
             <xsl:if test="not($isExisting)">
               <input class="gn-debug" type="text" name="{$xpathFieldId}" value="{@xpath}"/>
             </xsl:if>
-            <textarea class="form-control input-sm gn-debug" name="{$id}" data-gn-template-field="{$id}"
+            <textarea class="form-control gn-debug" name="{$id}" data-gn-template-field="{$id}"
               data-keys="{string-join($template/values/key/@label, '#')}"
               data-values="{if ($keyValues and count($keyValues/*) > 0) then string-join($keyValues/field/value, '#') else ''}">
               <xsl:copy-of select="$template/snippet/*"/>
@@ -579,7 +579,7 @@
 
     <xsl:choose>
       <xsl:when test="$type = 'textarea'">
-        <textarea class="form-control input-sm {if ($lang) then 'hidden' else ''}" 
+        <textarea class="form-control {if ($lang) then 'hidden' else ''}"
           id="gn-field-{$editInfo/@ref}" name="_{$name}"
           data-gn-autogrow="">
           <xsl:if test="$isRequired">
