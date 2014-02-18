@@ -2,10 +2,12 @@ package org.fao.geonet.kernel;
 
 import jeeves.server.ServiceConfig;
 import org.fao.geonet.AbstractCoreIntegrationTest;
+import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import static java.io.File.separator;
 import static org.junit.Assert.assertEquals;
@@ -31,7 +33,8 @@ public abstract class AbstractGeonetworkDataDirectoryTest extends AbstractCoreIn
 
         // reinitialize data directory so that it uses the defaults
         dataDirectory.setSystemDataDir(null);
-        final ServiceConfig handlerConfig = new ServiceConfig(getServiceConfigParameterElements());
+        final ArrayList<Element> serviceConfigParameterElements = getServiceConfigParameterElements();
+        final ServiceConfig handlerConfig = new ServiceConfig(serviceConfigParameterElements);
         final String webappDir = getWebappDir(getClass());
         dataDirectory.init("geonetwork", webappDir, handlerConfig, null);
 

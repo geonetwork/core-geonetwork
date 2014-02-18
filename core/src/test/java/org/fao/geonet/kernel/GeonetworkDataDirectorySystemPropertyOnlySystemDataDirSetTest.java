@@ -32,7 +32,7 @@ public class GeonetworkDataDirectorySystemPropertyOnlySystemDataDirSetTest exten
      */
     @Override
     protected String getDataDir() {
-        return new File(_dataDirectory, "nonDefaultDataDir").getAbsolutePath() + File.separator;
+        return new File(_dataDirContainer, "nonDefaultDataDir").getAbsolutePath() + File.separator;
     }
 
 

@@ -166,7 +166,7 @@ public class DatabaseMigrationTest extends AbstractSpringDataTest {
                 entity.setValue("true");
             }
         });
-        assertNotNull(_settingRepo.findOne("system/csw/transactionUpdateCreateXPath"));
+        assertNotNull(_settingRepo.findOne(SettingManager.CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS));
         final Setting ignoreChars = _settingRepo.findOne(SettingManager.SYSTEM_LUCENE_IGNORECHARS);
         assertNotNull(ignoreChars);
         assertEquals(SettingDataType.STRING, ignoreChars.getDataType());

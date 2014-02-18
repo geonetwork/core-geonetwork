@@ -31,7 +31,7 @@ import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
  *
  * Created by Jesse on 12/6/13.
  */
-public class EditLibTest extends AbstractCoreIntegrationTest {
+public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
 
     @Autowired
     private SchemaManager _schemaManager;

@@ -1,5 +1,6 @@
 package org.fao.geonet;
 
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.TreeTraverser;
 import com.google.common.io.Files;
@@ -37,6 +38,7 @@ import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.opengis.feature.type.AttributeDescriptor;
@@ -55,6 +57,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * A helper class for testing services.  This super-class loads in the spring beans for Spring-data repositories and mocks for
@@ -77,19 +81,28 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     @Autowired
     protected DirectoryFactory _directoryFactory;
 
+    /**
+     * Contain all datadirectories for all nodes.
+     */
+    protected static File _dataDirContainer;
+
+    /**
+     * Default node data directory
+     */
     protected static File _dataDirectory;
 
     @BeforeClass
     public static void setUpDataDirectory() {
         if (_dataDirectory == null) {
-            _dataDirectory = Files.createTempDir();
+            final File toDelete = Files.createTempDir();
+            _dataDirContainer = toDelete;
+            _dataDirectory = new File(toDelete, "defaultDataDir");
             Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    try {
-                        FileUtils.deleteDirectory(_dataDirectory);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    final FluentIterable<File> files = Files.fileTreeTraverser().postOrderTraversal(toDelete);
+                    for (File file : files) {
+                        FileUtils.deleteQuietly(file);
                     }
                 }
             }));
@@ -111,7 +124,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
         final GeonetworkDataDirectory geonetworkDataDirectory = _applicationContext.getBean(GeonetworkDataDirectory.class);
 
-        SyncReport report = synchronizeDataDirectory(new File(webappDir , "WEB-INF/data"));
+        final SyncReport syncReport = synchronizeDataDirectory(new File(webappDir, "WEB-INF/data"));
 
         final ArrayList<Element> params = getServiceConfigParameterElements();
 
@@ -145,16 +158,21 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
         final String schemaPluginsDir = geonetworkDataDirectory.getSchemaPluginsDir().getPath();
         final String resourcePath = geonetworkDataDirectory.getResourcesDir().getPath();
-        final String schemaPluginsCatalogFile = new File(schemaPluginsDir, "/schemaplugin-uri-catalog.xml").getPath();
-
-        _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
-        SchemaManager.registerXmlCatalogFiles(webappDir, schemaPluginsCatalogFile);
 
         final SchemaManager schemaManager = _applicationContext.getBean(SchemaManager.class);
-        if (report.updateSchemaManager) {
+        if (syncReport.updateSchemaManager || !schemaManager.existsSchema("iso19139")) {
+            new File(_dataDirectory, "config/schemaplugin-uri-catalog.xml").delete();
+            final String schemaPluginsCatalogFile = new File(schemaPluginsDir, "/schemaplugin-uri-catalog.xml").getPath();
+
+            _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
+            SchemaManager.registerXmlCatalogFiles(webappDir, schemaPluginsCatalogFile);
+
             schemaManager.configure(webappDir, resourcePath,
                     schemaPluginsCatalogFile, schemaPluginsDir, "eng", "iso19139", true);
         }
+
+        assertTrue(schemaManager.existsSchema("iso19139"));
+        assertTrue(schemaManager.existsSchema("dublin-core"));
 
         _applicationContext.getBean(SearchManager.class).init(false, false, "", 100);
         _applicationContext.getBean(DataManager.class).init(createServiceContext(), false);
@@ -178,33 +196,87 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
         final TreeTraverser<File> fileTreeTraverser = Files.fileTreeTraverser();
 
+
+        if (deleteNewFilesFromDataDir ) {
+
+            final int prefixPathLength2 = _dataDirectory.getPath().length();
+            for (File dataDirFile : fileTreeTraverser.postOrderTraversal(_dataDirectory)) {
+                String relativePath = dataDirFile.getPath().substring(prefixPathLength2);
+                final File srcFile = new File(srcDataDir, relativePath);
+                if (!srcFile.exists()) {
+                    if (srcFile.getParent().endsWith("schematron") && relativePath.contains("schema_plugins") && relativePath.endsWith(".xsl")) {
+                        // don't copy because the schematron xsl files are generated.
+                        // normally they shouldn't be here because they don't need to be in the
+                        // repository but some tests can generate them into the schemtrons folder
+                        // so ignore them here.
+                        continue;
+                    }
+
+                    if (relativePath.endsWith("schemaplugin-uri-catalog.xml")) {
+                        // we will handle this special case later.
+                        continue;
+                    }
+
+                    if (relativePath.contains("resources" + File.separator + "xml" + File.separator + "schemas")) {
+                        // the schemas xml directory is copied by schema manager but since it is schemas we can reuse the directory.
+                        continue;
+                    }
+
+                    if (dataDirFile.isFile() || dataDirFile.list().length == 0) {
+                        if (!dataDirFile.delete()) {
+                            // a file is holding on to a reference so we can't properly clean the data directory.
+                            // this means we need a new one.
+                            _dataDirectory = null;
+                            setUpDataDirectory();
+                            break;
+                        }
+                    }
+                    report.updateSchemaManager |= relativePath.contains("schema_plugins");
+                }
+            }
+        }
+
         final int prefixPathLength = srcDataDir.getPath().length();
         for (File file : fileTreeTraverser.preOrderTraversal(srcDataDir)) {
             String relativePath = file.getPath().substring(prefixPathLength);
             final File dataDirFile = new File(_dataDirectory, relativePath);
             if (file.isFile() && (!dataDirFile.exists() || dataDirFile.lastModified() != file.lastModified())) {
-                Files.createParentDirs(dataDirFile);
+                if (file.getParent().endsWith("schematron") && relativePath.contains("schema_plugins") && relativePath.endsWith(".xsl")) {
+                    // don't copy because the schematron xsl files are generated.
+                    // normally they shouldn't be here because they don't need to be in the
+                    // repository but some tests can generate them into the schemtrons folder
+                    // so ignore them here.
+                    continue;
+                }
+
+                if (relativePath.endsWith("schemaplugin-uri-catalog.xml")) {
+                    // we will handle this special case later.
+                    continue;
+                }
+
+                if (!dataDirFile.getParentFile().exists()) {
+                    Files.createParentDirs(dataDirFile);
+                }
                 BinaryFile.copy(file, dataDirFile);
                 dataDirFile.setLastModified(file.lastModified());
 
-                report.updateSchemaManager |= file.getPath().contains("schema_plugins");
-            }
-        }
-
-        if (deleteNewFilesFromDataDir ) {
-
-            final int prefixPathLength2 = _dataDirectory.getPath().length();
-            for (File dataDirFile : fileTreeTraverser.preOrderTraversal(_dataDirectory)) {
-                String relativePath = dataDirFile.getPath().substring(prefixPathLength2);
-                final File srcFile = new File(srcDataDir, relativePath);
-                if (!srcFile.exists()) {
-                    dataDirFile.delete();
-                    report.updateSchemaManager |= dataDirFile.getPath().contains("schema_plugins");
-                }
+                report.updateSchemaManager |= relativePath.contains("schema_plugins");
             }
         }
 
         return report;
+    }
+
+    @After
+    public void deleteNonDefaultNodeDataDirectories() throws IOException {
+        final Iterable<File> children = Files.fileTreeTraverser().children(_dataDirContainer);
+        for (File child : children) {
+            if (!child.equals(_dataDirectory)) {
+                for (File file : Files.fileTreeTraverser().postOrderTraversal(child)) {
+                    FileUtils.deleteQuietly(file);
+                }
+            }
+        }
     }
 
     protected boolean isDefaultNode() {
@@ -344,7 +416,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
                 uuidAction, Lists.newArrayList(metadata), schema, 0,
                 source.getUuid(), source.getName(), context,
                 id, createDate, createDate,
-                ""+groupId, metadataType);
+                "" + groupId, metadataType);
 
         dataManager.indexMetadata(id.get(0), true);
         return Integer.parseInt(id.get(0));
