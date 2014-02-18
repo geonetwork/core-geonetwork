@@ -54,7 +54,7 @@
           
           Disable form validation with novalidate attribute. -->
     <form id="gn-editor-{$metadataId}" name="gnEditor" accept-charset="UTF-8" method="POST"
-      novalidate="" class="form-horizontal gn-editor" role="form" 
+      novalidate="" class="form-horizontal gn-editor gn-tab-{$tab}" role="form"
       data-spy="scroll" data-target="#gn-editor-{$metadataId}-spy">
 
       <input type="hidden" id="schema" value="{$schema}"/>
