@@ -28,7 +28,7 @@ public class GeonetworkDataDirectoryServiceConfigOnlySystemDataDirSetTest extend
      */
     @Override
     protected String getDataDir() {
-        return new File(_testTemporaryFolder.getRoot(), "nonDefaultDataDir").getAbsolutePath() + File.separator;
+        return new File(_dataDirContainer, "nonDefaultDataDir").getAbsolutePath() + File.separator;
     }
 
 

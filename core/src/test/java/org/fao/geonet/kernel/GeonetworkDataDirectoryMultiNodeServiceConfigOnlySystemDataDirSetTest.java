@@ -18,7 +18,7 @@ public class GeonetworkDataDirectoryMultiNodeServiceConfigOnlySystemDataDirSetTe
     @Override
     protected ArrayList<Element> getServiceConfigParameterElements() {
         ArrayList<Element> list = super.getServiceConfigParameterElements();
-        list.add(createServiceConfigParam(GeonetworkDataDirectory.GEONETWORK_DIR_KEY,getBaseDir()));
+        list.add(createServiceConfigParam(GeonetworkDataDirectory.GEONETWORK_DIR_KEY, getBaseDir()));
         return list;
     }
 
@@ -41,7 +41,7 @@ public class GeonetworkDataDirectoryMultiNodeServiceConfigOnlySystemDataDirSetTe
     }
 
     private String getBaseDir() {
-        return new File(_testTemporaryFolder.getRoot(), "nonDefaultDataDir").getAbsolutePath();
+        return _dataDirectory.getAbsolutePath();
     }
 
 
