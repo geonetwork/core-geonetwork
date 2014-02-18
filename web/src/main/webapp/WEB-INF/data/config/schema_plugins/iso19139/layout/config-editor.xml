@@ -1062,7 +1062,6 @@
 
           </section>
           <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
-          <field xpath="/gmd:MD_Metadata/gmd:language"/>
         </section>
       </tab>
     </view>
