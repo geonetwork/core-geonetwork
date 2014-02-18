@@ -906,113 +906,109 @@
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:characterSet"> </field>
 
 
-
-
-
-          <section name="pointOfContact">
-            <field name="pointOfContact" templateModeOnly="true" notDisplayedIfMissing="true"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact"
-              del="."
-              if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
-              <template>
-                <values>
-                  <key label="organisationName"
-                    xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
-                  <key label="electronicMailAddress"
-                    xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
-                      gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
-                    use="email"/>
-                  <key label="role"
-                    xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
-                    <codelist name="gmd:CI_RoleCode"/>
-                  </key>
-                </values>
-                <snippet>
-                  <gmd:pointOfContact>
-                    <gmd:CI_ResponsibleParty>
-                      <gmd:organisationName>
-                        <gco:CharacterString>{{organisationName}}</gco:CharacterString>
-                      </gmd:organisationName>
-                      <gmd:contactInfo>
-                        <gmd:CI_Contact>
-                          <gmd:address>
-                            <gmd:CI_Address>
-                              <gmd:electronicMailAddress>
-                                <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
-                              </gmd:electronicMailAddress>
-                            </gmd:CI_Address>
-                          </gmd:address>
-                        </gmd:CI_Contact>
-                      </gmd:contactInfo>
-                      <gmd:role>
-                        <gmd:CI_RoleCode
-                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode"
-                          codeListValue="{{role}}"/>
-                      </gmd:role>
-                    </gmd:CI_ResponsibleParty>
-                  </gmd:pointOfContact>
-                </snippet>
-              </template>
-            </field>
-
-
-            <action type="add" name="pointOfContact" addDirective="data-gn-directory-entry-selector"
-              or="pointOfContact"
-              in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"> </action>
-
-
-            <field name="pointOfContact" templateModeOnly="true" notDisplayedIfMissing="true"
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact"
-              del="."
-              if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
-              <template>
-                <values>
-                  <key label="organisationName"
-                    xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
-                  <key label="electronicMailAddress"
-                    xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
+          <field name="pointOfContact" templateModeOnly="true" notDisplayedIfMissing="true"
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact"
+            del="."
+            if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+            <template>
+              <values>
+                <key label="organisationName"
+                  xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                <key label="electronicMailAddress"
+                  xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
                     gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
-                    use="email"/>
-                  <key label="role"
-                    xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
-                    <codelist name="gmd:CI_RoleCode"/>
-                  </key>
-                </values>
-                <snippet>
-                  <gmd:pointOfContact>
-                    <gmd:CI_ResponsibleParty>
-                      <gmd:organisationName>
-                        <gco:CharacterString>{{organisationName}}</gco:CharacterString>
-                      </gmd:organisationName>
-                      <gmd:contactInfo>
-                        <gmd:CI_Contact>
-                          <gmd:address>
-                            <gmd:CI_Address>
-                              <gmd:electronicMailAddress>
-                                <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
-                              </gmd:electronicMailAddress>
-                            </gmd:CI_Address>
-                          </gmd:address>
-                        </gmd:CI_Contact>
-                      </gmd:contactInfo>
-                      <gmd:role>
-                        <gmd:CI_RoleCode
-                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode"
-                          codeListValue="{{role}}"/>
-                      </gmd:role>
-                    </gmd:CI_ResponsibleParty>
-                  </gmd:pointOfContact>
-                </snippet>
-              </template>
-            </field>
+                  use="email"/>
+                <key label="role"
+                  xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
+                  <codelist name="gmd:CI_RoleCode"/>
+                </key>
+              </values>
+              <snippet>
+                <gmd:pointOfContact>
+                  <gmd:CI_ResponsibleParty>
+                    <gmd:organisationName>
+                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gmd:contactInfo>
+                      <gmd:CI_Contact>
+                        <gmd:address>
+                          <gmd:CI_Address>
+                            <gmd:electronicMailAddress>
+                              <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
+                            </gmd:electronicMailAddress>
+                          </gmd:CI_Address>
+                        </gmd:address>
+                      </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gmd:role>
+                      <gmd:CI_RoleCode
+                        codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                        codeListValue="{{role}}"/>
+                    </gmd:role>
+                  </gmd:CI_ResponsibleParty>
+                </gmd:pointOfContact>
+              </snippet>
+            </template>
+          </field>
 
 
-            <action type="add" name="pointOfContact" addDirective="data-gn-directory-entry-selector"
-              or="pointOfContact"
-              in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"> </action>
+          <action type="add" name="pointOfContact" addDirective="data-gn-directory-entry-selector"
+            or="pointOfContact"
+            in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"> </action>
 
-          </section>
+
+          <field name="pointOfContact" templateModeOnly="true" notDisplayedIfMissing="true"
+            xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:pointOfContact"
+            del="."
+            if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
+            <template>
+              <values>
+                <key label="organisationName"
+                  xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                <key label="electronicMailAddress"
+                  xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
+                  gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
+                  use="email"/>
+                <key label="role"
+                  xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
+                  <codelist name="gmd:CI_RoleCode"/>
+                </key>
+              </values>
+              <snippet>
+                <gmd:pointOfContact>
+                  <gmd:CI_ResponsibleParty>
+                    <gmd:organisationName>
+                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gmd:contactInfo>
+                      <gmd:CI_Contact>
+                        <gmd:address>
+                          <gmd:CI_Address>
+                            <gmd:electronicMailAddress>
+                              <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
+                            </gmd:electronicMailAddress>
+                          </gmd:CI_Address>
+                        </gmd:address>
+                      </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gmd:role>
+                      <gmd:CI_RoleCode
+                        codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                        codeListValue="{{role}}"/>
+                    </gmd:role>
+                  </gmd:CI_ResponsibleParty>
+                </gmd:pointOfContact>
+              </snippet>
+            </template>
+          </field>
+
+
+          <action type="add" name="pointOfContact" addDirective="data-gn-directory-entry-selector"
+            or="pointOfContact"
+            in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"> </action>
+
         </section>
+
         <section name="metadata">
 
           <section name="metadataPointOfContact">
