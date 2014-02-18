@@ -354,7 +354,8 @@
     "system/site/siteId-help": "Unique catalogue identifier. After changing the site identifier, user should update the index and the logo from the administration panel.",
     "system/platform/version-help": "Version:",
     "system/platform/subVersion-help": "Sub-version:",
-
+    "system/csw/transactionUpdateCreateXPath": "Create element if it does not exist when using XPath in CSW trasaction.",
+    "system/csw/transactionUpdateCreateXPath-help": "If not checked, only existing element could be updated.",
     "metadataAndTemplates": "Metadata & templates",
     "loadSchemaSamplesOrTemplates": "Load samples and templates for metadata standards",
     "listOfSchemas": "Standards available",
@@ -617,6 +618,7 @@
     "useLogoForCatalog": "Use it for the node",
     "useLogoForCatalogFavicon": "Use it for the node favorite icon",
     "removeLogo": "Remove logo",
+    "logoUpdated": "Catalog logo updated",
     
     "manageCSW": "CSW",
     "cswService": "CSW Service",
