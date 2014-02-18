@@ -16,14 +16,14 @@
     'gnUtilityService',
     'gnEditor',
     'gnCurrentEdit',
-    'gnNewMetadata',
+    'gnMetadataManager',
     function($scope, $routeParams, $http, 
         $rootScope, $translate, $compile,
             gnSearchManagerService, 
             gnUtilityService,
             gnEditor,
             gnCurrentEdit,
-            gnNewMetadata) {
+            gnMetadataManager) {
 
       $scope.isTemplate = 's';
       $scope.hasEntries = false;
@@ -251,7 +251,7 @@
       };
 
       $scope.importEntry = function(formId) {
-        gnNewMetadata.importMetadata($scope.importData).then(
+        gnMetadataManager.import($scope.importData).then(
             function() {
               searchEntries();
               $scope.isImporting = false;
@@ -262,12 +262,12 @@
 
       $scope.delEntry = function(e) {
         // md.delete?uuid=b09b1b16-769f-4dad-b213-fc25cfa9adc7
-        gnNewMetadata.deleteMetadata(e['geonet:info'].id).then(searchEntries);
+        gnMetadataManager.remove(e['geonet:info'].id).then(searchEntries);
       };
 
       $scope.copyEntry = function(e) {
         //md.create?id=181&group=2&isTemplate=s&currTab=simple
-        gnNewMetadata.copyMetadata(e['geonet:info'].id, $scope.ownerGroup,
+        gnMetadataManager.copy(e['geonet:info'].id, $scope.ownerGroup,
             fullPrivileges,
             's').then(searchEntries);
       };

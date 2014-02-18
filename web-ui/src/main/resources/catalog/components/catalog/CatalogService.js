@@ -7,13 +7,41 @@
     'gn_urlutils_service'
   ]);
 
-  // TODO: move to metadatamanger
-  // TODO: rename this is more than new metadata
-  module.provider('gnNewMetadata', function() {
-    this.$get = ['$http', '$location', '$timeout', 'gnUrlUtils',
-                 function($http, $location, $timeout, gnUrlUtils) {
+  /**
+   * @ngdoc service
+   * @kind function
+   * @name gnMetadataManager
+   * @requires $http
+   * @requires $location
+   * @requires $timeout
+   * @requires gnUrlUtils
+   * 
+   * @description 
+   * The `gnMetadataManager` service provides main operations to manage
+   * metadatas such as create, import, copy or delete.
+   * Other operations like save are provided by another service `gnEditor`.
+   */
+  module.factory('gnMetadataManager', [
+    '$http', 
+    '$location', 
+    '$timeout', 
+    'gnUrlUtils',
+    function($http, $location, $timeout, gnUrlUtils) {
         return {
-          deleteMetadata: function(id) {
+          //TODO: rewrite calls with gnHttp
+          
+          /**
+           * @ngdoc method
+           * @name gnMetadataManager#remove
+           * @methodOf gnMetadataManager
+           *
+           * @description
+           * Delete a metadata from catalog
+           *
+           * @param {string} id Internal id of the metadata
+           * @returns {HttpPromise} Future object
+           */
+          remove: function(id) {
             var url = gnUrlUtils.append('md.delete@json',
                 gnUrlUtils.toKeyValue({
                   id: id
@@ -21,8 +49,26 @@
                 );
             return $http.get(url);
           },
-          copyMetadata: function(id, groupId, withFullPrivileges, 
-              isTemplate, tab, isChild) {
+          
+          /**
+           * @ngdoc method
+           * @name gnMetadataManager#copy
+           * @methodOf gnMetadataManager
+           *
+           * @description
+           * Create a copy of a metadata. The copy will belong to the same group
+           * of the original metadata and will be of the same type (isTemplate,
+           * isChild, fullPrivileges).
+           *
+           * @param {string} id Internal id of the metadata to be copied.
+           * @param {string} groupId Internal id of the group of the metadata
+           * @param {string} withFullPrivileges privileges to assign.
+           * @param {string} isTemplate type of the metadata
+           * @param {string} isChild is child of a parent metadata
+           * @returns {HttpPromise} Future object
+           */
+          copy: function(id, groupId, withFullPrivileges, 
+              isTemplate, isChild) {
             var url = gnUrlUtils.append('md.create@json',
                 gnUrlUtils.toKeyValue({
                   group: groupId,
@@ -34,7 +80,19 @@
                 );
             return $http.get(url);
           },
-          importMetadata: function(data) {
+          
+          /**
+           * @ngdoc method
+           * @name gnMetadataManager#import
+           * @methodOf gnMetadataManager
+           *
+           * @description
+           * Import a new from metadata from an XML snippet.
+           *
+           * @param {Object} data Params to send to md.insert service
+           * @returns {HttpPromise} Future object
+           */
+          import: function(data) {
             return $http({
               url: 'md.insert@json',
               method: 'POST',
@@ -42,58 +100,120 @@
               headers: {'Content-Type': 'application/x-www-form-urlencoded'}
             });
           },
-          createNewMetadata: function(id, groupId, withFullPrivileges, 
-              isTemplate, tab, isChild) {
-            //            $http.get(url).success(function(data) {
-            //              // TODO: If using NRT in Lucene, the record
-            //              // will not be indexed straight away. Add a
-            //              // timeout for the index to be reopened
-            //              //
-            //              // A better approach could be to be able
-            //              // to force a reopen on the editor search
-            //              // which check if the record exist
-            //              // or
-            //              // do not use timeout if NRT is not used
-            //              // in config-lucene.xml
-            //              $timeout(function () {
-            //                $location.path('/metadata/' + data.id);
-            //              }, 1000)
-            //
-            //            });
-            // NRT is turned off by default.
-            this.copyMetadata(id, groupId, withFullPrivileges,
-                isTemplate, tab, isChild).success(function(data) {
+          
+          /**
+           * @ngdoc method
+           * @name gnMetadataManager#create
+           * @methodOf gnMetadataManager
+           *
+           * @description
+           * Create a new metadata as a copy of an existing template.
+           * Will forward to `copy` method.
+           *
+           * @param {string} id Internal id of the metadata to be copied.
+           * @param {string} groupId Internal id of the group of the metadata
+           * @param {string} withFullPrivileges privileges to assign.
+           * @param {string} isTemplate type of the metadata
+           * @param {string} isChild is child of a parent metadata
+           * @returns {HttpPromise} Future object
+           */
+          create: function(id, groupId, withFullPrivileges, 
+              isTemplate, isChild) {
+            this.copy(id, groupId, withFullPrivileges,
+                isTemplate, isChild).success(function(data) {
               $location.path('/metadata/' + data.id);
             });
             // TODO : handle creation error
           }
         };
-      }];
-  });
+      }
+  ]);
 
+  /**
+   * @ngdoc service
+   * @kind Object
+   * @name gnHttpServices
+   * 
+   * @description 
+   * The `gnHttpServices` service provides KVP for all geonetwork
+   * services used in the UI.
+   * 
+   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mdcreate mdCreate}
+   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mdview mdView}
+   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mdcreate mdCreate}
+   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mdinsert mdInsert}
+   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mddelete mdDelete}
+   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mdedit mdEdit}
+   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mdeditsave mdEditSave}
+   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mdeditsaveonly mdEditSaveonly}
+   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mdeditsaveandclose mdEditSaveandclose}
+   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mdeditcancel mdEditCancel}
+   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mdrelations getRelations}
+   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mdsuggestion suggestionsList}
+   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mdvalidate getValidation}
+   * 
+   * {@link service/config-service-admin-batchprocess#services-documentation-config-service-admin-batchprocessxml_-service-mdprocessing processMd}
+   * {@link service/config-service-admin-batchprocess#services-documentation-config-service-admin-batchprocessxml_-service-mdprocessingbatch processAll}
+   * {@link service/config-service-admin-batchprocess#services-documentation-config-service-admin-batchprocessxml_-service-mdprocessingbatchreport processReport}
+   * 
+   * {@link service/config-service-admin#services-documentation-config-service-adminxml_-service-info info}
+   * 
+   * {@link service/config-service-region#services-documentation-config-service-regionxml_-service-regionscategory regionsList}
+   * {@link service/config-service-region#services-documentation-config-service-regionxml_-service-regionslist region}
+   */
+  
   module.value('gnHttpServices', {
     mdCreate: 'md.create@json',
-    edit: 'md.edit',
-    info: 'info@json',
-    search: 'qi@json',
+    mdView: 'md.view@json',
+    mdCreate: 'md.create@json',
+    mdInsert: 'md.insert@json',
+    mdDelete: 'md.delete@json',
+    mdEdit: 'md.edit@json',
+    mdEditSave: 'md.edit.save@json',
+    mdEditSaveonly: 'md.edit.saveonly@json',
+    mdEditSaveandclose: 'md.edit.save.and.close@json',
+    mdEditCancel: 'md.edit.cancel@json',
+    getRelations: 'md.relations@json',
+    suggestionsList: 'md.suggestion@json',
+    getValidation: 'md.validate@json',
+
     processMd: 'md.processing',
     processAll: 'md.processing.batch',
+    processReport: 'md.processing.batch.report',
     processXml: 'xml.metadata.processing@json', // TODO: CHANGE
-    getRelations: 'md.relations@json',
-    getValidation: 'md.validate@json',
-    subtemplate: 'subtemplate',
-    lang: 'lang@json',
+
+    info: 'info@json',
+
     country: 'regions.list@json?categoryId=' +
-        'http://geonetwork-opensource.org/regions%23country',
+      'http://geonetwork-opensource.org/regions%23country',
     regionsList: 'regions.category.list@json',
     region: 'regions.list@json',
+
+
+    edit: 'md.edit',
+    search: 'qi@json',
+    subtemplate: 'subtemplate',
+    lang: 'lang@json',
     removeThumbnail: 'md.thumbnail.remove@json',
     removeOnlinesrc: 'resource.del.and.detach', // TODO: CHANGE
-    suggestionsList: 'md.suggestion@json',
     geoserverNodes: 'geoserver.publisher@json' // TODO: CHANGE
 
   });
+  
+  /**
+   * @ngdoc service
+   * @kind function
+   * @name gnHttp
+   * @requires $http
+   * @requires gnHttpServices
+   * @requires $location
+   * @requires gnUrlUtils
 
+   * @description 
+   * The `gnHttp` service extends `$http` service
+   * for geonetwork usage. It is based on `gnHttpServices` to 
+   * get service url.
+   */
   module.provider('gnHttp', function() {
 
     this.$get = ['$http', 'gnHttpServices' , '$location', 'gnUrlUtils',
@@ -120,6 +240,21 @@
           });
         }
         return {
+          
+          /**
+           * @ngdoc method
+           * @name gnHttp#callService
+           * @methodOf gnHttp
+           *
+           * @description
+           * Calls a geonetwork service with given parameters and an httpConfig
+           * (that will be handled by `$http#get` method).
+           *
+           * @param {string} serviceKey key of the service to get the url from `gnHttpServices`
+           * @param {Object} params to add to the request
+           * @param {Object} httpConfig see httpConfig of $http#get method
+           * @returns {HttpPromise} Future object
+           */
           callService: function(serviceKey, params, httpConfig) {
 
             var config = {
@@ -134,55 +269,32 @@
       }];
   });
 
-  // TODO: Move to editor module (because it's not needed
-  // for search apps for example)
-  module.factory('gnBatchProcessing', [
-    'gnHttp',
-    'gnEditor',
-    'gnCurrentEdit',
-    '$q',
-    function(gnHttp, gnEditor, gnCurrentEdit, $q) {
-
-      var processing = true;
-      var processReport = null;
-      return {
-
-        /**
-         * Run process md.processing on the edited
-         * metadata after the form has been saved.
-         *
-         * Return a promise called the batch has been
-         * processed
-         */
-        runProcessMd: function(params) {
-          if (!params.id && !params.uuid) {
-            angular.extend(params, {
-              id: gnCurrentEdit.id
-            });
-          }
-          var defer = $q.defer();
-          gnEditor.save(false, true)
-                .then(function() {
-                gnHttp.callService('processMd', params).then(function(data) {
-                  defer.resolve(data);
-                });
-              });
-          return defer.promise;
-        },
-
-        runProcessMdXml: function(params) {
-          return gnHttp.callService('processXml', params);
-        }
-
-
-        // TODO : write batch processing service here
-        // from adminTools controller
-      };
-    }]);
-
-
   /**
-   * Store the catalog config loaded by the gnConfigService.
+   * @ngdoc service
+   * @kind Object
+   * @name gnConfig
+   * 
+   * @description 
+   * The `gnConfig` service provides KVP for all geonetwork
+   * configuration settings that can be managed in administration UI.
+   * The `key` Object contains shortcut to full settings path.
+   * The value are set in the `gnConfig` object.
+   * 
+   * @example
+     <code>
+      {
+        key: {
+          isXLinkEnabled: 'system.xlinkResolver.enable',
+          isSelfRegisterEnabled: 'system.userSelfRegistration.enable',
+          isFeedbackEnabled: 'system.userFeedback.enable',
+          isSearchStatEnabled: 'system.searchStats.enable',
+          isHideWithHelEnabled: 'system.hidewithheldelements.enable'
+        },
+        isXLinkEnabled: true,
+        system.server.host: 'localhost'
+        
+      }
+     </code>
    */
   module.value('gnConfig', {
     key: {
@@ -195,6 +307,14 @@
   });
 
   /**
+   * @ngdoc service
+   * @kind function
+   * @name gnConfigService
+   * @requires $q
+   * @requires gnHttp
+   * @requires gnConfig
+   * 
+   * @description 
    * Load the catalog config and push it to gnConfig.
    */
   module.factory('gnConfigService', [
@@ -203,10 +323,18 @@
     'gnConfig',
     function($q, gnHttp, gnConfig) {
       return {
+        
         /**
-          * Get catalog configuration. The config is cached.
-          * Boolean value are parsed to boolean.
-          */
+         * @ngdoc method
+         * @name gnConfigService#load
+         * @methodOf gnConfigService
+         *
+         * @description
+         * Get catalog configuration. The config is cached.
+         * Boolean value are parsed to boolean.
+         *
+         * @returns {HttpPromise} Future object
+         */
         load: function() {
           var defer = $q.defer();
           gnHttp.callService('info',
@@ -222,6 +350,18 @@
           });
           return defer.promise;
         },
+        
+        /**
+         * @ngdoc method
+         * @name gnConfigService#getServiceURL
+         * @methodOf gnConfigService
+         *
+         * @description
+         * Get service URL from configuration settings.
+         * It is used by `gnHttp`service.
+         *
+         * @returns {String} service url.
+         */
         getServiceURL: function() {
           var url = gnConfig['system.server.protocol'] + '://' +
               gnConfig['system.server.host'] + ':' +
@@ -232,4 +372,56 @@
         }
       };
     }]);
+  
+  /**
+   * @ngdoc service
+   * @kind function
+   * @name Metadata
+   * 
+   * @description 
+   * The `Metadata` service is a metadata wrapper from the jeeves
+   * json output of the search service. It also provides some functions
+   * on the metadata.
+   */
+  module.factory('Metadata', function() {
+    function Metadata(k) {
+      this.props = $.extend(true, {}, k);
+    };
+
+    function formatLink(sLink) {
+      var linkInfos = sLink.split('|');
+      return {
+        name: linkInfos[1],
+        url: linkInfos[2],
+        desc: linkInfos[0],
+        protocol: linkInfos[3],
+        contentType: linkInfos[4]
+      };
+    }
+    function parseLink(sLink) {
+
+    };
+
+    Metadata.prototype = {
+      getUuid: function() {
+        return this.props['geonet:info'].uuid;
+      },
+      getLinks: function() {
+        return this.props.link;
+      },
+      getLinksByType: function(type) {
+        var ret = [];
+        angular.forEach(this.props.link, function(link) {
+          var linkInfo = formatLink(link);
+          if (linkInfo.protocol.indexOf(type) >= 0) {
+            ret.push(linkInfo);
+          }
+        });
+        return ret;
+      }
+    };
+    return Metadata;
+  });
+
+
 })();

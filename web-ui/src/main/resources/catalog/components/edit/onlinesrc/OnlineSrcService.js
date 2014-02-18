@@ -4,6 +4,22 @@
   var module = angular.module('gn_onlinesrc_service', [
   ]);
 
+  /**
+   * @ngdoc service
+   * @kind function
+   * @name gn_onlinesrc.service:gnOnlinesrc
+   * @requires gnBatchProcessing
+   * @requires gnHttp
+   * @requires gnEditor
+   * @requires gnCurrentEdit
+   * @requires $q
+   * @requires Metadata
+   * 
+   * @description 
+   * The `gnOnlinesrc` service provides all tools required to manage
+   * online resources like method to link or remove all kind of resources.
+   */
+  
   module.factory('gnOnlinesrc', [
     'gnBatchProcessing',
     'gnHttp',
@@ -164,8 +180,15 @@
         reload: reload,
 
         /**
+         * @ngdoc method
+         * @methodOf gn_onlinesrc.service:gnOnlinesrc
+         * @name gnOnlinesrc#getAllResources
+         *
+         * @description
          * Get all online resources for the current edited
          * metadata.
+         *
+         * @returns {HttpPromise} Future object
          */
         getAllResources: function() {
 
@@ -185,26 +208,50 @@
           return defer.promise;
         },
 
-
         /**
+         * @ngdoc method
+         * @methodOf gn_onlinesrc.service:gnOnlinesrc
+         * @name gnOnlinesrc#onOpenPopup
+         *
+         * @description
          * Open onlinesrc popup and call registered
          * function (from the directive).
+         *
+         * @param {string} type of the directive that calls it.
          */
         onOpenPopup: function(type) {
           openCb[type]();
         },
 
         /**
+         * @ngdoc method
+         * @methodOf gn_onlinesrc.service:gnOnlinesrc
+         * @name gnOnlinesrc#register
+         *
+         * @description
          * onlinesrc directive can register a function
          * on the open window event.
+         *
+         * @param {string} type of the directive that calls it.
+         * @param {function} fn callback to call on `onOpenPopup`
          */
         register: function(type, fn) {
           openCb[type] = fn;
         },
 
         /**
-         * Prepare parameters and call batch
-         * request from the gnBatchProcessing service
+         * @ngdoc method
+         * @methodOf gn_onlinesrc.service:gnOnlinesrc
+         * @name gnOnlinesrc#addOnlinesrc
+         *
+         * @description
+         * The `addOnlinesrc` method call a batch process to add a new online
+         * resource to the current metadata.
+         * It prepares the parameters and call batch
+         * request from the `gnBatchProcessing` service.
+         *
+         * @param {string} params to send to the batch process
+         * @param {string} popupid id of the popup to close after process.
          */
         addOnlinesrc: function(params, popupid) {
           runProcess(this,
@@ -214,7 +261,16 @@
         },
 
         /**
+         * @ngdoc method
+         * @name gnOnlinesrc#addThumbnailByURL
+         * @methodOf gn_onlinesrc.service:gnOnlinesrc
          *
+         * @description
+         * The `addThumbnailByURL` method call a batch process to add a thumbnail
+         * from an url to the current metadata.
+         *
+         * @param {string} params to send to the batch process
+         * @param {string} popupid id of the popup to close after process.
          */
         addThumbnailByURL: function(params, popupid) {
           runProcess(this,
@@ -224,10 +280,19 @@
         },
 
         /**
-         * Links to another metadata, could be
+         * @ngdoc method
+         * @name gnOnlinesrc#linkToMd
+         * @methodOf gn_onlinesrc.service:gnOnlinesrc
+         *
+         * @description
+         * The `linkToMd` method links to another metadata, could be
          * - parent
          * - source dataset
          * - feature catalog
+         *
+         * @param {string} mode type of the metadata to link
+         * @param {Object} record metadata to link.
+         * @param {string} popupid id of the popup to close after process.
          */
         linkToMd: function(mode, record, popupid) {
           var md = new Metadata(record);
@@ -246,9 +311,17 @@
         },
 
         /**
+         * @ngdoc method
+         * @name gnOnlinesrc#getIconByProtocol
+         * @methodOf gn_onlinesrc.service:gnOnlinesrc
+         *
+         * @description
          * Get display icon depending of the protocol
          * of the online resource.
          * To display onlinesrc list
+         *
+         * @param {string} protocol name
+         * @returns {string} icon class
          */
         getIconByProtocol: function(p) {
           for (i = 0; i < protocolIcons.length; ++i) {
@@ -267,7 +340,15 @@
         },
 
         /**
-         * Link a service to the current metadata
+         * @ngdoc method
+         * @name gnOnlinesrc#linkToService
+         * @methodOf gn_onlinesrc.service:gnOnlinesrc
+         *
+         * @description
+         * The `linkToService` links a service to the current metadata
+         *
+         * @param {Object} params for the batch
+         * @param {string} popupid id of the popup to close after process.
          */
         linkToService: function(params, popupid) {
           var qParams = setParams('dataset-add', params);
@@ -292,8 +373,16 @@
         },
 
         /**
-         * Call md.processing. in mode 'parent-add'
+         * @ngdoc method
+         * @name gnOnlinesrc#linkToDataset
+         * @methodOf gn_onlinesrc.service:gnOnlinesrc
+         *
+         * @description
+         * The `linkToDataset` calls md.processing. in mode 'parent-add'
          * to link a service to the edited metadata
+         *
+         * @param {Object} params for the batch
+         * @param {string} popupid id of the popup to close after process.
          */
         linkToDataset: function(params, popupid) {
           var qParams = setParams('onlinesrc-add', params);
@@ -319,7 +408,15 @@
         },
 
         /**
-         * Run a the process sibling with given parameters
+         * @ngdoc method
+         * @name gnOnlinesrc#linkToSibling
+         * @methodOf gn_onlinesrc.service:gnOnlinesrc
+         *
+         * @description
+         * The `linkToSibling` runs a the process sibling with given parameters
+         *
+         * @param {Object} params for the batch
+         * @param {string} popupid id of the popup to close after process.
          */
         linkToSibling: function(params, popupid) {
           runProcess(this,
@@ -329,9 +426,16 @@
         },
 
         /**
-         * Remove a thumbnail from metadata.
+         * @ngdoc method
+         * @name gnOnlinesrc#removeThumbnail
+         * @methodOf gn_onlinesrc.service:gnOnlinesrc
+         *
+         * @description
+         * The `removeThumbnail` removes a thumbnail from metadata.
          * Type large or small is specified in parameter.
          * The onlinesrc panel is reloaded after removal.
+         *
+         * @param {Object} thumb the online resource to remove
          */
         removeThumbnail: function(thumb) {
           var scope = this;
@@ -354,6 +458,18 @@
           }
         },
 
+        /**
+         * @ngdoc method
+         * @name gnOnlinesrc#removeOnlinesrc
+         * @methodOf gn_onlinesrc.service:gnOnlinesrc
+         *
+         * @description
+         * The `removeOnlinesrc` removes an online resource from metadata.
+         * Depending if the online resource has been uploaded or not, we call
+         * a batch processing or a simple service to remove it.
+         *
+         * @param {Object} onlinesrc the online resource to remove
+         */
         removeOnlinesrc: function(onlinesrc) {
           var scope = this;
 
@@ -374,7 +490,14 @@
         },
 
         /**
-         * Remove a service from a metadata
+         * @ngdoc method
+         * @name gnOnlinesrc#removeService
+         * @methodOf gn_onlinesrc.service:gnOnlinesrc
+         *
+         * @description
+         * The `removeService` removes a service from a metadata.
+         *
+         * @param {Object} onlinesrc the online resource to remove
          */
         removeService: function(onlinesrc) {
           var params = {
@@ -386,8 +509,15 @@
         },
 
         /**
-         * Remove a dataset from a metadata of
-         * service
+         * @ngdoc method
+         * @name gnOnlinesrc#removeDataset
+         * @methodOf gn_onlinesrc.service:gnOnlinesrc
+         *
+         * @description
+         * The `removeDataset` removes a dataset from a metadata of
+         * service.
+         *
+         * @param {Object} onlinesrc the online resource to remove
          */
         removeDataset: function(onlinesrc) {
           var params = {
@@ -399,8 +529,15 @@
         },
 
         /**
-         * Remove a link metadata by calling a process.
-         * The mode can be 'source', 'parent'
+         * @ngdoc method
+         * @name gnOnlinesrc#removeMdLink
+         * @methodOf gn_onlinesrc.service:gnOnlinesrc
+         *
+         * @description
+         * The `removeMdLink` removes a linked metadata by calling a process.
+         *
+         * @param {string} mode can be 'source', 'parent'
+         * @param {Object} onlinesrc the online resource to remove
          */
         removeMdLink: function(mode, onlinesrc) {
           var params = {};
@@ -410,8 +547,15 @@
         },
 
         /**
-         * Remove a feature catalog link from the
+         * @ngdoc method
+         * @name gnOnlinesrc#removeFeatureCatalog
+         * @methodOf gn_onlinesrc.service:gnOnlinesrc
+         *
+         * @description
+         * The `removeFeatureCatalog` removes a feature catalog link from the
          * current metadata.
+         *
+         * @param {Object} onlinesrc the online resource to remove
          */
         removeFeatureCatalog: function(onlinesrc) {
           var params = {
@@ -423,8 +567,15 @@
         },
 
         /**
-         * Remove a sibling link from the
+         * @ngdoc method
+         * @name gnOnlinesrc#removeSibling
+         * @methodOf gn_onlinesrc.service:gnOnlinesrc
+         *
+         * @description
+         * The `removeSibling` removes a sibling link from the
          * current metadata.
+         *
+         * @param {Object} onlinesrc the online resource to remove
          */
         removeSibling: function(onlinesrc) {
           var params = {

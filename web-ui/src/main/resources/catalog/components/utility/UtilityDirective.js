@@ -5,10 +5,9 @@
   ]);
 
   /**
-   * DEPECRATED : should use gnRegionPicker instead
    * @ngdoc directive
    * @name gn_fields_directive.directive:gnCountryPicker
-   * @function
+   * @depecrated
    *
    * @description
    * Use the region API to retrieve the list of

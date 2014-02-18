@@ -12,11 +12,9 @@
     '$scope', '$routeParams', '$http', '$rootScope', '$translate', '$compile',
     'gnSearchManagerService',
     'gnUtilityService',
-    'gnNewMetadata',
     function($scope, $routeParams, $http, $rootScope, $translate, $compile,
             gnSearchManagerService, 
-            gnUtilityService,
-            gnNewMetadata) {
+            gnUtilityService) {
 
 
       $scope.getTemplateNamesByType = function(type) {

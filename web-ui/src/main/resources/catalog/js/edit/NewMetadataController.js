@@ -13,11 +13,11 @@
     '$scope', '$routeParams', '$http', '$rootScope', '$translate', '$compile',
     'gnSearchManagerService',
     'gnUtilityService',
-    'gnNewMetadata',
+    'gnMetadataManager',
     function($scope, $routeParams, $http, $rootScope, $translate, $compile,
             gnSearchManagerService, 
             gnUtilityService,
-            gnNewMetadata) {
+            gnMetadataManager) {
 
       $scope.isTemplate = false;
       $scope.hasTemplates = true;
@@ -53,7 +53,7 @@
 
       var init = function() {
         if ($routeParams.id) {
-          gnNewMetadata.createNewMetadata(
+          gnMetadataManager.create(
               $routeParams.id,
               $routeParams.group,
               fullPrivileges,
@@ -158,7 +158,7 @@
       }
 
       $scope.createNewMetadata = function() {
-        gnNewMetadata.createNewMetadata(
+        gnMetadataManager.create(
             $scope.activeTpl['geonet:info'].id,
             $scope.ownerGroup,
             fullPrivileges,

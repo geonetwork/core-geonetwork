@@ -7,46 +7,6 @@
   var module = angular.module('gn_metadata_manager_service',
       ['gn_schema_manager_service', 'gn_editor_xml_service']);
 
-  module.factory('Metadata', function() {
-    function Metadata(k) {
-      this.props = $.extend(true, {}, k);
-    };
-
-    function formatLink(sLink) {
-      var linkInfos = sLink.split('|');
-      return {
-        name: linkInfos[1],
-        url: linkInfos[2],
-        desc: linkInfos[0],
-        protocol: linkInfos[3],
-        contentType: linkInfos[4]
-      };
-    }
-    function parseLink(sLink) {
-
-    };
-
-    Metadata.prototype = {
-      getUuid: function() {
-        return this.props['geonet:info'].uuid;
-      },
-      getLinks: function() {
-        return this.props.link;
-      },
-      getLinksByType: function(type) {
-        var ret = [];
-        angular.forEach(this.props.link, function(link) {
-          var linkInfo = formatLink(link);
-          if (linkInfo.protocol.indexOf(type) >= 0) {
-            ret.push(linkInfo);
-          }
-        });
-        return ret;
-      }
-    };
-    return Metadata;
-  });
-
   /**
    * Contains all the value of the current edited
    * metadata (id, uuid, formId, version etc..)
