@@ -13,7 +13,7 @@
   <xsl:include href="layout-custom-fields-keywords.xsl"/>
 
   <!-- Readonly elements -->
-  <xsl:template mode="mode-iso19139" priority="200" match="gmd:fileIdentifier|gmd:dateStamp">
+  <xsl:template mode="mode-iso19139" priority="2000" match="gmd:fileIdentifier|gmd:dateStamp">
 
     <xsl:call-template name="render-element">
       <xsl:with-param name="label" select="gn-fn-metadata:getLabel($schema, name(), $labels)/label"/>
