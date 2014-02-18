@@ -69,40 +69,6 @@
         
       </xsl:when>
       <xsl:otherwise>
-        <script src="{$uiResourcesPath}lib/jquery-2.0.3.min.js"></script>
-        
-        <script src="{$uiResourcesPath}lib/moment+langs.min.js"></script>
-        
-        <script src="{$uiResourcesPath}lib/angular/angular.min.js"></script>
-        <script src="{$uiResourcesPath}lib/angular/angular-resource.min.js"></script>
-        <script src="{$uiResourcesPath}lib/angular/angular-route.min.js"></script>
-          
-        <script src="{$uiResourcesPath}lib/angular-translate.min.js"></script>
-        <script src="{$uiResourcesPath}lib/angular-md5.min.js"></script>
-        <script src="{$uiResourcesPath}lib/bootstrap-3.0.1.min.js"></script>
-        <script src="{$uiResourcesPath}lib/ol.js"></script>
-        
-        <xsl:if test="$withD3">
-          <script src="{$uiResourcesPath}lib/d3.v3.min.js"></script>
-          <!-- TODO: minify -->
-          <script src="{$uiResourcesPath}lib/d3.ext/gauge.js"></script>
-          <script src="{$uiResourcesPath}lib/nv.d3.min.js"></script>
-        </xsl:if>
-        
-        
-        <!--<xsl:if test="$isEditing">-->
-        <!-- TODO: minify -->
-        <script src="{$uiResourcesPath}lib/jquery.ext/jquery.ui.widget.js"></script>
-        <script src="{$uiResourcesPath}lib/jquery.ext/jquery.iframe-transport.js"></script>
-        <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload.js"></script>
-        <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload-process.js"></script>
-        <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload-angular.js"></script>
-        
-        <script src="{$uiResourcesPath}lib/bootstrap.ext/typeahead.js/typeahead.min.js"></script>
-        <script src="{$uiResourcesPath}lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.min.js"></script>
-        <!--</xsl:if>-->
-        
-        <script src="{$uiResourcesPath}lib/{$angularApp}.min.js"></script>
       </xsl:otherwise>
     </xsl:choose>
     
@@ -115,6 +81,7 @@
             </script>
         </xsl:when>
         <xsl:otherwise>
+            <script src="{/root/gui/url}/static/lib.js"></script>
             <script src="{/root/gui/url}/static/{$angularApp}.js{$minimizedParam}"></script>
         </xsl:otherwise>
     </xsl:choose>
