@@ -199,9 +199,17 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
                 i++;
             }
 
+            while (!new File(dir.getPath()+i).exists() && !new File(dir.getPath()+i).mkdirs()) {
+                i++;
+                if (i > 1000) {
+                    throw new Error("Unable to make test data directory");
+                }
+            }
+
             _dataDirContainer = new File(dir.getPath()+i);
 
-            _dataDirectory = new File(Files.createTempDir(), "defaultDataDir");
+
+            _dataDirectory = new File(_dataDirContainer, "defaultDataDir");
             _dataDirLockFile = new File(_dataDirContainer, DATA_DIR_LOCK_NAME);
         }
     }
