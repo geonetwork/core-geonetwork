@@ -12,8 +12,8 @@
    * @requires gnEditor
    * @requires gnCurrentEdit
    * @requires $q
-   * 
-   * @description 
+   *
+   * @description
    * The `gnBatchProcessing` service is used to run batch processing service
    * on metadatas during the edition. It is mostly used for the online resources
    * management.
@@ -37,7 +37,7 @@
          * metadata after the form has been saved.
          *
          * @param {Object} params to add to the request
-         * @returns {HttpPromise}
+         * @return {HttpPromise}
          */
         runProcessMd: function(params) {
           if (!params.id && !params.uuid) {

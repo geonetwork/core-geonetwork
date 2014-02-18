@@ -15,22 +15,22 @@
    * @requires $location
    * @requires $timeout
    * @requires gnUrlUtils
-   * 
-   * @description 
+   *
+   * @description
    * The `gnMetadataManager` service provides main operations to manage
    * metadatas such as create, import, copy or delete.
    * Other operations like save are provided by another service `gnEditor`.
    */
   module.factory('gnMetadataManager', [
-    '$http', 
-    '$location', 
-    '$timeout', 
+    '$http',
+    '$location',
+    '$timeout',
     'gnUrlUtils',
     function($http, $location, $timeout, gnUrlUtils) {
-        return {
-          //TODO: rewrite calls with gnHttp
-          
-          /**
+      return {
+        //TODO: rewrite calls with gnHttp
+
+        /**
            * @ngdoc method
            * @name gnMetadataManager#remove
            * @methodOf gnMetadataManager
@@ -39,18 +39,18 @@
            * Delete a metadata from catalog
            *
            * @param {string} id Internal id of the metadata
-           * @returns {HttpPromise} Future object
+           * @return {HttpPromise} Future object
            */
-          remove: function(id) {
-            var url = gnUrlUtils.append('md.delete@json',
-                gnUrlUtils.toKeyValue({
-                  id: id
-                })
-                );
-            return $http.get(url);
-          },
-          
-          /**
+        remove: function(id) {
+          var url = gnUrlUtils.append('md.delete@json',
+              gnUrlUtils.toKeyValue({
+                id: id
+              })
+              );
+          return $http.get(url);
+        },
+
+        /**
            * @ngdoc method
            * @name gnMetadataManager#copy
            * @methodOf gnMetadataManager
@@ -65,23 +65,23 @@
            * @param {string} withFullPrivileges privileges to assign.
            * @param {string} isTemplate type of the metadata
            * @param {string} isChild is child of a parent metadata
-           * @returns {HttpPromise} Future object
+           * @return {HttpPromise} Future object
            */
-          copy: function(id, groupId, withFullPrivileges, 
-              isTemplate, isChild) {
-            var url = gnUrlUtils.append('md.create@json',
-                gnUrlUtils.toKeyValue({
-                  group: groupId,
-                  id: id,
-                  template: isTemplate ? (isTemplate === 's' ? 's' : 'y') : 'n',
-                  child: isChild ? 'y' : 'n',
-                  fullPrivileges: withFullPrivileges ? 'true' : 'false'
-                })
-                );
-            return $http.get(url);
-          },
-          
-          /**
+        copy: function(id, groupId, withFullPrivileges, 
+            isTemplate, isChild) {
+          var url = gnUrlUtils.append('md.create@json',
+              gnUrlUtils.toKeyValue({
+                group: groupId,
+                id: id,
+                template: isTemplate ? (isTemplate === 's' ? 's' : 'y') : 'n',
+                child: isChild ? 'y' : 'n',
+                fullPrivileges: withFullPrivileges ? 'true' : 'false'
+              })
+              );
+          return $http.get(url);
+        },
+
+        /**
            * @ngdoc method
            * @name gnMetadataManager#import
            * @methodOf gnMetadataManager
@@ -90,18 +90,18 @@
            * Import a new from metadata from an XML snippet.
            *
            * @param {Object} data Params to send to md.insert service
-           * @returns {HttpPromise} Future object
+           * @return {HttpPromise} Future object
            */
-          import: function(data) {
-            return $http({
-              url: 'md.insert@json',
-              method: 'POST',
-              data: $.param(data),
-              headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-            });
-          },
-          
-          /**
+        import: function(data) {
+          return $http({
+            url: 'md.insert@json',
+            method: 'POST',
+            data: $.param(data),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+          });
+        },
+
+        /**
            * @ngdoc method
            * @name gnMetadataManager#create
            * @methodOf gnMetadataManager
@@ -115,53 +115,80 @@
            * @param {string} withFullPrivileges privileges to assign.
            * @param {string} isTemplate type of the metadata
            * @param {string} isChild is child of a parent metadata
-           * @returns {HttpPromise} Future object
+           * @return {HttpPromise} Future object
            */
-          create: function(id, groupId, withFullPrivileges, 
-              isTemplate, isChild) {
-            this.copy(id, groupId, withFullPrivileges,
-                isTemplate, isChild).success(function(data) {
-              $location.path('/metadata/' + data.id);
-            });
-            // TODO : handle creation error
-          }
-        };
-      }
+        create: function(id, groupId, withFullPrivileges, 
+            isTemplate, isChild) {
+          this.copy(id, groupId, withFullPrivileges,
+              isTemplate, isChild).success(function(data) {
+            $location.path('/metadata/' + data.id);
+          });
+          // TODO : handle creation error
+        }
+      };
+    }
   ]);
 
   /**
    * @ngdoc service
    * @kind Object
    * @name gnHttpServices
-   * 
-   * @description 
+   *
+   * @description
    * The `gnHttpServices` service provides KVP for all geonetwork
    * services used in the UI.
-   * 
-   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mdcreate mdCreate}
-   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mdview mdView}
-   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mdcreate mdCreate}
-   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mdinsert mdInsert}
-   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mddelete mdDelete}
-   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mdedit mdEdit}
-   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mdeditsave mdEditSave}
-   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mdeditsaveonly mdEditSaveonly}
-   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mdeditsaveandclose mdEditSaveandclose}
-   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mdeditcancel mdEditCancel}
-   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mdrelations getRelations}
-   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mdsuggestion suggestionsList}
-   * {@link service/config-ui-metadata#services-documentation-config-ui-metadataxml_-service-mdvalidate getValidation}
-   * 
-   * {@link service/config-service-admin-batchprocess#services-documentation-config-service-admin-batchprocessxml_-service-mdprocessing processMd}
-   * {@link service/config-service-admin-batchprocess#services-documentation-config-service-admin-batchprocessxml_-service-mdprocessingbatch processAll}
-   * {@link service/config-service-admin-batchprocess#services-documentation-config-service-admin-batchprocessxml_-service-mdprocessingbatchreport processReport}
-   * 
-   * {@link service/config-service-admin#services-documentation-config-service-adminxml_-service-info info}
-   * 
-   * {@link service/config-service-region#services-documentation-config-service-regionxml_-service-regionscategory regionsList}
-   * {@link service/config-service-region#services-documentation-config-service-regionxml_-service-regionslist region}
+   *
+   *  FIXME : links are too long for JSLint.
+   *
+   * {@link service/config-ui-metadata#services-
+   * documentation-config-ui-metadataxml_-service-mdcreate mdCreate}
+   * {@link service/config-ui-metadata#services-
+   * documentation-config-ui-metadataxml_-service-mdview mdView}
+   * {@link service/config-ui-metadata#services-
+   * documentation-config-ui-metadataxml_-service-mdcreate mdCreate}
+   * {@link service/config-ui-metadata#services-
+   * documentation-config-ui-metadataxml_-service-mdinsert mdInsert}
+   * {@link service/config-ui-metadata#services-
+   * documentation-config-ui-metadataxml_-service-mddelete mdDelete}
+   * {@link service/config-ui-metadata#services-
+   * documentation-config-ui-metadataxml_-service-mdedit mdEdit}
+   * {@link service/config-ui-metadata#services-
+   * documentation-config-ui-metadataxml_-service-mdeditsave mdEditSave}
+   * {@link service/config-ui-metadata#services-
+   * documentation-config-ui-metadataxml_-service-
+   * mdeditsaveonly mdEditSaveonly}
+   * {@link service/config-ui-metadata#services-
+   * documentation-config-ui-metadataxml_-service-
+   * mdeditsaveandclose mdEditSaveandclose}
+   * {@link service/config-ui-metadata#services-
+   * documentation-config-ui-metadataxml_-service-mdeditcancel mdEditCancel}
+   * {@link service/config-ui-metadata#services-
+   * documentation-config-ui-metadataxml_-service-mdrelations getRelations}
+   * {@link service/config-ui-metadata#services-
+   * documentation-config-ui-metadataxml_-service-mdsuggestion suggestionsList}
+   * {@link service/config-ui-metadata#services-
+   * documentation-config-ui-metadataxml_-service-mdvalidate getValidation}
+   *
+   * {@link service/config-service-admin-batchprocess
+   * #services-documentation-config-service-admin-
+   * batchprocessxml_-service-mdprocessing processMd}
+   * {@link service/config-service-admin-batchprocess
+   * #services-documentation-config-service-admin-
+   * batchprocessxml_-service-mdprocessingbatch processAll}
+   * {@link service/config-service-admin-batchprocess
+   * #services-documentation-config-service-admin-
+   * batchprocessxml_-service-mdprocessingbatchreport processReport}
+   *
+   * {@link service/config-service-admin#services-
+   * documentation-config-service-adminxml_-service-info info}
+   *
+   * {@link service/config-service-region#services-
+   * documentation-config-service-regionxml_-
+   * service-regionscategory regionsList}
+   * {@link service/config-service-region#services-
+   * documentation-config-service-regionxml_-service-regionslist region}
    */
-  
+
   module.value('gnHttpServices', {
     mdCreate: 'md.create@json',
     mdView: 'md.view@json',
@@ -185,7 +212,7 @@
     info: 'info@json',
 
     country: 'regions.list@json?categoryId=' +
-      'http://geonetwork-opensource.org/regions%23country',
+        'http://geonetwork-opensource.org/regions%23country',
     regionsList: 'regions.category.list@json',
     region: 'regions.list@json',
 
@@ -199,7 +226,7 @@
     geoserverNodes: 'geoserver.publisher@json' // TODO: CHANGE
 
   });
-  
+
   /**
    * @ngdoc service
    * @kind function
@@ -209,9 +236,9 @@
    * @requires $location
    * @requires gnUrlUtils
 
-   * @description 
+   * @description
    * The `gnHttp` service extends `$http` service
-   * for geonetwork usage. It is based on `gnHttpServices` to 
+   * for geonetwork usage. It is based on `gnHttpServices` to
    * get service url.
    */
   module.provider('gnHttp', function() {
@@ -240,20 +267,23 @@
           });
         }
         return {
-          
+
           /**
            * @ngdoc method
            * @name gnHttp#callService
            * @methodOf gnHttp
            *
            * @description
-           * Calls a geonetwork service with given parameters and an httpConfig
+           * Calls a geonetwork service with given parameters
+           * and an httpConfig
            * (that will be handled by `$http#get` method).
            *
-           * @param {string} serviceKey key of the service to get the url from `gnHttpServices`
+           * @param {string} serviceKey key of the service to
+           * get the url from `gnHttpServices`
            * @param {Object} params to add to the request
-           * @param {Object} httpConfig see httpConfig of $http#get method
-           * @returns {HttpPromise} Future object
+           * @param {Object} httpConfig see httpConfig of
+           * $http#get method
+           * @return {HttpPromise} Future object
            */
           callService: function(serviceKey, params, httpConfig) {
 
@@ -273,13 +303,14 @@
    * @ngdoc service
    * @kind Object
    * @name gnConfig
-   * 
-   * @description 
+   *
+   * @description
    * The `gnConfig` service provides KVP for all geonetwork
-   * configuration settings that can be managed in administration UI.
+   * configuration settings that can be managed
+   * in administration UI.
    * The `key` Object contains shortcut to full settings path.
    * The value are set in the `gnConfig` object.
-   * 
+   *
    * @example
      <code>
       {
@@ -292,7 +323,7 @@
         },
         isXLinkEnabled: true,
         system.server.host: 'localhost'
-        
+
       }
      </code>
    */
@@ -313,8 +344,8 @@
    * @requires $q
    * @requires gnHttp
    * @requires gnConfig
-   * 
-   * @description 
+   *
+   * @description
    * Load the catalog config and push it to gnConfig.
    */
   module.factory('gnConfigService', [
@@ -323,7 +354,7 @@
     'gnConfig',
     function($q, gnHttp, gnConfig) {
       return {
-        
+
         /**
          * @ngdoc method
          * @name gnConfigService#load
@@ -333,7 +364,7 @@
          * Get catalog configuration. The config is cached.
          * Boolean value are parsed to boolean.
          *
-         * @returns {HttpPromise} Future object
+         * @return {HttpPromise} Future object
          */
         load: function() {
           var defer = $q.defer();
@@ -350,7 +381,7 @@
           });
           return defer.promise;
         },
-        
+
         /**
          * @ngdoc method
          * @name gnConfigService#getServiceURL
@@ -360,7 +391,7 @@
          * Get service URL from configuration settings.
          * It is used by `gnHttp`service.
          *
-         * @returns {String} service url.
+         * @return {String} service url.
          */
         getServiceURL: function() {
           var url = gnConfig['system.server.protocol'] + '://' +
@@ -372,13 +403,13 @@
         }
       };
     }]);
-  
+
   /**
    * @ngdoc service
    * @kind function
    * @name Metadata
-   * 
-   * @description 
+   *
+   * @description
    * The `Metadata` service is a metadata wrapper from the jeeves
    * json output of the search service. It also provides some functions
    * on the metadata.

@@ -14,12 +14,12 @@
    * @requires gnCurrentEdit
    * @requires $q
    * @requires Metadata
-   * 
-   * @description 
+   *
+   * @description
    * The `gnOnlinesrc` service provides all tools required to manage
    * online resources like method to link or remove all kind of resources.
    */
-  
+
   module.factory('gnOnlinesrc', [
     'gnBatchProcessing',
     'gnHttp',
@@ -188,7 +188,7 @@
          * Get all online resources for the current edited
          * metadata.
          *
-         * @returns {HttpPromise} Future object
+         * @return {HttpPromise} Future object
          */
         getAllResources: function() {
 
@@ -266,7 +266,8 @@
          * @methodOf gn_onlinesrc.service:gnOnlinesrc
          *
          * @description
-         * The `addThumbnailByURL` method call a batch process to add a thumbnail
+         * The `addThumbnailByURL` method call a batch
+         * process to add a thumbnail
          * from an url to the current metadata.
          *
          * @param {string} params to send to the batch process
@@ -321,7 +322,7 @@
          * To display onlinesrc list
          *
          * @param {string} protocol name
-         * @returns {string} icon class
+         * @return {string} icon class
          */
         getIconByProtocol: function(p) {
           for (i = 0; i < protocolIcons.length; ++i) {

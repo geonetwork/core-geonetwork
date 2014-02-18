@@ -102,7 +102,7 @@
                                     <arguments>
                                         <argument>--strict</argument>
                                         <argument>--custom_jsdoc_tags</argument>
-                                        <argument>ngdoc,name,function,description,example</argument>
+                                        <argument>ngdoc,methodOf,deprecated,restrict,requires,kind,name,function,description,example</argument>
                                         <argument>-r</argument>
                                         <!-- Each source file in this directory will be checked. -->
                                         <argument>src/main/resources/catalog/js</argument>

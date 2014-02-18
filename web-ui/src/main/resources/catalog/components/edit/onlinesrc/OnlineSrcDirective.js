@@ -6,8 +6,8 @@
   /**
    * @ngdoc overview
    * @name gn_onlinesrc_directive
-   * 
-   * @description 
+   *
+   * @description
    * Provide directives for online resources
    * <ul>
    * <li>gnOnlinesrcList</li>
@@ -21,30 +21,38 @@
     'gn_utility',
     'blueimp.fileupload'
   ])
-  
+
   /**
    * @ngdoc directive
    * @name gn_onlinesrc.directive:gnOnlinesrcList
-   * 
+   *
    * @restrict A
-   * 
-   * @description 
-   * The `gnOnlinesrcList` directive is used to display the list of
+   *
+   * @description
+   * The `gnOnlinesrcList` directive is used
+   * to display the list of
    * all online resources attached to the current metadata.
-   * The template will show up a list of all kinds of resource, and
+   * The template will show up a list of all kinds
+   * of resource, and
    * links to create new resources of those kinds.
-   * 
-   * The list is shown on directive call, and is refresh on 2 events:
+   *
+   * The list is shown on directive call, and is
+   * refresh on 2 events:
    * <ul>
-   *  <li> When the flag onlinesrcService.reload is set to true, the service
-   *    requires a refresh of the list, the directive here is watching this
+   *  <li> When the flag onlinesrcService.reload is
+   *  set to true, the service
+   *    requires a refresh of the list, the directive
+   *    here is watching this
    *    value to refresh when it is required.</li>
-   *  <li> When the metadata is saved, the gnCurrentEdit.saving flag is set
-   *    to true and we refresh the data. It doesn't append when the onlinesrcService
-   *    wants to save the metadata (the saving flag is kept as false) to avoid
+   *  <li> When the metadata is saved, the
+   *  gnCurrentEdit.saving flag is set
+   *    to true and we refresh the data. It doesn't
+   *    append when the onlinesrcService
+   *    wants to save the metadata (the saving flag
+   *    is kept as false) to avoid
    *    undesired refresh.</li>
    * </ul>
-   *    
+   *
    */
   .directive('gnOnlinesrcList', ['gnOnlinesrc', 'gnCurrentEdit',
         function(gnOnlinesrc, gnCurrentEdit) {
@@ -86,16 +94,16 @@
             }
           };
         }])
-        
-  /**
+
+      /**
    * @ngdoc directive
    * @name gn_onlinesrc.directive:gnAddThumbnail
    * @restrict A
    * @requires gnOnlinesrc
    * @requires gnEditor
    * @requires gnCurrentEdit
-   * 
-   * @description 
+   *
+   * @description
    * The `gnAddThumbnail` directive provides a form to add a new thumbnail
    * from an url or by uploading an image.
    * On submit, the metadata is saved, the thumbnail is added, then the form
@@ -174,8 +182,8 @@
             }
           };
         }])
-        
-  /**
+
+      /**
    * @ngdoc directive
    * @name gn_onlinesrc.directive:gnAddOnlinesrc
    * @restrict A
@@ -183,17 +191,18 @@
    * @requires gnOwsCapabilities
    * @requires gnEditor
    * @requires gnCurrentEdit
-   * 
-   * @description 
+   *
+   * @description
    * The `gnAddOnlinesrc` directive provides a form to add a new online resource
    * to the currend metadata. Depending on the protocol :
    * <ul>
    *  <li>DOWNLOAD : we upload a data from the disk.</li>
-   *  <li>OGC:WMS : we call a capabilities on the given url, then the user can add 
+   *  <li>OGC:WMS : we call a capabilities on the given url,
+   *  then the user can add
    *    several resources (layers) at the same time.</li>
    *  <li>Others : we just fill the form and call a batch processing.</li>
    * </ul>
-   * 
+   *
    * On submit, the metadata is saved, the thumbnail is added, then the form
    * and online resource list are refreshed.
    */
@@ -314,8 +323,8 @@
             }
           };
         }])
-        
-  /**
+
+      /**
    * @ngdoc directive
    * @name gn_onlinesrc.directive:gnLinkServiceToDataset
    * @restrict A
@@ -323,13 +332,16 @@
    * @requires gnOwsCapabilities
    * @requires Metadata
    * @requires gnCurrentEdit
-   * 
-   * @description 
-   * The `gnLinkServiceToDataset` directive provides a form to either add a service
-   * to a metadata of type dataset, or to add a dataset to a metadata of service.
-   * The process will update both of the metadatas, the current one and the one it 
+   *
+   * @description
+   * The `gnLinkServiceToDataset` directive provides a
+   * form to either add a service
+   * to a metadata of type dataset, or to add a dataset to a
+   * metadata of service.
+   * The process will update both of the metadatas, the current
+   * one and the one it
    * is linked to.
-   * 
+   *
    * On submit, the metadata is saved, the thumbnail is added, then the form
    * and online resource list are refreshed.
    */
@@ -426,16 +438,17 @@
             }
           };
         }])
-        
-  /**
+
+      /**
    * @ngdoc directive
    * @name gn_onlinesrc.directive:gnLinkToMetadata
    * @restrict A
    * @requires gnOnlinesrc
    * @requires $translate
-   * 
-   * @description 
-   * The `gnLinkServiceToDataset` directive provides a form to link one metadata to
+   *
+   * @description
+   * The `gnLinkServiceToDataset` directive provides
+   * a form to link one metadata to
    * another as :
    * <ul>
    *  <li>parent</li>
@@ -443,9 +456,9 @@
    *  <li>source dataset</li>
    * </ul>
    * The directive contains a search form allowing one local selection.
-   * 
-   * On submit, the metadata is saved, the thumbnail is added, then the form
-   * and online resource list are refreshed.
+   *
+   * On submit, the metadata is saved, the thumbnail is added,
+   * then the form and online resource list are refreshed.
    */
   .directive('gnLinkToMetadata', ['gnOnlinesrc', '$translate',
         function(gnOnlinesrc, $translate) {
@@ -494,19 +507,20 @@
             }
           };
         }])
-        
-  /**
+
+      /**
    * @ngdoc directive
    * @name gn_onlinesrc.directive:gnLinkToSibling
    * @restrict A
    * @requires gnOnlinesrc
-   * 
-   * @description 
-   * The `gnLinkToSibling` directive provides a form to link siblings to the 
-   * current metdata. The user need to specify Association type and Initiative type
+   *
+   * @description
+   * The `gnLinkToSibling` directive provides a form to link siblings to the
+   * current metdata. The user need to specify Association type and
+   * Initiative type
    * to be able to add a metadata to his selection. The process alow a multiple
    * selection.
-   * 
+   *
    * On submit, the metadata is saved, the thumbnail is added, then the form
    * and online resource list are refreshed.
    */

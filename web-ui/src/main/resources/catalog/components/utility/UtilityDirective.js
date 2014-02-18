@@ -7,7 +7,7 @@
   /**
    * @ngdoc directive
    * @name gn_fields_directive.directive:gnCountryPicker
-   * @depecrated
+   * @deprecated Use gnRegionPicker instead
    *
    * @description
    * Use the region API to retrieve the list of
