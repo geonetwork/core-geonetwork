@@ -341,10 +341,6 @@
                         <includes>
                             <include>**/*IntegrationTest.java</include>
                         </includes>
-                        <forkCount>1</forkCount>
-                        <reuseForks>true</reuseForks>
-                        <perCoreThreadCount>false</perCoreThreadCount>
-                        <threadCount>1</threadCount>
                     </configuration>
                 </execution>
             </executions>
