@@ -61,6 +61,6 @@
   <accessConstraints>Limitations d'accès public</accessConstraints>
   <useLimitation>Conditions applicables à l'accès et à l'utilisation</useLimitation>
 
-  <add-resource-id>Générer un identifiant pour la ressource</add-resource-id>
+  <add-resource-id>Générer un identifiant</add-resource-id>
   <add-resource-idHelp>Construit un identifiant en utilisant l'URL du catalogue et l'identifiant de la fiche (eg. http://www.organization.org/catalogue/5391bf69-44bc-4ea0-8cc0-6cf6c3bc81ae).</add-resource-idHelp>
 </strings>
