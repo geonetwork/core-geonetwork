@@ -18,6 +18,7 @@
   goog.require('gn_popup');
   goog.require('gn_suggestion');
   goog.require('gn_validation');
+  goog.require('gn_batch_service');
 
   var module = angular.module('gn_editor', [
     'gn',
@@ -28,7 +29,8 @@
     'gn_draggable_directive',
     'gn_editor_controller',
     'gn_ows',
-    'gn_geopublisher'
+    'gn_geopublisher',
+    'gn_batch_service'
   ]);
 
   // Define the translation files to load
