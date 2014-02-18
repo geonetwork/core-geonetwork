@@ -41,7 +41,7 @@ public class GeonetworkDataDirectoryMultiNodeServiceConfigOnlySystemDataDirSetTe
     }
 
     private String getBaseDir() {
-        return new File(_testTemporaryFolder.getRoot(), "nonDefaultDataDir").getAbsolutePath();
+        return new File(_dataDirectory, "nonDefaultDataDir").getAbsolutePath();
     }
 
 

@@ -1,7 +1,7 @@
 package org.fao.geonet;
 
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
+import com.google.common.collect.TreeTraverser;
 import com.google.common.io.Files;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import jeeves.constants.ConfigFile;
@@ -10,7 +10,6 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.ServiceRequest;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
@@ -40,8 +39,6 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.rules.TemporaryFolder;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.Name;
 import org.opengis.filter.Filter;
@@ -55,7 +52,6 @@ import javax.persistence.PersistenceContext;
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.net.URL;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,10 +77,28 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     @Autowired
     protected DirectoryFactory _directoryFactory;
 
-    @Rule
-    public TemporaryFolder _testTemporaryFolder = new TemporaryFolder();
+    protected static File _dataDirectory;
+
+    @BeforeClass
+    public static void setUpDataDirectory() {
+        if (_dataDirectory == null) {
+            _dataDirectory = Files.createTempDir();
+            Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        FileUtils.deleteDirectory(_dataDirectory);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }));
+        }
+    }
     @Before
     public void configureAppContext() throws Exception {
+
+
 
         System.setProperty(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD, Boolean.toString(true));
         // clear out datastore
@@ -96,6 +110,8 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         LanguageDetector.init(webappDir + _applicationContext.getBean(Geonet.Config.LANGUAGE_PROFILES_DIR, String.class));
 
         final GeonetworkDataDirectory geonetworkDataDirectory = _applicationContext.getBean(GeonetworkDataDirectory.class);
+
+        SyncReport report = synchronizeDataDirectory(new File(webappDir , "WEB-INF/data"));
 
         final ArrayList<Element> params = getServiceConfigParameterElements();
 
@@ -120,12 +136,9 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         nodeInfo.setId(getGeonetworkNodeId());
         nodeInfo.setDefaultNode(isDefaultNode());
 
-
-        final File dataDir = _testTemporaryFolder.getRoot();
-
         TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
 
-        geonetworkDataDirectory.init("geonetwork", webappDir, dataDir.getAbsolutePath(),
+        geonetworkDataDirectory.init("geonetwork", webappDir, _dataDirectory.getAbsolutePath(),
                 serviceConfig, null);
 
         _directoryFactory.resetIndex();
@@ -138,12 +151,15 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         SchemaManager.registerXmlCatalogFiles(webappDir, schemaPluginsCatalogFile);
 
         final SchemaManager schemaManager = _applicationContext.getBean(SchemaManager.class);
-        schemaManager.configure(webappDir, resourcePath,
-                schemaPluginsCatalogFile, schemaPluginsDir, "eng", "iso19139", true);
+        if (report.updateSchemaManager) {
+            schemaManager.configure(webappDir, resourcePath,
+                    schemaPluginsCatalogFile, schemaPluginsDir, "eng", "iso19139", true);
+        }
 
         _applicationContext.getBean(SearchManager.class).init(false, false, "", 100);
         _applicationContext.getBean(DataManager.class).init(createServiceContext(), false);
-        String siteUuid = _testTemporaryFolder.getRoot().getName();
+
+        String siteUuid = _dataDirectory.getName();
         _applicationContext.getBean(SettingManager.class).setSiteUuid(siteUuid);
         final SourceRepository sourceRepository = _applicationContext.getBean(SourceRepository.class);
         List<Source> sources = sourceRepository.findAll();
@@ -153,6 +169,42 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
         }
 
+    }
+
+    private SyncReport synchronizeDataDirectory(File srcDataDir) throws IOException {
+        SyncReport report = new SyncReport();
+
+        boolean deleteNewFilesFromDataDir = _dataDirectory.exists();
+
+        final TreeTraverser<File> fileTreeTraverser = Files.fileTreeTraverser();
+
+        final int prefixPathLength = srcDataDir.getPath().length();
+        for (File file : fileTreeTraverser.preOrderTraversal(srcDataDir)) {
+            String relativePath = file.getPath().substring(prefixPathLength);
+            final File dataDirFile = new File(_dataDirectory, relativePath);
+            if (file.isFile() && (!dataDirFile.exists() || dataDirFile.lastModified() != file.lastModified())) {
+                Files.createParentDirs(dataDirFile);
+                BinaryFile.copy(file, dataDirFile);
+                dataDirFile.setLastModified(file.lastModified());
+
+                report.updateSchemaManager |= file.getPath().contains("schema_plugins");
+            }
+        }
+
+        if (deleteNewFilesFromDataDir ) {
+
+            final int prefixPathLength2 = _dataDirectory.getPath().length();
+            for (File dataDirFile : fileTreeTraverser.preOrderTraversal(_dataDirectory)) {
+                String relativePath = dataDirFile.getPath().substring(prefixPathLength2);
+                final File srcFile = new File(srcDataDir, relativePath);
+                if (!srcFile.exists()) {
+                    dataDirFile.delete();
+                    report.updateSchemaManager |= dataDirFile.getPath().contains("schema_plugins");
+                }
+            }
+        }
+
+        return report;
     }
 
     protected boolean isDefaultNode() {
@@ -296,5 +348,9 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
         dataManager.indexMetadata(id.get(0), true);
         return Integer.parseInt(id.get(0));
+    }
+
+    private class SyncReport {
+        public boolean updateSchemaManager = false;
     }
 }
