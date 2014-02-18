@@ -254,7 +254,7 @@
         location.replace('md.formatter.download?id=' + f, '_blank');
       };
 
-      $scope.formattedDelete = function(f) {
+      $scope.formatterDelete = function(f) {
         $http.get('md.formatter.remove?id=' + f)
         .success(function(data) {
               $scope.formatterSelected = null;
