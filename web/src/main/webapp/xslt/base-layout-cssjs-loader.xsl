@@ -21,9 +21,6 @@
       <link href="{/root/gui/url}/static/nv.d3.css{$minimizedParam}" rel="stylesheet" media="screen" />
     </xsl:if>
     
-    <link href="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload-ui.css" rel="stylesheet"/>
-    <link href="{$uiResourcesPath}lib/style/ol.css" rel="stylesheet"/>
-    
     <link rel="shortcut icon" type="image/x-icon" href="../../images/logos/favicon.ico" />
     
     <link href="{/root/gui/url}/static/{$angularApp}.css{$minimizedParam}" rel="stylesheet" media="screen" />
