@@ -30,7 +30,8 @@
     </button>
     <button type="button" class="btn navbar-btn" data-ng-click="validate()">
       <i class="fa fa-check"/>
-      <span data-translate="" title="{{'validate-help' | translate}}">validate</span>
+      <span data-translate=""
+            title="{{'validate-help' | translate}}">validate</span>
     </button>
     <!-- TODO: automatic save status -->
     <button type="button" class="btn btn-danger navbar-btn gn-tooltip" data-ng-click="cancel()" 
@@ -38,9 +39,9 @@
       <i class="fa fa-undo"/>
       <span data-translate="">cancel</span>
     </button>
-    <button type="button" class="btn btn-danger navbar-btn gn-tooltip" data-ng-click="close()" 
-      title="{{'closeEditor' | translate}}">
-      <i class="fa fa-sign-out"/>&nbsp;
+    <button type="button" class="btn btn-danger navbar-btn gn-tooltip" data-ng-click="close()">
+      <i class="fa fa-sign-out"/>
+      <span data-translate="">closeEditor</span>
     </button>
   </div>
 </nav>
