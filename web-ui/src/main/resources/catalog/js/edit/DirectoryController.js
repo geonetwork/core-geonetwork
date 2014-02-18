@@ -251,7 +251,7 @@
       };
 
       $scope.importEntry = function(formId) {
-        gnMetadataManager.import($scope.importData).then(
+        gnMetadataManager.importMd($scope.importData).then(
             function() {
               searchEntries();
               $scope.isImporting = false;
