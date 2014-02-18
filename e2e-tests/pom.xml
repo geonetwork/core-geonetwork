@@ -208,8 +208,8 @@
                                 </goals>
                                 <phase>generate-resources</phase>
                                 <configuration>
-                                    <nodeVersion>v0.10.24</nodeVersion>
-                                    <npmVersion>1.3.23</npmVersion>
+                                  <nodeVersion>${node.version}</nodeVersion>
+                                  <npmVersion>${npm.version}</npmVersion>
                                 </configuration>
                             </execution>
 
