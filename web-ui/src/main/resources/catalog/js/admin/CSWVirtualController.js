@@ -49,7 +49,13 @@
         }).error(function(data) {
         });
       }
-
+      function loadCategories() {
+        $http.get('info@json?type=categories').success(function(data) {
+          $scope.categories = data.metadatacategory;
+        }).error(function(data) {
+          // TODO
+        });
+      }
       $scope.updatingVirtualCSW = function() {
         $scope.virtualCSWUpdated = true;
       };
@@ -131,6 +137,7 @@
 
       loadCSWVirtual();
       loadFilterList();
+      loadCategories();
 
     }]);
 

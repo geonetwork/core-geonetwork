@@ -926,7 +926,7 @@
     <!-- TODO: Could be relevant to only apply process to the current thesaurus -->
     
     <div class="row">
-      <div class="col-xs-11">
+      <div class="col-xs-10 col-xs-offset-2">
         <span data-gn-batch-process-button="{$process-name}"
           data-params="{$process-params}"
           data-name="{$strings/*[name() = $process-name]}"

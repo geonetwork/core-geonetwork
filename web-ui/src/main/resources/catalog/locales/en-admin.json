@@ -642,6 +642,7 @@
     "saveVirtualCSW": "Save",
     "deleteVirtualCSW": "Delete",
     "updateVirtualCSW": "Update ",
+    "virtualCswUpdated": "Virtual CSW updated",
     "serviceDescription": "Service description",
     "virtualCSWName": "Name",
     "virtualCSWNameHelp": "The virtual CSW name MUST start with csw-.",
