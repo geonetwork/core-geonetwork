@@ -84,9 +84,15 @@ form.gn-editor {
   }
   
   .gn-autocomplete-list {
-    position: absolute; 
-    z-index:2; 
-    max-height: 350px;
+    position: absolute;
+    margin-top: 4px;
+    width: inherit;
+
+    /**/
+    .tt-suggestion:hover {
+      color: #fff;
+      background-color: #0097cf;
+    }
   }
   
   .gn-debug {

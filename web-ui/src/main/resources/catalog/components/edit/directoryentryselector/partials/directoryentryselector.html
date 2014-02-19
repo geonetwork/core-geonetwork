@@ -10,52 +10,62 @@
 
     <!-- TODO: could be nice to filter by organisation -->
     <input type="text" class="form-control" placeholder="{{'searchAContact' | translate}}"
-      data-ng-model="params.any" data-ng-change="triggerSearch('qi@json')"/>
+           data-ng-model="params.any" data-ng-change="triggerSearch('qi@json')"/>
 
-    <div class="list-group gn-autocomplete-list">
-      <li href="" class="list-group-item" data-ng-repeat="r in searchResults.records"> {{r.title}}
-        <span class="pull-right">
-          <div class="btn-group"
-               title="{{'addContactAsText-help' | translate}}">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-              <i class="fa fa-plus"></i><span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <li data-ng-repeat="role in roles">
-                <a href="" data-ng-click="addContact(r, role.code)" title="{{role.description}}">
-                  {{role.label}}
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div data-ng-show="gnConfig[gnConfig.key.isXLinkEnabled]"
-               title="{{'addContactAsLink-help' | translate}}"
-               class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-              <i class="fa fa-link"></i><span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <li data-ng-repeat="role in roles">
-                <a href="" data-ng-click="addContact(r, role.code, true)" title="{{role.description}}">
-                  {{role.label}}
-                </a>
-              </li>
-            </ul>
-          </div>
-        </span>
-        <div class="clearfix"></div>
-      </li>
+
+    <!-- The autocomplete list -->
+    <div class="list-group tt-dropdown-menu gn-autocomplete-list"
+        data-ng-show="searchResults.records">
+      <span class="tt-suggestions">
+        <div class="tt-suggestion"
+            data-ng-repeat="r in searchResults.records"> {{r.title}}
+          <span class="pull-right">
+            <div class="btn-group"
+                 title="{{'addContactAsText-help' | translate}}">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-plus"></i><span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <li data-ng-repeat="role in roles">
+                  <a href="" data-ng-click="addContact(r, role.code)" title="{{role.description}}">
+                    {{role.label}}
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div data-ng-show="gnConfig[gnConfig.key.isXLinkEnabled]"
+                 title="{{'addContactAsLink-help' | translate}}"
+                 class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-link"></i><span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <li data-ng-repeat="role in roles">
+                  <a href="" data-ng-click="addContact(r, role.code, true)" title="{{role.description}}">
+                    {{role.label}}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </span>
+          <div class="clearfix"></div>
+        </div>
+      </span>
     </div>
+
+    <div class="input-group-btn">
+      <button class="btn btn-default" type="button"
+              data-ng-show="searchResults.records.length != 0"
+              data-ng-click="searchResults.records = []">
+        <i class="fa fa-times"></i>
+        <span>&nbsp;</span>
+      </button>
+    </div>
+
     <!-- The contact to insert once received -->
     <div data-ng-if="snippet">
       <input name="{{snippetRef}}" type="hidden" value="{{snippet}}"/>
     </div>
-  </div>
-
-  <div data-gn-modal="" class="gn-directory-entry-popup"
-    data-gn-popup-options="{title:('addFromDictionnary' | translate)}"
-    id="gn-directory-entry-popup-{{elementRef}}">
-    <div data-gn-directory-entry-multi-selector=""/>
   </div>
 
 </span>
