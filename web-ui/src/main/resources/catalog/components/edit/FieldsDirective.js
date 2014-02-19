@@ -41,8 +41,11 @@
    * Initialized field label or fieldset legend tooltip
    * based on the tooltip configuration.
    *
+   * If the element is input or textarea, the event to open
+   * the tooltip is on focus, if not, the event is on click.
+   *
    * @param {string} gnFieldTooltip The tooltip configuration
-   *  which identified the schema, the element name and optionnaly the
+   *  which identified the schema, the element name and optionally the
    *  element parent name and XPath. eg. 'iso19139|gmd:fileIdentifier'.
    *
    * @param {string} placement Tooltip placement. Default to 'bottom'
@@ -66,6 +69,9 @@
            restrict: 'A',
            link: function(scope, element, attrs) {
              var isInitialized = false;
+             var isField =
+               element.is('input') || element.is('textarea');
+
              var initTooltip = function(event) {
                if (!isInitialized && gnCurrentEdit.displayTooltips) {
                  // Retrieve field information (there is a cache)
@@ -75,15 +81,19 @@
                    if (info.description && info.description.length > 0) {
                      // Initialize tooltip when description returned
                      var html = '';
-                     angular.forEach(info.help, function(helpText) {
-                       if (helpText['@for']) {
-                       //                         html += helpText['#text'];
-                       } else {
-                         html += helpText;
-                       }
-                     });
-                     var isField =
-                     element.is('input') || element.is('textarea');
+
+                     // TODO: externalize in a template.
+                     if (angular.isArray(info.help)) {
+                       angular.forEach(info.help, function(helpText) {
+                         if (helpText['@for']) {
+                           html += helpText['#text'];
+                         } else {
+                           html += helpText;
+                         }
+                       });
+                     } else {
+                       html += info.help;
+                     }
 
 
                      // Right same width as field
@@ -111,11 +121,14 @@
                        '<h3 class="popover-title"></h3>' +
                        '<div class="popover-content"><p></p></div></div></div>',
                        //                       trigger: 'click',
-                       trigger: isField ? 'focus' : 'hover'
+                       trigger: isField ? 'focus' : 'click'
                      });
 
-                     if (event === 'hover' && !isField) {
-                       element.popover('show');
+//                     if (event === 'hover' && !isField) {
+//                       element.popover('show');
+//                     } else
+                     if (event === 'click' && !isField) {
+                       element.click('show');
                      } else {
                        element.focus();
                      }
@@ -127,12 +140,15 @@
              };
 
              // On hover trigger the tooltip init
-             element.hover(function() {
-               initTooltip('hover');
-             });
-             element.focus(function() {
-               initTooltip('focus');
-             });
+             if (isField) {
+               element.focus(function() {
+                 initTooltip('focus');
+               });
+             } else {
+               element.click(function() {
+                 initTooltip('hover');
+               });
+             }
            }
          };
        }]);
