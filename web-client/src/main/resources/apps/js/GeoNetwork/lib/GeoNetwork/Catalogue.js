@@ -1133,6 +1133,10 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             if (cookie) {
                 cookie.set('user', undefined);
             }
+            
+            this.identifiedUser = undefined;
+            this.onAfterBadLogin();
+            
             return false;
         }
     },
