@@ -52,7 +52,7 @@
          var isSameKindOfElement = function(element, target) {
            var elementLabel = $(element).children('label').get(0);
            var elementKey = $(elementLabel).attr('data-gn-field-tooltip');
-           if (target.length === 0) {
+           if (target === undefined || target.length === 0) {
              return false;
            } else {
              var childrenLabel = $(target).children('label').get(0);

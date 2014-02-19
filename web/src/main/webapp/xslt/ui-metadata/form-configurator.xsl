@@ -358,8 +358,7 @@
           Add an action to add an element. -->
       <xsl:variable name="name" select="@name"/>
       <xsl:variable name="childName" select="@or"/>
-      <xsl:variable name="child" select="$nonExistingChildParent/*[position() = last()]/gn:child[@name = $childName]"/>
-      
+
       <xsl:call-template name="render-element-template-field">
         <xsl:with-param name="name" select="$strings/*[name() = $name]"/>
         <xsl:with-param name="id" select="concat('_X', 
