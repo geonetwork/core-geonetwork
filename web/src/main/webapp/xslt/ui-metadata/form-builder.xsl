@@ -118,7 +118,7 @@
             <xsl:value-of select="$label"/>
           </label>
 
-          <div class="col-sm-8 gn-value">
+          <div class="col-sm-9 gn-value">
             <xsl:if test="$isMultilingual">
               <xsl:attribute name="data-gn-multilingual-field" select="$metadataOtherLanguagesAsJson"/>
               <xsl:attribute name="data-main-language" select="$metadataLanguage"/>
@@ -182,7 +182,7 @@
               </xsl:for-each>
             </xsl:if>
           </div>
-          <div class="col-sm-2 gn-control">
+          <div class="col-sm-1 gn-control">
             <xsl:if test="not($isDisabled)">
               <xsl:call-template name="render-form-field-control-remove">
                 <xsl:with-param name="editInfo" select="$editInfo"/>
@@ -315,7 +315,7 @@
         <!-- TODO: set tooltip -->
         <xsl:value-of select="$name"/>
       </label>
-      <div class="col-sm-8">
+      <div class="col-sm-9">
         <xsl:if test="$hasAddAction">
           <xsl:choose>
             <xsl:when test="$addDirective != ''">
@@ -416,7 +416,7 @@
         </xsl:if>
       </div>
       <xsl:if test="$refToDelete">
-        <div class="col-sm-2 gn-control">
+        <div class="col-sm-1 gn-control">
           <xsl:call-template name="render-form-field-control-remove">
             <xsl:with-param name="editInfo" select="$refToDelete"/>
           </xsl:call-template>
@@ -473,7 +473,7 @@
                   <xsl:value-of select="$label"/>
           </xsl:if>
         </label>
-        <div class="col-sm-8">
+        <div class="col-sm-9">
           
           <xsl:choose>
             <!-- When element have different types, provide
@@ -916,7 +916,7 @@
     <!-- TODO: Could be relevant to only apply process to the current thesaurus -->
     
     <div class="row">
-      <div class="col-lg-12">
+      <div class="col-xs-11">
         <span data-gn-batch-process-button="{$process-name}"
           data-params="{$process-params}"
           data-name="{$strings/*[name() = $process-name]}"
