@@ -4,10 +4,16 @@
   var module = angular.module('gn_editor_helper_directive', []);
 
   /**
-     *  Create a widget to handle a list of suggestion to help editor
-     *  to populate a field.
-     *
-     */
+   * @ngdoc directive
+   * @name gn_editor_helper_directive.directive:gnEditorHelper
+   * @restrict A
+   *
+   * @description
+   * Create a widget to handle a list of suggestion to help editor
+   * to populate a field. Suggestions are list of values defined
+   * in labels.xml for each schema.
+   *
+   */
   module.directive('gnEditorHelper', [
     function() {
 
@@ -28,7 +34,7 @@
           // Retrieve the target field by name (general case)
           // or by id (template mode field).
           var field = document.gnEditor[scope.ref] || $('#' + scope.ref).get(O),
-              relatedAttributeField = document.gnEditor[scope.relatedAttribute],
+              relatedAttributeField = document.gnEditor[scope.relatedAttr],
               relatedElementField = document.gnEditor[scope.relatedElement],
               initialValue = field.value;
 

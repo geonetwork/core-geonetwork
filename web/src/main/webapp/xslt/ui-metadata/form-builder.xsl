@@ -393,10 +393,13 @@
               </xsl:choose>
               
               <xsl:if test="$helper">
+                <xsl:variable name="elementName" select="concat($id, '_', @label)"/>
                 <xsl:call-template name="render-form-field-helper">
-                  <xsl:with-param name="elementRef" select="concat($id, '_', @label)"/>
-                  <!--<xsl:with-param name="relatedElement" select="concat('_', $editInfo/@ref)"/>
-                  <xsl:with-param name="relatedElementRef" select="concat('_', $editInfo/@ref, '_', $listOfValues/@relAtt)"/>-->
+                  <xsl:with-param name="elementRef" select="$elementName"/>
+                  <xsl:with-param name="relatedElement" select="if ($helper/@rel)
+                    then concat($elementName, '_', substring-after($helper/@rel, ':'))
+                    else ''"/>
+                  <!-- TODO related attribute ? -->
                   <xsl:with-param name="dataType" select="'text'"/>
                   <xsl:with-param name="listOfValues" select="$helper"/>
                 </xsl:call-template>
@@ -708,11 +711,18 @@
         Current input could be an element or an attribute (eg. uom). 
         -->
     <xsl:if test="$hasHelper">
-     
       <xsl:call-template name="render-form-field-helper">
         <xsl:with-param name="elementRef" select="concat('_', $editInfo/@ref)"/>
-        <xsl:with-param name="relatedElement" select="concat('_', $editInfo/@ref)"/>
-        <xsl:with-param name="relatedElementRef" select="concat('_', $editInfo/@ref, '_', $listOfValues/@relAtt)"/>
+        <!-- The @rel attribute in the helper may define a related field
+        to update. Check the related element of the current element
+        which should be in the sibbling axis. -->
+        <xsl:with-param name="relatedElement"
+                        select="concat('_',
+                        following-sibling::*[name() = $listOfValues/@rel]/*/gn:element/@ref)"/>
+        <!-- Related attribute name is based on element name
+        _<element_ref>_<attribute_name>. -->
+        <xsl:with-param name="relatedElementRef"
+                        select="concat('_', $editInfo/@ref, '_', $listOfValues/@relAtt)"/>
         <xsl:with-param name="dataType" select="$type"/>
         <xsl:with-param name="listOfValues" select="$listOfValues"/>
       </xsl:call-template>
@@ -738,7 +748,7 @@
       data-gn-editor-helper="{$listOfValues/@editorMode}"
       data-ref="{$elementRef}"
       data-type="{$dataType}"
-      data-related-element="{if ($listOfValues/@relElementRef != '') 
+      data-related-element="{if ($listOfValues/@rel != '')
       then $relatedElement else ''}"
       data-related-attr="{if ($listOfValues/@relAtt) 
       then $relatedElementRef else ''}">
