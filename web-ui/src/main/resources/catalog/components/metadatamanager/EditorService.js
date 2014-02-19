@@ -208,6 +208,9 @@
                saving: false
              });
 
+             if (angular.isFunction(gnCurrentEdit.formLoadExtraFn)) {
+               gnCurrentEdit.formLoadExtraFn();
+             }
            },
            //TODO : move edit services to new editor service
            /**

@@ -94,6 +94,22 @@
        */
       var duration = 300;
 
+      /**
+       * Function to call after form load
+       * to move view menu to top toolbar
+       */
+      var setViewMenuInTopToolbar = function () {
+        // Move view menu to the top toolbar
+        var menu = $('.gn-view-menu-button');
+        if (menu) {
+          menu.empty();
+          var button = $('#gn-view-menu-' + gnCurrentEdit.id);
+          if (button) {
+            menu.append(button);
+          }
+        }
+      };
+
       // Controller initialization
       var init = function() {
         gnConfigService.load().then(function(c) {
@@ -140,7 +156,7 @@
             }
 
             if ($scope.metadataFound) {
-              // TODO: Set metadata in page HEAD ?
+              // TODO: Set metadata title in page HEAD ?
 
               angular.extend(gnCurrentEdit, {
                 id: $routeParams.id,
@@ -150,7 +166,8 @@
                 displayTooltips:
                     gnCurrentEdit.schemaConfig.displayToolTip === true,
                 compileScope: $scope,
-                sessionStartTime: moment()
+                sessionStartTime: moment(),
+                formLoadExtraFn: setViewMenuInTopToolbar
               });
 
               $scope.gnCurrentEdit = gnCurrentEdit;

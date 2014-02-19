@@ -1,14 +1,26 @@
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation" data-ng-if="!unsupportedSchema">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation"
+     data-ng-if="!unsupportedSchema">
+  <div>
+    <ul class="gn-view-menu-button pull-left nav navbar-nav">
+      <!-- An empty drown down updated when form is loaded -->
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown">
+          <i class="fa fa-eye"></i>
+          <b class="caret"/>
+        </a>
+      </li>
+    </ul>
+  </div>
   <div class="pull-left">
     <div class="form-group navbar-btn">
       <div class="btn-group">
         <button type="button" class="btn btn-default"
-          data-ng-class="{'btn-primary': !isTemplate()}" data-ng-click="setTemplate(false)"
+          data-ng-class="{'active': !isTemplate()}" data-ng-click="setTemplate(false)"
           ><span data-translate="">METADATA</span>
           <i class="fa" data-ng-class="isTemplate() ? 'fa-circle-o' : 'fa-dot-circle-o'"></i>
         </button>
         <button type="button" class="btn btn-default"
-          data-ng-class="{'btn-primary': isTemplate()}" data-ng-click="setTemplate(true)"
+          data-ng-class="{'active': isTemplate()}" data-ng-click="setTemplate(true)"
           ><i class="fa" data-ng-class="isTemplate() ? 'fa-dot-circle-o' : 'fa-circle-o'"></i>
           <span data-translate="">TEMPLATE</span></button>
       </div>

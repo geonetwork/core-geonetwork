@@ -19,7 +19,7 @@
     
     <ul class="nav nav-pills">
       <!-- Make a drop down choice to swith to one view to another -->
-      <li class="dropdown">
+      <li class="dropdown" id="gn-view-menu-{$metadataId}">
         <a class="dropdown-toggle" data-toggle="dropdown" href="" 
           title="{$i18n/selectView}">
           <i class="fa fa-eye"></i>
