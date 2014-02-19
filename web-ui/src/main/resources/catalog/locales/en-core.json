@@ -133,7 +133,7 @@
     "msgUserAuthenticated": "User {{username}} authenticated.",
     "msgNoCatalogInfo": "Could not retrieved catalog information.",
     "msgNoUserInfo": "Could not retrieve user details.",
-    
+    "toggleScrollSpy": "Toggle scrolling navigation",
     "passwordUpdateError": "Error when updating password",
     "BadParameterEx": "Wrong parameter",
     "send": "Send",

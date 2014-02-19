@@ -117,7 +117,8 @@
     "msgUserAuthenticated": "L'utilisateur {{username}} est authentifié.",
     "msgNoCatalogInfo": "Ne peut retrouver les informations catalogue",
     "msgNoUserInfo": "Ne peut retrouver les informations utilisateurs",
-    
+
+    "toggleScrollSpy": "Afficher/cacher la navigation défilante",
     "passwordUpdateError": "Erreur lors de la mise à jour du mot de passe",
     "BadParameterEx": "Paramètre incorrect",
     "send": "Envoyer",
