@@ -38,6 +38,7 @@ Ext.namespace('GeoNetwork.admin');
 GeoNetwork.admin.SubTemplateManagerPanel = Ext.extend(Ext.Panel, {
     frame: false,
     record: undefined,
+    recordObj: undefined,
     catalogue: undefined,
     toolbar: undefined,
     /**
@@ -236,6 +237,7 @@ GeoNetwork.admin.SubTemplateManagerPanel = Ext.extend(Ext.Panel, {
             listeners: {
                 rowclick: function(grid, rowIndex, e){
                     this.record = grid.getStore().getAt(rowIndex).data;
+                    this.recordObj = grid.getStore().getAt(rowIndex);
                     this.editorPanel.init(this.record.id, false);
                     this.disableToolbar(false);
                 },
@@ -279,7 +281,7 @@ GeoNetwork.admin.SubTemplateManagerPanel = Ext.extend(Ext.Panel, {
                     iconCls : 'privIcon',
                     disabled: true,
                     handler: function(){
-                        this.catalogue.metadataAdmin(this.record);
+                        this.catalogue.metadataAdmin(this.recordObj);
                     },
                     scope: this
                 }]
