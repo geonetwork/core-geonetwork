@@ -6,12 +6,12 @@
 	xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink"
 	xmlns:geonet="http://www.fao.org/geonetwork" xmlns:exslt="http://exslt.org/common"
 	exclude-result-prefixes="#all">
-	
-	<xsl:include href="metadata-markup.xsl"/>
-	
+
 	<xsl:import href="../../iso19139/present/metadata-iso19139-fop.xsl"/>
-	
-	<xsl:template name="iso19139.sdn-productBrief">
+
+  <xsl:include href="metadata-markup.xsl"/>
+
+  <xsl:template name="iso19139.sdn-productBrief">
 		<metadata>
 			<xsl:choose>
 				<xsl:when test="geonet:info/isTemplate='s'">
