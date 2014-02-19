@@ -113,11 +113,11 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                     }],
                     'upstream-validation': [{
                         id: 'E__groupPublished',
-                        value: 'MYOCEAN-UPSTREAM-PRODUCTS'
+                        value: 'MYOCEAN-ALL-PRODUCTS'
                     }],
                     'upstream-production': [{
                         id: 'E__groupPublished',
-                        value: 'MYOCEAN-UPSTREAM-PRODUCTS'
+                        value: 'MYOCEAN-ALL-PRODUCTS'
                     }]
                 },
                 'iso19139.myocean.short': {
@@ -129,7 +129,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                     }],
                     upstream: [{
                         id: 'E__groupPublished',
-                        value: 'MYOCEAN-UPSTREAM-PRODUCTS'
+                        value: 'MYOCEAN-ALL-PRODUCTS'
                     }]
                 }
 //                'iso19139.xyz': {
