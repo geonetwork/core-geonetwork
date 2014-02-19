@@ -92,16 +92,16 @@
            * @param {Object} data Params to send to md.insert service
            * @return {HttpPromise} Future object
            */
-          importMd: function(data) {
-            return $http({
-              url: 'md.insert@json',
-              method: 'POST',
-              data: $.param(data),
-              headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-            });
-          },
-          
-          /**
+        importMd: function(data) {
+          return $http({
+            url: 'md.insert@json',
+            method: 'POST',
+            data: $.param(data),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+          });
+        },
+
+        /**
            * @ngdoc method
            * @name gnMetadataManager#create
            * @methodOf gnMetadataManager

@@ -98,7 +98,7 @@
        * Function to call after form load
        * to move view menu to top toolbar
        */
-      var setViewMenuInTopToolbar = function () {
+      var setViewMenuInTopToolbar = function() {
         // Move view menu to the top toolbar
         var menu = $('.gn-view-menu-button');
         if (menu) {

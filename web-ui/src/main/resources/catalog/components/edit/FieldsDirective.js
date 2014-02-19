@@ -70,7 +70,7 @@
            link: function(scope, element, attrs) {
              var isInitialized = false;
              var isField =
-               element.is('input') || element.is('textarea');
+             element.is('input') || element.is('textarea');
 
              var initTooltip = function(event) {
                if (!isInitialized && gnCurrentEdit.displayTooltips) {
@@ -124,9 +124,9 @@
                        trigger: isField ? 'focus' : 'click'
                      });
 
-//                     if (event === 'hover' && !isField) {
-//                       element.popover('show');
-//                     } else
+                     //                     if (event === 'hover' && !isField) {
+                     //                       element.popover('show');
+                     //                     } else
                      if (event === 'click' && !isField) {
                        element.click('show');
                      } else {
