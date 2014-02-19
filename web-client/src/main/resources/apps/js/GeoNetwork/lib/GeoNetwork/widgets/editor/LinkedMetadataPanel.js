@@ -104,7 +104,8 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
          */
         resourcesTypesCfg: {
             iso19139: ['thumbnail', 'onlinesrc', 'parent', 'children', 'service', 'dataset', 'sources', 'fcats', 'sibling'],
-            'iso19139.myocean': ['thumbnail', 'onlinesrc', 'sibling'],
+          'iso19139.sdn-product': ['thumbnail', 'onlinesrc', 'sibling'],
+          'iso19139.myocean': ['thumbnail', 'onlinesrc', 'sibling'],
             'iso19139.myocean.short': ['thumbnail'],
 //            'iso19139.xyz': ['thumbnail', 'parent', 'children', 'service', 'dataset', 'fcats', 'sibling'],
             'dublin-core': ['children']
