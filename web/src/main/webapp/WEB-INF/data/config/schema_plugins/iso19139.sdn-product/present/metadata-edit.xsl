@@ -83,25 +83,19 @@
 		<xsl:choose>
 			<xsl:when test="$edit=true()">
 				<xsl:variable name="text">
-					<xsl:variable name="ref" select="gco:Distance/geonet:element/@ref" />
-					<input type="number" class="md" name="_{$ref}" id="_{$ref}"  
+					<xsl:variable name="ref" select="gco:Measure/geonet:element/@ref" />
+					<input type="number" class="md" name="_{$ref}" id="_{$ref}"
+            style="width: inherit;"
 						onkeyup="validateNumber(this,true,true);"
 						onchange="validateNumber(this,true,true);"
-						value="{gco:Measure}" size="10"/>
-					<xsl:variable name="vnl_flag">temporal resolution: </xsl:variable>
-					<xsl:variable name="vnl" select="substring-after(., $vnl_flag)"/>
-					<xsl:variable name="id" select="concat('_', ./geonet:element/@ref)"/>						
-					<xsl:variable name="temporalResolutionCodeList"
-								select="/root/gui/schemas/*[name(.)=$schema]/labels/element[@name='gmd:resolution']/helper"/>
-					<select onchange="document.getElementById('{$id}').value = '{$vnl_flag}' + this.options[this.selectedIndex].value">
-						<option/>
-						<xsl:for-each select="$temporalResolutionCodeList/option">
-							<option value="{@value}">
-								<xsl:if test="@value = $vnl">
-									<xsl:attribute name="selected">selected</xsl:attribute>
-								</xsl:if>
-								<xsl:value-of select="."/></option>
-						</xsl:for-each>
+						value="{gco:Measure}"/>
+          <input type="text" class="md" name="_{$ref}_uom" id="_{$ref}_uom"
+            style="width: inherit;"
+            value="{gco:Measure/@uom}"/>
+
+          <select onchange="document.getElementById('_{$ref}_uom').value = this.options[this.selectedIndex].value">
+						<option value="degree">Degree</option>
+            <option value="kilometers">Kilometers</option>
 					</select>
 				</xsl:variable>
 				<xsl:apply-templates mode="simpleElement" select=".">
