@@ -326,16 +326,16 @@
 
           <field
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
-            gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword"
+            gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword[not(gmd:thesaurusName)]"
             or="keyword"
             in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
-            gmd:descriptiveKeywords/gmd:MD_Keywords"> </field>
+            gmd:descriptiveKeywords/gmd:MD_Keywords[not(gmd:thesaurusName)]"> </field>
 
           <!-- INSPIRE Themes -->
           <field
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
             gmd:descriptiveKeywords
-            [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString, 'INSPIRE themes')]"> </field>
+            [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString, 'INSPIRE themes')]"/>
           <!-- FIXME: MUST be provided in template and thesaurus available in the catalog, to be displayed properly -->
 
 
