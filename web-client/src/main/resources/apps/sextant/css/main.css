@@ -680,7 +680,8 @@ div.x-tip-body div.help {
 }
 /* Do not display projection switcher in bounding box editor */
 .myocean .map * label,
-.myocean\.simple .map * label {
+.myocean\.simple .map * label,
+.sdnProduct .map * label {
     display: none;
 }
 

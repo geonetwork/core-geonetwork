@@ -14,10 +14,12 @@
     <verticalExtent>Vertical extent</verticalExtent>
     <nbVerticalLevels>Number of vertical levels</nbVerticalLevels>
     <temporalExtent>Temporal extent</temporalExtent>
+    <temporalResolution>Temporal resolution</temporalResolution>
     <startDate>Start date</startDate>
     <endDate>End date</endDate>
     <unknown>Unknown</unknown>
     <productionCentre>Production centre</productionCentre>
     <productManager>Product manager</productManager>
     <productAccess>Product access</productAccess> 
+    <orgAdd>Add organisation</orgAdd>
 </strings>
