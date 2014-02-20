@@ -51,6 +51,7 @@
     "createNewMetadata": "Créer une fiche",
     "createMetadata": "Créer",
     "unknownType": "Autres",
+    "other": "Autre",
     "onlyErrors": "Afficher uniquement les erreurs",
     "schematron-rules-geonetwork": "Recommandations",
     "schematron-rules-iso": "Règles ISO",

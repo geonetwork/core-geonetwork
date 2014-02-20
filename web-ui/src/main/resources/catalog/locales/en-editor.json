@@ -49,6 +49,7 @@
     "createNewMetadata": "Add a new record",
     "createMetadata": "Create",
     "inGroup": "In",
+    "other": "Other",
     "unknownType": "Others",
     "onlyErrors": "Show only errors",
     "schematron-rules-geonetwork": "Recommendations",
