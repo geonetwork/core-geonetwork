@@ -26,7 +26,6 @@
       return {
         restrict: 'A',
         replace: false,
-        transclude: true,
         scope: {
           id: '@gnScrollSpy',
           watch: '=',
