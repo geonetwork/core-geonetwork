@@ -477,6 +477,7 @@ GeoNetwork.Lang.fr = {
     'validityInfo': 'Information sur la validation',
     'lastUpdate': 'Dernière mise à jour : ',
     'importMetadata': 'Import de métadonnées',
+    'import': 'Importer',
     'validationStatus': 'Validation ',
     'valid': 'Valide',
     'notValid': 'Non valide',

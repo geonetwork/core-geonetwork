@@ -473,6 +473,7 @@ GeoNetwork.Lang.en = {
     'validityInfo': 'Validation status: ',
     'lastUpdate': 'Last update: ',
     'importMetadata': 'Import metadata',
+    'import': 'Import',
     'validationStatus': 'Validation status',
     'valid': 'Valid',
     'notValid': 'Not valid',

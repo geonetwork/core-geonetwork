@@ -46,9 +46,7 @@ GeoNetwork.editor.InsertMetadataPanel = Ext.extend(Ext.form.FormPanel, {
                 url : catalogue.services.getImportXSL,
                 record : 'record',
                 idPath : 'id',
-                fields : [ {
-                    name : 'name'
-                }],
+                fields : ['name', 'id'],
                 sortInfo: {
                     field: 'name',
                     direction: 'ASC'
@@ -296,7 +294,7 @@ GeoNetwork.editor.InsertMetadataPanel = Ext.extend(Ext.form.FormPanel, {
     getButtons: function() {
         return [{
             xtype: 'button',
-            text: OpenLayers.i18n('back'),
+            text: OpenLayers.i18n('cancel'),
             handler: function(b,e) {
                 // Close form window
                 if(this.ownerCt.getXType() == 'window'){
@@ -307,7 +305,8 @@ GeoNetwork.editor.InsertMetadataPanel = Ext.extend(Ext.form.FormPanel, {
         },{
             // Submit form button
             xtype: 'button',
-            text: OpenLayers.i18n('insert'),
+            text: OpenLayers.i18n('import'),
+            iconCls: 'thumbnailGoIcon',
             handler: function(b,e) {
                 if(this.getForm().isValid( )) {
                     
