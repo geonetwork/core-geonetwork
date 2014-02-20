@@ -162,7 +162,9 @@
             $scope.activeTpl['geonet:info'].id,
             $scope.ownerGroup,
             fullPrivileges,
-            $scope.isTemplate);
+            $scope.isTemplate,
+            $routeParams.childOf ? true : false
+        );
       };
 
       init();
