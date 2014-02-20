@@ -50,6 +50,8 @@
     "addContactAsLink-help": "Ajouter ce contact en lien avec l'annuaire. Les informations sur le contact seront mises à jour lors des modifications dans l'annuraire.",
     "createNewMetadata": "Créer une fiche",
     "createMetadata": "Créer",
+    "createMetadataForGroup": "Créer et publier pour le groupe",
+    "createMetadataForGroup-help": "La fiche pourra être modifiée par tous les membres du groupe",
     "unknownType": "Autres",
     "other": "Autre",
     "onlyErrors": "Afficher uniquement les erreurs",

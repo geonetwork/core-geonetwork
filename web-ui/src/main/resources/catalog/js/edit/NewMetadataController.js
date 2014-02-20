@@ -58,7 +58,6 @@
               $routeParams.group,
               fullPrivileges,
               $routeParams.template);
-          // TODO: add fullPrivileges param in UI ?
         } else {
 
           // Metadata creation could be on a template
@@ -157,11 +156,11 @@
         $scope.title = $translate('createA');
       }
 
-      $scope.createNewMetadata = function() {
+      $scope.createNewMetadata = function(isPublic) {
         gnMetadataManager.create(
             $scope.activeTpl['geonet:info'].id,
             $scope.ownerGroup,
-            fullPrivileges,
+            isPublic || false,
             $scope.isTemplate,
             $routeParams.childOf ? true : false
         );

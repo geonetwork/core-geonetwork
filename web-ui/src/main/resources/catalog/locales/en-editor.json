@@ -48,6 +48,8 @@
     "addContactAsLink-help": "Add a link to the contact in the contact directory. The contact will be updated if updated in the directory.",
     "createNewMetadata": "Add a new record",
     "createMetadata": "Create",
+    "createMetadataForGroup": "Create and publish for group editors",
+    "createMetadataForGroup-help": "The record will be editable by all members of the group",
     "inGroup": "In",
     "other": "Other",
     "unknownType": "Others",

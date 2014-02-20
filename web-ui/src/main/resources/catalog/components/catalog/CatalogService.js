@@ -62,9 +62,9 @@
            *
            * @param {string} id Internal id of the metadata to be copied.
            * @param {string} groupId Internal id of the group of the metadata
-           * @param {string} withFullPrivileges privileges to assign.
-           * @param {string} isTemplate type of the metadata
-           * @param {string} isChild is child of a parent metadata
+           * @param {boolean} withFullPrivileges privileges to assign.
+           * @param {boolean} isTemplate type of the metadata
+           * @param {boolean} isChild is child of a parent metadata
            * @return {HttpPromise} Future object
            */
         copy: function(id, groupId, withFullPrivileges, 
@@ -112,9 +112,9 @@
            *
            * @param {string} id Internal id of the metadata to be copied.
            * @param {string} groupId Internal id of the group of the metadata
-           * @param {string} withFullPrivileges privileges to assign.
-           * @param {string} isTemplate type of the metadata
-           * @param {string} isChild is child of a parent metadata
+           * @param {boolean} withFullPrivileges privileges to assign.
+           * @param {boolean} isTemplate type of the metadata
+           * @param {boolean} isChild is child of a parent metadata
            * @return {HttpPromise} Future object
            */
         create: function(id, groupId, withFullPrivileges, 

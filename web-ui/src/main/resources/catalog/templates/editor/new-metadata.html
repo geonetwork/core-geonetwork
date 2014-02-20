@@ -56,12 +56,27 @@
       </div>
     </div>
     <div class="col-sm-2">
-      <button type="button" class="btn navbar-btn btn-success btn-lg"
-        data-ng-click="createNewMetadata()"
-        data-ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup)}">
-        <i class="fa fa-plus"/>
-        <span data-translate="">createMetadata</span>
-      </button>
+      <div class="btn-group">
+        <button type="button" class="btn btn-success btn-lg"
+          data-ng-click="createNewMetadata()"
+          data-ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup)}">
+          <i class="fa fa-plus"/>
+          <span data-translate="">createMetadata</span>
+        </button>
+        <button type="button"
+                class="btn btn-success btn-lg dropdown-toggle"
+                data-ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup)}"
+                data-toggle="dropdown">
+          <span class="caret"></span>&nbsp;
+        </button>
+        <ul class="dropdown-menu pull-right" role="menu">
+          <li><a
+              title="{{'createMetadataForGroup-help' | translate}}"
+              data-ng-click="createNewMetadata(true)"
+              href="" data-translate="">
+            createMetadataForGroup</a></li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>
