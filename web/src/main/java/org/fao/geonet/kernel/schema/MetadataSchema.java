@@ -52,6 +52,7 @@ public class MetadataSchema
 {
 	private static final String XSL_FILE_EXTENSION = ".xsl";
     private static final String SCH_FILE_EXTENSION = ".sch";
+    public static final String SCHEMATRON_DIR = "schematron";
     private Map<String,List<String>> hmElements = new HashMap<String,List<String>>();
 	private Map<String,List<List<String>>> hmRestric  = new HashMap<String,List<List<String>>>();
 	private Map<String, MetadataType> hmTypes    = new HashMap<String, MetadataType>();
@@ -339,8 +340,8 @@ public class MetadataSchema
 
 	public void buildchematronRules(String basePath) {
         String schematronResourceDir = basePath + "WEB-INF" 
-                + File.separator + "classes" + File.separator + "schematron" + File.separator ;
-        String schemaSchematronDir = schemaDir + File.separator + "schematron";
+                + File.separator + "classes" + File.separator + SCHEMATRON_DIR + File.separator ;
+        String schemaSchematronDir = schemaDir + File.separator + SCHEMATRON_DIR;
         String schematronCompilationFile = schematronResourceDir + "iso_svrl_for_xslt2.xsl";
         
         if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
@@ -371,7 +372,7 @@ public class MetadataSchema
                             + ". Error is " + e.getMessage());
                 } catch (Exception e) {
                     Log.error(Geonet.SCHEMA_MANAGER, "     Schematron rule compilation failed for " + schematronXslFilePath 
-                            + ". Error is " + e.getMessage());
+                            + ". Error is " + e.getMessage(), e);
                 }
             }
         }
@@ -388,7 +389,7 @@ public class MetadataSchema
 	    // Compile schema schematron rules
 	    buildchematronRules(basePath);
 	    
-		String saSchemas[] = new File(schemaDir + File.separator + "schematron").list(new SchematronReportRulesFilter());
+		String saSchemas[] = new File(schemaDir, SCHEMATRON_DIR).list(new SchematronReportRulesFilter());
 
 
         ServiceContext context = ServiceContext.get();
@@ -399,11 +400,11 @@ public class MetadataSchema
         Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
         if(saSchemas != null) {
-            for(String s : saSchemas) {
-                String file = schemaDir + File.separator + "schematron" + File.separator + s;
+            for(String schematronFileName : saSchemas) {
+                String file = schematronFileName;
 
                 final List<Element> schematronRulesInFile =
-                        SchemaDao.selectSchemas(dbms, file);
+                        SchemaDao.selectSchemas(dbms, file, schemaName);
 
                 //if schematron not already exists
                 if(schematronRulesInFile.isEmpty()) {

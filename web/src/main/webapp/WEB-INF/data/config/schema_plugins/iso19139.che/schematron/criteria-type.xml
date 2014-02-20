@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <criteriaTypes>
     <type>
-        <value>//gmd:keyword/gco:CharacterString/text() = '@@value@@'__OR__//gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString/text() = '@@value@@'</value>
+        <value>*//gmd:keyword/gco:CharacterString/text() = '@@value@@'__OR__*//gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString/text() = '@@value@@'</value>
         <type>XPATH</type>
         <name>Keyword</name>
         <allowArbitraryValue>false</allowArbitraryValue>

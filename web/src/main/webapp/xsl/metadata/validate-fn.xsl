@@ -10,10 +10,16 @@
     <xsl:param name="schema" as="xs:string"/>
     <xsl:param name="name" as="xs:string"/>
     <xsl:param name="labels" as="node()"/>
-    
-    <xsl:value-of
-      select="string($labels/schemas/*[name(.)=$schema]/labels/element[@name=$name and not(@context)]/label)"
-    />
+      <xsl:variable name="translatedTitle"
+          select="string($labels/schemas/*[name(.)=$schema]/labels/element[@name=$name and not(@context)]/label)"/>
+    <xsl:choose>
+        <xsl:when test="$translatedTitle">
+            <xsl:value-of select="$translatedTitle" />
+        </xsl:when>
+        <xsl:otherwise>
+            <xsl:value-of select="name" />
+        </xsl:otherwise>
+    </xsl:choose>
   </xsl:function>
   
   
@@ -72,7 +78,8 @@
       <!--cvc-type.3.1.3: The value 'DUMMY_DENOMINATOR' of element 'gco:Integer' is not valid. (Element: gco:Integer with parent element: gmd:denominator)-->
       <rule errorType="type.3.1.3">The value '(.*)' of element '(.*)' is not valid\. \(Element: ([a-z]{3}):(.*) with parent element: (.*)\)</rule>
     </xsl:variable>
-    
+
+
     <xsl:variable name="regexp" select="$rules/rule[@errorType=$errorType]"/>
     <xsl:choose>
       <xsl:when test="$regexp">

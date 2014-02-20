@@ -1,0 +1,28 @@
+<strings>
+    <schematron.title>BGDI</schematron.title>
+    <translatedTitle>Title translations</translatedTitle>
+    <deTitleRequired>Data Identification / Citation / title is required and requires a german translation</deTitleRequired>
+    <deTitleReport>German title:</deTitleReport>
+    <frTitleRequired>Data Identification / Citation / title is required and requires a french translation</frTitleRequired>
+    <frTitleReport>French title:</frTitleReport>
+
+    <translatedAltTitle>Alternate Title translations</translatedAltTitle>
+    <deAltTitleRequired>Data Identification / Citation / alternate title is required and requires a german translation</deAltTitleRequired>
+    <deAltTitleReport>German alternate title:</deAltTitleReport>
+    <deAltTitleMaxLength>German alternate title is too long, max length is 30</deAltTitleMaxLength>
+    <deAltTitleMaxLengthReport>German alternate title length:</deAltTitleMaxLengthReport>
+    <frAltTitleRequired>Data Identification / Citation / alternate title is required and requires a french translation</frAltTitleRequired>
+    <frAltTitleReport>French alternate title:</frAltTitleReport>
+    <frAltTitleMaxLength>French alternate title is too long, max length is 30</frAltTitleMaxLength>
+    <frAltTitleMaxLengthReport>French alternate title length:</frAltTitleMaxLengthReport>
+
+    <translatedAbstract>Abstract translations</translatedAbstract>
+    <deAbstractRequired>Data Identification / abstract is required and requires a german translation</deAbstractRequired>
+    <deAbstractReport>German abstract:</deAbstractReport>
+    <frAbstractRequired>Data Identification / abstract is required and requires a french translation</frAbstractRequired>
+    <frAbstractReport>French abstract:</frAbstractReport>
+
+    <pointOfContact>Point of Contact</pointOfContact>
+    <pointOfContactRequired>Data Identification / Point of Contact element is required</pointOfContactRequired>
+    <pointOfContactReport>Point of contact is present</pointOfContactReport>
+</strings>

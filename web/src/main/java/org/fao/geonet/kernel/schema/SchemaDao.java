@@ -99,13 +99,14 @@ public class SchemaDao {
                     @SuppressWarnings("unchecked")
                     List<Element> criteriaResult = dbms.select(LOAD_GROUP_QUERY, input.getChildTextTrim(COL_GROUP_NAME), schematronId).getChildren();
                     for (Element criteriaElement : criteriaResult) {
-                        SchematronCriteria criteria = new SchematronCriteria();
+                        if (!criteriaElement.getChildText(COL_CRITERIA_ID).trim().isEmpty()) {
+                            SchematronCriteria criteria = new SchematronCriteria();
 
-                        criteria.setType(SchematronCriteriaType.valueOf(criteriaElement.getChildText(COL_CRITERIA_TYPE)));
-                        criteria.setValue(criteriaElement.getChildText(COL_CRITERIA_VALUE));
+                            criteria.setType(SchematronCriteriaType.valueOf(criteriaElement.getChildText(COL_CRITERIA_TYPE)));
+                            criteria.setValue(criteriaElement.getChildText(COL_CRITERIA_VALUE));
 
-                        group.getCriteriaList().add(criteria);
-
+                            group.getCriteriaList().add(criteria);
+                        }
                         group.setName(input.getChildText(COL_GROUP_NAME));
                         group.setRequirement(SchematronRequirement.valueOf(input.getChildText(COL_GROUP_REQUIREMENT)));
                         group.setSchematronId(Integer.parseInt(input.getChildText(COL_GROUP_SCHEMATRON_ID)));
@@ -126,11 +127,11 @@ public class SchemaDao {
 		return schematrons;
 	}
 
-	public static List<Element> selectSchemas(Dbms dbms, String file)
+	public static List<Element> selectSchemas(Dbms dbms, String file, String schemaName)
 			throws SQLException {
 		@SuppressWarnings("unchecked")
 		final List<Element> schematrons = dbms.select(
-				"select * from " + TABLE_SCHEMATRON + " where file=?", file)
+				"select * from " + TABLE_SCHEMATRON + " where file=? and schemaname=?", file, schemaName)
 				.getChildren();
 		return schematrons;
 	}

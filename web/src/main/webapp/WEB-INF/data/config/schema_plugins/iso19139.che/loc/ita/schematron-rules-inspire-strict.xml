@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <schematron.title>Inspire strict rules extension</schematron.title>
+    <report.M44.spec><div>Specification:</div></report.M44.spec>
+    <report.M44.degree><div>Degree of conformity found:</div></report.M44.degree>
+
+</strings>

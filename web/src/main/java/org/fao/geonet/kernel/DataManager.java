@@ -2176,13 +2176,16 @@ public class DataManager {
 			String schemaname = metadataSchema.getName();
 			final List<Element> schemas = SchemaDao.selectSchema(dbms, schemaname);
 
-			//Loop through all xsl files
+            final String schemaDir = this.schemaMan.getSchemaDir(schemaname);
+
+            //Loop through all xsl files
 			for (Element schematron : schemas) {
 
                 int id = Integer.parseInt(schematron.getChildText(SchemaDao.COL_SCHEMATRON_ID));
                 //it contains absolute path to the xsl file
-                final String file = schematron.getChildText(SchemaDao.COL_SCHEMATRON_FILE);
-                String rule = SchemaDao.toRuleName(file);
+                final String schematronFileName = schematron.getChildText(SchemaDao.COL_SCHEMATRON_FILE);
+                String file = schemaDir + MetadataSchema.SCHEMATRON_DIR + File.separator + schematronFileName;
+                String rule = SchemaDao.toRuleName(schematronFileName);
                 String dbident = ""+id;
 
                 List<SchematronCriteriaGroup> criteriaGroups = SchemaDao.selectCriteriaBySchema(dbms, id);
