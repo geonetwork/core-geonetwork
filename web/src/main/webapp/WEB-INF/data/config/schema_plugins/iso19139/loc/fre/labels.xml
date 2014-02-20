@@ -2874,21 +2874,21 @@ période de temps couverte par le service.
       <helper editorMode="radio_withdesc">
       <option value="Pas de restriction d’accès public selon INSPIRE" title="Aucun des articles de la loi ne peut être invoqué pour justifier d’une restriction d’accès public.">Pas de restriction d’accès public selon INSPIRE</option>
       <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.a)" 
-        title="La confidentialité des travaux des autorités publiques, lorsque cette confidentialité est prévue par la loi.">L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.a)</option>
+        title="La confidentialité des travaux des autorités publiques, lorsque cette confidentialité est prévue par la loi.">Confidentialité des travaux des autorités publiques</option>
       <option value="L124-5-II-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.b)" 
-        title="Les relations internationales, la sécurité publique ou la défense nationale.">L124-5-II-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.b)</option>
+        title="Les relations internationales, la sécurité publique ou la défense nationale.">Relations internationales</option>
       <option value="L124-5-II-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.c)" 
-        title="La bonne marche de la justice, la possibilité pour toute personne d’être jugée équitablement ou la capacité d’une autorité publique d’effectuer une enquête d’ordre pénal ou disciplinaire.">L124-5-II-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.c)</option>
+        title="La bonne marche de la justice, la possibilité pour toute personne d’être jugée équitablement ou la capacité d’une autorité publique d’effectuer une enquête d’ordre pénal ou disciplinaire.">Bonne marche de la justice</option>
       <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.d)" 
-        title="La confidentialité des informations commerciales ou industrielles, lorsque cette confidentialité est prévue par la législation nationale ou communautaire afin de protéger un intérêt économique légitime, notamment l’intérêt public lié à la préservation de la confidentialité des statistiques et du secret fiscal.">L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.d)</option>
+        title="La confidentialité des informations commerciales ou industrielles, lorsque cette confidentialité est prévue par la législation nationale ou communautaire afin de protéger un intérêt économique légitime, notamment l’intérêt public lié à la préservation de la confidentialité des statistiques et du secret fiscal.">Confidentialité des informations commerciales ou industrielles</option>
       <option value="L124-5-II-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.e)" 
-        title="Les droits de propriété intellectuelle.">L124-5-II-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.e)</option>
+        title="Les droits de propriété intellectuelle.">Propriété intellectuelle</option>
       <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.f)" 
-        title="La confidentialité des données à caractère personnel et/ou des fichiers concernant une personne physique lorsque cette personne n’a pas consenti à la divulgation de ces informations au public, lorsque la confidentialité de ce type d’information est prévue par la législation nationale ou communautaire.">L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.f)</option>
+        title="La confidentialité des données à caractère personnel et/ou des fichiers concernant une personne physique lorsque cette personne n’a pas consenti à la divulgation de ces informations au public, lorsque la confidentialité de ce type d’information est prévue par la législation nationale ou communautaire.">Protection de la vie privée</option>
       <option value="L124-4-I-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.g)" 
-        title="Les intérêts ou la protection de toute personne qui a fourni les informations demandées sur une base volontaire sans y être contrainte par la loi ou sans que la loi puisse l’y contraindre, à moins que cette personne n’ait consenti à la divulgation de ces données.">L124-4-I-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.g)</option>
+        title="Les intérêts ou la protection de toute personne qui a fourni les informations demandées sur une base volontaire sans y être contrainte par la loi ou sans que la loi puisse l’y contraindre, à moins que cette personne n’ait consenti à la divulgation de ces données.">Protection des personnes</option>
       <option value="L124-4-I-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.h)" 
-        title="La protection de l’environnement auquel ces informations ont trait, comme par exemple la localisation d’espèces rares.">L124-4-I-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.h)</option>
+        title="La protection de l’environnement auquel ces informations ont trait, comme par exemple la localisation d’espèces rares.">Protection de l'environnement</option>
       <option value="L127-8-IV du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 17.7)" 
         title="">L127-8-IV du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 17.7)</option>
     </helper>-->
@@ -3925,6 +3925,7 @@ l’IGN (WPS)
       <option value="Aucune condition ne s’applique">Aucune condition ne s’applique</option>
       <option value="Conditions inconnues">Conditions inconnues</option>
       <option value="Utilisation libre sous réserve de mentionner la source (a minima le nom du producteur) et la date de sa dernière mise à jour">Utilisation libre sous réserve de mentionner la source (a minima le nom du producteur) et la date de sa dernière mise à jour</option>
+      <option value="Données ouvertes">Données ouvertes</option>
     </helper>
   </element>
   <element name="gmd:userContactInfo" id="66.0">

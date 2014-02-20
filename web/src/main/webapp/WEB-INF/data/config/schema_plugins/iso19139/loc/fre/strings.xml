@@ -39,10 +39,10 @@
   <publicationDate>Date de publication</publicationDate>
   <revisionDate>Date de révision</revisionDate>
   <conformity>Conformité</conformity>
-  <conformity_title>Title</conformity_title>
-  <conformity_date>Date</conformity_date>
+  <conformity_title>Spécification</conformity_title>
+  <conformity_date>Date de publication</conformity_date>
   <explanation>Explanation</explanation>
-  <pass>Pass</pass>
+  <pass>Degré</pass>
   <pointOfContact>Organisation responsable de la ressource</pointOfContact>
   <metadataPointOfContact>Point de contact des métadonnées</metadataPointOfContact>
   <organisationName>Nom de l'organisation</organisationName>
