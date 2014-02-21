@@ -491,15 +491,19 @@ public class DataManager {
             }
 
             if(schema.trim().equals("iso19139.che") && !fastIndex) {
-                /*
-                 * Geocat doesn't permit multilingual elements to have characterString elements only LocalizedString elements.
-                 * This transformation ensures this property
-                 */
-                md = Xml.transform(md, stylePath+"characterstring-to-localisedcharacterstring.xsl");
-                String parentUuid = null;
-                md = updateFixedInfo(schema, id, uuid, md, parentUuid , UpdateDatestamp.no, dbms, servContext);
+                try {
+                    /*
+                     * Geocat doesn't permit multilingual elements to have characterString elements only LocalizedString elements.
+                     * This transformation ensures this property
+                     */
+                    md = Xml.transform(md, stylePath+"characterstring-to-localisedcharacterstring.xsl");
+                    String parentUuid = null;
+                    md = updateFixedInfo(schema, id, uuid, md, parentUuid , UpdateDatestamp.no, dbms, servContext);
 
-                xmlSerializer.update(dbms, id, md, new ISODate().toString(), false, uuid, servContext);
+                    xmlSerializer.update(dbms, id, md, new ISODate().toString(), false, uuid, servContext);
+                } catch (Throwable t) {
+                    Log.error(Geonet.DATA_MANAGER, "Error converting Characterstring to PTFreeText elements. For metadata "+id, t);
+                }
 
             }
              if("n".equalsIgnoreCase(isHarvested) && processSharedObjects && schema.trim().equals("iso19139.che")) {
