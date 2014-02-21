@@ -350,26 +350,28 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             var statusIdx = this.statusStore.find('id', status);
             
             // Set button title with status information if not set to unkonwn (ie. workflow is enabled)
-            this.editAction.setText(OpenLayers.i18n('edit') 
+            if(this.editAction) {
+                this.editAction.setText(OpenLayers.i18n('edit') 
                     + (statusIdx !== -1 && status > 0 ? 
                             OpenLayers.String.format(OpenLayers.i18n('currentStatus'), {
                                 status: this.statusStore.getAt(statusIdx).get('label')[catalogue.lang]
                             }) : '')
                     );
-            this.editAction.show();
-            this.deleteAction.show();
+                this.editAction.show();
+            }
+            if(this.deleteAction)this.deleteAction.show();
             
             // If status is unkown or undefined
             if (status == '' || status == '0') {
-                this.enableWorkflowAction.show();
-                this.statusAction.hide();
+                if(this.enableWorkflowAction)this.enableWorkflowAction.show();
+                if(this.statusAction)this.statusAction.hide();
             } else {
-                this.enableWorkflowAction.hide();
-                this.statusAction.show();
+                if(this.enableWorkflowAction)this.enableWorkflowAction.hide();
+                if(this.statusAction)this.statusAction.show();
             }
         }
         if(this.otherActions) this.otherActions.setVisible(identified);
-        this.adminMenuSeparator.setVisible(identified);
+        if(this.adminMenuSeparator)this.adminMenuSeparator.setVisible(identified);
         
         /* Actions status depend on records */
         if(GeoNetwork.Settings && GeoNetwork.Settings.editor && GeoNetwork.Settings.editor.disableIfSubmittedForEditor) {
