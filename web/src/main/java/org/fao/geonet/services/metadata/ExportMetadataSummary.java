@@ -63,7 +63,7 @@ public class ExportMetadataSummary implements Service {
             fieldExporters.add(new HarvestedFieldExporter());
             fieldExporters.add(new PublishedFieldExporter());
             fieldExporters.add(new ValidFieldExporter());
-            fieldExporters.add(new UserInfoFieldExporter());
+            fieldExporters.add(new UserInfoFieldExporter(context));
             fieldExporters.add(new TypeFieldExporter());
             fieldExporters.add(new NullWarningFieldExporter("_defaultTitle", "Default Title"));
 
@@ -131,7 +131,11 @@ public class ExportMetadataSummary implements Service {
                     if (builder.length() > 0) {
                         builder.append(',');
                     }
-                    builder.append("\"").append(fieldExporter.getFieldValue().replace('"', '\'')).append("\"");
+                    String fieldValue = fieldExporter.getFieldValue();
+                    if (fieldExporter.isSingleValue()) {
+                        fieldValue = fieldValue.replace('"', '\'');
+                    }
+                    builder.append("\"").append(fieldValue).append("\"");
                     fieldExporter.clear();
                 }
                 builder.append('\n');
@@ -159,7 +163,9 @@ public class ExportMetadataSummary implements Service {
         public String getFieldName() {
             return fieldName;
         }
-
+        public boolean isSingleValue() {
+            return true;
+        }
         public String getFieldValue() {
             return fieldValue;
         }
@@ -179,7 +185,7 @@ public class ExportMetadataSummary implements Service {
         }
     }
 
-    private class GroupOwnerFieldExporter extends FieldExporter {
+    private static class GroupOwnerFieldExporter extends FieldExporter {
         Map<String, String> idToName = new HashMap<String, String>();
 
         public GroupOwnerFieldExporter(ServiceContext context) throws Exception {
@@ -208,18 +214,54 @@ public class ExportMetadataSummary implements Service {
         }
     }
 
-    private class UserInfoFieldExporter extends FieldExporter {
-        public UserInfoFieldExporter() {
-            super("_userinfo", "Username, First, Last, Profile");
+    private static class UserInfoFieldExporter extends FieldExporter {
+        private static class Info {
+            String username = "", first = "", last = "", profile = "", org = "", email = "";
+
+            @Override
+            public String toString() {
+                return String.format("%s\",\"%s %s\",\"%s\",\"%s\",\"%s", username, first, last, profile, org, email);
+            }
+        }
+        Map<String, Info> idToInfo = new HashMap<String, Info>();
+
+        public UserInfoFieldExporter(ServiceContext context) throws Exception {
+            super("_owner", "Username\", \"Name\", \"Profile\", \"Organization\", \"E-mail");
+            Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+
+            @SuppressWarnings("unchecked")
+            final List<Element> users = dbms.select("SELECT id, name FROM Groups").getChildren();
+
+            idToInfo.put(null, new Info());
+            for (Element user : users) {
+                Info info = new Info();
+                info.email = user.getChildText("email");
+                info.username = user.getChildText("username");
+                info.profile = user.getChildText("profile");
+                info.first = user.getChildText("name");
+                info.last = user.getChildText("surname");
+                info.org = user.getChildText("organisation");
+                this.idToInfo.put(user.getChildText("id"), info);
+            }
+        }
+
+        @Override
+        public boolean isSingleValue() {
+            return false;
         }
 
         @Override
         public String getFieldValue() {
-            return super.getFieldValue().replace('|', ',');
+            final String id = super.getFieldValue();
+            Info info = idToInfo.get(id);
+            if (info != null) {
+                return info.toString();
+            }
+            return id.replace('|', ',');
         }
     }
 
-    private class ValidFieldExporter extends FieldExporter {
+    private static class ValidFieldExporter extends FieldExporter {
         public ValidFieldExporter() {
             super("_valid", "Validity");
         }
@@ -238,7 +280,7 @@ public class ExportMetadataSummary implements Service {
         }
     }
 
-    private class PublishedFieldExporter extends FieldExporter {
+    private static class PublishedFieldExporter extends FieldExporter {
         public PublishedFieldExporter() {
             super("_groupPublished", "Is Published");
         }
@@ -253,7 +295,7 @@ public class ExportMetadataSummary implements Service {
         }
     }
 
-    private class TypeFieldExporter extends FieldExporter {
+    private static class TypeFieldExporter extends FieldExporter {
         public TypeFieldExporter() {
             super("_isTemplate", "Type (Metadata/Sub-template/Template");
         }
@@ -274,7 +316,7 @@ public class ExportMetadataSummary implements Service {
     }
 
 
-    private class HarvestedFieldExporter extends FieldExporter {
+    private static class HarvestedFieldExporter extends FieldExporter {
         public HarvestedFieldExporter() {
             super("_isHarvested", "Is Harvested");
         }
@@ -289,7 +331,7 @@ public class ExportMetadataSummary implements Service {
         }
     }
 
-    private class NullWarningFieldExporter extends FieldExporter {
+    private static class NullWarningFieldExporter extends FieldExporter {
         public NullWarningFieldExporter(String fieldName, String fieldLabel) {
             super(fieldName, fieldLabel);
         }
