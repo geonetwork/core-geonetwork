@@ -231,6 +231,7 @@
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/de.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/en.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/es.js</include>
+                <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/it.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/fr.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/nl.js</include>
                 <include>${project.build.directory}/classes/apps/js/OpenLayers/lib/OpenLayers/Lang/pl.js</include>
@@ -329,7 +330,8 @@
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/ca.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/de.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/en.js</include>
-				<include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/es.js</include>
+                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/es.js</include>
+                <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/it.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/fr.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/nl.js</include>
                 <include>${project.build.directory}/classes/apps/js/GeoNetwork/lib/GeoNetwork/lang/pl.js</include>
@@ -511,6 +513,8 @@
                 <include>${project.build.directory}/classes/apps/sextant/js/Settings.js</include>
                 <include>${project.build.directory}/classes/apps/sextant/js/cat.map/Settings.js</include>
                 <include>${project.build.directory}/classes/apps/sextant/js/cat.lang/fr.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.lang/es.js</include>
+                <include>${project.build.directory}/classes/apps/sextant/js/cat.lang/it.js</include>
                 <include>${project.build.directory}/classes/apps/sextant/js/cat.lang/en.js</include>
                 <include>${project.build.directory}/classes/apps/sextant/js/cat.edit.js</include>
                 <include>${project.build.directory}/classes/apps/sextant/js/cat.ipc.js</include>
