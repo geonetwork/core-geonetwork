@@ -226,11 +226,11 @@ public class ExportMetadataSummary implements Service {
         Map<String, Info> idToInfo = new HashMap<String, Info>();
 
         public UserInfoFieldExporter(ServiceContext context) throws Exception {
-            super("_owner", "Username\", \"Name\", \"Profile\", \"Organization\", \"E-mail");
+            super("_owner", "Username\", \"First Last\", \"Profile\", \"Organization\", \"E-mail");
             Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
             @SuppressWarnings("unchecked")
-            final List<Element> users = dbms.select("SELECT id, name FROM Groups").getChildren();
+            final List<Element> users = dbms.select("SELECT id, username, email, profile, name, surname, organisation FROM Users").getChildren();
 
             idToInfo.put(null, new Info());
             for (Element user : users) {
