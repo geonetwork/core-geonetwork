@@ -29,6 +29,25 @@
         }
       };
     }]),
+  module.directive('gnTemplateFieldToggle', [
+    function() {
+      return {
+        restrict: 'A',
+        replace: true,
+        templateUrl: '../../catalog/components/edit/templatefield/' +
+            'partials/togglefield.html',
+        scope: {
+          id: '@gnTemplateFieldToggle',
+          label: '@'
+        },
+        link: function(scope, element, attrs) {
+          scope.checked = true;
+          scope.toggle = function() {
+            $(scope.id).toggleClass('hidden');
+          };
+        }
+      };
+    }]),
   /**
      * The template field directive managed a custom field which
      * is based on an XML snippet to be sent in the form with some
@@ -60,11 +79,17 @@
           // Replace all occurence of {{fieldname}} by its value
           var generateSnippet = function() {
             var xmlSnippet = xmlSnippetTemplate, updated = false;
-            angular.forEach(fields, function(field) {
-              var value = $('#' + scope.id + '_' + field).val() || '';
-              if (value !== undefined) {
+            angular.forEach(fields, function(fieldName) {
+              var field = $('#' + scope.id + '_' + fieldName);
+              var value = '';
+              if (field.attr('type') === 'checkbox') {
+                value = field.is(":checked") ?  'true' : 'false';
+              } else {
+                value = field.val() || '';
+              }
+              if (value !== '') {
                 xmlSnippet = xmlSnippet.replace(
-                    '{{' + field + '}}',
+                    '{{' + fieldName + '}}',
                     value.replace(/\&/g, '&amp;amp;')
                          .replace(/\"/g, '&quot;'));
                 updated = true;
@@ -97,7 +122,11 @@
           // Initialize all values
           angular.forEach(values, function(value, key) {
             var selector = '#' + scope.id + '_' + fields[key];
-            $(selector).val(value);
+            if ($(selector).attr('type') === 'checkbox') {
+              $(selector).prop('checked', value);
+            } else {
+              $(selector).val(value);
+            }
           });
 
           generateSnippet();

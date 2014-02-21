@@ -79,7 +79,7 @@
       <!--<xsl:variable name="nodes" select="saxon:evaluate(concat('$p1/..', @xpath), $base)"/>
       does not work here because namespace of the context (ie. this XSL) are used
       to resolve the xpath. It needs to be in a profile specific XSL which declare profile
-      namespaces. -->
+      namespaces that's why each schema should define its evaluate-<schemaid> template. -->
       <xsl:variable name="nodes">
         <saxon:call-template name="{concat('evaluate-', $schema)}">
           <xsl:with-param name="base" select="$base"/>
@@ -188,8 +188,6 @@
             metadocument. This mode will probably take precedence over the others
             if defined in a view.
             -->
-          
-          <xsl:variable name="xpath" select="@xpath"/>
           <xsl:variable name="name" select="@name"/>
           <xsl:variable name="del" select="@del"/>
           <xsl:variable name="template" select="template"/>
@@ -325,13 +323,15 @@
             correct location. -->
             <xsl:variable name="xpathFieldId" select="concat('_P', generate-id())"/>
             <xsl:variable name="id" select="concat($xpathFieldId, '_xml')"/>
-            
+            <xsl:variable name="isMissingLabel" select="@isMissingLabel"/>
+
             <xsl:call-template name="render-element-template-field">
               <xsl:with-param name="name" select="$strings/*[name() = $name]"/>
               <xsl:with-param name="id" select="$id"/>
               <xsl:with-param name="xpathFieldId" select="$xpathFieldId"/>
               <xsl:with-param name="isExisting" select="false()"/>
               <xsl:with-param name="template" select="$template"/>
+              <xsl:with-param name="isMissingLabel" select="$strings/*[name() = $isMissingLabel]"/>
             </xsl:call-template>
           </xsl:if>
         </xsl:when>

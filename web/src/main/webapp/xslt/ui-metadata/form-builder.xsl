@@ -301,8 +301,12 @@
     <xsl:param name="addDirective" required="no"/>
     <xsl:param name="qname" required="no"/>
     <xsl:param name="parentRef" required="no"/>
+    <!-- Label to display if element is missing. The field
+    is initialized with a default template. -->
+    <xsl:param name="isMissingLabel" required="no"/>
     
-    
+    <xsl:variable name="tagId" select="generate-id()"/>
+
     <!--<xsl:message>!render-element-template-field <xsl:copy-of select="$keyValues"/>
       <xsl:value-of select="$name"/>/tpl:
       <xsl:copy-of select="$template"/>/
@@ -316,107 +320,123 @@
         <xsl:value-of select="$name"/>
       </label>
       <div class="col-sm-9">
-        <xsl:if test="$hasAddAction">
-          <xsl:choose>
-            <xsl:when test="$addDirective != ''">
-              <!-- The add directive should take care of building the form 
-              for adding the element. eg. adding a textarea with an XML snippet 
-              in. 
-              The default add action (ie. without directive), trigger add based
-              on schema info. It may stop on choices (eg. bbox or polygon for extent)
-              TODO: add a textarea and
-              use the default XML template defined in the editor configuration.
-              -->
-              <div>
-                <xsl:attribute name="{$addDirective}"/>
-                <xsl:attribute name="data-dom-id" select="$id"/>
-                <xsl:attribute name="data-element-name" select="$qname"/>
-                <xsl:attribute name="data-element-ref" select="$parentRef"/>
-                <xsl:attribute name="data-template-add-action" select="'true'"/>
-              </div>
-            </xsl:when>
-            <xsl:otherwise>
-              <i class="btn btn-default fa fa-plus" data-gn-template-field-add-button="{$id}"/>
-            </xsl:otherwise>
-          </xsl:choose>
+
+        <!-- Create a title indicating that the element is missing in the current
+        record. A checkbox display the template field to be populated. -->
+        <xsl:if test="$isMissingLabel != ''">
+          <div data-gn-template-field-toggle="#{$tagId}"
+              data-label="{$isMissingLabel}"/>
         </xsl:if>
-        
-        
-        <xsl:if test="not($addDirective)">
-          <div>
-            <xsl:if test="$hasAddAction">
-              <xsl:attribute name="class">hidden</xsl:attribute>
-            </xsl:if>
-            <!-- For each template field create an input.
-            The directive takes care of setting values. -->
-            <xsl:for-each select="$template/values/key">
-              <xsl:variable name="valueLabelKey" select="@label"/>
-              <xsl:variable name="helper" select="if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/helper else ''"/>
-              <xsl:variable name="codelist" select="if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/codelist else ''"/>
-              
-              <!-- Only display label if more than one key to match -->
-              <xsl:if test="count($template/values/key) > 1">
-                <label>
-                  <xsl:value-of select="$strings/*[name() = $valueLabelKey]"/>
-                </label>
+        <div id="{$tagId}">
+          <xsl:if test="$isMissingLabel != ''">
+            <xsl:attribute name="class" select="'hidden'"/>
+          </xsl:if>
+
+          <xsl:if test="$hasAddAction">
+            <xsl:choose>
+              <xsl:when test="$addDirective != ''">
+                <!-- The add directive should take care of building the form
+                for adding the element. eg. adding a textarea with an XML snippet
+                in.
+                The default add action (ie. without directive), trigger add based
+                on schema info. It may stop on choices (eg. bbox or polygon for extent)
+                TODO: add a textarea and
+                use the default XML template defined in the editor configuration.
+                -->
+                <div>
+                  <xsl:attribute name="{$addDirective}"/>
+                  <xsl:attribute name="data-dom-id" select="$id"/>
+                  <xsl:attribute name="data-element-name" select="$qname"/>
+                  <xsl:attribute name="data-element-ref" select="$parentRef"/>
+                  <xsl:attribute name="data-template-add-action" select="'true'"/>
+                </div>
+              </xsl:when>
+              <xsl:otherwise>
+                <i class="btn btn-default fa fa-plus" data-gn-template-field-add-button="{$id}"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:if>
+
+
+          <xsl:if test="not($addDirective)">
+            <div>
+              <xsl:if test="$hasAddAction">
+                <xsl:attribute name="class">hidden</xsl:attribute>
               </xsl:if>
-              
-              <xsl:choose>
-                <xsl:when test="@use = 'textarea'">
-                  <textarea class="form-control" id="{$id}_{@label}"></textarea>
-                </xsl:when>
-                <xsl:when test="$codelist != ''">
-                  <select class="form-control input-sm" id="{$id}_{@label}">
-                    <xsl:for-each select="$codelist/entry">
-                      <xsl:sort select="label"/>
-                      <option value="{code}" title="{normalize-space(description)}">
-                        <xsl:value-of select="label"/>
-                      </option>
-                    </xsl:for-each>
-                  </select>
-                </xsl:when>
-                <xsl:when test="@use = 'gn-date-picker'">
-                  <input class="form-control" type="hidden" value="" id="{$id}_{@label}"/>
-                  <div data-gn-date-picker="{if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/value else ''}"
-                       data-id="#{$id}_{@label}"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <input class="form-control" type="{if (@use) then @use else 'text'}" value="" id="{$id}_{@label}">
-                    <xsl:if test="$helper">
-                      <!-- hide the form field if helper is available, the 
-                        value is set by the directive which provide customized 
-                        forms -->
-                      <xsl:attribute name="class" select="'hidden'"/>
-                    </xsl:if>
-                  </input>
-                </xsl:otherwise>
-              </xsl:choose>
-              
-              <xsl:if test="$helper">
-                <xsl:variable name="elementName" select="concat($id, '_', @label)"/>
-                <xsl:call-template name="render-form-field-helper">
-                  <xsl:with-param name="elementRef" select="$elementName"/>
-                  <xsl:with-param name="relatedElement" select="if ($helper/@rel)
-                    then concat($elementName, '_', substring-after($helper/@rel, ':'))
-                    else ''"/>
-                  <!-- TODO related attribute ? -->
-                  <xsl:with-param name="dataType" select="'text'"/>
-                  <xsl:with-param name="listOfValues" select="$helper"/>
-                </xsl:call-template>
+              <!-- For each template field create an input.
+              The directive takes care of setting values. -->
+              <xsl:for-each select="$template/values/key">
+                <xsl:variable name="valueLabelKey" select="@label"/>
+                <xsl:variable name="helper" select="if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/helper else ''"/>
+                <xsl:variable name="codelist" select="if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/codelist else ''"/>
+
+                <!-- Only display label if more than one key to match -->
+                <xsl:if test="count($template/values/key) > 1">
+                  <label>
+                    <xsl:value-of select="$strings/*[name() = $valueLabelKey]"/>
+                  </label>
+                </xsl:if>
+
+                <xsl:choose>
+                  <xsl:when test="@use = 'textarea'">
+                    <textarea class="form-control" id="{$id}_{@label}"></textarea>
+                  </xsl:when>
+                  <xsl:when test="$codelist != ''">
+                    <select class="form-control input-sm" id="{$id}_{@label}">
+                      <xsl:for-each select="$codelist/entry">
+                        <xsl:sort select="label"/>
+                        <option value="{code}" title="{normalize-space(description)}">
+                          <xsl:value-of select="label"/>
+                        </option>
+                      </xsl:for-each>
+                    </select>
+                  </xsl:when>
+                  <xsl:when test="@use = 'checkbox'">
+                    <input type="checkbox" id="{$id}_{@label}"/>
+                  </xsl:when>
+                  <xsl:when test="@use = 'gn-date-picker'">
+                    <input class="form-control" type="hidden" value="" id="{$id}_{@label}"/>
+                    <div data-gn-date-picker="{if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/value else ''}"
+                         data-id="#{$id}_{@label}"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <input class="form-control" type="{if (@use) then @use else 'text'}" value="" id="{$id}_{@label}">
+                      <xsl:if test="$helper">
+                        <!-- hide the form field if helper is available, the
+                          value is set by the directive which provide customized
+                          forms -->
+                        <xsl:attribute name="class" select="'hidden'"/>
+                      </xsl:if>
+                    </input>
+                  </xsl:otherwise>
+                </xsl:choose>
+
+                <xsl:if test="$helper">
+                  <xsl:variable name="elementName" select="concat($id, '_', @label)"/>
+                  <xsl:call-template name="render-form-field-helper">
+                    <xsl:with-param name="elementRef" select="$elementName"/>
+                    <xsl:with-param name="relatedElement" select="if ($helper/@rel)
+                      then concat($elementName, '_', substring-after($helper/@rel, ':'))
+                      else ''"/>
+                    <!-- TODO related attribute ? -->
+                    <xsl:with-param name="dataType" select="'text'"/>
+                    <xsl:with-param name="listOfValues" select="$helper"/>
+                  </xsl:call-template>
+                </xsl:if>
+
+              </xsl:for-each>
+
+              <xsl:if test="not($isExisting)">
+                <input class="gn-debug" type="text" name="{$xpathFieldId}" value="{@xpath}"/>
               </xsl:if>
-              
-            </xsl:for-each>
-            
-            <xsl:if test="not($isExisting)">
-              <input class="gn-debug" type="text" name="{$xpathFieldId}" value="{@xpath}"/>
-            </xsl:if>
-            <textarea class="form-control gn-debug" name="{$id}" data-gn-template-field="{$id}"
-              data-keys="{string-join($template/values/key/@label, '#')}"
-              data-values="{if ($keyValues and count($keyValues/*) > 0) then string-join($keyValues/field/value, '#') else ''}">
-              <xsl:copy-of select="$template/snippet/*"/>
-            </textarea>
-          </div>
-        </xsl:if>
+              <textarea class="form-control gn-debug" name="{$id}" data-gn-template-field="{$id}"
+                data-keys="{string-join($template/values/key/@label, '#')}"
+                data-values="{if ($keyValues and count($keyValues/*) > 0) then string-join($keyValues/field/value, '#') else ''}">
+                <xsl:copy-of select="$template/snippet/*"/>
+              </textarea>
+            </div>
+          </xsl:if>
+        </div>
       </div>
       <xsl:if test="$refToDelete">
         <div class="col-sm-1 gn-control">

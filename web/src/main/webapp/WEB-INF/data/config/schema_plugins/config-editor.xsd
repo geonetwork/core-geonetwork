@@ -325,6 +325,15 @@
           <xs:documentation>The xpath of the element to match.</xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute name="isMissingLabel" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The label to display if the element
+            does not exist in the metadata record. It indicates that
+          the element is missing in the current record. It could be use
+          for a conformity section saying that the element is "not evaluated".
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
       <xs:attribute name="or">
         <xs:annotation>
           <xs:documentation>The local name of the geonet child (ie. non existing element) to
