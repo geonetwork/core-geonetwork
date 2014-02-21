@@ -397,6 +397,7 @@
                 "OpenLayers/Lang/de.js",
                 "OpenLayers/Lang/fr.js",
                 "OpenLayers/Lang/es.js",
+                "OpenLayers/Lang/it.js",
                 "OpenLayers/Lang/nl.js",
                 "OpenLayers/Lang/pl.js",
                 "OpenLayers/Spherical.js"

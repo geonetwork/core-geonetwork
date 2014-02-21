@@ -1018,6 +1018,8 @@ Ext.onReady(function() {
     
     if(cat.language == 'fr') cat.language = 'fre';
     else if(cat.language == 'en') cat.language = 'eng';
+    else if(cat.language == 'es') cat.language = 'spa';
+    else if(cat.language == 'it') cat.language = 'ita';
     
     cat.libPath = cat.imgPath?cat.imgPath+'js/lib':'../js';
     GeoNetwork.Util.setLang(cat.language, cat.libPath);
