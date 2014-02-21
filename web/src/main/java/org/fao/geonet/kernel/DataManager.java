@@ -2225,7 +2225,7 @@ public class DataManager {
 
                 if(requirement != SchematronRequirement.DISABLED) {
                     if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                        Log.debug(Geonet.DATA_MANAGER, " - rule:" + rule);
+                        Log.debug(Geonet.DATA_MANAGER, " - rule:" + rule + ". XSL validation file is: "+file);
                     }
 
 
@@ -2270,14 +2270,12 @@ public class DataManager {
                             valTypeAndStatus.put(ruleId, results);
                         }
                     } catch (Exception e) {
-                        Log.error(Geonet.DATA_MANAGER,"WARNING: schematron xslt "+rule+" failed");
+                        Log.error(Geonet.DATA_MANAGER,"WARNING: schematron xslt "+rule+" failed", e);
 
                         // If an error occurs that prevents to verify schematron rules, add to show in report
                         Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
                         errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
                         report.addContent(errorReport);
-
-                        e.printStackTrace();
                     }
 
                     // -- append report to main XML report.
