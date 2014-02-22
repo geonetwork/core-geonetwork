@@ -237,6 +237,38 @@
 	       </xsl:otherwise>
 	    </xsl:choose>
    </xsl:template>
+
+    <xsl:template priority="200" match="gmd:name[(ancestor-or-self::gmd:CI_OnlineResource)]">
+        <xsl:variable name="mainLang">
+            <xsl:call-template name="langId19139"/>
+        </xsl:variable>
+        <xsl:variable name="locale" select="concat('#', $mainLang)" />
+        <xsl:choose>
+            <xsl:when test="gco:CharacterString[normalize-space(.) != '']">
+                <gmd:name>
+                    <gco:CharacterString>
+                        <xsl:value-of select="gco:CharacterString" />
+                    </gco:CharacterString>
+                </gmd:name>
+            </xsl:when>
+            <xsl:when test=".//gmd:LocalisedCharacterString[@locale = $locale and normalize-space(.) != '']">
+                <gmd:name>
+                    <gco:CharacterString>
+                        <xsl:value-of select=".//gmd:LocalisedCharacterString[@locale = $locale and normalize-space(.) != '']" />
+                    </gco:CharacterString>
+                </gmd:name>
+            </xsl:when>
+            <xsl:when test=".//gmd:LocalisedCharacterString[normalize-space(.) != '']">
+                <gmd:name>
+                    <gco:CharacterString>
+                        <xsl:value-of select=".//gmd:LocalisedCharacterString[normalize-space(.) != '']" />
+                    </gco:CharacterString>
+                </gmd:name>
+            </xsl:when>
+            <xsl:otherwise></xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
     <!-- The following are NOT multilingual text -->
     <xsl:template priority="100" match="gmd:identifier|
         gmd:fileIdentifier|

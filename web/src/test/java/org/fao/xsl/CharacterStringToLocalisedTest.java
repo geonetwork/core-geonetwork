@@ -64,6 +64,70 @@ public class CharacterStringToLocalisedTest {
     }
 
     @Test
+    public void removePTFreeTextFromOnlineResource() throws Exception {
+        String pathToXsl = TransformationTestSupport.geonetworkWebapp + "/xsl/characterstring-to-localisedcharacterstring.xsl";
+
+        final String xml = "<che:CHE_MD_Metadata xmlns:che=\"http://www.geocat.ch/2008/che\" xmlns:srv=\"http://www.isotc211" +
+                            ".org/2005/srv\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" xmlns:gco=\"http://www.isotc211" +
+                            ".org/2005/gco\" xmlns:gml=\"http://www.opengis.net/gml\" xmlns:geonet=\"http://www.fao.org/geonetwork\" " +
+                            "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" gco:isoType=\"gmd:MD_Metadata\"> "
+                            + "<gmd:language xmlns:xalan=\"http://xml.apache.org/xalan\"> " +
+                            "<gco:CharacterString>fra</gco:CharacterString> </gmd:language> "
+                            + "<gmd:CI_OnlineResource>\n"
+                            + "  <gmd:name xsi:type=\"gmd:PT_FreeText_PropertyType\" gco:nilReason=\"missing\">\n"
+                            + "    <gco:CharacterString/>\n"
+                            + "    <gmd:PT_FreeText>\n"
+                            + "      <gmd:textGroup>\n"
+                            + "        <gmd:LocalisedCharacterString locale=\"#%s\">SITN - Kartenserver des Kantons " +
+                            "Neuenburg</gmd:LocalisedCharacterString>\n"
+                            + "      </gmd:textGroup>\n"
+                            + "    </gmd:PT_FreeText>\n"
+                            + "  </gmd:name>\n"
+                            + "</gmd:CI_OnlineResource>\n" + "</che:CHE_MD_Metadata>";
+        Element testData = Xml.loadString(String.format(xml, "DE"), false);
+
+        Element transformed = Xml.transform(testData, pathToXsl);
+        findAndAssert(transformed, new Count(1, new Finder("CI_OnlineResource/name/CharacterString")));
+        findAndAssert(transformed, new Count(0, new Finder("CI_OnlineResource/name/PT_FreeText/textGroup/LocalisedCharacterString")));
+
+        testData = Xml.loadString(String.format(xml, "FR"), false);
+
+        transformed = Xml.transform(testData, pathToXsl);
+        findAndAssert(transformed, new Count(1, new Finder("CI_OnlineResource/name/CharacterString")));
+        findAndAssert(transformed, new Count(0, new Finder("CI_OnlineResource/name/PT_FreeText/textGroup/LocalisedCharacterString")));
+
+        testData = Xml.loadString("<che:CHE_MD_Metadata xmlns:che=\"http://www.geocat.ch/2008/che\" xmlns:srv=\"http://www.isotc211" +
+                                  ".org/2005/srv\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" xmlns:gco=\"http://www.isotc211" +
+                                  ".org/2005/gco\" xmlns:gml=\"http://www.opengis.net/gml\" xmlns:geonet=\"http://www.fao.org/geonetwork\" " +
+                                  "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" gco:isoType=\"gmd:MD_Metadata\"> "
+                                  + "<gmd:language xmlns:xalan=\"http://xml.apache.org/xalan\"> " +
+                                  "<gco:CharacterString>fra</gco:CharacterString> </gmd:language> "
+                                  + "<gmd:CI_OnlineResource>\n"
+                                  + "  <gmd:name xsi:type=\"gmd:PT_FreeText_PropertyType\" gco:nilReason=\"missing\">\n"
+                                  + "    <gco:CharacterString>SITN - Kartenserver des Kantons Neuenburg</gco:CharacterString>\n"
+                                  + "  </gmd:name>\n"
+                                  + "</gmd:CI_OnlineResource>\n" + "</che:CHE_MD_Metadata>", false);
+
+        transformed = Xml.transform(testData, pathToXsl);
+        findAndAssert(transformed, new Count(1, new Finder("CI_OnlineResource/name/CharacterString")));
+        findAndAssert(transformed, new Count(0, new Finder("CI_OnlineResource/name/PT_FreeText/textGroup/LocalisedCharacterString")));
+
+        testData = Xml.loadString("<che:CHE_MD_Metadata xmlns:che=\"http://www.geocat.ch/2008/che\" xmlns:srv=\"http://www.isotc211" +
+                                  ".org/2005/srv\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" xmlns:gco=\"http://www.isotc211" +
+                                  ".org/2005/gco\" xmlns:gml=\"http://www.opengis.net/gml\" xmlns:geonet=\"http://www.fao.org/geonetwork\" " +
+                                  "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" gco:isoType=\"gmd:MD_Metadata\"> "
+                                  + "<gmd:language xmlns:xalan=\"http://xml.apache.org/xalan\"> " +
+                                  "<gco:CharacterString>fra</gco:CharacterString> </gmd:language> "
+                                  + "<gmd:CI_OnlineResource>\n"
+                                  + "  <gmd:name xsi:type=\"gmd:PT_FreeText_PropertyType\" gco:nilReason=\"missing\">\n"
+                                  + "  </gmd:name>\n"
+                                  + "</gmd:CI_OnlineResource>\n" + "</che:CHE_MD_Metadata>", false);
+
+        transformed = Xml.transform(testData, pathToXsl);
+        findAndAssert(transformed, new Count(0, new Finder("CI_OnlineResource/name")));
+    }
+
+    @Test
     public void fixBrokenKeywordXLinks() throws Exception {
         String pathToXsl = TransformationTestSupport.geonetworkWebapp
                 + "/xsl/characterstring-to-localisedcharacterstring.xsl";
@@ -72,7 +136,6 @@ public class CharacterStringToLocalisedTest {
                         "<descriptiveKeywords xmlns:xlink=\"http://www.w3.org/1999/xlink\" xlink:href=\"local://che.keyword.get?thesaurus=local._none_.geocat.ch&amp;id=http%3A//geocat.ch/concept%23154&amp;amp;locales=DE,FR,IT,EN\"/>",
                         false);
         Element transformed = Xml.transform(testData, pathToXsl);
-        System.out.println(Xml.getString(transformed));
         String expected = "local://che.keyword.get?thesaurus=local._none_.geocat.ch&id=http%3A//geocat.ch/concept%23154&locales=DE,FR,IT,EN";
         assertEquals(expected, transformed.getAttributeValue("href", XLink.NAMESPACE_XLINK));
         assertFalse(Xml.getString(transformed).contains("&amp;amp;"));
