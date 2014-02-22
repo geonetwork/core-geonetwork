@@ -1,13 +1,5 @@
 # Auto detect text files and perform LF normalization
-* text eol=crlf
-
-# Custom for Visual Studio
-*.cs     diff=csharp
-*.sln    merge=union
-*.csproj merge=union
-*.vbproj merge=union
-*.fsproj merge=union
-*.dbproj merge=union
+* text=auto
 
 # Standard to msysgit
 *.doc	 diff=astextplain
@@ -23,7 +15,18 @@
 
 # Images
 *.png binary
+*.gif binary
+*.bmp binary
+*.tiff binary
+*.tif binary
+*.jpeg binary
 *.jpg binary
+
+# Misc binary
+*.zip binary
+*.mef binary
+*.jks binary
+*.db binary
 
 # Related to font files
 *.ttf binary
