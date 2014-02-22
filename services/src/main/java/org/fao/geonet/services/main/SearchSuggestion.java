@@ -27,6 +27,15 @@ import com.google.common.collect.ComparisonChain;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.apache.lucene.facet.taxonomy.TaxonomyReader;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.WildcardQuery;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
+import org.fao.geonet.kernel.search.LuceneConfig;
+import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 import org.apache.commons.lang.StringUtils;
@@ -35,13 +44,13 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearchManager.TermFrequency;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
+import org.jdom.Content;
 import org.jdom.Element;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Return a list of suggestion for a field. The values could be filtered and
@@ -81,6 +90,7 @@ public class SearchSuggestion implements Service {
     static final String CONFIG_PARAM_MAX_NUMBER_OF_TERMS = "max_number_of_terms";
     static final String CONFIG_PARAM_DEFAULT_SEARCH_FIELD = "default_search_field";
     static final String CONFIG_PARAM_THRESHOLD = PARAM_THRESHOLD;
+    private static final String SUMMARY_FACET_CONFIG_KEY = "suggestions";
 
     /**
      * Max number of term's values to look in the index. For large catalogue
@@ -196,12 +206,9 @@ public class SearchSuggestion implements Service {
         // The main advantage is that only values from records visible to the
         // user are returned, because the search filter the results first.
         if (origin.equals("") || origin.equals(RECORDS_FIELD_VALUES)) {
-            LuceneSearcher searcher = (LuceneSearcher) sm.newSearcher(
-                    SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
-            
-            listOfSuggestions.addAll(searcher.getSuggestionForFields(
-                    context, fieldName, searchValue, _config, maxNumberOfTerms,
-                    threshold));
+            LuceneSearcher searcher = (LuceneSearcher) sm.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
+
+            searcher.getSuggestionForFields(context, fieldName, searchValue, _config, maxNumberOfTerms, threshold, listOfSuggestions);
         }
         // No values found from the index records field value ...
         if (origin.equals(INDEX_TERM_VALUES)
@@ -222,8 +229,7 @@ public class SearchSuggestion implements Service {
         
         // Starts with element first
         if (sortBy.equalsIgnoreCase(SORT_BY_OPTION.STARTSWITHFIRST.toString())) {
-            Collections.sort(listOfSuggestions, new StartsWithComparator(
-                    searchValueWithoutWildcard));
+            Collections.sort(listOfSuggestions, new StartsWithComparator(searchValueWithoutWildcard));
         } else if (sortBy.equalsIgnoreCase(SORT_BY_OPTION.ALPHA.toString())) {
             // Sort by alpha and frequency
             Collections.sort(listOfSuggestions);

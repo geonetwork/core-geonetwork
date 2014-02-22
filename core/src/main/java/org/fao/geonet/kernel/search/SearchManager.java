@@ -94,22 +94,8 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.TreeSet;
-import java.util.Vector;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -671,9 +657,9 @@ public class SearchManager {
         indexGeometry(schemaDir, metadata, id, moreFields);
         
         // Update Lucene index
-        List<Pair<String, Pair<Document, List<CategoryPath>>>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, metadataType, title, false);
+        List<Pair<String, Pair<Document, Collection<CategoryPath>>>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, metadataType, title, false);
         _tracker.deleteDocuments(new Term("_id", id));
-        for( Pair<String, Pair<Document, List<CategoryPath>>> document : docs ) {
+        for( Pair<String, Pair<Document, Collection<CategoryPath>>> document : docs ) {
             _tracker.addDocument(document.one(), document.two().one(), document.two().two());
             if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
                 Log.debug(Geonet.INDEX_ENGINE, "adding document in locale " + document.one());
@@ -731,7 +717,7 @@ public class SearchManager {
      * @return
      * @throws Exception
      */
-     private List<Pair<String,Pair<Document, List<CategoryPath>>>> buildIndexDocument(String schemaDir, Element metadata, String id, 
+     private List<Pair<String,Pair<Document, Collection<CategoryPath>>>> buildIndexDocument(String schemaDir, Element metadata, String id,
                                    List<Element> moreFields, MetadataType metadataType, String title,
                                    boolean group) throws Exception
      {
@@ -767,7 +753,7 @@ public class SearchManager {
         List<Element> documentElements = xmlDoc.getContent();
         Collection<Field> multilingualSortFields = findMultilingualSortElements(documentElements);
 
-        List<Pair<String, Pair<Document, List<CategoryPath>>>> documents = new ArrayList<Pair<String, Pair<Document, List<CategoryPath>>>>();
+        List<Pair<String, Pair<Document, Collection<CategoryPath>>>> documents = new ArrayList<Pair<String, Pair<Document, Collection<CategoryPath>>>>();
         for( Element doc : documentElements ) {
             // add _id field
             SearchManager.addField(doc, LuceneIndexField.ID, id, true, true);
@@ -1391,10 +1377,10 @@ public class SearchManager {
      * @param multilingualSortFields 
      * @return
      */
-	private Pair<Document, List<CategoryPath>> newDocument(Element xml, Collection<Field> multilingualSortFields)
+	private Pair<Document, Collection<CategoryPath>> newDocument(Element xml, Collection<Field> multilingualSortFields)
 	{
 		Document doc = new Document();
-		List<CategoryPath> categories = new ArrayList<CategoryPath>();
+		Collection<CategoryPath> categories = new HashSet<CategoryPath>();
     	
 		
 		for (Field field : multilingualSortFields) {
@@ -1480,12 +1466,16 @@ public class SearchManager {
                     
                     // Add value to the taxonomy
                     // TODO : Add all facets whatever the types
-                if(_luceneConfig.getTaxonomy().get("hits").get(name) != null) {
+                for (Map<String, FacetConfig> facets : _luceneConfig.getTaxonomy().values()) {
+                    if (facets.containsKey(name)) {
                         if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
                             Log.debug(Geonet.INDEX_ENGINE, "Add category path: " + name + " with " + string);
                         }
                         categories.add(new CategoryPath(name, string));
+
+                        break;
                     }
+                }
             }
         }
         
