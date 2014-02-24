@@ -261,17 +261,36 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
         	var panierurl = Ext.query('input[id*=configpanierurl]');
         	a = Ext.DomQuery.jsSelect('div.downloadLink', lis[i]);
         	elMenu = Ext.get(downloadMenu);
-        	if(a && a.length > 0 && 
-        			panierurl && panierurl[0] && panierurl[0].value) {
+        	var dlToShow = 0;
+        	
+        	if(a && a.length > 0) {
         		
-        		elMenu.removeClass('mdHiddenBtn');
-        		if(Ext.get(a[0]).hasClass('download-false')) {
-        			elMenu.addClass('unabled');
+        		for(i=0;i<a.length;++i) {
+        		    var node = a[i].firstElementChild;
+        		    var l = node.innerText || node.textContent || node.text;
+        		    if(l.split('|')[0]) {
+        		        if(panierurl && panierurl[0] && panierurl[0].value) {
+        		            dlToShow++;
+        		        }
+        		        else {
+        		            a[i].remove();
+        		        }
+        		    } else {
+        		        dlToShow++;
+        		    }
         		}
-        		if(a.length == 1) {
-        			elMenu.addClass('one-elt');
+        		if(dlToShow>0){
+                    elMenu.removeClass('mdHiddenBtn');
+                    if(Ext.get(a[0]).hasClass('download-false')) {
+                        elMenu.addClass('unabled');
+                    }
+                    if(dlToShow == 1) {
+                        elMenu.addClass('one-elt');
+                    }
+
         		}
-        	} else {
+        	}
+        	if(dlToShow==0 ){
         		elMenu.addClass('mdHiddenBtn');
         		Ext.get(downloadMenu[0]).next('div.btn-separator').addClass('mdHiddenBtn');
         	}
