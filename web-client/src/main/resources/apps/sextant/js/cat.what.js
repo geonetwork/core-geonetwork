@@ -171,7 +171,8 @@ cat.what = function() {
 	        // INSPIRE theme
             var params = {
                     field : 'inspiretheme_en',
-                    threshold: 1
+                    threshold: 1,
+                    origin: 'RECORDS_FIELD_VALUES'
                 };
             
             //if configwhat then send _groupPublished to the suggestion service to filter INSPIRE theme
@@ -238,7 +239,8 @@ cat.what = function() {
 	        // Use searchSuggestion to load categories (that way they can be filtered)
 	        var baseParams = {
 				field : 'sextantTheme',
-				threshold: 1
+				threshold: 1,
+				origin: 'RECORDS_FIELD_VALUES'
 			};
 	        
 	        //if configwhat then send _groupPublished to the suggestion service to filter cat
