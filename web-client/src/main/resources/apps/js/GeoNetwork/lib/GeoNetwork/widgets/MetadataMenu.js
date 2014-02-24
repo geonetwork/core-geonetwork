@@ -375,19 +375,19 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         
         /* Actions status depend on records */
         if(GeoNetwork.Settings && GeoNetwork.Settings.editor && GeoNetwork.Settings.editor.disableIfSubmittedForEditor) {
-            this.editAction.setDisabled(disableIfSubmittedForEditor || !isEditable || isReadOnly);
-            this.statusAction.setDisabled(disableIfSubmittedForEditor || (!isEditable && !isHarvested) || isReadOnly);
+            if(this.editAction)this.editAction.setDisabled(disableIfSubmittedForEditor || !isEditable || isReadOnly);
+            if(this.statusAction)this.statusAction.setDisabled(disableIfSubmittedForEditor || (!isEditable && !isHarvested) || isReadOnly);
         } else {
-            this.editAction.setDisabled(!isEditable || isReadOnly);
-        	this.statusAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
+            if(this.editAction)this.editAction.setDisabled(!isEditable || isReadOnly);
+            if(this.statusAction)this.statusAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
         }
-        this.adminAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
-        this.enableWorkflowAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
-        this.versioningAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
-        this.categoryAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
-        this.deleteAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
-        this.duplicateAction.setDisabled(isReadOnly);
-        this.createChildAction.setDisabled(!isEditable || isReadOnly);
+        if(this.adminAction)this.adminAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
+        if(this.enableWorkflowAction)this.enableWorkflowAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
+        if(this.versioningAction)this.versioningAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
+        if(this.categoryAction)this.categoryAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
+        if(this.deleteAction)this.deleteAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
+        if(this.duplicateAction)this.duplicateAction.setDisabled(isReadOnly);
+        if(this.createChildAction)this.createChildAction.setDisabled(!isEditable || isReadOnly);
 
         if (this.ratingWidget) {
             this.ratingWidget.reset();

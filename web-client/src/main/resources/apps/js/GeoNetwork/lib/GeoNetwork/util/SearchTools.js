@@ -444,7 +444,8 @@ GeoNetwork.util.SearchTools = {
         return result;
     },
     addFieldValue: function (result, name, value) {
-        if (result[name] === undefined || result[name] == '') {
+        if (result[name] === undefined || result[name] == '' ||
+                !Ext.isArray(result[name])) {
             result[name] = new Array(value);
         } else {
             result[name].push(value);

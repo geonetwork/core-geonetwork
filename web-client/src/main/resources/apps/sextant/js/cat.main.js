@@ -5,6 +5,20 @@ var catalogue;
 var app;
 var cookie;
 
+if (!Object.keys) {
+    Object.keys = function(obj) {
+      var keys = [];
+
+      for (var i in obj) {
+        if (obj.hasOwnProperty(i)) {
+          keys.push(i);
+        }
+      }
+
+      return keys;
+    };
+  }
+
 cat.app = function() {
 
     var geonetworkUrl;
@@ -628,7 +642,7 @@ cat.app = function() {
     
     function modalActionFn(title, urlOrPanel, cb){
         if (urlOrPanel) {
-            var app = this, win, defaultCb = function(el, success, response, options) {
+            var app = this, item, win, defaultCb = function(el, success, response, options) {
                 if (!success){
                     app.showError('Catalogue error', title);
                     win.close();
