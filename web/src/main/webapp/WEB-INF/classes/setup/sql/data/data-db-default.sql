@@ -957,6 +957,7 @@ INSERT INTO settings (name, value, datatype, position) VALUES ('system/requested
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/requestedLanguage/sorted', 'false', 2, 9540);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/hidewithheldelements/enable', 'false', 2, 9570);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/hidewithheldelements/keepMarkedElement', 'true', 2, 9580);
+INSERT INTO Settings (name, value, datatype, position) VALUES ('system/requestedLanguage/preferUiLanguage', 'true', 2, 9595);
 
 INSERT INTO HarvesterSettings VALUES  (1,NULL,'harvesting',NULL);
 

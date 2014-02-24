@@ -216,9 +216,10 @@
 	<setting name="system/requestedLanguage/only" label="Search only in requested language"/>
 	<setting name="system/requestedLanguage/sorted" label="Search results in requested language sorted on top"/>
 	<setting name="system/requestedLanguage/ignored" label="Ignore requested language for search results."/>
-	
-	
-	<setting name="searchStats" label="Search statistics"/>
+
+  <setting label="Prefer user interface language" name="system/requestedLanguage/preferUiLanguage"/>
+
+  <setting name="searchStats" label="Search statistics"/>
 	<setting name="system/searchStats/enable" label="Enable">
 		If set, Statistics on searches will be collected and stored in the database.
 	</setting>

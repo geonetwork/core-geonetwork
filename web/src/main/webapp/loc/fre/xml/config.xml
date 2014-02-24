@@ -176,6 +176,7 @@
 <setting label="Rechercher uniquement dans la langue de la requête" name="system/requestedLanguage/only"/>
 <setting label="Résultats de la recherche dans la langue demandée triés sur le dessus" name="system/requestedLanguage/sorted"/>
 <setting label="" name="system/requestedLanguage/ignored"/>
+<setting label="Préférer la langue de l'interface" name="system/requestedLanguage/preferUiLanguage"/>
 <setting label="Statistique sur les recherches" name="searchStats"/>
 <setting label="Activé" name="system/searchStats/enable">
 			If set, Statistics on searches will be collected and stored in the database.

@@ -156,6 +156,21 @@
 				</xsl:for-each>
 			</xsl:for-each>
 
+      <!-- Index credit translation if any
+      or the default language values -->
+      <xsl:variable name="credit" select="gmd:credit//gmd:LocalisedCharacterString[@locale=$langId]"/>
+      <xsl:choose>
+        <xsl:when test="$credit">
+          <xsl:for-each select="$credit">
+            <Field name="credit" string="{string(.)}" store="true" index="false"/>
+          </xsl:for-each>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:for-each select="gmd:credit/gco:CharacterString">
+            <Field name="credit" string="{string(.)}" store="true" index="false"/>
+          </xsl:for-each>
+        </xsl:otherwise>
+      </xsl:choose>
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 			<xsl:for-each select="gmd:abstract//gmd:LocalisedCharacterString[@locale=$langId]">
