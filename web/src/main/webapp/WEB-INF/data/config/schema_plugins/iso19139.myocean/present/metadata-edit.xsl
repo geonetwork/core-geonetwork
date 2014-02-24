@@ -1120,7 +1120,7 @@
 											<div class="slidingWindow">
 												<label><xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/startPeriod"/></label>
 												<br/>
-												<label for="_{$id}_s_month">
+												<label>
 													<select id="_{$id}_s" onchange="updateSlidingWindow('_{$id}');">
 														<option value="">+ (after processing time)</option>
 														<option value="-">
@@ -1156,7 +1156,7 @@
 											<div class="slidingWindow">
 												<label><xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/endPeriod"/></label>
 												<br/>
-												<label for="_{$id}_e_month">
+												<label>
 													<select id="_{$id}_e" onchange="updateSlidingWindow('_{$id}');">
 														<option value="">+ (after processing time)</option>
 														<option value="-">
