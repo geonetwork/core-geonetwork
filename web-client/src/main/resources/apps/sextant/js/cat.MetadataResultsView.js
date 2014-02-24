@@ -265,15 +265,15 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
         	
         	if(a && a.length > 0) {
         		
-        		for(i=0;i<a.length;++i) {
-        		    var node = a[i].firstElementChild;
+        		for(j=0;j<a.length;++j) {
+        		    var node = a[j].firstElementChild;
         		    var l = node.innerText || node.textContent || node.text;
         		    if(l.split('|')[0]) {
         		        if(panierurl && panierurl[0] && panierurl[0].value) {
         		            dlToShow++;
         		        }
         		        else {
-        		            a[i].remove();
+        		            a[j].remove();
         		        }
         		    } else {
         		        dlToShow++;
@@ -287,7 +287,6 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
                     if(dlToShow == 1) {
                         elMenu.addClass('one-elt');
                     }
-
         		}
         	}
         	if(dlToShow==0 ){
