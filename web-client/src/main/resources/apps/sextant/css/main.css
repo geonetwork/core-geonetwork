@@ -669,7 +669,8 @@ div.x-tip-body div.help {
  * This could have been better in the XSD schema, but making a complete new ISO profile
  * is not an option.
  */
-.myocean * .gmdalternateTitle span.buttons {
+.myocean * .gmdalternateTitle span.buttons,
+.sdnProduct * .gmdalternateTitle span.buttons {
     display: none !important;
 }
 .myocean * .thesaurusInfo {

@@ -42,4 +42,19 @@
             <description>Domain for which the current product is applicable : marine safety, marine resources, coastal and marine environment, weather, climate and seasonal forecasting</description>
         </entry>
     </codelist>
+    
+    <codelist name="gmd:CI_RoleCode">
+        <entry>
+            <code>custodian</code>
+            <label>Production center</label>
+            <description>Party that accepts accountability and responsability for the data and ensures
+                appropriate care and maintenance of the resource</description>
+        </entry>
+        <entry>
+            <code>originator</code>
+            <label>Product manager</label>
+            <description>Party who created the resource</description>
+        </entry>
+    </codelist>
+  
 </codelists>

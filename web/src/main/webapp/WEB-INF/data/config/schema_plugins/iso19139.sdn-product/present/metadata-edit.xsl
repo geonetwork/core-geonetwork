@@ -77,6 +77,7 @@
 	</xsl:template>
 
 	<!--  custom temporal resolution -->
+
 	<xsl:template mode="iso19139.sdn-product" match="gmd:resolution" priority="2">
 		<xsl:param name="schema" />
 		<xsl:param name="edit" />
@@ -84,19 +85,19 @@
 			<xsl:when test="$edit=true()">
 				<xsl:variable name="text">
 					<xsl:variable name="ref" select="gco:Measure/geonet:element/@ref" />
-					<input type="number" class="md" name="_{$ref}" id="_{$ref}"
-            style="width: inherit;"
-						onkeyup="validateNumber(this,true,true);"
-						onchange="validateNumber(this,true,true);"
-						value="{gco:Measure}"/>
-          <input type="text" class="md" name="_{$ref}_uom" id="_{$ref}_uom"
-            style="width: inherit;"
-            value="{gco:Measure/@uom}"/>
-
-          <select onchange="document.getElementById('_{$ref}_uom').value = this.options[this.selectedIndex].value">
-						<option value="degree">Degree</option>
-            <option value="kilometers">Kilometers</option>
-					</select>
+					<div>
+						<input type="text" class="md" name="_{$ref}" id="_{$ref}"
+	        			    style="width: inherit;"
+							onkeyup="validateNumber(this,true,true);"
+							onchange="validateNumber(this,true,true);"
+							value="{gco:Measure}"/>
+	
+						<select  class="md" name="_{$ref}_uom" id="_{$ref}_uom" style="width: inherit; margin-top: 0;" value="{gco:Measure/@uom}">
+			  				<option value="day">day</option>
+			  				<option value="month">month</option>
+						 	<option value="year">year</option>
+					  	</select>
+				  	</div>
 				</xsl:variable>
 				<xsl:apply-templates mode="simpleElement" select=".">
 					<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/temporalResolution" />
@@ -125,6 +126,7 @@
 	</xsl:template>
 
     <!-- custom distance / spatial resolution form -->
+
 	<xsl:template mode="iso19139.sdn-product" match="gmd:distance" priority="2">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
@@ -181,6 +183,32 @@
 		</xsl:choose>
 		
 	</xsl:template>
+
+	<!-- Custom contact form -->
+
+	<xsl:template mode="iso19139.sdn-product"
+		match="gmd:contact|gmd:pointOfContact|gmd:citedResponsibleParty|gmd:distributorContact" priority="99">
+		
+		<xsl:param name="schema" />
+		<xsl:param name="edit" />
+
+		<xsl:for-each select=".">
+			<xsl:apply-templates mode="iso19139"
+				select="gmd:CI_ResponsibleParty/gmd:organisationName">
+				<xsl:with-param name="schema" select="$schema" />
+				<xsl:with-param name="edit" select="$edit" />
+			</xsl:apply-templates>
+			<xsl:apply-templates mode="iso19139"
+				select="gmd:CI_ResponsibleParty/gmd:individualName|
+						gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress">
+				<xsl:with-param name="schema" select="$schema" />
+				<xsl:with-param name="edit" select="$edit" />
+			</xsl:apply-templates>
+		</xsl:for-each>
+
+	</xsl:template>
+
+
 
   <!-- Check if any elements are overriden here in iso19139.sdn-product mode
   if not fallback to iso19139 -->
@@ -584,6 +612,7 @@
 			<xsl:with-param name="content">		
 
 					<!-- geographical extent -->
+
 					<xsl:call-template name="complexElementGuiWrapper">
 						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/geographicalExtent" />
 						<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/geographicalExtent)" />
@@ -641,6 +670,7 @@
 					<!-- end of vertical extent -->
 					
 					<!-- temporal extent -->
+
 					<xsl:call-template name="complexElementGuiWrapper">
 						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/temporalExtent" />
 						<xsl:with-param name="id" select="generate-id(/root/gui/schemas/*[name()=$schema]/strings/temporalExtent)" />
@@ -690,44 +720,16 @@
 									</xsl:apply-templates>
 								</xsl:for-each>
 							</xsl:for-each>
+							
+							<!-- Temporal resolution -->
 							<xsl:for-each select="gmd:spatialRepresentationInfo/gmd:MD_Georectified/gmd:axisDimensionProperties/gmd:MD_Dimension
 										[./gmd:dimensionName/gmd:MD_DimensionNameTypeCode/@codeListValue='time']/gmd:resolution">
-<!-- 								<xsl:variable name="text"> -->
-<!-- 									<xsl:variable name="vnl_flag"> -->
-<!-- 										temporal resolution: -->
-<!-- 									</xsl:variable> -->
-<!-- 									<xsl:variable name="vnl" select="substring-after(., $vnl_flag)" /> -->
-<!-- 									<xsl:variable name="id" select="concat('_', ./geonet:element/@ref)" /> -->
-<!-- 									<input type="hidden" id="{$id}" name="{$id}" value="{.}" />		 -->
-<!-- 									<xsl:variable name="temporalResolutionCodeList" -->
-<!-- 										select="/root/gui/schemas/*[name(.)=$schema]/labels/element[@name='gmd:descriptor']/helper" /> -->
-<!-- 									<select -->
-<!-- 										onchange="document.getElementById('{$id}').value = '{$vnl_flag}' + this.options[this.selectedIndex].value"> -->
-<!-- 										<option /> -->
-<!-- 										<xsl:for-each select="$temporalResolutionCodeList/option"> -->
-<!-- 											TODO : selected -->
-<!-- 											<option value="{@value}"> -->
-<!-- 												<xsl:if test="@value = $vnl"> -->
-<!-- 													<xsl:attribute name="selected">selected</xsl:attribute> -->
-<!-- 												</xsl:if> -->
-<!-- 												<xsl:value-of select="." /> -->
-<!-- 											</option> -->
-<!-- 										</xsl:for-each> -->
-<!-- 									</select> -->
-<!-- 								</xsl:variable> -->
 									<xsl:apply-templates mode="iso19139.sdn-product" select=".">
 										<xsl:with-param name="schema" select="$schema" />
 										<xsl:with-param name="edit" select="$edit" />
 									</xsl:apply-templates>
-							
-<!-- 								<xsl:apply-templates mode="simpleElement" select="."> -->
-<!-- 									<xsl:with-param name="schema" select="$schema" /> -->
-<!-- 									<xsl:with-param name="edit" select="$edit" /> -->
-<!-- 									<xsl:with-param name="title" -->
-<!-- 										select="/root/gui/schemas/*[name()=$schema]/strings/temporalResolution" /> -->
-<!-- 									<xsl:with-param name="text" select="blah" /> -->
-<!-- 								</xsl:apply-templates> -->
 							</xsl:for-each>
+
 						</xsl:with-param>
 					</xsl:call-template>
 					<!-- end of temporal extent -->
@@ -749,8 +751,9 @@
 						/root/gui/schemas/*[name()=$schema]/strings/orgAdd, 
 						/root/gui/schemalist/name[text()=$schema]/@namespaces)"/>
 				</xsl:if>
-			<!-- production center -->
-			<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
+				
+				<!-- production center -->
+				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
 					gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']">
 					
 					<xsl:variable name="id" select="concat('seadatanet-product-', generate-id(.))"/>
@@ -764,7 +767,7 @@
 									onclick="doRemoveElementActionSimple('metadata.elem.delete.new', {geonet:element/@ref}, {../geonet:element/@ref}, '{$id}');"><span>  Remove</span></a>
 							</span>
 							<!-- Org name -->							
-							<xsl:apply-templates mode="iso19139" select="./gmd:CI_ResponsibleParty/gmd:organisationName">
+							<xsl:apply-templates mode="iso19139.sdn-product" select=".">
 								<xsl:with-param name="schema" select="$schema"/>
 								<xsl:with-param name="edit"   select="$edit"/>
 							</xsl:apply-templates>
@@ -797,7 +800,7 @@
 									onclick="doRemoveElementActionSimple('metadata.elem.delete.new', {geonet:element/@ref}, {../geonet:element/@ref}, '{$id}');"><span>  Remove</span></a>
 							</span>
 							<!-- Org name -->							
-							<xsl:apply-templates mode="iso19139" select="./gmd:CI_ResponsibleParty/gmd:organisationName">
+							<xsl:apply-templates mode="iso19139.sdn-product" select=".">
 								<xsl:with-param name="schema" select="$schema"/>
 								<xsl:with-param name="edit"   select="$edit"/>
 							</xsl:apply-templates>
@@ -824,8 +827,7 @@
 	dispatcher template. -->
 	<xsl:template mode="iso19139.sdn-product" match="*|@*"/>
 	
-	<!-- Override useLimitation having anchor to not display the xlink:href
-	information. -->
+	<!-- Override useLimitation having anchor to not display the xlink:href information. -->
 	<xsl:template mode="iso19139.sdn-product" match="gmd:useLimitation[gmx:Anchor]" priority="99">
 		<xsl:param name="schema" />
 		<xsl:param name="edit" />
@@ -833,18 +835,28 @@
 		<xsl:choose>
 			<xsl:when test="$edit=true()">
 				<xsl:variable name="ref" select="gmx:Anchor/geonet:element/@ref"/>
-				
-				<xsl:variable name="text">
-					<input type="text" class="md" name="_{$ref}"
-						value="{gmx:Anchor/text()}" size="30">
-					</input>
-				</xsl:variable>
-				
-				<xsl:apply-templates mode="simpleElement" select=".">
-					<xsl:with-param name="schema" select="$schema"/>
-					<xsl:with-param name="edit"   select="$edit"/>
-					<xsl:with-param name="text"   select="$text"/>
-				</xsl:apply-templates>
+					<xsl:apply-templates mode="simpleElement" select=".">
+						<xsl:with-param name="schema" select="$schema" />
+						<xsl:with-param name="edit" select="$edit" />
+						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/usageLicense" />
+						<xsl:with-param name="text">
+							<xsl:call-template name="snippet-editor">
+								<xsl:with-param name="elementRef" select="../geonet:element/@ref" />
+								<xsl:with-param name="widgetMode" select="''" />
+								<xsl:with-param name="thesaurusId"
+									select="'local.use-limitation.seadatanet.use-limitation'" />
+								<xsl:with-param name="listOfKeywords"
+									select="replace(replace(string-join(gmd:featureTypes/gco:LocalName/@codeSpace, '!,!'), '''', '\\'''), '!', '''')" />
+								<!-- <xsl:with-param name="listOfKeywords" select="replace(replace(string-join(gmd:featureTypes/gco:LocalName, 
+									'#,#'), '''', '\\'''), '#', '''')"/> -->
+								<xsl:with-param name="listOfTransformations"
+									select="'''to-iso19139.myocean-feature-type'''" />
+								<xsl:with-param name="transformation"
+									select="'to-iso19139.myocean-feature-type'" />
+								<xsl:with-param name="identificationMode" select="'uri'" />
+							</xsl:call-template>
+						</xsl:with-param>
+					</xsl:apply-templates>
 			</xsl:when>
 			<xsl:otherwise>
 				<a href="{gmx:Anchor/@xlink:href}"><xsl:value-of select="gmx:Anchor"/></a>

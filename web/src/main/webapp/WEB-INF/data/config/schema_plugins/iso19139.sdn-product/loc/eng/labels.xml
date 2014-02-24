@@ -40,6 +40,13 @@
 		<help />
 		<condition />
 	</element>
+	
+	<element name="gmd:date" context="gmd:CI_Date">
+		<label>Creation date</label>
+		<description></description>
+		<help />
+		<condition />
+	</element>
 
 	<element name="gmd:editionDate">
 		<label>Update date</label>
@@ -77,8 +84,7 @@
             <option value="WRF Lambert Conformal Conic (SR-ORG 29)">WRF Lambert Conformal Conic (SR-ORG 29)</option>
         </helper>
     </element>
-    
-        <element name="gmd:resolution">
+    <element name="gmd:resolution">
         <label>Temporal resolution</label>
         <description></description>
         <helper>

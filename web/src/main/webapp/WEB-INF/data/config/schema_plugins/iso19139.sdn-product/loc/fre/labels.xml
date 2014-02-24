@@ -41,7 +41,13 @@
 		<condition />
 	</element>
 
-	
+	<element name="gmd:date" context="gmd:CI_Date">
+		<label>Date de création</label>
+		<description></description>
+		<help />
+		<condition />
+	</element>
+
 	<element name="gmd:distance" context="gmd:MD_Resolution">
 		<label>Résolution spatiale</label>
 		<description></description>

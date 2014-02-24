@@ -22,4 +22,5 @@
     <productManager>Gestionnaire du produit</productManager>
     <productAccess>Accès au produit</productAccess>
     <orgAdd>Ajouter une organisation</orgAdd>
+    <creationDate>Date de création</creationDate>
 </strings>

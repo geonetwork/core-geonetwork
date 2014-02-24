@@ -22,4 +22,5 @@
     <productManager>Product manager</productManager>
     <productAccess>Product access</productAccess> 
     <orgAdd>Add organisation</orgAdd>
+    <creationDate>Creation date</creationDate>
 </strings>
