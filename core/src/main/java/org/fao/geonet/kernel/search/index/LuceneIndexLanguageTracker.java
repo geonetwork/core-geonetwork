@@ -201,7 +201,7 @@ public class LuceneIndexLanguageTracker {
         }
     }
 
-    public synchronized void addDocument(String language, Document doc, List<CategoryPath> categories)
+    public synchronized void addDocument(String language, Document doc, Collection<CategoryPath> categories)
             throws CorruptIndexException, LockObtainFailedException, IOException {
         lazyInit();
         if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {

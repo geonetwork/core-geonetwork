@@ -2,10 +2,7 @@ package org.fao.geonet.kernel.search.index;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import org.apache.lucene.store.Directory;
 import org.fao.geonet.utils.IO;
@@ -88,7 +85,7 @@ class TaxonomyIndexTracker {
     }
 
 
-    void addDocument(Document doc, List<CategoryPath> categories) {
+    void addDocument(Document doc, Collection<CategoryPath> categories) {
         try {
             FacetFields facetFields = new FacetFields(taxonomyWriter);
             facetFields.addFields(doc, categories);

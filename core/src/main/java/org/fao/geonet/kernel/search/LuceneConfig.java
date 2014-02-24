@@ -161,6 +161,17 @@ public class LuceneConfig {
                 sortOrder = Facet.SortOrder.ASCENDING;
             }
         }
+
+        public FacetConfig(FacetConfig config) {
+            this.name = config.name;
+            this.plural = config.plural;
+            this.indexKey = config.indexKey;
+            this.translator = config.translator;
+            this.max = config.max;
+            this.sortBy = sortBy;
+            this.sortOrder = sortOrder;
+        }
+
         public String toString() {
             StringBuffer sb = new StringBuffer("Field: ");
             sb.append(indexKey);
@@ -212,6 +223,9 @@ public class LuceneConfig {
         public int getMax() {
             return max;
         }
+        public void setMax(int max) {
+            this.max = max;
+        }
         public Translator getTranslator(ServiceContext context, String langCode) {
             try {
                 return Translator.createTranslator(translator, context, langCode);
@@ -219,7 +233,8 @@ public class LuceneConfig {
                 throw new RuntimeException(e);
             }
         }
-	}
+
+    }
 
 	/**
 	 * List of taxonomy by taxonomy types (hits, hits_with_summary

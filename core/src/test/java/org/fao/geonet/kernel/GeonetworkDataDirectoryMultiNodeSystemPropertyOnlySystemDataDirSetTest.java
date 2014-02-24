@@ -19,7 +19,7 @@ public class GeonetworkDataDirectoryMultiNodeSystemPropertyOnlySystemDataDirSetT
 
     @Before
     public void setSystemProperties() {
-        System.setProperty(GeonetworkDataDirectory.GEONETWORK_DIR_KEY, new File(_testTemporaryFolder.getRoot(),
+        System.setProperty(GeonetworkDataDirectory.GEONETWORK_DIR_KEY, new File(_dataDirContainer,
                 "node1NonDefaultDataDir").getAbsolutePath());
     }
 
@@ -42,7 +42,7 @@ public class GeonetworkDataDirectoryMultiNodeSystemPropertyOnlySystemDataDirSetT
      */
     @Override
     protected String getDataDir() {
-        return new File(_testTemporaryFolder.getRoot(), "node1NonDefaultDataDir").getAbsolutePath() + "_" + getGeonetworkNodeId() + File.separator;
+        return new File(_dataDirContainer, "node1NonDefaultDataDir").getAbsolutePath() + "_" + getGeonetworkNodeId() + File.separator;
     }
 
 
