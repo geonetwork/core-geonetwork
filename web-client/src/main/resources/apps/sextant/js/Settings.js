@@ -58,9 +58,9 @@ GeoNetwork.Settings.privileges = {
 
 GeoNetwork.Settings.facetListConfig = [{name: 'orgNames'}, 
                                        {name: 'inspirethemes'},  
-                                       {name: 'categories'},  
-                                       {name: 'createDateYears'}, 
-                                       {name: 'keywords'}];
+                                       {name: 'categories'}, 
+                                       {name: 'keywords'},  
+                                       {name: 'createDateYears'}];
 GeoNetwork.Settings.facetMaxItems = 5;
 
 // Define if default mode should be used for HTML print output instead of tabs only

@@ -36,5 +36,6 @@ cat.lang.fr = {
     ,"onlineResFromMD": "A partir des fiches"
     ,"onlineResFromManual": "Saisie manuelle"
     ,"refineSearch": "Précisez votre recherche"
+    ,"inspirethemes": "Thèmes Inspire"
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, cat.lang.fr);

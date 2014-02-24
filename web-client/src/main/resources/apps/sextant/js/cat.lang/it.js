@@ -36,6 +36,7 @@ cat.lang.it = {
     ,"onlineResFromMD": "Dai metadati"
     ,"onlineResFromManual": "Input manuale "
     ,"refineSearch": "Refine search"
+    ,"inspirethemes": "Inspire themes"
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.it, cat.lang.it);

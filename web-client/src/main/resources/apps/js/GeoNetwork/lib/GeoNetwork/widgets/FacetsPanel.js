@@ -420,7 +420,8 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
             });
             this.breadcrumb.add(new Ext.Button({
                 id: data.bcid,
-                text: (data.label != null ? data.label : data.node),
+                text: (data.label != null ? data.label : data.node)
+                    + '<span class="close-btn"></span>',
                 handler: function(b,e) {
                     this.removeFacet(data.id);
                 },

@@ -693,6 +693,23 @@ div.facets * .facet-less-bt a {
     color : #959532;
     text-decoration: underline;
 }
+
+.breadcrumb * button:hover,
+.breadcrumb * button,
+.breadcrumb * button:focus {
+	background-image: none !important;
+}
+
+.breadcrumb .close-btn {
+    background-image: url("../images/ui-icons_616161_256x240.png");
+    background-position: -96px -128px;
+    height:16px;
+    width:16px;
+    float: right;
+	margin-left: 5px;
+	margin-top: -2px;
+}
+
 .breadcrumb-mn {
     background-color: #FFF !important;
     background-image: none;
