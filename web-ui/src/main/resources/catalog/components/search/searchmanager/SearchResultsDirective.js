@@ -3,7 +3,8 @@
 
   var module = angular.module('gn_search_form_results_directive', []);
 
-  module.directive('gnSearchFormResults', ['gnSearchManagerService',
+  module.directive('gnSearchFormResults', [
+    'gnSearchManagerService',
     function(gnSearchManagerService) {
 
       var activeClass = 'active';
@@ -16,7 +17,8 @@
         scope: {
           searchResults: '=',
           paginationInfo: '=paginationInfo',
-          selection: '=selectRecords'
+          selection: '=selectRecords',
+          onMdClick: '='
         },
         link: function(scope, element, attrs) {
 
@@ -29,6 +31,20 @@
             }
           });
 
+          /**
+           * Triggered on a metadata row click.
+           * Call the function given in directive parameter on-md-click.
+           * If this function is not defined, then call the select method
+           * if the directive has a selection model. 
+           */
+          scope.onClick = function(md) {
+            if (angular.isFunction(scope.onMdClick)){
+              scope.onMdClick(md);
+            } else if(angular.isFunction(scope.select)) {
+              scope.select(md);
+            }
+          };
+          
           // Manage selection
           if (scope.options.selection.mode) {
             scope.selection = [];
