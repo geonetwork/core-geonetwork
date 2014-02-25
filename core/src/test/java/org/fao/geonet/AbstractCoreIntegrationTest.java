@@ -55,6 +55,7 @@ import java.io.*;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -70,6 +71,7 @@ import static org.junit.Assert.assertTrue;
  */
 @ContextConfiguration(inheritLocations = true, locations = "classpath:core-repository-test-context.xml")
 public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest {
+    private static final String DATA_DIR_LOCK_NAME = "lock";
     @Autowired
     protected ConfigurableApplicationContext _applicationContext;
     @PersistenceContext
@@ -85,33 +87,23 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
      * Contain all datadirectories for all nodes.
      */
     protected static File _dataDirContainer;
+    private static File _dataDirLockFile;
 
     /**
      * Default node data directory
      */
     protected static File _dataDirectory;
-
-    @BeforeClass
-    public static void setUpDataDirectory() {
-        if (_dataDirectory == null) {
-            final File toDelete = Files.createTempDir();
-            _dataDirContainer = toDelete;
-            _dataDirectory = new File(toDelete, "defaultDataDir");
-            Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    final FluentIterable<File> files = Files.fileTreeTraverser().postOrderTraversal(toDelete);
-                    for (File file : files) {
-                        FileUtils.deleteQuietly(file);
-                    }
-                }
-            }));
-        }
-    }
     @Before
     public void configureAppContext() throws Exception {
 
+        synchronized (AbstractCoreIntegrationTest.class) {
+            setUpDataDirectory();
 
+            if (!_dataDirLockFile.exists()) {
+                FileUtils.touch(_dataDirLockFile);
+                _dataDirLockFile.deleteOnExit();
+            }
+        }
 
         System.setProperty(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD, Boolean.toString(true));
         // clear out datastore
@@ -187,6 +179,45 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
         }
 
+    }
+
+    private void setUpDataDirectory() {
+        if (_dataDirLockFile != null && _dataDirLockFile.exists() &&
+            _dataDirLockFile.lastModified() < twoHoursAgo()) {
+            _dataDirLockFile.delete();
+        }
+        if (_dataDirectory == null || _dataDirLockFile.exists()) {
+            File dir = getClassFile(getClass()).getParentFile();
+            final String pathToTargetDir = "core/target";
+            while(!new File(dir, pathToTargetDir).exists()) {
+                dir = dir.getParentFile();
+            }
+            dir = new File(dir, pathToTargetDir+"/integration-test-datadirs");
+
+            int i = 0;
+            while (new File(dir.getPath()+i, DATA_DIR_LOCK_NAME).exists() && new File(dir.getPath()+i, DATA_DIR_LOCK_NAME).exists()) {
+                i++;
+            }
+
+            while (!new File(dir.getPath()+i).exists() && !new File(dir.getPath()+i).mkdirs()) {
+                i++;
+                if (i > 1000) {
+                    throw new Error("Unable to make test data directory");
+                }
+            }
+
+            _dataDirContainer = new File(dir.getPath()+i);
+
+
+            _dataDirectory = new File(_dataDirContainer, "defaultDataDir");
+            _dataDirLockFile = new File(_dataDirContainer, DATA_DIR_LOCK_NAME);
+        }
+    }
+
+    private long twoHoursAgo() {
+        final Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR_OF_DAY, -2);
+        return calendar.getTimeInMillis();
     }
 
     private SyncReport synchronizeDataDirectory(File srcDataDir) throws IOException {
@@ -269,14 +300,18 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
     @After
     public void deleteNonDefaultNodeDataDirectories() throws IOException {
-        final Iterable<File> children = Files.fileTreeTraverser().children(_dataDirContainer);
-        for (File child : children) {
-            if (!child.equals(_dataDirectory)) {
-                for (File file : Files.fileTreeTraverser().postOrderTraversal(child)) {
-                    FileUtils.deleteQuietly(file);
+        synchronized (AbstractCoreIntegrationTest.class) {
+            final Iterable<File> children = Files.fileTreeTraverser().children(_dataDirContainer);
+            for (File child : children) {
+                if (!child.equals(_dataDirectory)) {
+                    for (File file : Files.fileTreeTraverser().postOrderTraversal(child)) {
+                        FileUtils.deleteQuietly(file);
+                    }
                 }
             }
+            _dataDirLockFile.delete();
         }
+
     }
 
     protected boolean isDefaultNode() {

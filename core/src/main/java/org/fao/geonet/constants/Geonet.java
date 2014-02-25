@@ -413,6 +413,7 @@ public final class Geonet {
         public static final String BUILD_SUMMARY = "buildSummary";
         public static final String SUMMARY_ONLY = "summaryOnly";
         public static final String REQUESTED_LANGUAGE = "requestedLanguage";
+        public static final String SUMMARY_ITEMS = "summaryItems";
 
         /**
          * TODO javadoc.
@@ -426,6 +427,7 @@ public final class Geonet {
              * of the current search. 
              */
             public static final String RESULTS_WITH_SUMMARY     = "results_with_summary";
+            public static final String SUGGESTIONS = "suggestions";
         }
 
         /**
