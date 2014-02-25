@@ -40,7 +40,6 @@
 
 # Services documentation <xsl:value-of select="$fileName"/>
 
-{@link api/gn_fields_directive.directive:gnFieldTooltip `test`}
 
 
       <xsl:call-template name="doc-for-file">
