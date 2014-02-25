@@ -14,6 +14,7 @@
             <jsSource webappPath="catalog/lib/angular-translate.min.js"/>
             <jsSource webappPath="catalog/lib/angular-md5.min.js"/>
             <jsSource webappPath="catalog/lib/bootstrap-3.0.1.min.js"/>
+            <jsSource webappPath="catalog/lib/proj4js-compressed.js" minimize="false"/>
             <jsSource webappPath="catalog/lib/ol.js"/>
             <jsSource webappPath="catalog/lib/d3.v3.min.js"/>
             <jsSource webappPath="catalog/lib/d3.ext/gauge.js"/>

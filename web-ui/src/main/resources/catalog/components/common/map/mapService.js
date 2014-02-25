@@ -9,6 +9,7 @@
     this.$get = [
       'gnConfig',
       function(gnConfig) {
+        
         var defaultMapConfig = {
           'useOSM': 'true',
           'projection': 'EPSG:3857',
@@ -20,8 +21,18 @@
             "label":"Google mercator (EPSG:3857)"
           }]
         };
+        
         return {
 
+          importProj4js: function() {
+            if(Proj4js && gnConfig['map.proj4js'] && 
+                angular.isArray(gnConfig['map.proj4js'])) {
+              angular.forEach(gnConfig['map.proj4js'], function(item){
+                Proj4js.defs[item.code] = item.value;
+              });
+            }
+          },
+          
           /**
            * Reproject a given extent. Extent is an object
            * defined as
