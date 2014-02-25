@@ -430,8 +430,9 @@
                 <input class="gn-debug" type="text" name="{$xpathFieldId}" value="{@xpath}"/>
               </xsl:if>
               <textarea class="form-control gn-debug" name="{$id}" data-gn-template-field="{$id}"
-                data-keys="{string-join($template/values/key/@label, '#')}"
-                data-values="{if ($keyValues and count($keyValues/*) > 0) then string-join($keyValues/field/value, '#') else ''}">
+                data-keys="{string-join($template/values/key/@label, '$$$')}"
+                data-values="{if ($keyValues and count($keyValues/*) > 0)
+                  then string-join($keyValues/field/value, '$$$') else ''}">
                 <xsl:copy-of select="$template/snippet/*"/>
               </textarea>
             </div>
