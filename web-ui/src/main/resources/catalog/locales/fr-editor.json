@@ -54,6 +54,7 @@
     "createMetadataForGroup-help": "La fiche pourra être modifiée par tous les membres du groupe",
     "unknownType": "Autres",
     "other": "Autre",
+    "saveMetadataError": "Erreur lors de la sauvegarde",
     "onlyErrors": "Afficher uniquement les erreurs",
     "schematron-rules-geonetwork": "Recommandations",
     "schematron-rules-iso": "Règles ISO",
