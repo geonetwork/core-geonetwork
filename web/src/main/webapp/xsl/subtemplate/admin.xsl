@@ -33,7 +33,7 @@
 				<script type="text/javascript" src="{$widgetPath}/js/ext-ux/MultiselectItemSelector-3.0/Multiselect.js"/>
 				<script type="text/javascript" src="{$widgetPath}/js/ext-ux/SuperBoxSelect/SuperBoxSelect.js"/>
 				<script type="text/javascript" src="{$widgetPath}/js/ext-ux/LightBox/lightbox.js"/>
-
+        <script type="text/javascript" src="{$widgetPath}/js/ext-ux/CheckColumn.js"></script>
 				<script type="text/javascript" src="{$widgetPath}/js/OpenLayers/lib/OpenLayers.js"/>
 				<script type="text/javascript" src="{$widgetPath}/js/GeoExt/script/GeoExt.js"/>
 				<script type="text/javascript" src="{$widgetPath}/js/GeoNetwork/lib/GeoNetwork.js"/>
@@ -50,6 +50,7 @@
 		<script type="text/javascript" language="JavaScript">
 			var catalogue;
 			OpenLayers.ImgPath = '<xsl:value-of select="$widgetPath"/>/js/OpenLayers/img/';
+      GeoNetwork.Settings = {};
 
 			Ext.onReady(function(){
 				Ext.QuickTips.init();
@@ -62,6 +63,7 @@
 					lang: '<xsl:value-of select="/root/gui/language"/>',
 					mdOverlayedCmpId : 'resultsPanel'
 				});
+        catalogue.isLoggedIn();
 				// Declare default store to be used for records and summary
 				catalogue.metadataStore = GeoNetwork.data.MetadataResultsStore();
 				catalogue.summaryStore = GeoNetwork.data.MetadataSummaryStore();
