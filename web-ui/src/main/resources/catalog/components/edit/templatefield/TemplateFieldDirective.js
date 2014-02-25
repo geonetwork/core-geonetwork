@@ -72,8 +72,9 @@
         },
         link: function(scope, element, attrs) {
           var xmlSnippetTemplate = element[0].innerHTML;
-          var fields = scope.keys && scope.keys.split('#');
-          var values = scope.values && scope.values.split('#');
+          var separator = '$$$';
+          var fields = scope.keys && scope.keys.split(separator);
+          var values = scope.values && scope.values.split(separator);
 
 
           // Replace all occurence of {{fieldname}} by its value
