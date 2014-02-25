@@ -12,7 +12,13 @@
         var defaultMapConfig = {
           'useOSM': 'true',
           'projection': 'EPSG:3857',
-          'projectionList': ['EPSG:4326', 'EPSG:3857']
+          'projectionList': [{
+            "code":"EPSG:4326",
+            "label":"WGS84 (EPSG:4326)"
+          },{
+            "code":"EPSG:3857",
+            "label":"Google mercator (EPSG:3857)"
+          }]
         };
         return {
 
@@ -49,7 +55,7 @@
           },
 
           getMapConfig: function() {
-            if (gnConfig['map.config'] && gnConfig['map.config'].length > 0) {
+            if (gnConfig['map.config'] && angular.isObject(gnConfig['map.config'])) {
               return gnConfig['map.config'];
             } else {
               return defaultMapConfig;

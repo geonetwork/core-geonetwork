@@ -4,15 +4,16 @@
     
       <!-- Header with projection selection, draw button and area list -->
       <form class="form-inline" role="form">
-        <button class="btn btn-warning" data-ng-click="drawMap()">
+        <button class="btn btn-warning" data-ng-click="drawMap()" 
+          data-ng-class="{active : drawing}">
           <i class="fa fa-pencil"></i>&nbsp;<span data-translate="">drawRectangle</span>
         </button>
-        <div class="col-sm-3">
+        <div class="col-sm-4">
           <label class="sr-only" data-translate="">chooseProjection</label>
           <select data-ng-model="projs.form">
             <option data-ng-repeat="proj in projs.list" 
-              value="{{proj}}"
-              data-ng-selected="proj == projs.form">{{proj}}
+              value="{{proj.code}}"
+              data-ng-selected="proj.code == projs.form">{{proj.label}}
             </option>
          </select>
         </div>
@@ -24,11 +25,11 @@
       
       <!-- Hidden field that match xml metadata schema -->
       <div class="hidden">
-      <input data-ng-model="extent.form[0]" type="" name="{{hleftRef}}"/>
-      <input data-ng-model="extent.form[1]" type="" name="{{hbottomRef}}"/>
-      <input data-ng-model="extent.form[2]" type="" name="{{hrightRef}}"/>
-      <input data-ng-model="extent.form[3]" type="" name="{{htopRef}}"/>
-      <input data-ng-model="dcExtent" type="" name="{{dcRef}}"/>
+      <input data-ng-model="extent.form[0]" name="{{hleftRef}}"/>
+      <input data-ng-model="extent.form[1]" name="{{hbottomRef}}"/>
+      <input data-ng-model="extent.form[2]" name="{{hrightRef}}"/>
+      <input data-ng-model="extent.form[3]" name="{{htopRef}}"/>
+      <input data-ng-model="dcExtent" name="{{dcRef}}"/>
       </div>
       <table class="text-center">
         <tr align="center">

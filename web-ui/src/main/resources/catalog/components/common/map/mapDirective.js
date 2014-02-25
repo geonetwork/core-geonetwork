@@ -49,7 +49,7 @@
                list: gnMap.getMapConfig().projectionList,
                md: 'EPSG:4326',
                map: gnMap.getMapConfig().projection,
-               form: gnMap.getMapConfig().projectionList[0]
+               form: gnMap.getMapConfig().projectionList[0].code
              };
 
              scope.extent = {
