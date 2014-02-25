@@ -673,6 +673,10 @@ div.x-tip-body div.help {
 .sdnProduct * .gmdalternateTitle span.buttons {
     display: none !important;
 }
+.sdnProduct * th.gmxAnchor + td > div.attr {
+    display: none !important;
+}
+
 .myocean * .thesaurusInfo {
     display: none !important;
 }

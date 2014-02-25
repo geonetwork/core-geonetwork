@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gts="http://www.isotc211.org/2005/gts"
   xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx"
   xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml"
@@ -91,11 +91,19 @@
 							onkeyup="validateNumber(this,true,true);"
 							onchange="validateNumber(this,true,true);"
 							value="{gco:Measure}"/>
-	
-						<select  class="md" name="_{$ref}_uom" id="_{$ref}_uom" style="width: inherit; margin-top: 0;" value="{gco:Measure/@uom}">
-			  				<option value="day">day</option>
-			  				<option value="month">month</option>
-						 	<option value="year">year</option>
+
+
+            <xsl:variable name="options" as="xs:string*" select="'day', 'month', 'year'"/>
+            <xsl:variable name="uom" select="gco:Measure/@uom"/>
+
+						<select  class="md" name="_{$ref}_uom" id="_{$ref}_uom" style="width: inherit; margin-top: 0;">
+              <xsl:for-each select="$options">
+                <option value="{.}">
+                  <xsl:if test=". = $uom">
+                    <xsl:attribute name="selected">selected</xsl:attribute>
+                  </xsl:if>
+                  <xsl:value-of select="."/></option>
+              </xsl:for-each>
 					  	</select>
 				  	</div>
 				</xsl:variable>
@@ -834,29 +842,27 @@
 		
 		<xsl:choose>
 			<xsl:when test="$edit=true()">
-				<xsl:variable name="ref" select="gmx:Anchor/geonet:element/@ref"/>
-					<xsl:apply-templates mode="simpleElement" select=".">
-						<xsl:with-param name="schema" select="$schema" />
-						<xsl:with-param name="edit" select="$edit" />
-						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/usageLicense" />
-						<xsl:with-param name="text">
-							<xsl:call-template name="snippet-editor">
-								<xsl:with-param name="elementRef" select="../geonet:element/@ref" />
-								<xsl:with-param name="widgetMode" select="''" />
-								<xsl:with-param name="thesaurusId"
-									select="'local.use-limitation.seadatanet.use-limitation'" />
-								<xsl:with-param name="listOfKeywords"
-									select="replace(replace(string-join(gmd:featureTypes/gco:LocalName/@codeSpace, '!,!'), '''', '\\'''), '!', '''')" />
-								<!-- <xsl:with-param name="listOfKeywords" select="replace(replace(string-join(gmd:featureTypes/gco:LocalName, 
-									'#,#'), '''', '\\'''), '#', '''')"/> -->
-								<xsl:with-param name="listOfTransformations"
-									select="'''to-iso19139.myocean-feature-type'''" />
-								<xsl:with-param name="transformation"
-									select="'to-iso19139.myocean-feature-type'" />
-								<xsl:with-param name="identificationMode" select="'uri'" />
-							</xsl:call-template>
-						</xsl:with-param>
-					</xsl:apply-templates>
+        <xsl:variable name="ref" select="geonet:element/@ref"/>
+        <xsl:apply-templates mode="simpleElement" select=".">
+          <xsl:with-param name="schema" select="$schema" />
+          <xsl:with-param name="edit" select="$edit" />
+          <xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/usageLicense" />
+          <xsl:with-param name="text">
+            <xsl:call-template name="snippet-editor">
+              <xsl:with-param name="elementRef" select="../geonet:element/@ref" />
+              <xsl:with-param name="widgetMode" select="'combo'" />
+              <xsl:with-param name="thesaurusId"
+                select="'local.use-limitation.seadatanet.use-limitation'" />
+              <xsl:with-param name="listOfKeywords"
+                select="replace(replace(string-join(gmx:Anchor, '!,!'), '''', '\\'''), '!', '''')" />
+              <xsl:with-param name="listOfTransformations"
+                select="'''to-iso19139.sdn-use-limitation'''" />
+              <xsl:with-param name="transformation"
+                select="'to-iso19139.sdn-use-limitation'" />
+              <xsl:with-param name="identificationMode" select="'uri'" />
+            </xsl:call-template>
+          </xsl:with-param>
+        </xsl:apply-templates>
 			</xsl:when>
 			<xsl:otherwise>
 				<a href="{gmx:Anchor/@xlink:href}"><xsl:value-of select="gmx:Anchor"/></a>
