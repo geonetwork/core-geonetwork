@@ -185,7 +185,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
             config.height = 450;
             config.width = 700;
         }
-        if (this.metadataSchema === 'iso19139.myocean') {
+        if ((this.metadataSchema === 'iso19139.myocean') || (this.metadataSchema === 'iso19139.sdn-product')) {
             window = new GeoNetwork.editor.MyOceanLinkResourcesWindow(config);
         } else {
             window = new GeoNetwork.editor.LinkResourcesWindow(config);
