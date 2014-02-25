@@ -66,7 +66,7 @@ public class TemplatesUriLocator implements UriLocator {
     			    
         			javascript.append(
         					String.format("$templateCache.put('%s', '%s');", 
-        					path.replace('\\','/') + '/' + files[i].getName(), 
+        					"../.." + path.replace('\\','/') + '/' + files[i].getName(), 
         					sTemplate));
         		}
         	}
