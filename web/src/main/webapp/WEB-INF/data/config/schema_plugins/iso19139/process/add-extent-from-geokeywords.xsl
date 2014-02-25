@@ -54,7 +54,7 @@
                       and ../gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='place']"/>
     <xsl:if test="$geoKeywords">
       <suggestion process="add-extent-from-geokeywords" id="{generate-id()}" category="keyword" target="extent">
-        <name><xsl:value-of select="geonet:i18n($add-extent-loc, 'a', $guiLang)"/><xsl:value-of select="string-join($geoKeywords/*, ', ')"/>
+        <name><xsl:value-of select="geonet:i18n($add-extent-loc, 'a', $guiLang)"/><xsl:value-of select="string-join($geoKeywords/gco:CharacterString, ', ')"/>
           <xsl:value-of select="geonet:i18n($add-extent-loc, 'b', $guiLang)"/></name>
         <operational>true</operational>
         <params>{gurl:{type:'string', defaultValue:'<xsl:value-of select="$gurl"/>'},
@@ -182,11 +182,13 @@
   <!-- Loop on all non empty keywords -->
   <xsl:template name="add-extent">
     <xsl:param name="srv" select="false()"/>
+    <!-- Only check keyword in main metadata language
+     TODO: support multilingual keyword -->
     <xsl:for-each
       select="gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword[not(gco:CharacterString/@gco:nilReason)]">
 
       <xsl:call-template name="get-bbox">
-        <xsl:with-param name="word" select="*[normalize-space(.)!='']"/>
+        <xsl:with-param name="word" select="*[normalize-space(gco:CharacterString)!='']"/>
         <xsl:with-param name="srv" select="$srv"/>
       </xsl:call-template>
 
