@@ -208,13 +208,14 @@ app.LinkedMetadataSelectionPanel = Ext.extend(Ext.FormPanel, {
         	this.hiddenParameters = app.Filter.SERVICE;
         else if (this.mode=='iso19110')
         	this.hiddenParameters = app.Filter.FEATURE_CATALOGUE;
-        
+
+        var isFullRelationship = this.fullRelationships;
         var checkboxSM = new Ext.grid.CheckboxSelectionModel({
             singleSelect: this.singleSelect,
             header: '',
             listeners: {
         		selectionchange: function() {
-        			if(!this.fullRelationships) {
+        			if(!isFullRelationship) {
         				Ext.getCmp('linkedMetadataValidateButton').setDisabled(this.getSelections().length < 1);
         			}
         		}
@@ -244,7 +245,13 @@ app.LinkedMetadataSelectionPanel = Ext.extend(Ext.FormPanel, {
                                   valueField: 'rel',
                                   mode: 'local',
                                   typeAhead: false,
-                                  triggerAction: 'all'
+                                  triggerAction: 'all',
+                                  listeners: {
+                                      select: function(store,record) {
+                                          var button = Ext.getCmp('linkedMetadataValidateButton');
+                                         button.setDisabled(!record);
+                                      }
+                                  }
                             })
         };
 
@@ -308,7 +315,7 @@ app.LinkedMetadataSelectionPanel = Ext.extend(Ext.FormPanel, {
 	            id: 'linkedMetadataValidateButton',
 	            iconCls: 'linkIcon',
 	            text: translate('createRelation'),
-	            disabled: !this.fullRelationships,
+	            disabled: true,
 	            handler: function() {
 	                var selected = grid.getSelectionModel().getSelections();
 	                this.fireEvent('linkedmetadataselected', this, selected);

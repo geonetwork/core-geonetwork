@@ -1293,7 +1293,12 @@ function showLinkedMetadataSelectionPanel(ref, name, fullRelationships) {
         closeAction: 'hide',
         constrain: true,
         iconCls: 'linkIcon',
-        modal: true
+        modal: true,
+        listeners: {
+            beforeshow: function() {
+                linkedMetadataSelectionPanel.doSearch();
+            }
+        }
     });
 
     linkedMetadataSelectionWindow.show();
