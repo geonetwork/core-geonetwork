@@ -185,6 +185,7 @@
        * metadata records.
        */
       $scope.selectUser = function(u) {
+        $scope.userOperation = 'editinfo';
         // Load user group and then select user
         $http.get('admin.usergroups.list@json?id=' + u.id)
                 .success(function(data) {

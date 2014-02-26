@@ -62,7 +62,7 @@
               </div>
             </div>
             <!-- Password are disabled when updating user -->
-            <div ng-hide="userOperation != 'newuser'">
+            <div ng-if="userOperation == 'newuser'">
               <div
                 data-ng-class="gnUserEdit.password.$error.required || gnUserEdit.password.$error.minlength ? 'has-error' : ''" class="form-group">
                 <label class="control-label col-sm-3" data-translate="">password</label>
