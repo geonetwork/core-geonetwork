@@ -1,4 +1,5 @@
 <strings>
+    <schematron.title>BGDI</schematron.title>
     <translatedTitle>Title translations</translatedTitle>
     <deTitleRequired>Data Identification / Citation / title is required and requires a german translation</deTitleRequired>
     <deTitleReport>German title:</deTitleReport>

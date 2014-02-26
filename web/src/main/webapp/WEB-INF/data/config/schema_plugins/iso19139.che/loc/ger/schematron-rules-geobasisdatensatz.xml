@@ -1,4 +1,5 @@
 <strings>
+    <schematron.title>Geobasisdatensatz</schematron.title>
     <collectivetitle>Collective Title</collectivetitle>
     <collectiveTitleRequired>The Data Identification / Citation / Collective Title element is required</collectiveTitleRequired>
     <collectiveTitleReport>Collective Title:</collectiveTitleReport>
