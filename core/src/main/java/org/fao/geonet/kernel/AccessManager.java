@@ -261,6 +261,26 @@ public class AccessManager {
 		return hs;
 	}
 
+    public Set<String> getReviewerGroups(Dbms dbms, UserSession usrSess) throws Exception {
+        Set<String> hs = new HashSet<String>();
+
+        // get other groups
+        if (usrSess.isAuthenticated()) {
+            StringBuffer query = new StringBuffer("SELECT distinct(groupId) FROM UserGroups WHERE ");
+            query.append("profile='"+Geonet.Profile.REVIEWER + "' AND ");
+            query.append("userId=?");
+            Element elUserGrp = dbms.select(query.toString(), usrSess.getUserIdAsInt());
+
+            @SuppressWarnings("unchecked")
+            List<Element> list = elUserGrp.getChildren();
+
+            for (Element el : list) {
+                String groupId = el.getChildText("groupid");
+                hs.add(groupId);
+            }
+        }
+        return hs;
+    }
     /**
      * TODO javadoc.
      *
@@ -378,10 +398,15 @@ public class AccessManager {
 		if (info.groupOwner == null)
 			return false;
 
-		for (String userGroup : getUserGroups(dbms, us, null, true)) {
-			if (userGroup.equals(info.groupOwner))
+        for (String userGroup : getReviewerGroups(dbms, us)) {
+			if (userGroup.equals(info.groupOwner)) {
 				return true;
+            }
 		}
+//		for (String userGroup : getUserGroups(dbms, us, null, true)) {
+//			if (userGroup.equals(info.groupOwner))
+//				return true;
+//		}
 		return false;
 	}
 
