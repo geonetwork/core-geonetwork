@@ -1,4 +1,7 @@
-GeoNetwork.Settings = {};
+GeoNetwork.Settings = {
+//  hideAngularEditor: true,
+//  hideExtEditor: false
+};
 
 // Default to absolute path without apps/search
 // GeoNetwork.URL = '../..';

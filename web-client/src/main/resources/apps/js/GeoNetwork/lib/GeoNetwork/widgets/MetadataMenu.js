@@ -55,8 +55,8 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
     },
     resultsView: undefined,
     catalogue: undefined,
-    editAction: undefined,
-    editAction2: undefined,
+    extEditorAction: undefined,
+    angularEditorAction: undefined,
     deleteAction: undefined,
     zoomToAction: undefined,
     otherActions: undefined,
@@ -89,7 +89,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
      
      initAction: function(){
         
-        this.editAction = new Ext.Action({
+        this.extEditorAction = new Ext.Action({
             text: OpenLayers.i18n('edit'),
             iconCls: 'md-mn-edit',
             handler: function(){
@@ -98,7 +98,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             },
             scope: this
         });
-        this.editAction2 = new Ext.Action({
+        this.angularEditorAction = new Ext.Action({
             text: OpenLayers.i18n('edit'),
             iconCls: 'md-mn-edit',
             handler: function(){
@@ -280,14 +280,16 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
                 }
             });
         }
-        
+
+
         /* TODO : add categories / privileges / create child */
         this.updateMenu();
     },
     
     composeMenu: function(){
         if(!this.catalogue.isReadOnly()) {
-            this.add(this.editAction2);
+            this.add(this.angularEditorAction);
+            this.add(this.extEditorAction);
             this.add(this.deleteAction);
             this.otherActions = new Ext.menu.Item({
                 text: OpenLayers.i18n('otherActions'),
@@ -296,7 +298,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
                             this.adminAction, 
                             this.publicationToggleAction, this.statusAction, 
                             this.enableWorkflowAction, this.versioningAction, 
-                            this.categoryAction, new Ext.menu.Separator(), this.editAction]
+                            this.categoryAction]
                 }
             });
         }
@@ -356,34 +358,41 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             identified = this.catalogue.isIdentified() && 
                 (this.catalogue.identifiedUser && this.catalogue.identifiedUser.role !== 'RegisteredUser'),
             isReadOnly = this.catalogue.isReadOnly();
-        
-        
+
+
+        this.extEditorAction.hide();
+        this.angularEditorAction.hide();
+
         /* Actions and menu visibility for logged in user */
         if (!identified || isReadOnly) {
-            this.editAction.setText(OpenLayers.i18n('edit'));
-            this.editAction.hide();
-            this.editAction2.setText(OpenLayers.i18n('edit'));
-            this.editAction2.hide();
+            this.extEditorAction.setText(OpenLayers.i18n('edit'));
+            this.angularEditorAction.setText(OpenLayers.i18n('edit'));
             this.deleteAction.hide();
         } else {
             // TODO : if editor and status is submitted - turn off editing
             var statusIdx = this.statusStore.find('id', status);
             
             // Set button title with status information if not set to unkonwn (ie. workflow is enabled)
-            this.editAction.setText(OpenLayers.i18n('edit') 
+            this.extEditorAction.setText(OpenLayers.i18n('edit')
                     + (statusIdx !== -1 && status > 0 ? 
                             OpenLayers.String.format(OpenLayers.i18n('currentStatus'), {
                                 status: this.statusStore.getAt(statusIdx).get('label')[catalogue.lang]
                             }) : '')
                     );
-            this.editAction.show();
-            this.editAction2.setText(OpenLayers.i18n('edit') 
+
+          if (GeoNetwork.Settings.hideExtEditor === false) {
+            this.extEditorAction.show();
+          }
+            this.angularEditorAction.setText(OpenLayers.i18n('edit')
                     + (statusIdx !== -1 && status > 0 ? 
                             OpenLayers.String.format(OpenLayers.i18n('currentStatus'), {
                                 status: this.statusStore.getAt(statusIdx).get('label')[catalogue.lang]
                             }) : '')
                     );
-            this.editAction2.show();
+          // Display by default Angular editor
+          if (!GeoNetwork.Settings.hideAngularEditor) {
+            this.angularEditorAction.show();
+          }
             this.deleteAction.show();
             
             // If status is unkown or undefined
@@ -400,11 +409,11 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         
         /* Actions status depend on records */
         if(GeoNetwork.Settings && GeoNetwork.Settings.editor && GeoNetwork.Settings.editor.disableIfSubmittedForEditor) {
-            this.editAction.setDisabled(disableIfSubmittedForEditor || !isEditable || isReadOnly);
-            this.editAction2.setDisabled(disableIfSubmittedForEditor || !isEditable || isReadOnly);
+            this.extEditorAction.setDisabled(disableIfSubmittedForEditor || !isEditable || isReadOnly);
+            this.angularEditorAction.setDisabled(disableIfSubmittedForEditor || !isEditable || isReadOnly);
         } else {
-            this.editAction.setDisabled(!isEditable || isReadOnly);
-            this.editAction2.setDisabled(!isEditable || isReadOnly);
+            this.extEditorAction.setDisabled(!isEditable || isReadOnly);
+            this.angularEditorAction.setDisabled(!isEditable || isReadOnly);
         }
         this.adminAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
         
