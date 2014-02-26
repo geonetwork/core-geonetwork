@@ -18,7 +18,7 @@
   -->
   <xsl:template mode="relation" match="metadata[gmd:MD_Metadata or *[contains(@gco:isoType, 'MD_Metadata')]]" priority="99">
     
-    <xsl:for-each select="*/descendant::*[name(.) = 'gmd:graphicOverview']/*">
+    <xsl:for-each select="//gmd:graphicOverview/*">
       <relation type="thumbnail">
         <id><xsl:value-of select="gmd:fileName/gco:CharacterString"/></id>
         <title><xsl:value-of select="gmd:fileDescription/gco:CharacterString"/></title>
@@ -27,7 +27,7 @@
     
     <xsl:for-each select="*/descendant::*[name(.) = 'gmd:distributor']">
     <xsl:choose>
-    	<xsl:when test="normalize-space(gmd:MD_Distributor//gmd:onLine[1]/gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString) != 'OGC:WMS:getCapabilities'">
+    	<xsl:when test="count(.//gmd:onLine[normalize-space(gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString) = 'OGC:WMS:getCapabilities']) = 0">
 		    <xsl:for-each select="*/descendant::*[name(.) = 'gmd:onLine']/*[gmd:linkage/gmd:URL!='']">
 		      <relation type="onlinesrc">
 		        
