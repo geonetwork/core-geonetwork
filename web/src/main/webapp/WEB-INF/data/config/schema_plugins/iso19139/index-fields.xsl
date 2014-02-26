@@ -196,6 +196,8 @@
 				<Field name="abstract" string="{string(.)}" store="true" index="true"/>
             </xsl:for-each>
 
+      <!-- Multilingual indexing is taking care of properly index
+      translation or value in main language. -->
 			<!--<xsl:for-each select="gmd:credit/gco:CharacterString">-->
 				<!--<Field name="credit" string="{string(.)}" store="true" index="true"/>-->
 			<!--</xsl:for-each>-->
