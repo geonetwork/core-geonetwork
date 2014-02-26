@@ -162,12 +162,12 @@
       <xsl:choose>
         <xsl:when test="$credit">
           <xsl:for-each select="$credit">
-            <Field name="credit" string="{string(.)}" store="true" index="false"/>
+            <Field name="credit" string="{string(.)}" store="true" index="true"/>
           </xsl:for-each>
         </xsl:when>
         <xsl:otherwise>
           <xsl:for-each select="gmd:credit/gco:CharacterString">
-            <Field name="credit" string="{string(.)}" store="true" index="false"/>
+            <Field name="credit" string="{string(.)}" store="true" index="true"/>
           </xsl:for-each>
         </xsl:otherwise>
       </xsl:choose>
