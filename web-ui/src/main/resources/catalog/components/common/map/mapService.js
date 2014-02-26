@@ -25,6 +25,7 @@
         return {
 
           importProj4js: function() {
+            Proj4js.defs['EPSG:3857'] = Proj4js.defs['EPSG:900913'];
             if(Proj4js && gnConfig['map.proj4js'] && 
                 angular.isArray(gnConfig['map.proj4js'])) {
               angular.forEach(gnConfig['map.proj4js'], function(item){

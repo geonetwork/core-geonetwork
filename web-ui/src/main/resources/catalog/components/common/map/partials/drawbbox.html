@@ -3,32 +3,34 @@
     <div class="panel-body">
     
       <!-- Header with projection selection, draw button and area list -->
-      <form class="form-inline" role="form">
-        <button class="btn btn-warning" data-ng-click="drawMap()" 
-          data-ng-class="{active : drawing}">
-          <i class="fa fa-pencil"></i>&nbsp;<span data-translate="">drawRectangle</span>
-        </button>
-        <div class="col-sm-4">
-          <label class="sr-only" data-translate="">chooseProjection</label>
-          <select data-ng-model="projs.form">
-            <option data-ng-repeat="proj in projs.list" 
-              value="{{proj.code}}"
-              data-ng-selected="proj.code == projs.form">{{proj.label}}
-            </option>
-         </select>
+      <form class="form-horizontal" role="form">
+        <div class="form-group">
+          <button class="btn btn-warning" data-ng-click="drawMap()"
+            data-ng-class="{active : drawing}">
+            <i class="fa fa-pencil"></i>&nbsp;<span data-translate="">drawRectangle</span>
+          </button>
         </div>
-        <div class="col-sm-5" lang="lang">
-          <div data-gn-region-picker=""></div>
-        </div>
-        
+        <ul class="form-group list-inline">
+          <li class="gn-proj-select">
+            <select data-ng-model="projs.form">
+              <option data-ng-repeat="proj in projs.list"
+                value="{{proj.code}}"
+                data-ng-selected="proj.code == projs.form">{{proj.label}}
+              </option>
+            </select>
+          </li>
+          <li class="gn-region-picker" lang="lang">
+            <div data-gn-region-picker=""></div>
+          </li>
+        </ul>
       </form>
-      
+
       <!-- Hidden field that match xml metadata schema -->
       <div class="hidden">
-      <input data-ng-model="extent.form[0]" name="{{hleftRef}}"/>
-      <input data-ng-model="extent.form[1]" name="{{hbottomRef}}"/>
-      <input data-ng-model="extent.form[2]" name="{{hrightRef}}"/>
-      <input data-ng-model="extent.form[3]" name="{{htopRef}}"/>
+      <input data-ng-model="extent.md[0]" name="{{hleftRef}}"/>
+      <input data-ng-model="extent.md[1]" name="{{hbottomRef}}"/>
+      <input data-ng-model="extent.md[2]" name="{{hrightRef}}"/>
+      <input data-ng-model="extent.md[3]" name="{{htopRef}}"/>
       <input data-ng-model="dcExtent" name="{{dcRef}}"/>
       </div>
       <table class="text-center">
