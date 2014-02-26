@@ -24,8 +24,10 @@
 package org.fao.geonet.services.metadata;
 
 import org.fao.geonet.exceptions.BadParameterEx;
+
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 import org.fao.geonet.utils.Xml;
@@ -41,6 +43,8 @@ import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.lib.Lib;
 import org.jdom.*;
+import org.jdom.filter.ElementFilter;
+import org.jdom.xpath.XPath;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -258,7 +262,7 @@ class EditUtils {
                 if(Log.isDebugEnabled(Geonet.EDITOR))
                     Log.debug(Geonet.EDITOR, "replacing XML content");
 				el.removeContent();
-				val = addNamespaceToFragment(val);
+				val = EditLib.addNamespaceToFragment(val);
 				el.addContent(Xml.loadString(val, false));
             }
 			else {
@@ -283,7 +287,16 @@ class EditUtils {
     }
 
     /**
-     * Adds a localised character string to an element.
+     * Adds a localised character string to an element for an ISO19139 record.
+     *
+     * <pre>
+     * <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+     *    <gco:CharacterString>Template for Vector data in ISO19139 (multilingual)</gco:CharacterString>
+     *    <gmd:PT_FreeText>
+     *        <gmd:textGroup>
+     *            <gmd:LocalisedCharacterString locale="#FRE">Modèle de données vectorielles en ISO19139 (multilingue)</gmd:LocalisedCharacterString>
+     *        </gmd:textGroup>
+     * </pre>
      *
      * @param md metadata record
      * @param ref current ref of element. All _lang_AB_123 element will be processed.
@@ -294,27 +307,42 @@ class EditUtils {
         if (ref.startsWith("lang")) {
             if (val.length() > 0) {
                 String[] ids = ref.split("_");
-                // --- search element in current metadata record
+                // --- search element in current parent
                 Element parent = editLib.findElement(md, ids[2]);
-
-                // --- add required attribute
-                parent.setAttribute("type", "gmd:PT_FreeText_PropertyType", Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance"));
-
-                // --- add new translation
-                Namespace gmd = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
-                Element langElem = new Element("LocalisedCharacterString", gmd);
-                langElem.setAttribute("locale", "#" + ids[1]);
-                langElem.setText(val);
-
-                Element freeText = getOrAdd(parent, "PT_FreeText", gmd);
-
-                Element textGroup = new Element("textGroup", gmd);
-                freeText.addContent(textGroup);
-                textGroup.addContent(langElem);
-                Element refElem = new Element(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
-                refElem.setAttribute(Edit.Element.Attr.REF, "");
-                textGroup.addContent(refElem);
-                langElem.addContent((Element) refElem.clone());
+                List<Element> elems = null;
+                try {
+                  XPath xpath = XPath.newInstance(".//gmd:LocalisedCharacterString[@locale='#" + ids[1] + "']");
+                  @SuppressWarnings("unchecked")
+                  List<Element> tmp = xpath.selectNodes(parent);
+                  elems = tmp;
+                } catch (Exception e) {
+                  Log.debug(Geonet.DATA_MANAGER, "updatedLocalizedTextElement exception " + e.getMessage());
+                }
+                
+                // Element exists, set the value
+                if (elems != null  && elems.size() > 0) {
+                  elems.get(0).setText(val);
+                } else {
+                  // --- add required attribute
+                  parent.setAttribute("type", "gmd:PT_FreeText_PropertyType", Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance"));
+  
+                  // --- add new translation
+                  Namespace gmd = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
+                  Element langElem = new Element("LocalisedCharacterString", gmd);
+                  langElem.setAttribute("locale", "#" + ids[1]);
+                  langElem.setText(val);
+  
+                  Element freeText = getOrAdd(parent, "PT_FreeText", gmd);
+  
+                  Element textGroup = new Element("textGroup", gmd);
+                  freeText.addContent(textGroup);
+                  textGroup.addContent(langElem);
+                  
+                  Element refElem = new Element(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
+                  refElem.setAttribute(Edit.Element.Attr.REF, "");
+                  textGroup.addContent(refElem);
+                  langElem.addContent((Element) refElem.clone());
+                }
             }
             return true;
         }
@@ -322,24 +350,6 @@ class EditUtils {
     }
 
 	/**
-	 * Adds missing namespace (ie. GML) to XML inputs. It should be done by the client side
-	 * but add a check in here.
-	 *
-	 * @param fragment 		The fragment to be checked and processed.
-	 *
-	 * @return 				The updated fragment.
-	 */
-	protected static String addNamespaceToFragment(String fragment) {
-        //add the gml namespace if its missing
-        if (fragment.contains("<gml:") && !fragment.contains("xmlns:gml=\"")) {
-            if(Log.isDebugEnabled(Geonet.EDITOR))
-                Log.debug(Geonet.EDITOR, "  Add missing GML namespace.");
-        	fragment = fragment.replaceFirst("<gml:([^ >]+)", "<gml:$1 xmlns:gml=\"http://www.opengis.net/gml\"");
-        }
-		return fragment;
-	}
-
-    /**
      * If no PT_FreeText element exists, creates a geonet:element with an empty ref.
      *
      * @param parent

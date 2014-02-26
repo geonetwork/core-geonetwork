@@ -17,7 +17,7 @@
 			during the initialization of resources or
 			the appHandler org.fao.geonet.Geonetwork
 		-->
-		<startupErrorService>main.error</startupErrorService>
+		<startupErrorService>error</startupErrorService>
 		<language>eng</language>
 		<localized>true</localized>
 		<contentType>text/html; charset=UTF-8</contentType>
@@ -342,7 +342,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <!-- classic GUI -->
-		<service name="feedback">
+		<service name="feedback" deprecated="true">
 			<output sheet="feedback.xsl" />
 		</service>
 
@@ -369,7 +369,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.region.get">
+		<service name="xml.region.get" deprecated="true">
 			<class name=".services.region.Get" />
 			
 			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
@@ -377,64 +377,14 @@
 			</error>
 		</service>
 
-		<service name="xml.regions.list">
+		<service name="xml.regions.list" deprecated="true">
 			<class name=".services.region.List" />
 		</service>
 
-		<service name="xml.regions.category.list">
+		<service name="xml.regions.category.list" deprecated="true">
 			<class name=".services.region.ListCategories" />
 		</service>
 
-		<service name="region.getmap.png">
-			<class name=".services.region.GetMap" >
-				<!-- In getMap the envelope of the geometry is calculated then
-					 it is expanded by a factor.  That factor is the size of the map.  This allows the 
-					 map to be slightly bigger than the geometry allowing some context to be shown.
-					 This parameter allows different factors to be chosen per scale level 
-					 
-					 Proportion is the proportion of the world that the geometry
-					 covers
-					 (bounds of WGS84)/(bounds of geometry in WGS84)-->)
-				 <param name="expandFactors">
-				 	<factor proportion=".0005" value="2"/>
-				 	<factor proportion=".01" value=".5"/>
-				 	<factor proportion=".015" value=".2"/>
-				 </param>
-				 <param name="format" value="png"/>
-				 <!-- named backgrounds allow the background parameter to be a simple key 
-				 	  and the complete URL will be looked up from this list of named backgrounds 
-				 	  The name of the child elements is the key and the text is the url -->
-				 <param name="namedBackgrounds">
-				 	<!-- <geocat>http://wms.geo.admin.ch/?SERVICE=WMS&amp;REQUEST=GetMap&amp;VERSION=1.1.0&amp;LAYERS=ch.swisstopo.pixelkarte-farbe-pk1000.noscale&amp;STYLES=default&amp;SRS={srs}&amp;BBOX={minx},{miny},{maxx},{maxy}&amp;WIDTH={width}&amp;HEIGHT={height}&amp;FORMAT=image/png</geocat> -->
-				 </param>
-			 </class>
-			<output file="true" contentType="image/png"/>
-			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
-				<xml name="error" file="xml/file-not-found-error.xml" />
-			</error>
-		</service>
-
-		<service name="region.geom.wkt">
-			<class name=".services.region.GetGeom">
-				<param name="format" value="WKT"/>
-			</class>
-			
-			<output sheet="extracttext.xsl" contentType="text/plain; charset=utf-8"/>
-			
-			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
-				<xml name="error" file="xml/file-not-found-error.xml" />
-			</error>
-		</service>
-
-		<service name="region.geom.gml3">
-			<class name=".services.region.GetGeom">
-				<param name="format" value="GML3"/>
-			</class>
-			
-			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
-				<xml name="error" file="xml/file-not-found-error.xml" />
-			</error>
-		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Selection search services for filtering -->
@@ -448,7 +398,7 @@
 		<!-- Feedback services                                             -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="feedback.insert">
+		<service name="feedback.insert" deprecated="true">
 			<class name=".services.feedback.Insert" />
 
 			<output sheet="info.xsl">
@@ -1023,13 +973,13 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.metadata.insert">
+		<service name="xml.metadata.insert" deprecated="true">
 			<class name=".services.metadata.Insert" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.metadata.delete">
+		<service name="xml.metadata.delete" deprecated="true">
 			<class name=".services.metadata.Delete" />
 		</service>
 
@@ -1112,21 +1062,15 @@
 		</service>
 
 
-		<service name="crs.search">
-			<class name=".services.crs.Search" />
-		</service>
-		<service name="crs.types">
+		<service name="crs.types" deprecated="true">
 			<class name=".services.crs.GetCRSTypes" />
 		</service>
-		<service name="crs.get">
+		<service name="crs.get" deprecated="true">
 			<class name=".services.crs.GetCRS" />
 			<output sheet="crs.xsl" contentType="text/xml; charset=UTF-8" />
 		</service>
-
-		<service name="system.properties.set">
-			<class name=".services.config.SetSystemProperties" />
-		</service>
-
+		
+		
 		<service name="isolanguages" deprecated="true">
 			<class name="org.fao.geonet.guiservices.isolanguages.Get" />
 		</service>
@@ -1216,21 +1160,12 @@
 	    <output forward="virtualcsw.config"/>
 	  </service>
 
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Versioning log                                                -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="versioning.logdata">
-			<class name=".guiservices.versioning.Get"/>
-		</service>
 	</services>
 
 	<!-- ====================================================================== -->
 
 	<include>config-metadata.xml</include>
 	<include>config-metadata-experimental.xml</include>
-	<include>config-subtemplate.xml</include>
 	<include>config-thesaurus.xml</include>
 	<include>config-harvesting.xml</include>
 	<include>config-portal.xml</include>
@@ -1251,6 +1186,7 @@
   <include>config/config-service-pdf.xml</include>
   
   <include>config/config-service-thesaurus.xml</include>
+  <include>config/config-service-region.xml</include>
   
   <include>config/config-service-admin.xml</include>
   <include>config/config-service-admin-harvesting.xml</include>
@@ -1266,6 +1202,7 @@
   <include>config/config-service-admin-user-and-group.xml</include>
   <include>config/config-service-admin-geoserver-publication.xml</include>
   <include>config/config-service-admin-transfert-privileges.xml</include>
+  <include>config/config-service-admin-formatter.xml</include>
   
   <include>config/config-service-statistics.xml</include>
   
@@ -1274,7 +1211,11 @@
   <include>config/config-service-csw-virtual.xml</include>
   
   <include>config/config-service-sitemap.xml</include>
-  
+
+  <include>config/config-service-crs.xml</include>
+
+  <include>config/config-service-subtemplate.xml</include>
+
   <include>config/config-ui-search.xml</include>
   <include>config/config-ui-metadata.xml</include>
   <include>config/config-ui-admin.xml</include>

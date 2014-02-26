@@ -79,10 +79,10 @@
 
 
 
-        <!-- TODO: Could be nicer to have a list of languages -->
         <div>
             <label class="control-label" data-translate="">ogcwxs-metadataLanguage</label>
-            <input type="text" class="form-control" data-ng-model="harvesterSelected.options.lang"/>
+            <input type="text" class="form-control" data-ng-model="harvesterSelected.options.lang"
+             data-gn-language-picker=""/>
         </div>
 
         <div>
@@ -108,5 +108,5 @@
 
 
 
-    <div data-gn-harvester-privileges="harvesterSelected"/>
+    <div data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
 </form>

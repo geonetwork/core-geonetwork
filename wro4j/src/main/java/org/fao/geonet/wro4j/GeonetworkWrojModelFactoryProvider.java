@@ -28,6 +28,7 @@ public class GeonetworkWrojModelFactoryProvider extends ConfigurableProviderSupp
     public Map<String, UriLocator> provideLocators() {
         final Map<String, UriLocator> locatorMap = super.provideLocators();
         locatorMap.put(ClosureDependencyUriLocator.URI_LOCATOR_ID, new ClosureDependencyUriLocator());
+        locatorMap.put(TemplatesUriLocator.URI_LOCATOR_ID, new TemplatesUriLocator());
         return locatorMap;
     }
 

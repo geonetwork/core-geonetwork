@@ -24,9 +24,14 @@ then
   gnpoolsize=$gnpoolsize_default
 fi
 
-GNLIB=../../../../../target/geonetwork/WEB-INF/lib/
-WEB_FILE=../../../webResources/WEB-INF/web.xml
-WEB_FILE_OUT=../../../webapp/WEB-INF/web.xml
+# When running from the source code
+#GNLIB=../../../../../target/geonetwork/WEB-INF/lib/
+#WEB_FILE=../../../webResources/WEB-INF/web.xml
+#WEB_FILE_OUT=../../../webapp/WEB-INF/web.xml
+# When running from the app
+GNLIB=../lib/
+WEB_FILE=../web.xml
+WEB_FILE_OUT=../web.xml
 
 function showUsage 
 {
@@ -49,16 +54,14 @@ function showUsage
   echo
 }
 
-echo $#
-
-if [ "$1" = "-h" ] 
+if [ "$1" = "-h" ]
 then
         showUsage
         exit
 fi
 
 
-if [ $# -lt 5 ]
+if [ $# -lt 4 ]
 then
   showUsage
   exit
@@ -81,6 +84,8 @@ java -classpath $GNLIB/xalan-2.7.1.jar:$GNLIB/serializer-2.7.1.jar org.apache.xa
         -PARAM poolSize $gnpoolsize \
         -IN $WEB_FILE -XSL register-node.xsl \
         -OUT $WEB_FILE_OUT
+mv $wEB_FILE $WEB_FILE.bak
+mv $wEB_FILE_OUT $WEB_FILE
 
 echo "Setting db connection and SPRING configuration ..."
 java -classpath $GNLIB/xalan-2.7.1.jar:$GNLIB/serializer-2.7.1.jar org.apache.xalan.xslt.Process \
@@ -92,6 +97,8 @@ java -classpath $GNLIB/xalan-2.7.1.jar:$GNLIB/serializer-2.7.1.jar org.apache.xa
         -PARAM poolSize $gnpoolsize \
         -IN ../config-node/srv.xml -XSL generate-spring-config.xsl \
         -OUT ../config-node/$gnnodeid.xml
+
+sed -i s/j2e://g $WEB_FILE
 
 
 

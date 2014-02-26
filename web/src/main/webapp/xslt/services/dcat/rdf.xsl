@@ -11,7 +11,7 @@
   <xsl:output indent="yes"/>
   
   <xsl:include href="../../common/base-variables.xsl"/>
-  <xsl:include href="../../common/profiles-loader-rdf-tpl.xsl"/>
+  <xsl:include href="../../common/profiles-loader-tpl-rdf.xsl"/>
   
   <xsl:variable name="port" select="$env/system/server/port"/>
   <xsl:variable name="url" select="concat($env/system/server/protocol, '://', 

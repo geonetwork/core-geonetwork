@@ -172,7 +172,7 @@ public class Aligner
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
         String id = dataMan.insertMetadata(context, schema, md, params.uuid, Integer.parseInt(params.ownerId), group, remoteUuid,
-                         isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
+                         isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
 
 
 		int iId = Integer.parseInt(id);

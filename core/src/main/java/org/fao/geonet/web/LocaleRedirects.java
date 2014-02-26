@@ -80,7 +80,7 @@ public class LocaleRedirects {
                               @CookieValue(value = Jeeves.LANG_COOKIE, required = false) String langCookie,
                               @RequestHeader(value = ACCEPT_LANGUAGE_HEADER, required = false) final String langHeader) {
         String lang = lang(langParam, langCookie, langHeader);
-        return redirectURL(createServiceUrl(request, "login.form", lang, node));
+        return redirectURL(createServiceUrl(request, "catalog.signin", lang, node));
     }
 
     @RequestMapping(value = "/accessDenied.jsp")

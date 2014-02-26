@@ -72,6 +72,10 @@
 		<Bug pattern="REC_CATCH_EXCEPTION" />
 		<Method name="harvest" />
 	</Match>
+  <Match>
+    <Class name="org.fao.geonet.kernel.harvest.harvester.AbstractHarvester"/>
+    <Bug pattern="IS2_INCONSISTENT_SYNC"/>
+  </Match>
  	<Match>
 		<Class name="org.fao.geonet.kernel.harvest.harvester.wfsfeatures.Harvester" />
 		<Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD " />

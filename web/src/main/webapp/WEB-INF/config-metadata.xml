@@ -88,7 +88,7 @@
 	  </service>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.edit">
+		<service name="metadata.edit" deprecated="true">
 			<class name=".services.metadata.GetEditableData"/>
 
 			<output sheet="metadata-edit.xsl">
@@ -108,7 +108,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.elem.add">
+		<service name="metadata.elem.add" deprecated="true">
 			<class name=".services.metadata.AddElement"/>
 
 			<output sheet="metadata-edit-embedded.xsl">
@@ -128,7 +128,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.elem.delete">
+		<service name="metadata.elem.delete" deprecated="true">
 			<class name=".services.metadata.DeleteElement"/>
 
 			<output sheet="metadata-edit-embedded.xsl">
@@ -149,7 +149,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- saves edits -->
 
-		<service name="metadata.update">
+		<service name="metadata.update" deprecated="true">
 			<class name=".services.metadata.Update"/>
 
 			<output forward="metadata.edit" />
@@ -160,7 +160,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- saves edits and returns to viewer -->
 
-		<service name="metadata.update.finish">
+		<service name="metadata.update.finish" deprecated="true">
 			<class name=".services.metadata.Update">
 				<param name="finished" value="yes" />
 			</class>
@@ -171,7 +171,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- reset - forget edits and return to last saved version -->
 
-		<service name="metadata.update.forget">
+		<service name="metadata.update.forget" deprecated="true">
 			<class name=".services.metadata.Update">
 				<param name="forget" value="yes" />
 			</class>
@@ -184,7 +184,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- cancel - forget edits and returns to viewer -->
 
-		<service name="metadata.update.forgetandfinish">
+		<service name="metadata.update.forgetandfinish" deprecated="true">
 			<class name=".services.metadata.Update">
 				<param name="forget" value="yes" />
 				<param name="finished" value="yes" />
@@ -196,7 +196,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- validates metadata in session -->
 
-		<service name="metadata.validate">
+		<service name="metadata.validate" deprecated="true">
 			<class name=".services.metadata.Validate"/>
 
 			<output sheet="metadata-validate.xsl">
@@ -209,7 +209,7 @@
 			</error>
 		</service>
 
-		<service name="xml.metadata.validate">
+		<service name="xml.metadata.validate" deprecated="true">
 			<class name=".services.metadata.Validate"/>
 		  <output sheet="metadata/validate.xsl" contentType="text/xml; charset=UTF-8">
 		    <xml name="validation" file="xml/metadata-validate.xml" />
@@ -220,7 +220,7 @@
 			<class name=".guiservices.metadata.GetRelated"/>
 		</service>
 		
-	  <service name="xml.relation">
+	  <service name="xml.relation" deprecated="true">
 	    <class name=".guiservices.metadata.GetRelated"/>
 	    <output sheet="metadata/relation.xsl" contentType="text/xml; charset=UTF-8"/>
 	  </service>
@@ -228,7 +228,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.elem.down">
+		<service name="metadata.elem.down" deprecated="true">
 			<class name=".services.metadata.MoveElement">
 				<param name="dir" value="down" />
 			</class>
@@ -237,7 +237,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.elem.up">
+		<service name="metadata.elem.up" deprecated="true">
 			<class name=".services.metadata.MoveElement">
 				<param name="dir" value="up" />
 			</class>
@@ -246,7 +246,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.attr.delete">
+		<service name="metadata.attr.delete" deprecated="true">
 			<class name=".services.metadata.DeleteAttribute"/>
 		</service>
 
@@ -792,26 +792,26 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
 
         <!-- - - - - - - - - - - - - - Format MD services - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.formatter.register">
+        <service name="metadata.formatter.register" deprecated="true">
             <class name=".services.metadata.format.Register">
                 <param name="user_xsl_dir" value="user_xsl" />
             </class>
             <error id="illegal-params" sheet="metadata-error.xsl"/>
         </service>
 
-        <service name="metadata.formatter.admin">
+        <service name="metadata.formatter.admin" deprecated="true">
             <output sheet="metadata-formatter/admin.xsl"/>
             <error id="illegal-params" sheet="metadata-error.xsl"/>
         </service>
 
-        <service name="metadata.formatter.list">
+        <service name="metadata.formatter.list" deprecated="true">
             <class name=".services.metadata.format.ListFormatters">
                 <param name="user_xsl_dir" value="user_xsl" />
             </class>
             <error id="illegal-params" sheet="metadata-error.xsl"/>
         </service>
 
-        <service name="metadata.formatter.update">
+        <service name="metadata.formatter.update" deprecated="true">
             <class name=".services.metadata.format.UpdateFile">
                 <param name="user_xsl_dir" value="user_xsl" />
             </class>
@@ -820,13 +820,13 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
             <error id="illegal-params" sheet="metadata-error.xsl"/>
         </service>
 
-        <service name="metadata.formatter.files">
+        <service name="metadata.formatter.files" deprecated="true">
             <class name=".services.metadata.format.ListBundleFiles">
                 <param name="user_xsl_dir" value="user_xsl" />
             </class>
             <error id="illegal-params" sheet="metadata-error.xsl"/>
         </service>
-        <service name="metadata.formatter.edit">
+        <service name="metadata.formatter.edit" deprecated="true">
             <class name=".services.metadata.format.EditFile">
                 <param name="user_xsl_dir" value="user_xsl" />
             </class>
@@ -835,20 +835,20 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
             <error id="illegal-params" sheet="metadata-error.xsl"/>
         </service>
 
-        <service name="metadata.formatter.remove">
+        <service name="metadata.formatter.remove" deprecated="true">
             <class name=".services.metadata.format.Remove">
                 <param name="user_xsl_dir" value="user_xsl" />
             </class>
             <error id="illegal-params" sheet="metadata-error.xsl"/>
         </service>
-        <service name="metadata.formatter.download">
+        <service name="metadata.formatter.download" deprecated="true">
             <class name=".services.metadata.format.Download">
                 <param name="user_xsl_dir" value="user_xsl" />
             </class>
             <output file="true" />
             <error id="illegal-params" sheet="metadata-error.xsl"/>
         </service>
-        <service name="metadata.formatter.resource">
+        <service name="metadata.formatter.resource" deprecated="true">
             <class name=".services.metadata.format.Resource">
                 <param name="user_xsl_dir" value="user_xsl" />
             </class>
@@ -856,7 +856,7 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
             <error id="illegal-params" sheet="metadata-error.xsl"/>
         </service>
 
-        <service name="metadata.formatter.html">
+        <service name="metadata.formatter.html" deprecated="true">
             <class name=".services.metadata.format.Format">
                 <param name="user_xsl_dir" value="user_xsl" />
             </class>
@@ -864,14 +864,14 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
             <error id="illegal-params" sheet="metadata-error.xsl"/>
         </service>
 
-        <service name="metadata.formatter.xml">
+        <service name="metadata.formatter.xml" deprecated="true">
             <class name=".services.metadata.format.Format">
                 <param name="user_xsl_dir" value="user_xsl" />
             </class>
             <error id="illegal-params" sheet="metadata-error.xsl"/>
         </service>
         
-         <service name="metadata.formatter.pdf">
+         <service name="metadata.formatter.pdf" deprecated="true">
            <class name=".services.metadata.format.Format">
                <param name="user_xsl_dir" value="user_xsl" />
            </class>

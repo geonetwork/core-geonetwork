@@ -1000,7 +1000,7 @@
       <xsl:choose>
         <xsl:when test="starts-with($schema,'iso19139.')">
           <xsl:copy-of
-            select="$labels/schemas/*[name(.)=$schema]/codelists/codelist[@name = $qname]" />
+            select="$labels/schemas/*[name(.)=$schema]/codelists/codelist[@name = $qname and not(@displayIf)]" />
         </xsl:when>
         <xsl:otherwise />
       </xsl:choose>
@@ -1013,7 +1013,7 @@
         </xsl:when>
         <xsl:otherwise>
           <xsl:copy-of
-            select="$labels/schemas/*[name(.)='iso19139']/codelists/codelist[@name = $qname]" />
+            select="$labels/schemas/*[name(.)='iso19139']/codelists/codelist[@name = $qname and not(@displayIf)]" />
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>

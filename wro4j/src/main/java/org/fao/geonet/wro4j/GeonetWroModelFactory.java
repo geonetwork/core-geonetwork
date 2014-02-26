@@ -55,6 +55,8 @@ public class GeonetWroModelFactory implements WroModelFactory {
     public static final String CLASSPATH_PREFIX = "classpath:";
     private static final String NOT_MINIMIZED_EL = "notMinimized";
     public static final String GROUP_NAME_CLOSURE_DEPS = "closure_deps";
+    
+    public static final String TEMPLATE_PATTERN = "directive.js";
     @Inject
     private ReadOnlyContext _context;
 
@@ -449,12 +451,21 @@ public class GeonetWroModelFactory implements WroModelFactory {
             closureDepsGroup.addResource(ClosureDependencyUriLocator.createClosureDepResource(dependencyManager.getNode(moduleId)));
             final Collection<ClosureRequireDependencyManager.Node> deps = dependencyManager.getTransitiveDependenciesFor(moduleId, true);
 
+            List<Resource> resources = new ArrayList<Resource>();
             for (ClosureRequireDependencyManager.Node dep : deps) {
                 group.addResource(createResourceFrom(dep));
+                addTemplateResourceFrom(resources, dep);
                 closureDepsGroup.addResource(ClosureDependencyUriLocator.createClosureDepResource(dep));
             }
 
             group.addResource(createResourceFrom(dependencyManager.getNode(moduleId)));
+            if(resources.size() > 0) {
+                group.addResource(getTemplateResource(TemplatesUriLocator.URI_PREFIX_HEADER));
+                for (Resource resource : resources) {
+                    group.addResource(resource);
+                }
+                group.addResource(getTemplateResource(TemplatesUriLocator.URI_PREFIX_FOOTER));
+            }
             model.addGroup(group);
         }
 
@@ -467,6 +478,22 @@ public class GeonetWroModelFactory implements WroModelFactory {
         resource.setType(ResourceType.JS);
         resource.setUri(dep.path);
         return resource;
+    }
+    
+    private Resource getTemplateResource(final String prefix) {
+        Resource resource = new Resource();
+        resource.setMinimize(false);
+        resource.setType(ResourceType.JS);
+        resource.setUri(prefix);
+        return resource;
+    }
+
+    private void addTemplateResourceFrom(List<Resource> group, ClosureRequireDependencyManager.Node dep) {
+        if(dep.path.toLowerCase().endsWith(TEMPLATE_PATTERN)) {
+            String dirPath = new File(dep.path).getParent();
+            String prefix = TemplatesUriLocator.URI_PREFIX + dirPath + "/partials";
+            group.add(getTemplateResource(prefix));
+        }
     }
 
     private ClosureRequireDependencyManager configureJavascripDependencyManager(final NodeList jsSources,

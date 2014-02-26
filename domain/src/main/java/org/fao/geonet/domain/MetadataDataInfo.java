@@ -27,6 +27,7 @@ public class MetadataDataInfo implements Serializable {
 
     /**
      * Get title of metadata.
+     * @deprecated
      */
     @Column
     public String getTitle() {
@@ -37,7 +38,7 @@ public class MetadataDataInfo implements Serializable {
      * Set title of metadata. This only updates the database not the actual XML document. It is important that this value is retrieved
      * from
      * metadata document.
-     *
+     * @deprecated
      * @param title new value.
      * @return this data info object
      */

@@ -6,7 +6,8 @@
   <xsl:include href="../base-layout.xsl"/>
 
   <xsl:template mode="content" match="/">
-    <div data-ng-include="'{$uiResourcesPath}templates/editor/editor.html'">
+  
+    <div data-ng-show="authenticated" data-ng-view="">
     </div>
   </xsl:template>
 </xsl:stylesheet>

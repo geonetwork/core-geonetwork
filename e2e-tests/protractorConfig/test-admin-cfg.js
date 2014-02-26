@@ -11,6 +11,13 @@ exports.config = {
   // You can specify a file containing code to run by setting onPrepare to
   // the filename string.
   onPrepare: function() {
+    // The require statement must be down here, since jasmine-reporters
+    // needs jasmine to be in the global and protractor does not guarantee
+    // this until inside the onPrepare function.
+    require('jasmine-reporters');
+    jasmine.getEnv().addReporter(
+      new jasmine.JUnitXmlReporter('target/e2e-test-output', true, true));
+
     browser.driver.get('http://localhost:${appPort}/geonetwork/srv/eng/catalog.signin');
         element(by.model('signinUsername')).sendKeys('admin');
         element(by.model('signinPassword')).sendKeys('admin');

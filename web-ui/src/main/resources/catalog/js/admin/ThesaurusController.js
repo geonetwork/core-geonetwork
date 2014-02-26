@@ -358,7 +358,7 @@
             '<ref>' + $scope.thesaurusSelected.key + '</ref>' +
             '<oldid>' + selectedKeywordOldId + '</oldid>' +
             '<lang>' + $scope.lang + '</lang>' +
-            '<prefLab>' + $scope.keywordSelected.value['#text'] + '</prefLab>' +
+            '<label>' + $scope.keywordSelected.value['#text'] + '</label>' +
             geoxml +
             '</request>';
 

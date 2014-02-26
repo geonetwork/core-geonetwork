@@ -1,5 +1,5 @@
 <div class="row" data-ng-controller="GnAdminMetadataController">
-  <div class="col-lg-12">
+  <div class="col-lg-8">
     <div class="panel panel-default">
       <div class="panel-heading" data-translate="">loadSchemaSamplesOrTemplates</div>
       <div class="panel-body">
@@ -13,17 +13,17 @@
             </button>
             <ul class="dropdown-menu">
               <li>
-                <a data-ng-click="selectAllSchemas(true)" data-translate="">selectAll</a>
+                <a href="" data-ng-click="selectAllSchemas(true)" data-translate="">selectAll</a>
               </li>
               <li>
-                <a data-ng-click="selectAllSchemas(false)" data-translate="">selectNone</a>
+                <a href="" data-ng-click="selectAllSchemas(false)" data-translate="">selectNone</a>
               </li>
             </ul>
           </div>
         </div>
 
         <div class="list-group">
-          <a class="list-group-item" data-ng-repeat="s in schemas"
+          <a href="" class="list-group-item" data-ng-repeat="s in schemas"
             data-ng-class="isSchemaSelected(s) ? 'active' : ''" data-ng-click="selectSchema(s)">
             <h4 class="list-group-item-heading">{{s | translate}}</h4>
             <p> {{(s + '-help') | translate}} </p>
@@ -33,14 +33,16 @@
         <div class="row">
           <div class="col-lg-6">
             <button type="button" class="btn btn-primary btn-block"
-              data-ng-disabled="!selectedSchemas.length > 0" data-ng-click="loadTemplates()">
+              data-ng-disabled="!selectedSchemas.length > 0 || sampleLoadRunning === true || tplLoadRunning === true"
+              data-ng-click="loadTemplates()">
               <i class="fa fa-upload"/>
               <span data-translate="">loadTemplatesForSelectedSchema</span>
             </button>
           </div>
           <div class="col-lg-6">
             <button type="button" class="btn btn-primary btn-block"
-              data-ng-disabled="!selectedSchemas.length > 0" data-ng-click="loadSamples()">
+              data-ng-disabled="!selectedSchemas.length > 0 sampleLoadRunning === true || tplLoadRunning === true"
+              data-ng-click="loadSamples()">
               <i class="fa fa-upload"/>
               <span data-translate="">loadSamplesForSelectedSchema</span>
             </button>
@@ -48,7 +50,8 @@
         </div>
       </div>
     </div>
-
+  </div>
+  <div class="col-lg-4">
     <div class="progress progress-striped active"
       data-ng-show="sampleLoadRunning === true || tplLoadRunning === true">
       <div class="progress-bar" style="width: 100%"/>
@@ -65,12 +68,9 @@
           <p data-ng-show="loadReport['@error']">{{loadReport['@error']}}</p>
 
           <ul class="icons-ul">
-            <li data-ng-repeat="schema in selectedSchemas"><i class="fa fa-li fa fa-archive"
-              />{{schema | translate}} <ul class="icons-ul">
-                <li data-ng-repeat="record in loadReport[schema]">
-                  <i class="fa fa-li"
-                    data-ng-class="record['@status'] == 'loaded' ? 'fa fa-ok' : 'fa fa-trash-o'"/>
-                  {{record['@name']}}</li>
+            <li data-ng-repeat="schema in selectedSchemas">{{schema | translate}} <ul class="icons-ul">
+              <li data-ng-repeat="record in loadReport[schema]">
+                  {{record}} {{'records' | translate}}</li>
               </ul>
             </li>
           </ul>
@@ -82,10 +82,9 @@
           <p data-ng-show="loadTplReport['@error']">{{loadTplReport['@error']}}</p>
 
           <ul class="icons-ul">
-            <li data-ng-repeat="schema in selectedSchemas"><i class="fa fa-li fa fa-archive"
-              />{{schema | translate}} <ul class="icons-ul">
+            <li data-ng-repeat="schema in selectedSchemas">{{schema | translate}} <ul class="icons-ul">
                 <li data-ng-repeat="record in loadTplReport[schema]">
-                  <i class="fa fa-li"
+                  <i class=""
                     data-ng-class="record['@status'] == 'loaded' ? 'fa fa-ok' : 'fa fa-trash-o'"/>
                   {{record['@name']}}</li>
               </ul>

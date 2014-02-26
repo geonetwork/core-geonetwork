@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <i18n>
-  <viewInGE>View in Google Earth</viewInGE>
-  <warning>Warning!</warning>
-  <nojs>Javascript is not enabled. Enable it or click <a
-    href="catalog.search.nojs">here to search</a> in a degraded mode.</nojs>
-  <selectView>Choose view</selectView>
+  <viewInGE>Visualiser dans Google Earth</viewInGE>
+  <warning>Attention!</warning>
+  <nojs>Javascript n'est pas actif dans votre navigateur. Activez le ou cliquez <a
+    href="catalog.search.nojs">ici pour rechercher des informations</a> en mode dégradé.</nojs>
+  <selectView>Sélectionner une vue</selectView>
+  <moreTabs>Plus d'information</moreTabs>
   <nodeChangeWarning>Attention ! Vous souhaitez accéder à un autre noeud</nodeChangeWarning>
   <nodeChangeInfo>Attention : Vous n'êtes plus dans le catalogue auquel vous étiez connecté.</nodeChangeInfo>
   <nodeChangeBack>Si vous souhaitez revenir à ce catalogue cliquer ici :</nodeChangeBack>

@@ -1,0 +1,109 @@
+<div class="container" id="gn-directory-container">
+  <ul class="nav nav-pills">
+    <li class="disabled"><a data-translate="" href="javascript:void(0);">directoryManager</a></li>
+    <li data-ng-repeat="type in mdTypes" data-ng-class="activeType === type ? 'active' : ''">
+      <a href="" data-ng-click="selectType(type)">
+        <i class="fa {{getTypeIcon(type)}}"/>&nbsp;{{type | translate}}</a></li>
+  </ul>
+  <br/>
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <i class="fa fa-list-ul"/>
+          <span data-translate="">directoryEntries</span>
+          
+          <div class="pull-right">
+            <a href="" data-ng-click="startImportEntry()">
+              <i class="fa fa-plus"/>
+            </a>
+          </div>
+        </div>
+        <div class="panel-body" data-ng-if="tpls">
+          <input class="form-control" data-ng-model="entrySearch.$" autofocus=""
+            placeholder="{{'filter' | translate}}"/>
+          <div class="list-group">
+            <li class="list-group-item"
+              data-ng-repeat="e in tpls | filter:entrySearch | orderBy:'title'"
+              data-ng-class="e['geonet:info'].id === activeEntry['@id'] ? 'active' : ''">
+              <a href="" data-ng-click="selectEntry(e)"> {{e.title}} </a>
+              <div class="pull-right">
+                <a href="" data-ng-click="copyEntry(e)">
+                  <i class="fa fa-copy"/>
+                </a>
+                <a href="" data-ng-click="delEntry(e)">
+                  <i class="fa fa-times text-danger"/>
+                </a>
+              </div>
+            </li>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-8" data-ng-if="isImporting">
+      <div class="panel-default panel">
+        <div class="panel-heading" data-translate="">
+          importEntry
+        </div>
+        <div class="panel-body">
+          <form>
+            <div class="form-group">
+              <label for="data" data-translate="">xmlSnippet</label>
+              <textarea class="form-control"
+                id="data" name="data"
+                data-gn-autogrow=""
+                data-ng-model="importData.data"
+                data-ng-required=""
+                placeholder="<gmd:CI_ResponsibleParty xmlns:gmd= ..."
+              />
+              
+              <input type="hidden" data-ng-model="importData.insert_mode"/>
+              <input type="hidden" data-ng-model="importData.template"/>
+              <input type="hidden" data-ng-model="importData.fullPrivileges"/>
+            </div>
+            <div class="form-group" data-ng-show="groups && groups.length > 1">
+              <label class="control-label" data-translate="">inGroup</label>
+              <div data-groups-combo="" data-owner-group="importData.group" lang="lang" data-groups="groups"/>
+            </div>
+            
+            <div class="btn-toolbar">
+              <button type="button" class="btn btn-primary pull-right" 
+                data-ng-click="importEntry()" 
+                title="{{'importEntry' | translate}}">
+                <i class="fa fa-plus"/>&nbsp;
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-8" data-ng-if="activeEntry">
+      <div class="panel-default panel">
+        <div class="panel-heading">
+          <span data-translate="">{{activeEntry.title || activeEntry.defaultTitle}}</span>
+          
+          <div class="btn-toolbar">
+            <button type="button" class="btn btn-danger pull-right fa fa-sign-out" data-ng-click="close()" 
+              title="{{'closeEditor' | translate}}">
+            </button>
+            <button type="button" class="btn btn-primary pull-right fa fa-save" data-ng-click="save()">
+              <span data-translate="">save</span>
+            </button>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div data-ng-include="editorFormUrl"
+            data-onload="onFormLoad()"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div data-gn-modal="" class="gn-import-entry"
+    data-gn-popup-options="{title:'importDirectoryEntry'}"
+    id="gn-import-entry">
+    <div data-gn-link-to-metadata="source" id="link-to-source"
+      class="link-source-md"></div>
+  </div>
+  
+</div>

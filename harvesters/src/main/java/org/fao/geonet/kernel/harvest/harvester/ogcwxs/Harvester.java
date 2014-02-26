@@ -339,7 +339,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
         String id = dataMan.insertMetadata(context, schema, md, uuid, Integer.parseInt(params.ownerId), group, params.uuid,
-                     isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
+                     isTemplate, docType, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
 
@@ -648,7 +648,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 			schema = dataMan.autodetectSchema (xml);
 			
             reg.id = dataMan.insertMetadata(context, schema, xml, reg.uuid, Integer.parseInt(params.ownerId), group, params.uuid,
-                         isTemplate, docType, title, category, date, date, ufo, indexImmediate);
+                         isTemplate, docType, category, date, date, ufo, indexImmediate);
 
 			int iId = Integer.parseInt(reg.id);
             if(log.isDebugEnabled()) log.debug("    - Layer loaded in DB.");

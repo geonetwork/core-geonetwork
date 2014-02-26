@@ -426,7 +426,7 @@ public class ImportFromDir extends NotInReadOnlyModeService {
         String isTemplate = "n";
         dm.insertMetadata(context, schema, xml, uuid, context.getUserSession().getUserIdAsInt(), group, gc.getBean(SettingManager
                 .class).getSiteId(),
-                         isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
+                         isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
 
 	}
 

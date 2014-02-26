@@ -60,7 +60,7 @@ public class UploadAndProcess implements Service {
         String filename = Util.getParam(params, Params.FILENAME);
         String access = Util.getParam(params, Params.ACCESS, "private");
         String overwrite = Util.getParam(params, Params.OVERWRITE, "no");
-        String description = Util.getParam(params, Params.TITLE);
+        String description = Util.getParam(params, Params.TITLE, "");
 
         Lib.resource.checkEditPrivilege(context, id);
 

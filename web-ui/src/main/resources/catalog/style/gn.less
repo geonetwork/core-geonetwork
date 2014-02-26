@@ -1,6 +1,6 @@
 @import "../lib/style/bootstrap-3.0.1/bootstrap.less";
-@import "../lib/style/font-awesome-4.0.1/less/font-awesome.less";
-
+@import "../lib/style/font-awesome-4.0.3/less/font-awesome.less";
+@import "gn_doc.less";
 
 /**
  * Nav bar title may be longer than default
@@ -56,11 +56,21 @@
 div.gn-scroll-spy {
   position: fixed;
   bottom: 0%;
-  left: 0px;
-  opacity: 0.7;
+  right: 0px;
+  opacity: 0.8;
   font-size: 80%;
+  width: 150px;
+  z-index: 999;
+  background-color: @panel-bg;
+  border-top-left-radius: @panel-border-radius;
+  border-top: 1px solid @panel-default-border;
+  border-left: 1px solid @panel-default-border;
   
+  button {
+    .pull-right();
+  }
   ul {
+    opacity: 1;
     li {
       a {
       padding-left: 5px;
@@ -96,12 +106,83 @@ div.gn-scroll-spy {
   min-width: 200px;
   max-width: 600px;
   min-height: 100px;
-  max-height: 400px;
+  max-height: 800px;
   z-index: 2000;
 }
 
-#onlinesrc-popup, #linkparent-popup {
+.onlinesrc-popup {
   max-width: none;
   max-height: none;
   display: none;
+}
+.onlinesrc-popup .modal-content {
+  width: 750px;
+}
+img.thumb-small {
+max-width: 80px;
+max-height: 80px;
+min-height: 40px;
+}
+.gn-layers-grid-container {
+overflow:auto;
+height:200px;
+font-size: small;
+}
+.gn-layers-grid-container tr {
+  cursor: pointer;
+}
+.gn-layers-grid-container .table > thead > tr > td.active tr.active > td {
+  color: red;
+  background-color: #428bca;
+}
+
+/* typeahead styles */
+
+.tt-query {
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.tt-hint {
+  color: #999
+}
+
+.tt-dropdown-menu {
+  width: 422px;
+  margin-top: 12px;
+  padding: 8px 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
+  -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+          box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+
+.tt-suggestion {
+  padding: 3px 20px;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.tt-suggestion.tt-is-under-cursor {
+  color: #fff;
+  background-color: #0097cf;
+
+}
+
+.tt-suggestion p {
+  margin: 0;
+}
+
+.bootstrap-tagsinput {
+  width: 100%;
+}
+
+span.twitter-typeahead {
+  display: block !important;
 }

@@ -12,14 +12,23 @@
             <output sheet="../xslt/ui-admin/signin.xsl"/>
         </service>
 
+        <service name="contact.us">
+            <documentation>The contact us page.</documentation>
+            <output sheet="../xslt/ui-admin/contactus.xsl"/>
+        </service>
+
+        <service name="error">
+            <output sheet="../xslt/ui/error-page.xsl">
+                <call name="startupError" class=".guiservices.util.GetStartupError" />
+            </output>
+        </service>
+
         <service name="new.account">
             <documentation><![CDATA[
                 User self-registration services
                 ]]></documentation>
             <output sheet="../xslt/ui-admin/new-account.xsl"/>
-
         </service>
-
 
         <service name="node-change-warning">
             <documentation><![CDATA[

@@ -1,0 +1,98 @@
+<div class="gn-geopublisher-panel">
+  <div class="btn-group">
+    <button type="button" class="btn btn-warning dropdown-toggle" 
+      data-toggle="dropdown">
+      <i class="fa fa-globe text-danger"></i>&nbsp;<span
+        data-translate="">geopublisher</span><span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li data-ng-repeat="r in resources">
+        <a href="" data-ng-click="showPanel(r)">
+          {{r.fileName}}
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="panel panel-default" data-ng-hide="hidden">
+    <div class="panel-heading">
+      <span data-translate="" data-translate-values="{layer: '{{fileName}}'}">publishIn</span>
+
+      <select data-ng-model="nodeId"
+              data-ng-change="checkNode(nodeId)">
+        <option data-ng-repeat="node in nodes" value="{{node.id}}">
+          {{node.name}}
+        </option>
+      </select>
+    </div>
+    <div class="panel-body">
+      <!-- Header with projection selection, draw button and area list -->
+      <form class="form" data-role="form">
+        <div class="form-group" class="col-sm-12 inline">
+          <div class="btn-toolbar">
+            <button class="btn btn-lin btn-xs"
+                    data-ng-click="checkNode(nodeId)"
+                    data-ng-class="{'disabled': (!nodeId)}">
+              <i class="fa fa-chain"></i>&nbsp;<span data-translate="">check</span>
+            </button>
+            <button class="btn btn-link btn-xs" data-ng-click="publish(nodeId)"
+                data-ng-class="{'disabled': (isPublished || !nodeId)}">
+                <i class="fa fa-globe"></i>&nbsp;<span data-translate="">publish</span>
+            </button>
+            <button class="btn btn-link btn-xs" data-ng-click="unpublish(nodeId)"
+              data-ng-class="{'disabled': (!isPublished || !nodeId)}">
+              <i class="fa fa-globe text-danger"></i>&nbsp;<span
+                data-translate="">unpublish</span>
+            </button>
+            <!-- DROP DOWN CHECKBOX -->
+            <div class="dropdown">
+                <button class="btn btn-link btn-xs" data-toggle="dropdown" data-ng-click="publish(nodeId)"
+                  data-ng-class="{'disabled': (!isPublished || !nodeId)}">
+                  <i class="fa fa-clipboard"></i>&nbsp;<span data-translate="">linkService</span>
+                  <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a data-ng-click="setCheckBox('wms', $event)" href=""> 
+                      <i class="fa fa-check-square-o" data-ng-show="protocols.wms.checked"></i>
+                      <i class="fa fa-square-o" data-ng-hide="protocols.wms.checked"></i>
+                      {{protocols.wms.label}}
+                    </a>
+                  </li>
+                  <li>
+                    <a data-ng-click="setCheckBox('wfs', $event)" href=""> 
+                      <i class="fa fa-check-square-o" data-ng-show="protocols.wfs.checked"></i>
+                      <i class="fa fa-square-o" data-ng-hide="protocols.wfs.checked"></i>
+                      {{protocols.wfs.label}}
+                    </a>
+                  </li>
+                  <li>
+                    <a data-ng-click="setCheckBox('wcs', $event)" href=""> 
+                      <i class="fa fa-check-square-o" data-ng-show="protocols.wcs.checked"></i>
+                      <i class="fa fa-square-o" data-ng-hide="protocols.wcs.checked"></i>
+                      {{protocols.wms.label}}
+                    </a>
+                  </li>
+                  <li data-role="presentation" class="divider"></li>
+                  <li data-role="presentation">
+                    <a data-role="menuitem" tabindex="-1" href=""
+                       data-ng-click="linkService()">
+                       <span data-translate="">addLinks</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+          </div>
+        </div>
+      </form>
+
+      <div id="{{mapId}}" class="map"></div>
+      <div class="alert alert-info" data-ng-if="statusCode">{{statusCode}}</div>
+    </div>
+  </div>
+  
+  <div data-ng-if="snippet">
+    <input name="{{snippetRef}}" class="hidden" value="{{snippet}}"/>
+  </div>
+  
+</div>

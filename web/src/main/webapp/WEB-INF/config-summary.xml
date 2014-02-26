@@ -52,7 +52,7 @@
 			<item name="inspireTheme" plural="inspireThemes" indexKey="inspiretheme" sortBy="value" sortOrder="asc"/>
 			<item name="denominator" plural="denominators" indexKey="denominator" sortBy="value" sortOrder="asc"/>
 			<item name="spatialRepresentationType" plural="spatialRepresentationTypes" indexKey="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
-			<item name="orgName" plural="orgNames" indexKey="orgName"/>
+			<item name="orgName" plural="orgNames" indexKey="orgName" max="100"/>
 			<item name="metadataPOC" plural="metadataPOCs" indexKey="metadataPOC"/>
 			<item name="serviceType" plural="serviceTypes" indexKey="serviceType"/>
 			<item name="type" plural="types" indexKey="type" translator="codelist:gmd:MD_ScopeCode"/>

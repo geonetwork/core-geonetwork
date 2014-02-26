@@ -10,7 +10,8 @@
 
 	<xsl:include href="convert/functions.xsl"/>
 	<xsl:include href="../../../xsl/utils-fn.xsl"/>
-	
+  <xsl:include href="index-subtemplate-fields.xsl"/>
+  
 	<!-- This file defines what parts of the metadata are indexed by Lucene
 	     Searches can be conducted on indexes defined here. 
 	     The Field@name attribute defines the name of the search variable.
@@ -57,11 +58,13 @@
 			</xsl:variable>
 			<Field name="_defaultTitle" string="{string($_defaultTitle)}" store="true" index="true"/>
 			<!-- not tokenized title for sorting, needed for multilingual sorting -->
-            <Field name="_title" string="{string($_defaultTitle)}" store="true" index="true" />
-
+      <xsl:if test="geonet:info/isTemplate != 's'">
+		    <Field name="_title" string="{string($_defaultTitle)}" store="true" index="true" />
+      </xsl:if>
+		  
 			<xsl:apply-templates select="*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" mode="metadata"/>
-			
-			<xsl:apply-templates mode="index" select="*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']"/>
+		  
+			<xsl:apply-templates mode="index" select="*"/>
 			
 		</Document>
 	</xsl:template>
@@ -96,7 +99,7 @@
 		match="gmd:extent/gmd:EX_Extent/gmd:description/gco:CharacterString[normalize-space(.) != '']">
 		<Field name="extentDesc" string="{string(.)}" store="false" index="true"/>
 	</xsl:template>
-	
+  
 	
 	<!-- ========================================================================================= -->
 
@@ -416,11 +419,11 @@
 						</xsl:when>
 						<xsl:when test="string($fileDescr)='thumbnail'">
 							<!-- FIXME : relative path -->
-							<Field  name="image" string="{concat($fileDescr, '|', '../../srv/eng/resources.get?uuid=', //gmd:fileIdentifier/gco:CharacterString, '&amp;fname=', $fileName, '&amp;access=public')}" store="true" index="false"/>
+							<Field  name="image" string="{concat($fileDescr, '|', 'resources.get?uuid=', //gmd:fileIdentifier/gco:CharacterString, '&amp;fname=', $fileName, '&amp;access=public')}" store="true" index="false"/>
 						</xsl:when>
 						<xsl:when test="string($fileDescr)='large_thumbnail'">
 							<!-- FIXME : relative path -->
-							<Field  name="image" string="{concat('overview', '|', '../../srv/eng/resources.get?uuid=', //gmd:fileIdentifier/gco:CharacterString, '&amp;fname=', $fileName, '&amp;access=public')}" store="true" index="false"/>
+							<Field  name="image" string="{concat('overview', '|', 'resources.get?uuid=', //gmd:fileIdentifier/gco:CharacterString, '&amp;fname=', $fileName, '&amp;access=public')}" store="true" index="false"/>
 						</xsl:when>
 					</xsl:choose>
 				</xsl:if>

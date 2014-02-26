@@ -37,7 +37,8 @@ import static org.junit.Assert.*;
 public class GeonetWroModelFactoryTest {
 
     private static final String PATH_TO_ROOT_OF_TEST_RESOURCES = "wro4j/src/test/resources/org/fao/geonet/wro4j";
-
+    private static final String TEMPLATE_URI_PREFIX = "template://";
+    
     @Test
     public void testCreateUsingRequire() throws Exception {
 
@@ -330,8 +331,9 @@ public class GeonetWroModelFactoryTest {
                 assertCanLoadResource(uriLocatorFactory, resource);
 
                 if (testMinimized) {
-                    if (group.getName().equals(GROUP_NAME_CLOSURE_DEPS) || nonMinifiedFiles.contains(uri.substring(uri.lastIndexOf("/")
-                                                                                                                   + 1))) {
+                    if (group.getName().equals(GROUP_NAME_CLOSURE_DEPS) || 
+                    		nonMinifiedFiles.contains(uri.substring(uri.lastIndexOf("/") + 1)) ||
+                    		resource.getUri().startsWith(TEMPLATE_URI_PREFIX)) {
                         assertFalse(resource.getUri() + " was minimized but should not be", resource.isMinimize());
                     } else {
                         assertTrue(resource.getUri() + " was not minimized but should be", resource.isMinimize());

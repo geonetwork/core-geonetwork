@@ -24,13 +24,16 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
+
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
+
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -119,9 +122,14 @@ public class Create extends NotInReadOnlyModeService {
                 gc.getBean(SettingManager.class).getSiteId(), context.getUserSession().getUserIdAsInt(),
 												  (child.equals("n")?null:uuid), isTemplate, haveAllRights);
 
-        copyDataDir(context, id, newId, Params.Access.PUBLIC);
-        copyDataDir(context, id, newId, Params.Access.PRIVATE);
-
+        try {
+          copyDataDir(context, id, newId, Params.Access.PUBLIC);
+          copyDataDir(context, id, newId, Params.Access.PRIVATE);
+        } catch (IOException e) {
+          Log.warning(Geonet.DATA_MANAGER, "Error while copying metadata resources. " + e.getMessage() +  
+              ". Metadata is created but without resources from record with id:" + id);
+        }
+        
         Element response = new Element(Jeeves.Elem.RESPONSE);
         response.addContent(new Element(Geonet.Elem.JUSTCREATED).setText("true"));
         

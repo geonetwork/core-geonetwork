@@ -23,6 +23,7 @@ public class Setting extends GeonetEntity {
     private String value;
     private SettingDataType dataType;
     private int position;
+    private char internal = Constants.YN_TRUE;
 
     @Id
     @Column(name = "name", nullable = false, length = 255/* mysql cannot accept it any bigger if it is to be the id */)
@@ -64,6 +65,46 @@ public class Setting extends GeonetEntity {
     public Setting setPosition(int position) {
         this.position = position;
         return this;
+    }
+
+    /**
+     * For backwards compatibility we need the activated column to be either 'n' or 'y'. 
+     * This is a workaround to allow this until future
+     * versions of JPA that allow different ways of controlling how types are mapped to the database.
+     */
+    @Column(name = "internal", nullable = false, length = 1)
+    protected char getInternal_JpaWorkaround() {
+        return internal;
+    }
+
+    /**
+     * Set the column value. Constants.YN_ENABLED for true Constants.YN_DISABLED for false.
+     *
+     * @param internalValue the column value. Constants.YN_ENABLED for true Constants.YN_DISABLED for false.
+     * @return
+     */
+    protected void setInternal_JpaWorkaround(char internalValue) {
+      internal = internalValue;
+    }
+
+    /**
+     * Return true if the setting is public.
+     *
+     * @return true if the setting is public.
+     */
+    @Transient
+    public boolean isInternal() {
+      return Constants.toBoolean_fromYNChar(getInternal_JpaWorkaround());
+    }
+
+    /**
+     * Set true if the setting is private.
+     *
+     * @param internal true if the setting is private.
+     */
+    public Setting setInternal(boolean internal) {
+      setInternal_JpaWorkaround(Constants.toYN_EnabledChar(internal));
+      return this;
     }
 
 

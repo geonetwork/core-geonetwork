@@ -38,8 +38,8 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         final UserSession userSession = serviceContext.getUserSession();
         final String mdId = _dataManager.insertMetadata(serviceContext, "iso19193", new Element("MD_Metadata"), "uuid",
                 userSession.getUserIdAsInt(),
-                "" + ReservedGroup.all.getId(), "sourceid", "n", "doctype", "Title", null, new ISODate().getDateAndTime(),
-                new ISODate().getDateAndTime(), false, false);
+                "" + ReservedGroup.all.getId(), "sourceid", "n", "doctype", null, new ISODate().getDateAndTime(), new ISODate().getDateAndTime(),
+                false, false);
 
         assertEquals(1, _metadataRepository.count());
 
@@ -98,7 +98,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
 
         final ISODate changeDate = new ISODate();
         final String changeMessage = "Set to draft";
-        _dataManager.setStatus(serviceContext, metadataId, 0, changeDate.getDateAndTime(), changeMessage);
+        _dataManager.setStatus(serviceContext, metadataId, 0, changeDate, changeMessage);
 
         final MetadataStatus loadedStatus = _dataManager.getStatus(metadataId);
 

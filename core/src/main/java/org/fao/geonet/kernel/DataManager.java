@@ -29,18 +29,23 @@ package org.fao.geonet.kernel;
 
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
 
+import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
+
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.Xml.ErrorHandler;
+
 import jeeves.xlink.Processor;
 
 import org.apache.commons.lang.StringUtils;
@@ -406,7 +411,6 @@ public class DataManager {
             final String  source     = fullMd.getSourceInfo().getSourceId();
             final MetadataType metadataType = fullMd.getDataInfo().getType();
             final String  root       = fullMd.getDataInfo().getRoot();
-            final String  title      = fullMd.getDataInfo().getTitle();
             final String  uuid       = fullMd.getUuid();
             final String  isHarvested = String.valueOf(Constants.toYN_EnabledChar(fullMd.getHarvestInfo().isHarvested()));
             final String  owner      = String.valueOf(fullMd.getSourceInfo().getOwner());
@@ -426,7 +430,6 @@ public class DataManager {
             moreFields.add(SearchManager.makeField("_changeDate",  changeDate,  true, true));
             moreFields.add(SearchManager.makeField("_source",      source,      true, true));
             moreFields.add(SearchManager.makeField("_isTemplate",  metadataType.codeString,  true, true));
-            moreFields.add(SearchManager.makeField("_title",       title,       true, true));
             moreFields.add(SearchManager.makeField("_uuid",        uuid,        true, true));
             moreFields.add(SearchManager.makeField("_isHarvested", isHarvested, true, true));
             moreFields.add(SearchManager.makeField("_owner",       owner,       true, true));
@@ -499,7 +502,7 @@ public class DataManager {
                 }
                 moreFields.add(SearchManager.makeField("_valid", isValid, true, true));
             }
-            searchMan.index(schemaMan.getSchemaDir(schema), md, metadataId, moreFields, metadataType, title, forceRefreshReaders);
+            searchMan.index(schemaMan.getSchemaDir(schema), md, metadataId, moreFields, metadataType, forceRefreshReaders);
         } catch (Exception x) {
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);
         } finally {
@@ -691,6 +694,89 @@ public class DataManager {
         if (svnManager != null) {
             svnManager.createMetadataDir(id, context, md);
         }
+    }
+
+    /**
+     * Start an editing session. This will record the original metadata record
+     * in the session under the {@link Geonet.Session.METADATA_BEFORE_ANY_CHANGES} + id
+     * session property.
+     * 
+     * The record contains geonet:info element.
+     * 
+     * Note: Only the metadata record is stored in session. If the editing
+     * session upload new documents or thumbnails, those documents will not
+     * be cancelled. This needs improvements.
+     * 
+     * @param context
+     * @param id
+     * @throws Exception
+     */
+    public void startEditingSession(ServiceContext context, String id)
+        throws Exception {
+      if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
+        Log.debug(Geonet.EDITOR_SESSION, "Editing session starts for record " + id);
+      }
+      
+      boolean keepXlinkAttributes = false;
+      boolean forEditing = false;
+      boolean withValidationErrors = false;
+      Element metadataBeforeAnyChanges = getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
+      context.getUserSession().setProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id, metadataBeforeAnyChanges);
+    }
+
+    /**
+     * Rollback to the record in the state it was when the editing session started
+     * (See {@link #startEditingSession(ServiceContext, String)}).
+     * 
+     * @param context
+     * @param id
+     * @throws Exception
+     */
+    public void cancelEditingSession(ServiceContext context,
+        String id) throws Exception {
+        UserSession session = context.getUserSession();
+        Element metadataBeforeAnyChanges = (Element) session.getProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id);
+        
+        if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
+              Log.debug(Geonet.EDITOR_SESSION, 
+                  "Editing session end. Cancel changes. Restore record " + id + 
+                  ". Replace by original record which was: ");
+        }
+        
+        if (metadataBeforeAnyChanges != null) {
+            if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
+              Log.debug(Geonet.EDITOR_SESSION, " > restoring record: ");
+              Log.debug(Geonet.EDITOR_SESSION, Xml.getString(metadataBeforeAnyChanges));
+            }
+            Element info = metadataBeforeAnyChanges.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+            boolean validate = false;
+            boolean ufo = false;
+                boolean index = true;
+                metadataBeforeAnyChanges.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+                updateMetadata(context, id, metadataBeforeAnyChanges, 
+                    validate, ufo, index, 
+                    context.getLanguage(), info.getChildText(Edit.Info.Elem.CHANGE_DATE), false);
+                endEditingSession(id, session);
+        } else {
+            if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
+              Log.debug(Geonet.EDITOR_SESSION, 
+                  " > nothing to cancel for record " + id + 
+                  ". Original record was null. Use starteditingsession to.");
+            }
+        }
+    }
+
+    /**
+     * Remove the original record stored in session.
+     * 
+     * @param id
+     * @param session
+     */
+    public void endEditingSession(String id, UserSession session) {
+        if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
+          Log.debug(Geonet.EDITOR_SESSION, "Editing session end.");
+        }
+        session.removeProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id);
     }
 
     /**
@@ -1062,7 +1148,7 @@ public class DataManager {
      * @throws Exception
      */
     public void setTemplate(final int id, final MetadataType type, final String title) throws Exception {
-        setTemplateExt(id, type, title);
+        setTemplateExt(id, type);
         indexMetadata(Integer.toString(id), true);
     }
 
@@ -1070,18 +1156,13 @@ public class DataManager {
      * TODO javadoc.
      *
      * @param id
-     * @param title
      * @throws Exception
      */
-    public void setTemplateExt(final int id, final MetadataType metadataType, final String title) throws Exception {
+    public void setTemplateExt(final int id, final MetadataType metadataType) throws Exception {
         _metadataRepository.update(id, new Updater<Metadata>() {
             @Override
             public void apply(@Nonnull Metadata metadata) {
                 final MetadataDataInfo dataInfo = metadata.getDataInfo();
-                if (title != null) {
-                    dataInfo.setTitle(title);
-                }
-
                 dataInfo.setType(metadataType);
             }
         });
@@ -1317,7 +1398,6 @@ public class DataManager {
      * @param source id of the origin of this metadata (harvesting source, etc.)
      * @param metadataType whether this metadata is a template
      * @param docType ?!
-     * @param title title of this metadata
      * @param category category of this metadata
      * @param createDate date of creation
      * @param changeDate date of modification
@@ -1327,7 +1407,7 @@ public class DataManager {
      * @throws Exception hmm
      */
     public String insertMetadata(ServiceContext context, String schema, Element metadataXml, String uuid, int owner, String groupOwner, String source,
-                                 String metadataType, String docType, String title, String category, String createDate, String changeDate, boolean ufo, boolean index) throws Exception {
+                                 String metadataType, String docType, String category, String createDate, String changeDate, boolean ufo, boolean index) throws Exception {
 
         boolean notifyChange = true;
 
@@ -1346,7 +1426,6 @@ public class DataManager {
                 .setCreateDate(isoCreateDate)
                 .setSchemaId(schema)
                 .setDoctype(docType)
-                .setTitle(title)
                 .setRoot(metadataXml.getQualifiedName())
                 .setType(MetadataType.lookup(metadataType));
         newMetadata.getSourceInfo()
@@ -1588,6 +1667,9 @@ public class DataManager {
             Integer intId = Integer.valueOf(metadataId);
             metadataXml = updateFixedInfo(schema, Optional.of(intId), null, metadataXml, parentUuid, (updateDateStamp ? UpdateDatestamp.YES : UpdateDatestamp.NO), context);
         }
+
+        //--- force namespace prefix for iso19139 metadata
+        setNamespacePrefixUsingSchemas(schema, md);
 
         // Notifies the metadata change to metatada notifier service
         final Metadata metadata = _metadataRepository.findOne(metadataId);
@@ -2407,7 +2489,7 @@ public class DataManager {
      *
      * @return the saved status entity object
      */
-    public MetadataStatus setStatus(ServiceContext context, int id, int status, String changeDate, String changeMessage) throws Exception {
+    public MetadataStatus setStatus(ServiceContext context, int id, int status, ISODate changeDate, String changeMessage) throws Exception {
         MetadataStatus statusObject = setStatusExt(context, id, status, changeDate, changeMessage);
         indexMetadata(Integer.toString(id), true);
         return statusObject;
@@ -2426,7 +2508,7 @@ public class DataManager {
      *
      * @return the saved status entity object
      */
-    public MetadataStatus setStatusExt(ServiceContext context, int id, int status, String changeDate, String changeMessage) throws Exception {
+    public MetadataStatus setStatusExt(ServiceContext context, int id, int status, ISODate changeDate, String changeMessage) throws Exception {
         final StatusValueRepository statusValueRepository = _applicationContext.getBean(StatusValueRepository.class);
 
         MetadataStatus metatatStatus = new MetadataStatus();
@@ -2436,8 +2518,9 @@ public class DataManager {
         MetadataStatusId mdStatusId = new MetadataStatusId()
                 .setStatusId(status)
                 .setMetadataId(id)
+                .setChangeDate(changeDate)
                 .setUserId(userId);
-        mdStatusId.setChangeDate(new ISODate(changeDate));
+        mdStatusId.setChangeDate(changeDate);
 
         metatatStatus.setId(mdStatusId);
 
@@ -2761,13 +2844,7 @@ public class DataManager {
             addElement(info, Edit.Info.Elem.VERSION, version);
         }
 
-        buildExtraMetadataInfo(context, id, info);
-
-        if (accessMan.isVisibleToAll(id)) {
-            addElement(info, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, "true");
-        } else {
-            addElement(info, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, "false");
-        }
+        buildPrivilegesMetadataInfo(context, id, info);
 
         // add owner name
         User user = _applicationContext.getBean(UserRepository.class).findOne(owner);
@@ -2831,21 +2908,29 @@ public class DataManager {
     }
 
     /**
-     * Add extra information about the metadata record
-     * which depends on context and could not be stored in db or Lucene index.
+     * Add privileges information about the metadata record
+     * which depends on context and usually could not be stored in db 
+     * or Lucene index because depending on the current user
+     * or current client IP address.
      *
      * @param context
-     * @param id
-     * @param info
+     * @param id    The metadata id
+     * @param info  The element to add the info into
      * @throws Exception
      */
-    public void buildExtraMetadataInfo(ServiceContext context, String id,
+    public void buildPrivilegesMetadataInfo(ServiceContext context, String id,
                                        Element info) throws Exception {
         if (accessMan.canEdit(context, id))
             addElement(info, Edit.Info.Elem.EDIT, "true");
 
         if (accessMan.isOwner(context, id)) {
             addElement(info, Edit.Info.Elem.OWNER, "true");
+        }
+
+        if (accessMan.isVisibleToAll(id)) {
+            addElement(info, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, "true");
+        } else {
+            addElement(info, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, "false");
         }
 
         Set<Operation> operations = accessMan.getAllOperations(context, id, context.getIpAddress());

@@ -1,0 +1,30 @@
+<form class="form-horizontal" role="form" id="gn-contact-us-form">
+    <div class="form-group">
+        <label class="col-sm-3 control-label" data-translate="">name</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" name="name" data-ng-model="user.name"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label" data-translate="">email</label>
+        <div class="col-sm-9">
+            <input type="email" class="form-control" name="email" ata-ng-model="user.email"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label" data-translate="">organization</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" name="org"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label" data-translate="">comments</label>
+        <div class="col-sm-9">
+            <textarea class="form-control" name="comments" data-gn-autogrow=""/>
+        </div>
+    </div>
+    <button class="btn btn-primary pull-right" data-ng-click="send('#gn-contact-us-form')">
+        <i class="fa fa-envelope"/>&nbsp;<span data-translate="">send</span>
+    </button>
+    <p class="alert alert-info" data-ng-if="success" data-translate="">feebackSent</p>
+</form>

@@ -70,9 +70,9 @@
 
                 <div class="input-group">
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-primary fa fa-refresh"
+                        <button type="button" class="btn btn-default"
                             data-ng-click="geonetworkGetSources(harvesterSelected.site.host)"
-                            title="{{'geonetwork-retrieveSources' | translate}}"> </button>
+                            title="{{'geonetwork-retrieveSources' | translate}}"><i class="fa fa-refresh"></i>&nbsp;</button>
                     </span>
                     <select class="form-control"
                         data-ng-options="s.uuid as s.name for s in geonetworkSources"
@@ -127,5 +127,5 @@
     </fieldset>
 
 
-    <div data-gn-harvester-privileges="harvesterSelected"/>
+    <div data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
 </form>

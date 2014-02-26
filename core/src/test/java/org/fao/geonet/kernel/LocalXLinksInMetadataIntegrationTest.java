@@ -76,10 +76,9 @@ public class LocalXLinksInMetadataIntegrationTest extends AbstractCoreIntegratio
         String groupOwner = "" + ReservedGroup.intranet.getId();
         String source = _settingManager.getSiteId();
         String metadataType = MetadataType.METADATA.codeString;
-        String title = "Test data";
         String changeDate;
         String createDate = changeDate = new ISODate().getDateAndTime();
-        String id = _dataManager.insertMetadata(context, schema, metadata, uuid, owner, groupOwner, source,  metadataType, null, title,
+        String id = _dataManager.insertMetadata(context, schema, metadata, uuid, owner, groupOwner, source,  metadataType, null,
                 null, createDate, changeDate, false, false);
 
         final String keyword1 = "World";

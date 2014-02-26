@@ -99,7 +99,7 @@
 		</xsl:copy>
 	</xsl:template>
 	
-	<xsl:template match="statusvalues">
+	<xsl:template match="statusvalue">
 		<xsl:copy>
 			<xsl:for-each select="record">
 				<xsl:sort select="name" order="ascending"/>
@@ -166,9 +166,15 @@
 		        </metadataprivs>
 		    </xsl:when>
 			<xsl:otherwise>
-				<!-- Not needed -->
+				
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template match="config">
+		<xsl:for-each select="settings/setting">
+			<xsl:element name="{replace(@name, '/', '.')}"><xsl:value-of select="@value"/></xsl:element>
+		</xsl:for-each>
 	</xsl:template>
 
 </xsl:stylesheet>

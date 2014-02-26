@@ -56,10 +56,12 @@ public class ListCategories implements Service {
         for (RegionsDAO dao : daos) {
 
             Collection<String> ids = dao.getRegionCategoryIds(context);
-            for (String id : ids) {
-                Element catEl = new Element("category");
-                catEl.setAttribute("id", id);
-                result.addContent(catEl);
+            if (ids != null) {
+                for (String id : ids) {
+                    Element catEl = new Element("category");
+                    catEl.setAttribute("id", id);
+                    result.addContent(catEl);
+                }
             }
         }
         return result;

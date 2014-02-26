@@ -13,6 +13,7 @@
   <xsl:include href="process/add-service-info-from-wxs.xsl"/>
   <xsl:include href="process/linked-data-checker.xsl"/>
   <xsl:include href="process/related-metadata-checker.xsl"/>
+  <xsl:include href="process/add-resource-id.xsl"/>
 <!--  Disabled by default because related to INSPIRE only
   <xsl:include href="process/inspire-add-conformity.xsl"/>
   <xsl:include href="process/inspire-add-dq-toporeport.xsl"/>
@@ -27,6 +28,7 @@
     <p>add-service-info-from-wxs</p>
     <p>linked-data-checker</p>
     <p>related-metadata-checker</p>
+    <p>add-resource-id</p>
 <!--  Disabled by default because related to INSPIRE only
     <p>inspire-add-conformity</p>
     <p>inspire-add-dq-toporeport</p>

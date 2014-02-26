@@ -1,0 +1,24 @@
+<div class="row">
+  <div class="col-md-5">
+    <select multiple="" class="form-control" data-ng-model="currentSelectionLeft">
+      <option data-ng-repeat="e in choices track by $index" 
+        data-ng-init="label = getLabel(e)"
+        value="{{label}}"
+        data-ng-dblclick="select(e)">{{label}}</option>
+    </select>
+  </div>
+  <div class="col-md-2">
+    <div class="btn-group-vertical">
+      <button class="btn btn-link fa fa-angle-right" data-ng-click="select()"/>
+      <button class="btn btn-link fa fa-angle-left" data-ng-click="unselect()"/>
+    </div>
+  </div>
+  <div class="col-md-5">
+    <select multiple="" class="form-control" data-ng-model="currentSelectionRight">
+      <option data-ng-repeat="e in selected track by $index"
+        data-ng-init="label = getLabel(e)"
+        value="{{label}}"
+        data-ng-dblclick="unselect(e)">{{label}}</option>
+    </select>
+  </div>
+</div>

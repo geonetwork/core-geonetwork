@@ -28,6 +28,7 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.*;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
@@ -39,6 +40,7 @@ import org.jdom.Element;
 import org.springframework.http.client.ClientHttpResponse;
 
 import javax.annotation.CheckReturnValue;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -226,7 +228,7 @@ public class GeoServerRest {
 	private void createCoverageForStore(String ws, String cs, String file,
 			String metadataUuid, String metadataTitle, String metadataAbstract)
 			throws IOException {
-		String xml = "<coverageStore><name>" + cs + "</name><title>"
+		String xml = "<coverage><name>" + cs + "</name><title>"
 			+ (metadataTitle != null ? metadataTitle : cs)
 			+ "</title><enabled>true</enabled>"
 			+ (file != null ? "<file>" + file + "</file>" : "")
@@ -259,10 +261,10 @@ public class GeoServerRest {
 					+ "</content>"
 				+ "</metadataLink>"
 			+ "</metadataLinks>"
-		+ "</coverageStore>";
+		+ "</coverage>";
 
 		int statusCoverage = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
-				+ "/coveragestores/" + cs + "/coverages/" + cs + ".xml", xml,
+				+ "/coveragestores/" + cs + "/coverages.xml", xml,
 				null, "text/xml", false);
 
 		checkResponseCode(statusCoverage);
@@ -660,7 +662,7 @@ public class GeoServerRest {
 		if (method.equals(METHOD_PUT)) {
 			m = new HttpPut(url);
 			if (file != null) {
-				((HttpPut) m).setEntity(new InputStreamEntity(new FileInputStream(file)));
+                ((HttpPut) m).setEntity(new FileEntity(file));
 			}
 
 			if (postData != null) {

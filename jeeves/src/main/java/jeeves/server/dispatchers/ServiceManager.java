@@ -769,23 +769,35 @@ public class ServiceManager {
 				else
 				{
 					info("     -> transforming with stylesheet : " +styleSheet);
-
-					ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
 					try
 					{
-                        TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer.class).time();
-                        try {
-                            //--- first we do the transformation
-                            Xml.transform(rootElem, styleSheet, baos);
-                        } finally {
-                            timerContext.stop();
-                        }
 						//--- then we set the content-type and output the result
-
-						req.beginStream(outPage.getContentType(), cache);
-						req.getOutputStream().write(baos.toByteArray());
-						req.endStream();
+					    // If JSON output requested, run the XSLT transformation and the JSON
+                        if (req.hasJSONOutput()) {
+                            Element xsltResponse = null;
+                            TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer.class).time();
+                            try {
+                                //--- first we do the transformation
+                                xsltResponse = Xml.transform(rootElem, styleSheet);
+                            } finally {
+                                timerContext.stop();
+                            }
+                            req.beginStream("application/json; charset=UTF-8", cache);
+                            req.getOutputStream().write(Xml.getJSON(xsltResponse).getBytes(Constants.ENCODING));
+                            req.endStream();
+                        } else {
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer.class).time();
+                            try {
+                                //--- first we do the transformation
+                                Xml.transform(rootElem, styleSheet, baos);
+                            } finally {
+                                timerContext.stop();
+                            }
+                            req.beginStream(outPage.getContentType(), cache);
+                            req.getOutputStream().write(baos.toByteArray());
+                            req.endStream();
+                        }
 					}
 					catch(Exception e)
 					{

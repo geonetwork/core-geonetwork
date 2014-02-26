@@ -713,7 +713,7 @@
 
                          Note:  all groups must be on the same line with not whitespace.
                     -->
-                    <targetGroups>gn,gn_admin,gn_login,gn.libs,gn.libs.map,gn.libs.scriptaculous,gn,gn.search,gn.editor,gn.geo.libs,kernel,geonetwork-client-ext-ux_css,geonetwork-client_css,geonetwork-client-mini-nomap,geonetwork-client-mini,geonetwork-client-search-app,geonetwork-client-tabsearch-app,geonetwork-client-html5ui-app,closure_deps,srv_custom_style</targetGroups>
+                    <targetGroups>gn,gn_admin,gn_login,lib,gn.libs,gn.libs.map,gn.libs.scriptaculous,gn,gn.search,gn.editor,gn.geo.libs,kernel,geonetwork-client-ext-ux_css,geonetwork-client_css,geonetwork-client-mini-nomap,geonetwork-client-mini,geonetwork-client-search-app,geonetwork-client-tabsearch-app,geonetwork-client-html5ui-app,closure_deps,srv_custom_style</targetGroups>
                     <minimize>true</minimize>
                     <destinationFolder>${wro4jOutput}</destinationFolder>
                     <cssDestinationFolder>${wro4jOutput}/css</cssDestinationFolder>

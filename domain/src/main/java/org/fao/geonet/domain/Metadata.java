@@ -312,7 +312,6 @@ public class Metadata extends GeonetEntity {
         }
         dataInfo.setCreateDate(new ISODate(doc.get("_createDate")));
         dataInfo.setChangeDate(new ISODate(doc.get("_changeDate")));
-        dataInfo.setTitle(doc.get("_title"));
         dataInfo.setRoot(doc.get("_root"));
         final String displayOrder = doc.get("_displayOrder");
         if (displayOrder != null) {

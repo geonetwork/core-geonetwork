@@ -225,12 +225,12 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
         String id = dataMan.insertMetadata(context, schema, md, uuid, Integer.parseInt(params.ownerId), group, params.uuid,
-                     isTemplate, docType, title, category, rf.getChangeDate().getDateAndTime(), rf.getChangeDate().getDateAndTime(), ufo, indexImmediate);
+                     isTemplate, docType, category, rf.getChangeDate().getDateAndTime(), rf.getChangeDate().getDateAndTime(), ufo, indexImmediate);
 
 
 		int iId = Integer.parseInt(id);
 
-		dataMan.setTemplateExt(iId, MetadataType.METADATA, null);
+		dataMan.setTemplateExt(iId, MetadataType.METADATA);
 		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(rf.getPath()));
 
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);

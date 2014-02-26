@@ -387,8 +387,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      *
      * @param node
      */
-    @Transactional(propagation = Propagation.REQUIRED)
-    public synchronized void addInfo(Element node) {
+    public void addInfo(Element node) {
         Element info = node.getChild("info");
 
         //--- 'running'
@@ -927,7 +926,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * Contains all the warnings and errors that didn't abort the execution, but were thrown during harvesting
      */
     private List<HarvestError> errors = new LinkedList<HarvestError>();
-    private boolean running = false;
+    private volatile boolean running = false;
 
 
     protected ServiceContext context;

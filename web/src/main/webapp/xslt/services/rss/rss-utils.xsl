@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
-	xmlns:geonet="http://www.fao.org/geonetwork"
+	xmlns:gn="http://www.fao.org/gnwork"
 	xmlns:exslt="http://exslt.org/common"
 	xmlns:media="http://search.yahoo.com/mrss/"
 	xmlns:georss="http://www.georss.org/georss"
 	xmlns:gml="http://www.opengis.net/gml"
-	exclude-result-prefixes="geonet exslt">
+	exclude-result-prefixes="gn exslt">
 
-  <xsl:include href="../../common/profiles-loader-brief-tpl.xsl"/>
+  <xsl:include href="../../common/profiles-loader-tpl-brief.xsl"/>
 
 	<!-- Template that generates an item for every metadata record -->
 	<xsl:template match="*" mode="item">
@@ -18,10 +18,10 @@
 		  
 		  
 			<xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
-			<xsl:variable name="mdURL" select="normalize-space(concat($baseURL, '?uuid=', geonet:info/uuid))"/>
+			<xsl:variable name="mdURL" select="normalize-space(concat($baseURL, '?uuid=', gn:info/uuid))"/>
 			<xsl:variable name="thumbnailLink" select="normalize-space($metadata/image[@type='thumbnail'])"/>
-			<xsl:variable name="bDynamic" select="geonet:info/dynamic" />
-			<xsl:variable name="bDownload" select="geonet:info/download" />
+			<xsl:variable name="bDynamic" select="gn:info/dynamic" />
+			<xsl:variable name="bDownload" select="gn:info/download" />
 			<title><xsl:value-of select="$metadata/title"/></title>
 			<link><xsl:value-of select="$mdURL"/></link>
 			
@@ -58,7 +58,7 @@
 				<br clear="all"/>
 				<xsl:text disable-output-escaping="yes">]]&gt;</xsl:text>
 			</description>
-			<xsl:variable name="date" select="geonet:info/changeDate"/>
+			<xsl:variable name="date" select="gn:info/changeDate"/>
 			<xsl:variable name="day" select="substring($date,9,2)" />
 			<xsl:variable name="monthnumber" select="substring($date,6,2)" />
 			<xsl:variable name="year" select="substring($date,1,4)" />
@@ -185,7 +185,7 @@
 								There's a hint providing the possible layers available in the service -->
 							<xsl:variable name="xyRatio" select="string(number($north - $south) div number($east - $west))" />
 							<!-- This is a full GetMap request resulting in a PNG image of 200px wide-->
-							<link href="{@href}" type="{@type}" rel="alternate" title="{@title}" geonet:layers="{$nameL}" />
+							<link href="{@href}" type="{@type}" rel="alternate" title="{@title}" gn:layers="{$nameL}" />
 							<link href="{concat(@href,'?SERVICE=wms$amp;VERSION=1.1.1&amp;REQUEST=GetMap&amp;BBOX=',
 								concat($west,',',$south,',',$east,',',$north),
 								'&amp;LAYERS=',$nameL,

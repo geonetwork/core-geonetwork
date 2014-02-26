@@ -1,0 +1,12 @@
+{
+  "name": "geonetwork-docs",
+  "version": "0.0.0",
+  "description": "GeoNetwork docs",
+  "dependencies": {
+    "grunt": "~0.4.1",
+    "grunt-cli": "~0.1.13",
+    "grunt-ngdocs": "~0.1.1",
+    "grunt-contrib-connect": "~0.3.0",
+    "grunt-contrib-clean": "0.4.1"
+  }
+}

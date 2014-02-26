@@ -74,7 +74,7 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
                 StringBuffer sb = new StringBuffer("Group and profile search:");
                 sb.append("\nGroup attribute: \t" + groupAttribute);
                 sb.append("\nGroup query: \t" + groupQuery);
-                sb.append("\nGroup attribute: \t" + groupQueryPattern);
+                sb.append("\nGroup query pattern: \t" + groupQueryPattern);
                 sb.append("\nProfile attribute: \t" + privilegeAttribute);
                 sb.append("\nProfile query: \t" + privilegeQuery);
                 sb.append("\nProfile attribute: \t" + privilegeQueryPattern);

@@ -19,6 +19,11 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
 GeoNetwork.Lang.fr = {
+    'unsupportedBrowser': 'Navigateur non supporté',
+    'editorBrowserRestriction': "La version du navigateur Internet Explorer que vous utilisez n'est plus compatible avec certaines fonctionnalités les plus récentes (édition, administration). Le catalogue risque de ne pas fonctionner correctement, vous devez installer <a href='http://www.whatbrowser.org/'>un navigateur récent</a>.",
+    'metadataRecordPublishedTitle': 'Publication',
+    'metadataRecordPublished': '${title} est maintenant visible par tous.',
+    'metadataRecordUnPublished': '${title} n\'est plus visible par tous.',
     'metadata-not-found': 'La métadonnée avec l\'identifiant ${uuid} n\'a pas été trouvée ou n\'est pas partagée avec vous.',
     'Administrator': 'Administrateur',
     'filterGroup': 'Filtrer les groupes ...',
@@ -472,6 +477,7 @@ GeoNetwork.Lang.fr = {
     'validityInfo': 'Information sur la validation',
     'lastUpdate': 'Dernière mise à jour : ',
     'importMetadata': 'Import de métadonnées',
+    'import': 'Importer',
     'validationStatus': 'Validation ',
     'valid': 'Valide',
     'notValid': 'Non valide',

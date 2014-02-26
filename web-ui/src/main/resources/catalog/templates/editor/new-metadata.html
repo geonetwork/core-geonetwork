@@ -1,0 +1,82 @@
+<div class="container" id="gn-new-metadata-container">
+  <h2 data-translate="">{{title}}</h2>
+
+  <div class="alert alert-warning" data-ng-hide="hasTemplates" 
+    data-translate="">noTemplatesAvailable</div>
+
+  <div class="progress progress-striped active"
+    data-ng-show="hasTemplates && mdList === null">
+    <div class="progress-bar" style="width: 100%"/>
+  </div>
+
+  <div class="row" data-ng-show="mdTypes">
+    <div class="col-sm-2">
+      <div class="panel panel-default dynamic-list">
+        <div class="panel-heading">
+          <span data-translate="">createA</span>
+          <strong>{{(activeType || '...') | translate}}</strong>
+        </div>
+        <div class="panel-body">
+          <div class="list-group gn-record-type">
+            <a data-ng-repeat="type in mdTypes" href="" class="list-group-item"
+              data-ng-click="getTemplateNamesByType(type)"
+              data-ng-class="{'active': type==activeType}">
+              <i class="fa {{getTypeIcon(type)}} fa-3x"></i>
+              <p>
+                {{type | translate}}
+              </p>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="panel-default panel">
+        <div class="panel-heading">
+          <span data-translate="">fromTemplate</span>
+          <strong>{{(activeTpl.title || '...') | translate}}</strong>
+        </div>
+        <div class="panel-body">
+          <div class="list-group">
+            <a data-ng-repeat="tpl in tpls" href="" class="list-group-item"
+              data-ng-click="setActiveTpl(tpl)"
+              data-ng-class="{'active': tpl==activeTpl}">{{tpl.title || tpl.defaultTitle}}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3" data-ng-show="groups && groups.length > 1">
+      <div class="panel-default panel">
+        <div class="panel-heading"><span data-translate="">inGroup</span>
+          <strong>{{(ownerGroup.label[lang] || '...') | translate}}</strong>
+        </div>
+        <div class="panel-body">
+          <div data-groups-combo="" data-owner-group="ownerGroup" lang="lang" data-groups="groups"/>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-3">
+      <div class="btn-group">
+        <button type="button" class="btn btn-success btn-lg"
+          data-ng-click="createNewMetadata()"
+          data-ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup)}">
+          <i class="fa fa-plus"/>
+          <span data-translate="">createMetadata</span>
+        </button>
+        <button type="button"
+                class="btn btn-success btn-lg dropdown-toggle"
+                data-ng-class="{'disabled': (!activeType || !activeTpl || !ownerGroup)}"
+                data-toggle="dropdown">
+          <span class="caret"></span>&nbsp;
+        </button>
+        <ul class="dropdown-menu pull-right" role="menu">
+          <li><a
+              title="{{'createMetadataForGroup-help' | translate}}"
+              data-ng-click="createNewMetadata(true)"
+              href="" data-translate="">
+            createMetadataForGroup</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

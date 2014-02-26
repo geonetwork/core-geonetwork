@@ -16,11 +16,63 @@
       </output>
       <error sheet="../xslt/common/error.xsl"/>
     </service>
-
+    
+    <service name="md.create">
+      <documentation><![CDATA[
+        Create a new metadata from a template or an existing record.
+        
+        Parameters are:
+        * uuid or id: the record to start from
+        * template: is this new record a metadata or a template. Value y or n
+        * child: to create a child of the record. Value y or n
+        * currTab: the tab to start with
+        * fullPrivileges: all privileges for the group. default is false.
+        
+        ]]></documentation>
+      <class name=".services.metadata.Create">
+        <param name="editTab" value="true"/>
+      </class>
+    </service>
+    
+    
+    <service name="md.insert">
+      <documentation><![CDATA[
+        Insert a metadata sending an XML document.
+        
+        Parameters are:
+        * insert_mode: 0
+        * template: The type of record (y or n or s)
+        * data: The XML to insert
+        * group:
+        
+        ]]></documentation>
+      <class name=".services.metadata.Insert" />
+    </service>
+    
+    <service name="md.delete">
+      <documentation><![CDATA[
+        Delete a new metadata 
+        
+        Parameters are:
+        * uuid or id: the record to start from
+        
+        ]]></documentation>
+      <class name=".services.metadata.Delete"/>
+      <error sheet="../xslt/common/error.xsl"/>
+    </service>
+    
     <service name="md.edit">
-      <documentation>Edit a metadata record</documentation>
+      <documentation>
+        <![CDATA[
+        Edit a metadata record.
+        
+        Parameters: 
+        * id or uuid
+        * tab
+        ]]></documentation>
       <class name=".services.metadata.GetEditableData"/>
       <output sheet="../xslt/ui-metadata/edit/edit.xsl">
+        <call name="thesaurus" class=".services.thesaurus.GetList" />
         <call name="currTab" class=".guiservices.util.GetCurrentMDTab"/>
         <xml name="i18n" file="xml/i18n.xml"/>
       </output>
@@ -67,13 +119,25 @@
       <error sheet="../xslt/common/error.xsl"/>
     </service>
 
+    <service name="md.edit.cancel">
+      <documentation><![CDATA[
+        Cancel editing session.
+        ]]></documentation>
+      <class name=".services.metadata.Update">
+        <param name="forget" value="yes" />
+        <param name="finished" value="yes" />
+      </class>
+      <error sheet="../xslt/common/error.xsl"/>
+    </service>
+
     <service name="md.element.add">
       <documentation><![CDATA[
-                Add an element to the metadata record.
+                Add an element or attribute to the metadata record.
                 
                 Parameters are:
                 * ref: parent element reference
                 * name: element name
+                * child=geonet:attribute to add attribute
                 
                 TODO: Check if all those call are necessary
                 ]]></documentation>
@@ -84,7 +148,6 @@
         <call name="position" class=".guiservices.util.GetPositionMD"/>
         <call name="groups" class=".guiservices.groups.GetMine"/>
         <call name="sources" class=".guiservices.util.Sources"/>
-        <call name="isoLang" class=".guiservices.isolanguages.Get"/>
         <call name="subtemplates" class="jeeves.services.db.Select">
           <param name="db" value="main-db"/>
           <param name="query"
@@ -105,21 +168,110 @@
                 TODO: Check if all those call are necessary
                 ]]></documentation>
       <class name=".services.metadata.DeleteElement"/>
-
-      <output sheet="../xslt/ui-metadata/edit/edit-embedded.xsl">
-        <call name="currTab" class=".guiservices.util.GetCurrentMDEditingTab"/>
-        <call name="position" class=".guiservices.util.GetPositionMD"/>
-        <call name="groups" class=".guiservices.groups.GetMine"/>
-        <call name="sources" class=".guiservices.util.Sources"/>
-        <call name="isoLang" class=".guiservices.isolanguages.Get"/>
-        <call name="subtemplates" class="jeeves.services.db.Select">
-          <param name="db" value="main-db"/>
-          <param name="query"
-            value="SELECT distinct(root) AS type FROM metadata WHERE isTemplate = 's'"/>
-        </call>
-      </output>
     </service>
 
+    <service name="md.attribute.remove">
+      <class name=".services.metadata.DeleteAttribute"/>
+    </service>
+
+    <service name="md.element.down" deprecated="true">
+      <documentation><![CDATA[
+        Move an element at preceding position.
+        ]]></documentation>
+      <class name=".services.metadata.MoveElement">
+        <param name="dir" value="down" />
+      </class>
+      
+    </service>
+    
+    <service name="md.element.up" deprecated="true">
+      <documentation><![CDATA[
+        Move an element at following position.
+        ]]></documentation>
+      <class name=".services.metadata.MoveElement">
+        <param name="dir" value="up" />
+      </class>
+    </service>
+    
+    <service name="md.element.info">
+      <documentation><![CDATA[
+            Get help on an element.
+            
+            POST request, body is :
+            <request>
+              <element schema="iso19139" name="gmd:protocol" context="gmd:CI_OnlineResource" 
+                  fullContext="gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/
+                               gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:protocol" 
+                  isoType="" />
+            </request>
+            
+            ]]></documentation>
+    
+      <class name=".services.schema.Info" />
+    </service>
+    
+    
+    <service name="md.thumbnail.upload">
+      <documentation><![CDATA[
+        Upload a thumbnail and attach it to the metadata record.
+        This service must be used in the context of an editing session.
+        
+        Parameters:
+        * scalingDir
+        * smallScalingDir
+        * type eg. large
+        * scalingFactor
+        * smallScalingFactor
+        * version: The version number of the editing session
+        * id: The metadata id
+        * thumbnail_desc: 
+        * fname: The image
+        
+        ]]></documentation>
+      <class name=".services.thumbnail.Set"/>
+    </service>
+    
+    <service name="md.thumbnail.remove">
+      <documentation><![CDATA[
+        Delete a thumbnail from the data diretory and detach 
+        it to the metadata record.
+        ]]></documentation>
+      <class name=".services.thumbnail.Unset"/>
+    </service>
+    
+    
+    <service name="md.relations">
+      <documentation>Return a list of all relation of the given metadata. Relations are mainly online resources
+      like thumbnails, onlineresources etc ..</documentation>
+      <class name=".guiservices.metadata.GetRelated"/>
+      <output sheet="../xslt/services/metadata/relation.xsl" contentType="text/xml; charset=UTF-8"/>
+    </service>
+    
+    <service name="md.suggestion">
+      <documentation><![CDATA[
+        Get suggestion for all metadata.
+        Paremeters
+        * action could be 'list' or 'analyse'
+        * process
+        ]]></documentation>
+      <class name=".services.metadata.GetSuggestion"/>
+    </service>
+
+    <service name="md.validate">
+      <documentation><![CDATA[
+        Validate a metadata and validation report report.
+        
+        The metadata must be in editing mode. The metadata in session is used.
+        
+        Parameters:
+        * id: The metadata id
+        
+        ]]></documentation>
+      <class name=".services.metadata.Validate"/>
+      <output sheet="../xslt/services/metadata/validate.xsl" contentType="text/xml; charset=UTF-8">
+        <xml name="validation" file="xml/metadata-validate.xml" />
+      </output>
+    </service>
 
   </services>
 </geonet>

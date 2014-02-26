@@ -246,7 +246,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
         String docType = null, title = null, isTemplate = null;
         boolean ufo = true, indexImmediate = false;
         String id = dataMan.insertMetadata(context, schema, xml, uuid, userId, group, source,
-                isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
+                isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
 
         // Set metadata as public if setting enabled
         SettingManager sm = gc.getBean(SettingManager.class);

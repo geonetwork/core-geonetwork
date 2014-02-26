@@ -7,15 +7,15 @@
         Run a search and return a PDF document.
         
         ]]></documentation>
-      <class name=".services.main.Search">
+      <class name=".services.main.XmlSearch">
         <param name="maxSummaryKeys" value="1000" />
         <param name="maxHitsInSummary" value="1000" />
       </class>
       
       <output sheet="../xslt/services/pdf/portal-present-fop.xsl" file="true" contentType="application/pdf">
-        <call name="mdresults" class=".services.main.Result" >
-          <param name="range" value="1000" /> <!-- too many causes problems -->
-        </call>
+        <!--<call name="mdresults" class=".services.main.Result" >
+          <param name="range" value="1000" /> <!-\- too many causes problems -\->
+        </call>-->
         <call name="siteURL" class=".guiservices.util.GetSiteURL" />
       </output>
       

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+    <service name="md.formatter.register">
+      <documentation><![CDATA[
+        Upload a formatter package.
+        
+        Parameters:
+        * fname: ZIP file to load
+        ]]></documentation>
+      <class name=".services.metadata.format.Register">
+        <param name="user_xsl_dir" value="user_xsl" />
+      </class>
+    </service>
+    
+    <service name="md.formatter.list">
+      <documentation><![CDATA[
+        Return list of formatter available.
+        ]]></documentation>
+      <class name=".services.metadata.format.ListFormatters">
+        <param name="user_xsl_dir" value="user_xsl" />
+      </class>
+      <error id="illegal-params" sheet="metadata-error.xsl"/>
+    </service>
+    
+    <service name="md.formatter.remove">
+      <documentation><![CDATA[
+        Remove a formatter.
+        ]]></documentation>
+      <class name=".services.metadata.format.Remove">
+        <param name="user_xsl_dir" value="user_xsl" />
+      </class>
+      <error id="illegal-params" sheet="metadata-error.xsl"/>
+    </service>
+    
+    <service name="md.formatter.download">
+      <documentation><![CDATA[
+        Download ZIP package containaing the formmatter.
+        ]]></documentation>
+      <class name=".services.metadata.format.Download">
+        <param name="user_xsl_dir" value="user_xsl" />
+      </class>
+      <output file="true" />
+      <error id="illegal-params" sheet="metadata-error.xsl"/>
+    </service>
+    
+    
+    <service name="md.formatter.files">
+      <documentation><![CDATA[
+        Return all files contained in a formatter package.
+        ]]></documentation>
+      <class name=".services.metadata.format.ListBundleFiles">
+        <param name="user_xsl_dir" value="user_xsl" />
+      </class>
+      <error id="illegal-params" sheet="metadata-error.xsl"/>
+    </service>
+    
+    <service name="md.formatter.edit">
+      <documentation><![CDATA[
+        Return a file contained in a formatter package.
+        ]]></documentation>
+      <class name=".services.metadata.format.EditFile">
+        <param name="user_xsl_dir" value="user_xsl" />
+      </class>
+      <error id="illegal-params" sheet="metadata-error.xsl"/>
+    </service>
+    
+    <service name="md.formatter.update">
+      <documentation><![CDATA[
+        Update a file in a formatter package.
+        
+        Parameters:
+        
+        * id: The formatter identifier
+        * fname: The file path in the formatter
+        * data: The file content
+        ]]></documentation>
+      <class name=".services.metadata.format.UpdateFile">
+        <param name="user_xsl_dir" value="user_xsl" />
+      </class>
+      <error id="illegal-params" sheet="metadata-error.xsl"/>
+    </service>
+    
+    <service name="md.formatter.resource">
+      <documentation><![CDATA[
+        
+        ]]></documentation>
+      <class name=".services.metadata.format.Resource">
+        <param name="user_xsl_dir" value="user_xsl" />
+      </class>
+      <output file="true" />
+      <error id="illegal-params" sheet="metadata-error.xsl"/>
+    </service>
+    
+    <service name="md.formatter.html">
+      <documentation><![CDATA[
+        Render a record using a formatter.
+        
+        Parameters:
+        * xsl: formatter id
+        * id: metadata id
+        ]]></documentation>
+      <class name=".services.metadata.format.Format">
+        <param name="user_xsl_dir" value="user_xsl" />
+      </class>
+      <output sheet="../xslt/ui-metadata/formatter/identity.xsl"/>
+      <error id="illegal-params" sheet="metadata-error.xsl"/>
+    </service>
+    
+    <service name="md.formatter.xml">
+      <documentation><![CDATA[
+        
+        ]]></documentation>
+      <class name=".services.metadata.format.Format">
+        <param name="user_xsl_dir" value="user_xsl" />
+      </class>
+      <error id="illegal-params" sheet="metadata-error.xsl"/>
+    </service>
+    
+    <service name="md.formatter.pdf">
+      <documentation><![CDATA[
+        
+        ]]></documentation>
+      <class name=".services.metadata.format.Format">
+        <param name="user_xsl_dir" value="user_xsl" />
+      </class>
+      <class name=".services.metadata.format.PDF"/>
+      <output file="true"/>
+      <error id="illegal-params" sheet="metadata-error.xsl"/>
+    </service>
+  </services>
+</geonet>

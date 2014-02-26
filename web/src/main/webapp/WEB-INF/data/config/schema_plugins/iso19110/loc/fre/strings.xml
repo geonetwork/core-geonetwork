@@ -2,4 +2,8 @@
 <strings>
   <xml_iso19110>Sauvegarder cette métadonnée en ISO19110</xml_iso19110>
   <xml_iso19110Tooai_dc>Sauvegarder cette métadonnée en OAI Dublin Core</xml_iso19110Tooai_dc>
+  
+  <advanced>Complète</advanced>
+  <default>Simple</default>
+  <xml>XML</xml>
 </strings>

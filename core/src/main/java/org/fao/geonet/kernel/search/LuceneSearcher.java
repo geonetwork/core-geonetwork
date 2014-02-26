@@ -311,7 +311,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 						md = LuceneSearcher.getMetadataFromIndex(doc, id, true, _language.presentationLanguage, _luceneConfig.getMultilingualSortFields(), _luceneConfig.getDumpFields());
 					    
 						// Retrieve dynamic properties according to context (eg. editable)
-                        gc.getBean(DataManager.class).buildExtraMetadataInfo(srvContext, id, md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE));
+                        gc.getBean(DataManager.class).buildPrivilegesMetadataInfo(srvContext, id, md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE));
                     }
                     else if (srvContext != null) {
                         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
@@ -668,9 +668,9 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 			    //--- in case of an admin show all results
                 if (userSession != null) {
                     if (userSession.isAuthenticated()) {
-                        if (userSession.getProfile() != Profile.Administrator) {
+                        if (userSession.getProfile() == Profile.Administrator) {
                             request.addContent(new Element(SearchParameter.ISADMIN).addContent("true"));
-                        } else if (userSession.getProfile() != Profile.Reviewer) {
+                        } else if (userSession.getProfile() == Profile.Reviewer) {
                             request.addContent(new Element(SearchParameter.ISREVIEWER).addContent("true"));
                         }
                     }

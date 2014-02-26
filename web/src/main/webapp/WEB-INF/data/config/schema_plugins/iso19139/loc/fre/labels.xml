@@ -21,10 +21,13 @@
         xsi:noNamespaceSchemaLocation="../../../labels.xsd" >
         
   <element name="gmd:MD_ScopeCode">
-    <label>Code du sujet</label>
+    <label>Code</label>
     <description></description>
     <help/>
     <condition/>
+  </element>
+  <element name="gmx:MX_ScopeCode">
+    <label>Code</label>
   </element>
   <element name="code" id="207.0" context="gmd:MD_Identifier">
     <label>Code</label>
@@ -45,7 +48,6 @@
     <description>Nom ou identification de la personne ou de l'organisation responsable pour le domaine de valeurs</description>
     <help>Informations sur la personne ou l'organisation en charge de l'espace nominal ou de l'identifiant.</help>
     <condition/>
-    
   </element>
   <element name="gco:Date" id="364.0" context="gmd:CI_Citation">
     <label>Date d'édition</label>
@@ -842,7 +844,7 @@ appliquant les mêmes pratiques,</li>
     ]]></help>
     <condition/>
   </element>
-  <element name="gmd:abstract" id="25.0" context="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:abstract">
+  <element name="gmd:abstract" id="25.0" context="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:abstract">
     <label>Résumé de la ressource</label>
     <description>Court résumé explicatif du contenu des ressources</description>
     <help>Court résumé descriptif du contenu du jeu de données. Cet attribut est du type PT_FreeText et est géré dans la classe du même nom.</help>
@@ -905,8 +907,8 @@ de métadonnées de données « BD Carthage métropole »
     
   </element>
   
-  <element name="gmd:abstract" id="25.0">
-    <label>Résumé</label>
+  <element name="gmd:abstract" id="25.0" context="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract">
+    <label>Résumé de la ressource</label>
     <description>Court résumé explicatif du contenu des ressources</description>
     <help>Court résumé descriptif du contenu du jeu de données. Cet attribut est du type PT_FreeText et est géré dans la classe du même nom.</help>
     <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>
@@ -929,6 +931,10 @@ de métadonnées de données « BD Carthage métropole »
     ]]></help>
     <condition>Obligatoire</condition>
     
+  </element>
+  <element name="gmd:abstract" id="25.0">
+    <label>Résumé</label>
+    <description>Court résumé explicatif du contenu des ressources</description>
   </element>
   <element name="gmd:accessConstraints" id="70.0">
     <label>Contraintes d'accès</label>
@@ -1210,13 +1216,6 @@ de métadonnées de données « BD Carthage métropole »
     <condition>Obligatoire</condition>
     <condition>Conditional</condition>
   </element>-->
-  <element name="gmd:codeSpace" id="208.1">
-    <label>Nom de l'identifiant</label>
-    <description>Nom ou identification de la personne ou de l'organisation responsable pour la domaine de valeurs</description>
-    <help>Informations sur la personne ou l'organisation en charge de l'espace nominal ou de l'identifiant.</help>
-    <condition/>
-    
-  </element>
   <element name="gmd:collectiveTitle" id="371.0">
     <label>Titre collectif</label>
     <description>Titre commun avec indication d'une appartenance. Note : le titre identifie des éléments d'une série collective, combiné avec l'information sur quels volumes sont à disposition à la source citée</description>
@@ -1417,7 +1416,7 @@ de métadonnées de données « BD Carthage métropole »
     
   </element>
   
-  <element name="gmd:date" id="362.0" context="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date">
+  <element name="gmd:date" id="362.0" context="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date">
     <label>Date de référence</label>
     <description>Date de référence pour la ressource en question</description>
     <help>Date de référence indiquée sous forme de date (jj.mm.aaaa) et de type de date (création, publication, traitement). Ces informations sont du type CI_Date et sont gérées dans la classe du même nom.</help>
@@ -1467,7 +1466,7 @@ date de mise en ligne du service, en tant que date de publication.
       ]]>
     </help>
   </element>
-  <element name="gmd:date" id="362.0" context="gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date">
+  <element name="gmd:date" id="362.0" context="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date">
     <label>Date de référence</label>
     <description>Date de référence pour la ressource en question</description>
     <help>Date de référence indiquée sous forme de date (jj.mm.aaaa) et de type de date (création, publication, traitement). Ces informations sont du type CI_Date et sont gérées dans la classe du même nom.</help>
@@ -2178,7 +2177,7 @@ période de temps couverte par le service.
     
   </element>
   <element name="gmd:hierarchyLevel" id="6.0">
-    <label>Type de la ressource</label>
+    <label>Type de ressource</label>
     <description>Domaine auquel les métadonnées s'appliquent (voir l'annexe C pour plus d'information au sujet des niveaux de hiérarchie des métadonnées)</description>
     <help>Domaine auquel les métadonnées se rapportent. La catégorie d'informations à laquelle l'entité se réfère peut être indiquée dans la liste des codes (exemple : attributs, objets géométriques, jeu de données, etc.). "Jeu de données" est le paramètre par défaut.</help>
     <condition>Par défaut: "jeu de données"</condition>
@@ -2428,6 +2427,11 @@ période de temps couverte par le service.
     <condition/>
     
   </element>
+  
+  <element name="gmd:language" id="3.0">
+    <label>Langue</label>
+  </element>
+  
   <element name="gmd:lensDistortionInformationAvailability" id="255.0">
     <label>Disponibilité sur la distortion des lentilles</label>
     <description>Indication si oui ou non des informations sur la corrections de fautes dues aux lentilles sont à disposition</description>
@@ -2870,21 +2874,21 @@ période de temps couverte par le service.
       <helper editorMode="radio_withdesc">
       <option value="Pas de restriction d’accès public selon INSPIRE" title="Aucun des articles de la loi ne peut être invoqué pour justifier d’une restriction d’accès public.">Pas de restriction d’accès public selon INSPIRE</option>
       <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.a)" 
-        title="La confidentialité des travaux des autorités publiques, lorsque cette confidentialité est prévue par la loi.">L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.a)</option>
+        title="La confidentialité des travaux des autorités publiques, lorsque cette confidentialité est prévue par la loi.">Confidentialité des travaux des autorités publiques</option>
       <option value="L124-5-II-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.b)" 
-        title="Les relations internationales, la sécurité publique ou la défense nationale.">L124-5-II-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.b)</option>
+        title="Les relations internationales, la sécurité publique ou la défense nationale.">Relations internationales</option>
       <option value="L124-5-II-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.c)" 
-        title="La bonne marche de la justice, la possibilité pour toute personne d’être jugée équitablement ou la capacité d’une autorité publique d’effectuer une enquête d’ordre pénal ou disciplinaire.">L124-5-II-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.c)</option>
+        title="La bonne marche de la justice, la possibilité pour toute personne d’être jugée équitablement ou la capacité d’une autorité publique d’effectuer une enquête d’ordre pénal ou disciplinaire.">Bonne marche de la justice</option>
       <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.d)" 
-        title="La confidentialité des informations commerciales ou industrielles, lorsque cette confidentialité est prévue par la législation nationale ou communautaire afin de protéger un intérêt économique légitime, notamment l’intérêt public lié à la préservation de la confidentialité des statistiques et du secret fiscal.">L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.d)</option>
+        title="La confidentialité des informations commerciales ou industrielles, lorsque cette confidentialité est prévue par la législation nationale ou communautaire afin de protéger un intérêt économique légitime, notamment l’intérêt public lié à la préservation de la confidentialité des statistiques et du secret fiscal.">Confidentialité des informations commerciales ou industrielles</option>
       <option value="L124-5-II-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.e)" 
-        title="Les droits de propriété intellectuelle.">L124-5-II-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.e)</option>
+        title="Les droits de propriété intellectuelle.">Propriété intellectuelle</option>
       <option value="L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.f)" 
-        title="La confidentialité des données à caractère personnel et/ou des fichiers concernant une personne physique lorsque cette personne n’a pas consenti à la divulgation de ces informations au public, lorsque la confidentialité de ce type d’information est prévue par la législation nationale ou communautaire.">L124-4-I-1 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.f)</option>
+        title="La confidentialité des données à caractère personnel et/ou des fichiers concernant une personne physique lorsque cette personne n’a pas consenti à la divulgation de ces informations au public, lorsque la confidentialité de ce type d’information est prévue par la législation nationale ou communautaire.">Protection de la vie privée</option>
       <option value="L124-4-I-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.g)" 
-        title="Les intérêts ou la protection de toute personne qui a fourni les informations demandées sur une base volontaire sans y être contrainte par la loi ou sans que la loi puisse l’y contraindre, à moins que cette personne n’ait consenti à la divulgation de ces données.">L124-4-I-3 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.g)</option>
+        title="Les intérêts ou la protection de toute personne qui a fourni les informations demandées sur une base volontaire sans y être contrainte par la loi ou sans que la loi puisse l’y contraindre, à moins que cette personne n’ait consenti à la divulgation de ces données.">Protection des personnes</option>
       <option value="L124-4-I-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.h)" 
-        title="La protection de l’environnement auquel ces informations ont trait, comme par exemple la localisation d’espèces rares.">L124-4-I-2 du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 13.1.h)</option>
+        title="La protection de l’environnement auquel ces informations ont trait, comme par exemple la localisation d’espèces rares.">Protection de l'environnement</option>
       <option value="L127-8-IV du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 17.7)" 
         title="">L127-8-IV du code de l’environnement (Directive 2007/2/CE (INSPIRE), Article 17.7)</option>
     </helper>-->
@@ -3533,7 +3537,7 @@ diffusion restreinte.
     <condition/>
     
   </element>
-  <element name="gmd:title" id="360.0" context="gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title">
+  <element name="gmd:title" id="360.0" context="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title">
     <label>Spécification</label>
     <description>Nom avec lequel la ressource en question est connue</description>
     <help>
@@ -3542,8 +3546,7 @@ diffusion restreinte.
       
       Titre/nom. Ces informations sont du type PT_FreeText et sont gérées dans la classe du même nom.</help>
     <helper editorMode="radio_linebreak"
-        displayIf="$p1/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/gmd:MD_DataIdentification or 
-        $p1/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/*[@gco:isoType='gmd:MD_DataIdentification']">
+      displayIf="ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/*[name() = 'gmd:MD_DataIdentification' or @gco:isoType='gmd:MD_DataIdentification']">
       <option value="COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services">COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services</option>
       <option value="INSPIRE Data Specification on Administrative Units - Guidelines v3.0.1">Guide INSPIRE sur les unités administratives</option>
       <option value="INSPIRE Data Specification on Cadastral Parcels - Guidelines v 3.0.1">Guide INSPIRE sur les parcelles cadastrales</option>
@@ -3555,7 +3558,7 @@ diffusion restreinte.
       <option value="INSPIRE Specification on Coordinate Reference Systems - Guidelines v 3.1">Guide INSPIRE sur les référentiels de coordonnées</option>
       <option value="INSPIRE Specification on Geographical Grid Systems - Guidelines v 3.0.1">Guide INSPIRE sur les systèmes de maillage géographique</option>
     </helper>
-    <helper editorMode="radio_linebreak" displayIf="$p1/ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/srv:SV_ServiceIdentification">
+    <helper editorMode="radio_linebreak" displayIf="ancestor::node()[name()='gmd:MD_Metadata']/gmd:identificationInfo/srv:SV_ServiceIdentification">
       <option value="RÈGLEMENT (UE) N° 976/2009">Règlement service en réseau INSPIRE (service de recherche et de consultation) - RÈGLEMENT (UE) N° 976/2009</option>
       <option value="RÈGLEMENT (UE) N° 1088/2010">Règlement service en réseau INSPIRE (service de téléchargement et de transformation) - RÈGLEMENT (UE) N° 1088/2010</option>
       <option value="Technical Guidance for the implementation of INSPIRE Discovery Services – v.3.1">Guide INSPIRE sur les services de recherche</option>
@@ -3646,7 +3649,7 @@ celles des scénarios d’échange du Sandre est possible en complément.
     ]]></help>
     <condition>Obligatoire</condition>
   </element>
-  <element name="gmd:title" id="360.0" context="gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:title">
+  <element name="gmd:title" id="360.0" context="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:title">
     <label>Intitulé de la ressource</label>
     <description>L’intitulé (ou le titre) de la ressource doit être un nom caractéristique et souvent unique
       sous lequel la ressource est connue.</description>
@@ -3701,8 +3704,8 @@ l’IGN (WPS)
     <condition>Obligatoire</condition>
     
   </element>
-  <element name="gmd:title" id="360.0">
-    <label>Titre</label>
+  <element name="gmd:title" id="360.0" context="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title">
+    <label>Intitulé de la resource</label>
     <description>Nom avec lequel la ressource en question est connue</description>
     <help for="inspire"><![CDATA[<b>Exigence INSPIRE :</b>
     L’intitulé (ou le titre) de la ressource doit être un nom caractéristique
@@ -3740,6 +3743,10 @@ l’IGN (WPS)
     ]]></help>
     <condition>Obligatoire</condition>
     
+  </element>
+  <element name="gmd:title" id="360.0">
+    <label>Titre</label>
+    <description>Nom avec lequel la ressource en question est connue</description>
   </element>
   <element name="gmd:toneGradation" id="265.0">
     <label>Nombre de tons de gris</label>
@@ -3918,6 +3925,7 @@ l’IGN (WPS)
       <option value="Aucune condition ne s’applique">Aucune condition ne s’applique</option>
       <option value="Conditions inconnues">Conditions inconnues</option>
       <option value="Utilisation libre sous réserve de mentionner la source (a minima le nom du producteur) et la date de sa dernière mise à jour">Utilisation libre sous réserve de mentionner la source (a minima le nom du producteur) et la date de sa dernière mise à jour</option>
+      <option value="Données ouvertes">Données ouvertes</option>
     </helper>
   </element>
   <element name="gmd:userContactInfo" id="66.0">
@@ -4883,5 +4891,13 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
     </element>
     <element name="gml:realizationEpoch">
         <label>Époque de réalisation</label>
+    </element>
+    <element name="gco:lower">
+      <label>Minimum</label>
+      <description/>
+    </element>
+    <element name="gmx:language">
+      <label>Langue des métadonnées</label>
+      <description></description>
     </element>
 </labels>

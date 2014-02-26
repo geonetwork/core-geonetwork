@@ -15,7 +15,10 @@
   <!-- View and tabs -->
   <advanced>Full</advanced>
   <default>Simple</default>
+  <simple>Simple</simple>
   <inspire>INSPIRE</inspire>
+  <resource>Resource</resource>
+  <xml>XML</xml>
   <metadata>Metadata</metadata>
   <identificationInfo>Identification</identificationInfo>
   <distributionInfo>Distribution</distributionInfo>
@@ -27,4 +30,38 @@
   <metadataConstraints>Md. constraints</metadataConstraints>
   <metadataMaintenance>Md. maintenance</metadataMaintenance>
   <applicationSchemaInfo>Schema info</applicationSchemaInfo>
+  
+  <!-- INSPIRE view labels and help -->
+  <url>Online resource</url>
+  <identifier>Resource identifier</identifier>
+  <rsIdentifier>Projection</rsIdentifier>
+  <referenceDate>Temporal information</referenceDate>
+  <creationDate>Creation date</creationDate>
+  <publicationDate>Publication date</publicationDate>
+  <revisionDate>Revision date</revisionDate>
+  <temporalRangeSection>Temporal extent</temporalRangeSection>
+  <beginPosition>Begin</beginPosition>
+  <endPosition>End</endPosition>
+  <conformity>Conformity</conformity>
+  <conformity_title>Title</conformity_title>
+  <conformity_date>Date</conformity_date>
+  <explanation>Explanation</explanation>
+  <pass>Pass</pass>
+  <pointOfContact>Contact for the resource</pointOfContact>
+  <metadataPointOfContact>Contact for the metadata</metadataPointOfContact>
+  <organisationName>Organisation name</organisationName>
+  <electronicMailAddress>Email</electronicMailAddress>
+  <role>Role</role>
+  <pointOfContactName>Point of contact name</pointOfContactName>
+  <pointOfContactEmail>Point of contact email</pointOfContactEmail>
+  <encoding>Encoding</encoding>
+  <format>Format</format>
+  <format_version>Version</format_version>
+  <lineage>Lineage</lineage>
+  <spatialResolution>Spatial resolution</spatialResolution>
+  <accessConstraints>Access constraints</accessConstraints>
+  <useLimitation>Use limitation</useLimitation>
+  <notEvaluated>Not evaluated</notEvaluated>
+  <add-resource-id>Compute resource identifier</add-resource-id>
+  <add-resource-idHelp>Compose the resource identifier using the catalog URL and the metadata identifier (eg. http://www.organization.org/catalogue/5391bf69-44bc-4ea0-8cc0-6cf6c3bc81ae).</add-resource-idHelp>
 </strings>

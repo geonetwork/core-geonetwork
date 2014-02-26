@@ -303,7 +303,7 @@ public class Thesaurus {
         }
         
         // Create subject
-        URI mySubject = myFactory.createURI(namespace, keyword.getRelativeCode());
+        URI mySubject = myFactory.createURI(keyword.getUriCode());
 
         URI skosClass = myFactory.createURI(namespaceSkos, "Concept");
         URI rdfType = myFactory.createURI(org.openrdf.vocabulary.RDF.TYPE);

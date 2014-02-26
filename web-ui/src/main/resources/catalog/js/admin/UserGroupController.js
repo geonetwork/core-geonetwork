@@ -185,6 +185,7 @@
        * metadata records.
        */
       $scope.selectUser = function(u) {
+        $scope.userOperation = 'editinfo';
         // Load user group and then select user
         $http.get('admin.usergroups.list@json?id=' + u.id)
                 .success(function(data) {
@@ -209,27 +210,27 @@
 
       $scope.resetPassword1 = null;
       $scope.resetPassword2 = null;
-      $scope.resetPassword = function () {
-          $scope.resetPassword1 = null;
-          $scope.resetPassword2 = null;
-          $('#passwordResetModal').modal();
+      $scope.resetPassword = function() {
+        $scope.resetPassword1 = null;
+        $scope.resetPassword2 = null;
+        $('#passwordResetModal').modal();
       };
-      
+
       $scope.saveNewPassword = function() {
-          var params = {operation: 'resetpw',
-                  id: $scope.userSelected.id,
-                  password: $scope.resetPassword1,
-                  password2: $scope.resetPassword2
-          };
-          
-          $http.post('user.update@json', null, {params: params})
+        var params = {operation: 'resetpw',
+          id: $scope.userSelected.id,
+          password: $scope.resetPassword1,
+          password2: $scope.resetPassword2
+        };
+
+        $http.post('user.update@json', null, {params: params})
               .success(function(data) {
-                  $scope.resetPassword1 = null;
-                  $scope.resetPassword2 = null;
-                  $('#passwordResetModal').modal('hide');
-          }).error(function(data) {
-            // TODO
-          });
+              $scope.resetPassword1 = null;
+              $scope.resetPassword2 = null;
+              $('#passwordResetModal').modal('hide');
+            }).error(function(data) {
+              // TODO
+            });
 
       };
 
@@ -271,8 +272,7 @@
               $('#groups_' + $scope.profiles[i])[0].selectedIndex = -1;
             }
           }
-          $scope.userSelected.profile =
-              $scope.userIsAdmin ? 'Administrator' : $scope.profiles[0];
+          $scope.userSelected.profile = 'Administrator';
         } else {
           // Define the highest profile for user
           var newprofile = 'RegisteredUser';

@@ -5,11 +5,32 @@
     "password": "Mot de passe",
     "rememberMe": "Se souvenir de moi",
     "signIn": "S'identifier",
-    "signedInAs": "",
+    "signedInAs": " ",
+    "needHelp": "Besoin d'aide",
+    "docNotFound": "<strong>Attention !</strong> La page <a href='{{page}}'>{{page}}</a> n'a pas été trouvée dans le guide utilisateur.",
+    
+    "title": "Titre",
+    
+    "METADATA": "Fiche",
+    "TEMPLATE": "Modèle de fiche",
+    "SUB_TEMPLATE": "Annuaire",
     
     "eng": "English",
     "fre": "Français",
-    "title": "Titre",
+    "ara": "عربي",
+    "cat": "Català",
+    "chi": "中文",
+    "dut": "Nederlands",
+    "fin": "Suomeksi",
+    "ger": "Deutsch",
+    "ita": "Italiano",
+    "nor": "Norsk",
+    "por": "Рortuguês",
+    "rus": "Русский",
+    "spa": "Español",
+    "tur": "Türkçe",
+    "pol": "Polski",
+    
     
     "east": "Est",
     "west": "Ouest",
@@ -60,7 +81,8 @@
     "passwordUpdated": "Mot de passe mis à jour avec succès.",
     "resetPassword": "Changer le mot de passe",
     "resetPasswordTitle": "Modification du mot de passe de {{user}}.",
-    
+    "passwordReminderError": "Erreur lors de la récupération de votre mot de passe",
+   "sendPasswordLinkToMyEmail": "Récupérer mon mot de passe",
     "from": "De",
     "to": " à ",
     "by": "par",
@@ -70,11 +92,21 @@
     "selectNone": "Aucun",
     
     "noRecordFound": "Pas d'enregistrement trouvé",
-    
+    "map": "Carte",
+    "dataset": "Données",
+    "service": "Service",
+    "staticMap": "Carte statique",
+    "featureCatalog": "Catalogue d'attributs",
+
     "any": "Plein texte",
-    "orgName": "Contact de la ressource",
-    "createDateYear": "Année de création",
-    "_indexingError": "Erreur d'indexatin",
+    "orgNames": "Contact de la ressource",
+    "createDateYears": "Année de création",
+    "serviceTypes": "Type de service",
+    "denominators": "Niveau d'échelle (dénominateur)",
+    "metadataPOCs": "Contact pour la fiche",
+    "spatialRepresentationTypes": "Type de représentation spatiale",
+    "types": "Type de fiche",
+    "_indexingError": "Erreur d'indexation",
     "_cat": "Catégorie",
     "keyword": "Mot-clé",
     "filter": "Filtre",
@@ -95,7 +127,14 @@
     "msgUserAuthenticated": "L'utilisateur {{username}} est authentifié.",
     "msgNoCatalogInfo": "Ne peut retrouver les informations catalogue",
     "msgNoUserInfo": "Ne peut retrouver les informations utilisateurs",
-    
+
+    "toggleScrollSpy": "Afficher/cacher la navigation défilante",
     "passwordUpdateError": "Erreur lors de la mise à jour du mot de passe",
-    "BadParameterEx": "Paramètre incorrect"
+    "BadParameterEx": "Paramètre incorrect",
+    "send": "Envoyer",
+    "organization": "Organisation",
+    "comments": "Commentaire",
+    "sendAComment": "Envoyer nous un commentaire",
+    "feedbackNotEnable": "L'envoi de commentaire n'est pas activé.",
+    "feebackSent": "Votre message a été envoyé au gestionnaire du catalogue."
 }

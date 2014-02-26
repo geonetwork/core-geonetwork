@@ -312,8 +312,6 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             mdStatus: serviceUrl + 'metadata.status.form',
             mdStatusSet: serviceUrl + 'metadata.status',
             mdVersioning: serviceUrl + 'metadata.version',
-            subTemplateType: serviceUrl + 'subtemplate.types',
-            subTemplate: serviceUrl + 'subtemplate',
             upload: serviceUrl + 'resources.upload.new',
             uploadResource: serviceUrl + 'resource.upload.and.link',
             delResource: serviceUrl + 'resource.del.and.detach',
@@ -998,6 +996,18 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         var url = this.services.mdMEF + '?version=2&uuid=' + uuid;
         location.replace(url);
     },
+    /**
+     * Return true if browser is supported.
+     * Display an error message if not and return false.
+     */
+    isSupportedBrowser: function(msg) {
+      if (Ext.isIE6 || Ext.isIE7 || Ext.isIE8) {
+        this.showError(OpenLayers.i18n('unsupportedBrowser'), msg);
+        return false;
+      } else {
+        return true;
+      }
+    },
     /** api: method[metadataEdit]
      *  :param uuid: ``String`` Uuid of the metadata record to edit
      *
@@ -1024,6 +1034,25 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             }
             window.open(url, this.windowName, this.windowOption);
         }
+    },
+    metadataEdit2: function(id, create, group, child, isTemplate, schema){
+      if (this.isSupportedBrowser(OpenLayers.i18n('editorBrowserRestriction'))) {
+        var url = 'catalog.edit#/';
+        if (create) {
+          if (id) {
+            if (child) {
+              url += 'create?childOf=' + id;
+            } else {
+              url += 'create?from=' + id;
+            }
+          } else {
+            url += 'create';
+          }
+        } else {
+          url += 'metadata/' + id;
+        }
+        window.open(url, '_blank');
+      }
     },
     /** api: method[metadataDuplicate]
      *  :param uuid: ``String`` Uuid of the metadata to duplicate
@@ -1346,7 +1375,9 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Open the administration interface according to adminAppUrl properties.
      */
     admin: function(){
+      if (this.isSupportedBrowser(OpenLayers.i18n('editorBrowserRestriction'))) {
         location.href = this.adminAppUrl;
+      }
     },
     /** api: method[admin]
     *
@@ -1448,6 +1479,40 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             onlyUserGroup: this.info.userGroupOnly.toLowerCase() === 'true' || false
         });
         this.modalAction(OpenLayers.i18n('setPrivileges') + ' - ' + record.get('title'), privilegesPanel);
+    },
+    /** api: method[metadataAdmin]
+     *  Metadata publication. If record is published, action will unpublished it.
+     */
+    metadataPublish: function(record, messageTarget){
+        var published = record.get('isPublishedToAll') === 'true',
+            flag = published ? 'off' : 'on',
+            pivileges = ['_1_0=' + flag, '_1_1=' + flag, '_1_5=' + flag, '_1_6=' + flag], 
+            // View, Interactive Map, Download, Featured
+            service = this.services.mdAdminSave + '?update=true&id=' + record.get('id') + '&',
+            url = service + pivileges.join('&'),
+            app = this; 
+        
+        OpenLayers.Request.GET({
+            url: url,
+            success: function(response){
+                if (messageTarget) {
+                    GeoNetwork.Message().msg({
+                        title: OpenLayers.i18n('metadataRecordPublishedTitle'), 
+                        msg: published ? 
+                                OpenLayers.i18n('metadataRecordUnPublished') : 
+                                OpenLayers.i18n('metadataRecordPublished'), 
+                        tokens: {
+                            title: record.get('title')
+                        },
+                        status: 'info',
+                        target: messageTarget
+                    });
+                }
+            },
+            failure: function(response){
+                app.showError(OpenLayers.i18n('metadataRecordPublishedTitle'), response.status);
+            }
+        });
     },
     /** api: method[metadataStatus]
      *  Open status form to update metadata status

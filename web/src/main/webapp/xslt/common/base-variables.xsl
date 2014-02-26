@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <!-- Global XSL variables about the catalog and user session -->
-
+  
+  
+  <xsl:output name="default-serialize-mode" indent="no"
+    omit-xml-declaration="yes" />
+  <xsl:output name="default-indent-mode" indent="yes"
+    omit-xml-declaration="yes" />
+  
+  <!--
+  -->
+  <xsl:variable name="gnUri" select="'http://www.fao.org/geonetwork'"/>
+  
+  
   <xsl:variable name="uiResourcesPath" select="'../../catalog/'"/>
   
   <!-- The current service name -->
@@ -9,6 +20,10 @@
   
   <xsl:variable name="i18n" select="/root/gui/i18n"/>
   <xsl:variable name="lang" select="/root/gui/language"/>
+  
+  <!-- XSL using this variable should be refactored to not rely on the
+  old i18n files. FIXME eg. metadata-fop.xsl -->
+  <xsl:variable name="oldGuiStrings" select="/root/gui/strings"/>
   
   <xsl:variable name="isDebugMode" select="/root/request/debug"/>
   <xsl:variable name="isReadOnly" select="/root/gui/env/readonly = 'true'"/>
@@ -20,7 +35,9 @@
     else if ($service = 'catalog.signin' or 
               $service = 'new.account' or 
               $service = 'new.password' or 
+              $service = 'error' or 
               $service = 'node-change-warning') then 'gn_login'
+    else if ($service = 'contact.us') then 'gn_contact_us'
     else if ($service = 'catalog.edit') then 'gn_editor'
     else 'gn'"/>
   
@@ -52,4 +69,7 @@
   
   <xsl:variable name="isJsEnabled" select="not(ends-with($service, '-nojs'))"/>
   
+  <!-- TODO: retrieve from settings -->
+  <xsl:variable name="geopublishMatchingPattern"
+    select="'^WWW:DOWNLOAD.*|^FILE:GEO|FILE:RASTER|^DB:POSTGIS'"/>
 </xsl:stylesheet>

@@ -187,6 +187,21 @@ public class AccessManager {
 		return hs;
 	}
 
+    public Set<Integer> getReviewerGroups(UserSession usrSess) throws Exception {
+        Set<Integer> hs = new HashSet<Integer>();
+
+        // get other groups
+        if (usrSess.isAuthenticated()) {
+            Specification<UserGroup> spec =
+                    UserGroupSpecs.hasUserId(usrSess.getUserIdAsInt());
+            spec = Specifications
+                    .where(UserGroupSpecs.hasProfile(Profile.Reviewer))
+                    .and(spec);
+
+            hs.addAll(_userGroupRepository.findGroupIds(spec));
+        }
+        return hs;
+    }
     /**
      * TODO javadoc.
      *
@@ -218,14 +233,13 @@ public class AccessManager {
 
     /**
      * Returns true if, and only if, at least one of these conditions is satisfied:
-     *  - The user is the metadata owner
-     *  - The user is an Administrator
-     *	 - The user has edit rights over the metadata
-     *  - The user is a Reviewer and/or UserAdmin and the metadata groupOwner
-     *    is one of his groups.
+     * <ul>
+     *  <li>the user is owner (@see #isOwner)</li>
+     *  <li>the user has edit rights over the metadata</li>
+     * </ul>
      *
      * @param context
-     * @param id
+     * @param id    The metadata internal identifier
      * @return
      * @throws Exception
      */
@@ -234,10 +248,20 @@ public class AccessManager {
 	}
 
     /**
-     * TODO javadoc.
+     * Return true if the current user is:
+     * <ul>
+     *     <li>administrator</li>
+     *     <li>the metadata owner (the user who created the record)</li>
+     *     <li>reviewer in the group the metadata was created</li>
+     * </ul>
+     *
+     * Note: old GeoNetwork was also restricting editing on harvested
+     * record. This is not restricted on the server side anymore.
+     * If a record is harvested it could be edited by default
+     * but the client application may restrict this condition.
      *
      * @param context
-     * @param id
+     * @param id    The metadata internal identifier
      * @return
      * @throws Exception
      */
@@ -250,8 +274,6 @@ public class AccessManager {
 		//--- retrieve metadata info
 		Metadata info = _metadataRepository.findOne(id);
 
-		//--- harvested metadata cannot be edited
-//		if (info == null || info.isHarvested)
 		if (info == null)
 			return false;
 
@@ -271,9 +293,11 @@ public class AccessManager {
 
 		//--- if there is no group owner then the reviewer cannot review and the useradmin cannot administer
         final Integer groupOwner = info.getSourceInfo().getGroupOwner();
-
-		for (Integer userGroup : getUserGroups(us, null, true)) {
-			if (userGroup.intValue() == groupOwner.intValue())
+        if (groupOwner == null) {
+            return false;
+        }
+		for (Integer userGroup : getReviewerGroups(us)) {
+			if (userGroup == groupOwner.intValue())
 				return true;
 		}
 		return false;

@@ -8,4 +8,61 @@
   <temporalRef>Référence(s) temporelle(s)</temporalRef>
   <refDate>Date(s) de référence</refDate>
   <constraintInfo>Contraintes d'accès et d'utilisation</constraintInfo>
+  
+  
+  
+  <advanced>Complète</advanced>
+  <default>Simple</default>
+  <simple>Simple</simple>
+  <inspire>INSPIRE</inspire>
+  <resource>Ressource</resource>
+  <xml>XML</xml>
+  <metadata>Métadonnées</metadata>
+  <identificationInfo>Identification</identificationInfo>
+  <distributionInfo>Distribution</distributionInfo>
+  <dataQualityInfo>Qualité</dataQualityInfo>
+  <spatialRepresentationInfo>Information spatiale</spatialRepresentationInfo>
+  <referenceSystemInfo>Système de réf.</referenceSystemInfo>
+  <contentInfo>Contenu</contentInfo>
+  <portrayalCatalogueInfo>Représentation</portrayalCatalogueInfo>
+  <metadataConstraints>Md. constraintes</metadataConstraints>
+  <metadataMaintenance>Md. maintenance</metadataMaintenance>
+  <applicationSchemaInfo>Extension</applicationSchemaInfo>
+  
+  
+  <!-- INSPIRE view labels and help -->
+  <url>Localisateur de la ressource</url>
+  <identifier>Identificateur de ressource unique</identifier>
+  <rsIdentifier>Référentiel de coordonnées</rsIdentifier>
+  <referenceDate>Date de références</referenceDate>
+  <creationDate>Date de création</creationDate>
+  <publicationDate>Date de publication</publicationDate>
+  <revisionDate>Date de révision</revisionDate>
+  <conformity>Conformité</conformity>
+  <conformity_title>Spécification</conformity_title>
+  <conformity_date>Date de publication</conformity_date>
+  <explanation>Explanation</explanation>
+  <pass>Degré</pass>
+  <pointOfContact>Organisation responsable de la ressource</pointOfContact>
+  <metadataPointOfContact>Point de contact des métadonnées</metadataPointOfContact>
+  <organisationName>Nom de l'organisation</organisationName>
+  <electronicMailAddress>Email de l'organisation</electronicMailAddress>
+  <role>Rôle</role>
+  <pointOfContactName>Nom du point de contact</pointOfContactName>
+  <pointOfContactEmail>Email du point de contact</pointOfContactEmail>
+  <encoding>Encodage</encoding>
+  <serviceCategory>Catégorie de service</serviceCategory>
+  <format>Format</format>
+  <format_version>Version</format_version>
+  <bboxesSection>Rectangle de délimitation géographique</bboxesSection>
+  <temporalRangeSection>Étendue temporelle</temporalRangeSection>
+  <beginPosition>Date de début</beginPosition>
+  <endPosition>Date de fin</endPosition>
+  <lineage>Généalogie</lineage>
+  <spatialResolution>Résolution spatiale</spatialResolution>
+  <accessConstraints>Limitations d'accès public</accessConstraints>
+  <useLimitation>Conditions applicables à l'accès et à l'utilisation</useLimitation>
+  <notEvaluated>Non évaluée</notEvaluated>
+  <add-resource-id>Générer un identifiant</add-resource-id>
+  <add-resource-idHelp>Construit un identifiant en utilisant l'URL du catalogue et l'identifiant de la fiche (eg. http://www.organization.org/catalogue/5391bf69-44bc-4ea0-8cc0-6cf6c3bc81ae).</add-resource-idHelp>
 </strings>

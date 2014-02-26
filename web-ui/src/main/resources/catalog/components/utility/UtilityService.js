@@ -43,7 +43,7 @@
       $(':checkbox:not(:checked)', form).each(function() {
         uc.push(encodeURIComponent(this.name) + '=false');
       });
-      return form.serialize() +
+      return form.serialize().replace(/=on/g, '=true') +
           (uc.length ? '&' + uc.join('&').replace(/%20/g, '+') : '');
     };
 
@@ -176,4 +176,81 @@
       return moment(new Date(dateString)).fromNow();
     };
   });
+
+  module.factory('gnRegionService', [
+    '$q',
+    'gnHttp',
+    '$translate',
+    function($q, gnHttp, $translate) {
+
+      /**
+      * Array of available region type
+      * [{
+      *   id: 'id="http://geonetwork-opensource.org/regions#country'
+      *   name: 'country'
+      * }]
+      */
+      var regionsList = [];
+      var listDefer;
+
+      return {
+
+        regionsList: regionsList,
+
+        /**
+        * Load a region of the given type
+        * Return an array of the region labels in
+        * the given language.
+        */
+        loadRegion: function(type, lang) {
+          var defer = $q.defer();
+
+          gnHttp.callService('region', {
+            categoryId: type.id
+          }, {
+            cache: true
+          }).success(function(response) {
+            var data = response.region;
+
+            // Compute default name and add a
+            // tokens element which is used for filter
+            angular.forEach(data, function(country) {
+              country.tokens = [];
+              angular.forEach(country.label, function(label) {
+                country.tokens.push(label);
+              });
+              country.name = country.label[lang] || country.label[0];
+            });
+            defer.resolve(data);
+          });
+
+          return defer.promise;
+        },
+
+        /**
+        * Load the list of all types of region.
+        * Return an array of region composed by an id and a name.
+        * See regionList variable.
+        */
+        loadList: function() {
+          if (!listDefer) {
+            listDefer = $q.defer();
+            gnHttp.callService('regionsList').success(function(data) {
+              angular.forEach(data, function(value, key) {
+                var id = value['@id'];
+                if (id && id.indexOf('#') >= 0) {
+                  regionsList.push({
+                    id: id,
+                    name: id.split('#')[1],
+                    label: $translate(id.split('#')[1])
+                  });
+                }
+              });
+              listDefer.resolve(regionsList);
+            });
+          }
+          return listDefer.promise;
+        }
+      };
+    }]);
 })();

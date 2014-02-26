@@ -54,6 +54,8 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
         assertEquals(1, Xml.selectNodes(metadataElement, "gmd:fileIdentifier", Arrays.asList(GMD, GCO)).size());
     }
 
+
+
     @Test
     public void testAddElementFromXpath_HasPositionalIdentifier() throws Exception {
 
@@ -184,6 +186,16 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
         assertTrue(Xml.selectNodes(metadataElement, refSysElemName + "[3]" + xpath, theNSs).isEmpty());
         assertEqualsText(newValue, metadataElement, refSysElemName + "[2]" + xpath, GMD, GCO);
         assertEquals(3, Xml.selectNodes(metadataElement, "gmd:referenceSystemInfo", theNSs).size());
+        
+
+        newValue = "newValue2";
+        final String updateXPath2 = "(descendant-or-self::gmd:RS_Identifier)[2]/gmd:code/gco:CharacterString";
+        updateOccurred = new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, updateXPath2,
+                new AddElemValue(newValue), true);
+
+        assertTrue(updateOccurred);
+        assertEqualsText(newValue, metadataElement, refSysElemName + "[2]" + xpath, GMD, GCO);
+
     }
     @Test
     public void testRelativePathUpdateNoBrackets() throws Exception {
@@ -380,6 +392,45 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
         assertEquals(1, Xml.selectNodes(metadataElement, "gmd:contact", nsList).size());
     }
 
+
+    @Test
+    public void testAddFragmentFromXpath_ForNonExistingElementShouldCreateThem() throws Exception {
+        SchemaManager manager = _schemaManager;
+
+        MetadataSchema schema = manager.getSchema("iso19139");
+
+        final Element metadataElement = new Element("MD_Metadata", GMD);
+
+        String newValue =
+                "<gmd:date xmlns:gco=\"http://www.isotc211.org/2005/gco\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\">" +
+                "    <gmd:CI_Date>" +
+                "      <gmd:date>" +
+                "        <gco:Date>2014-01-21</gco:Date>" +
+                "      </gmd:date>" +
+                "      <gmd:dateType>" +
+                "        <gmd:CI_DateTypeCode codeListValue=\"revision\"></gmd:CI_DateTypeCode>" +
+                "      </gmd:dateType>" +
+                "    </gmd:CI_Date>" +
+                "  </gmd:date>";
+        // Test with no condition
+        new EditLib(manager).addElementOrFragmentFromXpath(metadataElement, schema,
+            "/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date", new AddElemValue(newValue), true);
+        assertEqualsText("2014-01-21", metadataElement, 
+            "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation" + 
+            "/gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'revision']/gmd:CI_Date/gmd:date/gco:Date", GMD, GCO);
+
+        //Test with condition
+        final Element metadataElement2 = new Element("MD_Metadata", GMD);
+        new EditLib(manager).addElementOrFragmentFromXpath(metadataElement2, schema,
+                "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation" + 
+            "/gmd:CI_Citation/gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'revision']", new AddElemValue(newValue), true);
+        assertEqualsText("2014-01-21", metadataElement2, 
+            "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation" + 
+            "/gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'revision']/gmd:CI_Date/gmd:date/gco:Date", GMD, GCO);
+
+    }
+
+
     @Test
     public void testAddFragmentFromXpath_ElementBecauseNameIsDifferentFromNodeInXpath() throws Exception {
         SchemaManager manager = _schemaManager;
@@ -506,6 +557,7 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
         new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, xpathProperty, new AddElemValue(newValue),
                 true);
     }
+
 
 
     @Test

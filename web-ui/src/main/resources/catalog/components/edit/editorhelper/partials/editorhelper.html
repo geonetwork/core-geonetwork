@@ -1,0 +1,47 @@
+<span data-ng-switch="" data-on="config.layout" class="helper">
+  <div data-ng-switch-when="radio">
+    <div class="radio row"
+         data-ng-repeat="o in config.option">
+      <div class="col-xs-12">
+        <label>
+          <input type="radio" data-ng-click="select(o)" name="ignore_{{ref}}"
+                 data-ng-checked="o['@value'] === config.value">
+          {{o['#text']}}
+        </label>
+        <span class="help-block" data-ng-if="mode == 'radio_withdesc'"
+              data-ng-show="o['@title']">{{o['@title']}}</span>
+      </div>
+    </div>
+    <div class="radio row">
+      <div class="col-xs-2">
+        <label>
+          <input type="radio"
+                 id="otherValueRadio_{{ref}}"
+                 name="ignore_{{ref}}"
+                 data-ng-click="selectOther(otherValue)"
+                 data-ng-checked="otherValue['@value'] !== ''"/>
+          <span data-translate="">other</span>
+        </label>
+      </div>
+      <div class="col-xs-10">
+        <input type="text" id="otherValue_{{ref}}" class="form-control"
+               data-ng-click="selectOtherRadio()"
+               data-ng-model="otherValue['@value']" value="{{otherValue['@value']}}"
+               data-ng-keyup="updateWithOtherValue()"/>
+      </div>
+    </div>
+  </div>
+  <div class="row" data-ng-switch-default="">
+    <div class="col-xs-8">
+      <input type="{{type}}" class="form-control"
+             data-ng-model="config.value"/>
+    </div>
+    <div class="col-xs-4">
+      <select class="form-control"
+              data-ng-model="config.selected"
+              data-ng-options="o as o['#text'] for o in config.option">
+        <option value="" disabled="" data-translate="">recommendedValues</option>
+      </select>
+    </div>
+  </div>
+</span>
