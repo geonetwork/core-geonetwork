@@ -66,7 +66,7 @@
                     </gmd:dimensionName>
                     <!-- OPTIONAL: number of vertical levels -->
                     <gmd:dimensionSize>
-                        <gco:Integer>20</gco:Integer>
+                        <gco:Integer>12</gco:Integer>
                     </gmd:dimensionSize>
                 </gmd:MD_Dimension>
             </gmd:axisDimensionProperties>
@@ -118,7 +118,7 @@
                 <gmd:CI_Citation>
                     <gmd:title>
                         <!-- MANDATORY: title in readable english, for example "chimistry climatology in Baltic Sea" -->
-                        <gco:CharacterString>chimistry climatology in Baltic Sea</gco:CharacterString>
+                        <gco:CharacterString>Template for Seadatanet product description</gco:CharacterString>
                     </gmd:title>
                     <gmd:alternateTitle>
                         <!-- MANDATORY: code used for external references, product code for users -->
@@ -155,65 +155,8 @@
             </gmd:citation>
             <gmd:abstract>
                 <!-- MANDATORY: wikipedia-like syntax may be used for bold, italic underlined, bullets and hyperlinks -->
-                <gco:CharacterString>Template elaborated based on myocean product full description requirements</gco:CharacterString>
+                <gco:CharacterString>Template elaborated based on seadatanet product description requirements</gco:CharacterString>
             </gmd:abstract>
-            <gmd:pointOfContact>
-                <!-- MANDATORY: originator of the product (responsible for processing and results)          -->
-                <!-- href is EDMO URL, text is EDMO label, email is adapted depending reponsible person     -->
-                <gmd:CI_ResponsibleParty>
-                    <gmd:organisationName>
-                        <gmx:Anchor xlink:href="EDMO URL identifier for the organisation to be detailed">HCMR</gmx:Anchor>
-                    </gmd:organisationName>
-                    <gmd:contactInfo>
-                        <gmd:CI_Contact>
-                            <gmd:address>
-                                <gmd:CI_Address>
-                                    <gmd:electronicMailAddress>
-                                        <gco:CharacterString>JM.Beckers@ulg.ac.be</gco:CharacterString>
-                                    </gmd:electronicMailAddress>
-                                </gmd:CI_Address>
-                            </gmd:address>
-                        </gmd:CI_Contact>
-                    </gmd:contactInfo>
-                    <gmd:role>
-                        <gmd:CI_RoleCode codeListValue="originator" codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode"/>
-                    </gmd:role>
-                </gmd:CI_ResponsibleParty>
-            </gmd:pointOfContact>
-            <!--  MANDATORY: custodian of the product (responsible for the data management for the product) -->
-            <!--  href is EDMO URL, text is EDMO label, email is adapted depending reponsible person        -->
-            <gmd:pointOfContact>
-                <gmd:CI_ResponsibleParty>
-                    <gmd:organisationName>
-                        <gmx:Anchor xlink:href="EDMO URL identifier for the organisation to be detailed">University of Liege, GeoHydrodynamics and Environment Research</gmx:Anchor>
-                    </gmd:organisationName>
-                    <gmd:contactInfo>
-                        <gmd:CI_Contact>
-                            <gmd:address>
-                                <gmd:CI_Address>
-                                    <gmd:electronicMailAddress>
-                                        <gco:CharacterString>a.barth@ulg.ac.be</gco:CharacterString>
-                                    </gmd:electronicMailAddress>
-                                </gmd:CI_Address>
-                            </gmd:address>
-                        </gmd:CI_Contact>
-                    </gmd:contactInfo>
-                    <gmd:role>
-                        <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="custodian"/>
-                    </gmd:role>
-                </gmd:CI_ResponsibleParty>
-            </gmd:pointOfContact>
-            <gmd:graphicOverview>
-                <gmd:MD_BrowseGraphic>
-                    <gmd:fileName>
-                        <!-- MANDATORY: URL of a small picture representing the product, e.g static map -->
-                        <gco:CharacterString>http://www.ifremer.fr/co/co052002/MAP_RTOAGL01/big/2012/MA_RTOAGL01_20121209_PSAL_0010m.png</gco:CharacterString>
-                    </gmd:fileName>
-                    <gmd:fileDescription>
-                        <gco:CharacterString>thumbnail</gco:CharacterString>
-                    </gmd:fileDescription>
-                </gmd:MD_BrowseGraphic>
-            </gmd:graphicOverview>            
             <gmd:descriptiveKeywords>
                 <gmd:MD_Keywords>
                     <gmd:keyword>
@@ -358,8 +301,8 @@
                         <gmd:EX_TemporalExtent>
                             <gmd:extent>
                                 <gml:TimePeriod gml:id="extent">
-                                    <gml:beginPosition>1950-01-01</gml:beginPosition>
-                                    <gml:endPosition>1980-01-01</gml:endPosition>
+                                    <gml:beginPosition>2010-10-05</gml:beginPosition>
+                                    <gml:endPosition indeterminatePosition="unknown" />
                                 </gml:TimePeriod>
                             </gmd:extent>
                         </gmd:EX_TemporalExtent>
@@ -395,58 +338,4 @@
             <gmd:featureCatalogueCitation/>
         </gmd:MD_FeatureCatalogueDescription>
     </gmd:contentInfo>
-    <gmd:distributionInfo>
-        <gmd:MD_Distribution>
-            <gmd:distributor>
-                <gmd:MD_Distributor>
-                    <gmd:distributorContact>
-                        <!-- MANDATORY: host of the web service -->
-                        <gmd:CI_ResponsibleParty>
-                            <gmd:organisationName>
-                                <gco:CharacterString>University of Liege</gco:CharacterString>
-                            </gmd:organisationName>
-                            <gmd:contactInfo>
-                                <gmd:CI_Contact/>
-                            </gmd:contactInfo>
-                            <gmd:role>
-                                <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode" codeListValue="distributor"/>
-                            </gmd:role>
-                        </gmd:CI_ResponsibleParty>
-                    </gmd:distributorContact>
-                    <gmd:distributorFormat>
-                        <gmd:MD_Format>
-                            <gmd:name gco:nilReason="missing"> </gmd:name>
-                            <gmd:version gco:nilReason="missing"> </gmd:version>
-                        </gmd:MD_Format>
-                    </gmd:distributorFormat>
-                    <gmd:distributorTransferOptions>
-                        <gmd:MD_DigitalTransferOptions>
-                            <!-- uuidref is the id of the dataset is the onLine information comes from automatically harvested metadata (e.g. from THREDDS Data Server) -->
-                            <gmd:onLine uuidref="univ-lg.be/1234567AZERTSSSSSSS">
-                                <gmd:CI_OnlineResource>
-                                    <gmd:linkage>
-                                        <!-- MANDATORY: getCapabilities URL of a WMS service or OPENDAP URL -->
-                                        <gmd:URL>http://atoll.mercator-ocean.fr/opendap-mercator-myocean/thredds/wms/global-analysis-forecast-phys-001-001-c-glo?service=WMS&amp;request=GetCapabilities</gmd:URL>
-                                    </gmd:linkage>
-                                    <gmd:protocol>
-                                        <!-- MANDATORY: type of protocol among OGC:WMS, OGC:WCS, WWW:OPENDAP, ....-->
-                                        <gco:CharacterString>OGC:WMS</gco:CharacterString>
-                                    </gmd:protocol>
-                                    <gmd:name gco:nilReason="missing">
-                                        <!-- OPTIONAL: list of the related layers, if empty means every layers are applicable -->
-                                        <gco:CharacterString/>
-                                    </gmd:name>
-                                    <gmd:description>
-                                        <!-- OPTIONAL: description of the related dataset or layer -->
-                                        <gco:CharacterString>another best estimate</gco:CharacterString>
-                                    </gmd:description>
-                                </gmd:CI_OnlineResource>
-                            </gmd:onLine>
-                            <!-- n onLine may be used -->
-                        </gmd:MD_DigitalTransferOptions>
-                    </gmd:distributorTransferOptions>
-                </gmd:MD_Distributor>
-            </gmd:distributor>
-        </gmd:MD_Distribution>
-    </gmd:distributionInfo>
 </gmd:MD_Metadata>
