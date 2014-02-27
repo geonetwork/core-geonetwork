@@ -82,6 +82,6 @@ INSERT INTO public.schematroncriteriagroup (name, schematronid, requirement) VAL
 
 -- INSERT INTO public.schematroncriteria (id, type, value, group_name, group_schematronid) VALUES (1, 'GROUP', '', 'Lichtenstein', 1);
 INSERT INTO public.schematroncriteria (id, type, value, group_name, group_schematronid) VALUES (1, 'XPATH', '*//gmd:keyword/gco:CharacterString/text() = ''BGDI''__OR__*//gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString/text() = ''BGDI''', 'BGDI', 2);
-INSERT INTO public.schematroncriteria (id, type, value, group_name, group_schematronid) VALUES (2, 'GROUP', 42, 'BGDI', 2);
+INSERT INTO public.schematroncriteria (id, type, value, group_name, group_schematronid) VALUES (2, 'GROUP', '42', 'BGDI', 2);
 INSERT INTO public.schematroncriteria (id, type, value, group_name, group_schematronid) VALUES (3, 'XPATH', '*//gmd:keyword/gco:CharacterString/text() = ''Geobasisdatensatz''__OR__*//gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString/text() = ''Geobasisdatensatz''', 'Geobasisdatensatz', 3);
-INSERT INTO public.schematroncriteria (id, type, value, group_name, group_schematronid) VALUES (4, 'GROUP', 42, 'Geobasisdatensatz', 3);
+INSERT INTO public.schematroncriteria (id, type, value, group_name, group_schematronid) VALUES (4, 'GROUP', '42', 'Geobasisdatensatz', 3);
