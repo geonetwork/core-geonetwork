@@ -28,7 +28,9 @@
   </div>
 
   <p class="navbar-text gn-tooltip"
-    data-ng-mouseover="getSaveStatus()" title="{{saveStatus}}">{{savedStatus}}</p>
+    data-ng-mouseover="getSaveStatus()" title="{{saveStatus}}">
+    <span data-ng-class="saveError ? 'text-danger' : ''">{{savedStatus}}</span>
+  </p>
   
   <div class="pull-right">
     <!--<button type="button" class="btn btn-primary navbar-btn gn-tooltip" data-ng-click="share()"

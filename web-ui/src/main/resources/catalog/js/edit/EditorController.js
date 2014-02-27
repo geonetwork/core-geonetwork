@@ -293,15 +293,19 @@
         return false;
       };
       $scope.save = function(refreshForm) {
+        $scope.saveError = false;
+
         gnEditor.save(refreshForm)
           .then(function(form) {
               $scope.savedStatus = gnCurrentEdit.savedStatus;
+              $scope.saveError = false;
               $scope.toggleAttributes();
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('saveMetadataSuccess')
               });
             }, function(error) {
               $scope.savedStatus = gnCurrentEdit.savedStatus;
+              $scope.saveError = true;
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('saveMetadataError'),
                 error: error,
