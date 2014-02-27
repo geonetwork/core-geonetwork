@@ -167,7 +167,8 @@
   <views>
     <!-- TODO: Add option to configure if view should be displayed or not 
     based on xpath expression ? -->
-    <view name="inspire" upAndDownControlHidden="true">
+    <!--Turn off INSPIRE view by default -->
+    <view name="inspire" upAndDownControlHidden="true" disabled="true">
       <tab id="inspire" default="true" mode="flat">
         <section name="resource">
           <field
