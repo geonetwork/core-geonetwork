@@ -91,7 +91,7 @@
         <level value="WARN" />
     </logger>
     <logger name="geonetwork.GeoServerPublisher" additivity="false">
-        <level value="WARN" />
+        <level value="DEBUG" />
     </logger>
     <logger name="geonetwork.data.directory" additivity="false">
         <level value="WARN" />
