@@ -3,7 +3,6 @@ package org.fao.geonet.kernel.schema;
 import jeeves.resources.dbms.Dbms;
 import org.jdom.Element;
 import org.jdom.Namespace;
-import org.springframework.context.ApplicationContext;
 
 import javax.persistence.*;
 import java.util.List;
@@ -50,7 +49,7 @@ public class SchematronCriteria {
 		this.value = value;
 	}
 
-    public boolean accepts(Dbms dbms, Element metadata, List<Namespace> metadataNamespaces) {
-        return getType().accepts(dbms, getValue(), metadata, metadataNamespaces);
+    public boolean accepts(Dbms dbms, int metadataId, Element metadata, List<Namespace> metadataNamespaces) {
+        return getType().accepts(dbms, getValue(), metadataId, metadata, metadataNamespaces);
     }
 }

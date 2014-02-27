@@ -6,7 +6,6 @@ import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.*;
-import org.springframework.context.ApplicationContext;
 
 import java.util.List;
 
@@ -115,7 +114,7 @@ public class XPathCriteriaEvaluator implements SchematronCriteriaEvaluator {
     }
 
     @Override
-    public boolean accepts(Dbms dbms, String value, Element metadata, List<Namespace> metadataNamespaces) {
+    public boolean accepts(Dbms dbms, String value, int metadataId, Element metadata, List<Namespace> metadataNamespaces) {
         String[] ors = value.split(OR);
         boolean orAccepts = false;
         for (String or : ors) {

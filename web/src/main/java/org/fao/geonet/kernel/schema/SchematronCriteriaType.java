@@ -33,10 +33,8 @@ package org.fao.geonet.kernel.schema;
 import jeeves.resources.dbms.Dbms;
 import org.jdom.Element;
 import org.jdom.Namespace;
-import org.springframework.context.ApplicationContext;
 
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -50,12 +48,10 @@ public enum SchematronCriteriaType {
      */
     GROUP(new SchematronCriteriaEvaluator() {
         @Override
-        public boolean accepts(Dbms dbms, String value, Element metadata, List<Namespace> metadataNamespaces) {
-            Integer groupId = Integer.valueOf(value);
-
+        public boolean accepts(Dbms dbms, String value, int metadataId, Element metadata, List<Namespace> metadataNamespaces) {
             boolean tmpApply;
             try {
-                tmpApply = dbms.select("SELECT * FROM metadata WHERE groupowner = ? ", groupId).getChildren().size() > 0;
+                tmpApply = dbms.select("SELECT * FROM metadata WHERE id = ? AND groupowner IN ( "+value+")", metadataId).getChildren().size() > 0;
 
                 return tmpApply;
             } catch (SQLException e) {
@@ -68,7 +64,7 @@ public enum SchematronCriteriaType {
      */
     ALWAYS_ACCEPT(new SchematronCriteriaEvaluator() {
         @Override
-        public boolean accepts(Dbms dbms, String value, Element metadata, List<Namespace> metadataNamespaces) {
+        public boolean accepts(Dbms dbms, String value, int metadataId, Element metadata, List<Namespace> metadataNamespaces) {
             return true;
         }
     }),
@@ -83,7 +79,7 @@ public enum SchematronCriteriaType {
         this.evaluator = evaluator;
     }
 
-    public boolean accepts(Dbms dbms, String value, Element metadata, List<Namespace> metadataNamespaces) {
-        return evaluator.accepts(dbms, value, metadata, metadataNamespaces);
+    public boolean accepts(Dbms dbms, String value, int metadataId, Element metadata, List<Namespace> metadataNamespaces) {
+        return evaluator.accepts(dbms, value, metadataId, metadata, metadataNamespaces);
     }
 }

@@ -36,7 +36,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -92,7 +91,6 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.Parent;
 import org.jdom.filter.ElementFilter;
-import org.jdom.xpath.XPath;
 
 /**
  * Handles all operations on metadata (select,insert,update,delete etc...).
@@ -2027,7 +2025,7 @@ public class DataManager {
             try {
                 editLib.enumerateTree(md);
                 //Apply custom schematron rules
-                Element errors = applyCustomSchematronRules(dbms, schema, doc.getRootElement(), lang, valTypeAndStatus);
+                Element errors = applyCustomSchematronRules(dbms, schema, Integer.parseInt(id), doc.getRootElement(), lang, valTypeAndStatus);
                 valid = valid && errors == null;
                 editLib.removeEditingInfo(md);
             } catch (Exception e) {
@@ -2121,7 +2119,7 @@ public class DataManager {
             version = editLib.getVersionForEditing(schema, id, md);
 
             //Apply custom schematron rules
-            error = applyCustomSchematronRules(dbms, schema, md, lang, valTypeAndStatus);
+            error = applyCustomSchematronRules(dbms, schema, Integer.parseInt(id), md, lang, valTypeAndStatus);
         } else {
             try {
                 // enumerate the metadata xml so that we can report any problems found
@@ -2129,7 +2127,7 @@ public class DataManager {
                 editLib.enumerateTree(md);
 
                 //Apply custom schematron rules
-                error = applyCustomSchematronRules(dbms, schema, md, lang, valTypeAndStatus);
+                error = applyCustomSchematronRules(dbms, schema, Integer.parseInt(id), md, lang, valTypeAndStatus);
 
                 // remove editing info added by enumerateTree
                 editLib.removeEditingInfo(md);
@@ -2164,14 +2162,15 @@ public class DataManager {
      * 
      * Returns null if no error on validation.
      * 
+     *
      * @param schema
-     * @param md
+     * @param metadataId
+     *@param md
      * @param lang
-     * @param valTypeAndStatus
-     * @return errors
+     * @param valTypeAndStatus    @return errors
      */
-	public Element applyCustomSchematronRules(Dbms dbms, String schema, Element md, 
-			String lang, Map<String, Integer[]> valTypeAndStatus) {
+	public Element applyCustomSchematronRules(Dbms dbms, String schema, int metadataId, Element md,
+                                              String lang, Map<String, Integer[]> valTypeAndStatus) {
 		MetadataSchema metadataSchema = getSchema(schema);
 
 		Element schemaTronXmlOut = new Element("schematronerrors",
@@ -2204,7 +2203,7 @@ public class DataManager {
                     List<SchematronCriteria> criterias = criteriaGroup.getCriteriaList();
                     boolean apply = false;
                     for(SchematronCriteria criteria : criterias) {
-                        boolean tmpApply = criteria.accepts(dbms, md, metadataSchema.getSchemaNS());
+                        boolean tmpApply = criteria.accepts(dbms, metadataId, md, metadataSchema.getSchemaNS());
 
                         if(!tmpApply) {
                             apply = false;
