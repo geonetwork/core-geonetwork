@@ -1,0 +1,62 @@
+<div>
+  <form class="form-horizontal" role="form"
+    data-ng-controller="GnSearchFormController">
+    <div class="onlinesrc-container">
+    
+      <div class="form-group">
+        <label for="associationType" class="col-sm-3 control-label">
+          <span data-translate="">associationType</span>
+        </label>
+        <div class="col-sm-5" schema-info-combo="codelist"
+          data-selected-info="associationType"
+          data-gn-schema-info="gmd:DS_AssociationTypeCode" lang="lang"></div>
+      </div>
+      <div class="form-group">
+        <label for="associationType" class="col-sm-3 control-label">
+          <span data-translate="">initiativeType</span>
+        </label>
+        <div class="col-sm-5" schema-info-combo="codelist"
+          data-selected-info="initiativeType"
+          data-gn-schema-info="gmd:DS_InitiativeTypeCode" lang="lang"></div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-10">
+          <div class="input-group dropdown" id="siblingdd">
+            <span class="input-group-addon"><i
+              class="fa fa-search" /></span> <input class="form-control"
+              data-ng-change="triggerSearch()" type="text"
+              data-toggle="dropdown"
+              data-ng-model="params.any"
+              placeholder="{{'search' | translate}}"/>
+            <ul class="dropdown-menu" role="menu">
+              <li data-ng-repeat="md in searchResults.records"><a
+                href="" data-ng-click="addToSelection(md, associationType, initiativeType)"
+                > {{md.title}} </a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div>
+        <ul class="list-group">
+          <li class="list-group-item gn-record"
+            data-ng-repeat="obj in selection">
+              {{obj.md.title || obj.md.defaultTitle}}
+              <span class="pull-right"><i>{{obj.associationType}} / {{obj.initiativeType}}</i></span>
+              <a ng-click="removeFromSelection(obj)" href="">
+                <i class="btn fa fa-times text-danger"></i>
+              </a>
+          </li>
+        </ul>
+      </div>
+      <div class="">
+        <button type="button" class="btn navbar-btn btn-success"
+          data-ng-click="linkToResource()"
+          data-ng-class="{'disabled': (selection.length < 1)}">
+          <i class="fa fa-sign-out" /> <span
+            data-translate="">linkToSibling</span>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

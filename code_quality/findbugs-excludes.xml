@@ -8,6 +8,10 @@
 		<Class name="~.*\..*Test" />
 	</Match>
 
+    <!-- 			Domain Exceptions 					-->
+	<Match>
+		<Class name="~org\.fao\.geonet\.domain\.\S+_$" />
+	</Match>
     <!-- 			Oaipmh Exceptions 					-->
 	<Match>
 		<Class name="org.fao.oaipmh.util.ISODate" />
@@ -15,11 +19,16 @@
 	</Match>
 
 	<!--              Jeeves  Exceptions                 -->
-	<Match>
-		<Class name="jeeves.server.JeevesEngine" />
-		<Method name="setDBServicesElement" />
-		<Bug pattern="REC_CATCH_EXCEPTION" />
-	</Match>
+    <Match>
+        <Class name="jeeves.server.JeevesEngine" />
+        <Method name="setDBServicesElement" />
+        <Bug pattern="REC_CATCH_EXCEPTION" />
+    </Match>
+    <Match>
+        <Class name="jeeves.server.JeevesEngine" />
+        <Method name="init" />
+        <Bug pattern="DM_EXIT" />
+    </Match>
  	<Match>
 		<Class name="jeeves.server.dispatchers.ServiceManager" />
 		<Method name="dispatch" />
@@ -63,6 +72,10 @@
 		<Bug pattern="REC_CATCH_EXCEPTION" />
 		<Method name="harvest" />
 	</Match>
+  <Match>
+    <Class name="org.fao.geonet.kernel.harvest.harvester.AbstractHarvester"/>
+    <Bug pattern="IS2_INCONSISTENT_SYNC"/>
+  </Match>
  	<Match>
 		<Class name="org.fao.geonet.kernel.harvest.harvester.wfsfeatures.Harvester" />
 		<Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD " />
@@ -92,9 +105,42 @@
 		<Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
 		<Method name="serviceSpecificExec"/>
 	</Match>
-	<Match>
-		<Bug pattern="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE" />
-	</Match>
+    <Match>
+        <Class name="org.fao.geonet.DatabaseMigration" />
+        <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" />
+        <Method name="newLookup"/>
+    </Match>
+    <Match>
+        <Class name="org.fao.geonet.kernel.security.ldap.AbstractLDAPUserDetailsContextMapper" />
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+        <Method name="mapUserFromContext"/>
+    </Match>
+    <Match>
+        <Class name="org.fao.geonet.kernel.security.ldap.LDAPUserDetailsContextMapperWithProfileSearch" />
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+        <Method name="setProfilesAndPrivileges"/>
+    </Match>
+    <Match>
+        <Class name="org.fao.geonet.kernel.security.ldap.LDAPUserDetailsContextMapper" />
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+        <Method name="setProfilesAndPrivileges"/>
+    </Match>
+    <Match>
+        <Class name="org.fao.geonet.util.XslUtil" />
+        <Bug pattern="NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE" />
+        <Method name="twoCharLangCode"/>
+    </Match>
+    <Match>
+        <Class name="org.fao.geonet.kernel.security.ldap.LDAPUserDetailsContextMapperWithPattern" />
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE" />
+        <Method name="setProfilesAndPrivileges"/>
+    </Match>
+    <Match>
+        <Bug pattern="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE" />
+    </Match>
+    <Match>
+        <Class name="org.fao.geonet.services.ownership.OwnershipUtils$1" />
+    </Match>
 
 	
 <!-- The following bugs are hard to fix should be fixed because they can cause problems in servers with multiple geonetworks running -->	

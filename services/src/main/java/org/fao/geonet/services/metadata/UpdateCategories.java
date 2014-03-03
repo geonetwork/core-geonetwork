@@ -25,16 +25,19 @@ package org.fao.geonet.services.metadata;
 
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.Updater;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -61,16 +64,20 @@ public class UpdateCategories extends NotInReadOnlyModeService {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
 		DataManager dataMan = gc.getBean(DataManager.class);
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		String id = Utils.getIdentifierFromParameters(params, context);
 
 		//--- check access
 		int iLocalId = Integer.parseInt(id);
-		if (!dataMan.existsMetadata(dbms, iLocalId))
+		if (!dataMan.existsMetadata(iLocalId))
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 
 		//--- remove old operations
-		dataMan.deleteAllMetadataCateg(dbms, id);
+        context.getBean(MetadataRepository.class).update(iLocalId, new Updater<Metadata>() {
+            @Override
+            public void apply(@Nonnull Metadata entity) {
+                entity.getCategories().clear();
+            }
+        });
 
 		//--- set new ones
 		@SuppressWarnings("unchecked")
@@ -80,13 +87,13 @@ public class UpdateCategories extends NotInReadOnlyModeService {
 			String name = el.getName();
 
 			if (name.startsWith("_"))
-				dataMan.setCategory(context, dbms, id, name.substring(1));
+				dataMan.setCategory(context, id, name.substring(1));
 		}
 
 		//--- index metadata
-        dataMan.indexInThreadPool(context, id, dbms);
+        dataMan.indexMetadata(id, true);
 
-		//--- return id for showing
+        //--- return id for showing
 		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));
 	}
 }

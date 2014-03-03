@@ -76,7 +76,7 @@ Ext.ux.grid.CheckColumn = Ext.extend(Ext.grid.Column, {
         p.css += ' x-grid3-check-col-td';
         // Remove notify and edit to internet,intranet,all groups
         if((this.dataIndex == 'oper2' || this.dataIndex == 'oper3') && (record.id == 0 || record.id == 1 || record.id == -1)) {
-        	return '';
+            return '';
         }
         return String.format('<div class="x-grid3-check-col{0}">&#160;</div>', v ? '-on' : '');
     },

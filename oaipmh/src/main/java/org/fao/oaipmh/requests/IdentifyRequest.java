@@ -26,6 +26,8 @@ package org.fao.oaipmh.requests;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.responses.IdentifyResponse;
 import org.jdom.JDOMException;
@@ -33,11 +35,14 @@ import org.xml.sax.SAXException;
 
 //=============================================================================
 
-public class IdentifyRequest extends AbstractRequest
-{
+public class IdentifyRequest extends AbstractRequest {
 	public static final String VERB = "Identify";
 
-	//---------------------------------------------------------------------------
+    public IdentifyRequest(GeonetHttpRequestFactory transport) {
+        super(transport);
+    }
+
+    //---------------------------------------------------------------------------
 	//---
 	//--- API methods
 	//---

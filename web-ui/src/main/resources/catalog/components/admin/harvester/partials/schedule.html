@@ -1,0 +1,50 @@
+<fieldset>
+  <legend>
+    <span data-translate="">harvesterSchedule</span>
+    <div class="btn-group pull-right" data-toggle="buttons">
+      <label class="btn btn-primary" data-ng-click="harvester.options.status = 'active'"
+        data-ng-class="harvester.options.status === 'active' ? 'active' : ''">
+        <input type="radio" name="harvesterStatus"/>
+        <strong data-translate="" class="">on</strong>
+      </label>
+      <label class="btn btn-primary"
+        data-ng-class="harvester.options.status === 'active' ? '' : 'active'"
+        data-ng-click="harvester.options.status = 'inactive'">
+        <input type="radio" name="harvesterStatus"/>
+        <strong data-translate="" class="">off</strong>
+      </label>
+    </div>
+  </legend>
+
+  <div>
+    <label class="control-label" data-translate="">every</label>
+    <div class="input-group">
+      <input type="text" class="form-control" data-ng-model="harvester.options.every"/>
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+          <i class="fa fa-clock-o"></i>&nbsp;<span class="caret"/>
+        </button>
+        <ul class="dropdown-menu pull-right">
+          <li data-ng-repeat="exp in cronExp">
+              <a href="" data-ng-click="setSchedule(exp)" title="{{exp}}">{{('cron-' + exp) | translate}}</a>
+          </li>
+          <li class="divider"/>
+          <li>
+              <a class="btn btn-link" 
+                  href="http://quartz-scheduler.org/documentation/quartz-2.x/tutorials/crontrigger" 
+                  data-translate="">moreExamples</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <label class="control-label">
+      <input type="checkbox" data-ng-model="harvester.options.oneRunOnly"/>
+      <span data-translate="">oneRunOnly</span>
+    </label>
+    <p class="help-block" data-translate="">oneRunOnlyHelp</p>
+  </div>
+
+</fieldset>

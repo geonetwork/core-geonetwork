@@ -1,0 +1,32 @@
+<fieldset>
+  <legend data-translate="">harvestedRecordPrivileges</legend>
+  <span class="btn-group" data-toggle="buttons">
+      <label class="btn btn-primary" data-ng-click="visibleTo('all')" id="gn-harvester-visible-all">
+        <input type="radio" name="options"/>
+        <i class="fa fa-unlock"></i>
+        <span data-translate="">visibleToAll</span>
+      </label>
+      <label class="btn btn-primary" data-ng-click="visibleTo('none')" id="gn-harvester-visible-none">
+        <input type="radio" name="options"/>
+        <i class="fa fa-lock"></i>
+        <span data-translate="">visibleToNobody</span>
+      </label>
+  </span>
+
+  <ul class="list-group">
+    <li class="list-group-item"><span class="input-group-btn">
+      <i class="fa" type="button"
+        data-ng-class="allGroup == true ? 'fa-check-square-o' : 'fa-square-o'"
+        data-ng-click="visibleTo('allGroup');">
+      </i>
+      <label>
+        <input class="form-control" data-ng-model="groupSearch.$"
+           placeholder="{{'filter' | translate}}"/>
+      </label>
+    </li>
+    <li data-ng-repeat="g in groups | filter:groupSearch | orderBy:'name'" class="list-group-item">
+      <input type="checkbox" id="group-{{g['@id']}}" data-ng-model="selectedPrivileges[g['@id']]"/>
+      <label for="group-{{g['@id']}}">{{g.label[lang]}}</label>
+    </li>
+  </ul>
+</fieldset>

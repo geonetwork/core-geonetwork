@@ -26,15 +26,14 @@ package org.fao.oaipmh.responses;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.fao.geonet.domain.ISODate;
 import org.fao.oaipmh.OaiPmh;
-import org.fao.oaipmh.util.ISODate;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
 //=============================================================================
 
-public abstract class AbstractResponse
-{
+public abstract class AbstractResponse {
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor

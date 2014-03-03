@@ -22,17 +22,13 @@
 //==============================================================================
 package org.fao.geonet.kernel.security;
 
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.ProfileManager;
-import jeeves.server.resources.ResourceManager;
-import jeeves.utils.Log;
-import jeeves.utils.PasswordUtil;
+import jeeves.config.springutil.JeevesAuthenticationDetails;
+import org.fao.geonet.utils.Log;
 
-import org.fao.geonet.constants.Geonet;
-import org.jdom.Element;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.util.PasswordUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,18 +38,33 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider 
-	implements ApplicationContextAware, UserDetailsService {
+	implements UserDetailsService {
 
-	private ApplicationContext applicationContext;
-	private PasswordEncoder encoder;
+    public boolean isCheckUserNameOrEmail() {
+        return checkUserNameOrEmail;
+    }
+
+    public void setCheckUserNameOrEmail(boolean checkUserNameOrEmail) {
+        this.checkUserNameOrEmail = checkUserNameOrEmail;
+    }
+
+    private boolean checkUserNameOrEmail = false;
+
+    @Autowired
+    private PasswordEncoder encoder;
+
+	@Autowired
+	private UserRepository _userRepository;
 
 	@Override
 	protected void additionalAuthenticationChecks(UserDetails userDetails,
 			UsernamePasswordAuthenticationToken authentication)
 			throws AuthenticationException {
-		GeonetworkUser gnDetails = (GeonetworkUser) userDetails;
+		User gnDetails = (User) userDetails;
 		if (authentication.getCredentials() == null) {
 			Log.warning(Log.JEEVES, "Authentication failed: no credentials provided");
 			throw new BadCredentialsException("Authentication failed: no credentials provided");
@@ -65,59 +76,37 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
 		}
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
 	protected UserDetails retrieveUser(String username,
 			UsernamePasswordAuthenticationToken authentication)
 			throws AuthenticationException {
-		Dbms dbms = null;
-		ResourceManager resourceManager = null;
-		try {
-			resourceManager = applicationContext.getBean(ResourceManager.class);
-			dbms = (Dbms) resourceManager.openDirect(Geonet.Res.MAIN_DB);
+	    try {
 			// Only check user with local db user (ie. authtype is '')
-			Element selectRequest = dbms.select("SELECT * FROM Users WHERE username=? AND authtype IS NULL", username);
-			Element userXml = selectRequest.getChild("record");
-			if (userXml != null) {
+	        User user = _userRepository.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(username);
+            if (user == null && checkUserNameOrEmail) {
+                user = _userRepository.findOneByEmailAndSecurityAuthTypeIsNullOrEmpty(username);
+            }
+			if (user != null) {
 				if (authentication != null && authentication.getCredentials() != null) {
-					String oldPassword = authentication.getCredentials().toString();
-					Integer iUserId = Integer.valueOf(userXml.getChildText(Geonet.Elem.ID));
-					if(PasswordUtil.hasOldHash(userXml)) {
-						userXml = PasswordUtil.updatePasswordWithNew(true, oldPassword , oldPassword, iUserId , encoder, dbms);
+					if(PasswordUtil.hasOldHash(user)) {
+						String oldPassword = user.getPassword();
+						String newPassword = authentication.getCredentials().toString();
+                        user = PasswordUtil.updatePasswordWithNew(true, oldPassword, newPassword, user, encoder, _userRepository);
 					}
 				}
 
-				ProfileManager profileManager = applicationContext.getBean(ProfileManager.class);
-				GeonetworkUser userDetails = new GeonetworkUser(profileManager, username, userXml);
-				return userDetails;
+                if (authentication != null && authentication.getDetails() instanceof JeevesAuthenticationDetails) {
+                    user.getSecurity().setNodeId(((JeevesAuthenticationDetails) authentication.getDetails()).getNodeId());
+                }
+
+				return user;
 			}
 		} catch (Exception e) {
-			try {
-				resourceManager.abort(Geonet.Res.MAIN_DB, dbms);
-				dbms = null;
-			} catch (Exception e2) {
-				e.printStackTrace();
-				Log.error(Log.JEEVES, "Error closing dbms"+dbms, e2);
-			}
 			Log.error(Log.JEEVES, "Unexpected error while loading user", e);
 			throw new AuthenticationServiceException("Unexpected error while loading user",e);
-		} finally {
-			if (dbms != null){
-				try {
-					resourceManager.close(Geonet.Res.MAIN_DB, dbms);
-				} catch (Exception e) {
-					e.printStackTrace();
-					Log.error(Log.JEEVES, "Error closing dbms"+dbms, e);
-				}
-			}
 		}
 		throw new UsernameNotFoundException(username+" is not a valid username");
-	}
-
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext)
-			throws BeansException {
-		this.applicationContext = applicationContext; 
-		this.encoder = (PasswordEncoder) applicationContext.getBean(PasswordUtil.ENCODER_ID);
 	}
 
 	@Override

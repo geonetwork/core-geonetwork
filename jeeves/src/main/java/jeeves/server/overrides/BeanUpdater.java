@@ -1,11 +1,12 @@
 package jeeves.server.overrides;
 
-import java.util.Properties;
-
-import jeeves.utils.Log;
-
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+
+import java.util.Properties;
 
 abstract class BeanUpdater implements Updater {
     protected String beanName;
@@ -15,18 +16,21 @@ abstract class BeanUpdater implements Updater {
     
 
     @Override
-    public final Object update(ApplicationContext applicationContext, Properties properties) {
-        Object bean = applicationContext.getBean(beanName);
-        if(bean != null) {
-            return update(applicationContext, properties, bean);
-        } else {
+    public final void update(ConfigurableListableBeanFactory beanFactory, Properties properties) {
+        try {
+            BeanDefinition bean = beanFactory.getBeanDefinition(beanName);
+            update(beanFactory, properties, bean);
+        } catch (NoSuchBeanDefinitionException e) {
             Log.warning(Log.JEEVES, "Unable apply override to bean: "+beanName+" because bean was not found");
-            return null;
         }
         
     }
 
+    @Override
+    public boolean runOnFinish() {
+        return false;
+    }
 
-    protected abstract Object update(ApplicationContext applicationContext, Properties properties, Object bean);
+    protected abstract void update(ConfigurableListableBeanFactory beanFactory, Properties properties, BeanDefinition bean);
     
 }

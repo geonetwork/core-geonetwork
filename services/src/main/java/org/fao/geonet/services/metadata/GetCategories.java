@@ -25,179 +25,103 @@ package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 //=============================================================================
 
 /** Given a metadata id returns all associated categories. Called by the
-  * metadata.category service
-  */
+ * metadata.category service
+ */
 
 public class GetCategories implements Service
 {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+    public void init(String appPath, ServiceConfig params) throws Exception {}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager dataMan = gc.getBean(DataManager.class);
-		AccessManager am = gc.getBean(AccessManager.class);
+    public Element exec(Element params, ServiceContext context) throws Exception
+    {
+        AccessManager am = context.getBean(AccessManager.class);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        String id = Utils.getIdentifierFromParameters(params, context);
 
-		String id = Utils.getIdentifierFromParameters(params, context);
+        //-----------------------------------------------------------------------
+        //--- check access
+        int iLocalId = Integer.parseInt(id);
 
-		//-----------------------------------------------------------------------
-		//--- check access
-		int iLocalId = Integer.parseInt(id);
-		
-		if (!dataMan.existsMetadata(dbms, iLocalId))
-			throw new IllegalArgumentException("Metadata not found --> " + id);
+        final Metadata metadata = context.getBean(MetadataRepository.class).findOne(iLocalId);
+        if (metadata == null) {
+            throw new IllegalArgumentException("Metadata not found --> " + id);
+        }
 
-		Element isOwner = new Element("owner");
-		if (am.isOwner(context,id))
-			isOwner.setText("true");
-		else
-			isOwner.setText("false");
+        Element isOwner = new Element("owner");
+        if (am.isOwner(context, id)) {
+            isOwner.setText("true");
+        } else {
+            isOwner.setText("false");
+        }
 
-		//-----------------------------------------------------------------------
-		//--- retrieve metadata categories
+        //-----------------------------------------------------------------------
+        //--- retrieve metadata categories
 
-		HashSet<String> hsMetadataCat = new HashSet<String>();
+        HashSet<String> hsMetadataCat = new HashSet<String>();
 
-		@SuppressWarnings("unchecked")
-        List<Element> mdCat = dbms.select("SELECT categoryId FROM MetadataCateg WHERE metadataId=?",Integer.valueOf(id)).getChildren();
+        for (MetadataCategory cat : metadata.getCategories()) {
+            hsMetadataCat.add(cat.getId() + "");
+        }
 
-		for (Element el : mdCat) {
-			hsMetadataCat.add(el.getChildText("categoryid"));
-		}
+        //-----------------------------------------------------------------------
+        //--- retrieve groups operations
+        final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
 
-		//-----------------------------------------------------------------------
-		//--- retrieve groups operations
+        Element elCateg = categoryRepository.findAllAsXml();
 
-		Element elCateg = Lib.local.retrieve(dbms, "Categories");
-
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> list = elCateg.getChildren();
+        for (Element el : list) {
 
-		for (Element el : list) {
+            el.setName(Geonet.Elem.CATEGORY);
 
-			el.setName(Geonet.Elem.CATEGORY);
+            //--- get all operations that this group can do on given metadata
 
-			//--- get all operations that this group can do on given metadata
+            if (hsMetadataCat.contains(el.getChildText("id")))
+                el.addContent(new Element("on"));
+        }
 
-			if (hsMetadataCat.contains(el.getChildText("id")))
-				el.addContent(new Element("on"));
-		}
+        //-----------------------------------------------------------------------
+        //--- put all together
 
+        Element elRes = new Element(Jeeves.Elem.RESPONSE)
+                .addContent(new Element(Geonet.Elem.ID).setText(id))
+                .addContent(elCateg)
+                .addContent(isOwner);
 
-		//-----------------------------------------------------------------------
-		//--- retrieve groups operations
-
-		Set<String> userGroups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress(), false);
-
-		Element elOper = Lib.local.retrieve(dbms, "Operations").setName(Geonet.Elem.OPERATIONS);
-
-		Element elGroup = Lib.local.retrieve(dbms, "Groups");
-
-		List listGroup = elGroup.getChildren();
-
-		for(int i=0; i<listGroup.size(); i++)
-		{
-			Element el = (Element) listGroup.get(i);
-			
-			el.setName(Geonet.Elem.GROUP);
-			String sGrpId = el.getChildText("id");
-			int grpId = Integer.parseInt(sGrpId);
-
-			//--- get all group informations (user member and user profile)
-			
-			el.setAttribute("userGroup", userGroups.contains(sGrpId) ? "true" : "false");
-			
-			String query = "SELECT profile FROM UserGroups WHERE userId=? AND groupId=?";
-			Element profiles = dbms.select(query, context.getUserSession().getUserIdAsInt(), grpId);
-			List profilesList = profiles.getChildren();
-			for (Object aProfile : profilesList) {
-				Element pEl = (Element) aProfile;
-				String profile = pEl.getChildText("profile");
-				el.addContent(new Element("userProfile").setText(profile));
-			}
-
-
-			//--- get all operations that this group can do on given metadata
-
-			query = "SELECT operationId FROM OperationAllowed WHERE metadataId=? AND groupId=?";
-
-			List listAllow = dbms.select(query, new Integer(id), grpId).getChildren();
-
-			//--- now extend the group list adding proper operations
-
-			List listOper = elOper.getChildren();
-
-			for(int j=0; j<listOper.size(); j++)
-			{
-				String operId = ((Element) listOper.get(j)).getChildText("id");
-
-				Element elGrpOper = new Element(Geonet.Elem.OPER)
-													.addContent(new Element(Geonet.Elem.ID).setText(operId));
-
-				boolean bFound = false;
-
-				for(int k=0; k<listAllow.size(); k++)
-				{
-					Element elAllow = (Element) listAllow.get(k);
-
-					if (operId.equals(elAllow.getChildText("operationid")))
-					{
-						bFound = true;
-						break;
-					}
-				}
-
-				if (bFound)
-					elGrpOper.addContent(new Element(Geonet.Elem.ON));
-
-				el.addContent(elGrpOper);
-			}
-		}
-		
-		//-----------------------------------------------------------------------
-		//--- put all together
-
-		Element elRes = new Element(Jeeves.Elem.RESPONSE)
-										.addContent(new Element(Geonet.Elem.ID).setText(id))
-										.addContent(elCateg)
-										.addContent(elOper)
-										.addContent(elGroup)
-										.addContent(isOwner);
-
-		return elRes;
-	}
+        return elRes;
+    }
 }
 
 //=============================================================================

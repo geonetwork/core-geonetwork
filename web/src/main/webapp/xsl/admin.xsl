@@ -222,24 +222,33 @@
 
                     <!-- Template administration -->
                     <xsl:variable name="mdTemplate">
-						<xsl:call-template name="addrow">
-							<xsl:with-param name="service" select="'metadata.templates.list'"/>
-							<xsl:with-param name="title"
-								select="/root/gui/strings/metadata-template-order"/>
-							<xsl:with-param name="desc"
-								select="/root/gui/strings/metadata-template-order-desc"/>
-						</xsl:call-template>
-					</xsl:variable>
+                        <xsl:call-template name="addrow">
+                            <xsl:with-param name="service" select="'metadata.templates.list'"/>
+                            <xsl:with-param name="title"
+                                            select="/root/gui/strings/metadata-template-order"/>
+                            <xsl:with-param name="desc"
+                                            select="/root/gui/strings/metadata-template-order-desc"/>
+                        </xsl:call-template>
+                    </xsl:variable>
 
-					<xsl:call-template name="addTitle">
-						<xsl:with-param name="icon">xml.png</xsl:with-param>
-						<xsl:with-param name="title"
-							select="concat(/root/gui/strings/metadata, '&#160;&amp;&#160;', /root/gui/strings/template)"/>
-						<xsl:with-param name="content">
-							<xsl:copy-of select="$mdServices"/>
-							<tr>
-								<td class="spacer"/>
-							</tr>
+                    <!-- Metadata versioning log-->
+                    <xsl:variable name="mdVersionLog">
+                        <xsl:call-template name="addrow">
+                            <xsl:with-param name="service" select="'versioning.log'"/>
+                            <xsl:with-param name="title"
+                                            select="/root/gui/strings/metadata-versioning-log"/>
+                        </xsl:call-template>
+                    </xsl:variable>
+
+                    <xsl:call-template name="addTitle">
+                        <xsl:with-param name="icon">xml.png</xsl:with-param>
+                        <xsl:with-param name="title"
+                                        select="concat(/root/gui/strings/metadata, '&#160;&amp;&#160;', /root/gui/strings/template)"/>
+                        <xsl:with-param name="content">
+                            <xsl:copy-of select="$mdServices"/>
+                            <tr>
+                                <td class="spacer"/>
+                            </tr>
                             <xsl:if test="not($readonly)">
 							<xsl:copy-of select="$mdTemplate"/>
                             </xsl:if>
@@ -295,40 +304,41 @@
 								</xsl:with-param>
 							</xsl:call-template>
                             </xsl:if>
-						</xsl:with-param>
-					</xsl:call-template>
+							<xsl:copy-of select="$mdVersionLog"/>
+                        </xsl:with-param>
+                    </xsl:call-template>
 
-					<xsl:variable name="io">
+                    <xsl:variable name="io">
 
-						<xsl:call-template name="addrow">
-							<xsl:with-param name="service" select="'metadata.xmlinsert.form'"/>
-							<xsl:with-param name="title" select="/root/gui/strings/xmlInsertTitle"/>
-							<xsl:with-param name="desc" select="/root/gui/strings/xmlInsert"/>
-						</xsl:call-template>
+                        <xsl:call-template name="addrow">
+                            <xsl:with-param name="service" select="'metadata.xmlinsert.form'"/>
+                            <xsl:with-param name="title" select="/root/gui/strings/xmlInsertTitle"/>
+                            <xsl:with-param name="desc" select="/root/gui/strings/xmlInsert"/>
+                        </xsl:call-template>
 
-						<xsl:call-template name="addrow">
-							<xsl:with-param name="service" select="'metadata.batchimport.form'"/>
-							<xsl:with-param name="title" select="/root/gui/strings/batchImportTitle"/>
-							<xsl:with-param name="desc" select="/root/gui/strings/batchImport"/>
-						</xsl:call-template>
+                        <xsl:call-template name="addrow">
+                            <xsl:with-param name="service" select="'metadata.batchimport.form'"/>
+                            <xsl:with-param name="title" select="/root/gui/strings/batchImportTitle"/>
+                            <xsl:with-param name="desc" select="/root/gui/strings/batchImport"/>
+                        </xsl:call-template>
 
-						<xsl:call-template name="addrow">
-							<xsl:with-param name="service" select="'harvesting'"/>
-							<xsl:with-param name="title"
-								select="/root/gui/strings/harvestingManagement"/>
-							<xsl:with-param name="desc" select="/root/gui/strings/harvestingManDes"
-							/>
-							<xsl:with-param name="icon">connect.png</xsl:with-param>	
-						</xsl:call-template>
+                        <xsl:call-template name="addrow">
+                            <xsl:with-param name="service" select="'harvesting'"/>
+                            <xsl:with-param name="title"
+                                            select="/root/gui/strings/harvestingManagement"/>
+                            <xsl:with-param name="desc" select="/root/gui/strings/harvestingManDes"
+                                    />
+                            <xsl:with-param name="icon">connect.png</xsl:with-param>
+                        </xsl:call-template>
 
-						<xsl:call-template name="addrow">
-							<xsl:with-param name="service" select="'notifications.list'"/>
-							<xsl:with-param name="title" select="/root/gui/strings/notifications"/>
-							<xsl:with-param name="desc" select="/root/gui/strings/notificationsDes"
-							/>
-						  <xsl:with-param name="icon">bell.png</xsl:with-param>
-						</xsl:call-template>
-					</xsl:variable>
+                        <xsl:call-template name="addrow">
+                            <xsl:with-param name="service" select="'notifications.list'"/>
+                            <xsl:with-param name="title" select="/root/gui/strings/notifications"/>
+                            <xsl:with-param name="desc" select="/root/gui/strings/notificationsDes"
+                                    />
+                            <xsl:with-param name="icon">bell.png</xsl:with-param>
+                        </xsl:call-template>
+                    </xsl:variable>
 
                     <xsl:if test="not($readonly)">
 					<xsl:call-template name="addTitle">
@@ -454,36 +464,24 @@
 					</xsl:call-template>
                     </xsl:if>
 
-					<xsl:variable name="classification">
+                    <xsl:variable name="classification">
 
-						<xsl:call-template name="addrow">
-							<xsl:with-param name="service" select="'category.list'"/>
-							<xsl:with-param name="title"
-								select="/root/gui/strings/categoryManagement"/>
-							<xsl:with-param name="desc" select="/root/gui/strings/categoryManDes"/>
-						</xsl:call-template>
+                        <xsl:call-template name="addrow">
+                            <xsl:with-param name="service" select="'category.list'"/>
+                            <xsl:with-param name="title"
+                                            select="/root/gui/strings/categoryManagement"/>
+                            <xsl:with-param name="desc" select="/root/gui/strings/categoryManDes"/>
+                        </xsl:call-template>
 
-						<xsl:call-template name="addrow">
-							<xsl:with-param name="service" select="'thesaurus.admin'"/>
-							<xsl:with-param name="title"
-								select="/root/gui/strings/thesaurus/management"/>
-							<xsl:with-param name="desc" select="/root/gui/strings/thesaurus/manDes"
-							/>
-						</xsl:call-template>
+                        <xsl:call-template name="addrow">
+                            <xsl:with-param name="service" select="'thesaurus.admin'"/>
+                            <xsl:with-param name="title"
+                                            select="/root/gui/strings/thesaurus/management"/>
+                            <xsl:with-param name="desc" select="/root/gui/strings/thesaurus/manDes"
+                                    />
+                        </xsl:call-template>
 
-						<!-- Only add the subtemplate if the client is widget based -->
-						<xsl:if test="/root/gui/config/client/@widget">
-							<tr>
-								<td class="spacer"/>
-							</tr>
-
-							<xsl:call-template name="addrow">
-								<xsl:with-param name="service" select="'subtemplate.admin'"/>
-								<xsl:with-param name="title" select="/root/gui/strings/subtemplate.admin"/>
-								<xsl:with-param name="desc" select="/root/gui/strings/subtemplate.admin.desc"/>
-							</xsl:call-template>
-						</xsl:if>
-					</xsl:variable>
+                    </xsl:variable>
 
                     <xsl:if test="not($readonly)">
 					<xsl:call-template name="addTitle">

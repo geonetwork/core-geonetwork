@@ -23,29 +23,27 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
-import jeeves.exceptions.BadServerResponseEx;
-import jeeves.exceptions.BadSoapResponseEx;
-import jeeves.exceptions.BadXmlResponseEx;
-import jeeves.exceptions.OperationAbortedEx;
-import jeeves.exceptions.UserNotFoundEx;
-import jeeves.interfaces.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
-import jeeves.utils.XmlRequest;
-
-import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.exceptions.*;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -66,11 +64,10 @@ class Harvester implements IHarvester<HarvestResult> {
 	//---
 	//--------------------------------------------------------------------------
 
-	public Harvester(Logger log, ServiceContext context, Dbms dbms, GeonetParams params)
+	public Harvester(Logger log, ServiceContext context, GeonetParams params)
 	{
 		this.log    = log;
 		this.context= context;
-		this.dbms   = dbms;
 		this.params = params;
 	}
 
@@ -83,7 +80,7 @@ class Harvester implements IHarvester<HarvestResult> {
 	public HarvestResult harvest(Logger log) throws Exception
 	{
         this.log = log;
-		XmlRequest req = new XmlRequest(new URL(params.host));
+		XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(params.host));
 
         Lib.net.setupProxy(context, req);
 
@@ -163,11 +160,11 @@ class Harvester implements IHarvester<HarvestResult> {
 
 		//--- align local node
 
-		Aligner      aligner = new Aligner(log, context, dbms, req, params, remoteInfo);
+		Aligner      aligner = new Aligner(log, context, req, params, remoteInfo);
 		HarvestResult result  = aligner.align(records, errors);
 
 		Map<String, String> sources = buildSources(remoteInfo);
-		updateSources(dbms, records, sources);
+		updateSources(records, sources);
 
 		return result;
 	}
@@ -229,7 +226,7 @@ class Harvester implements IHarvester<HarvestResult> {
 	private Element doSearch(XmlRequest request, Search s) throws OperationAbortedEx
 	{
 		request.setAddress(params.getServletPath() +"/srv/en/"+ Geonet.Service.XML_SEARCH);
-		
+		request.clearParams();
 		try
 		{
 			log.info("Searching on : "+ params.name);
@@ -294,7 +291,7 @@ class Harvester implements IHarvester<HarvestResult> {
 
 	//---------------------------------------------------------------------------
 
-	private void updateSources(Dbms dbms, Set<RecordInfo> records,
+	private void updateSources(Set<RecordInfo> records,
 										Map<String, String> remoteSources) throws SQLException, MalformedURLException
 	{
 		log.info("Aligning source logos from for : "+ params.name);
@@ -303,64 +300,61 @@ class Harvester implements IHarvester<HarvestResult> {
 
 		Set<String> sources = new HashSet<String>();
 
-		for (RecordInfo ri : records)
+		for (RecordInfo ri : records) {
 			sources.add(ri.source);
+        }
 
 		//--- update local sources and retrieve logos (if the case)
 
-		String siteId = getSiteId();
+        String siteId = context.getBean(SettingManager.class).getSiteId();
 
-		for (String sourceUuid : sources)
-            try {
-    			if (!siteId.equals(sourceUuid))
-    			{
-    				String sourceName = remoteSources.get(sourceUuid);
+		for (String sourceUuid : sources) {
+ 			if (!siteId.equals(sourceUuid)) {
+   				String sourceName = remoteSources.get(sourceUuid);
 
-				if (sourceName != null)
-					Lib.sources.retrieveLogo(context, params.host, sourceUuid);
-				else
-				{
+				if (sourceName != null) {
+					retrieveLogo(context, params.host, sourceUuid);
+                } else {
 					sourceName = "(unknown)";
 					Resources.copyUnknownLogo(context, sourceUuid);
 				}
 
-    				Lib.sources.update(dbms, sourceUuid, sourceName, false);
-    			}
-            } catch (SQLException e) {
-                HarvestError harvestError = new HarvestError(e, log);
-                harvestError
-                        .setDescription("Error updating the source logos from "
-                                + params.name + ": \n" + e.getSQLState());
-                harvestError.setHint("Check the original resource ("
-                        + sourceUuid + ") is correctly defined.");
-                this.errors.add(harvestError);
-            } catch (MalformedURLException e) {
-                HarvestError harvestError = new HarvestError(e, log);
-                harvestError
-                        .setDescription("Error retrieving the logo from url");
-                harvestError.setHint("Check the original resource ("
-                        + sourceUuid + ") is correctly defined.");
-                this.errors.add(harvestError);
+                Source source = new Source(sourceUuid, sourceName, false);
+                context.getBean(SourceRepository.class).save(source);
             }
-    }
-
-	//---------------------------------------------------------------------------
-
-	private String getSiteId()
-	{
-		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SettingManager sm =gc.getBean(SettingManager.class);
-
-		return sm.getValue("system/site/siteId");
+        }
 	}
 
+
+    private void retrieveLogo(ServiceContext context, String url, String uuid) throws MalformedURLException {
+        String logo = uuid + ".gif";
+
+        XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(url));
+        Lib.net.setupProxy(context, req);
+        req.setAddress(req.getAddress() + "/images/logos/" + logo);
+
+        File logoFile = new File(Resources.locateLogosDir(context) + File.separator + logo);
+
+        try {
+            req.executeLarge(logoFile);
+        } catch (IOException e) {
+            context.warning("Cannot retrieve logo file from : " + url);
+            context.warning("  (C) Logo  : " + logo);
+            context.warning("  (C) Excep : " + e.getMessage());
+
+            IO.delete(logoFile, false, Geonet.GEONETWORK);
+
+            Resources.copyUnknownLogo(context, uuid);
+        }
+    }
 	//---------------------------------------------------------------------------
+
+    //---------------------------------------------------------------------------
 	//---
 	//--- Variables
 	//---
 	//---------------------------------------------------------------------------
 	private Logger         log;
-	private Dbms           dbms;
 	private GeonetParams   params;
     private ServiceContext context;
     public List<HarvestError> getErrors() {

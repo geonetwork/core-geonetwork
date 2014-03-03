@@ -23,20 +23,24 @@
 
 package org.fao.geonet.kernel.harvest.harvester.fragment;
 
-import jeeves.exceptions.BadXmlResponseEx;
-import jeeves.interfaces.Logger;
-import jeeves.resources.dbms.Dbms;
+import com.google.common.base.Optional;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
-
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.OperationAllowedId_;
+import org.fao.geonet.exceptions.BadXmlResponseEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -44,13 +48,7 @@ import org.jdom.Namespace;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 //=============================================================================
 /** 
@@ -68,20 +66,18 @@ public class FragmentHarvester extends BaseAligner {
      *  
      * @param log		
      * @param context		Jeeves context
-     * @param dbms 			Database
      * @param params		Fragment harvesting configuration parameters
      * 
      */
-	public FragmentHarvester(Logger log, ServiceContext context, Dbms dbms, FragmentParams params) {
+	public FragmentHarvester(Logger log, ServiceContext context, FragmentParams params) {
 		this.log    = log;
 		this.context= context;
-		this.dbms   = dbms;
 		this.params = params;
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext (Geonet.CONTEXT_NAME);
 		dataMan = gc.getBean(DataManager.class);
 
-		SettingInfo si = new SettingInfo(context);
+		SettingInfo si = context.getBean(SettingInfo.class);
 		String siteUrl = si.getSiteUrl() + context.getBaseUrl();
 		metadataGetService = siteUrl + "/srv/en/xml.metadata.get";
 
@@ -131,8 +127,8 @@ public class FragmentHarvester extends BaseAligner {
 		}
 
 		//--- Loading categories and groups
-		localCateg 	= new CategoryMapper (dbms);
-		localGroups = new GroupMapper (dbms);
+		localCateg 	= new CategoryMapper (context);
+		localGroups = new GroupMapper (context);
 
 		@SuppressWarnings("unchecked")
         List<Element> recs = fragments.getChildren();
@@ -152,7 +148,7 @@ public class FragmentHarvester extends BaseAligner {
 	private void loadTemplate() {
 		try {
 			//--- Load template to be used to create metadata from fragments
-			metadataTemplate = dataMan.getMetadata(dbms, params.templateId);
+			metadataTemplate = dataMan.getMetadata(params.templateId);
 			
 			//--- Build a list of all Namespaces in the metadata document
 			Namespace ns = metadataTemplate.getNamespace();
@@ -231,7 +227,7 @@ public class FragmentHarvester extends BaseAligner {
 				recUuid = UUID.randomUUID().toString();
 			}
 			
-			String id = dataMan.getMetadataId(dbms, recUuid);
+			String id = dataMan.getMetadataId(recUuid);
 			if (id == null) {
 				log.debug("Adding metadata "+recUuid);
 				createMetadata(recUuid, recordMetadata);
@@ -323,18 +319,18 @@ public class FragmentHarvester extends BaseAligner {
 		String uuid = fragment.getAttributeValue("uuid");
 		
 		String schema = fragment.getAttributeValue("schema");
-
-		String title = fragment.getAttributeValue("title");
 		
-		if (schema==null) return;  //skip fragments with unknown schema
+		if (schema==null) {
+            return;  //skip fragments with unknown schema
+        }
 		
 		Element md = (Element) fragment.getChildren().get(0);
 
-		String id = dataMan.getMetadataId(dbms, uuid);
+		String id = dataMan.getMetadataId(uuid);
 		if (id == null) {
-			createSubtemplate(schema, md, uuid, title);
+			createSubtemplate(schema, md, uuid);
 		} else {
-			updateSubtemplate(id, uuid, md, title);
+			updateSubtemplate(id, uuid, md);
 		}
 
 	}
@@ -344,13 +340,12 @@ public class FragmentHarvester extends BaseAligner {
      * Update a sub-template for an xml fragment 
      *   
      * @param id        id of subtemplate to update
-     * @param uuid      uuid of subtemplate being updated
-     * @param md				Subtemplate
-     * @param title			Subtemplate title
+	 * @param uuid      uuid of subtemplate being updated
+	 * @param md				Subtemplate
      * 
      */
-	private void updateSubtemplate(String id, String uuid, Element md, String title) throws Exception {
-        update(id, md, title, true);
+	private void updateSubtemplate(String id, String uuid, Element md) throws Exception {
+        update(id, md, true);
         harvestSummary.updatedMetadata.add(uuid);
         harvestSummary.fragmentsUpdated++;
 	}
@@ -360,12 +355,11 @@ public class FragmentHarvester extends BaseAligner {
      * Create a sub-template for an xml fragment 
      *   
      * @param schema		Schema to which the sub-template belongs
-     * @param md				Subtemplate
-     * @param uuid			Uuid of subtemplate
-     * @param title			Title of subtemplate
+	 * @param md				Subtemplate
+	 * @param uuid			Uuid of subtemplate
      * 
      */
-	private void createSubtemplate(String schema, Element md, String uuid, String title) throws Exception {
+	private void createSubtemplate(String schema, Element md, String uuid) throws Exception {
 		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
 		Date date = new Date();
 		
@@ -376,20 +370,21 @@ public class FragmentHarvester extends BaseAligner {
         //
         String group= null, isTemplate= null, docType= null, category= null;
         boolean ufo= false, indexImmediate= false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, Integer.parseInt(params.owner), group, params.uuid,
-                         isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
+        String id = dataMan.insertMetadata(context, schema, md, uuid, Integer.parseInt(params.owner), group, params.uuid,
+                         isTemplate, docType, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
 
-        addPrivileges(id, params.privileges, localGroups, dataMan, context, dbms, log);
-        addCategories(id, params.categories, localCateg, dataMan, dbms, context, log, null);
+        addPrivileges(id, params.privileges, localGroups, dataMan, context, log);
+        addCategories(id, params.categories, localCateg, dataMan, context, log, null);
 	
-		dataMan.setTemplateExt(dbms, iId, "s", null);
-		dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
-		dataMan.indexMetadata(dbms, id);
+		dataMan.setTemplateExt(iId, MetadataType.SUB_TEMPLATE);
+		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(harvestUri));
+		dataMan.indexMetadata(id, false);
 
-		dbms.commit();
-		harvestSummary.fragmentsAdded ++;
+        dataMan.flush();
+
+        harvestSummary.fragmentsAdded ++;
     }
 
 	//---------------------------------------------------------------------------
@@ -532,7 +527,7 @@ public class FragmentHarvester extends BaseAligner {
             log.debug("	- Attempting to update metadata record "+id+" with links");
         }
 		template = dataMan.setUUID(params.outputSchema, recUuid, template);
-        update(id, template, null, false);
+        update(id, template, false);
         harvestSummary.recordsUpdated++;
         harvestSummary.updatedMetadata.add(recUuid);
 	}
@@ -542,11 +537,10 @@ public class FragmentHarvester extends BaseAligner {
      *
      * @param id
      * @param template
-     * @param title
      * @param doExt
      * @throws Exception
      */
-     private void update(String id, Element template, String title, boolean doExt)  throws Exception {
+     private void update(String id, Element template, boolean doExt)  throws Exception {
          DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
          Date date = new Date();
          //
@@ -556,25 +550,29 @@ public class FragmentHarvester extends BaseAligner {
          boolean ufo = false;
          boolean index = false;
          String language = context.getLanguage();
-         dataMan.updateMetadata(context, dbms, id, template, validate, ufo, index, language, df.format(date), false);
+         dataMan.updateMetadata(context, id, template, validate, ufo, index, language, df.format(date), false);
 
          int iId = Integer.parseInt(id);
 
-         dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", iId);
-         addPrivileges(id, params.privileges, localGroups, dataMan, context, dbms, log);
+         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+         Metadata metadata = metadataRepository.findOne(iId);
+         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
+         repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, iId);
+         addPrivileges(id, params.privileges, localGroups, dataMan, context, log);
 
-         dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", iId);
-         addCategories(id, params.categories, localCateg, dataMan, dbms, context, log, null);
+         metadata.getCategories().clear();
+         metadataRepository.save(metadata);
+         addCategories(id, params.categories, localCateg, dataMan, context, log, null);
 
-         dataMan.indexMetadata(dbms, id);
          if(doExt) {
-             dataMan.setTemplateExt(dbms, iId, "s", title);
-             dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
+             dataMan.setTemplateExt(iId, MetadataType.SUB_TEMPLATE);
+             dataMan.setHarvestedExt(iId, params.uuid, Optional.of(harvestUri));
          }
 
-         dataMan.indexMetadata(dbms, id);
-         dbms.commit();
-    }
+         dataMan.indexMetadata(id, false);
+
+         dataMan.flush();
+     }
 
 	//---------------------------------------------------------------------------
 	/** 
@@ -596,30 +594,32 @@ public class FragmentHarvester extends BaseAligner {
         //
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, params.outputSchema, template, context.getSerialFactory().getSerial(dbms, "Metadata"), recUuid, Integer.parseInt(params.owner), group, params.uuid,
-                isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
+        String id = dataMan.insertMetadata(context, params.outputSchema, template, recUuid, Integer.parseInt(params.owner), group, params.uuid,
+                isTemplate, docType, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
 
         if(log.isDebugEnabled()){
             log.debug("	- Set privileges, category, template and harvested");
         }
-        addPrivileges(id, params.privileges, localGroups, dataMan, context, dbms, log);
-        dataMan.setCategory(context, dbms, id, params.isoCategory);
+        addPrivileges(id, params.privileges, localGroups, dataMan, context, log);
+        dataMan.setCategory(context, id, params.isoCategory);
 		
-		dataMan.setTemplateExt(dbms, iId, "n", null); 
-		dataMan.setHarvestedExt(dbms, iId, params.uuid, harvestUri);
-		dataMan.indexMetadata(dbms, id);
+		dataMan.setTemplateExt(iId, MetadataType.METADATA);
+		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(harvestUri));
+		dataMan.indexMetadata(id, false);
 
-        if(log.isDebugEnabled())
+        if(log.isDebugEnabled()) {
             log.debug("	- Commit "+id);
-		dbms.commit();
-		harvestSummary.recordsBuilt++;
+        }
+
+        dataMan.flush();
+
+        harvestSummary.recordsBuilt++;
 	}
 
 	private Logger log;
 	private ServiceContext context;
-	private Dbms dbms;
 	private DataManager dataMan;
 	private FragmentParams params;
 	private String metadataGetService;

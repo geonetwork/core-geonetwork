@@ -29,11 +29,11 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jeeves.server.ProfileManager;
-import jeeves.server.resources.ResourceManager;
-import jeeves.utils.Log;
+import jeeves.component.ProfileManager;
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Profile;
 
 /**
  * Get all user information from the LDAP user's attributes (including profile
@@ -50,9 +50,7 @@ public class LDAPUserDetailsContextMapperWithPattern extends
     private int groupIndexInPattern;
     private int profilIndexInPattern;
 
-    protected void setProfilesAndPrivileges(ResourceManager resourceManager,
-            ProfileManager profileManager, String defaultProfile,
-            String defaultGroup, Map<String, ArrayList<String>> userInfo,
+    protected void setProfilesAndPrivileges(Profile defaultProfile, String defaultGroup, Map<String, ArrayList<String>> userInfo,
             LDAPUser userDetails) {
 
         // a privilegePattern is defined which define a
@@ -60,18 +58,17 @@ public class LDAPUserDetailsContextMapperWithPattern extends
         ArrayList<String> privileges = userInfo
                 .get(mapping.get("privilege")[0]);
         if (privileges != null) {
-            Set<String> profileList = new HashSet<String>();
+            Set<Profile> profileList = new HashSet<Profile>();
 
             for (String privilegeDefinition : privileges) {
                 Matcher m = pattern.matcher(privilegeDefinition);
                 boolean b = m.matches();
                 if (b) {
                     String group = m.group(groupIndexInPattern);
-                    String profile = m.group(profilIndexInPattern);
+                    Profile profile = Profile.valueOf(m.group(profilIndexInPattern));
 
-                    if (group != null && profile != null
-                            && profileManager.exists(profile)) {
-                        if (!group.equals(LDAPConstants.ALL_GROUP_INDICATOR)) {
+                    if (profile != null) {
+                        if (!LDAPConstants.ALL_GROUP_INDICATOR.equals(group)) {
                             if (Log.isDebugEnabled(Geonet.LDAP)) {
                                 Log.debug(Geonet.LDAP, "  Adding profile "
                                         + profile + " for group " + group);
@@ -89,14 +86,13 @@ public class LDAPUserDetailsContextMapperWithPattern extends
                             + privilegePattern + "'. Information ignored.");
                 }
             }
-            String highestUserProfile = profileManager
-                    .getHighestProfile(profileList.toArray(new String[0]));
+            Profile highestUserProfile = ProfileManager.getHighestProfile(profileList.toArray(new Profile[0]));
             if (highestUserProfile != null) {
                 if (Log.isDebugEnabled(Geonet.LDAP)) {
                     Log.debug(Geonet.LDAP, "  Highest user profile is "
                             + highestUserProfile);
                 }
-                userDetails.setProfile(highestUserProfile);
+                userDetails.getUser().setProfile(highestUserProfile);
             }
         }
     }

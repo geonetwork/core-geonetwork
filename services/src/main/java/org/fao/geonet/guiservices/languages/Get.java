@@ -24,10 +24,10 @@
 package org.fao.geonet.guiservices.languages;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.repository.LanguageRepository;
 import org.jdom.Element;
 
 //=============================================================================
@@ -47,9 +47,7 @@ public class Get implements Service
 
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-
-		return dbms.select("SELECT * FROM Languages");
+        return context.getBean(LanguageRepository.class).findAllAsXml();
 	}
 }
 

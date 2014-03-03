@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+    
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    
+    <service name="md.processing.batch">
+      <documentation>Processing a set of metadata record previously selected.
+        The process is an XSL schema dependant process defined in the 
+        schema process folder.</documentation>
+      <class name=".services.metadata.BatchXslProcessing"/>
+      <error sheet="../xslt/error/error-json.xsl"/>
+    </service>
+    
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    
+    <service name="md.processing">
+         <documentation>Processing one metadata to add onelinsrc for exemple.
+         The process is an XSL</documentation>
+    
+      <class name=".services.metadata.XslProcessing"/>
+        <output forward="md.edit"/>
+      </service>
+    
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <service name="md.processing.batch.report">
+      <documentation><![CDATA[
+Return the current or last batch process report in the user session.
+
+The service response contains:
+ * process: The name of the process
+ * startdate: The date the report was initialized
+ * reportdate: The date the report is generated
+ * running: True if the process is currently running
+ * totalRecords: The total number of records to process
+ * processedRecords: The number of records processed when the report was generated
+ * nullRecords: The number of records when a null metadata identifier is processed (may happen when a record is in the selection but was deleted after the selection)
+ * done: The number of records successfully processed
+ * notProcessFound: The number of records which does not provide process with that process id
+ * notOwner: The number of records the user who starts the process is not allowed to edit
+ * notFound: The number of records not found
+ * metadataErrorReport: List of records with error and exception details
+ 
+ 
+Sample response:
+```
+<response 
+  process="sextant-theme-add" 
+  startdate="2013-08-23T18:33:09" 
+  reportdate="2013-08-23T18:34:09" 
+  running="true" 
+  totalRecords="477" 
+  processedRecords="43" 
+  nullRecords="0">
+  <done>28</done>
+  <notProcessFound>0</notProcessFound>
+  <notOwner>0</notOwner>
+  <notFound>0</notFound>
+  <metadataErrorReport>
+    <metadata id="1186">
+      <message>Failed to compile stylesheet. 1 error detected.</message>
+      <stack>
+javax.xml.transform.TransformerConfigurationException: Failed to compile stylesheet. 1 error detected. at net.sf.saxon.PreparedStylesheet.prepare(PreparedStylesheet.java:176) at net.sf.saxon.TransformerFactoryImpl.newTemplates(TransformerFactoryImpl.java:139) at net.sf.saxon.TransformerFactoryImpl.newTransformer(TransformerFactoryImpl.java:91) at jeeves.utils.Xml.transform(Xml.java:538) at jeeves.utils.Xml.transform(Xml.java:382) at org.fao.geonet.kernel.DataManager.updateFixedInfo(DataManager.java:2728) at org.fao.geonet.kernel.DataManager.updateMetadata(DataManager.java:1733) at 
+...
+```
+        ]]>
+      </documentation>
+      <class name=".services.metadata.XslProcessingReportGet"/>
+      <error sheet="../xslt/error/error-json.xsl"/>
+    </service>
+
+    <service name="resource-onlinesrc-upload">
+    <documentation>Upload online resource</documentation>
+      <class name=".services.resources.UploadAndProcess"/>
+      
+      <!-- FIXME : this is a default success response XSL -->
+      <output sheet="admin-logo-add.xsl"/>
+      
+      <error sheet="error-modal.xsl">
+        <xml name="error" file="xml/file-upload-unsuccessful.xml"/>
+      </error>
+    </service>
+
+
+  </services>
+</geonet>

@@ -13,7 +13,19 @@
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
-
+	
+	<xsl:template match="results">
+		<sources>
+			<xsl:for-each select="record">
+				<xsl:sort select="name" order="ascending"/>
+				<source id="{id}">
+					<uuid><xsl:value-of select="id"/></uuid>
+					<xsl:copy-of select="name"/>
+				</source>
+			</xsl:for-each>
+		</sources>
+	</xsl:template>
+	
     <xsl:template match="isolanguages">
         <xsl:copy>
             <xsl:for-each select="record">
@@ -28,7 +40,7 @@
 	
 	<!-- ============================================================================================= -->
 
-	<xsl:template match="categories">
+	<xsl:template match="metadatacategory">
 		<xsl:copy>
 			<xsl:for-each select="record">
 				<xsl:sort select="name" order="ascending"/>
@@ -58,7 +70,7 @@
 
 	<!-- ============================================================================================= -->
 
-	<xsl:template match="groups">
+	<xsl:template match="group">
 		<xsl:copy>
 			<xsl:for-each select="record">
 				<xsl:sort select="name" order="ascending"/>
@@ -75,7 +87,7 @@
 
 	<!-- ============================================================================================= -->
 
-	<xsl:template match="operations">
+	<xsl:template match="operation">
 		<xsl:copy>
 			<xsl:for-each select="record">
 				<operation id="{id}">
@@ -87,7 +99,7 @@
 		</xsl:copy>
 	</xsl:template>
 	
-	<xsl:template match="statusvalues">
+	<xsl:template match="statusvalue">
 		<xsl:copy>
 			<xsl:for-each select="record">
 				<xsl:sort select="name" order="ascending"/>
@@ -154,9 +166,15 @@
 		        </metadataprivs>
 		    </xsl:when>
 			<xsl:otherwise>
-				<!-- Not needed -->
+				
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+	
+	<xsl:template match="config">
+		<xsl:for-each select="settings/setting">
+			<xsl:element name="{replace(@name, '/', '.')}"><xsl:value-of select="@value"/></xsl:element>
+		</xsl:for-each>
 	</xsl:template>
 
 </xsl:stylesheet>

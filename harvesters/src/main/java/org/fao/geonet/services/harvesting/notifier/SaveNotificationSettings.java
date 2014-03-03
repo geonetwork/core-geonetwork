@@ -20,7 +20,6 @@
 package org.fao.geonet.services.harvesting.notifier;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
@@ -42,9 +41,7 @@ public class SaveNotificationSettings implements Service {
         GeonetContext gc = (GeonetContext) context
                 .getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager settings = gc.getBean(SettingManager.class);
-        Dbms dbms = (Dbms) context.getResourceManager()
-                .open(Geonet.Res.MAIN_DB);
-        
+
         String sendTo = "";
         
         for (Object o : params.getChildren()) {
@@ -59,33 +56,33 @@ public class SaveNotificationSettings implements Service {
                     }
                 }
             } else if (param.getName().equalsIgnoreCase("template")) {
-                settings.setValue(dbms, "system/harvesting/mail/template",
+                settings.setValue("system/harvesting/mail/template",
                         param.getValue());
             } else if (param.getName().equalsIgnoreCase("templateError")) {
-                settings.setValue(dbms, "system/harvesting/mail/templateError",
+                settings.setValue("system/harvesting/mail/templateError",
                         param.getValue());
             } else if (param.getName().equalsIgnoreCase("templateWarning")) {
-                settings.setValue(dbms, "system/harvesting/mail/templateWarning",
+                settings.setValue("system/harvesting/mail/templateWarning",
                         param.getValue());
             } else if (param.getName().equalsIgnoreCase("subject")) {
-                settings.setValue(dbms, "system/harvesting/mail/subject",
+                settings.setValue("system/harvesting/mail/subject",
                         param.getValue());
             } else if (param.getName().equalsIgnoreCase("enabled")) {
-                settings.setValue(dbms, "system/harvesting/mail/enabled",
+                settings.setValue("system/harvesting/mail/enabled",
                         param.getValue());
             } else if (param.getName().equalsIgnoreCase("level1")) {
-                settings.setValue(dbms, "system/harvesting/mail/level1",
+                settings.setValue("system/harvesting/mail/level1",
                         param.getValue());
             } else if (param.getName().equalsIgnoreCase("level2")) {
-                settings.setValue(dbms, "system/harvesting/mail/level2",
+                settings.setValue("system/harvesting/mail/level2",
                         param.getValue());
             } else if (param.getName().equalsIgnoreCase("level3")) {
-                settings.setValue(dbms, "system/harvesting/mail/level3",
+                settings.setValue("system/harvesting/mail/level3",
                         param.getValue());
             }
         }
 
-        settings.setValue(dbms, "system/harvesting/mail/recipient", sendTo);
+        settings.setValue("system/harvesting/mail/recipient", sendTo);
 
         return new Element("ok");
     }

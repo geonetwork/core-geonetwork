@@ -23,19 +23,26 @@
 
 package org.fao.geonet.services.group;
 
+import com.google.common.base.Functions;
+import com.google.common.collect.Lists;
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.OperationAllowedId_;
+import org.fao.geonet.domain.UserGroupId_;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
-import org.fao.geonet.services.util.ServiceMetadataReindexer;
 import org.jdom.Element;
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -56,28 +63,26 @@ public class Remove extends NotInReadOnlyModeService {
 	{
 		String id = Util.getParam(params, Params.ID);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+
+        OperationAllowedRepository operationAllowedRepo = context.getBean(OperationAllowedRepository.class);
+        UserGroupRepository userGroupRepo = context.getBean(UserGroupRepository.class);
+        GroupRepository groupRepo = context.getBean(GroupRepository.class);
 
 		Integer iId = Integer.valueOf(id);
-		String query = "SELECT DISTINCT metadataId FROM OperationAllowed WHERE groupId=?";
+        List<Integer> reindex = operationAllowedRepo.findAllIds(OperationAllowedSpecs.hasGroupId(iId), OperationAllowedId_.metadataId);
 
-		@SuppressWarnings("unchecked")
-        List<Element> reindex = dbms.select(query, iId).getChildren();
-
-		dbms.execute("DELETE FROM OperationAllowed WHERE groupId=?",iId);
-		dbms.execute("DELETE FROM UserGroups       WHERE groupId=?",iId);
-		dbms.execute("DELETE FROM GroupsDes        WHERE idDes=?"  ,iId);
-		dbms.execute("DELETE FROM Groups           WHERE id=?"     ,iId);
-
+        operationAllowedRepo.deleteAllByIdAttribute(OperationAllowedId_.groupId, iId);
+        userGroupRepo.deleteAllByIdAttribute(UserGroupId_.groupId, Arrays.asList(iId));
+        groupRepo.delete(iId);
 		//--- reindex affected metadata
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getBean(DataManager.class);
 
-		ServiceMetadataReindexer s = new ServiceMetadataReindexer(dm, dbms, reindex);
-		s.process();
 
-		return new Element(Jeeves.Elem.RESPONSE)
+        dm.indexMetadata(Lists.transform(reindex, Functions.toStringFunction()));
+
+        return new Element(Jeeves.Elem.RESPONSE)
 							.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.REMOVED));
 	}
 }

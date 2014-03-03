@@ -27,14 +27,20 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.jdom.Element;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 //=============================================================================
 
@@ -43,6 +49,11 @@ import org.jdom.Element;
  */
 
 public class AddElement implements Service {
+
+    public static final String PREFIX = "loc_";
+    public static final String DEFINITION = "definition";
+    public static final String PREF_LAB = "label";
+
 	public void init(String appPath, ServiceConfig params) throws Exception {
 	}
 
@@ -59,12 +70,11 @@ public class AddElement implements Service {
 
 		String ref = Util.getParam(params, Params.REF);
 		String namespace = Util.getParam(params, "namespace", "");
-		String newid = Util.getParam(params, "newid");
+		String newid = Util.getParam(params, "newid", null);
+        if (newid == null) {
+            newid = UUID.randomUUID().toString();
+        }
 		String thesaType = Util.getParam(params, "refType");
-		String prefLab = Util.getParam(params, "prefLab");
-		String lang = Util.getParam(params, "lang");
-		String definition = Util.getParam(params, "definition","");
-
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 
 		ThesaurusManager manager = gc.getBean(ThesaurusManager.class);
@@ -74,9 +84,33 @@ public class AddElement implements Service {
 
 		    KeywordBean keyword = new KeywordBean()
 	            .setNamespaceCode(namespace)
-	            .setUriCode(newid)
-	            .setValue(prefLab, lang)
+	            .setUriCode(newid);
+
+            Map<Pair<String, String>, String> localizations = getLocalizedElements(params);
+            if (localizations.isEmpty()) {
+                String prefLab = Util.getParam(params, PREF_LAB);
+                String lang = Util.getParam(params, "lang");
+                String definition = Util.getParam(params, DEFINITION,"");
+
+                keyword.setValue(prefLab, lang)
             	.setDefinition(definition, lang);
+            } else {
+                Set<Map.Entry<Pair<String, String>, String>> entries = localizations.entrySet();
+
+                for (Map.Entry<Pair<String, String>, String> entry : entries) {
+                    String lang = entry.getKey().one();
+                    if (entry.getKey().two().equals(DEFINITION)) {
+                        final String definition = entry.getValue();
+                        keyword.setDefinition(definition, lang);
+                    } else if (entry.getKey().two().equals(PREF_LAB)) {
+                        final String label = entry.getValue();
+                        keyword.setValue(label, lang);
+                    } else {
+                        throw new IllegalArgumentException("Unknown localization type: "+entry.getKey().two());
+                    }
+
+                }
+            }
 
 			if (thesaType.equals("place")) {
 				String east = Util.getParam(params, "east");
@@ -98,6 +132,22 @@ public class AddElement implements Service {
 		}
 
 		return elResp;
+	}
+
+    public static Map<Pair<String, String>, String> getLocalizedElements(Element params) {
+        final java.util.List<Element> children = params.getChildren();
+
+        Map<Pair<String, String>, String> map = new HashMap<Pair<String, String>, String>();
+
+        for (Element child : children) {
+            if (child.getName().startsWith(PREFIX)) {
+                String[] parts = child.getName().split("_");
+                String lang = parts[1];
+                String type = parts[2];
+                map.put(Pair.read(lang, type), child.getTextTrim());
+            }
+        }
+        return map;
 	}
 }
 

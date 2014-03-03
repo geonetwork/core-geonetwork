@@ -22,16 +22,25 @@
 //==============================================================================
 package org.fao.geonet.services.publisher;
 
-import jeeves.constants.Jeeves;
-import jeeves.utils.Log;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.methods.*;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.*;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.FileEntity;
+import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.entity.StringEntity;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.util.Xml;
 import org.jdom.Element;
+import org.springframework.http.client.ClientHttpResponse;
 
 import javax.annotation.CheckReturnValue;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -66,18 +75,7 @@ public class GeoServerRest {
 	private String response;
 	private int status;
 
-	private HttpClientFactory httpClientFactory;
-
-	/**
-	 * Create a GeoServerRest instance to communicate with a GeoServer node.
-	 * 
-	 * @param baseCatalogueUrl
-	 *            TODO
-	 */
-	public GeoServerRest(String url, String username, String password,
-			String baseCatalogueUrl) {
-		init(url, username, password, baseCatalogueUrl);
-	}
+	private GeonetHttpRequestFactory factory;
 
 	/**
 	 * Create a GeoServerRest instance to communicate with a GeoServer node and
@@ -90,22 +88,17 @@ public class GeoServerRest {
 	 * @param baseCatalogueUrl
 	 *            TODO
 	 */
-	public GeoServerRest(String url, String username, String password,
+	public GeoServerRest(GeonetHttpRequestFactory factory, String url, String username, String password,
 			String defaultns, String baseCatalogueUrl) {
-		init(url, username, password, baseCatalogueUrl);
-		this.defaultWorkspace = defaultns;
+        this.restUrl = url;
+        this.username = username;
+        this.password = password;
+        this.baseCatalogueUrl = baseCatalogueUrl;
+        this.factory = factory;
+        Log.createLogger(LOGGER_NAME);
+        this.defaultWorkspace = defaultns;
 	}
 
-	private void init(String url, String username, String password,
-			String baseCatalogueUrl) {
-		this.restUrl = url;
-		this.username = username;
-		this.password = password;
-		this.baseCatalogueUrl = baseCatalogueUrl;
-		this.httpClientFactory = new HttpClientFactory(this.username,
-				this.password);
-		Log.createLogger(LOGGER_NAME);
-	}
 
 	/**
 	 * @return Return last transaction response information if set.
@@ -235,7 +228,7 @@ public class GeoServerRest {
 	private void createCoverageForStore(String ws, String cs, String file,
 			String metadataUuid, String metadataTitle, String metadataAbstract)
 			throws IOException {
-		String xml = "<coverageStore><name>" + cs + "</name><title>"
+		String xml = "<coverage><name>" + cs + "</name><title>"
 			+ (metadataTitle != null ? metadataTitle : cs)
 			+ "</title><enabled>true</enabled>"
 			+ (file != null ? "<file>" + file + "</file>" : "")
@@ -268,10 +261,10 @@ public class GeoServerRest {
 					+ "</content>"
 				+ "</metadataLink>"
 			+ "</metadataLinks>"
-		+ "</coverageStore>";
+		+ "</coverage>";
 
 		int statusCoverage = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
-				+ "/coveragestores/" + cs + "/coverages/" + cs + ".xml", xml,
+				+ "/coveragestores/" + cs + "/coverages.xml", xml,
 				null, "text/xml", false);
 
 		checkResponseCode(statusCoverage);
@@ -305,7 +298,6 @@ public class GeoServerRest {
 	}
 
 	/**
-	 * @see #createCoverage(String, String, java.io.File)
 	 * @param ws
 	 * @param ds
 	 * @param f
@@ -318,7 +310,6 @@ public class GeoServerRest {
 	}
 
 	/**
-	 * @see #createCoverage(String, String, java.io.File)
 	 * @param ds
 	 * @param f
 	 * @return
@@ -660,7 +651,6 @@ public class GeoServerRest {
 			throws IOException {
 
 		response = "";
-		final HttpClient c = httpClientFactory.newHttpClient();
 		String url = this.restUrl + urlParams;
         if(Log.isDebugEnabled(LOGGER_NAME)) {
             Log.debug(LOGGER_NAME, "url:" + url);
@@ -668,40 +658,50 @@ public class GeoServerRest {
             Log.debug(LOGGER_NAME, "postData:" + postData);
         }
 
-		HttpMethod m;
+		HttpRequestBase m;
 		if (method.equals(METHOD_PUT)) {
-			m = new PutMethod(url);
+			m = new HttpPut(url);
 			if (file != null) {
-				((PutMethod) m).setRequestEntity(new InputStreamRequestEntity(
-						new FileInputStream(file)));
-			}
-			if (postData != null) {
-				((PutMethod) m).setRequestEntity(new StringRequestEntity(
-						postData, contentType, Jeeves.ENCODING));
-			}
-		} else if (method.equals(METHOD_DELETE)) {
-			m = new DeleteMethod(url);
-		} else if (method.equals(METHOD_POST)) {
-			m = new PostMethod(url);
-			if (postData != null) {
-				((PostMethod) m).setRequestEntity(new StringRequestEntity(
-						postData, contentType, Jeeves.ENCODING));
+                ((HttpPut) m).setEntity(new FileEntity(file));
 			}
 
+			if (postData != null) {
+                final StringEntity entity = new StringEntity(postData, ContentType.create(contentType, Constants.ENCODING));
+                ((HttpPut) m).setEntity(entity);
+			}
+		} else if (method.equals(METHOD_DELETE)) {
+			m = new HttpDelete(url);
+		} else if (method.equals(METHOD_POST)) {
+			m = new HttpPost(url);
+			if (postData != null) {
+                final StringEntity entity = new StringEntity(postData, ContentType.create(contentType, Constants.ENCODING));
+				((HttpPost) m).setEntity(entity);
+			}
 		} else {
-			m = new GetMethod(url);
+			m = new HttpGet(url);
 		}
 
 		if (contentType != null && !"".equals(contentType)) {
-			m.setRequestHeader("Content-type", contentType);
+			m.setHeader("Content-type", contentType);
 		}
 
-		m.setDoAuthentication(true);
 
-		status = c.executeMethod(m);
-        if(Log.isDebugEnabled(LOGGER_NAME)) Log.debug(LOGGER_NAME, "status:" + status);
-		if (saveResponse)
-			this.response = m.getResponseBodyAsString();
+		m.setConfig(RequestConfig.custom().setAuthenticationEnabled(true).build());
+
+        final ClientHttpResponse httpResponse = factory.execute(m, new UsernamePasswordCredentials(username, password), AuthScope.ANY);
+
+        try {
+            status = httpResponse.getRawStatusCode();
+            if(Log.isDebugEnabled(LOGGER_NAME)) {
+                Log.debug(LOGGER_NAME, "status:" + status);
+            }
+            if (saveResponse) {
+                this.response = IOUtils.toString(httpResponse.getBody());
+            }
+        }finally {
+            httpResponse.close();
+        }
+
 
 		return status;
 	}

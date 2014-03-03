@@ -24,7 +24,7 @@
 package org.fao.geonet.services.main;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Logger;
+import org.fao.geonet.Logger;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;

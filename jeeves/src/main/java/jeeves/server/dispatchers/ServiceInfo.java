@@ -26,230 +26,216 @@ package jeeves.server.dispatchers;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Vector;
 
 //=============================================================================
 
-/** A container class for a service. It collect the method and the filter
-  */
+/**
+ * A container class for a service. It collect the method and the filter
+ */
+public class ServiceInfo {
+    private String appPath;
+    private String match;
+    private String sheet;
+    private boolean cache = false;
 
-public class ServiceInfo
-{
-	private String  appPath;
-	private String  match;
-	private String  sheet;
-	private boolean cache = false;
+    private Vector<Service> vServices = new Vector<Service>();
+    private Vector<OutputPage> vOutputs = new Vector<OutputPage>();
+    private Vector<ErrorPage> vErrors = new Vector<ErrorPage>();
 
-	private Vector<Service> vServices= new Vector<Service>();
-	private Vector<OutputPage> vOutputs = new Vector<OutputPage>();
-	private Vector<ErrorPage> vErrors  = new Vector<ErrorPage>();
+    //--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+    public void setAppPath(String appPath) {
+        this.appPath = appPath;
+    }
 
-	public ServiceInfo(String appPath)
-	{
-		this.appPath = appPath;
-	}
+    //--------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//--------------------------------------------------------------------------
+    public void setMatch(String match) {
+        if (match != null && match.trim().equals(""))
+            match = null;
 
-	public void setMatch(String match)
-	{
-		if (match != null && match.trim().equals(""))
-			match = null;
+        this.match = match;
+    }
 
-		this.match = match;
-	}
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
+    public void setSheet(String sheet) {
+        if (sheet != null && sheet.trim().equals(""))
+            sheet = null;
 
-	public void setSheet(String sheet)
-	{
-		if (sheet != null && sheet.trim().equals(""))
-			sheet = null;
+        this.sheet = sheet;
+    }
 
-		this.sheet = sheet;
-	}
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
+    public void setCache(String cache) {
+        this.cache = "yes".equals(cache);
+    }
 
-	public void setCache(String cache)
-	{
-		this.cache = "yes".equals(cache);
-	}
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
+    public boolean isCacheSet() {
+        return cache;
+    }
 
-	public boolean isCacheSet() { return cache; }
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
+    public void addService(Service s) {
+        vServices.add(s);
+    }
 
-	public void addService(Service s)
-	{
-		vServices.add(s);
-	}
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
-	/** Adds to the engine the output page of a service
-	  */
+    /**
+     * Adds to the engine the output page of a service
+     */
 
-	public void addOutputPage(OutputPage page)
-	{
-		vOutputs.add(page);
-	}
+    public void addOutputPage(OutputPage page) {
+        vOutputs.add(page);
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public void addErrorPage(ErrorPage page)
-	{
-		vErrors.add(page);
-	}
+    public void addErrorPage(ErrorPage page) {
+        vErrors.add(page);
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public Element execServices(Element params, ServiceContext context) throws Exception
-	{
-		if (params == null)
-			params = new Element(Jeeves.Elem.REQUEST);
+    public Element execServices(Element params, ServiceContext context) throws Exception {
+        if (params == null)
+            params = new Element(Jeeves.Elem.REQUEST);
 
-		//--- transform input request using a given stylesheet
+        //--- transform input request using a given stylesheet
 
-		params = transformInput(params);
+        params = transformInput(params);
 
-		if (vServices.size() == 0)
-		{
-			params.setName(Jeeves.Elem.RESPONSE);
-			return params;
-		}
+        if (vServices.size() == 0) {
+            params.setName(Jeeves.Elem.RESPONSE);
+            return params;
+        }
 
-		Element response = params;
+        Element response = params;
 
-		for(Service service : vServices) {
-			response = execService(service, response, context);
-		}
+        for (Service service : vServices) {
+            response = execService(service, response, context);
+        }
 
-		//--- we must detach the element from its parent because the output dispatcher
-		//--- links it to the root element
-		//--- note that caching is not allowed in any case
+        //--- we must detach the element from its parent because the output dispatcher
+        //--- links it to the root element
+        //--- note that caching is not allowed in any case
 
-		response.detach();
+        response.detach();
 
-		return response;
-	}
+        return response;
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public OutputPage findOutputPage(Element response) throws Exception {
-		for (OutputPage page : vOutputs) {
-			if (page.matches(response))
-				return page;
-		}
+    public OutputPage findOutputPage(Element response) throws Exception {
+        for (OutputPage page : vOutputs) {
+            if (page.matches(response))
+                return page;
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public ErrorPage findErrorPage(String id) {
-		for (ErrorPage page : vErrors) {
-			if (page.matches(id))
-				return page;
-		}
+    public ErrorPage findErrorPage(String id) {
+        for (ErrorPage page : vErrors) {
+            if (page.matches(id))
+                return page;
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	//---------------------------------------------------------------------------
-	/** Returns true if the service input has elements that match this page
-	  */
+    //---------------------------------------------------------------------------
 
-	public boolean matches(Element request) throws Exception
-	{
-		if (match == null)
-			return true;
-		else
-			return Xml.selectBoolean(request, match);
-	}
+    /**
+     * Returns true if the service input has elements that match this page
+     */
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    public boolean matches(Element request) throws Exception {
+        if (match == null)
+            return true;
+        else
+            return Xml.selectBoolean(request, match);
+    }
 
-	private Element transformInput(Element request) throws Exception
-	{
-		if (sheet == null)
-			return request;
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
-		String styleSheet = appPath + Jeeves.Path.XSL + sheet;
+    private Element transformInput(Element request) throws Exception {
+        if (sheet == null)
+            return request;
 
-		ServiceManager.info("Transforming input with stylesheet : " +styleSheet);
+        String styleSheet = appPath + Jeeves.Path.XSL + sheet;
 
-		try
-		{
-			Element result = Xml.transform(request, styleSheet);
-			ServiceManager.info("End of input transformation");
+        ServiceManager.info("Transforming input with stylesheet : " + styleSheet);
 
-			return result;
-		}
-		catch(Exception e)
-		{
-			ServiceManager.error("Exception during transformation");
-			ServiceManager.error("  (C) message is : "+ e.getMessage());
+        try {
+            Element result = Xml.transform(request, styleSheet);
+            ServiceManager.info("End of input transformation");
 
-			Throwable t = e;
+            return result;
+        } catch (Exception e) {
+            ServiceManager.error("Exception during transformation");
+            ServiceManager.error("  (C) message is : " + e.getMessage());
 
-			while(t.getCause() != null)
-			{
-				ServiceManager.error("  (C) message is : "+ t.getMessage());
-				t = t.getCause();
-			}
+            Throwable t = e;
 
-			throw e;
-		}
-	}
+            while (t.getCause() != null) {
+                ServiceManager.error("  (C) message is : " + t.getMessage());
+                t = t.getCause();
+            }
 
-	//--------------------------------------------------------------------------
+            throw e;
+        }
+    }
 
-	private Element execService(Service service, Element params, ServiceContext context) throws Exception
-	{
-		try
-		{
-			Element response = service.exec(params, context);
+    //--------------------------------------------------------------------------
+    @Transactional(propagation = Propagation.REQUIRED)
+    private Element execService(final Service service, final Element params, final ServiceContext context) throws Exception {
+        try {
+            Element response = service.exec(params, context);
 
-			if (response == null)
-				response = new Element(Jeeves.Elem.RESPONSE);
+            if (response == null) {
+                response = new Element(Jeeves.Elem.RESPONSE);
+            }
 
-			//--- commit resources and return response
+            //--- commit resources and return response
+            return response;
+        } catch (Exception e) {
+            //--- in case of exception we have to abort all resources
+            ServiceManager.error("Exception when executing service");
+            ServiceManager.error(" (C) Exc : " + e);
 
-			context.getResourceManager().close();
-
-			return response;
-		}
-		catch(Exception e)
-		{
-			//--- in case of exception we have to abort all resources
-
-			context.getResourceManager().abort();
-			ServiceManager.error("Exception when executing service");
-			ServiceManager.error(" (C) Exc : " + e);
-
-			throw e;
-		}
-	}
+            throw e;
+        }
+    }
 }
-
-//=============================================================================
 

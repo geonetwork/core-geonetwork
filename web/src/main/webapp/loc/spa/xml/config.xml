@@ -163,6 +163,7 @@
 <setting label="Directorio" name="system/removedMetadata/dir">
 			Directorio para almacenar los metadatos (en formato MEF ) cuando se borran.			
 		</setting>
+    <setting name="system/requestedLanguage/ignorechars" label="Characters to ignore during indexing"/>
 <requestedlanguageonly>Search only in requested language</requestedlanguageonly>
 <requestedlanguage_offonly>All documents in all languages (No
                 preferences)</requestedlanguage_offonly>
@@ -174,7 +175,13 @@
                 language</requestedlanguage_localeonly>
 <requestedlanguage_docLocaleonly>Document language is the requested
                 language</requestedlanguage_docLocaleonly>
-<setting label="Search &amp; language" name="requestedLanguage"/>
+<requestedlanguage_prefer_ui_locale>Prefer documents having translations in the UI language</requestedlanguage_prefer_ui_locale>
+<requestedlanguage_only_ui_locale>Only documents having translations in the UI language</requestedlanguage_only_ui_locale>
+<requestedlanguage_prefer_ui_docLocale>Prefer documents having the same language as the UI language</requestedlanguage_prefer_ui_docLocale>
+<requestedlanguage_only_ui_docLocale>Only documents having the same language as the UI language</requestedlanguage_only_ui_docLocale>
+
+
+    <setting label="Search &amp; language" name="requestedLanguage"/>
 <setting label="Search only in requested language" name="system/requestedLanguage/only"/>
 <setting label="Resultados de la búsqueda en el idioma solicitado ordenados en la parte superior" name="system/requestedLanguage/sorted"/>
 <setting label="" name="system/requestedLanguage/ignored"/>

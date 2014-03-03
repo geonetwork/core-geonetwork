@@ -23,7 +23,7 @@
 
 package org.fao.geonet.lib;
 
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.jdom.Attribute;
 import org.jdom.Content;
 import org.jdom.Element;
@@ -58,7 +58,7 @@ public class ElementLib
 
 	//-----------------------------------------------------------------------------
 
-	public Element pruneChildren(Element elem, Set<String> ids)
+	public Element pruneChildren(Element elem, Set<Integer> ids)
 	{
 		ArrayList<Element> alToPrune = new ArrayList<Element>();
 
@@ -69,7 +69,7 @@ public class ElementLib
 			Element child = (Element) obj;
 			String id = child.getChildText("id");
 
-			if (!ids.contains(id))
+			if (!ids.contains(Integer.valueOf(id)))
 				alToPrune.add(child);
 		}
 

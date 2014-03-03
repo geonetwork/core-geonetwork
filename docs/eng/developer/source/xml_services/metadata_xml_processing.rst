@@ -55,7 +55,7 @@ Example request for the anonymizer process XSLT:
 **POST**::
 
   Url:
-  http://localhost:8080/geonetwork/srv/en/xml.metadata.processing
+  http://localhost:8080/geonetwork/srv/eng/xml.metadata.processing
 
   Mime-type:
   application/xml
@@ -72,7 +72,7 @@ Example request for the anonymizer process XSLT:
 **GET**::
 
   Url:
-  http://localhost:8080/geonetwork/srv/en/xml.metadata.processing?&id=6&save=0&process=anonymizer&email=john.p.bead%40bonce.com
+  http://localhost:8080/geonetwork/srv/eng/xml.metadata.processing?&id=6&save=0&process=anonymizer&email=john.p.bead%40bonce.com
 
 Response
 ````````

@@ -1,14 +1,13 @@
 package org.fao.geonet.services.metadata.format;
 
-import jeeves.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.IO;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.GeonetContext;
-import org.fao.geonet.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.services.Utils;
@@ -25,9 +24,8 @@ import java.util.regex.Pattern;
  * @author jeichar
  */
 abstract class AbstractFormatService implements Service {
-    protected static String XSL_EXTENSION = ".xsl";
     protected static final String USER_XSL_DIR = "user_xsl_dir";
-    protected static final Pattern ID_XSL_REGEX = Pattern.compile("[\\w\\d-_]+");
+    protected static final Pattern ID_XSL_REGEX = Pattern.compile("[\\w0-9\\-_]+");
     protected static final String VIEW_XSL_FILENAME = "view.xsl";
 
     protected volatile String userXslDir;
@@ -47,18 +45,17 @@ abstract class AbstractFormatService implements Service {
         if (!initializedDir) {
             synchronized (this) {
                 if (!initializedDir) {
-                    if(!new File(userXslDir).isAbsolute()) {
-                        String baseURL = context.getBaseUrl();
-                        String webappName = baseURL.substring(1);
-                        String systemDataDir = System.getProperty(webappName +GeonetworkDataDirectory.KEY_SUFFIX);
-                        if (!systemDataDir.endsWith(File.separator)){
-                            systemDataDir = systemDataDir+File.separator;
+                    if (!new File(userXslDir).isAbsolute()) {
+                        String systemDataDir = context.getBean(GeonetworkDataDirectory.class).getSystemDataDir();
+
+                        if (!systemDataDir.endsWith(File.separator)) {
+                            systemDataDir = systemDataDir + File.separator;
                         }
-                        userXslDir = systemDataDir+"data"+File.separator+userXslDir;
+                        userXslDir = systemDataDir + "data" + File.separator + userXslDir;
                     }
                     IO.mkdirs(new File(userXslDir), "Formatter directory");
-                    
-                    Log.info(Geonet.DATA_DIRECTORY, "Final Custom Metadata format XSL directory set to: "+userXslDir);
+
+                    Log.info(Geonet.DATA_DIRECTORY, "Final Custom Metadata format XSL directory set to: " + userXslDir);
 
                     initializedDir = true;
                 }
@@ -77,8 +74,7 @@ abstract class AbstractFormatService implements Service {
     	GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dm = gc.getBean(DataManager.class);
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		String schema = dm.getMetadataSchema(dbms, metadataId);
+		String schema = dm.getMetadataSchema(metadataId);
 		return schema;
 	}
     protected static boolean containsFile(File container, File desiredFile) throws IOException {

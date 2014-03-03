@@ -23,13 +23,17 @@
 
 package jeeves.guiservices.session;
 
-import java.util.*;
-import org.jdom.*;
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.domain.Profile;
+import org.jdom.Element;
 
-import jeeves.interfaces.*;
-import jeeves.server.*;
-import jeeves.server.context.*;
-import jeeves.constants.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 //=============================================================================
 
@@ -74,25 +78,25 @@ public class Get implements Service
 		String sUsername = session.getUsername();
 		String sName     = session.getName();
 		String sSurname  = session.getSurname();
-		String sProfile  = session.getProfile();
+		Profile sProfile  = session.getProfile();
 
 		if (sUsername == null)
-			sUsername = ProfileManager.GUEST;
+			sUsername = Profile.Guest.name();
 
 		if (sName == null)
-			sName = ProfileManager.GUEST;
+			sName = sUsername;
 
 		if (sSurname == null)
 			sSurname = "";
 
 		if (sProfile == null)
-			sProfile = ProfileManager.GUEST;
+			sProfile = Profile.Guest;
 
 		Element userId   = new Element("userId")  .addContent(session.getUserId());
 		Element username = new Element("username").addContent(sUsername);
 		Element name     = new Element("name")    .addContent(sName);
 		Element surname  = new Element("surname") .addContent(sSurname);
-		Element profile  = new Element("profile") .addContent(sProfile);
+		Element profile  = new Element("profile") .addContent(sProfile.name());
 
 		Element sEl = new Element(Jeeves.Elem.SESSION)
 			.addContent(userId)

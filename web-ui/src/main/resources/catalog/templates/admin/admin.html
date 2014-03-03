@@ -1,0 +1,38 @@
+<span>
+  <div class="col-lg-8" data-ng-controller="GnAdminController">
+    <div class="clearfix">
+      <a data-ng-repeat="m in getMenu()" href="{{getMenuUrl(m)}}"
+        class="btn btn-lg btn-block {{m.classes}} gn-btn-admin">
+        <i class="fa {{m.icon}} fa-4x"/>
+        <p data-translate="">{{m.name}}</p>
+      </a>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="panel panel-default" data-ng-hide="true">
+      <div class="panel-heading" data-translate="">latestNews</div>
+    </div>
+    <div class="panel panel-default" data-ng-hide="true">
+      <div class="panel-heading" data-translate="">quicklinks</div>
+    </div>
+    <div class="panel panel-default text-center" data-ng-hide="searchInfo.facet.types.length === 0">
+      <div class="panel-body">
+        <div data-ng-repeat="type in searchInfo.facet.types">
+          <h2>{{type['@count']}}</h2>
+          <h5>{{(type['@label'] || type['@name']) | translate}}</h5>
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default text-center">
+      <div class="panel-body">
+        <div data-ng-hide="searchInfo.count == 0">
+          <h2>{{searchInfo.count}}</h2>
+          <h5 data-translate="" title="{{'totalNumberOfRecordsHelp' | translate}}"
+            >totalNumberOfRecords</h5>
+        </div>
+        <div data-ng-show="searchInfo.count == 0" data-translate=""> emptyCatalogShouldBeFilled
+        </div>
+      </div>
+    </div>
+  </div>
+</span>

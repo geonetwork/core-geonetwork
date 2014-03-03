@@ -22,8 +22,8 @@ package org.fao.geonet.services.util.z3950.provider.GN;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.MetaSearcher;
@@ -105,16 +105,9 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
                        setFragmentCount(metasearcher.getSize());
                        setTaskStatusCode(IRResultSetStatus.COMPLETE);
 
-                       this.srvxtx.getResourceManager().close();
                } catch (Throwable e) {
                        Log.error(Geonet.Z3950_SERVER, "error evaluating query.." + e);
                        e.printStackTrace();
-
-                       try {
-                               this.srvxtx.getResourceManager().abort();
-                       } catch (Exception e2) {
-                               e2.printStackTrace();
-                       }
                }
                return (getStatus());
        }
@@ -185,18 +178,11 @@ public class GNResultSet extends AbstractIRResultSet implements IRResultSet {
                                //System.err.println(fragment[i]);
 
                        }
-                       this.srvxtx.getResourceManager().close();
+
                    if(Log.isDebugEnabled(Geonet.Z3950_SERVER)) Log.debug(Geonet.Z3950_SERVER, "Fragment returned");
                } catch (Throwable e) {
-                       try {
-                               this.srvxtx.getResourceManager().abort();
-                       } catch (Exception e2) {
-                               e2.printStackTrace();
-                       }
-
                    if(Log.isDebugEnabled(Geonet.Z3950_SERVER))
                        Log.debug(Geonet.Z3950_SERVER, "Exception: "+e.getClass().getName()+" "+e);
-                       //e.printStackTrace();
                }
 
                return fragment;

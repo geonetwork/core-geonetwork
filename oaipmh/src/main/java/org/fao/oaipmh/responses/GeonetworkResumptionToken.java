@@ -26,8 +26,8 @@ package org.fao.oaipmh.responses;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
+import org.fao.geonet.domain.ISODate;
 import org.fao.oaipmh.util.SearchResult;
-import org.fao.oaipmh.util.ISODate;
 import org.fao.oaipmh.OaiPmh;
 import org.fao.oaipmh.exceptions.BadResumptionTokenException;
 import org.fao.oaipmh.requests.TokenListRequest;

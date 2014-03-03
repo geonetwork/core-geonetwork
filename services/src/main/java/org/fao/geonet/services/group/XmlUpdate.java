@@ -23,39 +23,49 @@
 
 package org.fao.geonet.services.group;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.Updater;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
+import javax.annotation.Nonnull;
+
 public class XmlUpdate extends NotInReadOnlyModeService {
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+    public void init(final String appPath, final ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+    public Element serviceSpecificExec(final Element params, final ServiceContext context) throws Exception {
 
-		for (Object g : params.getChildren("group"))
-		{
-			Element group = (Element) g;
+        final GroupRepository groupRepository = context.getBean(GroupRepository.class);
+        for (Object g : params.getChildren("group")) {
+            Element groupEl = (Element) g;
 
-			String  id    = Util.getAttrib(group, Params.ID);
-			Element label = Util.getChild (group, "label");
+            String id = Util.getAttrib(groupEl, Params.ID);
+            final Element label = Util.getChild(groupEl, "label");
 
-			Lib.local.update(dbms, "Groups", Integer.parseInt(id), label);
-		}
 
-		return new Element("ok");
-	}
+            groupRepository.update(Integer.valueOf(id), new Updater<Group>() {
+                @Override
+                public void apply(@Nonnull Group group) {
+                    for (Object t : label.getChildren()) {
+                        Element translationEl = (Element) t;
+                        group.getLabelTranslations().put(translationEl.getName(), translationEl.getText());
+                    }
+                }
+            });
+        }
+
+        return new Element("ok");
+    }
 }

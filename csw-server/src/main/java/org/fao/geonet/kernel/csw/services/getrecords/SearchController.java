@@ -27,9 +27,9 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.Util;
+import org.fao.geonet.utils.Xml;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.search.Sort;
 import org.fao.geonet.GeonetContext;
@@ -45,8 +45,7 @@ import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.kernel.search.spatial.Pair;
-import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.domain.Pair;
 import org.geotools.gml2.GMLConfiguration;
 import org.jdom.Content;
 import org.jdom.Element;
@@ -65,20 +64,20 @@ import java.util.Set;
  * TODO javadoc.
  */
 public class SearchController {
-    
-	private final Set<String> _selector;
-	private final Set<String> _uuidselector;
+
+    private final Set<String> _selector;
+    private final Set<String> _uuidselector;
     private GMLConfiguration _gmlConfig;
     private ApplicationContext _applicationContext;
 
-	public SearchController(ApplicationContext applicationContext) {
-		_selector = Collections.singleton("_id");
-		_uuidselector = Collections.singleton("_uuid");
-		_gmlConfig = new GMLConfiguration();
-		this._applicationContext = applicationContext;
+    public SearchController(ApplicationContext applicationContext) {
+        _selector = Collections.singleton("_id");
+        _uuidselector = Collections.singleton("_uuid");
+        _gmlConfig = new GMLConfiguration();
+        this._applicationContext = applicationContext;
     }
-    
-	//---------------------------------------------------------------------------
+
+    //---------------------------------------------------------------------------
     //---
     //--- Single public method to perform the general search tasks
     //---
@@ -114,14 +113,14 @@ public class SearchController {
         Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
 
         CatalogSearcher searcher = new CatalogSearcher(_gmlConfig, _selector, _uuidselector, _applicationContext);
-        
+
         context.getUserSession().setProperty(Geonet.Session.SEARCH_RESULT, searcher);
-        
-		// search for results, filtered and sorted
-        Pair<Element, List<ResultItem>> summaryAndSearchResults = searcher .search(context, filterExpr, filterVersion,
+
+        // search for results, filtered and sorted
+        Pair<Element, List<ResultItem>> summaryAndSearchResults = searcher.search(context, filterExpr, filterVersion,
                 typeName, sort, resultType, startPos, maxRecords, maxHitsFromSummary, cswServiceSpecificContraint);
 
-        final SettingInfo settingInfo = _applicationContext.getBean(SearchManager.class).get_settingInfo();
+        final SettingInfo settingInfo = context.getBean(SearchManager.class).getSettingInfo();
         String displayLanguage = LuceneSearcher.determineLanguage(context, filterExpr, settingInfo).presentationLanguage;
         // retrieve actual metadata for results
         int counter = retrieveMetadataMatchingResults(context, results, summaryAndSearchResults, maxRecords, setName,
@@ -136,14 +135,14 @@ public class SearchController {
         results.setAttribute("numberOfRecordsReturned", counter +"");
         results.setAttribute("elementSet", setName.toString());
 
-	    if (numMatches > counter) {
-		    results.setAttribute("nextRecord", counter + startPos + "");
-	    }
+        if (numMatches > counter) {
+            results.setAttribute("nextRecord", counter + startPos + "");
+        }
         else {
-		    results.setAttribute("nextRecord","0");
+            results.setAttribute("nextRecord","0");
         }
 
-	    return Pair.read(summary, results);
+        return Pair.read(summary, results);
     }
 
     /**
@@ -212,65 +211,64 @@ public class SearchController {
      * conversion available for the schema (eg. fgdc record can not be converted to ISO).
      * @throws CatalogException hmm
      */
-  public static Element retrieveMetadata(ServiceContext context, String id, ElementSetName setName, OutputSchema
-          outSchema, Set<String> elemNames, String typeName, ResultType resultType, String strategy, String displayLanguage) throws CatalogException {
+    public static Element retrieveMetadata(ServiceContext context, String id, ElementSetName setName, OutputSchema
+            outSchema, Set<String> elemNames, String typeName, ResultType resultType, String strategy, String displayLanguage) throws CatalogException {
 
-	try	{
-		//--- get metadata from DB
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
-        Element res = gc.getBean(DataManager.class).getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
-		res = XslUtil.controlForMarkup(context, res, Geonet.Settings.WIKI_OUTPUT);
-		SchemaManager scm = gc.getBean(SchemaManager.class);
-		if (res==null) {
-            return null;
+        try	{
+            //--- get metadata from DB
+            GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+            boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
+            Element res = gc.getBean(DataManager.class).getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
+            SchemaManager scm = gc.getBean(SchemaManager.class);
+            if (res==null) {
+                return null;
+            }
+            Element info = res.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+            String schema = info.getChildText(Edit.Info.Elem.SCHEMA);
+
+
+            // --- transform iso19115 record to iso19139
+            // --- If this occur user should probably migrate the catalogue from iso19115 to iso19139.
+            // --- But sometimes you could harvest remote node in iso19115 and make them available through CSW
+            if (schema.equals("iso19115")) {
+                res = Xml.transform(res, new StringBuilder().append(context.getAppPath()).append("xsl")
+                        .append(File.separator).append("conversion").append(File.separator).append("import")
+                        .append(File.separator).append("ISO19115-to-ISO19139.xsl").toString());
+                schema = "iso19139";
+            }
+
+            //--- skip metadata with wrong schemas
+            if (schema.equals("fgdc-std") || schema.equals("dublin-core"))
+                if(outSchema != OutputSchema.OGC_CORE)
+                    return null;
+
+            // apply stylesheet according to setName and schema
+            //
+            // OGC 07-045 :
+            // Because for this application profile it is not possible that a query includes more than one
+            // typename, any value(s) of the typeNames attribute of the elementSetName element are ignored.
+            res = applyElementSetName(context, scm, schema, res, outSchema, setName, resultType, id, displayLanguage);
+            //
+            // apply elementnames
+            //
+            res = applyElementNames(context, elemNames, typeName, scm, schema, res, resultType, info, strategy);
+
+            if(res != null) {
+                if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                    Log.debug(Geonet.CSW_SEARCH, "SearchController returns\n" + Xml.getString(res));
+            }
+            else {
+                if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+                    Log.debug(Geonet.CSW_SEARCH, "SearchController returns null");
+            }
+            return res;
         }
-		Element info = res.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
-		String schema = info.getChildText(Edit.Info.Elem.SCHEMA);
-
-
-		// --- transform iso19115 record to iso19139
-		// --- If this occur user should probably migrate the catalogue from iso19115 to iso19139.
-		// --- But sometimes you could harvest remote node in iso19115 and make them available through CSW
-		if (schema.equals("iso19115")) {
-			res = Xml.transform(res, new StringBuilder().append(context.getAppPath()).append("xsl")
-                    .append(File.separator).append("conversion").append(File.separator).append("import")
-                    .append(File.separator).append("ISO19115-to-ISO19139.xsl").toString());
-			schema = "iso19139";
-		}
-		
-		//--- skip metadata with wrong schemas
-		if (schema.equals("fgdc-std") || schema.equals("dublin-core"))
-		    if(outSchema != OutputSchema.OGC_CORE)
-		    	return null;
-        
-		// apply stylesheet according to setName and schema
-        //
-        // OGC 07-045 :
-        // Because for this application profile it is not possible that a query includes more than one
-        // typename, any value(s) of the typeNames attribute of the elementSetName element are ignored.
-        res = applyElementSetName(context, scm, schema, res, outSchema, setName, resultType, id, displayLanguage);
-		//
-	    // apply elementnames
-        //
-        res = applyElementNames(context, elemNames, typeName, scm, schema, res, resultType, info, strategy);
-
-        if(res != null) {
-            if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
-                Log.debug(Geonet.CSW_SEARCH, "SearchController returns\n" + Xml.getString(res));
+        catch (Exception e) {
+            context.error("Error while getting metadata with id : "+ id);
+            context.error("  (C) StackTrace:\n"+ Util.getStackTrace(e));
+            throw new NoApplicableCodeEx("Raised exception while getting metadata :"+ e);
         }
-        else {
-            if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
-                Log.debug(Geonet.CSW_SEARCH, "SearchController returns null");
-        }
-		return res;
-	}
-    catch (Exception e) {
-		context.error("Error while getting metadata with id : "+ id);
-		context.error("  (C) StackTrace:\n"+ Util.getStackTrace(e));
-		throw new NoApplicableCodeEx("Raised exception while getting metadata :"+ e);
     }
-  }
 
     /**
      * Applies stylesheet according to ElementSetName and schema.
@@ -300,21 +298,21 @@ public class SearchController {
             throw new InvalidParameterValueEx("outputSchema not supported for metadata " + id + " schema.", schema);
         }
 
-		String schemaDir  = schemaManager.getSchemaCSWPresentDir(schema)+ File.separator;
-		String styleSheet = schemaDir + prefix +"-"+ elementSetName +".xsl";
+        String schemaDir  = schemaManager.getSchemaCSWPresentDir(schema)+ File.separator;
+        String styleSheet = schemaDir + prefix +"-"+ elementSetName +".xsl";
 
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("lang", displayLanguage);
-		params.put("displayInfo", resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("lang", displayLanguage);
+        params.put("displayInfo", resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
 
-		try {
-		    result = Xml.transform(result, styleSheet, params);
-		}
+        try {
+            result = Xml.transform(result, styleSheet, params);
+        }
         catch (Exception e) {
-		    context.error("Error while transforming metadata with id : " + id + " using " + styleSheet);
-	        context.error("  (C) StackTrace:\n" + Util.getStackTrace(e));
-		    return null;
-		}
+            context.error("Error while transforming metadata with id : " + id + " using " + styleSheet);
+            context.error("  (C) StackTrace:\n" + Util.getStackTrace(e));
+            return null;
+        }
         return result;
     }
 
@@ -429,8 +427,8 @@ public class SearchController {
 
             Element matchingMetadata = (Element)result.clone();
             if(strategy.equals("context") || strategy.equals("geonetwork26")) {
-            // these strategies do not return complete metadata
-            matchingMetadata.removeContent();
+                // these strategies do not return complete metadata
+                matchingMetadata.removeContent();
             }
 
             boolean metadataContainsAllRequestedElementNames = true;
@@ -476,26 +474,26 @@ public class SearchController {
                             if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
                                 Log.debug(Geonet.CSW_SEARCH, "elementname does not start with one of the supported typeNames : " + elementName);
                             // prepend with /typeName/
-                                xpath = "/" + typeName + "//" + elementName ;
+                            xpath = "/" + typeName + "//" + elementName ;
                         }
                     }
                     @SuppressWarnings("unchecked")
                     List<Element> elementsMatching = (List<Element>)Xml.selectDocumentNodes(result, xpath, namespaces);
-                    
+
                     if(strategy.equals("context")) {
                         if(Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
                             Log.debug(Geonet.CSW_SEARCH, "strategy is context, constructing context to root");
                         }
-                        
+
                         List<Element> elementsInContextMatching = new ArrayList<Element>();
                         for (Element match : elementsInContextMatching) {
                             Element parent = match.getParentElement();
                             while(parent != null) {
-                                    parent.removeContent();
-                                    parent.addContent((Element)match.clone());
-                                    match = (Element)parent.clone();
-                                    parent = parent.getParentElement();
-                                }
+                                parent.removeContent();
+                                parent.addContent((Element)match.clone());
+                                match = (Element)parent.clone();
+                                parent = parent.getParentElement();
+                            }
                             elementsInContextMatching.add(match);
                         }
                         elementsMatching = elementsInContextMatching;

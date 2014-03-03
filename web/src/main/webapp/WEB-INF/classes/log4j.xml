@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
-<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+<log4j:configuration debug="false">
 
 
 
@@ -18,9 +18,6 @@
             <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c] - %m%n" />
         </layout>
     </appender>
-
-
-
 
     <!-- Geonetwork module (and submodule) logging -->
     <logger name="geonetwork" additivity="false">
@@ -100,10 +97,6 @@
         <level value="WARN" />
     </logger>
 
-
-
-
-
     <!--  Jeeves module and submodule logger configuration -->
     <logger name="jeeves" additivity="false">
         <level value="DEBUG" />
@@ -142,8 +135,12 @@
 
     <!--  Spring logging configuration -->
     <logger name="org.springframework" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
         <appender-ref ref="consoleAppender" />
+        <appender-ref ref="fileAppender" />
+    </logger>
+    <logger name="org.springframework.beans" additivity="false">
+        <level value="WARN" />
         <appender-ref ref="fileAppender" />
     </logger>
     <logger name="org.springframework.security" additivity="false">
@@ -152,7 +149,9 @@
     <logger name="org.springframework.security.ldap" additivity="false">
         <level value="WARN" />
     </logger>
-
+    <logger name="org.springframework.aop.framework.CglibAopProxy" additivity="false">
+        <level value="ERROR" />
+    </logger>
 
     <!--  JZKIT logging configuration -->
     <logger name="com.k_int" additivity="false">
@@ -169,7 +168,21 @@
     <logger name="org.jzkit.search.impl.LRUCache" additivity="false">
         <level value="WARN" />
     </logger>
-
+    <logger name="ro.isdc.wro.http" additivity="false">
+        <level value="DEBUG" />
+        <appender-ref ref="consoleAppender" />
+        <appender-ref ref="fileAppender" />
+    </logger>
+    <logger name="org.hibernate.SQL" additivity="false">
+        <level value="WARN" />
+        <appender-ref ref="consoleAppender" />
+        <appender-ref ref="fileAppender" />
+    </logger>
+    <logger name="org.hibernate.type" additivity="false">
+        <level value="WARN" />
+        <appender-ref ref="consoleAppender" />
+        <appender-ref ref="fileAppender" />
+    </logger>
 
 
     <!-- Turn off logging except when explicitly declared below -->

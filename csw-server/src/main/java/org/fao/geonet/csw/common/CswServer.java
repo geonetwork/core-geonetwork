@@ -23,7 +23,7 @@
 
 package org.fao.geonet.csw.common;
 
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 import org.jdom.Namespace;

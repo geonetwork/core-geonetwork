@@ -24,7 +24,7 @@ public class FreeConnectionsHealthCheck implements HealthCheckFactory {
             protected Result check() throws Exception {
                 Stats stats;
                 try {
-                    stats = context.getResourceManager().getStats(Geonet.Res.MAIN_DB);
+                    stats = new Stats(context);
                     int free = stats.maxActive - stats.numActive;
                     double fivePercent = Math.max(2.0, ((double) stats.maxActive) * 0.01);
                     if (free < fivePercent) {

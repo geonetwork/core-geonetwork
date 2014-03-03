@@ -1,18 +1,19 @@
 package org.fao.geonet.services.statistics;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.resources.dbms.Dbms;
+import org.fao.geonet.Constants;
+import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.IO;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.Util;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
+import javax.sql.DataSource;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -95,18 +96,18 @@ public class TableExport extends NotInReadOnlyModeService {
         String query = "select * from " + tableToExport;
         if (Log.isDebugEnabled(Geonet.SEARCH_LOGGER))
             Log.debug(Geonet.SEARCH_LOGGER, "Export Statistics table: query to get table:\n" + query);
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         // use connection by hand, to allow us to control the resultset and avoid Java Heap Space Exception
-        Connection con = dbms.getConnection();
+        Connection con = null;
         Statement stmt = null;
         ResultSet rs = null;
         FileOutputStream fileOutputStream = null;
         BufferedWriter out = null;
         try {
+            con = context.getBean(DataSource.class).getConnection();
             stmt = con.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             rs = stmt.executeQuery(query);
             fileOutputStream = new FileOutputStream(tableDumpFile);
-            out = new BufferedWriter(new OutputStreamWriter(fileOutputStream, Jeeves.ENCODING));
+            out = new BufferedWriter(new OutputStreamWriter(fileOutputStream, Constants.ENCODING));
             ResultSetMetaData rsMetaData = rs.getMetaData();
 
             if (this.dumpHeader) {
@@ -139,6 +140,9 @@ public class TableExport extends NotInReadOnlyModeService {
             IOUtils.closeQuietly(fileOutputStream);
             IO.closeQuietly(rs);
             IO.closeQuietly(stmt);
+            if (con != null) {
+                con.close();
+            }
         }
         // dbms.disconnect();
         if (Log.isDebugEnabled(Geonet.SEARCH_LOGGER))

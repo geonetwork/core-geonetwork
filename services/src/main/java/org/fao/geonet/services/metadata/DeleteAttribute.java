@@ -23,11 +23,10 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.services.NotInReadOnlyModeService;
@@ -51,13 +50,10 @@ public class DeleteAttribute extends NotInReadOnlyModeService {
 	public Element serviceSpecificExec(Element params, ServiceContext context)
 			throws Exception {
 		UserSession session = context.getUserSession();
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
-
 		String id = Util.getParam(params, Params.ID);
 		String ref = Util.getParam(params, Params.REF);
 
-		Element child = new AjaxEditUtils(context).deleteAttributeEmbedded(dbms, session, id, ref);
+		Element child = new AjaxEditUtils(context).deleteAttributeEmbedded(session, id, ref);
 
 		return child;
 	}

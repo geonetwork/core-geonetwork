@@ -1,0 +1,99 @@
+<form data-ng-keypress="updatingHarvester()">
+
+
+    <div class="row">
+        <div class="col-lg-6" data-gn-harvester-identification="harvesterSelected" lang=""/>
+
+        <div class="col-lg-6" data-gn-harvester-schedule="harvesterSelected"/>
+    </div>
+
+
+    <fieldset>
+        <legend><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+            harvesterSelected['@type']) | translate}}</legend>
+        <div data-ng-class="harvesterSelected.site.url == '' ? 'has-error' : ''">
+            <label class="control-label" data-translate="">serviceUrl</label>
+            <input type="text" class="form-control" data-ng-model="harvesterSelected.site.url"/>
+            <p class="help-block" data-translate="">serviceUrlHelp</p>
+        </div>
+
+
+        <div>
+            <label class="control-label" data-translate="">wfsfeatures-query</label>
+            <textarea class="form-control" data-ng-model="harvesterSelected.options.query"/>
+        </div>
+    </fieldset>
+
+
+    <fieldset>
+        <legend><span data-translate="">harvesterAdvancedConfigurationFor</span>
+            {{harvesterSelected['@type'] | translate}}</legend>
+
+
+        <div data-gn-harvester-account="harvesterSelected"/>
+
+
+        <!-- TODO: Could be nicer to have a list of languages -->
+        <div>
+            <label class="control-label" data-translate="">wfsfeatures-metadataLanguage</label>
+            <input type="text" class="form-control" data-ng-model="harvesterSelected.options.lang"/>
+        </div>
+
+        <div>
+            <label class="control-label" data-translate="">wfsfeatures-outputSchema</label>
+            <input type="text" class="form-control"
+                data-ng-model="harvesterSelected.options.outputSchema"/>
+        </div>
+
+        <div>
+            <label class="control-label">
+                <input type="checkbox" data-ng-model="harvesterSelected.options.streamFeatures"/>
+                <span data-translate="">wfsfeatures-streamFeatures</span>
+            </label>
+            <p class="help-block" data-translate="">wfsfeatures-streamFeaturesHelp</p>
+        </div>
+
+        <div>
+            <label class="control-label">
+                <span data-translate="">wfsfeatures-stylesheet</span>
+            </label>
+            <select class="form-control" data-ng-model="harvesterSelected.options.stylesheet"
+                data-ng-options="s.id as (s.name + ' (' + s.schema + ')') for s in harvesterGetFeatureXSLT"> </select>
+            <p class="help-block" data-translate="">wfsfeatures-stylesheetHelp</p>
+        </div>
+
+
+        <div data-gn-category="harvesterSelected.options.recordsCategory" data-lang="{{lang}}"
+            data-label="wfsfeature-recordsCategory"/>
+
+
+
+        <div>
+            <label class="control-label">
+                <input type="checkbox" data-ng-model="harvesterSelected.options.createSubtemplates"/>
+                <span data-translate="">wfsfeatures-createSubtemplates</span>
+            </label>
+            <p class="help-block" data-translate="">wfsfeatures-createSubtemplatesHelp</p>
+        </div>
+
+        <div>
+            <label class="control-label">
+                <span data-translate="">wfsfeatures-templateId</span>
+            </label>
+            <select class="form-control" data-ng-model="harvesterSelected.options.templateId"
+                data-ng-options="t['@id'] as (t.schema + ' > ' + t.title) for t in harvesterTemplates"> </select>
+            <p class="help-block" data-translate="">wfsfeatures-templateIdHelp</p>
+        </div>
+
+
+        <div>
+            <label class="control-label" data-translate="">wfsfeature-subtemplateCategory</label>
+
+            <div data-gn-category="harvesterSelected.categories[0]['@id']" lang="{{lang}}"/>
+        </div>
+    </fieldset>
+
+
+
+    <div data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
+</form>

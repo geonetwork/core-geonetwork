@@ -23,13 +23,14 @@
 
 package org.fao.geonet.services.main;
 
-import jeeves.exceptions.MissingParameterEx;
-import jeeves.exceptions.UserNotFoundEx;
+import org.fao.geonet.exceptions.MissingParameterEx;
+import org.fao.geonet.exceptions.UserNotFoundEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import jeeves.utils.XmlRequest;
+import org.fao.geonet.Util;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.XmlRequest;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
@@ -73,7 +74,7 @@ public class Forward implements Service
 		if (list.size() == 0)
 			throw new MissingParameterEx("<request>", par);
 
-		XmlRequest req = new XmlRequest(new URL(url));
+		XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(url));
 
 		//--- do we need to authenticate?
 

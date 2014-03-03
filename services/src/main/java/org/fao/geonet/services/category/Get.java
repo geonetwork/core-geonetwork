@@ -25,12 +25,11 @@ package org.fao.geonet.services.category;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.jdom.Element;
 
 //=============================================================================
@@ -38,8 +37,7 @@ import org.jdom.Element;
 /** Returns a specific category given its id
   */
 
-public class Get implements Service
-{
+public class Get implements Service {
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
@@ -48,16 +46,19 @@ public class Get implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
+	public Element exec(Element params, ServiceContext context) throws Exception {
 		String id = params.getChildText(Params.ID);
 
-		if (id == null)
+		if (id == null) {
 			return new Element(Jeeves.Elem.RESPONSE);
+        }
 
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
+        final MetadataCategory category = context.getBean(MetadataCategoryRepository.class).findOne(Integer.valueOf(id));
 
-		return Lib.local.retrieveById(dbms, "Categories", id).setName(Jeeves.Elem.RESPONSE);
+        if (category == null) {
+            return new Element(Jeeves.Elem.RESPONSE);
+        }
+        return new Element(Jeeves.Elem.RESPONSE).addContent(category.asXml());
 	}
 }
 

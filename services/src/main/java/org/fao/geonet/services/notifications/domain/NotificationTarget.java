@@ -51,12 +51,14 @@ public class NotificationTarget {
 
     @Override
     public boolean equals(Object o) {
-        if(o instanceof NotificationTarget) {
-            return this.id.equals(((NotificationTarget) o).getId());
-        }
-        else {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        NotificationTarget that = (NotificationTarget) o;
+
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+
+        return true;
     }
 
     @Override

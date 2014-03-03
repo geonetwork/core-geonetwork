@@ -60,18 +60,18 @@ GeoNetwork.admin.PrivilegesPanel = Ext.extend(Ext.grid.GridPanel, {
         }
     },
     isTopGroups : function(id) {
-    	if (GeoNetwork.Settings.privileges && GeoNetwork.Settings.privileges.topGroups) {
-    		return GeoNetwork.Settings.privileges.topGroups.indexOf(id) !== -1;
-    	} else {
-    		return false;
-    	}
+        if (GeoNetwork.Settings.privileges && GeoNetwork.Settings.privileges.topGroups) {
+            return GeoNetwork.Settings.privileges.topGroups.indexOf(id) !== -1;
+        } else {
+            return false;
+        }
     },
     getColumnOrder : function() {
-    	if (GeoNetwork.Settings.privileges && GeoNetwork.Settings.privileges.columnOrder) {
-    		return GeoNetwork.Settings.privileges.columnOrder;
-    	} else {
-    		return null;
-    	}
+        if (GeoNetwork.Settings.privileges && GeoNetwork.Settings.privileges.columnOrder) {
+            return GeoNetwork.Settings.privileges.columnOrder;
+        } else {
+            return null;
+        }
     },
     initComponent : function() {
         
@@ -196,7 +196,7 @@ GeoNetwork.admin.PrivilegesPanel = Ext.extend(Ext.grid.GridPanel, {
                          var id = Ext.DomQuery.selectNode('id', n);
                          
                          if (catalogue.getNodeText(id) <= 1 || 
-                        		 self.isTopGroups(catalogue.getNodeText(id))) {
+                                 self.isTopGroups(catalogue.getNodeText(id))) {
                              prefix = " - ";
                          }
                          var trueLabel = 
@@ -251,11 +251,11 @@ GeoNetwork.admin.PrivilegesPanel = Ext.extend(Ext.grid.GridPanel, {
                 
                 // build column depending on operations Store or columnOrder array
                 if (self.getColumnOrder()) {
-                	Ext.each(self.getColumnOrder(), function(id) {
+                    Ext.each(self.getColumnOrder(), function(id) {
                         var recId = operationsStore.find('id',id);
                         if (recId !== undefined) {
-                        	var rec = operationsStore.getAt(recId);
-                        	 columns.push({
+                            var rec = operationsStore.getAt(recId);
+                            columns.push({
                                  xtype: 'checkcolumn',
                                  header: rec.get('label'),
                                  dataIndex: 'oper'+rec.get('id'),
@@ -265,7 +265,7 @@ GeoNetwork.admin.PrivilegesPanel = Ext.extend(Ext.grid.GridPanel, {
                         }
                     });
                 } else {
-                	operationsStore.each(function(rec) {
+                    operationsStore.each(function(rec) {
                         columns.push({
                             xtype: 'checkcolumn',
                             header: rec.get('label'),

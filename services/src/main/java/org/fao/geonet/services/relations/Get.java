@@ -24,17 +24,21 @@
 package org.fao.geonet.services.relations;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.MetadataRelation;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.repository.MetadataRelationRepository;
+import org.fao.geonet.repository.specification.MetadataRelationSpecs;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -71,18 +75,17 @@ public class Get implements Service {
 	 * @throws Exception 
 	 */
 	public static Element getRelation(int id, String relation, ServiceContext context) throws Exception {
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager dm = gc.getBean(DataManager.class);
 		
-		Set<String> result = getRelationIds(id, relation, context);
+		Set<Integer> result = getRelationIds(id, relation, context);
 		
 				// --- retrieve metadata and return result
 		Element response = new Element("response");
 
-		for (String mdId : result) {
+		for (Integer mdId : result) {
             boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
-            Element md = dm.getMetadata(context, mdId, forEditing, withValidationErrors, keepXlinkAttributes);
+            Element md = dm.getMetadata(context,"" + mdId, forEditing, withValidationErrors, keepXlinkAttributes);
 
 			// --- we could have a race condition so, just perform a simple check
 			if (md != null)
@@ -103,48 +106,41 @@ public class Get implements Service {
 	 * @return
 	 * @throws Exception 
 	 */
-	public static Set<String> getRelationIds(int id, String relation, ServiceContext context) throws Exception {
-		Dbms dbms = (Dbms) context.getResourceManager()
-		.open(Geonet.Res.MAIN_DB);
-		
-		Set<String> result = new HashSet<String>();
-		
+	public static Set<Integer> getRelationIds(int id, String relation, ServiceContext context) throws Exception {
 		// --- perform proper queries to retrieve the id set
 		if (relation.equals("normal") || relation.equals("full")) {
-			String query = "SELECT relatedId FROM Relations WHERE id=?";
-			result.addAll(retrieveIds(dbms, query, "relatedid", id));
+			return retrieveIds(context, true, "relatedid", id);
 		}
 
 		if (relation.equals("reverse") || relation.equals("full")) {
-			String query = "SELECT id FROM Relations WHERE relatedId=?";
-			result.addAll(retrieveIds(dbms, query, "id", id));
+            return retrieveIds(context, false, "id", id);
 		}
 
-		return result;
+		return Collections.emptySet();
 	}
 	
 	/**
 	 * Run the query and load a Set based on query results.
-	 * 
-	 * @param dbms
-	 * @param query
-	 * @param field
-	 * @param id
-	 * @return
-	 * @throws java.sql.SQLException
 	 */
-	private static Set<String> retrieveIds(Dbms dbms, String query,
+	private static Set<Integer> retrieveIds(ServiceContext context, boolean findMetadataId,
 			String field, int id) throws SQLException {
-		@SuppressWarnings("unchecked")
-        List<Element> records = dbms.select(query, Integer.valueOf(id)).getChildren();
-		Set<String> results = new HashSet<String>();
+        final MetadataRelationRepository relationRepository = context.getBean(MetadataRelationRepository.class);
 
-		for (Element rec : records) {
-			String val = rec.getChildText(field);
+        Specification<MetadataRelation> spec;
+        if (findMetadataId) {
+            spec = MetadataRelationSpecs.hasMetadataId(id);
+        } else {
+            spec = MetadataRelationSpecs.hasRelatedId(id);
+        }
 
-			results.add(val);
-		}
-
-		return results;
+        HashSet<Integer> results = new HashSet<Integer>();
+        for (MetadataRelation metadataRelation : relationRepository.findAll(spec)) {
+            if (findMetadataId) {
+                results.add(metadataRelation.getId().getMetadataId());
+            } else {
+                results.add(metadataRelation.getId().getRelatedId());
+            }
+        }
+        return results;
 	}
 }

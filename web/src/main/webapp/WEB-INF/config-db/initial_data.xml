@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-lazy-init="true"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+       xmlns:util="http://www.springframework.org/schema/util">
+
+    <!--
+        this file lists the data files to import into the database if the database is empty
+        -->
+
+    <util:list id="initial-data">
+        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+            <constructor-arg value="data-db-"/>
+        </bean>
+        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+            <constructor-arg value="loc-eng-"/>
+        </bean>
+        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+            <constructor-arg value="loc-fre-"/>
+        </bean>
+        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+            <constructor-arg value="loc-ger-"/>
+        </bean>
+        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+            <constructor-arg value="loc-spa-"/>
+        </bean>
+        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+            <constructor-arg value="loc-cat-"/>
+        </bean>
+        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+            <constructor-arg value="loc-rus-"/>
+        </bean>
+        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+            <constructor-arg value="loc-por-"/>
+        </bean>
+        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+            <constructor-arg value="loc-chi-"/>
+        </bean>
+        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+            <constructor-arg value="loc-dut-"/>
+        </bean>
+        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+            <constructor-arg value="loc-nor-"/>
+        </bean>
+        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+            <constructor-arg value="loc-fin-"/>
+        </bean>
+        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+            <constructor-arg value="loc-ara-"/>
+        </bean>
+        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+            <constructor-arg value="loc-ita-"/>
+        </bean>
+        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+            <constructor-arg value="loc-tur-"/>
+        </bean>
+        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+            <constructor-arg value="loc-vie-"/>
+        </bean>
+        <bean class="org.fao.geonet.domain.Pair" factory-method="read">
+            <constructor-arg value="WEB-INF/classes/setup/sql/data"/>
+            <constructor-arg value="loc-pol-"/>
+        </bean>
+    </util:list>
+
+</beans>

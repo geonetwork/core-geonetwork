@@ -11,24 +11,24 @@ UPDATE CswServerCapabilitiesInfo SET langid='nor' WHERE langid='no';
 DELETE FROM Languages WHERE id='no';
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CategoriesDes VALUES (1,'nor','Kart og grafikk');
-INSERT INTO CategoriesDes VALUES (2,'nor','Datasett');
-INSERT INTO CategoriesDes VALUES (3,'nor','Interakive ressurser');
-INSERT INTO CategoriesDes VALUES (4,'nor','Applikasjoner');
-INSERT INTO CategoriesDes VALUES (5,'nor','Studier og anbefalinger');
-INSERT INTO CategoriesDes VALUES (6,'nor','Konferanseresultater');
-INSERT INTO CategoriesDes VALUES (7,'nor','Fotografier');
-INSERT INTO CategoriesDes VALUES (8,'nor','Audio/Video');
-INSERT INTO CategoriesDes VALUES (9,'nor','Kataloger');
-INSERT INTO CategoriesDes VALUES (10,'nor','Andre ressurser');
-INSERT INTO CategoriesDes VALUES (11,'nor','Z3950 Servers');
-INSERT INTO CategoriesDes VALUES (12,'nor','Registers');
-INSERT INTO CategoriesDes VALUES (13,'nor','Physical Samples');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'nor','Kart og grafikk');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'nor','Datasett');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'nor','Interakive ressurser');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (4,'nor','Applikasjoner');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (5,'nor','Studier og anbefalinger');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (6,'nor','Konferanseresultater');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (7,'nor','Fotografier');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (8,'nor','Audio/Video');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (9,'nor','Kataloger');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (10,'nor','Andre ressurser');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (11,'nor','Z3950 Servers');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (12,'nor','Registers');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (13,'nor','Physical Samples');
 
-INSERT INTO GroupsDes VALUES (-1,'nor','Gjest');
-INSERT INTO GroupsDes VALUES (0,'nor','Intranett');
-INSERT INTO GroupsDes VALUES (1,'nor','Alle');
-INSERT INTO GroupsDes VALUES (2,'nor','Eksempelgruppe');
+INSERT INTO GroupsDes (iddes, langid, label) VALUES (-1,'nor','Gjest');
+INSERT INTO GroupsDes (iddes, langid, label) VALUES (0,'nor','Intranett');
+INSERT INTO GroupsDes (iddes, langid, label) VALUES (1,'nor','Alle');
+INSERT INTO GroupsDes (iddes, langid, label) VALUES (2,'nor','Eksempelgruppe');
 
 INSERT INTO IsoLanguagesDes VALUES (1,'nor','Afar');
 INSERT INTO IsoLanguagesDes VALUES (2,'nor','Abkhazian');
@@ -522,12 +522,12 @@ INSERT INTO OperationsDes VALUES (3,'nor','Varsle');
 INSERT INTO OperationsDes VALUES (5,'nor','Interaktivt kart');
 INSERT INTO OperationsDes VALUES (6,'nor','Aktuelt');
 
-INSERT INTO StatusValuesDes VALUES (0,'nor','Unknown');
-INSERT INTO StatusValuesDes VALUES (1,'nor','Draft');
-INSERT INTO StatusValuesDes VALUES (2,'nor','Approved');
-INSERT INTO StatusValuesDes VALUES (3,'nor','Retired');
-INSERT INTO StatusValuesDes VALUES (4,'nor','Submitted');
-INSERT INTO StatusValuesDes VALUES (5,'nor','Rejected');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (0,'nor','Unknown');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (1,'nor','Draft');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (2,'nor','Approved');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (3,'nor','Retired');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (4,'nor','Submitted');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (5,'nor','Rejected');
 
 INSERT INTO RegionsDes VALUES (1,'nor','Armenia');
 INSERT INTO RegionsDes VALUES (2,'nor','Afghanistan');

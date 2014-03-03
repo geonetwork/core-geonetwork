@@ -24,19 +24,23 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.resources.dbms.Dbms;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.Util;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.services.NotInReadOnlyModeService;
-import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
 import java.util.ArrayList;
@@ -74,7 +78,7 @@ public class Insert extends NotInReadOnlyModeService {
 
 		String data       = Util.getParam(params, Params.DATA);
 		String group      = Util.getParam(params, Params.GROUP);
-		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
+        MetadataType metadataType = MetadataType.lookup(Util.getParam(params, Params.TEMPLATE, "n"));
 		String style      = Util.getParam(params, Params.STYLESHEET, "_none_");
 
 		boolean validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
@@ -94,7 +98,7 @@ public class Insert extends NotInReadOnlyModeService {
 
         String schema = dataMan.autodetectSchema(xml);
         if (schema == null)
-        	throw new BadParameterEx("Can't detect schema for metadata automatically.", schema);
+        	throw new BadParameterEx("Can't detect schema for metadata automatically.", "schema is unknown");
 
 		if (validate) DataManager.validateMetadata(schema, xml, context);
 
@@ -102,7 +106,7 @@ public class Insert extends NotInReadOnlyModeService {
 		//--- if the uuid does not exist and is not a template we generate it
 
 		String uuid;
-		if (isTemplate.equals("n"))
+		if (metadataType == MetadataType.TEMPLATE)
 		{
 			uuid = dataMan.extractUUID(schema, xml);
 			if (uuid.length() == 0) uuid = UUID.randomUUID().toString();
@@ -116,23 +120,21 @@ public class Insert extends NotInReadOnlyModeService {
 
 		final List<String> id = new ArrayList<String>();
 		final List<Element> md = new ArrayList<Element>();
-		String localId = null;
 		md.add(xml);
 		
 
         DataManager dm = gc.getBean(DataManager.class);
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        
+
 		// Import record
-		Importer.importRecord(uuid, localId , uuidAction, md, schema, 0,
-				gc.getSiteId(), gc.getSiteName(), context, id, date,
-				date, group, isTemplate, dbms);
+        Importer.importRecord(uuid, uuidAction, md, schema, 0,
+                gc.getBean(SettingManager.class).getSiteId(), gc.getBean(SettingManager.class).getSiteName(), context, id, date,
+				date, group, metadataType);
 		
 		int iId = Integer.parseInt(id.get(0));
 		
 		
 		// Set template
-		dm.setTemplate(dbms, iId, isTemplate, null);
+		dm.setTemplate(iId, metadataType, null);
 
 		
 		// Import category
@@ -143,16 +145,17 @@ public class Insert extends NotInReadOnlyModeService {
 			categs.addContent((new Element("category")).setAttribute(
 					"name", category));
 
-			Importer.addCategories(context, dm, dbms, id.get(0), categs);
+            final Metadata metadata = context.getBean(MetadataRepository.class).findOne(id.get(0));
+            Importer.addCategoriesToMetadata(metadata , categs, context);
 		} 
 
 		// Index
-        dm.indexInThreadPool(context, id.get(0), dbms);
-        
-		// Return response
+        dm.indexMetadata(id.get(0), true);
+
+        // Return response
 		Element response = new Element(Jeeves.Elem.RESPONSE);
 		response.addContent(new Element(Params.ID).setText(String.valueOf(iId)));
-	        response.addContent(new Element(Params.UUID).setText(String.valueOf(dm.getMetadataUuid(dbms, id.get(0)))));
+	        response.addContent(new Element(Params.UUID).setText(String.valueOf(dm.getMetadataUuid(id.get(0)))));
 
 		return response;
 	};

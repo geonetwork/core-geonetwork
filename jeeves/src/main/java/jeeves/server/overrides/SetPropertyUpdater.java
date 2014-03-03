@@ -1,19 +1,18 @@
 package jeeves.server.overrides;
 
-import java.beans.PropertyDescriptor;
-
-import jeeves.utils.Log;
-
-import org.springframework.context.ApplicationContext;
-import org.springframework.util.ReflectionUtils;
+import org.fao.geonet.utils.Log;
+import org.springframework.beans.PropertyValue;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 class SetPropertyUpdater extends PropertyUpdater {
 
     @Override
-    protected Object doUpdate(ApplicationContext applicationContext, Object bean, PropertyDescriptor descriptor, Object value) {
+    protected void doUpdate(ConfigurableListableBeanFactory beanFactory, BeanDefinition bean, Object value) {
         Log.debug(Log.JEEVES, "Setting "+propertyName+" on "+beanName+" with new value: "+value);
-        ReflectionUtils.invokeMethod(descriptor.getWriteMethod(), bean, value);
-        return null;
+        bean.getPropertyValues().removePropertyValue(propertyName);
+
+        bean.getPropertyValues().add(propertyName, value);
     }
     
 }

@@ -23,16 +23,18 @@
 
 package org.fao.geonet.kernel.harvest.harvester.oaipmh;
 
-import jeeves.exceptions.OperationAbortedEx;
-import jeeves.interfaces.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
 
 import org.eclipse.emf.common.command.AbortExecutionException;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.OperationAllowedId_;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -42,15 +44,18 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.XmlRequest;
 import org.fao.oaipmh.OaiPmh;
 import org.fao.oaipmh.exceptions.NoRecordsMatchException;
 import org.fao.oaipmh.requests.GetRecordRequest;
 import org.fao.oaipmh.requests.ListIdentifiersRequest;
-import org.fao.oaipmh.requests.Transport;
 import org.fao.oaipmh.responses.GetRecordResponse;
 import org.fao.oaipmh.responses.Header;
 import org.fao.oaipmh.responses.ListIdentifiersResponse;
-import org.fao.oaipmh.util.ISODate;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
@@ -73,11 +78,10 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 	//---
 	//--------------------------------------------------------------------------
 
-	public Harvester(Logger log, ServiceContext context, Dbms dbms, OaiPmhParams params)
+	public Harvester(Logger log, ServiceContext context, OaiPmhParams params)
 	{
 		this.log    = log;
 		this.context= context;
-		this.dbms   = dbms;
 		this.params = params;
 
 		result = new HarvestResult();
@@ -92,14 +96,14 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 	//---
 	//---------------------------------------------------------------------------
 
-	public HarvestResult harvest(Logger log) throws Exception 
-	{
+	public HarvestResult harvest(Logger log) throws Exception {
+
 	    this.log = log;
-	    
-		ListIdentifiersRequest req = new ListIdentifiersRequest();
+
+		ListIdentifiersRequest req = new ListIdentifiersRequest(context.getBean(GeonetHttpRequestFactory.class));
 		req.setSchemaPath(new File(context.getAppPath() + Geonet.SchemaPath.OAI_PMH));
 
-		Transport t = req.getTransport();
+        XmlRequest t = req.getTransport();
 		try {
 			t.setUrl(new URL(params.url));
         } catch (MalformedURLException e1) {
@@ -109,8 +113,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
             throw new AbortExecutionException(e1);
         }
 
-		if (params.useAccount)
-			t.setCredentials(params.username, params.password);
+		if (params.useAccount) {
+            t.setCredentials(params.username, params.password);
+        }
 
 		//--- set the proxy info if necessary
 		Lib.net.setupProxy(context, t);
@@ -223,7 +228,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
 	//---------------------------------------------------------------------------
 
-	private void align(Transport t, Set<RecordInfo> records) throws Exception
+	private void align(XmlRequest t, Set<RecordInfo> records) throws Exception
 	{
 		log.info("Start of alignment for : "+ params.name);
 
@@ -231,12 +236,13 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		//--- retrieve all local categories and groups
 		//--- retrieve harvested uuids for given harvesting node
 
-		localCateg = new CategoryMapper(dbms);
-		localGroups= new GroupMapper(dbms);
-		localUuids = new UUIDMapper(dbms, params.uuid);
-		dbms.commit();
+		localCateg = new CategoryMapper(context);
+		localGroups= new GroupMapper(context);
+		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
 
-		//-----------------------------------------------------------------------
+        dataMan.flush();
+
+        //-----------------------------------------------------------------------
 		//--- remove old metadata
 
 		for (String uuid : localUuids.getUUIDs())
@@ -245,9 +251,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 				String id = localUuids.getID(uuid);
 
                 if(log.isDebugEnabled()) log.debug("  - Removing old metadata with local id:"+ id);
-				dataMan.deleteMetadataGroup(context, dbms, id);
-				dbms.commit();
-				result.locallyRemoved++;
+				dataMan.deleteMetadataGroup(context, id);
+
+                dataMan.flush();
+
+                result.locallyRemoved++;
 			}
 
 		//-----------------------------------------------------------------------
@@ -284,7 +292,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 	//---
 	//--------------------------------------------------------------------------
 
-	private void addMetadata(Transport t, RecordInfo ri) throws Exception
+	private void addMetadata(XmlRequest t, RecordInfo ri) throws Exception
 	{
 		Element md = retrieveMetadata(t, ri);
 
@@ -302,33 +310,33 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         //
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.id, Integer.parseInt(params.ownerId), group, params.uuid,
-                         isTemplate, docType, title, category, ri.changeDate.toString(), ri.changeDate.toString(), ufo, indexImmediate);
+        String id = dataMan.insertMetadata(context, schema, md, ri.id, Integer.parseInt(params.ownerId), group, params.uuid,
+                         isTemplate, docType, category, ri.changeDate.toString(), ri.changeDate.toString(), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
 
-		dataMan.setTemplateExt(dbms, iId, "n", null);
-		dataMan.setHarvestedExt(dbms, iId, params.uuid);
+		dataMan.setTemplateExt(iId, MetadataType.METADATA);
+		dataMan.setHarvestedExt(iId, params.uuid);
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
-        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-		dbms.commit();
-		dataMan.indexMetadata(dbms, id);
+        dataMan.flush();
+
+        dataMan.indexMetadata(id, false);
 		result.addedMetadata++;
 	}
 
 	//--------------------------------------------------------------------------
 
-	private Element retrieveMetadata(Transport t, RecordInfo ri)
+	private Element retrieveMetadata(XmlRequest transport, RecordInfo ri)
 	{
 		try
 		{
             if(log.isDebugEnabled()) log.debug("  - Getting remote metadata with id : "+ ri.id);
 
-			GetRecordRequest req = new GetRecordRequest();
+			GetRecordRequest req = new GetRecordRequest(transport);
 			req.setSchemaPath(new File(context.getAppPath() + Geonet.SchemaPath.OAI_PMH));
-			req.setTransport(t);
 			req.setIdentifier(ri.id);
 			req.setMetadataPrefix(ri.prefix);
 
@@ -436,7 +444,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 	//---
 	//--------------------------------------------------------------------------
 
-	private void updateMetadata(Transport t, RecordInfo ri, String id) throws Exception
+	private void updateMetadata(XmlRequest t, RecordInfo ri, String id) throws Exception
 	{
 		String date = localUuids.getChangeDate(ri.id);
 
@@ -461,19 +469,23 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
             boolean ufo = false;
             boolean index = false;
             String language = context.getLanguage();
-            dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, ri.changeDate.toString(), false);
+            final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate.toString(),
+                    false);
 
-			//--- the administrator could change privileges and categories using the
+            //--- the administrator could change privileges and categories using the
 			//--- web interface so we have to re-set both
 
-			dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
-            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+            OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
+            repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
+            addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
-			dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
-            addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+            metadata.getCategories().clear();
+            context.getBean(MetadataRepository.class).save(metadata);
 
-			dbms.commit();
-			dataMan.indexMetadata(dbms, id);
+            addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
+
+            dataMan.flush();
+            dataMan.indexMetadata(id, false);
 			result.updatedMetadata++;
 		}
 	}
@@ -491,7 +503,6 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
 	private Logger         log;
 	private ServiceContext context;
-	private Dbms           dbms;
 	private OaiPmhParams   params;
 	private DataManager    dataMan;
 	private CategoryMapper localCateg;

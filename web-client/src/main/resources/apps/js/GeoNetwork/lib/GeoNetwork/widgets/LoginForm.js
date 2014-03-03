@@ -217,7 +217,7 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
                 text: OpenLayers.i18n('updateUserInfo'),
                 listeners: {
                     click: function () {
-                        this.catalogue.moveToURL(this.catalogue.services.updateUserInfo + this.catalogue.identifiedUser.id);
+                        this.catalogue.moveToURL(this.catalogue.services.updateUserInfo + this.catalogue.identifiedUser.username);
                     },
                     scope: this
                 }
@@ -226,7 +226,7 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
                 text: OpenLayers.i18n('updatePassword'),
                 listeners: {
                     click: function () {
-                        this.catalogue.moveToURL(this.catalogue.services.updatePassword + this.catalogue.identifiedUser.id);
+                        this.catalogue.moveToURL(this.catalogue.services.updatePassword + this.catalogue.identifiedUser.username);
                     },
                     scope: this
                 }

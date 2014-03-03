@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+    <!-- Search services -->
+    <service name="q">
+      <documentation><![CDATA[
+        Main search services.
+        
+        Parameters:
+        * All Lucene search field
+        * fast: (optional) if "index" the index is used to return the results 
+        (see dumpfields for output format configuration). if "false", the database 
+        is used to return the results in their original formats.
+        * hitsperpage: (optional) The number of hits to return
+        * summaryOnly: (optional) if "true", only the facets are retruned
+        * sortBy: (optional) Default relevance.
+        * sortOrder: (optional) reverse or empty.
+        
+        // TODO : improve
+        ]]></documentation>
+      <class name=".services.main.XmlSearch"/>
+    </service>
+
+    <service name="qi">
+      <documentation>
+      <![CDATA[
+      Same as q service but used internally by the application
+      in order to make distinction between user search and 
+      application search in statistics.
+      ]]>
+      </documentation>
+      <class name=".services.main.XmlSearch"/>
+    </service>
+
+    <service name="lang">
+      <documentation><![CDATA[
+        Return all ISO languages.
+        
+        Response:
+        ```
+        <isolanguage>
+          <record>
+            <code>aar</code>
+            <id>1</id>
+            <label>
+              <cat>Afar</cat>
+              <ger>Danakil-Sprache</ger>
+              <por>Afar</por>
+              <tur>Afar</tur>
+              <fin>Afar</fin>
+              <fre>Afar</fre>
+              <nor>Afar</nor>
+              <chi>Afar</chi>
+              <dut>Afar</dut>
+              <ita>Afar</ita>
+              <rus>Afar</rus>
+              <ara>Afar</ara>
+              <pol>Afar</pol>
+              <eng>Afar</eng>
+              <vie>Afar</vie>
+              <spa>Afar</spa>
+            </label>
+            <shortcode>aa</shortcode>
+          </record>
+        ```
+        ]]></documentation>
+      <class name="org.fao.geonet.guiservices.isolanguages.Get" />
+    </service>
+  </services>
+</geonet>

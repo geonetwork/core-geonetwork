@@ -22,32 +22,81 @@
 //==============================================================================
 package org.fao.geonet.kernel.security.ldap;
 
-import jeeves.guiservices.session.JeevesUser;
-import jeeves.server.ProfileManager;
+import java.util.Collection;
+
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
-public class LDAPUser extends JeevesUser {
+public class LDAPUser implements UserDetails {
 	
-	private static final long serialVersionUID = -5390558007347570517L;
-	
-	private Multimap<String, String> groupsAndProfile = HashMultimap.create();
-	
-	public LDAPUser(ProfileManager profileManager, String username) {
-		super(profileManager);
-		setUsername(username);
+    private static final long serialVersionUID = -879282571127799714L;
+    private final String _userName;
+
+    private Multimap<String, Profile> _groupsAndProfile = HashMultimap.create();
+
+	private User _user;
+
+	public LDAPUser(String username) {
+        this._userName = username;
 		// FIXME Should we here populate the LDAP user with LDAP attributes instead of in the GNLDAPUserDetailsMapper ?
 		// TODO : populate userId which should be in session
 	}
 	
-	public void addPrivilege(String group, String profile) {
-		groupsAndProfile.put(group, profile);
+	public void addPrivilege(String group, Profile profile) {
+		_groupsAndProfile.put(group, profile);
 	}
-	public void setPrivileges(Multimap<String, String> privileges) {
-		groupsAndProfile = privileges;
+	public void setPrivileges(Multimap<String, Profile> privileges) {
+		_groupsAndProfile = privileges;
 	}
-	public Multimap<String, String> getPrivileges() {
-		return groupsAndProfile;
+	public Multimap<String, Profile> getPrivileges() {
+		return _groupsAndProfile;
 	}
+
+	public User getUser() {
+        return _user;
+    }
+	public void setUser(User user) {
+        this._user = user;
+        user.setUsername(_userName);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return _user.getAuthorities();
+    }
+
+    @Override
+    public String getPassword() {
+        return _user.getUsername();
+    }
+
+    @Override
+    public String getUsername() {
+        return _user.getUsername();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return _user.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return _user.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return _user.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return _user.isEnabled();
+    }
 }

@@ -28,17 +28,23 @@
 package org.fao.geonet.guiservices.metadata;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.specification.MetadataSpecs;
+import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.jdom.Element;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specifications;
 
-import scala.collection.mutable.StringBuilder;
-
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -48,8 +54,7 @@ import java.util.Set;
  *
  * See http://www.sitemaps.org/protocol.php
  */
-public class Sitemap implements Service
-{
+public class Sitemap implements Service {
     private static final String FORMAT_XML = "xml";
     private static final String FORMAT_HTML = "html";
 
@@ -64,26 +69,22 @@ public class Sitemap implements Service
             format = FORMAT_XML;
         }
 
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        AccessManager am = gc.getBean(AccessManager.class);
+        AccessManager am = context.getBean(AccessManager.class);
 
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        Set<Integer> groups = am.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
 
-        Set<String> groups = am.getUserGroups(dbms, context.getUserSession(), context.getIpAddress(), false);
-
-        StringBuilder query = new StringBuilder("SELECT DISTINCT id, uuid, schemaId, changeDate FROM Metadata, OperationAllowed ");
-        query.append("WHERE id=metadataId AND isTemplate='n' AND operationId=0 AND (");
-
-        StringBuilder aux = new StringBuilder();
-
-        for (String grpId : groups) {
-            aux.append(" OR groupId=").append(grpId);
+        final OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
+        Specifications<OperationAllowed> spec = Specifications.where(OperationAllowedSpecs.hasOperation(ReservedOperation.view));
+        for (Integer grpId : groups) {
+            spec = spec.and(OperationAllowedSpecs.hasGroupId(grpId));
         }
+        final List<Integer> list = operationAllowedRepository.findAllIds(spec, OperationAllowedId_.metadataId);
 
-        query.append(aux.substring(4));
-        query.append(") ORDER BY changeDate DESC");
+        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        Sort sortByChangeDateDesc = new Sort(Sort.Direction.DESC, Metadata_.dataInfo.getName()+"."+MetadataDataInfo_.changeDate);
 
-        Element result = dbms.select(query.toString());
+        Element result = metadataRepository.findAllAsXml(MetadataSpecs.hasMetadataIdIn(list), sortByChangeDateDesc);
+
 
         Element formatEl = new Element("format");
         formatEl.setText(format.toLowerCase());

@@ -26,48 +26,35 @@
 
 package org.fao.geonet.kernel.harvest.harvester.thredds;
 
-import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadServerCertificateEx;
-import jeeves.exceptions.BadXmlResponseEx;
-import jeeves.interfaces.Logger;
-import jeeves.resources.dbms.Dbms;
+import com.google.common.base.Optional;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
-import jeeves.utils.XmlRequest;
 import jeeves.xlink.Processor;
-
 import org.apache.commons.io.IOUtils;
+import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.exceptions.BadServerCertificateEx;
+import org.fao.geonet.exceptions.BadXmlResponseEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
-import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
-import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.kernel.harvest.harvester.HarvestError;
-import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
-import org.fao.geonet.kernel.harvest.harvester.IHarvester;
-import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
-import org.fao.geonet.kernel.harvest.harvester.UriMapper;
+import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester;
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.FragmentParams;
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.HarvestSummary;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.util.ISODate;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.util.Sha1Encoder;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
-import thredds.catalog.InvAccess;
-import thredds.catalog.InvCatalogFactory;
-import thredds.catalog.InvCatalogImpl;
-import thredds.catalog.InvCatalogRef;
-import thredds.catalog.InvDataset;
-import thredds.catalog.InvMetadata;
-import thredds.catalog.InvService;
-import thredds.catalog.ServiceType;
-import thredds.catalog.ThreddsMetadata;
+import thredds.catalog.*;
 import thredds.catalog.dl.DIFWriter;
 import ucar.nc2.Attribute;
 import ucar.nc2.dataset.NetcdfDataset;
@@ -77,7 +64,6 @@ import ucar.nc2.units.DateType;
 import ucar.unidata.util.StringUtil;
 
 import javax.net.ssl.SSLHandshakeException;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -88,13 +74,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 //=============================================================================
 /** 
@@ -183,16 +163,14 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 	 *  
 	 * @param log		
 	 * @param context		Jeeves context
-	 * @param dbms 			Database
 	 * @param params	Information about harvesting configuration for the node
 	 * 
 	 * @return null
      **/
 	
-	public Harvester(Logger log, ServiceContext context, Dbms dbms, ThreddsParams params) {
+	public Harvester(Logger log, ServiceContext context, ThreddsParams params) {
 		this.log    = log;
 		this.context= context;
-		this.dbms   = dbms;
 		this.params = params;
 
 		result = new HarvestResult ();
@@ -201,19 +179,19 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		dataMan = gc.getBean(DataManager.class);
 		schemaMan = gc.getBean(SchemaManager.class);
 
-		SettingInfo si = new SettingInfo(context);
+		SettingInfo si = context.getBean(SettingInfo.class);
 		String siteUrl = si.getSiteUrl() + context.getBaseUrl();
 		metadataGetService = siteUrl + "/srv/en/xml.metadata.get";
 
 		
 		//--- Create fragment harvester for atomic datasets if required
 		if (params.createAtomicDatasetMd && params.atomicMetadataGeneration.equals(ThreddsParams.FRAGMENTS)) {
-			atomicFragmentHarvester = new FragmentHarvester(log, context, dbms, getAtomicFragmentParams());
+			atomicFragmentHarvester = new FragmentHarvester(log, context, getAtomicFragmentParams());
 		}
 		
 		//--- Create fragment harvester for collection datasets if required
 		if (params.createCollectionDatasetMd && params.collectionMetadataGeneration.equals(ThreddsParams.FRAGMENTS)) {
-			collectionFragmentHarvester = new FragmentHarvester(log, context, dbms, getCollectionFragmentParams());
+			collectionFragmentHarvester = new FragmentHarvester(log, context, getCollectionFragmentParams());
 		}
 	}
 
@@ -235,12 +213,12 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         
 		//--- Get uuid's and change dates of metadata records previously 
 		//--- harvested by this harvester grouping by harvest uri
-		localUris = new UriMapper(dbms, params.uuid);
+		localUris = new UriMapper(context, params.uuid);
 
 		//--- Try to load thredds catalog document
 		String url = params.url;
 		try {
-			XmlRequest req = new XmlRequest();
+			XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest();
 			req.setUrl(new URL(url));
 			req.setMethod(XmlRequest.Method.GET);
 			Lib.net.setupProxy(context, req);
@@ -263,7 +241,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 			if (!harvestUris.contains(localUri)) {
 				for (RecordInfo record: localUris.getRecords(localUri)) {
                     if(log.isDebugEnabled()) log.debug ("  - Removing deleted metadata with id: " + record.id);
-					dataMan.deleteMetadata (context, dbms, record.id);
+					dataMan.deleteMetadata (context, record.id);
 		
 					if (record.isTemplate.equals("s")) {
 						//--- Uncache xlinks if a subtemplate
@@ -275,10 +253,10 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 				}
 			}
 		}
-		
-		dbms.commit();
-		
-	    result.totalMetadata = result.serviceRecords + result.collectionDatasetRecords + result.atomicDatasetRecords;
+
+        dataMan.flush();
+
+        result.totalMetadata = result.serviceRecords + result.collectionDatasetRecords + result.atomicDatasetRecords;
 		return result;
 	}
 
@@ -312,8 +290,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 			return;
 
 		//--- loading categories and groups
-		localCateg 	= new CategoryMapper (dbms);
-		localGroups = new GroupMapper (dbms);
+		localCateg 	= new CategoryMapper (context);
+		localGroups = new GroupMapper (context);
 
 		//--- Setup proxy authentication  
 		Lib.net.setupProxy(context);
@@ -451,20 +429,20 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         //
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, Integer.parseInt(params.ownerId), group, params.uuid,
-                     isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
+        String id = dataMan.insertMetadata(context, schema, md, uuid, Integer.parseInt(params.ownerId), group, params.uuid,
+                     isTemplate, docType, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
-        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 		
-		dataMan.setTemplateExt(dbms, iId, "n", null);
-		dataMan.setHarvestedExt(dbms, iId, params.uuid, uri);
+		dataMan.setTemplateExt(iId, MetadataType.METADATA);
+		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(uri));
 
-        dataMan.indexMetadata(dbms, id);
-		
-		dbms.commit();
-	}
+        dataMan.indexMetadata(id, false);
+
+        dataMan.flush();
+    }
 
 	//---------------------------------------------------------------------------
 	/** 
@@ -537,7 +515,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		
 		if (lastModifiedDate == null) return true;
 
-		String datasetModifiedDate = new ISODate(lastModifiedDate.getTime()).toString();
+		String datasetModifiedDate = new ISODate(lastModifiedDate.getTime(), false).toString();
 		
 		for (RecordInfo localRecord: localRecords) {
 			if (localRecord.isOlderThan(datasetModifiedDate)) return true;
@@ -560,7 +538,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		if (localRecords == null) return;
 
 		for (RecordInfo record: localRecords) {
-			dataMan.deleteMetadata (context, dbms, record.id);
+			dataMan.deleteMetadata (context, record.id);
 
 			if (record.isTemplate.equals("s")) {
 				//--- Uncache xlinks if a subtemplate
@@ -683,7 +661,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 	
 	private String getSubsetUrl(InvDataset ds) {
 	    try {
-	        return ds.getParentCatalog().getUriString() + "?dataset=" + URLEncoder.encode(ds.getID(),Jeeves.ENCODING);
+	        return ds.getParentCatalog().getUriString() + "?dataset=" + URLEncoder.encode(ds.getID(), Constants.ENCODING);
         } catch (UnsupportedEncodingException e) {
 			log.error("Thrown Exception "+e+" during dataset processing");
 	        e.printStackTrace();
@@ -1039,7 +1017,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 			InputStream is = null;
 			try {
 			    is = conn.getInputStream();
-			    isr = new InputStreamReader(is, Jeeves.ENCODING);
+			    isr = new InputStreamReader(is, Constants.ENCODING);
                 dis = new BufferedReader(isr);
     			while ((inputLine = dis.readLine()) != null) {
     					version.append(inputLine+"\n");	
@@ -1327,7 +1305,6 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
 	private Logger         log;
 	private ServiceContext context;
-	private Dbms           dbms;
 	private ThreddsParams  params;
 	private DataManager    dataMan;
 	private SchemaManager  schemaMan;

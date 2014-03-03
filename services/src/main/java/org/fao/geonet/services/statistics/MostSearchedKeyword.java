@@ -1,12 +1,15 @@
 package org.fao.geonet.services.statistics;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.repository.statistic.SearchRequestParamRepository;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
+
+import java.util.List;
 
 /**
  * Service to get the db-stored requests most searched keyword.
@@ -15,7 +18,6 @@ import org.jdom.Element;
  *
  */
 public class MostSearchedKeyword extends NotInReadOnlyModeService {
-	private String luceneTermFieldsToExclude;
 	private int maxHits;
 	//--------------------------------------------------------------------------
 	//---
@@ -25,7 +27,6 @@ public class MostSearchedKeyword extends NotInReadOnlyModeService {
 
 	public void init(String appPath, ServiceConfig params) throws Exception	{
         super.init(appPath, params);
-		luceneTermFieldsToExclude = params.getValue("luceneTermFieldsToExclude");
 		maxHits = Integer.parseInt(params.getValue("maxHits"));
 	}
 
@@ -36,20 +37,22 @@ public class MostSearchedKeyword extends NotInReadOnlyModeService {
 	//--------------------------------------------------------------------------
     @Override
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-        String query = "select termtext, count(*) as cnt from ";
-        query += "params ";
-		if (luceneTermFieldsToExclude != null && luceneTermFieldsToExclude.length() > 0) {
-			query += " where length(termtext) > 0 and termField not in (" + luceneTermFieldsToExclude + ")";
-		}
-        query += " group by termtext ";
-        query += "having count(*) > 1 ";
-        query += "order by cnt desc";
+        final SearchRequestParamRepository repository = context.getBean(SearchRequestParamRepository.class);
 
-        if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) Log.debug(Geonet.SEARCH_LOGGER, "query: " + query);
-
-        MostSearchedResponse mostSearchedResponse = new MostSearchedResponse();
-        return mostSearchedResponse.createResponse(maxHits, dbms, query);
+        final List<Pair<String, Integer>> termTextToRequestCount = repository.getTermTextToRequestCount(maxHits);
+        if (termTextToRequestCount.isEmpty()) {
+            return new  Element("mostSearchedKeyword");
+        } else {
+            Element results = new Element("mostSearchedKeyword");
+            for (Pair<String, Integer> record : termTextToRequestCount) {
+                results.addContent(
+                        new Element("record")
+                                .addContent(new Element("termtext").setText(record.one()))
+                                .addContent(new Element("cnt").setText(""+record.two()))
+                );
+            }
+            return results;
+        }
 	}
 }

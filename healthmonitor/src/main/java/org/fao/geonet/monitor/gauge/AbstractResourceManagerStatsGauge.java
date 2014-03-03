@@ -4,9 +4,9 @@ import com.yammer.metrics.core.Gauge;
 import com.yammer.metrics.core.MetricsRegistry;
 import jeeves.monitor.MetricsFactory;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.resources.ResourceManager;
 import jeeves.server.resources.Stats;
-import org.fao.geonet.constants.Geonet;
+
+import javax.sql.DataSource;
 
 /**
  * Abstract super class for all Gauges that use the Main database Stats.
@@ -26,12 +26,12 @@ public abstract class AbstractResourceManagerStatsGauge<T> implements MetricsFac
     }
 
     public Gauge<T> create(MetricsRegistry metricsRegistry, final ServiceContext context) {
-        return metricsRegistry.newGauge(ResourceManager.class, name,new Gauge<T>() {
+        return metricsRegistry.newGauge(DataSource.class, name,new Gauge<T>() {
             @Override
             public T value() {
                 T finalValue;
                 try {
-                    T val = valueImpl(context.getResourceManager().getStats(Geonet.Res.MAIN_DB));
+                    T val = valueImpl(new Stats(context));
                     if(val == null) {
                         finalValue = defaultValue();
                     } else {

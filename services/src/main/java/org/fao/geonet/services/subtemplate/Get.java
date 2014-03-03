@@ -24,11 +24,13 @@ package org.fao.geonet.services.subtemplate;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.Util;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.jdom.Attribute;
@@ -75,12 +77,14 @@ public class Get implements Service {
         String uuid = Util.getParam(params, Params.UUID);
         
         // Retrieve template
-        Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-        Element rec = dbms.select("SELECT data FROM metadata WHERE isTemplate = 's' AND uuid = ?", uuid);
+        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        final Metadata metadata = metadataRepository.findOneByUuid(uuid);
 
-        String xmlData = rec.getChild(Jeeves.Elem.RECORD).getChildText("data");
-        rec = Xml.loadString(xmlData, false);
-        Element tpl = (Element) rec.detach();
+        if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
+            throw new IllegalArgumentException("Metadata uuid="+uuid+" is not a subtemplate");
+        }
+
+        Element tpl = metadata.getXmlData(false);
         
         
         // Processing parameters process=xpath~value.
@@ -98,10 +102,11 @@ public class Get implements Service {
                 String value = parameters.substring(endIndex + 1);
                 
                 List<Namespace> nss = new ArrayList<Namespace>();
+
                 @SuppressWarnings("unchecked")
-                List<Namespace> additionalNamespaces = rec.getAdditionalNamespaces();
+                List<Namespace> additionalNamespaces = tpl.getAdditionalNamespaces();
                 nss.addAll(additionalNamespaces);
-                nss.add(rec.getNamespace());
+                nss.add(tpl.getNamespace());
                 Object o = Xml.selectSingle(tpl, xpath, nss);
                 if (o instanceof Element) {
                     ((Element)o).setText(value);        // Remove all content before adding the value.

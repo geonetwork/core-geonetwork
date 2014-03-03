@@ -23,15 +23,15 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import jeeves.resources.dbms.Dbms;
-import org.jdom.Element;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.repository.GroupRepository;
 
 import java.util.HashMap;
-import java.util.List;
 
 //=============================================================================
 
-/** Loads all groups from the database and create a mapping (group name) -> (group ID)
+/** Loads all groups from the database and create a mapping (group name) -> (group ID).
   */
 
 public class GroupMapper
@@ -42,16 +42,14 @@ public class GroupMapper
 	//---
 	//--------------------------------------------------------------------------
 
-	public GroupMapper(Dbms dbms) throws Exception
+	public GroupMapper(ServiceContext context) throws Exception
 	{
-		String query = "SELECT id, name FROM Groups";
 
-		@SuppressWarnings("unchecked")
-        List<Element> idsList = dbms.select(query).getChildren();
+        final GroupRepository groupRepository = context.getBean(GroupRepository.class);
 
-        for (Element record : idsList) {
-            String id = record.getChildText("id");
-            String name = record.getChildText("name");
+        for (Group record : groupRepository.findAll()) {
+            String id = "" + record.getId();
+            String name = record.getName();
 
             add(name, id);
         }

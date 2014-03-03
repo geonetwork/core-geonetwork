@@ -31,7 +31,6 @@ Commentaire de l'utilisateur lors du changement d'état :
 La liste des changements d'état sont accessibles ici :
 %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search
 	</statusSendEmail>
-	
 	<otherValue>Autre :</otherValue>
 	<warning>Attention</warning>
 	<isAdmin>Est administrateur ?</isAdmin>
@@ -1447,4 +1446,5 @@ La liste des changements d'état sont accessibles ici :
 	    <org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage>TWiki</org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage>
     </name>
   </markup>
+    <unknown>Unknown</unknown>
 </strings>

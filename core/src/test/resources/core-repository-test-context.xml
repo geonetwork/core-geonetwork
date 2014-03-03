@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-lazy-init="true" xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="SvnManager" class="org.fao.geonet.kernel.SvnManager"/>
+    <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerDb"/>
+    <bean id="geonetworkAuthenticationProvider" class="org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider"/>
+    <bean id="geonetworkEncoder" class="org.springframework.security.crypto.password.NoOpPasswordEncoder"/>
+    <bean id="dataStore" class="org.geotools.data.memory.MemoryDataStore"/>
+
+    <bean lazy-init="false" id="initializeDatabaseWithTestData" class="org.springframework.jdbc.datasource.init.DataSourceInitializer">
+        <property name="dataSource" ref="jdbcDataSource"/>
+        <property name="databasePopulator">
+            <bean class="org.fao.geonet.TestDatabasePopulator">
+                <property name="interpolatedScripts">
+                    <list>
+                        <value>classpath:cleanoutdatabase.sql</value>
+                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/data-db-default.sql</value>
+                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-ara-default.sql</value>
+                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-cat-default.sql</value>
+                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-chi-default.sql</value>
+                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-dut-default.sql</value>
+                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-eng-default.sql</value>
+                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-fin-default.sql</value>
+                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-fre-default.sql</value>
+                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-ger-default.sql</value>
+                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-ita-default.sql</value>
+                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-nor-default.sql</value>
+                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-pol-default.sql</value>
+                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-por-default.sql</value>
+                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-rus-default.sql</value>
+                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-spa-default.sql</value>
+                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-tur-default.sql</value>
+                        <value>file:/${webapp}/WEB-INF/classes/setup/sql/data/loc-vie-default.sql</value>
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+    <!--<bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory" lazy-init="true"/>-->
+    <bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.MemoryDirectoryFactory" lazy-init="true"/>
+    <bean id="ForceInitRepositoriesForTestingBean" class="org.fao.geonet.kernel.ForceInitRepositoriesForTestingBean" lazy-init="false"/>
+</beans>

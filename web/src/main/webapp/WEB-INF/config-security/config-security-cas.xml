@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security-3.1.xsd"
+	xmlns:sec="http://www.springframework.org/schema/security" xmlns:ctx="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans">
+
+	<!-- requires that config-security imports a config file that has the casUserService 
+		bean -->
+	<!-- override beans in config-security-core with the changes required for 
+		cas -->
+	<alias name="casEntryPoint" alias="authenticationEntryPoint" />
+	<bean id="filterChainFilters" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<ref bean="securityContextPersistenceFilter" />
+				<ref bean="requestSingleLogoutFilter" />
+				<ref bean="logoutFilter" />
+				<ref bean="singleLogoutFilter" />
+				<ref bean="casFilter" />
+				<ref bean="basicAuthenticationFilter" />
+				<ref bean="requestCacheFilter" />
+				<ref bean="anonymousFilter" />
+				<ref bean="sessionMgmtFilter" />
+				<ref bean="exceptionTranslationFilter" />
+				<ref bean="filterSecurityInterceptor" />
+			</list>
+		</constructor-arg>
+	</bean>
+	<!-- Adds the CasAuthenticationProvider to the AuthenticationManager -->
+	<bean id="casAuthenticationProviderPostProcessor"
+		class="jeeves.config.springutil.AddAuthenticationProviderPostProcessor">
+		<constructor-arg value="0" />
+		<constructor-arg ref="casAuthenticationProvider"></constructor-arg>
+	</bean>
+	<!-- End overrides -->
+
+	<bean id="casServerPropertyUpdater" class="jeeves.config.springutil.ServerBeanPropertyUpdater">
+		<constructor-arg value="${geonetwork.https.url}" />
+		<constructor-arg>
+			<map>
+				<entry key-ref="serviceProperties" value="service" />
+				<entry key-ref="casTicketValidator" value="proxyCallbackUrl" />
+				<entry key-ref="casFilter" value="proxyReceptorUrl" />
+				<entry key-ref="logoutSuccessHandler" value="defaultTargetUrl" />
+			</map>
+		</constructor-arg>
+	</bean>
+	<bean id="serviceProperties" class="org.springframework.security.cas.ServiceProperties">
+		<property name="service" value="${geonetwork.https.url}/j_spring_cas_security_check" />
+		<property name="sendRenew" value="false" />
+		<property name="artifactParameter" value="ticket" />
+		<property name="authenticateAllArtifacts" value="true"/>
+	</bean>
+
+	<bean id="casFilter"
+		class="org.springframework.security.cas.web.CasAuthenticationFilter">
+		<property name="authenticationManager" ref="authenticationManager" />
+		<property name="proxyGrantingTicketStorage" ref="pgtStorage"/>
+		<property name="proxyReceptorUrl" value="${geonetwork.https.url}/j_spring_cas_security_proxyreceptor"/>
+		<property name="serviceProperties" ref="serviceProperties"/> 
+		<property name="authenticationDetailsSource">
+			<bean class= "org.springframework.security.cas.web.authentication.ServiceAuthenticationDetailsSource"/>
+        </property>
+	</bean>
+
+	<bean id="casEntryPoint"
+		class="org.springframework.security.cas.web.CasAuthenticationEntryPoint">
+		<property name="loginUrl" value="${cas.login.url}" />
+		<property name="serviceProperties" ref="serviceProperties" />
+	</bean>
+
+	<bean id="casAuthenticationProvider"
+		class="org.springframework.security.cas.authentication.CasAuthenticationProvider">
+		<property name="authenticationUserDetailsService">
+			<bean
+				class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
+				<constructor-arg ref="casUserService" />
+			</bean>
+		</property>
+		<property name="serviceProperties" ref="serviceProperties" />
+		<property name="ticketValidator" ref="casTicketValidator"/>
+		<property name="key" value="GeonetworkCasAuthenticatorProviderKey" />
+		<property name="statelessTicketCache" ref="casStatelessTicketCache" />
+	</bean>
+	
+	<bean id="casTicketValidator" class="org.jasig.cas.client.validation.Cas20ProxyTicketValidator">
+		<!-- Geonetwork class in start method will update the baseurl with the one in the settings table -->
+		<!-- If baseurlTag is not set then the proxyCallbackURL will not be updated -->
+		<constructor-arg index="0" value="${cas.ticket.validator.url}" />
+		<property name="proxyCallbackUrl" value="${geonetwork.https.url}/cas_security_proxyreceptor" />
+		<property name="proxyGrantingTicketStorage" ref="pgtStorage" />
+		<property name="acceptAnyProxy" value="true"/>
+	</bean>
+	<!-- TODO implement custom storage, maybe that stores in database -->
+	<bean id="pgtStorage" class="org.jasig.cas.client.proxy.ProxyGrantingTicketStorageImpl"/>
+	
+	<!-- This filter handles a Single Logout Request from the CAS Server -->
+	<bean id="singleLogoutFilter" class="org.jasig.cas.client.session.SingleSignOutFilter" /> 
+	<!-- This filter redirects to the CAS Server to signal Single Logout should be performed -->
+	<bean id="requestSingleLogoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+		<constructor-arg ref="logoutSuccessHandler" />
+		<constructor-arg>
+			<array>
+				<bean class="jeeves.config.springutil.LogoutUserSessionHandler" />
+				<bean class="org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler" />
+			</array>
+		</constructor-arg>
+		<property name="filterProcessesUrl" value="/j_spring_security_logout" />
+	</bean>
+	<bean id="logoutSuccessHandler" class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">
+    	<property name="defaultTargetUrl" value="${cas.logout.url}"></property>
+    </bean>
+	<bean id="casStatelessTicketCache"
+		class="org.springframework.security.cas.authentication.EhCacheBasedTicketCache">
+		<property name="cache">
+			<bean class="net.sf.ehcache.Cache" init-method="initialise"
+				destroy-method="dispose">
+				<constructor-arg value="casTickets" />
+				<constructor-arg value="50" />
+				<constructor-arg value="true" />
+				<constructor-arg value="false" />
+				<constructor-arg value="3600" />
+				<constructor-arg value="900" />
+				<property name="diskStorePath" value="${java.io.tmpdir}"></property>
+			</bean>
+		</property>
+	</bean>
+</beans>

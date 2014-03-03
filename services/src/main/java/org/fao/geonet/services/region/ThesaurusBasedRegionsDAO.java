@@ -54,7 +54,7 @@ public class ThesaurusBasedRegionsDAO extends RegionsDAO {
         this.thesaurusName = thesaurusName;
     }
 
-    private Thesaurus getThesaurus(ServiceContext context) throws Exception {
+    private synchronized Thesaurus getThesaurus(ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         ThesaurusManager th = gc.getBean(ThesaurusManager.class);
         Thesaurus regions = th.getThesaurusByName(thesaurusName);
@@ -90,10 +90,15 @@ public class ThesaurusBasedRegionsDAO extends RegionsDAO {
 
             @Override
             public Collection<String> call() throws Exception {
-                QueryBuilder<String> queryBuilder = QueryBuilder.builder().interpreter(CATEGORY_ID_READER);
-                queryBuilder.distinct(true);
-                queryBuilder.select(Selectors.BROADER, true);
-                return queryBuilder.build().execute(getThesaurus(context));
+                Thesaurus thesaurus = getThesaurus(context);
+                if (thesaurus != null) {
+                    QueryBuilder<String> queryBuilder = QueryBuilder.builder().interpreter(CATEGORY_ID_READER);
+                    queryBuilder.distinct(true);
+                    queryBuilder.select(Selectors.BROADER, true);
+                    return queryBuilder.build().execute(thesaurus);
+                } else {
+                    return null;
+                }
             }
 	        
 	    });

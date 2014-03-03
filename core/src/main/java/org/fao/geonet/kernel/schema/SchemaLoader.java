@@ -35,8 +35,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;

@@ -26,6 +26,8 @@ package org.fao.oaipmh.requests;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.responses.ResumptionToken;
 import org.jdom.Element;
@@ -34,9 +36,12 @@ import org.xml.sax.SAXException;
 
 //=============================================================================
 
-public abstract class ListRequest extends AbstractRequest
-{
-	//---------------------------------------------------------------------------
+public abstract class ListRequest extends AbstractRequest {
+
+    public ListRequest(GeonetHttpRequestFactory transport) {
+        super(transport);
+    }
+    //---------------------------------------------------------------------------
 	//---
 	//--- API methods
 	//---

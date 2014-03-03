@@ -1,0 +1,131 @@
+<form data-ng-keypress="updatingHarvester()">
+
+    <div class="row">
+        <div class="col-lg-6" data-gn-harvester-identification="harvesterSelected"/>
+
+        <div class="col-lg-6" data-gn-harvester-schedule="harvesterSelected"/>
+    </div>
+
+    <fieldset>
+        <legend><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+            harvesterSelected['@type']) | translate}}</legend>
+        <div data-ng-class="harvesterSelected.site.host == '' ? 'has-error' : ''">
+            <label class="control-label" data-translate="">geonetwork-host</label>
+            <input type="text" class="form-control" data-ng-model="harvesterSelected.site.host"/>
+            <p class="help-block" data-translate="">geonetwork-hostHelp</p>
+        </div>
+
+        <fieldset class="form-horizontal">
+            <legend data-translate="">harvesterFilter</legend>
+
+            <div>
+                <label class="control-label col-lg-4" data-translate="">any</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control"
+                        data-ng-model="harvesterSelected.searches[0].freeText"/>
+                </div>
+            </div>
+
+            <div>
+                <label class="control-label col-lg-4" data-translate="">title</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control"
+                        data-ng-model="harvesterSelected.searches[0].title"/>
+                </div>
+            </div>
+
+            <div>
+                <label class="control-label col-lg-4" data-translate="">abstract</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control"
+                        data-ng-model="harvesterSelected.searches[0].abstract"/>
+                </div>
+            </div>
+
+            <div>
+                <label class="control-label col-lg-4" data-translate="">keyword</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control"
+                        data-ng-model="harvesterSelected.searches[0].keyword"/>
+                </div>
+            </div>
+
+
+            <h4 data-translate="">geonetwork-customCriteria</h4>
+            <div>
+                <label class="control-label col-lg-4">
+                    <input type="text" class="form-control" placeholder="criteria"
+                        data-ng-model="harvesterSelected.searches[0].anyField"/>
+                </label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" placeholder="value"
+                        data-ng-model="harvesterSelected.searches[0].anyValue"/>
+                </div>
+            </div>
+            <p class="help-block" data-translate="">geonetwork-customCriteriaHelp</p>
+
+
+            <div>
+                <label class="control-label" data-translate="">source</label>
+
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default"
+                            data-ng-click="geonetworkGetSources(harvesterSelected.site.host)"
+                            title="{{'geonetwork-retrieveSources' | translate}}"><i class="fa fa-refresh"></i>&nbsp;</button>
+                    </span>
+                    <select class="form-control"
+                        data-ng-options="s.uuid as s.name for s in geonetworkSources"
+                        data-ng-model="harvesterSelected.searches[0].source.uuid">
+                        <option value=""/>
+                    </select>
+                </div>
+
+
+            </div>
+        </fieldset>
+
+    </fieldset>
+
+
+    <fieldset>
+        <legend><span data-translate="">harvesterAdvancedConfigurationFor</span>
+            {{harvesterSelected['@type'] | translate}}</legend>
+
+        <div data-gn-harvester-account="harvesterSelected"/>
+
+        <div>
+            <label class="control-label">
+                <input type="checkbox" data-ng-model="harvesterSelected.site.mefFormatFull"/>
+                <span data-translate="">geonetwork-mefFormatFull</span>
+            </label>
+            <p class="help-block" data-translate="">geonetwork-mefFormatFullHelp</p>
+        </div>
+
+        <div>
+            <label class="control-label">
+                <input type="checkbox" data-ng-model="harvesterSelected.site.createRemoteCategory"/>
+                <span data-translate="">geonetwork-createRemoteCategory</span>
+            </label>
+            <p class="help-block" data-translate="">geonetwork-createRemoteCategoryHelp</p>
+        </div>
+
+        <div>
+            <label class="control-label" data-translate="">geonetwork-xslfilter</label>
+            <input type="text" class="form-control" data-ng-model="harvesterSelected.site.xslfilter"/>
+            <p class="help-block" data-translate="">geonetwork-xslfilterHelp</p>
+        </div>
+
+
+        <div>
+            <label class="control-label">
+                <input type="checkbox" data-ng-model="harvesterSelected.content.validate"/>
+                <span data-translate="">harvesterValidate</span>
+            </label>
+            <p class="help-block" data-translate="">harvesterValidateHelp</p>
+        </div>
+    </fieldset>
+
+
+    <div data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
+</form>

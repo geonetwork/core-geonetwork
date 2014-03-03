@@ -1,0 +1,58 @@
+<form data-ng-keypress="updatingHarvester()">
+
+    <div class="row">
+        <div class="col-lg-6" data-gn-harvester-identification="harvesterSelected"/>
+
+        <div class="col-lg-6" data-gn-harvester-schedule="harvesterSelected"/>
+    </div>
+
+    <fieldset>
+        <legend><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+            harvesterSelected['@type']) | translate}}</legend>
+        <div data-ng-class="harvesterSelected.site.host == '' ? 'has-error' : ''">
+            <label class="control-label" data-translate="">geoPREST-host</label>
+            <input type="text" class="form-control" data-ng-model="harvesterSelected.site.baseUrl"/>
+            <p class="help-block" data-translate="">geoPREST-hostHelp</p>
+        </div>
+
+        <fieldset class="form-horizontal">
+            <legend data-translate="">harvesterFilter</legend>
+
+            <div>
+                <label class="control-label col-lg-4" data-translate="">any</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control"
+                        data-ng-model="harvesterSelected.searches[0].freeText"/>
+                </div>
+                <p class="help-block" data-translate="">geoPREST-anyHelp</p>
+            </div>
+
+        </fieldset>
+
+    </fieldset>
+
+
+    <fieldset>
+        <legend><span data-translate="">harvesterAdvancedConfigurationFor</span>
+            {{harvesterSelected['@type'] | translate}}</legend>
+
+        <div data-gn-harvester-account="harvesterSelected"/>
+
+        <div>
+            <label class="control-label">
+                <input type="checkbox" data-ng-model="harvesterSelected.content.validate"/>
+                <span data-translate="">harvesterValidate</span>
+            </label>
+            <p class="help-block" data-translate="">harvesterValidateHelp</p>
+        </div>
+        <div>
+            <label class="control-label" data-translate="">applyXSLToRecord</label>
+            <div data-gn-import-xsl="harvesterSelected.content.importxslt"/>
+
+            <p class="help-block" data-translate="">applyXSLToRecordHelp</p>
+        </div>
+    </fieldset>
+
+
+    <div data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
+</form>

@@ -25,8 +25,8 @@ package org.fao.geonet.services.metadata.format;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.Util;
+import org.fao.geonet.utils.Xml;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -65,8 +65,8 @@ public class Format extends AbstractFormatService {
         ConfigFile config = new ConfigFile(formatDir);
         String lang = config.getLang(context.getLanguage());
         
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        String url = new SettingInfo(gc.getBean(SettingManager.class)).getSiteUrl() + context.getBaseUrl();
+        SettingInfo settingInfo = context.getBean(SettingInfo.class);
+        String url = settingInfo.getSiteUrl() + context.getBaseUrl();
         
         Loader loader = Loader.fromParam(params);
         
@@ -87,13 +87,14 @@ public class Format extends AbstractFormatService {
         
         Element root = new Element("root");
         
+
         root.addContent (new Element("url").setText(url));
         String locUrl = url+"/srv/"+context.getLanguage()+"/";
         root.addContent (new Element("locUrl").setText(locUrl));
         String resourceUrl = locUrl+"/metadata.formatter.resource?"+Params.ID+"="+xslid+"&"+Params.FNAME+"=";
         root.addContent(new Element("resourceUrl").setText(resourceUrl));
         root.addContent(metadata);
-        root.addContent(getResources(formatDir, lang));
+        root.addContent(getResources(context, formatDir, lang));
         if(config.loadStrings()) {
         	root.addContent(getStrings(context.getAppPath(), lang));
         }
@@ -139,13 +140,14 @@ public class Format extends AbstractFormatService {
         return new Element("strings");
     }
 
-    private Element getResources(File formatDir, String lang) throws Exception {
+    private Element getResources(ServiceContext context, File formatDir, String lang) throws Exception {
         Element resources = new Element("loc");
         File baseLoc = new File(formatDir, "loc");
         File locDir = findLocDir(lang, baseLoc);
 
         resources.addContent(new Element("iso639_2").setAttribute("codeLength","3").setText(locDir.getName()));
-        String iso639_1 = IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(locDir.getName());
+        String iso639_1 = context.getBean(IsoLanguagesMapper.class).iso639_2_to_iso639_1(locDir.getName());
+
         resources.addContent(new Element("iso639_1").setAttribute("codeLength","2").setText(iso639_1 ));
 
         if(locDir.exists()) {

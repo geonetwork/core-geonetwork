@@ -8,7 +8,7 @@
 	-->
 	<xsl:template name="content">
 		<xsl:call-template name="formLayout">
-			<xsl:with-param name="title" select="/root/gui/strings/categories"/>
+			<xsl:with-param name="title" select="/root/gui/strings/updateCategories"/>
 			<xsl:with-param name="content">
 
 				<xsl:variable name="disabled" select="if (/root/response/owner='true') then false() else 
@@ -17,12 +17,12 @@
 				
 				<div id="categories" align="center">
 					<xsl:choose>
-						<xsl:when test="/root/response/categories/*">
-							
+						<xsl:when test="/root/response/metadatacategory/*">
+
 							<input name="metadataid" id="metadataid" type="hidden" value="{/root/response/id}"/>
 							<table>
 								<tr>
-									<th class="padded"><xsl:value-of select="/root/gui/strings/categories"/></th>
+									<th class="padded"><xsl:value-of select="/root/gui/strings/category"/></th>
 									<th class="padded"><xsl:value-of select="/root/gui/strings/assigned"/></th>
 								</tr>
 		
@@ -30,7 +30,7 @@
 					
 								<!-- loop on all categories -->
 		
-								<xsl:for-each select="/root/response/categories/category">
+								<xsl:for-each select="/root/response/metadatacategory/category">
 								  <xsl:sort select="label/child::*[name() = $lang]"/>
 									<xsl:variable name="categId" select="id"/>
 									<tr>

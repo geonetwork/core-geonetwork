@@ -12,7 +12,7 @@
 			<xsl:with-param name="content">
 
 				<div id="status" align="center">
-					<xsl:if test="/root/response/statusvalues/*">
+					<xsl:if test="/root/response/statusvalue/*">
 							
 							<input name="id" type="hidden" value="{/root/response/id}"/>
 							<table>
@@ -23,8 +23,8 @@
 								<xsl:variable name="lang" select="/root/gui/language"/>
 					
 								<!-- loop on all status -->
-								<xsl:variable name="isSubmitted" 
-									select="count(/root/response/statusvalues/status[on and name='submitted']) = 1"/>
+								<xsl:variable name="isSubmitted"
+									select="count(/root/response/statusvalue/status[on and name='submitted']) = 1"/>
 								<xsl:variable name="profile" select="/root/gui/session/profile"/>
 								<xsl:variable name="userId" select="/root/gui/session/userId"/>
 								<xsl:variable name="isReviewerOrAdmin" select="
@@ -38,7 +38,8 @@
 									<li>Has edit perm: <xsl:value-of select="/root/response/hasEditPermission"/></li>
 									<li>Owner: <xsl:value-of select="/root/response/isOwner"/></li>
 								</ul>-->
-								<xsl:for-each select="/root/response/statusvalues/status">
+
+								<xsl:for-each select="/root/response/statusvalue/status">
 								  <xsl:sort select="displayorder"/>
 								  <xsl:sort select="label/child::*[name() = $lang]"/>
 									<tr>

@@ -23,108 +23,173 @@
 
 package jeeves.server.context;
 
-import jeeves.config.springutil.JeevesApplicationContext;
-import jeeves.interfaces.Logger;
 import jeeves.monitor.MonitorManager;
-import jeeves.server.resources.ProviderManager;
-import jeeves.server.resources.ResourceManager;
-import jeeves.utils.Log;
-import jeeves.utils.SerialFactory;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Level;
+import org.fao.geonet.Constants;
+import org.fao.geonet.Logger;
+import org.fao.geonet.NodeInfo;
+import org.fao.geonet.utils.Log;
+import org.springframework.context.ConfigurableApplicationContext;
 
+import javax.annotation.Nonnull;
+import javax.persistence.EntityManager;
 import java.util.Collections;
 import java.util.Map;
 
 //=============================================================================
 
-/** Contains a minimun context for a job execution (schedule, service etc...)
-  */
+/**
+ * Contains a minimun context for a job execution (schedule, service etc...)
+ */
 
-public class BasicContext
-{
-	private ResourceManager resMan;
-	private ProviderManager provMan;
-	private SerialFactory   serialFact;
+public class BasicContext implements Logger {
 
-	protected Logger logger = Log.createLogger(Log.JEEVES);
-	private   String baseUrl;
-	private   String appPath;
+    protected Logger logger = Log.createLogger(Log.JEEVES);
+    private String baseUrl;
+    private String appPath;
 
-	protected Map<String, Object> htContexts;
-    private MonitorManager monitorManager;
-    private final JeevesApplicationContext jeevesApplicationContext;
+    protected Map<String, Object> htContexts;
+    private final ConfigurableApplicationContext jeevesApplicationContext;
+    private EntityManager entityManager;
 
     //--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+    //---
+    //--- Constructor
+    //---
+    //--------------------------------------------------------------------------
 
-	public BasicContext(JeevesApplicationContext jeevesApplicationContext, MonitorManager mm, ProviderManager pm, SerialFactory sf, Map<String, Object> contexts)
-	{
-		resMan = new ResourceManager(mm, pm);
+    public BasicContext(ConfigurableApplicationContext jeevesApplicationContext, Map<String, Object> contexts, EntityManager entityManager) {
 
-		this.jeevesApplicationContext = jeevesApplicationContext;
-        this.monitorManager = mm;
-		provMan    = pm;
-		serialFact = sf;
-		htContexts = Collections.unmodifiableMap(contexts);
-	}
+        this.jeevesApplicationContext = jeevesApplicationContext;
+        htContexts = Collections.unmodifiableMap(contexts);
+        this.entityManager = entityManager;
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //--------------------------------------------------------------------------
 
-	//--- readonly objects
 
-	public ResourceManager getResourceManager() { return resMan;     }
-	public SerialFactory   getSerialFactory()   { return serialFact; }
+    public Logger getLogger() {
+        return logger;
+    }
 
-	//--- read/write objects
+    //--- read/write objects
+    public String getBaseUrl() {
+        return baseUrl;
+    }
 
-	public Logger getLogger()  { return logger;  }
-	public String getBaseUrl() { return baseUrl; }
-	public String getAppPath() { return appPath; }
+    public String getAppPath() {
+        return appPath;
+    }
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
-	public void setBaseUrl(String name) { baseUrl = name; }
-	public void setAppPath(String path) { appPath = path; }
+    public void setBaseUrl(String name) {
+        baseUrl = name;
+    }
 
-	//--------------------------------------------------------------------------
+    public void setAppPath(String path) {
+        appPath = path;
+    }
 
-	public Object getHandlerContext(String contextName)
-	{
-		return htContexts.get(contextName);
-	}
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
-
-	public ProviderManager getProviderManager()
-	{
-		return provMan;
-	}
+    public Object getHandlerContext(String contextName) {
+        return htContexts.get(contextName);
+    }
 
     //--------------------------------------------------------------------------
 
     public MonitorManager getMonitorManager() {
-        return monitorManager;
+        return getBean(MonitorManager.class);
     }
 
     //--------------------------------------------------------------------------
 
-    public JeevesApplicationContext getApplicationContext() {
+    public ConfigurableApplicationContext getApplicationContext() {
         return jeevesApplicationContext;
     }
+    //--------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
+    public final @Nonnull <T> T getBean(Class<T> beanType) {
+        return jeevesApplicationContext.getBean(beanType);
+    }
 
-    public boolean isDebug() {return logger.isDebugEnabled();}
-	public void debug  (String message) { logger.debug  (message); }
-	public void info   (String message) { logger.info   (message); }
-	public void warning(String message) { logger.warning(message); }
-	public void error  (String message) { logger.error  (message); }
+    //--------------------------------------------------------------------------
+
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    //--------------------------------------------------------------------------
+
+    @Override
+    public boolean isDebugEnabled() {
+        return logger.isDebugEnabled();
+    }
+
+    @Override
+    public void debug(final String message) {
+        logger.debug(message);
+    }
+
+    @Override
+    public void info(final String message) {
+        logger.info(message);
+    }
+
+    @Override
+    public void warning(final String message) {
+        logger.warning(message);
+    }
+
+    @Override
+    public void error(final String message) {
+        logger.error(message);
+    }
+
+    @Override
+    public void error(Throwable ex) {
+        logger.error(ex);
+    }
+
+    @Override
+    public void fatal(final String message) {
+        logger.fatal(message);
+    }
+
+    @Override
+    public String getModule() {
+        return logger.getModule();
+    }
+
+    @Override
+    public void setAppender(FileAppender fa) {
+        logger.setAppender(fa);
+    }
+
+    @Override
+    public String getFileAppender() {
+        return logger.getFileAppender();
+    }
+
+    @Override
+    public Level getThreshold() {
+        return logger.getThreshold();
+    }
+
+    /**
+     * Return the id of the current node.
+     *
+     * @return the id of the current node.
+     */
+    public String getNodeId() {
+        return this.jeevesApplicationContext.getBean(NodeInfo.class).getId();
+    }
 }
 
 //=============================================================================

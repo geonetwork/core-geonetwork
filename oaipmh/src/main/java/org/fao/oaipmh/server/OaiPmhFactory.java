@@ -26,17 +26,15 @@ package org.fao.oaipmh.server;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.XmlRequest;
 import org.fao.oaipmh.exceptions.BadArgumentException;
 import org.fao.oaipmh.exceptions.BadVerbException;
-import org.fao.oaipmh.requests.AbstractRequest;
-import org.fao.oaipmh.requests.GetRecordRequest;
-import org.fao.oaipmh.requests.IdentifyRequest;
-import org.fao.oaipmh.requests.ListIdentifiersRequest;
-import org.fao.oaipmh.requests.ListMetadataFormatsRequest;
-import org.fao.oaipmh.requests.ListRecordsRequest;
-import org.fao.oaipmh.requests.ListSetsRequest;
-import org.fao.oaipmh.util.ISODate;
+import org.fao.oaipmh.requests.*;
 import org.jdom.Element;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 
 //=============================================================================
 
@@ -69,7 +67,7 @@ public class OaiPmhFactory
 
 	//---------------------------------------------------------------------------
 
-	public static AbstractRequest parse(Map<String, String> params) throws BadVerbException, BadArgumentException
+	public static AbstractRequest parse(ConfigurableApplicationContext applicationContext, Map<String, String> params) throws BadVerbException, BadArgumentException
 	{
 		//--- duplicate parameters because the below procedure will consume them
 
@@ -86,25 +84,31 @@ public class OaiPmhFactory
 
 		String verb = consumeMan(params, "verb");
 
-		if (verb.equals(IdentifyRequest.VERB))
-			return handleIdentify(params);
+		if (verb.equals(IdentifyRequest.VERB)) {
+            return handleIdentify(applicationContext, params);
+        }
 
-		if (verb.equals(GetRecordRequest.VERB))
-			return handleGetRecord(params);
+		if (verb.equals(GetRecordRequest.VERB)) {
+            return handleGetRecord(applicationContext, params);
+        }
 
-		if (verb.equals(ListIdentifiersRequest.VERB))
-			return handleListIdentifiers(params);
+		if (verb.equals(ListIdentifiersRequest.VERB)) {
+            return handleListIdentifiers(applicationContext, params);
+        }
 
-		if (verb.equals(ListMetadataFormatsRequest.VERB))
-			return handleListMdFormats(params);
+		if (verb.equals(ListMetadataFormatsRequest.VERB)) {
+            return handleListMdFormats(applicationContext, params);
+        }
 
-		if (verb.equals(ListRecordsRequest.VERB))
-			return handleListRecords(params);
+		if (verb.equals(ListRecordsRequest.VERB)) {
+            return handleListRecords(applicationContext, params);
+        }
 
-		if (verb.equals(ListSetsRequest.VERB))
-			return handleListSets(params);
+		if (verb.equals(ListSetsRequest.VERB)) {
+            return handleListSets(applicationContext, params);
+        }
 
-		throw new BadVerbException("Unknown verb : "+ verb);
+		throw new BadVerbException("Unknown verb : " + verb);
 	}
 
 	//---------------------------------------------------------------------------
@@ -182,18 +186,18 @@ public class OaiPmhFactory
 	//---
 	//---------------------------------------------------------------------------
 
-	private static IdentifyRequest handleIdentify(Map<String, String> params) throws BadArgumentException
-	{
+	private static IdentifyRequest handleIdentify(ApplicationContext applicationContext, Map<String, String> params)
+            throws BadArgumentException {
 		checkConsumption(params);
 
-		return new IdentifyRequest();
+        return new IdentifyRequest(applicationContext.getBean(GeonetHttpRequestFactory.class));
 	}
 
 	//---------------------------------------------------------------------------
 
-	private static GetRecordRequest handleGetRecord(Map<String, String> params) throws BadArgumentException
-	{
-		GetRecordRequest req = new GetRecordRequest();
+	private static GetRecordRequest handleGetRecord(ApplicationContext applicationContext, Map<String, String> params)
+            throws BadArgumentException {
+        GetRecordRequest req = new GetRecordRequest(applicationContext.getBean(GeonetHttpRequestFactory.class));
 
 		req.setIdentifier    (consumeMan(params, "identifier"    ));
 		req.setMetadataPrefix(consumeMan(params, "metadataPrefix"));
@@ -205,9 +209,10 @@ public class OaiPmhFactory
 
 	//---------------------------------------------------------------------------
 
-	private static ListIdentifiersRequest handleListIdentifiers(Map<String, String> params) throws BadArgumentException
-	{
-		ListIdentifiersRequest req = new ListIdentifiersRequest();
+	private static ListIdentifiersRequest handleListIdentifiers(ApplicationContext applicationContext, Map<String, String> params)
+            throws BadArgumentException {
+
+		ListIdentifiersRequest req = new ListIdentifiersRequest(applicationContext.getBean(GeonetHttpRequestFactory.class));
 
 		if (params.containsKey("resumptionToken"))
 			req.setResumptionToken(consumeMan(params, "resumptionToken"));
@@ -227,9 +232,10 @@ public class OaiPmhFactory
 
 	//---------------------------------------------------------------------------
 
-	private static ListMetadataFormatsRequest handleListMdFormats(Map<String, String> params) throws BadArgumentException
-	{
-		ListMetadataFormatsRequest req = new ListMetadataFormatsRequest();
+	private static ListMetadataFormatsRequest handleListMdFormats(ApplicationContext applicationContext, Map<String, String> params)
+            throws BadArgumentException {
+
+		ListMetadataFormatsRequest req = new ListMetadataFormatsRequest(applicationContext.getBean(GeonetHttpRequestFactory.class));
 
 		req.setIdentifier(consumeOpt(params, "identifier"));
 		checkConsumption(params);
@@ -239,9 +245,10 @@ public class OaiPmhFactory
 
 	//---------------------------------------------------------------------------
 
-	private static ListRecordsRequest handleListRecords(Map<String, String> params) throws BadArgumentException
-	{
-		ListRecordsRequest req = new ListRecordsRequest();
+	private static ListRecordsRequest handleListRecords(ApplicationContext applicationContext, Map<String, String> params)
+            throws BadArgumentException {
+
+		ListRecordsRequest req = new ListRecordsRequest(applicationContext.getBean(GeonetHttpRequestFactory.class));
 
 		if (params.containsKey("resumptionToken"))
 			req.setResumptionToken(consumeMan(params, "resumptionToken"));
@@ -261,9 +268,10 @@ public class OaiPmhFactory
 
 	//---------------------------------------------------------------------------
 
-	private static ListSetsRequest handleListSets(Map<String, String> params) throws BadArgumentException
-	{
-		ListSetsRequest req = new ListSetsRequest();
+	private static ListSetsRequest handleListSets(ApplicationContext applicationContext, Map<String, String> params)
+            throws BadArgumentException {
+
+		ListSetsRequest req = new ListSetsRequest(applicationContext.getBean(GeonetHttpRequestFactory.class));
 
 		if (params.containsKey("resumptionToken"))
 			req.setResumptionToken(consumeMan(params, "resumptionToken"));

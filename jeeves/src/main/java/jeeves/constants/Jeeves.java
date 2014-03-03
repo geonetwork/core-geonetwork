@@ -23,29 +23,26 @@
 
 package jeeves.constants;
 
+import org.fao.geonet.Constants;
+import org.fao.geonet.domain.Profile;
+
 
 //=============================================================================
 
 public final class Jeeves
 {
-	/**
+    public static final String LANG_COOKIE = "geonetwork_Preferred_Language_Cookie";
+    public static final String SHUTDOWN_ON_STARTUP_ERROR = "geonetwork.shutdown.on.startup.error";
+
+    /**
     * Default constructor.
     * Builds a Jeeves.
     */
    private Jeeves() {}
-   
-   public static final String ENCODING = System.getProperty("geonetwork.file.encoding", "UTF-8");
-   
-   public static final int MAX_UPLOAD_SIZE = 50; // 50 MB
 
 	public static final String CONFIG_FILE = "config.xml";
 
-	public static final String XML_CATALOG_FILES = "jeeves.xml.catalog.files";
-	public static final String XML_CATALOG_VERBOSITY = "jeeves.xml.catalog.verbosity";
-
-    public static final String XML_CATALOG_BLANKXSLFILE = "jeeves.xml.catalog.blankxslfile";
-
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 	//---
 	//--- Url prefixes
 	//---
@@ -85,9 +82,9 @@ public final class Jeeves
 		public static final String STRINGS   = "strings";
 		public static final String SERVICES  = "services";
 		public static final String SERVICE   = "service";
-		public static final String PROFILES  = "profiles";
+		public static final String PROFILES  = Profile.PROFILES_ELEM_NAME;
 		public static final String FORWARD   = "forward";
-		public static final String ERROR     = "error";
+		public static final String ERROR     = Constants.ERROR;
 		public static final String SESSION   = "session";
 
 		public static final String BASE_URL     = "url";
@@ -96,6 +93,7 @@ public final class Jeeves
 		public static final String LOC_SERVICE  = "locService";
 		public static final String LANGUAGE     = "language";
 		public static final String REQ_SERVICE  = "reqService";
+        public static final String NODE_ID      = "nodeId";
 	}
 
 	//--------------------------------------------------------------------------
@@ -157,7 +155,7 @@ public final class Jeeves
           */
 		   private Id() {}
          
-		   public static final String ERROR   = "error";
+		   public static final String ERROR   = Constants.ERROR;
 		}
 
 		//--- values of the type's attribute

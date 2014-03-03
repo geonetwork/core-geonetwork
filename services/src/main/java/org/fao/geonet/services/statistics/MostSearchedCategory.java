@@ -1,12 +1,19 @@
 package org.fao.geonet.services.statistics;
 
-import jeeves.resources.dbms.Dbms;
+import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.statistic.SearchRequestParam;
+import org.fao.geonet.repository.specification.SearchRequestParamSpecs;
+import org.fao.geonet.repository.statistic.SearchRequestParamRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specification;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Service to get the db-stored requests most searched category.
@@ -16,7 +23,7 @@ import org.jdom.Element;
  *
  */
 public class MostSearchedCategory extends NotInReadOnlyModeService {
-	private String luceneTermFields;
+	private List<String> luceneTermFields;
 	private int maxHits;
 	//--------------------------------------------------------------------------
 	//---
@@ -27,7 +34,12 @@ public class MostSearchedCategory extends NotInReadOnlyModeService {
 	public void init(String appPath, ServiceConfig params) throws Exception	{
         super.init(appPath, params);
 
-		luceneTermFields = params.getValue("luceneTermFields");
+        final String luceneTermFields1 = params.getValue("luceneTermFields");
+        if (luceneTermFields1!= null && luceneTermFields1.length() > 0) {
+            luceneTermFields = Arrays.asList(luceneTermFields1.split(","));
+        } else {
+            luceneTermFields = new ArrayList<String>();
+        }
 		maxHits = Integer.parseInt(params.getValue("maxHits"));
 	}
 
@@ -38,20 +50,26 @@ public class MostSearchedCategory extends NotInReadOnlyModeService {
 	//--------------------------------------------------------------------------
     @Override
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-        String query = "select termtext, count(*) as cnt from ";
-        query += "params ";
-		if (luceneTermFields != null && luceneTermFields.length() > 0) {
-			query += " where length(termtext) > 0 and termField in (" + luceneTermFields + ")";
-		}
-        query += " group by termtext ";
-        query += "having count(*) > 1 ";
-        query += "order by cnt desc";
 
-        if(Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) Log.debug(Geonet.SEARCH_LOGGER, "query: " + query);
+        final List<Pair<String,Integer>> termTextToRequestCount;
+        if (luceneTermFields.isEmpty()) {
+            termTextToRequestCount = context.getBean(SearchRequestParamRepository.class)
+                    .getTermTextToRequestCount(maxHits);
+        } else {
+            Specification<SearchRequestParam> spec = SearchRequestParamSpecs.hasTermFieldIn(luceneTermFields);
+            termTextToRequestCount = context.getBean(SearchRequestParamRepository.class)
+                .getTermTextToRequestCount(maxHits, spec);
+        }
 
-        MostSearchedResponse mostSearchedResponse = new MostSearchedResponse();
-        return mostSearchedResponse.createResponse(maxHits, dbms, query);
+        Element results = new Element(Jeeves.Elem.RESPONSE);
+        for (Pair<String, Integer> record : termTextToRequestCount) {
+            results.addContent(
+                    new Element("record")
+                            .addContent(new Element("termtext").setText(record.one()))
+                            .addContent(new Element("cnt").setText(""+record.two()))
+            );
+        }
+        return results;
 	}
 }

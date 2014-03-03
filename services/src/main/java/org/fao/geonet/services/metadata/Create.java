@@ -24,23 +24,37 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.ServiceNotAllowedEx;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
-
+import org.apache.commons.io.FileUtils;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
-import org.fao.geonet.util.ISODate;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.ReservedOperation;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specifications;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
  * Creates a metadata copying data from a given template.
@@ -62,8 +76,7 @@ public class Create extends NotInReadOnlyModeService {
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getBean(DataManager.class);
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		
+
 		String child = Util.getParam(params, Params.CHILD, "n");
 		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
 		String id = "";
@@ -74,12 +87,12 @@ public class Create extends NotInReadOnlyModeService {
 		try {
 			uuid = Util.getParam(params, Params.UUID);
 			// lookup ID by UUID
-			id = dm.getMetadataId(dbms, uuid);
+			id = dm.getMetadataId(uuid);
 		}
 		catch(BadInputEx x) {
 			try {
 				id = Util.getParam(params, Params.ID);
-				uuid = dm.getMetadataUuid(dbms, id);
+				uuid = dm.getMetadataUuid(id);
 			}
 			// request does not contain ID
 			catch(BadInputEx xx) {
@@ -89,46 +102,60 @@ public class Create extends NotInReadOnlyModeService {
 		}
 		
 		String groupOwner= Util.getParam(params, Params.GROUP);
-		String groupName = "";
-		
+
 		// TODO : Check user can create a metadata in that group
 		UserSession user = context.getUserSession();
-		if (!user.getProfile().equals(Geonet.Profile.ADMINISTRATOR)) {
-			String selectGroupIdQuery = "SELECT groupId, name FROM UserGroups, Groups WHERE id = groupId AND profile='Editor' AND userId=? AND groupId=?";
-            @SuppressWarnings("unchecked")
-            java.util.List<Element> list = dbms.select(selectGroupIdQuery, 
-						Integer.valueOf(user.getUserId()),
-						Integer.valueOf(groupOwner)).getChildren();
-			if (list.size() == 0) {
+		if (user.getProfile() != Profile.Administrator) {
+            final Specifications<UserGroup> spec = where(UserGroupSpecs.hasProfile(Profile.Editor))
+                    .and(UserGroupSpecs.hasUserId(user.getUserIdAsInt()))
+                    .and(UserGroupSpecs.hasGroupId(Integer.valueOf(groupOwner)));
+
+            final List<UserGroup> userGroups = context.getBean(UserGroupRepository.class).findAll(spec);
+
+			if (userGroups.size() == 0) {
 				throw new ServiceNotAllowedEx("Service not allowed. User needs to be Editor in group with id " + groupOwner);
 			}
 		}
         
 		//--- query the data manager
 
-		String newId = dm.createMetadata(context, dbms, id, groupOwner, context.getSerialFactory(),
-												  gc.getSiteId(), context.getUserSession().getUserIdAsInt(), 
+        String newId = dm.createMetadata(context, id, groupOwner,
+                gc.getBean(SettingManager.class).getSiteId(), context.getUserSession().getUserIdAsInt(),
 												  (child.equals("n")?null:uuid), isTemplate, haveAllRights);
 
-		
+
 		// Sextant / Enable workflow by default for records created in MYOCEAN groups
-        String selectGroupNameQuery = "SELECT name FROM Groups WHERE id=?";
-        
-        @SuppressWarnings("unchecked")
-        java.util.List<Element> list = dbms.select(selectGroupNameQuery, 
-                    Integer.valueOf(groupOwner)).getChildren();
-        if (list.size() != 0) {
-            groupName = list.get(0).getChildText("name");
+//        String selectGroupNameQuery = "SELECT name FROM Groups WHERE id=?";
+        final Group group = context.getBean(GroupRepository.class)
+                .findOne(Integer.valueOf(Integer.valueOf(groupOwner)));
+        String groupName = "";
+        if (group != null) {
+            groupName = group.getName();
         }
+//                @SuppressWarnings("unchecked")
+//        java.util.List<Element> list = dbms.select(selectGroupNameQuery,
+//                Integer.valueOf(groupOwner)).getChildren();
+//        if (list.size() != 0) {
+//            groupName = list.get(0).getChildText("name");
+//        }
         if (groupName.toLowerCase().contains("myocean-core-products")) {
             // TODO : trigger another indexing
-            dm.setStatus(context, dbms, Integer.valueOf(newId), Integer.valueOf(Params.Status.DRAFT), new ISODate().toString(), "Workflow enabled");
-            
-            dm.unsetOperation(context, dbms, newId, groupOwner, AccessManager.OPER_EDITING);
+            dm.setStatus(context, Integer.valueOf(newId),
+                    Integer.valueOf(Params.Status.DRAFT),
+                    new ISODate(), "Workflow enabled");  // TODO: i18n
+            dm.unsetOperation(context, newId, groupOwner, ReservedOperation.editing);
 		}
         // Sextant - end / Enable workflow by default for records created in MYOCEAN groups
 
 		
+        try {
+          copyDataDir(context, id, newId, Params.Access.PUBLIC);
+          copyDataDir(context, id, newId, Params.Access.PRIVATE);
+        } catch (IOException e) {
+          Log.warning(Geonet.DATA_MANAGER, "Error while copying metadata resources. " + e.getMessage() +  
+              ". Metadata is created but without resources from record with id:" + id);
+        }
+        
         Element response = new Element(Jeeves.Elem.RESPONSE);
         response.addContent(new Element(Geonet.Elem.JUSTCREATED).setText("true"));
         
@@ -143,4 +170,16 @@ public class Create extends NotInReadOnlyModeService {
         response.addContent(new Element(Geonet.Elem.ID).setText(newId));
 		return response;
 	}
+
+    private void copyDataDir(ServiceContext context, String oldId, String newId, String access) throws IOException {
+        final String sourceDir = Lib.resource.getDir(context, access, oldId);
+        final String destDir = Lib.resource.getDir(context, access, newId);
+        if (new File(sourceDir).exists()) {
+            if (!new File(destDir).mkdirs()){
+                Log.warning(Geonet.GEONETWORK, "Error creating the metadata data directory.");
+            }
+
+            FileUtils.copyDirectory(new File(sourceDir), new File(destDir));
+        }
+    }
 }

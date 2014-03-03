@@ -12,7 +12,8 @@
 
 	<xsl:include href="convert/functions.xsl"/>
 	<xsl:include href="../../../xsl/utils-fn.xsl"/>
-	
+  <xsl:include href="index-subtemplate-fields.xsl"/>
+  
 	<!-- This file defines what parts of the metadata are indexed by Lucene
 	     Searches can be conducted on indexes defined here. 
 	     The Field@name attribute defines the name of the search variable.
@@ -109,7 +110,7 @@
 		match="gmd:extent/gmd:EX_Extent/gmd:description/gco:CharacterString[normalize-space(.) != '']">
 		<Field name="extentDesc" string="{string(.)}" store="false" index="true"/>
 	</xsl:template>
-	
+  
 	
 	<!-- ========================================================================================= -->
 
@@ -388,6 +389,7 @@
 					<Field name="agg_{$associationType}_{$initiativeType}" string="{$code}" store="false" index="true"/>
 					<Field name="agg_{$associationType}_with_initiative" string="{$initiativeType}" store="false" index="true"/>
 					<Field name="agg_{$associationType}" string="{$code}" store="false" index="true"/>
+					<Field name="agg_associated" string="{$code}" store="false" index="true"/>
 					<Field name="agg_with_association" string="{$associationType}" store="false" index="true"/>
 					<Field name="agg_use" string="true" store="false" index="true"/>
 				</xsl:if>
@@ -447,11 +449,11 @@
 						</xsl:when>
 						<xsl:when test="string($fileDescr)='thumbnail'">
 							<!-- FIXME : relative path -->
-							<Field  name="image" string="{concat($fileDescr, '|', '../../srv/eng/resources.get?uuid=', //gmd:fileIdentifier/gco:CharacterString, '&amp;fname=', $fileName, '&amp;access=public')}" store="true" index="false"/>
+							<Field  name="image" string="{concat($fileDescr, '|', 'resources.get?uuid=', //gmd:fileIdentifier/gco:CharacterString, '&amp;fname=', $fileName, '&amp;access=public')}" store="true" index="false"/>
 						</xsl:when>
 						<xsl:when test="string($fileDescr)='large_thumbnail'">
 							<!-- FIXME : relative path -->
-							<Field  name="image" string="{concat('overview', '|', '../../srv/eng/resources.get?uuid=', //gmd:fileIdentifier/gco:CharacterString, '&amp;fname=', $fileName, '&amp;access=public')}" store="true" index="false"/>
+							<Field  name="image" string="{concat('overview', '|', 'resources.get?uuid=', //gmd:fileIdentifier/gco:CharacterString, '&amp;fname=', $fileName, '&amp;access=public')}" store="true" index="false"/>
 						</xsl:when>
 					</xsl:choose>
 				</xsl:if>
@@ -599,7 +601,7 @@
 		<xsl:variable name="isStatic" select="count(gmd:distributionInfo/gmd:MD_Distribution/
 			gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString[contains(., 'PDF') or contains(., 'PNG') or contains(., 'JPEG')]) > 0"/>
 		<xsl:variable name="isInteractive" select="count(gmd:distributionInfo/gmd:MD_Distribution/
-			gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString[contains(., 'OGC:WMC') or contains(., 'OGC:OWS')]) > 0"/>
+			gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString[contains(., 'OGC:WMC') or contains(., 'OGC:OWS-C')]) > 0"/>
 		<xsl:variable name="isPublishedWithWMCProtocol" select="count(gmd:distributionInfo/gmd:MD_Distribution/
 			gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:protocol[starts-with(gco:CharacterString, 'OGC:WMC')]) > 0"/>
 		
@@ -654,8 +656,8 @@
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
-		<xsl:for-each select="gmd:dateStamp/gco:DateTime">
-			<Field name="changeDate" string="{string(.)}" store="true" index="true"/>
+		<xsl:for-each select="gmd:dateStamp">
+			<Field name="changeDate" string="{string(gco:DateTime|gco:Date)}" store="true" index="true"/>
 		</xsl:for-each>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

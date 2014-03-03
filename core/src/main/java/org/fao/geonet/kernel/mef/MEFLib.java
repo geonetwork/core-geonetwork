@@ -23,12 +23,13 @@
 
 package org.fao.geonet.kernel.mef;
 
-import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.resources.dbms.Dbms;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
-import jeeves.utils.Xml;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.Xml;
 
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
@@ -37,16 +38,14 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.util.ISODate;
-import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.OperationRepository;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,6 +57,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Nonnull;
+import org.fao.geonet.util.XslUtil;
 
 import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PRIVATE;
 import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PUBLIC;
@@ -70,518 +70,500 @@ import static org.fao.geonet.kernel.mef.MEFConstants.VERSION;
  */
 public class MEFLib {
 
-	public enum Format {
-		/**
-		 * Only metadata record and infomation
-		 */
-		SIMPLE,
-		/**
-		 * Include public folder
-		 */
-		PARTIAL,
-		/**
-		 * Include private folder. Full is default format if none defined.
-		 */
-		FULL;
+    public enum Format {
+        /**
+         * Only metadata record and infomation
+         */
+        SIMPLE,
+        /**
+         * Include public folder
+         */
+        PARTIAL,
+        /**
+         * Include private folder. Full is default format if none defined.
+         */
+        FULL;
 
-		// ------------------------------------------------------------------------
+        // ------------------------------------------------------------------------
 
-		public static Format parse(String format) throws BadInputEx {
-			if (format == null)
-				return FULL;
-			// throw new MissingParameterEx("format");
+        public static Format parse(String format) throws BadInputEx {
+            if (format == null)
+                return FULL;
+            // throw new MissingParameterEx("format");
 
-			if (format.equals("simple"))
-				return SIMPLE;
-			if (format.equals("partial"))
-				return PARTIAL;
-			if (format.equals("full"))
-				return FULL;
+            if (format.equals("simple"))
+                return SIMPLE;
+            if (format.equals("partial"))
+                return PARTIAL;
+            if (format.equals("full"))
+                return FULL;
 
-			throw new BadParameterEx("format", format);
-		}
+            throw new BadParameterEx("format", format);
+        }
 
-		// ------------------------------------------------------------------------
+        // ------------------------------------------------------------------------
 
-		public String toString() {
-			return super.toString().toLowerCase();
-		}
-	}
-
-	/**
-	 * MEF file version.
-	 * 
-	 * MEF file is composed of one or more metadata record with extra
-	 * information managed by GeoNetwork. Metadata is in XML format. An
-	 * information file (info.xml) is used to transfert general informations,
-	 * categories, privileges and file references information. A public and
-	 * private directories allows data transfert (eg. thumbnails, data upload).
-	 * 
-	 */
-	public enum Version {
-		/**
-		 * Version 1 is composed of one metadata file. <pre>
-		 * Root 
-		 * | 
-		 * +--- metadata.xml
-		 * +--- info.xml 
-		 * +--- public 
-		 * |    +---- all public documents and thumbnails
-		 * +--- private 
-		 *      +---- all private documents and thumbnails
-		 * </pre>
-		 */
-		V1,
-		/**
-		 * Version 2 is composed of one or more metadata records. Each records
-		 * are stored in a directory named using record's uuid.
-		 * 
-		 * <pre>
-		 * Root 
-		 * |
-		 * + 0..n metadata 
-		 *   +--- metadata 
-		 *   |      +--- metadata.xml (ISO19139)
-		 *   |      +--- (optional) metadata.profil.xml (ISO19139profil) Require a
-		 * schema/convert/toiso19139.xsl to map to ISO. 
-		 *   +--- info.xml 
-		 *   +--- applschema ISO 19110 record 
-		 *   +--- public 
-		 *   |      +---- all public documents and thumbnails 
-		 *   +--- private 
-		 *          +---- all private documents and thumbnails
-		 * </pre>
-		 */
-		V2
-	}
-	
-	public static List<String> doImportIndexGroup(Element params, ServiceContext context, File mefFile, String stylePath) throws Exception {
-		return Importer.doImport(params, context, mefFile, stylePath, true);
-	}
-
-	// --------------------------------------------------------------------------
-	
-	public static List<String> doImport(Element params, ServiceContext context,
-			File mefFile, String stylePath) throws Exception {
-		return Importer.doImport(params, context, mefFile, stylePath);
-	}
-
-	// --------------------------------------------------------------------------
-
-	public static String doExport(ServiceContext context, String uuid,
-			String format, boolean skipUUID, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
-		return MEFExporter.doExport(context, uuid, Format.parse(format),
-				skipUUID, resolveXlink, removeXlinkAttribute);
-	}
-
-	// --------------------------------------------------------------------------
-
-	public static String doMEF2Export(ServiceContext context,
-			Set<String> uuids, String format, boolean skipUUID, String stylePath, boolean resolveXlink, boolean removeXlinkAttribute)
-			throws Exception {
-		return MEF2Exporter.doExport(context, uuids, Format.parse(format),
-				skipUUID, stylePath, resolveXlink, removeXlinkAttribute);
-	}
-
-	// --------------------------------------------------------------------------
-
-	public static void visit(File mefFile, IVisitor visitor, IMEFVisitor v)
-			throws Exception {
-		visitor.visit(mefFile, v);
-	}
-
-	/**
-	 * Return MEF file version according to ZIP file content.
-	 * 
-	 * @param mefFile
-	 *            mefFile to check version
-	 * @return v1
-	 */
-	public static Version getMEFVersion(File mefFile) {
-
-		try {
-			ZipInputStream zis = new ZipInputStream(
-					new FileInputStream(mefFile));
-			ZipEntry entry;
-
-			try {
-				while ((entry = zis.getNextEntry()) != null) {
-					String fullName = entry.getName();
-					if (fullName.equals("metadata.xml") || fullName.equals("info.xml"))
-						return Version.V1;
-					zis.closeEntry();
-				}
-			} finally {
-				zis.close();
-			}
-			return Version.V2;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-	};
-
-	/**
-	 * Get metadata record.
-	 * 
-	 * @param dbms
-	 * @param uuid
-	 * @return
-	 */
-	static Element retrieveMetadata(ServiceContext context, Dbms dbms, String uuid, boolean resolveXlink, boolean removeXlinkAttribute)
-			throws Exception {
-		@SuppressWarnings("unchecked")
-        List<Element> list = dbms.select("SELECT * FROM Metadata WHERE uuid=?", uuid).getChildren();
-
-		if (list.isEmpty())
-			throw new MetadataNotFoundEx("uuid=" + uuid);
-
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager dm = gc.getBean(DataManager.class);
-
-		Element record = list.get(0);
-		String id = record.getChildText("id");
-        record.removeChildren("data");
-        boolean forEditing = false;
-        boolean withEditorValidationErrors = false;
-        Element metadata = dm.getMetadata(context, id, forEditing, withEditorValidationErrors, !removeXlinkAttribute);
-        metadata.removeChild("info", Edit.NAMESPACE);
-        String outputParamPath = Geonet.Settings.WIKI_MEFOUTPUT;
-        metadata = XslUtil.controlForMarkup(context, metadata, outputParamPath);
-        Element mdEl = new Element("data").setText(Xml.getString(metadata));
-        record.addContent(mdEl);
-
-        return record;
-	}
+        public String toString() {
+            return super.toString().toLowerCase();
+        }
+    }
 
     /**
-	 * Add an entry to ZIP file
-	 * 
-	 * @param zos
-	 * @param name
-	 * @throws IOException
-	 */
-	static void createDir(ZipOutputStream zos, String name) throws IOException {
-		ZipEntry entry = new ZipEntry(name);
-		zos.putNextEntry(entry);
-	}
+     * MEF file version.
+     *
+     * MEF file is composed of one or more metadata record with extra
+     * information managed by GeoNetwork. Metadata is in XML format. An
+     * information file (info.xml) is used to transfert general informations,
+     * categories, privileges and file references information. A public and
+     * private directories allows data transfert (eg. thumbnails, data upload).
+     *
+     */
+    public enum Version {
+        /**
+         * Version 1 is composed of one metadata file. <pre>
+         * Root
+         * |
+         * +--- metadata.xml
+         * +--- info.xml
+         * +--- public
+         * |    +---- all public documents and thumbnails
+         * +--- private
+         *      +---- all private documents and thumbnails
+         * </pre>
+         */
+        V1,
+        /**
+         * Version 2 is composed of one or more metadata records. Each records
+         * are stored in a directory named using record's uuid.
+         *
+         * <pre>
+         * Root
+         * |
+         * + 0..n metadata
+         *   +--- metadata
+         *   |      +--- metadata.xml (ISO19139)
+         *   |      +--- (optional) metadata.profil.xml (ISO19139profil) Require a
+         * schema/convert/toiso19139.xsl to map to ISO.
+         *   +--- info.xml
+         *   +--- applschema ISO 19110 record
+         *   +--- public
+         *   |      +---- all public documents and thumbnails
+         *   +--- private
+         *          +---- all private documents and thumbnails
+         * </pre>
+         */
+        V2
+    }
 
-	/**
-	 * Add file to ZIP file
-	 * 
-	 * @param zos
-	 * @param name
-	 * @param in
-	 * @throws IOException
-	 */
-	static void addFile(ZipOutputStream zos, String name, @Nonnull InputStream in)
-			throws IOException {
-	       ZipEntry entry = null;
-	        try {
-	            entry = new ZipEntry(name);
-		zos.putNextEntry(entry);
-	            BinaryFile.copy(in, zos);
-	        } finally {
-	            try {
-	                if(zos != null) {
-		zos.closeEntry();
-	}
-	            } finally {
-	                IOUtils.closeQuietly(in);
-	            }
-	        }
-	}
+    // --------------------------------------------------------------------------
 
-	/**
-	 * Save public directory (thumbnails or other uploaded documents).
-	 * 
-	 * @param zos
-	 * @param dir
-	 * @param uuid
-	 *            Metadata uuid
-	 * @throws IOException
-	 */
-	static void savePublic(ZipOutputStream zos, String dir, String uuid)
-			throws IOException {
-		File[] files = new File(dir).listFiles(filter);
+    public static List<String> doImport(Element params, ServiceContext context,
+                                        File mefFile, String stylePath) throws Exception {
+        return Importer.doImport(params, context, mefFile, stylePath);
+    }
 
-		if (files != null)
-			for (File file : files)
-				addFile(zos, (uuid != null ? uuid : "") + FS + DIR_PUBLIC
-						+ file.getName(), new FileInputStream(file));
-	}
+    // --------------------------------------------------------------------------
 
-	/**
-	 * Save private directory (thumbnails or other uploaded documents).
-	 * 
-	 * @param zos
-	 * @param dir
-	 * @param uuid
-	 *            Metadata uuid
-	 * @throws IOException
-	 */
-	static void savePrivate(ZipOutputStream zos, String dir, String uuid)
-			throws IOException {
-		File[] files = new File(dir).listFiles(filter);
+    public static String doExport(ServiceContext context, String uuid,
+                                  String format, boolean skipUUID, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
+        return MEFExporter.doExport(context, uuid, Format.parse(format),
+                skipUUID, resolveXlink, removeXlinkAttribute);
+    }
 
-		if (files != null)
-			for (File file : files)
-				addFile(zos, (uuid != null ? uuid : "") + FS + DIR_PRIVATE
-						+ file.getName(), new FileInputStream(file));
-	}
+    // --------------------------------------------------------------------------
 
-	/**
-	 * Build an info file.
-	 * 
-	 * @param context
-	 * @param md
-	 * @param format
-	 * @param pubDir
-	 * @param priDir
-	 * @param skipUUID
-	 * @return
-	 * @throws Exception
-	 */
-	static String buildInfoFile(ServiceContext context, Element md,
-			Format format, String pubDir, String priDir, boolean skipUUID)
-			throws Exception {
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
+    public static String doMEF2Export(ServiceContext context,
+                                      Set<String> uuids, String format, boolean skipUUID, String stylePath, boolean resolveXlink, boolean removeXlinkAttribute)
+            throws Exception {
+        return MEF2Exporter.doExport(context, uuids, Format.parse(format),
+                skipUUID, stylePath, resolveXlink, removeXlinkAttribute);
+    }
 
-		Element info = new Element("info");
-		info.setAttribute("version", VERSION);
+    // --------------------------------------------------------------------------
 
-		info.addContent(buildInfoGeneral(md, format, skipUUID, context));
-		info.addContent(buildInfoCategories(dbms, md));
-		info.addContent(buildInfoPrivileges(context, md));
+    public static void visit(File mefFile, IVisitor visitor, IMEFVisitor v)
+            throws Exception {
+        visitor.visit(mefFile, v);
+    }
 
-		info.addContent(buildInfoFiles("public", pubDir));
-		info.addContent(buildInfoFiles("private", priDir));
+    /**
+     * Return MEF file version according to ZIP file content.
+     *
+     * @param mefFile
+     *            mefFile to check version
+     * @return v1
+     */
+    public static Version getMEFVersion(File mefFile) {
 
-		return Xml.getString(new Document(info));
-	}
+        try {
+            ZipInputStream zis = new ZipInputStream(
+                    new FileInputStream(mefFile));
+            ZipEntry entry;
 
-	/**
-	 * Build general section of info file.
-	 * 
-	 * 
-	 * @param md
-	 * @param format
-	 * @param skipUUID
-	 *            If true, do not add uuid, site identifier and site name.
-	 * @param context
-	 * @return
-	 */
-	static Element buildInfoGeneral(Element md, Format format,
-			boolean skipUUID, ServiceContext context) {
-		String id = md.getChildText("id");
-		String uuid = md.getChildText("uuid");
-		String schema = md.getChildText("schemaid");
-		String isTemplate = md.getChildText("istemplate").equals("y") ? "true"
-				: "false";
-		String createDate = md.getChildText("createdate");
-		String changeDate = md.getChildText("changedate");
-		String siteId = md.getChildText("source");
-		String rating = md.getChildText("rating");
-		String popularity = md.getChildText("popularity");
+            try {
+                while ((entry = zis.getNextEntry()) != null) {
+                    String fullName = entry.getName();
+                    if (fullName.equals("metadata.xml") || fullName.equals("info.xml"))
+                        return Version.V1;
+                    zis.closeEntry();
+                }
+            } finally {
+                zis.close();
+            }
+            return Version.V2;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    };
 
-		Element general = new Element("general").addContent(
-				new Element("createDate").setText(createDate)).addContent(
-				new Element("changeDate").setText(changeDate)).addContent(
-				new Element("schema").setText(schema)).addContent(
-				new Element("isTemplate").setText(isTemplate)).addContent(
-				new Element("localId").setText(id)).addContent(
-				new Element("format").setText(format.toString())).addContent(
-				new Element("rating").setText(rating)).addContent(
-				new Element("popularity").setText(popularity));
+    /**
+     * Get metadata record.
+     *
+     * @param uuid
+     * @return
+     */
+    static Metadata retrieveMetadata(ServiceContext context, String uuid, boolean resolveXlink, boolean removeXlinkAttribute)
+            throws Exception {
 
-		if (!skipUUID) {
-			GeonetContext gc = (GeonetContext) context
-					.getHandlerContext(Geonet.CONTEXT_NAME);
+        final Metadata metadata = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
 
-			general.addContent(new Element("uuid").setText(uuid));
-			general.addContent(new Element("siteId").setText(siteId));
-			general.addContent(new Element("siteName")
-					.setText(gc.getSiteName()));
-		}
+        if (metadata == null) {
+            throw new MetadataNotFoundEx("uuid=" + uuid);
+        }
 
-		return general;
-	}
+        DataManager dm = context.getBean(DataManager.class);
 
-	/**
-	 * Build category section of info file.
-	 * 
-	 * @param dbms
-	 * @param md
-	 * @return
-	 * @throws SQLException
-	 */
-	static Element buildInfoCategories(Dbms dbms, Element md)
-			throws SQLException {
-		Element categ = new Element("categories");
+        String id = ""+metadata.getId();
+        boolean forEditing = false;
+        boolean withEditorValidationErrors = false;
+        Element data = dm.getMetadata(context, id, forEditing, withEditorValidationErrors, !removeXlinkAttribute);
+        data.removeChild("info", Edit.NAMESPACE);
+        String outputParamPath = Geonet.Settings.WIKI_MEFOUTPUT;
+        data = XslUtil.controlForMarkup(context, data, outputParamPath);
+        metadata.setData(Xml.getString(data));
 
-		String id = md.getChildText("id");
-		String query = "SELECT name FROM MetadataCateg, Categories "
-				+ "WHERE categoryId = id AND metadataId = ?";
+        return metadata;
+    }
 
-		@SuppressWarnings("unchecked")
-        List<Element> list = dbms.select(query, Integer.valueOf(id)).getChildren();
+    /**
+     * Add an entry to ZIP file
+     *
+     * @param zos
+     * @param name
+     * @throws IOException
+     */
+    static void createDir(ZipOutputStream zos, String name) throws IOException {
+        ZipEntry entry = new ZipEntry(name);
+        zos.putNextEntry(entry);
+    }
 
-		for (Element record : list) {
-			String name = record.getChildText("name");
+    /**
+     * Add file to ZIP file
+     *
+     * @param zos
+     * @param name
+     * @param string
+     * @throws IOException
+     */
+    static void addFile(ZipOutputStream zos, String name, @Nonnull String string) throws IOException {
+        addFile(zos, name, new ByteArrayInputStream(string.getBytes("UTF-8")));
+    }
+    static void addFile(ZipOutputStream zos, String name, @Nonnull InputStream in)
+            throws IOException {
+        ZipEntry entry = null;
+        try {
+            entry = new ZipEntry(name);
+            zos.putNextEntry(entry);
+            BinaryFile.copy(in, zos);
+        } finally {
+            try {
+                if(zos != null) {
+                    zos.closeEntry();
+                }
+            } finally {
+                IOUtils.closeQuietly(in);
+            }
+        }
+    }
 
-			Element cat = new Element("category");
-			cat.setAttribute("name", name);
+    /**
+     * Save public directory (thumbnails or other uploaded documents).
+     *
+     * @param zos
+     * @param dir
+     * @param uuid
+     *            Metadata uuid
+     * @throws IOException
+     */
+    static void savePublic(ZipOutputStream zos, String dir, String uuid)
+            throws IOException {
+        File[] files = new File(dir).listFiles(filter);
 
-			categ.addContent(cat);
-		}
+        if (files != null)
+            for (File file : files)
+                addFile(zos, (uuid != null ? uuid : "") + FS + DIR_PUBLIC
+                        + file.getName(), new FileInputStream(file));
+    }
 
-		return categ;
-	}
+    /**
+     * Save private directory (thumbnails or other uploaded documents).
+     *
+     * @param zos
+     * @param dir
+     * @param uuid
+     *            Metadata uuid
+     * @throws IOException
+     */
+    static void savePrivate(ZipOutputStream zos, String dir, String uuid)
+            throws IOException {
+        File[] files = new File(dir).listFiles(filter);
 
-	/**
-	 * Build priviliges section of info file.
-	 * 
-	 * @param context
-	 * @param md
-	 * @return
-	 * @throws Exception
-	 */
-	static Element buildInfoPrivileges(ServiceContext context, Element md)
-			throws Exception {
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
+        if (files != null)
+            for (File file : files)
+                addFile(zos, (uuid != null ? uuid : "") + FS + DIR_PRIVATE
+                        + file.getName(), new FileInputStream(file));
+    }
 
-		String id = md.getChildText("id");
-		int iId = Integer.valueOf(id);
-		String query = "SELECT Groups.id as grpid, Groups.name as grpName, Operations.name as operName "
-				+ "FROM   OperationAllowed, Groups, Operations "
-				+ "WHERE  groupId = Groups.id "
-				+ "  AND  operationId = Operations.id "
-				+ "  AND  metadataId = ?";
+    /**
+     * Build an info file.
+     *
+     * @param context
+     * @param md
+     * @param format
+     * @param pubDir
+     * @param priDir
+     * @param skipUUID
+     * @return
+     * @throws Exception
+     */
+    static String buildInfoFile(ServiceContext context, Metadata md,
+                                Format format, String pubDir, String priDir, boolean skipUUID)
+            throws Exception {
+        Element info = new Element("info");
+        info.setAttribute("version", VERSION);
 
-		String grpOwnerQuery = "SELECT groupOwner FROM Metadata WHERE id = ?";
-		// Only one groupOwner per metadata
-		Element grpOwnerRs = dbms.select(grpOwnerQuery, iId).getChild("record");
-		// Get group Owner ID
-		String grpOwnerId = grpOwnerRs.getChildText("groupowner");
-		String grpOwnerName = "";
+        info.addContent(buildInfoGeneral(md, format, skipUUID, context));
+        info.addContent(buildInfoCategories(md));
+        info.addContent(buildInfoPrivileges(context, md));
 
-		HashMap<String, ArrayList<String>> hmPriv = new HashMap<String, ArrayList<String>>();
+        info.addContent(buildInfoFiles("public", pubDir));
+        info.addContent(buildInfoFiles("private", priDir));
 
-		// --- retrieve accessible groups
+        return Xml.getString(new Document(info));
+    }
 
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-		AccessManager am = gc.getBean(AccessManager.class);
+    /**
+     * Build general section of info file.
+     *
+     *
+     * @param md
+     * @param format
+     * @param skipUUID
+     *            If true, do not add uuid, site identifier and site name.
+     * @param context
+     * @return
+     */
+    static Element buildInfoGeneral(Metadata md, Format format,
+                                    boolean skipUUID, ServiceContext context) {
+        String id = String.valueOf(md.getId());
+        String uuid = md.getUuid();
+        String schema = md.getDataInfo().getSchemaId();
+        String isTemplate = md.getDataInfo().getType().codeString;
+        String createDate = md.getDataInfo().getCreateDate().getDateAndTime();
+        String changeDate = md.getDataInfo().getChangeDate().getDateAndTime();
+        String siteId = md.getSourceInfo().getSourceId();
+        String rating = "" + md.getDataInfo().getRating();
+        String popularity = "" + md.getDataInfo().getPopularity();
 
-		Set<String> userGroups = am.getUserGroups(dbms, context
-				.getUserSession(), context.getIpAddress(), false);
+        Element general = new Element("general").addContent(
+                new Element("createDate").setText(createDate)).addContent(
+                new Element("changeDate").setText(changeDate)).addContent(
+                new Element("schema").setText(schema)).addContent(
+                new Element("isTemplate").setText(isTemplate)).addContent(
+                new Element("localId").setText(id)).addContent(
+                new Element("format").setText(format.toString())).addContent(
+                new Element("rating").setText(rating)).addContent(
+                new Element("popularity").setText(popularity));
 
-		// --- scan query result to collect info
+        if (!skipUUID) {
+            GeonetContext gc = (GeonetContext) context
+                    .getHandlerContext(Geonet.CONTEXT_NAME);
 
-		@SuppressWarnings("unchecked")
-        List<Element> list = dbms.select(query, iId).getChildren();
+            general.addContent(new Element("uuid").setText(uuid));
+            general.addContent(new Element("siteId").setText(siteId));
+            general.addContent(new Element("siteName")
+                    .setText(gc.getBean(SettingManager.class).getSiteName()));
+        }
 
-		for (Element record : list) {
-			String grpId = record.getChildText("grpid");
-			String grpName = record.getChildText("grpname");
-			String operName = record.getChildText("opername");
+        return general;
+    }
 
-			if (!userGroups.contains(grpId))
-				continue;
+    /**
+     * Build category section of info file.
+     *
+     * @param md
+     * @return
+     * @throws SQLException
+     */
+    static Element buildInfoCategories(Metadata md)
+            throws SQLException {
+        Element categ = new Element("categories");
 
-			if (grpOwnerId != null && grpOwnerId.equals(grpId))
-				grpOwnerName = grpName;
 
-			ArrayList<String> al = hmPriv.get(grpName);
+        for (MetadataCategory category : md.getCategories()) {
+            String name = category.getName();
 
-			if (al == null) {
-				al = new ArrayList<String>();
-				hmPriv.put(grpName, al);
-			}
+            Element cat = new Element("category");
+            cat.setAttribute("name", name);
 
-			al.add(operName);
-		}
+            categ.addContent(cat);
+        }
 
-		// --- generate elements
+        return categ;
+    }
 
-		Element privil = new Element("privileges");
+    /**
+     * Build priviliges section of info file.
+     *
+     * @param context
+     * @param md
+     * @return
+     * @throws Exception
+     */
+    static Element buildInfoPrivileges(ServiceContext context, Metadata md)
+            throws Exception {
 
-		for (Map.Entry<String, ArrayList<String>> entry : hmPriv.entrySet()) {
-		    String grpName = entry.getKey();
-			Element group = new Element("group");
-			group.setAttribute("name", grpName);
-			// Handle group owner
-			if (grpName.equals(grpOwnerName))
-				group.setAttribute("groupOwner", Boolean.TRUE.toString());
+        int iId = md.getId();
 
-			privil.addContent(group);
+        OperationAllowedRepository allowedRepository = context.getBean(OperationAllowedRepository.class);
+        GroupRepository groupRepository = context.getBean(GroupRepository.class);
+        OperationRepository operationRepository = context.getBean(OperationRepository.class);
 
-			for (String operName : entry.getValue()) {
-				Element oper = new Element("operation");
-				oper.setAttribute("name", operName);
+        allowedRepository.findAllById_MetadataId(iId);
 
-				group.addContent(oper);
-			}
-		}
+        // Get group Owner ID
+        Integer grpOwnerId = md.getSourceInfo().getGroupOwner();
+        String grpOwnerName = "";
 
-		return privil;
-	}
+        HashMap<String, ArrayList<String>> hmPriv = new HashMap<String, ArrayList<String>>();
 
-	/**
-	 * Build file section of info file.
-	 * 
-	 * @param name
-	 * @param dir
-	 * @return
-	 */
-	static Element buildInfoFiles(String name, String dir) {
-		Element root = new Element(name);
+        // --- retrieve accessible groups
 
-		File[] files = new File(dir).listFiles(filter);
+        GeonetContext gc = (GeonetContext) context
+                .getHandlerContext(Geonet.CONTEXT_NAME);
+        AccessManager am = gc.getBean(AccessManager.class);
 
-		if (files != null)
-			for (File file : files) {
-				String date = new ISODate(file.lastModified()).toString();
+        Set<Integer> userGroups = am.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
 
-				Element el = new Element("file");
-				el.setAttribute("name", file.getName());
-				el.setAttribute("changeDate", date);
+        // --- scan query result to collect info
 
-				root.addContent(el);
-			}
+        OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
+        List<OperationAllowed> opsAllowed = operationAllowedRepository.findAllById_MetadataId(iId);
 
-		return root;
-	}
+        for (OperationAllowed operationAllowed : opsAllowed) {
+            int grpId = operationAllowed.getId().getGroupId();
+            Group group = groupRepository.findOne(grpId);
+            String grpName = group.getName();
 
-	/**
-	 * File filter to exclude .svn files.
-	 */
-	private static FileFilter filter = new FileFilter() {
-		public boolean accept(File pathname) {
-			if (pathname.getName().equals(".svn"))
-				return false;
+            if (!userGroups.contains(grpId)) {
+                continue;
+            }
 
-			return true;
-		}
-	};
+            Operation operation = operationRepository.findOne(operationAllowed.getId().getOperationId());
+            String operName = operation.getName();
 
-	static String getChangeDate(List<Element> files, String fileName)
-			throws Exception {
-		for (Element f : files) {
-			Element file = (Element) f;
-			String name = file.getAttributeValue("name");
-			String date = file.getAttributeValue("changeDate");
+            if (grpOwnerId == grpId) {
+                grpOwnerName = grpName;
+            }
 
-			if (name.equals(fileName))
-				return date;
-		}
+            ArrayList<String> al = hmPriv.get(grpName);
 
-		throw new Exception("File not found in info.xml : " + fileName);
-	}
+            if (al == null) {
+                al = new ArrayList<String>();
+                hmPriv.put(grpName, al);
+            }
+
+            al.add(operName);
+        }
+
+        // --- generate elements
+
+        Element privil = new Element("privileges");
+
+        for (Map.Entry<String, ArrayList<String>> entry : hmPriv.entrySet()) {
+            String grpName = entry.getKey();
+            Element group = new Element("group");
+            group.setAttribute("name", grpName);
+            // Handle group owner
+            if (grpName.equals(grpOwnerName))
+                group.setAttribute("groupOwner", Boolean.TRUE.toString());
+
+            privil.addContent(group);
+
+            for (String operName : entry.getValue()) {
+                Element oper = new Element("operation");
+                oper.setAttribute("name", operName);
+
+                group.addContent(oper);
+            }
+        }
+
+        return privil;
+    }
+
+    /**
+     * Build file section of info file.
+     *
+     * @param name
+     * @param dir
+     * @return
+     */
+    static Element buildInfoFiles(String name, String dir) {
+        Element root = new Element(name);
+
+        File[] files = new File(dir).listFiles(filter);
+
+        if (files != null)
+            for (File file : files) {
+                String date = new ISODate(file.lastModified(), false).toString();
+
+                Element el = new Element("file");
+                el.setAttribute("name", file.getName());
+                el.setAttribute("changeDate", date);
+
+                root.addContent(el);
+            }
+
+        return root;
+    }
+
+    /**
+     * File filter to exclude .svn files.
+     */
+    private static FileFilter filter = new FileFilter() {
+        public boolean accept(File pathname) {
+            if (pathname.getName().equals(".svn"))
+                return false;
+
+            return true;
+        }
+    };
+
+    static String getChangeDate(List<Element> files, String fileName)
+            throws Exception {
+        for (Element f : files) {
+            Element file = (Element) f;
+            String name = file.getAttributeValue("name");
+            String date = file.getAttributeValue("changeDate");
+
+            if (name.equals(fileName))
+                return date;
+        }
+
+        throw new Exception("File not found in info.xml : " + fileName);
+    }
 
 }
 
 // =============================================================================
-

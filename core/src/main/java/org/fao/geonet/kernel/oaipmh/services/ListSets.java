@@ -23,10 +23,11 @@
 
 package org.fao.geonet.kernel.oaipmh.services;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.oaipmh.OaiPmhService;
+import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.oaipmh.exceptions.BadResumptionTokenException;
 import org.fao.oaipmh.requests.AbstractRequest;
 import org.fao.oaipmh.requests.ListSetsRequest;
@@ -59,18 +60,12 @@ public class ListSets implements OaiPmhService
 		if (req.getResumptionToken() != null)
 			throw new BadResumptionTokenException(req.getResumptionToken());
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        final List<MetadataCategory> metadataCategories = context.getBean(MetadataCategoryRepository.class).findAll();
 
-		String query = "SELECT name, label FROM Categories, CategoriesDes "+
-							"WHERE id=idDes AND langId=?";
-
-		@SuppressWarnings("unchecked")
-        List<Element> list = dbms.select(query, context.getLanguage()).getChildren();
-
-		for (Element rec : list)
+		for (MetadataCategory rec : metadataCategories)
 		{
-			String name  = rec.getChildText("name");
-			String label = rec.getChildText("label");
+			String name  = rec.getName();
+			String label = rec.getLabel(context.getLanguage());
 
 			res.addSet(new SetInfo(name, label));
 		}

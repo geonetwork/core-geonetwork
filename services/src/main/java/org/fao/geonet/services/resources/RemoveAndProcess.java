@@ -24,15 +24,16 @@
 package org.fao.geonet.services.resources;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.OperationAbortedEx;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
@@ -42,8 +43,6 @@ import org.jdom.Element;
 
 import java.io.File;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Delete an uploaded file from the data directory and remote its
@@ -89,17 +88,14 @@ public class RemoveAndProcess extends NotInReadOnlyModeService {
         params.addContent(new Element("protocol")
                 .setText("WWW:DOWNLOAD-1.0-http--download"));
 
-        GeonetContext gc = (GeonetContext) context
-                .getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager dataMan = gc.getBean(DataManager.class);
-
         String process = "onlinesrc-remove";
         XslProcessingReport report = new XslProcessingReport(process);
 
         Element processedMetadata;
         try {
+            final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
             processedMetadata = XslProcessing.process(id, process,
-                    true, context.getAppPath(), params, context, report, true, dataMan.getSiteURL(context));
+                    true, context.getAppPath(), params, context, report, true, siteURL);
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed", "Not found:"
                         + report.getNotFoundMetadataCount() + ", Not owner:" + report.getNotEditableMetadataCount()

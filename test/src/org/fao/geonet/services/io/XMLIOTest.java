@@ -3,7 +3,7 @@ package org.fao.geonet.services.io;
 import java.io.IOException;
 import java.util.HashMap;
 
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 import junit.framework.TestCase;
 
 import org.fao.geonet.constants.Params;

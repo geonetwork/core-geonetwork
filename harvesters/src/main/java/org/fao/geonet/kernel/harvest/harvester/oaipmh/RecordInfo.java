@@ -23,8 +23,8 @@
 
 package org.fao.geonet.kernel.harvest.harvester.oaipmh;
 
+import org.fao.geonet.domain.ISODate;
 import org.fao.oaipmh.responses.Header;
-import org.fao.oaipmh.util.ISODate;
 
 //=============================================================================
 
@@ -59,7 +59,7 @@ public class RecordInfo
 
 		//--- accept if remote date is greater than local date
 
-		return (changeDate.sub(localDate) > 0);
+		return (changeDate.timeDifferenceInSeconds(localDate) > 0);
 	}
 
 	//---------------------------------------------------------------------------

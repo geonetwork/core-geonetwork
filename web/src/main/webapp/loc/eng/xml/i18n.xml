@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<i18n>
+  <viewInGE>View in Google Earth</viewInGE>
+  <warning>Warning!</warning>
+  <nojs>Javascript is not enabled. Enable it or click <a
+    href="catalog.search.nojs">here to search</a> in a degraded mode.</nojs>
+  <selectView>Choose view</selectView>
+  <moreTabs>More information</moreTabs>
+  <nodeChangeWarning>Node Change Warning</nodeChangeWarning>
+  <nodeChangeInfo>Warning: You are no longer in the same node that you logged into.</nodeChangeInfo>
+  <nodeChangeBack>If you would like to return to the node you logged into click:</nodeChangeBack>
+  <nodeChangeForward>If you would like to logout and return to the previous url click:</nodeChangeForward>
+</i18n>

@@ -24,22 +24,25 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.Util;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataDataInfo;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.Xml;
 import jeeves.xlink.XLink;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.services.NotInReadOnlyModeService;
-import org.fao.geonet.util.ISODate;
 import org.fao.geonet.util.Sha1Encoder;
 import org.jdom.*;
 
@@ -65,8 +68,6 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dataMan   = gc.getBean(DataManager.class);
 		UserSession   session   = context.getUserSession();
-
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		Set<Integer> metadata = new HashSet<Integer>();
 		Set<Integer> notFound = new HashSet<Integer>();
@@ -103,14 +104,14 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 
 		// --- see if we need to process selected set or just uuid
 		if (uuid.length() == 0) { // no uuid so process selected set
-    	if(context.isDebug()) context.debug("Get selected metadata");
+    	if(context.isDebugEnabled()) context.debug("Get selected metadata");
 
 			SelectionManager sm = SelectionManager.getManager(session);
 
 			synchronized(sm.getSelection("metadata")) {
 			for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
 				uuid = (String) iter.next();
-				processRecord(context, dbms, uuid, category, xpath, getTit, xpathTit, doChanges, metadata, notFound, notOwner, subtemplates, response);
+				processRecord(context, uuid, category, xpath, getTit, xpathTit, doChanges, metadata, notFound, notOwner, subtemplates, response);
 
 			}
 			}
@@ -118,17 +119,17 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 			SelectionManager.updateSelection("metadata", session, params.addContent(new Element("selected").setText("remove-all")), context);
 
 		} else { // just process the uuid passed in
-			processRecord(context, dbms, uuid, category, xpath, getTit, xpathTit, doChanges, metadata, notFound, notOwner, subtemplates, response);
+			processRecord(context, uuid, category, xpath, getTit, xpathTit, doChanges, metadata, notFound, notOwner, subtemplates, response);
 		}
 
-		dbms.commit();
+        dataMan.flush();
 
-		// -- reindex metadata
+        // -- reindex metadata
 		context.info("Re-indexing metadata");
 		Set<Integer> indexers = new HashSet<Integer>();
 		indexers.addAll(metadata);
 		indexers.addAll(subtemplates);
-		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataMan, dbms, indexers);
+		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dataMan, indexers);
 		r.process();
 
 		// -- for the moment just return the sizes - we could return the ids
@@ -146,60 +147,58 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 	//---
 	//--------------------------------------------------------------------------
 
-	private void processRecord(ServiceContext context, Dbms dbms, String uuid, String category, String xpath, String getTit, String xpathTit, boolean doChanges, Set<Integer> metadata, Set<Integer> notFound, Set<Integer> notOwner, Set<Integer> subtemplates, Element response) throws Exception {
+	private void processRecord(ServiceContext context, String uuid, String category, String xpath, String getTit, String xpathTit, boolean doChanges, Set<Integer> metadata, Set<Integer> notFound, Set<Integer> notOwner, Set<Integer> subtemplates, Element response) throws Exception {
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dataMan   = gc.getBean(DataManager.class);
 		AccessManager accessMan = gc.getBean(AccessManager.class);
 
-		if (context.isDebug())
+		if (context.isDebugEnabled())
 			context.debug("Extracting subtemplates from metadata with uuid:"+ uuid);
 
-		String id   = dataMan.getMetadataId(dbms, uuid);
+        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        Metadata metadataEntity = metadataRepository.findOneByUuid(uuid);
 
 		// Metadata may have been deleted since selection
-		if (id != null) {
-	
-			MdInfo info = dataMan.getMetadataInfo(dbms, id);
-	
-			if (info == null) {
-				notFound.add(Integer.valueOf(id));
-			} else if (!accessMan.isOwner(context, id)) {
-				notOwner.add(Integer.valueOf(id));
+		if (metadataEntity != null) {
+            String id   = "" + metadataEntity.getId();
+
+			if (!accessMan.isOwner(context, id)) {
+				notOwner.add(metadataEntity.getId());
 			} else {
-				extractSubtemplates(context, dataMan, dbms, id, category, xpath, getTit, xpathTit, doChanges, metadata, subtemplates, response); 	
+				extractSubtemplates(context, dataMan, metadataEntity, category, xpath, getTit, xpathTit, doChanges, metadata, subtemplates, response);
 			}
 		} else {
-      if(context.isDebug())
+      if(context.isDebugEnabled())
        	context.debug("  Metadata not found in db:"+ uuid);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-    private void extractSubtemplates(ServiceContext context, DataManager dataMan, Dbms dbms, String id, String category, String xpath, String getTit, String xpathTit, boolean doChanges, Set<Integer> metadata, Set<Integer> subtemplates, Element response) throws Exception {
+    private void extractSubtemplates(ServiceContext context, DataManager dataMan, Metadata metadataEntity, String category, String xpath, String getTit, String xpathTit, boolean doChanges, Set<Integer> metadata, Set<Integer> subtemplates, Element response) throws Exception {
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
 		// get metadata
-		Element md = dataMan.getMetadataNoInfo(context, id);
-		MdInfo mdInfo = dataMan.getMetadataInfo(dbms, id);
+		Element md = dataMan.getMetadataNoInfo(context, "" + metadataEntity.getId());
+        MetadataDataInfo mdInfo = metadataEntity.getDataInfo();
 
 		// Build a list of all Namespaces in the metadata document
-		List<Namespace> metadataNamespaces = namespaceList.get(mdInfo.schemaId);
+		List<Namespace> metadataNamespaces = namespaceList.get(mdInfo.getSchemaId());
 		if (metadataNamespaces == null) {
 			metadataNamespaces = new ArrayList<Namespace>();
 			Namespace ns = md.getNamespace();
 			if (ns != null) {
 				metadataNamespaces.add(ns);
 				metadataNamespaces.addAll(md.getAdditionalNamespaces());
-				namespaceList.put(mdInfo.schemaId, metadataNamespaces);
+				namespaceList.put(mdInfo.getSchemaId(), metadataNamespaces);
 			}
 		}
 
 		new Document(md);
 		// select all nodes that come back from the xpath selectNodes
 		List<?> nodes = Xml.selectNodes(md, xpath, metadataNamespaces);
-		if (context.isDebug() || !doChanges) {
+		if (context.isDebugEnabled() || !doChanges) {
 			context.debug("xpath \n"+xpath+"\n returned "+nodes.size()+" results");
 			if (!doChanges) {
 				response.addContent(new Element("xpath").setText(xpath));
@@ -213,7 +212,7 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 			Object o = iter.next();
 			if (o instanceof Element) {
 				Element elem = (Element)o;
-				if (context.isDebug() || !doChanges) {
+				if (context.isDebugEnabled() || !doChanges) {
 					context.debug("Test: Subtemplate with \n"+Xml.getString(elem));
 					if (!doChanges) {
 						response.addContent(new Element("subtemplate").setText(Xml.getString(elem)));
@@ -224,7 +223,7 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 				String title = null;
 				if (getTit.length() > 0) { // use xslt path in getTit
 					Element xmlTitle = Xml.transform((Element)elem.clone(), getTit);
-					if (context.isDebug() || !doChanges) {
+					if (context.isDebugEnabled() || !doChanges) {
 						context.debug("Test: Title \n"+Xml.getString(xmlTitle));
 					}
 					title = xmlTitle.getText();
@@ -264,7 +263,7 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 				}
 	
 				if (doChanges) { // insert subtemplate if it isn't already present
-					if (dataMan.getMetadataId(dbms, uuid) != null) {
+					if (dataMan.getMetadataId(uuid) != null) {
 						context.debug("Test: Subtemplate with uuid "+uuid+" already exists");
 					} else {
 						//if (context.isDebug()) context.info("Test: Add subtemplate uuid "+uuid);
@@ -274,10 +273,10 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 						String group = "1"; 
 						int user = context.getUserSession().getUserIdAsInt(); 
 						boolean ufo = false, indexImmediate = false;
-						int sId = context.getSerialFactory().getSerial(dbms, "Metadata");
 
-						dataMan.insertMetadata(context, dbms, mdInfo.schemaId, (Element)elem.clone(), sId, uuid, user, group, gc.getSiteId(), "s", docType, title, category, createDate, changeDate, ufo, indexImmediate); 
-						subtemplates.add(sId);
+                        String sId = dataMan.insertMetadata(context, mdInfo.getSchemaId(), (Element) elem.clone(), uuid, user, group,
+                                gc.getBean(SettingManager.class).getSiteId(), "s", docType, category, createDate, changeDate, ufo, indexImmediate);
+						subtemplates.add(Integer.valueOf(sId));
 					}
 				}
 
@@ -286,7 +285,7 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 				int iIndex = parent.indexOf(elem);
 				Element newElem = new Element(elem.getName(), elem.getNamespace());
 				newElem.setAttribute("uuidref", uuid);
-				newElem.setAttribute("href", dataMan.getSiteURL(context)+"/xml.metadata.get?uuid="+uuid, XLink.NAMESPACE_XLINK);
+                newElem.setAttribute("href", context.getBean(SettingManager.class).getSiteURL(context) +"/xml.metadata.get?uuid="+uuid, XLink.NAMESPACE_XLINK);
 				newElem.setAttribute("show", "replace", XLink.NAMESPACE_XLINK);
 				parent.removeContent(iIndex);
 				parent.addContent(iIndex,newElem);
@@ -300,7 +299,7 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 		}
 
 		// update metadata record
-		if (context.isDebug() || !doChanges) {
+		if (context.isDebugEnabled() || !doChanges) {
 			if (nodes.size() > 0) {
 				context.debug("Would update record with \n"+Xml.getString(md));
 			}
@@ -308,9 +307,9 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 
 		if (doChanges) {
 			boolean validate = false, ufo = false, indexImmediate = false;
-			dataMan.updateMetadata(context, dbms, id, md, validate, ufo, indexImmediate, context.getLanguage(), new ISODate().toString(), true); 
+			dataMan.updateMetadata(context, "" + metadataEntity.getId(), md, validate, ufo, indexImmediate, context.getLanguage(), new ISODate().toString(), true);
 
-			metadata.add(Integer.valueOf(id));
+			metadata.add(metadataEntity.getId());
 		}
 		
 	}

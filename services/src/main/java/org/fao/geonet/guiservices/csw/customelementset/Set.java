@@ -24,14 +24,13 @@ package org.fao.geonet.guiservices.csw.customelementset;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
-import org.fao.geonet.GeonetContext;
+import org.fao.geonet.domain.CustomElementSet;
+import org.fao.geonet.repository.CustomElementSetRepository;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.csw.domain.CustomElementSet;
 import org.jdom.Element;
 
 import java.util.List;
@@ -59,9 +58,7 @@ public class Set implements Service {
      * @throws Exception
      */
 	public Element exec(Element params, ServiceContext context) throws Exception {
-	    GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-        saveCustomElementSets(params, gc, dbms);
+        saveCustomElementSets(params, context);
         return new Element(Jeeves.Elem.RESPONSE).setText("ok");
 	}
 
@@ -70,21 +67,24 @@ public class Set implements Service {
      * Processes parameters and saves custom element sets in database.
      *
      * @param params
-     * @param gc
-     * @param dbms
      * @throws Exception
      */
-    private void saveCustomElementSets(Element params, GeonetContext gc, Dbms dbms) throws Exception {
-        if (Log.isDebugEnabled(Geonet.CUSTOM_ELEMENTSET))
+    private void saveCustomElementSets(Element params, ServiceContext context) throws Exception {
+        if (Log.isDebugEnabled(Geonet.CUSTOM_ELEMENTSET)) {
             Log.debug(Geonet.CUSTOM_ELEMENTSET, "set customelementset:\n" + Xml.getString(params));
+        }
 
-        CustomElementSet customElementSet = new CustomElementSet();
+        final CustomElementSetRepository repository = context.getBean(CustomElementSetRepository.class);
+        repository.deleteAll();
+
         @SuppressWarnings("unchecked")
         List<Element> xpaths = params.getChildren("xpath");
         for(Element xpath : xpaths) {
-            customElementSet.add(xpath.getText());
+            CustomElementSet customElementSet = new CustomElementSet();
+            customElementSet.setXpath(xpath.getText());
+
+            repository.save(customElementSet);
         }
-        CustomElementSet.saveCustomElementSets(dbms, customElementSet);
     }
 
 }

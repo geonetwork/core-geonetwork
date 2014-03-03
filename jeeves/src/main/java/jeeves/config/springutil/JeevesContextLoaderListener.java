@@ -1,84 +1,133 @@
 package jeeves.config.springutil;
 
-import java.io.File;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-
-import jeeves.utils.Log;
-
-import org.geonetwork.config.MigrateConfiguration;
+import com.google.common.io.Files;
+import jeeves.server.overrides.ConfigurationOverrides;
+import org.fao.geonet.NodeInfo;
+import org.fao.geonet.domain.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import jeeves.server.JeevesEngine;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.context.Lifecycle;
 import org.springframework.web.context.ConfigurableWebApplicationContext;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-public class JeevesContextLoaderListener extends ContextLoaderListener {
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import java.io.File;
+import java.util.regex.Pattern;
 
-    private static final String POST_PROCESSOR_INIT_PARAM = "applicationContextPostProcessors";
+/**
+ * Initializes the ApplicationContexts for each node.
+ */
+public class JeevesContextLoaderListener implements ServletContextListener {
+
 
     @Override
-    protected void customizeContext(ServletContext servletContext, ConfigurableWebApplicationContext applicationContext) {
-        processBeanFactoryPostProcessorParam(applicationContext, servletContext.getInitParameter(POST_PROCESSOR_INIT_PARAM));
-        String baseURL = servletContext.getContextPath();
-        String webappName;
-        if (baseURL.length() > 1) {
-            webappName = baseURL.substring(1) + ".";
-        } else {
-            webappName = "";
+    public void contextInitialized(final ServletContextEvent sce) {
+        try {
+        final Pattern nodeNamePattern = Pattern.compile("[a-zA-Z0-9_\\-]+");
+        final ServletContext servletContext = sce.getServletContext();
+
+        JeevesApplicationContext defaultContext = null;
+        File[] nodes = getNodeConfigurationFiles(servletContext);
+
+        if (nodes.length == 0) {
+            throw new IllegalArgumentException("Need at least one node defined");
         }
-        String key = webappName + POST_PROCESSOR_INIT_PARAM;
-        String param = System.getProperty(key);
-        if (param != null) {
-            processBeanFactoryPostProcessorParam(applicationContext, param);
-        } else {
-            key = "geonetwork." + POST_PROCESSOR_INIT_PARAM;
-            param = System.getProperty(key);
-            processBeanFactoryPostProcessorParam(applicationContext, param);
+
+        ConfigurationOverrides overrides = ConfigurationOverrides.DEFAULT;
+
+        String parentConfigFile = "/WEB-INF/config-spring-geonetwork-parent.xml";
+
+        JeevesApplicationContext parentAppContext = new JeevesApplicationContext(null, null, parentConfigFile);
+        parentAppContext.setServletContext(servletContext);
+        parentAppContext.refresh();
+
+        String commonConfigFile = "/WEB-INF/config-spring-geonetwork.xml";
+        for (File node : nodes) {
+            String nodeId = Files.getNameWithoutExtension(node.getName());
+            if (!nodeNamePattern.matcher(nodeId).matches()) {
+                throw new IllegalArgumentException(nodeId + " has an illegal name.  Node names must be of the form: [a-zA-Z_\\-]+ ");
+
+            }
+
+
+            JeevesApplicationContext jeevesAppContext = new JeevesApplicationContext(overrides, parentAppContext,
+                    commonConfigFile, node.toURI().toString());
+
+            jeevesAppContext.setServletContext(servletContext);
+            jeevesAppContext.refresh();
+
+            // initialize all JPA Repositories.  This should be done outside of the init
+            // because spring-data-jpa first looks up named queries (based on method names) and
+            // if the query is not found an exception is thrown.  This exception will set rollback
+            // on the transaction if a transaction is active.
+            //
+            // We want to initialize all repositories here so they are not lazily initialized
+            // at random places through out the code where it may be in a transaction.
+            jeevesAppContext.getBeansOfType(JpaRepository.class, false, true);
+
+            servletContext.setAttribute(User.NODE_APPLICATION_CONTEXT_KEY + nodeId, jeevesAppContext);
+
+            // check if the context is the default context
+            NodeInfo nodeInfo = jeevesAppContext.getBean(NodeInfo.class);
+            nodeInfo.setId(nodeId);
+
+            boolean isDefault = nodeInfo.isDefaultNode();
+
+            if (isDefault) {
+                if (defaultContext != null) {
+                    throw new IllegalArgumentException("Two nodes where defined as the default.  This is not acceptable.");
+                }
+                defaultContext = jeevesAppContext;
+
+                servletContext.setAttribute(User.NODE_APPLICATION_CONTEXT_KEY, jeevesAppContext);
+        }
+        }
+
+        if (defaultContext == null) {
+            throw new IllegalArgumentException("There are no default contexts defined");
+        }
+        } catch (Throwable e) {
+            JeevesEngine.handleStartupError(e);
         }
     }
 
-    private void processBeanFactoryPostProcessorParam(ConfigurableWebApplicationContext applicationContext, String param) {
-        if (param != null) {
-            for (String className : param.split(",")) {
-                if (!className.trim().isEmpty()) {
-                    try {
-                        Class<?> class1 = Class.forName(className.trim());
-                        BeanFactoryPostProcessor postProcessor = (BeanFactoryPostProcessor) class1.newInstance();
-                        applicationContext.addBeanFactoryPostProcessor(postProcessor);
-                    } catch (Throwable e) {
-                        Log.error(Log.JEEVES, "Unable to create Bean Post processor: "+className);
-                    }
-                }
+    public static String[] getNodeIds(final ServletContext servletContext) {
+        final File[] nodeConfigurationFiles = getNodeConfigurationFiles(servletContext);
+        String [] ids = new String [nodeConfigurationFiles.length];
+
+        for (int i = 0; i < nodeConfigurationFiles.length; i++) {
+            File file = nodeConfigurationFiles[i];
+            ids[i] = Files.getNameWithoutExtension(file.getName());
+        }
+
+        return ids;
+    }
+
+    private static File[] getNodeConfigurationFiles(ServletContext servletContext) {
+
+        final File nodeConfigDir = new File(servletContext.getRealPath("/WEB-INF/config-node"));
+        final File[] files = nodeConfigDir.listFiles();
+        if (files == null) {
+            throw new IllegalStateException("No node configuration file found in: "+nodeConfigDir);
+        }
+        return files;  //To change body of created methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void contextDestroyed(final ServletContextEvent sce) {
+        final ServletContext servletContext = sce.getServletContext();
+
+        for (String node : getNodeIds(sce.getServletContext())) {
+            if (!node.trim().isEmpty()) {
+                JeevesApplicationContext jeevesAppContext = (JeevesApplicationContext) servletContext.getAttribute(
+                        User.NODE_APPLICATION_CONTEXT_KEY + node.trim());
+                jeevesAppContext.destroy();
             }
         }
-    }
-
-    @Override
-    public void contextInitialized(ServletContextEvent event) {
-        String appPath = event.getServletContext().getRealPath("/");
-
-        if (!appPath.endsWith(File.separator)) {
-            appPath += File.separator;
-        }
-
-        String configPath = appPath + "WEB-INF" + File.separator;
-
-        // migrate from old configuration to new spring configuration if needed
-        new MigrateConfiguration().migrate(configPath, configPath, true);
-
-        super.contextInitialized(event);
-        Lifecycle context = (Lifecycle) WebApplicationContextUtils.getWebApplicationContext(event.getServletContext());
-        context.start();
-    }
-
-    @Override
-    public void contextDestroyed(ServletContextEvent event) {
-        Lifecycle context = (Lifecycle) WebApplicationContextUtils.getWebApplicationContext(event.getServletContext());
-        if (context != null) {
-            context.stop();
-        }
-        super.contextDestroyed(event);
     }
 }

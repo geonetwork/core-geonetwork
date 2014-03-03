@@ -365,7 +365,7 @@
               <xsl:value-of select="$gui/strings/show"/>
           </fo:basic-link> <xsl:text>|</xsl:text> <fo:basic-link text-decoration="underline" color="blue">
             <xsl:attribute name="external-destination"> url('<xsl:value-of
-              select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url, '/srv/eng/xml.metadata.get?uuid=', $metadata/geonet:info/uuid)"
+              select="concat($server/protocol, '://', $server/host,':', $server/port, /root/gui/url, '/srv/',/root/gui/language,'/xml.metadata.get?uuid=', $metadata/geonet:info/uuid)"
             />') </xsl:attribute>
             <xsl:value-of select="$gui/strings/show"/> <xsl:text>(XML)</xsl:text>
           </fo:basic-link> 

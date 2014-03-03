@@ -3,7 +3,7 @@ package org.fao.geonet.util;
 import java.util.HashMap;
 import java.util.Map;
 
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.eclipse.mylyn.wikitext.core.parser.markup.MarkupLanguage;

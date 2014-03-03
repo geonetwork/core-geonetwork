@@ -111,6 +111,7 @@ public final class Geonet {
         public static final String NOTIFICATIONS = "notifications";
 		public static final String SURNAME    = "surname";
 		public static final String PROFILE    = "profile";
+		public static final String USERNAME    = "username";
 		public static final String EMAIL      = "email";
 		public static final String OPERATIONS = "operations";
 		public static final String OPER       = "oper";
@@ -141,6 +142,7 @@ public final class Geonet {
 		public static final String CSW                = Jeeves.Path.XML + "csw/";
 		public static final String VALIDATION         = Jeeves.Path.XML + "validation/";
 		public static final String STYLESHEETS        = "/xsl";
+        public static final String XSLT_FOLDER        = java.io.File.separator + "xslt";
 		public static final String CONV_STYLESHEETS   = STYLESHEETS + "/conversion";
 		public static final String IMPORT_STYLESHEETS = CONV_STYLESHEETS + "/import";
 		public static final String WFS_STYLESHEETS    = "/convert/WFSToFragments";
@@ -165,6 +167,7 @@ public final class Geonet {
 		public static final String SEARCH_REQUEST_ID 		= "search_request_id";		
 		public static final String METADATA_SHOW			= "metadata.show";
 		public static final String METADATA_EDITING		= "metadata.editing";
+		public static final String METADATA_BEFORE_ANY_CHANGES = "metadata.before.any.changes";
         public static final String METADATA_EDITING_TAB   = "metadata.editing.tab";
 		public static final String METADATA_POSITION  = "metadata.position";
 		public static final String SEARCH_KEYWORDS_RESULT	= "search.keywords.result";
@@ -197,6 +200,8 @@ public final class Geonet {
             public static final String KEEP_MARKUP = "keep";
             
         }
+        public static final String VERSION = "system/platform/version";
+        public static final String SUBVERSION = "system/platform/subVersion";
     }
 
     /**
@@ -415,9 +420,11 @@ public final class Geonet {
 		public static final String RESULT_TYPE = "resultType";
 
 		public static final String FAST = "fast";
-		public static final String BUILD_SUMMARY = "buildSummary";
-		public static final String SUMMARY_ONLY = "summaryOnly";
+        public static final String INDEX = "index";
+        public static final String BUILD_SUMMARY = "buildSummary";
+        public static final String SUMMARY_ONLY = "summaryOnly";
         public static final String REQUESTED_LANGUAGE = "requestedLanguage";
+        public static final String SUMMARY_ITEMS = "summaryItems";
 
         /**
          * TODO javadoc.
@@ -431,6 +438,7 @@ public final class Geonet {
              * of the current search. 
              */
             public static final String RESULTS_WITH_SUMMARY     = "results_with_summary";
+            public static final String SUGGESTIONS = "suggestions";
         }
 
         /**
@@ -473,19 +481,6 @@ public final class Geonet {
 	}
 
     /**
-     * Container for profile names.
-     */
-	public static final class Profile {
-		public static final String ADMINISTRATOR   = "Administrator";
-		public static final String USER_ADMIN      = "UserAdmin";
-		public static final String REVIEWER        = "Reviewer";
-		public static final String EDITOR          = "Editor";
-		public static final String REGISTERED_USER = "RegisteredUser";
-		public static final String GUEST           = "Guest";
-		public static final String MONITOR         = "Monitor";
-	}
-
-    /**
      * Container for config elements that are inside the configuration file.
      */
 	public static final class Config {
@@ -510,7 +505,6 @@ public final class Geonet {
 		public static final String STAT_LUCENE_TERMS_EXCLUDE = "statLuceneTermsExclude";
 		public static final String STAT_LOG_ASYNCH = "statLogAsynch";
 		public static final String MAX_WRITES_IN_TRANSACTION = "maxWritesInTransaction";
-		public static final String USE_SUBVERSION  = "useSubversion";
 		public static final String SUBVERSION_PATH = "subversionPath";
 		public static final String STATUS_ACTIONS_CLASS = "statusActionsClass";
 		public static final String CONFIG_DIR = "configDir";
@@ -594,6 +588,7 @@ public final class Geonet {
     public static final String FEEDBACK = GEONETWORK + ".feedback";
     public static final String GEOPUBLISH = GEONETWORK + ".geopublisher";
     public static final String FORMATTER = GEONETWORK + ".formatter";
+    public static final String EDITOR_SESSION = GEONETWORK + ".editor.session";
     /**
      * Services.
      */

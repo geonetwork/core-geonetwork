@@ -27,47 +27,28 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import jeeves.exceptions.BadInputEx;
-import jeeves.interfaces.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.resources.ResourceManager;
-
-import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.Logger;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
 /**
- *
+ *  Harvest metadata from other catalogues using the CSW protocol
  */
 public class CswHarvester extends AbstractHarvester<HarvestResult> {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Static init
-	//---
-	//--------------------------------------------------------------------------
-
-	public static void init(ServiceContext context) throws Exception {}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Harvesting type
-	//---
-	//--------------------------------------------------------------------------
-
-	public String getType() { return "csw"; }
-
 	//--------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
 	//--------------------------------------------------------------------------
 
-	protected void doInit(Element node) throws BadInputEx {
+	protected void doInit(Element node, ServiceContext context) throws BadInputEx {
 		params = new CswParams(dataMan);
         super.setParams(params);
 		params.create(node);
@@ -82,13 +63,12 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
     /**
      * TODO javadoc.
      *
-     * @param dbms
      * @param node
      * @return
      * @throws BadInputEx
      * @throws SQLException
      */
-	protected String doAdd(Dbms dbms, Element node) throws BadInputEx, SQLException {
+	protected String doAdd(Element node) throws BadInputEx, SQLException {
 		params = new CswParams(dataMan);
         super.setParams(params);
 
@@ -98,11 +78,12 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
 		//--- force the creation of a new uuid
 		params.uuid = UUID.randomUUID().toString();
 
-		String id = settingMan.add(dbms, "harvesting", "node", getType());
+		String id = settingMan.add("harvesting", "node", getType());
 
-		storeNode(dbms, params, "id:"+id);
-		Lib.sources.update(dbms, params.uuid, params.name, true);
-		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.uuid);
+		storeNode(params, "id:"+id);
+        Source source = new Source(params.uuid, params.name, true);
+        context.getBean(SourceRepository.class).save(source);
+        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.uuid);
 		
 		return id;
 	}
@@ -115,13 +96,12 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
 
     /**
      *
-     * @param dbms
      * @param id
      * @param node
      * @throws BadInputEx
      * @throws SQLException
      */
-	protected void doUpdate(Dbms dbms, String id, Element node) throws BadInputEx, SQLException {
+	protected void doUpdate(String id, Element node) throws BadInputEx, SQLException {
 		CswParams copy = params.copy();
         super.setParams(params);
 
@@ -130,16 +110,17 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
 
 		String path = "harvesting/id:"+ id;
 
-		settingMan.removeChildren(dbms, path);
+		settingMan.removeChildren(path);
 
 		//--- update database
-		storeNode(dbms, copy, path);
+		storeNode(copy, path);
 
 		//--- we update a copy first because if there is an exception CswParams could be half updated and so it could be
 		// in an inconsistent state
 
-		Lib.sources.update(dbms, copy.uuid, copy.name, true);
-		Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.uuid);
+        Source source = new Source(copy.uuid, copy.name, true);
+        context.getBean(SourceRepository.class).save(source);
+        Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + copy.icon, copy.uuid);
 
 		params = copy;
         super.setParams(params);
@@ -148,29 +129,28 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
 
     /**
      *
-     * @param dbms
      * @param p
      * @param path
      * @param siteId
      * @param optionsId
      * @throws SQLException
      */
-	protected void storeNodeExtra(Dbms dbms, AbstractParams p, String path, String siteId, String optionsId) throws SQLException {
+	protected void storeNodeExtra(AbstractParams p, String path, String siteId, String optionsId) throws SQLException {
 		CswParams params = (CswParams) p;
 		
-		settingMan.add(dbms, "id:"+siteId, "capabUrl", params.capabUrl);
-		settingMan.add(dbms, "id:"+siteId, "icon",     params.icon);
-        settingMan.add(dbms, "id:"+siteId, "rejectDuplicateResource", params.rejectDuplicateResource);
-        settingMan.add(dbms, "id:"+siteId, "queryScope", params.queryScope);
-        settingMan.add(dbms, "id:"+siteId, "hopCount",     params.hopCount);
+		settingMan.add("id:"+siteId, "capabUrl", params.capabUrl);
+		settingMan.add("id:"+siteId, "icon",     params.icon);
+        settingMan.add("id:"+siteId, "rejectDuplicateResource", params.rejectDuplicateResource);
+        settingMan.add("id:"+siteId, "queryScope", params.queryScope);
+        settingMan.add("id:"+siteId, "hopCount",     params.hopCount);
 		
 		//--- store dynamic search nodes
-		String  searchID = settingMan.add(dbms, path, "search", "");	
+		String  searchID = settingMan.add(path, "search", "");	
 		
 		if (params.eltSearches!=null){
 			for (Element element : params.eltSearches) {
 				if (!element.getName().startsWith("parser")){
-					settingMan.add(dbms, "id:"+searchID, element.getName(), element.getText());
+					settingMan.add("id:"+searchID, element.getName(), element.getText());
 				}
 			}
 		}
@@ -178,14 +158,14 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
 		//--- store search nodes
 		/*for (Search s : params.getSearches())
 		{
-			String  searchID = settingMan.add(dbms, path, "search", "");
+			String  searchID = settingMan.add(path, "search", "");
 
-			settingMan.add(dbms, "id:"+searchID, "freeText", s.freeText);
-			settingMan.add(dbms, "id:"+searchID, "title",    s.title);
-			settingMan.add(dbms, "id:"+searchID, "abstract", s.abstrac);
-			settingMan.add(dbms, "id:"+searchID, "subject",  s.subject);
-			settingMan.add(dbms, "id:"+searchID, "minscale", s.minscale);
-			settingMan.add(dbms, "id:"+searchID, "maxscale", s.maxscale);
+			settingMan.add("id:"+searchID, "freeText", s.freeText);
+			settingMan.add("id:"+searchID, "title",    s.title);
+			settingMan.add("id:"+searchID, "abstract", s.abstrac);
+			settingMan.add("id:"+searchID, "subject",  s.subject);
+			settingMan.add("id:"+searchID, "minscale", s.minscale);
+			settingMan.add("id:"+searchID, "maxscale", s.maxscale);
 		}*/
 	}
 
@@ -198,13 +178,10 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
     /**
      *
      * @param log
-     * @param rm
      * @throws Exception
      */
-	protected void doHarvest(Logger log, ResourceManager rm) throws Exception {
-		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
-
-		Harvester h = new Harvester(log, context, dbms, params);
+    public void doHarvest(Logger log) throws Exception {
+		Harvester h = new Harvester(log, context, params);
 		result = h.harvest(log);
 	}
 

@@ -31,14 +31,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.servlet.ServletContext;
 
-import jeeves.resources.dbms.Dbms;
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.overrides.ConfigurationOverrides;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.Util;
+import org.fao.geonet.utils.Xml;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
@@ -47,14 +50,20 @@ import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.csw.common.exceptions.VersionNegotiationFailedEx;
+import org.fao.geonet.domain.Address;
+import org.fao.geonet.domain.Language;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
-import org.fao.geonet.kernel.csw.domain.CswCapabilitiesInfo;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.CswCapabilitiesInfo;
+import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepository;
+import org.fao.geonet.repository.LanguageRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -74,6 +83,10 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
     static final String NAME = "GetCapabilities";
     @Autowired
 	private LuceneConfig _luceneConfig;
+    @Autowired
+    private CatalogConfiguration _catalogConfig;
+    @Autowired
+    private FieldMapper _fieldMapper;
 
 	//---------------------------------------------------------------------------
 	//---
@@ -124,44 +137,54 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 			setKeywords(capabilities, context, cswServiceSpecificContraint);
 			setOperationsParameters(capabilities);
 
-            Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
-
             String currentLanguage = "";
 
             // INSPIRE: Use language parameter if available, otherwise use default (using context.getLanguage())            
-            if (inspireEnabled){
+            if (inspireEnabled) {
                 String isoLangParamValue = request.getAttributeValue("language");
 
-                List<String> langs = Lib.local.getLanguagesInspire(dbms);
+
+                final LanguageRepository languageRepository = context.getBean(LanguageRepository.class);
+                List<Language> languageList = languageRepository.findAllByInspireFlag(true);
+
+                List<String> langCodes = Lists.transform(languageList, new Function<Language, String>() {
+                    @Nullable
+                    @Override
+                    public String apply(@Nonnull Language input) {
+                        return input.getId();
+                    }
+                });
 
                 if (isoLangParamValue != null) {
                     // Retrieve GN language id from Iso language id
-                    if (langs.contains(isoLangParamValue)) {
+                    if (langCodes.contains(isoLangParamValue)) {
                         currentLanguage = isoLangParamValue;
-
                     }
                 }
 
 
-                String defaultLanguage = Lib.local.getDefaultLanguage(dbms);
+                Language defaultLanguage = languageRepository.findOneByDefaultLanguage();
 
                 if (StringUtils.isEmpty(currentLanguage)) {
-                    currentLanguage = defaultLanguage;
+                    currentLanguage = defaultLanguage.getId();
                 }
 
-                setInspireLanguages(capabilities, langs, currentLanguage, defaultLanguage);
+                setInspireLanguages(capabilities, langCodes, currentLanguage, defaultLanguage.getId());
             } else {
                 currentLanguage = context.getLanguage();
             }
 
-            CswCapabilitiesInfo cswCapabilitiesInfo = CswCapabilitiesInfo.getCswCapabilitiesInfo(dbms, currentLanguage);
+            final CswCapabilitiesInfoFieldRepository infoRepository = context.getBean(CswCapabilitiesInfoFieldRepository.class);
+            CswCapabilitiesInfo cswCapabilitiesInfo = infoRepository.findCswCapabilitiesInfo(currentLanguage);
 
             // Retrieve contact data from users table
             String contactId = gc.getBean(SettingManager.class).getValue("system/csw/contactId");
-            if ((contactId == null) || (contactId.equals(""))) contactId = "-1";
-            Element contact = dbms.select("SELECT * FROM Users WHERE id = ?", Integer.valueOf(contactId));
+            if ((contactId == null) || (contactId.equals(""))) {
+                contactId = "-1";
+            }
+            User user = context.getBean(UserRepository.class).findOne(contactId);
 
-            substitute(context, capabilities, cswCapabilitiesInfo,  contact.getChild("record"), currentLanguage);
+            substitute(context, capabilities, cswCapabilitiesInfo,  user, currentLanguage);
 
 			handleSections(request, capabilities);
 
@@ -333,6 +356,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
     /**
      * TODO javadoc.
      *
+     *
      * @param context
      * @param capab
      * @param cswCapabilitiesInfo
@@ -340,7 +364,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
      * @param langId
      * @throws Exception
      */
-	private void substitute(ServiceContext context, Element capab, CswCapabilitiesInfo cswCapabilitiesInfo, Element contact, String langId) throws Exception
+	private void substitute(ServiceContext context, Element capab, CswCapabilitiesInfo cswCapabilitiesInfo, User contact, String langId) throws Exception
 	{
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getBean(SettingManager.class);
@@ -360,17 +384,18 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
 		// Set CSW contact information
         if (contact != null) {
-            vars.put("$IND_NAME", contact.getChild("name").getValue() + " " + contact.getChild("surname").getValue());
-            vars.put("$ORG_NAME", contact.getChild("organisation").getValue());
-            vars.put("$POS_NAME", contact.getChild("profile").getValue());
+            vars.put("$IND_NAME", contact.getName() + " " + contact.getSurname());
+            vars.put("$ORG_NAME", contact.getOrganisation());
+            vars.put("$POS_NAME", contact.getProfile().name());
             vars.put("$VOICE", "");
             vars.put("$FACSCIMILE", "");
-            vars.put("$DEL_POINT", contact.getChild("address").getValue());
-            vars.put("$CITY", contact.getChild("city").getValue());
-            vars.put("$ADMIN_AREA", contact.getChild("state").getValue());
-            vars.put("$POSTAL_CODE", contact.getChild("zip").getValue());
-            vars.put("$COUNTRY", contact.getChild("country").getValue());
-            vars.put("$EMAIL", contact.getChild("email").getValue());
+            final Address address = contact.getPrimaryAddress();
+            vars.put("$DEL_POINT", address.getAddress());
+            vars.put("$CITY", address.getCity());
+            vars.put("$ADMIN_AREA", address.getState());
+            vars.put("$POSTAL_CODE", address.getZip());
+            vars.put("$COUNTRY", address.getCountry());
+            vars.put("$EMAIL", contact.getEmail());
             vars.put("$HOUROFSERVICE", "");
             vars.put("$CONTACT_INSTRUCTION","");
         } else {
@@ -493,7 +518,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 		List<Element> values;
 		String[] properties = {"keyword"};
 		try {
-            values = GetDomain.handlePropertyName(properties, context, true, CatalogConfiguration.getMaxNumberOfRecordsForKeywords(),
+            values = GetDomain.handlePropertyName(_catalogConfig, properties, context, true, _catalogConfig.getMaxNumberOfRecordsForKeywords(),
                     cswServiceSpecificContraint, _luceneConfig);
 		} catch (Exception e) {
             Log.error(Geonet.CSW, "Error getting domain value for specified PropertyName : " + e);
@@ -509,7 +534,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
                 keyword.setText(v.getText());
                 k.addContent(keyword);
                 cpt++;
-                if (cpt == CatalogConfiguration.getNumberOfKeywords()) {
+                if (cpt == _catalogConfig.getNumberOfKeywords()) {
                     break;
                 }
             }
@@ -551,7 +576,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 		Element parameter = new Element("Parameter", Csw.NAMESPACE_OWS)
 			.setAttribute("name", "typeName");
 		
-		Set<String> typenames = CatalogConfiguration.getDescribeRecordTypename().keySet();
+		Set<String> typenames = _catalogConfig.getDescribeRecordTypename().keySet();
 		for (String typename : typenames) {
 			parameter.addContent(new Element("Value", Csw.NAMESPACE_OWS)
 				.setText(typename));
@@ -571,7 +596,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
      * @param op
      */
 	private void fillGetRecordsParams(Element op) {
-		Set<String> isoQueryableMap = FieldMapper
+		Set<String> isoQueryableMap = _fieldMapper
 				.getPropertiesByType(Csw.ISO_QUERYABLES);
 		Element isoConstraint = new Element("Constraint", Csw.NAMESPACE_OWS)
 				.setAttribute("name", Csw.ISO_QUERYABLES);
@@ -581,7 +606,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 					.setText(params));
 		}
 
-		Set<String> additionalQueryableMap = FieldMapper
+		Set<String> additionalQueryableMap = _fieldMapper
 				.getPropertiesByType(Csw.ADDITIONAL_QUERYABLES);
 		Element additionalConstraint = new Element("Constraint",
 				Csw.NAMESPACE_OWS).setAttribute("name",

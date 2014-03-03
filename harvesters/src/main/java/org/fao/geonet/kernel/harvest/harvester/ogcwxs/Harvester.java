@@ -23,22 +23,17 @@
 
 package org.fao.geonet.kernel.harvest.harvester.ogcwxs;
 
-import jeeves.exceptions.BadInputEx;
-import jeeves.interfaces.Logger;
-import jeeves.resources.dbms.Dbms;
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.resources.ResourceManager;
-import jeeves.utils.BinaryFile;
-import jeeves.utils.Xml;
-import jeeves.utils.XmlRequest;
-
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
@@ -49,31 +44,31 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.thumbnail.Set;
 import org.fao.geonet.util.FileCopyMgr;
 import org.fao.geonet.util.Sha1Encoder;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.jdom.xpath.XPath;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.client.ClientHttpResponse;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import javax.annotation.Nullable;
+import java.io.*;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 //=============================================================================
@@ -154,18 +149,15 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
      *  
      * @param log		
      * @param context		Jeeves context
-     * @param dbms 			Database
      * @param params	Information about harvesting configuration for the node
      * 
      * @return null
      */
 	public Harvester(Logger log, 
 						ServiceContext context, 
-						Dbms dbms, 
 						OgcWxSParams params) {
 		this.log    = log;
 		this.context= context;
-		this.dbms   = dbms;
 		this.params = params;
 
 		result = new HarvestResult();
@@ -194,7 +186,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         // If harvest failed (ie. if node unreachable), metadata will be removed, and
         // the node will not be referenced in the catalogue until next harvesting.
         // TODO : define a rule for UUID in order to be able to do an update operation ? 
-        UUIDMapper localUuids = new UUIDMapper(dbms, params.uuid);
+        UUIDMapper localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
 
 
         // Try to load capabilities document
@@ -204,9 +196,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         		"&REQUEST=" + GETCAPABILITIES
         		;
 
-        if(log.isDebugEnabled()) log.debug("GetCapabilities document: " + this.capabilitiesUrl);
+        if(log.isDebugEnabled()) {
+            log.debug("GetCapabilities document: " + this.capabilitiesUrl);
+        }
 		
-        XmlRequest req = new XmlRequest();
+        XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest();
         req.setUrl(new URL(this.capabilitiesUrl));
         req.setMethod(XmlRequest.Method.GET);
         Lib.net.setupProxy(context, req);
@@ -229,19 +223,20 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 			unsetThumbnail (id);
 			
 			// Remove metadata
-			dataMan.deleteMetadata (context, dbms, id);
+			dataMan.deleteMetadata (context, id);
 			
 			result.locallyRemoved ++;
 		}
-		
-		if (result.locallyRemoved > 0)
-			dbms.commit ();
+
+
+        if (result.locallyRemoved > 0) {
+            dataMan.flush();
+        }
 		
         // Convert from GetCapabilities to ISO19119
         addMetadata (xml);
-        
-        dbms.commit ();
-            
+        dataMan.flush();
+
         result.totalMetadata = result.addedMetadata + result.layer;
     
 		return result;
@@ -268,8 +263,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 			return;
 
 		//--- Loading categories and groups
-		localCateg 	= new CategoryMapper (dbms);
-		localGroups = new GroupMapper (dbms);
+		localCateg 	= new CategoryMapper (context);
+		localGroups = new GroupMapper (context);
 
 		// md5 the full capabilities URL
 		String uuid = Sha1Encoder.encodeString (this.capabilitiesUrl); // is the service identifier
@@ -343,19 +338,20 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         //
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, Integer.parseInt(params.ownerId), group, params.uuid,
-                     isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
+        String id = dataMan.insertMetadata(context, schema, md, uuid, Integer.parseInt(params.ownerId), group, params.uuid,
+                     isTemplate, docType, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
 
-         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
-         addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+         addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 		
-		dataMan.setHarvestedExt(dbms, iId, params.uuid, params.url);
-		dataMan.setTemplate(dbms, iId, "n", null);
-		
-		dbms.commit();
-		//dataMan.indexMetadata(dbms, id); setTemplate update the index
+		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(params.url));
+		dataMan.setTemplate(iId, MetadataType.METADATA, null);
+
+         dataMan.flush();
+
+         //dataMan.indexMetadata(dbms, id); setTemplate update the index
 		
 		result.addedMetadata++;
 		
@@ -458,7 +454,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 				Element op = new Element ("operatesOn", srv);
 				op.setAttribute("uuidref", layer.uuid);
 
-                String hRefLink =  dataMan.getSiteURL(context) + "/xml.metadata.get?uuid=" + layer.uuid;
+                String hRefLink =  context.getBean(SettingManager.class).getSiteURL(context) + "/xml.metadata.get?uuid=" + layer.uuid;
                 op.setAttribute("href", hRefLink, xlink);
 
 				
@@ -585,7 +581,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 						// Extract uuid from loaded xml document
 						// FIXME : uuid could be duplicate if metadata already exist in catalog
 						reg.uuid = dataMan.extractUUID(schema, xml);
-						exist = dataMan.existsMetadataUuid(dbms, reg.uuid);
+						exist = dataMan.existsMetadataUuid(reg.uuid);
 						
 						if (exist) {
 							log.warning("    Metadata uuid already exist in the catalogue. Metadata will not be loaded.");
@@ -651,26 +647,25 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
             
 			schema = dataMan.autodetectSchema (xml);
 			
-            reg.id = dataMan.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), reg.uuid, Integer.parseInt(params.ownerId), group, params.uuid,
-                         isTemplate, docType, title, category, date, date, ufo, indexImmediate);
-			
-			xml = dataMan.updateFixedInfo(schema, reg.id, params.uuid, xml, null, DataManager.UpdateDatestamp.no, dbms, context);
-			
+            reg.id = dataMan.insertMetadata(context, schema, xml, reg.uuid, Integer.parseInt(params.ownerId), group, params.uuid,
+                         isTemplate, docType, category, date, date, ufo, indexImmediate);
+
 			int iId = Integer.parseInt(reg.id);
             if(log.isDebugEnabled()) log.debug("    - Layer loaded in DB.");
 
             if(log.isDebugEnabled()) log.debug("    - Set Privileges and category.");
-            addPrivileges(reg.id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+            addPrivileges(reg.id, params.getPrivileges(), localGroups, dataMan, context, log);
 
-            if (params.datasetCategory!=null && !params.datasetCategory.equals(""))
-				dataMan.setCategory (context, dbms, reg.id, params.datasetCategory);
+            if (params.datasetCategory!=null && !params.datasetCategory.equals("")) {
+				dataMan.setCategory (context, reg.id, params.datasetCategory);
+            }
 
             if(log.isDebugEnabled()) log.debug("    - Set Harvested.");
-			dataMan.setHarvestedExt(dbms, iId, params.uuid, params.url); // FIXME : harvestUuid should be a MD5 string
-			
-			dbms.commit();
-			
-			dataMan.indexMetadata(dbms, reg.id);
+			dataMan.setHarvestedExt(iId, params.uuid, Optional.of(params.url)); // FIXME : harvestUuid should be a MD5 string
+
+            dataMan.flush();
+
+            dataMan.indexMetadata(reg.id, false);
 			
 			try {
     			// Load bbox info for later use (eg. WMS thumbnails creation)
@@ -743,11 +738,14 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 				par.addContent(new Element ("smallScalingDir").setText("width"));
 				
 				// Call the services 
-				s.execOnHarvest(par, context, dbms, dataMan);
-				dbms.commit();
-				result.thumbnails ++;
-			} else
+				s.execOnHarvest(par, context, dataMan);
+
+                dataMan.flush();
+
+                result.thumbnails ++;
+			} else {
 				result.thumbnailsFailed ++;
+            }
 		} catch (Exception e) {
 			log.warning("  - Failed to set thumbnail for metadata: " + e.getMessage());
 			e.printStackTrace();
@@ -814,20 +812,29 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         		;
 		// All is in Lat/Long epsg:4326
 		
-		HttpClient httpclient = new HttpClient ();
-        GetMethod req = new GetMethod (url);
+        HttpGet req = new HttpGet(url);
 
         if(log.isDebugEnabled()) log.debug ("Retrieving remote document: " + url);
 
-		// set proxy from settings manager
-		Lib.net.setupProxy(context, httpclient);
-		
+
 		try {
 		    // Connect
-			int result = httpclient.executeMethod (req);
-            if(log.isDebugEnabled()) log.debug("   Get " + result);
+            final GeonetHttpRequestFactory requestFactory = context.getBean(GeonetHttpRequestFactory.class);
+            final ClientHttpResponse httpResponse = requestFactory.execute(req, new Function<HttpClientBuilder, Void>() {
+                @Nullable
+                @Override
+                public Void apply(@Nullable HttpClientBuilder input) {
+                    // set proxy from settings manager
+                    Lib.net.setupProxy(context, input);
+                    return null;  //To change body of implemented methods use File | Settings | File Templates.
+                }
+            });
 
-			if (result == 200) {
+            if(log.isDebugEnabled()) {
+                log.debug("   Get " + httpResponse.getStatusCode());
+            }
+
+			if (httpResponse.getStatusCode() == HttpStatus.OK) {
 			    // Save image document to temp directory
 				// TODO: Check OGC exception
                 OutputStream fo = null;
@@ -835,7 +842,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
                 
                 try {
                     fo = new FileOutputStream (dir + filename);
-                    in = req.getResponseBodyAsStream();
+                    in = httpResponse.getBody();
                     BinaryFile.copy (in,fo);
                 } finally {
                     IOUtils.closeQuietly(in);
@@ -845,12 +852,8 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 				log.info (" Http error connecting");
 				return null;
 			}
-		} catch (HttpException he) {
-			log.info (" Http error connecting to '" + httpclient.toString() + "'");
-			log.info (he.getMessage());
-			return null;
 		} catch (IOException ioe){
-			log.info (" Unable to connect to '" + httpclient.toString() + "'");
+			log.info (" Unable to connect to '" + req.toString() + "'");
 			log.info (ioe.getMessage());
 			return null;
 		} finally {
@@ -886,7 +889,6 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
 	private Logger         log;
 	private ServiceContext context;
-	private Dbms           dbms;
 	private OgcWxSParams   params;
 	private DataManager    dataMan;
 	private SchemaManager  schemaMan;

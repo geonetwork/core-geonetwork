@@ -22,17 +22,23 @@
 
 package org.fao.geonet.kernel.search;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.util.ISODate;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.specification.MetadataSpecs;
+import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -65,7 +71,7 @@ class UnusedSearcher extends MetaSearcher
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getBean(SettingManager.class);
 
-		String siteId = sm.getValue("system/site/siteId");
+		String siteId = sm.getSiteId();
 
 		alResult = new ArrayList<String>();
 
@@ -76,24 +82,20 @@ class UnusedSearcher extends MetaSearcher
 		context.info("UnusedSearcher : using maxDiff="+maxDiff);
 
 		//--- proper search
+        final Specifications<Metadata> spec = Specifications.where(MetadataSpecs.isType(MetadataType.TEMPLATE)).and(MetadataSpecs.isHarvested(false))
+                .and(MetadataSpecs.hasSource(siteId));
 
-		String query =	"SELECT DISTINCT id, createDate, changeDate "+
-							"FROM   Metadata "+
-							"WHERE  isTemplate='n' AND isHarvested='n' AND source=?";
+        final List<Metadata> list = context.getBean(MetadataRepository.class).findAll(spec);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		@SuppressWarnings("unchecked")
-        List<Element> list = dbms.select(query, siteId).getChildren();
+        for (Metadata rec : list) {
+            int id = rec.getId();
 
-        for (Element rec : list) {
-            String id = rec.getChildText("id");
+            ISODate createDate = rec.getDataInfo().getCreateDate();
+            ISODate changeDate = rec.getDataInfo().getChangeDate();
 
-            ISODate createDate = new ISODate(rec.getChildText("createdate"));
-            ISODate changeDate = new ISODate(rec.getChildText("changedate"));
-
-            if (changeDate.sub(createDate) / 60 < maxDiff) {
-                if (!hasInternetGroup(dbms, id)) {
-                    alResult.add(id);
+            if (changeDate.timeDifferenceInSeconds(createDate) / 60 < maxDiff) {
+                if (!hasInternetGroup(context, id)) {
+                    alResult.add("" + id);
                 }
             }
         }
@@ -167,18 +169,15 @@ class UnusedSearcher extends MetaSearcher
 	//---
 	//--------------------------------------------------------------------------
 
-	private boolean hasInternetGroup(Dbms dbms, String id) throws SQLException
+	private boolean hasInternetGroup(ServiceContext context, int id) throws SQLException
 	{
-		String query ="SELECT COUNT(*) AS result FROM OperationAllowed WHERE groupId=1 AND metadataId=?";
+	    OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
 
-		@SuppressWarnings("unchecked")
-        List<Element> list = dbms.select(query, Integer.valueOf(id)).getChildren();
-
-		Element record = list.get(0);
-
-		int result = Integer.parseInt(record.getChildText("result"));
-
-		return (result > 0);
+        final Specification<OperationAllowed> hasGroupId = OperationAllowedSpecs.hasGroupId(ReservedGroup.all.getId());
+        final Specification<OperationAllowed> hasMetadataId = OperationAllowedSpecs.hasMetadataId(id);
+        final Specifications<OperationAllowed> spec = Specifications.where(hasGroupId).and(hasMetadataId);
+        List<OperationAllowed> opsAllowed = operationAllowedRepository.findAll(spec);
+		return !opsAllowed.isEmpty();
 	}
 
 	//--------------------------------------------------------------------------

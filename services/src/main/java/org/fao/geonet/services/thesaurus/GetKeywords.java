@@ -28,8 +28,8 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.ThesaurusManager;
@@ -67,7 +67,7 @@ public class GetKeywords implements Service {
 			ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
 
             if(Log.isDebugEnabled("KeywordsManager")) Log.debug("KeywordsManager","Creating new keywords searcher");
-			searcher = new KeywordsSearcher(thesaurusMan);
+			searcher = new KeywordsSearcher(context, thesaurusMan);
 			searcher.search(context.getLanguage(), params);
 			searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
 			session

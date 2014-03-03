@@ -1,16 +1,28 @@
 package org.fao.geonet.guiservices.metadata;
 
-import jeeves.exceptions.OperationNotAllowedEx;
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.specification.MetadataSpecs;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.jdom.Element;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specifications;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
+
+import static org.springframework.data.jpa.domain.Specifications.*;
 
 /**
  * Retrieves the metadata owned by a user. Depending on user profile:
@@ -48,35 +60,33 @@ public class GetByOwner implements Service {
 
     public Element exec(Element params, ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
-        String query = null;
 
-        String ownerId = context.getUserSession().getUserId();
-        String userProfile = context.getUserSession().getProfile();
+        int ownerId = context.getUserSession().getUserIdAsInt();
+        Profile userProfile = context.getUserSession().getProfile();
 
         if (userProfile == null) {
-           throw new OperationNotAllowedEx("Unauthorized user attempted to list editable metadata ");
+            throw new OperationNotAllowedEx("Unauthorized user attempted to list editable metadata ");
         }
 
-				boolean useOwnerId = true;
-
+        Specifications<Metadata> spec;
         // if the user is an admin, return all metadata
-        if(userProfile.equals(Geonet.Profile.ADMINISTRATOR)) {
-            query = "SELECT id FROM Metadata WHERE isHarvested='n'" ;
-						useOwnerId = false;
-        }
-        // if the user is a reviewer, return all metadata of the user's groups
-        else if(userProfile.equals(Geonet.Profile.REVIEWER) || userProfile.equals(Geonet.Profile.USER_ADMIN)) {
-            query = "SELECT id FROM Metadata "+
-                    "WHERE groupOwner IN "+
-										"(SELECT groupId FROM UserGroups WHERE userId=? "+
-                    "AND isHarvested='n')" ;
-        }
-        // if the user is an editor, return metadata owned by this user
-        else if(userProfile.equals(Geonet.Profile.EDITOR) ) {
-            query = "SELECT id FROM Metadata WHERE owner=?"+
-                        " AND isHarvested='n'" ;
+        if(userProfile == Profile.Administrator) {
+            spec = where(MetadataSpecs.isHarvested(false));
+        } else if(userProfile == Profile.Reviewer || userProfile == Profile.UserAdmin) {
+            final List<UserGroup> groups = context.getBean(UserGroupRepository.class).findAll(UserGroupSpecs.hasUserId(ownerId));
+            List<Integer> groupIds = Lists.transform(groups, new Function<UserGroup, Integer>() {
+                @Nullable
+                @Override
+                public Integer apply(@Nonnull UserGroup input) {
+                    return input.getId().getGroupId();
+                }
+            });
+            spec = where(MetadataSpecs.isHarvested(false)).and(MetadataSpecs.isOwnedByOneOfFollowingGroups(groupIds));
+            // if the user is a reviewer, return all metadata of the user's groups
+        } else if(userProfile == Profile.Editor) {
+            spec = where(MetadataSpecs.isOwnedByUser(ownerId)).and(MetadataSpecs.isHarvested(false));
+            // if the user is an editor, return metadata owned by this user
         } else {
             throw new OperationNotAllowedEx("Unauthorized user " + ownerId + " attempted to list editable metadata ");
         }
@@ -84,28 +94,22 @@ public class GetByOwner implements Service {
         // Sorting
         String sortBy = sortByParameter(params);
 
+        Sort order = null;
         if(sortBy.equals("date")) {
-            query += " ORDER BY changeDate DESC";
-        }
-        else if(sortBy.equals("popularity")) {
-            query += " ORDER BY popularity DESC";
-        }
-        else if(sortBy.equals("rating")) {
-            query += " ORDER BY rating DESC";
+            order = new Sort(Sort.Direction.DESC, Metadata_.dataInfo + "." + MetadataDataInfo_.changeDate);
+        } else if(sortBy.equals("popularity")) {
+            order = new Sort(Sort.Direction.DESC, Metadata_.dataInfo + "." + MetadataDataInfo_.popularity);
+        } else if(sortBy.equals("rating")) {
+            order = new Sort(Sort.Direction.DESC, Metadata_.dataInfo + "." + MetadataDataInfo_.rating);
+        } else {
+            throw new IllegalArgumentException("Unknown sortBy parameter: "+sortBy);
         }
 
-        Element result;
-				if (useOwnerId) {
-					result = dbms.select(query, Integer.valueOf(ownerId));
-				} else {
-					result = dbms.select(query);
-				}
+        List<Metadata> metadataList = context.getBean(MetadataRepository.class).findAll(spec, order);
         _response = new Element("response");
 
-        @SuppressWarnings("unchecked")
-        List<Element> resultElems = result.getChildren();
-        for (Element rec : resultElems) {
-            String  id = rec.getChildText("id");
+        for (Metadata rec : metadataList) {
+            String  id = "" + rec.getId();
             boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
             Element md = gc.getBean(DataManager.class).getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
             _response.addContent(md);

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		">
+
+    <bean id="nodeInfo" class="org.fao.geonet.NodeInfo">
+        <property name="id" value="testNodeId" />
+        <property name="defaultNode" value="true" />
+    </bean>
+
+    <bean id="IS_DEFAULT_CONTEXT_BEAN" class="java.lang.Boolean">
+        <constructor-arg index="0" value="true"/>
+    </bean>
+
+    <!--<jdbc:embedded-database type="H2" id="jdbcDataSource" />-->
+    <bean id="jdbcDataSource" class="org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseFactoryBean">
+        <property name="databaseType" value="H2"/>
+        <property name="databaseConfigurer">
+            <bean class="org.fao.geonet.GeonetworkH2TestEmbeddedDatabaseConfigurer">
+                <!--<property name="compatilityMode" value="MySQL"/>-->
+                <!--<property name="compatilityMode" value="Oracle"/>-->
+                <!--<property name="compatilityMode" value="DB2"/>-->
+                <!--<property name="compatilityMode" value="MSSQLServer"/>-->
+                <!--<property name="compatilityMode" value="PostgreSQL"/>-->
+            </bean>
+        </property>
+    </bean>
+    <bean id="jpaVendorAdapterDatabaseParam" class="java.lang.String">
+        <constructor-arg value="H2"/>
+    </bean>
+
+    <bean id="generateDdl" class="java.lang.String">
+        <constructor-arg value="true"/>
+    </bean>
+</beans>

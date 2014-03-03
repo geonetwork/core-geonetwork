@@ -1,13 +1,11 @@
 package jeeves.server.overrides;
 
-import java.beans.PropertyDescriptor;
-import java.util.Properties;
-
-import jeeves.utils.Xml;
-
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.springframework.beans.BeanUtils;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+
+import java.util.Properties;
 
 abstract class PropertyUpdater extends BeanUpdater {
 
@@ -35,17 +33,15 @@ abstract class PropertyUpdater extends BeanUpdater {
     }
 
     @Override
-    public Object update(ApplicationContext applicationContext, Properties properties, Object bean) {
-        Object value = valueLoader.load(applicationContext, properties);
+    public void update(ConfigurableListableBeanFactory beanFactory, Properties properties, BeanDefinition bean) {
+        Object value = valueLoader.load(beanFactory, properties);
         if (value instanceof String) {
             String string = (String) value;
             value = ConfigurationOverrides.DEFAULT.updatePropertiesInText(properties, string);
         }
-        PropertyDescriptor descriptor = BeanUtils.getPropertyDescriptor(bean.getClass(), propertyName);
-        
-        return doUpdate(applicationContext, bean, descriptor, value);
+        doUpdate(beanFactory, bean, value);
     }
-    protected abstract Object doUpdate(ApplicationContext applicationContext, Object bean, PropertyDescriptor descriptor, Object value);
+    protected abstract void doUpdate(ConfigurableListableBeanFactory beanFactory, BeanDefinition bean, Object value);
     
     protected ValueLoader valueLoader;
     protected String propertyName;

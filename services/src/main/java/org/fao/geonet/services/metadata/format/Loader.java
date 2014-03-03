@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+
+import org.fao.geonet.Util;
+import org.fao.geonet.utils.Xml;
 
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -168,8 +168,7 @@ public enum Loader {
 				GeonetContext gc = (GeonetContext) context
 						.getHandlerContext(Geonet.CONTEXT_NAME);
 				DataManager dm = gc.getBean(DataManager.class);
-				Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-				String schema = dm.getMetadataSchema(dbms, metadataId);
+				String schema = dm.getMetadataSchema(metadataId);
 				return schema;
 			}
 			public Loader getValidLoader(final String url, Element params) throws Exception {

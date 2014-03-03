@@ -23,12 +23,15 @@
 
 package org.fao.geonet.lib;
 
-import jeeves.exceptions.OperationNotAllowedEx;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Operation;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.springframework.security.access.AccessDeniedException;
@@ -43,9 +46,8 @@ import java.util.Set;
  */
 public class ResourceLib {
 	/**
-	 * Get GeoNetwork data directory defined on startup see
-	 * {@link Geonetwork#start(org.jdom.Element, ServiceContext)}.
-	 * 
+	 * Get GeoNetwork data directory defined on startup
+	 *
 	 * @param context
 	 * @return
 	 */
@@ -60,52 +62,47 @@ public class ResourceLib {
 
 	/**
 	 * Get metadata public or private data directory. See
-	 * {@link #getDir(String, String, String)}.
+	 * {@link #getDir(jeeves.server.context.ServiceContext, String, int)}.
 	 */
 	public String getDir(ServiceContext context, String access, String id) {
-		return getDir(getDataDir(context), access, id);
-	}
-
-	/**
-	 * Get metadata data directory. See {@link #getMetadataDir(String, String)}.
-	 */
-	public String getMetadataDir(ServiceContext context, String id) {
-		return getMetadataDir(getDataDir(context), id);
+		return getDir(context, access, Integer.valueOf(id));
 	}
 
 	/**
 	 * Get metadata public or private data directory
 	 * 
-	 * @param dataDir
-	 *            The root data directory
-	 * @param access
-	 *            The type of data directory. {@link Params.Access#PUBLIC} or
-	 *            {@link Params.Access#PRIVATE}
-	 * @param id
-	 *            The metadata identifier
-	 * @return The data directory
+	 *
+     * @param access
+     *            The type of data directory. {@link org.fao.geonet.constants.Params.Access#PUBLIC} or
+     *            {@link org.fao.geonet.constants.Params.Access#PRIVATE}
+     * @param id
+     *            The metadata identifier
+     * @return The data directory
 	 */
-	public String getDir(String dataDir, String access, String id) {
-		String mdDir = getMetadataDir(dataDir, id);
+	public String getDir(ServiceContext context, String access, int id) {
+		String mdDir = getMetadataDir(context, id);
 		String subDir = (access != null && access.equals(Params.Access.PUBLIC)) ? Params.Access.PUBLIC
 				: Params.Access.PRIVATE;
 		return mdDir + subDir + "/";
 	}
 
-	/**
+    private String getMetadataDir(ServiceContext context, int id) {
+        return getMetadataDir(context, id+"");
+    }
+
+    /**
 	 * Get the metadata data directory
 	 * 
-	 * @param dataDir
-	 *            The root data directory
 	 * @param id
 	 *            The metadata identifier
 	 * @return The metadata data directory
 	 */
-	public String getMetadataDir(String dataDir, String id) {
+	public String getMetadataDir(ServiceContext context, String id) {
 		String group = pad(Integer.parseInt(id) / 100, 3);
 		String groupDir = group + "00-" + group + "99";
 
-		return dataDir + "/" + groupDir + "/" + id + "/";
+        String dataDir = context.getBean(GeonetworkDataDirectory.class).getSystemDataDir();
+        return dataDir + "/" + groupDir + "/" + id + "/";
 	}
 
 	/**
@@ -119,20 +116,22 @@ public class ResourceLib {
 	 *            See {@link AccessManager}.
 	 * @throws Exception
 	 */
-	public void checkPrivilege(ServiceContext context, String id,
-			String operation) throws Exception {
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
+    public void checkPrivilege(ServiceContext context, String id,
+            ReservedOperation operation) throws Exception {
+        GeonetContext gc = (GeonetContext) context
+                .getHandlerContext(Geonet.CONTEXT_NAME);
 
-		AccessManager accessMan = gc.getBean(AccessManager.class);
+        AccessManager accessMan = gc.getBean(AccessManager.class);
 
-		Set<String> hsOper = accessMan.getOperations(context, id, context
-				.getIpAddress());
-		
-		if (!hsOper.contains(operation)) {
-			denyAccess(context);
-		}
-	}
+        Set<Operation> hsOper = accessMan.getOperations(context, id, context.getIpAddress());
+        
+        for (Operation op : hsOper) {
+            if (op.is(operation)) {
+                return;
+            }
+        }
+            denyAccess(context);
+    }
 
 	public void denyAccess(ServiceContext context) throws Exception {
 		if (context.getUserSession().isAuthenticated()) {

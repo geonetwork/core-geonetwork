@@ -22,17 +22,21 @@
 //==============================================================================
 package org.fao.geonet.services.statistics;
 
+import static org.fao.geonet.services.statistics.RequestsByDateParams.*;
 import java.util.Hashtable;
 import java.util.List;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.statistic.SearchRequest_;
+import org.fao.geonet.repository.specification.SearchRequestSpecs;
+import org.fao.geonet.repository.statistic.DateInterval;
+import org.fao.geonet.repository.statistic.SearchRequestRepository;
+import org.fao.geonet.Util;
 
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
@@ -43,33 +47,20 @@ import org.jdom.Element;
  * 
  */
 public class RequestsByDateStatistics extends NotInReadOnlyModeService {
-    public static final String BY_YEAR = "YEAR";
-    public static final String BY_MONTH = "MONTH";
-    public static final String BY_DAY = "DAY";
-    public static final String BY_HOUR = "HOUR";
-
-    /** the date to search for from (format MUST be: ) */
-    private String dateFrom;
-    /** the date to search for too (format MUST be: yyy-MM-ddThh:mm) */
-    private String dateTo;
-    /** the type of graphic (by year, month or day to display */
-    private String graphicType;
-    /** to return service statistics by service type (ie. csw, oai, q, ...)*/
-    private boolean byType = false;
 
     /** the custom part of the date query; according to user choice for graphic */
-    public Hashtable<String, String> queryFragments;
+    public Hashtable<String, DateInterval> queryFragments;
 
 
     public void init(String appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
 
-        queryFragments = new Hashtable<String, String>(4);
+        queryFragments = new Hashtable<String, DateInterval>(4);
 
-        queryFragments.put(RequestsByDateStatistics.BY_HOUR, "substring(requestDate, 1, 13)");
-        queryFragments.put(RequestsByDateStatistics.BY_DAY, "substring(requestDate, 1, 10)");
-        queryFragments.put(RequestsByDateStatistics.BY_MONTH, "substring(requestDate, 1, 7)");
-        queryFragments.put(RequestsByDateStatistics.BY_YEAR, "substring(requestDate, 1, 4)");
+        queryFragments.put(BY_HOUR, new DateInterval.Hour());
+        queryFragments.put(BY_DAY, new DateInterval.Day());
+        queryFragments.put(BY_MONTH, new DateInterval.Month());
+        queryFragments.put(BY_YEAR, new DateInterval.Year());
     }
 
     // --------------------------------------------------------------------------
@@ -79,70 +70,69 @@ public class RequestsByDateStatistics extends NotInReadOnlyModeService {
     // --------------------------------------------------------------------------
     @Override
     public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-        this.dateFrom = Util.getParam(params, "dateFrom");
-        this.dateTo = Util.getParam(params, "dateTo");
-        this.graphicType = Util.getParam(params, "graphicType");
-        this.byType = Util.getParam(params, "byType", false);
+        String dateFromParam = Util.getParam(params, "dateFrom");
+        String dateToParam = Util.getParam(params, "dateTo");
+        String graphicType = Util.getParam(params, "graphicType");
+        boolean byType = Util.getParam(params, "byType", false);
         
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        ISODate dateFrom = null;
+        ISODate dateTo = null;
+
         Element elResp = new Element(Jeeves.Elem.RESPONSE);
-        
-        
-        // TODO : if ByServiceType
-        if (byType) {
-            String serviceTypesQuery = "SELECT DISTINCT(service) as type FROM Requests";
-            Element serviceTypes = dbms.select(serviceTypesQuery);
-            for (Object o : serviceTypes.getChildren()) {
-                Element type = (Element)o;
-                String serviceType = type.getChildText("type");
-                String query = buildQuery(serviceType);
-                if (Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) {
-                    Log.debug(Geonet.SEARCH_LOGGER, "query to get count by date:\n" + query);
+        final SearchRequestRepository requestRepository = context.getBean(SearchRequestRepository.class);
+
+        try {
+            dateFrom = new ISODate(dateFromParam);
+            dateTo = new ISODate(dateToParam);
+
+            // TODO : if ByServiceType
+            if (byType) {
+                final List<String> serviceTypes = requestRepository.selectAllDistinctAttributes(SearchRequest_
+                        .service);
+                for (String serviceType : serviceTypes) {
+                    Element results = buildQuery(requestRepository, serviceType, dateFrom, dateTo, graphicType);
+
+                    results.setAttribute("service", serviceType);
+                    elResp.addContent(results);
                 }
-                Element results = dbms.select(query, this.dateFrom, this.dateTo, serviceType);
-                results.setAttribute("service", serviceType);
+            } else {
+                Element results = buildQuery(requestRepository, null, dateFrom, dateTo, graphicType);
                 elResp.addContent(results);
             }
-        } else {
-            String query = buildQuery(null);
-            if (Log.isDebugEnabled(Geonet.SEARCH_LOGGER)) {
-                Log.debug(Geonet.SEARCH_LOGGER, "query to get count by date:\n" + query);
-            }
-            Element results = dbms.select(query, this.dateFrom, this.dateTo);
-            elResp.addContent(results);
-        }
-        
-        
-        SearchStatistics.addSingleDBValueToElement(dbms, elResp, 
-                "SELECT min(requestdate) AS min FROM Requests", 
-                "dateMin", "min", null);
-        SearchStatistics.addSingleDBValueToElement(dbms, elResp, 
-                "SELECT max(requestdate) AS max FROM Requests", 
-                "dateMax", "max", null);
-        
-        elResp.addContent(new Element("dateFrom").setText(this.dateFrom));
-        elResp.addContent(new Element("dateTo").setText(this.dateTo));
 
-        
+            elResp.addContent(new Element("dateFrom").setText(dateFrom.getDateAndTime()));
+            elResp.addContent(new Element("dateTo").setText(dateTo.getDateAndTime()));
+        } catch (Exception e) {
+            elResp.setAttribute("error", e.getMessage());
+        }
+
+        final ISODate oldestRequestDate = requestRepository.getOldestRequestDate();
+        SearchStatistics.addSingleDBValueToElement(elResp,
+                oldestRequestDate,
+                "dateMin", "min");
+        final ISODate mostRecentRequestDate = requestRepository.getMostRecentRequestDate();
+        SearchStatistics.addSingleDBValueToElement(elResp,
+                mostRecentRequestDate ,
+                "dateMax", "max");
+
         return elResp;
     }
 
-    public String buildQuery(String service) {
-        String requestDateSubstring = this.queryFragments.get(this.graphicType);
+    public Element buildQuery(SearchRequestRepository requestRepository, String service, ISODate dateFrom,
+                                                       ISODate dateTo, String graphicType) {
 
-        StringBuilder query = new StringBuilder("SELECT ");
-        query.append(requestDateSubstring);
-        query.append(" as reqdate, count(*) as number FROM Requests ");
-        query.append(" where requestdate >= ?");
-        query.append(" and requestdate <= ?");
-        if (service != null) {
-            query.append(" and service = ?");
+        DateInterval dateInterval = this.queryFragments.get(graphicType);
+        final List<Pair<DateInterval, Integer>> requestDateToRequestCountBetween = requestRepository
+                .getRequestDateToRequestCountBetween(dateInterval, dateFrom, dateTo, SearchRequestSpecs.hasService(service));
+
+        Element results = new Element("requests");
+        for (Pair<DateInterval, Integer> entry : requestDateToRequestCountBetween) {
+            results.addContent(new Element("record")
+                .addContent(new Element("number").setText(""+entry.two()))
+                .addContent(new Element("reqdate").setText(entry.one().getDateString()))
+            );
         }
-        query.append(" GROUP BY ");
-        query.append(requestDateSubstring);
-        query.append(" ORDER BY ");
-        query.append(requestDateSubstring);
 
-        return query.toString();
+        return results;
     }
 }

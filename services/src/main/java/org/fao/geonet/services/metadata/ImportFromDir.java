@@ -23,18 +23,22 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.exceptions.XSDValidationErrorEx;
-import jeeves.guiservices.session.JeevesUser;
-import jeeves.resources.dbms.Dbms;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.IO;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.Util;
+import org.fao.geonet.utils.Xml;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.exceptions.SchematronValidationErrorEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
@@ -195,9 +199,9 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 		private final String stylePath;
 		private final boolean failOnError;
 		private final ServiceContext context;
-		private final String userId;
+		private final int userId;
 		private final String userName;
-		private final String userProfile;
+		private final Profile userProfile;
 
 		ImportCallable(File files[], int beginIndex, int count, Element params, ServiceContext context, String stylePath, boolean failOnError) {
 			this.files = files;
@@ -207,18 +211,14 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 			this.context = context;
 			this.stylePath = stylePath;
 			this.failOnError = failOnError;
-			this.userId = this.context.getUserSession().getUserId();
+			this.userId = Integer.valueOf(this.context.getUserSession().getUserId());
 			this.userName = this.context.getUserSession().getUsername();
 			this.userProfile = this.context.getUserSession().getProfile();
 		}
 		
 		private void login() {
-		    JeevesUser user = new JeevesUser(this.context.getProfileManager());
-		    user.setId(this.userId);
-		    user.setUsername(this.userName);
-		    user.setProfile(this.userProfile);
 		    UserSession session = new UserSession();
-		    session.loginAs(user);
+		    session.loginAs(new User().setUsername(this.userName).setId(this.userId).setProfile(this.userProfile));
 		    this.context.setUserSession(session);
 		}
 		
@@ -229,8 +229,8 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 			
 			for(int i=beginIndex; i<beginIndex+count; i++) {
 				try {
-					MEFLib.doImportIndexGroup(params, context, files[i], stylePath);
-				} catch (Exception e) {
+                    MEFLib.doImport(params, context, files[i], stylePath);
+                } catch (Exception e) {
 					if (failOnError)
 						throw e;
 					
@@ -351,7 +351,7 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 
 		for(int i=0; i<sites.length; i++)
 		{
-            if(context.isDebug())
+            if(context.isDebugEnabled())
                 context.debug("Scanning site : "+sites[i]);
 
 			File categs[] = sites[i].listFiles(filter);
@@ -361,7 +361,7 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 
 			for(int j=0; j<categs.length; j++)
 			{
-                if(context.isDebug())
+                if(context.isDebugEnabled())
                     context.debug("   Scanning category : "+categs[j]);
 
 				String catDir  = categs[j].getName();
@@ -421,13 +421,12 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 		//-----------------------------------------------------------------------
 		//--- insert metadata into the system
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
         String docType = null, title = null, createDate = null, changeDate = null;
         boolean ufo = true, indexImmediate = true;
         String isTemplate = "n";
-        dm.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, context.getUserSession().getUserIdAsInt(), group, gc.getSiteId(),
-                         isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
+        dm.insertMetadata(context, schema, xml, uuid, context.getUserSession().getUserIdAsInt(), group, gc.getBean(SettingManager
+                .class).getSiteId(),
+                         isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
 
 	}
 
@@ -484,11 +483,9 @@ class ImportConfig
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getBean(DataManager.class);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		Element config = Xml.loadFile(configFile);
 
-		fillCategIds(dbms);
+		fillCategIds(context);
 
 		mapCategor(config.getChild(CATEGORY_MAPPING));
 		mapSchemas(config.getChild(SCHEMA_MAPPING), dm);
@@ -528,16 +525,12 @@ class ImportConfig
 	//---
 	//--------------------------------------------------------------------------
 
-	private void fillCategIds(Dbms dbms) throws Exception
-	{
-		String query = "SELECT * FROM Categories";
+	private void fillCategIds(ServiceContext context) throws Exception {
+        final List<MetadataCategory> metadataCategories = context.getBean(MetadataCategoryRepository.class).findAll();
 
-		@SuppressWarnings("unchecked")
-        List<Element> idsList = dbms.select(query).getChildren();
-
-		for (Element record : idsList) {
-			String id   = record.getChildText("id");
-			String name = record.getChildText("name");
+		for (MetadataCategory record : metadataCategories) {
+			String id   = "" + record.getId();
+			String name = record.getName();
 
 			htCategId.put(name, id);
 		}

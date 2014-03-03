@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
-import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.openrdf.model.Value;
 import org.openrdf.sesame.query.QueryResultsTable;

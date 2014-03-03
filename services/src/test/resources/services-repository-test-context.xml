@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-lazy-init="true" xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+       ">
+
+
+    <!-- Define the languages in the UI.  Seems like these should come from database at some point but at the moment they
+         are needed here.
+     -->
+    <util:set id="languages">
+        <value>ara</value>
+        <value>cat</value>
+        <value>chi</value>
+        <value>dut</value>
+        <value>eng</value>
+        <value>fin</value>
+        <value>fre</value>
+        <value>ger</value>
+        <value>ita</value>
+        <value>nor</value>
+        <value>pol</value>
+        <value>por</value>
+        <value>rus</value>
+        <value>spa</value>
+        <value>tur</value>
+    </util:set>
+</beans>

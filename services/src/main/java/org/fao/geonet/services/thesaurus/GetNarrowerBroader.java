@@ -27,8 +27,8 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.ThesaurusManager;
@@ -65,7 +65,7 @@ public class GetNarrowerBroader implements Service {
 		ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
 
         if(Log.isDebugEnabled("KeywordsManager")) Log.debug("KeywordsManager","Creating new keywords searcher");
-		searcher = new KeywordsSearcher(thesaurusMan);
+		searcher = new KeywordsSearcher(context, thesaurusMan);
 		
 		String request = Util.getParam(params, "request");
         String conceptId = Util.getParam(params, "id");

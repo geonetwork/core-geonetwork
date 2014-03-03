@@ -1,8 +1,9 @@
 package jeeves.server.overrides;
 
-import java.util.Properties;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.config.RuntimeBeanReference;
 
-import org.springframework.context.ApplicationContext;
+import java.util.Properties;
 
 class RefValueLoader implements ValueLoader {
     private String beanName;
@@ -12,11 +13,7 @@ class RefValueLoader implements ValueLoader {
     }
 
     @Override
-    public Object load(ApplicationContext context, Properties properties) {
-        Object bean = context.getBean(beanName);
-        if(bean == null) {
-            throw new IllegalArgumentException("Could not find a bean with id: "+beanName);
-        }
-        return bean;
+    public Object load(ConfigurableBeanFactory beanFactory, Properties properties) {
+        return new RuntimeBeanReference(beanName);
     }
 }

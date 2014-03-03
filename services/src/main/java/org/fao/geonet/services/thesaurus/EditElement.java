@@ -28,7 +28,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -65,7 +65,7 @@ public class EditElement implements Service {
 		String id 		= Util.getParam(params, Params.ID, "");
 		String uri 		= Util.getParam(params, Params.URI, "");
 		String mode	 	= Util.getParam(params, Params.MODE, "");
-		String lang 	= IsoLanguagesMapper.getInstance().iso639_2_to_iso639_1(context.getLanguage());
+		String lang 	= context.getBean(IsoLanguagesMapper.class).iso639_2_to_iso639_1(context.getLanguage());
 		
 		String modeType 	= "add";
 		
@@ -82,7 +82,7 @@ public class EditElement implements Service {
 			}else{
 				GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 				ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
-				KeywordsSearcher searcher = new KeywordsSearcher(thesaurusMan);
+				KeywordsSearcher searcher = new KeywordsSearcher(context, thesaurusMan);
 				
 				kb = searcher.searchById(uri, ref, lang);
 				
@@ -93,19 +93,23 @@ public class EditElement implements Service {
 
 			elResp.addContent(new Element("relCode").setText(kb.getRelativeCode()));
 			elResp.addContent(new Element("nsCode").setText(kb.getNameSpaceCode()));
-			if (kb.getCoordEast() != null)
-				elResp.addContent(new Element("east").setText(kb.getCoordEast()));
-			if (kb.getCoordWest() != null)
-				elResp.addContent(new Element("west").setText(kb.getCoordWest()));
-			if (kb.getCoordSouth() != null)
-				elResp.addContent(new Element("south").setText(kb.getCoordSouth()));
-			if (kb.getCoordNorth() != null)
-				elResp.addContent(new Element("north").setText(kb.getCoordNorth()));			
+			if (kb.getCoordEast() != null) {
+                elResp.addContent(new Element("east").setText(kb.getCoordEast()));
+            }
+			if (kb.getCoordWest() != null) {
+                elResp.addContent(new Element("west").setText(kb.getCoordWest()));
+            }
+			if (kb.getCoordSouth() != null) {
+                elResp.addContent(new Element("south").setText(kb.getCoordSouth()));
+            }
+			if (kb.getCoordNorth() != null) {
+                elResp.addContent(new Element("north").setText(kb.getCoordNorth()));
+            }
 			
 
 			modeType 	= "edit";
 			uri 		= kb.getRelativeCode();
-		}else{
+		} else {
 			elResp.addContent(new Element("nsCode").setText("#"));
 		}
 		
@@ -119,7 +123,7 @@ public class EditElement implements Service {
 			
 			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 			ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
-			KeywordsSearcher searcherBNR = new KeywordsSearcher(thesaurusMan);
+			KeywordsSearcher searcherBNR = new KeywordsSearcher(context, thesaurusMan);
 			
 			for (int i = 0; i <= reqType.size() - 1; i++) {
 				searcherBNR.searchForRelated(uri, ref, reqType.get(i), lang);
@@ -127,20 +131,19 @@ public class EditElement implements Service {
 				searcherBNR.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
 				String type;
 				
-				if(reqType.get(i) == KeywordRelation.BROADER)		// If looking for broader search concept in a narrower element
+				if (reqType.get(i) == KeywordRelation.BROADER) {
+				    // If looking for broader search concept in a narrower element
 					type = "narrower";
-				else if(reqType.get(i) == KeywordRelation.NARROWER)
+                } else if (reqType.get(i) == KeywordRelation.NARROWER) {
 					type = "broader";
-				else 
-					type = "related";
-				
+                } else {
+                        type = "related";
+                }
 				Element keywordType = new Element(type);
 				keywordType.addContent(searcherBNR.getResults());
 				
 				elResp.addContent(keywordType);
 			}
-			
-			searcherBNR = null;
 		}
 		
 		String thesaType = ref;

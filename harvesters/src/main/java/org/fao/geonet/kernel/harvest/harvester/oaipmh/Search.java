@@ -23,10 +23,10 @@
 
 package org.fao.geonet.kernel.harvest.harvester.oaipmh;
 
-import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.utils.Util;
-import org.fao.geonet.util.ISODate;
+import org.fao.geonet.Util;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.jdom.Element;
 
 //=============================================================================
@@ -61,7 +61,7 @@ class Search
 			if (!from.equals(""))
 			{
 				fromDate = new ISODate(from);
-				from     = fromDate.getDate();
+				from     = fromDate.getDateAsString();
 			}
 
 		}
@@ -77,7 +77,7 @@ class Search
 			if (!until.equals(""))
 			{
 				untilDate = new ISODate(until);
-				until     = untilDate.getDate();
+				until     = untilDate.getDateAsString();
 			}
 		}
 		catch(Exception e)
@@ -88,7 +88,7 @@ class Search
 		//--- check from <= until
 
 		if (fromDate != null && untilDate != null)
-			if (fromDate.sub(untilDate) > 0)
+			if (fromDate.timeDifferenceInSeconds(untilDate) > 0)
 				throw new BadParameterEx("from greater than until", from +">"+ until);
 	}
 

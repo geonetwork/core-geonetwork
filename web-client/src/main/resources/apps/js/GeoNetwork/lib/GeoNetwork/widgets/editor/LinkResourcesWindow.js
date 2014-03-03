@@ -172,10 +172,6 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
     versionField: undefined,
     mdStore: undefined,
     layerNames : undefined,
-    editUrl: undefined,
-    editName: undefined,
-    editProtocol: undefined,
-    editDesc: undefined,
 
     
     /**
@@ -642,8 +638,6 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
     
     /**
      * Form for online resource 
-     * 
-     * if editUrl is defined, then it means we want to edit an existing resource.
      */
     generateDocumentUploadForm: function (cancelBt) {
         var self = this, protocolStore = new Ext.data.JsonStore({
@@ -678,6 +672,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             value: this.versionId,
             hidden: true
         });
+        
 
         var fsUrl = new Ext.form.FieldSet({
             checkboxToggle: true,
@@ -700,10 +695,21 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                         var success = (request.status == '200');
                         if(success) {
                             this.el.addClass('x-form-valid');
-                        } else if(this.el.hasClass('x-form-valid')) {
-                            this.el.removeClass('x-form-valid');
+                            if(this.el.hasClass('x-form-invalid')) {
+                                this.el.removeClass('x-form-invalid');
+                            }
+                        } else {
+                            if(this.el.hasClass('x-form-valid')) {
+                                this.el.removeClass('x-form-valid');
+                            }
+                            this.el.addClass('x-form-invalid');
+
                         }
-                        return request.status == '200';
+                    }
+                },
+                listeners: {
+                    blur: function(cpt) {
+                        cpt.validFn(cpt.getValue());
                     }
                 }
             }],
@@ -721,6 +727,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                         this.uploadDocument = false;
                         
                         protocolCombo.setVisible(true);
+                        protocolCombo.ownerCt.find('name', 'name')[0].setVisible(true);
                         
                         if (!fsUpload.collapsed) {
                             fsUpload.collapse();
@@ -734,7 +741,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         var reloadCapabilitiesStore = function(stringUrl, protocol, callback) {
             if(this.isGetMap(protocol)) {
                 var params = {};
-                
+                this.layerNames = [];
                 if(stringUrl.split('?').length == 2) {
                     params = Ext.urlDecode(stringUrl.split('?')[1]);
                 }
@@ -788,10 +795,14 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 select: {
                     fn: function (combo, record, index) {
                         var visible = this.isGetMap(combo.getValue());
+// GN default
+//                        combo.ownerCt.find('name', 'name')[0].setVisible(!visible);
+//                        combo.ownerCt.find('name', 'title')[0].setVisible(!visible);
                         combo.ownerCt.find('name', 'capabilitiesGrid')[0].setVisible(visible);
                         combo.ownerCt.find('name', 'refreshCapabilities-Btn')[0].setVisible(visible);
                         
                         var urlField = combo.ownerCt.find('name', 'href')[0];
+                        urlField.validFn(urlField.getValue());
                         if(visible && urlField && urlField.isVisible() && urlField.getValue() != '') {
                             reloadCapabilitiesStore.call(this, urlField.getValue(), combo.getValue());
                         }
@@ -851,6 +862,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                         this.uploadDocument = true;
                         
                         protocolCombo.setVisible(false);
+                        protocolCombo.ownerCt.find('name', 'name')[0].setVisible(false);
                         
                         if (!fsUrl.collapsed) {
                             fsUrl.collapse();
@@ -1371,7 +1383,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             "?id=" + this.metadataId + 
             "&process=" + this.type + (this.editUrl ? "-edit" : "-add") +
             parameters + '&oldUrl=' + this.editUrl + '&oldName=' + this.editName;
-        
+
         this.editor.process(action);
         
         this.close();

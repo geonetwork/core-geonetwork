@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+    <services package="org.fao.geonet">
+        <documentation>User and group services</documentation>
+        
+        <service name="create.account">
+            <documentation><![CDATA[
+                Create a new user account.
+                ]]></documentation>
+            <class name=".services.register.SelfRegister" />
+            <error sheet="../xslt/error/error-json.xsl"/>
+        </service>
+        
+        <service name="password.reminder">
+            <documentation><![CDATA[
+                In case you forgot your password, send an email with a page to change user password.
+                
+                Parameters:
+                * username
+                ]]></documentation>
+            <class name=".services.password.SendLink" />
+            <error sheet="../xslt/error/error-json.xsl"/>
+        </service>
+        
+        <service name="password.change">
+            <class name=".services.password.Change" />
+            <error sheet="../xslt/error/error-json.xsl"/>
+        </service>
+        
+        
+        <service name="admin.user.update">
+            <documentation>The service can be used to create or update 
+                a user.</documentation>
+            <class name=".services.user.Update" />
+            <error sheet="../xslt/error/error-json.xsl"/>
+        </service>
+        
+        <service name="admin.user.remove">
+            <documentation>Remove a user.</documentation>
+            <class name=".services.user.Remove" />
+            <error sheet="../xslt/error/error-json.xsl"/>
+        </service>
+        
+        <service name="admin.user.list">
+            <documentation>Get the list of users in the catalog.</documentation>
+            <class name=".services.user.List" />
+        </service>
+        
+        <service name="admin.usergroups.list">
+            <documentation>The service can be used to
+                retrieve the list of groups for a user.</documentation>
+            <class name=".services.user.UserGroups" />
+        </service>
+        
+        <service name="admin.group.list">
+            <documentation>The service can be used to get the list of 
+                groups in the catalog.</documentation>
+            <class name=".services.group.List" />
+        </service>
+        
+        <service name="admin.group.update.labels">
+            <documentation>The service can be used to update group's label
+                translations.</documentation>
+            <class name=".services.group.XmlUpdate" />
+        </service>
+        
+        <service name="admin.group.update">
+            <documentation>The service can be used to create
+                or update a group.</documentation>
+            <class name=".services.group.Update" />
+            <error sheet="../xslt/error/error-json.xsl"/>
+        </service>
+        
+        <service name="admin.group.remove">
+            <documentation>The service can be used to remove a group.</documentation>
+            <class name=".services.group.Remove" />
+            <error sheet="../xslt/error/error-json.xsl"/>
+        </service>
+    </services>
+</geonet>

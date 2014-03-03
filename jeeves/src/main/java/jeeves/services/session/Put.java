@@ -23,17 +23,16 @@
 
 package jeeves.services.session;
 
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.List;
-
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
 import org.jdom.Element;
+
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.List;
 
 //=============================================================================
 

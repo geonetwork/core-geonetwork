@@ -3,12 +3,11 @@ package org.fao.geonet.services.region;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.kernel.region.Request;
@@ -162,7 +161,7 @@ public class MetadataRegionSearchRequest extends Request {
         String mdId = id.getMdId(context);
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         
-        Lib.resource.checkPrivilege(context, mdId, AccessManager.OPER_VIEW);
+        Lib.resource.checkPrivilege(context, mdId, ReservedOperation.view);
 
         boolean withEditorValidationErrors = false;
         boolean keepXlinkAttributes = true;
@@ -222,8 +221,7 @@ public class MetadataRegionSearchRequest extends Request {
             String mdId = Utils.lookupMetadataIdFromFileId(gc, id);
             
             if (mdId == null) {
-                Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-                mdId = gc.getBean(DataManager.class).getMetadataId(dbms, id);
+                mdId = gc.getBean(DataManager.class).getMetadataId(id);
             }
             return mdId;
         }
@@ -261,8 +259,7 @@ public class MetadataRegionSearchRequest extends Request {
         @Override
         public String getMdId(ServiceContext context) throws Exception {
             GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-            Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-            return gc.getBean(DataManager.class).getMetadataId(dbms, id);
+            return gc.getBean(DataManager.class).getMetadataId(id);
         }
 
         @Override

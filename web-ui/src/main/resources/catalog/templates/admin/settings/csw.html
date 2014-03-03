@@ -1,0 +1,135 @@
+<span data-ng-controller="GnCSWSettingsController">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <span data-translate="">cswService</span>
+      <div class="btn-toolbar">
+        <button type="submit" class="btn btn-primary pull-right fa fa-save"
+          data-ng-click="saveSettings('#gn-settings')" data-translate="">save</button>
+      </div>
+    </div>
+
+
+    <div class="panel-body">
+      <form id="gn-settings">
+        <div>
+          <label>
+            <input type="checkbox" name="system.csw.enable"
+              value="{{cswSettings['system/csw/enable']}}"
+              data-ng-model="cswSettings['system/csw/enable']"/>
+            <span>{{'system/csw/enable' | translate}}</span>
+          </label>
+
+          <p class="help-block">{{'system/csw/enable-help' | translate}}</p>
+        </div>
+        <div>
+          <label>
+            <input type="checkbox" name="system.csw.metadataPublic"
+              value="{{cswSettings['system/csw/metadataPublic']}}"
+              data-ng-model="cswSettings['system/csw/metadataPublic']"/>
+            <span>{{'system/csw/metadataPublic' | translate}}</span>
+          </label>
+
+          <p class="help-block">{{'system/csw/metadataPublic-help' | translate}}</p>
+        </div>
+        <div>
+          <label>
+            <input type="checkbox" name="system.csw.transactionUpdateCreateXPath"
+              value="{{cswSettings['system/csw/transactionUpdateCreateXPath']}}"
+              data-ng-model="cswSettings['system/csw/transactionUpdateCreateXPath']"/>
+            <span>{{'system/csw/transactionUpdateCreateXPath' | translate}}</span>
+          </label>
+
+          <p class="help-block">{{'system/csw/transactionUpdateCreateXPath-help' | translate}}</p>
+        </div>
+        <div>
+          <label for="{{system.csw.contactId}}">{{'system/csw/contactId' | translate}}</label>
+          <select data-ng-model="cswSettings['system/csw/contactId']" name="system.csw.contactId"
+            required="" class="form-control">
+            <option data-ng-repeat="u in users" value="{{u.id}}"
+              ng-selected="u.id == cswSettings['system/csw/contactId']">{{u.name + ' ' +
+              u.surname}}</option>
+          </select>
+          <p class="help-block">{{'system/csw/contactId-help' | translate}}</p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <span data-translate="">cswCapabilitiesProperties</span>
+      <div class="btn-toolbar">
+        <button type="submit" class="btn btn-primary pull-right fa fa-save"
+          data-ng-click="saveProperties('#gn-csw-capabilities-properties')" data-translate=""
+          >save</button>
+      </div>
+    </div>
+    <div class="panel-body">
+      <form id="gn-csw-capabilities-properties">
+        <table class="table table-striped">
+          <tr>
+            <th>
+              <span data-translate="">properties</span>
+              <select data-ng-model="cswFieldFilterValue" class="form-control">
+                <option value=""/>
+                <option data-ng-repeat="(key, value) in cswFields track by $index" value="{{key}}"
+                  ng-selected="key == cswFieldFilterValue">{{key | translate}}</option>
+              </select>
+            </th>
+            <th>
+              <span data-translate="">language</span>
+              <select data-ng-model="cswLanguageFilterValue" class="form-control">
+                <option value=""/>
+                <option data-ng-repeat="(key, value) in cswLanguages track by $index"
+                  value="{{key}}" ng-selected="key == cswLanguageFilterValue">{{key |
+                  translate}}</option>
+              </select>
+            </th>
+            <th data-translate="">value</th>
+          </tr>
+          <tr data-ng-repeat="element in cswFilter(cswConfig) track by $index">
+            <td>{{element.fieldname | translate}}</td>
+            <td>{{element.langid | translate}}</td>
+            <td>
+              <input type="text" class="form-control"
+                name="csw.{{element.fieldname}}_{{element.langid}}" value="{{element.value}}"
+                data-ng-model="element.value"/>
+            </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+  </div>
+
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <span data-translate="">customizeElementSet</span>
+      <div class="btn-toolbar">
+        <button type="submit" class="btn btn-primary pull-right fa fa-save"
+          data-ng-click="saveCSWElementSetName('#gn-csw-elementsetname')" data-translate=""
+          >save</button>
+      </div>
+    </div>
+    <div class="panel-body">
+      <form id="gn-csw-elementsetname" class="form-horizontal">
+        <fieldset>
+          <p class="help-block" data-translate="">customizeElementSetHelp</p>
+          <div class="form-group" data-ng-repeat="e in cswElementSetName track by $index">
+            <div class="col-lg-10">
+              <input type="text" name="xpath" placeholder="/xpath" class="form-control"
+                data-ng-model="e"/>
+            </div>
+            <label class="col-lg-2 control-label">
+              <i class="fa fa-trash-o text-danger" data-ng-click="deleteElementSetName(e)"></i>
+            </label>
+          </div>
+          <div class="btn-toolbar">
+            <button type="submit" class="btn fa fa-plus" data-ng-click="addCSWElementSetName()"
+              data-translate="">add</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</span>

@@ -23,9 +23,10 @@
 
 package org.fao.geonet.services.metadata.format;
 
-import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.Constants;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.jdom.Element;
 
@@ -43,7 +44,7 @@ public class ListBundleFiles extends AbstractFormatService {
     public Element exec(Element params, ServiceContext context) throws Exception {
         ensureInitializedDir(context);
 
-        String xslid = jeeves.utils.Util.getParam(params, Params.ID);
+        String xslid = Util.getParam(params, Params.ID);
 
         File formatDir = getAndVerifyFormatDir(Params.ID, xslid).getCanonicalFile();
 
@@ -60,7 +61,7 @@ public class ListBundleFiles extends AbstractFormatService {
             return;
 
         for (File f : files) {
-            String name = URLEncoder.encode(f.getName(), Jeeves.ENCODING);
+            String name = URLEncoder.encode(f.getName(), Constants.ENCODING);
             Element element;
             String id = parentId + "/" + f.getName();
             if (f.isDirectory() && legalFile(f)) {

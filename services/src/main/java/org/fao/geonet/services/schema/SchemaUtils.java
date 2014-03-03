@@ -21,14 +21,14 @@
 
 package org.fao.geonet.services.schema;
 
-import jeeves.exceptions.OperationAbortedEx;
-import jeeves.resources.dbms.Dbms;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.IO;
-import jeeves.utils.XmlRequest;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.XmlRequest;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.lib.Lib;
@@ -69,15 +69,14 @@ public class SchemaUtils {
 			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 			DataManager dm = gc.getBean(DataManager.class);
 
-            Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-			String id = dm.getMetadataId(dbms, uuid.toLowerCase());
+			String id = dm.getMetadataId(uuid.toLowerCase());
 			if (id == null) {
      		    throw new OperationAbortedEx("Metadata record with uuid "+uuid+" doesn't exist");
 			}
 
 			// -- check download permissions (should be ok since admin but...)
 			try {
-				Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
+				Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
 			}
             catch (Exception e) {
      		    throw new OperationAbortedEx("Download access not available on metadata record with uuid "+uuid);
@@ -111,7 +110,7 @@ public class SchemaUtils {
 
 		// -- get the schema zip archive from the net
 		if (url != null) { 
-			XmlRequest strReq = new XmlRequest(url);
+			XmlRequest strReq = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(url);
 			zipArchive = File.createTempFile("schema",".zip");
 			deleteTempZip = true;
 

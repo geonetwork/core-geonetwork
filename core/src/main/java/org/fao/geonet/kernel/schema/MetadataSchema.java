@@ -36,8 +36,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
@@ -323,6 +323,16 @@ public class MetadataSchema
 	{
 		return new ArrayList<Namespace>(hmPrefixes.values());
 	}
+
+    public Map<String, String> getSchemaNSWithPrefix() {
+        Map<String, String> mapNs = new HashMap<String, String>();
+        List<Namespace> schemaNsList = getSchemaNS();
+
+        for(Namespace ns : schemaNsList) {
+            mapNs.put(ns.getPrefix(), ns.getURI());
+        }
+        return mapNs;
+    }
 
 	public void buildchematronRules(String basePath) {
         String schematronResourceDir = basePath + "WEB-INF" 

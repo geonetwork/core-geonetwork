@@ -24,21 +24,23 @@
 package org.fao.geonet.services.password;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.OperationAbortedEx;
-import jeeves.exceptions.OperationNotAllowedEx;
-import jeeves.exceptions.UserNotFoundEx;
-import jeeves.resources.dbms.Dbms;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.exceptions.OperationAbortedEx;
+import org.fao.geonet.exceptions.UserNotFoundEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.PasswordUtil;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.Util;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.services.MailSendingService;
+import org.fao.geonet.util.PasswordUtil;
+import org.fao.geonet.util.MailUtil;
 import org.jdom.Element;
 
 import java.io.File;
@@ -60,7 +62,7 @@ public class SendLink extends MailSendingService {
 	// --------------------------------------------------------------------------
 
 	public void init(String appPath, ServiceConfig params) throws Exception {
-		this.stylePath = appPath + FS + Geonet.Path.STYLESHEETS + FS;
+        this.stylePath = appPath + Geonet.Path.XSLT_FOLDER + FS + "services" + FS + "account" + FS;
 	}
 
 	// --------------------------------------------------------------------------
@@ -74,39 +76,30 @@ public class SendLink extends MailSendingService {
 
 		String username = Util.getParam(params, Params.USERNAME);
 		String template = Util.getParam(params, Params.TEMPLATE, CHANGE_EMAIL_XSLT);
-		
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
-		
-		// check valid user 
-		Element elUser = dbms.select(	"SELECT * FROM Users WHERE username=?",username);
-		if (elUser.getChildren().size() == 0)
+
+        final User user = context.getBean(UserRepository.class).findOneByUsername(username);
+		if (user == null) {
 			throw new UserNotFoundEx(username);
+        }
 
 		// only let registered users change their password  
-		if (!elUser.getChild("record").getChild("profile").getText().equals(Geonet.Profile.REGISTERED_USER)) 
+		if (user.getProfile() != Profile.RegisteredUser) {
 			// Don't throw OperationNotAllowedEx because it is not related to not having enough priviledges
 			throw new IllegalArgumentException("Only users with profile RegisteredUser can change their password using this option");
-		
+        }
+
 		// get mail settings		
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getBean(SettingManager.class);
 
-		String host = sm.getValue("system/feedback/mailServer/host");
-		String port = sm.getValue("system/feedback/mailServer/port");
 		String adminEmail = sm.getValue("system/feedback/email");
-		String thisSite = sm.getValue("system/site/name");
+		String thisSite = sm.getSiteName();
 
-		SettingInfo si = new SettingInfo(context);
+		SettingInfo si = context.getBean(SettingInfo.class);
 		String siteURL = si.getSiteUrl() + context.getBaseUrl();
 
-		// Do not allow an unconfigured site to send out change password emails
-		if (thisSite == null || host == null || port == null || adminEmail == null || thisSite.equals("dummy") || host.equals("") || port.equals("") || adminEmail.equals("")) {
-			throw new IllegalArgumentException("Missing settings in System Configuration (see Administration menu) - cannot change passwords");
-		}
-		
 		// construct change key - only valid today 
-		String scrambledPassword = elUser.getChild("record").getChildText(Params.PASSWORD);
+		String scrambledPassword = user.getPassword();
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
 		String todaysDate = sdf.format(cal.getTime());
@@ -116,7 +109,9 @@ public class SendLink extends MailSendingService {
 		// TODO: allow internationalised emails
 		Element root = new Element("root");
 		root.addContent(new Element("username").setText(username));
-		root.addContent(new Element("email").setText(elUser.getChild("record").getChildText("email")));
+        for (String email : user.getEmailAddresses()) {
+            root.addContent(new Element("email").setText(email));
+        }
 		root.addContent(new Element("site").setText(thisSite));
 		root.addContent(new Element("siteURL").setText(siteURL));
 		root.addContent(new Element("changeKey").setText(changeKey));
@@ -129,7 +124,7 @@ public class SendLink extends MailSendingService {
 		String content = elEmail.getChildText("content");
 		
 		// send change link via email
-        if (!sendMail(host, Integer.parseInt(port), subject, adminEmail, to, content, PROTOCOL)) {
+        if (!MailUtil.sendMail(to, subject, content, sm, adminEmail, "")) {
             throw new OperationAbortedEx("Could not send email");
 		}
 
@@ -138,7 +133,6 @@ public class SendLink extends MailSendingService {
 
 	private static String FS = File.separator;
 	private String stylePath;
-	private static final String PROTOCOL = "smtp";
 	private static final String CHANGE_EMAIL_XSLT = "password-forgotten-email.xsl";
 	public static final String DATE_FORMAT = "yyyy-MM-dd";
 

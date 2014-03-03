@@ -24,7 +24,6 @@
 package org.fao.geonet.services.harvesting;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -47,7 +46,7 @@ public class Util
 
 	public interface Job
 	{
-		public OperResult execute(Dbms dbms, HarvestManager hm, String id) throws Exception;
+		public OperResult execute(HarvestManager hm, String id) throws Exception;
 	}
 
 	//--------------------------------------------------------------------------
@@ -62,8 +61,6 @@ public class Util
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		HarvestManager hm = gc.getBean(HarvestManager.class);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		@SuppressWarnings("unchecked")
         List<Element> paramList = params.getChildren();
 
@@ -71,7 +68,7 @@ public class Util
 
 		for (Element el : paramList) {
 			String  id  = el.getText();
-			String  res = job.execute(dbms, hm, id).toString();
+			String  res = job.execute(hm, id).toString();
 
 			el = new Element("id")
 							.setText(id)

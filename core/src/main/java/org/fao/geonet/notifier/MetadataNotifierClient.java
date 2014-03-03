@@ -22,24 +22,28 @@
 //==============================================================================
 package org.fao.geonet.notifier;
 
-import java.io.IOException;
-
-import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScope;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.apache.commons.httpclient.protocol.Protocol;
+import com.google.common.base.Function;
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.GeonetContext;
+import org.apache.http.NameValuePair;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.client.ClientHttpResponse;
 
-import ucar.nc2.util.net.EasySSLProtocolSocketFactory;
+import javax.annotation.Nullable;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Metadata notifier client to manage the communication with notification servlet.
@@ -49,57 +53,60 @@ public class MetadataNotifierClient {
     /**
      * Uses the notifier update service to handle insertion and updates of metadata.
      *
+     *
      * @param metadata
      * @param metadataUuid
+     * @param context
      * @throws MetadataNotifierClientException
      */
-	public void webUpdate(String serviceUrl, String username, String password, String metadata,
-                          String metadataUuid, GeonetContext gc) throws MetadataNotifierClientException {
-        HttpClient client;
-
-        Protocol.registerProtocol("https",
-        new Protocol("https", new EasySSLProtocolSocketFactory(), 443));
-
-		// Create a method instance.
-		PostMethod method = new PostMethod(serviceUrl);
-
-		// Provide custom retry handler is necessary
-		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
-
-        NameValuePair[] data = {
-          new NameValuePair("action", "update"),
-          new NameValuePair("uuid", metadataUuid),
-          new NameValuePair("XMLFile", metadata)
-        };
-
-        method.setRequestBody(data);
+	public void webUpdate(String serviceUrl, final String username, final String password, String metadata,
+                          String metadataUuid, final ServiceContext context) throws MetadataNotifierClientException {
 
 		//RequestEntity requestEntity = new InputStreamRequestEntity(isoDocumentInputStream);
 
 		//method.setRequestEntity(requestEntity);
-		try {
-            // Create an instance of HttpClient.
-            client = new HttpClient();
+        List<? extends NameValuePair> data = Arrays.asList(
+                new BasicNameValuePair("action", "update"),
+                new BasicNameValuePair("uuid", metadataUuid),
+                new BasicNameValuePair("XMLFile", metadata)
+        );
+        execute(serviceUrl, username, password, context, data);
+    }
 
-            if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) {
-                System.out.println("webUpdate: SET USER");
-                client.getState().setCredentials(
-                               AuthScope.ANY,
-                               new UsernamePasswordCredentials(username, password)
-                               );
+    private void execute(String serviceUrl, final String username, final String password, final ServiceContext context, List<? extends NameValuePair> data) throws MetadataNotifierClientException {
+        try {
 
-                method.setDoAuthentication( true );
-            }         
+            // Create a method instance.
+            HttpPost method = new HttpPost(serviceUrl);
+            final UrlEncodedFormEntity entity = new UrlEncodedFormEntity(data);
+            final RequestConfig.Builder configBuilder = RequestConfig.custom();
+            configBuilder.setMaxRedirects(3);
 
-            System.out.println("settingMan: " + (gc.getBean(SettingManager.class) != null));
-            if (gc.getBean(SettingManager.class) != null) Lib.net.setupProxy(gc.getBean(SettingManager.class), client);
+            method.setEntity(entity);
 
+            configBuilder.setAuthenticationEnabled(StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password));
+
+            method.setConfig(configBuilder.build());
+
+            final GeonetHttpRequestFactory requestFactory = context.getBean(GeonetHttpRequestFactory.class);
+            ClientHttpResponse response = requestFactory.execute(method, new Function<HttpClientBuilder, Void>() {
+                @Nullable
+                @Override
+                public Void apply(@Nullable HttpClientBuilder input) {
+                    final CredentialsProvider provider = Lib.net.setupProxy(context.getBean(SettingManager.class), input);
+                    if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) {
+                        System.out.println("webUpdate: SET USER");
+                        provider.setCredentials( AuthScope.ANY, new UsernamePasswordCredentials(username, password));
+
+                        configBuilder.setAuthenticationEnabled(true);
+                    }
+                    return null;
+                }
+            });
 
 			// Execute the method.
-			int statusCode = client.executeMethod(method);
-
-			if (statusCode != HttpStatus.SC_OK) {
-				throw new MetadataNotifierClientException("Method failed: " + method.getStatusLine());
+			if (response.getStatusCode() != HttpStatus.OK) {
+				throw new MetadataNotifierClientException("Method failed: " + response.getStatusText());
 			}
 
 			// Read the response body.
@@ -109,16 +116,10 @@ public class MetadataNotifierClient {
 			// Use caution: ensure correct character encoding and is not binary data
 			// System.out.println(new String(responseBody));
 
-		} catch (HttpException e) {
-			throw new MetadataNotifierClientException(e);
 		} catch (IOException e) {
 			throw new MetadataNotifierClientException(e);
-		} finally {
-			// Release the connection.
-			method.releaseConnection(); 
-            client = null;
 		}
-	}
+    }
 
     /**
      * Uses the notifier delete service to handle deletion of metadata.
@@ -127,67 +128,15 @@ public class MetadataNotifierClient {
      * @throws MetadataNotifierClientException
      */
 	public void webDelete(String serviceUrl, String username, String password,
-                          String metadataUuid, GeonetContext gc) throws MetadataNotifierClientException {
-        HttpClient client;
+                          String metadataUuid, ServiceContext context) throws MetadataNotifierClientException {
 
-        Protocol.registerProtocol("https",
-        new Protocol("https", new EasySSLProtocolSocketFactory(), 443));
+        List<? extends NameValuePair> data = Arrays.asList(
+                new BasicNameValuePair("action", "delete"),
+                new BasicNameValuePair("uuid", metadataUuid),
+                new BasicNameValuePair("XMLFile", "")
+        );
 
-		// Create a method instance.
-		PostMethod method = new PostMethod(serviceUrl);
-
-		// Provide custom retry handler is necessary
-		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
-
-		try {
-            // Create an instance of HttpClient.
-            client = new HttpClient();
-
-             if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) {
-                client.getState().setCredentials(
-                               AuthScope.ANY,
-                               new UsernamePasswordCredentials(username, password)
-                               );
-                method.setDoAuthentication( true ); 
-            }
-            
-            if (gc.getBean(SettingManager.class) != null) Lib.net.setupProxy(gc.getBean(SettingManager.class), client);
-
-            NameValuePair[] data = {
-              new NameValuePair("action", "delete"),
-              new NameValuePair("uuid", metadataUuid),
-              new NameValuePair("XMLFile", "")
-            };
-
-            method.setRequestBody(data);
-
-			//RequestEntity requestEntity = new StringRequestEntity(metadataUuid, null, null);
-
-			//method.setRequestEntity(requestEntity);
-
-			// Execute the method.
-			int statusCode = client.executeMethod(method);
-
-			if (statusCode != HttpStatus.SC_OK) {
-				throw new MetadataNotifierClientException("Method failed: " + method.getStatusLine());
-			}
-
-			// Read the response body.
-			// byte[] responseBody = method.getResponseBody();
-
-			// Deal with the response.
-			// Use caution: ensure correct character encoding and is not binary data
-			// System.out.println(new String(responseBody));
-
-		} catch (HttpException e) {
-			throw new MetadataNotifierClientException(e);
-		} catch (IOException e) {
-			throw new MetadataNotifierClientException(e);
-		} finally {
-			// Release the connection.
-			method.releaseConnection();
-            client = null;
-		}
+        execute(serviceUrl, username, password, context, data);
 	}
 
 }

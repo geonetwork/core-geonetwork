@@ -20,7 +20,9 @@
 			
 				<xsl:variable name="lang" select="/root/gui/language"/>
 				<xsl:variable name="groupOwner" select="/root/response/groupOwner"/>
-				
+				<xsl:variable name="isNotReviewer" select="not(/root/response/group/group[id=$groupOwner and userProfile='Reviewer'])"/>
+				<xsl:variable name="disabled" select="(/root/response/owner='false')"/>
+
 				<!-- 
 				Is current user Reviewer of a group where the metadata is editable ?
 				-->
@@ -41,11 +43,11 @@
 						<tr>
 							<th class="padded"><xsl:value-of select="/root/gui/strings/groups"/></th>
 							<!-- loop on all operations leaving editing and notify to last -->
-							
+
 							<xsl:choose>
 								<!-- If list of operation is overriden and must be displayed in a custom order -->
 								<xsl:when test="$operationOrder">
-									<xsl:variable name="oper" select="/root/response/operations/record"/>
+									<xsl:variable name="oper" select="/root/response/operation/record"/>
 									
 									<xsl:for-each select="$operationOrder/id">
 										<xsl:variable name="currentOperation" select="."/>
@@ -55,7 +57,7 @@
 									</xsl:for-each>
 								</xsl:when>
 								<xsl:otherwise>
-									<xsl:for-each select="/root/response/operations/record">
+									<xsl:for-each select="/root/response/operation/record">
 										<xsl:sort select="id"/>
 										<xsl:if test="id!='2' and id!='3'">
 											<th class="padded-center record-{id}"><xsl:value-of select="label/child::*[name() = $lang]"/></th>
@@ -64,7 +66,12 @@
 								</xsl:otherwise>
 							</xsl:choose>
 							
-							<xsl:for-each select="/root/response/operations/record">
+							<xsl:for-each select="/root/response/operation/record">
+								<xsl:if test="id!='2' and id!='3'">
+									<th class="padded-center"><xsl:value-of select="label/child::*[name() = $lang]"/></th>
+								</xsl:if>
+							</xsl:for-each>
+							<xsl:for-each select="/root/response/operation/record">
 								<xsl:if test="id='2' or id='3'">
 									<th class="padded-center record-{id}"><xsl:value-of select="label/child::*[name() = $lang]"/></th>
 								</xsl:if>
@@ -77,17 +84,17 @@
 							Disabled if user is not an administrator
 							or if user is not a reviewer of the metadata group.
 						-->
-						<xsl:apply-templates select="/root/response/groups/group[id='1']" mode="group">
+						<xsl:apply-templates select="/root/response/group/group[id='1']" mode="group">
 							<xsl:with-param name="lang" select="$lang"/>
 							<xsl:with-param name="disabled" select="($profile != 'Administrator') and $isNotReviewer"/>
 						</xsl:apply-templates>
 
-						<xsl:apply-templates select="/root/response/groups/group[id='0']" mode="group">
+						<xsl:apply-templates select="/root/response/group/group[id='0']" mode="group">
 							<xsl:with-param name="lang" select="$lang"/>
 							<xsl:with-param name="disabled" select="($profile != 'Administrator') and $isNotReviewer"/>
 						</xsl:apply-templates>
 
-						<xsl:apply-templates select="/root/response/groups/group[id='-1']" mode="group">
+						<xsl:apply-templates select="/root/response/group/group[id='-1']" mode="group">
 							<xsl:with-param name="lang" select="$lang"/>
 							<xsl:with-param name="disabled" select="($profile != 'Administrator') and $isNotReviewer"/>
 						</xsl:apply-templates>
@@ -102,7 +109,7 @@
 
 						<tr>
 							<td class="dots"/>
-							<xsl:for-each select="/root/response/operations/record">
+							<xsl:for-each select="/root/response/operation/record">
 								<td class="dots"/>
 							</xsl:for-each>
 							<td class="dots"/>
@@ -110,7 +117,7 @@
 						</tr>
 			
 						<!-- loop on other groups except -->
-						<xsl:for-each select="/root/response/groups/group">
+						<xsl:for-each select="/root/response/group/group">
 							<xsl:sort select="name"/>
 							
 							<xsl:variable name="userGroup" select="@userGroup"/>

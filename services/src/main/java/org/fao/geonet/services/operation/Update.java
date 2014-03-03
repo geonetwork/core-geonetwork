@@ -23,15 +23,17 @@
 
 package org.fao.geonet.services.operation;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.domain.Operation;
+import org.fao.geonet.repository.OperationRepository;
+import org.fao.geonet.repository.Updater;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
+
+import javax.annotation.Nonnull;
 
 public class Update extends NotInReadOnlyModeService {
 	public void init(String appPath, ServiceConfig params) throws Exception {}
@@ -44,16 +46,21 @@ public class Update extends NotInReadOnlyModeService {
 
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        final OperationRepository operationRepository = context.getBean(OperationRepository.class);
 
-		for (Object o : params.getChildren("operation"))
+        for (Object o : params.getChildren("operation"))
 		{
-			Element operat = (Element) o;
+			Element operationEl = (Element) o;
 
-			String  id    = Util.getAttrib(operat, Params.ID);
-			Element label = Util.getChild (operat, "label");
+			String  id    = Util.getAttrib(operationEl, Params.ID);
+			final Element label = Util.getChild (operationEl, "label");
 
-			Lib.local.update(dbms, "Operations", Integer.parseInt(id), label);
+            operationRepository.update(Integer.valueOf(id), new Updater<Operation>() {
+                @Override
+                public void apply(@Nonnull Operation entity) {
+                    entity.setLabelTranslations(label.getChildren());
+                }
+            });
 		}
 
 		return new Element("ok");

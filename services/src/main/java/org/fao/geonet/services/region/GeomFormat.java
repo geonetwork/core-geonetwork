@@ -3,16 +3,16 @@ package org.fao.geonet.services.region;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
 import com.vividsolutions.jts.io.WKTWriter;
-import jeeves.constants.Jeeves;
+import org.fao.geonet.Constants;
 import org.fao.geonet.csw.common.util.Xml;
 import org.geotools.gml2.GMLConfiguration;
 import org.geotools.xml.Encoder;
 import org.geotools.xml.Parser;
 import org.jdom.Element;
-import scala.actors.threadpool.Arrays;
 
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public enum GeomFormat {
@@ -41,7 +41,7 @@ public enum GeomFormat {
             encoder.setNamespaceAware(true);
 
             encoder.encode(geom, org.geotools.gml3.GML.geometryMember, outputStream);
-            String gmlString = outputStream.toString(Jeeves.ENCODING);
+            String gmlString = outputStream.toString(Constants.ENCODING);
 
             return Xml.loadString(gmlString, false);
         }
@@ -83,7 +83,7 @@ public enum GeomFormat {
             encoder.setNamespaceAware(true);
 
             encoder.encode(geom, org.geotools.gml2.GML.geometryMember, outputStream);
-            String gmlString = outputStream.toString(Jeeves.ENCODING);
+            String gmlString = outputStream.toString(Constants.ENCODING);
 
             return Xml.loadString(gmlString, false);
         }
@@ -103,7 +103,7 @@ public enum GeomFormat {
             encoder.setIndenting(false);
 
             encoder.encode(geom, org.geotools.gml3.v3_2.GML.geometryMember, outputStream);
-            String gmlString = outputStream.toString(Jeeves.ENCODING);
+            String gmlString = outputStream.toString(Constants.ENCODING);
 
             return Xml.loadString(gmlString, false);
         }

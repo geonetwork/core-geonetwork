@@ -7,8 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import jeeves.exceptions.BadInputEx;
-import jeeves.utils.Util;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.Util;
 
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.rdf.QueryBuilder;

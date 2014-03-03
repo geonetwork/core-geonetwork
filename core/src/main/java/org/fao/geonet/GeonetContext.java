@@ -29,48 +29,46 @@ import org.fao.geonet.util.ThreadPool;
 import org.springframework.context.ApplicationContext;
 
 public class GeonetContext {
-    ApplicationContext springAppContext;
-    Class<StatusActions> statusActionsClass;
-    boolean readOnly;
-    ThreadPool threadPool;
+    private final ApplicationContext _springAppContext;
+    private final Class<StatusActions> _statusActionsClass;
+    private final ThreadPool _threadPool;
+    private boolean _readOnly;
 
     // ---------------------------------------------------------------------------
-    /* package */GeonetContext() {
+    /* package */GeonetContext(ApplicationContext springAppContext, boolean readOnly,
+                               Class<StatusActions> statusActionsClass, ThreadPool threadPool) {
+        this._springAppContext = springAppContext;
+        this._readOnly = readOnly;
+        this._statusActionsClass = statusActionsClass;
+        this._threadPool = threadPool;
     }
+
 
     // ---------------------------------------------------------------------------
 
     public ApplicationContext getApplicationContext() {
-        return springAppContext;
+        return _springAppContext;
     }
 
     public ThreadPool getThreadPool() {
-        return threadPool;
+        return _threadPool;
     }
 
     public <T> T getBean(Class<T> beanClass) {
-        return springAppContext.getBean(beanClass);
+        return _springAppContext.getBean(beanClass);
     }
 
     // ---------------------------------------------------------------------------
 
-    public String getSiteId() {
-        return getBean(SettingManager.class).getSiteId();
-    }
-
-    public String getSiteName() {
-        return getBean(SettingManager.class).getSiteName();
-    }
-
     public Class<StatusActions> getStatusActionsClass() {
-        return statusActionsClass;
+        return _statusActionsClass;
     }
 
     public boolean isReadOnly() {
-        return readOnly;
+        return _readOnly;
     }
 
     public void setReadOnly(boolean readOnly) {
-        this.readOnly = readOnly;
+        this._readOnly = readOnly;
     }
 }

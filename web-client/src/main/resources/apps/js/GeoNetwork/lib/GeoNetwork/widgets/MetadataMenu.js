@@ -55,7 +55,8 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
     },
     resultsView: undefined,
     catalogue: undefined,
-    editAction: undefined,
+    extEditorAction: undefined,
+    angularEditorAction: undefined,
     deleteAction: undefined,
     zoomToAction: undefined,
     otherActions: undefined,
@@ -66,6 +67,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
     enableWorkflowAction: undefined,
     versioningAction: undefined,
     adminAction: undefined,
+    publicationToggleAction: undefined,
     categoryAction: undefined,
     viewAction: undefined,
     printAction: undefined,
@@ -87,12 +89,21 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
      
      initAction: function(){
         
-        this.editAction = new Ext.Action({
+        this.extEditorAction = new Ext.Action({
             text: OpenLayers.i18n('edit'),
             iconCls: 'md-mn-edit',
             handler: function(){
                 var id = this.record.get('id');
                 this.catalogue.metadataEdit(id);
+            },
+            scope: this
+        });
+        this.angularEditorAction = new Ext.Action({
+            text: OpenLayers.i18n('edit'),
+            iconCls: 'md-mn-edit',
+            handler: function(){
+                var id = this.record.get('id');
+                this.catalogue.metadataEdit2(id);
             },
             scope: this
         });
@@ -111,7 +122,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             iconCls: 'md-mn-copy',
             handler: function(){
                 var id = this.record.get('id');
-                GeoNetwork.editor.EditorTools.showNewMetadataWindow(this, id, OpenLayers.i18n('duplicate'), false);
+                catalogue.metadataEdit2(id, true, null, false, 'n', null);
             },
             scope: this
         });
@@ -120,7 +131,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             iconCls: 'childIcon',
             handler: function(){
                 var id = this.record.get('id');
-                GeoNetwork.editor.EditorTools.showNewMetadataWindow(this, id, OpenLayers.i18n('createChild'), true);
+                catalogue.metadataEdit2(id, true, null, true, 'n', null);
             },
             scope: this
         });
@@ -131,6 +142,13 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             iconCls : 'privIcon',
             handler: function(){
                 this.catalogue.metadataAdmin(this.record);
+            },
+            scope: this
+        });
+        this.publicationToggleAction = new Ext.Action({
+            text: OpenLayers.i18n('publish'),
+            handler: function(){
+                this.catalogue.metadataPublish(this.record, Ext.getBody());
             },
             scope: this
         });
@@ -266,19 +284,25 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
                 }
             });
         }
-        
+
+
         /* TODO : add categories / privileges / create child */
         this.updateMenu();
     },
     
     composeMenu: function(){
         if(!this.catalogue.isReadOnly()) {
-            this.add(this.editAction);
+            this.add(this.angularEditorAction);
+            this.add(this.extEditorAction);
             this.add(this.deleteAction);
             this.otherActions = new Ext.menu.Item({
                 text: OpenLayers.i18n('otherActions'),
                 menu: {
-                    items: [this.duplicateAction, this.createChildAction, this.adminAction, this.statusAction, this.enableWorkflowAction, this.versioningAction, this.categoryAction]
+                    items: [this.duplicateAction, this.createChildAction, 
+                            this.adminAction, 
+                            this.publicationToggleAction, this.statusAction, 
+                            this.enableWorkflowAction, this.versioningAction, 
+                            this.categoryAction]
                 }
             });
         }
@@ -334,33 +358,49 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             disableIfSubmittedForEditor = ((status == 4 || status == 2 || status == 3) 
                     && this.catalogue.identifiedUser.role === 'Editor' ? true : false),
             isHarvested = this.record.get('isharvested') === 'y' ? true : false,
+            isPublished = this.record.get('isPublishedToAll') === 'true' ? true : false,
+            isAdmin = (this.catalogue.identifiedUser && this.catalogue.identifiedUser.role !== 'Administrator'),
             harvesterType = this.record.get('harvestertype'),
             identified = this.catalogue.isIdentified() && 
                 (this.catalogue.identifiedUser && this.catalogue.identifiedUser.role !== 'RegisteredUser'),
             isReadOnly = this.catalogue.isReadOnly();
-        
-        
+
+
+        this.extEditorAction.hide();
+        this.angularEditorAction.hide();
+
         /* Actions and menu visibility for logged in user */
         if (!identified || isReadOnly) {
-            this.editAction.setText(OpenLayers.i18n('edit'));
-            this.editAction.hide();
+            this.extEditorAction.setText(OpenLayers.i18n('edit'));
+            this.angularEditorAction.setText(OpenLayers.i18n('edit'));
             this.deleteAction.hide();
         } else {
             // TODO : if editor and status is submitted - turn off editing
             var statusIdx = this.statusStore.find('id', status);
             
             // Set button title with status information if not set to unkonwn (ie. workflow is enabled)
-            if(this.editAction) {
-                this.editAction.setText(OpenLayers.i18n('edit') 
+            this.extEditorAction.setText(OpenLayers.i18n('edit')
                     + (statusIdx !== -1 && status > 0 ? 
                             OpenLayers.String.format(OpenLayers.i18n('currentStatus'), {
                                 status: this.statusStore.getAt(statusIdx).get('label')[catalogue.lang]
                             }) : '')
                     );
-                this.editAction.show();
-            }
-            if(this.deleteAction)this.deleteAction.show();
-            
+
+          if (GeoNetwork.Settings.hideExtEditor === false) {
+            this.extEditorAction.show();
+          }
+            this.angularEditorAction.setText(OpenLayers.i18n('edit')
+                    + (statusIdx !== -1 && status > 0 ?
+                            OpenLayers.String.format(OpenLayers.i18n('currentStatus'), {
+                                status: this.statusStore.getAt(statusIdx).get('label')[catalogue.lang]
+                            }) : '')
+                    );
+          // Display by default Angular editor
+          if (!GeoNetwork.Settings.hideAngularEditor) {
+            this.angularEditorAction.show();
+          }
+            this.deleteAction.show();
+
             // If status is unkown or undefined
             if (status == '' || status == '0') {
                 if(this.enableWorkflowAction)this.enableWorkflowAction.show();
@@ -375,19 +415,33 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         
         /* Actions status depend on records */
         if(GeoNetwork.Settings && GeoNetwork.Settings.editor && GeoNetwork.Settings.editor.disableIfSubmittedForEditor) {
-            if(this.editAction)this.editAction.setDisabled(disableIfSubmittedForEditor || !isEditable || isReadOnly);
-            if(this.statusAction)this.statusAction.setDisabled(disableIfSubmittedForEditor || (!isEditable && !isHarvested) || isReadOnly);
+            this.extEditorAction.setDisabled(disableIfSubmittedForEditor || !isEditable || isReadOnly);
+            this.angularEditorAction.setDisabled(disableIfSubmittedForEditor || !isEditable || isReadOnly);
         } else {
-            if(this.editAction)this.editAction.setDisabled(!isEditable || isReadOnly);
-            if(this.statusAction)this.statusAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
+            this.extEditorAction.setDisabled(!isEditable || isReadOnly);
+            this.angularEditorAction.setDisabled(!isEditable || isReadOnly);
         }
-        if(this.adminAction)this.adminAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
-        if(this.enableWorkflowAction)this.enableWorkflowAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
-        if(this.versioningAction)this.versioningAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
-        if(this.categoryAction)this.categoryAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
-        if(this.deleteAction)this.deleteAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
-        if(this.duplicateAction)this.duplicateAction.setDisabled(isReadOnly);
-        if(this.createChildAction)this.createChildAction.setDisabled(!isEditable || isReadOnly);
+        this.adminAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
+        
+        // Publish/Unpublish action is only enable for admin
+        // TODO: check if a reviewer may have the privilege to publish to all 
+        // (depends on if the user is reviewer for the metadata's groups)
+        this.publicationToggleAction.setDisabled(!isEditable && !isHarvested && !isAdmin);
+        if (isPublished) {
+            // Update label and handler to unpublish
+            this.publicationToggleAction.setText(OpenLayers.i18n('unpublish'));
+        } else {
+            this.publicationToggleAction.setText(OpenLayers.i18n('publish'));
+        }
+        
+        
+        this.statusAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
+        this.enableWorkflowAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
+        this.versioningAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
+        this.categoryAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
+        this.deleteAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
+        this.duplicateAction.setDisabled(isReadOnly);
+        this.createChildAction.setDisabled(!isEditable || isReadOnly);
 
         if (this.ratingWidget) {
             this.ratingWidget.reset();

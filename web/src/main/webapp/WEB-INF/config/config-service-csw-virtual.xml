@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+    <services package="org.fao.geonet">
+
+        <!-- Additional CSW entry points can be defined with a filter condition which applies extra criteria
+            to the CSW request. The filter condition should be defined using Lucene query syntax
+            ( http://lucene.apache.org/java/2_4_0/queryparsersyntax.html).
+
+            Defining a new CSW entry point requires a GeoNetwork restart
+
+            Some examples:
+
+            <service name="csw-custom">
+            <class name=".services.main.CswDiscoveryDispatcher" >
+                   <param name="filter" value="+inspirerelated:on"/>
+                </class>
+            </service>
+
+            <service name="csw-custom2">
+            <class name=".services.main.CswDiscoveryDispatcher" >
+                   <param name="filter" value="+inspirerelated:on +keyword:Elevation"/>
+                </class>
+            </service>
+
+        -->
+        <service name="csw-integration-test">
+            <class name=".services.main.CswDiscoveryDispatcher">
+                <param name="filter" value="+spatialRepresentationType:vector"/>
+            </class>
+        </service>
+
+    </services>
+</geonet>

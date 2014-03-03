@@ -11,13 +11,13 @@ UPDATE CswServerCapabilitiesInfo SET langid='rus' WHERE langid='ru';
 DELETE FROM Languages WHERE id='ru';
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CategoriesDes VALUES (11,'rus','Z3950 Servers');
-INSERT INTO CategoriesDes VALUES (12,'rus','Registers');
-INSERT INTO CategoriesDes VALUES (13,'rus','Физические образцы');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (11,'rus','Z3950 Servers');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (12,'rus','Registers');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (13,'rus','Физические образцы');
 
-INSERT INTO StatusValuesDes VALUES (0,'rus','Unknown');
-INSERT INTO StatusValuesDes VALUES (1,'rus','Draft');
-INSERT INTO StatusValuesDes VALUES (2,'rus','Approved');
-INSERT INTO StatusValuesDes VALUES (3,'rus','Retired');
-INSERT INTO StatusValuesDes VALUES (4,'rus','Submitted');
-INSERT INTO StatusValuesDes VALUES (5,'rus','Rejected');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (0,'rus','Unknown');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (1,'rus','Draft');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (2,'rus','Approved');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (3,'rus','Retired');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (4,'rus','Submitted');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (5,'rus','Rejected');

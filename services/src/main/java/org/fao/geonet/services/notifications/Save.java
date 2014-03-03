@@ -23,10 +23,12 @@
 
 package org.fao.geonet.services.notifications;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
+import org.fao.geonet.domain.MetadataNotifier;
+import org.fao.geonet.repository.MetadataNotificationRepository;
+import org.fao.geonet.repository.MetadataNotifierRepository;
+import org.fao.geonet.utils.Xml;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -138,29 +140,33 @@ public class Save extends NotInReadOnlyModeService {
             }
 
         }
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        final MetadataNotificationRepository notificationRepository = context.getBean(MetadataNotificationRepository.class);
+        final MetadataNotifierRepository notifierRepository = context.getBean(MetadataNotifierRepository.class);
+
         for(NotificationTarget notificationTarget : notificationTargets.values()) {
-            String enabled = notificationTarget.isEnabled() ? "y" : "n" ;
+            final MetadataNotifier metadataNotifier = new MetadataNotifier();
+            metadataNotifier.setName(notificationTarget.getName());
+            metadataNotifier.setUsername(notificationTarget.getUsername());
+            metadataNotifier.setPassword(notificationTarget.getPassword());
+            metadataNotifier.setUrl(notificationTarget.getUrl());
+            metadataNotifier.setEnabled(notificationTarget.isEnabled());
+
             // insert
-            if(! notificationTarget.isPreExisting() && StringUtils.isNotBlank(notificationTarget.getName())
+            if (!notificationTarget.isPreExisting() && StringUtils.isNotBlank(notificationTarget.getName())
                     && StringUtils.isNotBlank(notificationTarget.getUrl())) {
-                int id = context.getSerialFactory().getSerial(dbms, "MetadataNotifiers");
-                String query = "INSERT INTO MetadataNotifiers(id, name, username, password, url, enabled) VALUES(?, ?, ?, ?, ?, ?)";
-                dbms.execute(query, id, notificationTarget.getName(), notificationTarget.getUsername(), notificationTarget.getPassword(), notificationTarget.getUrl(), enabled);
-            }
-            // pre-existing
-            else if(notificationTarget.isPreExisting()) {
+
+                notifierRepository.save(metadataNotifier);
+            } else if(notificationTarget.isPreExisting()) {
+                // pre-existing
                 String id = notificationTarget.getId();
                 // delete
                 if(notificationTarget.getName() == null) {
                     int iid = Integer.parseInt(id);
-                    dbms.execute("DELETE FROM MetadataNotifications WHERE NotifierId=?", iid);
-                    dbms.execute("DELETE FROM MetadataNotifiers WHERE id=?", iid);
-                }
-                // update
-                else {
-                    String query = "UPDATE MetadataNotifiers SET name=?, username=?, password=?, url=?, enabled=? WHERE id=?";
-                    dbms.execute(query, notificationTarget.getName(), notificationTarget.getUsername(), notificationTarget.getPassword(), notificationTarget.getUrl(), enabled, Integer.parseInt(id));
+                    notificationRepository.deleteAllWithNotifierId(iid);
+                    notifierRepository.delete(iid);
+                } else {
+                    // update
+                    notifierRepository.save(metadataNotifier);
                 }
             }
         }

@@ -60,7 +60,7 @@ public final class Csw {
 	public static final String SERVICE         = "CSW";
 
 	public static final String CSW_VERSION    = "2.0.2";
-	public static final String OWS_VERSION    = "1.0.0";
+	public static final String OWS_VERSION    = "1.2.0";
 	public static final String FILTER_VERSION_1_1 = "1.1.0";
 	public static final String FILTER_VERSION_1_0 = "1.0.0";
 	

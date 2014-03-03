@@ -25,6 +25,7 @@ package org.fao.geonet.services.metadata.format;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.jdom.Element;
 
@@ -39,12 +40,12 @@ public class ListFormatters extends AbstractFormatService {
 
     public Element exec(Element params, ServiceContext context) throws Exception {
         ensureInitializedDir(context);
-        String schema = jeeves.utils.Util.getParam(params, "schema", null);
-        if (jeeves.utils.Util.getParam(params, Params.ID, null) != null ||
-        		jeeves.utils.Util.getParam(params, Params.UUID, null) != null) {
+        String schema = Util.getParam(params, "schema", null);
+        if (Util.getParam(params, Params.ID, null) != null ||
+        		Util.getParam(params, Params.UUID, null) != null) {
 	        try {
 	        	schema = getMetadataSchema(params, context);
-	        } catch (Exception e) {
+	        } catch (Throwable e) {
 	        	// its ok.  just can't use metadata
 	        }
         }

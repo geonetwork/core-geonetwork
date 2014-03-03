@@ -25,21 +25,27 @@ package org.fao.geonet.services.config;
 
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataSourceInfo_;
+import org.fao.geonet.domain.Metadata_;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.specification.MetadataSpecs;
+import org.fao.geonet.repository.statistic.PathSpec;
 import org.jdom.Element;
 
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,7 +53,6 @@ import java.util.Map;
 
 /**
  * TODO javadoc.
- * 
  */
 public class Set implements Service {
     /**
@@ -61,7 +66,7 @@ public class Set implements Service {
 
     /**
      * TODO javadoc.
-     * 
+     *
      * @param params
      * @param context
      * @return
@@ -70,7 +75,6 @@ public class Set implements Service {
     public Element exec(Element params, ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager sm = gc.getBean(SettingManager.class);
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
         Map<String, String> values = new HashMap<String, String>();
         for (Object obj : params.getChildren()) {
@@ -80,27 +84,34 @@ public class Set implements Service {
             }
         }
 
-        String currentUuid = sm.getValue("system/site/siteId");
+        String currentUuid = sm.getSiteId();
 
-        if (!sm.setValues(dbms, values))
+        if (!sm.setValues(values))
             throw new OperationAbortedEx("Cannot set all values");
-        
-        // Save parameters
-        dbms.commit();
-        
-        
+
         // And reload services
-        // Update inspire property in SearchManager
-        gc.getBean(SearchManager.class).setInspireEnabled(Boolean.valueOf((String) values.get("system/inspire/enable")));
-        String newUuid = (String) values.get("system/site/siteId");
+        String newUuid = values.get(SettingManager.SYSTEM_SITE_SITE_ID_PATH);
 
         if (newUuid != null && !currentUuid.equals(newUuid)) {
-            dbms.execute("UPDATE Metadata SET source=? WHERE isHarvested='n'", newUuid);
-            dbms.execute("UPDATE Sources  SET uuid=? WHERE uuid=?", newUuid, currentUuid);
+            final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+            final SourceRepository sourceRepository = context.getBean(SourceRepository.class);
+            final Source source = sourceRepository.findOne(currentUuid);
+            Source newSource = new Source(newUuid, source.getName(), source.isLocal());
+            sourceRepository.save(newSource);
+
+            PathSpec<Metadata, String> servicesPath = new PathSpec<Metadata, String>() {
+                @Override
+                public Path<String> getPath(Root<Metadata> root) {
+                    return root.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.sourceId);
+                }
+            };
+            metadataRepository.createBatchUpdateQuery(servicesPath, newUuid, MetadataSpecs.isHarvested(false));
+
+            sourceRepository.delete(source);
         }
 
-        SettingInfo info = new SettingInfo(context);
-        ServerBeanPropertyUpdater.updateURL(info.getSiteUrl(true) + context.getBaseUrl(), context.getServlet().getServletContext());
+        SettingInfo info = context.getBean(SettingInfo.class);
+        ServerBeanPropertyUpdater.updateURL(info.getSiteUrl(true) + context.getBaseUrl(), context.getApplicationContext());
 
         // Reload services affected by updated settings
         if (reloadServices) {

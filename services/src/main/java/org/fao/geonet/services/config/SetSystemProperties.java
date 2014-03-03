@@ -3,7 +3,7 @@ package org.fao.geonet.services.config;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.util.ThreadPool;
 import org.jdom.Element;

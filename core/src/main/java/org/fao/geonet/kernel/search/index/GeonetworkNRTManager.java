@@ -3,7 +3,7 @@ package org.fao.geonet.kernel.search.index;
 import java.io.Closeable;
 import java.io.IOException;
 
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.lucene.search.IndexSearcher;
@@ -113,9 +113,9 @@ class GeonetworkNRTManager implements Closeable {
         
     }
 
-    public boolean maybeRefresh() throws IOException {
+    public void maybeRefreshBlocking() throws IOException {
         taxonomyTracker.maybeRefresh();
-        return actualManager.maybeRefresh();
+        actualManager.maybeRefreshBlocking();;
     }
 
     public void release(IndexSearcher searcher) throws IOException {

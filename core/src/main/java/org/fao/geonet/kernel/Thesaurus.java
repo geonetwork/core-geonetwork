@@ -22,13 +22,17 @@
 
 package org.fao.geonet.kernel;
 
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.util.LangUtils;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
+
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.languages.IsoLanguagesMapper;
-import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.openrdf.model.BNode;
 import org.openrdf.model.Graph;
@@ -52,17 +56,14 @@ import org.openrdf.sesame.query.QueryEvaluationException;
 import org.openrdf.sesame.query.QueryResultsTable;
 import org.openrdf.sesame.repository.local.LocalRepository;
 import org.openrdf.sesame.sail.StatementIterator;
+import org.springframework.context.ApplicationContext;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Thesaurus {
@@ -106,7 +107,7 @@ public class Thesaurus {
 	@SuppressWarnings("unused")
 	private String authority;
 */
-	private IsoLanguagesMapper isoLanguageMapper;
+	private ApplicationContext context;
 
 	/**
 	 * @param fname
@@ -114,12 +115,12 @@ public class Thesaurus {
 	 * @param type
 	 * @param dname category/domain name of thesaurus
 	 */
-	public Thesaurus(IsoLanguagesMapper mapper, String fname, String type, String dname, File thesaurusFile, String siteUrl) {
-	    this(mapper, fname, null, null, type, dname, thesaurusFile, siteUrl, false);
+	public Thesaurus(ApplicationContext context, String fname, String type, String dname, File thesaurusFile, String siteUrl) {
+	    this(context, fname, null, null, type, dname, thesaurusFile, siteUrl, false);
 	}
-    public Thesaurus(IsoLanguagesMapper mapper, String fname, String tname, String tnamespace, String type, String dname, File thesaurusFile, String siteUrl, boolean ignoreMissingError) {
+    public Thesaurus(ApplicationContext context, String fname, String tname, String tnamespace, String type, String dname, File thesaurusFile, String siteUrl, boolean ignoreMissingError) {
 		super();
-		this.isoLanguageMapper = mapper;
+		this.context = context;
 		this.fname = fname;
 		this.type = type;
 		this.dname = dname;
@@ -136,11 +137,6 @@ public class Thesaurus {
 		}
 	}
 
-	
-	public Thesaurus(String fname, String type, String dname, File thesaurusFile, String siteUrl) {
-		this(null, fname, type, dname, thesaurusFile, siteUrl);
-	}
-	
     /**
 	 * 
 	 * @return Thesaurus identifier
@@ -307,7 +303,7 @@ public class Thesaurus {
         }
         
         // Create subject
-        URI mySubject = myFactory.createURI(namespace, keyword.getRelativeCode());
+        URI mySubject = myFactory.createURI(keyword.getUriCode());
 
         URI skosClass = myFactory.createURI(namespaceSkos, "Concept");
         URI rdfType = myFactory.createURI(org.openrdf.vocabulary.RDF.TYPE);
@@ -390,7 +386,6 @@ public class Thesaurus {
     /**
      * Remove keyword from thesaurus.
      * 
-     * @param namespace
      * @param uri
      * @throws AccessDeniedException
      */
@@ -798,7 +793,7 @@ public class Thesaurus {
 		}
 
         public IsoLanguagesMapper getIsoLanguageMapper() {
-            return isoLanguageMapper == null? IsoLanguagesMapper.getInstance() : isoLanguageMapper;
+            return context.getBean(IsoLanguagesMapper.class);
         }
 
         /**
@@ -896,4 +891,7 @@ public class Thesaurus {
             return this.defaultNamespace;
         }
 
+    public Map<String, String> getTitles(ServiceContext context) throws JDOMException, IOException {
+        return LangUtils.translate(context, getKey());
+    }
 }

@@ -24,15 +24,15 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.Util;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
@@ -88,8 +88,6 @@ public class GetSuggestion implements Service {
         GeonetContext gc = (GeonetContext) context
                 .getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getBean(DataManager.class);
-        Dbms dbms = (Dbms) context.getResourceManager()
-                .open(Geonet.Res.MAIN_DB);
 
         String action = Util.getParam(params, "action", "list");
         @SuppressWarnings("unchecked")
@@ -103,13 +101,13 @@ public class GetSuggestion implements Service {
 
         // Retrieve metadata record
         String id = Utils.getIdentifierFromParameters(params, context);
-        MdInfo mdInfo = dm.getMetadataInfo(dbms, id);
+        Metadata mdInfo = gc.getBean(MetadataRepository.class).findOne(id);
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
         Element md = gc.getBean(DataManager.class).getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 
         // List or analyze all suggestions process registered for this schema
         if ("list".equals(action) || "analyze".equals(action)) {
-            MetadataSchema metadataSchema = dm.getSchema(mdInfo.schemaId);
+            MetadataSchema metadataSchema = dm.getSchema(mdInfo.getDataInfo().getSchemaId());
             String filePath = metadataSchema.getSchemaDir() + "/"
                     + XSL_SUGGEST;
             File xslProcessing = new File(filePath);

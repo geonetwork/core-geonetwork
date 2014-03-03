@@ -1,43 +1,23 @@
 package jeeves.monitor;
 
-import static jeeves.constants.ConfigFile.Monitors.Child.SERVICE_CONTEXT_COUNTER;
-import static jeeves.constants.ConfigFile.Monitors.Child.CRITICAL_SERVICE_CONTEXT_HEALTH_CHECK;
-import static jeeves.constants.ConfigFile.Monitors.Child.WARNING_SERVICE_CONTEXT_HEALTH_CHECK;
-import static jeeves.constants.ConfigFile.Monitors.Child.EXPENSIVE_SERVICE_CONTEXT_HEALTH_CHECK;
-import static jeeves.constants.ConfigFile.Monitors.Child.SERVICE_CONTEXT_GAUGE;
-import static jeeves.constants.ConfigFile.Monitors.Child.SERVICE_CONTEXT_HISTOGRAM;
-import static jeeves.constants.ConfigFile.Monitors.Child.SERVICE_CONTEXT_METER;
-import static jeeves.constants.ConfigFile.Monitors.Child.SERVICE_CONTEXT_TIMER;
+import com.yammer.metrics.core.*;
+import com.yammer.metrics.log4j.InstrumentedAppender;
+import com.yammer.metrics.reporting.JmxReporter;
+import jeeves.constants.ConfigFile;
+import jeeves.server.context.ServiceContext;
+import org.apache.log4j.LogManager;
+import org.fao.geonet.Util;
+import org.fao.geonet.utils.Log;
+import org.jdom.Element;
+import org.springframework.stereotype.Component;
 
+import javax.servlet.ServletContext;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-
-import jeeves.constants.ConfigFile;
-import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
-
-import org.apache.log4j.LogManager;
-import org.jdom.Element;
-
-import com.yammer.metrics.core.Counter;
-import com.yammer.metrics.core.DummyCounter;
-import com.yammer.metrics.core.DummyHistogram;
-import com.yammer.metrics.core.DummyMeter;
-import com.yammer.metrics.core.DummyTimer;
-import com.yammer.metrics.core.Gauge;
-import com.yammer.metrics.core.HealthCheck;
-import com.yammer.metrics.core.HealthCheckRegistry;
-import com.yammer.metrics.core.Histogram;
-import com.yammer.metrics.core.Meter;
-import com.yammer.metrics.core.MetricsRegistry;
-import com.yammer.metrics.core.Timer;
-import com.yammer.metrics.log4j.InstrumentedAppender;
-import com.yammer.metrics.reporting.JmxReporter;
+import static jeeves.constants.ConfigFile.Monitors.Child.*;
 
 /**
  * Contains references to the monitor factories to start for each App
@@ -63,15 +43,15 @@ public class MonitorManager {
     private final Map<Class<MetricsFactory<Histogram>>, Histogram> serviceContextHistogram = new HashMap<Class<MetricsFactory<Histogram>>, Histogram>();
     private final Map<Class<MetricsFactory<Meter>>, Meter> serviceContextMeter = new HashMap<Class<MetricsFactory<Meter>>, Meter>();
 
-    private final HealthCheckRegistry healthCheckRegistry;
-    private final HealthCheckRegistry criticalHealthCheckRegistry;
-    private final HealthCheckRegistry warningHealthCheckRegistry;
-    private final HealthCheckRegistry expensiveHealthCheckRegistry;
+    private HealthCheckRegistry healthCheckRegistry;
+    private HealthCheckRegistry criticalHealthCheckRegistry;
+    private HealthCheckRegistry warningHealthCheckRegistry;
+    private HealthCheckRegistry expensiveHealthCheckRegistry;
 
-    private final MetricsRegistry metricsRegistry;
-    private final JmxReporter jmxReporter;
+    private MetricsRegistry metricsRegistry;
+    private JmxReporter jmxReporter;
 
-    public MonitorManager(ServletContext context, String baseUrl) {
+    public void init(ServletContext context, String baseUrl) {
 
         String webappName = baseUrl.substring(1);
 
@@ -291,7 +271,11 @@ public class MonitorManager {
     }
 
     public void shutdown() {
-        resourceTracker.clean();
-        jmxReporter.shutdown();
+        if (resourceTracker != null) {
+            resourceTracker.clean();
+        }
+        if (jmxReporter != null) {
+            jmxReporter.shutdown();
+        }
     }
 }

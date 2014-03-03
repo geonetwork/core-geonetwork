@@ -23,22 +23,22 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geoPREST;
 
-import jeeves.interfaces.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
-import jeeves.utils.XmlRequest;
 
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
-import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
-import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.kernel.harvest.harvester.HarvestError;
-import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
-import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
-import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
+import org.fao.geonet.kernel.harvest.harvester.*;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
 import java.net.URL;
@@ -55,10 +55,9 @@ public class Aligner extends BaseAligner
 	//---
 	//--------------------------------------------------------------------------
 
-	public Aligner(Logger log, ServiceContext sc, Dbms dbms, GeoPRESTParams params) throws Exception {
+	public Aligner(Logger log, ServiceContext sc, GeoPRESTParams params) throws Exception {
 		this.log        = log;
 		this.context    = sc;
-		this.dbms       = dbms;
 		this.params     = params;
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -67,7 +66,7 @@ public class Aligner extends BaseAligner
 
 		//--- setup REST operation rest/document?id={uuid}
 
-		request = new XmlRequest(new URL(params.baseUrl+"/rest/document"));
+		request = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(params.baseUrl+"/rest/document"));
 
 	}
 
@@ -84,12 +83,13 @@ public class Aligner extends BaseAligner
 		//--- retrieve all local categories and groups
 		//--- retrieve harvested uuids for given harvesting node
 
-		localCateg = new CategoryMapper(dbms);
-		localGroups= new GroupMapper(dbms);
-		localUuids = new UUIDMapper(dbms, params.uuid);
-		dbms.commit();
+		localCateg = new CategoryMapper(context);
+		localGroups= new GroupMapper(context);
+		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
 
-		//-----------------------------------------------------------------------
+        dataMan.flush();
+
+        //-----------------------------------------------------------------------
 		//--- remove old metadata
 
 		for (String uuid : localUuids.getUUIDs()) {
@@ -98,9 +98,11 @@ public class Aligner extends BaseAligner
 
 				if(log.isDebugEnabled())
 					log.debug("  - Removing old metadata with local id:"+ id);
-				dataMan.deleteMetadata(context, dbms, id);
-				dbms.commit();
-				result.locallyRemoved++;
+				dataMan.deleteMetadata(context, id);
+
+                dataMan.flush();
+
+                result.locallyRemoved++;
 			}
 		}
 
@@ -109,7 +111,7 @@ public class Aligner extends BaseAligner
 
 		for (RecordInfo ri : records) {
 		    try {
-    			String id = dataMan.getMetadataId(dbms, ri.uuid);
+    			String id = dataMan.getMetadataId(ri.uuid);
     
     			if (id == null)	addMetadata(ri);
     			else				updateMetadata(ri, id);
@@ -157,18 +159,19 @@ public class Aligner extends BaseAligner
 		int userid = 1;
 		String group = null, isTemplate = null, docType = null, title = null, category = null;
 		boolean ufo = false, indexImmediate = false;
-		String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), ri.uuid, userid, group, params.uuid, isTemplate, docType, title, category, ri.changeDate, ri.changeDate, ufo, indexImmediate);
+		String id = dataMan.insertMetadata(context, schema, md, ri.uuid, userid, group, params.uuid, isTemplate, docType, category, ri.changeDate, ri.changeDate, ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
 
-		dataMan.setTemplateExt(dbms, iId, "n", null);
-		dataMan.setHarvestedExt(dbms, iId, params.uuid);
+		dataMan.setTemplateExt(iId, MetadataType.METADATA);
+		dataMan.setHarvestedExt(iId, params.uuid);
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
-        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-		dbms.commit();
-		dataMan.indexMetadata(dbms, id);
+        dataMan.flush();
+
+        dataMan.indexMetadata(id, false);
 		result.addedMetadata++;
 	}
 
@@ -210,16 +213,19 @@ public class Aligner extends BaseAligner
 				boolean ufo = false;
 				boolean index = false;
 				String language = context.getLanguage();
-				dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, ri.changeDate, false);
+                final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false);
 
-				dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
-                addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+                OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
+                repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
+                addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
-				dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
-                addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+                metadata.getCategories().clear();
+                context.getBean(MetadataRepository.class).save(metadata);
+                addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-				dbms.commit();
-				dataMan.indexMetadata(dbms, id);
+                dataMan.flush();
+
+                dataMan.indexMetadata(id, false);
 				result.updatedMetadata++;
 			}
 		}
@@ -265,8 +271,9 @@ public class Aligner extends BaseAligner
 
 		try
 		{
-			if (log.isDebugEnabled())
-                log.debug("Getting record from : "+ request.getHost() +" (uuid:"+ uuid +")");
+			if (log.isDebugEnabled()) {
+                log.debug("Getting record from : " + request.getHost() + " (uuid:" + uuid + ")");
+            }
 			Element response = null;
 			try {
 				response = request.execute();
@@ -277,7 +284,9 @@ public class Aligner extends BaseAligner
 				throw new Exception(e);
 			}
 
-			if(log.isDebugEnabled()) log.debug("Record got:\n"+Xml.getString(response));
+			if(log.isDebugEnabled()) {
+                log.debug("Record got:\n" + Xml.getString(response));
+            }
 
 			// validate it here if requested
 			if (params.validate) {
@@ -321,7 +330,6 @@ public class Aligner extends BaseAligner
 
 	private Logger         log;
 	private ServiceContext context;
-	private Dbms           dbms;
 	private XmlRequest		 request;
 	private GeoPRESTParams params;
 	private DataManager    dataMan;

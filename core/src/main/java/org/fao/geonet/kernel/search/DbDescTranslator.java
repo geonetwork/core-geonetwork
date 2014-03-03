@@ -23,78 +23,128 @@
 
 package org.fao.geonet.kernel.search;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
-import jeeves.resources.dbms.Dbms;
-
-import org.jdom.Element;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Localized;
 import org.jdom.JDOMException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
- * Translates keys into a language from a db table description table.
+ * Translates keys using a Repository class and property from the retrieved entity.
  *
  * @author jesse, francois
  */
 public class DbDescTranslator extends Translator {
 
     private static final long serialVersionUID = 1L;
-    private transient final Dbms _dbms;
-	private final String _langCode;
 
-	/**
-	 * Table with ids and keys
-	 */
-	private final String _tableName;
+    private final transient ApplicationContext _applicationContext;
+    private final String _langCode;
+    private Class<? extends JpaRepository> _repositoryClass;
+    private final String _propertyName;
+    private String _beanName;
 
-	/**
-	 * Table with description
-	 */
-	private final String _descTableName;
 
-	public DbDescTranslator(Dbms dbms, String langCode, String tableName)
-			throws IOException, JDOMException {
-		_tableName = tableName;
-		_descTableName = _tableName + "Des";
-		_dbms = dbms;
-		_langCode = langCode;
-	}
+    public DbDescTranslator(ApplicationContext applicationContext, String langCode, String param)
+            throws IOException, JDOMException, ClassNotFoundException {
+        String[] parts = param.split(":", 2);
+        try {
+            this._repositoryClass = (Class<? extends JpaRepository>) Class.forName(parts[0]);
+        } catch (Exception e) {
+            this._beanName = parts[0];
+        }
 
-	public String translate(String key) {
-		if (_tableName == null || _descTableName == null) {
-			return key;
-		}
+        this._propertyName = parts[1];
+        _applicationContext = applicationContext;
+        _langCode = langCode;
+    }
 
-		try {
-			// --- Get id
-			String query = "SELECT id FROM " + _tableName + " WHERE LOWER(name) = ?";
-			Element rec = _dbms.select(query, key.toLowerCase()).getChild("record");
-			if(rec == null) {
-			    return key;
-			}
-			String id = rec.getChildText("id");
+    public String translate(final String key) {
+        try {
+            JpaRepository repository;
+            if (_repositoryClass != null) {
+                repository = _applicationContext.getBean(_repositoryClass);
+            } else {
+                repository = _applicationContext.getBean(_beanName, JpaRepository.class);
+            }
+            final Class<?> repositoryClass = repository.getClass();
 
-			if (id == null)
-				return key;
+            Localized entity = findEntity(key, repository, repositoryClass);
 
-			// --- Get value in language
-			query = "SELECT label FROM " + _descTableName
-					+ " WHERE idDes = ? AND langId = ?";
-			rec = _dbms.select(query, Integer.parseInt(id), _langCode).getChild("record");
-			if( rec==null ){
-			    return key;
-			}
-			String label = rec.getChildText("label");
 
-			if (label == null)
-				return key;
-			else
-				return label;
+            if (entity == null) {
+                return key;
+            }
 
-		} catch (SQLException e) {
-			// TODO : Add debug
-			return key;
-		}
-	}
+
+            String label = entity.getLabel(_langCode);
+
+            if (label == null) {
+                return key;
+            } else {
+                return label;
+            }
+
+        } catch (Exception e) {
+            Log.error(Geonet.GEONETWORK, "Error translating a string", e);
+            return key;
+        }
+    }
+
+    private Localized findEntity(final String key, final JpaRepository repository, final Class<?> repositoryClass) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+
+        Method[] methods = repositoryClass.getMethods();
+
+        Localized entity = null;
+        for (Method method : methods) {
+            if (method.getName().equals("findOne") && method.getParameterTypes().length == 1) {
+                entity = (Localized) method.invoke(repository, key);
+                if (entity == null) {
+                    entity = (Localized) method.invoke(repository, Integer.valueOf(key));
+                }
+                if (entity == null) {
+                    entity = (Localized) method.invoke(repository, Long.valueOf(key));
+                }
+                if (entity == null) {
+                    entity = (Localized) method.invoke(repository, Double.valueOf(key));
+                }
+                if (entity == null) {
+                    entity = (Localized) method.invoke(repository, Float.valueOf(key));
+                }
+                if (entity == null) {
+                    entity = (Localized) method.invoke(repository, Boolean.valueOf(key));
+                }
+                if (entity == null) {
+                    entity = (Localized) method.invoke(repository, key.charAt(0));
+                }
+                if (entity == null) {
+                    entity = (Localized) method.invoke(repository, Short.valueOf(key));
+                }
+            }
+        }
+
+        if (entity != null) {
+            return entity;
+        } else {
+            if (repositoryClass.getSuperclass() != null) {
+                entity = findEntity(key, repository, repositoryClass.getSuperclass());
+            }
+            if (entity == null) {
+                final Class<?>[] interfaces = repositoryClass.getInterfaces();
+                for (Class<?> anInterface : interfaces) {
+                    entity = findEntity(key, repository, anInterface);
+                    if (entity != null) {
+                        return entity;
+                    }
+                }
+            }
+            return null;
+        }
+    }
 
 }

@@ -26,7 +26,7 @@ package org.fao.geonet.services.crs;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.geotools.referencing.ReferencingFactoryFinder;
 import org.jdom.Element;

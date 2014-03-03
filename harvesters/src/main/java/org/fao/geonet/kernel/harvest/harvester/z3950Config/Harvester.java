@@ -24,19 +24,19 @@
 package org.fao.geonet.kernel.harvest.harvester.z3950Config;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.OperationAbortedEx;
-import jeeves.interfaces.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
-import jeeves.utils.XmlRequest;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
 import java.util.HashSet;
@@ -54,7 +54,7 @@ class Harvester implements IHarvester<HarvestResult>
 	//---
 	//--------------------------------------------------------------------------
 
-	public Harvester(Logger log, ServiceContext context, Dbms dbms, Z3950ConfigParams params)
+	public Harvester(Logger log, ServiceContext context, Z3950ConfigParams params)
 	{
 		this.log    = log;
 		this.params = params;
@@ -71,7 +71,7 @@ class Harvester implements IHarvester<HarvestResult>
 	{
 	    this.log = log;
 
-		XmlRequest req = new XmlRequest(params.host, Integer.valueOf(params.port));
+        XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(params.host, Integer.valueOf(params.port));
 
 		Lib.net.setupProxy(context, req);
 

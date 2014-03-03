@@ -11,24 +11,24 @@ UPDATE CswServerCapabilitiesInfo SET langid='fin' WHERE langid='fi';
 DELETE FROM Languages WHERE id='fi';
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CategoriesDes VALUES (1,'fin','Kartat & kuvat');
-INSERT INTO CategoriesDes VALUES (2,'fin','Tietoaineistot');
-INSERT INTO CategoriesDes VALUES (3,'fin','Vuorovaikutteiset resurssit');
-INSERT INTO CategoriesDes VALUES (4,'fin','Sovellukset');
-INSERT INTO CategoriesDes VALUES (5,'fin','Esimerkkitapaukset, parhaat käytännöt');
-INSERT INTO CategoriesDes VALUES (6,'fin','Konferenssijulkaisut');
-INSERT INTO CategoriesDes VALUES (7,'fin','Valokuvat');
-INSERT INTO CategoriesDes VALUES (8,'fin','Äänitteet / Videot');
-INSERT INTO CategoriesDes VALUES (9,'fin','Hakemistot');
-INSERT INTO CategoriesDes VALUES (10,'fin','Other information resources');
-INSERT INTO CategoriesDes VALUES (11,'fin','Z3950 Servers');
-INSERT INTO CategoriesDes VALUES (12,'fin','Registers');
-INSERT INTO CategoriesDes VALUES (13,'fin','Fyysisiä näytteitä');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'fin','Kartat & kuvat');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'fin','Tietoaineistot');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'fin','Vuorovaikutteiset resurssit');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (4,'fin','Sovellukset');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (5,'fin','Esimerkkitapaukset, parhaat käytännöt');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (6,'fin','Konferenssijulkaisut');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (7,'fin','Valokuvat');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (8,'fin','Äänitteet / Videot');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (9,'fin','Hakemistot');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (10,'fin','Other information resources');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (11,'fin','Z3950 Servers');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (12,'fin','Registers');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (13,'fin','Fyysisiä näytteitä');
 
-INSERT INTO GroupsDes VALUES (-1,'fin','Vierailija');
-INSERT INTO GroupsDes VALUES (0,'fin','Intranet');
-INSERT INTO GroupsDes VALUES (1,'fin','Kaikki');
-INSERT INTO GroupsDes VALUES (2,'fin','Ryhmä');
+INSERT INTO GroupsDes (iddes, langid, label) VALUES (-1,'fin','Vierailija');
+INSERT INTO GroupsDes (iddes, langid, label) VALUES (0,'fin','Intranet');
+INSERT INTO GroupsDes (iddes, langid, label) VALUES (1,'fin','Kaikki');
+INSERT INTO GroupsDes (iddes, langid, label) VALUES (2,'fin','Ryhmä');
 
 INSERT INTO IsoLanguagesDes VALUES (1,'fin','Afar');
 INSERT INTO IsoLanguagesDes VALUES (2,'fin','Abkhazian');
@@ -522,12 +522,12 @@ INSERT INTO OperationsDes VALUES (3,'fin','Notify');
 INSERT INTO OperationsDes VALUES (5,'fin','Interactive Map');
 INSERT INTO OperationsDes VALUES (6,'fin','Featured');
 
-INSERT INTO StatusValuesDes VALUES (0,'fin','Unknown');
-INSERT INTO StatusValuesDes VALUES (1,'fin','Draft');
-INSERT INTO StatusValuesDes VALUES (2,'fin','Approved');
-INSERT INTO StatusValuesDes VALUES (3,'fin','Retired');
-INSERT INTO StatusValuesDes VALUES (4,'fin','Submitted');
-INSERT INTO StatusValuesDes VALUES (5,'fin','Rejected');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (0,'fin','Unknown');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (1,'fin','Draft');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (2,'fin','Approved');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (3,'fin','Retired');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (4,'fin','Submitted');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (5,'fin','Rejected');
 
 INSERT INTO RegionsDes VALUES (1,'fin','Armenia');
 INSERT INTO RegionsDes VALUES (2,'fin','Afghanistan');

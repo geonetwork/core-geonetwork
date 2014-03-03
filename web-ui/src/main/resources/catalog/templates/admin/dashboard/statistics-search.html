@@ -1,0 +1,168 @@
+<div class="row" data-ng-controller="GnDashboardSearchStatController">
+  <div class="col-lg-12">
+    <div class="panel panel-default">
+      <div class="panel-heading" data-translate="">mainSearchStatistics</div>
+
+
+      <div class="panel-body">
+
+        <h2 data-translate="">searchStatisticsTitle</h2>
+        <table class="table table-striped">
+          <!-- See https://github.com/angular/angular.js/pull/2505#issuecomment-17012537-->
+          <tr
+            data-ng-repeat="(key, value) in statistics.search.mainSearchStatistics.q track by $index">
+            <td>{{key | translate}}</td>
+            <td class="text-right">{{value}}</td>
+          </tr>
+        </table>
+        <h2 data-translate="">cswStatistics</h2>
+        <table class="table table-striped">
+          <tr
+            data-ng-repeat="(key, value) in statistics.search.mainSearchStatistics.csw track by $index">
+            <td>{{key | translate}}</td>
+            <td class="text-right">{{value}}</td>
+          </tr>
+        </table>
+
+        <button type="button" class="btn btn-small"
+          data-ng-click="csvExport([statistics.search.mainSearchStatistics.q,
+                statistics.search.mainSearchStatistics.csw], $event)"
+          data-translate="">csvExport</button>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-12">
+    <div class="panel panel-default">
+      <div class="panel-heading" data-translate="">numberOfSearchTimeline</div>
+      <div class="panel-body">
+        <!-- TODO : Draw a time line ? -->
+        <form class="form-horizontal" role="form">
+          <div class="form-group">
+            <label class="col-lg-1" data-translate="">from</label>
+            <div class="col-lg-3">
+              <input type="date" class="form-control" data-ng-model="dateFrom"/>
+            </div>
+            <label class="col-lg-1" data-translate="">to</label>
+            <div class="col-lg-3">
+              <input type="date" class="form-control" data-ng-model="dateTo"/>
+            </div>
+            <div class="col-lg-4">
+              <span data-translate="">by</span>
+              <label>
+                <input data-ng-model="graphicType" name="graphicType" type="radio" value="HOUR"/>
+                <span data-translate="">hour</span>
+              </label>
+              <label>
+                <input data-ng-model="graphicType" name="graphicType" type="radio" value="DAY"/>
+                <span data-translate="">day</span>
+              </label>
+              <label>
+                <input data-ng-model="graphicType" name="graphicType" type="radio" value="MONTH"/>
+                <span data-translate="">month</span>
+              </label>
+              <label>
+                <input data-ng-model="graphicType" name="graphicType" type="radio" value="YEAR"/>
+                <span data-translate="">year</span>
+              </label>
+            </div>
+          </div>
+        </form>
+
+
+        <svg id="gn-stat-search-timeline" class="gn-chart"/>
+
+        <button type="button" class="btn btn-small"
+          data-ng-click="csvExport(statistics.search.temporal, $event)" data-translate=""
+          >csvExport</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-12">
+    <div class="panel panel-default">
+      <div class="panel-heading" data-translate="">typeOfServiceUsed</div>
+      <div class="panel-body">
+        <svg id="gn-stat-search-by-service" class="gn-chart"/>
+
+        <button type="button" class="btn btn-small"
+          data-ng-click="csvExport(statistics.search.byServiceType, $event)" data-translate=""
+          >csvExport</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-12">
+    <div class="panel panel-default">
+      <div class="panel-heading" data-translate="">searchIp</div>
+      <div class="panel-body">
+        <ul>
+          <li data-ng-repeat="ip in statistics.search.ip"> {{ip.sumhit}} {{'requestFrom' |
+            translate}} {{ip.ip}} </li>
+        </ul>
+        <button type="button" class="btn btn-small"
+          data-ng-click="csvExport(statistics.search.ip, $event)" data-translate=""
+          >csvExport</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-12">
+    <div class="panel panel-default">
+      <div class="panel-heading" data-translate="">searchFieldsAndTerms</div>
+      <div class="panel-body">
+        <h2 data-translate="">searchFieldsStatistics</h2>
+        <label data-translate="">chooseAServiceType</label>
+        <select data-ng-model="termsForSearchService" class="form-control">
+          <option data-ng-repeat="(key, value) in statistics.search.services track by $index"
+            value="{{value}}">{{value | translate}}</option>
+        </select>
+
+
+        <table class="table table-striped">
+          <tr>
+            <th data-translate="">service</th>
+            <th data-translate="">criteria</th>
+            <th data-translate="">numberOfSearch</th>
+          </tr>
+          <tr data-ng-repeat="field in statistics.search.fields | filter:termsForSearchService">
+            <td>{{field.service | translate}}</td>
+            <td>
+              <a href="" title="viewTermsForField"
+                data-ng-click="viewTermsForField(field.termfield, field.service)">{{field.termfield
+                | translate}}</a>
+            </td>
+            <td class="text-right">{{field.total}}</td>
+          </tr>
+        </table>
+        <button type="button" class="btn btn-small"
+          data-ng-click="csvExport(statistics.search.fields, $event)" data-translate=""
+          >csvExport</button>
+
+        <h2><span data-translate="">searchTermsStatistics</span>{{currentField | translate}}</h2>
+        <table class="table table-striped">
+          <tr data-ng-repeat="terms in statistics.search.terms.any">
+            <td>{{terms.termtext}}</td>
+            <td class="text-right">{{terms.total}}</td>
+          </tr>
+        </table>
+        <button type="button" class="btn btn-small"
+          data-ng-click="csvExport(statistics.search.terms.any, $event)" data-translate=""
+          >csvExport</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-12">
+    <div class="panel panel-default">
+      <div class="panel-heading" data-translate="">statisticsTablesExport</div>
+      <div class="panel-body">
+        <button type="button" class="btn btn-small" data-ng-click="searchStatisticExport()"
+          data-ng-hide="paramsExport && requestsExport" data-translate=""
+          >searchStatisticExport</button>
+        <div data-ng-bind-html="requestsExport"/>
+        <div data-ng-bind-html="paramsExport"/>
+      </div>
+    </div>
+  </div>
+
+</div>

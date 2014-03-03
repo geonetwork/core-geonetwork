@@ -1,0 +1,13 @@
+<div class="gn-info alert fade in" 
+    data-ng-hide="status === null"
+    data-ng-class="'alert-' + status.type" >
+    <button type="button" class="close" data-ng-click="clearStatusMessage()">×</button>
+    <h4 data-ng-hide="!status.title">{{status.title}}</h4>
+    <p data-ng-hide="!status.msg">{{status.msg}}</p>
+    
+    <div data-ng-hide="!status.error">
+        {{status.error['class'] | translate}}
+        <blockquote><p>{{status.error.message}}</p></blockquote>
+        <code class="gn-stack">{{status.error.stack}}</code>
+    </div>
+</div>

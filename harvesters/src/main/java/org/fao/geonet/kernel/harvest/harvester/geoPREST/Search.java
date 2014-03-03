@@ -23,7 +23,7 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geoPREST;
 
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.jdom.Element;
 
 //=============================================================================

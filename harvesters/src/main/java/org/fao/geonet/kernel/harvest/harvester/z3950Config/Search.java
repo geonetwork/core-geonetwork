@@ -23,8 +23,8 @@
 
 package org.fao.geonet.kernel.harvest.harvester.z3950Config;
 
-import jeeves.exceptions.BadParameterEx;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.jdom.Element;
 
 //=============================================================================

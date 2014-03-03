@@ -23,12 +23,12 @@
 
 package org.fao.geonet.services.harvesting;
 
-import jeeves.exceptions.ObjectNotFoundEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.ObjectNotFoundEx;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.jdom.Element;
 
@@ -54,7 +54,7 @@ public class Get implements Service {
 		//--- if 'id' is null all entries are returned
 
 		String id = params.getChildText("id");
-		String sortField = jeeves.utils.Util.getParam(params, "sortField", "site[1]/name[1]");
+		String sortField = org.fao.geonet.Util.getParam(params, "sortField", "site[1]/name[1]");
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 

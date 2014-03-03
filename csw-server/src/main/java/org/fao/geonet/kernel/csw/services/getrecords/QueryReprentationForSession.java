@@ -4,7 +4,7 @@ import org.fao.geonet.util.Sha1Encoder;
 import org.jdom.Element;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 
 public class QueryReprentationForSession {
 

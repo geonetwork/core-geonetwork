@@ -1,16 +1,18 @@
 package org.fao.geonet.services.metadata;
 
-import jeeves.resources.dbms.Dbms;
+import com.google.common.base.Optional;
+
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+
+import org.fao.geonet.kernel.AddElemValue;
+import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.lib.Lib;
 import org.jdom.*;
 import org.jdom.filter.ElementFilter;
@@ -30,10 +32,6 @@ import java.util.Map;
  */
 public class AjaxEditUtils extends EditUtils {
 
-    private static final String XML_FRAGMENT_SEPARATOR = "&&&";
-    private static final String MSG_ELEMENT_NOT_FOUND_AT_REF = "Element not found at ref = ";
-    private static final String COLON_SEPARATOR = "COLON";
-    
     public AjaxEditUtils(ServiceContext context) {
         super(context);
     }
@@ -52,11 +50,13 @@ public class AjaxEditUtils extends EditUtils {
      * <li>ElementId_AttributeName=AttributeValue</li>
      * <li>ElementId_AttributeNamespacePrefixCOLONAttributeName=AttributeValue</li>
      * <li>XElementId=ElementValue</li>
+     * <li>XElementId_replace=ElementValue</li>
      * <li>XElementId_ElementName=ElementValue</li>
      * <li>XElementId_ElementName_replace=ElementValue</li>
+     * <li>P{key}=xpath with P{key}_xml=XML snippet</li>
      * </ul>
      * 
-     * ElementName MUST contain "{@value #COLON_SEPARATOR}" instead of ":" for prefixed elements.
+     * ElementName MUST contain "{@value #EditLib.COLON_SEPARATOR}" instead of ":" for prefixed elements.
      * 
      * <p>
      * When using X key ElementValue could contains many XML fragments (eg. 
@@ -66,19 +66,30 @@ public class AjaxEditUtils extends EditUtils {
      * If not, the element with ElementId is replaced.
      * If _replace suffix is used, then all elements having the same type than elementId are removed before insertion.
      * 
-     * <p>
+     * </p>
      * 
-     * @param dbms
+     * <p>
+     * <pre>
+     *  _Pd2295e223:/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+     *              gmd:citation/gmd:CI_Citation/
+     *              gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'creation']
+     *              
+     *  _Pd2295e223_xml:&lt;gmd:date/&gt; ... &lt;/gmd:date&gt;
+     * </pre>
+     * </p>
+     * 
      * @param id        Metadata internal identifier.
      * @param changes   List of changes to apply.
      * @param currVersion       Editing version which is checked against current editing version.
      * @return  The update metadata record
      * @throws Exception
      */
-    protected Element applyChangesEmbedded(Dbms dbms, String id, 
+    protected Element applyChangesEmbedded(String id,
                                         Map<String, String> changes, String currVersion) throws Exception {
         Lib.resource.checkEditPrivilege(context, id);
-        String schema = dataManager.getMetadataSchema(dbms, id);
+
+        String schema = dataManager.getMetadataSchema(id);
+        MetadataSchema metadataSchema = dataManager.getSchema(schema);
         EditLib editLib = dataManager.getEditLib();
 
         // --- check if the metadata has been modified from last time
@@ -93,6 +104,7 @@ public class AjaxEditUtils extends EditUtils {
 
         // Store XML fragments to be handled after other elements update
         Map<String, String> xmlInputs = new HashMap<String, String>();
+        Map<String, AddElemValue> xmlAndXpathInputs = new HashMap<String, AddElemValue>();
 
         // --- update elements
         for (Map.Entry<String, String> entry : changes.entrySet()) {
@@ -110,6 +122,23 @@ public class AjaxEditUtils extends EditUtils {
                 ref = ref.substring(1);
                 xmlInputs.put(ref, value);
                 continue;
+            } else if (ref.startsWith("P") && ref.endsWith("_xml")) {
+                continue;
+            } else if (ref.startsWith("P") && !ref.endsWith("_xml")) {
+                // Catch element starting with a P for xpath update mode
+                String snippet = changes.get(ref + "_xml");
+
+                if(Log.isDebugEnabled(Geonet.EDITOR)) {
+                  Log.debug(Geonet.EDITOR, "Add element by XPath: " + value);
+                  Log.debug(Geonet.EDITOR, "  Snippet is : " + snippet);
+                }
+
+                if (snippet != null && !"".equals(snippet)) {
+                    xmlAndXpathInputs.put(value, new AddElemValue(snippet));
+                } else {
+                    Log.warning(Geonet.EDITOR, "No XML snippet or value found for xpath " + value + " and element ref " + ref);
+                }
+                continue;
             }
 
             if (updatedLocalizedTextElement(md, ref, value, editLib)) {
@@ -124,13 +153,13 @@ public class AjaxEditUtils extends EditUtils {
             
             Element el = editLib.findElement(md, ref);
             if (el == null) {
-                Log.error(Geonet.EDITOR, MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+                Log.error(Geonet.EDITOR, EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
                 continue;
             }
             
             // Process attribute
             if (attribute != null) {
-                Pair<Namespace, String> attInfo = parseAttributeName(attribute, COLON_SEPARATOR, id, md, dbms, editLib);
+                Pair<Namespace, String> attInfo = parseAttributeName(attribute, EditLib.COLON_SEPARATOR, id, md, editLib);
                 String localname = attInfo.two();
                 Namespace attrNS = attInfo.one();
                 if (el.getAttribute(localname, attrNS) != null) {
@@ -153,57 +182,15 @@ public class AjaxEditUtils extends EditUtils {
         
         // Deals with XML fragments to insert or update
         if (!xmlInputs.isEmpty()) {
-            
-            // Loop over each XML fragments to insert or replace
-            for (Map.Entry<String, String> entry : xmlInputs.entrySet()) {
-                String ref = entry.getKey();
-                String value = entry.getValue();
-                String name = null;
-                int addIndex = ref.indexOf('_');
-                if (addIndex != -1) {
-                    name = ref.substring(addIndex + 1);
-                    ref = ref.substring(0, addIndex);
-                }
-                
-                // Get element to fill
-                Element el = editLib.findElement(md, ref);
-                if (el == null) {
-                    Log.error(Geonet.EDITOR, MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
-                    continue;
-                }
-                
-                if (value != null && !value.equals("")) {
-                    String[] fragments = value.split(XML_FRAGMENT_SEPARATOR);
-                    for (String fragment : fragments) {
-                        if (name != null) {
-                            if(Log.isDebugEnabled(Geonet.EDITOR))
-                                Log.debug(Geonet.EDITOR, "Add XML fragment; " + fragment + " to element with ref: " + ref);
-                            
-                            int unIndex = name.indexOf('_');
-                            boolean replaceExisting = false;
-                            if (unIndex != -1) {
-                                replaceExisting = true;
-                                name = name.substring(0, unIndex);
-                            }
-                            
-                            name = name.replace(COLON_SEPARATOR, ":");
-                            editLib.addFragment(schema, el, name, fragment, replaceExisting);
-                        } else {
-                            if(Log.isDebugEnabled(Geonet.EDITOR))
-                                Log.debug(Geonet.EDITOR, "Add XML fragment; " + fragment
-                                    + " to element with ref: " + ref + " replacing content.");
-                            
-                            // clean before update
-                            el.removeContent();
-                            fragment = addNamespaceToFragment(fragment);
-                            
-                            // Add content
-                            el.addContent(Xml.loadString(fragment, false));
-                        }
-                    }
-                }
-            }
+            editLib.addXMLFragments(schema, md, xmlInputs);
         }
+
+        // Deals with XML fragments and XPath to insert or update
+        if (!xmlAndXpathInputs.isEmpty()) {
+            editLib.addElementOrFragmentFromXpaths(md, xmlAndXpathInputs, metadataSchema, true);
+        }
+        
+        setMetadataIntoSession(session,(Element)md.clone(), id);
         
         // --- remove editing info
         editLib.removeEditingInfo(md);
@@ -211,7 +198,6 @@ public class AjaxEditUtils extends EditUtils {
         
         return (Element) md.detach();
     }
-
     /**
      * TODO javadoc.
      *
@@ -273,7 +259,6 @@ public class AjaxEditUtils extends EditUtils {
     /**
      * For Ajax Editing : adds an element or an attribute to a metadata element ([add] link).
      *
-     * @param dbms
      * @param session
      * @param id
      * @param ref
@@ -282,9 +267,9 @@ public class AjaxEditUtils extends EditUtils {
      * @return
      * @throws Exception
      */
-	public synchronized Element addElementEmbedded(Dbms dbms, UserSession session, String id, String ref, String name, String childName)  throws Exception {
+	public synchronized Element addElementEmbedded(UserSession session, String id, String ref, String name, String childName)  throws Exception {
 	    Lib.resource.checkEditPrivilege(context, id);
-		String  schema = dataManager.getMetadataSchema(dbms, id);
+		String  schema = dataManager.getMetadataSchema(id);
 		//--- get metadata from session
 		Element md = getMetadataFromSession(session, id);
 
@@ -292,7 +277,7 @@ public class AjaxEditUtils extends EditUtils {
 		EditLib editLib = dataManager.getEditLib();
         Element el = editLib.findElement(md, ref);
 		if (el == null)
-			throw new IllegalStateException(MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+			throw new IllegalStateException(EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
 
 		//--- locate the geonet:element and geonet:info elements and clone for
 		//--- later re-use
@@ -316,7 +301,7 @@ public class AjaxEditUtils extends EditUtils {
 					}
 				}
 				
-				Pair<Namespace, String> attInfo = parseAttributeName(name, ":", id, md, dbms, editLib);
+				Pair<Namespace, String> attInfo = parseAttributeName(name, ":", id, md, editLib);
 			    //--- Add new attribute with default value
                 el.setAttribute(new Attribute(attInfo.two(), defaultValue, attInfo.one()));
                 
@@ -324,7 +309,7 @@ public class AjaxEditUtils extends EditUtils {
 				child = el;
 			} else {
 				//--- normal element
-				child = editLib.addElement(schema, el, name);
+				child = editLib.addElement(mds, el, name);
 				if (!childName.equals(""))
 				{
 					//--- or element
@@ -344,7 +329,7 @@ public class AjaxEditUtils extends EditUtils {
 			}
 		}
         else {
-			child = editLib.addElement(schema, el, name);
+			child = editLib.addElement(mds, el, name);
 		}
 		//--- now enumerate the new child (if not a simple attribute)
 		if (childName == null || !childName.equals("geonet:attribute")) {
@@ -376,7 +361,6 @@ public class AjaxEditUtils extends EditUtils {
     /**
      * For Ajax Editing : removes an element from a metadata ([del] link).
      *
-     * @param dbms
      * @param session
      * @param id
      * @param ref
@@ -384,10 +368,10 @@ public class AjaxEditUtils extends EditUtils {
      * @return
      * @throws Exception
      */
-	public synchronized Element deleteElementEmbedded(Dbms dbms, UserSession session, String id, String ref, String parentRef) throws Exception {
+	public synchronized Element deleteElementEmbedded(UserSession session, String id, String ref, String parentRef) throws Exception {
 	    Lib.resource.checkEditPrivilege(context, id);
 
-		String schema = dataManager.getMetadataSchema(dbms, id);
+		String schema = dataManager.getMetadataSchema(id);
 
 		//--- get metadata from session
 		Element md = getMetadataFromSession(session, id);
@@ -401,7 +385,7 @@ public class AjaxEditUtils extends EditUtils {
 		Element el = editLib.findElement(md, ref);
 
 		if (el == null)
-			throw new IllegalStateException(MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+			throw new IllegalStateException(EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
 
 
 		String uName = el.getName();
@@ -467,14 +451,13 @@ public class AjaxEditUtils extends EditUtils {
 	/**
 	 * Removes attribute in embedded mode.
 	 *
-	 * @param dbms
 	 * @param session
 	 * @param id
 	 * @param ref	Attribute identifier (eg. _169_uom).
 	 * @return
 	 * @throws Exception
 	 */
-	public synchronized Element deleteAttributeEmbedded(Dbms dbms, UserSession session, String id, String ref) throws Exception {
+	public synchronized Element deleteAttributeEmbedded(UserSession session, String id, String ref) throws Exception {
 	    Lib.resource.checkEditPrivilege(context, id);
 
 	    String[] token = ref.split("_");
@@ -490,7 +473,7 @@ public class AjaxEditUtils extends EditUtils {
 		Element el = editLib.findElement(md, elementId);
 
 		if (el != null) {
-		    Pair<Namespace, String> attInfo = parseAttributeName(attributeName, ":", id, md, dbms, editLib);
+		    Pair<Namespace, String> attInfo = parseAttributeName(attributeName, ":", id, md, editLib);
 		    el.removeAttribute(attInfo.two(), attInfo.one());
 		}
 
@@ -501,7 +484,7 @@ public class AjaxEditUtils extends EditUtils {
 	}
 
     private Pair<Namespace, String> parseAttributeName(String attributeName, String separator,
-            String id, Element md, Dbms dbms, EditLib editLib) throws Exception {
+            String id, Element md, EditLib editLib) throws Exception {
         
         Integer indexColon = attributeName.indexOf(separator);
         String localname = attributeName;
@@ -510,7 +493,7 @@ public class AjaxEditUtils extends EditUtils {
         if (indexColon != -1) {
             String prefix = attributeName.substring(0, indexColon);
             localname = attributeName.substring(indexColon + separator.length());
-            String  schema = dataManager.getMetadataSchema(dbms, id);
+            String  schema = dataManager.getMetadataSchema(id);
             String namespace = editLib.getNamespace(prefix + ":" + localname, md, dataManager.getSchema(schema));
             attrNS = Namespace.getNamespace(prefix, namespace);
         }
@@ -519,17 +502,16 @@ public class AjaxEditUtils extends EditUtils {
     /**
      * For Ajax Editing : swap element with sibling ([up] and [down] links).
      *
-     * @param dbms
      * @param session
      * @param id
      * @param ref
      * @param down
      * @throws Exception
      */
-	public synchronized void swapElementEmbedded(Dbms dbms, UserSession session, String id, String ref, boolean down) throws Exception {
+	public synchronized void swapElementEmbedded(UserSession session, String id, String ref, boolean down) throws Exception {
 	    Lib.resource.checkEditPrivilege(context, id);
 
-	    dataManager.getMetadataSchema(dbms, id);
+	    dataManager.getMetadataSchema(id);
 
 		//--- get metadata from session
 		Element md = getMetadataFromSession(session, id);
@@ -539,7 +521,7 @@ public class AjaxEditUtils extends EditUtils {
 		Element elSwap = editLib.findElement(md, ref);
 
 		if (elSwap == null)
-			throw new IllegalStateException(MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+			throw new IllegalStateException(EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
 
 		//--- swap the elements
 		int iSwapIndex = -1;
@@ -571,14 +553,13 @@ public class AjaxEditUtils extends EditUtils {
      * For Ajax Editing : retrieves metadata from session and validates it.
      *
      * @param session
-     * @param dbms
      * @param id
      * @param lang
      * @return
      * @throws Exception
      */
-	public Element validateMetadataEmbedded(UserSession session, Dbms dbms, String id, String lang) throws Exception {
-		String schema = dataManager.getMetadataSchema(dbms, id);
+	public Element validateMetadataEmbedded(UserSession session, String id, String lang) throws Exception {
+		String schema = dataManager.getMetadataSchema(id);
 
 		//--- get metadata from session and clone it for validation
 		Element realMd = getMetadataFromSession(session, id);
@@ -589,10 +570,10 @@ public class AjaxEditUtils extends EditUtils {
 		editLib.removeEditingInfo(md);
 		editLib.contractElements(md);
         String parentUuid = null;
-        md = dataManager.updateFixedInfo(schema, id, null, md, parentUuid, DataManager.UpdateDatestamp.no, dbms, context);
+        md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, UpdateDatestamp.NO, context);
 
 		//--- do the validation on the metadata
-		return dataManager.doValidate(session, dbms, schema, id, md, lang, false).one();
+		return dataManager.doValidate(session, schema, id, md, lang, false).one();
 
 	}
 
@@ -600,7 +581,6 @@ public class AjaxEditUtils extends EditUtils {
      * For Editing : adds an attribute from a metadata ([add] link).
 	 * FIXME: Modify and use within Ajax controls
      *
-     * @param dbms
      * @param id
      * @param ref
      * @param name
@@ -608,16 +588,16 @@ public class AjaxEditUtils extends EditUtils {
      * @return
      * @throws Exception
      */
-	public synchronized boolean addAttribute(Dbms dbms, String id, String ref, String name, String currVersion) throws Exception {
+	public synchronized boolean addAttribute(String id, String ref, String name, String currVersion) throws Exception {
 	    Lib.resource.checkEditPrivilege(context, id);
 
-		Element md = xmlSerializer.select(dbms, "Metadata", context, id);
+		Element md = xmlSerializer.select(context, id);
 
 		//--- check if the metadata has been deleted
 		if (md == null)
 			return false;
 
-		String schema = dataManager.getMetadataSchema(dbms, id);
+		String schema = dataManager.getMetadataSchema(id);
         EditLib editLib = dataManager.getEditLib();
 		editLib.expandElements(schema, md);
 		editLib.enumerateTree(md);
@@ -630,7 +610,7 @@ public class AjaxEditUtils extends EditUtils {
 		Element el = editLib.findElement(md, ref);
 
 		if (el == null)
-			Log.error(Geonet.DATA_MANAGER, MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+			Log.error(Geonet.DATA_MANAGER, EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
 			//throw new IllegalStateException("Element not found at ref = " + ref);
 
 		//--- remove editing info added by previous call
@@ -642,24 +622,23 @@ public class AjaxEditUtils extends EditUtils {
 
         editLib.contractElements(md);
         String parentUuid = null;
-		md = dataManager.updateFixedInfo(schema, id, null, md, parentUuid, DataManager.UpdateDatestamp.no, dbms, context);
+		md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, UpdateDatestamp.NO, context);
         String changeDate = null;
-				xmlSerializer.update(dbms, id, md, changeDate, false, null, context);
+        xmlSerializer.update(id, md, changeDate, false, null, context);
 
         // Notifies the metadata change to metatada notifier service
-        dataManager.notifyMetadataChange(dbms, md, id);
+        dataManager.notifyMetadataChange(md, id);
 
 		//--- update search criteria
-        dataManager.indexInThreadPoolIfPossible(dbms,id);
+        dataManager.indexMetadata(id, false);
 
-		return true;
+        return true;
 	}
 
     /**
      * For Editing : removes an attribute from a metadata ([del] link).
 	 * FIXME: Modify and use within Ajax controls
      *
-     * @param dbms
      * @param id
      * @param ref
      * @param name
@@ -667,16 +646,16 @@ public class AjaxEditUtils extends EditUtils {
      * @return
      * @throws Exception
      */
-	public synchronized boolean deleteAttribute(Dbms dbms, String id, String ref, String name, String currVersion) throws Exception {
+	public synchronized boolean deleteAttribute(String id, String ref, String name, String currVersion) throws Exception {
 	    Lib.resource.checkEditPrivilege(context, id);
 
-		Element md = xmlSerializer.select(dbms, "Metadata", context, id);
+		Element md = xmlSerializer.select(context, id);
 
 		//--- check if the metadata has been deleted
 		if (md == null)
 			return false;
 
-		String schema = dataManager.getMetadataSchema(dbms, id);
+		String schema = dataManager.getMetadataSchema(id);
         EditLib editLib = dataManager.getEditLib();
 		editLib.expandElements(schema, md);
 		editLib.enumerateTree(md);
@@ -689,7 +668,7 @@ public class AjaxEditUtils extends EditUtils {
 		Element el = editLib.findElement(md, ref);
 
 		if (el == null)
-			throw new IllegalStateException(MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
+			throw new IllegalStateException(EditLib.MSG_ELEMENT_NOT_FOUND_AT_REF + ref);
 
 		//--- remove editing info added by previous call
 		editLib.removeEditingInfo(md);
@@ -698,17 +677,17 @@ public class AjaxEditUtils extends EditUtils {
 
 		editLib.contractElements(md);
         String parentUuid = null;
-        md = dataManager.updateFixedInfo(schema, id, null, md, parentUuid, DataManager.UpdateDatestamp.no, dbms, context);
+        md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, UpdateDatestamp.NO, context);
 
         String changeDate = null;
-				xmlSerializer.update(dbms, id, md, changeDate, false, null, context);
+				xmlSerializer.update(id, md, changeDate, false, null, context);
 
         // Notifies the metadata change to metatada notifier service
-        dataManager.notifyMetadataChange(dbms, md, id);
+        dataManager.notifyMetadataChange(md, id);
 
 		//--- update search criteria
-        dataManager.indexInThreadPoolIfPossible(dbms, id);
+        dataManager.indexMetadata(id, false);
 
-		return true;
+        return true;
 	}
 }

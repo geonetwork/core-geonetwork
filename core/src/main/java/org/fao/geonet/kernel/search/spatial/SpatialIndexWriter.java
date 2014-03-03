@@ -37,11 +37,12 @@ import java.util.logging.Level;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Pair;
 import org.geotools.data.DataStore;
 import org.geotools.data.FeatureEvent;
 import org.geotools.data.FeatureListener;
@@ -51,8 +52,10 @@ import org.geotools.data.Transaction;
 import org.geotools.data.memory.MemoryFeatureCollection;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.factory.GeoTools;
+import org.geotools.feature.AttributeTypeBuilder;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -61,6 +64,7 @@ import org.jdom.Element;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
+import org.opengis.feature.type.AttributeType;
 import org.opengis.feature.type.Name;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory2;
@@ -86,8 +90,8 @@ import com.vividsolutions.jts.index.strtree.STRtree;
 public class SpatialIndexWriter implements FeatureListener
 {
 
-    static final String _IDS_ATTRIBUTE_NAME = "id";
-    static final String _SPATIAL_INDEX_TYPENAME = "spatialindex";
+    public static final String _IDS_ATTRIBUTE_NAME = "fid";
+    public static final String _SPATIAL_INDEX_TYPENAME = "spatialindex";
     static final String                                          SPATIAL_FILTER_JCS        = "SpatialFilterCache";
     public static final int                                      MAX_WRITES_IN_TRANSACTION = 1000;
 
@@ -110,7 +114,6 @@ public class SpatialIndexWriter implements FeatureListener
     /**
 			* TODO: javadoc.
 			* 
-			* @param dataStore
 			* @param parser
 			* @param transaction
 			* @param maxWrites Maximum number of writes in a transaction. If set to
@@ -142,7 +145,7 @@ public class SpatialIndexWriter implements FeatureListener
     /**
      * Add a metadata record to the index
      *
-     * @param schemasDir
+     * @param schemaDir
      *            the base directory that contains the different metadata
      *            schemas
      * @param metadata
@@ -416,8 +419,9 @@ public class SpatialIndexWriter implements FeatureListener
             e.printStackTrace();
         }
         _index = new STRtree();
-        FeatureIterator<SimpleFeature> features = _featureStore.getFeatures().features();
+        FeatureIterator<SimpleFeature> features = null;
         try {
+            features = _featureStore.getFeatures().features();
             while (features.hasNext()) {
                 SimpleFeature feature = features.next();
                 Pair<FeatureId, Object> data = Pair.read(feature.getIdentifier(), feature.getAttribute(_idColumn));
@@ -428,7 +432,9 @@ public class SpatialIndexWriter implements FeatureListener
             }
 
         } finally {
-            features.close();
+            if (features != null) {
+                features.close();
+            }
         }
     }
 
@@ -454,7 +460,20 @@ public class SpatialIndexWriter implements FeatureListener
                 return (FeatureStore<SimpleFeatureType, SimpleFeature>) datastore.getFeatureSource(name);
             }
         }
-        return null;
+        return attemptToCreateSpatialIndexFeatureStore(datastore);
+    }
+
+    private static FeatureStore<SimpleFeatureType, SimpleFeature> attemptToCreateSpatialIndexFeatureStore(DataStore datastore) throws
+            IOException {
+        SimpleFeatureTypeBuilder typeBuilder = new SimpleFeatureTypeBuilder();
+        typeBuilder.setName(_SPATIAL_INDEX_TYPENAME);
+
+        typeBuilder.setCRS(DefaultGeographicCRS.WGS84);
+        typeBuilder.add("geom", MultiPolygon.class);
+
+        SimpleFeatureType type = typeBuilder.buildFeatureType();
+        datastore.createSchema(type);
+        return (FeatureStore<SimpleFeatureType, SimpleFeature>) datastore.getFeatureSource(type.getName());
     }
 
     public static Name findIdColumn(FeatureSource<SimpleFeatureType, SimpleFeature> featureSource) {

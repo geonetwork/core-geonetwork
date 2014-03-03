@@ -264,7 +264,7 @@
 			</output>
 		</service>
 		<service name="test.csw">
-			<output sheet="test-csw.xsl"/>							
+			<output sheet="test-csw.xsl" deprecated="true"/>							
 		</service>
 	</services>
 </geonet>

@@ -23,12 +23,12 @@
 
 package org.fao.geonet.services.logo;
 
-import jeeves.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.IO;
-import jeeves.utils.Util;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.Util;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;

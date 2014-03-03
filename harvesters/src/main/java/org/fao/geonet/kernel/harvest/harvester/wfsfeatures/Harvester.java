@@ -23,20 +23,14 @@
 
 package org.fao.geonet.kernel.harvest.harvester.wfsfeatures;
 
-import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.BadXmlResponseEx;
-import jeeves.interfaces.Logger;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
-import jeeves.utils.XmlElementReader;
-import jeeves.utils.XmlRequest;
 import jeeves.xlink.Processor;
-
-import org.apache.commons.httpclient.HttpException;
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.BadXmlResponseEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
@@ -48,6 +42,11 @@ import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.Fragme
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.HarvestSummary;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.XmlElementReader;
+import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -61,13 +60,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 //=============================================================================
 /** 
@@ -133,15 +126,13 @@ class Harvester implements IHarvester<HarvestResult>
      *  
      * @param log		
      * @param context									Jeeves context
-     * @param dbms 										Database
      * @param params	harvesting configuration for the node
      * 
      * @return null
      */
-	public Harvester(Logger log, ServiceContext context, Dbms dbms, WfsFeaturesParams params) {
+	public Harvester(Logger log, ServiceContext context, WfsFeaturesParams params) {
 		this.log    = log;
 		this.context= context;
-		this.dbms   = dbms;
 		this.params = params;
 
 		result = new HarvestResult ();
@@ -149,7 +140,7 @@ class Harvester implements IHarvester<HarvestResult>
 		GeonetContext gc = (GeonetContext) context.getHandlerContext (Geonet.CONTEXT_NAME);
 		dataMan = gc.getBean(DataManager.class);
 		schemaMan = gc.getBean(SchemaManager.class);
-		SettingInfo si = new SettingInfo(context);
+		SettingInfo si = context.getBean(SettingInfo.class);
 		String siteUrl = si.getSiteUrl() + context.getBaseUrl();
 		metadataGetService = siteUrl + "/srv/en/xml.metadata.get";
 		ssParams.put("siteUrl", siteUrl);
@@ -202,7 +193,8 @@ class Harvester implements IHarvester<HarvestResult>
 		log.info("Retrieving metadata fragments for : " + params.name);
         
 		//--- collect all existing metadata uuids before we update
-		localUuids = new UUIDMapper(dbms, params.uuid);
+        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        localUuids = new UUIDMapper(metadataRepository, params.uuid);
 
 		//--- parse the xml query from the string - TODO: default should be 
 		//--- get everything
@@ -217,7 +209,7 @@ class Harvester implements IHarvester<HarvestResult>
 		}
 
 		//--- harvest metadata and subtemplates from fragments using generic fragment harvester
-		FragmentHarvester fragmentHarvester = new FragmentHarvester(log, context, dbms, getFragmentHarvesterParams());
+		FragmentHarvester fragmentHarvester = new FragmentHarvester(log, context, getFragmentHarvesterParams());
 
 		if (params.streamFeatures) {
 			harvestFeatures(wfsQuery, fragmentHarvester);
@@ -262,10 +254,9 @@ class Harvester implements IHarvester<HarvestResult>
      */
 	
 	private void harvestFeatures(Element xmlQuery, FragmentHarvester fragmentHarvester)
-            throws UnsupportedEncodingException, IOException, HttpException,
-            XMLStreamException, FactoryConfigurationError, Exception {
+            throws FactoryConfigurationError, Exception {
 		
-		XmlRequest req = new XmlRequest(new URL(params.url));
+		XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(params.url);
 		req.setRequest(xmlQuery);
 		Lib.net.setupProxy(context, req);
 		
@@ -339,7 +330,7 @@ class Harvester implements IHarvester<HarvestResult>
     
     			if (!updatedMetadata.contains(uuid)) {	
     				String id = localUuids.getID(uuid);
-    				dataMan.deleteMetadata(context, dbms, id);
+    				dataMan.deleteMetadata(context, id);
     			
     				if (isTemplate.equals("s")) {
     					result.subtemplatesRemoved ++;
@@ -357,13 +348,8 @@ class Harvester implements IHarvester<HarvestResult>
 		}
 		
 		if (result.subtemplatesRemoved + result.locallyRemoved > 0)  {
-			try {
-                dbms.commit();
-            } catch (SQLException e) {
-                HarvestError error = new HarvestError(e, log);
-                this.errors.add(error);
-            }
-		}
+            dataMan.flush();
+        }
     }
 
 	/** 
@@ -397,7 +383,6 @@ class Harvester implements IHarvester<HarvestResult>
 
 	private Logger         log;
 	private ServiceContext context;
-	private Dbms           dbms;
 	private WfsFeaturesParams   params;
 	private DataManager    dataMan;
 	private SchemaManager  schemaMan;

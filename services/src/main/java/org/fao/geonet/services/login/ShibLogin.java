@@ -23,207 +23,183 @@
 
 package org.fao.geonet.services.login;
 
-import jeeves.exceptions.UserLoginEx;
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.ProfileManager;
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasGroupId;
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
+import static org.springframework.data.jpa.domain.Specifications.where;
+
+import java.sql.SQLException;
+import java.util.Map;
+
+import org.fao.geonet.exceptions.UserLoginEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.security.GeonetworkUser;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 //=============================================================================
 
 /**
- * <code>ShibLogin</code> processes the result of a Shibboleth (or other external 
- * authentication system) login. The user will have already been challenged for 
- * userid and password and will have had their credentials placed in the HTTP 
- * headers. These are then used to find or create the user's account.
+ * <code>ShibLogin</code> processes the result of a Shibboleth (or other external authentication system) login. The user will have already
+ * been challenged for userid and password and will have had their credentials placed in the HTTP headers. These are then used to find or
+ * create the user's account.
  * 
  * @author James Dempsey <James.Dempsey@csiro.au>
  * @version $Revision: 1629 $
  */
-public class ShibLogin extends NotInReadOnlyModeService
-{
-	private static final String VIA_SHIBBOLETH = "Via Shibboleth";
-	private static final String SHIBBOLETH_FLAG = "SHIBBOLETH";
+public class ShibLogin extends NotInReadOnlyModeService {
+    private static final String VIA_SHIBBOLETH = "Via Shibboleth";
+    private static final String SHIBBOLETH_FLAG = "SHIBBOLETH";
 
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Init
+    // ---
+    // --------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
-
-	public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(String appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
 
-	/* (non-Javadoc)
-	 * @see jeeves.interfaces.Service#exec(org.jdom.Element, jeeves.server.context.ServiceContext)
-	 */
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
-		// Get the header keys to lookup from the settings
-		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SettingManager sm = gc.getBean(SettingManager.class);
-		String prefix = "system/shib";
-		String usernameKey = sm.getValue(prefix + "/attrib/username");
-		String surnameKey = sm.getValue(prefix + "/attrib/surname");
-		String firstnameKey = sm.getValue(prefix + "/attrib/firstname");
-		String profileKey = sm.getValue(prefix + "/attrib/profile");
+    /*
+     * (non-Javadoc)
+     * 
+     * @see jeeves.interfaces.Service#exec(org.jdom.Element, jeeves.server.context.ServiceContext)
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        // Get the header keys to lookup from the settings
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SettingManager sm = gc.getBean(SettingManager.class);
+        String prefix = "system/shib";
+        String usernameKey = sm.getValue(prefix + "/attrib/username");
+        String surnameKey = sm.getValue(prefix + "/attrib/surname");
+        String firstnameKey = sm.getValue(prefix + "/attrib/firstname");
+        String profileKey = sm.getValue(prefix + "/attrib/profile");
         String groupKey = sm.getValue(prefix + "/attrib/group");
-        String defGroup =  sm.getValue(prefix +"/defaultGroup");
+        String defGroup = sm.getValue(prefix + "/defaultGroup");
 
-		// Read in the data from the headers
-		Map<String, String> headers = context.getHeaders();
-		String username = Util.getHeader(headers, usernameKey, "");
-		String surname = Util.getHeader(headers, surnameKey, "");
-		String firstname = Util.getHeader(headers, firstnameKey, "");
-		String profile = Util.getHeader(headers, profileKey, "");
-        String group    = Util.getHeader(headers, groupKey, "");
-	
-		// Make sure the profile name is an exact match
-		profile = context.getProfileManager().getCorrectCase(profile);
-		if (profile.equals(""))
-		{
-			profile = ProfileManager.GUEST;
-		}
+        // Read in the data from the headers
+        Map<String, String> headers = context.getHeaders();
+        String username = Util.getHeader(headers, usernameKey, "");
+        String surname = Util.getHeader(headers, surnameKey, "");
+        String firstname = Util.getHeader(headers, firstnameKey, "");
+        String profileName = Util.getHeader(headers, profileKey, "");
+        String group = Util.getHeader(headers, groupKey, "");
+
+        // Make sure the profile name is an exact match
+        Profile profile = context.getProfileManager().getCorrectCase(profileName);
+        if (profile == null) {
+            profile = Profile.Guest;
+        }
 
         if (group.equals("")) {
             group = defGroup;
         }
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
+        UserRepository userRepository = context.getBean(UserRepository.class);
 
-		// Create or update the user 
-		if (username != null && username.length() > 0)
-		{
-			if (username.length() > 256) // only accept the first 256 chars
-			{
-				username = username.substring(0, 256);
-			}
-			updateUser(context, dbms, username, surname, firstname, profile, group);
-		}
+        // Create or update the user
+        if (username != null && username.length() > 0) {
+            User user = updateUser(context, userRepository, username, surname, firstname, profile, group);
 
-		//--- attempt to load user from db
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), null,
+                    user.getAuthorities());
+            authentication.setDetails(user);
 
-		String query = "SELECT * FROM Users WHERE username = ? ";
+            if (SecurityContextHolder.getContext() == null) {
+                SecurityContextHolder.createEmptyContext();
+            }
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-		@SuppressWarnings("unchecked")
-        List<Element> list = dbms.select(query, username).getChildren();
+            context.info("User '" + username + "' logged in as '" + user.getProfile() + "'");
 
-		if (list.isEmpty())
-			throw new UserLoginEx(username);
+            return new Element("ok");
+        } else {
+            throw new UserLoginEx(username);
+        }
 
-		Element userEl = list.get(0);
-	
-		GeonetworkUser user = new GeonetworkUser(context.getProfileManager(), username, userEl);
-		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user.getUsername(), null, user.getAuthorities() ) ;
-		authentication.setDetails(user);
+    }
 
-		if(SecurityContextHolder.getContext() == null) {
-			SecurityContextHolder.createEmptyContext();
-		}
-		SecurityContextHolder.getContext().setAuthentication(authentication);
+    // --------------------------------------------------------------------------
 
-		context.info("User '"+ username +"' logged in as '"+ user.getProfile() +"'");
+    /**
+     * Update the user to match the provided details, or create a new record for them if they don't have one already.
+     * 
+     * @param context The Jeeves ServiceContext
+     * @param userRepository The user repository.
+     * @param username The user's username, must not be null.
+     * @param surname The surname of the user
+     * @param firstname The first name of the user.
+     * @param profile The name of the user type.
+     * @throws java.sql.SQLException If the record cannot be saved.
+     */
+    private User updateUser(ServiceContext context, UserRepository userRepository, String username, String surname, String firstname,
+            Profile profile, String groupName) throws SQLException {
 
-		return new Element("ok");
-	}
-
-
-	//--------------------------------------------------------------------------
-
-	/**
-	 * Update the user to match the provided details, or create a new record
-	 * for them if they don't have one already.
-	 * 
-	 * @param context The Jeeves ServiceContext
-	 * @param dbms The database connection.
-	 * @param username The user's username, must not be null.
-	 * @param surname The surname of the user
-	 * @param firstname The first name of the user.
-	 * @param profile The name of the user type.
-	 * @throws java.sql.SQLException If the record cannot be saved.
-	 */
-	private void updateUser(ServiceContext context, Dbms dbms, String username,
-			String surname, String firstname, String profile, String group) throws SQLException
-	{
-        boolean groupProvided = ((group != null) && (!(group.equals(""))));
+        boolean groupProvided = ((groupName != null) && (!(groupName.equals(""))));
         int groupId = -1;
         int userId = -1;
 
         if (groupProvided) {
-            String query = "SELECT id FROM Groups WHERE name=?";
+            GroupRepository groupRepo = context.getBean(GroupRepository.class);
+            Group group = groupRepo.findByName(groupName);
 
-            @SuppressWarnings("unchecked")
-            List<Element> list  = dbms.select(query, group).getChildren();
+            if (group == null) {
+                group = groupRepo.save(new Group().setName(groupName));
+            }
+            groupId = group.getId();
+        }
+        // --- update user information into the database
+        if (username.length() > 256) // only accept the first 256 chars
+        {
+            username = username.substring(0, 256);
+        }
+        User user = userRepository.findOneByUsername(username);
 
-            if (list.isEmpty()) {
-                groupId = context.getSerialFactory().getSerial(dbms, "Groups");
+        if (user == null) {
+            user = new User().setUsername(username);
+        }
 
-                query = "INSERT INTO GROUPS(id, name) VALUES(?,?)";
-                dbms.execute(query, groupId, group);
-                Lib.local.insert(dbms, "Groups", groupId, group);
+        user.setName(firstname).setSurname(surname).setProfile(profile).getSecurity().setPassword(VIA_SHIBBOLETH.toCharArray())
+                .setAuthType(SHIBBOLETH_FLAG);
 
-            } else {
-                String gi = ((Element) list.get(0)).getChildText("id");
+        userRepository.save(user);
 
-                groupId = Integer.valueOf(gi).intValue();
+        if (groupProvided) {
+            UserGroupRepository userGroupRepo = context.getBean(UserGroupRepository.class);
+
+            long count = userGroupRepo.count(where(hasGroupId(groupId)).and(hasUserId(userId)));
+
+            if (count == 0) {
+                UserGroup userGroup = new UserGroup();
+                userGroup.getId().setGroupId(groupId).setUserId(userId);
+                userGroupRepo.save(userGroup);
             }
         }
-		//--- update user information into the database
 
-		String query = "UPDATE Users SET name=?, surname=?, profile=?, password=?, authtype=? WHERE username=?";
-
-		int res = dbms.execute(query, firstname, surname, profile, VIA_SHIBBOLETH, SHIBBOLETH_FLAG, username);
-
-		//--- if the user was not found --> add it
-
-		if (res == 0)
-		{
-			userId = context.getSerialFactory().getSerial(dbms, "Users");
-
-			query = 	"INSERT INTO Users(id, username, name, surname, profile, password, authtype) "+
-						"VALUES(?,?,?,?,?,?,?)";
-
-			dbms.execute(query, userId, username, firstname, surname, profile, VIA_SHIBBOLETH, SHIBBOLETH_FLAG);
-
-            if (groupProvided) {
-                String query2 = "SELECT count(*) as numr FROM UserGroups WHERE groupId=? and userId=?";
-                @SuppressWarnings("unchecked")
-                List<Element> list  = dbms.select(query2, groupId, userId).getChildren();
-
-                String count = list.get(0).getChildText("numr");
-
-                 if (count.equals("0")) {
-                     query = "INSERT INTO UserGroups(userId, groupId) "+
-                             "VALUES(?,?)";
-                     dbms.execute(query, userId, groupId);
-
-                 }
-            }
-		}
-
-		dbms.commit();
-	}
+        return user;
+    }
 
 }

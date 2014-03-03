@@ -24,16 +24,18 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
@@ -71,7 +73,6 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
 		AccessManager accessMan = gc.getBean(AccessManager.class);
 		UserSession us = context.getUserSession();
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		context.info("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(us);
@@ -83,11 +84,12 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
 		synchronized(sm.getSelection("metadata")) {
 		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
 			String uuid = (String) iter.next();
-			String id   = dm.getMetadataId(dbms, uuid);
+			String id   = dm.getMetadataId(uuid);
 								
 			//--- check access
 
-			MdInfo info = dm.getMetadataInfo(dbms, id);
+            final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+            Metadata info = metadataRepository.findOne(id);
 			if (info == null) {
 				notFound.add(Integer.valueOf(id));
 			} else if (!accessMan.isOwner(context, id)) {
@@ -95,28 +97,37 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
 			} else {
 
 				//--- remove old operations
-				dm.deleteAllMetadataCateg(dbms, id);
+                info.getCategories().clear();
 
 				//--- set new ones
 				@SuppressWarnings("unchecked")
                 List<Element> list = params.getChildren();
 
-				for (Element el : list) {
+                final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
+                for (Element el : list) {
 					String name = el.getName();
 
-					if (name.startsWith("_"))
-						dm.setCategory(context, dbms, id, name.substring(1));
+					if (name.startsWith("_"))  {
+                        final MetadataCategory category = categoryRepository.findOneByName(name.substring(1));
+                        if (category != null) {
+                            info.getCategories().add(category);
+                        } else {
+                            context.warning("Unable to find category with name: "+name.substring(1));
+                        }
+                    }
 				}
+
+                metadataRepository.save(info);
 				metadata.add(Integer.valueOf(id));
 			}
 		}
 		}
 
-		dbms.commit();
+        context.getBean(DataManager.class).flush();
 
-		//--- reindex metadata
+        //--- reindex metadata
 		context.info("Re-indexing metadata");
-		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, dbms, metadata);
+		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, metadata);
 		r.process();
 
 		// -- for the moment just return the sizes - we could return the ids

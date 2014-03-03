@@ -16,14 +16,14 @@ INSERT INTO CswServerCapabilitiesInfo VALUES (54, 'cat', 'abstract', '');
 INSERT INTO CswServerCapabilitiesInfo VALUES (55, 'cat', 'fees', '');
 INSERT INTO CswServerCapabilitiesInfo VALUES (56, 'cat', 'accessConstraints', '');
 
-INSERT INTO CategoriesDes VALUES (11,'cat','Z3950 Servers');
-INSERT INTO CategoriesDes VALUES (12,'cat','Registers');
-INSERT INTO CategoriesDes VALUES (13,'cat','Physical Samples');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (11,'cat','Z3950 Servers');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (12,'cat','Registers');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (13,'cat','Physical Samples');
 
-INSERT INTO StatusValuesDes VALUES (0,'cat','Unknown');
-INSERT INTO StatusValuesDes VALUES (1,'cat','Draft');
-INSERT INTO StatusValuesDes VALUES (2,'cat','Approved');
-INSERT INTO StatusValuesDes VALUES (3,'cat','Retired');
-INSERT INTO StatusValuesDes VALUES (4,'cat','Submitted');
-INSERT INTO StatusValuesDes VALUES (5,'cat','Rejected');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (0,'cat','Unknown');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (1,'cat','Draft');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (2,'cat','Approved');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (3,'cat','Retired');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (4,'cat','Submitted');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (5,'cat','Rejected');
 

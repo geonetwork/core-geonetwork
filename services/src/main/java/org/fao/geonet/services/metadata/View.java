@@ -26,13 +26,13 @@ package org.fao.geonet.services.metadata;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.csw.common.Csw;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
-import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.lib.Lib;
@@ -86,7 +86,7 @@ public class View extends ShowViewBaseService {
 		if (id == null)
 			throw new MetadataNotFoundEx("Metadata not found.");
 
-		Lib.resource.checkPrivilege(context, id, AccessManager.OPER_VIEW);
+		Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
 
 		// -----------------------------------------------------------------------
 		// --- get metadata

@@ -1249,7 +1249,7 @@
 		<description>Commonly used word(s) or formalised word(s) or phrase(s) used to describe the
             subject</description>
 	</element>
-	<element name="gmd:language" context="gmd:MD_Metadata" id="3.0">
+	<element name="gmd:language" id="3.0">
 		<label>Metadata language</label>
 		<description>Language used for documenting metadata</description>
 		<condition>conditional</condition>
@@ -1401,7 +1401,7 @@
 			<option value="PNG">PNG</option>
 			<option value="JPEG">JPEG</option>
 			<option value="OGC:WMC">OGC:WMC</option>
-			<option value="OGC:OWS Context">OGC:OWS Context</option>
+			<option value="OGC:OWS-C">OGC OWS Context</option>
 		</helper>
 	</element>
 	<element name="gmd:name" context="gmd:MD_ExtendedElementInformation"
@@ -1895,75 +1895,75 @@
 		<label>Protocol</label>
 		<description>Connection protocol to be used</description>
 		<helper sort="true">
-			<option show="y" value="ESRI:AIMS--http--configuration">ArcIMS Map Service Configuration File (*.AXL)
+			<option value="ESRI:AIMS--http--configuration">ArcIMS Map Service Configuration File (*.AXL)
 			</option>
-			<option show="y" value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service
+			<option value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service
 			</option>
-			<option show="-" value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service
+			<option value="ESRI:AIMS--http-get-image">ArcIMS Internet Image Map Service
 			</option>
-			<option show="y" value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)
+			<option value="GLG:KML-2.0-http-get-map">Google Earth KML service (ver 2.0)
 			</option>
-			<option show="-" value="OGC:CSW">OGC-CSW Catalogue Service for the Web
+			<option value="OGC:CSW">OGC-CSW Catalogue Service for the Web
 			</option>
-			<option show="-" value="OGC:KML">OGC-KML Keyhole Markup Language
+			<option value="OGC:KML">OGC-KML Keyhole Markup Language
 			</option>
-			<option show="-" value="OGC:GML">OGC-GML Geography Markup Language
+			<option value="OGC:GML">OGC-GML Geography Markup Language
 			</option>
-			<option show="-" value="OGC:ODS">OGC-ODS OpenLS Directory Service
+			<option value="OGC:ODS">OGC-ODS OpenLS Directory Service
 			</option>
-			<option show="-" value="OGC:OGS">OGC-ODS OpenLS Gateway Service</option>
-			<option show="-" value="OGC:OUS">OGC-ODS OpenLS Utility Service</option>
-			<option show="-" value="OGC:OPS">OGC-ODS OpenLS Presentation Service
+			<option value="OGC:OGS">OGC-ODS OpenLS Gateway Service</option>
+			<option value="OGC:OUS">OGC-ODS OpenLS Utility Service</option>
+			<option value="OGC:OPS">OGC-ODS OpenLS Presentation Service
 			</option>
-			<option show="-" value="OGC:ORS">OGC-ODS OpenLS Route Service</option>
-			<option show="-" value="OGC:SOS">OGC-SOS Sensor Observation Service
+			<option value="OGC:ORS">OGC-ODS OpenLS Route Service</option>
+			<option value="OGC:SOS">OGC-SOS Sensor Observation Service
 			</option>
-			<option show="-" value="OGC:SPS">OGC-SPS Sensor Planning Service
+			<option value="OGC:SPS">OGC-SPS Sensor Planning Service
 			</option>
-			<option show="-" value="OGC:SAS">OGC-SAS Sensor Alert Service</option>
-			<option show="-" value="OGC:WCS">OGC-WCS Web Coverage Service</option>
-			<option show="y" value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)
+			<option value="OGC:SAS">OGC-SAS Sensor Alert Service</option>
+			<option value="OGC:WCS">OGC-WCS Web Coverage Service</option>
+			<option value="OGC:WCS-1.1.0-http-get-capabilities">OGC-WCS Web Coverage Service (ver 1.1.0)
 			</option>
-			<option show="-" value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service
+			<option value="OGC:WCTS">OGC-WCTS Web Coordinate Transformation Service
 			</option>
-			<option show="-" value="OGC:WFS">OGC-WFS Web Feature Service</option>
-			<option show="y" value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)
+			<option value="OGC:WFS">OGC-WFS Web Feature Service</option>
+			<option value="OGC:WFS-1.0.0-http-get-capabilities">OGC-WFS Web Feature Service (ver 1.0.0)
 			</option>
-			<option show="-" value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</option>
-			<option show="y" value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)
+			<option value="OGC:WFS-G">OGC-WFS-G Gazzetteer Service</option>
+			<option value="OGC:WMC-1.1.0-http-get-capabilities">OGC-WMC Web Map Context (ver 1.1)
 			</option>
-			<option show="-" value="OGC:WMS">OGC-WMS Web Map Service</option>
-			<option show="-" value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)
+			<option value="OGC:WMS">OGC-WMS Web Map Service</option>
+			<option value="OGC:WMS-1.1.1-http-get-capabilities">OGC-WMS Capabilities service (ver 1.1.1)
 			</option>
-			<option show="-" value="OGC:WMS-1.3.0-http-get-capabilities">OGC-WMS Capabilities service (ver 1.3.0)
+			<option value="OGC:WMS-1.3.0-http-get-capabilities">OGC-WMS Capabilities service (ver 1.3.0)
 			</option>
-			<option show="-" value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)
+			<option value="OGC:WMS-1.1.1-http-get-map">OGC Web Map Service (ver 1.1.1)
 			</option>
-			<option show="-" value="OGC:WMS-1.3.0-http-get-map">OGC Web Map Service (ver 1.3.0)
+			<option value="OGC:WMS-1.3.0-http-get-map">OGC Web Map Service (ver 1.3.0)
 			</option>
-			<option show="-" value="OGC:SOS-1.0.0-http-get-observation">OGC-SOS Get Observation (ver 1.0.0)
+			<option value="OGC:SOS-1.0.0-http-get-observation">OGC-SOS Get Observation (ver 1.0.0)
 			</option>
-			<option show="-" value="OGC:SOS-1.0.0-http-post-observation">OGC-SOS Get Observation (POST) (ver 1.0.0)
+			<option value="OGC:SOS-1.0.0-http-post-observation">OGC-SOS Get Observation (POST) (ver 1.0.0)
 			</option>
-			<option show="-" value="OGC:WNS">OGC-WNS Web Notification Service
+			<option value="OGC:WNS">OGC-WNS Web Notification Service
 			</option>
-			<option show="-" value="OGC:WPS">OGC-WPS Web Processing Service</option>
-			<option show="-" value="WWW:DOWNLOAD-1.0-ftp--download">File for download through FTP</option>
-			<option show="-" value="WWW:DOWNLOAD-1.0-http--download">File for download</option>
-			<option show="-" value="FILE:GEO">GIS file</option>
-			<option show="-" value="FILE:RASTER">GIS RASTER file</option>
-			<option show="y" value="WWW:LINK-1.0-http--ical">iCalendar (URL)</option>
-			<option show="y" value="WWW:LINK-1.0-http--link">Web address (URL)</option>
-			<option show="y" value="WWW:LINK-1.0-http--partners">Partner web address (URL)</option>
-			<option show="y" value="WWW:LINK-1.0-http--related">Related link (URL)</option>
-			<option show="y" value="WWW:LINK-1.0-http--rss">RSS News feed (URL)</option>
-			<option show="y" value="WWW:LINK-1.0-http--samples">Showcase product (URL)</option>
-			<option show="-" value="DB:POSTGIS">PostGIS database table</option>
-			<option show="-" value="DB:ORACLE">ORACLE database table</option>
-			<option show="y" value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</option>
-			<option show="y" value="RBNB:DATATURBINE">Data Turbine</option>
-			<option show="-" value="UKST">Unknown Service Type</option>
-
+			<option value="OGC:WPS">OGC-WPS Web Processing Service</option>
+			<option value="OGC:OWS-C">OGC OWS Context</option>
+			<option value="WWW:DOWNLOAD-1.0-ftp--download">File for download through FTP</option>
+			<option value="WWW:DOWNLOAD-1.0-http--download">File for download</option>
+			<option value="FILE:GEO">GIS file</option>
+			<option value="FILE:RASTER">GIS RASTER file</option>
+			<option value="WWW:LINK-1.0-http--ical">iCalendar (URL)</option>
+			<option value="WWW:LINK-1.0-http--link">Web address (URL)</option>
+			<option value="WWW:LINK-1.0-http--partners">Partner web address (URL)</option>
+			<option value="WWW:LINK-1.0-http--related">Related link (URL)</option>
+			<option value="WWW:LINK-1.0-http--rss">RSS News feed (URL)</option>
+			<option value="WWW:LINK-1.0-http--samples">Showcase product (URL)</option>
+			<option value="DB:POSTGIS">PostGIS database table</option>
+			<option value="DB:ORACLE">ORACLE database table</option>
+			<option value="WWW:LINK-1.0-http--opendap">OPeNDAP URL</option>
+			<option value="RBNB:DATATURBINE">Data Turbine</option>
+			<option value="UKST">Unknown Service Type</option>
 		</helper>
 	</element>
 	<element name="gmd:purpose" id="26.0">

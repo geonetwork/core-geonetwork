@@ -1,0 +1,63 @@
+<div class="row" data-ng-controller="GnCategoriesController">
+  <div class="col-lg-5">
+    <div class="panel panel-default">
+      <div class="panel-heading" data-translate=""> categories </div>
+
+      <div class="panel-body">
+
+        <input class="form-control" data-ng-model="categorySearch.$" autofocus=""
+          placeholder="{{'filter' | translate}}"/>
+        <input type="hidden" data-ng-model="categorySelected['@id']"/>
+        <div class="list-group">
+          <a href="" class="list-group-item" data-ng-repeat="c in categories | filter:categorySearch"
+            data-ng-click="selectCategory(c)">
+            <img src="../../images/category/{{c.name}}.png" alt="{{'categoryLogo' | translate}}"/>
+            {{c.label[lang]}}</a>
+        </div>
+        <button type="button" class="btn btn-primary btn-block" data-ng-click="addCategory()">
+          <i class="fa fa-plus"/>
+          <span data-translate="">newCategory</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-7" data-ng-hide="categorySelected['@id']==null">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span data-ng-hide="categorySelected['@id'] == ''" data-translate="">updateCategory</span>
+        <span data-ng-hide="categorySelected['@id'] != ''" data-translate="">newCategory</span>
+        <strong>{{categorySelected.label[lang]}}</strong>
+
+        <div class="btn-toolbar">
+          <button type="button" class="btn btn-primary pull-right fa fa-save"
+            data-ng-disabled="!categoryUpdated" data-ng-click="saveCategory('#gn-category-edit')"
+            data-translate=""> saveCategory </button>
+          <button type="button" class="btn btn-primary pull-right btn-danger fa fa-trash-o"
+            data-ng-hide="categorySelected['@id'] == ''"
+            data-ng-click="deleteCategory(categorySelected['@id'])" data-translate=""
+            >deleteCategory</button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <form id="gn-category-edit" class="form-horizontal" data-ng-keypress="updatingCategory()">
+          <fieldset>
+            <input type="hidden" name="id" data-ng-model="categorySelected['@id']"
+              value="{{categorySelected['@id']}}"> </input>
+            <label data-translate="" class="col-lg-2 control-label">categoryName</label>
+            <div class="col-lg-10">
+              <input type="text" name="name" class="form-control" autofocus=""
+                data-ng-model="categorySelected.name"> </input>
+            </div>
+          </fieldset>
+        </form>
+
+
+        <div data-ng-hide="!categorySelected.label">
+          <h3><span data-translate="">translationForCategory</span> {{categorySelected.name}}</h3>
+          <div data-gn-db-translation="categorySelected" data-type="category"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

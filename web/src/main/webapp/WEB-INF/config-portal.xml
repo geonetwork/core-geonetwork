@@ -104,52 +104,7 @@
 				<call name="sources"  class=".guiservices.util.Sources"/>
 			</output>
 		</service>
-		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-        
-		<service name="pdf.search">
-			<class name=".services.main.Search">
-				<param name="maxSummaryKeys" value="1000" />
-				<param name="maxHitsInSummary" value="1000" />
-			</class>
-
-			<output sheet="portal-present-fop.xsl" file="true" contentType="application/pdf">
-				<call name="mdresults" class=".services.main.Result" >
-					<param name="range" value="1000" /> <!-- too many causes problems -->
-				</call>
-				<call name="siteURL" class=".guiservices.util.GetSiteURL" />
-			</output>
-		</service>
-        
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
-		<service name="pdf.selection.search">
-			<class name=".services.main.SelectionSearch">
-				<param name="restoreLastSearch" value="yes" />
-			</class>
-			<output forward="pdf.present" />
-		</service>
-		
-		<service name="pdf.present">
-			<class name=".services.main.Result">
-				<param name="range" value="1000" /> 
-			</class>
-			<output sheet="portal-present-fop.xsl" file="true" contentType="application/pdf">
-				<call name="siteURL" class=".guiservices.util.GetSiteURL" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-        
-		<service name="portal.sitemap">
-			<class name=".guiservices.metadata.Sitemap" />
-	      <output sheet="portal-sitemap.xsl" contentType="text/xml; charset=UTF-8"/>
-		</service>
-
-		<service name="robots.txt">
-			<output sheet="robots.xsl" contentType="text; charset=UTF-8"/>
-		</service>
-		
+	  
 		<service name="logo">
 			<output sheet="admin-logo.xsl"/>
 		</service>

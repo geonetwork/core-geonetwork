@@ -25,10 +25,9 @@ package jeeves.server.dispatchers.guiservices;
 
 
 import jeeves.constants.ConfigFile;
-import jeeves.exceptions.BadInputEx;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-
+import org.fao.geonet.Util;
+import org.fao.geonet.exceptions.BadInputEx;
 import org.jdom.Element;
 
 //=============================================================================

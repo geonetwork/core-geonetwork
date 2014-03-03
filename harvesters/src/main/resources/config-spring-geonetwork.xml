@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-lazy-init="true"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	">
+
+    <bean id="Harvest" class="org.fao.geonet.component.harvester.csw.Harvest" />
+    <bean id="HarvestManager" class="org.fao.geonet.kernel.harvest.HarvestManagerImpl" />
+
+    <!-- The id of the beans is the same as the type in the harvester settings table and thus should not be changed -->
+    <bean id="geonetwork" class="org.fao.geonet.kernel.harvest.harvester.geonet.GeonetHarvester" scope="prototype"/>
+    <bean id="geonetwork20" class="org.fao.geonet.kernel.harvest.harvester.geonet20.Geonet20Harvester" scope="prototype"/>
+    <bean id="geoPREST" class="org.fao.geonet.kernel.harvest.harvester.geoPREST.GeoPRESTHarvester" scope="prototype"/>
+    <bean id="webdav" class="org.fao.geonet.kernel.harvest.harvester.webdav.WebDavHarvester" scope="prototype"/>
+    <bean id="csw" class="org.fao.geonet.kernel.harvest.harvester.csw.CswHarvester" scope="prototype"/>
+    <bean id="z3950" class="org.fao.geonet.kernel.harvest.harvester.z3950.Z3950Harvester" scope="prototype"/>
+    <bean id="z3950Config" class="org.fao.geonet.kernel.harvest.harvester.z3950Config.Z3950ConfigHarvester" scope="prototype"/>
+    <bean id="oaipmh" class="org.fao.geonet.kernel.harvest.harvester.oaipmh.OaiPmhHarvester" scope="prototype"/>
+    <bean id="ogcwxs" class="org.fao.geonet.kernel.harvest.harvester.ogcwxs.OgcWxSHarvester" scope="prototype"/>
+    <bean id="thredds" class="org.fao.geonet.kernel.harvest.harvester.thredds.ThreddsHarvester" scope="prototype"/>
+    <bean id="arcsde" class="org.fao.geonet.kernel.harvest.harvester.arcsde.ArcSDEHarvester" scope="prototype"/>
+    <bean id="filesystem" class="org.fao.geonet.kernel.harvest.harvester.localfilesystem.LocalFilesystemHarvester" scope="prototype"/>
+    <bean id="wfsfeatures" class="org.fao.geonet.kernel.harvest.harvester.wfsfeatures.WfsFeaturesHarvester" scope="prototype"/>
+
+
+</beans>

@@ -25,15 +25,16 @@ package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
@@ -69,15 +70,13 @@ public class GetStatus implements Service
 		DataManager dataMan = gc.getBean(DataManager.class);
 		AccessManager am = gc.getBean(AccessManager.class);
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		String id = Utils.getIdentifierFromParameters(params, context);
 
 		//-----------------------------------------------------------------------
 		//--- check access
 		int iLocalId = Integer.parseInt(id);
 		
-		if (!dataMan.existsMetadata(dbms, iLocalId))
+		if (!dataMan.existsMetadata(iLocalId))
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 
 		if (!am.isOwner(context,id)) 
@@ -86,25 +85,19 @@ public class GetStatus implements Service
 		//-----------------------------------------------------------------------
 		//--- retrieve metadata status
 
-		Element stats = dataMan.getStatus(dbms, iLocalId);
+		MetadataStatus stats = dataMan.getStatus(iLocalId);
 
 		String status = Params.Status.UNKNOWN;
 		String userId = "-1"; // no userId
 		if (stats != null) {
-		    
-			@SuppressWarnings("unchecked")
-            List<Element> mdStat = stats.getChildren();
-			if (mdStat.size() > 0) {	
-				Element stat = mdStat.get(0);	
-				status = stat.getChildText("statusid");
-				userId = stat.getChildText("userid");
-			}
+		    status = String.valueOf(stats.getId().getStatusId());
+            userId = String.valueOf(stats.getId().getUserId());
 		}
 
 		//-----------------------------------------------------------------------
-		//--- retrieve status values 
+		//--- retrieve status values
 
-		Element elStatus = Lib.local.retrieve(dbms, "StatusValues");
+		Element elStatus = gc.getBean(StatusValueRepository.class).findAllAsXml();
 
 		@SuppressWarnings("unchecked")
         List<Element> kids = elStatus.getChildren();
@@ -129,7 +122,7 @@ public class GetStatus implements Service
 		Set<Integer> ids = new HashSet<Integer>();
 		ids.add(Integer.valueOf(id));
 
-		Element cRevs = am.getContentReviewers(dbms, ids);
+		Element cRevs = am.getContentReviewers(ids);
 		cRevs.setName("contentReviewers");
 
 		//-----------------------------------------------------------------------

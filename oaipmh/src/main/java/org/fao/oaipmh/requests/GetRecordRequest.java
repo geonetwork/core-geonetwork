@@ -26,6 +26,9 @@ package org.fao.oaipmh.requests;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.XmlRequest;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.responses.GetRecordResponse;
 import org.jdom.JDOMException;
@@ -37,7 +40,15 @@ public class GetRecordRequest extends AbstractRequest
 {
 	public static final String VERB = "GetRecord";
 
-	//---------------------------------------------------------------------------
+    public GetRecordRequest(GeonetHttpRequestFactory transport) {
+        super(transport);
+    }
+
+    public GetRecordRequest(XmlRequest transport) {
+        super(transport);
+    }
+
+    //---------------------------------------------------------------------------
 	//---
 	//--- API methods
 	//---

@@ -122,9 +122,41 @@ GeoNetwork.map.ExtentMap = function(){
                 restrictedExtent: GeoNetwork.map.EXTENT,
                 maxExtent: GeoNetwork.map.MAXEXTENT,
                 theme: null
-            },
+            }, map;
+
+        if (GeoNetwork.map.CONTEXT) {
+            // Load map context
+            var request = OpenLayers.Request.GET({
+                url: GeoNetwork.map.CONTEXT,
+                async: false
+            });
+            if (request.responseText) {
+
+                var text = request.responseText;
+                var format = new OpenLayers.Format.WMC();
+                map = format.read(text, {map:options});
+            }
+        }
+        else if (GeoNetwork.map.OWS) {
+            // Load map context
+            var request = OpenLayers.Request.GET({
+                url: GeoNetwork.map.OWS,
+                async: false
+            });
+            if (request.responseText) {
+                var parser = new OpenLayers.Format.OWSContext();
+                var text = request.responseText;
+                map = parser.read(text, {map: options});
+            }
+        }
+        else {
             map = new OpenLayers.Map(options);
-        
+
+            // Add layers.
+            for (i = 0; i < GeoNetwork.map.BACKGROUND_LAYERS.length; i++) {
+                map.addLayer(GeoNetwork.map.BACKGROUND_LAYERS[i].clone());
+            }
+        }
         
         
         // Disable mouse wheel and navigation toolbar in view mode.
@@ -138,11 +170,7 @@ GeoNetwork.map.ExtentMap = function(){
         // Add mouse position control to display coordintate.
         map.addControl(new OpenLayers.Control.MousePosition());
         
-        // Add layers.
-        for (i = 0; i < GeoNetwork.map.BACKGROUND_LAYERS.length; i++) {
-            map.addLayer(GeoNetwork.map.BACKGROUND_LAYERS[i].clone());
-        }
-        
+
         
         // Add vector layer to draw features (ie. bbox or polygon)
         var vectorLayer = new OpenLayers.Layer.Vector("VectorLayer", {            //displayOutsideMaxExtent: true,
@@ -213,10 +241,11 @@ GeoNetwork.map.ExtentMap = function(){
             
             // reproject if another projection is used
             if (mainProjCode !== wgsProj) {
-            	var p = new OpenLayers.Projection(mainProjCode);
-            	if(mainProjCode == 'EPSG:900913') {
-            		p.proj = null;
-            	}
+                // proj4j definition of EPSG:900913, fails for 90, -90 latitudes cause it cannot compute near the pole.
+                // Disable proj4j computation and use OL one's even if proj4j projection is defined
+                var p = new OpenLayers.Projection(mainProjCode);
+                if (p.projCode == "EPSG:900913") p.proj = null;
+
             	boundsForMap.transform(new OpenLayers.Projection(wgsProjCode), p);
             }
         } else {
@@ -240,21 +269,26 @@ GeoNetwork.map.ExtentMap = function(){
             
             // Reproject bounds to map projection if needed
             if (toProj !== mainProjCode) {
-            	var p = new OpenLayers.Projection(mainProjCode);
-            	if(mainProjCode == 'EPSG:900913' && toProj == 'EPSG:4326') {
-            		p.proj = null;
-            	}
-            	boundsForMap.transform(new OpenLayers.Projection(toProj), p);
+                // proj4j definition of EPSG:900913, fails for 90, -90 latitudes cause it cannot compute near the pole.
+                // Disable proj4j computation and use OL one's even if proj4j projection is defined
+                var pOrig = new OpenLayers.Projection(toProj);
+                if (pOrig.projCode == "EPSG:900913") pOrig.proj = null;
+
+                var pDest = new OpenLayers.Projection(mainProjCode);
+                if (pDest.projCode == "EPSG:900913") pDest.proj = null;
+
+            	boundsForMap.transform(pOrig, pDest);
             }
             
             // Reproject coordinates to WGS84 to set lat long in coordinates hidden inputs
             if (toProj !== wgsProjCode) {
-            	var p = new OpenLayers.Projection(toProj);
-            	if(toProj == 'EPSG:900913') {
-            		p.proj = null;
-            	}
-                bounds.transform(p, new OpenLayers.Projection(wgsProjCode));
-            } 
+                // proj4j definition of EPSG:900913, fails for 90, -90 latitudes cause it cannot compute near the pole.
+                // Disable proj4j computation and use OL one's even if proj4j projection is defined
+                var p = new OpenLayers.Projection(toProj);
+                if (p.projCode == "EPSG:900913") p.proj = null;
+
+                bounds.transform(new OpenLayers.Projection(p), new OpenLayers.Projection(wgsProjCode));
+            }
             // Set main projection coordinates
             Ext.get("_" + wsen[0]).dom.value = bounds.left;
             Ext.get("_" + wsen[1]).dom.value = bounds.bottom;
@@ -302,10 +336,12 @@ GeoNetwork.map.ExtentMap = function(){
             var bounds = OpenLayers.Bounds.fromString(l + "," + b + "," + r + "," + t);
             
             if (!toProj.equals(wgsProj)) {
-            	if(toProj.getCode() == 'EPSG:900913') {
-            		toProj.proj = null;
-            	}
-                bounds.transform(wgsProj, toProj);
+                // proj4j definition of EPSG:900913, fails for 90, -90 latitudes cause it cannot compute near the pole.
+                // Disable proj4j computation and use OL one's even if proj4j projection is defined
+                var p = toProj;
+                if (p.projCode == "EPSG:900913") p.proj = null;
+
+                bounds.transform(wgsProj, p);
             }
             if (w !== "") {
                 w = bounds.left.toFixed(digits) + "";
@@ -386,7 +422,7 @@ GeoNetwork.map.ExtentMap = function(){
         if (string === '') {
             return false;
         }
-        
+
         var format = 'WKT';
         var from, to;
         if (options !== null) {
@@ -604,7 +640,12 @@ GeoNetwork.map.ExtentMap = function(){
                                 // coordinate to store WGS84 in metadata record.
                                 
                                 if (mainProj !== wgsProj) {
-                                    boundsReproj = bounds.clone().transform(mainProj, wgsProj);
+                                    // proj4j definition of EPSG:900913, fails for 90, -90 latitudes cause it cannot compute near the pole.
+                                    // Disable proj4j computation and use OL one's even if proj4j projection is defined
+                                    var p = mainProj;
+                                    if (p.projCode == "EPSG:900913") p.proj = null;
+
+                                    boundsReproj = bounds.clone().transform(p, wgsProj);
                                 } else {
                                     boundsReproj = bounds;
                                 }
@@ -800,7 +841,7 @@ GeoNetwork.map.ExtentMap = function(){
                         }
                     });
                 }
-                
+
                 var mapPanel = new GeoExt.MapPanel({
                     renderTo: id,
                     height: 300, // TODO : make config file see with ELE.
@@ -810,17 +851,20 @@ GeoNetwork.map.ExtentMap = function(){
                 });
                 
                 if (children.length > 0) {
-                	if(mainProj.getCode() == 'EPSG:900913') {
-                		mainProj.proj = null;
-                	}
+
+                    // proj4j definition of EPSG:900913, fails for 90, -90 latitudes cause it cannot compute near the pole.
+                    // Disable proj4j computation and use OL one's even if proj4j projection is defined
+                    var p = mainProj;
+                    if (p.projCode == "EPSG:900913") p.proj = null;
+
                     readFeature(children[0].innerHTML, {
                         format: 'WKT',
                         zoomToFeatures: true,
                         from: wgsProj, // Always reproject LatLounBoundingBox
-                        to: mainProj
+                        to: p
                     }, vectorLayers[eltRef], maps[eltRef]);
                 }
-                //              FIXME : GML parsing sounds not trivial. Using WKT parser instead for now.  
+                //              FIXME : GML parsing sounds not trivial. Using WKT parser instead for now.
                 //                if (GeoNetwork.map.ExtentMap.targetPolygon != '') {
                 //                    var gml = document.getElementById('_X' + GeoNetwork.map.ExtentMap.targetPolygon).value;
                 //                    GeoNetwork.map.ExtentMap.readFeature(gml, {

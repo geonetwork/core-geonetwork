@@ -24,20 +24,23 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.MdInfo;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
 import java.util.*;
+
+import static org.fao.geonet.kernel.SelectionManager.SELECTION_METADATA;
 
 /**
  * Stores all operations allowed for a metadata.
@@ -59,33 +62,31 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
 	//---
 	//--------------------------------------------------------------------------
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dm = gc.getBean(DataManager.class);
 		AccessManager accessMan = gc.getBean(AccessManager.class);
 		UserSession   us = context.getUserSession();
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		context.info("Get selected metadata");
 		SelectionManager sm = SelectionManager.getManager(us);
 
 		Set<Integer> metadata = new HashSet<Integer>();
-		Set<Integer> notFound = new HashSet<Integer>();
+		Set<String> notFound = new HashSet<String>();
 		Set<Integer> notOwner = new HashSet<Integer>();
 
-		synchronized(sm.getSelection("metadata")) {
-		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
-			String uuid = (String) iter.next();
-			String id   = dm.getMetadataId(dbms, uuid);
+		synchronized(sm.getSelection(SELECTION_METADATA)) {
+		for (Iterator<String> iter = sm.getSelection(SELECTION_METADATA).iterator(); iter.hasNext();) {
+			String uuid = iter.next();
 
 			//--- check access
-			MdInfo info = dm.getMetadataInfo(dbms, id);
+
+			Metadata info = context.getBean(MetadataRepository.class).findOneByUuid(uuid);
 			if (info == null) {
-				notFound.add(Integer.valueOf(id));
-			} else if (!accessMan.isOwner(context, id)) {
-				notOwner.add(Integer.valueOf(id));
+				notFound.add(uuid);
+			} else if (!accessMan.isOwner(context, String.valueOf(info.getId()))) {
+				notOwner.add(info.getId());
 			} else {
 
 				//--- remove old operations
@@ -93,13 +94,14 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
 
 				//--- in case of owner, privileges for groups 0,1 and GUEST are 
 				//--- disabled and are not sent to the server. So we cannot remove them
-				boolean isAdmin = Geonet.Profile.ADMINISTRATOR.equals(us.getProfile());
-				boolean isReviewer= Geonet.Profile.REVIEWER.equals(us.getProfile());
+				boolean isAdmin = Profile.Administrator == us.getProfile();
+				boolean isReviewer= Profile.Reviewer == us.getProfile();
 
-				if (us.getUserId().equals(info.owner) && !isAdmin && !isReviewer)
-					skip = true;
+				if (us.getUserIdAsInt() == info.getSourceInfo().getOwner() && !isAdmin && !isReviewer) {
+                    skip = true;
+                }
 
-				dm.deleteMetadataOper(dbms, id, skip);
+				dm.deleteMetadataOper(context, "" + info.getId(), skip);
 
 				//--- set new ones
 				@SuppressWarnings("unchecked")
@@ -114,17 +116,17 @@ public class BatchUpdatePrivileges extends NotInReadOnlyModeService {
 						String groupId = st.nextToken();
 						String operId  = st.nextToken();
 
-						dm.setOperation(context, dbms, id, groupId, operId);
+						dm.setOperation(context, "" + info.getId(), groupId, operId);
 					}
 				}
-				metadata.add(Integer.valueOf(id));
+				metadata.add(info.getId());
 			}
 		}
 		}
 
 		//--- reindex metadata
 		context.info("Re-indexing metadata");
-		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, dbms, metadata);
+		BatchOpsMetadataReindexer r = new BatchOpsMetadataReindexer(dm, metadata);
 		r.process();
 
 		// -- for the moment just return the sizes - we could return the ids

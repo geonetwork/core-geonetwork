@@ -24,19 +24,16 @@
 package org.fao.geonet.services.user;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.UserNotFoundEx;
-import jeeves.resources.dbms.Dbms;
+import org.fao.geonet.exceptions.UserNotFoundEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.PasswordUtil;
-import jeeves.utils.Util;
-import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.services.NotInReadOnlyModeService;
+import org.fao.geonet.util.PasswordUtil;
 import org.jdom.Element;
-
-import javax.servlet.ServletContext;
+import org.springframework.context.ApplicationContext;
 
 /**
  * Update the password of logged user.
@@ -59,10 +56,7 @@ public class PwUpdate extends NotInReadOnlyModeService {
 	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
 	{
 		String password    = Util.getParam(params, Params.PASSWORD);
-		ServletContext servletContext = context.getServlet().getServletContext();
 		String newPassword = Util.getParam(params, Params.NEW_PASSWORD);
-
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
 		UserSession session = context.getUserSession();
 		String      currentUserId  = session.getUserId();
@@ -70,7 +64,8 @@ public class PwUpdate extends NotInReadOnlyModeService {
 		if (currentUserId == null) throw new UserNotFoundEx(null);
 
 		int iUserId = Integer.parseInt(currentUserId);
-		PasswordUtil.updatePasswordWithNew(true, password, newPassword, iUserId, servletContext, dbms);
+        ApplicationContext appContext = context.getApplicationContext();
+		PasswordUtil.updatePasswordWithNew(true, password, newPassword, iUserId, appContext);
 
 		return new Element(Jeeves.Elem.RESPONSE);
 	}

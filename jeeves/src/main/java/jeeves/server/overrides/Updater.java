@@ -1,9 +1,12 @@
 package jeeves.server.overrides;
 
-import java.util.Properties;
-
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 
+import java.util.Properties;
+
 interface Updater {
-    public abstract Object update(ApplicationContext applicationContext, Properties properties);
+    public void update(ConfigurableListableBeanFactory beanFactory, Properties properties);
+    public boolean runOnFinish();
 }

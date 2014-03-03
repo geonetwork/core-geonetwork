@@ -1,0 +1,81 @@
+<div class="container" data-ng-controller="GnLoginController">
+  <div class="col-lg-6">
+    <form class="form-horizontal" name="gnSigninForm" action="../../j_spring_security_check"
+      method="post" role="form" data-ng-if="user['@authenticated'] != 'true'">
+      <div class="form-group">
+        <label class="col-sm-3 control-label"
+               for="inputUsername" data-translate="">username</label>
+        <div class="col-sm-9">
+          <input type="text" class="form-control" id="inputUsername" name="username" autofocus=""
+            placeholder="{{'username' | translate}}" data-ng-model="signinUsername" required=""/>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="col-sm-3 control-label" 
+          for="inputPassword" data-translate="">password</label>
+        <div class="col-sm-9">
+          <input type="password" class="form-control" id="inputPassword" name="password"
+            data-ng-model="signinPassword" placeholder="{{'password' | translate}}" required=""/>
+        </div>
+      </div>
+      
+      <input type="hidden" name="redirectUrl" data-ng-model="redirectUrl" value="{{redirectUrl}}"/>
+      <!--<div class="checkbox">
+                <label class="checkbox">
+                    <input type="checkbox"/><span translate>rememberMe</span>
+                </label>
+            </div>-->
+
+      <button type="submit" class="btn btn-primary pull-right" data-ng-disabled="!gnSigninForm.$valid">
+        <i class="fa fa-signin"/>
+        <span data-translate="">signIn</span>
+      </button>
+      <div class="clearfix"></div>
+    </form>
+  </div>
+  <div class="col-lg-6">
+    <div class="panel panel-default" data-ng-show="gnConfig[gnConfig.key.isSelfRegisterEnabled]">
+      <div class="panel-heading" data-translate="">needAnAccount</div>
+      <div class="panel-body">
+        <p data-translate="">needAnAccountInfo</p>
+        <p>
+          <a class="btn btn-default" href="new.account" data-translate="">createAnAccount</a>
+        </p>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading" data-translate="">forgetDetails</div>
+      <div class="panel-body">
+        <div data-ng-show="sendPassword === false">
+          <p data-translate="">forgetDetailsInfo</p>
+          <p>
+            <a type="submit" class="btn btn-default" data-ng-click="setSendPassword(true)"
+              data-translate="">recoverPassword</a>
+          </p>
+        </div>
+        <div data-ng-show="sendPassword === true">
+          <div>
+            <form class="form-horizontal" id="userinfo" name="gnUserinfo">
+              <div class="form-group">
+                <label class="control-label col-lg-3" data-translate="">username</label>
+                <div class="col-lg-8">
+                  <input type="text" name="username" id="username"
+                         data-ng-model="usernameToRemind"
+                         data-ng-required="" class="form-control"/>
+                </div>
+              </div>
+              <a type="submit" class="btn btn-default pull-right"
+                 data-ng-disabled="usernameToRemind == ''"
+                 data-ng-click="remindMyPassword('#userinfo')">
+                <i class="fa fa-question-sign"/>
+                <span data-translate="">sendPasswordLinkToMyEmail</span>
+              </a>
+              <div class="clearfix"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -4,6 +4,11 @@ var catalogue;
 var app;
 var cookie;
 
+var nodeInfo = /([a-zA-Z0-9_\-]+)\/([a-z]{3})\/find/
+        .exec(window.location.href);
+var catalogueLang = nodeInfo[2] || GeoNetwork.Util.defaultLocale;
+var catalogueNode = nodeInfo[1] || 'srv';
+
 GeoNetwork.app = function () {
     // private vars:
     var geonetworkUrl;
@@ -515,8 +520,8 @@ GeoNetwork.app = function () {
             createMainTagCloud();
             createLatestUpdate();
         } else {
-            Ext.get('infoPanel').getUpdater().update({url: 'home_eng.html'});
-            Ext.get('helpPanel').getUpdater().update({url: 'help_eng.html'});
+            Ext.get('infoPanel').getUpdater().update({url: '../../apps/search/home_' + catalogueLang + '.html'});
+            Ext.get('helpPanel').getUpdater().update({url: '../../apps/search/help_' + catalogueLang + '.html'});
         }
     }
     /** private: methode[createInfoPanel]
@@ -532,7 +537,7 @@ GeoNetwork.app = function () {
             autoWidth: true,
             contentEl: 'infoContent',
             autoLoad: {
-                url: 'home_' + catalogue.LANG + '.html',
+                url: '../../apps/search/home_' + catalogue.LANG + '.html',
                 callback: loadCallback,
                 scope: this,
                 loadScripts: false
@@ -553,7 +558,7 @@ GeoNetwork.app = function () {
             autoWidth: true,
             renderTo: 'shortcut',
             autoLoad: {
-                url: 'help_' + catalogue.LANG + '.html',
+                url: '../../apps/search/help_' + catalogue.LANG + '.html',
                 callback: initShortcut,
                 scope: this,
                 loadScripts: false
@@ -695,8 +700,9 @@ GeoNetwork.app = function () {
     // public space:
     return {
         init: function () {
-            geonetworkUrl = GeoNetwork.URL || window.location.href.match(/(http.*\/.*)\/apps\/search.*/, '')[1];
-
+            var geonetworkUrl = GeoNetwork.URL || window.location.href.match(
+                    /(http.*\/.*)\/.*\/.*\/.*/, '')[1];
+            
             urlParameters = GeoNetwork.Util.getParameters(location.href);
             var lang = urlParameters.hl || GeoNetwork.Util.defaultLocale;
             if (urlParameters.extent) {
@@ -724,9 +730,10 @@ GeoNetwork.app = function () {
             catalogue = new GeoNetwork.Catalogue({
                 statusBarId: 'info',
                 lang: lang,
+                node: catalogueNode,
                 hostUrl: geonetworkUrl,
                 mdOverlayedCmpId: 'resultsPanel',
-                adminAppUrl: geonetworkUrl + '/srv/' + lang + '/admin',
+                adminAppUrl: geonetworkUrl + '/' + catalogueNode + '/' + lang + '/admin.console',
                 // Declare default store to be used for records and summary
                 metadataStore: GeoNetwork.Settings.mdStore ? GeoNetwork.Settings.mdStore() : GeoNetwork.data.MetadataResultsStore(),
                 metadataCSWStore : GeoNetwork.data.MetadataCSWResultsStore(),
@@ -844,6 +851,12 @@ GeoNetwork.app = function () {
             } else if (urlParameters.id !== undefined) {
                 catalogue.metadataShowById(urlParameters.id, true);
             }
+            if (urlParameters.insert !== undefined) {
+                setTimeout(function () {
+                    var actionCtn = Ext.getCmp('resultsPanel').getTopToolbar();
+                    actionCtn.mdImportAction.handler.apply(actionCtn);
+                }, 500);
+            }
             
             // FIXME : should be in Search field configuration
             Ext.get('E_any').setWidth(285);
@@ -914,20 +927,24 @@ GeoNetwork.app = function () {
             
             // Update page title based on search results and params
             var formParams = GeoNetwork.util.SearchTools.getFormValues(searchForm);
-            var criteria = '', 
-                excludedSearchParam = {E_hitsperpage: null, timeType: null,
-                sortOrder: null, sortBy: null};
+
+            // Update page title based on search results and params
+            var formParams = GeoNetwork.util.SearchTools.getFormValues(searchForm);
+            var criteria = [], 
+            excludedSearchParam = {E_hitsperpage: null, timeType: null,
+            sortOrder: null, sortBy: null};
             for (var item in formParams) {
                 if (formParams.hasOwnProperty(item) && excludedSearchParam[item] === undefined) {
                     var value = formParams[item];
                     if (value != '') {
                         fieldName = item.split('_');
-                        criteria += OpenLayers.i18n(fieldName[1] || item) + ': ' + value + ' - '
+                        criteria.push(OpenLayers.i18n(fieldName[1] || item) + ': ' + value);
                     }
                 }
             }
+        
             var title = (catalogue.metadataStore.totalLength || 0) + OpenLayers.i18n('recordsFound')
-                           + (criteria !== '' ? ' | ' + criteria : '');
+                           + (criteria.length > 0 ? ' | ' + criteria.join(', ') : '');
             
             GeoNetwork.Util.updateHeadInfo({
                 title: catalogue.getInfo().name + ' | ' + title

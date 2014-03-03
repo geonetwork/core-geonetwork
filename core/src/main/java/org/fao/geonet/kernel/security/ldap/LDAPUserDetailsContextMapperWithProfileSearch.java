@@ -35,11 +35,11 @@ import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchResult;
 
-import jeeves.server.ProfileManager;
-import jeeves.server.resources.ResourceManager;
-import jeeves.utils.Log;
+import jeeves.component.ProfileManager;
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Profile;
 
 /**
  * Get all user information from the LDAP user's attributes excluding profiles
@@ -65,8 +65,7 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
 
     private Pattern privilegeQueryPatternCompiled;
 
-    protected void setProfilesAndPrivileges(ResourceManager resourceManager,
-            ProfileManager profileManager, String defaultProfile,
+    protected void setProfilesAndPrivileges(Profile defaultProfile,
             String defaultGroup, Map<String, ArrayList<String>> userInfo,
             LDAPUser userDetails) {
 
@@ -75,7 +74,7 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
                 StringBuffer sb = new StringBuffer("Group and profile search:");
                 sb.append("\nGroup attribute: \t" + groupAttribute);
                 sb.append("\nGroup query: \t" + groupQuery);
-                sb.append("\nGroup attribute: \t" + groupQueryPattern);
+                sb.append("\nGroup query pattern: \t" + groupQueryPattern);
                 sb.append("\nProfile attribute: \t" + privilegeAttribute);
                 sb.append("\nProfile query: \t" + privilegeQuery);
                 sb.append("\nProfile attribute: \t" + privilegeQueryPattern);
@@ -87,7 +86,7 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
                 DirContext dc = contextSource.getReadOnlyContext();
 
                 // Extract profile first
-                Set<String> profileList = new HashSet<String>();
+                Set<Profile> profileList = new HashSet<Profile>();
                 String groupsQuery = MessageFormat.format(this.privilegeQuery,
                         userDetails.getUsername());
                 ldapInfoList = dc.search(privilegeObject, groupsQuery, null);
@@ -100,9 +99,9 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
                             .matcher(profileName);
                     boolean b = m.matches();
                     if (b) {
-                        String p = m.group(1);
+                        Profile p = Profile.findProfileIgnoreCase(m.group(1));
                         if (profileMapping != null) {
-                            String mapped = profileMapping.get(p);
+                            Profile mapped = profileMapping.get(p.name());
                             if (mapped != null) {
                                 p = mapped;
                             }
@@ -115,24 +114,25 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
                                 + "'. Information ignored.");
                     }
                 }
-                String highestUserProfile = profileManager
-                        .getHighestProfile(profileList.toArray(new String[0]));
+                
+                // TODO: This is broken.  
+                Profile highestUserProfile = ProfileManager.getHighestProfile(profileList.toArray(new Profile[profileList.size()]));
                 if (highestUserProfile != null) {
                     if (Log.isDebugEnabled(Geonet.LDAP)) {
                         Log.debug(Geonet.LDAP, "  Highest user profile is "
                                 + highestUserProfile);
                     }
-                    userDetails.setProfile(highestUserProfile);
+                    userDetails.getUser().setProfile(highestUserProfile);
                 }
                 
                 // If no profile defined, use default profile
-                if (userDetails.getProfile() == null) {
+                if (userDetails.getUser().getProfile() == null) {
                     if (Log.isDebugEnabled(Geonet.LDAP)) {
                         Log.debug(Geonet.LDAP,
                                 "  No profile defined in LDAP, using default profile "
                                         + defaultProfile);
                     }
-                    userDetails.setProfile(defaultProfile);
+                    userDetails.getUser().setProfile(defaultProfile);
                 }
                 
                 
@@ -151,7 +151,7 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
                     if (b) {
                         String group = m.group(1);
                         userDetails.addPrivilege(group,
-                                userDetails.getProfile());
+                                userDetails.getUser().getProfile());
                     } else {
                         Log.error(Geonet.LDAP, "LDAP group '" + groupName
                                 + "' does not match search pattern '"

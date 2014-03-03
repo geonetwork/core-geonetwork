@@ -23,15 +23,17 @@
 
 package org.fao.geonet.kernel.mef;
 
-import jeeves.exceptions.BadFormatEx;
-import jeeves.resources.dbms.Dbms;
+import com.google.common.base.Optional;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.exceptions.BadFormatEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
-import jeeves.utils.IO;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.Util;
+import org.fao.geonet.utils.Xml;
 
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
@@ -40,45 +42,30 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.util.ISODate;
+import org.fao.geonet.repository.*;
 import org.fao.oaipmh.exceptions.BadArgumentException;
 import org.jdom.Element;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class Importer {
-	public static List<String> doImport(final Element params,
-			final ServiceContext context, File mefFile, final String stylePath)
-			throws Exception {
-			return doImport(params, context, mefFile, stylePath, false);
-	}
-
-	public static List<String> doImport(final Element params,
-			final ServiceContext context, File mefFile, final String stylePath,
-			final boolean indexGroup) throws Exception {
-		final GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-		final DataManager dm = gc.getBean(DataManager.class);
+	public static List<String> doImport(final Element params, final ServiceContext context,
+                                        final File mefFile, final String stylePath) throws Exception {
+		final DataManager dm = context.getBean(DataManager.class);
 
 		// Load preferred schema and set to iso19139 by default
-		final String preferredSchema = (gc.getBean(ServiceConfig.class)
-				.getMandatoryValue("preferredSchema") != null ? gc.getBean(ServiceConfig.class).getMandatoryValue("preferredSchema")
-				: "iso19139");
+        String preferredSchema = context.getBean(ServiceConfig.class).getMandatoryValue("preferredSchema");
+        if (preferredSchema == null) {
+            preferredSchema = "iso19139";
+        }
 
-		final Dbms dbms = (Dbms) context.getResourceManager().open(
-				Geonet.Res.MAIN_DB);
-
-		final List<String> id = new ArrayList<String>();
+        final List<String> metadataIdMap = new ArrayList<String>();
 		final List<Element> md = new ArrayList<Element>();
 		final List<Element> fc = new ArrayList<Element>();
 
@@ -86,8 +73,9 @@ public class Importer {
 		String fileType = Util.getParam(params, "file_type", "mef");
 		if (fileType.equals("mef")) {
 			MEFLib.Version version = MEFLib.getMEFVersion(mefFile);
-			if (version.equals(MEFLib.Version.V2))
-				fileType = "mef2";
+			if (version != null && version.equals(MEFLib.Version.V2)) {
+                fileType = "mef2";
+            }
 		}
 
 		IVisitor visitor;
@@ -102,7 +90,8 @@ public class Importer {
 			throw new BadArgumentException("Bad file type parameter.");
 
 		// --- import metadata from MEF, Xml, ZIP files
-		MEFLib.visit(mefFile, visitor, new IMEFVisitor() {
+        final String finalPreferredSchema = preferredSchema;
+        MEFLib.visit(mefFile, visitor, new IMEFVisitor() {
 
 			public void handleMetadata(Element metadata, int index)
 					throws Exception {
@@ -131,9 +120,9 @@ public class Importer {
                 	Log.debug(Geonet.MEF, "info.xml says schema should be "+infoSchema);
 
 
-				Element metadataValidForImport = null;
+				Element metadataValidForImport;
 
-								Map<String,Pair<String,Element>> mdFiles = new HashMap<String,Pair<String,Element>>();
+                Map<String,Pair<String,Element>> mdFiles = new HashMap<String,Pair<String,Element>>();
                 for (File file : Files) {
                     if (file != null && !file.isDirectory()) {
                         Element metadata = Xml.loadFile(file);
@@ -154,7 +143,6 @@ public class Importer {
                             Log.debug(Geonet.MEF, "No schema match for "
                                 + lastUnknownMetadataFolderName + file.getName() 
                                 + ".");
-                            continue;
                         }
                     }
                 }
@@ -176,11 +164,11 @@ public class Importer {
 								}
 
 								// 2nd: Select metadata with preferredSchema
-								mdInform = mdFiles.get(preferredSchema);
+								mdInform = mdFiles.get(finalPreferredSchema);
                 if (mdInform != null) {
 									if (Log.isDebugEnabled(Geonet.MEF)) {
 										Log.debug(Geonet.MEF, mdInform.one()
-											+ " with preferred schema (" + preferredSchema + ").");
+											+ " with preferred schema (" + finalPreferredSchema + ").");
 									}
 									metadataValidForImport = mdInform.two();
 									handleMetadata(metadataValidForImport, index);
@@ -235,13 +223,12 @@ public class Importer {
 				// It is used in handleMetadataFiles as the first option to pick a 
 				// metadata file from those in a metadata dir in a MEF2
 				// String schema = null;
-				String isTemplate;
-				String localId = null;
+				final MetadataType isTemplate;
 				String rating = null;
 				String popularity = null;
 				String groupId = null;
 				Element categs = null;
-				Element privileges;
+				final Element privileges;
 				boolean validate = false;
 
 				
@@ -254,7 +241,7 @@ public class Importer {
 							+ FS + style));
 				
 				
-				Element metadata = md.get(index);
+				final Element metadata = md.get(index);
 				String schema = dm.autodetectSchema(metadata, null);
 
 				if (schema == null)
@@ -262,9 +249,8 @@ public class Importer {
 
 				// Handle non MEF files insertion
 				if (info.getChildren().size() == 0) {
-					source = Util.getParam(params, Params.SITE_ID, gc
-							.getSiteId());
-					isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
+                    source = Util.getParam(params, Params.SITE_ID, context.getBean(SettingManager.class).getSiteId());
+					isTemplate = MetadataType.lookup(Util.getParam(params, Params.TEMPLATE, "n"));
 
 					String category = Util
 							.getParam(params, Params.CATEGORY, "");
@@ -289,10 +275,10 @@ public class Importer {
 					privileges.addContent(new Element("operation")
 							.setAttribute("name", "featured"));
 
-					// Get the Metadata uuid if it's not a template.
-					if (isTemplate.equals("n")) {
-						uuid = dm.extractUUID(schema, md.get(index));
-					} else if (isTemplate.equals("s")) {
+					if (isTemplate == MetadataType.METADATA) {
+                        // Get the Metadata uuid if it's not a template.
+                        uuid = dm.extractUUID(schema, md.get(index));
+					} else if (isTemplate== MetadataType.SUB_TEMPLATE) {
 					    // Get subtemplate uuid if defined in @uuid at root
                         uuid = md.get(index).getAttributeValue("uuid");
 					}
@@ -317,19 +303,16 @@ public class Importer {
 					if (assign) {
                         if(Log.isDebugEnabled(Geonet.MEF))
                             Log.debug(Geonet.MEF, "Assign to local catalog");
-						source = gc.getSiteId();
+                        source = context.getBean(SettingManager.class).getSiteId();
 					} else {	
 						// --- If siteId is not set, set to current node
-						source = Util.getParam(general, Params.SITE_ID, gc
-								.getSiteId());
+                        source = Util.getParam(general, Params.SITE_ID, context.getBean(SettingManager.class).getSiteId());
 						sourceName = general.getChildText("siteName");
-						localId = general.getChildText("localId");
 
                         if(Log.isDebugEnabled(Geonet.MEF))
                             Log.debug(Geonet.MEF, "Assign to catalog: " + source);
 					}
-					isTemplate = general.getChildText("isTemplate").equals(
-							"true") ? "y" : "n";
+					isTemplate = general.getChildText("isTemplate").equals("true") ? MetadataType.TEMPLATE : MetadataType.METADATA;
 					rating = general.getChildText("rating");
 					popularity = general.getChildText("popularity");
 				}
@@ -342,9 +325,9 @@ public class Importer {
 				String uuidAction = Util.getParam(params, Params.UUID_ACTION,
 						Params.NOTHING);
 
-				importRecord(uuid, localId, uuidAction, md, schema, index,
-						source, sourceName, context, id, createDate,
-						changeDate, groupId, isTemplate, dbms);
+				importRecord(uuid, uuidAction, md, schema, index,
+						source, sourceName, context, metadataIdMap, createDate,
+						changeDate, groupId, isTemplate);
 
 				if (fc.size() != 0 && fc.get(index) != null) {
 					// UUID is set as @uuid in root element
@@ -358,65 +341,84 @@ public class Importer {
                     int userid = context.getUserSession().getUserIdAsInt();
                     String group = null, docType = null, title = null, category = null;
                     boolean ufo = false, indexImmediate = false;
-                    String fcId = dm.insertMetadata(context, dbms, "iso19110", fc.get(index), context.getSerialFactory().getSerial(dbms, "Metadata"), uuid,
-                            userid, group, source, isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
+                    String fcId = dm.insertMetadata(context, "iso19110", fc.get(index), uuid,
+                            userid, group, source, isTemplate.codeString, docType, category, createDate, changeDate, ufo, indexImmediate);
 
                     if(Log.isDebugEnabled(Geonet.MEF))
                         Log.debug(Geonet.MEF, "Adding Feature catalog with uuid: " + uuid);
 
 					// Create database relation between metadata and feature
 					// catalog
-					String mdId = id.get(index);
-					String query = "INSERT INTO Relations (id, relatedId) VALUES (?, ?)";
-					dbms.execute(query, Integer.parseInt(mdId), Integer.parseInt(fcId));
+					String mdId = metadataIdMap.get(index);
 
-					id.add(fcId);
+                    final MetadataRelationRepository relationRepository = context.getBean(MetadataRelationRepository.class);
+                    final MetadataRelation relation = new MetadataRelation();
+                    relation.setId(new MetadataRelationId(Integer.valueOf(mdId), Integer.valueOf(fcId)));
+
+                    relationRepository.save(relation);
+
+					metadataIdMap.add(fcId);
 					// TODO : privileges not handled for feature catalog ...
 				}
 
-				int iId = Integer.parseInt(id.get(index));
+				final int iMetadataId = Integer.valueOf(metadataIdMap.get(index));
 
-				if (rating != null)
-					dbms.execute("UPDATE Metadata SET rating=? WHERE id=?",
-							Integer.valueOf(rating), iId);
+                final String finalPopularity = popularity;
+                final String finalRating = rating;
+                final Element finalCategs = categs;
+                final String finalGroupId = groupId;
+                context.getBean(MetadataRepository.class).update(iMetadataId, new Updater<Metadata>() {
+                    @Override
+                    public void apply(@Nonnull final Metadata metadata) {
+                        final MetadataDataInfo dataInfo = metadata.getDataInfo();
+                        if (finalPopularity != null) {
+                            dataInfo.setPopularity(Integer.valueOf(finalPopularity));
+                        }
+                        if (finalRating != null) {
+                            dataInfo.setRating(Integer.valueOf(finalRating));
+                        }
+                        dataInfo.setType(isTemplate);
+                        metadata.getHarvestInfo().setHarvested(false);
 
-				if (popularity != null)
-					dbms.execute("UPDATE Metadata SET popularity=? WHERE id=?",
-							Integer.valueOf(popularity), iId);
+                        addCategoriesToMetadata(metadata, finalCategs, context);
 
-				dm.setTemplateExt(dbms, iId, isTemplate, null);
-				dm.setHarvestedExt(dbms, iId, null);
+                        if (finalGroupId == null) {
+                            Group ownerGroup = addPrivileges(context, dm, iMetadataId, privileges);
+                            if (ownerGroup != null) {
+                                metadata.getSourceInfo().setGroupOwner(ownerGroup.getId());
+                            }
+                        } else {
+                            final OperationAllowedRepository allowedRepository = context.getBean(OperationAllowedRepository.class);
+                            final Set<OperationAllowed> allowedSet = addOperations(context, dm, privileges, iMetadataId,
+                                    Integer.valueOf(finalGroupId));
+                            allowedRepository.save(allowedSet);
+                        }
 
-				String pubDir = Lib.resource.getDir(context, "public", id
+
+
+                    }
+                });
+
+
+                String pubDir = Lib.resource.getDir(context, "public", metadataIdMap
 						.get(index));
-				String priDir = Lib.resource.getDir(context, "private", id
-						.get(index));
+                String priDir = Lib.resource.getDir(context, "private", metadataIdMap
+                        .get(index));
 
-		        IO.mkdirs(new File(pubDir), "MEF Importer public resources directory for metadata "+id);
-		        IO.mkdirs(new File(priDir), "MEF Importer private resources directory for metadata "+id);
+                IO.mkdirs(new File(pubDir), "MEF Importer public resources directory for metadata "+metadataIdMap);
+                IO.mkdirs(new File(priDir), "MEF Importer private resources directory for metadata "+metadataIdMap);
 
-				if (categs != null)
-					addCategories(context, dm, dbms, id.get(index), categs);
-
-				if (groupId == null)
-					addPrivileges(context, dm, dbms, id.get(index), privileges);
-				else
-					addOperations(context, dm, dbms, privileges, id.get(index), groupId);
-
-				if (indexGroup) {
-					dm.indexMetadata(dbms, id.get(index));
-				}
-                else {
-                    dm.indexInThreadPool(context,id.get(index),dbms);
-				}
+                dm.indexMetadata(metadataIdMap.get(index), false);
 			}
 
 			// --------------------------------------------------------------------
 
-			public void handlePublicFile(String file, String changeDate,
+        public void handlePublicFile(String file, String changeDate,
 					InputStream is, int index) throws IOException {
-                if(Log.isDebugEnabled(Geonet.MEF)) Log.debug(Geonet.MEF, "Adding public file with name=" + file);
-				saveFile(context, id.get(index), "public", file, changeDate, is);
+                if(Log.isDebugEnabled(Geonet.MEF)) {
+                    Log.debug(Geonet.MEF, "Adding public file with name=" + file);
+                }
+				saveFile(context, metadataIdMap.get(index), "public", file, changeDate, is);
 			}
 
 			// --------------------------------------------------------------------
@@ -424,20 +426,43 @@ public class Importer {
 			public void handlePrivateFile(String file, String changeDate,
 					InputStream is, int index) throws IOException {
                 if(Log.isDebugEnabled(Geonet.MEF)) Log.debug(Geonet.MEF, "Adding private file with name=" + file);
-				saveFile(context, id.get(index), "private", file, changeDate,
+				saveFile(context, metadataIdMap.get(index), "private", file, changeDate,
 						is);
 			}
 
 		});
 
-		return id;
+		return metadataIdMap;
 	}
 
-	public static void importRecord(String uuid, String localId,
-			String uuidAction, List<Element> md, String schema, int index,
-			String source, String sourceName, ServiceContext context,
-			List<String> id, String createDate, String changeDate,
-			String groupId, String isTemplate, Dbms dbms) throws Exception {
+    public static void addCategoriesToMetadata(Metadata metadata, Element finalCategs, ServiceContext context) {
+        if (finalCategs != null) {
+            final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
+            for (Object cat : finalCategs.getChildren()) {
+                Element categoryEl = (Element) cat;
+                String catName = categoryEl.getAttributeValue("name");
+                final MetadataCategory oneByName = categoryRepository.findOneByName(catName);
+
+                if (oneByName == null) {
+                    if(Log.isDebugEnabled(Geonet.MEF)) {
+                        Log.debug(Geonet.MEF, " - Skipping non-existent category : " + catName);
+                    }
+                } else {
+                    // --- metadata category exists locally
+                    if(Log.isDebugEnabled(Geonet.MEF)) {
+                        Log.debug(Geonet.MEF, " - Setting category : " + catName);
+                    }
+                    metadata.getCategories().add(oneByName);
+                }
+            }
+        }
+    }
+
+    public static void importRecord(String uuid,
+                                    String uuidAction, List<Element> md, String schema, int index,
+                                    String source, String sourceName, ServiceContext context,
+                                    List<String> id, String createDate, String changeDate,
+                                    String groupId, MetadataType isTemplate) throws Exception {
 
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -465,16 +490,17 @@ public class Importer {
 						"Missing siteId parameter from info.xml file");
 
 			// --- only update sources table if source is not current site 
-			if (!source.equals(gc.getSiteId())) { 
-				Lib.sources.update(dbms, source, sourceName, true); 
-			}
+            if (!source.equals(gc.getBean(SettingManager.class).getSiteId())) {
+                Source source1 = new Source(source, sourceName, true);
+                context.getBean(SourceRepository.class).save(source1);
+            }
 		}
 
 		try {
-			if (dm.existsMetadataUuid(dbms, uuid) && !uuidAction.equals(Params.NOTHING)) {
+			if (dm.existsMetadataUuid(uuid) && !uuidAction.equals(Params.NOTHING)) {
                 // user has privileges to replace the existing metadata
-                if(dm.getAccessManager().canEdit(context, dm.getMetadataId(dbms, uuid))) {
-                    dm.deleteMetadata(context, dbms, dm.getMetadataId(dbms, uuid));
+                if(dm.getAccessManager().canEdit(context, dm.getMetadataId(uuid))) {
+                    dm.deleteMetadata(context, dm.getMetadataId(uuid));
                     if(Log.isDebugEnabled(Geonet.MEF))
                         Log.debug(Geonet.MEF, "Deleting existing metadata with UUID : " + uuid);
                 }
@@ -493,51 +519,15 @@ public class Importer {
         if(Log.isDebugEnabled(Geonet.MEF))
             Log.debug(Geonet.MEF, "Adding metadata with uuid:" + uuid);
 		
-		// Try to insert record with localId provided, if not use a new id.
-		boolean insertedWithLocalId = false;
-		if (localId != null && !localId.equals("")) {
-			try {
-				int iLocalId = Integer.parseInt(localId);
-		
-				// Use the same id to insert the metadata record.
-				// This is an optional element. If present, indicates the
-				// id used locally by the sourceId actor to store the metadata. Its
-				// purpose is just to allow the reuse of the same local id when
-				// reimporting a metadata. 
-				if (!dm.existsMetadata(dbms, iLocalId)) {
-                    if(Log.isDebugEnabled(Geonet.MEF))
-                        Log.debug(Geonet.MEF, "Using given localId: " + localId);
-
-                    //
-                    // insert metadata
-                    //
-                    String docType = "", title = null, category = null;
-                    boolean ufo = false, indexImmediate = false;
-                    dm.insertMetadata(context, dbms, schema, md.get(index), iLocalId, uuid, context.getUserSession().getUserIdAsInt(), groupId, source,
-                        isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
-
-					id.add(index, Integer.toString(iLocalId));
-
-					insertedWithLocalId = true;
-				}
-			} catch (NumberFormatException e) {
-                if(Log.isDebugEnabled(Geonet.MEF)) {
-                    Log.debug(Geonet.MEF, "Invalid localId provided: " + localId + ". Adding record with a new id.");
-                }
-			}
-		} 
-		
-		if (!insertedWithLocalId) {
-            //
-            // insert metadata
-            //
-            int userid = context.getUserSession().getUserIdAsInt();
-            String docType = null, title = null, category = null;
-            boolean ufo = false, indexImmediate = false;
-            id.add(index,
-                    dm.insertMetadata(context, dbms, schema, md.get(index), context.getSerialFactory().getSerial(dbms, "Metadata"), uuid,
-                    userid, groupId, source, isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate));
-		}
+        //
+        // insert metadata
+        //
+        int userid = context.getUserSession().getUserIdAsInt();
+        String docType = null, title = null, category = null;
+        boolean ufo = false, indexImmediate = false;
+        id.add(index,
+                dm.insertMetadata(context, schema, md.get(index), uuid,
+                userid, groupId, source, isTemplate.codeString, docType, category, createDate, changeDate, ufo, indexImmediate));
 
 	}
 
@@ -553,43 +543,10 @@ public class Importer {
 		try {
             os = new FileOutputStream(outFile);
     		BinaryFile.copy(is, os);
-    		IO.setLastModified(outFile, new ISODate(changeDate).getSeconds() * 1000, Geonet.MEF);
+    		IO.setLastModified(outFile, new ISODate(changeDate).getTimeInSeconds() * 1000, Geonet.MEF);
 		} finally {
 		    IOUtils.closeQuietly(os);
 		}
-	}
-
-	/**
-	 * Add categories registered in information file.
-	 * 
-	 * @param context
-	 * @param dm
-	 * @param dbms
-	 * @param id
-	 * @param categ
-	 * @throws Exception
-	 */
-	public static void addCategories(ServiceContext context, DataManager dm, Dbms dbms, String id,
-			Element categ) throws Exception {
-		@SuppressWarnings("unchecked")
-        List<Element> locCats = dbms.select("SELECT id,name FROM Categories").getChildren();
-		@SuppressWarnings("unchecked")
-        List<Element> list = categ.getChildren("category");
-
-        for (Element categoryEl : list) {
-            String catName = categoryEl.getAttributeValue("name");
-            String catId = mapLocalEntity(locCats, catName);
-
-            if (catId == null) {
-                if(Log.isDebugEnabled(Geonet.MEF))
-                    Log.debug(Geonet.MEF, " - Skipping non-existent category : " + catName);
-            }
-            else {
-                // --- metadata category exists locally
-                if(Log.isDebugEnabled(Geonet.MEF)) Log.debug(Geonet.MEF, " - Setting category : " + catName);
-                dm.setCategory(context, dbms, id, catId);
-            }
-        }
 	}
 
 	/**
@@ -597,39 +554,48 @@ public class Importer {
 	 * 
 	 * @param context
 	 * @param dm
-	 * @param dbms
-	 * @param id
+	 * @param metadataId
 	 * @param privil
 	 * @throws Exception
 	 */
-	private static void addPrivileges(ServiceContext context, DataManager dm, Dbms dbms, String id,
-			Element privil) throws Exception {
-		@SuppressWarnings("unchecked")
-        List<Element> locGrps = dbms.select("SELECT id,name FROM Groups").getChildren();
-		@SuppressWarnings("unchecked")
+	private static Group addPrivileges(final ServiceContext context, final DataManager dm, final int metadataId,
+                                       final Element privil) {
+
+        final GroupRepository groupRepository = context.getBean(GroupRepository.class);
+        @SuppressWarnings("unchecked")
         List<Element> list = privil.getChildren("group");
+
+        Group owner = null;
+        Set<OperationAllowed> opAllowedToAdd = new HashSet<OperationAllowed>();
+        List<Group> groupsToAdd = new ArrayList<Group>();
 
 		for (Element group : list) {
 			String grpName = group.getAttributeValue("name");
 			boolean groupOwner = group.getAttributeValue("groupOwner") != null;
-			String grpId = mapLocalEntity(locGrps, grpName);
+			Group groupEntity = groupRepository.findByName(grpName);
 
-			if (grpId == null) {
+			if (groupEntity == null) {
                 if(Log.isDebugEnabled(Geonet.MEF)) {
                     Log.debug(Geonet.MEF, " - Skipping non-existent group : " + grpName);
                 }
 			} else {
 				// --- metadata group exists locally
+                if(Log.isDebugEnabled(Geonet.MEF)) {
+                    Log.debug(Geonet.MEF, " - Setting privileges for group : " + grpName);
+                }
 
-                    if(Log.isDebugEnabled(Geonet.MEF))
-                        Log.debug(Geonet.MEF, " - Setting privileges for group : " + grpName);
-				addOperations(context, dm, dbms, group, id, grpId);
+                groupsToAdd.add(groupEntity);
+                opAllowedToAdd.addAll(addOperations(context, dm, group, metadataId, groupEntity.getId()));
 				if (groupOwner) {
-                    if(Log.isDebugEnabled(Geonet.MEF)) Log.debug(Geonet.MEF, grpName + " set as group Owner ");
-					dm.setGroupOwner(dbms, id, grpId);
+                    if (Log.isDebugEnabled(Geonet.MEF)) {
+                        Log.debug(Geonet.MEF, grpName + " set as group Owner ");
+                    }
+                    owner = groupEntity;
 				}
 			}
 		}
+
+        return owner;
 	}
 
 	/**
@@ -637,43 +603,42 @@ public class Importer {
 	 * 
 	 * @param context
 	 * @param dm
-	 * @param dbms
 	 * @param group
-	 * @param id
+	 * @param metadataId
 	 * @param grpId
 	 * @throws Exception
 	 */
-	private static void addOperations(ServiceContext context, DataManager dm, Dbms dbms, Element group,
-			String id, String grpId) throws Exception {
+	private static Set<OperationAllowed> addOperations(final ServiceContext context, final DataManager dm, final Element group,
+                                                       final int metadataId, final int grpId) {
 		@SuppressWarnings("unchecked")
-        List<Element> opers = group.getChildren("operation");
+        List<Element> operations = group.getChildren("operation");
 
-        for (Element oper : opers) {
-            String opName = oper.getAttributeValue("name");
+        Set<OperationAllowed> toAdd = new HashSet<OperationAllowed>();
+        for (Element operation : operations) {
+            String opName = operation.getAttributeValue("name");
 
             int opId = dm.getAccessManager().getPrivilegeId(opName);
 
             if (opId == -1) {
-                if(Log.isDebugEnabled(Geonet.MEF)) Log.debug(Geonet.MEF, "   Skipping --> " + opName);
-            }
-            else {
+                if(Log.isDebugEnabled(Geonet.MEF)) {
+                    Log.debug(Geonet.MEF, "   Skipping --> " + opName);
+                }
+            } else {
                 // --- operation exists locally
 
-                if(Log.isDebugEnabled(Geonet.MEF)) Log.debug(Geonet.MEF, "   Adding --> " + opName);
-                dm.setOperation(context, dbms, id, grpId, opId + "");
+                if(Log.isDebugEnabled(Geonet.MEF)) {
+                    Log.debug(Geonet.MEF, "   Adding --> " + opName);
+                }
+                Optional<OperationAllowed> opAllowed = dm.getOperationAllowedToAdd(context, metadataId, grpId, opId);
+                if (opAllowed.isPresent()) {
+                    toAdd.add(opAllowed.get());
+                }
             }
         }
+
+        return toAdd;
 	}
 
-	private static String mapLocalEntity(List<Element> entities, String name) {
-		for (Element entity : entities) {
-			if (entity.getChildText("name").equals(name)
-					|| entity.getChildText("id").equals(name))
-				return entity.getChildText("id");
-		}
-
-		return null;
-	}
 }
 
 // =============================================================================

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editor xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="../../config-editor.xsd">
+
+  <!-- Form field type configuration. Default is text. -->
+  <fields>
+    <for name="dc:description" use="textarea"/>
+    <for name="dc:source" use="textarea"/>
+    <for name="dc:rights" use="textarea"/>
+
+    <for name="dct:modified" use="date"/>
+    <for name="dct:created" use="date"/>
+    <for name="dct:dateSubmitted" use="date"/>
+    <for name="dct:dateAccepted" use="date"/>
+    <for name="dct:dateCopyrighted" use="date"/>
+
+    <for name="dc:language" use="data-gn-language-picker"/>
+  </fields>
+
+
+  <!-- View configuration -->
+  <views>
+    <view name="default">
+      <tab id="default" default="true" mode="flat">
+        <section xpath="/simpledc"/>
+      </tab>
+    </view>
+    <view name="advanced">
+      <tab id="advanced" default="true">
+        <section xpath="/simpledc"/>
+      </tab>
+    </view>
+    <view name="xml">
+      <tab id="xml" default="true"/>
+    </view>
+  </views>
+</editor>

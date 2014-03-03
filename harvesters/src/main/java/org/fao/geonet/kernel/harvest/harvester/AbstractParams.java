@@ -23,17 +23,19 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.MissingParameterEx;
-import jeeves.utils.Log;
-import jeeves.utils.QuartzSchedulerUtils;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import com.vividsolutions.jts.util.Assert;
+
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.MissingParameterEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.QuartzSchedulerUtils;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
@@ -76,25 +78,36 @@ public abstract class AbstractParams {
             Log.debug(Geonet.HARVEST_MAN, "AbstractParams creating from:\n"+ Xml.getString(node));
         }
 		Element site    = node.getChild("site");
-		Element opt     = node.getChild("options");
+        Assert.isTrue(site != null, "Site cannot be null");
+        Element opt     = node.getChild("options");
 		Element content = node.getChild("content");
 		
 		
-		Element account = (site == null) ? null : site.getChild("account");
+		Element account = site.getChild("account");
 
 		name       = Util.getParam(site, "name", "");
 		uuid       = Util.getParam(site, "uuid", UUID.randomUUID().toString());
-		
-        Element ownerIdE = node.getChild("ownerId");
+
+        Element ownerIdE = node.getChild("owner");
         if(ownerIdE != null) {
-            ownerId = ownerIdE.getText();
+            ownerId = ownerIdE.getChildText("id");
+        }
+        ownerIdE = node.getChild("owner");
+        if(ownerIdE != null) {
+            ownerId = ownerIdE.getChildText("id");
+            if (ownerId == null || ownerId.trim().isEmpty()) {
+                ownerId = ownerIdE.getText();
+                if (ownerId == null || ownerId.trim().isEmpty()) {
+                    ownerId = null;
+                }
+            }
         }
 
         if(StringUtils.isEmpty(ownerId)){
             Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + name + " (" + uuid + ")");
         }
 
-        Element ownerIdGroupE = node.getChild("ownerGroup");
+        Element ownerIdGroupE = site.getChild("ownerGroup");
         if(ownerIdGroupE != null) {
             Element idE = ownerIdGroupE.getChild("id");
             if(idE != null) {
@@ -131,17 +144,20 @@ public abstract class AbstractParams {
 		Element opt     = node.getChild("options");
 		Element content = node.getChild("content");
 
-		Element account = (site == null) ? null : site.getChild("account");
+        final String ACCOUNT_EL_NAME = "account";
+        Element account = (site == null) ? null : site.getChild(ACCOUNT_EL_NAME);
+        if (account == null) {
+            account = node.getChild(ACCOUNT_EL_NAME);
+        }
 		Element privil  = node.getChild("privileges");
 		Element categ   = node.getChild("categories");
 
 		name       = Util.getParam(site, "name", name);
 
-        Element ownerIdE = node.getChild("ownerId");
+		Element ownerIdE = node.getChild("owner");
         if(ownerIdE != null) {
-            ownerId = ownerIdE.getText();
-        }
-        else {
+            ownerId = ownerIdE.getChildText("id");
+        } else {
             Log.warning(Geonet.HARVEST_MAN, "No owner defined for harvester: " + name + " (" + uuid + ")");
         }
 
@@ -220,11 +236,11 @@ public abstract class AbstractParams {
 		copy.validate   = validate;
 
         for(Privileges p : alPrivileges) {
-			copy.alPrivileges.add(p.copy());
+            copy.addPrivilege(p.copy());
         }
 
         for(String s : alCategories) {
-			copy.alCategories.add(s);
+            copy.addCategory(s);
         }
 
 		copy.node = node;
@@ -245,7 +261,6 @@ public abstract class AbstractParams {
     public Trigger getTrigger() {
     	return QuartzSchedulerUtils.getTrigger(uuid, AbstractHarvester.HARVESTER_GROUP_NAME, every, MAX_EVERY);
     }
-
     /**
      *
      * @param port
@@ -305,9 +320,13 @@ public abstract class AbstractParams {
                 p.add(op);
             }
 
-            alPrivileges.add(p);
+            addPrivilege(p);
         }
 	}
+
+    public void addPrivilege(Privileges p) {
+        alPrivileges.add(p);
+    }
 
     /**
      *
@@ -359,19 +378,23 @@ public abstract class AbstractParams {
             Element categElem = (Element) o;
             String categId = categElem.getAttributeValue("id");
 
-            if (categId == null) {
-                throw new MissingParameterEx("attribute:id", categElem);
+            if (categId == null || categId.trim().isEmpty()) {
+                // categoryId is not mandatory.
+                continue;
             }
-
             if (!Lib.type.isInteger(categId)) {
                 throw new BadParameterEx("attribute:id", categElem);
             }
 
-            alCategories.add(categId);
+            addCategory(categId);
         }
 	}
 
-	//---------------------------------------------------------------------------
+    public void addCategory(String categId) {
+        alCategories.add(categId);
+    }
+
+    //---------------------------------------------------------------------------
 	//---
 	//--- Variables
 	//---

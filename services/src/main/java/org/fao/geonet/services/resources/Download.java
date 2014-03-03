@@ -23,21 +23,24 @@
 
 package org.fao.geonet.services.resources;
 
-import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.ResourceNotFoundEx;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.ResourceNotFoundEx;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.BinaryFile;
-import jeeves.utils.Util;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.util.MailSender;
 import org.jdom.Element;
@@ -80,7 +83,7 @@ public class Download implements Service
 		
 		if (access.equals(Params.Access.PRIVATE))
 		{
-			Lib.resource.checkPrivilege(context, id, AccessManager.OPER_DOWNLOAD);
+			Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
 			doNotify = true;
 		}
 
@@ -96,7 +99,6 @@ public class Download implements Service
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		SettingManager sm = gc.getBean(SettingManager.class);
 		DataManager    dm = gc.getBean(DataManager.class);
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		//--- increase metadata popularity
 		if (access.equals(Params.Access.PRIVATE))
@@ -113,29 +115,25 @@ public class Download implements Service
 			String fromDescr = "GeoNetwork administrator";
 
 			if (host.trim().length() == 0 || from.trim().length() == 0)
-                if(context.isDebug())
+                if(context.isDebugEnabled())
                     context.debug("Skipping email notification");
 			else
 			{
-                if(context.isDebug())
+                if(context.isDebugEnabled()) {
                     context.debug("Sending email notification for file : "+ file);
+                }
 
 				// send emails about downloaded file to groups with notify privilege
 
-				StringBuffer query = new StringBuffer();
-				query.append("SELECT g.id, g.name, g.email ");
-				query.append("FROM   OperationAllowed oa, Groups g ");
-				query.append("WHERE  oa.operationId =" + AccessManager.OPER_NOTIFY + " ");
-				query.append("AND    oa.metadataId = ? ");
-				query.append("AND    oa.groupId = g.id");
+                OperationAllowedRepository opAllowedRepo = context.getBean(OperationAllowedRepository.class);
+                final GroupRepository groupRepository = context.getBean(GroupRepository.class);
 
-				Element groups = dbms.select(query.toString(), Integer.valueOf(id));
-
-				@SuppressWarnings("unchecked")
-                List<Element> groupsEls = groups.getChildren();
-				for (Element group : groupsEls) {
-					String  name  = group.getChildText("name");
-					String  email = group.getChildText("email");
+                List<OperationAllowed> opsAllowed = opAllowedRepo.findByMetadataId(id);
+                
+				for (OperationAllowed opAllowed : opsAllowed) {
+                    Group group = groupRepository.findOne(opAllowed.getId().getGroupId());
+					String  name  = group.getName();
+					String  email = group.getEmail();
 
 					if (email.trim().length() != 0)
 					{

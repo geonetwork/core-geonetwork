@@ -24,14 +24,15 @@
 package org.fao.geonet.services.user;
 
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.UserNotFoundEx;
-import jeeves.resources.dbms.Dbms;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.exceptions.UserNotFoundEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
@@ -66,7 +67,6 @@ public class InfoUpdate extends NotInReadOnlyModeService {
 		String organ    = Util.getParam(params, Params.ORG,     "");
 		String kind     = Util.getParam(params, Params.KIND,    "");
 
-		Dbms dbms = (Dbms) context.getResourceManager().open (Geonet.Res.MAIN_DB);
 
 		// check old password
 		UserSession session = context.getUserSession();
@@ -75,14 +75,23 @@ public class InfoUpdate extends NotInReadOnlyModeService {
 		if (userId == null)
 			throw new UserNotFoundEx(null);
 
-		// change profile
-		String query = "UPDATE Users SET surname=?, name=?, "+
-							"address=?, city=?, state=?, zip=?, country=?, email=?," +
-							"organisation=?, kind=? WHERE id=?";
+        final UserRepository userRepository = context.getBean(UserRepository.class);
+        final User user = userRepository.findOne(userId);
 
-		dbms.execute (query, surname, name,
-									address, city, state, zip, country, email,
-									organ, kind, Integer.valueOf(userId));
+        user.setName(name)
+                .setKind(kind)
+                .setOrganisation(organ)
+                .setSurname(surname);
+        user.getPrimaryAddress()
+                .setAddress(address)
+                .setCity(city)
+                .setCountry(country)
+                .setState(state)
+                .setZip(zip);
+        user.getEmailAddresses().clear();
+        user.getEmailAddresses().add(email);
+
+        userRepository.save(user);
 
 		return new Element(Jeeves.Elem.RESPONSE);
 	}

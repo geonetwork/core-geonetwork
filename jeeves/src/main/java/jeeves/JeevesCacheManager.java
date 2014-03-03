@@ -1,5 +1,7 @@
 package jeeves;
 
+import org.fao.geonet.JeevesJCS;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -44,7 +46,9 @@ public class JeevesCacheManager {
             
             if (value == null) {
                 value = loader.call();
-                cache.put(key, value);
+                if (value != null) {
+                  cache.put(key, value);
+              }
             }
             return value;
         } finally {

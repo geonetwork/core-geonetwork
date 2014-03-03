@@ -22,6 +22,7 @@
 
 package org.fao.geonet.kernel;
 
+import org.eclipse.jetty.util.URIUtil;
 import org.fao.geonet.constants.Geonet.Namespaces;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Content;
@@ -29,9 +30,6 @@ import org.jdom.Element;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
-
-import org.apache.commons.httpclient.util.URIUtil;
-import org.apache.commons.httpclient.URIException;
 
 /**
  * TODO javadoc.
@@ -161,7 +159,7 @@ public class KeywordBean {
     /**
      * Set a definition for the specified language
      * 
-     * @param definition the new definition
+     * @param value the new value
      * @param lang the language to set, can be 2 or 3 letter language code
      * 
      * @return this keyword bean
@@ -349,14 +347,9 @@ public class KeywordBean {
 		Element an = new Element("Anchor", Namespaces.GMX);
 		Element cs = new Element("CharacterString", Namespaces.GCO);
 		if (getUriCode() != null && getUriCode().length() != 0) {
-			try {
-				an.setText(getDefaultValue());
-				an.setAttribute("href", URIUtil.encodeQuery(keywordUrl+ getUriCode()), Namespaces.XLINK);
-				el.addContent(an);
-			} catch (URIException e) { // what to do here? Just add the value
-				cs.setText(getDefaultValue());
-				el.addContent(cs); 
-			}
+            an.setText(getDefaultValue());
+            an.setAttribute("href", URIUtil.encodePath(keywordUrl + getUriCode()), Namespaces.XLINK);
+            el.addContent(an);
 		} else {
 			cs.setText(getDefaultValue());
 			el.addContent(cs);
@@ -423,14 +416,9 @@ public class KeywordBean {
 		for (KeywordBean kb : kbList) {
 			Element keyword = new Element("keyword", Namespaces.GMD);
 			if (kb.getUriCode() != null && kb.getUriCode().length() != 0) {
-				try {
-					an.setText(kb.getDefaultValue());
-					an.setAttribute("href", URIUtil.encodeQuery(kb.keywordUrl+kb.getUriCode()), Namespaces.XLINK);
-					keyword.addContent((Content) an.clone());
-				} catch (URIException e) {
-					cs.setText(kb.getDefaultValue());
-					keyword.addContent((Content) cs.clone());
-				}
+                an.setText(kb.getDefaultValue());
+                an.setAttribute("href", URIUtil.encodePath(kb.keywordUrl+kb.getUriCode()), Namespaces.XLINK);
+                keyword.addContent((Content) an.clone());
 			} else {
 				cs.setText(kb.getDefaultValue());
 				keyword.addContent((Content) cs.clone());
@@ -629,9 +617,6 @@ public class KeywordBean {
 				return this;
     }
 
-    public void setIsoLanguageMapper(IsoLanguagesMapper isoLanguageMapper) {
-        this.isoLanguageMapper = isoLanguageMapper;
-    }
 
     private String to3CharLang(String lang) {
         return getIsoLanguageMapper().iso639_1_to_iso639_2(lang.toLowerCase(), lang.toLowerCase());

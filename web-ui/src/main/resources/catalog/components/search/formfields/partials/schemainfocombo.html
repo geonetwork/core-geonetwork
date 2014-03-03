@@ -1,0 +1,9 @@
+<select data-ng-model="selectedInfo">
+
+  <option data-ng-repeat="p in infos" data-ng-if="type == 'element'" value="{{p['@value']}}"
+    data-ng-selected="p == selectedInfo">{{p['#text']}}</option>
+    
+  <option data-ng-repeat="p in infos" data-ng-if="type == 'codelist'" value="{{p.code}}"
+    data-ng-selected="p == selectedInfo">{{p.label}}</option>
+    
+</select>

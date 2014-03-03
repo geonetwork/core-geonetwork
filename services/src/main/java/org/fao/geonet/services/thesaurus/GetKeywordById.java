@@ -26,7 +26,7 @@ package org.fao.geonet.services.thesaurus;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.KeywordBean;
@@ -54,9 +54,12 @@ public class GetKeywordById implements Service {
             throws Exception {
         String sThesaurusName = Util.getParam(params, "thesaurus");
         String uri = Util.getParam(params, "id", null);
-        String lang = Util.getParam(params, "lang", context.getLanguage());
-        String langForThesaurus = IsoLanguagesMapper.getInstance()
-                .iso639_2_to_iso639_1(lang);
+        String[] lang = Util.getParam(params, "lang", context.getLanguage()).split(",");
+
+        final IsoLanguagesMapper mapper = context.getBean(IsoLanguagesMapper.class);
+        for (int i = 0; i < lang.length; i++) {
+            lang[i] = mapper.iso639_2_to_iso639_1(lang[i]);
+        }
 
         boolean multiple = Util.getParam(params, "multiple", false);
 
@@ -73,11 +76,11 @@ public class GetKeywordById implements Service {
         if (uri == null) {
             root = new Element("descKeys");
         } else {
-            searcher = new KeywordsSearcher(thesaurusMan);
+            searcher = new KeywordsSearcher(context, thesaurusMan);
             KeywordBean kb = null;
             
             if (!multiple) {
-                kb = searcher.searchById(uri, sThesaurusName, langForThesaurus);
+                kb = searcher.searchById(uri, sThesaurusName, lang);
                 if (kb == null) {
                     root = new Element("descKeys");
                 } else {
@@ -89,8 +92,7 @@ public class GetKeywordById implements Service {
                 List<KeywordBean> kbList = new ArrayList<KeywordBean>();
                 for (int i = 0; i < url.length; i++) {
                     String currentUri = url[i];
-                    kb = searcher.searchById(currentUri, sThesaurusName,
-                            langForThesaurus);
+                    kb = searcher.searchById(currentUri, sThesaurusName, lang);
                     if (kb == null) {
                         root = new Element("null");
                     } else {

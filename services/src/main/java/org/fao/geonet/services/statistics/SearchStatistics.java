@@ -22,21 +22,27 @@
 //==============================================================================
 package org.fao.geonet.services.statistics;
 
-import java.sql.SQLException;
-import java.util.List;
-
-import jeeves.resources.dbms.Dbms;
+import com.google.common.base.Optional;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-
-import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.Util;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.statistic.SearchRequestRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
-import org.fao.geonet.util.JODAISODate;
 import org.jdom.Element;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.Months;
+import org.springframework.data.jpa.domain.Specification;
+
+import java.sql.SQLException;
+
+import static org.fao.geonet.repository.specification.SearchRequestSpecs.hasHits;
+import static org.fao.geonet.repository.specification.SearchRequestSpecs.hasService;
+import static org.fao.geonet.repository.statistic.MetadataStatisticSpec.StandardSpecs.popularitySum;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
  * Service to get core metrics for a service:
@@ -46,119 +52,86 @@ import org.joda.time.Months;
  * <li>Average searches by month</li>
  * <li>Number of record views</li>
  * </ul>
- * 
  */
 public class SearchStatistics extends NotInReadOnlyModeService {
-    
+
     private static final String NUMBER_OF_SEARCH_QUERY = "SELECT COUNT(*) AS total " +
-                                            "FROM requests WHERE service = ?";
-    
+                                                         "FROM requests WHERE service = ?";
+
     private static final String NUMBER_SEARCH_BY_X_QUERY = "SELECT count(*) / ? AS avg FROM requests " +
-                                            "WHERE service = ? ";
-    
+                                                           "WHERE service = ? ";
+
     private static final String NUMBER_VIEWS_BY_X_QUERY = "SELECT sum(popularity) / ? AS avg FROM metadata";
-    
-    private static final String NUMBER_OF_SEARCHES_WITH_NO_HITS_QUERY = 
-                                "SELECT count(*) AS total FROM requests WHERE hits = 0 AND service = ?";
-    
+
+    private static final String NUMBER_OF_SEARCHES_WITH_NO_HITS_QUERY =
+            "SELECT count(*) AS total FROM requests WHERE hits = 0 AND service = ?";
+
     private static final String SERVICE_PARAM = "service";
-    
+
     public void init(String appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
-    
+
     @Override
     public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
         String service = Util.getParam(params, SERVICE_PARAM);
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         Element response = new Element("response");
-        
 
-        
-        String begin = SearchStatistics.getSingleDBValue(dbms,
-                "SELECT min(requestdate) AS min FROM Requests", 
-                "min");
-        String end = SearchStatistics.getSingleDBValue(dbms, 
-                "SELECT max(requestdate) AS max FROM Requests", 
-                "max");
-        
-        DateTime beginDate = JODAISODate.parseBasicOrFullDateTime(begin);
-        DateTime endDate = JODAISODate.parseBasicOrFullDateTime(end);
+        final SearchRequestRepository requestRepository = context.getBean(SearchRequestRepository.class);
+
+        String begin = requestRepository.getOldestRequestDate().getDateAndTime();
+        String end = requestRepository.getMostRecentRequestDate().getDateAndTime();
+
+        DateTime beginDate = ISODate.parseBasicOrFullDateTime(begin);
+        DateTime endDate = ISODate.parseBasicOrFullDateTime(end);
         int days = Days.daysBetween(beginDate, endDate).getDays();
+        int nonZeroDays = days == 0 ? 1 : days;
         int months = Months.monthsBetween(beginDate, endDate).getMonths();
-        
+        int nonZeroMonths = months == 0 ? 1 : months;
         response.addContent(new Element("activity_days").setText(days + ""));
         response.addContent(new Element("activity_months").setText(months + ""));
-        
+
+
         // Total number of searches
-        addSingleDBValueToElement(dbms, response, NUMBER_OF_SEARCH_QUERY, "total_searches", "total", service);
-        
+        long total = requestRepository.count(hasService(service));
+        addSingleDBValueToElement(response, total, "total_searches", "total");
+
         // Average searches by day
-        addSingleDBValueToElement(dbms, response, NUMBER_SEARCH_BY_X_QUERY, "avg_searches_by_day", "avg", 
-                days == 0 ? "1" : String.valueOf(days), service);
-        
+        long avgPerDay = total / nonZeroDays;
+        addSingleDBValueToElement(response, avgPerDay, "avg_searches_by_day", "avg");
+
         // Average searches by month
-        addSingleDBValueToElement(dbms, response, NUMBER_SEARCH_BY_X_QUERY, "avg_searches_by_month", "avg", 
-                months == 0 ? "1" : String.valueOf(months), service);
+        long avgPerMonth = total / nonZeroMonths;
+        addSingleDBValueToElement(response, avgPerMonth, "avg_searches_by_month", "avg");
 
         // Average views by day
-        addSingleDBValueToElement(dbms, response, NUMBER_VIEWS_BY_X_QUERY, "avg_views_by_day", "avg", 
-                days == 0 ? "1" : String.valueOf(days));
-        
+        final int views = context.getBean(MetadataRepository.class).getMetadataStatistics().getTotalStat(popularitySum(),
+                Optional.<Specification<Metadata>>absent());
+        int viewsByDay = views / nonZeroDays;
+        addSingleDBValueToElement(response, viewsByDay, "avg_views_by_day", "avg");
+
         // Average views by month
-        addSingleDBValueToElement(dbms, response, NUMBER_VIEWS_BY_X_QUERY, "avg_views_by_month", "avg", 
-                months == 0 ? "1" : String.valueOf(months));
-        
+        int viewsByMonth = views / nonZeroMonths;
+        addSingleDBValueToElement(response, viewsByMonth, "avg_views_by_month", "avg");
+
         // Number of search with no hits
-        addSingleDBValueToElement(dbms, response, NUMBER_OF_SEARCHES_WITH_NO_HITS_QUERY, "total_searches_with_no_hits", "total", 
-                service);
-        
+        long noHits = requestRepository.count(where(hasService(service)).and(hasHits(0)));
+        addSingleDBValueToElement(response, noHits, "total_searches_with_no_hits", "total");
+
         return response;
     }
-    
-    /**
-     * Get a single value returned by a query
-     * 
-     * @param dbms
-     * @param query
-     * @param elementName
-     * @param queryFieldName
-     * @param arg
-     * @return
-     * @throws SQLException
-     */
-    protected static String getSingleDBValue(Dbms dbms, String query, String queryFieldName, String... args) 
-            throws SQLException {
-        List<Element> results;
-        if (args != null) {
-            results = dbms.select(query, args).getChildren();
-        } else {
-            results = dbms.select(query).getChildren();
-        }
-        if (results.size() != 0) {
-            Element record = (Element) results.get(0);
-            return record.getChildText(queryFieldName);
-        }
-        return null;
-    }
-    
+
     /**
      * Add a new element with the value found.
-     * 
-     * @param dbms
+     *
      * @param response
-     * @param query
      * @param elementName
      * @param queryFieldName
-     * @param arg
      * @throws SQLException
      */
-    protected static void addSingleDBValueToElement(Dbms dbms, Element response, String query, 
-            String elementName, String queryFieldName, String... args) 
+    protected static void addSingleDBValueToElement(Element response, Object value,
+                                                    String elementName, String queryFieldName)
             throws SQLException {
-        String value = getSingleDBValue(dbms, query, queryFieldName, args);
-        if (value != null) {
-            response.addContent(new Element(elementName).setText(value));
-        }
+        response.addContent(new Element(elementName).setText("" + value));
     }
 }

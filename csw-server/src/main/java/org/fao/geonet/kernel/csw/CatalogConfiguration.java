@@ -24,13 +24,20 @@
 package org.fao.geonet.kernel.csw;
 
 import jeeves.constants.ConfigFile;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
+import jeeves.server.overrides.ConfigurationOverrides;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.jdom.Element;
 import org.jdom.Namespace;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,40 +48,62 @@ import java.util.Set;
 public class CatalogConfiguration {
 
 	// GetCapabilities variables
-	private static int _numberOfKeywords = 10;
-	private static int _maxNumberOfRecordsForKeywords = Integer.MAX_VALUE; 
+	private int _numberOfKeywords = 10;
+	private int _maxNumberOfRecordsForKeywords = Integer.MAX_VALUE;
 	
 	// GetDomain variables
-	private static int _maxNumberOfRecordsForPropertyNames = Integer.MAX_VALUE;
+	private int _maxNumberOfRecordsForPropertyNames = Integer.MAX_VALUE;
 	
 	// GetRecords variables
-	private static final HashMap<String, String> _fieldMapping = new HashMap<String, String>();
-    private static final HashMap<String, HashMap<String, String>> _fieldMappingXPath = new HashMap<String, HashMap<String, String>>();
-	private static final Set<String> _isoQueryables = new HashSet<String>();
-	private static final Set<String> _additionalQueryables = new HashSet<String>();
-	private static final Set<String> _getRecordsConstraintLanguage = new HashSet<String>();
-	private static final Set<String> _getRecordsOutputFormat = new HashSet<String>();
-	private static final Set<String> _getRecordsOutputSchema = new HashSet<String>();
-	private static final Set<String> _getRecordsTypenames = new HashSet<String>();
-	private static final Set<String> _getRecordsRangeFields = new HashSet<String>();
+	private final HashMap<String, String> _fieldMapping = new HashMap<String, String>();
+    private final HashMap<String, HashMap<String, String>> _fieldMappingXPath = new HashMap<String, HashMap<String, String>>();
+	private final Set<String> _isoQueryables = new HashSet<String>();
+	private final Set<String> _additionalQueryables = new HashSet<String>();
+	private final Set<String> _getRecordsConstraintLanguage = new HashSet<String>();
+	private final Set<String> _getRecordsOutputFormat = new HashSet<String>();
+	private final Set<String> _getRecordsOutputSchema = new HashSet<String>();
+	private final Set<String> _getRecordsTypenames = new HashSet<String>();
+	private final Set<String> _getRecordsRangeFields = new HashSet<String>();
 	
 	// DescribeRecord variables
-	private static final HashMap<String, String> _describeRecordTypenames = new HashMap<String, String>();
-	private static final Set<Namespace> _describeRecordNamespaces = new HashSet<Namespace>();
-	private static final Set<String> _describeRecordOutputFormat = new HashSet<String>();
+	private final HashMap<String, String> _describeRecordTypenames = new HashMap<String, String>();
+	private final Set<Namespace> _describeRecordNamespaces = new HashSet<Namespace>();
+	private final Set<String> _describeRecordOutputFormat = new HashSet<String>();
 	
 	// GetRecordById variables
-	private static boolean _increasePopularity = false;
+	private boolean _increasePopularity = false;
 
-	public static void loadCatalogConfig(String path, String configFile)
+    @Autowired
+    private GeonetworkDataDirectory _dataDir;
+    @Autowired(required = false)
+    private ServletContext _servletContext;
+
+    private volatile boolean initialized = false;
+
+
+    public synchronized void init() {
+        if (!initialized) {
+            Log.info(Geonet.CSW, "  - Catalogue services for the web...");
+
+            final String webappDir = _dataDir.getWebappDir();
+            try {
+                loadCatalogConfig(webappDir, Csw.CONFIG_FILE);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            initialized = true;
+        }
+    }
+	private void loadCatalogConfig(String path, String configFile)
 			throws Exception {
 		configFile = path + File.separator + "WEB-INF" + File.separator + configFile;
 
 		Log.info(Geonet.CSW, "Loading : " + configFile);
 
 		Element configRoot = Xml.loadFile(configFile);
+        ConfigurationOverrides.DEFAULT.updateWithOverrides(configFile, _servletContext, _dataDir.getWebappDir(), configRoot);
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> operationsList = configRoot.getChildren(Csw.ConfigFile.Child.OPERATIONS);
 
         for (Element element : operationsList) {
@@ -91,7 +120,7 @@ public class CatalogConfiguration {
 
 	}
 
-	private static void initOperations(Element element) {
+	private void initOperations(Element element) {
 		@SuppressWarnings("unchecked")
         List<Element> operationLst = element.getChildren(Csw.ConfigFile.Operations.Child.OPERATION);
 
@@ -120,7 +149,7 @@ public class CatalogConfiguration {
         }
 	}
 
-	private static void initGetRecordByIdConfig(Element operation) {
+	private void initGetRecordByIdConfig(Element operation) {
 	    Element increasePopularityConfig = operation.getChild(Csw.ConfigFile.Operation.Child.INCREASE_POPULARITY);
         if (increasePopularityConfig != null && "yes".equals(increasePopularityConfig.getText())) {
             _increasePopularity = true;
@@ -130,7 +159,7 @@ public class CatalogConfiguration {
     /**
 	 * @param operation
 	 */
-	private static void initCapabilities(Element operation) {
+	private void initCapabilities(Element operation) {
 		Element kn = operation.getChild(Csw.ConfigFile.Operation.Child.NUMBER_OF_KEYWORDS);
 		if (kn != null && kn.getText()!= null)
 			_numberOfKeywords = Integer.parseInt(kn.getText());
@@ -143,7 +172,7 @@ public class CatalogConfiguration {
 	/**
 	 * @param operation
 	 */
-	private static void initDomain(Element operation) {
+	private void initDomain(Element operation) {
 		Element kn = operation.getChild(Csw.ConfigFile.Operation.Child.MAX_NUMBER_OF_RECORDS_FOR_PROPERTY_NAMES);
 		if (kn != null && kn.getText()!= null)
 			_maxNumberOfRecordsForPropertyNames = Integer.parseInt(kn.getText());
@@ -152,7 +181,7 @@ public class CatalogConfiguration {
 	/**
 	 * @param operation
 	 */
-	private static void initDescribeRecordConfig(Element operation) {
+	private void initDescribeRecordConfig(Element operation) {
 		// Handle typename parameter list value
 		List<Element> typenameList = getTypenamesConfig(operation);
 		
@@ -174,7 +203,7 @@ public class CatalogConfiguration {
 
 	}
 
-	private static List<Element> getTypenamesConfig(Element operation) {
+	private List<Element> getTypenamesConfig(Element operation) {
 		Element typenames = operation
 				.getChild(Csw.ConfigFile.Operation.Child.TYPENAMES);
 
@@ -183,7 +212,7 @@ public class CatalogConfiguration {
         return typenamesConfig;
 	}
 
-	private static void initGetRecordsConfig(Element operation) {
+	private void initGetRecordsConfig(Element operation) {
 		// Only one child parameters
 		Element params = operation
 				.getChild(Csw.ConfigFile.Operation.Child.PARAMETERS);
@@ -270,7 +299,7 @@ public class CatalogConfiguration {
 	 * @param operation
 	 * @return
 	 */
-	private static Set<String> getOutputFormat(Element operation) {
+	private Set<String> getOutputFormat(Element operation) {
 		Set<String> outformatList = new HashSet<String>();
 		Element outputFormat = operation
 				.getChild(Csw.ConfigFile.Operation.Child.OUTPUTFORMAT);
@@ -286,15 +315,18 @@ public class CatalogConfiguration {
 		return outformatList;
 	}
 
-	public static HashMap<String, String> getFieldMapping() {
+	public HashMap<String, String> getFieldMapping() {
+        init();
 		return _fieldMapping;
 	}
 
-    public static HashMap<String, HashMap<String, String>> getFieldMappingXPath() {
+    public HashMap<String, HashMap<String, String>> getFieldMappingXPath() {
+        init();
         return _fieldMappingXPath;
     }
 
-	public static Set<String> getTypeMapping(String type) {
+	public Set<String> getTypeMapping(String type) {
+        init();
 		// FIXME : handle not supported type throwing an exception
 		if (type.equals(Csw.ISO_QUERYABLES))
 			return _isoQueryables;
@@ -311,74 +343,85 @@ public class CatalogConfiguration {
 	/**
 	 * @return the _numberOfKeywords
 	 */
-	public static int getNumberOfKeywords() {
+	public int getNumberOfKeywords() {
+        init();
 		return _numberOfKeywords;
 	}
 
 	/**
 	 * @return the _maxNumberOfRecordsForKeywords
 	 */
-	public static int getMaxNumberOfRecordsForKeywords() {
+	public int getMaxNumberOfRecordsForKeywords() {
+        init();
 		return _maxNumberOfRecordsForKeywords;
 	}
 
 	/**
 	 * @return the _maxNumberOfRecordsForPropertyNames
 	 */
-	public static int getMaxNumberOfRecordsForPropertyNames() {
+	public int getMaxNumberOfRecordsForPropertyNames() {
+        init();
 		return _maxNumberOfRecordsForPropertyNames;
 	}
 
 	/**
 	 * @return the _describeRecordTypenames
 	 */
-	public static HashMap<String, String> getDescribeRecordTypename() {
+	public HashMap<String, String> getDescribeRecordTypename() {
+        init();
 		return _describeRecordTypenames;
 	}
 	
 	/**
 	 * @return the _describeRecordNamespaces
 	 */
-	public static Set<Namespace> getDescribeRecordNamespaces() {
+	public Set<Namespace> getDescribeRecordNamespaces() {
+        init();
 		return _describeRecordNamespaces;
 	}
 	
 	/**
 	 * @return the _describeRecordOutputFormat
 	 */
-	public static Set<String> getDescribeRecordOutputFormat() {
+	public Set<String> getDescribeRecordOutputFormat() {
+        init();
 		return _describeRecordOutputFormat;
 	}
 
     /**
 	 * @return the _getRecordsOutputFormat
 	 */
-	public static Set<String> getGetRecordsOutputFormat() {
+	public Set<String> getGetRecordsOutputFormat() {
+        init();
 		return _getRecordsOutputFormat;
 	}
 
 	/**
 	 * @return the _getRecordsOutputSchema
 	 */
-	public static Set<String> getGetRecordsOutputSchema() {
+	public Set<String> getGetRecordsOutputSchema() {
+        init();
 		return _getRecordsOutputSchema;
 	}
 
 	/**
 	 * @return the _getRecordsTypenames
 	 */
-	public static Set<String> getGetRecordsTypenames() {
+	public Set<String> getGetRecordsTypenames() {
+        init();
 		return _getRecordsTypenames;
 	}
 
 	/**
 	 * @return the _getRecordsRangeFields
 	 */
-	public static Set<String> getGetRecordsRangeFields() {
+	public Set<String> getGetRecordsRangeFields() {
+        init();
 		return _getRecordsRangeFields;
 	}
 
-    public static boolean is_increasePopularity() {
+    public boolean isIncreasePopularity() {
+        init();
         return _increasePopularity;
     }
 

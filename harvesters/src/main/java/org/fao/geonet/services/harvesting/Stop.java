@@ -24,7 +24,6 @@
 package org.fao.geonet.services.harvesting;
 
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
@@ -53,9 +52,9 @@ public class Stop implements Service
 	{
 		return Util.exec(params, context, new Util.Job()
 		{
-			public OperResult execute(Dbms dbms, HarvestManager hm, String id) throws Exception
+			public OperResult execute(HarvestManager hm, String id) throws Exception
 			{
-				return hm.stop(dbms, id);
+				return hm.stop(id);
 			}
 		});
 	}

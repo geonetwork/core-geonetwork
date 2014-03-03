@@ -1,15 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ctx="http://www.springframework.org/schema/context"
-	xmlns:util="http://www.springframework.org/schema/util"
-	xmlns:sec="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:sec="http://www.springframework.org/schema/security"
 
-	xsi:schemaLocation="
+       xsi:schemaLocation="
 		http://www.springframework.org/schema/beans 
 		http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/security
-        http://www.springframework.org/schema/security/spring-security-3.1.xsd" >
+        http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<bean id="testBeanFull" class="jeeves.server.overrides.ExampleBean">
+        <property name="basicProp" value="basicPropOriginalValue" />
+        <property name="basicProp2" value="basicProp2OriginalValue" />
+        <property name="collectionProp">
+            <list>
+                <value>value1</value>
+            </list>
+        </property>
+        <property name="collectionRef">
+            <list>
+                <ref bean="testBean" />
+            </list>
+        </property>
+        <property name="simpleRef" ref="testBean" />
+    </bean>
 
 	<bean id="testBean" class="jeeves.server.overrides.ExampleBean"/>
     <bean class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor" id="filterSecurityInterceptor">

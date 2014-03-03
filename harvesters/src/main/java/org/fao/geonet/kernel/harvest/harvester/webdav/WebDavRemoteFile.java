@@ -23,69 +23,66 @@
 
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
-import jeeves.utils.Xml;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.webdav.lib.WebdavResource;
+import com.github.sardine.DavResource;
+import com.github.sardine.Sardine;
+import org.apache.commons.io.IOUtils;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.util.ISODate;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+
+import java.io.InputStream;
 
 
 //=============================================================================
 
 class WebDavRemoteFile implements RemoteFile {
-	//---------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//---------------------------------------------------------------------------
+    private final Sardine sardine;
 
-	public WebDavRemoteFile(WebdavResource wr) {
-		this.wr = wr;
-		path       = wr.getPath();
-		changeDate = new ISODate(wr.getGetLastModified()).toString();
-	}
+    private String path;
+    private ISODate changeDate;
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- RemoteFile interface
-	//---
-	//---------------------------------------------------------------------------
 
-	public String getPath()       { return path;       }
-	public String getChangeDate() { return changeDate; }
+    public WebDavRemoteFile(Sardine sardine, String baseURL, DavResource davResource) {
+        this.sardine = sardine;
+        path = baseURL + davResource.getPath();
+        changeDate = new ISODate(davResource.getModified().getTime(), false);
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- RemoteFile interface
+    //---
+    //---------------------------------------------------------------------------
 
-	public Element getMetadata(SchemaManager  schemaMan) throws Exception {
-		try {
-			wr.setPath(path);
-            return Xml.loadStream(wr.getMethodData());
-		}
-		catch (HttpException x) {
-			throw new Exception("HTTPException : " + x.getMessage());
-		}
-	}
+    public String getPath() {
+        return path;
+    }
 
-	//---------------------------------------------------------------------------
+    public ISODate getChangeDate() {
+        return changeDate;
+    }
 
-	public boolean isMoreRecentThan(String localChangeDate) {
-		ISODate remoteDate = new ISODate(changeDate);
-		ISODate localDate  = new ISODate(localChangeDate);
-		//--- accept if remote date is greater than local date
-		return (remoteDate.sub(localDate) > 0);
-	}
+    //---------------------------------------------------------------------------
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//---------------------------------------------------------------------------
+    public Element getMetadata(SchemaManager schemaMan) throws Exception {
+        InputStream in = null;
+        try {
+            in = sardine.get(path);
+            return Xml.loadStream(in);
+        } finally {
+            IOUtils.closeQuietly(in);
+        }
+    }
 
-	private String path;
-	private String changeDate;
+    //---------------------------------------------------------------------------
 
-	private WebdavResource wr;
+    public boolean isMoreRecentThan(String localChangeDate) {
+        ISODate remoteDate = changeDate;
+        ISODate localDate = new ISODate(localChangeDate);
+        //--- accept if remote date is greater than local date
+        return (remoteDate.timeDifferenceInSeconds(localDate) > 0);
+    }
 }
 
 //=============================================================================

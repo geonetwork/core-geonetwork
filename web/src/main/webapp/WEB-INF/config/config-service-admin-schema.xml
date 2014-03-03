@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+      
+      <service name="admin.schema.list">
+          <documentation>Retrieve the list of schema available in the catalog.</documentation>
+          <class name="org.fao.geonet.guiservices.schemas.Get"/>
+      </service>
+      
+      <service name="admin.load.templates">
+          <documentation>Load template records for one or more schema.</documentation>
+          <class name=".guiservices.templates.AddDefault"/>
+      </service>
+      
+      <service name="admin.templates.list">
+          <documentation><![CDATA[
+              Get a list of templates with sorting order information.
+              ]]></documentation>
+          <class name=".guiservices.templates.Get"/>
+      </service>
+      
+      <service name="admin.templates.save.order">
+          <documentation><![CDATA[
+              Save template order.
+              ]]></documentation>
+          <class name=".guiservices.templates.SaveDisplayOrder"/>
+      </service>
+      
+      <service name="admin.load.samples">
+          <documentation>Load sample records for one or more schema.</documentation>
+          <class name=".guiservices.sampledata.Add"/>
+      </service>
+      
+      <service name="admin.schema.add">
+          <documentation><![CDATA[
+              Add a standard to the catalog.
+              
+              Parameters are:
+              * schema: The schema identifier
+              * fname: Local path to the ZIP archive
+              * uuid: UUID of local metadata record with GeoNetwork Metadata Schema Archive (URL) as online resource 
+              * url: URL to the ZIP archive
+              
+              ]]></documentation>
+          <class name=".services.schema.Add"/>
+          <error sheet="../xslt/error/error-json.xsl"/>
+      </service>
+      
+      <service name="admin.schema.remove">
+          <documentation>
+              <![CDATA[
+              Remove a standard.
+              ]]>
+          </documentation>
+          <class name=".services.schema.Delete"/>
+          <error sheet="../xslt/error/error-json.xsl"/>
+      </service>
+      
+      <service name="admin.schema.update">
+          <documentation>
+              <![CDATA[
+              Update an existing standard.
+              ]]>
+          </documentation>
+          <class name=".services.schema.Update"/>
+          <error sheet="../xslt/error/error-json.xsl"/>
+      </service>
+  </services>
+</geonet>

@@ -21,16 +21,18 @@
 
 package org.fao.geonet.kernel.harvest.harvester.z3950;
 
-import jeeves.interfaces.Logger;
-import jeeves.resources.dbms.Dbms;
+import com.google.common.base.Optional;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
 
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
@@ -43,19 +45,15 @@ import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.main.Info;
-import org.fao.geonet.util.ISODate;
+import org.fao.geonet.utils.Xml;
 import org.jdom.DocType;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 //=============================================================================
 
@@ -71,7 +69,7 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 	// ---
 	// --------------------------------------------------------------------------
 
-	public Harvester(Logger log, ServiceContext context, Dbms dbms, Z3950Params params) {
+	public Harvester(Logger log, ServiceContext context, Z3950Params params) {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		this.context = context;
 		this.log = log;
@@ -79,7 +77,6 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 		this.dataMan = gc.getBean(DataManager.class);
 		this.settingMan = gc.getBean(SettingManager.class);
 		this.context = context;
-		this.dbms = dbms;
 		this.params = params;
 	}
 
@@ -100,18 +97,20 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 		Z3950ServerResults serverResults = new Z3950ServerResults();
 
 		// --- Clean all before harvest : Remove/Add mechanism
-		localUuids = new UUIDMapper(dbms, params.uuid);
+		localUuids = new UUIDMapper(context.getBean(MetadataRepository.class), params.uuid);
 
 		// --- remove old metadata
 		for (String uuid : localUuids.getUUIDs()) {
 			String id = localUuids.getID(uuid);
             if(this.log.isDebugEnabled()) log.debug("  - Removing old metadata before update with id: " + id);
-			dataMan.deleteMetadataGroup(context, dbms, id);
+			dataMan.deleteMetadataGroup(context, id);
 			serverResults.locallyRemoved++;
 		}
 
-		if (serverResults.locallyRemoved > 0)
-			dbms.commit();
+
+        if (serverResults.locallyRemoved > 0) {
+            dataMan.flush();
+        }
 
 		// --- Search remote node
 		MetaSearcher s = searchMan.newSearcher(SearchManager.Z3950, Geonet.File.SEARCH_Z3950_CLIENT);
@@ -158,21 +157,21 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 		request.addContent(new Element("from"));
 		request.addContent(new Element("to"));
 
-		Element categories = Lib.local.retrieve(dbms, "Categories");
-        if(log.isDebugEnabled()) log.debug("categories "+Xml.getString(categories));
-
 		Element repositories = new Info().getZRepositories(context, settingMan);
-        if(log.isDebugEnabled()) log.debug("repos "+Xml.getString(repositories));
+        if(log.isDebugEnabled()) {
+            log.debug("repos "+Xml.getString(repositories));
+        }
 
 		// -- build a map of collection code versus repository name for 
 		// -- assigning the categories
 		Map <String,String> codes = new HashMap<String,String>();
 		Map <String,String> catCodes = new HashMap<String,String>();
 
-		// -- add new category for each repository
+        final MetadataCategoryRepository categoryRepository = this.context.getBean(MetadataCategoryRepository.class);
+        // -- add new category for each repository
 		boolean addcateg = false;
 		for (String repo : params.getRepositories()) {
-			Element repoElem = Xml.selectElement(repositories,"record[id='"+repo+"']");
+			Element repoElem = Xml.selectElement(repositories, "record[id='"+repo+"']");
 			if (repoElem != null) {
 				Element repoId  = repoElem.getChild("id");
 				String repoName = repoElem.getChildText("name");
@@ -185,16 +184,18 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 				categName = categName.toLowerCase();
 				catCodes.put(repoId.getAttributeValue("serverCode")+":"+repoId.getAttributeValue("code"), categName);
 
-				if (Xml.selectElement(categories,"record[name='"+categName+"']") == null) {
-					int newId = context.getSerialFactory().getSerial(dbms, "Categories");
-					dbms.execute("INSERT INTO Categories(id, name) VALUES (?, ?)", newId, categName);
-					Lib.local.insert(dbms, "Categories", newId, repoName);
+				if (categoryRepository.findOneByNameIgnoreCase(categName) == null) {
+                    MetadataCategory category = new MetadataCategory();
+                    category.setName(categName);
+                    categoryRepository.save(category);
 					addcateg = true;
 				}
 			}
 		}
 
-		if (addcateg) dbms.commit();
+		if (addcateg) {
+            categoryRepository.flush();
+        }
 
 		// --- return only maximum hits as directed by the harvest params
 		int nrGroups = (numberOfHits / groupSize) + 1;
@@ -208,8 +209,8 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 			List<Document> list = s.presentDocuments(context, request, config);
 
 			// --- Loading categories and groups
-			localCateg = new CategoryMapper(dbms);
-			localGroups = new GroupMapper(dbms);
+			localCateg = new CategoryMapper(context);
+			localGroups = new GroupMapper(context);
 
             if(log.isDebugEnabled())
                 log.debug("There are "+(list.size()-1)+" children in the results ("+lower+" to "+upper+")");
@@ -296,10 +297,6 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 
 				//--- generate a new metadata id
 		
-				int id = context.getSerialFactory().getSerial(dbms, "Metadata");
-                // TODO end confusion about datatypes
-                String id$ = Integer.toString(id);
-
 				String docType = "";
 				if (!transformIt && (doc.getDocType() != null)) {
 					docType = Xml.getString(doc.getDocType());
@@ -308,13 +305,14 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 				//--- check for duplicate uuid - violates constraints on metadata table
 				//--- if we attempt insert
 				boolean alreadyAdded = !newUuids.add(uuid);
-				boolean alreadyInDb  = (dataMan.getMetadataId(dbms,uuid) != null);
+				boolean alreadyInDb  = (dataMan.getMetadataId(uuid) != null);
 				if (alreadyAdded || alreadyInDb) {
 					log.error("Uuid "+uuid+" already exists in this set/database - cannot insert");
 					result.couldNotInsert++;
 					continue;
 				}
 
+                final String id;
                 //
                 // insert metadata
                 //
@@ -323,10 +321,10 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
                     int owner = 1;
                     String category = null, createDate = new ISODate().toString(), changeDate = createDate;
                     boolean ufo = false, indexImmediate = false;
-					dataMan.insertMetadata(context, dbms, schema, md, id, uuid, owner, groupOwner, params.uuid,
-                        isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
+                    id = dataMan.insertMetadata(context, schema, md, uuid, owner, groupOwner, params.uuid,
+                            isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
 
-				}
+                }
                 catch (Exception e) {
                     HarvestError error = new HarvestError(e, log);
                     error.setDescription("Unable to insert metadata. "+e.getMessage());
@@ -336,12 +334,13 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 					continue;
 				}
 
-                addPrivileges(id$, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
-                addCategories(id$, params.getCategories(), localCateg, dataMan, dbms, context, log, catCodes.get(colCode));
+                addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+                addCategories(id, params.getCategories(), localCateg, dataMan, context, log, catCodes.get(colCode));
 
 
-                dataMan.setTemplateExt(dbms, id, "n", null);
-				dataMan.setHarvestedExt(dbms, id, params.uuid, params.name);
+                final Integer iId = Integer.valueOf(id);
+                dataMan.setTemplateExt(iId, MetadataType.METADATA);
+				dataMan.setHarvestedExt(iId, params.uuid, Optional.of(params.name));
 
 				// validate it here if requested
 				if (params.validate) {
@@ -352,18 +351,19 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 						docVal = new Document(md);
 					}
 
-					if (!dataMan.doValidate(dbms, schema, id$, docVal, context.getLanguage())) {
+					if (!dataMan.doValidate(schema, id, docVal, context.getLanguage())) {
 						result.doesNotValidate++;
 					} 
 				}
-			
-				dataMan.indexMetadata(dbms, id$);
 
-				result.addedMetadata++;
-			}
-		}
+                dataMan.flush();
 
-		dbms.commit();
+                dataMan.indexMetadata(id, false);
+
+                result.addedMetadata++;
+            }
+        }
+
 		return serverResults;
 	}
 
@@ -374,7 +374,6 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 	// ---------------------------------------------------------------------------
 
 	private Logger log;
-	private final Dbms dbms;
 	private final Z3950Params params;
 	private ServiceContext context;
 	private CategoryMapper localCateg;

@@ -27,15 +27,17 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.ProfileManager;
-import jeeves.server.resources.ResourceManager;
-import jeeves.utils.Log;
-import jeeves.utils.SerialFactory;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Geonet.Profile;
-import org.jdom.Element;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -46,6 +48,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 
 /**
  * Map LDAP user information to GeoNetworkUser information.
@@ -60,7 +65,7 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
 
     Map<String, String[]> mapping;
 
-    Map<String, String> profileMapping;
+    Map<String, Profile> profileMapping;
 
     protected boolean importPrivilegesFromLdap;
 
@@ -74,27 +79,29 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public UserDetails mapUserFromContext(DirContextOperations userCtx,
             String username, Collection<? extends GrantedAuthority> authorities) {
-        ResourceManager resourceManager = applicationContext
-                .getBean(ResourceManager.class);
-        ProfileManager profileManager = applicationContext
-                .getBean(ProfileManager.class);
-        SerialFactory serialFactory = applicationContext
-                .getBean(SerialFactory.class);
 
-        String defaultProfile = (mapping.get("profile")[1] != null ? mapping
-                .get("profile")[1] : Profile.REGISTERED_USER);
+        Profile defaultProfile;
+        if (mapping.get("profile")[1] != null) {
+            defaultProfile = Profile.valueOf(mapping.get("profile")[1]);
+        } else {
+            defaultProfile = Profile.RegisteredUser;
+        }
         String defaultGroup = mapping.get("privilege")[1];
 
         Map<String, ArrayList<String>> userInfo = LDAPUtils
                 .convertAttributes(userCtx.getAttributes().getAll());
 
-        LDAPUser userDetails = new LDAPUser(profileManager, username);
-        userDetails.setName(getUserInfo(userInfo, "name"))
+        LDAPUser userDetails = new LDAPUser(username);
+        User user = userDetails.getUser();
+        user.setName(getUserInfo(userInfo, "name"))
                 .setSurname(getUserInfo(userInfo, "surname"))
-                .setEmail(getUserInfo(userInfo, "mail"))
-                .setOrganisation(getUserInfo(userInfo, "organisation"))
+                .setOrganisation(getUserInfo(userInfo, "organisation"));
+        user.getEmailAddresses().clear();
+        user.getEmailAddresses().add(getUserInfo(userInfo, "mail"));
+        user.getPrimaryAddress()
                 .setAddress(getUserInfo(userInfo, "address"))
                 .setState(getUserInfo(userInfo, "state"))
                 .setZip(getUserInfo(userInfo, "zip"))
@@ -104,139 +111,55 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
         // Set privileges for the user. If not, privileges are handled
         // in local database
         if (importPrivilegesFromLdap) {
-            setProfilesAndPrivileges(resourceManager, profileManager,
-                    defaultProfile, defaultGroup, userInfo, userDetails);
-        } else {
-            setDefaultProfilesAndPrivileges(resourceManager, profileManager,
-                    defaultProfile, userDetails);
+            setProfilesAndPrivileges(defaultProfile, defaultGroup, userInfo, userDetails);
         }
 
         // Assign default profile if not set by LDAP info or local database
-        if (userDetails.getProfile() == null) {
-            userDetails.setProfile(defaultProfile);
+        if (user.getProfile() == null) {
+            user.setProfile(defaultProfile);
         }
 
-        // Check that user profile is defined and fallback to registered user
-        // in order to avoid inconsistent JeevesUser creation
-        Set<String> checkProfile = profileManager.getProfilesSet(userDetails
-                .getProfile());
-        if (checkProfile == null) {
-            Log.error(Geonet.LDAP, "  User profile " + userDetails.getProfile()
-                    + " is not set in Jeeves registered profiles."
-                    + " Assigning registered user profile.");
-            userDetails.setProfile(Profile.REGISTERED_USER);
-        }
-
-        saveUser(resourceManager, serialFactory, userDetails);
+        saveUser(userDetails);
 
         return userDetails;
     }
 
-    abstract protected void setProfilesAndPrivileges(
-            ResourceManager resourceManager, ProfileManager profileManager,
-            String defaultProfile, String defaultGroup,
+    abstract protected void setProfilesAndPrivileges(Profile defaultProfile, String defaultGroup,
             Map<String, ArrayList<String>> userInfo, LDAPUser userDetails);
 
-    /**
-     * Check if user exist in database and set his profile or use default one.
-     * 
-     * @param resourceManager
-     * @param profileManager
-     * @param defaultProfile
-     * @param userDetails
-     */
-    protected void setDefaultProfilesAndPrivileges(
-            ResourceManager resourceManager, ProfileManager profileManager,
-            String defaultProfile, LDAPUser userDetails) {
-
-        Dbms dbms = null;
-        // If user already exist in database, retrieve his profile information
-        try {
-            dbms = (Dbms) resourceManager.openDirect(Geonet.Res.MAIN_DB);
-            Element dbUserProfilRequest = dbms.select(
-                    "SELECT profile FROM Users WHERE username=?",
-                    userDetails.getUsername());
-            if (dbUserProfilRequest.getChild("record") != null) {
-                String dbUserProfil = dbUserProfilRequest.getChild("record")
-                        .getChildText("profile");
-                userDetails.setProfile(dbUserProfil);
-            }
-        } catch (Exception e) {
-            try {
-                resourceManager.abort(Geonet.Res.MAIN_DB, dbms);
-                dbms = null;
-            } catch (Exception e2) {
-                e.printStackTrace();
-                Log.error(Geonet.LDAP, "Error closing dbms" + dbms, e2);
-            }
-            Log.error(
-                    Geonet.LDAP,
-                    "Unexpected error while retrieving LDAP user profil in user database",
-                    e);
-            throw new AuthenticationServiceException(
-                    "Unexpected error while retrieving LDAP user profil in user database",
-                    e);
-        } finally {
-            if (dbms != null) {
-                try {
-                    resourceManager.close(Geonet.Res.MAIN_DB, dbms);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.error(Geonet.LDAP, "Error closing dbms" + dbms, e);
-                }
-            }
-        }
-    }
-
-    protected void addProfile(ProfileManager profileManager,
-            LDAPUser userDetails, String profile) {
+    protected void addProfile(@Nonnull LDAPUser userDetails, @Nonnull String profileName, @Nullable Set<Profile> profileList) {
         // Check if profile exist in profile mapping table
-        String mappedProfile = profileMapping.get(profile);
-        if (mappedProfile != null) {
-            profile = mappedProfile;
+        if (profileMapping != null) {
+            Profile mapped = profileMapping.get(profileName);
+            if (mapped != null) {
+                profileName = mapped.name();
+            }
         }
 
         if (Log.isDebugEnabled(Geonet.LDAP)) {
-            Log.debug(Geonet.LDAP, "  Assigning profile " + profile);
+            Log.debug(Geonet.LDAP, "  Assigning profile " + profileName);
         }
-        if (profileManager.exists(profile)) {
-            userDetails.setProfile(profile);
+        Profile profile = Profile.valueOf(profileName);
+        if (profile != null) {
+            userDetails.getUser().setProfile(profile);
+            if (profileList != null) {
+                profileList.add(profile);
+            }
         } else {
-            Log.error(Geonet.LDAP, "  Profile " + profile + " does not exist.");
+            Log.error(Geonet.LDAP, "  Profile " + profileName + " does not exist.");
         }
     }
 
-    private void saveUser(ResourceManager resourceManager,
-            SerialFactory serialFactory, LDAPUser userDetails) {
-        Dbms dbms = null;
+    private void saveUser(LDAPUser userDetails) {
         try {
-            dbms = (Dbms) resourceManager.openDirect(Geonet.Res.MAIN_DB);
-            LDAPUtils.saveUser(userDetails, dbms, serialFactory,
-                    importPrivilegesFromLdap, createNonExistingLdapGroup);
+            UserRepository userRepo = applicationContext.getBean(UserRepository.class);
+            GroupRepository groupRepo = applicationContext.getBean(GroupRepository.class);
+            UserGroupRepository userGroupRepo = applicationContext.getBean(UserGroupRepository.class);
+            LDAPUtils.saveUser(userDetails, userRepo, groupRepo, userGroupRepo, importPrivilegesFromLdap, createNonExistingLdapGroup);
         } catch (Exception e) {
-            try {
-                resourceManager.abort(Geonet.Res.MAIN_DB, dbms);
-                dbms = null;
-            } catch (Exception e2) {
-                e.printStackTrace();
-                Log.error(Geonet.LDAP, "Error closing dbms" + dbms, e2);
-            }
-            Log.error(
-                    Geonet.LDAP,
-                    "Unexpected error while saving/updating LDAP user in database",
-                    e);
             throw new AuthenticationServiceException(
                     "Unexpected error while saving/updating LDAP user in database",
                     e);
-        } finally {
-            if (dbms != null) {
-                try {
-                    resourceManager.close(Geonet.Res.MAIN_DB, dbms);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.error(Geonet.LDAP, "Error closing dbms" + dbms, e);
-                }
-            }
         }
     }
 
@@ -309,15 +232,15 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
         return mapping;
     }
 
-    public String getProfileMappingValue(String key) {
+    public Profile getProfileMappingValue(String key) {
         return profileMapping.get(key);
     }
 
-    public void setProfileMapping(Map<String, String> profileMapping) {
+    public void setProfileMapping(Map<String, Profile> profileMapping) {
         this.profileMapping = profileMapping;
     }
 
-    public Map<String, String> getProfileMapping() {
+    public Map<String, Profile> getProfileMapping() {
         return profileMapping;
     }
 

@@ -18,7 +18,7 @@
     <commitInterval>30000</commitInterval>
     <!-- If true then NRTManagerReopenThread will control how often the reader are reopened.
     	 If false then the reader will be opened everytime they are obtained.  -->
-    <useNRTManagerReopenThread>true</useNRTManagerReopenThread>
+    <useNRTManagerReopenThread>false</useNRTManagerReopenThread>
     <!-- 
     	Only applies if useNRTManagerReopenThread is true
     	Maximum time until a new  reader must be opened; this sets the upper bound 
@@ -105,6 +105,7 @@
       <field name="_source" tagName="source"/>
       <field name="_status" tagName="status"/>
       <field name="_edit" tagName="edit"/>
+      <field name="_root" tagName="root"/>
       <field name="_title" tagName="title" multilingualSortField="true"/>
       <field name="_docLocale" tagName="docLocale"/>
       <field name="_locale" tagName="_locale"/>

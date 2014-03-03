@@ -18,7 +18,6 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.resources.dbms.Dbms;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.util.ThreadUtils;
@@ -38,30 +37,26 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
 		private final int ids[];
 		private final int beginIndex, count;
 		private final DataManager dm;
-		private final Dbms dbms;
-	
-		BatchOpsCallable(int ids[], int beginIndex, int count, DataManager dm, Dbms dbms) {
+
+		BatchOpsCallable(int ids[], int beginIndex, int count, DataManager dm) {
 			this.ids = ids;
 			this.beginIndex = beginIndex;
 			this.count = count;
 			this.dm = dm;
-			this.dbms = dbms;
 		}
 		
 		public Void call() throws Exception {
 			for(int i=beginIndex; i<beginIndex+count; i++) {
-				dm.indexMetadata(dbms, ids[i]+"");
+				dm.indexMetadata(ids[i]+"", false);
 			}
 			return null;
 		}
 	}
 	
   Set<Integer> metadata;
-	Dbms dbms;
 
-  public BatchOpsMetadataReindexer(DataManager dm, Dbms dbms, Set<Integer> metadata) {
+  public BatchOpsMetadataReindexer(DataManager dm, Set<Integer> metadata) {
       super(dm);
-			this.dbms = dbms;
       this.metadata = metadata;
   }
 
@@ -83,7 +78,7 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor {
 			int start = index;
 			int count = Math.min(perThread,ids.length-start);
 			// create threads to process this chunk of ids
-			Callable<Void> worker = new BatchOpsCallable(ids, start, count, getDataManager(), dbms);
+			Callable<Void> worker = new BatchOpsCallable(ids, start, count, getDataManager());
 			Future<Void> submit = executor.submit(worker);
 			submitList.add(submit);
 			index += count;

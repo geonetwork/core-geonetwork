@@ -24,17 +24,18 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.MdInfo;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
@@ -78,15 +79,13 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 		DataManager   dm = gc.getBean(DataManager.class);
 		UserSession   us = context.getUserSession();
 
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-
 		String id = Utils.getIdentifierFromParameters(params, context);
 		boolean update = Util.getParam(params, Params.UPDATEONLY, "false").equals("true");
 
 		//-----------------------------------------------------------------------
 		//--- check access
 
-		MdInfo info = dm.getMetadataInfo(dbms, id);
+		Metadata info = context.getBean(MetadataRepository.class).findOne(id);
 
 		if (info == null)
 			throw new MetadataNotFoundEx(id);
@@ -99,15 +98,16 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 		//--- in case of owner, privileges for groups 0,1 and GUEST are disabled 
 		//--- and are not sent to the server. So we cannot remove them
 
-		boolean isAdmin   = Geonet.Profile.ADMINISTRATOR.equals(us.getProfile());
-		boolean isReviewer= Geonet.Profile.REVIEWER	 .equals(us.getProfile());
+		boolean isAdmin   = Profile.Administrator == us.getProfile();
+		boolean isReviewer= Profile.Reviewer == us.getProfile();
 
 
-		if (us.getUserId().equals(info.owner) && !isAdmin && !isReviewer)
+		if (us.getUserIdAsInt() == info.getSourceInfo().getOwner() && !isAdmin && !isReviewer) {
 			skip = true;
+        }
 
 		if (!update) {
-			dm.deleteMetadataOper(dbms, id, skip);
+			dm.deleteMetadataOper(context, id, skip);
 		}
 		
 		//-----------------------------------------------------------------------
@@ -127,22 +127,22 @@ public class UpdateAdminOper extends NotInReadOnlyModeService {
 				String operId  = st.nextToken();
 
 				if (!update) {
-					dm.setOperation(context, dbms, id, groupId, operId);
+					dm.setOperation(context, id, groupId, operId);
 				} else {
 					boolean publish = "on".equals(el.getTextTrim());
 					if (publish) {
-						dm.setOperation(context, dbms, id, groupId, operId);
+						dm.setOperation(context, id, groupId, operId);
 					} else {
-						dm.unsetOperation(context, dbms, id, groupId, operId);
+						dm.unsetOperation(context, id, groupId, operId);
 					}
 				}
 			}
 		}
 
 		//--- index metadata
-		dm.indexInThreadPool(context,id, dbms);
+        dm.indexMetadata(id, true);
 
-		//--- return id for showing
+        //--- return id for showing
 		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));
 	}
 }

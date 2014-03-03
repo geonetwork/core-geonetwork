@@ -23,7 +23,8 @@
 	</condition>
 
 	<!-- =================================================================================== -->
-
+	
+	<property name="appName" value="geonetwork" />
 	<property name="version" value="2.11.0" />
     <property name="subVersion" value="SNAPSHOT" />
 	<property name="javaVersion" value="1.6.0" /> <!-- Minimum version required -->
@@ -201,17 +202,17 @@
 
         <property file="../web/src/main/webapp/WEB-INF/server.prop"/>
 
-        <delete dir="../geonetwork-${release}"/>
-        <mkdir  dir="../geonetwork-${release}"/>
+    	<delete dir="../${appName}-${release}"/>
+    	<mkdir  dir="../${appName}-${release}"/>
 
         <echo message="Building platform independent installer on ${osys} using IzPack"/>
 
         <izpack	input="${propsdir}/installer-config.xml"
-            output="../geonetwork-${release}/geonetwork-install-${release}-${subVersion}.jar"
+        	output="../${appName}-${release}/${appName}-install-${release}-${subVersion}.jar"
                     installerType="standard"
                     basedir="${basedir}"/>
 
-        <checksum file="../geonetwork-${release}/geonetwork-install-${release}-${subVersion}.jar" forceOverwrite="yes"/>
+    	<checksum file="../${appName}-${release}/${appName}-install-${release}-${subVersion}.jar" forceOverwrite="yes"/>
 
     </target>
 
@@ -225,14 +226,14 @@
 		<echo message="Building Windows installer on ${osys} using launch4j"/>
 
 		<launch4j configFile="${basedir}/launch4j/launch4jConfig.xml"
-			jar="../geonetwork-${release}/geonetwork-install-${release}-${subVersion}.jar"
-			outfile="../geonetwork-${release}/geonetwork-install-${release}-${subVersion}.exe"
+			jar="../${appName}-${release}/${appName}-install-${release}-${subVersion}.jar"
+			outfile="../${appName}-${release}/${appName}-install-${release}-${subVersion}.exe"
 			txtFileVersion="${version}-${subVersion}-${date}" 
 			txtProductVersion="${version}-${subVersion}" 
 			fileVersion="${version}.0" 
 			productVersion="${version}.0"/>
 
-	<checksum file="../geonetwork-${release}/geonetwork-install-${release}-${subVersion}.exe" forceOverwrite="yes"/>
+		<checksum file="../${appName}-${release}/${appName}-install-${release}-${subVersion}.exe" forceOverwrite="yes"/>
 		
 	</target>
 

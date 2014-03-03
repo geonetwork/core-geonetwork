@@ -77,7 +77,7 @@
           <artifactItems>
             <artifactItem>
               <groupId>${project.groupId}</groupId>
-              <artifactId>geonetwork-main</artifactId>
+              <artifactId>web-app</artifactId>
               <version>${project.version}</version>
               <type>war</type>
             </artifactItem>
@@ -140,7 +140,7 @@
               <requestHeaderSize>20000</requestHeaderSize>
             </connector>
           </connectors>
-          <webApp>${geonetworkWar}/geonetwork-main.war</webApp>
+          <war>${geonetworkWar}/web-app.war</war>
           <webAppConfig>
             <contextPath>/geonetwork</contextPath>
           </webAppConfig>

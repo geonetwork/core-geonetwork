@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  	<services package="org.fao.geonet">
+    	<service name="admin.category.update">
+			<class name=".services.category.Update" />
+            <error sheet="../xslt/error/error-json.xsl"/>
+		</service>
+
+		<service name="admin.category.remove">
+			<class name=".services.category.Remove" />
+            <error sheet="../xslt/error/error-json.xsl"/>
+		</service>
+		
+		<service name="admin.category.update.labels">
+			<class name=".services.category.XmlUpdate" />
+		</service>
+	</services>
+</geonet>

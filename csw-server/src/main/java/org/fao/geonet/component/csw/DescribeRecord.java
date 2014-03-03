@@ -24,8 +24,8 @@
 package org.fao.geonet.component.csw;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.Util;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
@@ -38,6 +38,7 @@ import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -53,6 +54,8 @@ import java.util.Set;
 public class DescribeRecord extends AbstractOperation implements CatalogService
 {
     static final String NAME = "DescribeRecord";
+    @Autowired
+    private CatalogConfiguration _catalogConfig;
 
     //---------------------------------------------------------------------------
     //---
@@ -169,7 +172,7 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
 
 		// Handle outputFormat parameter
 		if (parameterName.equalsIgnoreCase("outputformat")) {
-			Set<String> formats = CatalogConfiguration
+			Set<String> formats = _catalogConfig
 					.getDescribeRecordOutputFormat();
 			List<Element> values = createValuesElement(formats);
             if (listOfValues != null) {
@@ -179,7 +182,7 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
 
 		// Handle namespace parameter
 		if (parameterName.equalsIgnoreCase("namespace")) {
-			Set<Namespace> namespaces = CatalogConfiguration
+			Set<Namespace> namespaces = _catalogConfig
 					.getDescribeRecordNamespaces();
 			List<Element> values = createValuesElementNS(namespaces);
             if (listOfValues != null) {
@@ -189,7 +192,7 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
 
 		// Handle typename parameter
 		if (parameterName.equalsIgnoreCase("typename")) {
-			Set<String> typenames = CatalogConfiguration
+			Set<String> typenames = _catalogConfig
 					.getDescribeRecordTypename().keySet();
 			List<Element> values = createValuesElement(typenames);
             if (listOfValues != null) {
@@ -215,7 +218,7 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
 	HashMap<String, Element> scElements = new HashMap<String, Element>();
 	
 	if (typeName == null) {
-		Set<String> schemaFiles = new HashSet<String>(CatalogConfiguration
+		Set<String> schemaFiles = new HashSet<String>(_catalogConfig
 					.getDescribeRecordTypename().values());
 		for (String schema : schemaFiles) {			
 			String tname = schema.substring(0, schema.indexOf("."));
@@ -223,9 +226,9 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
 			scElements.put(tname, currentSC);
 		}
 	} else {
-		if (CatalogConfiguration.getDescribeRecordTypename().containsKey(typeName)) {
+		if (_catalogConfig.getDescribeRecordTypename().containsKey(typeName)) {
 			scElements.put(typeName, loadSchemaComponent(context, typeName,
-					CatalogConfiguration.getDescribeRecordTypename().get(typeName)));
+					_catalogConfig.getDescribeRecordTypename().get(typeName)));
 		}
 //		  CSW 2.0.2 testsuite csw:csw-2.0.2-DescribeRecord-tc3.1:
 //		  "The response to a DescribeRecord request that contains an unknown TypeName

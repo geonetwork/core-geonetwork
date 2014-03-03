@@ -25,15 +25,19 @@ package org.fao.geonet.services.thesaurus;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Constants;
+import org.fao.geonet.domain.ThesaurusActivation;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.repository.ThesaurusActivationRepository;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Map;
@@ -61,23 +65,22 @@ public class GetList implements Service {
 			throws Exception {
 		Element response = new Element(Jeeves.Elem.RESPONSE);
 		
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		ThesaurusManager th = gc.getBean(ThesaurusManager.class);
+		ThesaurusManager th = context.getBean(ThesaurusManager.class);
 		Map<String, Thesaurus> thTable = th.getThesauriMap();
 		
-		response.addContent(buildResultfromThTable(thTable, dbms));
+		response.addContent(buildResultfromThTable(context, thTable));
 		
 		return response;
 	}
 	
 	/**
-	 * @param thTable
-	 * @return {@link org.jdom.Element}
+	 *
+     * @param context
+     * @param thTable
+     * @return {@link org.jdom.Element}
 	 * @throws java.sql.SQLException
 	 */
-	private Element buildResultfromThTable(Map<String, Thesaurus> thTable, Dbms dbms) throws SQLException {
+	private Element buildResultfromThTable(ServiceContext context, Map<String, Thesaurus> thTable) throws SQLException, JDOMException, IOException {
 		
 		Element elRoot = new Element("thesauri");
 		
@@ -98,7 +101,10 @@ public class GetList implements Service {
 			elFname.addContent(fname);
 			
 			Element elTitle = new Element("title");
-			String title = currentTh.getTitle();
+			String title = currentTh.getTitles(context).get(context.getLanguage());
+			if(title == null) {
+				title = currentTh.getTitle();
+			}
 			elTitle.addContent(title);
 			
 			Element elType = new Element("type");
@@ -119,17 +125,16 @@ public class GetList implements Service {
             
 	        
 			Element elActivated= new Element("activated");
-			String activated = "y";
-                        // Thesaurus are activated by default
-                        String checkQuery = "SELECT count(*) as disabled FROM Thesaurus WHERE id = ? and activated = 'n'";
-                        Element records = dbms.select(checkQuery, currentTh.getKey());
-                        if (records.getChild("record").getChildText("disabled").equals("1")) {
-                            activated = "n";
-                        }
-                        elActivated.setText(activated);
-			
-			elLoop.addContent(elKey);
-			elLoop.addContent(elDname);
+            char activated = Constants.YN_TRUE;
+            final ThesaurusActivationRepository activationRepository = context.getBean(ThesaurusActivationRepository.class);
+            final ThesaurusActivation activation = activationRepository.findOne(currentTh.getKey());
+            if (activation == null || !activation.isActivated()) {
+                activated = Constants.YN_FALSE;
+            }
+            elActivated.setText(""+activated);
+
+            elLoop.addContent(elKey);
+            elLoop.addContent(elDname);
 			elLoop.addContent(elFname);
 			elLoop.addContent(elTitle);
             elLoop.addContent(elDate);

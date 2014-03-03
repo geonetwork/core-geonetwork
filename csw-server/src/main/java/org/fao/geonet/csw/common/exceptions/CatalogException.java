@@ -23,7 +23,7 @@
 
 package org.fao.geonet.csw.common.exceptions;
 
-import jeeves.utils.Xml;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.csw.common.Csw;
 import org.jdom.Element;
 import org.jdom.Namespace;

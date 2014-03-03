@@ -22,25 +22,24 @@
 //==============================================================================
 package org.fao.geonet.guiservices.csw.virtual;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
+import jeeves.server.JeevesEngine;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
-
-import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Service;
+import org.fao.geonet.repository.ServiceRepository;
 import org.jdom.Element;
+
+import java.util.*;
+import java.util.List;
 
 /**
  * Update the virtual CSW server informations
  */
 
-public class Update implements Service {
+public class Update implements jeeves.interfaces.Service {
 
     public void init(String appPath, ServiceConfig params) throws Exception {
     }
@@ -49,11 +48,10 @@ public class Update implements Service {
             throws Exception {
         String operation = Util.getParam(params, Params.OPERATION);
         String serviceId = params.getChildText(Params.ID);
-        String paramId = params.getChildText(Params.ID);
 
-        String servicename = Util.getParam(params, Params.SERVICENAME);
-        String classname = Util.getParam(params, Params.CLASSNAME);
-        String servicedescription = Util.getParam(params,
+        String serviceName = Util.getParam(params, Params.SERVICENAME);
+        String className = Util.getParam(params, Params.CLASSNAME);
+        String serviceDescription = Util.getParam(params,
                 Params.SERVICEDESCRIPTION, "");
 
         HashMap<String, String> filters = new HashMap<String, String>();
@@ -76,63 +74,43 @@ public class Update implements Service {
         filters.put(Params.FILTER_CATEGORY,
                 Util.getParam(params, Params.FILTER_CATEGORY, ""));
 
-        Dbms dbms = (Dbms) context.getResourceManager()
-                .open(Geonet.Res.MAIN_DB);
-
+        final ServiceRepository serviceRepository = context.getBean(ServiceRepository.class);
         if (operation.equals(Params.Operation.NEWSERVICE)) {
+            Service service = serviceRepository.findOneByName(serviceName);
 
-            String query = "SELECT * FROM Services WHERE name=?";
-            Element servicesTest = dbms.select(query, servicename);
-
-            if (servicesTest.getChildren().size() != 0) {
+            if (service != null) {
                 throw new IllegalArgumentException("Service with name "
-                        + servicename + " already exists");
+                        + serviceName + " already exists");
             }
 
-            serviceId = String.format("%s",
-                    context.getSerialFactory().getSerial(dbms, "Services"));
-            query = "INSERT INTO services (id, name, class, description) VALUES (?, ?, ?, ?)";
-            dbms.execute(query, Integer.valueOf(serviceId), servicename, classname,
-                    servicedescription);
+            service = new org.fao.geonet.domain.Service();
+            service.setDescription(serviceDescription);
+            service.setClassName(className);
+            service.setName(serviceName);
+
 
             for (Map.Entry<String, String> filter : filters.entrySet()) {
                 if (filter.getValue() != null && !filter.getValue().equals("")) {
-                    paramId = String.format("%s", context.getSerialFactory()
-                            .getSerial(dbms, "ServiceParameters"));
-                    query = "INSERT INTO serviceParameters (id, service, name, value) VALUES (?, ?, ?, ?)";
-                    dbms.execute(query, Integer.valueOf(paramId), Integer.valueOf(serviceId),
-                            filter.getKey(), filter.getValue());
+                    service.getParameters().put(filter.getKey(), filter.getValue());
                 }
             }
-        }
-
-        else if (operation.equals(Params.Operation.UPDATESERVICE)) {
+            serviceRepository.save(service);
+            serviceId = String.valueOf(service.getId());
+        } else if (operation.equals(Params.Operation.UPDATESERVICE)) {
+            final Service service = serviceRepository.findOne(Integer.valueOf(serviceId));
+            service.setClassName(className);
+            service.setName(serviceName);
+            service.setDescription(serviceDescription);
 
             for (Map.Entry<String, String> filter : filters.entrySet()) {
-
-                String query = "SELECT * FROM ServiceParameters WHERE service=? AND name=?";
-                Element testParams = dbms.select(query, Integer.valueOf(serviceId),
-                        filter.getKey());
-
-                if (testParams.getChildren().size() != 0) {
-                    query = "UPDATE serviceParameters SET value=? WHERE service=? AND name=?";
-                    dbms.execute(query, filter.getValue(), Integer.valueOf(serviceId),
-                            filter.getKey());
-                } else {
-                    paramId = String.format("%s", context.getSerialFactory()
-                            .getSerial(dbms, "ServiceParameters"));
-                    query = "INSERT INTO serviceParameters (id, service, name, value) VALUES (?, ?, ?, ?)";
-                    dbms.execute(query, Integer.valueOf(paramId), Integer.valueOf(serviceId),
-                            filter.getKey(), filter.getValue());
-                }
-
-                query = "UPDATE services SET description=?, name=? WHERE id=?";
-                dbms.execute(query, servicedescription, servicename, Integer.valueOf(serviceId));
+                service.getParameters().put(filter.getKey(), filter.getValue());
             }
+
+            serviceRepository.save(service);
         }
 
         // launching the service on the fly
-        context.getServlet().getEngine().loadConfigDB(dbms, Integer.valueOf(serviceId));
+        context.getBean(JeevesEngine.class).loadConfigDB(context.getApplicationContext(), Integer.valueOf(serviceId));
 
         return new Element(Jeeves.Elem.RESPONSE);
     }

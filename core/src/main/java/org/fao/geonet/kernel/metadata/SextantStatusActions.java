@@ -23,10 +23,10 @@
 
 package org.fao.geonet.kernel.metadata;
 
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.*;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.fao.geonet.constants.Params;
 
 /**
  * Custom status action class for Sextant.
@@ -74,28 +74,29 @@ public class SextantStatusActions extends DefaultStatusActions {
 		* @param changeDate The date the status was changed.
 		* @param changeMessage The message explaining why the status has changed.
 		*/
-	public Set<Integer> statusChange(String status, Set<Integer> metadataIds, String changeDate, String changeMessage) throws Exception {
+	public Set<Integer> statusChange(String status, Set<Integer> metadataIds,
+                                     String changeDate, String changeMessage) throws Exception {
 		Set<Integer> unchanged = new HashSet<Integer>();
 
         // -- process the metadata records to set status
         for (Integer mid : metadataIds) {
-            String currentStatus = dm.getCurrentStatus(dbms, mid);
+            String currentStatus = dm.getCurrentStatus(mid);
 
             // --- if the status is already set to value of status then do nothing
             if (status.equals(currentStatus)) {
-                if (context.isDebug())
-                    context.debug("Metadata " + mid + " already has status " + mid);
                 unchanged.add(mid);
             }
 
             if (status.equals(Params.Status.APPROVED)) {
                 // setAllOperations(mid); - this is a short cut that could be enabled
-            } else if (status.equals(Params.Status.DRAFT) || status.equals(Params.Status.REJECTED)) {
+            } else if (status.equals(Params.Status.DRAFT) ||
+                       status.equals(Params.Status.REJECTED)) {
                 unsetAllOperations(mid);
             }
 
             // --- set status, indexing is assumed to take place later
-            dm.setStatusExt(context, dbms, mid, Integer.valueOf(status), changeDate, changeMessage);
+            dm.setStatusExt(context, mid, Integer.valueOf(status),
+                    new ISODate(changeDate), changeMessage);
         }
 
         // --- inform content reviewers if the status is submitted

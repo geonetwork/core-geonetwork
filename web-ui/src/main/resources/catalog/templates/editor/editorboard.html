@@ -1,0 +1,41 @@
+<div>
+  <div class="row">
+    <div class="col-sm-8">
+     <!-- 
+       FIXME: Add list of user records -->
+       <div class="panel panel-default">
+        <div class="panel-heading">
+          <span data-translate="">yourMetadata</span>
+        </div>
+        <div class="panel-body">
+          <form data-ng-controller="GnSearchFormController">
+            <div class="form-group">
+              <input class="form-control" type="text" 
+                data-ng-change="triggerSearch()"
+                placeholder="{{'search' | translate}}" autofocus=""
+                data-ng-model="params.any"/>
+            </div>
+            <div data-gn-search-form-results=""
+              data-gn-search-form-results-mode="title"
+              data-search-results="searchResults"
+              data-select-records="selectRecords"
+              data-pagination-info="paginationInfo"
+              data-on-md-click="onMdClick">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+    </div>
+    <div class="col-sm-4">
+      <a href="#/create" class="btn btn-primary btn-lg btn-block">
+        <i class="fa fa-plus"/>&nbsp;<span data-translate="">addRecord</span>
+      </a>
+      <a href="#/directory" class="btn btn-primary btn-lg btn-block"
+        ng-if="user.profile === 'Administrator' || user.profile === 'Reviewer'">
+        <i class="fa fa-list-ul"/>&nbsp;<span data-translate="">directoryManager</span>
+      </a>
+    </div>
+  </div>
+</div>

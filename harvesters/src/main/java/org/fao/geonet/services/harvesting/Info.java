@@ -23,36 +23,24 @@
 
 package org.fao.geonet.services.harvesting;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
 import jeeves.constants.Jeeves;
-import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.BadXmlResponseEx;
-import jeeves.exceptions.JeevesException;
-import jeeves.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.*;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.XmlRequest;
 import org.fao.oaipmh.exceptions.NoSetHierarchyException;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.requests.ListMetadataFormatsRequest;
 import org.fao.oaipmh.requests.ListSetsRequest;
-import org.fao.oaipmh.requests.Transport;
 import org.fao.oaipmh.responses.ListMetadataFormatsResponse;
 import org.fao.oaipmh.responses.ListSetsResponse;
 import org.fao.oaipmh.responses.MetadataFormat;
@@ -60,6 +48,14 @@ import org.fao.oaipmh.responses.SetInfo;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.xml.sax.SAXException;
+
+import java.io.File;
+import java.io.FileFilter;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 //=============================================================================
 
@@ -87,8 +83,8 @@ public class Info implements Service
 	{
 		Element result = new Element("root");
 		
-		String schema = jeeves.utils.Util.getParam(params, "schema", "");
-		String serviceType = jeeves.utils.Util.getParam(params, "serviceType", "");
+		String schema = org.fao.geonet.Util.getParam(params, "schema", "");
+		String serviceType = Util.getParam(params, "serviceType", "");
 
 		@SuppressWarnings("unchecked")
         List<Element> paramChildren = params.getChildren();
@@ -147,7 +143,7 @@ public class Info implements Service
 
 	private Element getHarvesterTypes(ServiceContext context) {
 	    Element types = new Element("types");
-	    for (String type : AbstractHarvester.getHarvesterTypes()) {
+	    for (String type : AbstractHarvester.getHarvesterTypes(context)) {
             types.addContent(new Element("type").setText(type));
         }
         return types;
@@ -323,9 +319,10 @@ public class Info implements Service
 
 	private Element getMdFormats(String url, ServiceContext context) throws Exception
 	{
-		ListMetadataFormatsRequest req = new ListMetadataFormatsRequest();
+		ListMetadataFormatsRequest req = new ListMetadataFormatsRequest(context.getBean(GeonetHttpRequestFactory.class));
 		req.setSchemaPath(oaiSchema);
-		Transport t = req.getTransport();
+
+        XmlRequest t = req.getTransport();
 		t.setUrl(new URL(url));
 		Lib.net.setupProxy(context, t);
 		ListMetadataFormatsResponse res = req.execute();
@@ -348,9 +345,9 @@ public class Info implements Service
 
 		try
 		{
-			ListSetsRequest req = new ListSetsRequest();
+			ListSetsRequest req = new ListSetsRequest(context.getBean(GeonetHttpRequestFactory.class));
 			req.setSchemaPath(oaiSchema);
-			Transport t = req.getTransport();
+            XmlRequest t = req.getTransport();
 			t.setUrl(new URL(url));
 			Lib.net.setupProxy(context, t);
 			ListSetsResponse res = req.execute();

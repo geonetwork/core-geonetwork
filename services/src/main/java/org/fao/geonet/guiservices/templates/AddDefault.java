@@ -25,12 +25,12 @@ package org.fao.geonet.guiservices.templates;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.Util;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -69,13 +69,11 @@ public class AddDefault implements Service {
 		Element result = new Element(Jeeves.Elem.RESPONSE);
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
-		Dbms dbms = (Dbms) context.getResourceManager()
-				.open(Geonet.Res.MAIN_DB);
 
 		DataManager dataMan = gc.getBean(DataManager.class);
 		SchemaManager schemaMan = gc.getBean(SchemaManager.class);
 
-		String siteId = gc.getSiteId();
+        String siteId = gc.getBean(SettingManager.class).getSiteId();
 		int owner = context.getUserSession().getUserIdAsInt();
 
 		Log.info(Geonet.DATA_MANAGER, "Loading templates for schemas "
@@ -101,27 +99,30 @@ public class AddDefault implements Service {
 						templateFilesList.add(file);
 			}
 
-			for (File temp : templateFilesList) {
-				String status = "failed";
-				String templateName = temp.getName();
+            final String prefix = "sub-";
+            final int prefixLength = prefix.length();
+            for (File temp : templateFilesList) {
+                String status = "failed";
+                String templateName = temp.getName();
 
-				Element template = new Element("template");
-				template.setAttribute("name", templateName);
+                Element template = new Element("template");
+                template.setAttribute("name", templateName);
 
-                if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+                if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                     Log.debug(Geonet.DATA_MANAGER,
-						" - Adding template file (for schema " + schemaName + "): " + templateName);
+                            " - Adding template file (for schema " + schemaName + "): " + templateName);
+                }
 
-				try {
-					Element xml = Xml.loadFile(temp);
-					String uuid = UUID.randomUUID().toString();
-					String isTemplate = "y";
-					String title = null;
+                try {
+                    Element xml = Xml.loadFile(temp);
+                    String uuid = UUID.randomUUID().toString();
+                    String isTemplate = "y";
+                    String title = null;
 
-					if (templateName.startsWith("sub-")) {
+                    if (templateName.startsWith(prefix)) {
 						isTemplate = "s";
-						title = templateName.substring(4,
-								templateName.length() - 4);
+						title = templateName.substring(prefixLength,
+								templateName.length() - prefixLength);
 					}
                     //
                     // insert metadata
@@ -129,10 +130,9 @@ public class AddDefault implements Service {
                     String groupOwner = "1";
                     String docType = null, category = null, createDate = null, changeDate = null;
                     boolean ufo = true, indexImmediate = true;
-					dataMan.insertMetadata(context, dbms, schemaName, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, owner, groupOwner, siteId,
-                                           isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
+					dataMan.insertMetadata(context, schemaName, xml, uuid, owner, groupOwner, siteId,
+                                           isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
 
-					dbms.commit();
 					status = "loaded";
 				} catch (Exception e) {
 					serviceStatus = "false";

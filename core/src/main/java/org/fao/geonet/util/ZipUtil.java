@@ -11,7 +11,7 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import jeeves.utils.IO;
+import org.fao.geonet.utils.IO;
 
 /**
  * Zip or unzip files

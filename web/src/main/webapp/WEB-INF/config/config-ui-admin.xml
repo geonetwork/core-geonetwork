@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+    <services package="org.fao.geonet">
+
+        <service name="admin.console">
+            <documentation>The administration console page.</documentation>
+            <output sheet="../xslt/ui-admin/admin.xsl"/>
+        </service>
+
+        <service name="catalog.signin">
+            <documentation>The user authentication page.</documentation>
+            <output sheet="../xslt/ui-admin/signin.xsl"/>
+        </service>
+
+        <service name="contact.us">
+            <documentation>The contact us page.</documentation>
+            <output sheet="../xslt/ui-admin/contactus.xsl"/>
+        </service>
+
+        <service name="error">
+            <output sheet="../xslt/ui/error-page.xsl">
+                <call name="startupError" class=".guiservices.util.GetStartupError" />
+            </output>
+        </service>
+
+        <service name="new.account">
+            <documentation><![CDATA[
+                User self-registration services
+                ]]></documentation>
+            <output sheet="../xslt/ui-admin/new-account.xsl"/>
+        </service>
+
+        <service name="node-change-warning">
+            <documentation><![CDATA[
+                This is the page returned when user is identified in one node
+                and try to access another node. The page proposed to the user
+                to return to the previous node or logout and go to the requested 
+                node.
+                ]]></documentation>
+            <output sheet="../xslt/ui-admin/node-change-warning.xsl">
+                <xml name="i18n" file="xml/i18n.xml"/>
+            </output>
+        </service>
+
+        <service name="new.password">
+            <documentation><![CDATA[
+                Change user password page.
+                ]]></documentation>
+            <output sheet="../xslt/ui-admin/new-password.xsl"/>
+        </service>
+    </services>
+</geonet>

@@ -23,15 +23,20 @@
 
 package org.fao.geonet.kernel.oaipmh.services;
 
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Xml;
-import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
-import org.fao.geonet.kernel.oaipmh.Lib;
-import org.fao.geonet.kernel.oaipmh.OaiPmhService;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataDataInfo;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.oaipmh.Lib;
+import org.fao.geonet.kernel.oaipmh.OaiPmhService;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.oaipmh.exceptions.CannotDisseminateFormatException;
 import org.fao.oaipmh.exceptions.IdDoesNotExistException;
 import org.fao.oaipmh.requests.AbstractRequest;
@@ -40,122 +45,108 @@ import org.fao.oaipmh.responses.AbstractResponse;
 import org.fao.oaipmh.responses.GetRecordResponse;
 import org.fao.oaipmh.responses.Header;
 import org.fao.oaipmh.responses.Record;
-import org.fao.oaipmh.util.ISODate;
 import org.jdom.Attribute;
 import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specification;
 
-import java.util.List;
+import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
 
 //=============================================================================
 
-public class GetRecord implements OaiPmhService
-{
-	public String getVerb() { return GetRecordRequest.VERB; }
+public class GetRecord implements OaiPmhService {
+    public String getVerb() {
+        return GetRecordRequest.VERB;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //---------------------------------------------------------------------------
 
-	public AbstractResponse execute(AbstractRequest request, ServiceContext context) throws Exception
-	{
-		GetRecordRequest  req = (GetRecordRequest) request;
-		GetRecordResponse res = new GetRecordResponse();
+    public AbstractResponse execute(AbstractRequest request, ServiceContext context) throws Exception {
+        GetRecordRequest req = (GetRecordRequest) request;
+        GetRecordResponse res = new GetRecordResponse();
 
-		String uuid   = req.getIdentifier();
-		String prefix = req.getMetadataPrefix();
+        String uuid = req.getIdentifier();
+        String prefix = req.getMetadataPrefix();
 
-		res.setRecord(buildRecord(context, uuid, prefix));
+        res.setRecord(buildRecord(context, uuid, prefix));
 
-		return res;
-	}
+        return res;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private Record buildRecord(ServiceContext context, String uuid, String prefix) throws Exception {
-		return buildRecordStat(context,"uuid",uuid,prefix);
-	}
+    private Record buildRecord(ServiceContext context, String uuid, String prefix) throws Exception {
+        return buildRecordStat(context, hasMetadataUuid(uuid), prefix);
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	// function builds a OAI records from a metadata record, according to the arguments select and selectVal
-	public static Record buildRecordStat(ServiceContext context, String select, Object selectVal, String prefix) throws Exception {
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		SchemaManager   sm = gc.getBean(SchemaManager.class);
-		DataManager     dm = gc.getBean(DataManager.class);
+    // function builds a OAI records from a metadata record, according to the arguments select and selectVal
+    public static Record buildRecordStat(ServiceContext context, Specification<Metadata> spec/*String select, Object selectVal*/,
+                                         String prefix) throws Exception {
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SchemaManager sm = gc.getBean(SchemaManager.class);
 
-		String query = "SELECT uuid,id, schemaId, changeDate, data FROM Metadata WHERE "+select+"=?";
-		@SuppressWarnings("unchecked")
-        List<Element> list = dbms.select(query, selectVal).getChildren();
+        Metadata metadata = context.getBean(MetadataRepository.class).findOne(spec);
+        if (metadata == null)
+            throw new IdDoesNotExistException(spec.toString());
 
-		if (list.size() == 0)
-			throw new IdDoesNotExistException(selectVal.toString());
+        String uuid = metadata.getUuid();
+        final MetadataDataInfo dataInfo = metadata.getDataInfo();
+        String schema = dataInfo.getSchemaId();
+        String changeDate = dataInfo.getChangeDate().getDateAndTime();
+        String data = metadata.getData();
 
-		Element rec = (Element) list.get(0);
+        Element md = Xml.loadString(data, false);
 
-		String id         = rec.getChildText("id");
-		String uuid				= rec.getChildText("uuid");
-		String schema     = rec.getChildText("schemaid");
-		String changeDate = rec.getChildText("changedate");
-		String data       = rec.getChildText("data");
+        //--- try to disseminate format
 
-		Element md = Xml.loadString(data, false);
+        if (prefix.equals(schema)) {
+            Attribute schemaLocAtt = sm.getSchemaLocation(schema, context);
+            if (schemaLocAtt != null) {
+                if (md.getAttribute(schemaLocAtt.getName(), schemaLocAtt.getNamespace()) == null) {
+                    md.setAttribute(schemaLocAtt);
+                    // make sure namespace declaration for schemalocation is present -
+                    // remove it first (does nothing if not there) then add it
+                    md.removeNamespaceDeclaration(schemaLocAtt.getNamespace());
+                    md.addNamespaceDeclaration(schemaLocAtt.getNamespace());
+                }
+            }
+        } else {
+            String schemaDir = sm.getSchemaDir(schema);
+            if (Lib.existsConverter(schemaDir, prefix)) {
+                final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
+                Element env = Lib.prepareTransformEnv(uuid, changeDate, context.getBaseUrl(), siteURL, gc.getBean(SettingManager.class)
+                        .getSiteName());
+                md = Lib.transform(schemaDir, env, md, prefix + ".xsl");
+            } else {
+                throw new CannotDisseminateFormatException("Unknown prefix : " + prefix);
+            }
+        }
 
-		//--- try to disseminate format
+        //--- build header and set some infos
 
-		if (prefix.equals(schema)) {
-			Attribute schemaLocAtt = sm.getSchemaLocation(schema, context);
-			if (schemaLocAtt != null) {
-				if (md.getAttribute(schemaLocAtt.getName(), schemaLocAtt.getNamespace()) == null) {
-					md.setAttribute(schemaLocAtt);
-					// make sure namespace declaration for schemalocation is present -
-					// remove it first (does nothing if not there) then add it
-					md.removeNamespaceDeclaration(schemaLocAtt.getNamespace()); 
-					md.addNamespaceDeclaration(schemaLocAtt.getNamespace());
-				}
-			}
-		} else {
-			String schemaDir = sm.getSchemaDir(schema);
-			if (Lib.existsConverter(schemaDir, prefix)) {
-				Element env = Lib.prepareTransformEnv(uuid, changeDate, context.getBaseUrl(), dm.getSiteURL(context), gc.getSiteName());
-				md = Lib.transform(schemaDir, env, md, prefix+".xsl");
-			} else {
-				throw new CannotDisseminateFormatException("Unknown prefix : "+ prefix);
-			}
-		}
+        Header h = new Header();
 
-		//--- build header and set some infos
+        h.setIdentifier(uuid);
+        h.setDateStamp(new ISODate(changeDate));
 
-		Header h = new Header();
+        for (MetadataCategory metadataCategory : metadata.getCategories()) {
+            h.addSet(metadataCategory.getName());
+        }
 
-		h.setIdentifier(uuid);
-		h.setDateStamp(new ISODate(changeDate));
+        //--- build and return record
 
-		//--- find and add categories (here called sets)
+        Record r = new Record();
 
-		query = "SELECT name FROM Categories, MetadataCateg WHERE id=categoryId AND metadataId=?";
+        r.setHeader(h);
+        r.setMetadata(md);
 
-		@SuppressWarnings("unchecked")
-        List<Element> list2 = dbms.select(query, Integer.valueOf(id)).getChildren();
-
-		for (Object o : list2)
-		{
-			rec = (Element) o;
-
-			h.addSet(rec.getChildText("name"));
-		}
-
-		//--- build and return record
-
-		Record r = new Record();
-
-		r.setHeader(h);
-		r.setMetadata(md);
-
-		return r;
-	}
+        return r;
+    }
 }
 
 //=============================================================================

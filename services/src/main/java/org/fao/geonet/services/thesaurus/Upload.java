@@ -23,16 +23,18 @@
 
 package org.fao.geonet.services.thesaurus;
 
-import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.OperationAbortedEx;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.*;
+import org.fao.geonet.utils.*;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.lib.Lib;
@@ -125,7 +127,7 @@ public class Upload implements Service {
 				URI uri = new URI(url);
 				rdfFile = File.createTempFile("thesaurus", ".rdf");
 
-				XmlRequest httpReq = new XmlRequest(uri.getHost(),
+				XmlRequest httpReq = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(uri.getHost(),
 						uri.getPort());
 				httpReq.setAddress(uri.getPath());
 
@@ -193,8 +195,8 @@ public class Upload implements Service {
 			
 			// Rename .xml to .rdf for all thesaurus
 			fname = fname.substring(0, extensionIdx) + ".rdf";
-			eTSResult = UploadThesaurus(rdfFile, style, context, fname, type,
-					dir);
+			eTSResult = uploadThesaurus(rdfFile, style, context, fname, type,
+                    dir);
 		} else {
             if(Log.isDebugEnabled(Geonet.THESAURUS)) {
                 Log.debug(Geonet.THESAURUS, "Incorrect extension for thesaurus named: " + fname);
@@ -215,36 +217,36 @@ public class Upload implements Service {
 	 * @return Element thesaurus uploaded
 	 * @throws Exception
 	 */
-	private Element UploadThesaurus(File rdfFile, String style,
-			ServiceContext context, String fname, String type, String dir)
+	private Element uploadThesaurus(File rdfFile, String style,
+                                    ServiceContext context, String fname, String type, String dir)
 			throws Exception {
 
-		Element TS_xml = null;
+		Element tsXml = null;
 		Element xml = Xml.loadFile(rdfFile);
 		xml.detach();
 
 		if (!style.equals("_none_")) {
-			TS_xml = Xml.transform(xml, stylePath + "/" + style);
-			TS_xml.detach();
+			tsXml = Xml.transform(xml, stylePath + "/" + style);
+			tsXml.detach();
 		} else
-			TS_xml = xml;
+			tsXml = xml;
 
 		// Load document and check namespace
-		if (TS_xml.getNamespacePrefix().equals("rdf")
-				&& TS_xml.getName().equals("RDF")) {
+		if (tsXml.getNamespacePrefix().equals("rdf")
+				&& tsXml.getName().equals("RDF")) {
 
 			GeonetContext gc = (GeonetContext) context
 					.getHandlerContext(Geonet.CONTEXT_NAME);
 			ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
-			DataManager dm = gc.getBean(DataManager.class);
 
 			// copy to directory according to type
 			String path = thesaurusMan.buildThesaurusFilePath(fname, type, dir);
 			File newFile = new File(path);
-			Xml.writeResponse(new Document(TS_xml), new FileOutputStream(
+			Xml.writeResponse(new Document(tsXml), new FileOutputStream(
 					newFile));
 
-			Thesaurus gst = new Thesaurus(fname, type, dir, newFile, dm.getSiteURL(context));
+            final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
+            Thesaurus gst = new Thesaurus(context.getApplicationContext(), fname, type, dir, newFile, siteURL);
 			thesaurusMan.addThesaurus(gst, false);
 		} else {
 			IO.delete(rdfFile, false, Geonet.THESAURUS);

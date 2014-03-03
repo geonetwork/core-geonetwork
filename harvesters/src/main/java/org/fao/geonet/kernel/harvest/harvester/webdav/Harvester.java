@@ -22,25 +22,22 @@
 //==============================================================================
 package org.fao.geonet.kernel.harvest.harvester.webdav;
 
-import jeeves.interfaces.Logger;
-import jeeves.resources.dbms.Dbms;
+import com.google.common.base.Optional;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
-
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
-import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
-import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
-import org.fao.geonet.kernel.harvest.harvester.HarvestError;
-import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
-import org.fao.geonet.kernel.harvest.harvester.IHarvester;
-import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
-import org.fao.geonet.kernel.harvest.harvester.UriMapper;
+import org.fao.geonet.kernel.harvest.harvester.*;
+import org.fao.geonet.repository.HarvesterDataRepository;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
@@ -58,10 +55,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 	//---
 	//--------------------------------------------------------------------------
 
-	public Harvester(Logger log, ServiceContext context, Dbms dbms, WebDavParams params) {
+	public Harvester(Logger log, ServiceContext context, WebDavParams params) {
 		this.log    = log;
 		this.context= context;
-		this.dbms   = dbms;
 		this.params = params;
 
 		result = new HarvestResult();
@@ -80,8 +76,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 	public HarvestResult harvest(Logger log) throws Exception {
 		this.log = log;
         if(log.isDebugEnabled()) log.debug("Retrieving remote metadata information for : "+ params.name);
-		
-		RemoteRetriever rr = null;		
+        RemoteRetriever rr = null;
         if (params.subtype.equals("webdav")) {
             rr = new WebDavRetriever();
         } else if (params.subtype.equals("waf")) {
@@ -89,13 +84,14 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         } else {
             throw new IllegalArgumentException(params.subtype + " is not one of webdav or waf");
         }
-		
-		Log.info(Log.SERVICE, "webdav harvest subtype : "+params.subtype);		
-		rr.init(log, context, params);
-		List<RemoteFile> files = rr.retrieve();
-        if(log.isDebugEnabled()) log.debug("Remote files found : "+ files.size());
-		align(files);
-		rr.destroy();
+        try {
+            Log.info(Log.SERVICE, "webdav harvest subtype : "+params.subtype);
+            rr.init(log, context, params);
+            List<RemoteFile> files = rr.retrieve();
+            if(log.isDebugEnabled()) log.debug("Remote files found : "+ files.size());
+            align(files);
+        } finally { rr.destroy();
+        }
 		return result;
 	}
 
@@ -105,26 +101,33 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 	//---
 	//---------------------------------------------------------------------------
 
-	private void align(List<RemoteFile> files) throws Exception {
+	private void align(final List<RemoteFile> files) throws Exception {
 		log.info("Start of alignment for : "+ params.name);
 		//-----------------------------------------------------------------------
 		//--- retrieve all local categories and groups
 		//--- retrieve harvested uuids for given harvesting node
-		localCateg = new CategoryMapper(dbms);
-		localGroups= new GroupMapper(dbms);
-		localUris  = new UriMapper(dbms, params.uuid);
-		dbms.commit();
+		localCateg = new CategoryMapper(context);
+		localGroups= new GroupMapper(context);
+		localUris  = new UriMapper(context, params.uuid);
+
 		//-----------------------------------------------------------------------
 		//--- remove old metadata
-		for (String uri : localUris.getUris()) {
-			if (!exists(files, uri)) {
-				// only one metadata record created per uri by this harvester 
-				String id = localUris.getRecords(uri).get(0).id;
-                if(log.isDebugEnabled()) log.debug("  - Removing old metadata with local id:"+ id);
-				dataMan.deleteMetadataGroup(context, dbms, id);
-				dbms.commit();
-				result.locallyRemoved++;
-			}
+		for (final String uri : localUris.getUris()) {
+            if (!exists(files, uri)) {
+                // only one metadata record created per uri by this harvester
+                String id = localUris.getRecords(uri).get(0).id;
+                if (log.isDebugEnabled()){
+                    log.debug("  - Removing old metadata with local id:"+ id);
+                }
+                try {
+                    dataMan.deleteMetadataGroup(context, id);
+                } catch (Exception e) {
+                    log.error("Error occurred while deleting metadata id");
+                }
+                dataMan.flush();
+                result.locallyRemoved++;
+
+            }
 		}
 		//-----------------------------------------------------------------------
 		//--- insert/update new metadata
@@ -132,10 +135,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 		for(RemoteFile rf : files) {
 			result.totalMetadata++;
 			List<RecordInfo> records = localUris.getRecords(rf.getPath());
-			if (records == null)	{
+			if (records == null) {
 				addMetadata(rf);
-			}
-			else {
+			} else {
 				// only one metadata record created per uri by this harvester 
 				updateMetadata(rf, records.get(0));
 			}
@@ -189,7 +191,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
         // 3.- If there is a collision of uuid with existent metadata, use a
         // random one
-        if (dataMan.existsMetadataUuid(dbms, uuid)) {
+        if (dataMan.existsMetadataUuid(uuid)) {
                 uuid = null;
         }
 
@@ -222,20 +224,21 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         //
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, Integer.parseInt(params.ownerId), group, params.uuid,
-                     isTemplate, docType, title, category, rf.getChangeDate(), rf.getChangeDate(), ufo, indexImmediate);
+        String id = dataMan.insertMetadata(context, schema, md, uuid, Integer.parseInt(params.ownerId), group, params.uuid,
+                     isTemplate, docType, category, rf.getChangeDate().getDateAndTime(), rf.getChangeDate().getDateAndTime(), ufo, indexImmediate);
 
 
 		int iId = Integer.parseInt(id);
 
-		dataMan.setTemplateExt(dbms, iId, "n", null);
-		dataMan.setHarvestedExt(dbms, iId, params.uuid, rf.getPath());
+		dataMan.setTemplateExt(iId, MetadataType.METADATA);
+		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(rf.getPath()));
 
-        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
-        addCategories(id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+        addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
+        addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-		dbms.commit();
-		dataMan.indexMetadata(dbms, id);
+        dataMan.flush();
+
+        dataMan.indexMetadata(id, false);
 		result.addedMetadata++;
 	}
 	
@@ -323,18 +326,22 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             boolean ufo = false;
             boolean index = false;
             String language = context.getLanguage();
-            dataMan.updateMetadata(context, dbms, record.id, md, validate, ufo, index, language, rf.getChangeDate(), false);
+            final Metadata metadata = dataMan.updateMetadata(context, record.id, md, validate, ufo, index, language,
+                    rf.getChangeDate().getDateAndTime(), false);
 
-			//--- the administrator could change privileges and categories using the
+            //--- the administrator could change privileges and categories using the
 			//--- web interface so we have to re-set both
-			dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(record.id));
-            addPrivileges(record.id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
+            OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
+            repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(record.id));
+            addPrivileges(record.id, params.getPrivileges(), localGroups, dataMan, context, log);
 
-            dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(record.id));
-            addCategories(record.id, params.getCategories(), localCateg, dataMan, dbms, context, log, null);
+            metadata.getCategories().clear();
+            context.getBean(MetadataRepository.class).save(metadata);
+            addCategories(record.id, params.getCategories(), localCateg, dataMan, context, log, null);
 
-            dbms.commit();
-			dataMan.indexMetadata(dbms, record.id);
+            dataMan.flush();
+
+            dataMan.indexMetadata(record.id, false);
 			result.updatedMetadata++;
 		}
 	}
@@ -351,7 +358,6 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 
 	private Logger log;
 	private ServiceContext context;
-	private Dbms dbms;
 	private WebDavParams params;
 	private DataManager dataMan;
 	private CategoryMapper localCateg;
@@ -374,8 +380,8 @@ interface RemoteRetriever {
 
 interface RemoteFile {
 	public String  getPath();
-	public String  getChangeDate();
-	public Element getMetadata(SchemaManager  schemaMan) throws JDOMException, IOException, Exception;
+	public ISODate getChangeDate();
+	public Element getMetadata(SchemaManager  schemaMan) throws Exception;
 	public boolean isMoreRecentThan(String localDate);
 }
 

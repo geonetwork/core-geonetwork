@@ -24,7 +24,7 @@ package org.fao.geonet.languages;
 import com.cybozu.labs.langdetect.Detector;
 import com.cybozu.labs.langdetect.DetectorFactory;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
+import org.fao.geonet.utils.Log;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
@@ -86,11 +86,13 @@ public class LanguageDetector {
     /**
      * Detects language of input string.
      *
+     *
+     * @param srvContext
      * @param input text to analyze
      * @return iso 639-2 code of detected language
      * @throws Exception hmm
      */
-    public String detect(String input) throws Exception {
+    public String detect(ServiceContext srvContext, String input) throws Exception {
         if(!LanguageDetector.languageLevelSupported) {
             throw new Exception(LanguageDetector.upgradeMessage);
         }
@@ -101,7 +103,7 @@ public class LanguageDetector {
         if(detectedLanguage.length() > 2) {
             detectedLanguage = detectedLanguage.substring(0, 2);
         }
-        String iso639_2 = IsoLanguagesMapper.getInstance().iso639_1_to_iso639_2(detectedLanguage);
+        String iso639_2 = srvContext.getBean(IsoLanguagesMapper.class).iso639_1_to_iso639_2(detectedLanguage);
         if(Log.isDebugEnabled(Geonet.LANGUAGEDETECTOR))
             Log.debug(Geonet.LANGUAGEDETECTOR, "detected language: " + iso639_2);
         return iso639_2;
@@ -111,12 +113,12 @@ public class LanguageDetector {
     /**
      * Creates mapping to ISO 639-2 for all languages supported by this language detector.
      *
+     *
+     *
      * @param path path to profiles directory
-     * @param context everywhere !
-     * @param dataManager Der DatenGeschäftsführer
      * @throws Exception hmm
      */
-    public static void init(String path, ServiceContext context, DataManager dataManager) throws Exception {
+    public static void init(String path) throws Exception {
         if(!LanguageDetector.languageLevelSupported) {
             throw new Exception(LanguageDetector.upgradeMessage);
         }

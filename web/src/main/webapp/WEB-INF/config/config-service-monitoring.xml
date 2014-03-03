@@ -1,0 +1,35 @@
+<config>
+    <monitors package="org.fao.geonet.monitor.health">
+        <!-- *HealthCheck must implement the HealthCheckFactory interface -->
+        <!-- There are 3 types of healthChecks
+           criticalHealthCheck - healthChecks that must pass or the system is non-functional.  They must be quick checks so the monitor can call check often
+           warningHealthCheck - healthCheck that indicates something is wrong but the system can still function
+           expensiveHealthCheck - healthChecks that must pass or the system is non-functional but are expensive to compute so should be called infrequently by checker
+         -->
+        <criticalHealthCheck class=".DatabaseHealthCheck"/>
+        <criticalHealthCheck class=".LuceneIndexHealthCheck"/>
+        <criticalHealthCheck class=".CswGetCapabilitiesHealthCheck"/>
+        <warningHealthCheck class=".NoIndexErrorsHealthCheck"/>
+        <warningHealthCheck class=".FreeConnectionsHealthCheck"/>
+        <warningHealthCheck class="jeeves.monitor.healthcheck.FreeFileHandlesHealthCheck"/>
+        <expensiveHealthCheck class=".CswGetRecordsHealthCheck"/>
+        <expensiveHealthCheck class=".FieldCacheSanityHealthCheck"/>
+    </monitors>
+    <monitors package="org.fao.geonet.monitor.harvest">
+        <counter class=".AbstractHarvesterErrorCounter"/>
+    </monitors>
+    <monitors package="jeeves.monitor.timer">
+        <!-- timer must implement the MetricsFactory<Timer> interface -->
+       <timer class=".ServiceManagerGuiServicesTimer"/>
+       <timer class=".ServiceManagerServicesTimer"/>
+       <timer class=".ServiceManagerXslOutputTransformTimer"/>
+        <!-- Other monitor types are: gauge, counter, meter, histogram -->
+    </monitors>
+    <monitors package="jeeves.monitor.counter">
+    	<!-- The following doesn't exist, it is a potential example -->
+       <!-- <counter class=".ResourceManagerOpenCounter"/> -->
+    </monitors>
+    <monitors package="org.fao.geonet.monitor.gauge">
+       <gauge class="jeeves.monitor.guage.FreeFileDescriptorsGuage"/>
+    </monitors>
+</config>

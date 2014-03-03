@@ -21,16 +21,17 @@
 //==============================================================================
 package org.fao.geonet.languages;
 
-
-import java.sql.SQLException;
-import java.util.List;
-
-import jeeves.resources.dbms.Dbms;
-
-import org.jdom.Element;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.IsoLanguage;
+import org.fao.geonet.repository.IsoLanguageRepository;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import org.fao.geonet.utils.Log;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+
+import javax.annotation.PostConstruct;
 
 /**
  * TODO javadoc.
@@ -44,10 +45,15 @@ public class IsoLanguagesMapper {
     /*
      * Stores mapping of ISO 639-1 to ISO 639-2 for all languages defined in IsoLanguages table
      */
-    protected BiMap<String, String> isoLanguagesMap639 =  HashBiMap.create();
+    protected BiMap<String, String> _isoLanguagesMap639 =  HashBiMap.create();
+
+    @Autowired
+    private IsoLanguageRepository _langRepo;
 
 
-    protected IsoLanguagesMapper() {}
+    protected IsoLanguagesMapper() {
+
+    }
 
     /**
      * TODO javadoc.
@@ -75,22 +81,25 @@ public class IsoLanguagesMapper {
 
     /**
      * Creates mapping to of ISO 639-1 to ISO 639-2 for all languages defined in IsoLanguages table
-     *
-     * @param dbms
      */
-    public void init(Dbms dbms) {
-        String query = "SELECT code, shortcode FROM IsoLanguages";
-        try {
-            @SuppressWarnings("unchecked")
-            List<Element> records = dbms.select(query).getChildren();
-            for (Element record : records) {
-                isoLanguagesMap639.forcePut(record.getChildText("shortcode")
-                        .toLowerCase(), record.getChildText("code")
-                        .toLowerCase());
+    @PostConstruct
+    public void init() {
+        for (IsoLanguage record : _langRepo.findAll()) {
+            final String shortCode = toLowerCase(record.getShortCode());
+            final String code = toLowerCase(record.getCode());
+            if (shortCode != null && code != null) {
+                _isoLanguagesMap639.forcePut(shortCode, code);
+            } else {
+                Log.info(Geonet.GEONETWORK, "Unable to add IsoLanguage mapping for "+record);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
+    }
+
+    private String toLowerCase(String code) {
+        if (code == null) {
+            return null;
+        }
+        return code.toLowerCase();
     }
 
 
@@ -101,10 +110,10 @@ public class IsoLanguagesMapper {
      * @return
      */
     public String iso639_1_to_iso639_2(String iso639_1) {
-        if(isoLanguagesMap639.containsValue(iso639_1.toLowerCase())) {
+        if(_isoLanguagesMap639.containsValue(iso639_1.toLowerCase())) {
             return iso639_1.toLowerCase();
         } else {
-            return isoLanguagesMap639.get(iso639_1.toLowerCase());
+            return _isoLanguagesMap639.get(iso639_1.toLowerCase());
         }
     }
 
@@ -115,10 +124,10 @@ public class IsoLanguagesMapper {
      * @return
      */
     public String iso639_2_to_iso639_1(String iso639_2) {
-        if(isoLanguagesMap639.containsKey(iso639_2.toLowerCase())) {
+        if(_isoLanguagesMap639.containsKey(iso639_2.toLowerCase())) {
             return iso639_2.toLowerCase();
         } else {
-            return isoLanguagesMap639.inverse().get(iso639_2.toLowerCase());
+            return _isoLanguagesMap639.inverse().get(iso639_2.toLowerCase());
         }
     }
 

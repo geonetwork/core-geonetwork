@@ -23,11 +23,14 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.specification.MetadataSpecs;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import jeeves.resources.dbms.Dbms;
-import org.jdom.Element;
 
 //=============================================================================
 
@@ -45,15 +48,13 @@ public class UriMapper
 	//---
 	//--------------------------------------------------------------------------
 
-	public UriMapper(Dbms dbms, String harvestUuid) throws Exception
+	public UriMapper(ServiceContext context, String harvestUuid) throws Exception
 	{
-		String query = "SELECT id, uuid, harvestUri, changeDate, schemaId, isTemplate FROM Metadata WHERE harvestUuid=?";
+        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        final List<Metadata> metadataList = metadataRepository.findAll(MetadataSpecs.hasHarvesterUuid(harvestUuid));
 
-		@SuppressWarnings("unchecked")
-        List<Element> idsList = dbms.select(query, harvestUuid).getChildren();
-
-		for (Element record : idsList) {
-			String uri  = record.getChildText("harvesturi");
+		for (Metadata record : metadataList) {
+			String uri  = record.getHarvestInfo().getUri();
 
 			List<RecordInfo> records = hmUriRecords.get(uri);
 			

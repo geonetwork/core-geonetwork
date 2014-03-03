@@ -22,37 +22,31 @@
 //==============================================================================
 package org.fao.geonet.notifier;
 
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.resources.ResourceManager;
+import jeeves.server.context.ServiceContext;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 
+/**
+ * A runnable for notifying remote listeners that metadata changes have occurred.
+ */
 public class MetadataNotifierTask implements Runnable {
-    private ResourceManager rm;
-    private GeonetContext gc;
+    private ServiceContext context;
 
-    public MetadataNotifierTask(ResourceManager rm, GeonetContext gc) {
-        this.rm = rm;
-        this.gc = gc;
+    public MetadataNotifierTask configure(ServiceContext context) {
+        this.context = context;
+        return this;
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
     public void run() {
-        Dbms dbms = null;
         try {
-            dbms = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
-            gc.getBean(MetadataNotifierManager.class).updateMetadataBatch(dbms, gc);
-        } catch (Exception x) {
-            System.out.println(x.getMessage());
-            x.printStackTrace();
-        } finally {
-            if (dbms != null) {
-                try {
-                    rm.close(Geonet.Res.MAIN_DB, dbms);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+            context.getBean(MetadataNotifierManager.class).updateMetadataBatch(context);
+        } catch (MetadataNotifierManager.MetadataNotifierException e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -1,0 +1,24 @@
+<div>
+  <div class="btn-group">
+    <button class="btn btn-default" type="button" data-ng-click="add()">
+      <i class="fa fa-plus gn-add"/>
+      <span data-translate="">addKeywordNotFromThesaurus</span>
+    </button>
+    <div class="btn-group">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+        <i class="fa fa-book"/>
+        <span data-translate="">addFromThesaurus</span>
+        <span class="caret"/>
+      </button>
+      <ul class="dropdown-menu">
+        <li data-ng-repeat="t in thesaurus | orderBy:'props.title'">
+          <a href="" data-ng-click="addThesaurus(t.getKey())">{{t.getTitle()}}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!-- The thesaurus snippet to insert once received -->
+  <div data-ng-if="snippet">
+    <input name="{{snippetRef}}" type="hidden" value="{{snippet}}"/>
+  </div>
+</div>

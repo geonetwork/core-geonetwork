@@ -23,21 +23,17 @@
 
 package org.fao.geonet.component.harvester.csw;
 
-import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
+import com.google.common.base.Function;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.Xml;
-import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
-import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
@@ -45,6 +41,7 @@ import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.CswHarvesterResponseExecutionService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
@@ -55,12 +52,19 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.harvesting.Util;
-import org.fao.geonet.util.ISODate;
 import org.fao.geonet.util.ISOPeriod;
 import org.fao.geonet.util.MailSender;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -71,11 +75,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.RunnableFuture;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 
 /**
  * CSW Harvest operation.
@@ -88,10 +88,10 @@ import java.util.concurrent.TimeoutException;
  * @author heikki doeleman
  * 
  */
-@Component(Harvest.NAME)
 public class Harvest extends AbstractOperation implements CatalogService {
 
 	static final String NAME = "Harvest";
+    private ApplicationContext applicationContext;
 
     public Harvest() {}
 
@@ -115,18 +115,20 @@ public class Harvest extends AbstractOperation implements CatalogService {
 	 * @throws CatalogException hmm
 	 */
 	public Element execute(Element request, ServiceContext serviceContext) throws CatalogException {
-        if(Log.isDebugEnabled(Geonet.CSW_HARVEST))
+        if (Log.isDebugEnabled(Geonet.CSW_HARVEST)) {
             Log.debug(Geonet.CSW_HARVEST, "CSW Harvest execute, request is:\n" + Xml.getString(request));
+        }
         try {
-		checkService(request);
-		checkVersion(request);
+            this.applicationContext = serviceContext.getApplicationContext();
+            checkService(request);
+            checkVersion(request);
             String resourceType = checkResourceType(request);
             checkResourceFormat(request);
             String source = checkSource(request);
 
             // Define an id for the operation to be used for harvester node name identification and response handler info.
-		operationId = "CSW.HarvestOperation:" + UUID.randomUUID().toString();
-		
+            operationId = "CSW.HarvestOperation:" + UUID.randomUUID().toString();
+
             // create a new harvester node
             Element node = createHarvestNode(request, resourceType, source, serviceContext);
 
@@ -152,7 +154,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
             // waiting for the server to process the request.
             //
             if (StringUtils.isEmpty(responseHandler)) {
-                if(Log.isDebugEnabled(Geonet.CSW_HARVEST))
+                if (Log.isDebugEnabled(Geonet.CSW_HARVEST))
                     Log.debug(Geonet.CSW_HARVEST, "CSW Harvest executes synchronously");
                 response = doHarvest(node, serviceContext, Mode.SYNCHRONOUS);
             }
@@ -171,20 +173,20 @@ public class Harvest extends AbstractOperation implements CatalogService {
             // 10.3.7 (if a problem was encountered) is sent to the URL specified as the value of the ResponseHandler
             // parameter.
             else {
-                if(Log.isDebugEnabled(Geonet.CSW_HARVEST))
+                if (Log.isDebugEnabled(Geonet.CSW_HARVEST))
                     Log.debug(Geonet.CSW_HARVEST, "CSW Harvest executes asynchronously");
                 checkResponseHandler(responseHandler);
-			// Immediate acknowledgement answer.
+                // Immediate acknowledgement answer.
                 response = createAcknowledgeResponse(request);
                 // run harvester
                 doHarvest(node, serviceContext, Mode.ASYNCHRONOUS);
                 // deal with results asynchronously
                 asynchronousHarvestResponse(node, responseHandler, serviceContext);
-		}
-            if(Log.isDebugEnabled(Geonet.CSW_HARVEST))
+            }
+            if (Log.isDebugEnabled(Geonet.CSW_HARVEST))
                 Log.debug(Geonet.CSW_HARVEST, "CSW Harvest execute returns:\n" + Xml.getString(response));
-		return response;
-	}
+            return response;
+        }
         catch(CatalogException x) {
             Log.error(Geonet.CSW_HARVEST, x.getMessage());
             x.printStackTrace();
@@ -489,9 +491,8 @@ public class Harvest extends AbstractOperation implements CatalogService {
          */
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         HarvestManager hm = gc.getBean(HarvestManager.class);
-        String uuid = hm.add2(dbms, node);
+        String uuid = hm.addHarvesterReturnUUID(node);
         node.setAttribute("uuid", uuid);
         node.addContent(new Element("info"));
         AbstractHarvester harvester = hm.getHarvester(uuid);
@@ -659,11 +660,11 @@ public class Harvest extends AbstractOperation implements CatalogService {
 		// run
         Element response = Util.exec(activeParams, context, new Util.Job() {
             
-            public OperResult execute(Dbms dbms, HarvestManager hm, String id) throws Exception {
+            public OperResult execute(HarvestManager hm, String id) throws Exception {
                 if(Log.isDebugEnabled(Geonet.CSW_HARVEST))
                     Log.debug(Geonet.CSW_HARVEST, "doHarvest starting harvester job");
-					hm.start(dbms, id);
-					return hm.run(dbms, id);
+					hm.start(id);
+					return hm.run(id);
 				}
 			});
 
@@ -914,7 +915,7 @@ public class Harvest extends AbstractOperation implements CatalogService {
                 // transfer file
                 //
                 String filename = "CSW.Harvest.result";
-                InputStream is = new ByteArrayInputStream(harvestResponse.getBytes(Jeeves.ENCODING));
+                InputStream is = new ByteArrayInputStream(harvestResponse.getBytes(Constants.ENCODING));
                 ftpClient.storeFile(filename, is);
                 is.close();
                 ftpClient.logout();
@@ -949,32 +950,33 @@ public class Harvest extends AbstractOperation implements CatalogService {
          * @param harvestResponse response to send
          */
         private void sendByHTTP(String harvestResponse) {
-            PostMethod method = new PostMethod(responseHandler);
+            HttpPost method = new HttpPost(responseHandler);
             try {
-                method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler());
-                method.setRequestEntity(new StringRequestEntity(harvestResponse));
-                HttpClient httpClient = new HttpClient();
-                method.setDoAuthentication(false);
-                GeonetContext geonetContext = (GeonetContext) serviceContext.getHandlerContext(Geonet.CONTEXT_NAME);
-                SettingManager settingManager = geonetContext.getBean(SettingManager.class);
-                Lib.net.setupProxy(settingManager, httpClient);
-                int statusCode = httpClient.executeMethod(method);
-                if (statusCode != HttpStatus.SC_OK) {
+                RequestConfig.Builder config = RequestConfig.custom();
+                method.setEntity(new StringEntity(harvestResponse));
+                config.setAuthenticationEnabled(false);
+                method.setConfig(config.build());
+
+                final ClientHttpResponse httpResponse = applicationContext.getBean(GeonetHttpRequestFactory.class).execute(method,
+                        new Function<HttpClientBuilder, Void>() {
+                            @Nullable
+                            @Override
+                            public Void apply(@Nonnull HttpClientBuilder input) {
+                                SettingManager settingManager = applicationContext.getBean(SettingManager.class);
+                                Lib.net.setupProxy(settingManager, input);
+                                input.setRetryHandler(new DefaultHttpRequestRetryHandler());
+                                return null;
+                            }
+                        });
+                if (httpResponse.getStatusCode() != HttpStatus.OK) {
                     // never mind, just log it
-                    Log.warning(Geonet.CSW_HARVEST, "WARNING: Failed to send HarvestResponse to responseHandler " + responseHandler + ", HTTP status is " + statusCode);
+                    Log.warning(Geonet.CSW_HARVEST, "WARNING: Failed to send HarvestResponse to responseHandler " + responseHandler + ", HTTP status is " + httpResponse.getStatusText());
                 }
-            }
-            // never mind, just log it
-            catch (HttpException x) {
+            } catch (IOException x) {
+                // never mind, just log it
                 Log.warning(Geonet.CSW_HARVEST, "WARNING: " + x.getMessage() + " (this exception is swallowed)");
                 x.printStackTrace();
-            }
-            // never mind, just log it
-            catch (IOException x) {
-                Log.warning(Geonet.CSW_HARVEST, "WARNING: " + x.getMessage() + " (this exception is swallowed)");
-                x.printStackTrace();
-            }
-            finally {
+            } finally {
                 method.releaseConnection();
             }
         }
@@ -989,33 +991,33 @@ public class Harvest extends AbstractOperation implements CatalogService {
          * @param harvestResponse - the response to send
          */
         private void send(Element harvestResponse) {
-            if(Log.isDebugEnabled(Geonet.CSW_HARVEST))
+            if(Log.isDebugEnabled(Geonet.CSW_HARVEST)) {
                 Log.debug(Geonet.CSW_HARVEST, "AsyncHarvestResponse send started");
+            }
 
             String harvestResponseString = Xml.getString(harvestResponse);
-            if(Log.isDebugEnabled(Geonet.CSW_HARVEST))
+            if(Log.isDebugEnabled(Geonet.CSW_HARVEST)) {
                 Log.debug(Geonet.CSW_HARVEST, "Sending HarvestResponse to " + responseHandler);
+            }
 
             switch(protocol) {
-                case EMAIL: {
+                case EMAIL:
                     sendByEmail(harvestResponseString);
                     break;
-                }
-                case FTP: {
+                case FTP:
                     sendByFTP(harvestResponseString);
                     break;
-                }
-                case HTTP: {
+                case HTTP:
                     sendByHTTP(harvestResponseString);
                     break;
-                }
-                // shouldn't happen
-                default: {
-                    Log.warning(Geonet.CSW_HARVEST, "WARNING: unsupported protocol for responseHandler " + responseHandler + ". HarvestResponse is not sent.");
-                }
+                default:
+                    // shouldn't happen
+                    Log.warning(Geonet.CSW_HARVEST, "WARNING: unsupported protocol for responseHandler " + responseHandler + ". " +
+                                                    "HarvestResponse is not sent.");
             }
-            if(Log.isDebugEnabled(Geonet.CSW_HARVEST))
+            if(Log.isDebugEnabled(Geonet.CSW_HARVEST)) {
                 Log.debug(Geonet.CSW_HARVEST, "AsyncHarvestResponse send finished");
+            }
         }
 
         /**
@@ -1025,14 +1027,16 @@ public class Harvest extends AbstractOperation implements CatalogService {
         
         public void run() {
             try {
-                if(Log.isDebugEnabled(Geonet.CSW_HARVEST))
+                if(Log.isDebugEnabled(Geonet.CSW_HARVEST)) {
                     Log.debug(Geonet.CSW_HARVEST, "AsyncHarvestResponse run started");
+                }
                 waitForHarvesterToFinish(harvester, serviceContext);
                 Element harvestResponse = createHarvestResponse(harvester, serviceContext);
                 send(harvestResponse);
                 ready.release();
-                if(Log.isDebugEnabled(Geonet.CSW_HARVEST))
+                if(Log.isDebugEnabled(Geonet.CSW_HARVEST)) {
                     Log.debug(Geonet.CSW_HARVEST, "AsyncHarvestResponse run finished");
+                }
             }
             catch(Exception x) {
                 Log.error(Geonet.CSW_HARVEST,("ERROR: AsyncHarvestResponse " + x.getMessage() + " (this exception is swallowed)"));

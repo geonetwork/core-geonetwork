@@ -23,47 +23,51 @@
 
 package jeeves.server;
 
-import static org.quartz.JobBuilder.newJob;
-import static org.quartz.impl.matchers.GroupMatcher.jobGroupEquals;
-
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.UUID;
-
 import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.ConfigFile;
 import jeeves.interfaces.Schedule;
 import jeeves.monitor.MonitorManager;
-import jeeves.server.resources.ProviderManager;
-import jeeves.utils.QuartzSchedulerUtils;
-import jeeves.utils.SerialFactory;
-
+import org.fao.geonet.utils.QuartzSchedulerUtils;
 import org.jdom.Element;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.stereotype.Component;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.UUID;
+
+import static org.quartz.JobBuilder.newJob;
+import static org.quartz.impl.matchers.GroupMatcher.jobGroupEquals;
 
 //=============================================================================
-
 public class ScheduleManager
 {
-    private static final String SCHEDULER_ID = "scheduleManager";
+    /**
+     * Id for the Quartz scheduler for the Schedule jobs.
+     */
+    public static final String SCHEDULER_ID = "scheduleManager";
 
 	private String appPath;
 	private String baseUrl;
 	private String instanceId = SCHEDULER_ID+"-"+UUID.randomUUID().toString();
-	private ProviderManager providMan;
-	private SerialFactory   serialFact;
-    private MonitorManager monitorManager;
-    private JeevesApplicationContext jeevesApplicationContext;
-
 	private Hashtable<String, Object> htContexts = new Hashtable<String, Object>();
-	private Scheduler scheduler;
-
+    private Scheduler scheduler;
     private Map<String, ScheduleInfo> vSchedules = new HashMap<String, ScheduleInfo>();
-	
+
+    @Autowired
+    private ConfigurableApplicationContext jeevesApplicationContext;
+    @PersistenceContext
+    private EntityManager entityManager;
+
     //--------------------------------------------------------------------------
 	//---
 	//--- Constructor
@@ -95,20 +99,13 @@ public class ScheduleManager
 
 	//--------------------------------------------------------------------------
 
-    public void setProviderMan  (ProviderManager p) { providMan  = p; }
-    public void setMonitorManager (MonitorManager mm) { monitorManager  = mm; }
-    public void setApplicationContext (JeevesApplicationContext jap) { jeevesApplicationContext  = jap; }
-	public void setSerialFactory(SerialFactory   s) { serialFact = s; }
 	public void setAppPath(String  path)  { appPath = path;  }
 
     //--------------------------------------------------------------------------
 
     public String getAppPath() { return appPath;}
     public String getBaseUrl() {return baseUrl;}
-    public ProviderManager getProvidMan() {return providMan;}
-    public SerialFactory getSerialFact() {return serialFact;}
-    public MonitorManager getMonitorManager() {return monitorManager;}
-    public JeevesApplicationContext getApplicationContext() { return jeevesApplicationContext; }
+    public ConfigurableApplicationContext getApplicationContext() { return jeevesApplicationContext; }
     public Hashtable<String, Object> getHtContexts() {return new Hashtable<String, Object>(htContexts);}
 
     //--------------------------------------------------------------------------
@@ -159,7 +156,9 @@ public class ScheduleManager
 
 	public void exit() throws SchedulerException
 	{
-		scheduler.shutdown();
+        if (scheduler != null) {
+		    scheduler.shutdown();
+        }
 	}
 
 	//--------------------------------------------------------------------------
@@ -168,7 +167,11 @@ public class ScheduleManager
         return vSchedules.get(scheduleName);
     }
 
-	//---------------------------------------------------------------------------
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    //---------------------------------------------------------------------------
 
 
 }

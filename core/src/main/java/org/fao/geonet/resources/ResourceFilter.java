@@ -12,10 +12,12 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import jeeves.utils.Log;
+import jeeves.config.springutil.JeevesDelegatingFilterProxy;
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.domain.Pair;
+import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * Servlet for serving up resources located in GeoNetwork data directory.  
@@ -38,6 +40,7 @@ public class ResourceFilter implements Filter {
     private FilterConfig config;
     private volatile ServletContext servletContext;
     private volatile String appPath;
+    private ConfigurableApplicationContext applicationContext;
 
     public void init(FilterConfig config) throws ServletException {
         this.config = config;
@@ -97,7 +100,9 @@ public class ResourceFilter implements Filter {
 	private void initFields() throws IOException {
         servletContext = config.getServletContext();
         appPath = new java.io.File(servletContext.getRealPath(".")).getParent();
-        resourcesDir = Resources.locateResourcesDir(config.getServletContext());
+
+        this.applicationContext = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext(config.getServletContext());
+        resourcesDir = Resources.locateResourcesDir(config.getServletContext(), applicationContext);
 
         defaultImage = Resources.loadResource(resourcesDir, config.getServletContext(), appPath, "images/logos/dummy.gif", new byte[0], -1);
         favicon = Resources.loadResource(resourcesDir, config.getServletContext(), appPath, "images/logos/favicon.gif", defaultImage.one(), -1);

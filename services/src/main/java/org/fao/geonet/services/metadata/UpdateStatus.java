@@ -25,13 +25,14 @@ package org.fao.geonet.services.metadata;
 
 
 import jeeves.constants.Jeeves;
-import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.utils.Util;
+import org.fao.geonet.Util;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
@@ -39,7 +40,6 @@ import org.fao.geonet.kernel.metadata.StatusActions;
 import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
-import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
 import java.util.HashSet;
@@ -70,12 +70,11 @@ public class UpdateStatus extends NotInReadOnlyModeService {
 
 		DataManager dataMan = gc.getBean(DataManager.class);
 		AccessManager am = gc.getBean(AccessManager.class);
-		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		String id = Utils.getIdentifierFromParameters(params, context);
 
 		//--- check access
 		int iLocalId = Integer.parseInt(id);
-		if (!dataMan.existsMetadata(dbms, iLocalId))
+		if (!dataMan.existsMetadata(iLocalId))
 			throw new IllegalArgumentException("Metadata not found --> " + id);
 
 		//--- only allow the owner of the record to set its status
@@ -85,21 +84,21 @@ public class UpdateStatus extends NotInReadOnlyModeService {
 
 		String status = Util.getParam(params, Params.STATUS);
 		String changeMessage = Util.getParam(params, Params.CHANGE_MESSAGE);
-		String changeDate = new ISODate().toString();
+		ISODate changeDate = new ISODate();
 
 		//--- use StatusActionsFactory and StatusActions class to 
 		//--- change status and carry out behaviours for status changes
 		StatusActionsFactory saf = new StatusActionsFactory(gc.getStatusActionsClass());
 
-		StatusActions sa = saf.createStatusActions(context, dbms);
+		StatusActions sa = saf.createStatusActions(context);
 
 		Set<Integer> metadataIds = new HashSet<Integer>();
 		metadataIds.add(iLocalId);
 
-		saf.statusChange(sa, status, metadataIds, changeDate, changeMessage);
+		sa.statusChange(status, metadataIds, changeDate, changeMessage);
 
 		//--- reindex metadata
-		dataMan.indexMetadata(dbms, id);
+		dataMan.indexMetadata(id, true);
 
 		//--- return id for showing
 		return new Element(Jeeves.Elem.RESPONSE).addContent(new Element(Geonet.Elem.ID).setText(id));

@@ -23,11 +23,14 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import jeeves.resources.dbms.Dbms;
-import org.jdom.Element;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.repository.MetadataRepository;
 
 import java.util.HashMap;
 import java.util.List;
+
+import static org.fao.geonet.repository.specification.MetadataSpecs.hasHarvesterUuid;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 //=============================================================================
 
@@ -47,18 +50,15 @@ public class UUIDMapper
 	//---
 	//--------------------------------------------------------------------------
 
-	public UUIDMapper(Dbms dbms, String harvestUuid) throws Exception
+	public UUIDMapper(MetadataRepository repo, String harvestUuid) throws Exception
 	{
-		String query = "SELECT id, uuid, changeDate, isTemplate FROM Metadata WHERE harvestUuid=?";
+        final List<Metadata> all = repo.findAll(where(hasHarvesterUuid(harvestUuid)));
 
-		@SuppressWarnings("unchecked")
-        List<Element> idsList = dbms.select(query, harvestUuid).getChildren();
-
-        for (Element record : idsList) {
-            String id = record.getChildText("id");
-            String uuid = record.getChildText("uuid");
-            String date = record.getChildText("changedate");
-            String isTemplate = record.getChildText("istemplate");
+        for (Metadata record : all) {
+            String id = record.getId() + "";
+            String uuid = record.getUuid();
+            String date = record.getDataInfo().getChangeDate().getDateAndTime();
+            String isTemplate = record.getDataInfo().getType().codeString;
 
             hmUuidDate.put(uuid, date);
             hmUuidId.put(uuid, id);

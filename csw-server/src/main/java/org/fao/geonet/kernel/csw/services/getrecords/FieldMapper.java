@@ -25,44 +25,46 @@ package org.fao.geonet.kernel.csw.services.getrecords;
 
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Set;
 
 //==============================================================================
-
-public class FieldMapper
-{
+public class FieldMapper {
     //---------------------------------------------------------------------------
     //---
     //--- API methods
     //---
     //---------------------------------------------------------------------------
+    @Autowired
+    private CatalogConfiguration _catalogConfig;
 
-    public static String map(String field)
+    public String map(String field)
     {
-    	return CatalogConfiguration.getFieldMapping().get(getAbsolute(field));
+    	return _catalogConfig.getFieldMapping().get(getAbsolute(field));
     }
 
     //---------------------------------------------------------------------------
 
-    public static String mapXPath(String field, String schema)
+    public String mapXPath(String field, String schema)
     {
-        HashMap<String, String> xpaths =  CatalogConfiguration.getFieldMappingXPath().get(getAbsolute(field));
+        HashMap<String, String> xpaths =  _catalogConfig.getFieldMappingXPath().get(getAbsolute(field));
 
         return (xpaths != null)?xpaths.get(schema):null;
     }
 
     //---------------------------------------------------------------------------
 
-    public static Iterable<String> getMappedFields()
+    public Iterable<String> getMappedFields()
     {
-		return CatalogConfiguration.getFieldMapping().values();
+		return _catalogConfig.getFieldMapping().values();
     }
 
     //---------------------------------------------------------------------------
 
-    public static boolean match(Element elem, Set<String> elemNames)
+    public boolean match(Element elem, Set<String> elemNames)
     {
 	String name = elem.getQualifiedName();
 
@@ -77,8 +79,8 @@ public class FieldMapper
     
     //---------------------------------------------------------------------------
     
-    public static Set<String> getPropertiesByType(String type) {
-    	return  CatalogConfiguration.getTypeMapping(type); 
+    public Set<String> getPropertiesByType(String type) {
+    	return  _catalogConfig.getTypeMapping(type);
     }
 
     //---------------------------------------------------------------------------
@@ -87,7 +89,7 @@ public class FieldMapper
     //---
     //---------------------------------------------------------------------------
 
-    private static String getAbsolute(String field)
+    private String getAbsolute(String field)
     {
 	if (field.startsWith("./"))
 	    field = field.substring(2);

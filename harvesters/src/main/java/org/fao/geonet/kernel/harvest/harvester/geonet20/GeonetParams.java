@@ -23,10 +23,10 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet20;
 
-import jeeves.exceptions.BadInputEx;
-import jeeves.exceptions.BadParameterEx;
-import jeeves.utils.Util;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.Util;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.lib.Lib;

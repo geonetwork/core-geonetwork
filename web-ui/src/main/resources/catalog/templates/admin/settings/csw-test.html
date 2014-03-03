@@ -1,0 +1,46 @@
+<div class="row" data-ng-controller="GnCSWTestController">
+  <div class="col-lg-12">
+    <div class="panel panel-default">
+      <div class="panel-heading" data-translate="">testCSW</div>
+      <div class="panel-body">
+        <label class="radio-inline">
+          <input type="radio" name="csw" id="csw1" value="csw" data-ng-model="cswUrl"><label for="csw1">csw</label>
+        </label>
+        <label class="radio-inline">
+          <input type="radio" name="csw" id="csw2" value="csw-publication" data-ng-model="cswUrl"><label for="csw2">csw-publication</label>
+        </label>
+        <h4 data-translate="">cswRequest</h4>
+        <select class="form-control" data-ng-model="currentTestId" autofocus="">
+          <option data-ng-repeat="(key, value) in cswTests" value="{{key}}">{{value[0]}}</option>
+        </select>
+
+        <textarea rows="8" class="form-control" data-ng-model="currentTest"/>
+
+        <br/>
+        <button type="submit" class="btn btn-success btn-block" data-ng-click="runCSWRequest()"
+          data-ng-disabled="currentTestId == null">
+          <i class="fa fa-play"/>
+          <span data-translate="">runCSWRequest</span>
+        </button>
+
+        <h4 data-translate="">cswResponse</h4>
+        <textarea rows="20" class="form-control" data-ng-model="currentTestResponse"/>
+
+
+
+        <h4 data-translate="">cswSampleGetRequest</h4>
+        <ul>
+          <li>
+            <a href="csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetCapabilities"
+              >GetCapabilities</a>
+          </li>
+          <li>
+            <a
+              href="csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById&amp;ID=8c74e8c4-701a-4cd1-a988-7f2bf9e891bd"
+              >GetRecordById</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

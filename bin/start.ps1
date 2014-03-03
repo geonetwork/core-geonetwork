@@ -1,3 +1,7 @@
+param (
+	[string]$mode = "build"
+)
+
 $scriptPath = split-path -parent $MyInvocation.MyCommand.Definition
 . "$scriptPath\config.ps1"
 
@@ -14,22 +18,20 @@ if (!(test-path Env:\JREBEL_HOME)) {
 	echo "Env:JREBEL_HOME is found.  Configuring JRebel. JREBEL_OPTS = $JREBEL_OPTS"
 }
 
-$Env:MAVEN_OPTS=""
+if ($mode -eq "build") {
+	$Env:MAVEN_OPTS="$MEMORY"
 
-cmd /c "cd $JEEVES_DIR && mvn install $args"
-cmd /c "cd $scriptPath\..\domain && mvn install $args"
-cmd /c "cd $scriptPath\..\core && mvn install $args"
-cmd /c "cd $scriptPath\..\csw-server && mvn install $args"
-cmd /c "cd $scriptPath\..\healthmonitor && mvn install $args"
-cmd /c "cd $scriptPath\..\harvesters && mvn install $args"
-cmd /c "cd $scriptPath\..\services && mvn install $args"
-
-#if (  ]; then
-#    echo "[FAILURE] [deploy] Failed to execute 'jeeves' correctly"
-#    exit -1
-#fi
+	cmd /c "cd $scriptPath\..\common && mvn install $args"
+	cmd /c "cd $scriptPath\..\domain && mvn install $args"
+	cmd /c "cd $JEEVES_DIR && mvn install $args"
+	cmd /c "cd $scriptPath\..\core && mvn install $args"
+	cmd /c "cd $scriptPath\..\csw-server && mvn install $args"
+	cmd /c "cd $scriptPath\..\healthmonitor && mvn install $args"
+	cmd /c "cd $scriptPath\..\harvesters && mvn install $args"
+	cmd /c "cd $scriptPath\..\services && mvn install $args"
+}
 
 $Env:MAVEN_OPTS="$JREBEL_OPTS $DEBUG $OVERRIDES $MEMORY -Dgeonetwork.dir=$DATA_DIR -Dfile.encoding=UTF8"
 
-cmd /c "cd $WEB_DIR &&  mvn jetty:run -Penv-inspire -Pwidgets $args"
+cmd /c "cd $WEB_DIR &&  mvn jetty:run -Penv-dev -Pwidgets $args"
 cd $scriptPath

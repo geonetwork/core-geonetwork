@@ -26,11 +26,12 @@
 		<statusSendEmail>Change log message: %s\n\nRecords are available from the following URL:\n %s/main.search?_status=%s&amp;_statusChangeDate=%s</statusSendEmail>
 		-->
 	<statusSendEmail>Change log message: %s
-		
+
 Records are available from the following URL:
 %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search
 	</statusSendEmail>
 	
+	<metadata-versioning-log>Metadata versioning log</metadata-versioning-log>
 	<otherValue>Other:</otherValue>
 	<warning>Warning</warning>
 	<isAdmin>Is administrator ?</isAdmin>
@@ -1435,4 +1436,5 @@ Records are available from the following URL:
 	    <org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage>TWiki</org.eclipse.mylyn.wikitext.twiki.core.TWikiLanguage>
     </name>
   </markup>
+    <unknown>Unknown</unknown>
 </strings>

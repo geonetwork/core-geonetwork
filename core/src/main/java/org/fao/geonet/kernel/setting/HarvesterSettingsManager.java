@@ -26,20 +26,20 @@ package org.fao.geonet.kernel.setting;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.resources.ProviderManager;
-import jeeves.server.resources.ResourceListener;
-import jeeves.server.resources.ResourceProvider;
-import jeeves.utils.Log;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.HarvesterSetting;
+import org.fao.geonet.repository.HarvesterSettingRepository;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Allows hierarchical management of harvester settings. The harvester settings API has been designed with the following goals:
@@ -63,112 +63,71 @@ import org.jdom.Element;
  * Harvester settings depend on the harvester's protocol.
  * 
  */
-
 public class HarvesterSettingsManager {
-    private Setting root;
 
-    public HarvesterSettingsManager(Dbms dbms, ProviderManager provMan) throws SQLException {
-        init(dbms);
+    @Autowired
+    private HarvesterSettingRepository _settingsRepo;
+    @Autowired
+    private SettingManager _settingManager;
 
-        for (ResourceProvider rp : provMan.getProviders()) {
-            if (rp.getName().equals(dbms.getURL())) {
-                rp.addListener(resList);
-            }
-        }
-    }
+    @PersistenceContext
+    private EntityManager _entityManager;
+
+    // ---------------------------------------------------------------------------
+    // ---
+    // --- API methods
+    // ---
+    // ---------------------------------------------------------------------------
+
+    // ---------------------------------------------------------------------------
+    // --- Getters
+    // ---------------------------------------------------------------------------
 
     /**
-     * Init the settings tree from the HarvesterSettings table content
+     * Get the indicated setting and its children up-to the indicated depth.
      * 
-     * @param dbms
-     * @throws SQLException
-     */
-    private void init(Dbms dbms) throws SQLException {
-        @SuppressWarnings("unchecked")
-        List<Element> list = dbms.select("SELECT * FROM HarvesterSettings").getChildren();
-
-        root = new Setting(0, "root", null);
-        createSubTree(root, list);
-    }
-    
-    /**
-     * TODO javadoc.
-     */
-    private ResourceListener resList = new ResourceListener() {
-        public void beforeClose(Object resource) {
-         // do nothing
-        }
-
-        public void close(Object resource) {
-            flush(resource, true);
-        }
-
-        public void abort(Object resource) {
-            flush(resource, false);
-        }
-    };
-
-    /**
-     * Get a setting
-     * 
-     * @param path  Path to the settings
-     * @param level
-     * @return  the setting value or null
+     * @param path path to the setting that is root of the subtree
+     * @param level depth of tree to create
+     * @return
      */
     public Element get(String path, int level) {
-        lock.readLock().lock();
-        try {
-            Setting s = resolve(path);
-            return (s == null) ? null : build(s, level);
-        } finally {
-            lock.readLock().unlock();
-        }
+        HarvesterSetting s = _settingsRepo.findOneByPath(path);
+
+        return (s == null) ? null : build(s, level);
     }
 
+    // ---------------------------------------------------------------------------
 
-    /**
-     * Get a setting
-     * 
-     * @param path  Path to the settings
-     * @return  the setting value or null
-     */
     public String getValue(String path) {
-        lock.readLock().lock();
-        try {
-            Setting s = resolve(path);
-            return (s == null) ? null : s.getValue();
-        } finally {
-            lock.readLock().unlock();
-        }
+        HarvesterSetting s = _settingsRepo.findOneByPath(path);
+
+        return (s == null) ? null : s.getValue();
     }
+
+    // ---------------------------------------------------------------------------
+    // --- Setters
+    // ---------------------------------------------------------------------------
 
     /**
      * TODO javadoc.
      * 
-     * @param dbms
      * @param path
      * @param name
      * @return
      * @throws SQLException
      */
-    public boolean setName(Dbms dbms, String path, String name) throws SQLException {
+    public boolean setName(String path, String name) throws SQLException {
         if (path == null)
             throw new IllegalArgumentException("Path cannot be null");
 
-        lock.writeLock().lock();
-
-        try {
-            Setting s = resolve(path);
-
-            if (s == null)
-                return false;
-
-            dbms.execute("UPDATE HarvesterSettings SET name=? WHERE id=?", name, s.getId());
-            tasks.add(Task.getNameChangedTask(dbms, s, name));
+        HarvesterSetting updatedSetting = _settingsRepo.findOneByPath(path);
+        if (updatedSetting == null) {
+            return false;
+        } else {
+            updatedSetting.setName(name);
+            _settingsRepo.save(updatedSetting);
 
             return true;
-        } finally {
-            lock.writeLock().unlock();
         }
     }
 
@@ -177,16 +136,16 @@ public class HarvesterSettingsManager {
     /**
      * TODO javadoc.
      * 
-     * @param dbms
      * @param path
      * @param value
      * @return
      * @throws SQLException
      */
-    public boolean setValue(Dbms dbms, String path, Object value) throws SQLException {
+    public boolean setValue(String path, Object value) throws SQLException {
         Map<String, Object> values = new HashMap<String, Object>();
         values.put(path, value);
-        return setValues(dbms, values);
+
+        return setValues(values);
     }
 
     // ---------------------------------------------------------------------------
@@ -194,85 +153,65 @@ public class HarvesterSettingsManager {
     /**
      * TODO javadoc.
      * 
-     * @param dbms
      * @param values
      * @return
      * @throws SQLException
      */
-    public boolean setValues(Dbms dbms, Map<String, Object> values) throws SQLException {
-        lock.writeLock().lock();
+    public boolean setValues(Map<String, Object> values) throws SQLException {
+        boolean success = true;
 
-        try {
-            boolean success = true;
+        List<HarvesterSetting> toSave = new ArrayList<HarvesterSetting>(values.size());
+        for (Map.Entry<String, Object> entry : values.entrySet()) {
+            String path = entry.getKey();
+            String value = makeString(entry.getValue());
 
-            for (Map.Entry<String, Object> entry : values.entrySet()) {
-                String path = entry.getKey();
-                String value = makeString(entry.getValue());
-                if (Log.isDebugEnabled(Geonet.SETTINGS))
+            HarvesterSetting s = _settingsRepo.findOneByPath(path);
+
+            if (s == null) {
+                success = false;
+                Log.warning(Geonet.SETTINGS, "Unable to find Settings row for: " + path + ". Check settings table.");
+            } else {
+                s.setValue(value);
+                if (Log.isDebugEnabled(Geonet.SETTINGS)) {
                     Log.debug(Geonet.SETTINGS, "Set path: " + path + ", value: " + value);
-
-                Setting s = resolve(path);
-
-                if (s == null) {
-                    success = false;
-                    Log.warning(Geonet.SETTINGS, "Unable to find Settings row for: " + path + ". Check settings table.");
-                } else {
-                    dbms.execute("UPDATE HarvesterSettings SET value=? WHERE id=?", value, s.getId());
-                    tasks.add(Task.getValueChangedTask(dbms, s, value));
                 }
+                toSave.add(s);
             }
-
-            return success;
-        } finally {
-            lock.writeLock().unlock();
         }
+
+        _settingsRepo.save(toSave);
+
+        return success;
     }
 
     /**
      * When adding to a newly created node, path must be 'id:...'.
      * 
-     * @param dbms
      * @param path
      * @param name
      * @param value
      * @return
      * @throws SQLException
      */
-    public String add(Dbms dbms, String path, Object name, Object value) throws SQLException {
+    public String add(String path, Object name, Object value) throws SQLException {
         if (name == null)
             throw new IllegalArgumentException("Name cannot be null");
 
         String sName = makeString(name);
         String sValue = makeString(value);
 
-        lock.writeLock().lock();
+        // --- first, we look into the tasks list because the 'id' could have been
+        // --- added just now
 
-        try {
-            // --- first, we look into the tasks list because the 'id' could have been
-            // --- added just now
+        HarvesterSetting parent = _settingsRepo.findOneByPath(path);
 
-            Setting parent = findAmongAdded(dbms, path);
+        if (parent == null)
+            return null;
 
-            // --- if we fail, just do a normal search
+        HarvesterSetting child = new HarvesterSetting().setParent(parent).setName(sName).setValue(sValue);
 
-            if (parent == null)
-                parent = resolve(path);
-
-            if (parent == null)
-                return null;
-
-            Setting child = new Setting(getNextSerial(dbms), sName, sValue);
-
-            String query = "INSERT INTO HarvesterSettings(id, parentId, name, value) VALUES(?, ?, ?, ?)";
-
-            dbms.execute(query, child.getId(), parent.getId(), sName, sValue);
-
-            tasks.add(Task.getAddedTask(dbms, parent, child));
-
-            return Integer.toString(child.getId());
-        } finally {
-            lock.writeLock().unlock();
-        }
+        _settingsRepo.save(child);
+        return Integer.toString(child.getId());
     }
 
     // ---------------------------------------------------------------------------
@@ -280,26 +219,17 @@ public class HarvesterSettingsManager {
     /**
      * TODO javadoc.
      * 
-     * @param dbms
      * @param path
      * @return
      * @throws SQLException
      */
-    public boolean remove(Dbms dbms, String path) throws SQLException {
-        lock.writeLock().lock();
+    public boolean remove(String path) throws SQLException {
+        HarvesterSetting s = _settingsRepo.findOneByPath(path);
+        if (s == null)
+            return false;
 
-        try {
-            Setting s = resolve(path);
-
-            if (s == null)
-                return false;
-
-            remove(dbms, s);
-
-            return true;
-        } finally {
-            lock.writeLock().unlock();
-        }
+        _settingsRepo.delete(s);
+        return true;
     }
 
     // ---------------------------------------------------------------------------
@@ -307,103 +237,55 @@ public class HarvesterSettingsManager {
     /**
      * TODO javadoc.
      * 
-     * @param dbms
      * @param path
      * @return
      * @throws SQLException
      */
-    public boolean removeChildren(Dbms dbms, String path) throws SQLException {
-        lock.writeLock().lock();
-        try {
-            Setting s = resolve(path);
-            if (s == null)
-                return false;
+    public boolean removeChildren(String path) throws SQLException {
+        HarvesterSetting parent = _settingsRepo.findOneByPath(path);
 
-            for (Setting child : s.getChildren())
-                remove(dbms, child);
+        if (parent == null)
+            return false;
 
-            return true;
-        } finally {
-            lock.writeLock().unlock();
+        List<HarvesterSetting> children = _settingsRepo.findAllChildren(parent.getId());
+        for (HarvesterSetting child : children) {
+            remove(child);
         }
+
+        return true;
     }
-    
-    /**
-     * Refreshes current settings manager. This has to be used when updating the Settings table without using this class. For example when
-     * using an SQL script.
-     */
-    public boolean refresh(Dbms dbms) throws SQLException {
-        lock.readLock().lock();
-        try {
-            this.init(dbms);
-            return true;
-        } finally {
-            lock.readLock().unlock();
-        }
-    }
+
+    // ---------------------------------------------------------------------------
+    // --- Auxiliary methods
+    // ---------------------------------------------------------------------------
+
 
     public boolean getValueAsBool(String path, boolean defValue) {
-        String value = getValue(path);
-
-        return (value != null) ? value.equals("true") : defValue;
+        HarvesterSetting setting = _settingsRepo.findOneByPath(path);
+        if (setting == null) {
+            return defValue;
+        }
+        return setting.getValueAsBool();
     }
 
     // ---------------------------------------------------------------------------
 
     public boolean getValueAsBool(String path) {
-        String value = getValue(path);
+        HarvesterSetting value = _settingsRepo.findOneByPath(path);
 
         if (value == null)
             return false;
 
-        return value.equals("true");
+        return value.getValueAsBool();
     }
 
-    // ---------------------------------------------------------------------------
-
-    public Integer getValueAsInt(String path) {
-        String value = getValue(path);
-
-        if (value == null || value.trim().length() == 0)
-            return null;
-
-        return Integer.valueOf(value);
-    }
-
+    public String getSiteId()   { return _settingManager.getSiteId(); }
+    public String getSiteName() { return _settingManager.getSiteName();   }
+    
     // ---------------------------------------------------------------------------
     // ---
     // --- Private methods
     // ---
-    // ---------------------------------------------------------------------------
-
-    /**
-     * Create a tree of {@link Setting}.
-     * 
-     * @param setting
-     * @param records
-     */
-    private void createSubTree(Setting setting, List<Element> records) {
-        for (Iterator<Element> i = records.iterator(); i.hasNext();) {
-            Element elem = (Element) i.next();
-            String sParId = elem.getChildText("parentid");
-            int parId = sParId.equals("") ? 0 : Integer.parseInt(sParId);
-
-            if (setting.getId() == parId) {
-                String id = elem.getChildText("id");
-                String name = elem.getChildText("name");
-                String value = elem.getChildText("value");
-
-                Setting child = new Setting(Integer.parseInt(id), name, value);
-
-                setting.addChild(child);
-                i.remove();
-            }
-        }
-
-        for (Setting child : setting.getChildren())
-            createSubTree(child, records);
-    }
-
     // ---------------------------------------------------------------------------
 
     private String makeString(Object obj) {
@@ -413,96 +295,13 @@ public class HarvesterSettingsManager {
     // ---------------------------------------------------------------------------
 
     /**
-     * TODO javadoc.
-     * 
-     * @param path
-     * @return
-     */
-    private Setting resolve(String path) {
-        StringTokenizer st = new StringTokenizer(path, SEPARATOR);
-
-        Setting s = root;
-
-        while (s != null && st.hasMoreTokens()) {
-            String child = st.nextToken();
-
-            if (child.startsWith("id:"))
-                s = find(s, Integer.parseInt(child.substring(3)));
-            else
-                s = s.getChild(child);
-        }
-
-        return s;
-    }
-
-    // ---------------------------------------------------------------------------
-
-    /**
-     * TODO javadoc.
-     * 
-     * @param s
-     * @param id
-     * @return
-     */
-    private Setting find(Setting s, int id) {
-        ArrayList<Setting> stack = new ArrayList<Setting>();
-
-        for (Setting child : s.getChildren())
-            stack.add(child);
-
-        while (!stack.isEmpty()) {
-            s = stack.get(0);
-            stack.remove(0);
-
-            if (s.getId() == id)
-                return s;
-
-            for (Setting child : s.getChildren())
-                stack.add(child);
-        }
-
-        return null;
-    }
-
-    // ---------------------------------------------------------------------------
-
-    /**
-     * TODO javadoc.
-     * 
-     * @param dbms
-     * @param path
-     * @return
-     */
-    private Setting findAmongAdded(Dbms dbms, String path) {
-        if (!path.startsWith("id:"))
-            return null;
-
-        if (path.indexOf(SEPARATOR) != -1)
-            return null;
-
-        int id = Integer.parseInt(path.substring(3));
-
-        for (Task task : tasks) {
-            Setting s = task.getAddedSetting(dbms, id);
-
-            if (s != null)
-                return s;
-        }
-
-        return null;
-    }
-
-    // ---------------------------------------------------------------------------
-
-    /**
-     * Add children settings until level is reached
-     * to a setting.
+     * Convert a setting and subtree into xml
      * 
      * @param s
      * @param level
      * @return
      */
-    private Element build(Setting s, int level) {
+    private Element build(HarvesterSetting s, int level) {
         Element el = new Element(s.getName());
         el.setAttribute("id", Integer.toString(s.getId()));
 
@@ -516,7 +315,7 @@ public class HarvesterSettingsManager {
         if (level != 0) {
             Element children = new Element("children");
 
-            for (Setting child : s.getChildren())
+            for (HarvesterSetting child : _settingsRepo.findAllChildren(s.getId()))
                 children.addContent(build(child, level - 1));
 
             if (children.getContentSize() != 0)
@@ -526,54 +325,13 @@ public class HarvesterSettingsManager {
         return el;
     }
 
-    private int getNextSerial(Dbms dbms) throws SQLException {
-        if (maxSerial == 0) {
-            @SuppressWarnings("unchecked")
-            List<Element> list = dbms.select("SELECT MAX(id) AS max FROM HarvesterSettings").getChildren();
-            String max = list.get(0).getChildText("max");
-            maxSerial = Integer.parseInt(max);
-        }
-        return ++maxSerial;
+    // ---------------------------------------------------------------------------
+
+    private void remove(HarvesterSetting s) throws SQLException {
+        _settingsRepo.delete(s);
     }
 
-    private void remove(Dbms dbms, Setting s) throws SQLException {
-        for (Setting child : s.getChildren())
-            remove(dbms, child);
-
-        dbms.execute("DELETE FROM HarvesterSettings WHERE id=?", s.getId());
-        tasks.add(Task.getRemovedTask(dbms, s));
+    public void refresh() {
+        _entityManager.getEntityManagerFactory().getCache().evict(HarvesterSetting.class);
     }
-
-    /**
-     * TODO javadoc.
-     * 
-     * @param resource
-     * @param commit
-     */
-    private void flush(Object resource, boolean commit) {
-        lock.writeLock().lock();
-
-        try {
-            for (Iterator<Task> i = tasks.iterator(); i.hasNext();) {
-                Task task = i.next();
-
-                if (task.matches(resource)) {
-                    i.remove();
-
-                    if (commit)
-                        task.commit();
-                }
-            }
-        } finally {
-            lock.writeLock().unlock();
-        }
-    }
-
-    private static final String SEPARATOR = "/";
-
-    private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-
-    private List<Task> tasks = new ArrayList<Task>();
-
-    private int maxSerial = 0;
 }

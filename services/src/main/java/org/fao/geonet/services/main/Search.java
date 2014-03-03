@@ -103,7 +103,6 @@ public class Search implements Service
 		
 		if (oldSelection != null){
 			oldSelection.close();
-			oldSelection = null;
 		}
 		
 
