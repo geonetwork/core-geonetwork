@@ -415,7 +415,7 @@ public class MetadataSchema
                     group.setSchematronId(id);
                     SchematronCriteria criteria = new SchematronCriteria();
                     criteria.setType(SchematronCriteriaType.ALWAYS_ACCEPT);
-                    criteria.setValue("");
+                    criteria.setValue("_ignored_");
 
                     group.getCriteriaList().add(criteria);
                     SchemaDao.insertGroup(context, dbms, group);
