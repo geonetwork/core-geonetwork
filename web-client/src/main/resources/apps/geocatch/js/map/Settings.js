@@ -96,6 +96,9 @@ var geocat = {
         strokeWidth : 1,
         pointRadius : 4,
         pointerEvents : "visiblePainted"
+    },
+    openMetadataWindow: function(uuid) {
+        catalogue.metadataShow(uuid);
     }
 }
 
