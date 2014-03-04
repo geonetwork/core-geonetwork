@@ -24,41 +24,44 @@
       ['gn_fields', 'gn_new_metadata_controller',
        'gn_editorboard_controller',
        'gn_directory_controller', 'gn_utility_directive',
-       'gn_scroll_spy', 'gn_thesaurus']);
+       'gn_scroll_spy', 'gn_thesaurus', 'ui.bootstrap.datetimepicker']);
 
   var tplFolder = '../../catalog/templates/editor/';
 
-  module.config(['$routeProvider', function($routeProvider) {
-    $routeProvider.
-        when('/metadata/:id', {
-          templateUrl: tplFolder + 'editor.html',
-          controller: 'GnEditorController'}).
-        when('/metadata/:id/tab/:tab', {
-          templateUrl: tplFolder + 'editor.html',
-          controller: 'GnEditorController'}).
-        when('/metadata/:id/tab/:tab/:displayAttributes', {
-          templateUrl: tplFolder + 'editor.html',
-          controller: 'GnEditorController'}).
-        when('/create', {
-          templateUrl: tplFolder + 'new-metadata.html',
-          controller: 'GnNewMetadataController'}).
-        when('/create/from/:id/in/:group/astemplate/:template', {
-          templateUrl: tplFolder + 'editor.html',
-          controller: 'GnNewMetadataController'}).
-        when('/directory', {
-          templateUrl: tplFolder + 'directory.html',
-          controller: 'GnDirectoryController'}).
-        when('/directory/type/:type', {
-          templateUrl: tplFolder + 'directory.html',
-          controller: 'GnDirectoryController'}).
-        when('/directory/id/:id', {
-          templateUrl: tplFolder + 'directory.html',
-          controller: 'GnDirectoryController'}).
-        otherwise({
-          templateUrl: tplFolder + 'editorboard.html',
-          controller: 'GnEditorBoardController'
-        });
-  }]);
+  module.config(['$routeProvider',
+    function($routeProvider) {
+
+
+      $routeProvider.
+          when('/metadata/:id', {
+            templateUrl: tplFolder + 'editor.html',
+            controller: 'GnEditorController'}).
+          when('/metadata/:id/tab/:tab', {
+            templateUrl: tplFolder + 'editor.html',
+            controller: 'GnEditorController'}).
+          when('/metadata/:id/tab/:tab/:displayAttributes', {
+            templateUrl: tplFolder + 'editor.html',
+            controller: 'GnEditorController'}).
+          when('/create', {
+            templateUrl: tplFolder + 'new-metadata.html',
+            controller: 'GnNewMetadataController'}).
+          when('/create/from/:id/in/:group/astemplate/:template', {
+            templateUrl: tplFolder + 'editor.html',
+            controller: 'GnNewMetadataController'}).
+          when('/directory', {
+            templateUrl: tplFolder + 'directory.html',
+            controller: 'GnDirectoryController'}).
+          when('/directory/type/:type', {
+            templateUrl: tplFolder + 'directory.html',
+            controller: 'GnDirectoryController'}).
+          when('/directory/id/:id', {
+            templateUrl: tplFolder + 'directory.html',
+            controller: 'GnDirectoryController'}).
+          otherwise({
+            templateUrl: tplFolder + 'editorboard.html',
+            controller: 'GnEditorBoardController'
+          });
+    }]);
 
   /**
    * Metadata editor controller - draft
