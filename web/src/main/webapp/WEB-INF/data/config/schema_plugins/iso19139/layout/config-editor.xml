@@ -14,7 +14,6 @@
     <for name="gmd:description" use="textarea"/>
     <for name="gmd:evaluationMethodDescription" use="textarea"/>
     <for name="gmd:explanation" use="textarea"/>
-    <for name="gmd:evaluationMethodDescription" use="textarea"/>
     <for name="gmd:handlingDescription" use="textarea"/>
     <for name="gmd:maintenanceNote" use="textarea"/>
     <for name="gmd:measureDescription" use="textarea"/>
