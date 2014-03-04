@@ -237,7 +237,7 @@
 	        								<li>
 		        								<ul>
 		        									<xsl:for-each select="$children">
-		        										<li><a class="arrow" href="javascript:geocat.openMetadataWindow('{geonet:info/uuid}'">
+		        										<li><a class="arrow" href="javascript:geocat.openMetadataWindow('{geonet:info/uuid}')">
 		        											<xsl:call-template name="getMetadataTitle">
 		        												<xsl:with-param name="uuid" select="geonet:info/uuid"/>
 		        											</xsl:call-template>
