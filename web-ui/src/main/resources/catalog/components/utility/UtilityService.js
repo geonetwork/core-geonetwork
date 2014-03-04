@@ -8,10 +8,13 @@
        * Scroll page to element.
        */
     var scrollTo = function(elementId, offset, duration, easing) {
-      $(document.body).animate({scrollTop: (offset ?
+      var top = 0;
+      if (elementId !== undefined) {
+        top = offset ?
           $(elementId).offset().top :
-          $(elementId).position().top)
-      },
+          $(elementId).position().top
+      }
+      $(document.body).animate({scrollTop: top},
       duration, easing);
     };
 

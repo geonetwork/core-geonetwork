@@ -134,6 +134,7 @@
     "msgNoCatalogInfo": "Could not retrieved catalog information.",
     "msgNoUserInfo": "Could not retrieve user details.",
     "toggleScrollSpy": "Toggle scrolling navigation",
+    "scrollTop": "Scroll to top",
     "passwordUpdateError": "Error when updating password",
     "BadParameterEx": "Wrong parameter",
     "send": "Send",
