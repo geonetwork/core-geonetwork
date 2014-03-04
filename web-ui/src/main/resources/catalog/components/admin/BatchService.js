@@ -49,6 +49,8 @@
           gnEditor.save(false, true)
                 .then(function() {
                 gnHttp.callService('processMd', params).then(function(data) {
+                  var snippet = $(data.data);
+                  gnEditor.refreshEditorForm(snippet);
                   defer.resolve(data);
                 });
               });

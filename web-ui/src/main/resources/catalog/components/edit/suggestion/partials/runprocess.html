@@ -20,7 +20,9 @@
     </div>
   </form>
   <button type="button" class="btn navbar-btn btn-success"
-  data-ng-click="gnSuggestion.runProcess(gnSuggestion.getCurrent()['@process'], params)">
-  <i class="fa fa-play"/> <span data-translate="">process</span>
+    data-ng-click="runProcess()"
+    data-ng-disabled="processing || processed">
+    <i class="fa fa-play"/> <span data-translate="">process</span>
+    <i data-ng-if="processing" class="fa fa-spinner fa-spin"/>
   </button>
 </div>
