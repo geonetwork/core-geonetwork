@@ -218,7 +218,7 @@
 		        		 -->
 		        		<xsl:if test="$children or $siblings">
 		        			<ul>
-		        				<!-- <xsl:if test="normalize-space($parent)!=''">
+		        				<xsl:if test="normalize-space($parent)!=''">
 		        					<li>
 			        					<a class="arrow" href="metadata.show?uuid={$parent}">
 				        					<xsl:call-template name="getMetadataTitle">
@@ -226,7 +226,7 @@
 				        					</xsl:call-template>
 			        					</a>
 		        					</li>
-		        				</xsl:if> -->
+		        				</xsl:if>
 		        				<xsl:if test="$children">
 		        				<li>
 		        					<ul>
@@ -237,7 +237,7 @@
 	        								<li>
 		        								<ul>
 		        									<xsl:for-each select="$children">
-		        										<li><a class="arrow" href="javascript:geocat.openMetadataWindow('{geonet:info/uuid}">
+		        										<li><a class="arrow" href="javascript:geocat.openMetadataWindow('{geonet:info/uuid}'">
 		        											<xsl:call-template name="getMetadataTitle">
 		        												<xsl:with-param name="uuid" select="geonet:info/uuid"/>
 		        											</xsl:call-template>
@@ -299,7 +299,7 @@
 	        					</ul>
 	        				</xsl:if>
 		        		</xsl:if>
-		        		
+
 		        		<xsl:choose>
 		        			<xsl:when test="$edit">
 		        				<img src="{/root/gui/url}/images/plus.gif"
