@@ -31,8 +31,8 @@
           //          .success(function(data) {
           $http.get('admin.group.list@json', {cache: true})
             .success(function(data) {
-            scope.groups = data !== 'null' ? data : null;
-          });
+                scope.groups = data !== 'null' ? data : null;
+              });
           scope.setIcon = function(i) {
             scope.harvester.site.icon = i;
           };
