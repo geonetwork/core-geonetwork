@@ -3,8 +3,11 @@
     <div class="panel panel-default">
       <div class="panel-heading" data-translate="">versionHistory</div>
       <div class="panel-body" data-ng-controller="GnVcsController">
-        
-        
+        <div class="alert alert-info"
+           data-ng-show="logs.length === 0"
+           data-translate="">
+          noCommitAvailable
+        </div>
         <ul class="gn-history">
           <li data-ng-repeat="log in logs.entry">
             {{log.title}} 

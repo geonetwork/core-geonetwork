@@ -91,7 +91,7 @@
     "selectAll": "Tous",
     "selectNone": "Aucun",
     
-    "noRecordFound": "Pas d'enregistrement trouvé",
+    "noRecordFound": "Pas d'enregistrement trouvé.",
     "map": "Carte",
     "dataset": "Données",
     "service": "Service",

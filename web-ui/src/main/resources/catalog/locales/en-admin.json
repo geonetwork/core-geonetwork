@@ -24,7 +24,7 @@
     
     "status": "Status",
     "information": "Information",
-    
+    "noCommitAvailable": "No activity recorded. Enable the versionning on metadata record to follow changes.",
     "dbUrl": "Database",
     "recordsBy": "Record's statistics by",
     "facetIndicatorHelp": "Statistics by records are defined based on facets configuration and may represent only the most frequent values.",
