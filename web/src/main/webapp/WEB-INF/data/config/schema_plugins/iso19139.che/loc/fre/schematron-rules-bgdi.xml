@@ -1,28 +1,28 @@
 <strings>
     <schematron.title>BGDI</schematron.title>
-    <translatedTitle>Title translations</translatedTitle>
-    <deTitleRequired>Data Identification / Citation / title is required and requires a german translation</deTitleRequired>
-    <deTitleReport>German title:</deTitleReport>
-    <frTitleRequired>Data Identification / Citation / title is required and requires a french translation</frTitleRequired>
-    <frTitleReport>French title:</frTitleReport>
+    <translatedTitle>Traduction du titre</translatedTitle>
+    <deTitleRequired>Identification des données / Information de référence / le titre est obligatoire et nécessite une traduction en allemand</deTitleRequired>
+    <deTitleReport>Titre Allemand:</deTitleReport>
+    <frTitleRequired>Identification des données / Information de référence / le titre est obligatoire et nécessite une traduction en français</frTitleRequired>
+    <frTitleReport>Titre Français:</frTitleReport>
 
-    <translatedAltTitle>Alternate Title translations</translatedAltTitle>
-    <deAltTitleRequired>Data Identification / Citation / alternate title is required and requires a german translation</deAltTitleRequired>
-    <deAltTitleReport>German alternate title:</deAltTitleReport>
-    <deAltTitleMaxLength>German alternate title is too long, max length is 30</deAltTitleMaxLength>
-    <deAltTitleMaxLengthReport>German alternate title length:</deAltTitleMaxLengthReport>
-    <frAltTitleRequired>Data Identification / Citation / alternate title is required and requires a french translation</frAltTitleRequired>
-    <frAltTitleReport>French alternate title:</frAltTitleReport>
-    <frAltTitleMaxLength>French alternate title is too long, max length is 30</frAltTitleMaxLength>
-    <frAltTitleMaxLengthReport>French alternate title length:</frAltTitleMaxLengthReport>
+    <translatedAltTitle>Traduction du titre court</translatedAltTitle>
+    <deAltTitleRequired>Identification des données / Information de référence / le titre court est obligatoire et nécessite une traduction en allemand</deAltTitleRequired>
+    <deAltTitleReport>Titre court Allemand:</deAltTitleReport>
+    <deAltTitleMaxLength>Le titre court Allemand est trop long, max 30c</deAltTitleMaxLength>
+    <deAltTitleMaxLengthReport>Longueur du titre court Allemand:</deAltTitleMaxLengthReport>
+    <frAltTitleRequired>Identification des données / Information de référence / le titre court est obligatoire et nécessite une traduction en français</frAltTitleRequired>
+    <frAltTitleReport>Titre court Français:</frAltTitleReport>
+    <frAltTitleMaxLength>Le titre court Français est trop long, max 30c</frAltTitleMaxLength>
+    <frAltTitleMaxLengthReport>Longueur du titre court en français:</frAltTitleMaxLengthReport>
 
-    <translatedAbstract>Abstract translations</translatedAbstract>
-    <deAbstractRequired>Data Identification / abstract is required and requires a german translation</deAbstractRequired>
-    <deAbstractReport>German abstract:</deAbstractReport>
-    <frAbstractRequired>Data Identification / abstract is required and requires a french translation</frAbstractRequired>
-    <frAbstractReport>French abstract:</frAbstractReport>
+    <translatedAbstract>Traduction du résumé</translatedAbstract>
+    <deAbstractRequired>Identification des données / le résumé est obligatoire et nécessite une traduction en allemand</deAbstractRequired>
+    <deAbstractReport>Résumé Allemand:</deAbstractReport>
+    <frAbstractRequired>Identification des données / le résumé est obligatoire et nécessite une traduction en français</frAbstractRequired>
+    <frAbstractReport>Résumé Français:</frAbstractReport>
 
-    <pointOfContact>Point of Contact</pointOfContact>
-    <pointOfContactRequired>Data Identification / Point of Contact element is required</pointOfContactRequired>
-    <pointOfContactReport>Point of contact is present</pointOfContactReport>
+    <pointOfContact>Point de contact</pointOfContact>
+    <pointOfContactRequired>Identification des données / l'élément Point de contact est obligatoire</pointOfContactRequired>
+    <pointOfContactReport>Le Point de contact est présent</pointOfContactReport>
 </strings>
