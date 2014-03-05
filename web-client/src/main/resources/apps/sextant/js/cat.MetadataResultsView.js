@@ -310,7 +310,7 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
                 record: record,
                 resultsView: dv,
                 composeMenu: function(){
-                    this.add(this.editAction);
+                    this.add(this.extEditorAction);
                     this.add(this.deleteAction);
                     this.add(this.duplicateAction);
                     this.add(this.adminAction);
