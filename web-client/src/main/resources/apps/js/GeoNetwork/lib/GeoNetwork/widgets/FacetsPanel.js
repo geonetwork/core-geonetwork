@@ -105,7 +105,7 @@ GeoNetwork.FacetsPanel = Ext.extend(Ext.Panel, {
          */
         maxDisplayedItem: undefined,
         autoScroll: true,
-        cls: 'facets',
+        cls: 'facets'
     },
     /** private: property[facetsStore]
      * Store containing current facet for the search.
