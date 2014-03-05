@@ -1337,23 +1337,25 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         	if (this.node) {
             	params.node = this.node;
             }
-        	params.redirectUrl = '/..' + location.pathname;
-        	this.postToUrl(this.services.login, params, 'POST');
-//			OpenLayers.Request.POST({
-//			    url: this.services.login,
-//			    data: OpenLayers.Util.getParameterString(params),
-//			    headers: {
-//			        "Content-Type": "application/x-www-form-urlencoded"
-//			    },
-//	            success: function(response){
-//	            	app.isLoggedIn();  // will get the user information and trigger after login event
-//	            },
-//	            failure: function(response){
-//	                app.identifiedUser = undefined;
-//	                app.onAfterBadLogin();
-//	                // TODO : Get Exception from GeoNetwork
-//	            }
-//	        });
+//          Default GN login mode
+//        	params.redirectUrl = '/..' + location.pathname;
+//        	this.postToUrl(this.services.login, params, 'POST');
+//          Sextant POST request to check login
+			OpenLayers.Request.POST({
+			    url: this.services.login,
+			    data: OpenLayers.Util.getParameterString(params),
+			    headers: {
+			        "Content-Type": "application/x-www-form-urlencoded"
+			    },
+	            success: function(response){
+	            	app.isLoggedIn();  // will get the user information and trigger after login event
+	            },
+	            failure: function(response){
+	                app.identifiedUser = undefined;
+	                app.onAfterBadLogin();
+	                // TODO : Get Exception from GeoNetwork
+	            }
+	        });
         }
     },
     /**	api: method[logout]
