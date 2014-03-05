@@ -128,18 +128,18 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
                 catalogue.metadataEdit2(id, true, null, false, 'n', null);
               }
             },
-          scope: this
+            scope: this
         });
-       this.createChildAction = new Ext.Action({
-           text: OpenLayers.i18n('createChild'),
-           iconCls: 'childIcon',
-           handler: function(){
-             var id = this.record.get('id');
-             if (GeoNetwork.Settings.hideAngularEditor === true) {
-               GeoNetwork.editor.EditorTools.showNewMetadataWindow(this, id, OpenLayers.i18n('createChild'), true);
-             } else {
-               catalogue.metadataEdit2(id, true, null, true, 'n', null);
-             }
+        this.createChildAction = new Ext.Action({
+            text: OpenLayers.i18n('createChild'),
+            iconCls: 'childIcon',
+            handler: function(){
+                var id = this.record.get('id');
+              if (GeoNetwork.Settings.hideAngularEditor === true) {
+                GeoNetwork.editor.EditorTools.showNewMetadataWindow(this, id, OpenLayers.i18n('createChild'), true);
+              } else {
+                catalogue.metadataEdit2(id, true, null, true, 'n', null);
+              }
             },
             scope: this
         });
@@ -181,7 +181,6 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             },
             scope: this
         });
-
          // TODO : enable only if SVN manager is on.
          this.versioningAction = new Ext.Action({
              text: OpenLayers.i18n('versioning'),
@@ -204,7 +203,6 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
          });
 
         this.adminMenuSeparator = new Ext.menu.Separator();
-        
         
         /* Public menu */
         this.viewAction = new Ext.Action({
@@ -267,11 +265,9 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             },
             scope: this
         });
-        
-        
-        
+
         /* Rating menu */
-        if (Ext.ux.RatingItem) { // Check required widget are loaded before displaying context menu
+        if (!this.catalogue.isReadOnly() && Ext.ux.RatingItem) { // Check required widget are loaded before displaying context menu
             // If more actions are placed in context menu, this needs improvements.
             this.ratingWidget = new Ext.ux.RatingItem(null, {
                 canReset: false,
@@ -362,9 +358,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         					: 
         					false,
             status = this.record.get('status'),
-            // SEXTANT https://forge.ifremer.fr/mantis/view.php?id=15011#bugnotes
-            disableIfSubmittedForEditor = ((status == 4 || status == 2 || status == 3) 
-                    && this.catalogue.identifiedUser.role === 'Editor' ? true : false),
+            disableIfSubmittedForEditor = (status == 4 && this.catalogue.identifiedUser.role === 'Editor' ? true : false),
             isHarvested = this.record.get('isharvested') === 'y' ? true : false,
             isPublished = this.record.get('isPublishedToAll') === 'true' ? true : false,
             isAdmin = (this.catalogue.identifiedUser && this.catalogue.identifiedUser.role !== 'Administrator'),
@@ -398,7 +392,7 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             this.extEditorAction.show();
           }
             this.angularEditorAction.setText(OpenLayers.i18n('edit')
-                    + (statusIdx !== -1 && status > 0 ?
+                    + (statusIdx !== -1 && status > 0 ? 
                             OpenLayers.String.format(OpenLayers.i18n('currentStatus'), {
                                 status: this.statusStore.getAt(statusIdx).get('label')[catalogue.lang]
                             }) : '')
@@ -408,18 +402,18 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             this.angularEditorAction.show();
           }
             this.deleteAction.show();
-
+            
             // If status is unkown or undefined
             if (status == '' || status == '0') {
-                if(this.enableWorkflowAction)this.enableWorkflowAction.show();
-                if(this.statusAction)this.statusAction.hide();
+                this.enableWorkflowAction.show();
+                this.statusAction.hide();
             } else {
-                if(this.enableWorkflowAction)this.enableWorkflowAction.hide();
-                if(this.statusAction)this.statusAction.show();
+                this.enableWorkflowAction.hide();
+                this.statusAction.show();
             }
         }
         if(this.otherActions) this.otherActions.setVisible(identified);
-        if(this.adminMenuSeparator)this.adminMenuSeparator.setVisible(identified);
+        this.adminMenuSeparator.setVisible(identified);
         
         /* Actions status depend on records */
         if(GeoNetwork.Settings && GeoNetwork.Settings.editor && GeoNetwork.Settings.editor.disableIfSubmittedForEditor) {
