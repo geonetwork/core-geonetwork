@@ -1,9 +1,5 @@
 <overrides>
   <properties>
-    <db.user>sxtcatal</db.user>
-    <db.pass>sxttest</db.pass>
-    <db.driver>org.postgresql.Driver</db.driver>
-    <db.url>jdbc:postgresql://vpostgresval:5432/sextant</db.url>
     <widget.url>../../apps/sextant/index_debug.html</widget.url>
     <widget.parameters>hl=fre</widget.parameters>
   </properties>

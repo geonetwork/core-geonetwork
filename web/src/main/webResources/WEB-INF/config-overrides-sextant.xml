@@ -10,10 +10,10 @@
   
   <!-- Sextant Turn off NRT manager to reopen last index version
     This is important to reflect status change quickly in the search
-    results. -->
+    results.
   <file name="WEB-INF/config-lucene.xml">
     <replaceText xpath="index/useNRTManagerReopenThread">false</replaceText>
-  </file>
+  </file> -->
   
   <file name=".*/WEB-INF/config-gui.xml">
     <replaceAtt xpath="client" attName="widget" value="true"/>
@@ -55,24 +55,11 @@
     
     <replaceAtt xpath="//service[@name = 'main.search.suggest']/class/param[@name='threshold']" attName="value" value="1"/>
     
-    <replaceXML xpath="resources">
-      <resource enabled="true">
-        <name>main-db</name>
-        <provider>jeeves.resources.dbms.ApacheDBCPool</provider>
-        <config>
-          <user>${db.user}</user>
-          <password>${db.pass}</password>
-          <driver>${db.driver}</driver>
-          <url>${db.url}</url>
-          <poolSize>30</poolSize>
-          <minIdle>10</minIdle>
-          <maxIdle>30</maxIdle>
-          <maxWait>1000</maxWait>
-          <validationQuery>SELECT 1</validationQuery>
-        </config>
-      </resource>
-    </replaceXML>
   </file>
+
+  <spring>
+    <import file="/WEB-INF/config-db/postgres.xml"/>
+  </spring>
 
   <!-- Full path to user_xsl to avoid to try to get it from the data directory.
   -->
@@ -94,7 +81,7 @@
   </file>
       
   <!-- Add custom CSW service -->
-  <file name=".*/WEB-INF/config-csw-servers.xml">
+  <file name=".*/WEB-INF/config/config-csw-virtual.xml">
     <addXML xpath="services">
       <service name="csw-AIRESMARINES">
         <class name=".services.main.CswDiscoveryDispatcher">

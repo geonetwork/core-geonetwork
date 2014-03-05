@@ -1,9 +1,5 @@
 <overrides>
     <properties>
-    <db.user>sxtcatal</db.user>
-    <db.pass>sxtdba</db.pass>
-    <db.driver>org.postgresql.Driver</db.driver>
-    <db.url>jdbc:postgresql://visi1-common-php5:5432/sextant_myocean_test_tomcat1</db.url>
     <widget.url>../../apps/sextant/index_debug.html</widget.url>
     <widget.parameters>hl=eng</widget.parameters>
   </properties>
