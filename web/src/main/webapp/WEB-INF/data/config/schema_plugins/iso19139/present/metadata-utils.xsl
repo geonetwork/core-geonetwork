@@ -220,7 +220,7 @@
 		        			<ul>
 		        				<xsl:if test="normalize-space($parent)!=''">
 		        					<li>
-			        					<a class="arrow" href="metadata.show?uuid={$parent}">
+			        					<a class="arrow" href="javascript:geocat.openMetadataWindow('{$parent}')">
 				        					<xsl:call-template name="getMetadataTitle">
 				        						<xsl:with-param name="uuid" select="$parent"/>
 				        					</xsl:call-template>
