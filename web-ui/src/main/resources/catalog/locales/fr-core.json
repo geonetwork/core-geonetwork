@@ -91,7 +91,7 @@
     "selectAll": "Tous",
     "selectNone": "Aucun",
     
-    "noRecordFound": "Pas d'enregistrement trouvé",
+    "noRecordFound": "Pas d'enregistrement trouvé.",
     "map": "Carte",
     "dataset": "Données",
     "service": "Service",
@@ -129,6 +129,7 @@
     "msgNoUserInfo": "Ne peut retrouver les informations utilisateurs",
 
     "toggleScrollSpy": "Afficher/cacher la navigation défilante",
+    "scrollTop": "Retourner en haut de la page",
     "passwordUpdateError": "Erreur lors de la mise à jour du mot de passe",
     "BadParameterEx": "Paramètre incorrect",
     "send": "Envoyer",

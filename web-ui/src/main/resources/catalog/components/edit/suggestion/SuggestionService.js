@@ -80,7 +80,7 @@
             params = {};
           }
           params.process = service;
-          gnBatchProcessing.runProcessMd(params).then(function(data) {
+          return gnBatchProcessing.runProcessMd(params).then(function(data) {
             scope.reload = true;
           });
         }

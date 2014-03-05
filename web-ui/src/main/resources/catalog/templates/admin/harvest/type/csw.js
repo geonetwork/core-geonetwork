@@ -10,6 +10,7 @@ var gnHarvestercsw = {
             "site" : {
                 "name" : "",
                 "uuid" : "",
+                "icon" : "blank.gif",
                 "account" : {
                     "use" : "false",
                     "username" : [],
@@ -44,21 +45,21 @@ var gnHarvestercsw = {
     },
     buildResponseCSWSearch : function($scope) {
         var body = '';
-        console.log($scope.harvesterSelected.searches[0]);
-        for(var tag in $scope.harvesterSelected.searches[0]) {
-            if($scope.harvesterSelected.searches[0].hasOwnProperty(tag)) {
-                var value = $scope.harvesterSelected.searches[0][tag].value;
-                // Save all values even if empty
-                // XML to JSON does not convert single child to Object but Array
-                // In that situation, saving only one parameter will make this
-                // happen and then search criteria name which is the tag name
-                // will be lost.
-//                if (value) {
-                body += '<' + tag + '>' + value + '</' + tag + '>';
-//            }
-            }
-         }
-        
+        if ($scope.harvesterSelected.searches) {
+          for(var tag in $scope.harvesterSelected.searches[0]) {
+              if($scope.harvesterSelected.searches[0].hasOwnProperty(tag)) {
+                  var value = $scope.harvesterSelected.searches[0][tag].value;
+                  // Save all values even if empty
+                  // XML to JSON does not convert single child to Object but Array
+                  // In that situation, saving only one parameter will make this
+                  // happen and then search criteria name which is the tag name
+                  // will be lost.
+  //                if (value) {
+                  body += '<' + tag + '>' + value + '</' + tag + '>';
+  //            }
+              }
+           }
+        }
         return '<searches><search>' + body + '</search></searches>';
     },
     buildResponse : function(h, $scope) {

@@ -6,6 +6,7 @@
         <cssSource webappPath="catalog/style" pathOnDisk="${project.basedir}/../web-ui/src/main/resources" />
     </require>
     <declarative name="lib" pathOnDisk="web-ui/src/main/resources">
+            <jsSource webappPath="catalog/lib/modernizr.js"/>
             <jsSource webappPath="catalog/lib/jquery-2.0.3.min.js"/>
             <jsSource webappPath="catalog/lib/moment+langs.min.js"/>
             <jsSource webappPath="catalog/lib/angular/angular.min.js"/>
@@ -13,6 +14,7 @@
             <jsSource webappPath="catalog/lib/angular/angular-route.min.js"/>
             <jsSource webappPath="catalog/lib/angular-translate.min.js"/>
             <jsSource webappPath="catalog/lib/angular-md5.min.js"/>
+            <jsSource webappPath="catalog/lib/angular.ext/datetimepicker.js"/>
             <jsSource webappPath="catalog/lib/bootstrap-3.0.1.min.js"/>
             <jsSource webappPath="catalog/lib/proj4js-compressed.js" minimize="false"/>
             <jsSource webappPath="catalog/lib/ol.js"/>

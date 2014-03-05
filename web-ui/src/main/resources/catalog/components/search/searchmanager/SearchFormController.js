@@ -97,6 +97,10 @@
         $scope.triggerSearch();
         $scope.$broadcast('resetSelection');
       });
+      $scope.$on('clearResults', function() {
+        $scope.clearResults();
+      });
+
     }
   ]);
 })();

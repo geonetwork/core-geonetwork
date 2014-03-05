@@ -24,7 +24,7 @@
   </div>
 
   <div class="col-lg-8" data-ng-hide="userSelected.id == null">
-    <div class="panel panel-default">
+    <div class="panel panel-default" data-ng-controller="GnSearchFormController">
       <div class="panel-heading"
         title="{{userHasRecords() ? ('cantDeleteUserHavingRecords' | translate) : ''}}">
         <span data-ng-hide="userSelected.id == ''" data-translate="">updateUser</span>
@@ -40,7 +40,7 @@
             data-ng-click="saveUser('#gn-user-edit')" id="gn-btn-user-save"><i class="fa fa-save"></i>&nbsp;<span data-translate=""
             >saveUser</button>
           <button type="button" class="btn btn-primary pull-right btn-danger"
-            data-ng-disabled="userHasRecords()" data-ng-hide="userSelected.id == ''"
+            data-ng-disabled="searchResults.count > 0" data-ng-hide="userSelected.id == ''"
             data-ng-click="deleteUser(userSelected.id)" id="gn-btn-user-delete"><i class="fa fa-trash-o"></i>&nbsp;<span data-translate=""
             >deleteUser</button>
         </div>
@@ -211,16 +211,19 @@
             </fieldset>
           </fieldset>
         </form>
-        <div data-ng-hide="!userRecords">
+        <div data-ng-show="searchResults.count != 0">
           <h3>
-            <ng-pluralize count="userRecords.count"
-              when="{'0': ('noRecordFound' | translate),
+            <ng-pluralize count="searchResults.count"
+                          when="{'0': ('noRecordFound' | translate),
                     'one': '1' +  ('userRecord' | translate) + ' {{userSelected.name}} {{userSelected.surname}}',
                     'other': '{}' +  ('userRecords' | translate) + ' {{userSelected.name}} {{userSelected.surname}}'}"
-            > </ng-pluralize>
+                > </ng-pluralize>
           </h3>
-          <div data-gn-search-results="userRecords" data-allow-selection="false"/>
-          <div data-gn-pagination="userRecordsPagination"/>
+          <div data-gn-search-form-results=""
+               data-gn-search-form-results-mode="title"
+               data-search-results="searchResults"
+               data-pagination-info="paginationInfo">
+          </div>
         </div>
       </div>
     </div>

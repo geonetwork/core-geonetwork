@@ -24,7 +24,7 @@
     
     "status": "Status",
     "information": "Information",
-    
+    "noCommitAvailable": "No activity recorded. Enable the versionning on metadata record to follow changes.",
     "dbUrl": "Database",
     "recordsBy": "Record's statistics by",
     "facetIndicatorHelp": "Statistics by records are defined based on facets configuration and may represent only the most frequent values.",
@@ -624,7 +624,7 @@
     "cswService": "CSW Service",
     "system/csw/enable-help": "Enable CSW and all virtual CSW services. When not enable, an exception is returned.",
     "cswCapabilitiesProperties": "CSW Service information",
-    "system/csw/metadataPublic-help": "When a transation insert a new recort via the CSW-T protocol, automatically publish the record to all users.",
+    "system/csw/metadataPublic-help": "When a transation insert a new record via the CSW-T protocol, automatically publish the record to all users.",
     "system/csw/contactId-help": "Choose the contact to be added to the GetCapabilities request. Create a custom user in the user management page if needed.",
     "properties": "Field",
     "language": "Language",

@@ -5,7 +5,7 @@
     "oneLanguage-help": "Choose one language to edit using the selector",
     "overviews": "Overviews",
     "associatedResources": "Associated resources",
-    "saveMetadataError": "Error while saving metadata.",
+    "saveMetadataError": "Error while saving metadata. You should reload the editor.",
     "suggestions": "Suggestions",
     "validationReport": "Validation",
     "drawRectangle": "Draw rectangle",

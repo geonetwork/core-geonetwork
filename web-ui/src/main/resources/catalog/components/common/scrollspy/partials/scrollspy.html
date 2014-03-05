@@ -3,6 +3,9 @@
     <button class="btn btn-link fa fa-sort-amount-asc"
             data-toggle="collapse" data-target="#{{id}}-spy"
             title="{{'toggleScrollSpy' | translate}}"/>
+    <button class="btn btn-link fa fa-arrow-circle-up"
+            data-ng-click="scrollTo()"
+            title="{{'scrollTop' | translate}}"/>
   </div>
   <ul class="nav nav-pills nav-stacked collapse"
       data-ng-class="collapse ? '' : 'in'"

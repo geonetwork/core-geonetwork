@@ -28,7 +28,7 @@
   <xsl:variable name="replaceMode"
     select="geonet:parseBoolean($replace)"/>
   <xsl:variable name="serviceUrl"
-    select="concat($gurl, '/srv/', $lang, '/xml.search.keywords?pNewSearch=true&amp;pTypeSearch=2&amp;pKeyword=')"/>
+    select="concat($gurl, '/srv/', $lang, '/keywords?pNewSearch=true&amp;pTypeSearch=2&amp;pKeyword=')"/>
 
 
 
@@ -185,10 +185,11 @@
     <!-- Only check keyword in main metadata language
      TODO: support multilingual keyword -->
     <xsl:for-each
-      select="gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword[not(gco:CharacterString/@gco:nilReason)]">
-
+      select="gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword[
+        normalize-space(gco:CharacterString) != '' and
+        not(gco:CharacterString/@gco:nilReason)]">
       <xsl:call-template name="get-bbox">
-        <xsl:with-param name="word" select="*[normalize-space(gco:CharacterString)!='']"/>
+        <xsl:with-param name="word" select="gco:CharacterString"/>
         <xsl:with-param name="srv" select="$srv"/>
       </xsl:call-template>
 
@@ -200,12 +201,12 @@
   <xsl:template name="get-bbox">
     <xsl:param name="word"/>
     <xsl:param name="srv" select="false()"/>
-    
+
     <xsl:if test="normalize-space($word)!=''">
       <!-- Get keyword information -->
       <xsl:variable name="keyword" select="document(concat($serviceUrl, $word))"/>
       <xsl:variable name="knode" select="exslt:node-set($keyword)"/>
-  
+
       <!-- It should be one but if one keyword is found in more
           thant one thesaurus, then each will be processed.-->
       <xsl:for-each select="$knode/response/descKeys/keyword">

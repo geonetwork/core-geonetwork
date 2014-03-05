@@ -138,6 +138,12 @@
             the element name with namespace prefix.</xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute name="disabled" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>Hide the view from the menu if attribute is defined. Allows to easily
+            disable a view.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
       <xs:attribute name="upAndDownControlHidden" type="xs:boolean" fixed="true">
         <xs:annotation>
           <xs:documentation>Define if up and down control should be displayed in that view. If not

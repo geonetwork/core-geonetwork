@@ -23,15 +23,16 @@
             'identification.html',
         link: function(scope, element, attrs) {
           scope.lang = 'eng'; // FIXME
-          $http.get('admin.harvester.info@json?type=icons')
+          $http.get('admin.harvester.info@json?type=icons', {cache: true})
           .success(function(data) {
                 scope.icons = data[0];
               });
           // $http.get('admin.usergroups.list@json?id=' + 1)
           //          .success(function(data) {
-          $http.get('admin.group.list@json').success(function(data) {
-            scope.groups = data !== 'null' ? data : null;
-          });
+          $http.get('admin.group.list@json', {cache: true})
+            .success(function(data) {
+                scope.groups = data !== 'null' ? data : null;
+              });
           scope.setIcon = function(i) {
             scope.harvester.site.icon = i;
           };
@@ -145,7 +146,8 @@
                }
              };
              function loadGroups() {
-               $http.get('info@json?type=groups').success(function(data) {
+               $http.get('info@json?type=groups', {cache: true})
+                 .success(function(data) {
                  scope.groups = data !== 'null' ? data.group : null;
                });
              }

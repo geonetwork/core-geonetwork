@@ -41,3 +41,10 @@ CREATE TABLE Email
 	primary key(user_id),
     foreign key(user_id) references Users(id)
 );
+
+
+
+
+ALTER TABLE Requests ALTER COLUMN query TYPE text;
+ALTER TABLE Requests ALTER COLUMN type TYPE text;
+ALTER TABLE Requests ALTER COLUMN spatialfilter TYPE text;

@@ -4,6 +4,7 @@
     "Administrator": "Administrateur",
     "metadatasAndTemplates": "Metadonnées et modèles",
     "statisticsAndStatus": "Statistiques et status",
+    "noCommitAvailable": "Aucune activité enregistrée. Activer la gestion des versions sur les fiches pour suivre les modifications.",
     "io": "Importer/Exporter",
     "harvesters": "Moissonnage",
     "harvesterError": "Erreur lors du moissonnage",

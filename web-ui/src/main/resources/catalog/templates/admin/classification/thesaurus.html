@@ -313,7 +313,7 @@
         <div class="modal-footer">
           <button type="button" class="btn fa fa-ban-circle" data-dismiss="modal" data-translate=""
             >cancel</button>
-          <button type="button" class="btn btn-primary fa fa-save" data-ng-hide="isNewKeyword()"
+          <button type="button" class="btn btn-primary fa fa-save" data-ng-hide="isNewKeyword() || isExternal()"
             data-translate="" data-ng-click="updateKeyword()">updateKeyword</button>
           <button type="button" class="btn btn-primary fa fa-plus" data-ng-show="isNewKeyword()"
             data-translate="" data-ng-click="createKeyword()">createKeyword</button>

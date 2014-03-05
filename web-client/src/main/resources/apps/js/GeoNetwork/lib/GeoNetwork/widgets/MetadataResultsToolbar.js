@@ -376,7 +376,6 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             hidden: true
         });
         this.actionMenu.addItem(this.otherItem);
-
         if (GeoNetwork.Settings.hideAngularEditor === true) {
           this.createMetadataAction = new Ext.menu.Item({
             text: OpenLayers.i18n('newMetadata'),
@@ -422,6 +421,9 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
               catalogue.metadataEdit2(null, true);
             }
           });
+        }
+        if(!this.catalogue.isReadOnly()) {
+            this.actionMenu.addItem(this.createMetadataAction);
         }
 
 

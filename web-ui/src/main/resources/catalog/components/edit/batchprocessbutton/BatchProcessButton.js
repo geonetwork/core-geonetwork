@@ -28,16 +28,19 @@
              // TODO: handle process parameters.
              scope.paramList = angular.fromJson(scope.params);
              scope.name = scope.name || scope.processId;
+             scope.processing = false;
              scope.process = function() {
+               scope.processing = true;
                var params = {
                  process: scope.processId
                };
                angular.extend(params, scope.paramList);
 
                gnBatchProcessing.runProcessMd(params)
-                .then(function(response) {
-                 gnEditor.refreshEditorForm(response.data);
+                .then(function(data) {
+                   scope.processing = false;
                });
+
              };
            }
          };

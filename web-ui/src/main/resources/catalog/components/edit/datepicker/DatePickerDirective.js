@@ -27,8 +27,25 @@
         templateUrl: '../../catalog/components/edit/datepicker/partials/' +
             'datepicker.html',
         link: function(scope, element, attrs) {
-          scope.mode = scope.year = scope.month = scope.time = scope.date = '';
+          // Check if browser support date type or not to
+          // HTML date and time input types.
+          // If not datetimepicker.js is used (it will not
+          // support year or month only mode in this case)
+          scope.dateTypeSupported = Modernizr.inputtypes.date;
+
+          // Format date when datetimepicker is used.
+          scope.formatFromDatePicker = function(date) {
+            var format = 'YYYY-MM-DDTHH:mm:ss';
+            var dateTime = moment(date);
+            scope.dateInput = dateTime.format(format);
+          };
+
+          scope.mode = scope.year = scope.month = scope.time =
+              scope.date = scope.dateDropDownInput = '';
+
           // Default date is empty
+          // Compute mode based on date length. The format
+          // is always ISO YYYY-MM-DDTHH:mm:ss
           if (!scope.value) {
             scope.value = '';
           } else if (scope.value.length === 4) {
@@ -43,21 +60,33 @@
             scope.date = isDateTime ? tokens[0] : scope.value;
             scope.time = isDateTime ? tokens[1] : '';
           }
+          if (scope.dateTypeSupported !== true) {
+            scope.dateInput = scope.value;
+            scope.dateDropDownInput = scope.value;
+          }
 
-          // TODO: Add format ?
           scope.setMode = function(mode) {
             scope.mode = mode;
           };
 
+
+          // Build xml snippet based on input date.
           var buildDate = function() {
             var tag = 'gco:Date';
 
-            if (scope.mode === 'year') {
+            if (scope.dateTypeSupported !== true) {
+              if (scope.dateInput === undefined) {
+                return;
+              }
+              tag = scope.dateInput.indexOf('T') === -1 ?
+                  'gco:Date' : 'gco:DateTime';
+              scope.dateTime = scope.dateInput;
+            } else if (scope.mode === 'year') {
               scope.dateTime = scope.year;
             } else if (scope.mode === 'month') {
               scope.dateTime = scope.month;
             } else if (scope.time) {
-              var tag = 'gco:DateTime';
+              tag = 'gco:DateTime';
               var time = scope.time;
               // TODO: Set seconds, Timezone ?
               scope.dateTime = scope.date;
@@ -79,6 +108,7 @@
           scope.$watch('time', buildDate);
           scope.$watch('year', buildDate);
           scope.$watch('month', buildDate);
+          scope.$watch('dateInput', buildDate);
           scope.$watch('xmlSnippet', function() {
             if (scope.id) {
               $(scope.id).val(scope.xmlSnippet);
