@@ -25,12 +25,25 @@
     <sch:pattern>
         <sch:title>$loc/strings/conformity</sch:title>
         <!-- Check specification names and status -->
-        <sch:rule context="//gmd:dataQualityInfo/*/gmd:report/*/gmd:result/*">
-            <sch:let name="degree" value="gmd:pass/*/text()"/>
-            <sch:let name="specification_title" value="gmd:specification/*/gmd:title/gco:CharacterString/text()"/>
-            <sch:let name="has_specification_title" value="gmd:specification/*/gmd:title//text()[string-length(.) > 0]"/>
-            <sch:let name="specification_date" value="gmd:specification/*/gmd:date/*/gmd:date/*/text()[string-length(.) > 0]"/>
-            <sch:let name="specification_dateType" value="normalize-space(gmd:specification/*/gmd:date/*/gmd:dateType/*/@codeListValue)"/>
+        <sch:rule context="//gmd:dataQualityInfo/*/gmd:report/*/gmd:result">
+            <sch:let name="degree" value="*/gmd:pass/*/text()"/>
+            <sch:let name="lang" value="normalize-space(/*/gmd:language)" />
+            <sch:let name="langCodeMap">
+                <ger>#DE</ger>
+                <eng>#EN</eng>
+                <fre>#FR</fre>
+                <ita>#IT</ita>
+                <spa>#ES</spa>
+                <fin>#FI</fin>
+                <dut>#NL</dut>
+            </sch:let>
+            <sch:let name="langCode" value="normalize-space($langCodeMap//*[name() = $lang])" />
+
+            <sch:let name="specification_title" value="*/gmd:specification/*/gmd:title//text()[(string-length(.) > 0) and (../name() = 'gco:CharacterString' or ../@locale = $langCode)]" />
+            <sch:let name="has_specification_title" value="$specification_title" />
+
+            <sch:let name="specification_date" value="*/gmd:specification/*/gmd:date/*/gmd:date/*/text()[string-length(.) > 0]"/>
+            <sch:let name="specification_dateType" value="normalize-space(*/gmd:specification/*/gmd:date/*/gmd:dateType/*/@codeListValue)"/>
             <sch:let name="allTitles">
                 <titles>
                     <ger>verordnung (eg) nr. 1089/2010 der kommission vom 23. november 2010 zur durchführung der richtlinie 2007/2/eg des europäischen parlaments und des rates hinsichtlich der interoperabilität von geodatensätzen und -diensten</ger>
@@ -42,7 +55,6 @@
                     <dut>verordening (eu) n r. 1089/2010 van de commissie van 23 november 2010 ter uitvoering van richtlijn 2007/2/eg van het europees parlement en de raad betreffende de interoperabiliteit van verzamelingen ruimtelijke gegevens en van diensten met betrekking tot ruimtelijke gegevens</dut>
                 </titles>
             </sch:let>
-            <sch:let name="lang" value="normalize-space(/*/gmd:language)" />
             <sch:let name="isDeMetadata" value="$lang = 'ger'"/>
             <sch:let name="hasDeTitle" value="$isDeMetadata and $specification_title[lower-case(normalize-space(.)) = $allTitles//ger/text()]"/>
 
@@ -67,20 +79,20 @@
             <sch:let name="correctTitle" value="$allTitles//*[name() = $lang]/text()"/>
             <sch:assert test="$hasDeTitle or $hasEnTitle or $hasFrTitle or $hasItTitle or
                               $hasEsTitle or $hasFiTitle or $hasNlTitle">
-                <sch:value-of select="$loc/strings/report.M44.conformityActual/div"/>
+                <sch:value-of select="$loc/strings/assert.M44.conformityActual/div"/>
 
-                <sch:value-of select="normalize-space($specification_title)"/>
+                <sch:value-of select="concat('''', normalize-space($specification_title[1]), '''')"/>
 
-                <sch:value-of select="$loc/strings/report.M44.conformityExpected/div"/>
+                <sch:value-of select="$loc/strings/assert.M44.conformityExpected/div"/>
 
-                <sch:value-of select="$correctTitle"/>
+                <sch:value-of select="concat('''', $correctTitle, '''')"/>
 
             </sch:assert>
             <sch:assert test="$has_specification_title">
-                <sch:value-of select="$loc/strings/report.M44.spec/div"/>
+                <sch:value-of select="$loc/strings/assert.M44.title/div"/>
             </sch:assert>
             <sch:assert test="$specification_date and $specification_dateType">
-                <sch:value-of select="$loc/strings/report.M44.spec/div"/>
+                <sch:value-of select="$loc/strings/assert.M44.date/div"/>
             </sch:assert>
             <sch:report test="$has_specification_title"><sch:value-of select="$loc/strings/report.M44.spec/div"/>
                 <sch:value-of select="$has_specification_title"/>, (<sch:value-of select="$specification_date"/>, <sch:value-of select="$specification_dateType"/>)
