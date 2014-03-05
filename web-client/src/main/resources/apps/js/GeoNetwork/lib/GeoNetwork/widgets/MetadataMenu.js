@@ -122,16 +122,24 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             iconCls: 'md-mn-copy',
             handler: function(){
                 var id = this.record.get('id');
+              if (GeoNetwork.Settings.hideAngularEditor === true) {
+                GeoNetwork.editor.EditorTools.showNewMetadataWindow(this, id, OpenLayers.i18n('duplicate'), false);
+              } else {
                 catalogue.metadataEdit2(id, true, null, false, 'n', null);
+              }
             },
-            scope: this
+          scope: this
         });
-        this.createChildAction = new Ext.Action({
-            text: OpenLayers.i18n('createChild'),
-            iconCls: 'childIcon',
-            handler: function(){
-                var id = this.record.get('id');
-                catalogue.metadataEdit2(id, true, null, true, 'n', null);
+       this.createChildAction = new Ext.Action({
+           text: OpenLayers.i18n('createChild'),
+           iconCls: 'childIcon',
+           handler: function(){
+             var id = this.record.get('id');
+             if (GeoNetwork.Settings.hideAngularEditor === true) {
+               GeoNetwork.editor.EditorTools.showNewMetadataWindow(this, id, OpenLayers.i18n('createChild'), true);
+             } else {
+               catalogue.metadataEdit2(id, true, null, true, 'n', null);
+             }
             },
             scope: this
         });
