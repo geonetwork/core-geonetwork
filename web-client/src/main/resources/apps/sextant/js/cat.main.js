@@ -779,7 +779,7 @@ cat.app = function() {
                 lang : cat.language,
                 hostUrl : geonetworkUrl,
                 mdOverlayedCmpId : 'resultsPanel',
-                adminAppUrl : geonetworkUrl + '/srv/' + cat.language + '/admin',
+                adminAppUrl : geonetworkUrl + '/srv/' + cat.language + '/admin.console',
                 metadataStore : GeoNetwork.Settings.mdStore ? GeoNetwork.Settings.mdStore()    : GeoNetwork.data.MetadataResultsStore(), metadataCSWStore : GeoNetwork.data.MetadataCSWResultsStore(),
                 summaryStore : GeoNetwork.data.MetadataSummaryStore(),
                 editMode : 2,
