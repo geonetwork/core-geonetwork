@@ -10,7 +10,7 @@ var gnHarvestercsw = {
             "site" : {
                 "name" : "",
                 "uuid" : "",
-                "icon" : "blank.gif"
+                "icon" : "blank.gif",
                 "account" : {
                     "use" : "false",
                     "username" : [],
