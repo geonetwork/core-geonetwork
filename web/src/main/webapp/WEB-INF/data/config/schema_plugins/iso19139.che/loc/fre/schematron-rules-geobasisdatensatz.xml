@@ -1,17 +1,17 @@
 <strings>
     <schematron.title>Geobasisdatensatz</schematron.title>
-    <collectivetitle>Collective Title</collectivetitle>
+    <collectivetitle>Titre collectiv</collectivetitle>
     <collectiveTitleRequired>The Data Identification / Citation / Collective Title element is required</collectiveTitleRequired>
-    <collectiveTitleReport>Collective Title:</collectiveTitleReport>
+    <collectiveTitleReport>Titre collectif:</collectiveTitleReport>
 
-    <basicGeoDataInfo>Basic Geodata</basicGeoDataInfo>
+    <basicGeoDataInfo>Géodonnée de base</basicGeoDataInfo>
     <geodataIdRequired>Data Identification / basicGeodataID is required</geodataIdRequired>
     <geodataIdReport>Basic Geographic ID: </geodataIdReport>
 
     <geodataTypeRequired>Data Identification / basicGeodataType is required</geodataTypeRequired>
     <geodataTypeReport>Basic Geographic Type: </geodataTypeReport>
 
-    <legislativeInformation>Legislative Information</legislativeInformation>
+    <legislativeInformation>Information sur la législation</legislativeInformation>
     <legislativeInformationRequired>Metadata / Legislative Information is required</legislativeInformationRequired>
     <legislativeInformationReport>Metadata / Legislative Information is present</legislativeInformationReport>
 </strings>
