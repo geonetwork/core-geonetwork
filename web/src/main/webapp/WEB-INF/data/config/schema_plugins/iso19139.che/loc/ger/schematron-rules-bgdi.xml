@@ -1,28 +1,28 @@
 <strings>
     <schematron.title>BGDI</schematron.title>
     <translatedTitle>Übersetzung des Titels</translatedTitle>
-    <deTitleRequired>Basisinformation zum Datenbestand / Bibliografische Angaben / Titel sind obligatorisch und verlangen eine deutsche Übersetzung</deTitleRequired>
-    <deTitleReport>German title:</deTitleReport>
-    <frTitleRequired>Data Identification / Citation / title is required and requires a french translation</frTitleRequired>
-    <frTitleReport>French title:</frTitleReport>
+    <deTitleRequired>Basisinformation zum Datenbestand / Bibliografische Angaben / Titel ist obligatorisch und verlangt eine deutsche Übersetzung</deTitleRequired>
+    <deTitleReport>Deutscher Titel:</deTitleReport>
+    <frTitleRequired>Basisinformation zum Datenbestand / Bibliografische Angaben / Titel ist obligatorisch und verlangt eine französische Übersetzung</frTitleRequired>
+    <frTitleReport>Französischer Titel:</frTitleReport>
 
-    <translatedAltTitle>Alternate Title translations</translatedAltTitle>
-    <deAltTitleRequired>Data Identification / Citation / alternate title is required and requires a german translation</deAltTitleRequired>
-    <deAltTitleReport>German alternate title:</deAltTitleReport>
-    <deAltTitleMaxLength>German alternate title is too long, max length is 30</deAltTitleMaxLength>
-    <deAltTitleMaxLengthReport>German alternate title length:</deAltTitleMaxLengthReport>
-    <frAltTitleRequired>Data Identification / Citation / alternate title is required and requires a french translation</frAltTitleRequired>
-    <frAltTitleReport>French alternate title:</frAltTitleReport>
-    <frAltTitleMaxLength>French alternate title is too long, max length is 30</frAltTitleMaxLength>
-    <frAltTitleMaxLengthReport>French alternate title length:</frAltTitleMaxLengthReport>
+    <translatedAltTitle>Übersetzung Alternativtitel</translatedAltTitle>
+    <deAltTitleRequired>Basisinformation zum Datenbestand / Bibliografische Angaben / Alternativitel ist obligatorisch und verlangt eine deutsche Übersetzung</deAltTitleRequired>
+    <deAltTitleReport>Deutscher Alternativitel:</deAltTitleReport>
+    <deAltTitleMaxLength>Der deutsche Alternativitel ist zu lang - max. 30 Zeichen</deAltTitleMaxLength>
+    <deAltTitleMaxLengthReport>Länge des deutschen Alternativtitel:</deAltTitleMaxLengthReport>
+    <frAltTitleRequired>Basisinformation zum Datenbestand / Bibliografische Angaben / Alternativitel ist obligatorisch und verlangt eine französische Übersetzung</frAltTitleRequired>
+    <frAltTitleReport>Französischer Alternativtitel:</frAltTitleReport>
+    <frAltTitleMaxLength>Der französische Alternativitel ist zu lang - max. 30 Zeichen</frAltTitleMaxLength>
+    <frAltTitleMaxLengthReport>Länge des französischen Alternativtitels:</frAltTitleMaxLengthReport>
 
-    <translatedAbstract>Abstract translations</translatedAbstract>
-    <deAbstractRequired>Data Identification / abstract is required and requires a german translation</deAbstractRequired>
-    <deAbstractReport>German abstract:</deAbstractReport>
-    <frAbstractRequired>Data Identification / abstract is required and requires a french translation</frAbstractRequired>
-    <frAbstractReport>French abstract:</frAbstractReport>
+    <translatedAbstract>Übersetzung der Kurzbeschreibung</translatedAbstract>
+    <deAbstractRequired>Basisinformation zum Datenbestand / Kurzbeschreibung ist obligatorisch und verlangt eine deutsche Übersetzung</deAbstractRequired>
+    <deAbstractReport>Deutsche Kurzbeschreibung:</deAbstractReport>
+    <frAbstractRequired>Basisinformation zum Datenbestand / Kurzbeschreibung ist obligatorisch und verlangt eine französische Übersetzung</frAbstractRequired>
+    <frAbstractReport>Französische Kurzbeschreibung:</frAbstractReport>
 
-    <pointOfContact>Point of Contact</pointOfContact>
-    <pointOfContactRequired>Data Identification / Point of Contact element is required</pointOfContactRequired>
-    <pointOfContactReport>Point of contact is present</pointOfContactReport>
+    <pointOfContact>Ansprechpartner</pointOfContact>
+    <pointOfContactRequired>Basisinformation zum Datenbestand / Element Ansprechperson ist obligatorisch</pointOfContactRequired>
+    <pointOfContactReport>Ansprechperson ist präsent</pointOfContactReport>
 </strings>
