@@ -30,16 +30,17 @@
                                 <label style="text-size:140%;font-weight:bold">Threads</label>
                             </a>
                         </li>
-                        <li>
-                            <a href="{/root/gui/locService}/debug.filehandles?max=100&amp;filter=^((?!\.jar).)*$">
-                                <label style="text-size:140%;font-weight:bold">Open File Descriptors</label>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{/root/gui/locService}/debug.openconnection.accessors">
-                                <label style="text-size:140%;font-weight:bold">Open Connections</label>
-                            </a>
-                        </li>
+                        <!--https://github.com/geonetwork/core-geonetwork/issues/409-->
+                        <!--<li>-->
+                            <!--<a href="{/root/gui/locService}/debug.filehandles?max=100&amp;filter=^((?!\.jar).)*$">-->
+                                <!--<label style="text-size:140%;font-weight:bold">Open File Descriptors</label>-->
+                            <!--</a>-->
+                        <!--</li>-->
+                        <!--<li>-->
+                            <!--<a href="{/root/gui/locService}/debug.openconnection.accessors">-->
+                                <!--<label style="text-size:140%;font-weight:bold">Open Connections</label>-->
+                            <!--</a>-->
+                        <!--</li>-->
                     </ul>
                 </fieldset>
 
