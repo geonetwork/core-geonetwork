@@ -125,19 +125,13 @@ public class Create extends NotInReadOnlyModeService {
 
 
 		// Sextant / Enable workflow by default for records created in MYOCEAN groups
-//        String selectGroupNameQuery = "SELECT name FROM Groups WHERE id=?";
         final Group group = context.getBean(GroupRepository.class)
                 .findOne(Integer.valueOf(Integer.valueOf(groupOwner)));
         String groupName = "";
         if (group != null) {
             groupName = group.getName();
         }
-//                @SuppressWarnings("unchecked")
-//        java.util.List<Element> list = dbms.select(selectGroupNameQuery,
-//                Integer.valueOf(groupOwner)).getChildren();
-//        if (list.size() != 0) {
-//            groupName = list.get(0).getChildText("name");
-//        }
+
         if (groupName.toLowerCase().contains("myocean-core-products")) {
             // TODO : trigger another indexing
             dm.setStatus(context, Integer.valueOf(newId),
