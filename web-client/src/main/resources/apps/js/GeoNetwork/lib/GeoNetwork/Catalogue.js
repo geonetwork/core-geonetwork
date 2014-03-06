@@ -1367,23 +1367,24 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     	if (this.casEnabled) {
         	window.location = this.services.logout;
         } else {
-            var params = {};
-            params.redirectUrl = '/..' + location.pathname;
-            this.postToUrl(this.services.logout, params, 'POST');
-            
-//	        var app = this;
-//	        OpenLayers.Request.GET({
-//	            url: this.services.logout,
-//	            async: false,  // logout does not seem to work when it is asynchronous request
-//	            success: function(response){
-//	                app.identifiedUser = undefined;
-//	                app.onAfterLogout();
-//	            },
-//	            failure: function(response){
-//	                app.identifiedUser = undefined;
-//	                app.onAfterBadLogout();
-//	            }
-//	        });
+// GeoNetwork refresh to page
+//            var params = {};
+//            params.redirectUrl = '/..' + location.pathname;
+//            this.postToUrl(this.services.logout, params, 'POST');
+//
+	        var app = this;
+	        OpenLayers.Request.GET({
+	            url: this.services.logout,
+	            async: false,  // logout does not seem to work when it is asynchronous request
+	            success: function(response){
+	                app.identifiedUser = undefined;
+	                app.onAfterLogout();
+	            },
+	            failure: function(response){
+	                app.identifiedUser = undefined;
+	                app.onAfterBadLogout();
+	            }
+	        });
         }
     },
     /** api: method[checkError]
