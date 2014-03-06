@@ -41,7 +41,7 @@
         $http.get('statistics-search@json?service=q')
         .success(function(data) {
               $scope.statistics.search.mainSearchStatistics.q =
-                (data === 'null' ? null : data);
+                  (data === 'null' ? null : data);
             }).error(function(data) {
               // TODO
             });
@@ -50,7 +50,7 @@
         $http.get('statistics-search@json?service=csw')
         .success(function(data) {
               $scope.statistics.search.mainSearchStatistics.csw =
-                (data === 'null' ? null : data);
+                  (data === 'null' ? null : data);
             }).error(function(data) {
               // TODO
             });

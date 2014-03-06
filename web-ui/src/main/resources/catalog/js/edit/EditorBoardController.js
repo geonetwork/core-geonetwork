@@ -12,7 +12,7 @@
       $scope.onMdClick = function(md) {
         $location.path('/metadata/' + md['geonet:info'].id);
       };
-      
+
       $scope.$watch('user.id', function(val) {
         if (val) {
           $scope.params['_owner'] = val;

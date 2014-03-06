@@ -311,7 +311,7 @@
       /**
        * Check index every ...
        */
-      var indexCheckInterval = 1000;
+      var indexCheckInterval = 5000;
 
       /**
        * Get number of record in the index and

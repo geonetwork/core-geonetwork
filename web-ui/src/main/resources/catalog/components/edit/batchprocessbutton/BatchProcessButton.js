@@ -38,7 +38,7 @@
 
                gnBatchProcessing.runProcessMd(params)
                 .then(function(data) {
-                   scope.processing = false;
+                 scope.processing = false;
                });
 
              };
