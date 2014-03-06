@@ -1,15 +1,15 @@
 <strings>
     <schematron.title>Géodonnée de base</schematron.title>
     <collectivetitle>Titre collectif</collectivetitle>
-    <collectiveTitleRequired>The Data Identification / Citation / Collective Title element is required</collectiveTitleRequired>
+    <collectiveTitleRequired>Identification des données / Information de référence / Titre collectif est obligatoire</collectiveTitleRequired>
     <collectiveTitleReport>Titre collectif:</collectiveTitleReport>
 
     <basicGeoDataInfo>Géodonnée de base</basicGeoDataInfo>
-    <geodataIdRequired>Data Identification / basicGeodataID is required</geodataIdRequired>
-    <geodataIdReport>Basic Geographic ID: </geodataIdReport>
+    <geodataIdRequired>Identification des données / Identifiant géodonnées de base est obligatoire</geodataIdRequired>
+    <geodataIdReport>Identifiant géodonnées de base: </geodataIdReport>
 
-    <geodataTypeRequired>Data Identification / basicGeodataType is required</geodataTypeRequired>
-    <geodataTypeReport>Basic Geographic Type: </geodataTypeReport>
+    <geodataTypeRequired>Identification des données / Type de géodonnées de base est obligatoire</geodataTypeRequired>
+    <geodataTypeReport>Type géodonnées de base: </geodataTypeReport>
 
     <legislativeInformation>Information sur la législation</legislativeInformation>
     <legislativeInformationRequired>Métadonnée / Information sur la législation est obligatoire</legislativeInformationRequired>
