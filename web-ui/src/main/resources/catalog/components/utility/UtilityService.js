@@ -11,11 +11,11 @@
       var top = 0;
       if (elementId !== undefined) {
         top = offset ?
-          $(elementId).offset().top :
-          $(elementId).position().top
+            $(elementId).offset().top :
+            $(elementId).position().top;
       }
       $(document.body).animate({scrollTop: top},
-      duration, easing);
+          duration, easing);
     };
 
     /**

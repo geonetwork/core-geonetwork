@@ -35,16 +35,16 @@
            * Triggered on a metadata row click.
            * Call the function given in directive parameter on-md-click.
            * If this function is not defined, then call the select method
-           * if the directive has a selection model. 
+           * if the directive has a selection model.
            */
           scope.onClick = function(md) {
-            if (angular.isFunction(scope.onMdClick)){
+            if (angular.isFunction(scope.onMdClick)) {
               scope.onMdClick(md);
-            } else if(angular.isFunction(scope.select)) {
+            } else if (angular.isFunction(scope.select)) {
               scope.select(md);
             }
           };
-          
+
           // Manage selection
           if (scope.options.selection.mode) {
             scope.selection = [];

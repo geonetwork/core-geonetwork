@@ -61,7 +61,8 @@
       }
 
       function loadHarvesterTypes() {
-        $http.get('admin.harvester.info@json?type=harvesterTypes', {cache: true})
+        $http.get('admin.harvester.info@json?type=harvesterTypes',
+            {cache: true})
         .success(function(data) {
               angular.forEach(data[0], function(value) {
                 $scope.harvesterTypes[value] = {
