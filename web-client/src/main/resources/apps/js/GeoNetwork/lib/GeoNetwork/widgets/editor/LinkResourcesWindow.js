@@ -884,7 +884,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 xtype: 'textarea',
                 fieldLabel: OpenLayers.i18n('Description'),
                 name: 'title',
-                value: this.editDescr,
+                value: this.editDescr
             }, {
                 xtype: 'button',
                 cls: 'gn-onlineResForm',
