@@ -54,7 +54,7 @@
     <replaceAtt xpath="appHandler/param[@name = 'statusActionsClass']" attName="value" value="org.fao.geonet.kernel.metadata.SextantStatusActions"/>
     
     <replaceAtt xpath="//service[@name = 'main.search.suggest']/class/param[@name='threshold']" attName="value" value="1"/>
-    
+
   </file>
 
   <spring>
@@ -81,7 +81,7 @@
   </file>
       
   <!-- Add custom CSW service -->
-  <file name=".*/WEB-INF/config/config-csw-virtual.xml">
+  <file name=".*/WEB-INF/config/config-service-csw-virtual">
     <addXML xpath="services">
       <service name="csw-AIRESMARINES">
         <class name=".services.main.CswDiscoveryDispatcher">
