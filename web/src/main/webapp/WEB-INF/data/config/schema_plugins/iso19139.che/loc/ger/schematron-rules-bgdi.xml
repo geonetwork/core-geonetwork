@@ -1,7 +1,7 @@
 <strings>
     <schematron.title>BGDI</schematron.title>
-    <translatedTitle>Title translations</translatedTitle>
-    <deTitleRequired>Data Identification / Citation / title is required and requires a german translation</deTitleRequired>
+    <translatedTitle>Übersetzung des Titels</translatedTitle>
+    <deTitleRequired>Basisinformation zum Datenbestand / Bibliografische Angaben / Titel sind obligatorisch und verlangen eine deutsche Übersetzung</deTitleRequired>
     <deTitleReport>German title:</deTitleReport>
     <frTitleRequired>Data Identification / Citation / title is required and requires a french translation</frTitleRequired>
     <frTitleReport>French title:</frTitleReport>
