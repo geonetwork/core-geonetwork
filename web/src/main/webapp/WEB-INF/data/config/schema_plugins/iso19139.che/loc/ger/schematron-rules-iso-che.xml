@@ -13,6 +13,6 @@
   <alert.M103><div><h2>Alle Titel in der Klasse "Bibliografische Angaben sind obligatorisch.</h2></div></alert.M103>
   <report.M103><div><h2>Alle Titel in der Klasse "Bibliografische Angaben sind obligatorisch.</h2></div></report.M103>
   <M104>[GM03_2_1] - Topic Categories</M104>
-  <alert.M104><div><h2>environment, planningCadastre, geoscientificInformation, imageryBaseMapsEarthCover topic category is not a legal topic category for iso19139.che select a sub-category</h2></div></alert.M104>
-  <report.M104><div><h2>environment, planningCadastre, geoscientificInformation, imageryBaseMapsEarthCover topic category is not a legal topic category for iso19139.che select a sub-category</h2></div></report.M104>
+  <alert.M104><div><h2>environment, planningCadastre, geoscientificInformation, imageryBaseMapsEarthCover: Thematik ist keine offizielle Thematik gemäss iso19139.che - wählen Sie eine Subkategorie</h2></div></alert.M104>
+  <report.M104><div><h2>environment, planningCadastre, geoscientificInformation, imageryBaseMapsEarthCover: Thematik ist keine offizielle Thematik gemäss iso19139.che - wählen Sie eine Subkategorie</h2></div></report.M104>
 </strings>
