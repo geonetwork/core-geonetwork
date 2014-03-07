@@ -23,6 +23,6 @@
     <frAbstractReport>Französische Kurzbeschreibung:</frAbstractReport>
 
     <pointOfContact>Ansprechpartner</pointOfContact>
-    <pointOfContactRequired>Basisinformation zum Datenbestand / Element Ansprechperson ist obligatorisch</pointOfContactRequired>
-    <pointOfContactReport>Ansprechperson ist präsent</pointOfContactReport>
+    <pointOfContactRequired>Basisinformation zum Datenbestand / Element Ansprechpartner ist obligatorisch</pointOfContactRequired>
+    <pointOfContactReport>Ansprechpartner ist präsent</pointOfContactReport>
 </strings>
