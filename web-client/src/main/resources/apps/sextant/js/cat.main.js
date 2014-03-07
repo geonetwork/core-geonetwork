@@ -500,6 +500,7 @@ cat.app = function() {
             cls : 'search-panel',
             buttonAlign : 'left',
             resetCb : function() {
+                catalogue.reseting = true;
                 this.getForm().reset();
                 var trees = this.findByType('gn_categorytree', true);
                 Ext.each(trees, function (tree) {
@@ -540,7 +541,13 @@ cat.app = function() {
                     }
                 }
                 catalogue.startRecord = 1; // Reset start record
-                search();
+                if(catalogue.reseting) {
+                    catalogue.on('afterReset', search, this);
+                }
+                else {
+                    search();
+                }
+
             },
             padding : 5,
             autoScroll: true,

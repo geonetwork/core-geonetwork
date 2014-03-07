@@ -63,9 +63,9 @@ cat.what = function() {
 			    // Filter group starting with - from the store for non authentified users
 			    // Filter group if configwhat is defined
 			    userGroupStore = GeoNetwork.data.GroupStore(catalogue.services.getGroups);
-			    
-			    groupFieldStore.on('load', function () {
-			        this.filterBy(function (record, id) {
+
+			    groupFieldStore.on('load', function (s) {
+			        s.filterBy(function (record, id) {
 	                    if (groupToRemove.indexOf("-" + record.get('value')) !== -1) {
 	                        // Group to remove if identify
 	                        if (catalogue.isIdentified()) {
@@ -88,6 +88,8 @@ cat.what = function() {
 			            }
 	                    return true;
 			        });
+                    catalogue.reseting = false;
+                    catalogue.fireEvent('afterReset');
 			    });
 			}
 	        catalogueField = new Ext.ux.form.SuperBoxSelect({
