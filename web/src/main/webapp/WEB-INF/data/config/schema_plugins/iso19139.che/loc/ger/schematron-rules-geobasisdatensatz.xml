@@ -8,7 +8,7 @@
     <geodataIdRequired>Basisinformation zum Datenbestand / Identifikator des Geobasisdatensatzes ist obligatorisch</geodataIdRequired>
     <geodataIdReport>Identifikator des Geobasisdatensatzes: </geodataIdReport>
 
-    <geodataTypeRequired>Data Identification / Art des Identifikators ist obligatorisch</geodataTypeRequired>
+    <geodataTypeRequired>Basisinformation zum Datenbestand / Art des Identifikators ist obligatorisch</geodataTypeRequired>
     <geodataTypeReport>Art des Identifikators: </geodataTypeReport>
 
     <legislativeInformation>Gesetzgebung</legislativeInformation>
