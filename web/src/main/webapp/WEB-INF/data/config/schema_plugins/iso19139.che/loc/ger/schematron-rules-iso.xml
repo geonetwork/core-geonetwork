@@ -21,7 +21,7 @@
     <M23>[ISOFTDS19139:2005-TableA1-Row06] - Entweder Assoziierter Datenbestand (aggregateDataSetName) oder Identifikator (aggregateDataSetIdentifier) müssen ausgefüllt werden.</M23>
     <M24>[ISOFTDS19139:2005-TableA1-Row01] - Sprache ist obligatorisch</M24>
     <M25>[ISOFTDS19139:2005-TableA1-Row02] - Zeichensatz ist obligatorisch</M25>
-    <M26>[ISOFTDS19139:2005-TableA1-Row19] - detail required unless simple term</M26>
+    <M26>[ISOFTDS19139:2005-TableA1-Row19] - Detail obligatorisch ausser es handelt sich um einen einfachen Ausdruck</M26>
     <M27>[ISOFTDS19139:2005-TableA1-Row20] - Bedingung</M27>
     <M28>[ISOFTDS19139:2005-TableA1-Row21] - Code</M28>
     <M29>[ISOFTDS19139:2005-TableA1-Row22] - shortName</M29>
