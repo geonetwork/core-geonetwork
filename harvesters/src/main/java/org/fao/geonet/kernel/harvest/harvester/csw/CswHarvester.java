@@ -23,10 +23,6 @@
 
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
-import java.io.File;
-import java.sql.SQLException;
-import java.util.UUID;
-
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.domain.Source;
@@ -37,6 +33,10 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
+
+import java.io.File;
+import java.sql.SQLException;
+import java.util.UUID;
 
 /**
  *  Harvest metadata from other catalogues using the CSW protocol
@@ -65,8 +65,8 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
      *
      * @param node
      * @return
-     * @throws BadInputEx
-     * @throws SQLException
+     * @throws org.fao.geonet.exceptions.BadInputEx
+     * @throws java.sql.SQLException
      */
 	protected String doAdd(Element node) throws BadInputEx, SQLException {
 		params = new CswParams(dataMan);
@@ -84,7 +84,7 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
         Source source = new Source(params.uuid, params.name, true);
         context.getBean(SourceRepository.class).save(source);
         Resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + params.icon, params.uuid);
-		
+
 		return id;
 	}
 
@@ -98,8 +98,8 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
      *
      * @param id
      * @param node
-     * @throws BadInputEx
-     * @throws SQLException
+     * @throws org.fao.geonet.exceptions.BadInputEx
+     * @throws java.sql.SQLException
      */
 	protected void doUpdate(String id, Element node) throws BadInputEx, SQLException {
 		CswParams copy = params.copy();
@@ -133,7 +133,7 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
      * @param path
      * @param siteId
      * @param optionsId
-     * @throws SQLException
+     * @throws java.sql.SQLException
      */
 	protected void storeNodeExtra(AbstractParams p, String path, String siteId, String optionsId) throws SQLException {
 		CswParams params = (CswParams) p;
@@ -143,6 +143,7 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
         settingMan.add("id:"+siteId, "rejectDuplicateResource", params.rejectDuplicateResource);
         settingMan.add("id:"+siteId, "queryScope", params.queryScope);
         settingMan.add("id:"+siteId, "hopCount",     params.hopCount);
+        settingMan.add("id:"+siteId, "xslfilter",     params.xslfilter);
 		
 		//--- store dynamic search nodes
 		String  searchID = settingMan.add(path, "search", "");	
@@ -154,19 +155,6 @@ public class CswHarvester extends AbstractHarvester<HarvestResult> {
 				}
 			}
 		}
-
-		//--- store search nodes
-		/*for (Search s : params.getSearches())
-		{
-			String  searchID = settingMan.add(path, "search", "");
-
-			settingMan.add("id:"+searchID, "freeText", s.freeText);
-			settingMan.add("id:"+searchID, "title",    s.title);
-			settingMan.add("id:"+searchID, "abstract", s.abstrac);
-			settingMan.add("id:"+searchID, "subject",  s.subject);
-			settingMan.add("id:"+searchID, "minscale", s.minscale);
-			settingMan.add("id:"+searchID, "maxscale", s.maxscale);
-		}*/
 	}
 
 	//---------------------------------------------------------------------------
