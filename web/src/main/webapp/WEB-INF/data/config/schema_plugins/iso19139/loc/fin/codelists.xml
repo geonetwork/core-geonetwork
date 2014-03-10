@@ -1630,7 +1630,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
   <!-- ================== TÄTÄ ILMEISESTI EI SUOMEN PROFIILISSA================================== -->
-	<codelist name="gmd:MX_ScopeCode">
+	<codelist name="gmx:MX_ScopeCode">
 		<entry hideInEditMode="true">
 			<code>attribute</code>
 			<label>Attribute</label>

@@ -1896,7 +1896,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:MX_ScopeCode">
+	<codelist name="gmx:MX_ScopeCode">
 		<entry>
 			<code>attribute</code>
 
