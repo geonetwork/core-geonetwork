@@ -1,8 +1,8 @@
 <strings>
   <schematron.title>Règles d'implémentation GM03</schematron.title>
   <M100>[GM03_2] - Géodonnées de base</M100>
-  <alert.M100><div><h2>Le type de géodonnées de base est obligatoire si un identifiant a été saisi.</h2></div></alert.M100>
-  <report.M100><div><h2>Le type de géodonnées de base est obligatoire si un identifiant a été saisi.</h2></div></report.M100>
+  <alert.M100><div><h2>Le type de géodonnée de base est obligatoire si un identifiant a été saisi.</h2></div></alert.M100>
+  <report.M100><div><h2>Le type de géodonnée de base est obligatoire si un identifiant a été saisi.</h2></div></report.M100>
   <M101>[GM03_2] - Type de modèle</M101>
   <alert.M101><div><h2>Le type du modèle est obligatoire</h2></div></alert.M101>
   <report.M101><div><h2>Le type du modèle est obligatoire</h2></div></report.M101>
