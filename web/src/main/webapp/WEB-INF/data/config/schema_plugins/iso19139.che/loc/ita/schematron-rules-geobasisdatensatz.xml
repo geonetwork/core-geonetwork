@@ -1,17 +1,17 @@
 <strings>
-    <schematron.title>Geobasisdatensatz</schematron.title>
-    <collectivetitle>Collective Title</collectivetitle>
-    <collectiveTitleRequired>The Data Identification / Citation / Collective Title element is required</collectiveTitleRequired>
-    <collectiveTitleReport>Collective Title:</collectiveTitleReport>
+    <schematron.title>Set di geodati di base</schematron.title>
+    <collectivetitle>Titolo collettivo</collectivetitle>
+    <collectiveTitleRequired>Identificazione dei dati / Citazione / il titolo collettivo è obbligatorio</collectiveTitleRequired>
+    <collectiveTitleReport>Titolo collettivo:</collectiveTitleReport>
 
-    <basicGeoDataInfo>Basic Geodata</basicGeoDataInfo>
-    <geodataIdRequired>Data Identification / basicGeodataID is required</geodataIdRequired>
-    <geodataIdReport>Basic Geographic ID: </geodataIdReport>
+    <basicGeoDataInfo>Geodati di base</basicGeoDataInfo>
+    <geodataIdRequired>Identificazione dei dati / l’identificatore dei geodati di base è obbligatorio</geodataIdRequired>
+    <geodataIdReport>Identificatore geografico: </geodataIdReport>
 
-    <geodataTypeRequired>Data Identification / basicGeodataType is required</geodataTypeRequired>
-    <geodataTypeReport>Basic Geographic Type: </geodataTypeReport>
+    <geodataTypeRequired>Identificazione dei dati / il tipo dei geodati di base è obbligatorio</geodataTypeRequired>
+    <geodataTypeReport>Tipo geografico di base: </geodataTypeReport>
 
-    <legislativeInformation>Legislative Information</legislativeInformation>
-    <legislativeInformationRequired>Metadata / Legislative Information is required</legislativeInformationRequired>
-    <legislativeInformationReport>Metadata / Legislative Information is present</legislativeInformationReport>
+    <legislativeInformation>Base giuridica</legislativeInformation>
+    <legislativeInformationRequired>Metadata / Base giuridica è obbligatorio</legislativeInformationRequired>
+    <legislativeInformationReport>Metadata / Base giuridica è presente</legislativeInformationReport>
 </strings>
