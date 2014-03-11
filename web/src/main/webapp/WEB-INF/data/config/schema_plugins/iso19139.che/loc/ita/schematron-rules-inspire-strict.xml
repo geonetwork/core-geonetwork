@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-    <schematron.title>Inspire strict rules extension</schematron.title>
-    <report.M44.spec><div>Specification:</div></report.M44.spec>
-    <assert.M44.date><div>Conformance report requires date.</div></assert.M44.date>
-    <assert.M44.title><div>Conformance report requires a title in the metadata language</div></assert.M44.title>
-    <assert.M44.conformityActual><div>Invalid Conformity Title:<br></br></div></assert.M44.conformityActual>
-    <assert.M44.conformityExpected><div><br></br>Expected Conformity Title:<br></br></div></assert.M44.conformityExpected>
-    <report.M44.degree><div>Degree of conformity found:</div></report.M44.degree>
+    <schematron.title>Estensione regole rigorose INSPIRE</schematron.title>
+    <report.M44.spec><div>Specifica:</div></report.M44.spec>
+    <assert.M44.date><div>Il report di conformità richiede una data.</div></assert.M44.date>
+    <assert.M44.title><div>Il report di conformità richiede un titolo nelle lingua dei metadati</div></assert.M44.title>
+    <assert.M44.conformityActual><div>Titolo conformità non valido:<br></br></div></assert.M44.conformityActual>
+    <assert.M44.conformityExpected><div><br></br>Previsto titolo conformità:<br></br></div></assert.M44.conformityExpected>
+    <report.M44.degree><div>Grado di conformità presente:</div></report.M44.degree>
 
 </strings>
