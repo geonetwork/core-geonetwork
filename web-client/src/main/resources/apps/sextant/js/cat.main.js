@@ -492,6 +492,8 @@ cat.app = function() {
             item.setVisible(false);
         });
 
+        catalogue.on('afterReset', search, this);
+
         var searchForm = new GeoNetwork.SearchFormPanel({
             id : 'searchForm',
             stateId : 's',
@@ -535,19 +537,24 @@ cat.app = function() {
             }),
             searchCb : function() {
                 var any = Ext.get('E_any');
+                var configwhatInput = Ext.query('input[id*=configwhat]');
                 if (any) {
                     if (any.getValue() === OpenLayers.i18n('fullTextSearch')) {
                         any.setValue('');
                     }
                 }
                 catalogue.startRecord = 1; // Reset start record
-                if(catalogue.reseting) {
-                    catalogue.on('afterReset', search, this);
+                // If one or more catalog are defined as filter
+                // resetting form takes some time to reload list
+                // of groups. Wait for the reseting event to be triggered
+                // once groupFieldStore is reloaded
+                if(configwhatInput && configwhatInput[0] && configwhatInput[0].value) {
+                  if(!catalogue.reseting) {
+                      search();
+                  }
+                } else {
+                  search();
                 }
-                else {
-                    search();
-                }
-
             },
             padding : 5,
             autoScroll: true,
