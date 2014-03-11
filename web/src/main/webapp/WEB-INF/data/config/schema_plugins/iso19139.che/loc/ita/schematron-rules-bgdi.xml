@@ -1,28 +1,28 @@
 <strings>
     <schematron.title>BGDI</schematron.title>
-    <translatedTitle>Title translations</translatedTitle>
-    <deTitleRequired>Data Identification / Citation / title is required and requires a german translation</deTitleRequired>
-    <deTitleReport>German title:</deTitleReport>
-    <frTitleRequired>Data Identification / Citation / title is required and requires a french translation</frTitleRequired>
-    <frTitleReport>French title:</frTitleReport>
+    <translatedTitle>Traduzioni titolo</translatedTitle>
+    <deTitleRequired>Identificazione dei dati / Citazione / il titolo è obbligatorio e richiede una traduzione in tedesco</deTitleRequired>
+    <deTitleReport>Titolo in tedesco:</deTitleReport>
+    <frTitleRequired>Identificazione dei dati / Citazione / il titolo è obbligatorio e richiede una traduzione in francese</frTitleRequired>
+    <frTitleReport>Titolo in francese:</frTitleReport>
 
-    <translatedAltTitle>Alternate Title translations</translatedAltTitle>
-    <deAltTitleRequired>Data Identification / Citation / alternate title is required and requires a german translation</deAltTitleRequired>
-    <deAltTitleReport>German alternate title:</deAltTitleReport>
-    <deAltTitleMaxLength>German alternate title is too long, max length is 30</deAltTitleMaxLength>
-    <deAltTitleMaxLengthReport>German alternate title length:</deAltTitleMaxLengthReport>
-    <frAltTitleRequired>Data Identification / Citation / alternate title is required and requires a french translation</frAltTitleRequired>
-    <frAltTitleReport>French alternate title:</frAltTitleReport>
-    <frAltTitleMaxLength>French alternate title is too long, max length is 30</frAltTitleMaxLength>
-    <frAltTitleMaxLengthReport>French alternate title length:</frAltTitleMaxLengthReport>
+    <translatedAltTitle>Traduzioni titolo alternativo</translatedAltTitle>
+    <deAltTitleRequired>Identificazione dei dati / Citazione / il titolo alternativo è obbligatorio e richiede una traduzione in tedesco</deAltTitleRequired>
+    <deAltTitleReport>Titolo alternativo in tedesco:</deAltTitleReport>
+    <deAltTitleMaxLength>Il titolo alternativo in tedesco è troppo lungo: la lunghezza massima è di 30 caratteri</deAltTitleMaxLength>
+    <deAltTitleMaxLengthReport>Lunghezza titolo alternativo in tedesco:</deAltTitleMaxLengthReport>
+    <frAltTitleRequired>Identificazione dei dati / Citazione / il titolo alternativo è obbligatorio e richiede una traduzione in francese</frAltTitleRequired>
+    <frAltTitleReport>Titolo alternativo in francese:</frAltTitleReport>
+    <frAltTitleMaxLength>Il titolo alternativo in francese è troppo lungo: la lunghezza massima è di 30 caratteri</frAltTitleMaxLength>
+    <frAltTitleMaxLengthReport>Lunghezza titolo alternativo in francese:</frAltTitleMaxLengthReport>
 
-    <translatedAbstract>Abstract translations</translatedAbstract>
-    <deAbstractRequired>Data Identification / abstract is required and requires a german translation</deAbstractRequired>
-    <deAbstractReport>German abstract:</deAbstractReport>
-    <frAbstractRequired>Data Identification / abstract is required and requires a french translation</frAbstractRequired>
-    <frAbstractReport>French abstract:</frAbstractReport>
+    <translatedAbstract>Traduzioni sommario</translatedAbstract>
+    <deAbstractRequired>Identificazione dei dati / il sommario è obbligatorio e richiede una traduzione in tedesco</deAbstractRequired>
+    <deAbstractReport>Sommario in tedesco:</deAbstractReport>
+    <frAbstractRequired>Identificazione dei dati / il sommario è obbligatorio e richiede una traduzione in francese</frAbstractRequired>
+    <frAbstractReport>Sommario in francese:</frAbstractReport>
 
-    <pointOfContact>Point of Contact</pointOfContact>
-    <pointOfContactRequired>Data Identification / Point of Contact element is required</pointOfContactRequired>
-    <pointOfContactReport>Point of contact is present</pointOfContactReport>
+    <pointOfContact>Punto di Contatto</pointOfContact>
+    <pointOfContactRequired>Identificazione dei dati / l’elemento Punto di Contatto è obbligatorio</pointOfContactRequired>
+    <pointOfContactReport>Punto di Contatto è presente</pointOfContactReport>
 </strings>
