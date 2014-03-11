@@ -1,8 +1,8 @@
 <strings>
-  <schematron.title>GM03 implementing rules</schematron.title>
+  <schematron.title>Règles d'implémentation GM03</schematron.title>
   <M100>[GM03_2] - Géodonnées de base</M100>
-  <alert.M100><div><h2>Le type de géodonnées de base est obligatoire si un identifiant a été saisi.</h2></div></alert.M100>
-  <report.M100><div><h2>Le type de géodonnées de base est obligatoire si un identifiant a été saisi.</h2></div></report.M100>
+  <alert.M100><div><h2>Le type de géodonnée de base est obligatoire si un identifiant a été saisi.</h2></div></alert.M100>
+  <report.M100><div><h2>Le type de géodonnée de base est obligatoire si un identifiant a été saisi.</h2></div></report.M100>
   <M101>[GM03_2] - Type de modèle</M101>
   <alert.M101><div><h2>Le type du modèle est obligatoire</h2></div></alert.M101>
   <report.M101><div><h2>Le type du modèle est obligatoire</h2></div></report.M101>
@@ -12,7 +12,7 @@
   <M103>[GM03_2] - Titre de la citation</M103>
   <alert.M103><div><h2>Il est obligatoire de saisir le titre des citations dans la langue par défaut de la métadonnée.</h2></div></alert.M103>
   <report.M103><div><h2>Il est obligatoire de saisir le titre des citations dans la langue par défaut de la métadonnée.</h2></div></report.M103>
-  <M104>[GM03_2_1] - Topic Categories</M104>
-  <alert.M104><div><h2>environment, planningCadastre, geoscientificInformation, imageryBaseMapsEarthCover topic category is not a legal topic category for iso19139.che select a sub-category</h2></div></alert.M104>
-  <report.M104><div><h2>environment, planningCadastre, geoscientificInformation, imageryBaseMapsEarthCover topic category is not a legal topic category for iso19139.che select a sub-category</h2></div></report.M104>
+  <M104>[GM03_2_1] - Catégorie thématique</M104>
+  <alert.M104><div><h2>Environnement, Cadastre - aménagement, Sciences de la terre, Carte de base - imagerie - couverture du sol catégorie thématique non égale à la catégorie thématique pour iso19139.che sélectionner une sous catégorie</h2></div></alert.M104>
+  <report.M104><div><h2>Environnement, Cadastre - aménagement, Sciences de la terre, Carte de base - imagerie - couverture du sol atégorie thématique non égale à la catégorie thématique pour iso19139.che sélectionner une sous catégorie</h2></div></report.M104>
 </strings>

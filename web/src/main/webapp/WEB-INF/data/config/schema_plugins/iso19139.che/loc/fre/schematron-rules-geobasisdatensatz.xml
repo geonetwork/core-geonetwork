@@ -1,17 +1,17 @@
 <strings>
-    <schematron.title>Geobasisdatensatz</schematron.title>
-    <collectivetitle>Collective Title</collectivetitle>
-    <collectiveTitleRequired>The Data Identification / Citation / Collective Title element is required</collectiveTitleRequired>
-    <collectiveTitleReport>Collective Title:</collectiveTitleReport>
+    <schematron.title>Géodonnée de base</schematron.title>
+    <collectivetitle>Titre collectif</collectivetitle>
+    <collectiveTitleRequired>Identification des données / Information de référence / Titre collectif est obligatoire</collectiveTitleRequired>
+    <collectiveTitleReport>Titre collectif:</collectiveTitleReport>
 
-    <basicGeoDataInfo>Basic Geodata</basicGeoDataInfo>
-    <geodataIdRequired>Data Identification / basicGeodataID is required</geodataIdRequired>
-    <geodataIdReport>Basic Geographic ID: </geodataIdReport>
+    <basicGeoDataInfo>Géodonnée de base</basicGeoDataInfo>
+    <geodataIdRequired>Identification des données / Identifiant géodonnées de base est obligatoire</geodataIdRequired>
+    <geodataIdReport>Identifiant géodonnées de base: </geodataIdReport>
 
-    <geodataTypeRequired>Data Identification / basicGeodataType is required</geodataTypeRequired>
-    <geodataTypeReport>Basic Geographic Type: </geodataTypeReport>
+    <geodataTypeRequired>Identification des données / Type de géodonnées de base est obligatoire</geodataTypeRequired>
+    <geodataTypeReport>Type géodonnées de base: </geodataTypeReport>
 
-    <legislativeInformation>Legislative Information</legislativeInformation>
-    <legislativeInformationRequired>Metadata / Legislative Information is required</legislativeInformationRequired>
-    <legislativeInformationReport>Metadata / Legislative Information is present</legislativeInformationReport>
+    <legislativeInformation>Information sur la législation</legislativeInformation>
+    <legislativeInformationRequired>Métadonnée / Information sur la législation est obligatoire</legislativeInformationRequired>
+    <legislativeInformationReport>Métadonnée / Information sur la législation est présent</legislativeInformationReport>
 </strings>

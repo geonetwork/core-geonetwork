@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-	<schematron.title>GeoNetwork recommandations</schematron.title>
-    <M500>[Language] - Metadata language is not defined and other language are declared and Main metadata language MUST NOT be defined in other language section.</M500>
+	<schematron.title>Empfehlungen GeoNetwork</schematron.title>
+    <M500>[Sprache] - Die Grundsprache des Metadateneintrags ist nicht definiert, gleichzeitig wurden andere Sprachen deklariert. Die Grundsprache des Metadatensatzes DARF jedoch NICHT in anderen Sprachfeldern definiert werden</M500>
     <alert.M500>
-        <div>Check that the main metadata language is not defined and other languages (ie.
-            gmd:locale) elements exist (see Advanced view / metadata section). <br/>
-            <span class="validationReportSuggestion">Suggestions: Define main metadata language or
-                remove other language definition.</span></div>
+        <div>Definieren Sie eine Grundsprache und überprüfen Sie, dass weitere Sprachen im Bereich Sprachraum definiert sind.(ie.
+            gmd:locale)(s. erweiterte Ansicht / Metadaten). <br/>
+            <span class="validationReportSuggestion">Vorschlag: Definieren Sie eine Grundsprache oder löschen Sie das entsprechende Sprachraum-Feld.</span></div>
     </alert.M500>
-    <report.M500>Main metadata language is:</report.M500>
+    <report.M500>Die Grundsprache des Metadatensatzes ist:</report.M500>
     <alert.M501>
-        <div>Declare the main metadata language only once (see Advanced view / metadata section). <br/>
-            <span class="validationReportSuggestion">Suggestions: remove it from the other language
-                section.</span></div>
+        <div>Geben Sie die Grundsprache des Metadatensatzes nur einmal an (s. erweiterte Ansicht / Metadaten). <br/>
+            <span class="validationReportSuggestion">Vorschlag: Löschen Sie die Sprache im Sprachraum-Feld.</span></div>
     </alert.M501>
-    <report.M501>No duplicate languages found.</report.M501>
+    <report.M501>Es wurde keine Mehrfachvergabe des Sprachenfeldes im Metadatensatz gefunden.</report.M501>
 </strings>
