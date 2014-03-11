@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
 	<schematron.title>Empfehlungen GeoNetwork</schematron.title>
-    <M500>[Language] - Die Grundsprache des Metadateneintrags ist nicht definiert und andere Sprachen wurden deklariert und die Grundsprache des Metadatensatzes DARF NICHT in anderen Sprachfeldern definiert werden.</M500>
+    <M500>[Sprache] - Die Grundsprache des Metadateneintrags ist nicht definiert, gleichzeitig wurden andere Sprachen deklariert. Die Grundsprache des Metadatensatzes DARF jedoch NICHT in anderen Sprachfeldern definiert werden</M500>
     <alert.M500>
         <div>Definieren Sie eine Grundsprache und überprüfen Sie, dass weitere Sprachen im Bereich Sprachraum definiert sind.(ie.
             gmd:locale)(s. erweiterte Ansicht / Metadaten). <br/>
