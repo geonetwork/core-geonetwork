@@ -633,8 +633,8 @@
 	<linkedParentMetadataHelp>To add a relation to a parent, go to ISO view &gt; Metadata tab.</linkedParentMetadataHelp>
 	<linkedChildrenMetadata> Children metadata:</linkedChildrenMetadata>
 	<linkedChildrenMetadataHelp>List of children linked to current metadata record.</linkedChildrenMetadataHelp>
-	<linkedSiblingMetadata> Siblings:</linkedSiblingMetadata>
-	<linkedSiblingMetadataHelp>List of siblings linked to current metadata record.</linkedSiblingMetadataHelp>
+	<linkedSiblingMetadata> Related Metadata:</linkedSiblingMetadata>
+	<linkedSiblingMetadataHelp>List of Metadata linked to current metadata record.</linkedSiblingMetadataHelp>
 	<linkedDatasetMetadata> Related datasets:</linkedDatasetMetadata>
 	<serviceCreate>Create new service metadata</serviceCreate>
 	<parentSearch js="true">Search for a metadata record to set as parent of current record.</parentSearch>
