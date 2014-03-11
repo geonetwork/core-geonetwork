@@ -22,6 +22,8 @@
 //==============================================================================
 package org.fao.geonet.services.publisher;
 
+import org.fao.geonet.domain.MapServer;
+
 /**
  * A Geoserver node configuration
  * 
@@ -38,6 +40,15 @@ public class GeoServerNode {
 		setUsername(username);
 		setUserpassword(userPassword);
 	}
+    public GeoServerNode(MapServer m) {
+        setId(String.valueOf(m.getId()));
+        setName(m.getName());
+        setUrl(m.getConfigurl());
+        setNamespacePrefix(m.getNamespacePrefix());
+        setNamespaceUrl(m.getNamespace());
+        setUsername(m.getUsername());
+        setUserpassword(m.getPassword());
+    }
 
 	private String id;
 
