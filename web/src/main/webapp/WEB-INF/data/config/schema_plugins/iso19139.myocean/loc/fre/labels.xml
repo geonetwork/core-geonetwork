@@ -40,10 +40,12 @@
             <option value="instantaneous">Instantaneous</option>
             <option value="hourly mean">Hourly mean</option>
             <option value="hourly instantaneous">Hourly instantaneous</option>
+            <option value="3 hourly mean">3 hourly mean</option>
             <option value="3 hourly instantaneous">3 hourly instantaneous</option>
             <option value="3 hourly instantaneous, daily mean">3 hourly instantaneous, daily mean</option>
             <option value="6 hourly mean">6 hourly mean</option>
             <option value="daily mean">Daily mean</option>
+            <option value="daily instantaneous">Daily instantaneous</option>
             <option value="daily mean, hourly mean">Daily mean, hourly mean</option>
             <option value="daily mean, hourly instantaneous">Daily mean, hourly instantaneous</option>
             <option value="daily mean, monthly mean, seasonal mean">Daily mean, monthly mean, seasonal mean</option>
@@ -51,7 +53,7 @@
             <option value="weekly mean">Weekly mean</option>
             <option value="weekly mean, monthly mean">Weekly mean, monthly mean</option>
             <option value="monthly mean">Monthly mean</option>
-            <option value="monthly mean, daily mean">Monthly mean, daily mean</option>           
+            <option value="monthly mean, daily mean">Monthly mean, daily mean</option>
             <option value="Pluri-annual mean">Pluri-annual mean</option>
         </helper>
     </element>

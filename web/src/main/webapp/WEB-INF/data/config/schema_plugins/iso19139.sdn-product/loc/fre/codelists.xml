@@ -43,7 +43,7 @@
 	<codelist name="gmd:CI_RoleCode">
 		<entry>
 			<code>custodian</code>
-			<label>Production center</label>
+			<label>Custodian</label>
 			<description>Party that accepts accountability and responsability for
 				the data and ensures
 				appropriate care and maintenance of the resource
@@ -51,7 +51,7 @@
 		</entry>
 		<entry>
 			<code>originator</code>
-			<label>Product manager</label>
+			<label>Originator</label>
 			<description>Party who created the resource</description>
 		</entry>
 	</codelist>
