@@ -610,8 +610,8 @@
 	<createIfNotExistButton js="true">Crea un nuovo record di metadati</createIfNotExistButton>
 	<associateService js="true">Collega metadati di un servizio</associateService>
 	<associateDataset js="true">Collega metadati di dati</associateDataset>
-	<associateSibling js="true">Link sibling metadata</associateSibling>
-	<associateSiblingText js="true">Search the sibling you want to add. Then, double click on relationship column and specify the relationship for each sibling.</associateSiblingText>
+	<associateSibling js="true">Link to related metadata</associateSibling>
+	<associateSiblingText js="true">Search the related Metadata you want to add. Then, double click on relationship column and specify the relationship for each sibling.</associateSiblingText>
 	<associateServiceHelp>Per aggiungere un collegamento ai metadati di un servizio, ricerca un servizio e definisci un nome di un layer.</associateServiceHelp>
 	<associateDatasetHelp>Per aggiungere un collegamento ai dati, vai sulla vista ISO &gt; sezione Identificazione, e operare sugli elementi definiti.</associateDatasetHelp>
 	<addParent>Aggiungi o aggiorna la sezione dei metadati genitore</addParent>
@@ -624,8 +624,8 @@
 	<linkedParentMetadataHelp>Per aggiungere un collegamento ad un genitore, vai su vista ISO &gt; sezione Metadati.</linkedParentMetadataHelp>
 	<linkedChildrenMetadata>Metadati figli:</linkedChildrenMetadata>
 	<linkedChildrenMetadataHelp>Lista di figli collegati al metadato corrente.</linkedChildrenMetadataHelp>
-	<linkedSiblingMetadata> Siblings:</linkedSiblingMetadata>	
-	<linkedSiblingMetadataHelp>List of siblings linked to current metadata record.</linkedSiblingMetadataHelp>
+	<linkedSiblingMetadata> Related metadata:</linkedSiblingMetadata>	
+	<linkedSiblingMetadataHelp>List of related metadata linked to current metadata record.</linkedSiblingMetadataHelp>
 	<linkedDatasetMetadata>Dati collegati:</linkedDatasetMetadata>
 	<serviceCreate>Crea un nuovo metadato di un servizio</serviceCreate>
 	<parentSearch js="true">Ricerca un record di metadati da assegnare come genitore del record corrente.</parentSearch>
