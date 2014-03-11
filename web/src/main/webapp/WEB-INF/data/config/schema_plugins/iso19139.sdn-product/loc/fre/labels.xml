@@ -48,6 +48,13 @@
 		<condition />
 	</element>
 
+	 <element name="gmd:dimensionSize" context="gmd:MD_Dimension">
+		<label>Nombre de niveaux verticaux</label>
+		<description></description>
+		<help />
+		<condition />	 
+	 </element>
+
 	<element name="gmd:distance" context="gmd:MD_Resolution">
 		<label>Résolution spatiale</label>
 		<description></description>
@@ -76,28 +83,19 @@
             <option value="WRF Lambert Conformal Conic (SR-ORG 29)">WRF Lambert Conformal Conic (SR-ORG 29)</option>
         </helper>
     </element>
-    
-            <element name="gmd:resolution">
-        <label>Résolution temporelle</label>
-        <description></description>
-        <helper>
-            <option value="irregular">Irrégulière</option>
-            <option value="instantaneous">Instantanée</option>
-            <option value="hourly mean">Hourly mean</option>
-            <option value="hourly instantaneous">Hourly instantaneous</option>
-            <option value="3 hourly instantaneous">3 hourly instantaneous</option>
-            <option value="3 hourly instantaneous, daily mean">3 hourly instantaneous, daily mean</option>
-            <option value="6 hourly mean">6 hourly mean</option>
-            <option value="daily mean">Daily mean</option>
-            <option value="daily mean, hourly mean">Daily mean, hourly mean</option>
-            <option value="daily mean, hourly instantaneous">Daily mean, hourly instantaneous</option>
-            <option value="daily mean, monthly mean, seasonal mean">Daily mean, monthly mean, seasonal mean</option>
-            <option value="daily mean, weekly mean">Daily mean, weekly mean</option>
-            <option value="weekly mean">Weekly mean</option>
-            <option value="weekly mean, monthly mean">Weekly mean, monthly mean</option>
-            <option value="monthly mean">Monthly mean</option>
-            <option value="monthly mean, daily mean">Monthly mean, daily mean</option>           
-            <option value="Pluri-annual mean">Pluri-annual mean</option>
-        </helper>
-    </element>
+	<element name="gmd:resolution">
+		<label>Résolution temporelle</label>
+		<description></description>
+		<help />
+	</element>
+    <element name="gmd:protocol" id="398.0">
+		<label>Protocole</label>
+		<description>Protocole de la connexion à utiliser</description>
+		<help>Protocole de connexion utilisé, par exemple FTP.</help>
+		<condition />
+	<helper>
+		<option value="OGC:WMS">OGC-WMS Web Map Service</option>
+		<option value="WWW:DOWNLOAD-1.0-http--download">Fichier à télécharger</option>
+	</helper>
+  </element>
 </labels>

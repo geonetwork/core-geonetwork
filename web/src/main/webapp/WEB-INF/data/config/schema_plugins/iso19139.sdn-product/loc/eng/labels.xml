@@ -55,6 +55,13 @@
 		<condition />
 	</element>
 	
+	 <element name="gmd:dimensionSize" context="gmd:MD_Dimension">
+		<label>Number of vertical levels</label>
+		<description></description>
+		<help />
+		<condition />	 
+	 </element>
+	
 	 
 	 <element name="gmd:distance" context="gmd:MD_Resolution">
 		<label>Spatial resolution</label>
@@ -87,24 +94,14 @@
     <element name="gmd:resolution">
         <label>Temporal resolution</label>
         <description></description>
-        <helper>
-            <option value="irregular">Irregular</option>
-            <option value="instantaneous">Instantaneous</option>
-            <option value="hourly mean">Hourly mean</option>
-            <option value="hourly instantaneous">Hourly instantaneous</option>
-            <option value="3 hourly instantaneous">3 hourly instantaneous</option>
-            <option value="3 hourly instantaneous, daily mean">3 hourly instantaneous, daily mean</option>
-            <option value="6 hourly mean">6 hourly mean</option>
-            <option value="daily mean">Daily mean</option>
-            <option value="daily mean, hourly mean">Daily mean, hourly mean</option>
-            <option value="daily mean, hourly instantaneous">Daily mean, hourly instantaneous</option>
-            <option value="daily mean, monthly mean, seasonal mean">Daily mean, monthly mean, seasonal mean</option>
-            <option value="daily mean, weekly mean">Daily mean, weekly mean</option>
-            <option value="weekly mean">Weekly mean</option>
-            <option value="weekly mean, monthly mean">Weekly mean, monthly mean</option>
-            <option value="monthly mean">Monthly mean</option>
-            <option value="monthly mean, daily mean">Monthly mean, daily mean</option>           
-            <option value="Pluri-annual mean">Pluri-annual mean</option>
-        </helper>
+		<help/>
     </element>
+  	<element name="gmd:protocol" id="398.0">
+		<label>Protocol</label>
+		<description>Connection protocol to be used</description>
+		<helper sort="true">
+			<option show="-" value="OGC:WMS">OGC-WMS Web Map Service</option>
+			<option show="-" value="WWW:DOWNLOAD-1.0-http--download">File for download</option>
+		</helper>
+	</element>
 </labels>

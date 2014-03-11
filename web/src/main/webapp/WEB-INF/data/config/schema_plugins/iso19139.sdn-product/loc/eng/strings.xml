@@ -18,8 +18,8 @@
     <startDate>Start date</startDate>
     <endDate>End date</endDate>
     <unknown>Unknown</unknown>
-    <productionCentre>Production centre</productionCentre>
-    <productManager>Product manager</productManager>
+    <custodian>Custodian</custodian>
+    <originator>Originator</originator>
     <productAccess>Product access</productAccess> 
     <orgAdd>Add organisation</orgAdd>
     <creationDate>Creation date</creationDate>

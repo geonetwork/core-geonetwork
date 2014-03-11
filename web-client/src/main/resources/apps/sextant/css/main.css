@@ -670,7 +670,9 @@ div.x-tip-body div.help {
  * is not an option.
  */
 .myocean * .gmdalternateTitle span.buttons,
-.sdnProduct * .gmdalternateTitle span.buttons {
+.sdnProduct * .gmdalternateTitle span.buttons,
+.sdnProduct * .gmdresolution span.buttons,
+.sdnProduct * .gmduseLimitation span.buttons {
     display: none !important;
 }
 .sdnProduct * th.gmxAnchor + td > div.attr {
