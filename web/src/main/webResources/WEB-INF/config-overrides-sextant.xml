@@ -36,6 +36,7 @@
       <emodnet.hydrography flat="true"/>
       <myocean.simple flat="true"/>
       <myocean flat="true"/>
+      <sdnProduct flat="true"/>
     </addXML>
 
   </file>
