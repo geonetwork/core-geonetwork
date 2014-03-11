@@ -609,8 +609,8 @@ Es sind von Ihnen genutzte wiederverwendbare Objekte entfernt worden. Nachfolgen
 	<linkedParentMetadataHelp>Um eine Beziehung zu einem Eltern-Metadatensatz herzustellen, gehen Sie zu "ISO-Ansicht" &gt; Metadaten.</linkedParentMetadataHelp>
 	<linkedChildrenMetadata> Untergeordnete Metadaten:</linkedChildrenMetadata>
 	<linkedChildrenMetadataHelp>Liste der "Kinder" dieses Metadatensatzes</linkedChildrenMetadataHelp>
-	<linkedSiblingMetadata> Geschwister:</linkedSiblingMetadata>
-	<linkedSiblingMetadataHelp>Liste der Geschwister im Zusammenhang mit aktuellen Metadatensatz.</linkedSiblingMetadataHelp>
+	<linkedSiblingMetadata> verwandter Datensatz</linkedSiblingMetadata>
+	<linkedSiblingMetadataHelp>Liste der verwandten Metadaten im Zusammenhang mit aktuellen Metadatensatz.</linkedSiblingMetadataHelp>
 	<linkedDatasetMetadata> Verlinkte Metadaten:</linkedDatasetMetadata>
 	<serviceCreate>Einen neuen Dienst-Metadatensatz erstellen</serviceCreate>
 	<parentSearch js="true">Nach Eltern-Datensatz suchen</parentSearch>
