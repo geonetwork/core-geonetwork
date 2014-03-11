@@ -120,6 +120,12 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
     },
     
     editMode : 1,
+
+    /**
+      * Flag that is true during reseting process
+      *
+      **/
+    reseting: false,
     
     /** api: config[hostUrl] 
      * ``String`` Optional GeoNetwork host name.
@@ -405,7 +411,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         /** private: event[afterBadLogout] 
          *  Fires after bad user logged out.
          */
-        this.addEvents('selectionchange', 'afterLogin', 'afterLogout', 'afterBadLogin', 'afterBadLogout', 'afterDelete');
+        this.addEvents('selectionchange', 'afterLogin', 'afterLogout', 'afterBadLogin', 'afterBadLogout', 'afterDelete', 'afterReset');
         
         GeoNetwork.Catalogue.superclass.constructor.call(this, config);
     },
