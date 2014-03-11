@@ -1,5 +1,5 @@
 <strings>
-  <schematron.title>GM03 implementing rules</schematron.title>
+  <schematron.title>Regole di implementazione GM03</schematron.title>
   <M100>[GM03_2] - Geodati di base</M100>
   <alert.M100><div><h2>Il tipo di Geodati di base e obbligatorio se c'è un'identificatore di Geodati di base.</h2></div></alert.M100>
   <report.M100><div><h2>Il tipo di Geodati di base e obbligatorio se c'è un'identificatore di Geodati di base.</h2></div></report.M100>
@@ -13,6 +13,6 @@
   <alert.M103><div><h2>I titoli sono obbligatori. Aggiungere un titolo o rimuove tutta la classe di citazione respettiva.</h2></div></alert.M103>
   <report.M103><div><h2>I titoli sono obbligatori. Aggiungere un titolo o rimuove tutta la classe di citazione respettiva.</h2></div></report.M103>
   <M104>[GM03_2_1] - Topic Categories</M104>
-  <alert.M104><div><h2>environment, planningCadastre, geoscientificInformation, imageryBaseMapsEarthCover topic category is not a legal topic category for iso19139.che select a sub-category</h2></div></alert.M104>
-  <report.M104><div><h2>environment, planningCadastre, geoscientificInformation, imageryBaseMapsEarthCover topic category is not a legal topic category for iso19139.che select a sub-category</h2></div></report.M104>
+  <alert.M104><div><h2>protezione dell’ambiente e della natura, pianificazione territoriale – catasto fondiario, geologia-suolo-rischi naturali, carte di base-copertura del suolo-immagini aeree non è una categoria tematica valida secondo iso19139.che: selezionare una sotto-categoria </h2></div></alert.M104>
+  <report.M104><div><h2>protezione dell’ambiente e della natura, pianificazione territoriale – catasto fondiario, geologia-suolo-rischi naturali, carte di base-copertura del suolo-immagini aeree non è una categoria tematica valida secondo iso19139.che: selezionare una sotto-categoria </h2></div></report.M104>
 </strings>
