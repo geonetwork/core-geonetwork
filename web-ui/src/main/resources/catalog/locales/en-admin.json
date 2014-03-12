@@ -563,6 +563,7 @@
     "serviceUrl": "Service URL",
     
     "mapservers": "Map servers",
+    "mapserverName": "Name",
     "manageMapServers": "Map servers",
     "newMapServer": "New server",
     "updateMapServer": "Update ",

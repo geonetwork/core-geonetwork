@@ -687,6 +687,7 @@
     "moreExamples": "D'autres exemples ...",
 
     "mapservers": "Serveurs cartographiques",
+    "mapserverName": "Nom",
     "manageMapServers": "Serveurs cartographiques",
     "newMapServer": "Nouveau serveur",
     "updateMapServer": "Mise à jour de ",
