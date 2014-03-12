@@ -104,8 +104,10 @@ public class LanguageDetector {
             detectedLanguage = detectedLanguage.substring(0, 2);
         }
         String iso639_2 = srvContext.getBean(IsoLanguagesMapper.class).iso639_1_to_iso639_2(detectedLanguage);
-        if(Log.isDebugEnabled(Geonet.LANGUAGEDETECTOR))
-            Log.debug(Geonet.LANGUAGEDETECTOR, "detected language: " + iso639_2);
+        Log.debug(Geonet.LANGUAGEDETECTOR,
+                    "detected language: " + iso639_2 +
+                    " for text:" + input);
+
         return iso639_2;
     }
 

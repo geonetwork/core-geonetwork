@@ -684,5 +684,21 @@
     "cron-0 0/5 14 * * ?": "Toutes les 5 minutes entre 14:00 et 15:00",
     "cron-0 15 10 ? * MON-FRI": "à 10:15 du lundi au vendredi",
     "cron-0 15 10 15 * ?": "à 10:15 le 15 de chaque mois",
-    "moreExamples": "D'autres exemples ..."
+    "moreExamples": "D'autres exemples ...",
+
+    "mapservers": "Serveurs cartographiques",
+    "manageMapServers": "Serveurs cartographiques",
+    "newMapServer": "Nouveau serveur",
+    "updateMapServer": "Mise à jour de ",
+    "mapserverDescription": "Description",
+    "mapserverConfiguration": "Configuration des URLs",
+    "description": "Description",
+    "configurl": "URL du service REST de configuration",
+    "wmsurl": "URL du service WMS",
+    "wcsurl": "URL du service WCS",
+    "wfsurl": "URL du service WFS",
+    "stylerurl": "URL du service de définition des styles",
+    "workspace": "Espace de travail",
+    "workspace-help": "Préfixe de l'espace de nommage et URL de l'espace de nommage correspondant à l'espace de travail dans lequel les couches doivent être publiées."
+
 }

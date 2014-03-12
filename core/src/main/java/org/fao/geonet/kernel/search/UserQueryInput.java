@@ -96,10 +96,44 @@ public class UserQueryInput {
     private Map<String, Set<String>> searchPrivilegeCriteria = new HashMap<String, Set<String>>();
     private Map<String, String> searchOption = new HashMap<String, String>();
 
+    /**
+     * Return all search criteria.
+     *
+     * @return
+     */
     public Map<String, Set<String>> getSearchCriteria() {
         return searchCriteria;
     }
 
+    public static final List<String> NO_TEXT_FIELDS = Arrays.asList(
+            SearchParameter.UUID,
+            SearchParameter.PARENTUUID,
+            SearchParameter.OPERATESON,
+            SearchParameter._SCHEMA,
+            SearchParameter.RELATION,
+            SearchParameter.SITEID,
+            SearchParameter.HASFEATURECAT
+            );
+
+    /**
+     * Return all search criteria except those which
+     * does not contains textual information like
+     * identifiers or codelists (eg. UUID, PARENTUUID).
+     *
+     *
+     * Those fields may be used for language detection.
+     *
+     * @return
+     */
+    public Map<String, Set<String>> getTextCriteria() {
+        Map<String, Set<String>> textCriteria = new HashMap<String, Set<String>>();
+        for (String criteria : searchCriteria.keySet()) {
+            if (!NO_TEXT_FIELDS.contains(criteria)) {
+                textCriteria.put(criteria, searchCriteria.get(criteria));
+            }
+        }
+        return textCriteria;
+    }
     public Map<String, Set<String>> getSearchPrivilegeCriteria() {
         return searchPrivilegeCriteria;
     }
@@ -276,4 +310,5 @@ public class UserQueryInput {
     public String getEditable() {
         return editable;
     }
+
 }
