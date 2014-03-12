@@ -25,6 +25,8 @@ package org.fao.geonet.services.publisher;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.auth.AuthenticationException;
+import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.*;
 import org.apache.http.entity.ContentType;
@@ -687,6 +689,10 @@ public class GeoServerRest {
 
 
 		m.setConfig(RequestConfig.custom().setAuthenticationEnabled(true).build());
+
+		try {
+		m.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(username, password), m));
+		} catch (AuthenticationException a) {};
 
         final ClientHttpResponse httpResponse = factory.execute(m, new UsernamePasswordCredentials(username, password), AuthScope.ANY);
 
