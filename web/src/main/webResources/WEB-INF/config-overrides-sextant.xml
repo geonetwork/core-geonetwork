@@ -259,6 +259,11 @@
           <param name="filter" value="+_groupPublished:ROLNP"/>
         </class>
       </service>
+      <service name="csw-SEADATANET">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:SEADATANET"/>
+        </class>
+      </service>
       <service name="csw-SIG972">
         <class name=".services.main.CswDiscoveryDispatcher">
           <param name="filter" value="+_groupPublished:SIG972"/>
