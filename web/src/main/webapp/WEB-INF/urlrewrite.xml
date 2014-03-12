@@ -94,6 +94,10 @@
         <to type="permanent-redirect" last="true">%{context-path}/home</to>
     </rule>
     <rule>
+      <from>^/\?(.*)$</from>
+      <to type="permanent-redirect" last="true">%{context-path}/home?$1</to>
+    </rule>
+    <rule>
         <from>^/index.html$</from>
         <to type="permanent-redirect" last="true">%{context-path}/home</to>
     </rule>
