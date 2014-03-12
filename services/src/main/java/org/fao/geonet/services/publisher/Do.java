@@ -169,13 +169,13 @@ public class Do implements Service {
                         .setText("ok")
                         .setAttribute("id", String.valueOf(m.getId()));
         } else if (action.equals(ACTION.REMOVE_NODE)) {
-            MapServer m = repo.findOne(Util.getParam(params, "id"));
+            MapServer m = repo.findOneById(Util.getParam(params, "id"));
             if (m != null) {
                 repo.delete(m);
             }
             return new Element(action.toString()).setText("ok");
         } else if (action.equals(ACTION.UPDATE_NODE)) {
-            MapServer m = repo.findOne(Util.getParam(params, "id"));
+            MapServer m = repo.findOneById(Util.getParam(params, "id"));
             if (m != null) {
                 m.setName(Util.getParam(params, "name", ""))
                     .setDescription(Util.getParam(params, "description", ""))
@@ -190,7 +190,7 @@ public class Do implements Service {
             }
             return new Element(action.toString()).setText("ok");
         } else if (action.equals(ACTION.UPDATE_NODE_ACCOUNT)) {
-            MapServer m = repo.findOne(Util.getParam(params, "id"));
+            MapServer m = repo.findOneById(Util.getParam(params, "id"));
             if (m != null) {
                 m.setUsername(Util.getParam(params, "username", ""))
                     .setPassword(Util.getParam(params, "password", ""));
@@ -208,7 +208,7 @@ public class Do implements Service {
     		String metadataTitle = Util.getParam(params, "metadataTitle", "").replace("\\n","");
     		// unescape \\n from metadataAbstract so they're properly sent to geoserver
     		String metadataAbstract = Util.getParam(params, "metadataAbstract", "").replace("\\n","\n");
-            MapServer m = repo.findOne(nodeId);
+            MapServer m = repo.findOneById(nodeId);
             GeoServerNode g = new GeoServerNode(m);
     		if (g == null) {
                 throw new IllegalArgumentException(

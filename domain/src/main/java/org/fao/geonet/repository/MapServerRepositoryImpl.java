@@ -17,7 +17,7 @@ public class MapServerRepositoryImpl implements MapServerRepositoryCustom {
     private EntityManager _entityManager;
 
     @Override
-    public MapServer findOne(final String id) {
+    public MapServer findOneById(final String id) {
         return _entityManager.find(MapServer.class, Integer.valueOf(id));
     }
 }

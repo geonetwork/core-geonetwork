@@ -20,5 +20,5 @@ public interface MapServerRepositoryCustom {
      * @return the mapserver with the given id
      */
     @Nullable
-    MapServer findOne(@Nonnull String id);
+    MapServer findOneById(@Nonnull String id);
 }
