@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.search;
 
+import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Localized;
@@ -46,7 +47,7 @@ public class DbDescTranslator extends Translator {
     private final transient ApplicationContext _applicationContext;
     private final String _langCode;
     private Class<? extends JpaRepository> _repositoryClass;
-    private final String _propertyName;
+    private final String _methodName;
     private String _beanName;
 
 
@@ -59,7 +60,8 @@ public class DbDescTranslator extends Translator {
             this._beanName = parts[0];
         }
 
-        this._propertyName = parts[1];
+        this._methodName = parts.length == 2 ? parts[1] : "findOne";
+
         _applicationContext = applicationContext;
         _langCode = langCode;
     }
@@ -102,7 +104,7 @@ public class DbDescTranslator extends Translator {
 
         Localized entity = null;
         for (Method method : methods) {
-            if (method.getName().equals("findOne") && method.getParameterTypes().length == 1) {
+            if (method.getName().equals(this._methodName) && method.getParameterTypes().length == 1) {
                 entity = (Localized) method.invoke(repository, key);
                 if (entity == null) {
                     entity = (Localized) method.invoke(repository, Integer.valueOf(key));
