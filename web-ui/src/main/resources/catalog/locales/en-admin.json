@@ -562,7 +562,21 @@
     "notYetSupported": "Not supported yet",
     "serviceUrl": "Service URL",
     
-    
+    "mapservers": "Map servers",
+    "manageMapServers": "Map servers",
+    "newMapServer": "New server",
+    "updateMapServer": "Update ",
+    "mapserverDescription": "Description",
+    "mapserverConfiguration": "URL configuration",
+    "description": "Description",
+    "configurl": "REST API configuration URL",
+    "wmsurl": "WMS service URL",
+    "wcsurl": "WCS service URL",
+    "wfsurl": "WFS service URL",
+    "stylerurl": "Styler URL",
+    "workspace": "Workspace",
+    "workspace-help": "Namespace prefix and namespace URL corresponding to the workspace data hase to be published in.",
+
     "manageDirectory": "Directory",
     
     

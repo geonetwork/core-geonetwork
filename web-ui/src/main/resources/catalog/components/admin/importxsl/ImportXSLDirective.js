@@ -18,11 +18,12 @@
           element: '=gnImportXsl'
         },
         templateUrl: '../../catalog/components/admin/importxsl/partials/' +
-          'importxsl.html',
+            'importxsl.html',
         link: function(scope, element, attrs) {
-          $http.get('admin.harvester.info@json?type=importStylesheets').success(function(data) {
-            scope.stylesheets = data[0];
-          });
+          $http.get('admin.harvester.info@json?type=importStylesheets')
+            .success(function(data) {
+                scope.stylesheets = data[0];
+              });
         }
       };
     }]);
