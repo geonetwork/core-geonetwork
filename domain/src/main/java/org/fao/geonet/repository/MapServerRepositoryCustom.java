@@ -16,8 +16,8 @@ public interface MapServerRepositoryCustom {
      * (where id is a string). The string will be
      * converted to an integer for making the query.
      *
-     * @param userId the userid.
-     * @return the use with the given userid
+     * @param id the mapserver id.
+     * @return the mapserver with the given id
      */
     @Nullable
     MapServer findOne(@Nonnull String id);
