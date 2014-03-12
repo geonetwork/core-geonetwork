@@ -19,8 +19,6 @@ public class HarvesterDataRepositoryTest extends AbstractSpringDataTest {
     @Autowired
     private HarvesterDataRepository _dataRepository;
 
-    private final AtomicInteger _inc = new AtomicInteger();
-
     @Test
     public void testFindAllById_HarvesterUuid() throws Exception {
         final HarvesterData data1 = newHarvesterData(_inc);

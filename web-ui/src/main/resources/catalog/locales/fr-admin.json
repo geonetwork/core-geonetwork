@@ -332,6 +332,17 @@
     "loadSampleReport": "Exemples importés pour",
     "loadTemplatesReport": "Modèles importés pour",
     "sortTemplate": "Trier les modèles",
+
+    "schematron" : "Schematron",
+    "metadataschemaValidate" : "Validation",
+    "metadataschemaValidateDes" : "Configure what rules are applied for each schema metadata. If no rule defined for a schema, it will be applied always.",
+    "schematroncriteriagroup" : "Criteria Group",
+    "xpathlabel" : "xPath",
+    "xpathvalue" : "Value",
+    "toggleRequirement" : "Change Requirement",
+    "deleteCriteriaGroup" : "Delete Criteria Group",
+    "deleteCriteria" : "Delete Criteria",
+
     "harvester": "N&#339;uds distants",
     "newHarvester": "Moissonner ",
     "deleteHarvester": "Supprimer",

@@ -133,7 +133,7 @@ public class Update extends NotInReadOnlyModeService {
             if (user.getAddresses().isEmpty()) {
                 addressEntity = new Address();
             } else {
-                addressEntity = user.getPrimaryAddress();
+                addressEntity = user.getAddresses().iterator().next();
 
             }
             if (address != null) {

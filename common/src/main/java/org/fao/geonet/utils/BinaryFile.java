@@ -563,6 +563,13 @@ public final class BinaryFile
         
     }
 
+    public static void moveTo(File inFile, File outFile, String operationDescription) throws IOException {
+        IO.mkdirs(outFile.getParentFile(), "Error creating Parent File for operation: "+operationDescription);
+        if (!inFile.renameTo(outFile)) {
+            copy(inFile, outFile);
+            IO.delete(inFile, false, "org.fao.geonet");
+        }
+    }
 }
 
 //=============================================================================

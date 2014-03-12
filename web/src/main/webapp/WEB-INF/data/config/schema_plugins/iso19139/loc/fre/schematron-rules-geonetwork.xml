@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <schematron.title>Geonetwork Validation Rules</schematron.title>
     <M500>[Langue] - La langue principale des métadonnées n'est pas définie alors que d'autres
         langues le sont.</M500>
     <alert.M500><div>Définir la langue principale et vérifier dans la section autres langues (ie.

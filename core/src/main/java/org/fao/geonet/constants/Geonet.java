@@ -604,5 +604,6 @@ public final class Geonet {
 		public static final Namespace XSI = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
         public static final Namespace OWS = Namespace.getNamespace("ows", "http://www.opengis.net/ows");
         public static final Namespace OGC = Namespace.getNamespace("ogc", "http://www.opengis.net/ogc");
+        public static final Namespace GML = Namespace.getNamespace("gml", "http://www.opengis.net/gml");
     }
 }

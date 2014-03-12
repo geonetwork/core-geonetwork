@@ -4,18 +4,15 @@ import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.ReservedOperation;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.fao.geonet.repository.SpringDataTestSupport.assertSameContents;
 import static org.fao.geonet.repository.SpringDataTestSupport.setId;
 import static org.junit.Assert.*;
 
-@Transactional
 public class OperationRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
@@ -23,8 +20,6 @@ public class OperationRepositoryTest extends AbstractSpringDataTest {
 
     @PersistenceContext
     EntityManager _entityManager;
-
-    private AtomicInteger _nextId = new AtomicInteger(20);
 
     @Test
     public void test_Save_Count_FindOnly_DeleteAll() throws Exception {
@@ -121,7 +116,7 @@ public class OperationRepositoryTest extends AbstractSpringDataTest {
     }
 
     private Operation newOperation() {
-        return newOperation(_nextId);
+        return newOperation(_inc);
     }
     public static Operation newOperation(AtomicInteger inc) {
         int id = inc.incrementAndGet();

@@ -364,9 +364,18 @@
     "loadReport": "Import report",
     "loadSampleReport": "Samples imported for standards",
     "loadTemplatesReport": "Templates imported for standards",
-    
     "sortTemplate": "Sort metadata templates",
-    
+
+    "schematron" : "Schematron",
+    "metadataschemaValidate" : "Validation",
+    "metadataschemaValidateDes" : "Configure what rules are applied for each schema metadata. If no rule defined for a schema, it will be applied always.",
+    "schematroncriteriagroup" : "Criteria Group",
+    "xpathlabel" : "xPath",
+    "xpathvalue" : "Value",
+    "toggleRequirement" : "Change Requirement",
+    "deleteCriteriaGroup" : "Delete Criteria Group",
+    "deleteCriteria" : "Delete Criteria",
+
     "time": "Time",
     "details": "Details",
     "harvester": "Harvester",

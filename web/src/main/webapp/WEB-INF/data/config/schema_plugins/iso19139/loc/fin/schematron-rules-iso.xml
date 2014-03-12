@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <schematron.title>ISO Validation Rules</schematron.title>
     <M6>Merkkijonolla pitää olla arvo tai sen isäelementille pitää olla määritelty nilReason-attribuutti.</M6>
     <M7>Koordinaattireferenssijärjestelmän attribuuttien rajoitteet</M7>
     <M8>[ISOFTDS19139:2005-TableA1-Row24] - Vastuutaholle on annettava henkilön nimi, organisaation nimi tai asema.</M8>

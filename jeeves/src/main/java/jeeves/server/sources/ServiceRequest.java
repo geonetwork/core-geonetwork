@@ -40,7 +40,7 @@ import java.util.Map;
 
 public class ServiceRequest
 {
-	public enum InputMethod  { GET, POST, XML, SOAP }
+    public enum InputMethod  { GET, POST, XML, SOAP }
 	public enum OutputMethod { DEFAULT, XML, SOAP }
 
 	//---------------------------------------------------------------------------

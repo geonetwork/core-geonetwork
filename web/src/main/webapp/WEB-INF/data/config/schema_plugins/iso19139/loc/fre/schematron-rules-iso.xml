@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <schematron.title>ISO Validation Rules</schematron.title>
     <M6>Une chaîne de caractère ne doit pas être vide ou son parent doit avoir un attribut nilReason</M6>
     <M7>Contraintes sur les attributs CRS</M7>
     <M8>[ISOFTDS19139:2005-TableA1-Row24] - Au moins le nom du contact, le nom de l'organisation ou la fonction du contact doivent être renseignés</M8>

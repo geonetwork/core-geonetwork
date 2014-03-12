@@ -104,8 +104,10 @@ class TaxonomyIndexTracker {
 
     void close(List<Throwable> errors) throws IOException {
         try {
-            if(taxonomyReader != null)
+            if(taxonomyReader != null) {
                 taxonomyReader.close();
+                taxonomyReader = null;
+            }
         } catch (Throwable e) {
             errors.add(e);
         }
@@ -117,12 +119,18 @@ class TaxonomyIndexTracker {
         expiredReaders.clear();
 
         try {
-            taxonomyWriter.close();
+            if (taxonomyWriter != null) {
+                taxonomyWriter.close();
+                taxonomyWriter = null;
+            }
         } catch (Throwable e) {
             errors.add(e);
         }
         try {
-            cachedFSDir.close();
+            if (cachedFSDir != null) {
+                cachedFSDir.close();
+                cachedFSDir = null;
+            }
         } catch (Throwable e) {
             errors.add(e);
         }

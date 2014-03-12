@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <schematron.title>ISO Validation Rules</schematron.title>
     <M6>CharacterString must have content or its parent must have a valid nilReason attribute.</M6>
     <M7>CRS attributes constraints</M7>
     <M8>[ISOFTDS19139:2005-TableA1-Row24] - A name is required for contact</M8>

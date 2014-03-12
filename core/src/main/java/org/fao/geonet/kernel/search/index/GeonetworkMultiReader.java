@@ -2,6 +2,7 @@ package org.fao.geonet.kernel.search.index;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.MultiReader;
@@ -9,21 +10,22 @@ import org.fao.geonet.kernel.search.index.GeonetworkNRTManager.AcquireResult;
 
 public class GeonetworkMultiReader extends MultiReader {
 
-    private Map<AcquireResult, GeonetworkNRTManager> searchers;
+    private final AtomicInteger _openReaderCount;
+    private Map<AcquireResult, GeonetworkNRTManager> _searchers;
 
-    public GeonetworkMultiReader(IndexReader[] subReaders, Map<AcquireResult, GeonetworkNRTManager> searchers) {
+    public GeonetworkMultiReader(AtomicInteger openReaderCounter, IndexReader[] subReaders, Map<AcquireResult, GeonetworkNRTManager> searchers) {
         super(subReaders);
-        this.searchers = searchers;
+        openReaderCounter.incrementAndGet();
+        this._openReaderCount = openReaderCounter;
+        this._searchers = searchers;
     }
 
     public void releaseToNRTManager() throws IOException {
-        for(Map.Entry<AcquireResult, GeonetworkNRTManager> entry: searchers.entrySet()) {
+        for(Map.Entry<AcquireResult, GeonetworkNRTManager> entry: _searchers.entrySet()) {
             entry.getValue().release(entry.getKey().searcher);
         }
-        searchers.clear();
+        _searchers.clear();
+        _openReaderCount.decrementAndGet();
     }
 
-    public int numSubReaders() {
-        return searchers.size();
-    }
 }

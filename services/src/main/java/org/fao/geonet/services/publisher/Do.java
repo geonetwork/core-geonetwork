@@ -85,13 +85,6 @@ public class Do implements Service {
 	public static final String MODULE = "geonetwork.GeoServerPublisher";
 
 	/**
-	 * XML document containing Geoserver node configuration defined in
-	 * geoserver-nodes.xml
-	 */
-	private Element geoserverConfig;
-	private String geoserverConfigFile;
-	private boolean geoserverConfigLoaded = false;
-	/**
 	 * List of current known nodes
 	 */
 	private HashMap<Integer, GeoServerNode> geoserverNodes = new HashMap<Integer, GeoServerNode>();
@@ -210,12 +203,6 @@ public class Do implements Service {
     		String metadataAbstract = Util.getParam(params, "metadataAbstract", "").replace("\\n","\n");
             MapServer m = repo.findOneById(nodeId);
             GeoServerNode g = new GeoServerNode(m);
-    		if (g == null) {
-                throw new IllegalArgumentException(
-                        "Invalid node id " + nodeId + ". Can't find node id in current registered nodes. "
-                        + "Use action=LIST parameter to retrieve the list of valid nodes.");
-            }
-
 
             final GeonetHttpRequestFactory requestFactory = context.getBean(GeonetHttpRequestFactory.class);
             GeoServerRest gs = new GeoServerRest(requestFactory, g.getUrl(),

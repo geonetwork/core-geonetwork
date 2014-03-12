@@ -47,7 +47,7 @@ public class MetadataNotifierControl {
         
         if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
             Log.debug(Geonet.DATA_MANAGER, "getUnregisteredMetadata after dbms");
-        final MetadataNotifierTask updateTask = srvContext.getBean(MetadataNotifierTask.class).configure(srvContext);
+        final MetadataNotifierTask updateTask = srvContext.getBean(MetadataNotifierTask.class);
 
         scheduler.schedule(updateTask, 20, TimeUnit.SECONDS);
         if(Log.isDebugEnabled(Geonet.DATA_MANAGER))

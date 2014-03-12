@@ -125,13 +125,13 @@ public class LuceneConfig {
      * Facet configuration
      */
     public static class FacetConfig {
-        private String name;
-        private String plural;
-        private String indexKey;
-        private Facet.SortBy sortBy = Facet.SortBy.COUNT;
-        private Facet.SortOrder sortOrder = Facet.SortOrder.DESCENDING;
+        private final String name;
+        private final String plural;
+        private final String indexKey;
+        private final Facet.SortBy sortBy;
+        private final Facet.SortOrder sortOrder;
         private int max;
-        private String translator;
+        private final String translator;
         /**
          * Create a facet configuration from a summary configuration element.
          * 
@@ -150,7 +150,7 @@ public class LuceneConfig {
             } else {
                 max = Integer.parseInt(maxString);
             }
-            max = Math.min(Facet.MAX_SUMMARY_KEY, max);
+            this.max = Math.min(Facet.MAX_SUMMARY_KEY, max);
             
             String sortByConfig = summaryElement.getAttributeValue("sortBy");
             String sortOrderConfig = summaryElement.getAttributeValue("sortOrder");
@@ -159,6 +159,8 @@ public class LuceneConfig {
             
             if("asc".equals(sortOrderConfig)){
                 sortOrder = Facet.SortOrder.ASCENDING;
+            } else {
+                sortOrder = Facet.SortOrder.DESCENDING;
             }
         }
 
@@ -168,8 +170,8 @@ public class LuceneConfig {
             this.indexKey = config.indexKey;
             this.translator = config.translator;
             this.max = config.max;
-            this.sortBy = sortBy;
-            this.sortOrder = sortOrder;
+            this.sortBy = config.sortBy;
+            this.sortOrder = config.sortOrder;
         }
 
         public String toString() {

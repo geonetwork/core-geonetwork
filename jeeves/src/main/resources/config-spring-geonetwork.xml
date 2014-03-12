@@ -20,6 +20,7 @@
     <bean id="ScheduleManager" class="jeeves.server.ScheduleManager" lazy-init="true"/>
     <bean id="ServiceManager" class="jeeves.server.dispatchers.ServiceManager" lazy-init="true"/>
     <bean id="XmlCacheManager" class="jeeves.server.dispatchers.guiservices.XmlCacheManager" lazy-init="true"/>
+    <bean id="TransactionAspect" class="jeeves.TransactionAspect" />
 
 
     <bean id="ServiceInfo" class="jeeves.server.dispatchers.ServiceInfo" scope="prototype"/>

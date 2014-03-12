@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <schematron.title>ISO Validation Rules</schematron.title>
     <M6>Attribut darf nicht leer sein</M6>
     <M7>Bedingungen für CRS Attribute</M7>
     <M8>[ISOFTDS19139:2005-TableA1-Row24] - Name, Organisation oder Position ist obligatorisch.</M8>

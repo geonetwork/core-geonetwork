@@ -4,6 +4,7 @@ import org.fao.geonet.entitylistener.UserGroupEntityListenerManager;
 import org.jdom.Element;
 
 import javax.persistence.*;
+import java.util.IdentityHashMap;
 
 /**
  * The mapping between user, the groups a user is a part of and the profiles the user has for each group.
@@ -110,7 +111,7 @@ public class UserGroup extends GeonetEntity {
     }
 
     @Override
-    public Element asXml() {
+    protected Element asXml(IdentityHashMap<Object, Void> alreadyEncoded) {
         return new Element("record")
                 .addContent(new Element("group").setText(""+getId().getGroupId()))
                 .addContent(new Element("user").setText(""+getId().getUserId()))

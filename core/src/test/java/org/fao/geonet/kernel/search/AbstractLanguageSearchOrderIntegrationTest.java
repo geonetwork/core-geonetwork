@@ -16,6 +16,7 @@ import org.jdom.JDOMException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 
 import javax.annotation.Nonnull;
 import java.io.ByteArrayInputStream;

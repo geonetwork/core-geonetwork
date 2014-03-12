@@ -33,11 +33,13 @@ import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.Updater;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -214,7 +216,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 		}			
 	}
 
-	private void updateMetadata(Element xml, String id, GroupMapper localGroups, CategoryMapper localCateg) throws Exception {
+	private void updateMetadata(Element xml, String id, GroupMapper localGroups, final CategoryMapper localCateg) throws Exception {
 	    Log.info(ARCSDE_LOG_MODULE_NAME, "  - Updating metadata with id: "+ id);
         //
         // update metadata
@@ -231,9 +233,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
         metadata.getCategories().clear();
-
-        context.getBean(MetadataRepository.class).save(metadata);
-        aligner.addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
+        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null);
 
         dataMan.flush();
 
@@ -248,7 +248,7 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 	 * @param localCateg
 	 * @throws Exception
 	 */
-	private String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, CategoryMapper localCateg) throws Exception {
+	private String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, final CategoryMapper localCateg) throws Exception {
 	    Log.info(ARCSDE_LOG_MODULE_NAME, "  - Adding metadata with remote uuid: "+ uuid);
 
         //
@@ -268,7 +268,12 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
 		dataMan.setHarvestedExt(iId, source);
 
         aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-        aligner.addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
+        context.getBean(MetadataRepository.class).update(iId, new Updater<Metadata>() {
+            @Override
+            public void apply(@Nonnull Metadata entity) {
+                aligner.addCategories(entity, params.getCategories(), localCateg, context, log, null);
+            }
+        });
 
         dataMan.flush();
 

@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specifications;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nullable;
 import javax.persistence.EntityManager;
@@ -20,7 +19,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.*;
 
-@Transactional
 public class UserRepositoryTest extends AbstractSpringDataTest {
     @PersistenceContext
     private EntityManager _entityManager;
@@ -32,8 +30,6 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
     GroupRepository _groupRepo;
     @Autowired
     UserRepository _userRepo;
-
-    AtomicInteger _inc = new AtomicInteger();
 
     @Test
     public void testNodeIdIsSetOnLoad() {

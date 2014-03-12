@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="criteriaTypes" type="criteriaTypesType"/>
+  <xs:complexType name="typeType">
+    <xs:sequence minOccurs="1" maxOccurs="1">
+      <xs:element type="xs:string" name="value" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="xs:string" name="type" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="xs:string" name="name" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="xs:string" name="allowArbitraryValue" minOccurs="0" maxOccurs="1"/>
+        <xs:choice minOccurs="1" maxOccurs="1">
+            <xs:element type="localType" name="local" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>if url is not present then values must be defined as in following example:</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element type="remoteType" name="remote"  minOccurs="1" maxOccurs="1"/>
+        </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tokensType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="token" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="remoteType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="cacheTime" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>cacheTime > 0 indicates that the typeahead should download all values and cache them
+                    If cacheTime is &lt; 0 then either the "values" element will be used or a remote search will be used for each completion.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="url" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Don't cache  Cache for 1 minute</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="selectRecordArray" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>The following 3 elements are functions (paramName) {function body} and will be converted to a javascript function
+                     in the UI by pre-pending function to the body text  The following 3 elements are functions (paramName) {function body} and will be converted to a javascript function
+                     in the UI by pre-pending function to the body text</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="selectLabelFunction" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="xs:string" name="selectTokensFunction" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>selectTokensFunction is optional</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="selectValueFunction" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="localType">
+    <xs:sequence>
+      <xs:element type="valueType" name="value" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="valueType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="value" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="tokensType" name="tokens" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="criteriaTypesType">
+    <xs:sequence>
+      <xs:element type="typeType" name="type" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

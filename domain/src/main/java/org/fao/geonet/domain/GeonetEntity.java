@@ -6,6 +6,7 @@ import org.springframework.beans.BeanWrapperImpl;
 import javax.annotation.Nonnull;
 import javax.persistence.Embeddable;
 import java.beans.PropertyDescriptor;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,11 +33,20 @@ public class GeonetEntity {
      * @return XML representing the entity.
      */
     @Nonnull
-    public Element asXml() {
-        return asXml(this);
+    public final Element asXml() {
+        IdentityHashMap<Object, Void> alreadyEncoded = new IdentityHashMap<Object, Void>();
+
+        Element record = asXml(alreadyEncoded);
+
+        return record;
     }
 
-    private static Element asXml(Object obj) {
+    protected Element asXml(IdentityHashMap<Object, Void> alreadyEncoded) {
+        return asXml(this, alreadyEncoded);
+    }
+
+    private static Element asXml(Object obj, IdentityHashMap<Object, Void> alreadyEncoded) {
+        alreadyEncoded.put(obj, null);
         Element record = new Element(RECORD_EL_NAME);
         BeanWrapperImpl wrapper = new BeanWrapperImpl(obj);
 
@@ -47,7 +57,9 @@ public class GeonetEntity {
                     if (descName.equalsIgnoreCase("labelTranslations")) {
                         Element labelEl = new Element(LABEL_EL_NAME);
 
+                        @SuppressWarnings("unchecked")
                         Map<String, String> labels = (Map<String, String>) desc.getReadMethod().invoke(obj);
+
                         if (labels != null) {
                             for (Map.Entry<String, String> entry : labels.entrySet()) {
                                 labelEl.addContent(new Element(entry.getKey().toLowerCase()).setText(entry.getValue()));
@@ -58,7 +70,7 @@ public class GeonetEntity {
                     } else {
                         final Object rawData = desc.getReadMethod().invoke(obj);
                         if (rawData != null) {
-                            final Element element = propertyToElement(descName, rawData);
+                            final Element element = propertyToElement(alreadyEncoded, descName, rawData);
                             record.addContent(element);
                         }
                     }
@@ -67,26 +79,27 @@ public class GeonetEntity {
                 throw new RuntimeException(e);
             }
         }
-
         return record;
     }
 
-    private static Element propertyToElement(String descName, Object rawData) {
+    private static Element propertyToElement(IdentityHashMap<Object, Void> alreadyEncoded, String descName, Object rawData) {
         final Element element = new Element(descName.toLowerCase());
         if (rawData instanceof GeonetEntity) {
-            final Element element1 = ((GeonetEntity) rawData).asXml();
-            final List list = element1.removeContent();
-            element.addContent(list);
+            if (!alreadyEncoded.containsKey(rawData)) {
+                final Element element1 = ((GeonetEntity)rawData).asXml(alreadyEncoded);
+                final List list = element1.removeContent();
+                element.addContent(list);
+            }
         } else if (rawData instanceof XmlEmbeddable) {
             ((XmlEmbeddable) rawData).addToXml(element);
         } else if (hasEmbeddableAnnotation(rawData)) {
-            final Element element1 = asXml(rawData);
+            final Element element1 = asXml(rawData, alreadyEncoded);
             final List list = element1.removeContent();
             element.addContent(list);
         } else if (rawData instanceof Iterable) {
             String childName = pluralToSingular(descName);
             for (Object o : (Iterable<?>) rawData) {
-                element.addContent(propertyToElement(childName, o));
+                element.addContent(propertyToElement(alreadyEncoded, childName, o));
             }
         } else {
             element.addContent(rawData.toString());
@@ -106,6 +119,5 @@ public class GeonetEntity {
         }
         return descName;
     }
-
 
 }

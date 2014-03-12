@@ -61,11 +61,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
         </dependency>
-        <dependency>
-            <groupId>aspectj</groupId>
-            <artifactId>aspectjweaver</artifactId>
-        </dependency>
-
         <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
         <dependency>
             <groupId>org.dspace</groupId>

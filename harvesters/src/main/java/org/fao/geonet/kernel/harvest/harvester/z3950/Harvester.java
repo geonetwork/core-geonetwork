@@ -31,6 +31,7 @@ import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
@@ -47,12 +48,14 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.Updater;
 import org.fao.geonet.services.main.Info;
 import org.fao.geonet.utils.Xml;
 import org.jdom.DocType;
 import org.jdom.Document;
 import org.jdom.Element;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 //=============================================================================
@@ -86,7 +89,7 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 	// ---
 	// ---------------------------------------------------------------------------
 
-	public Z3950ServerResults harvest(Logger log) throws Exception {
+	public Z3950ServerResults harvest(final Logger log) throws Exception {
 		Set<String> newUuids = new HashSet<String>();
 
 		int groupSize = 10;
@@ -335,7 +338,12 @@ class Harvester extends BaseAligner implements IHarvester<Z3950ServerResults> {
 				}
 
                 addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-                addCategories(id, params.getCategories(), localCateg, dataMan, context, log, catCodes.get(colCode));
+                context.getBean(MetadataRepository.class).update(Integer.parseInt(id), new Updater<Metadata>() {
+                    @Override
+                    public void apply(@Nonnull Metadata entity) {
+                        addCategories(entity, params.getCategories(), localCateg, context, log, null);
+                    }
+                });
 
 
                 final Integer iId = Integer.valueOf(id);

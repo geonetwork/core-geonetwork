@@ -43,12 +43,15 @@ import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.Xml;
+import org.fao.geonet.repository.Updater;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
 
 import java.util.*;
 
 import static org.fao.geonet.utils.AbstractHttpRequest.Method.GET;
+
+import javax.annotation.Nonnull;
 import static org.fao.geonet.utils.AbstractHttpRequest.Method.POST;
 
 //=============================================================================
@@ -237,8 +240,12 @@ public class Aligner extends BaseAligner
 		dataMan.setHarvestedExt(iId, params.uuid);
 
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-        addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
-
+        context.getBean(MetadataRepository.class).update(Integer.parseInt(id), new Updater<Metadata>() {
+            @Override
+            public void apply(@Nonnull Metadata entity) {
+                addCategories(entity, params.getCategories(), localCateg, context, log, null);
+            }
+        });
 
         dataMan.flush();
 
@@ -289,16 +296,13 @@ public class Aligner extends BaseAligner
                 String language = context.getLanguage();
                 final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false);
 
-                OperationAllowedRepository repository =
-                        context.getBean(OperationAllowedRepository.class);
-                repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId,
-                        Integer.parseInt(id));
+                OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
+				repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
+                
                 addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
                 metadata.getCategories().clear();
-                addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
-
-                context.getBean(MetadataRepository.class).save(metadata);
+                addCategories(metadata, params.getCategories(), localCateg, context, log, null);
 
                 dataMan.flush();
 

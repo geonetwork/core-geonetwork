@@ -34,9 +34,12 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataNotifier;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 
@@ -50,53 +53,49 @@ import java.util.List;
  *  
  */
 public class MetadataNotifierClient {
+    @Autowired
+    SettingManager settingManager;
+    @Autowired
+    GeonetHttpRequestFactory requestFactory;
     /**
      * Uses the notifier update service to handle insertion and updates of metadata.
      *
-     *
-     * @param metadata
-     * @param metadataUuid
-     * @param context
      * @throws MetadataNotifierClientException
      */
-	public void webUpdate(String serviceUrl, final String username, final String password, String metadata,
-                          String metadataUuid, final ServiceContext context) throws MetadataNotifierClientException {
-
-		//RequestEntity requestEntity = new InputStreamRequestEntity(isoDocumentInputStream);
-
-		//method.setRequestEntity(requestEntity);
+	public void webUpdate(MetadataNotifier notifier, String metadataXml, String metadataUuid) throws MetadataNotifierClientException {
         List<? extends NameValuePair> data = Arrays.asList(
                 new BasicNameValuePair("action", "update"),
                 new BasicNameValuePair("uuid", metadataUuid),
-                new BasicNameValuePair("XMLFile", metadata)
+                new BasicNameValuePair("XMLFile", metadataXml)
         );
-        execute(serviceUrl, username, password, context, data);
+        execute(notifier, data);
     }
 
-    private void execute(String serviceUrl, final String username, final String password, final ServiceContext context, List<? extends NameValuePair> data) throws MetadataNotifierClientException {
+    private void execute(final MetadataNotifier notifier, List<? extends NameValuePair> data) throws MetadataNotifierClientException {
         try {
 
             // Create a method instance.
-            HttpPost method = new HttpPost(serviceUrl);
+            HttpPost method = new HttpPost(notifier.getUrl());
             final UrlEncodedFormEntity entity = new UrlEncodedFormEntity(data);
             final RequestConfig.Builder configBuilder = RequestConfig.custom();
             configBuilder.setMaxRedirects(3);
 
             method.setEntity(entity);
 
-            configBuilder.setAuthenticationEnabled(StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password));
+            final boolean authenticationEnabled = StringUtils.isNotBlank(notifier.getUsername()) && notifier.getPassword() != null &&
+                                                  notifier.getPassword().length > 0;
+            configBuilder.setAuthenticationEnabled(authenticationEnabled);
 
             method.setConfig(configBuilder.build());
 
-            final GeonetHttpRequestFactory requestFactory = context.getBean(GeonetHttpRequestFactory.class);
             ClientHttpResponse response = requestFactory.execute(method, new Function<HttpClientBuilder, Void>() {
                 @Nullable
                 @Override
                 public Void apply(@Nullable HttpClientBuilder input) {
-                    final CredentialsProvider provider = Lib.net.setupProxy(context.getBean(SettingManager.class), input);
-                    if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(password)) {
+                    final CredentialsProvider provider = Lib.net.setupProxy(settingManager, input);
+                    if (authenticationEnabled) {
                         System.out.println("webUpdate: SET USER");
-                        provider.setCredentials( AuthScope.ANY, new UsernamePasswordCredentials(username, password));
+                        provider.setCredentials( AuthScope.ANY, new UsernamePasswordCredentials(notifier.getUsername(), String.copyValueOf(notifier.getPassword())));
 
                         configBuilder.setAuthenticationEnabled(true);
                     }
@@ -127,8 +126,7 @@ public class MetadataNotifierClient {
      * @param metadataUuid
      * @throws MetadataNotifierClientException
      */
-	public void webDelete(String serviceUrl, String username, String password,
-                          String metadataUuid, ServiceContext context) throws MetadataNotifierClientException {
+	public void webDelete(MetadataNotifier notifier, String metadataUuid) throws MetadataNotifierClientException {
 
         List<? extends NameValuePair> data = Arrays.asList(
                 new BasicNameValuePair("action", "delete"),
@@ -136,7 +134,7 @@ public class MetadataNotifierClient {
                 new BasicNameValuePair("XMLFile", "")
         );
 
-        execute(serviceUrl, username, password, context, data);
+        execute(notifier, data);
 	}
 
 }

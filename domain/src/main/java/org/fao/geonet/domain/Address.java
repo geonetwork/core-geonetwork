@@ -169,57 +169,35 @@ public class Address extends GeonetEntity implements Serializable {
     }
     // CSOFF: AvoidInlineConditionals
     // CSOFF: NeedBraces
+
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((_address == null) ? 0 : _address.hashCode());
-        result = prime * result + ((_city == null) ? 0 : _city.hashCode());
-        result = prime * result + ((_country == null) ? 0 : _country.hashCode());
-        result = prime * result + _id;
-        result = prime * result + ((_state == null) ? 0 : _state.hashCode());
-        result = prime * result + ((_zip == null) ? 0 : _zip.hashCode());
-        return result;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Address address = (Address) o;
+
+        if (_id != address._id) return false;
+        if (_address != null ? !_address.equals(address._address) : address._address != null) return false;
+        if (_city != null ? !_city.equals(address._city) : address._city != null) return false;
+        if (_country != null ? !_country.equals(address._country) : address._country != null) return false;
+        if (_state != null ? !_state.equals(address._state) : address._state != null) return false;
+        if (_zip != null ? !_zip.equals(address._zip) : address._zip != null) return false;
+
+        return true;
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Address other = (Address) obj;
-        if (_address == null) {
-            if (other._address != null)
-                return false;
-        } else if (!_address.equals(other._address))
-            return false;
-        if (_city == null) {
-            if (other._city != null)
-                return false;
-        } else if (!_city.equals(other._city))
-            return false;
-        if (_country == null) {
-            if (other._country != null)
-                return false;
-        } else if (!_country.equals(other._country))
-            return false;
-        if (_id != other._id)
-            return false;
-        if (_state == null) {
-            if (other._state != null)
-                return false;
-        } else if (!_state.equals(other._state))
-            return false;
-        if (_zip == null) {
-            if (other._zip != null)
-                return false;
-        } else if (!_zip.equals(other._zip))
-            return false;
-        return true;
+    public int hashCode() {
+        int result = _id;
+        result = 31 * result + (_address != null ? _address.hashCode() : 0);
+        result = 31 * result + (_city != null ? _city.hashCode() : 0);
+        result = 31 * result + (_state != null ? _state.hashCode() : 0);
+        result = 31 * result + (_zip != null ? _zip.hashCode() : 0);
+        result = 31 * result + (_country != null ? _country.hashCode() : 0);
+        return result;
     }
+
     // CSON: AvoidInlineConditionals
     // CSON: NeedBraces
 }

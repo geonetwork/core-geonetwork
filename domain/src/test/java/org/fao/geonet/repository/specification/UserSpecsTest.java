@@ -9,7 +9,6 @@ import org.fao.geonet.repository.UserRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -29,12 +28,9 @@ import static org.junit.Assert.assertTrue;
  * Date: 9/12/13
  * Time: 7:32 PM
  */
-@Transactional
 public class UserSpecsTest extends AbstractSpringDataTest {
     @Autowired
     UserRepository _userRepo;
-
-    AtomicInteger _inc = new AtomicInteger();
 
     @Test
     public void testHasUserId() throws Exception {

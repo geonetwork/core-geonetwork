@@ -1,0 +1,102 @@
+<div data-ng-controller="GnAdminMetadataController">
+    <div data-ng-controller="GnSchematronEditCriteriaController">
+        <div id="schematronConfirmationDialog" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="ConfirmRemoveDialog" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    Do Delete?
+
+                    <button data-dismiss="modal" data-ng-click="dialog.deleteConfirmed()">{{'confirm' | translate}}</button>
+                    <button data-dismiss="modal">{{'cancel' | translate}}</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading" data-translate="">schematrons</div>
+                    <div class="panel-body" data-ng-repeat="schema in schematrons">
+                        <h5><strong>{{schema.name}}</strong></h5>
+
+                        <div class="list-group">
+                            <a class="list-group-item" data-ng-repeat="schematron in schema.schematron"
+                               data-ng-click="selectSchematron(schema, schematron)"
+                               data-ng-class="{active: selection.schematron === schematron}">
+                                {{schematron.rulename}} <span class="badge">{{schematron.groupCount}}</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><span data-translate="">schematronApplicationCriteria</span>
+                        <i id="schematronCriteriaGroupsQuestion" class="fa fa-question-circle"
+                             data-ng-mouseover="isShowSchematronGroupHelp = true"
+                             data-ng-mouseleave="isShowSchematronGroupHelp = false"></i>
+                        <div style="padding-left: 2em; padding-top: 1em" data-ng-show="isShowSchematronGroupHelp">
+                            Schematron <em>{{selection.schematron.rulename}}</em> will be used to validate a metadata when all the criteria in
+                            one of the following groups evaluate to true for the metadata.
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div data-ng-show="schematronGroups != undefined && schematronGroups != null">
+                            <ul class="nav nav-tabs">
+                                <li data-ng-class="{active: selection.group == group}"
+                                    data-ng-click="selectGroup(group)"
+                                    data-ng-repeat="group in schematronGroups">
+                                    <a data-ng-click="startGroupEditing(group)">
+                                        <span data-ng-hide="editGroup.group === group">{{group.id.name}}&NonBreakingSpace;</span>
+                                        <input data-ng-show="editGroup.group === group"
+                                               data-ng-blur="cancelGroupEdit()"
+                                               data-ng-model="editGroup.updatedGroup.id.name"
+                                               data-ng-keyup="handleGroupEditKeyPress($event.keyCode)"
+                                               id="{{group.id.name}}_NameInput"type="text" value="{{group.id.name}}" />
+                                        <i class="fa gn-action"
+                                           data-ng-class="hoverDelete"
+                                           data-ng-init="hoverDelete = 'fa-times'"
+                                           data-ng-click="deleteSchematronGroup(group)"
+                                           data-ng-mouseleave="hoverDelete = 'fa-times'"
+                                           data-ng-mouseover="hoverDelete = 'fa-times-circle'"></i>
+                                    </a>
+                                </li>
+                                <li data-ng-class="{active: !selection.group}"
+                                        data-ng-click="createSchematronGroup()">
+                                    <a class="fa fa-plus"></a>
+                                </li>
+                            </ul>
+                            <div class="well-sm">
+                                <div class="dropdown" data-ng-hide="!schematronGroups || schematronGroups.length == 0">
+                                    <h5 data-toggle="dropdown" style="cursor: pointer">
+                                        <small>{{'requirement'+selection.group.requirement | translate}}</small>
+                                        <i class="fa fa-caret-down"></i>
+                                    </h5>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                        <li role="presentation" data-ng-repeat="requirement in requirements"
+                                            data-ng-hide="selection.group.requirement === requirement">
+                                            <a role="menuitem" data-ng-click="setRequirement(requirement)" tabindex="-1">{{'requirement'+requirement | translate}}</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <ul class="list-group" data-ng-if="selection.group">
+                                <gn-criteria-editor
+                                        criteria="criteria"
+                                        schema="selection.schema"
+                                        group="selection.group"
+                                        lang="lang"
+                                        confirmationDialog="dialog"
+                                        data-ng-repeat="criteria in selection.group.criteria"></gn-criteria-editor>
+                                <gn-criteria-editor
+                                        criteria="{id: null, type: 'NEW', uitype:'NEW', value: '', uivalue: ''}"
+                                        schema="selection.schema"
+                                        lang="lang"
+                                        confirmationDialog="dialog"
+                                        group="selection.group"></gn-criteria-editor>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

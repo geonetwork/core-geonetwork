@@ -33,6 +33,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
 
     @Test
     public void testDeleteMetadata() throws Exception {
+        int count = (int) _metadataRepository.count();
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
         final UserSession userSession = serviceContext.getUserSession();
@@ -41,11 +42,11 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
                 "" + ReservedGroup.all.getId(), "sourceid", "n", "doctype", null, new ISODate().getDateAndTime(), new ISODate().getDateAndTime(),
                 false, false);
 
-        assertEquals(1, _metadataRepository.count());
+        assertEquals(count + 1, _metadataRepository.count());
 
         _dataManager.deleteMetadata(serviceContext, mdId);
 
-        assertEquals(0, _metadataRepository.count());
+        assertEquals(count, _metadataRepository.count());
     }
 
     @Test

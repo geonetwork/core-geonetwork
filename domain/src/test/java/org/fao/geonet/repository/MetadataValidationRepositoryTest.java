@@ -3,7 +3,6 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -17,14 +16,12 @@ import static org.junit.Assert.assertNull;
  * Date: 9/4/13
  * Time: 4:01 PM
  */
-@Transactional
 public class MetadataValidationRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
     private MetadataValidationRepository _metadataValidationRepository;
     @Autowired
     private MetadataRepository _metadataRepository;
-    private AtomicInteger _inc = new AtomicInteger();
 
     @Test
     public void testFindById_MetadataId() throws Exception {

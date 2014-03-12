@@ -35,11 +35,7 @@ import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
 import org.apache.xml.resolver.tools.CatalogResolver;
-import org.jdom.DocType;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
+import org.jdom.*;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.SAXOutputter;
@@ -666,8 +662,6 @@ public final class Xml
      * @param xml the XML element
      * @return the JSON response
      * 
-     * @throws JsonParseException
-     * @throws JsonMappingException
      * @throws IOException
      */
     public static String getJSON (Element xml) throws IOException {
@@ -679,8 +673,6 @@ public final class Xml
      * @param xml the XML element
      * @return the JSON response
      * 
-     * @throws JsonParseException
-     * @throws JsonMappingException
      * @throws IOException
      */
     public static String getJSON (String xml) throws IOException {
@@ -1222,5 +1214,107 @@ public final class Xml
 		return SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 	}
 
+
+    /**
+     * Create and XPath expression for identified Element.
+     *
+     * @param element element within the xml to find an XPath for.
+     *
+     * return xpath or null if there was an error.
+     */
+    public static String getXPathExpr(Content element) {
+        StringBuilder builder = new StringBuilder();
+        if (!doCreateXpathExpr(element, builder)) {
+            return null;
+        } else {
+            return builder.toString();
+        }
+    }
+
+    /**
+     * Create and XPath expression for identified Element.
+     *
+     * @param attribute element within the xml to find an XPath for.
+     *
+     * return xpath or null if there was an error.
+     */
+    public static String getXPathExpr(Attribute attribute) {
+        StringBuilder builder = new StringBuilder();
+        if (!doCreateXpathExpr(attribute, builder)) {
+            return null;
+        } else {
+            return builder.toString();
+        }
+    }
+
+    private static boolean doCreateXpathExpr(Object content, StringBuilder builder) {
+        if (builder.length() > 0) {
+            builder.insert(0, "/");
+        }
+
+        Element parentElement;
+        if (content instanceof Element) {
+            Element element = (Element) content;
+            final List<Attribute> attributes = element.getAttributes();
+            doCreateAttributesXpathExpr(builder, attributes);
+            final String textTrim = element.getTextTrim();
+            if (!textTrim.isEmpty()) {
+                boolean addToCondition = builder.length() > 0 && builder.charAt(0) == '[';
+
+                if (!addToCondition) {
+                    builder.insert(0, "']");
+                } else {
+                    builder.deleteCharAt(0);
+                    builder.insert(0, "' and ");
+                }
+
+                builder.insert(0, textTrim).insert(0, "[normalize-space(text()) = '");
+
+            }
+            builder.insert(0, element.getName());
+            if (element.getNamespacePrefix() != null && !element.getNamespacePrefix().trim().isEmpty()) {
+                builder.insert(0, ':').insert(0, element.getNamespacePrefix());
+            }
+            parentElement = element.getParentElement();
+        } else if (content instanceof Text) {
+            final Text text = (Text) content;
+            builder.insert(0, "text()");
+            parentElement = text.getParentElement();
+        } else if (content instanceof Attribute) {
+            Attribute attribute = (Attribute) content;
+            builder.insert(0, attribute.getName());
+            if (attribute.getNamespacePrefix() != null && !attribute.getNamespacePrefix().trim().isEmpty()) {
+                builder.insert(0, ':').insert(0, attribute.getNamespacePrefix());
+            }
+            builder.insert(0, '@');
+            parentElement = attribute.getParent();
+        } else {
+            parentElement = null;
+        }
+
+        if (parentElement != null && parentElement.getParentElement() != null) {
+            return doCreateXpathExpr(parentElement, builder);
+        }
+        return true;
+    }
+
+    private static void doCreateAttributesXpathExpr(StringBuilder builder, List<Attribute> attributes) {
+        if (!attributes.isEmpty()) {
+            StringBuilder attBuilder = new StringBuilder("[");
+            for (Attribute attribute : attributes) {
+                if (attBuilder.length() > 1) {
+                    attBuilder.append(" and ");
+                }
+                attBuilder.append('@');
+                if (attribute.getNamespacePrefix() != null && !attribute.getNamespacePrefix().trim().isEmpty()) {
+                    attBuilder.append(attribute.getNamespacePrefix()).append(':');
+                }
+                attBuilder.append(attribute.getName()).append(" = '").append(attribute.getValue()).append('\'');
+            }
+            attBuilder.append("]");
+
+            builder.insert(0, attBuilder);
+        }
+    }
 
 }

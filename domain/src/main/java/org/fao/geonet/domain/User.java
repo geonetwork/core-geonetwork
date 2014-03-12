@@ -20,7 +20,7 @@ import java.util.*;
 @Table(name = "Users")
 @Cacheable
 @EntityListeners(value = {UserEntityListenerManager.class})
-@SequenceGenerator(name=User.ID_SEQ_NAME, initialValue=100, allocationSize=1)
+@SequenceGenerator(name = User.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class User extends GeonetEntity implements UserDetails {
     public static final String NODE_APPLICATION_CONTEXT_KEY = "jeevesNodeApplicationContext_";
     private static final long serialVersionUID = 2589607276443866650L;
@@ -32,7 +32,7 @@ public class User extends GeonetEntity implements UserDetails {
     private String _surname;
     private String _name;
     private Set<String> _email = new HashSet<String>();
-    private Set<Address> _addresses = new HashSet<Address>();
+    private Set<Address> _addresses = new LinkedHashSet<Address>();
     private String _organisation;
     private String _kind;
     private Profile _profile = Profile.RegisteredUser;
@@ -45,7 +45,7 @@ public class User extends GeonetEntity implements UserDetails {
      * @return the user id
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
         return _id;
     }
@@ -211,11 +211,14 @@ public class User extends GeonetEntity implements UserDetails {
     Address getPrimaryAddress() {
         Set<Address> addresses = getAddresses();
 
-        if (addresses.isEmpty()) {
-            addresses.add(new Address());
+        final Address addressCopy = new Address();
+        if (!addresses.isEmpty()) {
+            final Address otherAddress = addresses.iterator().next();
+            addressCopy.mergeAddress(otherAddress, true);
+            addressCopy.setId(otherAddress.getId());
         }
 
-        return addresses.iterator().next();
+        return addressCopy;
     }
 
     /**
@@ -311,7 +314,7 @@ public class User extends GeonetEntity implements UserDetails {
         ArrayList<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
         final String nodeId = getSecurity().getNodeId();
         if (nodeId != null) {
-            auths.add(new SimpleGrantedAuthority(NODE_APPLICATION_CONTEXT_KEY+nodeId));
+            auths.add(new SimpleGrantedAuthority(NODE_APPLICATION_CONTEXT_KEY + nodeId));
         }
 
         if (_profile != null) {

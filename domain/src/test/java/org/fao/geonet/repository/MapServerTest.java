@@ -10,7 +10,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.fao.geonet.repository.SpringDataTestSupport.assertSameContents;
 import static org.junit.Assert.assertEquals;
 
 @Transactional

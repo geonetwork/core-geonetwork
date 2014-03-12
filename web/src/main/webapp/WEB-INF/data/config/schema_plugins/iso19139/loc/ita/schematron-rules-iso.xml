@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <schematron.title>ISO Validation Rules</schematron.title>
     <M6>Il testo deve avere un contenuto oppure il suo genitore deve avere un attributo nilReason valido.</M6>
     <M7>CRS attributes constraints</M7>
     <M8>[ISOFTDS19139:2005-TableA1-Row24] - E' richiesto un nome per il contatto</M8>

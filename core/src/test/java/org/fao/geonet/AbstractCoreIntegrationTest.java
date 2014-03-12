@@ -1,6 +1,5 @@
 package org.fao.geonet;
 
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.TreeTraverser;
 import com.google.common.io.Files;
@@ -26,6 +25,7 @@ import org.fao.geonet.languages.LanguageDetector;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.TransformerFactoryFactory;
@@ -40,7 +40,6 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.Name;
 import org.opengis.filter.Filter;
@@ -51,15 +50,20 @@ import org.springframework.test.context.ContextConfiguration;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.sql.DataSource;
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.net.URL;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertTrue;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * A helper class for testing services.  This super-class loads in the spring beans for Spring-data repositories and mocks for
@@ -164,6 +168,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         }
 
         assertTrue(schemaManager.existsSchema("iso19139"));
+        assertTrue(schemaManager.existsSchema("iso19115"));
         assertTrue(schemaManager.existsSchema("dublin-core"));
 
         _applicationContext.getBean(SearchManager.class).init(false, false, "", 100);
@@ -176,7 +181,16 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         if (sources.isEmpty()) {
             sources = new ArrayList<Source>(1);
             sources.add(sourceRepository.save(new Source().setLocal(true).setName("Name").setUuid(siteUuid)));
-
+        }
+        final DataSource dataSource = _applicationContext.getBean(DataSource.class);
+        Connection conn = null;
+        try {
+            conn = dataSource.getConnection();
+            ThreadUtils.init(conn.getMetaData().getURL(), _applicationContext.getBean(SettingManager.class));
+        } finally {
+            if (conn != null) {
+                conn.close();
+            }
         }
 
     }
@@ -412,7 +426,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         return new File(here.getParentFile(), "web/src/main/webapp/").getAbsolutePath() + File.separator;
     }
 
-    private static File getClassFile(Class<?> cl) {
+    protected static File getClassFile(Class<?> cl) {
         final String testClassName = cl.getSimpleName();
         return new File(cl.getResource(testClassName + ".class").getFile());
     }
@@ -443,6 +457,11 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         String schema = dataManager.autodetectSchema(metadata);
         final SourceRepository sourceRepository = _applicationContext.getBean(SourceRepository.class);
         List<Source> sources = sourceRepository.findAll();
+
+        if (sources.isEmpty()) {
+            final Source source = sourceRepository.save(new Source().setLocal(true).setName("localsource").setUuid("uuidOfLocalSorce"));
+            sources = Lists.newArrayList(source);
+        }
 
         Source source = sources.get(0);
         ArrayList<String> id = new ArrayList<String>(1);

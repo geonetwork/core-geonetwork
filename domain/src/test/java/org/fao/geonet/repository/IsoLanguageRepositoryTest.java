@@ -4,20 +4,16 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.IsoLanguage;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
 
-@Transactional
 public class IsoLanguageRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
     IsoLanguageRepository _repo;
-
-    AtomicInteger _inc = new AtomicInteger();
 
     @Test
     public void testFindOne() {

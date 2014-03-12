@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <schematron.title>Geonetwork Validation Rules</schematron.title>
     <M500>[Language] - la lingua del metadato non è definita e sono dichiarati in altre lingue e la lingua principale per il metadato NON DEVE essere definita nella sezione lingua.</M500>
     <alert.M500>
         <div>Verifica se la lingua principale non è impostata quando sono definite più lingue (es. gmd:locale) 

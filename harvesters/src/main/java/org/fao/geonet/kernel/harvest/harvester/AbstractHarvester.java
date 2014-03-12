@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester;
 
 import jeeves.server.UserSession;
+import jeeves.server.context.BasicContext;
 import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.lang.StringUtils;
@@ -38,6 +39,7 @@ import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
@@ -57,8 +59,6 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specifications;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -131,12 +131,13 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         String packagename = getClass().getPackage().getName();
         String[] packages = packagename.split("\\.");
         String packageType = packages[packages.length - 1];
-        log = Log.createLogger(this.getParams().name,
+        final String harvesterName = this.getParams().name.replaceAll("\\W+", "_");
+        log = Log.createLogger(harvesterName,
                 "geonetwork.harvester");
 
         String directory = log.getFileAppender();
-        if (directory.isEmpty()) {
-            directory = "./";
+        if (directory == null || directory.isEmpty()) {
+            directory = context.getBean(GeonetworkDataDirectory.class).getSystemDataDir()+"/harvester_logs/";
         }
         File d = new File(directory);
         if (!d.isDirectory()) {
@@ -144,9 +145,9 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         }
 
         DailyRollingFileAppender fa = new DailyRollingFileAppender();
-        fa.setName(this.getParams().name);
+        fa.setName(harvesterName);
         String logfile = directory + "harvester_" + packageType + "_"
-                         + this.getParams().name + "_"
+                         + harvesterName + "_"
                          + dateFormat.format(new Date(System.currentTimeMillis()))
                          + ".log";
         fa.setFile(logfile);
@@ -172,14 +173,12 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws BadInputEx
      * @throws SQLException
      */
-    @Transactional(propagation = Propagation.REQUIRED)
     public synchronized void add(Element node) throws BadInputEx, SQLException {
         status = Status.INACTIVE;
         error = null;
         id = doAdd(node);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
     public synchronized void init(Element node, ServiceContext context) throws BadInputEx, SchedulerException {
         id = node.getAttributeValue("id");
         status = Status.parse(node.getChild("options").getChildText("status"));
@@ -250,7 +249,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      *
      * @throws Exception
      */
-    @Transactional(propagation = Propagation.REQUIRED)
     public synchronized void destroy() throws Exception {
         doUnschedule();
 
@@ -285,7 +283,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws SQLException
      * @throws SchedulerException
      */
-    @Transactional(propagation = Propagation.REQUIRED)
     public synchronized OperResult start() throws SQLException, SchedulerException {
         if (status != Status.INACTIVE) {
             return OperResult.ALREADY_ACTIVE;
@@ -307,7 +304,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws SQLException
      * @throws SchedulerException
      */
-    @Transactional(propagation = Propagation.REQUIRED)
     public synchronized OperResult stop() throws SQLException, SchedulerException {
         if (status != Status.ACTIVE) {
             return OperResult.ALREADY_INACTIVE;
@@ -323,7 +319,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      *
      * @return {@link OperResult#OK} or {@link OperResult#ALREADY_RUNNING} if harvester is currently running.
      */
-    @Transactional(propagation = Propagation.REQUIRED)
     public synchronized OperResult run() throws SQLException, SchedulerException {
         if (status == Status.INACTIVE) {
             start();
@@ -340,7 +335,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      *
      * @return {@link OperResult#OK} or {@link OperResult#ERROR}
      */
-    @Transactional(propagation = Propagation.REQUIRED)
     public synchronized OperResult invoke() {
         Status oldStatus = status;
 
@@ -360,7 +354,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @throws SQLException
      * @throws SchedulerException
      */
-    @Transactional(propagation = Propagation.REQUIRED)
     public synchronized void update(Element node) throws BadInputEx, SQLException, SchedulerException {
         doUpdate(id, node);
 
@@ -411,6 +404,10 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      */
     public void addHarvestInfo(Element info, String id, String uuid) {
         info.addContent(new Element("type").setText(getType()));
+    }
+
+    public ServiceContext getServiceContext() {
+        return context;
     }
 
     //---------------------------------------------------------------------------
@@ -484,7 +481,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * Run the harvest process.
      * This has to be protected or better for CGLib to proxy to it./
      */
-    @Transactional(propagation = Propagation.REQUIRED)
     protected synchronized OperResult harvest() {
         OperResult operResult = OperResult.OK;
         running = true;
@@ -903,7 +899,6 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
      * @return
      * @throws Exception
      */
-    @Transactional(propagation = Propagation.REQUIRED)
     public String getOwnerEmail() throws Exception {
         String ownerId = getParams().ownerIdGroup;
 

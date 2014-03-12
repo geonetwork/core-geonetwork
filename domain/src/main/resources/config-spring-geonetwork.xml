@@ -26,6 +26,7 @@
                 <entry key="hibernate.cache.use_second_level_cache" value="false"/>
                 <entry key="hibernate.jdbc.batch_size" value="3"/>
                 <entry key="hibernate.jdbc.batch_versioned_data" value="true"/>
+                <entry key="hibernate.enable_lazy_load_no_trans" value="true"/>
             </map>
         </property>
     </bean>

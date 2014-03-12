@@ -96,6 +96,7 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -560,7 +561,7 @@ public class SearchManager {
 		endZ3950();
 		_spatial.end();
 		_luceneOptimizerManager.cancel();
-		_tracker.close(true);
+		_tracker.close(TimeUnit.MINUTES.toMillis(1), true);
 	}
 
     /**
@@ -1298,7 +1299,7 @@ public class SearchManager {
 		if (rebuild || badIndex) {
 			Log.error(Geonet.INDEX_ENGINE, "Rebuilding lucene index");
 
-			_tracker.reset();
+			_tracker.reset(TimeUnit.MINUTES.toMillis(5));
 			if (_spatial != null){
 				try {
 				_spatial.writer().reset();

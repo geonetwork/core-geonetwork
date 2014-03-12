@@ -28,7 +28,9 @@
 
 
 
+
     <bean id="IncreasePopularityTask" class="org.fao.geonet.kernel.IncreasePopularityTask" lazy-init="true" scope="prototype"/>
     <bean id="SearchLoggerTask" class="org.fao.geonet.kernel.search.SearchLoggerTask" lazy-init="true" scope="prototype"/>
     <bean id="MetadataNotifierTask" class="org.fao.geonet.notifier.MetadataNotifierTask" lazy-init="true" scope="prototype"/>
+    <bean id="MetadataNotifierClient" class="org.fao.geonet.notifier.MetadataNotifierClient" lazy-init="true" scope="prototype"/>
 </beans>

@@ -23,6 +23,6 @@ public class TemplatesUriLocatorTest {
 
         assertTrue(locator.accept(resource.getUri()));
         final String actual = IOUtils.toString(locator.locate(resource.getUri()));
-        assertEquals(String.format("$templateCache.put('%stemplate.html', '<html><div ng-class=\"test | \\'bold\\'\"></div></html>');",path.replace('\\','/')), actual);
+        assertEquals(String.format("$templateCache.put('%stemplate.html', '<html><div ng-class=\"test | \\'bold\\'\"></div></html>');","../.."+path.replace('\\','/')), actual);
     }
 }

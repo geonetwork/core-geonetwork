@@ -12,6 +12,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.*;
 import java.io.IOException;
+import java.util.IdentityHashMap;
 
 /**
  * An entity representing a harvesting task that may have been completed or possibly ending in error.
@@ -309,9 +310,10 @@ public class HarvestHistory extends GeonetEntity {
         return this;
     }
 
+
     @Override
-    public Element asXml() {
-        final Element element = super.asXml();
+    protected Element asXml(IdentityHashMap<Object, Void> alreadyEncoded) {
+        final Element element = super.asXml(alreadyEncoded);
 
 
         Element infoAsXml = null;

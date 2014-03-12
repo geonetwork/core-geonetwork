@@ -1,14 +1,10 @@
 package org.fao.geonet.wro4j;
 
+import org.apache.commons.io.IOUtils;
 import ro.isdc.wro.config.Context;
 import ro.isdc.wro.model.resource.locator.UriLocator;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 import javax.servlet.ServletContext;
 
@@ -53,21 +49,26 @@ public class TemplatesUriLocator implements UriLocator {
         			
     				String sCurrentLine;
     				template = new StringBuilder();
-    				br = new BufferedReader(new FileReader(files[i]));
-    				while ((sCurrentLine = br.readLine()) != null) {
-    					template.append(sCurrentLine);
-    				}
-    				
-    			    String sTemplate = template.toString();
-    			    sTemplate = sTemplate.replaceAll(">\\s*<", "><");
-    			    sTemplate = sTemplate.replaceAll("\\s\\s+", " ");
-    			    sTemplate = sTemplate.replaceAll("\n", "");
-    			    sTemplate = sTemplate.replace("'", "\\'");
-    			    
-        			javascript.append(
-        					String.format("$templateCache.put('%s', '%s');", 
-        					"../.." + path.replace('\\','/') + '/' + files[i].getName(), 
-        					sTemplate));
+                    final Reader reader = new InputStreamReader(new FileInputStream(files[i]), "UTF-8");
+                    try {
+                        br = new BufferedReader(reader);
+                        while ((sCurrentLine = br.readLine()) != null) {
+                            template.append(sCurrentLine);
+                        }
+
+                        String sTemplate = template.toString();
+                        sTemplate = sTemplate.replaceAll(">\\s*<", "><");
+                        sTemplate = sTemplate.replaceAll("\\s\\s+", " ");
+                        sTemplate = sTemplate.replaceAll("\n", "");
+                        sTemplate = sTemplate.replace("'", "\\'");
+
+                        javascript.append(
+                                String.format("$templateCache.put('%s', '%s');",
+                                "../.." + path.replace('\\','/') + '/' + files[i].getName(),
+                                sTemplate));
+                    } finally {
+                        IOUtils.closeQuietly(reader);
+                    }
         		}
         	}
     	}

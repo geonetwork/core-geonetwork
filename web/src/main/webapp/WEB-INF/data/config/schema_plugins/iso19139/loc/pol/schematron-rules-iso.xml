@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <schematron.title>ISO Validation Rules</schematron.title>
     <M6>Łańcuch znaków musi mieć zawartość lub jego &apos; rodzic musi mieć ważny atrybut nilReason.</M6>
     <M7>Ograniczenia atrybutów CRS</M7>
     <M8>[ISOFTDS19139:2005-TableA1-Row24] - Wymagana jest nazwa w kontakcie</M8>

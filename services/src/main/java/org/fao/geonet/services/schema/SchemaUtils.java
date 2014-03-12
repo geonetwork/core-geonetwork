@@ -122,14 +122,14 @@ public class SchemaUtils {
 			zipArchive = new File(fname);
 		}
 
-		Element response = doSchema(scm, schema, zipArchive, add);
+		Element response = doSchema(context, scm, schema, zipArchive, add);
 		if (deleteTempZip) IO.delete(zipArchive, false, Geonet.SCHEMA_MANAGER);
 		return response;
 	}
 
 	// --------------------------------------------------------------------------
 
-	private Element doSchema(SchemaManager scm, String schema, File zipArchive, boolean add) throws Exception { 
+	private Element doSchema(ServiceContext context, SchemaManager scm, String schema, File zipArchive, boolean add) throws Exception {
 
 		Element response = new Element("response");
 

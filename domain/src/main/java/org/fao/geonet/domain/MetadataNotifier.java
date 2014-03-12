@@ -152,7 +152,11 @@ public class MetadataNotifier extends GeonetEntity {
      */
     @Nullable
     public char[] getPassword() {
-        return _password.clone();
+        if (_password == null) {
+            return null;
+        }  else {
+            return _password.clone();
+        }
     }
 
     /**

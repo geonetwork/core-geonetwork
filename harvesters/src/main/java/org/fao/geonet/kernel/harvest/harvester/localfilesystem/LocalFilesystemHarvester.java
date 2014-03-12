@@ -32,6 +32,7 @@ import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.Updater;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.util.XMLExtensionFilenameFilter;
 import org.fao.geonet.utils.IO;
@@ -39,6 +40,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -236,7 +238,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 		return result;
 	}
 
-	private void updateMetadata(Element xml, String id, GroupMapper localGroups, CategoryMapper localCateg) throws Exception {
+	private void updateMetadata(Element xml, final String id, GroupMapper localGroups, final CategoryMapper localCateg) throws Exception {
 		log.debug("  - Updating metadata with id: "+ id);
 
         //
@@ -254,10 +256,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
         metadata.getCategories().clear();
-        context.getBean(MetadataRepository.class).save(metadata);
-
-        aligner.addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
-
+        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null);
 
         dataMan.flush();
 
@@ -275,7 +274,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 	 * @param createDate TODO
 	 * @throws Exception
 	 */
-	private String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, CategoryMapper localCateg, String createDate) throws Exception {
+	private String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, final CategoryMapper localCateg, String createDate) throws Exception {
 		log.debug("  - Adding metadata with remote uuid: "+ uuid);
 
 		String source = params.uuid;
@@ -293,7 +292,12 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 		dataMan.setHarvestedExt(iId, source);
 
         aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-        aligner.addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
+        context.getBean(MetadataRepository.class).update(iId, new Updater<Metadata>() {
+            @Override
+            public void apply(@Nonnull Metadata entity) {
+                aligner.addCategories(entity, params.getCategories(), localCateg, context, log, null);
+            }
+        });
 
         dataMan.flush();
 

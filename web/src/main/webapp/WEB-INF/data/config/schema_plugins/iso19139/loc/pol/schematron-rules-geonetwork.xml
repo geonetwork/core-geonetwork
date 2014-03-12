@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <schematron.title>Geonetwork Validation Rules</schematron.title>
     <M500>[Język] - Język metadanych jest nie zdefiniowany i inny język jest zadeklarowany - nie wolno zdefiniować języka głównego metadanych w sekcji innego języka.</M500>
     <alert.M500>
         <div>Sprawdź czy język główny metadanych nie jest zdefiniowany w innych językach(w gmd:locale). <br/>

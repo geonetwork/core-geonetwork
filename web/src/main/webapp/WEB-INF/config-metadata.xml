@@ -1,423 +1,423 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
 <geonet>
-	<services package="org.fao.geonet">
+    <services package="org.fao.geonet">
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Metadata services                                             -->
-				<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-		<service name="metadata.insert.paste">
-			<class name=".services.metadata.Insert" />
-	
-			<output sheet="metadata-insert-results.xsl" />
-	
-			<error sheet="error.xsl">
-				<xml name="error" file="xml/validation-error.xml" />
-				<xml name="validation" file="xml/metadata-validate.xml" />
-			</error>
-		</service>
-	
-		<service name="xml.metadata.insert.paste">
-			<class name=".services.metadata.Insert" />
-			<error sheet="error-xml.xsl"/>
-		</service>
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- Metadata services                                             -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <service name="metadata.insert.paste">
+            <class name=".services.metadata.Insert" />
 
-		<service name="metadata.insert">
-			<class name=".services.metadata.Insert"/>
+            <output sheet="metadata-insert-results.xsl" />
 
-			<output forward="metadata.edit" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.show">
-			<class name=".services.metadata.Show">
-				<param name="addRefs" value="y" />
-				<param name="cache" value="y" />
-			</class>
-
-			<output sheet="metadata-show.xsl">
-				<call name="currTab"  class=".guiservices.util.GetCurrentMDTab"/>
-				<call name="position" class=".guiservices.util.GetPositionMD"/>
-				<call name="relation" class =".guiservices.metadata.GetRelated"/>
-				<call name="sources"  class=".guiservices.util.Sources"/>
-				<call name="isoLang"  class=".guiservices.isolanguages.Get"/>
-				<call name="clear"  class=".services.metadata.ClearCachedShowMetadata"/>
-			</output>
-
-			<error id="operation-not-allowed" sheet="error.xsl" statusCode="403">
-				<xml name="error" file="xml/metadata-show-error.xml" />
-			</error>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.show.embedded">
-			<class name=".services.metadata.Show">
-				<param name="addRefs" value="y" />
-				<param name="cache" value="y" />
-			</class>
-
-			<output sheet="metadata-show-embedded.xsl">
-				<call name="currTab"  class=".guiservices.util.GetCurrentMDTab"/>
-				<call name="position" class=".guiservices.util.GetPositionMD"/>
-				<call name="relation" class =".guiservices.metadata.GetRelated"/>
-				<call name="sources"  class=".guiservices.util.Sources"/>
-				<call name="isoLang"  class=".guiservices.isolanguages.Get"/>
-				<call name="clear"  class=".services.metadata.ClearCachedShowMetadata"/>
-			</output>
-
-			<error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
-				<xml name="error" file="xml/metadata-show-error.xml" />
-			</error>
-		</service>
-
-
-	  <service name="pdf">
-	    <class name=".services.metadata.Show" />
-	    <output sheet="layout-pdf.xsl" file="true" contentType="application/pdf">
-	      <call name="siteURL" class=".guiservices.util.GetSiteURL" />
-	      <call name="sources" class=".guiservices.util.Sources" />
-	    </output>
-	    <error id="access" sheet="error-form.xsl">
-	      <xml name="privError" file="xml/privileges-error.xml" />
-	    </error>
-	  </service>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.edit" deprecated="true">
-			<class name=".services.metadata.GetEditableData"/>
-
-			<output sheet="metadata-edit.xsl">
-				<call name="currTab"       class =".guiservices.util.GetCurrentMDTab"/>
-				<call name="position" 	   class =".guiservices.util.GetPositionMD"/>
-				<call name="groups"        class =".guiservices.groups.GetMine"/>
-				<call name="relation"  	   class =".guiservices.metadata.GetRelated"/>
-				<call name="regions"       class =".guiservices.regions.Get"/>
-				<call name="sources"       class =".guiservices.util.Sources"/>
-				<call name="isoLang"       class =".guiservices.isolanguages.Get"/>
-				<call name="subtemplates"  class ="jeeves.services.db.Select">
-					<param name="db"    value="main-db"/>
-					<param name="query" value="SELECT distinct(root) AS type FROM metadata WHERE isTemplate = 's'"/>
-				</call>
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.elem.add" deprecated="true">
-			<class name=".services.metadata.AddElement"/>
-
-			<output sheet="metadata-edit-embedded.xsl">
-				<call name="currTab"       class =".guiservices.util.GetCurrentMDTab"/>
-				<call name="position" 		 class =".guiservices.util.GetPositionMD"/>
-				<call name="groups"        class =".guiservices.groups.GetMine"/>
-				<call name="regions"       class =".guiservices.regions.Get"/>
-				<call name="sources"       class =".guiservices.util.Sources"/>
-				<call name="isoLang"       class =".guiservices.isolanguages.Get"/>
-				<call name="subtemplates"  class ="jeeves.services.db.Select">
-					<param name="db"    value="main-db"/>
-					<param name="query" value="SELECT distinct(root) AS type FROM metadata WHERE isTemplate = 's'"/>
-				</call>
-			</output>
-
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.elem.delete" deprecated="true">
-			<class name=".services.metadata.DeleteElement"/>
-
-			<output sheet="metadata-edit-embedded.xsl">
-				<call name="currTab"       class =".guiservices.util.GetCurrentMDTab"/>
-				<call name="position" 		 class =".guiservices.util.GetPositionMD"/>
-				<call name="groups"        class =".guiservices.groups.GetMine"/>
-				<call name="regions"       class =".guiservices.regions.Get"/>
-				<call name="sources"       class =".guiservices.util.Sources"/>
-				<call name="isoLang"       class =".guiservices.isolanguages.Get"/>
-				<call name="subtemplates"  class ="jeeves.services.db.Select">
-					<param name="db"    value="main-db"/>
-					<param name="query" value="SELECT distinct(root) AS type FROM metadata WHERE isTemplate = 's'"/>
-				</call>
-			</output>
-
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- saves edits -->
-
-		<service name="metadata.update" deprecated="true">
-			<class name=".services.metadata.Update"/>
-
-			<output forward="metadata.edit" />
-
-			<error id="client" sheet="metadata-error.xsl"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- saves edits and returns to viewer -->
-
-		<service name="metadata.update.finish" deprecated="true">
-			<class name=".services.metadata.Update">
-				<param name="finished" value="yes" />
-			</class>
-
-			<error id="client" sheet="metadata-error.xsl"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- reset - forget edits and return to last saved version -->
-
-		<service name="metadata.update.forget" deprecated="true">
-			<class name=".services.metadata.Update">
-				<param name="forget" value="yes" />
-			</class>
-
-			<output forward="metadata.edit" />
-
-			<error id="client" sheet="metadata-error.xsl"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- cancel - forget edits and returns to viewer -->
-
-		<service name="metadata.update.forgetandfinish" deprecated="true">
-			<class name=".services.metadata.Update">
-				<param name="forget" value="yes" />
-				<param name="finished" value="yes" />
-			</class>
-
-			<error id="client" sheet="metadata-error.xsl"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- validates metadata in session -->
-
-		<service name="metadata.validate" deprecated="true">
-			<class name=".services.metadata.Validate"/>
-
-			<output sheet="metadata-validate.xsl">
-				<xml name="validation" file="xml/metadata-validate.xml" />
-			</output>
-
-			<error sheet="res-error.xsl">
-				<xml name="error" file="xml/validation-error.xml" />
-				<xml name="validation" file="xml/metadata-validate.xml" />
-			</error>
-		</service>
-
-		<service name="xml.metadata.validate" deprecated="true">
-			<class name=".services.metadata.Validate"/>
-		  <output sheet="metadata/validate.xsl" contentType="text/xml; charset=UTF-8">
-		    <xml name="validation" file="xml/metadata-validate.xml" />
-		  </output>
-		</service>
-
-		<service name="metadata.relation">
-			<class name=".guiservices.metadata.GetRelated"/>
-		</service>
-		
-	  <service name="xml.relation" deprecated="true">
-	    <class name=".guiservices.metadata.GetRelated"/>
-	    <output sheet="metadata/relation.xsl" contentType="text/xml; charset=UTF-8"/>
-	  </service>
-	  
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.elem.down" deprecated="true">
-			<class name=".services.metadata.MoveElement">
-				<param name="dir" value="down" />
-			</class>
-
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.elem.up" deprecated="true">
-			<class name=".services.metadata.MoveElement">
-				<param name="dir" value="up" />
-			</class>
-
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.attr.delete" deprecated="true">
-			<class name=".services.metadata.DeleteAttribute"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.version">
-			<class name=".services.metadata.Version"/>
-
-			<output sheet="infomodal.xsl">
-				<xml name="info" file="xml/metadata-version.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.batch.version">
-			<class name=".services.metadata.BatchVersion"/>
-
-			<output sheet="metadata-batch-results.xsl">
-				<xml name="info" file="xml/metadata-batchVersion.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.batch.extract.subtemplates.form">
-		  <!-- use same service for category update -->
-			<class name=".services.metadata.PrepareBatchUpdateCategories"/>
-
-			<output sheet="metadata-batchextractsubtemplates.xsl">
-				<xml name="info" file="xml/metadata-batchExtractSubtemplates.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.batch.extract.subtemplates">
-			<class name=".services.metadata.BatchExtractSubtemplates"/>
-
-			<output sheet="metadata-batch-extract-subtemplates-results.xsl">
-				<xml name="info" file="xml/metadata-batchExtractSubtemplates.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <service name="metadata.service.extract">
-                <class name=".services.metadata.ExtractServicesLayers"/>
+            <error sheet="error.xsl">
+                <xml name="error" file="xml/validation-error.xml" />
+                <xml name="validation" file="xml/metadata-validate.xml" />
+            </error>
         </service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <service name="xml.metadata.insert.paste">
+            <class name=".services.metadata.Insert" />
+            <error sheet="error-xml.xsl" />
+        </service>
 
-		<service name="metadata.delete">
-			<class name=".services.metadata.Delete"/>
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-			<output sheet="infomodal.xsl">
-				<xml name="info" file="xml/metadata-delete.xml" />
-			</output>
-		</service>
+        <service name="metadata.insert">
+            <class name=".services.metadata.Insert" />
+
+            <output forward="metadata.edit" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.show">
+            <class name=".services.metadata.Show">
+                <param name="addRefs" value="y" />
+                <param name="cache" value="y" />
+            </class>
+
+            <output sheet="metadata-show.xsl">
+                <call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
+                <call name="position" class=".guiservices.util.GetPositionMD" />
+                <call name="relation" class=".guiservices.metadata.GetRelated" />
+                <call name="sources" class=".guiservices.util.Sources" />
+                <call name="isoLang" class=".guiservices.isolanguages.Get" />
+                <call name="clear" class=".services.metadata.ClearCachedShowMetadata" />
+            </output>
+
+            <error id="operation-not-allowed" sheet="error.xsl" statusCode="403">
+                <xml name="error" file="xml/metadata-show-error.xml" />
+            </error>
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.show.embedded">
+            <class name=".services.metadata.Show">
+                <param name="addRefs" value="y" />
+                <param name="cache" value="y" />
+            </class>
+
+            <output sheet="metadata-show-embedded.xsl">
+                <call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
+                <call name="position" class=".guiservices.util.GetPositionMD" />
+                <call name="relation" class=".guiservices.metadata.GetRelated" />
+                <call name="sources" class=".guiservices.util.Sources" />
+                <call name="isoLang" class=".guiservices.isolanguages.Get" />
+                <call name="clear" class=".services.metadata.ClearCachedShowMetadata" />
+            </output>
+
+            <error id="operation-not-allowed" sheet="error-embedded.xsl" statusCode="403">
+                <xml name="error" file="xml/metadata-show-error.xml" />
+            </error>
+        </service>
+
+
+        <service name="pdf">
+            <class name=".services.metadata.Show" />
+            <output sheet="layout-pdf.xsl" file="true" contentType="application/pdf">
+                <call name="siteURL" class=".guiservices.util.GetSiteURL" />
+                <call name="sources" class=".guiservices.util.Sources" />
+            </output>
+            <error id="access" sheet="error-form.xsl">
+                <xml name="privError" file="xml/privileges-error.xml" />
+            </error>
+        </service>
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.edit" deprecated="true">
+            <class name=".services.metadata.GetEditableData" />
+
+            <output sheet="metadata-edit.xsl">
+                <call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
+                <call name="position" class=".guiservices.util.GetPositionMD" />
+                <call name="groups" class=".guiservices.groups.GetMine" />
+                <call name="relation" class=".guiservices.metadata.GetRelated" />
+                <call name="regions" class=".guiservices.regions.Get" />
+                <call name="sources" class=".guiservices.util.Sources" />
+                <call name="isoLang" class=".guiservices.isolanguages.Get" />
+                <call name="subtemplates" class="jeeves.services.db.Select">
+                    <param name="db" value="main-db" />
+                    <param name="query" value="SELECT distinct(root) AS type FROM metadata WHERE isTemplate = 's'" />
+                </call>
+            </output>
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.elem.add" deprecated="true">
+            <class name=".services.metadata.AddElement" />
+
+            <output sheet="metadata-edit-embedded.xsl">
+                <call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
+                <call name="position" class=".guiservices.util.GetPositionMD" />
+                <call name="groups" class=".guiservices.groups.GetMine" />
+                <call name="regions" class=".guiservices.regions.Get" />
+                <call name="sources" class=".guiservices.util.Sources" />
+                <call name="isoLang" class=".guiservices.isolanguages.Get" />
+                <call name="subtemplates" class="jeeves.services.db.Select">
+                    <param name="db" value="main-db" />
+                    <param name="query" value="SELECT distinct(root) AS type FROM metadata WHERE isTemplate = 's'" />
+                </call>
+            </output>
+
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.elem.delete" deprecated="true">
+            <class name=".services.metadata.DeleteElement" />
+
+            <output sheet="metadata-edit-embedded.xsl">
+                <call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
+                <call name="position" class=".guiservices.util.GetPositionMD" />
+                <call name="groups" class=".guiservices.groups.GetMine" />
+                <call name="regions" class=".guiservices.regions.Get" />
+                <call name="sources" class=".guiservices.util.Sources" />
+                <call name="isoLang" class=".guiservices.isolanguages.Get" />
+                <call name="subtemplates" class="jeeves.services.db.Select">
+                    <param name="db" value="main-db" />
+                    <param name="query" value="SELECT distinct(root) AS type FROM metadata WHERE isTemplate = 's'" />
+                </call>
+            </output>
+
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- saves edits -->
+
+        <service name="metadata.update" deprecated="true">
+            <class name=".services.metadata.Update" />
+
+            <output forward="metadata.edit" />
+
+            <error id="client" sheet="metadata-error.xsl" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- saves edits and returns to viewer -->
+
+        <service name="metadata.update.finish" deprecated="true">
+            <class name=".services.metadata.Update">
+                <param name="finished" value="yes" />
+            </class>
+
+            <error id="client" sheet="metadata-error.xsl" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- reset - forget edits and return to last saved version -->
+
+        <service name="metadata.update.forget" deprecated="true">
+            <class name=".services.metadata.Update">
+                <param name="forget" value="yes" />
+            </class>
+
+            <output forward="metadata.edit" />
+
+            <error id="client" sheet="metadata-error.xsl" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- cancel - forget edits and returns to viewer -->
+
+        <service name="metadata.update.forgetandfinish" deprecated="true">
+            <class name=".services.metadata.Update">
+                <param name="forget" value="yes" />
+                <param name="finished" value="yes" />
+            </class>
+
+            <error id="client" sheet="metadata-error.xsl" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- validates metadata in session -->
+
+        <service name="metadata.validate" deprecated="true">
+            <class name=".services.metadata.Validate" />
+
+            <output sheet="metadata-validate.xsl">
+                <xml name="validation" file="xml/metadata-validate.xml" />
+            </output>
+
+            <error sheet="res-error.xsl">
+                <xml name="error" file="xml/validation-error.xml" />
+                <xml name="validation" file="xml/metadata-validate.xml" />
+            </error>
+        </service>
+
+        <service name="xml.metadata.validate" deprecated="true">
+            <class name=".services.metadata.Validate" />
+            <output sheet="metadata/validate.xsl" contentType="text/xml; charset=UTF-8">
+                <xml name="validation" file="xml/metadata-validate.xml" />
+            </output>
+        </service>
+
+        <service name="metadata.relation">
+            <class name=".guiservices.metadata.GetRelated" />
+        </service>
+
+        <service name="xml.relation" deprecated="true">
+            <class name=".guiservices.metadata.GetRelated" />
+            <output sheet="metadata/relation.xsl" contentType="text/xml; charset=UTF-8" />
+        </service>
+
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.elem.down" deprecated="true">
+            <class name=".services.metadata.MoveElement">
+                <param name="dir" value="down" />
+            </class>
+
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.elem.up" deprecated="true">
+            <class name=".services.metadata.MoveElement">
+                <param name="dir" value="up" />
+            </class>
+
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.attr.delete" deprecated="true">
+            <class name=".services.metadata.DeleteAttribute" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.version">
+            <class name=".services.metadata.Version" />
+
+            <output sheet="infomodal.xsl">
+                <xml name="info" file="xml/metadata-version.xml" />
+            </output>
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.batch.version">
+            <class name=".services.metadata.BatchVersion" />
+
+            <output sheet="metadata-batch-results.xsl">
+                <xml name="info" file="xml/metadata-batchVersion.xml" />
+            </output>
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.batch.extract.subtemplates.form">
+            <!-- use same service for category update -->
+            <class name=".services.metadata.PrepareBatchUpdateCategories" />
+
+            <output sheet="metadata-batchextractsubtemplates.xsl">
+                <xml name="info" file="xml/metadata-batchExtractSubtemplates.xml" />
+            </output>
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.batch.extract.subtemplates">
+            <class name=".services.metadata.BatchExtractSubtemplates" />
+
+            <output sheet="metadata-batch-extract-subtemplates-results.xsl">
+                <xml name="info" file="xml/metadata-batchExtractSubtemplates.xml" />
+            </output>
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.service.extract">
+            <class name=".services.metadata.ExtractServicesLayers" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.delete">
+            <class name=".services.metadata.Delete" />
+
+            <output sheet="infomodal.xsl">
+                <xml name="info" file="xml/metadata-delete.xml" />
+            </output>
+        </service>
 
         <service name="metadata.quiet.delete">
-            <class name=".services.metadata.Delete"/>
+            <class name=".services.metadata.Delete" />
             <output forward="admin" />
         </service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.batch.delete">
-			<class name=".services.metadata.BatchDelete"/>
+        <service name="metadata.batch.delete">
+            <class name=".services.metadata.BatchDelete" />
 
-			<output sheet="metadata-batch-results.xsl">
-				<xml name="info" file="xml/metadata-batchDelete.xml" />
-			</output>
-		</service>
+            <output sheet="metadata-batch-results.xsl">
+                <xml name="info" file="xml/metadata-batchDelete.xml" />
+            </output>
+        </service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.batch.newowner">
-			<class name=".services.metadata.BatchNewOwner"/>
+        <service name="metadata.batch.newowner">
+            <class name=".services.metadata.BatchNewOwner" />
 
-			<output sheet="metadata-batch-results.xsl">
-				<xml name="info" file="xml/metadata-batchNewOwner.xml" />
-			</output>
-		</service>
+            <output sheet="metadata-batch-results.xsl">
+                <xml name="info" file="xml/metadata-batchNewOwner.xml" />
+            </output>
+        </service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.batch.newowner.form">
-			<class name=".services.metadata.PrepareBatchNewOwner"/>
+        <service name="metadata.batch.newowner.form">
+            <class name=".services.metadata.PrepareBatchNewOwner" />
 
-			<output sheet="metadata-batchownership.xsl">
-				<xml name="info" file="xml/metadata-batchNewOwner.xml" />
-			</output>
-		</service>
+            <output sheet="metadata-batchownership.xsl">
+                <xml name="info" file="xml/metadata-batchNewOwner.xml" />
+            </output>
+        </service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.batch.status.form">
-			<class name=".services.metadata.PrepareBatchUpdateStatus"/>
+        <service name="metadata.batch.status.form">
+            <class name=".services.metadata.PrepareBatchUpdateStatus" />
 
-			<output sheet="metadata-status.xsl"/>
-		</service>
+            <output sheet="metadata-status.xsl" />
+        </service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.batch.update.status">
-			<class name=".services.metadata.BatchUpdateStatus"/>
+        <service name="metadata.batch.update.status">
+            <class name=".services.metadata.BatchUpdateStatus" />
 
-			<output sheet="metadata-batch-results.xsl">
-				<xml name="info" file="xml/metadata-batchUpdateStatus.xml" />
-			</output>
-		</service>
+            <output sheet="metadata-batch-results.xsl">
+                <xml name="info" file="xml/metadata-batchUpdateStatus.xml" />
+            </output>
+        </service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.batch.category.form">
-			<class name=".services.metadata.PrepareBatchUpdateCategories"/>
+        <service name="metadata.batch.category.form">
+            <class name=".services.metadata.PrepareBatchUpdateCategories" />
 
-			<output sheet="metadata-category.xsl"/>
-		</service>
+            <output sheet="metadata-category.xsl" />
+        </service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.batch.update.categories">
-			<class name=".services.metadata.BatchUpdateCategories"/>
+        <service name="metadata.batch.update.categories">
+            <class name=".services.metadata.BatchUpdateCategories" />
 
-			<output sheet="metadata-batch-results.xsl">
-				<xml name="info" file="xml/metadata-batchUpdateCategories.xml" />
-			</output>
-		</service>
+            <output sheet="metadata-batch-results.xsl">
+                <xml name="info" file="xml/metadata-batchUpdateCategories.xml" />
+            </output>
+        </service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="metadata.batch.admin.form">
-			<class name=".services.metadata.PrepareBatchUpdatePrivileges"/>
-			
-			<output sheet="metadata-admin.xsl"/>
-		</service>
-	    
-	    <service name="xml.metadata.batch.admin.form">
-	        <class name=".services.metadata.PrepareBatchUpdatePrivileges"/>
-	    </service>
-	    
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <service name="metadata.batch.admin.form">
+            <class name=".services.metadata.PrepareBatchUpdatePrivileges" />
 
-		<service name="metadata.batch.update.privileges">
-			<class name=".services.metadata.BatchUpdatePrivileges"/>
+            <output sheet="metadata-admin.xsl" />
+        </service>
 
-			<output sheet="metadata-batch-results.xsl">
-				<xml name="info" file="xml/metadata-batchUpdatePrivileges.xml" />
-			</output>
-		</service>
-	    
-	    <service name="xml.metadata.batch.update.privileges">
-	        <class name=".services.metadata.BatchUpdatePrivileges"/>
-	    </service>
-	    
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Update child -->
-		
-		<service name="metadata.batch.children.form">
-			<output sheet="metadata-children.xsl"/>
-		</service>
-		
-		<service name="metadata.batch.update.children">
-			<class name=".services.metadata.UpdateChildren"/>
-		</service>
+        <service name="xml.metadata.batch.admin.form">
+            <class name=".services.metadata.PrepareBatchUpdatePrivileges" />
+        </service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<service name="metadata.batch.processing.report" deprecated="true">
-			<documentation><![CDATA[
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.batch.update.privileges">
+            <class name=".services.metadata.BatchUpdatePrivileges" />
+
+            <output sheet="metadata-batch-results.xsl">
+                <xml name="info" file="xml/metadata-batchUpdatePrivileges.xml" />
+            </output>
+        </service>
+
+        <service name="xml.metadata.batch.update.privileges">
+            <class name=".services.metadata.BatchUpdatePrivileges" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- Update child -->
+
+        <service name="metadata.batch.children.form">
+            <output sheet="metadata-children.xsl" />
+        </service>
+
+        <service name="metadata.batch.update.children">
+            <class name=".services.metadata.UpdateChildren" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <service name="metadata.batch.processing.report" deprecated="true">
+            <documentation><![CDATA[
 Return the current or last batch process report in the user session.
 
 The service response contains:
@@ -457,326 +457,326 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
 ...
 ```
 				]]>
-			</documentation>
-			<class name=".services.metadata.XslProcessingReportGet"/>
-		</service>
-		
-		<service name="metadata.batch.processing" deprecated="true">
-			<class name=".services.metadata.BatchXslProcessing"/>
-			
-			<output sheet="metadata-batch-results.xsl">
-				<xml name="info" file="xml/metadata-batchXslProcessing.xml" />
-			</output>
-		</service>
-		
-		<service name="metadata.processing">
-			<class name=".services.metadata.XslProcessing"/>
-			<output forward="metadata.edit" />
-		</service>
-		
-		<service name="xml.metadata.processing">
-			<class name=".services.metadata.XslProcessing"/>
-			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
-		</service>
-		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
-		<service name="metadata.select">
-			<class name=".services.main.Select">
-				<param name="type" value="metadata" />
-			</class>
-		</service>
+            </documentation>
+            <class name=".services.metadata.XslProcessingReportGet" />
+        </service>
+
+        <service name="metadata.batch.processing" deprecated="true">
+            <class name=".services.metadata.BatchXslProcessing" />
+
+            <output sheet="metadata-batch-results.xsl">
+                <xml name="info" file="xml/metadata-batchXslProcessing.xml" />
+            </output>
+        </service>
+
+        <service name="metadata.processing">
+            <class name=".services.metadata.XslProcessing" />
+            <output forward="metadata.edit" />
+        </service>
+
+        <service name="xml.metadata.processing">
+            <class name=".services.metadata.XslProcessing" />
+            <error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
+        </service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.create.form">
-			<output sheet="metadata-create.xsl">
-				<call name="groups"    class=".guiservices.groups.GetMine"/>
-				<call name="templates" class=".guiservices.templates.Get"/>
-				<xml name="create" file="xml/metadata-create.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.create.thesaurus.form">
-			<output sheet="metadata-create-thesaurus.xsl">
-				<call name="thesaurusTypes" class=".services.thesaurus.GetList"/>
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.duplicate.form">
-			<output sheet="metadata-duplicate.xsl">
-				<call name="groups" class=".guiservices.groups.GetMine"/>
-				<xml  name="create" file ="xml/metadata-create.xml" />
-			</output>
-
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.create">
-			<class name=".services.metadata.Create"/>
-
-			<output forward="metadata.edit" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	  <service name="metadata.admin.index.rebuild" deprecated="true">
-			<documentation>
-				<para>Service to force a complete rebuild of Lucene index</para>
-			</documentation>
-			<class name=".services.metadata.IndexRebuild" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	  <service name="metadata.admin.index.rebuildxlinks" deprecated="true">
-			<documentation>
-				<para>Service to clear all cached xlinks and rebuild index for metadata records with xlinks</para>
-			</documentation>
-			<class name=".services.metadata.IndexRebuild">
-				<param name="rebuildxlinkindex" value="yes" />
-			</class>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-
-		<service name="metadata.admin.index.optimize" deprecated="true">
-			<documentation>
-				<para>Service to force optimization of Lucene index</para>
-			</documentation>
-			<class name=".services.metadata.IndexOptimize" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.admin.form">
-			<class name=".services.metadata.GetAdminOper"/>
-
-			<output sheet="metadata-admin.xsl"/>
-		</service>
-	    <service name="xml.metadata.admin.form">
-	        <class name=".services.metadata.GetAdminOper"/>
-	    </service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.admin">
-			<class name=".services.metadata.UpdateAdminOper"/>
-
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.status.form">
-			<class name=".services.metadata.GetStatus"/>
-
-			<output sheet="metadata-status.xsl"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.status">
-			<class name=".services.metadata.UpdateStatus"/>
-
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		
-		<service name="metadata.category.form">
-			<class name=".services.metadata.GetCategories"/>
-
-			<output sheet="metadata-category.xsl"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.category">
-			<class name=".services.metadata.UpdateCategories"/>
-
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.xmlinsert.form">
-			<output sheet="metadata-insert-form.xsl">
-				<call name="groups"  class=".guiservices.groups.GetMine">
-					<param name="profile" value="Editor"/>
-				</call>
-				<call name="categories"        class=".services.category.List"/>
-				<call name="importStyleSheets" class=".guiservices.util.GetImportXSLs"/>
-			</output>
-		</service>
-		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.batchimport.form">
-			<output sheet="metadata-batchimport.xsl">
-				<call name="groups"            class=".guiservices.groups.GetMine"/>
-				<call name="categories"        class=".services.category.List"/>
-				<call name="importStyleSheets" class=".guiservices.util.GetImportXSLs"/>
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.searchunused.form">
-			<output sheet="metadata-searchunused.xsl">
-				<xml  name="unused" file="xml/metadata-searchunused.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.searchunused">
-			<class name=".services.metadata.SearchUnused"/>
-
-			<output forward="main.present"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Metadata Schema services                                      -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.schema.add">
-			<class name=".services.schema.Add"/>
-			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
-		</service>
-
-		<service name="metadata.schema.add.form">
-			<output sheet="metadata-schema-ops.xsl"/>
-		</service>
-
-		<service name="metadata.schema.delete">
-			<class name=".services.schema.Delete"/>
-			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
-		</service>
-
-		<service name="metadata.schema.delete.form">
-			<output sheet="metadata-schema-ops.xsl"/>
-		</service>
-
-		<service name="metadata.schema.update">
-			<class name=".services.schema.Update"/>
-			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
-		</service>
-
-		<service name="metadata.schema.update.form">
-			<output sheet="metadata-schema-ops.xsl"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Thumbnail services                                            -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.thumbnail.form">
-			<class name=".services.thumbnail.Get"/>
-
-			<output sheet="metadata-thumbnail.xsl">
-				<xml name="thumbnail" file="xml/metadata-thumbnail.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.thumbnail.set">
-			<class name=".services.thumbnail.Set"/>
-
-			<output forward="metadata.thumbnail.form"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="metadata.thumbnail.unset">
-			<class name=".services.thumbnail.Unset"/>
-
-			<output forward="metadata.thumbnail.form"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Transfer ownership                                            -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="transfer.ownership" deprecated="true">
-			<output sheet="ownership/transfer-ownership.xsl">
-				<xml name="ownership" file="xml/transfer-ownership.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.ownership.editors" deprecated="true">
-			<class name=".services.ownership.Editors"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.ownership.groups" deprecated="true">
-			<class name=".services.ownership.Groups"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.ownership.transfer" deprecated="true">
-			<class name=".services.ownership.Transfer"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Status                                                        -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.metadata.status.set">
-			<class name=".services.metadata.UpdateStatus"/>
-		</service>
-		
-		<service name="xml.metadata.status.get">
-			<class name=".services.status.Get"/>
-		</service>
-		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Rating                                                        -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.metadata.rate">
-			<class name=".services.metadata.Rate"/>
-		</service>
-		
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Order templates											   -->
+
+        <service name="metadata.select">
+            <class name=".services.main.Select">
+                <param name="type" value="metadata" />
+            </class>
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.create.form">
+            <output sheet="metadata-create.xsl">
+                <call name="groups" class=".guiservices.groups.GetMine" />
+                <call name="templates" class=".guiservices.templates.Get" />
+                <xml name="create" file="xml/metadata-create.xml" />
+            </output>
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.create.thesaurus.form">
+            <output sheet="metadata-create-thesaurus.xsl">
+                <call name="thesaurusTypes" class=".services.thesaurus.GetList" />
+            </output>
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.duplicate.form">
+            <output sheet="metadata-duplicate.xsl">
+                <call name="groups" class=".guiservices.groups.GetMine" />
+                <xml name="create" file="xml/metadata-create.xml" />
+            </output>
+
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.create">
+            <class name=".services.metadata.Create" />
+
+            <output forward="metadata.edit" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.admin.index.rebuild" deprecated="true">
+            <documentation>
+                <para>Service to force a complete rebuild of Lucene index</para>
+            </documentation>
+            <class name=".services.metadata.IndexRebuild" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.admin.index.rebuildxlinks" deprecated="true">
+            <documentation>
+                <para>Service to clear all cached xlinks and rebuild index for metadata records with xlinks</para>
+            </documentation>
+            <class name=".services.metadata.IndexRebuild">
+                <param name="rebuildxlinkindex" value="yes" />
+            </class>
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+        <service name="metadata.admin.index.optimize" deprecated="true">
+            <documentation>
+                <para>Service to force optimization of Lucene index</para>
+            </documentation>
+            <class name=".services.metadata.IndexOptimize" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.admin.form">
+            <class name=".services.metadata.GetAdminOper" />
+
+            <output sheet="metadata-admin.xsl" />
+        </service>
+        <service name="xml.metadata.admin.form">
+            <class name=".services.metadata.GetAdminOper" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.admin">
+            <class name=".services.metadata.UpdateAdminOper" />
+
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.status.form">
+            <class name=".services.metadata.GetStatus" />
+
+            <output sheet="metadata-status.xsl" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.status">
+            <class name=".services.metadata.UpdateStatus" />
+
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.category.form">
+            <class name=".services.metadata.GetCategories" />
+
+            <output sheet="metadata-category.xsl" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.category">
+            <class name=".services.metadata.UpdateCategories" />
+
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.xmlinsert.form">
+            <output sheet="metadata-insert-form.xsl">
+                <call name="groups" class=".guiservices.groups.GetMine">
+                    <param name="profile" value="Editor" />
+                </call>
+                <call name="categories" class=".services.category.List" />
+                <call name="importStyleSheets" class=".guiservices.util.GetImportXSLs" />
+            </output>
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.batchimport.form">
+            <output sheet="metadata-batchimport.xsl">
+                <call name="groups" class=".guiservices.groups.GetMine" />
+                <call name="categories" class=".services.category.List" />
+                <call name="importStyleSheets" class=".guiservices.util.GetImportXSLs" />
+            </output>
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.searchunused.form">
+            <output sheet="metadata-searchunused.xsl">
+                <xml name="unused" file="xml/metadata-searchunused.xml" />
+            </output>
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.searchunused">
+            <class name=".services.metadata.SearchUnused" />
+
+            <output forward="main.present" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- Metadata Schema services                                      -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.schema.add">
+            <class name=".services.schema.Add" />
+            <error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
+        </service>
+
+        <service name="metadata.schema.add.form">
+            <output sheet="metadata-schema-ops.xsl" />
+        </service>
+
+        <service name="metadata.schema.delete">
+            <class name=".services.schema.Delete" />
+            <error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
+        </service>
+
+        <service name="metadata.schema.delete.form">
+            <output sheet="metadata-schema-ops.xsl" />
+        </service>
+
+        <service name="metadata.schema.update">
+            <class name=".services.schema.Update" />
+            <error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
+        </service>
+
+        <service name="metadata.schema.update.form">
+            <output sheet="metadata-schema-ops.xsl" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- Thumbnail services                                            -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.thumbnail.form">
+            <class name=".services.thumbnail.Get" />
+
+            <output sheet="metadata-thumbnail.xsl">
+                <xml name="thumbnail" file="xml/metadata-thumbnail.xml" />
+            </output>
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.thumbnail.set">
+            <class name=".services.thumbnail.Set" />
+
+            <output forward="metadata.thumbnail.form" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="metadata.thumbnail.unset">
+            <class name=".services.thumbnail.Unset" />
+
+            <output forward="metadata.thumbnail.form" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- Transfer ownership                                            -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="transfer.ownership" deprecated="true">
+            <output sheet="ownership/transfer-ownership.xsl">
+                <xml name="ownership" file="xml/transfer-ownership.xml" />
+            </output>
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="xml.ownership.editors" deprecated="true">
+            <class name=".services.ownership.Editors" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="xml.ownership.groups" deprecated="true">
+            <class name=".services.ownership.Groups" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="xml.ownership.transfer" deprecated="true">
+            <class name=".services.ownership.Transfer" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- Status                                                        -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="xml.metadata.status.set">
+            <class name=".services.metadata.UpdateStatus" />
+        </service>
+
+        <service name="xml.metadata.status.get">
+            <class name=".services.status.Get" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- Rating                                                        -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="xml.metadata.rate">
+            <class name=".services.metadata.Rate" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- Order templates											   -->
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
         <service name="metadata.templates.list">
-			<output sheet="metadata-templates-list.xsl">
-                <call name="templates" class=".guiservices.templates.Get"/>
-			</output>
+            <output sheet="metadata-templates-list.xsl">
+                <call name="templates" class=".guiservices.templates.Get" />
+            </output>
         </service>
-		
+
         <service name="metadata.templates.displayorder.save">
-			<class name=".guiservices.templates.SaveDisplayOrder"/>
+            <class name=".guiservices.templates.SaveDisplayOrder" />
         </service>
-		
-		<service name="metadata.templates.add.default">
-			<class name=".guiservices.templates.AddDefault"/>
-		</service>
-        
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Metadata samples											   -->
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-        <service name="metadata.samples.add">
-			<class name=".guiservices.sampledata.Add"/>
-		</service>
+
+        <service name="metadata.templates.add.default">
+            <class name=".guiservices.templates.AddDefault" />
+        </service>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Metadata latest updated (ajax)        						   -->
+        <!-- Metadata samples											   -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <service name="metadata.samples.add">
+            <class name=".guiservices.sampledata.Add" />
+        </service>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- Metadata latest updated (ajax)        						   -->
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
         <service name="metadata.latest.updated">
             <output sheet="metadata-latest-updated.xsl">
-                <call name="latestUpdated"  class=".guiservices.metadata.GetLatestUpdated">
-                    <param name="maxItems"           value="5" />
+                <call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
+                    <param name="maxItems" value="5" />
                     <param name="timeBetweenUpdates" value="10" />
                 </call>
             </output>
@@ -787,7 +787,7 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <service name="xml.user.metadata">
-          <class name=".guiservices.metadata.GetByOwner" />
+            <class name=".guiservices.metadata.GetByOwner" />
         </service>
 
         <!-- - - - - - - - - - - - - - Format MD services - - - - - - - - - - - - - - - - -->
@@ -796,19 +796,19 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
             <class name=".services.metadata.format.Register">
                 <param name="user_xsl_dir" value="user_xsl" />
             </class>
-            <error id="illegal-params" sheet="metadata-error.xsl"/>
+            <error id="illegal-params" sheet="metadata-error.xsl" />
         </service>
 
         <service name="metadata.formatter.admin" deprecated="true">
-            <output sheet="metadata-formatter/admin.xsl"/>
-            <error id="illegal-params" sheet="metadata-error.xsl"/>
+            <output sheet="metadata-formatter/admin.xsl" />
+            <error id="illegal-params" sheet="metadata-error.xsl" />
         </service>
 
         <service name="metadata.formatter.list" deprecated="true">
             <class name=".services.metadata.format.ListFormatters">
                 <param name="user_xsl_dir" value="user_xsl" />
             </class>
-            <error id="illegal-params" sheet="metadata-error.xsl"/>
+            <error id="illegal-params" sheet="metadata-error.xsl" />
         </service>
 
         <service name="metadata.formatter.update" deprecated="true">
@@ -817,76 +817,75 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
             </class>
 
             <output forward="metadata.formatter.edit" />
-            <error id="illegal-params" sheet="metadata-error.xsl"/>
+            <error id="illegal-params" sheet="metadata-error.xsl" />
         </service>
 
         <service name="metadata.formatter.files" deprecated="true">
             <class name=".services.metadata.format.ListBundleFiles">
                 <param name="user_xsl_dir" value="user_xsl" />
             </class>
-            <error id="illegal-params" sheet="metadata-error.xsl"/>
+            <error id="illegal-params" sheet="metadata-error.xsl" />
         </service>
         <service name="metadata.formatter.edit" deprecated="true">
             <class name=".services.metadata.format.EditFile">
                 <param name="user_xsl_dir" value="user_xsl" />
             </class>
 
-            <output sheet="metadata-formatter/edit.xsl"/>
-            <error id="illegal-params" sheet="metadata-error.xsl"/>
+            <output sheet="metadata-formatter/edit.xsl" />
+            <error id="illegal-params" sheet="metadata-error.xsl" />
         </service>
 
         <service name="metadata.formatter.remove" deprecated="true">
             <class name=".services.metadata.format.Remove">
                 <param name="user_xsl_dir" value="user_xsl" />
             </class>
-            <error id="illegal-params" sheet="metadata-error.xsl"/>
+            <error id="illegal-params" sheet="metadata-error.xsl" />
         </service>
         <service name="metadata.formatter.download" deprecated="true">
             <class name=".services.metadata.format.Download">
                 <param name="user_xsl_dir" value="user_xsl" />
             </class>
             <output file="true" />
-            <error id="illegal-params" sheet="metadata-error.xsl"/>
+            <error id="illegal-params" sheet="metadata-error.xsl" />
         </service>
         <service name="metadata.formatter.resource" deprecated="true">
             <class name=".services.metadata.format.Resource">
                 <param name="user_xsl_dir" value="user_xsl" />
             </class>
             <output file="true" />
-            <error id="illegal-params" sheet="metadata-error.xsl"/>
+            <error id="illegal-params" sheet="metadata-error.xsl" />
         </service>
 
         <service name="metadata.formatter.html" deprecated="true">
             <class name=".services.metadata.format.Format">
                 <param name="user_xsl_dir" value="user_xsl" />
             </class>
-            <output sheet="metadata-formatter/identity.xsl"/>
-            <error id="illegal-params" sheet="metadata-error.xsl"/>
+            <output sheet="metadata-formatter/identity.xsl" />
+            <error id="illegal-params" sheet="metadata-error.xsl" />
         </service>
 
         <service name="metadata.formatter.xml" deprecated="true">
             <class name=".services.metadata.format.Format">
                 <param name="user_xsl_dir" value="user_xsl" />
             </class>
-            <error id="illegal-params" sheet="metadata-error.xsl"/>
+            <error id="illegal-params" sheet="metadata-error.xsl" />
         </service>
-        
-         <service name="metadata.formatter.pdf" deprecated="true">
-           <class name=".services.metadata.format.Format">
-               <param name="user_xsl_dir" value="user_xsl" />
-           </class>
-           <class name=".services.metadata.format.PDF"/>
-           <output file="true"/>
-           <error id="illegal-params" sheet="metadata-error.xsl"/>
-       </service>
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Versioning log                                                -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	   <service name="versioning.log">
-		   <output sheet="versioning/log.xsl">
-		   </output>
-       </service>
+        <service name="metadata.formatter.pdf" deprecated="true">
+            <class name=".services.metadata.format.Format">
+                <param name="user_xsl_dir" value="user_xsl" />
+            </class>
+            <class name=".services.metadata.format.PDF" />
+            <output file="true" />
+            <error id="illegal-params" sheet="metadata-error.xsl" />
+        </service>
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- Versioning log                                                -->
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service name="versioning.log">
+            <output sheet="versioning/log.xsl"></output>
+        </service>
     </services>
 </geonet>
 
