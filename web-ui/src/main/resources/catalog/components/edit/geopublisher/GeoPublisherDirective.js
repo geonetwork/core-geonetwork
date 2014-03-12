@@ -202,7 +202,7 @@
                 var p = gnGeoPublisher.publishNode(nodeId,
                     scope.fileName,
                     scope.resource.title,
-                    scope.resource.abstract);
+                    scope.resource['abstract']);
                 if (p) {
                   p.success(function(data) {
                     readResponse(data, 'publish');

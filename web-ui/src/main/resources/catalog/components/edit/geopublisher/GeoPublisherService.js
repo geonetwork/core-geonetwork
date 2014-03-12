@@ -31,13 +31,13 @@
         },
 
         publishNode: function(node, fileName,
-                              title, abstract) {
+                              title, moreInfo) {
           if (node) {
             return gnHttp.callService('geoserverNodes', {
               metadataId: gnCurrentEdit.id,
               metadataUuid: gnCurrentEdit.uuid,
               metadataTitle: title,
-              metadataAbstract: abstract,
+              metadataAbstract: moreInfo,
               access: 'private',
               action: 'CREATE',
               nodeId: node,
