@@ -53,7 +53,7 @@ public class CswParams extends AbstractParams {
      * called when a new entry must be added. Reads values from the provided entry, providing default values.
      *
      * @param node
-     * @throws BadInputEx
+     * @throws org.fao.geonet.exceptions.BadInputEx
      */
 	public void create(Element node) throws BadInputEx {
 		super.create(node);
@@ -62,10 +62,11 @@ public class CswParams extends AbstractParams {
 		Element searches = node.getChild("searches");
 
 		capabUrl = Util.getParam(site, "capabilitiesUrl", "");
-        rejectDuplicateResource = Util.getParam(site, "rejectDuplicateResource",  false);
+        rejectDuplicateResource = Util.getParam(site, "rejectDuplicateResource", false);
         queryScope = Util.getParam(site, "queryScope", "off");
         hopCount = Util.getParam(site, "hopCount", 2);
-        
+        xslfilter = Util.getParam(site, "xslfilter", "");
+
         try {
             capabUrl = URLDecoder.decode(capabUrl, Constants.ENCODING);
         }
@@ -74,10 +75,10 @@ public class CswParams extends AbstractParams {
             x.printStackTrace();
             // TODO should not swallow
         }
-		icon     = Util.getParam(site, "icon",            "default.gif");
+		icon     = Util.getParam(site, "icon", "default.gif");
 
 		addSearches(searches);
-		
+
 		if (searches!=null){
 			if (searches.getChild("search")!=null){
 			    @SuppressWarnings("unchecked")
@@ -85,8 +86,8 @@ public class CswParams extends AbstractParams {
 				eltSearches = tmp;
 			}
 		}
-		
-		
+
+
 
 	}
 
@@ -94,7 +95,7 @@ public class CswParams extends AbstractParams {
      * called when an entry has changed and variables must be updated.
      *
      * @param node
-     * @throws BadInputEx
+     * @throws org.fao.geonet.exceptions.BadInputEx
      */
 	public void update(Element node) throws BadInputEx {
 		super.update(node);
@@ -103,7 +104,7 @@ public class CswParams extends AbstractParams {
 		Element searches = node.getChild("searches");
 		
 		capabUrl = Util.getParam(site, "capabilitiesUrl", capabUrl);
-        rejectDuplicateResource = Util.getParam(site, "rejectDuplicateResource",  rejectDuplicateResource);
+        rejectDuplicateResource = Util.getParam(site, "rejectDuplicateResource", rejectDuplicateResource);
         
         try {
             capabUrl = URLDecoder.decode(capabUrl, Constants.ENCODING);
@@ -115,8 +116,9 @@ public class CswParams extends AbstractParams {
         }
         queryScope = Util.getParam(site, "queryScope", queryScope);
         hopCount = Util.getParam(site, "hopCount", hopCount);
+        xslfilter = Util.getParam(site, "xslfilter", "");
 
-		icon     = Util.getParam(site, "icon",            icon);
+		icon     = Util.getParam(site, "icon", icon);
 
 		//--- if some search queries are given, we drop the previous ones and
 		//--- set these new ones
@@ -170,6 +172,7 @@ public class CswParams extends AbstractParams {
 		copy.rejectDuplicateResource = rejectDuplicateResource;
 	 	copy.queryScope = queryScope;
 	 	copy.hopCount = hopCount;
+        copy.xslfilter = xslfilter;
 
 		for (Search s : alSearches)
 			copy.alSearches.add(s.copy());
@@ -214,8 +217,17 @@ public class CswParams extends AbstractParams {
     public boolean rejectDuplicateResource;
     public String queryScope;
     public Integer hopCount;
+    /**
+     * The filter is a process (see schema/process folder) which depends on the schema.
+     * It could be composed of parameter which will be sent to XSL transformation using
+     * the following syntax :
+     * <pre>
+     * anonymizer?protocol=MYLOCALNETWORK:FILEPATH&email=gis@organisation.org&thesaurus=MYORGONLYTHEASURUS
+     * </pre>
+     */
+    public String  xslfilter;
 
-	private List<Search> alSearches = new ArrayList<Search>();	
+	private List<Search> alSearches = new ArrayList<Search>();
 	public List<Element> eltSearches = new ArrayList<Element>();
 	
 }

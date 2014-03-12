@@ -30,12 +30,11 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.CswOperation;
 import org.fao.geonet.csw.common.CswServer;
 import org.fao.geonet.csw.common.ElementSetName;
-import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordByIdRequest;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowedId_;
-import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
@@ -43,15 +42,11 @@ import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.utils.AbstractHttpRequest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.fao.geonet.utils.AbstractHttpRequest.Method.GET;
 import static org.fao.geonet.utils.AbstractHttpRequest.Method.POST;
@@ -136,6 +131,11 @@ public class Aligner extends BaseAligner
 
         dataMan.flush();
 
+        Pair<String, Map<String, String>> filter =
+                HarvesterUtil.parseXSLFilter(params.xslfilter, log);
+        processName = filter.one();
+        processParams = filter.two();
+
         //-----------------------------------------------------------------------
 		//--- remove old metadata
 
@@ -208,6 +208,10 @@ public class Aligner extends BaseAligner
             log.debug("  - Adding metadata with remote uuid:" + ri.uuid + " schema:" + schema);
         }
 
+        if (!params.xslfilter.equals("")) {
+            md = HarvesterUtil.processMetadata(dataMan.getSchema(schema),
+                    md, processName, processParams, log);
+        }
         //
         // insert metadata
         //
@@ -247,7 +251,6 @@ public class Aligner extends BaseAligner
 	//--- Private methods : updateMetadata
 	//---
 	//--------------------------------------------------------------------------
-
 	private void updateMetadata(RecordInfo ri, String id) throws Exception
 	{
 		String date = localUuids.getChangeDate(ri.uuid);
@@ -271,7 +274,12 @@ public class Aligner extends BaseAligner
 				if (md == null) {
 					return;
 				}
-				
+                String schema = dataMan.autodetectSchema(md, null);
+                if (!params.xslfilter.equals("")) {
+                    md = HarvesterUtil.processMetadata(dataMan.getSchema(schema),
+                            md, processName, processParams, log);
+                }
+
                 //
                 // update metadata
                 //
@@ -281,13 +289,16 @@ public class Aligner extends BaseAligner
                 String language = context.getLanguage();
                 final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false);
 
-                OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-				repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
+                OperationAllowedRepository repository =
+                        context.getBean(OperationAllowedRepository.class);
+                repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId,
+                        Integer.parseInt(id));
                 addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
                 metadata.getCategories().clear();
-                context.getBean(MetadataRepository.class).save(metadata);
                 addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
+
+                context.getBean(MetadataRepository.class).save(metadata);
 
                 dataMan.flush();
 
@@ -394,7 +405,7 @@ public class Aligner extends BaseAligner
      * the capability to exclude "duplicate" description of the same dataset.
      * 
      * The check is made searching the identifier field in the index using 
-     * {@link LuceneSearcher#getAllMetadataFromIndexFor(String, String, String, Set, boolean)}
+     * {@link org.fao.geonet.kernel.search.LuceneSearcher#getAllMetadataFromIndexFor(String, String, String, java.util.Set, boolean)}
      * 
      * @param uuid the metadata unique identifier
      * @param response  the XML document to check
@@ -425,7 +436,7 @@ public class Aligner extends BaseAligner
                         String identifier = identifierNode.getTextTrim();
                         log.debug("    - Searching for duplicates for resource identifier: " + identifier);
                         
-                        Map<String, Map<String,String>> values = LuceneSearcher.getAllMetadataFromIndexFor(defaultLanguage, resourceIdentifierLuceneIndexField, 
+                        Map<String, Map<String,String>> values = LuceneSearcher.getAllMetadataFromIndexFor(defaultLanguage, resourceIdentifierLuceneIndexField,
                                 identifier, Collections.singleton("_uuid"), true);
                         log.debug("    - Number of resources with same identifier: " + values.size());
                         for (Map<String, String> recordFieldValues : values.values()) {
@@ -454,13 +465,16 @@ public class Aligner extends BaseAligner
 	//---
 	//--------------------------------------------------------------------------
 
-	private Logger         log;
-	private ServiceContext context;
-	private CswParams      params;
-	private DataManager    dataMan;
-	private CategoryMapper localCateg;
-	private GroupMapper    localGroups;
-	private UUIDMapper     localUuids;
-	private HarvestResult  result;
-	private GetRecordByIdRequest request;
+    private Logger         log;
+    private ServiceContext context;
+    private CswParams      params;
+    private DataManager    dataMan;
+    private CategoryMapper localCateg;
+    private GroupMapper    localGroups;
+    private UUIDMapper     localUuids;
+    private HarvestResult  result;
+    private GetRecordByIdRequest request;
+
+    private String processName;
+    private Map<String, String> processParams = new HashMap<String, String>();
 }
