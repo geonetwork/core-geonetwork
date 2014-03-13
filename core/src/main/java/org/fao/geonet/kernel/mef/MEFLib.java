@@ -470,7 +470,7 @@ public class MEFLib {
             Operation operation = operationRepository.findOne(operationAllowed.getId().getOperationId());
             String operName = operation.getName();
 
-            if (grpOwnerId == grpId) {
+            if (grpOwnerId != null && grpOwnerId == grpId) {
                 grpOwnerName = grpName;
             }
 
