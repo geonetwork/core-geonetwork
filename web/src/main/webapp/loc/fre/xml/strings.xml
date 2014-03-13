@@ -615,8 +615,8 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 	<createIfNotExistButton js="true">Créer une nouvelle métadonnée</createIfNotExistButton>
 	<associateService js="true">Associer une métadonnée de service</associateService>
 	<associateDataset js="true">Associer une métadonnée de données</associateDataset>
-	<associateSibling js="true">Link related metadata</associateSibling>
-	<associateSiblingText js="true">Search the related Metadata you want to add. Then, double click on relationship column and specify the relationship for each sibling.</associateSiblingText>
+	<associateSibling js="true">Lien sur la métadonnée liée.</associateSibling>
+	<associateSiblingText js="true">Recherchez la métadonnée liée que vous voulez ajouter. Puis, double cliquez sur la colonne type de relation et spécifiez-la.</associateSiblingText>
 	<associateServiceHelp>Pour associer une métadonnée de service, rechercher un service et choisir la couche associée.</associateServiceHelp>
 	<associateDatasetHelp>Pour associer une métadonnée de données, aller dans la vue ISO &gt; onglet Identification,
 		et définir l'élément "operates on".</associateDatasetHelp>
@@ -630,8 +630,8 @@ Des objets réutilisables que vous utilisez dans vos métadonnées ont été rej
 	<linkedParentMetadataHelp>Pour associer un parent, aller dans la vue ISO &gt; onglet Metadonnées.</linkedParentMetadataHelp>
 	<linkedChildrenMetadata> Enfants:</linkedChildrenMetadata>
 	<linkedChildrenMetadataHelp>Liste des enfants pour la métadonnée en cours.</linkedChildrenMetadataHelp>
-	<linkedSiblingMetadata> Related metadata:</linkedSiblingMetadata>	
-	<linkedSiblingMetadataHelp>List of related metadata linked to current metadata record.</linkedSiblingMetadataHelp>
+	<linkedSiblingMetadata>Métadonnée liée:</linkedSiblingMetadata>	
+	<linkedSiblingMetadataHelp>Liste des métadonnées liées à l’enregistrement courant de métadonnées.</linkedSiblingMetadataHelp>
 	<linkedDatasetMetadata> Jeux de données associés:</linkedDatasetMetadata>
 	<serviceCreate>Créer une métadonnée de service</serviceCreate>
 	<parentSearch js="true">Chercher un parent pour la métadonnée en cours.</parentSearch>
