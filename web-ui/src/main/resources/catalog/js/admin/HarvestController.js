@@ -20,7 +20,7 @@
     '$scope', '$http', '$translate', '$injector', '$rootScope',
     'gnSearchManagerService', 'gnUtilityService',
     function($scope, $http, $translate, $injector, $rootScope,
-            gnSearchManagerService, gnUtilityService) {
+             gnSearchManagerService, gnUtilityService) {
 
       $scope.pageMenu = {
         folder: 'harvest/',
@@ -53,7 +53,7 @@
       function loadHistory() {
         $scope.harvesterHistory = undefined;
         $http.get('admin.harvester.history@json?uuid=' +
-                $scope.harvesterSelected.site.uuid).success(function(data) {
+            $scope.harvesterSelected.site.uuid).success(function(data) {
           $scope.harvesterHistory = data.harvesthistory;
         }).error(function(data) {
           // TODO
@@ -63,7 +63,7 @@
       function loadHarvesterTypes() {
         $http.get('admin.harvester.info@json?type=harvesterTypes',
             {cache: true})
-        .success(function(data) {
+          .success(function(data) {
               angular.forEach(data[0], function(value) {
                 $scope.harvesterTypes[value] = {
                   label: value,
@@ -71,12 +71,12 @@
                 };
                 $.getScript('../../catalog/templates/admin/harvest/type/' +
                     value + '.js')
-                    .done(function(script, textStatus) {
+                .done(function(script, textStatus) {
                       $scope.harvesterTypes[value].loaded = true;
                       // FIXME: could we make those harvester specific
                       // function a controller
                     })
-                  .fail(function(jqxhr, settings, exception) {
+                .fail(function(jqxhr, settings, exception) {
                       $scope.harvesterTypes[value].loaded = false;
                     });
               });
@@ -144,10 +144,10 @@
 
       $scope.saveHarvester = function() {
         var body = window['gnHarvester' + $scope.harvesterSelected['@type']]
-                            .buildResponse($scope.harvesterSelected, $scope);
+          .buildResponse($scope.harvesterSelected, $scope);
 
         $http.post('admin.harvester.' +
-                ($scope.harvesterNew ? 'add' : 'update') +
+            ($scope.harvesterNew ? 'add' : 'update') +
             '@json', body, {
               headers: {'Content-type': 'application/xml'}
             }).success(function(data) {
@@ -198,8 +198,8 @@
       };
       $scope.deleteHarvester = function() {
         $http.get('admin.harvester.remove@json?id=' +
-                  $scope.harvesterSelected['@id'])
-              .success(function(data) {
+            $scope.harvesterSelected['@id'])
+          .success(function(data) {
               $scope.harvesterSelected = {};
               $scope.harvesterUpdated = false;
               $scope.harvesterNew = false;
@@ -211,8 +211,8 @@
 
       $scope.deleteHarvesterRecord = function() {
         $http.get('admin.harvester.clear@json?id=' +
-                  $scope.harvesterSelected['@id'])
-              .success(function(data) {
+            $scope.harvesterSelected['@id'])
+          .success(function(data) {
               $scope.harvesterSelected = {};
               $scope.harvesterUpdated = false;
               $scope.harvesterNew = false;
@@ -227,7 +227,7 @@
           ids.push(h.id);
         });
         $http.get('admin.harvester.history.delete@json?id=' + ids.join('&id='))
-              .success(function(data) {
+          .success(function(data) {
               loadHarvesters().then(function() {
                 $scope.selectHarvester($scope.harvesterSelected);
               });
@@ -235,8 +235,8 @@
       };
       $scope.runHarvester = function() {
         $http.get('admin.harvester.run@json?id=' +
-                $scope.harvesterSelected['@id'])
-            .success(function(data) {
+            $scope.harvesterSelected['@id'])
+          .success(function(data) {
               loadHarvesters();
             });
       };
@@ -247,8 +247,8 @@
         }
         var status = $scope.harvesterSelected.options.status;
         $http.get('admin.harvester.' +
-                  (status === 'active' ? 'start' : 'stop') +
-                  '@json?id=' +
+            (status === 'active' ? 'start' : 'stop') +
+            '@json?id=' +
             $scope.harvesterSelected['@id'])
           .success(function(data) {
 
@@ -278,7 +278,7 @@
       $scope.geonetworkGetSources = function(url) {
         $http.get($scope.proxyUrl +
             encodeURIComponent(url + '/srv/eng/info?type=sources'))
-         .success(function(data) {
+          .success(function(data) {
               $scope.geonetworkSources = [];
               var i = 0;
               var xmlDoc = $.parseXML(data);
@@ -324,7 +324,7 @@
       // TODO : enable watch only if OAIPMH
       $scope.$watch('harvesterSelected.site.url', function() {
         if ($scope.harvesterSelected &&
-                $scope.harvesterSelected['@type'] === 'oaipmh') {
+            $scope.harvesterSelected['@type'] === 'oaipmh') {
           $scope.oaipmhGet();
         }
       });
@@ -345,8 +345,8 @@
         $scope.cswCriteriaInfo = null;
 
         if ($scope.harvesterSelected &&
-                $scope.harvesterSelected.site &&
-                $scope.harvesterSelected.site.capabilitiesUrl) {
+            $scope.harvesterSelected.site &&
+            $scope.harvesterSelected.site.capabilitiesUrl) {
 
 
           var url = $scope.harvesterSelected.site.capabilitiesUrl;
@@ -360,8 +360,8 @@
           }
 
           $http.get($scope.proxyUrl +
-                  encodeURIComponent(url))
-           .success(function(data) {
+              encodeURIComponent(url))
+            .success(function(data) {
                 $scope.cswCriteria = [];
 
                 var i = 0;
@@ -377,24 +377,31 @@
                   var matches = ['SupportedISOQueryables',
                     'SupportedQueryables',
                     'AdditionalQueryables'];
-
-                  $xml.find('Constraint').each(function() {
+                  var parseCriteriaFn = function() {
+                    var name = $(this).text();
+                    $scope.cswCriteria.push(name);
+                    if (!$scope.harvesterSelected.searches[0][name]) {
+                      $scope.harvesterSelected.searches[0][name] =
+                          {value: ''};
+                    }
+                  };
+                  var parseQueryablesFn = function() {
                     if (matches.indexOf($(this).attr('name')) !== -1) {
 
                       // Add all queryables to the list of possible parameters
                       // and to the current harvester if not exist.
                       // When harvester is saved only criteria with
                       // value will be saved.
-                      $(this).find('Value').each(function() {
-                        var name = $(this).text();
-                        $scope.cswCriteria.push(name);
-                        if (!$scope.harvesterSelected.searches[0][name]) {
-                          $scope.harvesterSelected.searches[0][name] =
-                              {value: ''};
-                        }
-                      });
+                      $(this).find('Value').each(parseCriteriaFn);
+                      $(this).find('ows\\:Value').each(parseCriteriaFn);
                     }
-                  });
+                  };
+                  // For Chrome and IE
+                  $xml.find('Constraint').each(parseQueryablesFn);
+                  // For FF, namespace parsing is different
+                  if ($scope.cswCriteria.length === 0) {
+                    $xml.find('ows\\:Constraint').each(parseQueryablesFn);
+                  }
 
                   $scope.cswCriteria.sort();
 
@@ -443,7 +450,7 @@
       // When schema change reload the available XSLTs and templates
       $scope.$watch('harvesterSelected.options.outputSchema', function() {
         if ($scope.harvesterSelected &&
-                $scope.harvesterSelected['@type'] === 'wfsfeatures') {
+            $scope.harvesterSelected['@type'] === 'wfsfeatures') {
           wfsGetFeatureXSLT();
           loadHarvesterTemplates();
         }
@@ -476,8 +483,8 @@
         $scope.oaipmhInfo = null;
         var opt = $scope.harvesterSelected.options;
         var schema = ($scope.threddsCollectionsMode === 'DIF' ?
-                opt.outputSchemaOnCollectionsDIF :
-                opt.outputSchemaOnCollectionsFragments);
+            opt.outputSchemaOnCollectionsDIF :
+            opt.outputSchemaOnCollectionsFragments);
         var body = '<request><type>threddsFragmentStylesheets</type><schema>' +
             schema +
             '</schema></request>';
