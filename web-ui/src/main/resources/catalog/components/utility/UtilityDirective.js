@@ -182,17 +182,27 @@
    */
   module.directive('gnAutogrow', function() {
     // add helper for measurement to body
-    var testObj = angular.element('<textarea id="autogrow-helper"' +
-        ' style="height: 0; position: absolute; top: -999px"/>');
+    var testObj = angular.element('<textarea ' +
+      ' style="height: 0px; position: absolute; "/>');
     angular.element(window.document.body).append(testObj);
 
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {
+        var maxHeight = 1000;
+        var defaultWidth = 400;
         var adjustHeight = function() {
-          var height, width = element[0].clientWidth;
+          // Height is computed based on scollHeight from
+          // the testObj. Max height is 1000px.
+          // Width is set to the element width
+          // or its parent if hidden (eg. multilingual field
+          // on load).
+          var height,
+              width = element.is(':hidden') ?
+            element.parent().width() || defaultWidth :
+            element[0].clientWidth;
           testObj.css('width', width + 'px').val(element.val());
-          height = testObj[0].scrollHeight;
+          height = Math.min(testObj[0].scrollHeight, maxHeight);
           element.css('height', height + 18 + 'px');
         };
 
