@@ -620,7 +620,7 @@
 	<associateService js="true">Link service metadata</associateService>
 	<associateDataset js="true">Link dataset metadata</associateDataset>
 	<associateSibling js="true">Link related metadata</associateSibling>
-	<associateSiblingText js="true">Search the related Metadata you want to add. Then, double click on relationship column and specify the relationship for each sibling.</associateSiblingText>
+	<associateSiblingText js="true">Search the related Metadata you want to add. Then, double click on relationship column and specify the relationship.</associateSiblingText>
 	<associateServiceHelp>To add a relation to a service metadata, search for service and define layer name.</associateServiceHelp>
 	<associateDatasetHelp>To add a relation to a dataset, go to ISO view > Identification section, and defined operates on elements.</associateDatasetHelp>
 	<addParent> Add or update siblings metadata section</addParent>
