@@ -34,6 +34,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
+import com.google.common.collect.Lists;
 import jeeves.TransactionAspect;
 import jeeves.TransactionTask;
 import org.eclipse.jetty.util.ConcurrentHashSet;
@@ -3056,7 +3057,8 @@ public class DataManager {
 
     public void notifyMetadataChange (Element md, String metadataId) throws Exception {
 
-        if (_metadataRepository.findOne(metadataId).getDataInfo().getType() == MetadataType.METADATA) {
+        final Metadata metadata = _metadataRepository.findOne(metadataId);
+        if (metadata != null && metadata.getDataInfo().getType() == MetadataType.METADATA) {
 
             XmlSerializer.removeWithheldElements(md, servContext.getBean(SettingManager.class));
             String uuid = getMetadataUuid( metadataId);
@@ -3077,7 +3079,16 @@ public class DataManager {
 
     }
 
-    public void deleteBatchMetadata(String harvesterUUID) {
-        _metadataRepository.deleteAll(MetadataSpecs.hasHarvesterUuid(harvesterUUID));
+    public void batchDeleteMetadataAndUpdateIndex(Specification<Metadata> specification) throws Exception {
+        final List<Integer> idsOfMetadataToDelete = _metadataRepository.findAllIdsBy(specification);
+
+        searchMan.delete("_id", Lists.transform(idsOfMetadataToDelete, new Function<Integer, String>() {
+            @Nullable
+            @Override
+            public String apply(@Nonnull Integer input) {
+                return input.toString();
+            }
+        }));
+        _metadataRepository.deleteAll(specification);
     }
 }

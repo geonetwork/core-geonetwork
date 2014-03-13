@@ -1,6 +1,7 @@
 package org.fao.geonet.kernel;
 
 import static org.junit.Assert.*;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 import com.google.common.base.Optional;
 import jeeves.server.UserSession;
@@ -8,11 +9,16 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
+import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 
 import javax.annotation.Nonnull;
 import java.io.ByteArrayInputStream;
@@ -163,11 +169,36 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         assertFalse(metadata.getHarvestInfo().isHarvested());
     }
 
+    @Test
+    public void testDeleteBatchMetadata() throws Exception {
+        ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+
+        int md1 = importMetadata(this, context);
+        int md2 = importMetadata(this, context);
+
+        final SearchManager searchManager = context.getBean(SearchManager.class);
+        IndexAndTaxonomy indexReader = searchManager.getNewIndexReader("eng");
+
+        assertEquals(2, indexReader.indexReader.numDocs());
+        assertEquals(2, _metadataRepository.count());
+
+        indexReader.indexReader.releaseToNRTManager();
+
+        Specification<Metadata> spec = where(MetadataSpecs.hasMetadataId(md1)).or(MetadataSpecs.hasMetadataId(md2));
+        _dataManager.batchDeleteMetadataAndUpdateIndex(spec);
+
+        assertEquals(0, _metadataRepository.count());
+
+        indexReader = searchManager.getNewIndexReader("eng");
+        assertEquals(0, indexReader.indexReader.numDocs());
+        indexReader.indexReader.releaseToNRTManager();
+    }
 
     static int importMetadata(AbstractCoreIntegrationTest test, ServiceContext serviceContext) throws Exception {
         final Element sampleMetadataXml = test.getSampleMetadataXml();
         final ByteArrayInputStream stream = new ByteArrayInputStream(Xml.getString(sampleMetadataXml).getBytes("UTF-8"));
-        return test.importMetadataXML(serviceContext, "uuidSetStatus", stream, MetadataType.METADATA,
+        return test.importMetadataXML(serviceContext, "uuid", stream, MetadataType.METADATA,
                 ReservedGroup.all.getId(), Params.GENERATE_UUID);
     }
 
