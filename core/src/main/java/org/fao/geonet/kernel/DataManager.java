@@ -1210,9 +1210,7 @@ public class DataManager {
                 MetadataHarvestInfo harvestInfo = metadata.getHarvestInfo();
                 harvestInfo.setUuid(harvestUuid);
                 harvestInfo.setHarvested(harvestUuid != null);
-                if (harvestUri.isPresent()) {
-                    harvestInfo.setUri(harvestUri.get());
-                }
+                harvestInfo.setUri(harvestUri.orNull());
             }
         });
     }

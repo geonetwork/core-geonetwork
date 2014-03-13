@@ -232,7 +232,7 @@ public class Aligner extends BaseAligner
         }
         String id = dataMan.insertMetadata(context, schema, md, ri.uuid,
                 ownerId, group, params.uuid,
-                         isTemplate, docType, category, ri.changeDate, ri.changeDate, ufo, indexImmediate);
+                isTemplate, docType, category, ri.changeDate, ri.changeDate, ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
 

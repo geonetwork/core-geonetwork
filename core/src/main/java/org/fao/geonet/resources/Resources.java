@@ -295,8 +295,15 @@ public class Resources {
             }
 
             final int indexOfDot = file.getName().lastIndexOf(".");
-            final String suffixless = file.getName().substring(0, indexOfDot);
-            String suffix = file.getName().substring(indexOfDot + 1);
+            final String suffixless;
+            String suffix;
+            if (indexOfDot == -1) {
+                suffixless = file.getName();
+                suffix = ".png";
+            } else {
+                suffixless = file.getName().substring(0, indexOfDot);
+                suffix = file.getName().substring(indexOfDot + 1);
+            }
             if (!file.exists() && IMAGE_WRITE_SUFFIXES.contains(suffix.toLowerCase())) {
                 // find a different format and convert it to our desired format
                 File[] found = file.getParentFile().listFiles(new FilenameFilter() {

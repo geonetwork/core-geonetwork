@@ -1,11 +1,13 @@
-package org.fao.geonet;
+package org.fao.geonet.kernel;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.repository.MetadataRepository;
 import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,8 @@ import static org.junit.Assert.assertTrue;
 public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractCoreIntegrationTest {
     @Autowired
     DataManager _dataManager;
+    @Autowired
+    MetadataRepository _metadataRepository;
 
     @Autowired
     PlatformTransactionManager _tm;
@@ -52,6 +56,25 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractC
                         assertNotNull(updateMd);
                         final boolean hasNext = updateMd.getCategories().iterator().hasNext();
                         assertTrue(hasNext);
+                    }
+                });
+
+    }
+
+    @Test
+    public void testSetHarvesterData() throws Exception {
+        TransactionlessTesting.get().run
+                (new TestTask() {
+                    @Override
+                    public void run() throws Exception {
+                        final ServiceContext serviceContext = createServiceContext();
+                        loginAsAdmin(serviceContext);
+
+                        final DataManagerWorksWithoutTransactionIntegrationTest test =
+                                DataManagerWorksWithoutTransactionIntegrationTest.this;
+                        final int metadataId =  DataManagerIntegrationTest.importMetadata(test, serviceContext);
+
+                        DataManagerIntegrationTest.doSetHarvesterDataTest(_metadataRepository, _dataManager, metadataId);
                     }
                 });
 

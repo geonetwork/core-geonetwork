@@ -439,7 +439,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         return admin;
     }
 
-    protected Element getSampleMetadataXml() throws IOException, JDOMException {
+    public Element getSampleMetadataXml() throws IOException, JDOMException {
         final URL resource = AbstractCoreIntegrationTest.class.getResource("kernel/valid-metadata.iso19139.xml");
         return Xml.loadStream(resource.openStream());
     }
@@ -450,8 +450,8 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
      * @return
      * @throws Exception
      */
-    protected int importMetadataXML(ServiceContext context, String uuid, InputStream xmlInputStream, MetadataType metadataType,
-                                    int groupId, String uuidAction) throws Exception {
+    public int importMetadataXML(ServiceContext context, String uuid, InputStream xmlInputStream, MetadataType metadataType,
+                                 int groupId, String uuidAction) throws Exception {
         final Element metadata = Xml.loadStream(xmlInputStream);
         final DataManager dataManager = _applicationContext.getBean(DataManager.class);
         String schema = dataManager.autodetectSchema(metadata);
