@@ -595,8 +595,8 @@ Es sind von Ihnen genutzte wiederverwendbare Objekte entfernt worden. Nachfolgen
 	<createIfNotExistButton js="true">Einen neuen Metadatensatz erstellen</createIfNotExistButton>
 	<associateService js="true"> Dienst-Metadaten verlinken</associateService>
 	<associateDataset js="true"> Daten-Metadaten verlinken</associateDataset>
-	<associateSibling js="true"> verwandte Metadaten verlinken</associateSibling>
-	<associateSiblingText js="true">Suchen Sie die Metadatensätze, die hinzufügen möchten. Doppelklicken Sie dann auf Beziehung klicken Spalte und geben Sie die &lt;br/&gt;Beziehung zum verlinkten Datensatz an.</associateSiblingText>
+	<associateSibling js="true"> Verwandte Metadaten verlinken</associateSibling>
+	<associateSiblingText js="true">Suchen Sie die verwandten Metadatensätze, die Sie hinzufügen möchten. Doppelklicken Sie dann auf Beziehung und geben Sie die Art der Beziehung an.</associateSiblingText>
 	<associateServiceHelp>Um Dienst-Metadaten zu verlinken: nach Dienst-Metadaten suchen und Layername angeben.</associateServiceHelp>
 	<associateDatasetHelp>Um eine Beziehung zu einem Datensatz herzustellen, gehen Sie zu "ISO-Ansicht" &gt; Basisinformation und definieren Sie die "bezieht sich auf"-Elemente (Operates on).</associateDatasetHelp>
 	<addParent> Hinzufügen oder Aktualisieren eines Geschwister-Metadatensatzes</addParent>
@@ -609,8 +609,8 @@ Es sind von Ihnen genutzte wiederverwendbare Objekte entfernt worden. Nachfolgen
 	<linkedParentMetadataHelp>Um eine Beziehung zu einem Eltern-Metadatensatz herzustellen, gehen Sie zu "ISO-Ansicht" &gt; Metadaten.</linkedParentMetadataHelp>
 	<linkedChildrenMetadata> Untergeordnete Metadaten:</linkedChildrenMetadata>
 	<linkedChildrenMetadataHelp>Liste der "Kinder" dieses Metadatensatzes</linkedChildrenMetadataHelp>
-	<linkedSiblingMetadata> verwandter Datensatz</linkedSiblingMetadata>
-	<linkedSiblingMetadataHelp>Liste der verwandten Metadaten im Zusammenhang mit aktuellen Metadatensatz.</linkedSiblingMetadataHelp>
+	<linkedSiblingMetadata> Verwandter Datensatz</linkedSiblingMetadata>
+	<linkedSiblingMetadataHelp>Liste der verwandten Metadaten des aktuellen Metadatensatzes.</linkedSiblingMetadataHelp>
 	<linkedDatasetMetadata> Verlinkte Metadaten:</linkedDatasetMetadata>
 	<serviceCreate>Einen neuen Dienst-Metadatensatz erstellen</serviceCreate>
 	<parentSearch js="true">Nach Eltern-Datensatz suchen</parentSearch>
