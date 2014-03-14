@@ -749,15 +749,20 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         });
         
         var reloadCapabilitiesStore = function(stringUrl, protocol, callback) {
+            
             if(this.isGetMap(protocol)) {
                 var params = {};
                 this.layerNames = [];
                 if(stringUrl.split('?').length == 2) {
                     params = Ext.urlDecode(stringUrl.split('?')[1]);
                 }
-                params = Ext.applyIf(params, {
-                    request: 'getCapabilities',
-                    service: 'WMS'
+                var paramsUpper = {};
+                for(var p in params){
+                    paramsUpper[p.toUpperCase()] = params[p];
+                }
+                params = Ext.applyIf(paramsUpper, {
+                    REQUEST: 'getCapabilities',
+                    SERVICE: 'WMS'
                 });
                 
                 if(protocol && protocol.indexOf('1.3.0') >= 0 ) {
@@ -773,20 +778,25 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         };
         
         // Specific MyOcean --
-        // If we edit a WMS getCapabilitie, we load the grid from the URL, then
+        // If we edit a WMS getCapability, we load the grid from the URL, then
         // - we select the layers that were in the MD
         // - we update the title of the layers corresponding to <description> element of the MD
         var updateGridFromLoadedValues = function(layers, options, store) {
             var grid = protocolCombo.ownerCt.find('name', 'capabilitiesGrid')[0];
             var recs = this.capabilitiesStore.queryBy(function(rec, id) {
-                return (names.indexOf(rec.get('name')) >= 0);
+                if(names) {
+                    return (names.indexOf(rec.get('name')) >= 0);
+                }
             }, this);
-            grid.getSelectionModel().selectRecords(recs.items);
             
-            recs.each(function(rec) {
-                var idx = names.indexOf(rec.get('name'));
-                rec.set('title', descs[idx]);
-            });
+            if(recs) {
+                grid.getSelectionModel().selectRecords(recs.items);
+                
+                recs.each(function(rec) {
+                    var idx = names.indexOf(rec.get('name'));
+                    rec.set('title', descs[idx]);
+                });
+            }
         }
         // --
         
