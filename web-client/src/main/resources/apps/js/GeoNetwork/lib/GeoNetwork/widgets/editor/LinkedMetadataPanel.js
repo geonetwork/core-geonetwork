@@ -112,6 +112,11 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         },
         tpl: null
     },
+    /**
+     * Collections of all onlinesrc of the MD
+     */
+    xmlRelations : null,
+    
     /** public: method[clear] 
      *  Remove all related metadata from the store and clean the panel content.
      */
@@ -169,7 +174,12 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                 metadataSchema: this.metadataSchema,
                 setThumbnail: this.catalogue.services.mdSetThumbnail,
                 bodyStyle: 'padding:10px;background-color:white',
-                imagePath: this.imagePath
+                imagePath: this.imagePath,
+                editUrl: url,
+                editName: name,
+                editProtocol: protocol == 'OGC:WMS:getCapabilities' ? 'OGC:WMS' : protocol,
+                editDescr: descr,
+                xmlRelations: this.xmlRelations
             };
         if (type === 'thumbnail') {
             config.height = 300;
@@ -265,8 +275,9 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
             parameters += "&url=" + encodeURIComponent(id);
 
             var name = uuid.split('||')[0].trim().split(' ');
-            name.pop();
+            var protocol = name.pop();
             parameters += "&name=" + encodeURIComponent(name.join(' '));
+            parameters += "&protocol=" + protocol.substring(1, protocol.length -1);
             
             // if a file is upload remove the file before removing the link
             if (uuid.indexOf('WWW:DOWNLOAD-1.0-http--download') !== -1) {
@@ -475,7 +486,8 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                     mds.each(function(md) {
                         var dsInStore = false;
                         for(var i=0;i<datasets.length;i++) {
-                            if(datasets[i].url == md.get('id') && datasets[i].parentName == md.get('parentName')) {
+                            if(datasets[i].url == md.get('id') && md.get('parentName') != '' && 
+                                    datasets[i].parentName == md.get('parentName')) {
                                 dsInStore = true;
                                 break;
                             }
@@ -488,7 +500,8 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                     Ext.each(datasets, function(ds) {
                         // get all relations that belong to the same dataset
                         var mdsPerDataset = store.queryBy(function(rec,id) {
-                            return (rec.get('id') == ds.url && rec.get('parentName') == ds.parentName);
+                            return (rec.get('id') == ds.url && rec.get('parentName') != '' && 
+                                    rec.get('parentName') == ds.parentName);
                         });
                         if(mdsPerDataset.getCount() > 1) {
                             var rec = new store.recordType();
@@ -500,6 +513,11 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                             });
                             rec.set('id', ds.url);
                             rec.set('type', type);
+                            
+                            // Fill if dataset desc is empty
+                            if(rec.get('title').split('||').length > rec.get('abstract').split('||').length) {
+                                rec.set('abstract', '||' + rec.get('abstract'));
+                            }
                             mds.add(rec);
                         }
                     });
@@ -507,8 +525,9 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                         if (a.get('title') === b.get('title')) {
                             return 0;
                         }
-                        return a.get('title') < b.get('title') ? -1 : 1;
+                        return a.get('title').toLowerCase() < b.get('title').toLowerCase() ? -1 : 1;
                     });
+                    this.xmlRelations = mds;
                 }
                 
                 mds.items.type = type;
@@ -521,6 +540,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                 if (type === 'children' && mds.items.length !== 0) {
                     this.hasChildren = true;
                 }
+                
             }, this);
             this.update('<div><div id="add-menu-content"></div>' + html + '</div>');
             

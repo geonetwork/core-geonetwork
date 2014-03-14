@@ -753,3 +753,9 @@ background-color: #DDF8DD;
 border-color: #59B854;
 background-image: none;
 }
+
+ul.msgbox {
+    list-style-type: disc;
+    padding-left: 50px;
+    padding-top: 8px;
+}

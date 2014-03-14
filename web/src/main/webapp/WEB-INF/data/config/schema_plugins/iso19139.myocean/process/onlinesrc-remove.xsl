@@ -9,6 +9,7 @@ Stylesheet used to remove a reference to a online resource.
 	
 	<xsl:param name="url"/>
 	<xsl:param name="name" />
+	<xsl:param name="protocol" />
 	
 	<!-- Do a copy of every nodes and attributes -->
 	<xsl:template match="@*|node()">
@@ -18,9 +19,13 @@ Stylesheet used to remove a reference to a online resource.
 	</xsl:template>
 
 	<!-- Remove geonet:* elements. -->
-	<xsl:template match="geonet:*|gmd:distributor[gmd:MD_Distributor//gmd:onLine/gmd:CI_OnlineResource/gmd:linkage/gmd:URL = $url and gmd:MD_Distributor//gmd:onLine/gmd:CI_OnlineResource/gmd:name/gco:CharacterString = $name]" priority="2"/>
-	<xsl:template match="geonet:*|gmd:distributor[gmd:MD_Distributor//gmd:onLine/gmd:CI_OnlineResource/gmd:linkage/gmd:URL = $url and gmd:MD_Distributor//gmd:onLine/gmd:CI_OnlineResource/gmd:name/@gco:nilReason = 'missing']" priority="2"/>
-	<xsl:template match="geonet:*|gmd:distributor[normalize-space(gmd:MD_Distributor//gmd:onLine/gmd:CI_OnlineResource/gmd:linkage/gmd:URL) = $url and normalize-space(gmd:MD_Distributor//gmd:onLine/gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString) = 'WWW:DOWNLOAD-1.0-http--download']" priority="2"/>
-	
+	<xsl:template match="geonet:*|gmd:distributor[gmd:MD_Distributor//gmd:onLine/gmd:CI_OnlineResource/gmd:linkage/gmd:URL = $url 
+						and gmd:MD_Distributor//gmd:onLine/gmd:CI_OnlineResource/gmd:name/gco:CharacterString = $name
+						and gmd:MD_Distributor//gmd:onLine/gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString = $protocol]" priority="2"/>
+						
+	<xsl:template match="geonet:*|gmd:distributor[gmd:MD_Distributor//gmd:onLine/gmd:CI_OnlineResource/gmd:linkage/gmd:URL = $url 
+						and gmd:MD_Distributor//gmd:onLine/gmd:CI_OnlineResource/gmd:name/@gco:nilReason = 'missing'
+						and gmd:MD_Distributor//gmd:onLine/gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString = $protocol]" priority="2"/>
+						
 	<xsl:template match="geonet:*|gmd:distributionInfo[count(//gmd:distributor) = 1]" priority="2"/>
 </xsl:stylesheet>
