@@ -3871,6 +3871,12 @@
       <option value="OGC:WMS">OGC Web Map Service</option>
       <option value="OGC:WFS">OGC Web Feature Service</option>
       <option value="OGC:WCS">OGC Web Coverage Service</option>
+      <option value="view">View -- INSPIRE</option>
+      <option value="discovery">Discovery -- INSPIRE</option>
+      <option value="download">Download -- INSPIRE</option>
+      <option value="transformation">Transformation -- INSPIRE</option>
+      <option value="invoke">Invoke -- INSPIRE</option>
+      <option value="other">Other -- INSPIRE</option>
       <!--<option value="W3C:HTML:DOWNLOAD">Téléchargement</option>
       <option value="W3C:HTML:LINK">Information</option>-->
     </helper>
