@@ -34,6 +34,7 @@ INSERT INTO public.schematron (id, file, schemaname) VALUES (2, 'schematron-rule
 INSERT INTO public.schematron (id, file, schemaname) VALUES (3, 'schematron-rules-geobasisdatensatz.required.xsl', 'iso19139.che');
 
 INSERT INTO public.schematroncriteriagroup (name, schematronid, requirement) VALUES ('Lichtenstein', 1, 'REQUIRED');
+INSERT INTO public.schematroncriteriagroup (name, schematronid, requirement) VALUES ('DefaultInspireStrict', 1, 'REPORT_ONLY');
 INSERT INTO public.schematroncriteriagroup (name, schematronid, requirement) VALUES ('BGDI', 2, 'REQUIRED');
 INSERT INTO public.schematroncriteriagroup (name, schematronid, requirement) VALUES ('Geobasisdatensatz', 3, 'REQUIRED');
 
@@ -42,3 +43,4 @@ INSERT INTO public.schematroncriteria (id, type, value, group_name, group_schema
 INSERT INTO public.schematroncriteria (id, type, value, group_name, group_schematronid) VALUES (2, 'GROUP', '42', 'BGDI', 2);
 INSERT INTO public.schematroncriteria (id, type, value, group_name, group_schematronid) VALUES (3, 'XPATH', '*//gmd:keyword/gco:CharacterString/text() = ''Geobasisdatensatz''__OR__*//gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString/text() = ''Geobasisdatensatz''', 'Geobasisdatensatz', 3);
 INSERT INTO public.schematroncriteria (id, type, value, group_name, group_schematronid) VALUES (4, 'GROUP', '42', 'Geobasisdatensatz', 3);
+INSERT INTO public.schematroncriteria (id, type, value, group_name, group_schematronid) VALUES (5, 'ALWAYS_ACCEPT', '', 'DefaultInspireStrict', 1);
