@@ -36,12 +36,11 @@ IMPORTANT:  Please do not add any Specifications or queries to the system withou
 Spring Data allows four different ways to write queries. (For more in-depth explanation see: http://projects.spring.io/spring-data-jpa/
 
 1.  Query methods
- * You can create methods in the ...Repository interface and the method name will be parsed by Spring Data and a query will be created
-   you based on the name.  There are many different options including in, and, or ways to write the methods.
+ * You can create methods in the ...Repository interface and the method name will be parsed by Spring Data and a query will be created you based on the name.  There are many different options including in, and, or ways to write the methods.
  * While the methods are easy to write they are not very flexible.  Using Specifications tend to be a more flexible solution and is therefore preferred
  * **Examples: (See tests for example usage)**
-   * [UserRepository](src/main/java/org/fao/geonet/repository/UserRepository.java)
-   * [OperationAllowedRepository](src/main/java/org/fao/geonet/repository/OperationAllowedRepository.java)
+  * [UserRepository](src/main/java/org/fao/geonet/repository/UserRepository.java)
+  * [OperationAllowedRepository](src/main/java/org/fao/geonet/repository/OperationAllowedRepository.java)
 1. Specifications
  * The Specification interface provides a composable API for writing queries.
  * For example you could write a hasMetadataId specification and a hasOwnerId specification.  One could then compose them in using not, and, or.
@@ -55,8 +54,8 @@ Spring Data allows four different ways to write queries. (For more in-depth expl
  * Spring JPA Repositories can have custom queries with very custom implementations.  A Repository will extend an interface with the custom methods
    and the implementations would be in a subclass of the interface.
  * **Examples: (See tests for example usage)**
-   * [MetadataRepositoryCustom](src/main/java/org/fao/geonet/repository/MetadataRepositoryCustom.java)
-   * [MetadataRepositoryImpl](src/main/java/org/fao/geonet/repository/MetadataRepositoryImpl.java)
+  * [MetadataRepositoryCustom](src/main/java/org/fao/geonet/repository/MetadataRepositoryCustom.java)
+  * [MetadataRepositoryImpl](src/main/java/org/fao/geonet/repository/MetadataRepositoryImpl.java)
  * The implementation will use the normal EntityManager (JPA) API for constructing the queries
 1. Standard JPA querying
  * One can obtain an EntityManager by using the @PersistentContext annotation on a field in a Spring bean.
