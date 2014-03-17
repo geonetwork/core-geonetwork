@@ -214,17 +214,17 @@ une interface externe du service internet pour le processus ou la chaîne de ser
         <entry>
             <code>largerWorkCitation</code>
             <label>Larger work citation</label>
-            <description>Reference to a master dataset of which this one is a part</description>
+            <description>Référence à un jeu de données maitre dont celui-ci est une partie.</description>
         </entry>
         <entry>
             <code>isTemporalStatOf</code>
             <label>Temporal state</label>
-            <description>Reference from one dataset in a timeseries to another in the same timeseries</description>
+            <description>Référence provenant d’un jeu de données dans une série chronologique à un autre jeu dans la même série chronologique.</description>
         </entry>
         <entry>
             <code>isDescriptionOf</code>
             <label>Description</label>
-            <description>Reference from one dataset which describes the referenced data</description>
+            <description>Référence provenant d’un jeu de données décrivant les données référencées.</description>
         </entry>
     </codelist>
 </codelists>
