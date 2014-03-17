@@ -2352,14 +2352,14 @@ e di trasformazione.</label>
 			<option value="OGC:WMS">OGC Web Map Service (OGC:WMS)</option>
 			<option value="OGC:WFS">OGC Web Feature Service (OGC:WFS)</option>
 			<option value="OGC:WCS">OGC Web Coverage Service (OGC:WCS)</option>
-			<option value="W3C:HTML:DOWNLOAD">Download (W3C:HTML:DOWNLOAD)</option>
-			<option value="W3C:HTML:LINK">Information (W3C:HTML:LINK)</option>
-            <option value="view">View -- INSPIRE</option>
-            <option value="discovery">Discovery -- INSPIRE</option>
-            <option value="download">Download -- INSPIRE</option>
-            <option value="transformation">Transformation -- INSPIRE</option>
-            <option value="invoke">Invoke -- INSPIRE</option>
-            <option value="other">Other -- INSPIRE</option>
+			<option value="W3C:HTML:DOWNLOAD">Scaricamento (W3C:HTML:DOWNLOAD)</option>
+			<option value="W3C:HTML:LINK">Informazione (W3C:HTML:LINK)</option>
+            <option value="view">Consultazione (INSPIRE)</option>
+            <option value="discovery">Ricerca (INSPIRE)</option>
+            <option value="download">Scaricamento (INSPIRE)</option>
+            <option value="transformation">Conversione (INSPIRE)</option>
+            <option value="invoke">Richiesta (INSPIRE)</option>
+            <option value="other">Altro (INSPIRE)</option>
 			<!-- INSPIRE Service type defined in MD IR / 1.3.1 Spatial data service
 				type <option value="discovery">Discovery Service (discovery)</option> <option 
 				value="view">View Service (view)</option> <option value="download">Download 
