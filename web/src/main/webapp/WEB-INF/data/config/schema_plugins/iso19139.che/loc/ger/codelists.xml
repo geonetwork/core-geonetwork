@@ -378,7 +378,7 @@
         <entry>
             <code>largerWorkCitation</code>
             <label>Larger work citation</label>
-            <description>Bezug zu einem übergeordneten Datenbsatz, von dem dieser Datenbestand ein Teil ist</description>
+            <description>Bezug zu einem übergeordneten Datensatz, von dem dieser Datensatz ein Teil ist</description>
         </entry>
         <entry>
             <code>isTemporalStatOf</code>
