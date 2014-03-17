@@ -378,17 +378,17 @@
         <entry>
             <code>largerWorkCitation</code>
             <label>Larger work citation</label>
-            <description>Reference to a master dataset of which this one is a part</description>
+            <description>Riferimento ad un set di dati principale, del quale il presente è parte.</description>
         </entry>
         <entry>
             <code>isTemporalStatOf</code>
             <label>Temporal state</label>
-            <description>Reference from one dataset in a timeseries to another in the same timeseries</description>
+            <description>Riferimento da un set di dati in una serie temporale ad un altro set nella stessa serie.</description>
         </entry>
         <entry>
             <code>isDescriptionOf</code>
             <label>Description</label>
-            <description>Reference from one dataset which describes the referenced data</description>
+            <description>Riferimento da un set di dati che descrive i dati referenziati.</description>
         </entry>
     </codelist>
 </codelists>
