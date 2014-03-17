@@ -2769,12 +2769,12 @@
           <option value="OGC:WCS">OGC Web Coverage Service (OGC:WCS)</option>
           <option value="W3C:HTML:DOWNLOAD">Download (W3C:HTML:DOWNLOAD)</option>
           <option value="W3C:HTML:LINK">Information (W3C:HTML:LINK)</option>
-          <option value="view">View -- INSPIRE</option>
-          <option value="discovery">Discovery -- INSPIRE</option>
-          <option value="download">Download -- INSPIRE</option>
-          <option value="transformation">Transformation -- INSPIRE</option>
-          <option value="invoke">Invoke -- INSPIRE</option>
-          <option value="other">Other -- INSPIRE</option>
+          <option value="view">Darstellungsdienst (gem. INSPIRE)</option>
+          <option value="discovery">Metadatendienst (gem. INSPIRE)</option>
+          <option value="download">Downloaddienst (gem.INSPIRE)</option>
+          <option value="transformation">Transformationsdienst (gem. INSPIRE)</option>
+          <option value="invoke">Dienst zum Abrufen von Geodiensten (gem. INSPIRE)</option>
+          <option value="other">Weitere (gem. INSPIRE)</option>
           <!--INSPIRE Service type defined in MD IR / 1.3.1 Spatial data service
               type <option value="discovery">Discovery Service (discovery)</option> <option
               value="view">View Service (view)</option> <option value="download">Download
