@@ -3862,21 +3862,15 @@
       peut être classé que dans une seule catégorie.<!-- [2] --></description>
     <helper>
       <!-- INSPIRE Service type defined in MD IR / 1.3.1 Spatial data service type -->
-      <option value="discovery">Service de découverte (discovery)</option>
-      <option value="view">Service de visualisation (view)</option>
-      <option value="download">Service de téléchargement (download)</option>
-      <option value="transformation">Service de transformation (transformation)</option>
-      <option value="invoke">Service d'invocation (invoke)</option>
-      <option value="other">Autres services (other)</option>
+      <option value="discovery">Service de métadonnées (discovery selon INSPIRE)</option>
+      <option value="view">Service de visualisation (view selon INSPIRE)</option>
+      <option value="download">Service de téléchargement (download selon INSPIRE)</option>
+      <option value="transformation">Service de transformation (transformation selon INSPIRE)</option>
+      <option value="invoke">Service d'invocation (invoke selon INSPIRE)</option>
+      <option value="other">Autres services (other selon INSPIRE)</option>
       <option value="OGC:WMS">OGC Web Map Service</option>
       <option value="OGC:WFS">OGC Web Feature Service</option>
       <option value="OGC:WCS">OGC Web Coverage Service</option>
-      <option value="view">View -- INSPIRE</option>
-      <option value="discovery">Discovery -- INSPIRE</option>
-      <option value="download">Download -- INSPIRE</option>
-      <option value="transformation">Transformation -- INSPIRE</option>
-      <option value="invoke">Invoke -- INSPIRE</option>
-      <option value="other">Other -- INSPIRE</option>
       <!--<option value="W3C:HTML:DOWNLOAD">Téléchargement</option>
       <option value="W3C:HTML:LINK">Information</option>-->
     </helper>
