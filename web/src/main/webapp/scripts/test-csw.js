@@ -76,6 +76,7 @@ operations[i++] = [ 'csw-GetDomainPropertyName', 'csw-GetDomain | PropertyName',
 operations[i++] = [ 'csw-TransactionInsert', 'csw-Transaction | Insert', '' ];
 operations[i++] = [ 'csw-TransactionUpdate', 'csw-Transaction | Update full record', '' ];
 operations[i++] = [ 'csw-TransactionUpdateProperties', 'csw-Transaction | Update properties', '' ];
+operations[i++] = [ 'csw-TransactionUpdateXPath', 'csw-Transaction | Update XPath', '' ];
 operations[i++] = [ 'csw-TransactionDelete', 'csw-Transaction | Delete', '' ];
 // TRANSACTION ------------- END -- //
 // HARVEST ------------- START -- //
@@ -94,11 +95,14 @@ function init() {
 function updateOperation(option) {
 	for (i = 0; i < operations.length; i++) {
 		if (operations[i][0] == option.value) {
+            var cswURL = operations[i][0].indexOf('csw-Transaction') === 0 ? '/geonetwork/srv/eng/csw-publication' : '/geonetwork/srv/eng/csw';
+            var url = '../../xml/csw/test/' + operations[i][0] + '.xml';
 			var request = OpenLayers.Request
 					.GET( {
-						url :'../../xml/csw/test/' + operations[i][0] + '.xml',
+						url :url,
 						success : function(response) {
 							document.getElementById('body').value = response.responseText;
+                            document.getElementById('url').value = cswURL;
 						}
 					});
 
