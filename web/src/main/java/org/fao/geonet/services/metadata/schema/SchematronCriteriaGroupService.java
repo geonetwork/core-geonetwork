@@ -54,11 +54,11 @@ public class SchematronCriteriaGroupService implements Service {
 
     private Element delete(Element params, ServiceContext context) throws Exception {
         String groupName = Util.getParam(params, PARAM_GROUP_NAME);
-        String schematronId = Util.getParam(params, PARAM_SCHEMATRON_ID);
+        int schematronId = Integer.parseInt(Util.getParam(params, PARAM_SCHEMATRON_ID));
         Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
         dbms.execute("DELETE FROM "+SchemaDao.TABLE_SCHEMATRON_CRITERIA +
-                     " WHERE "+SchemaDao.COL_CRITERIA_GROUP_NAME + "=? and "+SchemaDao.COL_GROUP_SCHEMATRON_ID + "=?",
+                     " WHERE "+SchemaDao.COL_CRITERIA_GROUP_NAME + "=? and "+SchemaDao.COL_CRITERIA_SCHEMATRON_ID + "=?",
                 groupName, schematronId);
         dbms.execute("DELETE FROM "+SchemaDao.TABLE_SCHEMATRON_CRITERIA_GROUP +
                      " WHERE "+SchemaDao.COL_GROUP_NAME+ "=? and "+SchemaDao.COL_GROUP_SCHEMATRON_ID + "=?",

@@ -128,7 +128,7 @@ function($scope, $http) {
 
     // Remove item from table list
     $scope.removeItem = function(a) {
-        var id;
+        var id, schematronId;
         var url = 'metadata.schema.schematron.criteria';
         var confirmMsg;
         if (a.row) {
@@ -136,6 +136,7 @@ function($scope, $http) {
             confirmMsg = confirmDelete;
         } else {
             id = a.group.name;
+            schematronId = a.group.schematron.id;
             url = url + '.group';
             confirmMsg = confirmDeleteGroup;
         }
@@ -146,7 +147,8 @@ function($scope, $http) {
                 params : {
                     action : 'delete',
                     id : id,
-                    groupName : id
+                    groupName : id,
+                  schematronId: schematronId
                 }
             }).success(function() {
                 if (a.row) {
