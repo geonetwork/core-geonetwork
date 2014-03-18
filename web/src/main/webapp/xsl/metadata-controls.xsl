@@ -41,7 +41,7 @@
 
 			<!-- add button -->
 			<xsl:choose>
-				<xsl:when test="normalize-space($addLink) != '' and not($addXMLFragment and normalize-space($addXMLFragment))">
+				<xsl:when test="$addLink and $addLink[.//text()[normalize-space(.) != '']] and not($addXMLFragment and normalize-space($addXMLFragment))">
 					<xsl:variable name="linkTokens" select="tokenize($addLink,'!')"/>
 					<xsl:text> </xsl:text>
 					<xsl:choose>

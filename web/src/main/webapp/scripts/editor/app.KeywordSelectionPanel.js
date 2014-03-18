@@ -21,7 +21,8 @@ app.keyword.keywordStore = new Ext.data.Store({
       pNewSearch: true,
       pTypeSearch: 1,
       pThesauri: '',
-      pMode: 'searchBox'
+      pMode: 'searchBox',
+      pLanguage: '*'
   },
   reader: new Ext.data.XmlReader({
       record: 'keyword',

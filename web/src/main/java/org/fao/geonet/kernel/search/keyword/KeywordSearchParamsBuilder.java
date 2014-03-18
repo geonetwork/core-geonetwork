@@ -79,7 +79,10 @@ public class KeywordSearchParamsBuilder {
 
         List<Element> thesauri = params.getChildren(XmlParams.pThesauri);
         for (Element thesaurusName : thesauri) {
-            parsedParams.addThesaurus(thesaurusName.getTextTrim());
+            final String text = thesaurusName.getTextTrim();
+            if (!text.isEmpty()) {
+                parsedParams.addThesaurus(text);
+            }
         }
         
         List<Element> langs = params.getChildren(XmlParams.pLang);

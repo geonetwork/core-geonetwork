@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.thesaurus;
 
+import com.google.common.collect.Lists;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -38,6 +39,8 @@ import org.fao.geonet.kernel.search.keyword.KeywordSort;
 import org.fao.geonet.kernel.search.keyword.SortDirection;
 import org.fao.geonet.kernel.search.keyword.XmlParams;
 import org.jdom.Element;
+
+import java.util.ArrayList;
 
 /**
  * Returns a list of keywords given a list of thesaurus
@@ -65,11 +68,13 @@ public class GetKeywords implements Service {
 		// For GEOCAT to handle search for *
 		if ("*".equals(Util.getParam(params, XmlParams.pLanguages, ""))) {
 			params.removeChildren(XmlParams.pLanguages);
-			params.addContent(new Element(XmlParams.pLanguages).setText("eng"));
-			params.addContent(new Element(XmlParams.pLanguages).setText("fre"));
-			params.addContent(new Element(XmlParams.pLanguages).setText("ger"));
-			params.addContent(new Element(XmlParams.pLanguages).setText("ita"));
-			params.addContent(new Element(XmlParams.pLanguages).setText("rom"));
+
+            final ArrayList<String> langs = Lists.newArrayList("eng", "fre", "ger", "ita", "rom");
+            langs.remove(context.getLanguage());
+            params.addContent(new Element(XmlParams.pLanguages).setText(context.getLanguage()));
+            for (String lang : langs) {
+                params.addContent(new Element(XmlParams.pLanguages).setText(lang));
+            }
 		}
 		// END
 		if (newSearch) {			
