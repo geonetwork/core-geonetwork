@@ -82,7 +82,10 @@ public class KeywordSearchParamsBuilder {
         @SuppressWarnings("unchecked")
         List<Element> thesauri = params.getChildren(XmlParams.pThesauri);
         for (Element thesaurusName : thesauri) {
-            parsedParams.addThesaurus(thesaurusName.getTextTrim());
+            final String text = thesaurusName.getTextTrim();
+            if (!text.isEmpty()) {
+                parsedParams.addThesaurus(text);
+            }
         }
         
         @SuppressWarnings("unchecked")
