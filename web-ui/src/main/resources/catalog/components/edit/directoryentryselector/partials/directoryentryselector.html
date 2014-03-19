@@ -26,7 +26,7 @@
                 <i class="fa fa-plus"></i><span class="caret"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
-                <li data-ng-repeat="role in roles">
+                <li data-ng-repeat="role in roles" data-ng-hide="role['@hideInEditMode']">
                   <a href="" data-ng-click="addContact(r, role.code)" title="{{role.description}}">
                     {{role.label}}
                   </a>
@@ -40,7 +40,7 @@
                 <i class="fa fa-link"></i><span class="caret"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
-                <li data-ng-repeat="role in roles">
+                <li data-ng-repeat="role in roles" data-ng-hide="role['@hideInEditMode']">
                   <a href="" data-ng-click="addContact(r, role.code, true)" title="{{role.description}}">
                     {{role.label}}
                   </a>
