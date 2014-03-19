@@ -47,7 +47,7 @@
     "addContactUsingXLink": "Ajouter un contact (avec XLink)",
     "searchAContact": "Rechercher un contact ...",
     "addContactAsText-help": "Par défaut. Copier ce contact dans la fiche.",
-    "addContactAsLink-help": "Ajouter ce contact en lien avec l'annuaire. Les informations sur le contact seront mises à jour lors des modifications dans l'annuraire.",
+    "addContactAsLink-help": "Ajouter ce contact en lien avec l'annuaire. Les informations sur le contact seront mises à jour lors des modifications dans l'annuaire.",
     "createNewMetadata": "Créer une fiche",
     "createMetadata": "Créer",
     "createMetadataForGroup": "Créer et publier pour le groupe",
