@@ -268,9 +268,7 @@
         
         ]]></documentation>
       <class name=".services.metadata.Validate"/>
-      <output sheet="../xslt/services/metadata/validate.xsl" contentType="text/xml; charset=UTF-8">
-        <xml name="validation" file="xml/metadata-validate.xml" />
-      </output>
+      <output sheet="../xslt/services/metadata/validate.xsl" contentType="text/xml; charset=UTF-8"/>
     </service>
 
   </services>
