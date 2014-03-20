@@ -42,6 +42,20 @@
               <param name="action" value="EXISTS"/>
           </class>
       </service>
+      <service name="admin.schematron.update">
+          <documentation>
+              <![CDATA[
+              Update properties of a schematron
+
+              Parameters are:
+                 * id: The id of a schematron to update
+                 * displaypriority: the new display priority of the schematron
+              ]]>
+          </documentation>
+          <class name=".services.metadata.schema.SchematronService">
+              <param name="action" value="EDIT"/>
+          </class>
+      </service>
 
       <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
       <!-- SchematronCriteria Admin services                             -->

@@ -22,9 +22,7 @@ import org.fao.geonet.kernel.search.index.DirectoryFactory;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.LanguageDetector;
-import org.fao.geonet.repository.AbstractSpringDataTest;
-import org.fao.geonet.repository.SourceRepository;
-import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Log;
@@ -46,6 +44,7 @@ import org.opengis.filter.Filter;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.ContextConfiguration;
 
 import javax.persistence.EntityManager;
@@ -163,7 +162,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
             _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
             SchemaManager.registerXmlCatalogFiles(webappDir, schemaPluginsCatalogFile);
 
-            schemaManager.configure(webappDir, resourcePath,
+            schemaManager.configure(_applicationContext, webappDir, resourcePath,
                     schemaPluginsCatalogFile, schemaPluginsDir, "eng", "iso19139", true);
         }
 

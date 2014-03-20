@@ -39,11 +39,11 @@
               label: 'metadataFormatter',
               icon: 'fa-print',
               href: '#/metadata/formatter'
-//            },{
-//              type: 'schematron',
-//              label: 'schematron',
-//              icon: 'fa-eye',
-//              href: '#/metadata/schematron'
+            },{
+              type: 'schematron',
+              label: 'schematron',
+              icon: 'fa-eye',
+              href: '#/metadata/schematron'
             }]
       };
 
