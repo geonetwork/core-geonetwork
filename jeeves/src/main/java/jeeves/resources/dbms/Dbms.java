@@ -174,6 +174,7 @@ public class Dbms
 
 	public Element select(String query) throws SQLException
 	{
+		checkConnection();
 		return selectFull(query, new HashMap<String, String>(), (Object[]) null);
 	}
 
@@ -181,6 +182,7 @@ public class Dbms
 
 	public Element select(String query, Object... args) throws SQLException
 	{
+		checkConnection();
 		return selectFull(query, new HashMap<String, String>(), args);
 	}
 
@@ -188,6 +190,7 @@ public class Dbms
 
 	public Element select(String query, Map<String, String> formats) throws SQLException
 	{
+		checkConnection();
 		return selectFull(query, formats, (Object[]) null);
 	}
 
@@ -195,6 +198,7 @@ public class Dbms
 
 	public Element selectFull(String query, Map<String, String> formats, Object... args) throws SQLException
 	{
+		checkConnection();
         if(Log.isDebugEnabled(Log.Dbms.SELECT)) {
             Log.debug(Log.Dbms.SELECT, "Query: "+ query);
 		    Log.debug(Log.Dbms.SELECT, "Connection: "+ conn.hashCode());
@@ -250,6 +254,7 @@ public class Dbms
 
 	public int execute(String query) throws SQLException
 	{
+		checkConnection();
 		return execute(query, (Object[]) null);
 	}
 
@@ -260,6 +265,7 @@ public class Dbms
 
 	public int execute(String query, Object... args) throws SQLException
 	{
+		checkConnection();
         if(Log.isDebugEnabled(Log.Dbms.EXECUTE)) {
             Log.debug(Log.Dbms.EXECUTE, "Query    : "+ query);
 
@@ -491,8 +497,34 @@ public class Dbms
 	protected void finalize() {
 		disconnect();
 	}
-	
+	/**
+	 * Just in case some previous error disconnected 
+	 * the connection, check and reopen if necessary.
+	 * 
+	 * On fatal error, set up the conn field to null 
+	 * instead of an invalid connection.
+	 */
+	protected void checkConnection() {
+		//Simplest case: someone mess around
+		if(this.conn == null) {
+			try {
+				this.conn = this.dataSource.getConnection();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				this.conn = null;
+			}
+		} else if(isClosed()) {
+            Log.debug(Log.RESOURCES, "Connection was closed! "+ conn.hashCode());
+			try {
+				this.conn = this.dataSource.getConnection();
+				//If we have to empty the full datasource, we will:
+				checkConnection();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				this.conn = null;
+			}
+		}
+	}
 }
 
 //=============================================================================
-
