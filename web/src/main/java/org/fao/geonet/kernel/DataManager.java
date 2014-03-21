@@ -1929,7 +1929,7 @@ public class DataManager {
                 //--- update search criteria
                 boolean indexGroup = false;
                 boolean processSharedObjects = false;
-                indexMetadata(dbms, id, processSharedObjects, servContext, true, false, false);
+                indexMetadata(dbms, id, processSharedObjects, context, true, false, false);
             }
 		}
 		return true;
