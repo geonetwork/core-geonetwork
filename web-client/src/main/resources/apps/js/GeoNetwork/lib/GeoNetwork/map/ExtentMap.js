@@ -119,7 +119,7 @@ GeoNetwork.map.ExtentMap = function(){
                 units: units,
                 projection: mainProjCode,
                 resolutions: GeoNetwork.map.RESOLUTIONS,
-                restrictedExtent: GeoNetwork.map.EXTENT,
+                restrictedExtent: GeoNetwork.map.MAXEXTENT,
                 maxExtent: GeoNetwork.map.MAXEXTENT,
                 theme: null
             }, map;

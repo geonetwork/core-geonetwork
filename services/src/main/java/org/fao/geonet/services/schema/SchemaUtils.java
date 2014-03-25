@@ -151,9 +151,9 @@ public class SchemaUtils {
 		// -- manager
 		try {
 			if (add) {
-				scm.addPluginSchema(schema, inputStream);
+				scm.addPluginSchema(context.getApplicationContext(), schema, inputStream);
 			} else {
-				scm.updatePluginSchema(schema, inputStream);
+				scm.updatePluginSchema(context.getApplicationContext(), schema, inputStream);
 			}
      	response.setAttribute("status", "ok");
      	response.setAttribute("message", "Schema "+schema+" has been added/updated");

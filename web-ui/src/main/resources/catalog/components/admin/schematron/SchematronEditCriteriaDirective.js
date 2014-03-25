@@ -10,8 +10,8 @@
      * Display harvester identification section with
      * name, group and icon
      */
-    module.directive('gnCriteriaEditor', ['gnSchematronAdminService', '$compile', '$templateCache', '$q', '$translate', '$timeout',
-        function (gnSchematronAdminService, $compile, $templateCache, $q, $translate, $timeout) {
+    module.directive('gnCriteriaEditor', ['gnSchematronAdminService', '$translate', '$timeout',
+        function (gnSchematronAdminService, $translate, $timeout) {
             return {
                 restrict: 'E',
                 replace: true,
@@ -25,9 +25,10 @@
                 },
 
                 templateUrl: '../../catalog/components/admin/schematron/partials/criteria-viewer.html',
-                link: function (scope, element, attrs) {
-                    var findValueInput = function () {
-                        return element.find("input.form-control")
+                link: function (scope, element) {
+                    var findValueInput, criteriaTypeToValueMap, i, type;
+                    findValueInput = function () {
+                        return element.find("input.form-control");
                     };
                     if (scope.original.value instanceof Array) {
                         scope.original.value = '';
@@ -40,7 +41,7 @@
                     // Keep a map of the values that belong to each criteria type
                     // so when a type is changed the value field can be updated with a
                     // value that makes sense for the type.
-                    var criteriaTypeToValueMap = {
+                    criteriaTypeToValueMap = {
                         currentType__ : scope.criteria.uitype
                     };
                     scope.criteriaTypes = {};
@@ -48,8 +49,8 @@
                         scope.criteriaTypes.NEW = {name: 'NEW', type: 'NEW', label:$translate('NEW')};
                         criteriaTypeToValueMap.NEW = '';
                     }
-                    for (var i = 0; i < scope.schema.criteriaTypes.type.length; i++) {
-                        var type = scope.schema.criteriaTypes.type[i];
+                    for (i = 0; i < scope.schema.criteriaTypes.type.length; i++) {
+                        type = scope.schema.criteriaTypes.type[i];
                         scope.criteriaTypes[type.name] = type;
                         criteriaTypeToValueMap[type.name] = '';
                     }
@@ -59,10 +60,9 @@
                     scope.calculateClassOnDirty = function(whenDirty, whenClean) {
                         if (scope.isDirty()) {
                             return whenDirty;
-                        } else {
-                            return whenClean;
                         }
-                    }
+                        return whenClean;
+                    };
                     scope.editing = false;
                     scope.startEditing = function () {
                         if (scope.schema.editObject) {
@@ -85,10 +85,11 @@
                         scope.criteria.type = scope.criteriaTypes[scope.criteria.uitype].type;
                     };
                     scope.updateValueField = function () {
-                        var oldType = criteriaTypeToValueMap.currentType__;
-                        var newType = scope.criteria.uitype;
-                        var oldValue = scope.criteria.uivalue;
-                        var newValue = criteriaTypeToValueMap[newType];
+                      var oldType, newType, oldValue, newValue;
+                        oldType = criteriaTypeToValueMap.currentType__;
+                        newType = scope.criteria.uitype;
+                        oldValue = scope.criteria.uivalue;
+                        newValue = criteriaTypeToValueMap[newType];
 
                         criteriaTypeToValueMap.currentType__ = newType;
                         criteriaTypeToValueMap[oldType] = oldValue;
@@ -101,18 +102,20 @@
                             case 'NEW':
                                 return $translate("NEW");
                             case 'XPATH':
-                                return $translate('schematronDescriptionXpath').replace(/@@value@@/g, scope.original.uivalue);
+                                return $translate('schematronDescriptionXpath', {value:scope.original.uivalue});
                             default:
-                                var type = scope.criteriaTypes[scope.original.uitype].label;
-                                return $translate('schematronDescriptionGeneric').replace(/@@type@@/g, type).replace(/@@value@@/g, scope.original.uivalue);
+                                type = scope.criteriaTypes[scope.original.uitype].label;
+                                return $translate('schematronDescriptionGeneric', {type: type, value: scope.original.uivalue});
                         }
                     };
                     scope.handleKeyUp = function (keyCode) {
                         switch (keyCode) {
                             case 27: // esc
                                 scope.cancelEditing();
+                                break;
                             case 13: // enter
                                 scope.saveEdit();
+                                break;
                         }
                     };
                     scope.cancelEditing = function () {
@@ -123,10 +126,11 @@
                     };
 
                     scope.deleteCriteria = function () {
-                        $scope.dialog.deleteConfirmed = function() {
+                        scope.confirmationDialog.message = $translate('confirmDeleteSchematronCriteria');
+                        scope.confirmationDialog.deleteConfirmed = function() {
                             gnSchematronAdminService.criteria.remove(scope.criteria, scope.group);
                         };
-                        $scope.dialog.showDialog();
+                        scope.confirmationDialog.showDialog();
                     };
                     scope.saveEdit = function () {
                         if (scope.isDirty()) {
@@ -141,32 +145,33 @@
                         scope.editing = false;
                     };
                     scope.updateTypeAhead = function () {
-                        var input = findValueInput();
+                        var input, criteriaType, typeaheadOptions, parseResponseFunction;
+                        input = findValueInput();
                         input.typeahead('destroy');
 
-                        var criteriaType = scope.criteriaTypes[scope.criteria.uitype];
+                        criteriaType = scope.criteriaTypes[scope.criteria.uitype];
 
                         if (criteriaType && (criteriaType.remote || criteriaType.local)) {
-                            var typeaheadOptions = {
+                            typeaheadOptions = {
                                 name: scope.criteria.uitype
                             };
 
-                            var parseResponseFunction = function(parsedResponse) {
-                                var selectRecordArray = criteriaType.remote.selectRecordArray;
-                                var selectValueFunction = criteriaType.remote.selectValueFunction;
-                                var selectLabelFunction = criteriaType.remote.selectLabelFunction;
-                                var selectTokensFunction = criteriaType.remote.selectTokensFunction;
+                            parseResponseFunction = function(parsedResponse) {
+                                var selectRecordArray, selectValueFunction, selectLabelFunction, selectTokensFunction, data, finalData,
+                                  i, record, name, rawValue, value, doEval;
 
-                                function doEval(propertyName) {
-                                    if (typeof(criteriaType.remote[propertyName]) != "function") {
-                                        eval(propertyName + " = function "+criteriaType.remote[propertyName]);
+                                doEval = function (propertyName) {
+                                    if (typeof(criteriaType.remote[propertyName]) !== "function") {
+                                        return eval("(function "+criteriaType.remote[propertyName]+")");
                                     }
-                                }
-                                doEval('selectRecordArray');
-                                doEval('selectLabelFunction');
-                                doEval('selectValueFunction');
+                                    return criteriaType.remote[propertyName];
+                                };
+                                selectRecordArray = doEval('selectRecordArray');
+                                selectLabelFunction = doEval('selectLabelFunction');
+                                selectValueFunction = doEval('selectValueFunction');
+
                                 if (criteriaType.remote.selectTokensFunction) {
-                                    doEval('selectTokensFunction');
+                                  selectTokensFunction = doEval('selectTokensFunction');
                                 } else {
                                     selectTokensFunction = function (record, scope) {
                                         return selectLabelFunction(record, scope).split(/\s+/g);
@@ -174,20 +179,20 @@
 
                                     criteriaType.remote.selectTokensFunction = selectTokensFunction;
                                 }
+                                console.log(selectRecordArray);
+                                data = selectRecordArray(parsedResponse, scope);
 
-                                var data = selectRecordArray(parsedResponse, scope);
-
-                                var finalData = [];
-                                for (var i = 0; i < data.length; i++) {
-                                    var record = data[i];
-                                    var name = selectLabelFunction(record, scope);
-                                    var rawWalue = selectValueFunction(record, scope);
-                                    var value = criteriaType.value.replace(/@@value@@/g, rawWalue);
+                                finalData = [];
+                                for (i = 0; i < data.length; i++) {
+                                    record = data[i];
+                                    name = selectLabelFunction(record, scope);
+                                    rawValue = selectValueFunction(record, scope);
+                                    value = criteriaType.value.replace(/@@value@@/g, rawValue);
                                     finalData.push({
                                         value: name,
                                         data: value,
                                         tokens: selectTokensFunction(record, scope)
-                                    })
+                                    });
                                 }
 
                                 return finalData;
@@ -207,7 +212,7 @@
                                         timeout: 1000,
                                         wildcard: '@@search@@',
                                         filter: parseResponseFunction
-                                    }
+                                    };
                                 }
                             } else {
                                 typeaheadOptions.local = criteriaType.local;
@@ -224,4 +229,4 @@
                 }
             };
         }]);
-})();
+}());

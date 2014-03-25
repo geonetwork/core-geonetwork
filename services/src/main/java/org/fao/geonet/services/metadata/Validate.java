@@ -23,58 +23,161 @@
 
 package org.fao.geonet.services.metadata;
 
+import com.google.common.collect.Lists;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Schematron;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
+import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.filter.ElementFilter;
+import org.jdom.input.SAXBuilder;
+
+import java.io.File;
+import java.util.Iterator;
+import java.util.List;
 
 /**
- *  For editing : update leaves information. Access is restricted
- *  Validate current metadata record in session.
- *  
- *  FIXME : id MUST be the id of the current metadata record in session ?
+ * For editing : update leaves information. Access is restricted
+ * Validate current metadata record in session.
+ * <p/>
+ * FIXME : id MUST be the id of the current metadata record in session ?
  */
 public class Validate extends NotInReadOnlyModeService {
+    static final String EL_ACTIVE_PATTERN = "active-pattern";
+    static final String EL_FIRED_RULE = "fired-rule";
+    static final String EL_FAILED_ASSERT = "failed-assert";
+    static final String EL_SUCCESS_REPORT = "successful-report";
+    static final String ATT_CONTEXT = "context";
+    static final String DEFAULT_CONTEXT = "??";
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Init
+    //---
+    //--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+    public void init(String appPath, ServiceConfig params) throws Exception {
+    }
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception
-	{
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dataMan = gc.getBean(DataManager.class);
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager dataMan = gc.getBean(DataManager.class);
 
-		UserSession session = context.getUserSession();
+        UserSession session = context.getUserSession();
 
-		String id = Utils.getIdentifierFromParameters(params, context);
+        String id = Utils.getIdentifierFromParameters(params, context);
+        String schemaName = dataMan.getMetadataSchema(id);
 
-		//--- validate metadata from session
-		Element errorReport = new AjaxEditUtils(context).validateMetadataEmbedded(session, id, context.getLanguage());
+        //--- validate metadata from session
+        Element errorReport = new AjaxEditUtils(context).validateMetadataEmbedded(session, id, context.getLanguage());
 
-		//--- update element and return status
-		Element elResp = new Element(Jeeves.Elem.RESPONSE);
-		elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
-		elResp.addContent(new Element("schema").setText(dataMan.getMetadataSchema(id)));
-		elResp.addContent(errorReport);
+        restructureReportToHavePatternRuleHierarchy(errorReport);
 
-		return elResp;
-	}
+        //--- update element and return status
+        Element elResp = new Element(Jeeves.Elem.RESPONSE);
+        elResp.addContent(new Element(Geonet.Elem.ID).setText(id));
+        elResp.addContent(new Element("schema").setText(dataMan.getMetadataSchema(id)));
+        elResp.addContent(errorReport);
+        Element schematronTranslations = new Element("schematronTranslations");
+
+        final SchematronRepository schematronRepository = context.getBean(SchematronRepository.class);
+        // --- add translations for schematrons
+        final List<Schematron> schematrons = schematronRepository.findAllBySchemaName(schemaName);
+
+        MetadataSchema metadataSchema = dataMan.getSchema(schemaName);
+        String schemaDir = metadataSchema.getSchemaDir();
+        SAXBuilder builder = new SAXBuilder();
+
+        for (Schematron schematron : schematrons) {
+            // it contains absolute path to the xsl file
+            String rule = schematron.getRuleName();
+
+            String file = schemaDir + File.separator + "loc" + File.separator
+                          + context.getLanguage() + "/" + rule + ".xml";
+
+            Document document = builder.build(file);
+            Element element = document.getRootElement();
+
+            Element s = new Element(rule);
+            element.detach();
+            s.addContent(element);
+            schematronTranslations.addContent(s);
+        }
+        elResp.addContent(schematronTranslations);
+
+        return elResp;
+    }
+
+    /**
+     * Schematron report has an odd structure:
+     * <pre><code>
+     * &lt;svrl:active-pattern  ... />
+     * &lt;svrl:fired-rule  ... />
+     * &lt;svrl:failed-assert ... />
+     * &lt;svrl:successful-report ... />
+     * </code></pre>
+     * <p/>
+     * This method restructures the xml to be:
+     * <pre><code>
+     * &lt;svrl:active-pattern  ... >
+     *     &lt;svrl:fired-rule  ... >
+     *         &lt;svrl:failed-assert ... />
+     *         &lt;svrl:successful-report ... />
+     *     &lt;svrl:fired-rule  ... >
+     * &lt;svrl:active-pattern>
+     * </code></pre>
+     *
+     * @param errorReport
+     */
+    static void restructureReportToHavePatternRuleHierarchy(Element errorReport) {
+        final Iterator patternFilter = errorReport.getDescendants(new ElementFilter(EL_ACTIVE_PATTERN, Geonet.Namespaces.SVRL));
+        @SuppressWarnings("unchecked")
+        List<Element> patterns = Lists.newArrayList(patternFilter);
+        for (Element pattern : patterns) {
+            final Element parentElement = pattern.getParentElement();
+            Element currentRule = null;
+            @SuppressWarnings("unchecked")
+            final List<Element> children = parentElement.getChildren();
+
+            int index = children.indexOf(pattern) + 1;
+            while(index < children.size() && !children.get(index).getName().equals(EL_ACTIVE_PATTERN)) {
+                Element next = children.get(index);
+                if (EL_FIRED_RULE.equals(next.getName())) {
+                    currentRule = next;
+                    next.detach();
+                    pattern.addContent(next);
+                } else {
+                    if (currentRule == null) {
+                        // odd but could happen I suppose
+                        currentRule = new Element(EL_FIRED_RULE, Geonet.Namespaces.SVRL).
+                                setAttribute(ATT_CONTEXT, DEFAULT_CONTEXT);
+                        pattern.addContent(currentRule);
+                    }
+
+                    next.detach();
+                    currentRule.addContent(next);
+
+                }
+            }
+            if (pattern.getChildren().isEmpty()) {
+                pattern.detach();
+            }
+        }
+    }
 }

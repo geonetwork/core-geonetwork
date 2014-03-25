@@ -326,6 +326,8 @@
                 <excludes>
                     <exclude>**/*IntegrationTest.java</exclude>
                 </excludes>
+                <argLine>-Dfile.encoding=UTF-8</argLine>
+                <forkCount>1</forkCount>
             </configuration>
             <executions>
                 <execution>

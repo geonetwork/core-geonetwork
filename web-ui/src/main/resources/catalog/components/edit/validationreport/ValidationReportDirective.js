@@ -16,39 +16,46 @@
             templateUrl: '../../catalog/components/edit/validationreport/' +
                 'partials/validationreport.html',
             scope: {},
-            link: function(scope, element, attrs) {
+            link: function(scope) {
               scope.showErrorsOnly = true;
               scope.gnCurrentEdit = gnCurrentEdit;
 
 
               var init = function() {
-                scope.rules = {};
+                scope.numberOfRules = 0;
                 scope.ruleTypes = {};
                 scope.hasErrors = false;
 
-                gnValidation.get().then(function(rules) {
-                  scope.rules = rules;
-                  var errors = 0;
-
-                  angular.forEach(scope.rules, function(rule) {
-                    if (scope.ruleTypes[rule['@group']] === undefined) {
-                      scope.ruleTypes[rule['@group']] = {
-                        id: rule['@group'],
-                        label: rule.label || rule['@group'],
-                        error: 0,
-                        success: 0,
-                        total: 0};
+                gnValidation.get().then(function(ruleTypes) {
+                  scope.ruleTypes = [];
+                  var optional = [];
+                  angular.forEach(ruleTypes, function(ruleType) {
+                    if (ruleType.requirement !== 'REQUIRED') {
+                      optional.push (ruleType);
+                    } else {
+                      scope.ruleTypes.push(ruleType);
                     }
 
-                    scope.ruleTypes[rule['@group']][rule['@type']] ++;
-                    scope.ruleTypes[rule['@group']].total++;
-                    if (scope.hasErrors =
-                        scope.ruleTypes[rule['@group']].error) {
-                      errors++;
-                    }
+                    ruleType.error = parseInt(ruleType.error);
+                    ruleType.expanded = false;
+
+                    scope.hasErrors = scope.hasErrors || ruleType.error > 0;
+                    angular.forEach(ruleType.patterns, function(pat) {
+                      scope.numberOfRules += pat.rules.length;
+                    });
                   });
-                  scope.hasErrors = errors > 0;
+
+                  scope.ruleTypes = scope.ruleTypes.concat(optional);
                 });
+              };
+
+              scope.labelImportanceClass = function (type){
+                if (type.error === 0) {
+                  return 'label-success';
+                } else if (type.requirement === 'REQUIRED') {
+                  return 'label-danger';
+                }
+                return 'label-info';
               };
 
               scope.toggleShowErrors = function() {
@@ -56,28 +63,14 @@
               };
 
               scope.getClass = function(type) {
-                if (scope.rules && scope.rules.length) {
+                if (scope.numberOfRules > 0) {
                   if (type === 'icon') {
                     return scope.hasErrors ?
                         'fa-thumbs-o-down' : 'fa-thumbs-o-up';
-                  } else {
-                    return scope.hasErrors ? 'panel-danger' : 'panel-success';
                   }
-                } else {
-                  return '';
+                  return scope.hasErrors ? 'panel-danger' : 'panel-success';
                 }
-              };
-
-              scope.filterByType = function(type) {
-                var rules = [];
-
-                for (var i = 0; i < scope.rules.length; i++) {
-                  var s = scope.rules[i];
-                  if (s['@group'] === type.id) {
-                    rules.push(s);
-                  }
-                }
-                return rules;
+                return '';
               };
 
               // When saving is done, refresh validation report
@@ -89,4 +82,4 @@
             }
           };
         }]);
-})();
+}());

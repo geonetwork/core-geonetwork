@@ -305,8 +305,8 @@ USA.
 
 
             <sch:let name="keyword"
-                value="gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString|
-                gmd:descriptiveKeywords/*/gmd:keyword/gmx:Anchor"/>
+                value="gmd:descriptiveKeywords/*/gmd:keyword/gco:CharacterString | gmd:descriptiveKeywords/*/gmd:keyword//gmd:LocalisedCharacterString |
+				gmd:descriptiveKeywords/*/gmd:keyword/gmx:Anchor"/>
             <sch:let name="inspire-theme-found"
                 value="count($inspire-thesaurus//skos:Concept[skos:prefLabel = $keyword])"/>
             <sch:assert test="$inspire-theme-found > 0">

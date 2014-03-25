@@ -1,12 +1,19 @@
 <div data-ng-controller="GnAdminMetadataController">
     <div data-ng-controller="GnSchematronEditCriteriaController">
-        <div id="schematronConfirmationDialog" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="ConfirmRemoveDialog" aria-hidden="true">
-            <div class="modal-dialog modal-sm">
+        <div id="schematronConfirmationDialog" class="modal fade">
+            <div class="modal-dialog">
                 <div class="modal-content">
-                    Do Delete?
-
-                    <button data-dismiss="modal" data-ng-click="dialog.deleteConfirmed()">{{'confirm' | translate}}</button>
-                    <button data-dismiss="modal">{{'cancel' | translate}}</button>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">{{'confirmDialogTitle' | translate}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>{{confirmationDialog.message}}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button data-dismiss="modal" data-ng-click="confirmationDialog.deleteConfirmed()">{{'confirm' | translate}}</button>
+                        <button data-dismiss="modal">{{'cancel' | translate}}</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -14,14 +21,23 @@
             <div class="col-sm-4">
                 <div class="panel panel-default">
                     <div class="panel-heading" data-translate="">schematrons</div>
+                    <input class="form-control" data-ng-model="schematronSearch.$" autofocus=""
+                           placeholder="{{'filter' | translate}}"/>
+
                     <div class="panel-body" data-ng-repeat="schema in schematrons">
                         <h5><strong>{{schema.name}}</strong></h5>
 
                         <div class="list-group">
-                            <a class="list-group-item" data-ng-repeat="schematron in schema.schematron"
+                            <a class="list-group-item" data-ng-repeat="schematron in schema.schematron | filter:schematronSearch"
                                data-ng-click="selectSchematron(schema, schematron)"
                                data-ng-class="{active: selection.schematron === schematron}">
-                                {{schematron.rulename}} <span class="badge">{{schematron.groupCount}}</span>
+                                <i class="fa"
+                                   data-ng-click="raiseSchematron(schema, schematron); $event.stopPropagation()"
+                                   data-ng-class="!$first ? ['fa-angle-up', 'gn-action'] : ''"></i>
+                                <i class="fa"
+                                   data-ng-click="lowerSchematron(schema, schematron); $event.stopPropagation()"
+                                   data-ng-class="!$last ? ['fa-angle-down', 'gn-action'] : ''"></i>
+                                {{schematron.title}} <span class="badge">{{schematron.groupCount}}</span>
                             </a>
                         </div>
                     </div>
@@ -34,8 +50,7 @@
                              data-ng-mouseover="isShowSchematronGroupHelp = true"
                              data-ng-mouseleave="isShowSchematronGroupHelp = false"></i>
                         <div style="padding-left: 2em; padding-top: 1em" data-ng-show="isShowSchematronGroupHelp">
-                            Schematron <em>{{selection.schematron.rulename}}</em> will be used to validate a metadata when all the criteria in
-                            one of the following groups evaluate to true for the metadata.
+                           {{'schematronInfo' | translate}}
                         </div>
                     </div>
                     <div class="panel-body">
@@ -54,7 +69,7 @@
                                         <i class="fa gn-action"
                                            data-ng-class="hoverDelete"
                                            data-ng-init="hoverDelete = 'fa-times'"
-                                           data-ng-click="deleteSchematronGroup(group)"
+                                           data-ng-click="$event.stopPropagation();deleteSchematronGroup(group)"
                                            data-ng-mouseleave="hoverDelete = 'fa-times'"
                                            data-ng-mouseover="hoverDelete = 'fa-times-circle'"></i>
                                     </a>
@@ -83,13 +98,13 @@
                                         schema="selection.schema"
                                         group="selection.group"
                                         lang="lang"
-                                        confirmationDialog="dialog"
+                                        confirmation-dialog="confirmationDialog"
                                         data-ng-repeat="criteria in selection.group.criteria"></gn-criteria-editor>
                                 <gn-criteria-editor
                                         criteria="{id: null, type: 'NEW', uitype:'NEW', value: '', uivalue: ''}"
                                         schema="selection.schema"
                                         lang="lang"
-                                        confirmationDialog="dialog"
+                                        confirmation-dialog="confirmationDialog"
                                         group="selection.group"></gn-criteria-editor>
 
                             </ul>
