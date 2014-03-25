@@ -74,15 +74,25 @@
       <input type="hidden" id="flat" name="flat" value="{$isFlatMode}"/>
       <input type="hidden" id="showvalidationerrors" name="showvalidationerrors" value="{$showValidationErrors}"/>
 
+
+      <xsl:call-template name="get-online-source-config">
+        <xsl:with-param name="pattern" select="$geopublishMatchingPattern"/>
+        <xsl:with-param name="id" select="'geoPublisherConfig'"/>
+      </xsl:call-template>
+
+      <xsl:call-template name="get-online-source-config">
+        <xsl:with-param name="pattern" select="$layerMatchingPattern"/>
+        <xsl:with-param name="id" select="'layerConfig'"/>
+      </xsl:call-template>
+
+
       <!-- Dispatch to profile mode -->
       <xsl:if test="$service != 'md.element.add'">
         <xsl:call-template name="menu-builder">
           <xsl:with-param name="config" select="$editorConfig"/>
         </xsl:call-template>
       </xsl:if>
-      
-      <xsl:call-template name="geopublisher-button"/>
-      
+
       <xsl:choose>
         <xsl:when test="$service != 'md.element.add' and $tabConfig/section">
           <xsl:apply-templates mode="form-builder" select="$tabConfig/section">
@@ -103,21 +113,24 @@
   </xsl:template>
 
 
-  <!-- Check if current record has ressources which could be 
+  <!-- Check if current record has resources which could be
   published in OGC services (eg. onLine resources in ISO19139)
   and configure a gn-geo-publisher directive. -->
-  <xsl:template name="geopublisher-button">
-    
-    <xsl:variable name="geopublisherConfig">
-      <saxon:call-template name="{concat('get-', $schema, '-geopublisher-config')}"/>
+  <xsl:template name="get-online-source-config">
+    <xsl:param name="pattern"/>
+    <xsl:param name="id"/>
+
+    <xsl:variable name="config">
+      <saxon:call-template name="{concat('get-', $schema, '-online-source-config')}">
+        <xsl:with-param name="pattern" select="$pattern"/>
+      </saxon:call-template>
     </xsl:variable>
-    
-    <xsl:if test="$geopublisherConfig/config/*">
-      <input id="geoPublisherConfig" type="hidden"
+
+    <xsl:if test="$config/config/*">
+      <input id="{$id}" type="hidden"
         value="{java-xsl-util:xmlToJson(
-        saxon:serialize($geopublisherConfig, 'default-serialize-mode'))}"/>
+        saxon:serialize($config, 'default-serialize-mode'))}"/>
     </xsl:if>
-    
   </xsl:template>
 
 </xsl:stylesheet>

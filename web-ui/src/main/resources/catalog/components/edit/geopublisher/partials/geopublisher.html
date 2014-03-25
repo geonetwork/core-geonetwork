@@ -8,7 +8,7 @@
     <ul class="dropdown-menu" role="menu">
       <li data-ng-repeat="r in resources">
         <a href="" data-ng-click="showPanel(r)">
-          {{r.fileName}}
+          {{r.name}}
         </a>
       </li>
     </ul>
@@ -16,7 +16,7 @@
 
   <div class="panel panel-default" data-ng-hide="hidden">
     <div class="panel-heading">
-      <span data-translate="" data-translate-values="{layer: '{{fileName}}'}">publishIn</span>
+      <span data-translate="" data-translate-values="{layer: '{{name}}'}">publishIn</span>
 
       <select data-ng-model="nodeId"
               data-ng-change="selectNode(nodeId)">
