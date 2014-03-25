@@ -392,7 +392,7 @@
                     </select>
                   </xsl:when>
                   <xsl:when test="@use = 'checkbox'">
-                    <input type="checkbox" id="{$id}_{@label}"/>
+                    <span class="pull-left" ><input type="checkbox" id="{$id}_{@label}"/>&#160;</span>
                   </xsl:when>
                   <xsl:when test="@use = 'gn-date-picker'">
                     <input class="form-control" type="hidden" value="" id="{$id}_{@label}"/>
