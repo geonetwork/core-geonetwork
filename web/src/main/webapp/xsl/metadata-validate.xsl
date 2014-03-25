@@ -150,10 +150,20 @@
 
 		<fieldset class="validation-report">
 			<legend class="block-legend">
+                <xsl:choose>
+                    <xsl:when test="$count != 0 and @geonet:required = 'true'">
+                        <img src="../../images/validationError.png" style="height:16px;width:16px;"></img>
+                        <xsl:text> </xsl:text>
+                    </xsl:when>
+                    <xsl:when test="$count != 0 and @geonet:required = 'false'">
+                        <img src="../../images/validationWarning.png" style="height:16px;width:16px;"></img>
+                        <xsl:text> </xsl:text>
+                    </xsl:when>
+                    <xsl:otherwise></xsl:otherwise>
+                </xsl:choose>
 			    <xsl:value-of select="/root/response/schematronTranslations/*[name()=$rule]/strings/schematron.title/text()"/><xsl:text> </xsl:text>
 				<xsl:choose>
-					<xsl:when test="$count != 0"> (
-						<img src="../../images/schematron.gif" alt="failed" title="failed"/>
+					<xsl:when test="$count != 0"> <xsl:text>(</xsl:text>
 						<xsl:value-of select="$count"/>
 						<xsl:text> </xsl:text>
 						<xsl:value-of select="/root/gui/strings/errors"/>) 
@@ -184,7 +194,10 @@
 			<legend class="block-legend">
 				<xsl:value-of select="/root/gui/strings/schematronReport"/>
 			</legend>
-			<xsl:apply-templates select="*" mode="validation-report"/>
+            <xsl:for-each select="*">
+                <xsl:sort select="@geonet:required" order="descending"/>
+                <xsl:apply-templates select="." mode="validation-report"/>
+            </xsl:for-each>
 		</fieldset>
 	</xsl:template>
 
