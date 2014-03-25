@@ -485,7 +485,7 @@ USA.
             </sch:report>
         </sch:rule>
         <sch:rule context="//gmd:identificationInfo/*/gmd:citation/*/gmd:date/*/gmd:date">
-            <sch:let name="text" value="gco:Date"/>
+            <sch:let name="text" value="gco:Date|gco:DateTime"/>
             <sch:let name="nilReason" value="@gco:nilReason and not(./node())"/>
             <sch:assert test="$text or $nilReason">
                 <sch:value-of select="$loc/strings/alert.requiredDate"/>
