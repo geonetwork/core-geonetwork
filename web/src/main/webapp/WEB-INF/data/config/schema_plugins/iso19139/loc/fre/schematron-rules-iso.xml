@@ -112,4 +112,7 @@
     <report.requiredLanguage>Data Identification Language found</report.requiredLanguage>
     <alert.requiredCitation>Data Identification Citation is a required element</alert.requiredCitation>
     <report.requiredCitation>Data Identification Citation found</report.requiredCitation>
+    <requiredElements>Required Elements</requiredElements>
+    <requireCitation>Citation</requireCitation>
+
 </strings>
