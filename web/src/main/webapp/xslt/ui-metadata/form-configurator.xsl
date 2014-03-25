@@ -131,6 +131,7 @@
 
 
 
+
       <!-- For non existing node create a XML snippet to be edited 
         No match in current document. 2 scenario here:
         1) the requested element is a direct child of a node of the document. 
@@ -138,12 +139,17 @@
         -->
       <xsl:choose>
         <xsl:when test="$isDisplayed and not(@templateModeOnly)">
-          
+          <xsl:variable name="configName" select="@name"/>
+
           <!-- Display the matching node using standard editor mode
           propagating to the schema mode ... -->
           <xsl:for-each select="$nodes">
             <saxon:call-template name="{concat('dispatch-', $schema)}">
               <xsl:with-param name="base" select="."/>
+              <xsl:with-param name="overrideLabel"
+                              select="if ($configName != '')
+                                      then $strings/*[name() = $configName]
+                                      else ''"/>
             </saxon:call-template>
           </xsl:for-each>
 
@@ -160,13 +166,11 @@
           <xsl:if test="($nonExistingChildParent/* and not(@ifNotExist)) or 
             ($nonExistingChildParent/* and count($nodes/*) = 0 and @ifNotExist)">
             <xsl:variable name="childName" select="@or"/>
-            <xsl:variable name="configName" select="@name"/>
 
             <xsl:for-each select="$nonExistingChildParent/*/gn:child[@name = $childName]">
               <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
               
               <xsl:variable name="directive" select="gn-fn-metadata:getFieldAddDirective($editorConfig, $name)"/>
-
               <xsl:call-template name="render-element-to-add">
                 <xsl:with-param name="label"
                   select="if ($configName != '') 
