@@ -174,24 +174,29 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         ServiceContext context = createServiceContext();
         loginAsAdmin(context);
 
+        final SearchManager searchManager = context.getBean(SearchManager.class);
+        final long startMdCount = _metadataRepository.count();
+        IndexAndTaxonomy indexReader = searchManager.getNewIndexReader("eng");
+        final int startIndexDocs = indexReader.indexReader.numDocs();
+        indexReader.close();
+
         int md1 = importMetadata(this, context);
         int md2 = importMetadata(this, context);
 
-        final SearchManager searchManager = context.getBean(SearchManager.class);
-        IndexAndTaxonomy indexReader = searchManager.getNewIndexReader("eng");
+        indexReader = searchManager.getNewIndexReader("eng");
 
-        assertEquals(2, indexReader.indexReader.numDocs());
-        assertEquals(2, _metadataRepository.count());
+        assertEquals(startIndexDocs + 2, indexReader.indexReader.numDocs());
+        assertEquals(startMdCount + 2, _metadataRepository.count());
 
-        indexReader.indexReader.releaseToNRTManager();
+        indexReader.close();
 
         Specification<Metadata> spec = where(MetadataSpecs.hasMetadataId(md1)).or(MetadataSpecs.hasMetadataId(md2));
         _dataManager.batchDeleteMetadataAndUpdateIndex(spec);
 
-        assertEquals(0, _metadataRepository.count());
+        assertEquals(startMdCount, _metadataRepository.count());
 
         indexReader = searchManager.getNewIndexReader("eng");
-        assertEquals(0, indexReader.indexReader.numDocs());
+        assertEquals(startIndexDocs, indexReader.indexReader.numDocs());
         indexReader.indexReader.releaseToNRTManager();
     }
 

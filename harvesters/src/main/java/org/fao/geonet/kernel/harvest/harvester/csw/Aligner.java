@@ -42,10 +42,13 @@ import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.Updater;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.repository.Updater;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
+
+import javax.annotation.Nonnull;
 
 import java.util.*;
 

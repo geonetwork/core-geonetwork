@@ -51,8 +51,7 @@ Spring Data allows four different ways to write queries. (For more in-depth expl
   * [MetadataSpecs](src/main/java/org/fao/geonet/repository/specification/MetadataSpecs.java)
   * [UserSpecs](src/main/java/org/fao/geonet/repository/specification/UserSpecs.java)
 1. Custom Queries
- * Spring JPA Repositories can have custom queries with very custom implementations.  A Repository will extend an interface with the custom methods
-   and the implementations would be in a subclass of the interface.
+ * Spring JPA Repositories can have custom queries with very custom implementations.  A Repository will extend an interface with the custom methods and the implementations would be in a subclass of the interface.
  * **Examples: (See tests for example usage)**
   * [MetadataRepositoryCustom](src/main/java/org/fao/geonet/repository/MetadataRepositoryCustom.java)
   * [MetadataRepositoryImpl](src/main/java/org/fao/geonet/repository/MetadataRepositoryImpl.java)

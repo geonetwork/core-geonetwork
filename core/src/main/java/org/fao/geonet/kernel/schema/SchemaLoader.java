@@ -27,17 +27,27 @@
 
 package org.fao.geonet.kernel.schema;
 
-import org.fao.geonet.constants.Edit;
-import org.fao.geonet.constants.Geonet;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+
+import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
+import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+
+import org.fao.geonet.constants.Edit;
+import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.fao.geonet.utils.ResolverWrapper;
 import org.fao.geonet.utils.Resolver;
 
-import java.io.File;
 import java.net.URI;
 import java.util.*;
 
@@ -85,11 +95,12 @@ public class SchemaLoader
 	//---
 	//---------------------------------------------------------------------------
 
-	public MetadataSchema load(String xmlSchemaFile, String xmlSubstitutionsFile) throws Exception
+	public MetadataSchema load(String xmlSchemaFile, String xmlSubstitutionsFile, SchematronRepository schemaRepo,
+                               SchematronCriteriaGroupRepository criteriaGroupRepository) throws Exception
 	{
 		ssOverRides = new SchemaSubstitutions(xmlSubstitutionsFile);
 
-		if (!new File(xmlSchemaFile).exists()) return new MetadataSchema();
+		if (!new File(xmlSchemaFile).exists()) return new MetadataSchema(schemaRepo, criteriaGroupRepository);
 
 		//--- PHASE 1 : pre-processing
 		//---
@@ -125,7 +136,7 @@ public class SchemaLoader
 
 		//--- PHASE 3 : get appinfo, add namespaces and elements
 
-		MetadataSchema mds = new MetadataSchema();
+		MetadataSchema mds = new MetadataSchema(schemaRepo, criteriaGroupRepository);
 		mds.setPrimeNS(elFirst.getAttributeValue("targetNamespace"));
 
 

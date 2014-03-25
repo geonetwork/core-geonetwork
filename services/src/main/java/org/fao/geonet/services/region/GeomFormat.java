@@ -20,8 +20,8 @@ import java.util.HashMap;
 public enum GeomFormat {
 
     WKT {
-        private final WKTWriter wktWriter = new WKTWriter();
-        private final WKTReader wktReader = new WKTReader();
+        private final transient WKTWriter wktWriter = new WKTWriter();
+        private final transient WKTReader wktReader = new WKTReader();
 
         @Override
         public Element toElement(Geometry geom) {

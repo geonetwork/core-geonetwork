@@ -1,0 +1,194 @@
+package org.fao.geonet.services.metadata.schema;
+
+import jeeves.constants.Jeeves;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.Util;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
+import org.fao.geonet.repository.SchematronCriteriaRepository;
+import org.fao.geonet.repository.Updater;
+import org.fao.geonet.repository.specification.SchematronCriteriaSpecs;
+import org.jdom.Element;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
+
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.util.List;
+
+/**
+ *  Load, edit, delete {@link org.fao.geonet.domain.SchematronCriteria} entities.
+ *
+ * Created by Jesse on 2/7/14.
+ */
+public class SchematronCriteriaService extends AbstractSchematronService {
+
+    public static final String PARAM_GROUP_NAME = "groupName";
+    public static final String PARAM_INCLUDE_GROUP = "includeGroup";
+    public static final String PARAM_SCHEMATRON_ID = "schematronId";
+    public static final String PARAM_TYPE = "type";
+    public static final String PARAM_VALUE = "value";
+    public static final String PARAM_UI_TYPE = "uitype";
+    public static final String PARAM_UI_VALUE = "uivalue";
+
+    @Override
+    protected Element add(Element params, ServiceContext context) throws Exception {
+        String groupName = Util.getParam(params, SchematronCriteriaGroupService.PARAM_GROUP_NAME);
+        int schematronId = Integer.parseInt(Util.getParam(params, SchematronCriteriaGroupService.PARAM_SCHEMATRON_ID));
+
+        final SchematronCriteriaGroupRepository criteriaGroupRepository = context.getBean(SchematronCriteriaGroupRepository.class);
+
+        final SchematronCriteriaType type = SchematronCriteriaType
+                .valueOf(Util.getParam(params, PARAM_TYPE));
+        final String value = Util.getParam(params, PARAM_VALUE, "");
+        final String uitype = Util.getParam(params, PARAM_UI_TYPE);
+        final String uivalue = Util.getParam(params, PARAM_UI_VALUE, "");
+
+        final SchematronCriteriaGroupId id = new SchematronCriteriaGroupId(groupName, schematronId);
+        SchematronCriteriaGroup group = criteriaGroupRepository.findOne(id);
+        if (group == null) {
+            group = new SchematronCriteriaGroup();
+            group.setId(id);
+            group.setRequirement(SchematronRequirement.REQUIRED);
+        }
+
+        SchematronCriteria criteria = new SchematronCriteria();
+        criteria.setType(type);
+        criteria.setValue(value);
+        criteria.setUiType(uitype);
+        criteria.setUiValue(uivalue);
+        group.addCriteria(criteria);
+
+        group = criteriaGroupRepository.saveAndFlush(group);
+        SchematronCriteria savedCriteria = group.getCriteria().get(group.getCriteria().size() - 1);
+
+        Element result = new Element(Jeeves.Elem.RESPONSE);
+        result.addContent(new Element("status").setText("success"));
+        result.addContent(new Element("id").setText("" + savedCriteria.getId()));
+        result.addContent(new Element("groupname").setText(group.getId().getName()));
+        result.addContent(new Element("schematronid").setText("" + group.getId().getSchematronId()));
+
+        return result;
+    }
+
+    @Override
+    protected Element list(Element params, ServiceContext context) throws Exception {
+        String groupName = Util.getParam(params, PARAM_GROUP_NAME, null);
+        String schematronId = Util.getParam(params, PARAM_SCHEMATRON_ID, null);
+        boolean includeGroup = Util.getParam(params, PARAM_INCLUDE_GROUP, false);
+        String id = Util.getParam(params, Params.ID, null);
+
+        if (id != null && schematronId != null && groupName != null) {
+            throw new IllegalArgumentException("Either one of " + Params.ID + " cannot be present if either "+ PARAM_GROUP_NAME + " or " + PARAM_SCHEMATRON_ID + " are also present.");
+        }
+
+        final SchematronCriteriaRepository criteriaRepository = context.getBean(SchematronCriteriaRepository.class);
+        final Element element;
+
+        if (id == null) {
+            Specifications spec = null;
+            if (schematronId != null) {
+                spec = Specifications.where(SchematronCriteriaSpecs.hasSchematronId(Integer.parseInt(schematronId)));
+            }
+
+            if (groupName != null) {
+                final Specification<SchematronCriteria> hasGroupSpec = SchematronCriteriaSpecs.hasGroupName(groupName);
+                if (spec == null) {
+                    spec = Specifications.where(hasGroupSpec);
+                } else {
+                    spec = spec.and(hasGroupSpec);
+                }
+            }
+            element = criteriaRepository.findAllAsXml(spec);
+        } else {
+            final SchematronCriteria criteria = criteriaRepository.findOne(Integer.parseInt(id));
+
+            if (criteria == null) {
+                throw new BadParameterEx(Params.ID, id);
+            }
+            element = new Element(Jeeves.Elem.RESPONSE).addContent(criteria.asXml());
+        }
+
+        @SuppressWarnings("unchecked")
+        final List<Element> criteriaRecords = element.getChildren();
+        if (!includeGroup) {
+            for (Element criteriaRecord : criteriaRecords) {
+                final Element groupEl = criteriaRecord.getChild("group");
+                Element idEl = groupEl.getChild("id");
+                idEl.detach();
+                groupEl.setContent(idEl);
+            }
+        } else {
+            for (Element criteriaRecord : criteriaRecords) {
+                @SuppressWarnings("unchecked")
+                List<Element> groups = criteriaRecord.getChildren("group");
+                for (Element group : groups) {
+                    group.removeChild("criteria");
+                    group.removeChild("schematron");
+                }
+            }
+
+        }
+        return element;
+    }
+
+    @Override
+    protected boolean exists(Element params, ServiceContext context) throws Exception {
+        final Integer id = Integer.valueOf(Util.getParam(params, Params.ID));
+        return context.getBean(SchematronCriteriaRepository.class).exists(id);
+    }
+
+    @Override
+    protected Element edit(Element params, ServiceContext context) throws Exception {
+        int id = Integer.parseInt(Util.getParam(params, Params.ID));
+        final String type = Util.getParam(params, PARAM_TYPE, null);
+        final String value = Util.getParam(params, PARAM_VALUE, null);
+        final String uiType = Util.getParam(params, PARAM_UI_TYPE, null);
+        final String uiValue = Util.getParam(params, PARAM_UI_VALUE, null);
+
+
+        final SchematronCriteriaRepository criteriaRepository = context.getBean(SchematronCriteriaRepository.class);
+        criteriaRepository.update(id, new Updater<SchematronCriteria>() {
+            @Override
+            public void apply(@Nonnull SchematronCriteria entity) {
+                if (type != null) {
+                    entity.setType(SchematronCriteriaType.valueOf(type.toUpperCase()));
+                }
+
+                if (value != null) {
+                    entity.setValue(value);
+                }
+
+                if (uiType != null) {
+                    entity.setUiType(uiType);
+                }
+
+                if (uiValue != null) {
+                    entity.setUiValue(uiValue);
+                }
+            }
+        });
+
+        return new Element("ok");
+    }
+
+    @Override
+    protected Element delete(Element params, ServiceContext context) throws Exception {
+        final Integer id = Integer.valueOf(Util.getParam(params, Params.ID));
+
+        final SchematronCriteriaRepository criteriaRepository = context.getBean(SchematronCriteriaRepository.class);
+
+        if (criteriaRepository.exists(id)) {
+            criteriaRepository.delete(id);
+            if (!criteriaRepository.exists(id)) {
+                return new Element("ok");
+            } else {
+                throw new IOException("Error deleting criteria object");
+            }
+        }
+
+        throw new BadParameterEx(Params.ID, id);
+    }
+}
