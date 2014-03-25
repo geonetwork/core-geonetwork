@@ -97,13 +97,13 @@
     <report.M61>Le niveau de hiérarchie est :</report.M61>
 
     <alert.requiredAbstract>Identification des données Résumé est un élément obligatoire</alert.requiredAbstract>
-    <report.requiredAbstract>Identification des données Résumé est trouvé</report.requiredAbstract>
+    <report.requiredAbstract>Identification des données Résumé trouvé</report.requiredAbstract>
     <alert.requiredTitle>Identification des données Information de référence Titre est un élément obligatoire</alert.requiredTitle>
     <report.requiredTitle>Identification des données Information de référence Titre non trouvé</report.requiredTitle>
     <alert.requiredDate>Identification des données Information de référence Date est un élément obligatoire</alert.requiredDate>
     <report.requiredDate>Identification des données Information de référence Date trouvée</report.requiredDate>
     <alert.requiredDateType>Identification des données Information de référence Type de date est un élément obligatoire</alert.requiredDateType>
-    <report.requiredDateType>Identification des données Information de référence Type de date est trouvé</report.requiredDateType>
+    <report.requiredDateType>Identification des données Information de référence Type de date trouvé</report.requiredDateType>
     <alert.requiredContact>Contact est un élément obligatoire</alert.requiredContact>
     <report.requiredContact>Contact trouvé</report.requiredContact>
     <alert.requiredLanguage>Langue est un élément obligaroire</alert.requiredLanguage>
