@@ -37,6 +37,7 @@
   <rsIdentifier>Projection</rsIdentifier>
   <referenceDate>Temporal information</referenceDate>
   <creationDate>Creation date</creationDate>
+  <hierarchyLevel>Hierarchy level</hierarchyLevel>
   <publicationDate>Publication date</publicationDate>
   <revisionDate>Revision date</revisionDate>
   <temporalRangeSection>Temporal extent</temporalRangeSection>

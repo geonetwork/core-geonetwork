@@ -36,6 +36,7 @@
   <rsIdentifier>Référentiel de coordonnées</rsIdentifier>
   <referenceDate>Date de référence</referenceDate>
   <creationDate>Date de création</creationDate>
+  <hierarchyLevel>Type de ressource</hierarchyLevel>
   <publicationDate>Date de publication</publicationDate>
   <revisionDate>Date de révision</revisionDate>
   <conformity>Conformité</conformity>

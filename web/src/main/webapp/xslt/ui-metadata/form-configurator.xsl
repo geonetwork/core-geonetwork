@@ -352,8 +352,26 @@
         </saxon:call-template>
       </xsl:if>
     </xsl:variable>
-    
-    <xsl:if test="$nonExistingChildParent/*">
+
+
+    <!-- Check if this field is controlled by a condition (eg. display that field for
+              service metadata record only).
+              If @if expression return false, the field is not displayed. -->
+    <xsl:variable name="isDisplayed">
+      <xsl:choose>
+        <xsl:when test="@if">
+          <saxon:call-template name="{concat('evaluate-', $schema, '-boolean')}">
+            <xsl:with-param name="base" select="$base"/>
+            <xsl:with-param name="in" select="concat('/../', @if)"/>
+          </saxon:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="true()"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:if test="$nonExistingChildParent/* and $isDisplayed = 'true'">
       <!-- The element does not exist in current record. 
           Add an action to add an element. -->
       <xsl:variable name="name" select="@name"/>
