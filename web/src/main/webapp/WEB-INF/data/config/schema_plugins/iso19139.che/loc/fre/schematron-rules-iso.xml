@@ -106,7 +106,7 @@
     <report.requiredDateType>Identification des données Information de référence Type de date trouvé</report.requiredDateType>
     <alert.requiredContact>Contact est un élément obligatoire</alert.requiredContact>
     <report.requiredContact>Contact trouvé</report.requiredContact>
-    <alert.requiredLanguage>Langue est un élément obligaroire</alert.requiredLanguage>
+    <alert.requiredLanguage>Langue est un élément obligatoire</alert.requiredLanguage>
     <report.requiredLanguage>Langue trouvée</report.requiredLanguage>
     <alert.requiredLanguage>Identification des données Langue est un élément obligatoire</alert.requiredLanguage>
     <report.requiredLanguage>Identification des données Langue trouvé</report.requiredLanguage>
