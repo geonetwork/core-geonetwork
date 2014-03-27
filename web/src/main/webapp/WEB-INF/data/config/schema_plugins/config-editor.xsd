@@ -488,6 +488,37 @@
 
   <xs:element name="key">
     <xs:complexType>
+      <xs:choice>
+        <xs:element minOccurs="0" maxOccurs="1" name="codelist">
+          <xs:annotation>
+            <xs:documentation>Define a codelist to use.</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:attribute name="name" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>An existing codelist from codelist.xml for the schema.</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" maxOccurs="1" name="helper">
+          <xs:annotation>
+            <xs:documentation>Define a helper to use.</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:attribute name="name" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>An existing element name from labels.xml for the schema having an helper defined.</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="context" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>An optional context if the target element have many values.</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
       <xs:attribute name="label" type="xs:string" use="required">
         <xs:annotation>
           <xs:documentation>Field label.</xs:documentation>
