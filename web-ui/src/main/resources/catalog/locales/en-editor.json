@@ -55,6 +55,7 @@
     "unknownType": "Others",
     "onlyErrors": "Show only errors",
     "errors": "Error(s)",
+    "error": "error",
     "schematron-rules-geonetwork": "Recommendations",
     "schematron-rules-iso": "ISO rules",
     "schematron-rules-inspire": "INSPIRE rules",

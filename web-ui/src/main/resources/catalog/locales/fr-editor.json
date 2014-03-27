@@ -56,6 +56,8 @@
     "other": "Autre",
     "saveMetadataError": "Erreur lors de la sauvegarde. Vous devriez recharger la page.",
     "onlyErrors": "Afficher uniquement les erreurs",
+    "error": "erreur",
+    "errors": "erreurs",
     "schematron-rules-geonetwork": "Recommandations",
     "schematron-rules-iso": "Règles ISO",
     "schematron-rules-inspire": "Règles INSPIRE",
