@@ -48,6 +48,7 @@
   <conformity_date>Date</conformity_date>
   <explanation>Explanation</explanation>
   <pass>Pass</pass>
+  <indeterminatePosition>Indeterminate position</indeterminatePosition>
   <pointOfContact>Contact for the resource</pointOfContact>
   <metadataPointOfContact>Contact for the metadata</metadataPointOfContact>
   <organisationName>Organisation name</organisationName>

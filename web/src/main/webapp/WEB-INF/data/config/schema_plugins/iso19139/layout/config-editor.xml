@@ -621,12 +621,17 @@
             if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
             <template>
               <values>
+                <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
                 <key label="beginPosition"
-                  xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition"
+                  xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
                   use="date"/>
                 <key label="endPosition"
-                  xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition" use="date"
+                  xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition" use="date"
                 />
+                <key label="indeterminatePosition"
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition">
+                  <codelist name="indeterminatePosition"/>
+                </key>
               </values>
               <snippet>
                 <gmd:temporalElement>
@@ -634,7 +639,7 @@
                     <gmd:extent>
                       <gml:TimePeriod gml:id="">
                         <gml:beginPosition>{{beginPosition}}</gml:beginPosition>
-                        <gml:endPosition>{{endPosition}}</gml:endPosition>
+                        <gml:endPosition indeterminatePosition="{{indeterminatePosition}}">{{endPosition}}</gml:endPosition>
                       </gml:TimePeriod>
                     </gmd:extent>
                   </gmd:EX_TemporalExtent>
@@ -649,11 +654,14 @@
             <template>
               <values>
                 <key label="beginPosition"
-                  xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition"
-                  use="date"/>
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
+                     use="date"/>
                 <key label="endPosition"
-                  xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition" use="date"
-                />
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition" use="date"
+                    />
+                <key label="indeterminatePosition"
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"
+                     use="codelist"/>
               </values>
               <snippet>
                 <gmd:temporalElement>
@@ -661,7 +669,7 @@
                     <gmd:extent>
                       <gml:TimePeriod gml:id="">
                         <gml:beginPosition>{{beginPosition}}</gml:beginPosition>
-                        <gml:endPosition>{{endPosition}}</gml:endPosition>
+                        <gml:endPosition indeterminatePosition="{{indeterminatePosition}}">{{endPosition}}</gml:endPosition>
                       </gml:TimePeriod>
                     </gmd:extent>
                   </gmd:EX_TemporalExtent>
@@ -956,18 +964,29 @@
               <snippet>
                 <gmd:pointOfContact>
                   <gmd:CI_ResponsibleParty>
+                    <gn:copy select="gmd:individualName"/>
                     <gmd:organisationName>
                       <gco:CharacterString>{{organisationName}}</gco:CharacterString>
                     </gmd:organisationName>
+                    <gn:copy select="gmd:positionName"/>
                     <gmd:contactInfo>
                       <gmd:CI_Contact>
+                        <gn:copy select="gmd:phone"/>
                         <gmd:address>
                           <gmd:CI_Address>
+                            <gn:copy select="gmd:deliveryPoint"/>
+                            <gn:copy select="gmd:city"/>
+                            <gn:copy select="gmd:administrativeArea"/>
+                            <gn:copy select="gmd:postalCode"/>
+                            <gn:copy select="gmd:country"/>
                             <gmd:electronicMailAddress>
                               <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
                             </gmd:electronicMailAddress>
                           </gmd:CI_Address>
                         </gmd:address>
+                        <gn:copy select="gmd:onlineResource"/>
+                        <gn:copy select="gmd:hoursOfService"/>
+                        <gn:copy select="gmd:contactInstructions"/>
                       </gmd:CI_Contact>
                     </gmd:contactInfo>
                     <gmd:role>
@@ -1007,18 +1026,29 @@
               <snippet>
                 <gmd:pointOfContact>
                   <gmd:CI_ResponsibleParty>
+                    <gn:copy select="gmd:individualName"/>
                     <gmd:organisationName>
                       <gco:CharacterString>{{organisationName}}</gco:CharacterString>
                     </gmd:organisationName>
+                    <gn:copy select="gmd:positionName"/>
                     <gmd:contactInfo>
                       <gmd:CI_Contact>
+                        <gn:copy select="gmd:phone"/>
                         <gmd:address>
                           <gmd:CI_Address>
+                            <gn:copy select="gmd:deliveryPoint"/>
+                            <gn:copy select="gmd:city"/>
+                            <gn:copy select="gmd:administrativeArea"/>
+                            <gn:copy select="gmd:postalCode"/>
+                            <gn:copy select="gmd:country"/>
                             <gmd:electronicMailAddress>
                               <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
                             </gmd:electronicMailAddress>
                           </gmd:CI_Address>
                         </gmd:address>
+                        <gn:copy select="gmd:onlineResource"/>
+                        <gn:copy select="gmd:hoursOfService"/>
+                        <gn:copy select="gmd:contactInstructions"/>
                       </gmd:CI_Contact>
                     </gmd:contactInfo>
                     <gmd:role>
@@ -1056,18 +1086,29 @@
               <snippet>
                 <gmd:contact>
                   <gmd:CI_ResponsibleParty>
+                    <gn:copy select="gmd:individualName"/>
                     <gmd:organisationName>
                       <gco:CharacterString>{{organisationName}}</gco:CharacterString>
                     </gmd:organisationName>
+                    <gn:copy select="gmd:positionName"/>
                     <gmd:contactInfo>
                       <gmd:CI_Contact>
+                        <gn:copy select="gmd:phone"/>
                         <gmd:address>
                           <gmd:CI_Address>
+                            <gn:copy select="gmd:deliveryPoint"/>
+                            <gn:copy select="gmd:city"/>
+                            <gn:copy select="gmd:administrativeArea"/>
+                            <gn:copy select="gmd:postalCode"/>
+                            <gn:copy select="gmd:country"/>
                             <gmd:electronicMailAddress>
                               <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
                             </gmd:electronicMailAddress>
                           </gmd:CI_Address>
                         </gmd:address>
+                        <gn:copy select="gmd:onlineResource"/>
+                        <gn:copy select="gmd:hoursOfService"/>
+                        <gn:copy select="gmd:contactInstructions"/>
                       </gmd:CI_Contact>
                     </gmd:contactInfo>
                     <gmd:role>
