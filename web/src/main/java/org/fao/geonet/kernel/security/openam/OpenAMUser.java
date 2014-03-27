@@ -28,6 +28,11 @@ import jeeves.server.ProfileManager;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
+/**
+ * OpenAMUser
+ *   
+ * @author thierry.chevallier (AKKA Informatique et Systèmes) for ingeoclouds : contact@ingeoclouds.eu
+ */
 public class OpenAMUser extends JeevesUser {
 	
 

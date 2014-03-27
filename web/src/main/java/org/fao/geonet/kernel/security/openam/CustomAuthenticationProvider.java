@@ -55,7 +55,8 @@ import com.iplanet.sso.SSOToken;
 
 /**
  * CustomAuthenticationProvider
- * @author tx.chevallier
+ * 	Custom class for SSO authentication
+ * @author thierry.chevallier (AKKA Informatique et Systèmes) for ingeoclouds : contact@ingeoclouds.eu
  */
 public class CustomAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider 
 	implements ApplicationContextAware, UserDetailsService
