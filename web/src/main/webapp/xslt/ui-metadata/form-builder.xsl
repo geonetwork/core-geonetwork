@@ -383,6 +383,7 @@
                   </xsl:when>
                   <xsl:when test="$codelist != ''">
                     <select class="form-control input-sm" id="{$id}_{@label}">
+                      <option></option>
                       <xsl:for-each select="$codelist/entry">
                         <xsl:sort select="label"/>
                         <option value="{code}" title="{normalize-space(description)}">
