@@ -30,6 +30,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Operation;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.OperationRepository;
@@ -68,7 +69,14 @@ public class PrepareBatchUpdatePrivileges implements Service {
 		Element hasOwner = new Element("owner").setText("true");
 
 		//--- get all operations
-		Element elOper = context.getBean(OperationRepository.class).findAllAsXml();
+        List<Operation> operationList = context.getBean(OperationRepository.class).findAll();
+
+        // elOper is for returned XML and keeps backwards compatibility
+        Element elOper = new Element(Geonet.Elem.OPERATIONS);
+
+        for (Operation operation : operationList) {
+            elOper.addContent(operation.asXml());
+        }
 
 		//--- retrieve groups operations
 		Set<Integer> userGroups = am.getUserGroups(context.getUserSession(), context.getIpAddress(), false);

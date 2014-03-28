@@ -61,7 +61,7 @@
         </dependency>
         <dependency>
             <groupId>xml-resolver</groupId>
-            <artifactId>xml-resolver</artifactId>
+            <artifactId>xml-resolver-patched</artifactId>
         </dependency>
         <dependency>
             <groupId>jaxen</groupId>
@@ -108,7 +108,10 @@
             <artifactId>spring-test</artifactId>
             <scope>compile</scope>
         </dependency>
-
+        <dependency>
+          <groupId>org.eclipse.core</groupId>
+          <artifactId>org.eclipse.core.runtime</artifactId>
+        </dependency>
         <dependency>
             <groupId>net.sf.json-lib</groupId>
             <artifactId>json-lib</artifactId>

@@ -85,6 +85,7 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
+import org.eclipse.core.runtime.URIUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -446,40 +447,20 @@ public final class Xml
         if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
             Log.debug(Log.XML_RESOLVER, "Trying to resolve "+href+":"+base);
         }
-        String decodedBase;
-        try {
-            decodedBase = URLDecoder.decode(base, ENCODING);
-        } catch (UnsupportedEncodingException e1) {
-            decodedBase = base;
-        }
-        String decodedHref;
-        try {
-            decodedHref = URLDecoder.decode(href, ENCODING);
-        } catch (UnsupportedEncodingException e1) {
-            decodedHref = href;
-        }
-        Source s = catResolver.resolve(decodedHref, decodedBase);
-        // If resolver has a blank XSL file to replace non existing resolved file ...
+        Source s = catResolver.resolve(href, base);
+        // If resolver has a blank XSL file use it to replace
+        // resolved file that doesn't exist...
         String blankXSLFile = resolver.getBlankXSLFile();
         if (blankXSLFile != null && s.getSystemId().endsWith(".xsl")) {
-            // The resolved resource does not exist, set it to blank file path to not trigger FileNotFound Exception
             try {
                 if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
                     Log.debug(Log.XML_RESOLVER, "  Check if exist " + s.getSystemId());
                 }
-                File f;
-                if (SystemUtils.IS_OS_WINDOWS) {
-                    String path = s.getSystemId();
-                    // fxp
-                    path = path.replaceAll("file:\\/", "");
-                    // heikki
-                    path = path.replaceAll("file:", "");
+                File f = URIUtil.toFile(new URI(s.getSystemId()));
+                if(Log.isDebugEnabled(Log.XML_RESOLVER))
+                    Log.debug(Log.XML_RESOLVER, "Check on "+f.getPath()+" exists returned: "+f.exists());
+                // If the resolved resource does not exist, set it to blank file path to not trigger FileNotFound Exception
 
-                    f = new File(path);
-                }
-                else {
-                    f = new File(new URI(s.getSystemId()));
-                }
                 if (!(f.exists())) {
                     if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
                         Log.debug(Log.XML_RESOLVER, "  Resolved resource " + s.getSystemId() + " does not exist. blankXSLFile returned instead.");
@@ -488,6 +469,7 @@ public final class Xml
                 }
             }
             catch (URISyntaxException e) {
+                Log.warning(Log.XML_RESOLVER, "URI syntax problem: "+e.getMessage());
                 e.printStackTrace();
             }
         }

@@ -9,6 +9,8 @@ import org.w3c.dom.ls.LSInput;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 /* Resolves system and public ids as well as URIs using oasis catalog
@@ -80,14 +82,17 @@ public class XmlResolver extends XMLCatalogResolver {
 			} else if (systemId != null && baseURI != null) {
 				if (baseURI.startsWith("http://")) {
 					URL ref = new URL(baseURI);
-					String thePath = new File(ref.getPath()).getParent();
-					externalRef = new URL(ref.getProtocol(), ref.getHost(), ref.getPort(), thePath + "/" + systemId);
-				}
+                    String thePath = new File(ref.getPath()).getParent().replace('\\', '/');
+                    externalRef = new URI(ref.getProtocol(), null, ref.getHost(), ref.getPort(), thePath + "/" + systemId, null, null).toURL();
+                }
 			}
 		} catch (MalformedURLException e) { // leave this to someone else?
 			e.printStackTrace();
-			return result; 
-		}
+			return result;
+        } catch (URISyntaxException e) { // leave this to someone else?
+            e.printStackTrace();
+            return result;
+        }
 
 		if (externalRef != null) { 
 
@@ -96,14 +101,13 @@ public class XmlResolver extends XMLCatalogResolver {
 			try {
 				elResult = isXmlInCache(externalRef.toString());
 			} catch (CacheException e) {
-				Log.error(Log.XML_RESOLVER, "Request to cache for " + externalRef + " failed.");
+                Log.error(Log.XML_RESOLVER, "Request to cache for " + externalRef + " failed.");
 				e.printStackTrace();
 			}
 
 			if (elResult == null) { // use XMLRequest to get the XML
 				XmlRequest xml = new GeonetHttpRequestFactory().createXmlRequest(externalRef);
-				Log.error(Log.XML_RESOLVER, "proxyParams are " + proxyParams.useProxy);
-				if (proxyParams.useProxy) { 
+                if (proxyParams.useProxy) {
 					xml.setUseProxy(true);
 					xml.setProxyHost(proxyParams.proxyHost);
 					xml.setProxyPort(proxyParams.proxyPort);

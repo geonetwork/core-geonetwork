@@ -31,7 +31,7 @@
   In that case, _3=<new_uuid> will be sent to update the fileIdentifier/CharacterString.
   
   # Element schema
-  
+
   The metadocument also contains cardinality and list of values for enumeration.
   
   -->

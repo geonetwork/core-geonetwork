@@ -929,6 +929,21 @@ public class SchemaManager {
             String xmlSubstitutionsFile, String xmlIdFile, String oasisCatFile, String conversionsFile) throws Exception {
         String path = new File(xmlSchemaFile).getParent();
 
+        // -- add any oasis catalog files to Jeeves.XML_CATALOG_FILES system
+        // -- property for resolver to pick up
+        if (new File(oasisCatFile).exists()) {
+            String catalogProp = System.getProperty(Constants.XML_CATALOG_FILES);
+            if (catalogProp == null)
+                catalogProp = ""; // shouldn't happen
+            if (catalogProp.equals("")) {
+                catalogProp = oasisCatFile;
+            } else {
+                catalogProp = catalogProp + ";" + oasisCatFile;
+            }
+            System.setProperty(Constants.XML_CATALOG_FILES, catalogProp);
+            Xml.resetResolver();
+        }
+
         SchematronRepository schemaRepo = applicationContext.getBean(SchematronRepository.class);
         SchematronCriteriaGroupRepository criteriaGroupRepository = applicationContext.getBean(SchematronCriteriaGroupRepository.class);
         MetadataSchema mds = new SchemaLoader().load(xmlSchemaFile, xmlSubstitutionsFile, schemaRepo, criteriaGroupRepository);
@@ -961,20 +976,6 @@ public class SchemaManager {
             }
         }
 
-        // -- add any oasis catalog files to Jeeves.XML_CATALOG_FILES system
-        // -- property for resolver to pick up
-
-        if (new File(oasisCatFile).exists()) {
-            String catalogProp = System.getProperty(Constants.XML_CATALOG_FILES);
-            if (catalogProp == null)
-                catalogProp = ""; // shouldn't happen
-            if (catalogProp.equals("")) {
-                catalogProp = oasisCatFile;
-            } else {
-                catalogProp = catalogProp + ";" + oasisCatFile;
-            }
-            System.setProperty(Constants.XML_CATALOG_FILES, catalogProp);
-        }
 
         Pair<String, String> idInfo = extractIdInfo(xmlIdFile, name);
 
