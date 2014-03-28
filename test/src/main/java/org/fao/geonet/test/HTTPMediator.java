@@ -33,6 +33,8 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 
+import jeeves.utils.JeevesSAXBuilder;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -206,7 +208,7 @@ public class HTTPMediator extends ServerMediator {
 				client.executeMethod(httpMethod);
 
 				///data = httpMethod.getResponseBody();
-				SAXBuilder builder = new SAXBuilder();
+				SAXBuilder builder = new JeevesSAXBuilder();
 				builder.setFeature("http://apache.org/xml/features/allow-java-encodings", true);
 				Document jdoc = builder.build(httpMethod.getResponseBodyAsStream());
 
