@@ -686,10 +686,10 @@
             or="spatialResolution" in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
           </field>-->
           <field
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution"> </field>
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution[gmd:MD_Resolution/gmd:equivalentScale]"/>
 
           <action type="add" name="spatialResolution" or="spatialResolution"
-            in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
             <template>
               <snippet>
                 <gmd:spatialResolution>
@@ -706,22 +706,24 @@
               </snippet>
             </template>
           </action>
-          <!-- <action type="add"
-            name="spatialDistance"
-            or="spatialResolution" in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+
+          <field
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution[gmd:MD_Resolution/gmd:distance]"/>
+          <action type="add"
+                  name="spatialDistance"
+                  or="spatialResolution" in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
             <template>
               <snippet>
                 <gmd:spatialResolution>
                   <gmd:MD_Resolution>
                     <gmd:distance uom="m">
                       <gco:Integer/>
-                    </gmd:distance:>
+                    </gmd:distance>
                   </gmd:MD_Resolution>
                 </gmd:spatialResolution>
               </snippet>
             </template>
           </action>
-          -->
 
 
           <field name="conformity" templateModeOnly="true"

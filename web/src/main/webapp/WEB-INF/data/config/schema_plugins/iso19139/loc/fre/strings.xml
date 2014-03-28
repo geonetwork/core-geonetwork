@@ -75,7 +75,8 @@
   <beginPosition>Date de début</beginPosition>
   <endPosition>Date de fin</endPosition>
   <lineage>Généalogie</lineage>
-  <spatialResolution>Résolution spatiale</spatialResolution>
+  <spatialResolution>Résolution spatiale (échelle)</spatialResolution>
+  <spatialDistance>Résolution spatiale (distance)</spatialDistance>
   <accessConstraints>Limitations d'accès public</accessConstraints>
   <useLimitation>Conditions applicables à l'accès et à l'utilisation</useLimitation>
   <notEvaluated>Non évaluée</notEvaluated>
