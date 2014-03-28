@@ -330,6 +330,10 @@
 		</xsl:element>
 	</xsl:template>
 
+  <!-- Remove attribute indeterminatePosition having empty
+  value which is not a valid facet for it. -->
+  <xsl:template match="@indeterminatePosition[. = '']" priority="2"/>
+
 	<!-- ================================================================= -->
 	<!-- Adjust the namespace declaration - In some cases name() is used to get the 
 		element. The assumption is that the name is in the format of  <ns:element> 
