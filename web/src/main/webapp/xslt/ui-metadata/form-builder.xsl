@@ -398,7 +398,9 @@
                   <xsl:when test="@use = 'gn-date-picker'">
                     <input class="form-control" type="hidden" value="" id="{$id}_{@label}"/>
                     <div data-gn-date-picker="{if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/value else ''}"
-                         data-id="#{$id}_{@label}"/>
+                         data-id="#{$id}_{@label}">
+                      <xsl:copy-of select="directiveAttributes/@*"/>
+                    </div>
                   </xsl:when>
                   <xsl:otherwise>
                     <input class="form-control" type="{if (@use) then @use else 'text'}" value="" id="{$id}_{@label}">
