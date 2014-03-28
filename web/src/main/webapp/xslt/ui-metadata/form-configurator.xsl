@@ -195,7 +195,6 @@
           <xsl:variable name="name" select="@name"/>
           <xsl:variable name="del" select="@del"/>
           <xsl:variable name="template" select="template"/>
-          
           <xsl:for-each select="$nodes/*">
             <!-- Retrieve matching key values 
               Only text values are supported. Separator is #.
@@ -222,7 +221,20 @@
                 
               -->
             <xsl:variable name="currentNode" select="."/>
-            
+
+            <!-- Check if template field values should be in
+            readonly mode in the editor.-->
+            <xsl:variable name="readonly">
+              <xsl:choose>
+                <xsl:when test="$template/values/@readonlyIf">
+                  <saxon:call-template name="{concat('evaluate-', $schema, '-boolean')}">
+                    <xsl:with-param name="base" select="$currentNode"/>
+                    <xsl:with-param name="in" select="concat('/', $template/values/@readonlyIf)"/>
+                  </saxon:call-template>
+                </xsl:when>
+              </xsl:choose>
+            </xsl:variable>
+
             <xsl:variable name="templateCombinedWithNode" as="node()">
               <template>
                 <xsl:copy-of select="$template/values"/>
@@ -237,6 +249,10 @@
             <xsl:variable name="keyValues">
               <xsl:for-each select="$template/values/key">
                 <field name="{@label}">
+                  <xsl:if test="$readonly = 'true'">
+                    <readonly>true</readonly>
+                  </xsl:if>
+
                   <xsl:variable name="matchingNodeValue">
                     <saxon:call-template name="{concat('evaluate-', $schema)}">
                       <xsl:with-param name="base" select="$currentNode"/>

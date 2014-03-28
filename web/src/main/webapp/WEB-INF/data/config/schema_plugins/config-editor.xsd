@@ -501,6 +501,24 @@
         ]]></xs:documentation>
     </xs:annotation>
     <xs:complexType>
+      <xs:attribute name="readonlyIf">
+        <xs:annotation>
+          <xs:documentation><![CDATA[
+            XPath returning a boolean expression which if true 
+            disable all template fields.
+            
+            Example: Disable pointOfContactName field if gmd:contact
+            contains an XLink.
+            
+            ```
+            <template>
+              <values readonlyIf="count(@xlink:href) > 0">
+                <key label="pointOfContactName"
+                  xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+            ```
+            ]]></xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
       <xs:sequence>
         <xs:element minOccurs="1" maxOccurs="unbounded" ref="key"/>
       </xs:sequence>

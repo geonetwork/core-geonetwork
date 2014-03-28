@@ -369,6 +369,7 @@
                 <xsl:variable name="valueLabelKey" select="@label"/>
                 <xsl:variable name="helper" select="if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/helper else ''"/>
                 <xsl:variable name="codelist" select="if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/codelist else ''"/>
+                <xsl:variable name="readonly" select="if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/readonly else ''"/>
 
                 <!-- Only display label if more than one key to match -->
                 <xsl:if test="count($template/values/key) > 1">
@@ -379,10 +380,19 @@
 
                 <xsl:choose>
                   <xsl:when test="@use = 'textarea'">
-                    <textarea class="form-control" id="{$id}_{@label}"></textarea>
+                    <textarea class="form-control"
+                              id="{$id}_{@label}">
+                      <xsl:if test="$readonly = 'true'">
+                        <xsl:attribute name="disabled"/>
+                      </xsl:if>
+                    </textarea>
                   </xsl:when>
                   <xsl:when test="$codelist != ''">
-                    <select class="form-control input-sm" id="{$id}_{@label}">
+                    <select class="form-control input-sm"
+                            id="{$id}_{@label}">
+                      <xsl:if test="$readonly = 'true'">
+                        <xsl:attribute name="disabled"/>
+                      </xsl:if>
                       <option></option>
                       <xsl:for-each select="$codelist/entry">
                         <xsl:sort select="label"/>
@@ -393,22 +403,36 @@
                     </select>
                   </xsl:when>
                   <xsl:when test="@use = 'checkbox'">
-                    <span class="pull-left" ><input type="checkbox" id="{$id}_{@label}"/>&#160;</span>
+                    <span class="pull-left" >
+                      <input type="checkbox"
+                             id="{$id}_{@label}">
+                        <xsl:if test="$readonly = 'true'">
+                          <xsl:attribute name="disabled"/>
+                        </xsl:if>
+                       </input>&#160;</span>
                   </xsl:when>
                   <xsl:when test="@use = 'gn-date-picker'">
-                    <input class="form-control" type="hidden" value="" id="{$id}_{@label}"/>
+                    <input class="form-control"
+                           type="hidden"
+                           value=""
+                           id="{$id}_{@label}"/>
                     <div data-gn-date-picker="{if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/value else ''}"
                          data-id="#{$id}_{@label}">
                       <xsl:copy-of select="directiveAttributes/@*"/>
                     </div>
                   </xsl:when>
                   <xsl:otherwise>
-                    <input class="form-control" type="{if (@use) then @use else 'text'}" value="" id="{$id}_{@label}">
+                    <input class="form-control"
+                           type="{if (@use) then @use else 'text'}"
+                           value="" id="{$id}_{@label}">
                       <xsl:if test="$helper">
                         <!-- hide the form field if helper is available, the
                           value is set by the directive which provide customized
                           forms -->
                         <xsl:attribute name="class" select="'hidden'"/>
+                      </xsl:if>
+                      <xsl:if test="$readonly = 'true'">
+                        <xsl:attribute name="disabled"/>
                       </xsl:if>
                     </input>
                   </xsl:otherwise>
