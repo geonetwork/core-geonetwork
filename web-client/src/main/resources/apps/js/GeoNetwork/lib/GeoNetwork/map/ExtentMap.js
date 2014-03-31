@@ -206,6 +206,7 @@ GeoNetwork.map.ExtentMap = function(){
             i;
         
         for (i = 0; i < wsen.length; ++i) {
+          if (Ext.get(wsen[i])) {
             // register a "change" listen on each input text element
             Ext.get(wsen[i]).on('change', function(){
                 // update the value of the corresponding input hidden elements
@@ -217,6 +218,7 @@ GeoNetwork.map.ExtentMap = function(){
             Ext.get("_" + wsen[i]).on('change', function(){
                 updateBbox(map, watchedBbox, eltRef, true);
             });
+          }
         }
     }
     
@@ -321,7 +323,12 @@ GeoNetwork.map.ExtentMap = function(){
     function watchRadios(watchedBbox, eltRef){
         function updateInputTextFields(watchedBbox, toProj, digits){
             var wsen = watchedBbox.split(',');
-            
+
+          // Don't try to update field if not exist
+          if (Ext.get("_" + wsen[0]) &&
+              Ext.get("_" + wsen[1]) &&
+              Ext.get("_" + wsen[2]) &&
+              Ext.get("_" + wsen[3])) {
             // Get WGS84 values
             var w = Ext.get("_" + wsen[0]).getValue();
             var s = Ext.get("_" + wsen[1]).getValue();
@@ -359,6 +366,7 @@ GeoNetwork.map.ExtentMap = function(){
                 n = bounds.top.toFixed(digits) + "";
             }
             Ext.get(wsen[3]).dom.value = n;
+          }
         }
         
         // Register onclick event for radio related to current map
