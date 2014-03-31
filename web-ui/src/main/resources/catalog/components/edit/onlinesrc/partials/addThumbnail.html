@@ -111,6 +111,10 @@
         <div class="row">
           <div class="col-xs-8">
             <div id="{{mapId}}" class="map"></div>
+
+            <div class="alert alert-warning"
+                data-ng-if="layers === undefined"
+                data-translate="">noLayersForThumbnail</div>
           </div>
           <div class="col-xs-4">
             <p class="help-block" data-translate="">thumbnailMaker-help</p>

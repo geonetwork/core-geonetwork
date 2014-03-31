@@ -135,5 +135,6 @@
     "thumbnailMaker": "Create thumbnail",
     "thumbnailMaker-help": "All WMS layers registered in the metadata record are added to the map below. Choose a layout (Thumbnail recommended), a scale, zoom to the area of interest to generate the thumbnail.",
     "print_layout": "Layout",
-    "print_scale": "Scale"
+    "print_scale": "Scale",
+    "noLayersForThumbnail": "No layer defined in record to generate thumbnail from"
 }

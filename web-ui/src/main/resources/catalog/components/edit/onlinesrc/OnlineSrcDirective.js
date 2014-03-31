@@ -1,7 +1,7 @@
 (function() {
   goog.provide('gn_onlinesrc_directive');
 
-  
+
   goog.require('ga_print_directive');
   goog.require('gn_utility');
 
@@ -144,21 +144,36 @@
               scope.map;
 
               var init = function() {
-                if (!scope.loaded && scope.mode === 'thumbnailMaker') {
-                  scope.map = new ol.Map({
-                    layers: [
-                      gnMap.getLayersFromConfig()
-                    ],
-                    renderer: ol.RendererHint.CANVAS,
-                    view: new ol.View2D({
-                      center: [0, 0],
-                      projection: gnMap.getMapConfig().projection,
-                      zoom: 2
-                    })
+
+                if (scope.mode === 'thumbnailMaker') {
+                  if (!scope.loaded) {
+                    scope.map = new ol.Map({
+                      layers: [],
+                      renderer: ol.RendererHint.CANVAS,
+                      view: new ol.View2D({
+                        center: [0, 0],
+                        projection: gnMap.getMapConfig().projection,
+                        zoom: 2
+                      })
+                    });
+
+                    // we need to wait the scope.hidden binding is done
+                    // before rendering the map.
+                    scope.map.setTarget(scope.mapId);
+                    scope.loaded = true;
+                  }
+
+                  scope.layers = gnCurrentEdit.layerConfig;
+
+                  // Reset map
+                  angular.forEach(scope.map.getLayers(), function(layer) {
+                    scope.map.removeLayer(layer);
                   });
 
+                  scope.map.addLayer(gnMap.getLayersFromConfig());
+
                   // Add each WMS layer to the map
-                  angular.forEach(gnCurrentEdit.layerConfig, function(layer) {
+                  angular.forEach(scope.layers, function(layer) {
                     scope.map.addLayer(new ol.layer.Tile({
                       source: new ol.source.TileWMS({
                         url: layer.url,
@@ -168,11 +183,6 @@
                       })
                     }));
                   });
-
-                  // we need to wait the scope.hidden binding is done
-                  // before rendering the map.
-                  scope.map.setTarget(scope.mapId);
-                  scope.loaded = true;
                 }
               };
 
