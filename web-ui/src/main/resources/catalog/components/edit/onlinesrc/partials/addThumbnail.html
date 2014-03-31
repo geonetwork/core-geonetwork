@@ -107,6 +107,7 @@
       <!-- Thumbnail maker panel -->
       <div class="form-group gn-thumbnail-maker-panel" data-ng-show="mode == 'thumbnailMaker'">
         <textarea class="form-control hidden" name="config">{{jsonSpec}}</textarea>
+        <input type="hidden" name="rotation" value="90"/>
         <div class="row">
           <div class="col-xs-8">
             <div id="{{mapId}}" class="map"></div>

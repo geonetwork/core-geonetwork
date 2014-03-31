@@ -33,6 +33,11 @@ import org.mapfish.print.utils.PJsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -94,7 +99,7 @@ public class ThumbnailMaker {
         return mapPrinter;
     }
 
-    public File generateThumbnail(String jsonConfig)
+    public File generateThumbnail(String jsonConfig, Integer rotationAngle)
             throws IOException, DocumentException {
 
         PJsonObject specJson = MapPrinter.parseSpec(jsonConfig);
@@ -116,7 +121,6 @@ public class ThumbnailMaker {
                     specJson,
                     out,
                     new HashMap<String, String>());
-
             outputFormat.print(params);
         } catch (IOException e) {
             throw e;
@@ -127,6 +131,61 @@ public class ThumbnailMaker {
                 out.close();
             }
         }
+
+        if (rotationAngle != null) {
+            rotate(tempFile, outputFormat.getFileSuffix(), rotationAngle);
+        }
         return tempFile;
+    }
+
+    public static void rotate(File imageFile, String extension, int angle) {
+        BufferedImage originalImage = null;
+        try {
+            originalImage = readImage(imageFile.getCanonicalPath());
+            BufferedImage rotatedImage = rotate(originalImage, angle);
+            writeImage(rotatedImage, imageFile.getCanonicalPath(), extension);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static BufferedImage readImage(String fileLocation) {
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(new File(fileLocation));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return img;
+    }
+    public static void writeImage(BufferedImage img, String fileLocation,
+                                  String extension) {
+        try {
+            BufferedImage bi = img;
+            File outputfile = new File(fileLocation);
+            ImageIO.write(bi, extension, outputfile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Rotate an image
+     *
+     * @param image
+     * @param angle Angle in degree
+     * @return
+     */
+    public static BufferedImage rotate(BufferedImage image, double angle) {
+        angle = Math.toRadians(angle);
+        double sin = Math.abs(Math.sin(angle)), cos = Math.abs(Math.cos(angle));
+        int w = image.getWidth(), h = image.getHeight();
+        int neww = (int)Math.floor(w*cos+h*sin), newh = (int)Math.floor(h*cos+w*sin);
+        BufferedImage result = new BufferedImage(neww, newh, Transparency.TRANSLUCENT);
+        Graphics2D g = result.createGraphics();
+        g.translate((neww-w)/2, (newh-h)/2);
+        g.rotate(angle, w/2, h/2);
+        g.drawRenderedImage(image, null);
+        g.dispose();
+        return result;
     }
 }

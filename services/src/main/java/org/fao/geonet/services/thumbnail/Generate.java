@@ -50,6 +50,13 @@ public class Generate extends NotInReadOnlyModeService {
         String version = Util.getParam(params, Params.VERSION);
         String file = Util.getParam(params, Params.NAME, "thumbnail.png");
         String jsonConfig = Util.getParam(params, "config");
+        String rotation = Util.getParam(params, "rotation", null);
+        Integer rotationAngle = null;
+        try {
+            rotationAngle = Integer.valueOf(rotation);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
 
         Lib.resource.checkEditPrivilege(context, id);
 
@@ -61,7 +68,11 @@ public class Generate extends NotInReadOnlyModeService {
         if (version != null && !dataMan.getVersion(id).equals(version)) {
             throw new ConcurrentUpdateEx(id);
         }
-        File thumbnailFile = thumbnailMaker.generateThumbnail(jsonConfig);
+
+
+        File thumbnailFile = thumbnailMaker.generateThumbnail(
+                jsonConfig,
+                rotationAngle);
 
         //--- create destination directory
         String dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);

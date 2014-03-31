@@ -248,6 +248,7 @@
         * id: the metadata identifier
         * version: the editing version.
         * config: Mapfish print JSON map specification
+        * rotation: (optional) Rotation angle. May be needed if PDF is using landscape mode.
         ]]></documentation>
       <class name=".services.thumbnail.Generate"/>
     </service>
