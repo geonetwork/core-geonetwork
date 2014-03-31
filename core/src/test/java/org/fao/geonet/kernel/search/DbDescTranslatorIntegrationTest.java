@@ -48,13 +48,18 @@ public class DbDescTranslatorIntegrationTest extends AbstractCoreIntegrationTest
         StaticApplicationContext appContext = new StaticApplicationContext(_appContext);
         appContext.getBeanFactory().registerSingleton(beanName, repo);
 
-        DbDescTranslator translator = new DbDescTranslator(appContext, "eng", repo.getClass().getName() + ":value");
+        DbDescTranslator translator = new DbDescTranslator(appContext, "eng", repo.getClass().getName() + "");
         final String translation = translator.translate("" + key);
         assertEquals(value.getLabel("eng"), translation);
 
-        DbDescTranslator translator2 = new DbDescTranslator(appContext, "eng", beanName + ":value");
+        DbDescTranslator translator2 = new DbDescTranslator(appContext, "eng", beanName + "");
         final String translation2 = translator2.translate("" + key);
         assertEquals(value.getLabel("eng"), translation2);
+
+        DbDescTranslator translator3 = new DbDescTranslator(appContext, "eng", repo.getClass().getName() + ":findOne");
+        final String translation3 = translator3.translate("" + key);
+        assertEquals(value.getLabel("eng"), translation3);
+
     }
 
     static class ValueObject extends Localized {

@@ -247,7 +247,7 @@ public class Geonetwork implements ApplicationHandler {
         logger.info("			- Schema plugins directory: " + schemaPluginsDir);
         logger.info("			- Schema Catalog File     : " + schemaCatalogueFile);
         SchemaManager schemaMan = _applicationContext.getBean(SchemaManager.class);
-        schemaMan.configure(appPath, Resources.locateResourcesDir(context), schemaCatalogueFile,
+        schemaMan.configure(_applicationContext, appPath, Resources.locateResourcesDir(context), schemaCatalogueFile,
                 schemaPluginsDir, context.getLanguage(), handlerConfig.getMandatoryValue(Geonet.Config.PREFERRED_SCHEMA),
                 createOrUpdateSchemaCatalog);
 

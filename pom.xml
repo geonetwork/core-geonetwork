@@ -329,6 +329,8 @@
                 <excludes>
                     <exclude>**/*IntegrationTest.java</exclude>
                 </excludes>
+                <argLine>-Dfile.encoding=UTF-8</argLine>
+                <forkCount>1</forkCount>
             </configuration>
             <executions>
                 <execution>
@@ -598,10 +600,12 @@
         <artifactId>xercesImpl</artifactId>
         <version>2.7.1</version>
       </dependency>
+			<!-- Patched XML Resolver 1.2 from apache xml-commons - fixes problems
+			     with windows URLs -->
       <dependency>
         <groupId>xml-resolver</groupId>
-        <artifactId>xml-resolver</artifactId>
-        <version>1.2</version>
+        <artifactId>xml-resolver-patched</artifactId>
+        <version>1.2.1</version>
       </dependency>
       <dependency>
         <groupId>org.apache.lucene</groupId>
@@ -661,7 +665,12 @@
         <version>2.5.3</version>
       </dependency>
 			-->
- 
+			<dependency>
+				<groupId>org.eclipse.core</groupId>
+				<artifactId>org.eclipse.core.runtime</artifactId>
+				<version>3.7.0</version>
+			</dependency>
+
       <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
       <dependency>
         <groupId>org.dspace</groupId>

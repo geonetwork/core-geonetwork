@@ -11,6 +11,12 @@
             <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c] - %m%n" />
         </layout>
     </appender>
+    <appender name="allConsoleAppender" class="org.apache.log4j.ConsoleAppender">
+        <param name="Threshold" value="ALL" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c] - %m%n" />
+        </layout>
+    </appender>
     <appender name="fileAppender" class="org.apache.log4j.RollingFileAppender">
         <param name="Threshold" value="ALL" />
         <param name="File" value="logs/geonetwork.log" />
@@ -170,7 +176,7 @@
     </logger>
     <logger name="ro.isdc.wro.http" additivity="false">
         <level value="DEBUG" />
-        <appender-ref ref="consoleAppender" />
+        <appender-ref ref="allConsoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
     <logger name="org.hibernate.SQL" additivity="false">

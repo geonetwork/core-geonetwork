@@ -9,10 +9,12 @@
         'gnOnlinesrc',
         'gnGeoPublisher',
         'gnEditor',
+        'gnCurrentEdit',
         '$timeout',
         '$translate',
         function(gnMap, gnOnlinesrc, 
-            gnGeoPublisher, gnEditor, $timeout, $translate) {
+            gnGeoPublisher, gnEditor, gnCurrentEdit,
+            $timeout, $translate) {
           return {
             restrict: 'A',
             replace: true,
@@ -88,11 +90,19 @@
                * depending on scope.protocols options.
                */
               scope.linkService = function() {
-                scope.snippet = gnOnlinesrc.addFromGeoPublisher(scope.layerName,
+                var snippet = gnOnlinesrc.addFromGeoPublisher(scope.layerName,
                     gsNode, scope.protocols);
 
-                scope.snippetRef = gnEditor.buildXMLFieldName(
+                var snippetRef = gnEditor.buildXMLFieldName(
                     scope.refParent, 'gmd:onLine');
+                var formId = '#gn-editor-' + gnCurrentEdit.id;
+                var form = $(formId);
+                if (form) {
+                  var field = $('<textarea style="display:none;" name="' +
+                      snippetRef + '">' +
+                      snippet + '</textarea>');
+                  form.append(field);
+                }
 
                 $timeout(function() {
                   gnEditor.save(true);
@@ -123,7 +133,6 @@
                */
               var readResponse = function(data, action) {
                 if (data['@status'] == '404') {
-                  // TODO: i18n
                   scope.statusCode = $translate('datasetNotFound');
 
                   if (scope.isPublished) {
@@ -140,6 +149,12 @@
                   } else if (action == 'publish') {
                     scope.statusCode = $translate('publishSuccess');
                   }
+                } else if (data['status'] !== '') {
+                  if (scope.isPublished) {
+                    map.getLayerGroup().getLayers().pop();
+                  }
+                  scope.statusCode = data['status'];
+                  scope.isPublished = false;
                 }
               };
 
@@ -184,7 +199,10 @@
                * Publish the layer on the gsNode
                */
               scope.publish = function(nodeId) {
-                var p = gnGeoPublisher.publishNode(nodeId, scope.fileName);
+                var p = gnGeoPublisher.publishNode(nodeId,
+                    scope.fileName,
+                    scope.resource.title,
+                    scope.resource['abstract']);
                 if (p) {
                   p.success(function(data) {
                     readResponse(data, 'publish');
@@ -217,6 +235,7 @@
                 scope.ref = r.ref;
                 scope.refParent = r.refParent;
                 scope.fileName = r.fileName;
+                scope.resource = r;
 
                 if (!scope.loaded) {
                   init();

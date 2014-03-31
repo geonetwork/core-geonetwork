@@ -659,8 +659,8 @@
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
-		<xsl:for-each select="gmd:dateStamp">
-			<Field name="changeDate" string="{string(gco:DateTime|gco:Date)}" store="true" index="true"/>
+		<xsl:for-each select="gmd:dateStamp/*">
+			<Field name="changeDate" string="{string(.)}" store="true" index="true"/>
 		</xsl:for-each>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

@@ -206,6 +206,7 @@
                reprojExtent('form', 'md');
                setDcOutput();
                drawBbox();
+               map.getView().fitExtent(scope.extent.map, map.getSize());
              };
 
              /**

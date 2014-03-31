@@ -38,8 +38,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider 
 	implements UserDetailsService {
@@ -76,7 +74,6 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
 		}
 	}
 
-	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
 	protected UserDetails retrieveUser(String username,
 			UsernamePasswordAuthenticationToken authentication)

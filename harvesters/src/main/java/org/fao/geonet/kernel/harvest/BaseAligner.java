@@ -3,11 +3,20 @@ package org.fao.geonet.kernel.harvest;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Logger;
 
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
+import org.fao.geonet.kernel.search.MetadataRecordSelector;
+import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.MetadataRepository;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -25,15 +34,19 @@ public abstract class BaseAligner {
     /**
      * TODO Javadoc.
      *
-     * @param id
      * @param categories
      * @param localCateg
-     * @param dataMan
-     * @param context
      * @param log
      * @throws Exception
      */
-    public void addCategories(String id, Iterable<String> categories, CategoryMapper localCateg, DataManager dataMan, ServiceContext context, Logger log, String serverCategory) throws Exception {
+    public void addCategories(Metadata metadata, Iterable<String> categories, CategoryMapper localCateg, ServiceContext context,
+                              Logger log, String serverCategory) {
+
+        final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
+        Map<String, MetadataCategory> nameToCategoryMap = new HashMap<String, MetadataCategory>();
+        for (MetadataCategory metadataCategory : categoryRepository.findAll()) {
+            nameToCategoryMap.put(""+metadataCategory.getId(), metadataCategory);
+        }
         for(String catId : categories)  {
             String name = localCateg.getName(catId);
 
@@ -46,7 +59,12 @@ public abstract class BaseAligner {
                 if(log.isDebugEnabled()) {
                     log.debug("    - Setting category : "+ name);
                 }
-                dataMan.setCategory(context, id, catId);
+                final MetadataCategory metadataCategory = nameToCategoryMap.get(catId);
+                if (metadataCategory != null) {
+                    metadata.getCategories().add(metadataCategory);
+                } else {
+                    log.warning("Unable to map category: "+catId+" ("+name+") to a category in Geonetwork");
+                }
             }
         }
 
@@ -55,9 +73,15 @@ public abstract class BaseAligner {
             if (catId == null) {
                 if(log.isDebugEnabled()) log.debug("    - Skipping removed category :" + serverCategory);
             } else {
-                dataMan.setCategory(context, id, catId);
+                final MetadataCategory metadataCategory = nameToCategoryMap.get(catId);
+                if (metadataCategory != null) {
+                    metadata.getCategories().add(metadataCategory);
+                } else {
+                    log.warning("Unable to map category: "+catId+" to a category in Geonetwork");
+                }
             }
         }
+        context.getBean(MetadataRepository.class).save(metadata);
     }
 
     /**

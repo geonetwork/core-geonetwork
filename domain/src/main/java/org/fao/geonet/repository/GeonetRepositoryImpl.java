@@ -49,6 +49,7 @@ public class GeonetRepositoryImpl<T extends GeonetEntity, ID extends Serializabl
         updater.apply(entity);
 
         _entityManager.persist(entity);
+        _entityManager.flush();
 
         return entity;
     }

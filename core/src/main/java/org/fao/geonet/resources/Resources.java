@@ -10,6 +10,7 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -147,13 +148,7 @@ public class Resources {
             return locateResourcesDir(context.getServlet().getServletContext(), context.getApplicationContext());
         }
 
-        String dir = context.getBean(GeonetworkDataDirectory.class).getResourcesDir().getAbsolutePath();
-
-        if (dir == null) {
-            return "resources";
-        } else {
-            return dir;
-        }
+        return context.getBean(GeonetworkDataDirectory.class).getResourcesDir().getAbsolutePath();
     }
 
     /**
@@ -169,9 +164,10 @@ public class Resources {
      *         harvesting likely contain the actual images
      */
     public static String locateResourcesDir(ServletContext context, ApplicationContext applicationContext) {
-        String property = applicationContext.getBean(GeonetworkDataDirectory.class).getResourcesDir().getPath();
-
-        if (property == null) {
+        String property = null;
+        try {
+            property = applicationContext.getBean(GeonetworkDataDirectory.class).getResourcesDir().getPath();
+        } catch (NoSuchBeanDefinitionException e) {
             property = context.getRealPath("/WEB-INF/data/resources");
         }
 
@@ -284,7 +280,10 @@ public class Resources {
         if (!file.exists()) {
             File webappCopy = null;
             if (context != null) {
-                webappCopy = new File(context.getRealPath(filename));
+                final String realPath = context.getRealPath(filename);
+                if (realPath != null) {
+                    webappCopy = new File(realPath);
+                }
             }
 
             if (webappCopy == null) {
@@ -296,8 +295,15 @@ public class Resources {
             }
 
             final int indexOfDot = file.getName().lastIndexOf(".");
-            final String suffixless = file.getName().substring(0, indexOfDot);
-            String suffix = file.getName().substring(indexOfDot + 1);
+            final String suffixless;
+            String suffix;
+            if (indexOfDot == -1) {
+                suffixless = file.getName();
+                suffix = ".png";
+            } else {
+                suffixless = file.getName().substring(0, indexOfDot);
+                suffix = file.getName().substring(indexOfDot + 1);
+            }
             if (!file.exists() && IMAGE_WRITE_SUFFIXES.contains(suffix.toLowerCase())) {
                 // find a different format and convert it to our desired format
                 File[] found = file.getParentFile().listFiles(new FilenameFilter() {

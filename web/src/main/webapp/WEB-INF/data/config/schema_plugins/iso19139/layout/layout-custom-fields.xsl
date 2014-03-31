@@ -98,25 +98,6 @@
 
   </xsl:template>
 
-
-
-  <xsl:template mode="mode-iso19139" match="gmd:parentIdentifier" priority="200">
-
-    <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
-    <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
-
-    <xsl:call-template name="render-element">
-      <xsl:with-param name="label"
-        select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
-      <xsl:with-param name="value" select="."/>
-      <xsl:with-param name="cls" select="local-name()"/>
-      <xsl:with-param name="xpath" select="$xpath"/>
-      <xsl:with-param name="directive" select="'gn-field-cherry-pick-uuid'"/>
-      <xsl:with-param name="editInfo" select="gco:CharacterString/gn:element"/>
-    </xsl:call-template>
-
-  </xsl:template>
-
   <!-- ===================================================================== -->
   <!-- gml:TimePeriod (format = %Y-%m-%dThh:mm:ss) -->
   <!-- ===================================================================== -->
@@ -179,7 +160,6 @@
         select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
       <xsl:with-param name="editInfo" select="gn:element"/>
       <xsl:with-param name="cls" select="local-name()"/>
-      <!-- <xsl:with-param name="attributesSnippet" select="$attributes"/> -->
       <xsl:with-param name="subTreeSnippet">
         <div gn-draw-bbox="" data-hleft="{gmd:westBoundLongitude/gco:Decimal}"
           data-hright="{gmd:eastBoundLongitude/gco:Decimal}" data-hbottom="{gmd:southBoundLatitude/gco:Decimal}"

@@ -29,20 +29,35 @@
   <metadataMaintenance>Md. maintenance</metadataMaintenance>
   <applicationSchemaInfo>Extension</applicationSchemaInfo>
   
-  
+  <!-- XSD error translation -->
+  <invalidElement>Élément invalide. Contenu invalide pour l'élément : </invalidElement>
+  <onElementOf> Un des éléments suivants </onElementOf>
+  <isExpected> est attendu.</isExpected>
+  <isNotComplete> est incomplet.</isNotComplete>
+  <elementLocated> L'élément parent est </elementLocated>
+  <missingElement>Élément manquant. Le contenu de l'élément </missingElement>
+  <invalidValue>Valeur manquante ou invalide.</invalidValue>
+  <notValidFor> n'est pas une valeur valide pour </notValidFor>
+  <xsdErrorIs>L'erreur est : </xsdErrorIs>
+  <inElement> dont le parent est </inElement>
+  <enum1>La valeur </enum1>
+  <enum2> n'est pas valide pour le champ </enum2>
+  <enum3>Les valeurs possibles sont : </enum3>
+
   <!-- INSPIRE view labels and help -->
   <url>Localisateur de la ressource</url>
   <identifier>Identificateur de ressource unique</identifier>
   <rsIdentifier>Référentiel de coordonnées</rsIdentifier>
-  <referenceDate>Date de références</referenceDate>
+  <referenceDate>Date de référence</referenceDate>
   <creationDate>Date de création</creationDate>
+  <hierarchyLevel>Type de ressource</hierarchyLevel>
   <publicationDate>Date de publication</publicationDate>
   <revisionDate>Date de révision</revisionDate>
   <conformity>Conformité</conformity>
   <conformity_title>Spécification</conformity_title>
   <conformity_date>Date de publication</conformity_date>
   <explanation>Explanation</explanation>
-  <pass>Degré</pass>
+  <pass>Conforme</pass>
   <pointOfContact>Organisation responsable de la ressource</pointOfContact>
   <metadataPointOfContact>Point de contact des métadonnées</metadataPointOfContact>
   <organisationName>Nom de l'organisation</organisationName>
@@ -53,13 +68,15 @@
   <encoding>Encodage</encoding>
   <serviceCategory>Catégorie de service</serviceCategory>
   <format>Format</format>
+  <indeterminatePosition>Position indéterminée</indeterminatePosition>
   <format_version>Version</format_version>
   <bboxesSection>Rectangle de délimitation géographique</bboxesSection>
   <temporalRangeSection>Étendue temporelle</temporalRangeSection>
   <beginPosition>Date de début</beginPosition>
   <endPosition>Date de fin</endPosition>
   <lineage>Généalogie</lineage>
-  <spatialResolution>Résolution spatiale</spatialResolution>
+  <spatialResolution>Résolution spatiale (échelle)</spatialResolution>
+  <spatialDistance>Résolution spatiale (distance)</spatialDistance>
   <accessConstraints>Limitations d'accès public</accessConstraints>
   <useLimitation>Conditions applicables à l'accès et à l'utilisation</useLimitation>
   <notEvaluated>Non évaluée</notEvaluated>

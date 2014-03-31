@@ -179,9 +179,22 @@
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:abstract"
             if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
 
-          <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevel" or="hierarchyLevel"
-              in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevel"/>
 
+          <action type="add"
+                  if="count(gmd:MD_Metadata/gmd:hierarchyLevel) = 0"
+                  name="hierarchyLevel" or="hierarchyLevel"
+                  in="/gmd:MD_Metadata">
+            <template>
+              <snippet>
+                <gmd:hierarchyLevel>
+                  <gmd:MD_ScopeCode
+                      codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_ScopeCode"
+                      codeListValue="dataset"/>
+                </gmd:hierarchyLevel>
+              </snippet>
+            </template>
+          </action>
 
           <field
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/srv:serviceType"/>
@@ -471,7 +484,6 @@
               gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'creation']"
               if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
               <template>
-                <!-- TODO: support datetime-->
                 <values>
                   <key label="date" xpath="gmd:CI_Date/gmd:date/*" use="gn-date-picker"/>
                 </values>
@@ -608,12 +620,22 @@
             if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
             <template>
               <values>
+                <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
                 <key label="beginPosition"
-                  xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition"
-                  use="date"/>
+                  xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
+                  use="gn-date-picker">
+                  <directiveAttributes data-tag-name=""/>
+                </key>
                 <key label="endPosition"
-                  xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition" use="date"
-                />
+                  xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
+                  use="gn-date-picker"
+                >
+                  <directiveAttributes data-tag-name=""/>
+                </key>
+                <key label="indeterminatePosition"
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition">
+                  <codelist name="indeterminatePosition"/>
+                </key>
               </values>
               <snippet>
                 <gmd:temporalElement>
@@ -621,7 +643,7 @@
                     <gmd:extent>
                       <gml:TimePeriod gml:id="">
                         <gml:beginPosition>{{beginPosition}}</gml:beginPosition>
-                        <gml:endPosition>{{endPosition}}</gml:endPosition>
+                        <gml:endPosition indeterminatePosition="{{indeterminatePosition}}">{{endPosition}}</gml:endPosition>
                       </gml:TimePeriod>
                     </gmd:extent>
                   </gmd:EX_TemporalExtent>
@@ -636,11 +658,15 @@
             <template>
               <values>
                 <key label="beginPosition"
-                  xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition"
-                  use="date"/>
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
+                     use="gn-date-picker"/>
                 <key label="endPosition"
-                  xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition" use="date"
-                />
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
+                     use="gn-date-picker"
+                    />
+                <key label="indeterminatePosition"
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"
+                     use="codelist"/>
               </values>
               <snippet>
                 <gmd:temporalElement>
@@ -648,7 +674,7 @@
                     <gmd:extent>
                       <gml:TimePeriod gml:id="">
                         <gml:beginPosition>{{beginPosition}}</gml:beginPosition>
-                        <gml:endPosition>{{endPosition}}</gml:endPosition>
+                        <gml:endPosition indeterminatePosition="{{indeterminatePosition}}">{{endPosition}}</gml:endPosition>
                       </gml:TimePeriod>
                     </gmd:extent>
                   </gmd:EX_TemporalExtent>
@@ -660,15 +686,39 @@
           <field name="lineage"
             xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement"/>
 
+          <action type="add" name="lineage" or="statement"
+                  in="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage">
+            <template>
+              <snippet>
+                <gmd:statement>
+                  <gco:CharacterString></gco:CharacterString>
+                </gmd:statement>
+              </snippet>
+            </template>
+          </action>
+          <action type="add" name="lineage" or="lineage"
+                  in="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality">
+            <template>
+              <snippet>
+                <gmd:lineage>
+                  <gmd:LI_Lineage>
+                    <gmd:statement>
+                      <gco:CharacterString></gco:CharacterString>
+                    </gmd:statement>
+                  </gmd:LI_Lineage>
+                </gmd:lineage>
+              </snippet>
+            </template>
+          </action>
           <!--<field
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution"
             or="spatialResolution" in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
           </field>-->
           <field
-            xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution"> </field>
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution[gmd:MD_Resolution/gmd:equivalentScale]"/>
 
           <action type="add" name="spatialResolution" or="spatialResolution"
-            in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
             <template>
               <snippet>
                 <gmd:spatialResolution>
@@ -685,22 +735,24 @@
               </snippet>
             </template>
           </action>
-          <!-- <action type="add"
-            name="spatialDistance"
-            or="spatialResolution" in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+
+          <field
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution[gmd:MD_Resolution/gmd:distance]"/>
+          <action type="add"
+                  name="spatialDistance"
+                  or="spatialResolution" in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
             <template>
               <snippet>
                 <gmd:spatialResolution>
                   <gmd:MD_Resolution>
                     <gmd:distance uom="m">
                       <gco:Integer/>
-                    </gmd:distance:>
+                    </gmd:distance>
                   </gmd:MD_Resolution>
                 </gmd:spatialResolution>
               </snippet>
             </template>
           </action>
-          -->
 
 
           <field name="conformity" templateModeOnly="true"
@@ -861,10 +913,10 @@
 
 
 
-          <field
+          <field name="accessConstraints"
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
-            gmd:resourceConstraints/gmd:MD_LegalConstraints"
-            if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0"> </field>
+            gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints"
+            if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0"/>
 
           <action type="add" name="accessConstraints" or="resourceConstraints"
             in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"
@@ -891,8 +943,8 @@
 
           <field
             xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
-            gmd:resourceConstraints/gmd:MD_LegalConstraints"
-            if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"> </field>
+            gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints"
+            if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
 
           <action type="add" name="accessConstraints" or="resourceConstraints"
             in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"
@@ -928,7 +980,7 @@
             del="."
             if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
             <template>
-              <values>
+              <values readonlyIf="count(@xlink:href) > 0">
                 <key label="organisationName"
                   xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
                 <key label="electronicMailAddress"
@@ -943,18 +995,29 @@
               <snippet>
                 <gmd:pointOfContact>
                   <gmd:CI_ResponsibleParty>
+                    <gn:copy select="gmd:individualName"/>
                     <gmd:organisationName>
                       <gco:CharacterString>{{organisationName}}</gco:CharacterString>
                     </gmd:organisationName>
+                    <gn:copy select="gmd:positionName"/>
                     <gmd:contactInfo>
                       <gmd:CI_Contact>
+                        <gn:copy select="gmd:phone"/>
                         <gmd:address>
                           <gmd:CI_Address>
+                            <gn:copy select="gmd:deliveryPoint"/>
+                            <gn:copy select="gmd:city"/>
+                            <gn:copy select="gmd:administrativeArea"/>
+                            <gn:copy select="gmd:postalCode"/>
+                            <gn:copy select="gmd:country"/>
                             <gmd:electronicMailAddress>
                               <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
                             </gmd:electronicMailAddress>
                           </gmd:CI_Address>
                         </gmd:address>
+                        <gn:copy select="gmd:onlineResource"/>
+                        <gn:copy select="gmd:hoursOfService"/>
+                        <gn:copy select="gmd:contactInstructions"/>
                       </gmd:CI_Contact>
                     </gmd:contactInfo>
                     <gmd:role>
@@ -979,7 +1042,7 @@
             del="."
             if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
             <template>
-              <values>
+              <values readonlyIf="count(@xlink:href) > 0">
                 <key label="organisationName"
                   xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
                 <key label="electronicMailAddress"
@@ -994,18 +1057,29 @@
               <snippet>
                 <gmd:pointOfContact>
                   <gmd:CI_ResponsibleParty>
+                    <gn:copy select="gmd:individualName"/>
                     <gmd:organisationName>
                       <gco:CharacterString>{{organisationName}}</gco:CharacterString>
                     </gmd:organisationName>
+                    <gn:copy select="gmd:positionName"/>
                     <gmd:contactInfo>
                       <gmd:CI_Contact>
+                        <gn:copy select="gmd:phone"/>
                         <gmd:address>
                           <gmd:CI_Address>
+                            <gn:copy select="gmd:deliveryPoint"/>
+                            <gn:copy select="gmd:city"/>
+                            <gn:copy select="gmd:administrativeArea"/>
+                            <gn:copy select="gmd:postalCode"/>
+                            <gn:copy select="gmd:country"/>
                             <gmd:electronicMailAddress>
                               <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
                             </gmd:electronicMailAddress>
                           </gmd:CI_Address>
                         </gmd:address>
+                        <gn:copy select="gmd:onlineResource"/>
+                        <gn:copy select="gmd:hoursOfService"/>
+                        <gn:copy select="gmd:contactInstructions"/>
                       </gmd:CI_Contact>
                     </gmd:contactInfo>
                     <gmd:role>
@@ -1032,7 +1106,7 @@
             notDisplayedIfMissing="true"
             xpath="/gmd:MD_Metadata/gmd:contact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='pointOfContact']" del=".">
             <template>
-              <values>
+              <values readonlyIf="count(@xlink:href) > 0">
                 <key label="pointOfContactName"
                   xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
                 <key label="pointOfContactEmail"
@@ -1043,18 +1117,29 @@
               <snippet>
                 <gmd:contact>
                   <gmd:CI_ResponsibleParty>
+                    <gn:copy select="gmd:individualName"/>
                     <gmd:organisationName>
                       <gco:CharacterString>{{organisationName}}</gco:CharacterString>
                     </gmd:organisationName>
+                    <gn:copy select="gmd:positionName"/>
                     <gmd:contactInfo>
                       <gmd:CI_Contact>
+                        <gn:copy select="gmd:phone"/>
                         <gmd:address>
                           <gmd:CI_Address>
+                            <gn:copy select="gmd:deliveryPoint"/>
+                            <gn:copy select="gmd:city"/>
+                            <gn:copy select="gmd:administrativeArea"/>
+                            <gn:copy select="gmd:postalCode"/>
+                            <gn:copy select="gmd:country"/>
                             <gmd:electronicMailAddress>
                               <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
                             </gmd:electronicMailAddress>
                           </gmd:CI_Address>
                         </gmd:address>
+                        <gn:copy select="gmd:onlineResource"/>
+                        <gn:copy select="gmd:hoursOfService"/>
+                        <gn:copy select="gmd:contactInstructions"/>
                       </gmd:CI_Contact>
                     </gmd:contactInfo>
                     <gmd:role>

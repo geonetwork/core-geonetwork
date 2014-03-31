@@ -19,7 +19,7 @@
       <span data-translate="" data-translate-values="{layer: '{{fileName}}'}">publishIn</span>
 
       <select data-ng-model="nodeId"
-              data-ng-change="checkNode(nodeId)">
+              data-ng-change="selectNode(nodeId)">
         <option data-ng-repeat="node in nodes" value="{{node.id}}">
           {{node.name}}
         </option>
@@ -90,9 +90,4 @@
       <div class="alert alert-info" data-ng-if="statusCode">{{statusCode}}</div>
     </div>
   </div>
-  
-  <div data-ng-if="snippet">
-    <input name="{{snippetRef}}" class="hidden" value="{{snippet}}"/>
-  </div>
-  
 </div>

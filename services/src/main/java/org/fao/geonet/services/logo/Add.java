@@ -27,6 +27,7 @@ import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.Util;
 import org.apache.commons.io.FileUtils;
@@ -66,7 +67,7 @@ public class Add implements Service {
 		File outFile = new File(logoDirectory, file);
 
 		try {
-			FileUtils.moveFile(inFile, outFile);
+			BinaryFile.moveTo(inFile, outFile, "Copy Logo");
 		} catch (Exception e) {
 			IO.delete(inFile, false, Geonet.RESOURCES);
 			throw new Exception(

@@ -28,6 +28,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
+import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 import org.fao.geonet.utils.Xml;
@@ -130,12 +131,18 @@ import java.util.List;
  * 
  * <h3>related</h3>
  * (deprecated) Use to link ISO19110 and ISO19139 record.
- * 
+ *
+ *
+ *
+ * TODO: Part of this should be moved to schema plugins as it might
+ * be different according to schema. extract-relations.xsl cover part
+ * of the needs.
  * 
  */
 public class GetRelated implements Service {
 
     private ServiceConfig _config;
+    private static Namespace dct = Namespace.getNamespace("dct", "http://purl.org/dc/terms/");
     private static Namespace gmd = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
     private static Namespace srv = Namespace.getNamespace("srv", "http://www.isotc211.org/2005/srv");
     private static Namespace gco = Namespace.getNamespace("gco", "http://www.isotc211.org/2005/gco");
@@ -198,14 +205,22 @@ public class GetRelated implements Service {
 
         // Get parent record from this record
         if (type.equals("") || type.contains("parent")) {
-            Element parent = md.getChild("parentIdentifier", gmd);
-            if (parent != null) {
-                String parentUuid = parent.getChildText("CharacterString", gco);
-
-                Element parentContent = getRecord(parentUuid, context, dm);
-                if (parentContent != null) {
-                    relatedRecords.addContent(new Element("parent").addContent(new Element("response").addContent(parentContent)));
-                }
+            String schema = dm.getMetadataSchema(id + "");
+            // Assume ISO19139 record
+            String parentNodeName = "parentIdentifier";
+            Namespace parentNodeNamespace = gmd;
+            String elementName = "CharacterString";
+            Namespace elementNamespace = gco;
+            if (schema.equals("dublin-core")) {
+                parentNodeName = "isPartOf";
+                parentNodeNamespace = dct;
+                elementName = null;
+                elementNamespace = null;
+            }
+            ElementFilter el = new ElementFilter(parentNodeName, parentNodeNamespace);
+            StringBuffer uuids = filterMetadataAndGetElement(md, el, elementName, elementNamespace);
+            if (uuids.length() > 0) {
+                relatedRecords.addContent(search(uuids.toString(), "parent", context, from, to, fast));
             }
         }
 
@@ -300,7 +315,8 @@ public class GetRelated implements Service {
     /**
      * Search in metadata all matching element for the filter 
      * and return a list of uuid separated by or to be used in a
-     * search on uuid.
+     * search on uuid. Extract uuid from attribute uuidref of
+     * matched element.
      * 
      * @param md
      * @param el
@@ -314,6 +330,43 @@ public class GetRelated implements Service {
         while (i.hasNext()) {
             Element e = i.next();
             String uuid = e.getAttributeValue("uuidref");
+            if (!"".equals(uuid)) {
+                if (first) {
+                    uuids.append(uuid);
+                    first = false;
+                } else {
+                    uuids.append(" or " + uuid);
+                }
+            }
+        }
+        return uuids;
+    }
+
+    /**
+     * Search in metadata all matching element for the filter
+     * and return a list of uuid separated by or to be used in a
+     * search on uuid. Extract uuid from matched element if
+     * elementName is null or from the elementName child.
+     *
+     * @param md
+     * @param el
+     * @param elementName
+     * @param elementNamespace
+     * @return
+     */
+    private StringBuffer filterMetadataAndGetElement(Element md,
+                                                     ElementFilter el,
+                                                     String elementName,
+                                                     Namespace elementNamespace) {
+        @SuppressWarnings("unchecked")
+        Iterator<Element> i = md.getDescendants(el);
+        StringBuffer uuids = new StringBuffer("");
+        boolean first = true;
+        while (i.hasNext()) {
+            Element e = i.next();
+            String uuid = elementName == null ?
+                    e.getText() :
+                    e.getChildText(elementName, elementNamespace);
             if (!"".equals(uuid)) {
                 if (first) {
                     uuids.append(uuid);
@@ -348,7 +401,9 @@ public class GetRelated implements Service {
                 parameters.addContent(new Element("hassource").setText(uuid));
             else if ("associated".equals(type))
                 parameters.addContent(new Element("agg_associated").setText(uuid));
-            else if ("datasets".equals(type) || "fcats".equals(type) || "sources".equals(type) || "siblings".equals(type))
+            else if ("datasets".equals(type) || "fcats".equals(type) ||
+                    "sources".equals(type) || "siblings".equals(type) ||
+                    "parent".equals(type))
                 parameters.addContent(new Element("uuid").setText(uuid));
 
             parameters.addContent(new Element("fast").addContent("index"));

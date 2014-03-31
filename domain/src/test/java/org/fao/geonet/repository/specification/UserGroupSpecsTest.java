@@ -5,7 +5,6 @@ import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.repository.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
@@ -24,7 +23,6 @@ import static org.junit.Assert.*;
  * Date: 9/10/13
  * Time: 2:37 PM
  */
-@Transactional
 public class UserGroupSpecsTest extends AbstractSpringDataTest {
 
     @Autowired
@@ -33,8 +31,6 @@ public class UserGroupSpecsTest extends AbstractSpringDataTest {
     UserRepository _userRepo;
     @Autowired
     GroupRepository _groupRepo;
-
-    AtomicInteger _inc = new AtomicInteger();
 
     @Test
     public void testHasGroupId() throws Exception {

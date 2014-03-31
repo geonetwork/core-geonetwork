@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="SvnManager" class="org.fao.geonet.kernel.SvnManager"/>
+    <bean id="svnManager" class="org.fao.geonet.kernel.SvnManager"/>
     <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerDb"/>
     <bean id="geonetworkAuthenticationProvider" class="org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider"/>
     <bean id="geonetworkEncoder" class="org.springframework.security.crypto.password.NoOpPasswordEncoder"/>
@@ -41,5 +41,7 @@
 
     <!--<bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory" lazy-init="true"/>-->
     <bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.MemoryDirectoryFactory" lazy-init="true"/>
-    <bean id="ForceInitRepositoriesForTestingBean" class="org.fao.geonet.kernel.ForceInitRepositoriesForTestingBean" lazy-init="false"/>
+    <bean id="forceInitRepositoriesForTestingBean" class="org.fao.geonet.kernel.ForceInitRepositoriesForTestingBean" lazy-init="false"/>
+    <bean id="httpRequestFactory" class="org.fao.geonet.utils.GeonetHttpRequestFactory" />
+
 </beans>

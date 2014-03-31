@@ -364,9 +364,26 @@
     "loadReport": "Import report",
     "loadSampleReport": "Samples imported for standards",
     "loadTemplatesReport": "Templates imported for standards",
-    
     "sortTemplate": "Sort metadata templates",
-    
+
+    "schematron" : "Schematron",
+    "schematrons" : "Schematrons",
+    "schematronApplicationCriteria" : "Schematron Applicability",
+    "schematronInfo" : "The selected Schematron will be used to validate a metadata when all the criteria in one of the following groups evaluate to true for the metadata.",
+    "confirmDialogTitle" : "Confirm Action",
+    "confirmDeleteSchematronCriteriaGroup" : "Are you sure you want to delete the Criteria Group?",
+    "confirm" : "Ok",
+    "requirementREQUIRED" : "Required to be valid",
+    "requirementREPORT_ONLY" : "Only Report errors, does not affect validity of metadata",
+    "requirementDISABLED" : "Ignore this group, the schematron will not be ran even if criteria match",
+    "NEW" : "New",
+    "schematronDescriptionAlwaysAccept" : "This criteria always passes",
+    "schematronDescriptionXpath" : "This criteria passes when the XPath is true: '{{value}}'",
+    "schematronDescriptionGeneric" : "This criteria passes when the metadata has '{{type}}' with the value '{{value}}'",
+    "confirmDeleteSchematronCriteria" : "Are you sure you want to delete the Criteria?",
+    "criteriaValue" : "Value",
+    "dupNameWarning" : "There is already a group with that name.  Change the name.",
+
     "time": "Time",
     "details": "Details",
     "harvester": "Harvester",
@@ -562,7 +579,22 @@
     "notYetSupported": "Not supported yet",
     "serviceUrl": "Service URL",
     
-    
+    "mapservers": "Map servers",
+    "mapserverName": "Name",
+    "manageMapServers": "Map servers",
+    "newMapServer": "New server",
+    "updateMapServer": "Update ",
+    "mapserverDescription": "Description",
+    "mapserverConfiguration": "URL configuration",
+    "description": "Description",
+    "configurl": "REST API configuration URL",
+    "wmsurl": "WMS service URL",
+    "wcsurl": "WCS service URL",
+    "wfsurl": "WFS service URL",
+    "stylerurl": "Styler URL",
+    "workspace": "Workspace",
+    "workspace-help": "Namespace prefix and namespace URL corresponding to the workspace data hase to be published in.",
+
     "manageDirectory": "Directory",
     
     

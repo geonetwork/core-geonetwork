@@ -11,18 +11,30 @@
   <div class="panel-body">
     <div class="gn-validation-report">
       <div data-ng-repeat="type in ruleTypes">
-        <h4>{{type.label | translate}} <span class="label pull-right"
-          data-ng-class="type.success === type.total ? 'label-success' : 'label-danger'">
-          {{type.success}} / {{type.total}}</span></h4>
+        <h4><span class="gn-schematron-title">{{type.label | translate}}</span>
+            <span class="label pull-right"
+                  data-ng-class="labelImportanceClass(type)"
+                  data-ng-if="type.total === '?'">
+              <ng-pluralize count="type.error"
+                            when="{'0': '0 ' + ('error' | translate),
+                            '1': '1 ' +  ('error' | translate),
+                            'other': '{} ' +  ('errors' | translate)}">
+              </ng-pluralize>
+            </span>
+            <span class="label pull-right"
+                  data-ng-class="labelImportanceClass(type)"
+                  data-ng-if="type.total !== '?'">{{type.success}} / {{type.total}}</span>
+          </h4>
         <p>
-          <div class="list-group">
-            <li class="list-group-item" data-ng-repeat="rule in filterByType(type)"
-              title="{{rule.details}}"
-              data-ng-class="rule['@type'] === 'success' ? (showErrorsOnly ? 'hidden' : '') : 'text-danger'">
-              <h5>{{rule.title}}</h5>
-              <p>{{rule.msg}}</p>
-            </li>
-          </div>
+            <div class="list-group" data-ng-repeat="pattern in type.patterns">
+              <li class="list-group-item" data-ng-repeat="rule in pattern.rules"
+                  title="{{rule.details}}"
+                  data-ng-hide="!type.expanded && (showErrorsOnly && rule['@type'] === 'success')"
+                  data-ng-class="rule['@type'] !== 'error' ? '' : (type.requirement === 'REQUIRED' ? 'text-danger' : 'text-info')">
+                <h5>{{pattern.title}}</h5>
+                <p>{{rule.msg}}</p>
+              </li>
+            </div>
         </p>
       </div>
     </div>

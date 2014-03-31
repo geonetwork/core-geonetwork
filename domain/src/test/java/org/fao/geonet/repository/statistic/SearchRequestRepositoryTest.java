@@ -12,7 +12,6 @@ import org.fao.geonet.repository.specification.SearchRequestSpecs;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -32,7 +31,6 @@ import static org.junit.Assert.assertTrue;
  * Date: 9/29/13
  * Time: 11:03 PM
  */
-@Transactional
 public class SearchRequestRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
@@ -42,8 +40,6 @@ public class SearchRequestRepositoryTest extends AbstractSpringDataTest {
 
     @PersistenceContext
     EntityManager _entityManager;
-
-    AtomicInteger _inc = new AtomicInteger();
 
     @Test
     public void testFindOne() throws Exception {
@@ -59,7 +55,7 @@ public class SearchRequestRepositoryTest extends AbstractSpringDataTest {
         _entityManager.clear();
 
         SearchRequest found = _requestRepo.findOne(searchRequest2.getId());
-        SpringDataTestSupport.assertSameContents(searchRequest2, found);
+        assertSameContents(searchRequest2, found);
         assertEquals(searchRequest2.getParams().size(), found.getParams().size());
         List<SearchRequestParam> params = _paramRepo.findAll(SearchRequestParamSpecs.hasService(searchRequest2.getService()));
         assertEquals(searchRequest2.getParams().size(), params.size());

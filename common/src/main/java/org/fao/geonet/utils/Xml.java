@@ -35,11 +35,7 @@ import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
 import org.apache.xml.resolver.tools.CatalogResolver;
-import org.jdom.DocType;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
+import org.jdom.*;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.SAXOutputter;
@@ -89,6 +85,7 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
+import org.eclipse.core.runtime.URIUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -450,40 +447,20 @@ public final class Xml
         if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
             Log.debug(Log.XML_RESOLVER, "Trying to resolve "+href+":"+base);
         }
-        String decodedBase;
-        try {
-            decodedBase = URLDecoder.decode(base, ENCODING);
-        } catch (UnsupportedEncodingException e1) {
-            decodedBase = base;
-        }
-        String decodedHref;
-        try {
-            decodedHref = URLDecoder.decode(href, ENCODING);
-        } catch (UnsupportedEncodingException e1) {
-            decodedHref = href;
-        }
-        Source s = catResolver.resolve(decodedHref, decodedBase);
-        // If resolver has a blank XSL file to replace non existing resolved file ...
+        Source s = catResolver.resolve(href, base);
+        // If resolver has a blank XSL file use it to replace
+        // resolved file that doesn't exist...
         String blankXSLFile = resolver.getBlankXSLFile();
         if (blankXSLFile != null && s.getSystemId().endsWith(".xsl")) {
-            // The resolved resource does not exist, set it to blank file path to not trigger FileNotFound Exception
             try {
                 if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
                     Log.debug(Log.XML_RESOLVER, "  Check if exist " + s.getSystemId());
                 }
-                File f;
-                if (SystemUtils.IS_OS_WINDOWS) {
-                    String path = s.getSystemId();
-                    // fxp
-                    path = path.replaceAll("file:\\/", "");
-                    // heikki
-                    path = path.replaceAll("file:", "");
+                File f = URIUtil.toFile(new URI(s.getSystemId()));
+                if(Log.isDebugEnabled(Log.XML_RESOLVER))
+                    Log.debug(Log.XML_RESOLVER, "Check on "+f.getPath()+" exists returned: "+f.exists());
+                // If the resolved resource does not exist, set it to blank file path to not trigger FileNotFound Exception
 
-                    f = new File(path);
-                }
-                else {
-                    f = new File(new URI(s.getSystemId()));
-                }
                 if (!(f.exists())) {
                     if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
                         Log.debug(Log.XML_RESOLVER, "  Resolved resource " + s.getSystemId() + " does not exist. blankXSLFile returned instead.");
@@ -492,6 +469,7 @@ public final class Xml
                 }
             }
             catch (URISyntaxException e) {
+                Log.warning(Log.XML_RESOLVER, "URI syntax problem: "+e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -666,8 +644,6 @@ public final class Xml
      * @param xml the XML element
      * @return the JSON response
      * 
-     * @throws JsonParseException
-     * @throws JsonMappingException
      * @throws IOException
      */
     public static String getJSON (Element xml) throws IOException {
@@ -679,8 +655,6 @@ public final class Xml
      * @param xml the XML element
      * @return the JSON response
      * 
-     * @throws JsonParseException
-     * @throws JsonMappingException
      * @throws IOException
      */
     public static String getJSON (String xml) throws IOException {
@@ -1222,5 +1196,107 @@ public final class Xml
 		return SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
 	}
 
+
+    /**
+     * Create and XPath expression for identified Element.
+     *
+     * @param element element within the xml to find an XPath for.
+     *
+     * return xpath or null if there was an error.
+     */
+    public static String getXPathExpr(Content element) {
+        StringBuilder builder = new StringBuilder();
+        if (!doCreateXpathExpr(element, builder)) {
+            return null;
+        } else {
+            return builder.toString();
+        }
+    }
+
+    /**
+     * Create and XPath expression for identified Element.
+     *
+     * @param attribute element within the xml to find an XPath for.
+     *
+     * return xpath or null if there was an error.
+     */
+    public static String getXPathExpr(Attribute attribute) {
+        StringBuilder builder = new StringBuilder();
+        if (!doCreateXpathExpr(attribute, builder)) {
+            return null;
+        } else {
+            return builder.toString();
+        }
+    }
+
+    private static boolean doCreateXpathExpr(Object content, StringBuilder builder) {
+        if (builder.length() > 0) {
+            builder.insert(0, "/");
+        }
+
+        Element parentElement;
+        if (content instanceof Element) {
+            Element element = (Element) content;
+            final List<Attribute> attributes = element.getAttributes();
+            doCreateAttributesXpathExpr(builder, attributes);
+            final String textTrim = element.getTextTrim();
+            if (!textTrim.isEmpty()) {
+                boolean addToCondition = builder.length() > 0 && builder.charAt(0) == '[';
+
+                if (!addToCondition) {
+                    builder.insert(0, "']");
+                } else {
+                    builder.deleteCharAt(0);
+                    builder.insert(0, "' and ");
+                }
+
+                builder.insert(0, textTrim).insert(0, "[normalize-space(text()) = '");
+
+            }
+            builder.insert(0, element.getName());
+            if (element.getNamespacePrefix() != null && !element.getNamespacePrefix().trim().isEmpty()) {
+                builder.insert(0, ':').insert(0, element.getNamespacePrefix());
+            }
+            parentElement = element.getParentElement();
+        } else if (content instanceof Text) {
+            final Text text = (Text) content;
+            builder.insert(0, "text()");
+            parentElement = text.getParentElement();
+        } else if (content instanceof Attribute) {
+            Attribute attribute = (Attribute) content;
+            builder.insert(0, attribute.getName());
+            if (attribute.getNamespacePrefix() != null && !attribute.getNamespacePrefix().trim().isEmpty()) {
+                builder.insert(0, ':').insert(0, attribute.getNamespacePrefix());
+            }
+            builder.insert(0, '@');
+            parentElement = attribute.getParent();
+        } else {
+            parentElement = null;
+        }
+
+        if (parentElement != null && parentElement.getParentElement() != null) {
+            return doCreateXpathExpr(parentElement, builder);
+        }
+        return true;
+    }
+
+    private static void doCreateAttributesXpathExpr(StringBuilder builder, List<Attribute> attributes) {
+        if (!attributes.isEmpty()) {
+            StringBuilder attBuilder = new StringBuilder("[");
+            for (Attribute attribute : attributes) {
+                if (attBuilder.length() > 1) {
+                    attBuilder.append(" and ");
+                }
+                attBuilder.append('@');
+                if (attribute.getNamespacePrefix() != null && !attribute.getNamespacePrefix().trim().isEmpty()) {
+                    attBuilder.append(attribute.getNamespacePrefix()).append(':');
+                }
+                attBuilder.append(attribute.getName()).append(" = '").append(attribute.getValue()).append('\'');
+            }
+            attBuilder.append("]");
+
+            builder.insert(0, attBuilder);
+        }
+    }
 
 }

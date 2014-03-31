@@ -30,13 +30,29 @@
   <metadataConstraints>Md. constraints</metadataConstraints>
   <metadataMaintenance>Md. maintenance</metadataMaintenance>
   <applicationSchemaInfo>Schema info</applicationSchemaInfo>
-  
+
+  <!-- XSD error translation -->
+  <invalidElement>Invalid element. Invalid content was found starting with element: </invalidElement>
+  <onElementOf>One of the following elements </onElementOf>
+  <isExpected> is expected.</isExpected>
+  <isNotComplete> is not complete.</isNotComplete>
+  <elementLocated>Parent element is </elementLocated>
+  <missingElement>Missing element. The content of element: </missingElement>
+  <invalidValue>Invalid or missing value.</invalidValue>
+  <notValidFor> is not a valid value for </notValidFor>
+  <xsdErrorIs>XSD error is: </xsdErrorIs>
+  <inElement> in element </inElement>
+  <enum1>Value </enum1>
+  <enum2> is not valid for the field </enum2>
+  <enum3>List of values is :</enum3>
+
   <!-- INSPIRE view labels and help -->
   <url>Online resource</url>
   <identifier>Resource identifier</identifier>
   <rsIdentifier>Projection</rsIdentifier>
   <referenceDate>Temporal information</referenceDate>
   <creationDate>Creation date</creationDate>
+  <hierarchyLevel>Hierarchy level</hierarchyLevel>
   <publicationDate>Publication date</publicationDate>
   <revisionDate>Revision date</revisionDate>
   <temporalRangeSection>Temporal extent</temporalRangeSection>
@@ -47,6 +63,7 @@
   <conformity_date>Date</conformity_date>
   <explanation>Explanation</explanation>
   <pass>Pass</pass>
+  <indeterminatePosition>Indeterminate position</indeterminatePosition>
   <pointOfContact>Contact for the resource</pointOfContact>
   <metadataPointOfContact>Contact for the metadata</metadataPointOfContact>
   <organisationName>Organisation name</organisationName>
@@ -58,7 +75,8 @@
   <format>Format</format>
   <format_version>Version</format_version>
   <lineage>Lineage</lineage>
-  <spatialResolution>Spatial resolution</spatialResolution>
+  <spatialResolution>Spatial resolution (scale)</spatialResolution>
+  <spatialDistance>Spatial resolution (distance)</spatialDistance>
   <accessConstraints>Access constraints</accessConstraints>
   <useLimitation>Use limitation</useLimitation>
   <notEvaluated>Not evaluated</notEvaluated>
