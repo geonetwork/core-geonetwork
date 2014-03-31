@@ -9,40 +9,48 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu pull-right" role="menu">
-        <li><a href="" data-toggle="modal"
+        <li data-ng-show="isCategoryEnable('thumbnail')"
+            ><a href="" data-toggle="modal"
           data-target="#addthumbnail-popup"> <i
             class="fa fa-picture-o"></i> <i class="icon-external-link"></i>
             <span data-translate="">addThumbnail</span>
         </a></li>
-        <li><a href="" data-ng-click="onlinesrcService.onOpenPopup('onlinesrc')"> <i class="fa fa-link"></i>
+        <li data-ng-show="isCategoryEnable('onlinesrc')">
+          <a href="" data-ng-click="onlinesrcService.onOpenPopup('onlinesrc')"> <i class="fa fa-link"></i>
             <i class="icon-external-link"></i> <span data-translate="">addOnlinesrc</span>
         </a></li>
-        <li class="divider"></li>
-        <li><a href=""
-          data-ng-click="onlinesrcService.onOpenPopup('parent')"> <i
+        <li class="divider"
+            data-ng-show="isCategoryEnable('thumbnail') || isCategoryEnable('onlinesrc')"></li>
+        <li data-ng-show="isCategoryEnable('parent')"><a href=""
+            data-ng-click="onlinesrcService.onOpenPopup('parent')"> <i
             class="fa fa-sitemap"></i> <i class="icon-external-link"></i>
             <span data-translate="">linkToParent</span>
         </a></li>
-        <li data-ng-hide="gnCurrentEdit.isService"><a href="" data-ng-click="onlinesrcService.onOpenPopup('service')"> 
+        <li data-ng-show="isCategoryEnable('service') && !gnCurrentEdit.isService">
+          <a href="" data-ng-click="onlinesrcService.onOpenPopup('service')">
           <i class="fa fa-cloud"></i> <i
             class="icon-external-link"></i> <span data-translate="">linkToService</span>
         </a></li>
-        <li data-ng-show="gnCurrentEdit.isService"><a href="" data-ng-click="onlinesrcService.onOpenPopup('dataset')"> <i
+        <li data-ng-show="isCategoryEnable('dataset') && gnCurrentEdit.isService">
+          <a href="" data-ng-click="onlinesrcService.onOpenPopup('dataset')"> <i
             class="fa fa-files-o"></i> <i class="icon-external-link"></i>
             <span data-translate="">linkToDataset</span>
         </a></li>
-        <li><a href=""
-          data-ng-click="onlinesrcService.onOpenPopup('source')"> <i
+        <li data-ng-show="isCategoryEnable('source')">
+          <a href=""
+             data-ng-click="onlinesrcService.onOpenPopup('source')"> <i
             class="fa fa-sitemap fa-rotate-180"></i> <i class="icon-external-link"></i>
             <span data-translate="">linkToSource</span>
         </a></li>
-        <li><a href=""
-          data-ng-click="onlinesrcService.onOpenPopup('fcats')"> <i
+        <li data-ng-show="isCategoryEnable('fcats')">
+          <a href=""
+            data-ng-click="onlinesrcService.onOpenPopup('fcats')"> <i
             class="fa fa-table"></i> <i class="icon-external-link"></i>
             <span data-translate="">linkToFeatureCatalog</span>
         </a></li>
-        <li><a href=""
-          data-ng-click="onlinesrcService.onOpenPopup('sibling')"> <i
+        <li data-ng-show="isCategoryEnable('sibling')">
+          <a href=""
+            data-ng-click="onlinesrcService.onOpenPopup('sibling')"> <i
             class="fa fa-sign-out"></i> <i class="icon-external-link"></i>
             <span data-translate="">linkToSibling</span>
         </a></li>
