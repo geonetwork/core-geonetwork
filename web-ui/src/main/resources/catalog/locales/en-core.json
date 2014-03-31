@@ -143,5 +143,7 @@
     "comments": "Comment",
     "sendAComment": "Send us a comment",
     "feedbackNotEnable": "Feedback is not enabled.",
-    "feebackSent": "Your message has been sent to the catalog manager."
+    "feebackSent": "Your message has been sent to the catalog manager.",
+    "url": "URL",
+    "upload": "Upload"
 }

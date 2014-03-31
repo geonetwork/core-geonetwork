@@ -2,6 +2,7 @@
 # allowed DPIs
 #===========================================================================
 dpis:
+  - 600
   - 254
   - 190
   - 127
@@ -10,6 +11,8 @@ dpis:
 # the allowed scales
 #===========================================================================
 scales:
+  - 5000
+  - 10000
   - 25000
   - 50000
   - 100000
@@ -21,7 +24,12 @@ scales:
   - 40000000
   - 100000000
   - 140000000
-  
+
+formats:
+  - pdf
+  - png
+  - jpeg
+
 #===========================================================================
 # the list of allowed hosts
 #===========================================================================
@@ -36,12 +44,25 @@ hosts:
    
 layouts:
   #===========================================================================
-  A4 portrait:
+  Thumbnail:
+    mainPage:
+      rotation: false
+      pageSize: LEGAL
+      landscape: true
+      backgroundPdf: '${configDir}/template-thumbnail.pdf'
+      items:
+        - !map
+          spacingAfter: 0
+          width: 1008
+          height: 612
+          absoluteX: 0
+          absoluteY: 612
   #===========================================================================
+  A4 portrait:
     mainPage:
       rotation: true
       pageSize: A4
-      backgroundPdf: '${configDir}/template.pdf'      
+      backgroundPdf: '${configDir}/template.pdf'
       header:
         height: 50
         items:
@@ -49,7 +70,7 @@ layouts:
             font: Helvetica
             fontSize: 30
             align: right
-#            text: '${mapTitle}'
+  #            text: '${mapTitle}'
       items:
         - !map
           spacingAfter: 30
@@ -90,6 +111,6 @@ layouts:
           width: 300
           items:
             - !text
-              text: '${now yyyy} GeoNetwork opensource'  
+              text: '${now yyyy} GeoNetwork opensource'
               fontEncoding: Cp1252
               fontSize: 10

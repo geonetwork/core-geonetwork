@@ -134,5 +134,12 @@
     "continent": "Continent",
     "dateMode": "Date ou date et heure",
     "yearMode": "Année",
-    "yearAndMonthMode": "Année et mois"
+    "yearAndMonthMode": "Année et mois",
+    "createSmall": "Créer une miniature",
+    "description": "Description",
+    "thumbnailMaker": "Générer un aperçu",
+    "thumbnailMaker-help": "Toutes les couches WMS renseignées dans la fiche ont été ajoutées à la carte. Sélectionner une mise en page (Thumbnail est recommandé), une échelle puis zoomer vers une zone d'intérêt afin de générer l'aperçu.",
+    "print_layout": "Mise en page",
+    "print_scale": "Échelle",
+    "noLayersForThumbnail": "Aucune couche WMS définie dans la fiche pour générer un aperçu"
 }

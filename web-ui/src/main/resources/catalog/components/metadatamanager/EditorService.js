@@ -184,7 +184,10 @@
                });
              }
            },
-
+           setVersion: function(version) {
+             $(gnCurrentEdit.formId).
+             find('input[id="version"]').val(version);
+           },
            /**
             * Called after the edit form has been loaded.
             * Fill gnCurrentEdit all the info of the current
@@ -204,7 +207,8 @@
                showValidationErrors: getInputValue('showvalidationerrors'),
                uuid: getInputValue('uuid'),
                version: getInputValue('version'),
-               geoPublisherConfig: getInputValue('geoPublisherConfig'),
+               geoPublisherConfig: angular.fromJson(getInputValue('geoPublisherConfig')),
+               layerConfig: angular.fromJson(getInputValue('layerConfig')),
                saving: false
              });
 
