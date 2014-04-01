@@ -1159,5 +1159,6 @@
     <wro.version>1.7.1</wro.version>
     <node.version>v0.10.24</node.version>
     <npm.version>1.3.23</npm.version>
+    <print-lib.version>2.0.0</print-lib.version>
   </properties>
 </project>
