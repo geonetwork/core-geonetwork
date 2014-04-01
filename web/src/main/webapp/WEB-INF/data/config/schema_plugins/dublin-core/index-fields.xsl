@@ -106,7 +106,11 @@
 				<xsl:with-param name="name" select="'keyword'"/>
 				<xsl:with-param name="store" select="'true'"/> 
 			</xsl:apply-templates>
-			
+
+      <xsl:for-each select="/simpledc/dct:isPartOf">
+        <Field name="parentUuid" string="{string(.)}" store="true" index="true"/>
+      </xsl:for-each>
+
 			<Field name="any" store="false" index="true">
 				<xsl:attribute name="string">
 					<xsl:value-of select="normalize-space(string(/simpledc))"/>

@@ -1,0 +1,20 @@
+<form class="" >
+  <div class="form-group">
+    <label class="control-label"
+           data-translate="">print_layout</label>
+    <div class="">
+      <select class="form-control"
+              data-ng-model="layout"
+              data-ng-options="l.name for l in capabilities.layouts"></select>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="control-label"
+           data-translate="">print_scale</label>
+    <div class="">
+      <select class="form-control"
+              data-ng-model="scale"
+              data-ng-options="l.name for l in capabilities.scales"></select>
+    </div>
+  </div>
+</form>

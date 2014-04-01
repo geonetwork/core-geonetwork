@@ -1476,7 +1476,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
         var privilegesPanel = new GeoNetwork.admin.PrivilegesPanel({
             id: record.get('id'),
             url: url,
-            onlyUserGroup: this.info.userGroupOnly.toLowerCase() === 'true' || false
+            onlyUserGroup: (this.info && this.info.userGroupOnly.toLowerCase() === 'true') || false
         });
         this.modalAction(OpenLayers.i18n('setPrivileges') + ' - ' + record.get('title'), privilegesPanel);
     },

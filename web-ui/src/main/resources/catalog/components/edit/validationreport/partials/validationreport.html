@@ -14,7 +14,13 @@
         <h4><span class="gn-schematron-title">{{type.label | translate}}</span>
             <span class="label pull-right"
                   data-ng-class="labelImportanceClass(type)"
-                  data-ng-if="type.total === '?'">{{type.error}} {{'errors' | translate}}</span>
+                  data-ng-if="type.total === '?'">
+              <ng-pluralize count="type.error"
+                            when="{'0': '0 ' + ('error' | translate),
+                            '1': '1 ' +  ('error' | translate),
+                            'other': '{} ' +  ('errors' | translate)}">
+              </ng-pluralize>
+            </span>
             <span class="label pull-right"
                   data-ng-class="labelImportanceClass(type)"
                   data-ng-if="type.total !== '?'">{{type.success}} / {{type.total}}</span>

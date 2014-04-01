@@ -6,6 +6,8 @@
 
     <xsl:include href="validate-fn.xsl" />
 
+    <xsl:variable name="metadataSchema" select="/root/response/schema"/>
+
     <xsl:template match="/">
         <rules>
             <xsl:call-template name="metadata-validation-report">
@@ -73,7 +75,10 @@
             <xsl:for-each select="$xsdErrors/geonet:error">
                 <pattern>
                     <title>
-                        <xsl:value-of select="geonet:parse-xsd-error(geonet:message, //response/schema, /root/gui)" />
+                        <xsl:value-of select="geonet:parse-xsd-error(geonet:message,
+                        $metadataSchema,
+                        /root/gui/schemas/*[name() = $metadataSchema]/labels,
+                        /root/gui/schemas/*[name() = $metadataSchema]/strings)" />
                     </title>
                     <rules>
                         <rule group="xsd" type="error" id="xsd#{geonet:errorNumber}">

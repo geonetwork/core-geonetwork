@@ -131,6 +131,7 @@
 
 
 
+
       <!-- For non existing node create a XML snippet to be edited 
         No match in current document. 2 scenario here:
         1) the requested element is a direct child of a node of the document. 
@@ -138,12 +139,17 @@
         -->
       <xsl:choose>
         <xsl:when test="$isDisplayed and not(@templateModeOnly)">
-          
+          <xsl:variable name="configName" select="@name"/>
+
           <!-- Display the matching node using standard editor mode
           propagating to the schema mode ... -->
           <xsl:for-each select="$nodes">
             <saxon:call-template name="{concat('dispatch-', $schema)}">
               <xsl:with-param name="base" select="."/>
+              <xsl:with-param name="overrideLabel"
+                              select="if ($configName != '')
+                                      then $strings/*[name() = $configName]
+                                      else ''"/>
             </saxon:call-template>
           </xsl:for-each>
 
@@ -160,13 +166,11 @@
           <xsl:if test="($nonExistingChildParent/* and not(@ifNotExist)) or 
             ($nonExistingChildParent/* and count($nodes/*) = 0 and @ifNotExist)">
             <xsl:variable name="childName" select="@or"/>
-            <xsl:variable name="configName" select="@name"/>
 
             <xsl:for-each select="$nonExistingChildParent/*/gn:child[@name = $childName]">
               <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
               
               <xsl:variable name="directive" select="gn-fn-metadata:getFieldAddDirective($editorConfig, $name)"/>
-
               <xsl:call-template name="render-element-to-add">
                 <xsl:with-param name="label"
                   select="if ($configName != '') 
@@ -191,7 +195,6 @@
           <xsl:variable name="name" select="@name"/>
           <xsl:variable name="del" select="@del"/>
           <xsl:variable name="template" select="template"/>
-          
           <xsl:for-each select="$nodes/*">
             <!-- Retrieve matching key values 
               Only text values are supported. Separator is #.
@@ -218,7 +221,20 @@
                 
               -->
             <xsl:variable name="currentNode" select="."/>
-            
+
+            <!-- Check if template field values should be in
+            readonly mode in the editor.-->
+            <xsl:variable name="readonly">
+              <xsl:choose>
+                <xsl:when test="$template/values/@readonlyIf">
+                  <saxon:call-template name="{concat('evaluate-', $schema, '-boolean')}">
+                    <xsl:with-param name="base" select="$currentNode"/>
+                    <xsl:with-param name="in" select="concat('/', $template/values/@readonlyIf)"/>
+                  </saxon:call-template>
+                </xsl:when>
+              </xsl:choose>
+            </xsl:variable>
+
             <xsl:variable name="templateCombinedWithNode" as="node()">
               <template>
                 <xsl:copy-of select="$template/values"/>
@@ -233,6 +249,10 @@
             <xsl:variable name="keyValues">
               <xsl:for-each select="$template/values/key">
                 <field name="{@label}">
+                  <xsl:if test="$readonly = 'true'">
+                    <readonly>true</readonly>
+                  </xsl:if>
+
                   <xsl:variable name="matchingNodeValue">
                     <saxon:call-template name="{concat('evaluate-', $schema)}">
                       <xsl:with-param name="base" select="$currentNode"/>
@@ -352,8 +372,26 @@
         </saxon:call-template>
       </xsl:if>
     </xsl:variable>
-    
-    <xsl:if test="$nonExistingChildParent/*">
+
+
+    <!-- Check if this field is controlled by a condition (eg. display that field for
+              service metadata record only).
+              If @if expression return false, the field is not displayed. -->
+    <xsl:variable name="isDisplayed">
+      <xsl:choose>
+        <xsl:when test="@if">
+          <saxon:call-template name="{concat('evaluate-', $schema, '-boolean')}">
+            <xsl:with-param name="base" select="$base"/>
+            <xsl:with-param name="in" select="concat('/../', @if)"/>
+          </saxon:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="true()"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+
+    <xsl:if test="$nonExistingChildParent/* and $isDisplayed = 'true'">
       <!-- The element does not exist in current record. 
           Add an action to add an element. -->
       <xsl:variable name="name" select="@name"/>

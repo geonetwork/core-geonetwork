@@ -3,7 +3,7 @@
     <div class="radio row"
          data-ng-repeat="o in config.option">
       <div class="col-xs-12">
-        <label>
+        <label title="{{mode == 'radio_withdesc' ? '' : o['@title']}}">
           <input type="radio" data-ng-click="select(o)" name="ignore_{{ref}}"
                  data-ng-checked="o['@value'] === config.value">
           {{o['#text']}}

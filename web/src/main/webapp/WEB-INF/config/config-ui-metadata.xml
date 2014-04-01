@@ -238,8 +238,21 @@
         ]]></documentation>
       <class name=".services.thumbnail.Unset"/>
     </service>
-    
-    
+
+    <service name="md.thumbnail.generate">
+      <documentation><![CDATA[
+        Generate a thumbnail. Metadata must be on
+        editing session.
+
+        Parameters:
+        * id: the metadata identifier
+        * version: the editing version.
+        * config: Mapfish print JSON map specification
+        * rotation: (optional) Rotation angle. May be needed if PDF is using landscape mode.
+        ]]></documentation>
+      <class name=".services.thumbnail.Generate"/>
+    </service>
+
     <service name="md.relations">
       <documentation>Return a list of all relation of the given metadata. Relations are mainly online resources
       like thumbnails, onlineresources etc ..</documentation>

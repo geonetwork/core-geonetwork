@@ -190,5 +190,9 @@
     <label>Date de mise à disposition</label>
     <description>Date de mise à disposition de la resource.</description>
   </element>
-  
+  <element name="dct:isPartOf">
+    <label>Identifiant de la fiche de métadonnées parent</label>
+    <description>Une reesource associée dans laquelle la ressource décrite est physiquement ou logiquement incluse.</description>
+  </element>
+
 </labels>

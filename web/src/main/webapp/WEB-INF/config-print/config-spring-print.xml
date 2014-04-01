@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-lazy-init="true"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/context
+         http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+  <context:annotation-config></context:annotation-config>
+  <bean id="mapPrinter" class="org.mapfish.print.MapPrinter" scope="prototype"/>
+  <bean id="configFactory" class="org.mapfish.print.config.ConfigFactory"/>
+  <bean id="thumbnailMaker" class="org.fao.geonet.kernel.thumbnail.ThumbnailMaker"/>
+
+  <!-- Define MapReaderFactories -->
+  <bean id="mapReaderFactoryFinder" class="org.mapfish.print.map.readers.MapReaderFactoryFinder"/>
+  <bean id="wms-MapReaderFactory" class="org.mapfish.print.map.readers.WMSMapReader$Factory"/>
+  <bean id="mapServer-MapReaderFactory" class="org.mapfish.print.map.readers.MapServerMapReader$Factory"/>
+  <bean id="tileCache-MapReaderFactory" class="org.mapfish.print.map.readers.TileCacheMapReader$Factory"/>
+  <bean id="osm-MapReaderFactory" class="org.mapfish.print.map.readers.OsmMapReader$Factory"/>
+  <bean id="xyz-MapReaderFactory" class="org.mapfish.print.map.readers.XyzMapReader$Factory"/>
+  <bean id="tms-MapReaderFactory" class="org.mapfish.print.map.readers.TmsMapReader$Factory"/>
+  <bean id="vector-MapReaderFactory" class="org.mapfish.print.map.readers.VectorMapReader$Factory"/>
+  <bean id="image-MapReaderFactory" class="org.mapfish.print.map.readers.ImageMapReader$Factory"/>
+  <bean id="tiledGoogle-MapReaderFactory" class="org.mapfish.print.map.readers.google.GoogleMapTileReader$Factory"/>
+  <bean id="google-MapReaderFactory" class="org.mapfish.print.map.readers.google.GoogleMapReader$Factory"/>
+  <bean id="wmts-ReaderFactory" class="org.mapfish.print.map.readers.WMTSMapReader$Factory"/>
+
+  <!-- Define output factories -->
+  <bean id="outputFactory" class="org.mapfish.print.output.OutputFactory">
+    <property name="formatFactories">
+      <list>
+        <ref bean="fileCachingJaiMosaicOutputFactory" />
+        <ref bean="inMemoryJaiMosaicOutputFactory" />
+        <ref bean="pdfOutputFactory" />
+      </list>
+    </property>
+  </bean>
+  <bean id="fileCachingJaiMosaicOutputFactory" class="org.mapfish.print.output.FileCachingJaiMosaicOutputFactory"/>
+  <bean id="inMemoryJaiMosaicOutputFactory" class="org.mapfish.print.output.InMemoryJaiMosaicOutputFactory"/>
+  <bean id="pdfOutputFactory" class="org.mapfish.print.output.PdfOutputFactory"/>
+</beans>
