@@ -30,6 +30,8 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
+import jeeves.utils.JeevesSAXBuilder;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -53,7 +55,7 @@ public class Xml
 	public static Element loadString(String data, boolean validate)
 												throws IOException, JDOMException
 	{
-		SAXBuilder builder = new SAXBuilder(validate);
+		SAXBuilder builder = new JeevesSAXBuilder(validate);
 		builder.setFeature("http://apache.org/xml/features/allow-java-encodings", true);
 			
 		
@@ -67,7 +69,7 @@ public class Xml
 
 	public static Element loadStream(InputStream input) throws IOException, JDOMException
 	{
-		SAXBuilder builder = new SAXBuilder();
+		SAXBuilder builder = new JeevesSAXBuilder();
 		builder.setFeature("http://apache.org/xml/features/allow-java-encodings", true);
 		Document   jdoc    = builder.build(input);
 

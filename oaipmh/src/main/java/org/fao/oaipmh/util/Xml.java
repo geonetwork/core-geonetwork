@@ -59,7 +59,7 @@ public class Xml {
 
 	public static Element loadStream(InputStream input) throws IOException,
 			JDOMException {
-		SAXBuilder builder = new SAXBuilder();
+		SAXBuilder builder = new OAISAXBuilder(false);
 		Document jdoc = builder.build(input);
 
 		return (Element) jdoc.getRootElement().detach();

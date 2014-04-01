@@ -118,7 +118,8 @@ public final class Xml
 	}
 
     private static SAXBuilder getSAXBuilderWithoutXMLResolver(boolean validate) {
-        SAXBuilder builder = new SAXBuilder(validate);
+        SAXBuilder builder = new JeevesSAXBuilder(validate);
+        //SAXBuilder builder = new SAXBuilder(validate);
         builder.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         return builder;
     }
