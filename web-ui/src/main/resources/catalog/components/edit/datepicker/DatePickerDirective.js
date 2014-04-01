@@ -77,16 +77,18 @@
 
           // Build xml snippet based on input date.
           var buildDate = function() {
-            var tag = scope.tagName !== undefined ? scope.tagName : 'gco:Date';
+            var tag = scope.tagName !== undefined ?
+                scope.tagName : 'gco:Date';
             var namespace = tag.split(':')[0];
 
             if (scope.dateTypeSupported !== true) {
+
               if (scope.dateInput === undefined) {
                 return;
-              }
-              if (scope.tagName !== undefined) {
-                tag = scope.dateInput.indexOf('T') === -1 ?
-                    'gco:Date' : 'gco:DateTime';
+              } else {
+                tag = scope.tagName !== undefined ? scope.tagName :
+                    (scope.dateInput.indexOf('T') === -1 ?
+                    'gco:Date' : 'gco:DateTime');
               }
               scope.dateTime = scope.dateInput;
             } else if (scope.mode === 'year') {
@@ -94,7 +96,8 @@
             } else if (scope.mode === 'month') {
               scope.dateTime = scope.month;
             } else if (scope.time) {
-              tag = scope.tagName !== undefined ? scope.tagName : 'gco:DateTime';
+              tag = scope.tagName !== undefined ?
+                  scope.tagName : 'gco:DateTime';
               var time = scope.time;
               // TODO: Set seconds, Timezone ?
               scope.dateTime = scope.date;
