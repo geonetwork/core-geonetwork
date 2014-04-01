@@ -90,7 +90,7 @@
                * depending on scope.protocols options.
                */
               scope.linkService = function() {
-                var snippet = gnOnlinesrc.addFromGeoPublisher(scope.layerName,
+                var snippet = gnOnlinesrc.addFromGeoPublisher(scope.wmsLayerName,
                     gsNode, scope.protocols);
 
                 var snippetRef = gnEditor.buildXMLFieldName(
