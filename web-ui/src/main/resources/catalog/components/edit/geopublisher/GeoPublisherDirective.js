@@ -36,7 +36,7 @@
                   layers: [
                     gnMap.getLayersFromConfig()
                   ],
-                  renderer: ol.RendererHint.CANVAS,
+                  renderer: 'canvas',
                   view: new ol.View2D({
                     center: [0, 0],
                     projection: gnMap.getMapConfig().projection,

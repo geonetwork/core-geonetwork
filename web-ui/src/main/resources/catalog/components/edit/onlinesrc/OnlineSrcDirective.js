@@ -163,7 +163,7 @@
                   if (!scope.loaded) {
                     scope.map = new ol.Map({
                       layers: [],
-                      renderer: ol.RendererHint.CANVAS,
+                      renderer: 'canvas',
                       view: new ol.View2D({
                         center: [0, 0],
                         projection: gnMap.getMapConfig().projection,
@@ -192,7 +192,8 @@
                       source: new ol.source.TileWMS({
                         url: layer.url,
                         params: {
-                          'LAYERS': layer.name
+                          'LAYERS': layer.name,
+                          'URL': layer.url
                         }
                       })
                     }));
