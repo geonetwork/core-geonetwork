@@ -207,8 +207,10 @@
                showValidationErrors: getInputValue('showvalidationerrors'),
                uuid: getInputValue('uuid'),
                version: getInputValue('version'),
-               geoPublisherConfig: angular.fromJson(getInputValue('geoPublisherConfig')),
-               layerConfig: angular.fromJson(getInputValue('layerConfig')),
+               geoPublisherConfig:
+               angular.fromJson(getInputValue('geoPublisherConfig')),
+               layerConfig:
+               angular.fromJson(getInputValue('layerConfig')),
                saving: false
              });
 

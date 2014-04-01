@@ -213,7 +213,7 @@
               * Zoom to extent.
               */
              scope.onRegionSelect = function(region) {
-               scope.$apply(function () {
+               scope.$apply(function() {
                  scope.extent.md = [parseFloat(region.west),
                    parseFloat(region.south),
                    parseFloat(region.east),

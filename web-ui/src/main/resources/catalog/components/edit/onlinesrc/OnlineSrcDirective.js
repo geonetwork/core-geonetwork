@@ -79,20 +79,20 @@
                       scope.relations = data;
                     });
               };
-              scope.isCategoryEnable = function (category) {
+              scope.isCategoryEnable = function(category) {
                 var config = gnCurrentEdit.schemaConfig.related;
                 if (config.readonly === true) {
                   return false;
                 } else {
                   if (config.categories &&
-                    config.categories.length > 0 &&
-                    $.inArray(category, config.categories) === -1) {
+                      config.categories.length > 0 &&
+                      $.inArray(category, config.categories) === -1) {
                     return false;
                   } else {
                     return true;
                   }
                 }
-              }
+              };
 
               // Reload relations when a directive requires it
               scope.$watch('onlinesrcService.reload', function() {

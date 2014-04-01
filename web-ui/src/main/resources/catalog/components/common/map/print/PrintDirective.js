@@ -3,8 +3,8 @@
 
   // Source from https://github.com/geoadmin/mf-geoadmin3
   var module = angular.module('ga_print_directive',
-    [
-      'pascalprecht.translate']);
+      [
+       'pascalprecht.translate']);
 
   module.controller('GaPrintDirectiveController', [
     '$scope', '$http',
@@ -95,7 +95,7 @@
 
         var minx, miny, maxx, maxy;
         minx = printRectangle[0], miny = printRectangle[1],
-          maxx = printRectangle[2], maxy = printRectangle[3];
+        maxx = printRectangle[2], maxy = printRectangle[3];
 
         ctx.beginPath();
         // Outside polygon, must be clockwise
@@ -152,17 +152,17 @@
           var maxResolution = layerConfig.maxResolution || Infinity;
 
           if (resolution <= maxResolution &&
-            resolution >= minResolution) {
+              resolution >= minResolution) {
             if (src instanceof ol.source.WMTS) {
               encLayer = $scope.encoders.layers['WMTS'].call(this,
-                layer, layerConfig);
+                  layer, layerConfig);
             } else if (src instanceof ol.source.OSM) {
               encLayer = $scope.encoders.layers['OSM'].call(this,
-                layer, layerConfig);
+                  layer, layerConfig);
             } else if (src instanceof ol.source.ImageWMS ||
-              src instanceof ol.source.TileWMS) {
+                src instanceof ol.source.TileWMS) {
               encLayer = $scope.encoders.layers['WMS'].call(this,
-                layer, layerConfig);
+                  layer, layerConfig);
             } else if (layer instanceof ol.layer.Vector) {
               var features = [];
               src.forEachFeatureInExtent(ext, function(feat) {
@@ -171,7 +171,7 @@
 
               if (features && features.length > 0) {
                 encLayer =
-                  $scope.encoders.layers['Vector'].call(this,
+                    $scope.encoders.layers['Vector'].call(this,
                     layer, features);
               }
             }
@@ -180,14 +180,14 @@
 
         if ($scope.options.legend && layerConfig.hasLegend) {
           encLegend = $scope.encoders.legends['ga_urllegend'].call(this,
-            layer, layerConfig);
+              layer, layerConfig);
 
           if (encLegend.classes &&
-            encLegend.classes[0] &&
-            encLegend.classes[0].icon) {
+              encLegend.classes[0] &&
+              encLegend.classes[0].icon) {
             var legStr = encLegend.classes[0].icon;
             if (legStr.indexOf(pdfLegendString,
-              legStr.length - pdfLegendString.length) !== -1) {
+                legStr.length - pdfLegendString.length) !== -1) {
               pdfLegendsToDownload.push(legStr);
               encLegend = undefined;
             }
@@ -372,7 +372,7 @@
             subLayers.forEach(function(subLayer, idx, arr) {
               if (subLayer.visible) {
                 var enc = $scope.encoders.
-                  layers['Layer'].call(this, layer);
+                    layers['Layer'].call(this, layer);
                 var layerEnc = encodeLayer(subLayer, proj);
                 if (layerEnc && layerEnc.layer) {
                   $.extend(enc, layerEnc);
@@ -384,7 +384,7 @@
           },
           'Vector': function(layer, features) {
             var enc = $scope.encoders.
-              layers['Layer'].call(this, layer);
+                layers['Layer'].call(this, layer);
             var format = new ol.format.GeoJSON();
             var encStyles = {};
             var encFeatures = [];
@@ -396,8 +396,8 @@
                 id: styleId
               };
               var styles = (layer.getStyleFunction()) ?
-                layer.getStyleFunction()(feature) :
-                ol.feature.defaultStyleFunction(feature);
+                  layer.getStyleFunction()(feature) :
+                  ol.feature.defaultStyleFunction(feature);
 
 
               var geometry = feature.getGeometry();
@@ -442,18 +442,18 @@
           },
           'WMS': function(layer, config) {
             var enc = $scope.encoders.
-              layers['Layer'].call(this, layer);
+                layers['Layer'].call(this, layer);
             var params = layer.getSource().getParams();
             var layers = params.LAYERS.split(',') || [];
             var styles = (params.STYLES !== undefined) ?
-              params.STYLES.split(',') :
-              new Array(layers.length).join(',').split(',');
+                params.STYLES.split(',') :
+                new Array(layers.length).join(',').split(',');
 
             angular.extend(enc, {
               type: 'WMS',
               baseURL: config.wmsUrl ||
-                       layer.url ||
-                       layer.getSource().getParams().URL,
+                  layer.url ||
+                  layer.getSource().getParams().URL,
               layers: layers,
               styles: styles,
               format: 'image/' + (config.format || 'png'),
@@ -470,7 +470,7 @@
           },
           'OSM': function(layer, config) {
             var enc = $scope.encoders.
-              layers['Layer'].call(this, layer);
+                layers['Layer'].call(this, layer);
             angular.extend(enc, {
               type: 'OSM',
               baseURL: 'http://a.tile.openstreetmap.org/',
@@ -486,7 +486,7 @@
           },
           'WMTS': function(layer, config) {
             var enc = $scope.encoders.layers['Layer'].
-              call(this, layer);
+                call(this, layer);
             var source = layer.getSource();
             var tileGrid = source.getTileGrid();
             angular.extend(enc, {
@@ -520,7 +520,7 @@
             enc.classes.push({
               name: '',
               icon: $scope.options.legendUrl +
-                layer.bodId + '_' + $translate.uses() + format
+                  layer.bodId + '_' + $translate.uses() + format
             });
             return enc;
           },
@@ -537,7 +537,7 @@
         var nearest = null;
         angular.forEach(scales, function(scale) {
           if (nearest == null ||
-            Math.abs(scale - target) < Math.abs(nearest - target)) {
+              Math.abs(scale - target) < Math.abs(nearest - target)) {
             nearest = scale;
           }
         });
@@ -564,12 +564,12 @@
           if (layer.visible) {
             var attribution = layer.attribution;
             if (attribution !== undefined &&
-              attributions.indexOf(attribution) == -1) {
+                attributions.indexOf(attribution) == -1) {
               attributions.push(attribution);
             }
             if (layer instanceof ol.layer.Group) {
               var encs = $scope.encoders.layers['Group'].call(this,
-                layer, proj);
+                  layer, proj);
               encLayers = encLayers.concat(encs);
             } else {
               var enc = encodeLayer(layer, proj);
@@ -687,7 +687,7 @@
         //biggest (1:500) to smallest (1:2500000)
         angular.forEach($scope.scales, function(scale) {
           if (nextBiggest == null ||
-            testScale > scale.value) {
+              testScale > scale.value) {
             nextBiggest = scale;
           }
         });
@@ -725,16 +725,16 @@
     }]);
 
   module.directive('gaPrint',
-    ['gnCurrentEdit', function(gnCurrentEdit) {
-      return {
-        restrict: 'A',
-        templateUrl: '../../catalog/components/common/map/' +
-          'print/partials/print.html',
-        controller: 'GaPrintDirectiveController',
-        link: function(scope, elt, attrs, controller) {
-          scope.defaultLayout = attrs.layout;
-          scope.gnCurrentEdit = gnCurrentEdit;
-        }
-      };
-    }]);
+      ['gnCurrentEdit', function(gnCurrentEdit) {
+        return {
+          restrict: 'A',
+          templateUrl: '../../catalog/components/common/map/' +
+           'print/partials/print.html',
+          controller: 'GaPrintDirectiveController',
+          link: function(scope, elt, attrs, controller) {
+            scope.defaultLayout = attrs.layout;
+            scope.gnCurrentEdit = gnCurrentEdit;
+          }
+        };
+      }]);
 })();

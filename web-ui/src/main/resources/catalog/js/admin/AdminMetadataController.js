@@ -5,7 +5,7 @@
   goog.require('gn_schematronadmin_controller');
 
   var module = angular.module('gn_adminmetadata_controller',
-    ['gn_schematronadmin_controller']);
+      ['gn_schematronadmin_controller']);
 
 
   /**
@@ -335,7 +335,7 @@
       } else if ($routeParams.tab === 'formatter') {
         loadFormatter();
       } else if ($routeParams.schemaName || $routeParams.tab === 'schematron') {
-          $routeParams.tab = 'schematron';
+        $routeParams.tab = 'schematron';
       } else {
         loadSchemas();
       }
