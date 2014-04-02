@@ -23,7 +23,8 @@
           elementName: '@',
           elementRef: '@',
           id: '@',
-          tagName: '@'
+          tagName: '@',
+          indeterminatePosition: '@'
         },
         templateUrl: '../../catalog/components/edit/datepicker/partials/' +
             'datepicker.html',
@@ -47,6 +48,8 @@
 
           scope.mode = scope.year = scope.month = scope.time =
               scope.date = scope.dateDropDownInput = '';
+          scope.withIndeterminatePosition =
+              attrs.indeterminatePosition !== undefined;
 
           // Default date is empty
           // Compute mode based on date length. The format
@@ -74,6 +77,19 @@
             scope.mode = mode;
           };
 
+          var resetDateIfNeeded = function() {
+            // Reset date if indeterminate position is now
+            // or unknows.
+            if (scope.withIndeterminatePosition &&
+                (scope.indeterminatePosition === 'now' ||
+                scope.indeterminatePosition === 'unknown')) {
+              scope.dateInput = '';
+              scope.date = '';
+              scope.year = '';
+              scope.month = '';
+              scope.time = '';
+            }
+          };
 
           // Build xml snippet based on input date.
           var buildDate = function() {
@@ -113,9 +129,15 @@
             if (tag === '') {
               scope.xmlSnippet = scope.dateTime;
             } else {
+              var attribute = '';
+              if (scope.withIndeterminatePosition &&
+                  scope.indeterminatePosition !== '') {
+                attribute = ' indeterminatePosition="' +
+                    scope.indeterminatePosition + '"';
+              }
               scope.xmlSnippet = '<' + tag +
                   ' xmlns:' + namespace + '="' + namespaces[namespace] + '"' +
-                  '>' +
+                  attribute + '>' +
                   scope.dateTime + '</' + tag + '>';
             }
           };
@@ -125,6 +147,8 @@
           scope.$watch('year', buildDate);
           scope.$watch('month', buildDate);
           scope.$watch('dateInput', buildDate);
+          scope.$watch('indeterminatePosition', buildDate);
+          scope.$watch('indeterminatePosition', resetDateIfNeeded);
           scope.$watch('xmlSnippet', function() {
             if (scope.id) {
               $(scope.id).val(scope.xmlSnippet);
