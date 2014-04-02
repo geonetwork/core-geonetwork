@@ -69,8 +69,6 @@
   <organisationName>Organisation name</organisationName>
   <electronicMailAddress>Email</electronicMailAddress>
   <role>Role</role>
-  <pointOfContactName>Point of contact name</pointOfContactName>
-  <pointOfContactEmail>Point of contact email</pointOfContactEmail>
   <encoding>Encoding</encoding>
   <format>Format</format>
   <format_version>Version</format_version>

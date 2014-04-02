@@ -96,7 +96,10 @@
                     function(data) {
                       if (data !== 'null') {
                         scope.infos = [];
-                        angular.forEach(data[0].helper, function(h) {
+                        // Helper element may be embbeded in an option
+                        // property when attributes are defined
+                        angular.forEach(data[0].helper.option || data[0].helper,
+                          function(h) {
                           scope.infos.push({
                             code: h['@value'],
                             label: h['#text'],

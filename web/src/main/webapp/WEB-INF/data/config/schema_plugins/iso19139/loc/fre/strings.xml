@@ -63,8 +63,6 @@
   <organisationName>Nom de l'organisation</organisationName>
   <electronicMailAddress>Email de l'organisation</electronicMailAddress>
   <role>Rôle</role>
-  <pointOfContactName>Nom du point de contact</pointOfContactName>
-  <pointOfContactEmail>Email du point de contact</pointOfContactEmail>
   <encoding>Encodage</encoding>
   <serviceCategory>Catégorie de service</serviceCategory>
   <format>Format</format>
