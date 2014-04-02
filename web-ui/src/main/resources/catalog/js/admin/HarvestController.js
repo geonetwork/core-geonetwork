@@ -72,7 +72,9 @@
                 $.getScript('../../catalog/templates/admin/harvest/type/' +
                     value + '.js')
                 .done(function(script, textStatus) {
-                      $scope.harvesterTypes[value].loaded = true;
+                      $scope.$apply(function() {
+                        $scope.harvesterTypes[value].loaded = true;
+                      });
                       // FIXME: could we make those harvester specific
                       // function a controller
                     })
