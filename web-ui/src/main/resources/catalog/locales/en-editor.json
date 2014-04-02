@@ -10,6 +10,8 @@
     "suggestions": "Suggestions",
     "validationReport": "Validation",
     "drawRectangle": "Draw rectangle",
+    "chooseAProj": "Select the projection to use to display coordinates (note: coordinates are always saved in the metadata record in WGS84).",
+    "clickToDrawABox": "Click once to enable control and draw a box. Click again to stop drawing.",
     "chooseRegion": "Choose a region",
     "recommendedValues": "Recommended values",
     "toggleAttributes": "More details",

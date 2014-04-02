@@ -8,6 +8,8 @@
     "suggestions": "Suggestions",
     "validationReport": "Validation",
     "drawRectangle": "Dessiner une emprise",
+    "chooseAProj": "Sélectionner la projection à utiliser pour l'affichage des coordonnées (note : les coordonnées sont toujours sauvegardées en WGS84 dans la fiche).",
+    "clickToDrawABox": "Cliquer une fois pour activer le bouton et dessiner l'emprise. Recliquer pour arrêter de dessiner.",
     "chooseRegion": "Choisir un territoire",
     "recommendedValues": "Valeurs recommandées",
     "toggleAttributes": "Plus de détails",
