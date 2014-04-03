@@ -3,6 +3,8 @@ package org.fao.geonet.repository;
 import com.google.common.base.Optional;
 import org.fao.geonet.domain.*;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -70,6 +72,7 @@ public class OperationAllowedRepositoryImpl implements OperationAllowedRepositor
         return _entityManager.createQuery(query).getResultList();
     }
 
+    @Transactional
     @Override
     public int deleteAllByMetadataIdExceptGroupId(int metadataId, int groupId) {
         final String opAllowedEntityName = OperationAllowed.class.getSimpleName();
@@ -85,6 +88,7 @@ public class OperationAllowedRepositoryImpl implements OperationAllowedRepositor
 
     }
 
+    @Transactional
     @Override
     public int deleteAllByIdAttribute(SingularAttribute<OperationAllowedId, Integer> idAttribute, int id) {
         final String opAllowedEntityName = OperationAllowed.class.getSimpleName();
