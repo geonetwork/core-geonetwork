@@ -129,16 +129,20 @@
             if (tag === '') {
               scope.xmlSnippet = scope.dateTime;
             } else {
-              var attribute = '';
-              if (scope.withIndeterminatePosition &&
-                  scope.indeterminatePosition !== '') {
-                attribute = ' indeterminatePosition="' +
-                    scope.indeterminatePosition + '"';
+              if (scope.dateTime != '') {
+                var attribute = '';
+                if (scope.withIndeterminatePosition &&
+                    scope.indeterminatePosition !== '') {
+                  attribute = ' indeterminatePosition="' +
+                      scope.indeterminatePosition + '"';
+                }
+                scope.xmlSnippet = '<' + tag +
+                    ' xmlns:' + namespace + '="' + namespaces[namespace] + '"' +
+                    attribute + '>' +
+                    scope.dateTime + '</' + tag + '>';
+              } else {
+                scope.xmlSnippet = '';
               }
-              scope.xmlSnippet = '<' + tag +
-                  ' xmlns:' + namespace + '="' + namespaces[namespace] + '"' +
-                  attribute + '>' +
-                  scope.dateTime + '</' + tag + '>';
             }
           };
 
