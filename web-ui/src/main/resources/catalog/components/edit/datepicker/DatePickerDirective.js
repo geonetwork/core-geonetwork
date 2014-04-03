@@ -129,7 +129,7 @@
             if (tag === '') {
               scope.xmlSnippet = scope.dateTime;
             } else {
-              if (scope.dateTime != '') {
+              if (scope.dateTime != '' || scope.indeterminatePosition != '') {
                 var attribute = '';
                 if (scope.withIndeterminatePosition &&
                     scope.indeterminatePosition !== '') {
