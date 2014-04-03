@@ -12,6 +12,23 @@ input[type=text], input[type=number], select {
   .form-control;
 }
 
+/* Cancel the rule above for tagsinput and typeahead */
+.bootstrap-tagsinput input,
+.bootstrap-tagsinput input:focus {
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  width: auto !important;
+  max-width: inherit;
+}
+span.twitter-typeahead {
+  display: inline-block !important;
+}
+
+
+
 .gn-drawmap-panel {
   table .form-group {
     width: 150px;
