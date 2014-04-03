@@ -20,7 +20,7 @@
   <!-- Get the list of other languages -->
   <xsl:template name="get-dublin-core-other-languages"/>
 
-  <xsl:template name="get-dublin-core-geopublisher-config"/>
+  <xsl:template name="get-dublin-core-online-source-config"/>
 
   <!-- Visit all tree -->
   <xsl:template mode="mode-dublin-core" match="dc:*|dct:*">
@@ -94,6 +94,7 @@
   <!-- the other elements in DC. -->
   <xsl:template mode="mode-dublin-core" priority="100" match="dc:*|dct:*">
     <xsl:variable name="name" select="name(.)"/>
+    <xsl:variable name="ref" select="gn:element/@ref"/>
     <xsl:variable name="labelConfig" select="gn-fn-metadata:getLabel($schema, $name, $labels)"/>
     <xsl:variable name="helper" select="gn-fn-metadata:getHelper($labelConfig/helper, .)"/>
 
@@ -111,6 +112,9 @@
       <xsl:with-param name="name" select="if ($isEditing) then gn:element/@ref else ''"/>
       <xsl:with-param name="editInfo" select="gn:element"/>
       <xsl:with-param name="listOfValues" select="$helper"/>
+      <xsl:with-param name="isFirst"
+                      select="(gn:element/@down = 'true' and not(gn:element/@up)) or
+                      (not(gn:element/@down) and not(gn:element/@up))"/>
     </xsl:call-template>
 
     <!-- Add a control to add this type of element
@@ -133,6 +137,7 @@
       <xsl:call-template name="render-element-to-add">
         <xsl:with-param name="childEditInfo" select="$newElementConfig/gn:child"/>
         <xsl:with-param name="parentEditInfo" select="$dcConfig/parent::node()/gn:element"/>
+        <xsl:with-param name="isFirst" select="false()"/>
       </xsl:call-template>
     </xsl:if>
   </xsl:template>

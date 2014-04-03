@@ -75,11 +75,17 @@
     <xsl:param name="base" as="node()"/>
 
     <xsl:if test="@xpath">
-      <!-- Match any nodes in the metadata with the XPath -->
-      <!--<xsl:variable name="nodes" select="saxon:evaluate(concat('$p1/..', @xpath), $base)"/>
-      does not work here because namespace of the context (ie. this XSL) are used
-      to resolve the xpath. It needs to be in a profile specific XSL which declare profile
-      namespaces that's why each schema should define its evaluate-<schemaid> template. -->
+      <!-- Seach any nodes in the metadata matching the XPath.
+
+      We could have called saxon-evaluate from here like:
+      <xsl:variable name="nodes"
+        select="saxon:evaluate(concat('$p1/..', @xpath), $base)"/>
+      but this does not work here because namespace of the context
+      (ie. this XSLT) are used to resolve the xpath.
+      It needs to be in a profile specific XSL which declare all
+      profile's namespaces used in XPath expression.
+
+      That's why each schema should define its evaluate-<schemaid> template. -->
       <xsl:variable name="nodes">
         <saxon:call-template name="{concat('evaluate-', $schema)}">
           <xsl:with-param name="base" select="$base"/>
@@ -101,9 +107,9 @@
 
 
 
-      <!-- Check if this field is controlled by a condition (eg. display that field for 
-                service metadata record only).
-                If @if expression return false, the field is not displayed. -->
+      <!-- Check if this field is controlled by a condition
+          (eg. display that field for service metadata record only).
+          If @if expression return false, the field is not displayed. -->
       <xsl:variable name="isDisplayed">
         <xsl:choose>
           <xsl:when test="@if">
@@ -260,8 +266,30 @@
                     </saxon:call-template>
                   </xsl:variable>
                   <value><xsl:value-of select="normalize-space($matchingNodeValue)"/></value>
-                  
-                  
+
+                  <!--
+                  Directive attribute are usually string but could be an XPath
+                  to evaluate. In that case, the attribute starts with eval#.
+
+                  This could be useful when a directive takes care of setting
+                  more than one value for an element. Eg. a date and an attribute
+                  like indeterminate position.
+
+                  <directiveAttributes
+                      data-tag-name="gml:endPosition"
+                      data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/>
+                  -->
+                  <xsl:for-each select="directiveAttributes/attribute::*">
+                    <xsl:if test="starts-with(., 'eval#')">
+                      <directiveAttributes name="{name()}">
+                        <saxon:call-template name="{concat('evaluate-', $schema)}">
+                          <xsl:with-param name="base" select="$currentNode"/>
+                          <xsl:with-param name="in" select="concat('/', substring-after(., 'eval#'))"/>
+                        </saxon:call-template>
+                      </directiveAttributes>
+                    </xsl:if>
+                  </xsl:for-each>
+
                   <!-- If an helper element defined the path to an helper list to 
                   get from the loc files -->
                   <xsl:if test="helper">
@@ -330,6 +358,7 @@
               <xsl:with-param name="template" select="$templateCombinedWithNode"/>
               <xsl:with-param name="keyValues" select="$keyValues"/>
               <xsl:with-param name="refToDelete" select="if ($refToDelete) then $refToDelete/gn:element else ''"/>
+              <xsl:with-param name="isFirst" select="position() = 1"/>
             </xsl:call-template>
           </xsl:for-each>
           
@@ -373,6 +402,16 @@
       </xsl:if>
     </xsl:variable>
 
+    <xsl:variable name="elementOfSameKind">
+      <xsl:if test="@or and @in">
+        <saxon:call-template name="{concat('evaluate-', $schema)}">
+          <xsl:with-param name="base" select="$base"/>
+          <xsl:with-param name="in"
+                          select="concat('/../', @in,
+                            '/*[local-name() = ''', @or, ''']')"/>
+        </saxon:call-template>
+      </xsl:if>
+    </xsl:variable>
 
     <!-- Check if this field is controlled by a condition (eg. display that field for
               service metadata record only).
@@ -408,6 +447,8 @@
         <xsl:with-param name="addDirective" select="@addDirective"/>
         <xsl:with-param name="parentRef" select="$nonExistingChildParent/*[position() = last()]/gn:element/@ref"/>
         <xsl:with-param name="qname" select="concat($nonExistingChildParent/*[position() = last()]/gn:child[@name = $childName]/@prefix, ':', @or)"/>
+        <xsl:with-param name="isFirst" select="@forceLabel or count($elementOfSameKind/*) = 0"/>
+        <xsl:with-param name="isAddAction" select="true()"/>
       </xsl:call-template>
     </xsl:if>
     

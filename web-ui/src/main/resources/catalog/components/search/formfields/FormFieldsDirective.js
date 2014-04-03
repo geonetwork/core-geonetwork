@@ -99,14 +99,15 @@
                         // Helper element may be embbeded in an option
                         // property when attributes are defined
                         angular.forEach(data[0].helper.option || data[0].helper,
-                          function(h) {
-                          scope.infos.push({
-                            code: h['@value'],
-                            label: h['#text'],
-                            description: h['@title'] || '',
-                            'default': h['@default'] == '' ? 'true' : 'false'
-                          });
-                        });
+                            function(h) {
+                              scope.infos.push({
+                                code: h['@value'],
+                                label: h['#text'],
+                                description: h['@title'] || '',
+                                'default': h['@default'] == '' ?
+                                    'true' : 'false'
+                              });
+                            });
                       } else {
                         scope.infos = null;
                       }

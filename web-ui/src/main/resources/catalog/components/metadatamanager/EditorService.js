@@ -38,10 +38,10 @@
            return !isSameKindOfElement(element, $(element).next().get(0));
          };
          /**
-          * Compare the element label key with the previous element label key
+          * Compare the element input key with the previous element input key
           * Return true if the element it the first element of its kind.
           *
-          * Label key is composed of schema, element name and optionally xpath.
+          * input key is composed of schema, element name and optionally xpath.
           *
           * Example:
           * iso19139|gmd:voice|gmd:CI_Telephone|/gmd:MD_Metadata/gmd:contact
@@ -50,12 +50,12 @@
           *
           */
          var isSameKindOfElement = function(element, target) {
-           var elementLabel = $(element).children('label').get(0);
+           var elementLabel = $(element).find('input,textarea').get(0);
            var elementKey = $(elementLabel).attr('data-gn-field-tooltip');
            if (target === undefined || target.length === 0) {
              return false;
            } else {
-             var childrenLabel = $(target).children('label').get(0);
+             var childrenLabel = $(target).find('input,textarea').get(0);
              if (childrenLabel) {
                var targetKey = $(childrenLabel).attr('data-gn-field-tooltip');
                return targetKey === elementKey;
@@ -273,6 +273,13 @@
                if (attribute) {
                  target.replaceWith(snippet);
                } else {
+                 // If the element was a add button
+                 // without any existing element, the
+                 // gn-extra-field indicating a not first field
+                 // was not set. After add, set the css class.
+                 if (target.hasClass('gn-add-field')) {
+                   target.addClass('gn-extra-field');
+                 }
                  snippet.css('display', 'none');   // Hide
                  target[position || 'after'](snippet); // Insert
                  snippet.slideDown(duration, function() {});   // Slide
@@ -338,6 +345,10 @@
                    var elementCtrl = $(next).find('div.gn-move').get(0);
                    var ctrl = $(elementCtrl).children();
                    $(ctrl.get(0)).addClass('invisible');
+
+                   if ($(next).hasClass('gn-extra-field')) {
+                     $(next).removeClass('gn-extra-field');
+                   }
                  } else {
                    // If middle element with up and down
                    // do nothing
@@ -350,6 +361,11 @@
                      var elementCtrl = $(prev).find('div.gn-move').get(0);
                      var ctrl = $(elementCtrl).children();
                      $(ctrl.get(1)).addClass('invisible');
+
+                     var next = $(element).next();
+                     if (next.hasClass('gn-add-field')) {
+                       next.removeClass('gn-extra-field');
+                     }
                    }
                  }
                };
@@ -403,6 +419,11 @@
                  $(ctrl).toggleClass('invisible', ctrl2Hidden);
                  $(ctrl2).toggleClass('invisible', ctrlHidden);
                });
+
+               var hasClass = currentElement.hasClass('gn-extra-field');
+               var hasClass2 = switchWithElement.hasClass('gn-extra-field');
+               currentElement.toggleClass('gn-extra-field', hasClass2);
+               switchWithElement.toggleClass('gn-extra-field', hasClass);
              };
 
              $http.get(this.buildEditUrlPrefix('md.element.' + direction) +

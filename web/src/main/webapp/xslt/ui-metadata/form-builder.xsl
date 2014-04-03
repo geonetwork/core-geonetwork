@@ -66,6 +66,10 @@
     <!-- Define if the language fields should be displayed 
     with the selector or below each other. -->
     <xsl:param name="toggleLang" required="no" as="xs:boolean" select="false()"/>
+    <!-- A gn-extra-field class is added to non first element.
+    This class could be used to customize style of first or following
+    element of same kind. eg. do not display label. -->
+    <xsl:param name="isFirst" required="no" as="xs:boolean" select="true()"/>
 
 
     <xsl:variable name="isMultilingual" select="count($value/values) > 0"/>
@@ -111,10 +115,11 @@
         </div>
       </xsl:when>
       <xsl:otherwise>
-        <div class="form-group {if ($isRequired) then 'gn-required' else ''}" id="gn-el-{$editInfo/@ref}">
-          <label for="gn-field-{$editInfo/@ref}"
-            class="col-sm-2 control-label" 
-            >
+        <div class="form-group gn-field {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field'}"
+            id="gn-el-{$editInfo/@ref}">
+          <label
+              for="gn-field-{$editInfo/@ref}"
+              class="col-sm-2 control-label">
             <xsl:value-of select="$label"/>
           </label>
 
@@ -304,7 +309,9 @@
     <!-- Label to display if element is missing. The field
     is initialized with a default template. -->
     <xsl:param name="isMissingLabel" required="no"/>
-    
+    <xsl:param name="isFirst" required="no" as="xs:boolean" select="true()"/>
+    <xsl:param name="isAddAction" required="no" as="xs:boolean" select="false()"/>
+
     <xsl:variable name="tagId" select="generate-id()"/>
 
     <!--<xsl:message>!render-element-template-field <xsl:copy-of select="$keyValues"/>
@@ -314,12 +321,20 @@
       <xsl:value-of select="$isExisting"/>/
       <xsl:value-of select="$id"/>
     </xsl:message>-->
-    <div class="form-group" id="gn-el-{if ($refToDelete) then $refToDelete/@ref else generate-id()}">
-      <label class="col-sm-2 control-label">
+    <div class="form-group gn-field {if ($isFirst) then '' else 'gn-extra-field'} {if ($isAddAction) then 'gn-add-field' else ''}"
+         id="gn-el-{if ($refToDelete) then $refToDelete/@ref else generate-id()}">
+
+    <label class="col-sm-2 control-label">
         <!-- TODO: set tooltip -->
         <xsl:value-of select="$name"/>
       </label>
       <div class="col-sm-9">
+        <!-- Create an empty input to contain the data-gn-field-tooltip
+        key which is used to display tooltips and check if an element
+        is the first element of its kind in the form. The key for a template
+        field is {schemaIdentifier}|{firstTemplateFieldKey} -->
+        <input type="hidden"
+               data-gn-field-tooltip="{$schema}|{$template/values/key[position() = 1]/@label}"/>
 
         <!-- Create a title indicating that the element is missing in the current
         record. A checkbox display the template field to be populated. -->
@@ -373,7 +388,7 @@
 
                 <!-- Only display label if more than one key to match -->
                 <xsl:if test="count($template/values/key) > 1">
-                  <label>
+                  <label for="{$id}_{@label}">
                     <xsl:value-of select="$strings/*[name() = $valueLabelKey]"/>
                   </label>
                 </xsl:if>
@@ -416,9 +431,25 @@
                            type="hidden"
                            value=""
                            id="{$id}_{@label}"/>
+
                     <div data-gn-date-picker="{if ($keyValues) then $keyValues/field[@name = $valueLabelKey]/value else ''}"
                          data-id="#{$id}_{@label}">
-                      <xsl:copy-of select="directiveAttributes/@*"/>
+                      <xsl:for-each select="directiveAttributes/attribute::*">
+                        <xsl:variable name="directiveAttributeName" select="name()"/>
+
+                        <xsl:attribute name="{$directiveAttributeName}">
+                          <xsl:choose>
+                            <xsl:when test="count($keyValues/field[@name = $valueLabelKey]/
+                              directiveAttributes[@name = $directiveAttributeName]) > 0">
+                              <xsl:value-of select="$keyValues/field[@name = $valueLabelKey]/
+                              directiveAttributes[@name = $directiveAttributeName]/text()"/>
+                              </xsl:when>
+                            <xsl:otherwise>
+                              <xsl:value-of select="."/>
+                            </xsl:otherwise>
+                          </xsl:choose>
+                        </xsl:attribute>
+                      </xsl:for-each>
                     </div>
                   </xsl:when>
                   <xsl:otherwise>
@@ -511,13 +542,15 @@
     <xsl:param name="parentEditInfo"/>
     <!-- Hide add element if child of an XLink section. -->
     <xsl:param name="isDisabled" select="ancestor::node()[@xlink:href]"/>
+    <xsl:param name="isFirst" required="no" as="xs:boolean" select="true()"/>
 
     <xsl:if test="not($isDisabled)">
       <xsl:variable name="id" select="generate-id()"/>
       <xsl:variable name="qualifiedName" select="concat($childEditInfo/@prefix, ':', $childEditInfo/@name)"/>
   
       <!-- This element is replaced by the content received when clicking add -->
-      <div class="form-group" id="gn-el-{$id}">
+      <div class="form-group gn-field {if ($isFirst) then '' else 'gn-extra-field'} gn-add-field"
+           id="gn-el-{$id}">
         <label class="col-sm-2 control-label"
           data-gn-field-tooltip="{$schema}|{$qualifiedName}|{name(..)}|">
           <xsl:if test="normalize-space($label) != ''">
@@ -973,7 +1006,7 @@
     <xsl:param name="process-params"/>
     <!-- TODO: Could be relevant to only apply process to the current thesaurus -->
     
-    <div class="row">
+    <div class="row form-group gn-field gn-extra-field">
       <div class="col-xs-10 col-xs-offset-2">
         <span data-gn-batch-process-button="{$process-name}"
           data-params="{$process-params}"
