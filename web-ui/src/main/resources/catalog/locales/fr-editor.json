@@ -35,7 +35,7 @@
     "share": "Partager",
     "share-help": "Définir qui peut consulter cette fiche",
     "beforeUnloadEditor": "Vous pourriez avoir des modifications non sauvées depuis la dernière sauvegarde {{timeAgo}}.",
-    "closeEditor": "Sauver & fermer",
+    "closeEditor": "Enregistrer & fermer",
     "validate": "Valider",
     "validate-help": "Vérifier la conformité de cette fiche vis à vis des règles du standard",
     "notFoundInThesaurus": "<strong>Attention ! Les mots clés {{keywords}} n'ont pas été trouvés dans le thésaurus.</strong> Cela peut se produire lorsque les mots clés sont dans une langue qui n'est pas celle de l'interface. L'édition de mots clés multilingues n'est pas encore supportée. <strong>Ces mots clés sont cependant conservés dans la fiche</strong> sauf si vous supprimez cette section.",
