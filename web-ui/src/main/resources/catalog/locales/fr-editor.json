@@ -40,6 +40,7 @@
     "validate-help": "Vérifier la conformité de cette fiche vis à vis des règles du standard",
     "notFoundInThesaurus": "<strong>Attention ! Les mots clés {{keywords}} n'ont pas été trouvés dans le thésaurus.</strong> Cela peut se produire lorsque les mots clés sont dans une langue qui n'est pas celle de l'interface. L'édition de mots clés multilingues n'est pas encore supportée. <strong>Ces mots clés sont cependant conservés dans la fiche</strong> sauf si vous supprimez cette section.",
     "keywordInsertMode": "Insérer les mots clés comme",
+    "resetKeywordsAnyway": "Supprimer ces mots clés",
     "to-iso19139-keyword-with-anchor": "ancre",
     "to-iso19139-keyword-with-anchor-help": "Useful for having an hyperlink on the keyword which usually is the keyword identifier. A gmx:Anchor element is used for each keywords.",
     "to-iso19139-keyword-as-xlink": "lien",
