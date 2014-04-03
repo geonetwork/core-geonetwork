@@ -107,9 +107,7 @@
 
              var bboxLayer = new ol.layer.Vector({
                source: source,
-               styleFunction: function(feature, resolution) {
-                 return [boxStyle];
-               }
+               style: boxStyle
              });
 
              var map = new ol.Map({
@@ -117,7 +115,7 @@
                  gnMap.getLayersFromConfig(),
                  bboxLayer
                ],
-               renderer: ol.RendererHint.CANVAS,
+               renderer: 'canvas',
                view: new ol.View2D({
                  center: [0, 0],
                  projection: scope.projs.map,
@@ -215,16 +213,18 @@
               * Zoom to extent.
               */
              scope.onRegionSelect = function(region) {
-               scope.extent.md = [parseFloat(region.west),
-                 parseFloat(region.south),
-                 parseFloat(region.east),
-                 parseFloat(region.north)];
+               scope.$apply(function() {
+                 scope.extent.md = [parseFloat(region.west),
+                   parseFloat(region.south),
+                   parseFloat(region.east),
+                   parseFloat(region.north)];
 
-               reprojExtent('md', 'map');
-               reprojExtent('md', 'form');
-               setDcOutput();
-               drawBbox();
-               map.getView().fitExtent(scope.extent.map, map.getSize());
+                 reprojExtent('md', 'map');
+                 reprojExtent('md', 'form');
+                 setDcOutput();
+                 drawBbox();
+                 map.getView().fitExtent(scope.extent.map, map.getSize());
+               });
              };
            }
          };

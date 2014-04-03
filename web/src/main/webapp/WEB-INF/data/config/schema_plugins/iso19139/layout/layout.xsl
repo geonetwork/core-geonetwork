@@ -24,13 +24,13 @@
   <xsl:template mode="mode-iso19139" match="gn:child" priority="2000">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
-
     <!-- TODO: this should be common to all schemas -->
     <xsl:if test="$isEditing and 
       not($isFlatMode)">
       
       <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
       <xsl:variable name="directive" select="gn-fn-metadata:getFieldAddDirective($editorConfig, $name)"/>
+      <xsl:message>#<xsl:value-of select="$name"/>: <xsl:value-of select="count(preceding-sibling::*[name() = $name])"/> </xsl:message>
 
       <xsl:call-template name="render-element-to-add">
         <!-- TODO: add xpath and isoType to get label ? -->
@@ -39,6 +39,7 @@
         <xsl:with-param name="directive" select="if($directive != 'text') then $directive else ''"/>
         <xsl:with-param name="childEditInfo" select="."/>
         <xsl:with-param name="parentEditInfo" select="../gn:element"/>
+        <xsl:with-param name="isFirst" select="count(preceding-sibling::*[name() = $name]) = 0"/>
       </xsl:call-template>
     </xsl:if>
   </xsl:template>
@@ -228,6 +229,7 @@
       <xsl:with-param name="listOfValues" select="$helper"/>
       <xsl:with-param name="toggleLang" select="$isMultilingualElementExpanded"/>
       <xsl:with-param name="forceDisplayAttributes" select="$forceDisplayAttributes"/>
+      <xsl:with-param name="isFirst" select="count(preceding-sibling::*[name() = $elementName]) = 0"/>
     </xsl:call-template>
 
 
@@ -267,9 +269,8 @@
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
+    <xsl:variable name="elementName" select="name()"/>
 
-
-    
     <xsl:call-template name="render-element">
       <xsl:with-param name="label"
         select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
@@ -283,6 +284,7 @@
       <xsl:with-param name="parentEditInfo" select="gn:element"/>
       <xsl:with-param name="listOfValues"
         select="gn-fn-metadata:getCodeListValues($schema, name(*[@codeListValue]), $codelists, .)"/>
+      <xsl:with-param name="isFirst" select="count(preceding-sibling::*[name() = $elementName]) = 0"/>
     </xsl:call-template>
 
   </xsl:template>

@@ -25,6 +25,13 @@
            $cacheFactory) {
          /**
           * Cache field info and codelist info
+          *
+          * TODO: Maybe we could improve caching ?
+          * On page load, many codelist are retrieved
+          * and the first one is not returned before
+          * others are requested and as such are not
+          * yet populated in the cache. Not sure how
+          * this could be improved ?
           */
          var infoCache = $cacheFactory('infoCache');
 

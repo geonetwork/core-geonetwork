@@ -36,7 +36,7 @@
                   layers: [
                     gnMap.getLayersFromConfig()
                   ],
-                  renderer: ol.RendererHint.CANVAS,
+                  renderer: 'canvas',
                   view: new ol.View2D({
                     center: [0, 0],
                     projection: gnMap.getMapConfig().projection,
@@ -90,7 +90,8 @@
                * depending on scope.protocols options.
                */
               scope.linkService = function() {
-                var snippet = gnOnlinesrc.addFromGeoPublisher(scope.layerName,
+                var snippet =
+                    gnOnlinesrc.addFromGeoPublisher(scope.wmsLayerName,
                     gsNode, scope.protocols);
 
                 var snippetRef = gnEditor.buildXMLFieldName(
@@ -187,7 +188,7 @@
                * a layer configuration if published.
                */
               scope.checkNode = function(nodeId) {
-                var p = gnGeoPublisher.checkNode(nodeId, scope.fileName);
+                var p = gnGeoPublisher.checkNode(nodeId, scope.name);
                 if (p) {
                   p.success(function(data) {
                     readResponse(data, 'check');
@@ -200,7 +201,7 @@
                */
               scope.publish = function(nodeId) {
                 var p = gnGeoPublisher.publishNode(nodeId,
-                    scope.fileName,
+                    scope.name,
                     scope.resource.title,
                     scope.resource['abstract']);
                 if (p) {
@@ -214,7 +215,7 @@
                * Unpublish the layer on the gsNode
                */
               scope.unpublish = function(nodeId) {
-                var p = gnGeoPublisher.unpublishNode(nodeId, scope.fileName);
+                var p = gnGeoPublisher.unpublishNode(nodeId, scope.name);
                 if (p) {
                   p.success(readResponse);
                 }
@@ -234,7 +235,7 @@
                 // FIXME: only one publisher in a page ?
                 scope.ref = r.ref;
                 scope.refParent = r.refParent;
-                scope.fileName = r.fileName;
+                scope.name = r.name;
                 scope.resource = r;
 
                 if (!scope.loaded) {
@@ -243,7 +244,7 @@
                 }
 
                 // Build layer name based on file name
-                scope.layerName = r.fileName
+                scope.layerName = r.name
                   .replace(/.zip$|.tif$|.tiff$/, '');
                 scope.wmsLayerName = scope.layerName;
                 if (scope.layerName.match('^jdbc')) {

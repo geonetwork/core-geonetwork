@@ -5,7 +5,16 @@
     <input type="hidden" class="form-control"
            name="{{elementRef}}" value="{{xmlSnippet}}"/>
 
+
     <div class="input-group gn-date-picker" data-ng-show="dateTypeSupported === true">
+      <div class="input-group gn-indeterminate-position"
+          data-ng-show="withIndeterminatePosition"
+          data-schema-info-combo="codelist"
+          data-selected-info="indeterminatePosition"
+          data-gn-schema-info="indeterminatePosition"
+          data-allow-blank=""
+          lang="lang"></div>
+
       <input type="number" class="form-control"
              data-ng-model="year"
              data-ng-show="mode === 'year'"/>
@@ -34,6 +43,13 @@
       </div>
     </div>
     <div class="input-group gn-date-picker" data-ng-show="dateTypeSupported !== true">
+      <div class="input-group gn-indeterminate-position"
+           data-ng-show="withIndeterminatePosition"
+           data-schema-info-combo="codelist"
+           data-selected-info="indeterminatePosition"
+           data-gn-schema-info="indeterminatePosition"
+           data-allow-blank=""
+           lang="lang"></div>
       <input type="text"
         class="form-control"
         data-ng-model="dateInput">

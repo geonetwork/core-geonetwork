@@ -183,7 +183,7 @@
   module.directive('gnAutogrow', function() {
     // add helper for measurement to body
     var testObj = angular.element('<textarea ' +
-      ' style="height: 0px; position: absolute; "/>');
+        ' style="height: 0px; position: absolute; "/>');
     angular.element(window.document.body).append(testObj);
 
     return {
@@ -199,8 +199,8 @@
           // on load).
           var height,
               width = element.is(':hidden') ?
-            element.parent().width() || defaultWidth :
-            element[0].clientWidth;
+              element.parent().width() || defaultWidth :
+              element[0].clientWidth;
           testObj.css('width', width + 'px').val(element.val());
           height = Math.min(testObj[0].scrollHeight, maxHeight);
           element.css('height', height + 18 + 'px');

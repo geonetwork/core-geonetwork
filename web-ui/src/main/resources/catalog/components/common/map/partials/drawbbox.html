@@ -4,25 +4,7 @@
     
       <!-- Header with projection selection, draw button and area list -->
       <form class="form-horizontal" role="form">
-        <div class="form-group">
-          <button class="btn btn-warning" data-ng-click="drawMap()"
-            data-ng-class="{active : drawing}">
-            <i class="fa fa-pencil"></i>&nbsp;<span data-translate="">drawRectangle</span>
-          </button>
-        </div>
-        <ul class="form-group list-inline">
-          <li class="gn-proj-select">
-            <select data-ng-model="projs.form">
-              <option data-ng-repeat="proj in projs.list"
-                value="{{proj.code}}"
-                data-ng-selected="proj.code == projs.form">{{proj.label}}
-              </option>
-            </select>
-          </li>
-          <li class="gn-region-picker" lang="lang">
-            <div data-gn-region-picker=""></div>
-          </li>
-        </ul>
+        <div data-gn-region-picker=""></div>
       </form>
 
       <!-- Hidden field that match xml metadata schema -->
@@ -35,12 +17,29 @@
       </div>
       <table class="text-center">
         <tr align="center">
-          <td colspan="3"><div class="form-group">
+          <td>
+            <select data-ng-model="projs.form"
+                title="{{'chooseAProj' | translate}}">
+              <option data-ng-repeat="proj in projs.list"
+                      value="{{proj.code}}"
+                      data-ng-selected="proj.code == projs.form">{{proj.label}}
+              </option>
+            </select>
+          </td>
+          <td><div class="form-group">
               <input
                 data-ng-model="extent.form[3]" type="number"
                 id="drawbbox-top" placeholder="{{'north' | translate}}" 
                 data-ng-change="updateBbox(true)"/>
           </div></td>
+          <td>
+            <button class="btn btn-warning"
+                    title="{{'clickToDrawABox' | translate}}"
+                    data-ng-click="drawMap()"
+                    data-ng-class="{active : drawing}">
+              <i class="fa fa-pencil"></i>&nbsp;<span data-translate="">drawRectangle</span>
+            </button>
+          </td>
         </tr>
         <tr valign="middle" align="center">
           <td class="col-left">

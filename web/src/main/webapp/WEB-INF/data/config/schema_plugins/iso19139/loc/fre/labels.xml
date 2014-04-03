@@ -3078,7 +3078,7 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
     <description>Protocole de la connexion à utiliser</description>
     <help>Protocole de connexion utilisé, par exemple FTP.</help>
     <condition/>
-    <helper>
+    <helper sort="true">
       <option value="OGC:CSW">OGC-CSW Catalogue Service for the Web</option>
       <option value="OGC:KML">OGC-KML Keyhole Markup Language</option>
       <option value="OGC:GML">OGC-GML Geography Markup Language</option>
@@ -3104,7 +3104,7 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
       <option value="FILE:GEO">Fichier SIG</option>
       <option value="FILE:RASTER">Fichier SIG RASTER</option>
       <option value="WWW:LINK-1.0-http--ical">iCalendar (URL)</option>
-      <option value="WWW:LINK-1.0-http--link">Adresse Internet (URL)</option>
+      <option value="WWW:LINK-1.0-http--link" default="">Adresse Internet (URL)</option>
       <option value="WWW:LINK-1.0-http--rss">Fil RSS (URL)</option>
       <option value="DB:POSTGIS">Base de données / Table PostGIS</option>
       <option value="DB:ORACLE">Base de données / ORACLE</option>
@@ -3924,7 +3924,7 @@ l’IGN (WPS)
     <helper>
       <option value="Aucune condition ne s’applique">Aucune condition ne s’applique</option>
       <option value="Conditions inconnues">Conditions inconnues</option>
-      <option value="Utilisation libre sous réserve de mentionner la source (a minima le nom du producteur) et la date de sa dernière mise à jour">Utilisation libre sous réserve de mentionner la source (a minima le nom du producteur) et la date de sa dernière mise à jour</option>
+      <option value="Utilisation libre sous réserve de mentionner la source (a minima le nom du producteur) et la date de sa dernière mise à jour" title="Utilisation libre sous réserve de mentionner la source (a minima le nom du producteur) et la date de sa dernière mise à jour">Utilisation libre sous réserve de mentionner la source ...</option>
       <option value="Données ouvertes">Données ouvertes</option>
     </helper>
   </element>

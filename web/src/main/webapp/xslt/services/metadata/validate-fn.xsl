@@ -30,7 +30,6 @@
     <xsl:variable name="response">
       <xsl:for-each select="$element">
         <e>
-          <xsl:message>##<xsl:value-of select="."/> </xsl:message>
           <xsl:analyze-string select="." regex="{$regex}">
             <xsl:matching-substring>
               <xsl:variable name="name" select="concat(regex-group(1), ':', regex-group(2))"/>

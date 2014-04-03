@@ -31,7 +31,7 @@
                   var optional = [];
                   angular.forEach(ruleTypes, function(ruleType) {
                     if (ruleType.requirement !== 'REQUIRED') {
-                      optional.push (ruleType);
+                      optional.push(ruleType);
                     } else {
                       scope.ruleTypes.push(ruleType);
                     }
@@ -49,7 +49,7 @@
                 });
               };
 
-              scope.labelImportanceClass = function (type){
+              scope.labelImportanceClass = function(type) {
                 if (type.error === 0) {
                   return 'label-success';
                 } else if (type.requirement === 'REQUIRED') {

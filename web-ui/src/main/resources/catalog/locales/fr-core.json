@@ -138,5 +138,8 @@
     "comments": "Commentaire",
     "sendAComment": "Envoyer nous un commentaire",
     "feedbackNotEnable": "L'envoi de commentaire n'est pas activé.",
-    "feebackSent": "Votre message a été envoyé au gestionnaire du catalogue."
+    "feebackSent": "Votre message a été envoyé au gestionnaire du catalogue.",
+
+    "url": "URL",
+    "upload": "Téléchargement"
 }

@@ -4,11 +4,14 @@
     "allLanguage-help": "Display all languages",
     "oneLanguage-help": "Choose one language to edit using the selector",
     "overviews": "Overviews",
+    "overview": "Overview",
     "associatedResources": "Associated resources",
     "saveMetadataError": "Error while saving metadata. You should reload the editor.",
     "suggestions": "Suggestions",
     "validationReport": "Validation",
     "drawRectangle": "Draw rectangle",
+    "chooseAProj": "Select the projection to use to display coordinates (note: coordinates are always saved in the metadata record in WGS84).",
+    "clickToDrawABox": "Click once to enable control and draw a box. Click again to stop drawing.",
     "chooseRegion": "Choose a region",
     "recommendedValues": "Recommended values",
     "toggleAttributes": "More details",
@@ -128,5 +131,12 @@
     "continent": "Continent",
     "dateMode": "Date or date time",
     "yearMode": "Year only",
-    "yearAndMonthMode": "Year and month"
+    "createSmall": "Create small",
+    "description": "Description",
+    "yearAndMonthMode": "Year and month",
+    "thumbnailMaker": "Create thumbnail",
+    "thumbnailMaker-help": "All WMS layers registered in the metadata record are added to the map. Choose a layout (Thumbnail recommended), a scale, zoom to the area of interest to generate the thumbnail.",
+    "print_layout": "Layout",
+    "print_scale": "Scale",
+    "noLayersForThumbnail": "No layer defined in record to generate thumbnail from"
 }
