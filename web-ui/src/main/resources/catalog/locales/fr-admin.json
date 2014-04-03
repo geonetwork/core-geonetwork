@@ -391,7 +391,7 @@
     "ogcwxs-datasetCategory": "Catégorie pour les métadonnées de données",
     "ogcwxs-topicCategory": "Thème ISO",
     "ogcwxs-createThumbnails": "Générer les aperçus",
-    "ogcwxs-createThumbnailsHelp": "Lors du moissonnnage, pour chaque couche, une requête GetMap sur l'emprise de la couche est faite pour la génération de l'aperçu",
+    "ogcwxs-createThumbnailsHelp": "Lors du moissonnnage, pour chaque couche, une requête GetMap sur l'emprise de la couche est faite pour la génération de l'aperçu. Ne s'applique qu'au service WMS.",
     "ogcwxs-createMetadataForEachLayer": "Créer une fiche pour chaque couche du document GetCapabilities.",
     "ogcwxs-createMetadataForEachLayerHelp": "",
     "ogcwxs-createMetadataForEachLayerUsingMetadataURL": "Créer une fiche pour chaque couche ayant une référence à sa métadonnée (ie. via MetadataURL).",
