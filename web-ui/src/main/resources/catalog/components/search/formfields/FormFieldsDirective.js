@@ -68,7 +68,7 @@
                 }
                 // Search default value
                 angular.forEach(scope.infos, function(h) {
-                  if (h.default == 'true') {
+                  if (h['default'] == 'true') {
                     defaultValue = h.code;
                   }
                 });
@@ -104,7 +104,7 @@
                             code: h['@value'],
                             label: h['#text'],
                             description: h['@title'] || '',
-                            default: h['@default'] == '' ? 'true' : 'false'
+                            'default': h['@default'] == '' ? 'true' : 'false'
                           });
                         });
                       } else {
