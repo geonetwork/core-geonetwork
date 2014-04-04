@@ -80,9 +80,16 @@ public class Aligner extends BaseAligner
 
 		//--- save remote categories and groups into hashmaps for a fast access
 
-		@SuppressWarnings("unchecked")
-        List<Element> list = remoteInfo.getChild("groups").getChildren("group");
-		setupLocEntity(list, hmRemoteGroups);
+        // Before 2.11 response contains groups. Now group is used.
+        Element groups = remoteInfo.getChild("groups");
+        if (groups == null) {
+            groups = remoteInfo.getChild("group");
+        }
+        if (groups != null) {
+            @SuppressWarnings("unchecked")
+            List<Element> list = groups.getChildren("group");
+            setupLocEntity(list, hmRemoteGroups);
+        }
 	}
 
 	//--------------------------------------------------------------------------
