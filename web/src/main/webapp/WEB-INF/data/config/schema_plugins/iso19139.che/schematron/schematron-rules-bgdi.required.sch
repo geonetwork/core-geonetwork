@@ -18,8 +18,8 @@ queryBinding="xslt2">
     <sch:title>$loc/strings/translatedTitle</sch:title>
     <!-- Check specification names and status -->
     <sch:rule context="/che:CHE_MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation">
-        <sch:let name="deTitle" value="normalize-space(gmd:title//gmd:LocalisedCharacterString[@locale='#DE'])"/>
-        <sch:let name="frTitle" value="normalize-space(gmd:title//gmd:LocalisedCharacterString[@locale='#FR'])"/>
+        <sch:let name="deTitle" value="normalize-space((gmd:title//gmd:LocalisedCharacterString[@locale='#DE'])[1])"/>
+        <sch:let name="frTitle" value="normalize-space((gmd:title//gmd:LocalisedCharacterString[@locale='#FR'])[1])"/>
 
         <sch:assert test="string-length($deTitle) > 0">
             <sch:value-of select="$loc/strings/deTitleRequired"/>
@@ -44,8 +44,8 @@ queryBinding="xslt2">
     <sch:title>$loc/strings/translatedAltTitle</sch:title>
     <!-- Check specification names and status -->
     <sch:rule context="/che:CHE_MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation">
-        <sch:let name="deAltTitle" value="normalize-space(gmd:alternateTitle//gmd:LocalisedCharacterString[@locale='#DE'])"/>
-        <sch:let name="frAltTitle" value="normalize-space(gmd:alternateTitle//gmd:LocalisedCharacterString[@locale='#FR'])"/>
+        <sch:let name="deAltTitle" value="normalize-space((gmd:alternateTitle//gmd:LocalisedCharacterString[@locale='#DE'])[1])"/>
+        <sch:let name="frAltTitle" value="normalize-space((gmd:alternateTitle//gmd:LocalisedCharacterString[@locale='#FR'])[1])"/>
 
         <sch:assert test="string-length($deAltTitle) > 0">
             <sch:value-of select="$loc/strings/deAltTitleRequired"/>
@@ -58,7 +58,7 @@ queryBinding="xslt2">
         <sch:assert test="string-length($deAltTitle) &lt; 31">
             <sch:value-of select="$loc/strings/deAltTitleMaxLength"/>
         </sch:assert>
-        <sch:report test="string-length($deAltTitle) &lt; 31">
+        <sch:report test="string-length($deAltTitle) &lt; 31 and string-length($deAltTitle) &gt; 0">
             <sch:value-of select="$loc/strings/deAltTitleMaxLengthReport"/>
             <sch:value-of select="string-length($deAltTitle)"/>
         </sch:report>
@@ -75,7 +75,7 @@ queryBinding="xslt2">
         <sch:assert test="string-length($frAltTitle) &lt; 31">
             <sch:value-of select="$loc/strings/frAltTitleMaxLength"/>
         </sch:assert>
-        <sch:report test="string-length($frAltTitle) &lt; 31">
+        <sch:report test="string-length($frAltTitle) &lt; 31 and string-length($frAltTitle) &gt; 0">
             <sch:value-of select="$loc/strings/frAltTitleMaxLengthReport"/>
             <sch:value-of select="string-length($frAltTitle)"/>
         </sch:report>
@@ -86,8 +86,8 @@ queryBinding="xslt2">
     <sch:title>$loc/strings/translatedAbstract</sch:title>
     <!-- Check specification names and status -->
     <sch:rule context="che:CHE_MD_Metadata/gmd:identificationInfo">
-        <sch:let name="deAbstract" value="normalize-space(*/gmd:abstract//gmd:LocalisedCharacterString[@locale='#DE'])"/>
-        <sch:let name="frAbstract" value="normalize-space(*/gmd:abstract//gmd:LocalisedCharacterString[@locale='#FR'])"/>
+        <sch:let name="deAbstract" value="normalize-space((*/gmd:abstract//gmd:LocalisedCharacterString[@locale='#DE'])[1])"/>
+        <sch:let name="frAbstract" value="normalize-space((*/gmd:abstract//gmd:LocalisedCharacterString[@locale='#FR'])[1])"/>
 
         <sch:assert test="string-length($deAbstract) > 0">
             <sch:value-of select="$loc/strings/deAbstractRequired"/>

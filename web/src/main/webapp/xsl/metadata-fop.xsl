@@ -392,7 +392,7 @@
             <fo:block font-family="{$font-family}" font-size="{$header-size}" color="{$title-color}"
               font-weight="{$header-weight}" padding-top="4pt" padding-right="4pt"
               padding-left="4pt">
-              <fo:external-graphic padding-right="4pt">
+              <fo:external-graphic padding-right="4pt" content-width="32px" content-height="32px">
                 <xsl:attribute name="src"> url('<xsl:value-of
                     select="concat( //server/protocol, '://', //server/host,':', //server/port, /root/gui/url,'/images/logos/', /root/gui/env/site/siteId,'.gif')"
                   />')" </xsl:attribute>
