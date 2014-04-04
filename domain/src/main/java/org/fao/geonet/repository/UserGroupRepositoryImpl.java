@@ -8,6 +8,7 @@ import org.fao.geonet.domain.UserGroupId;
 import org.fao.geonet.domain.UserGroupId_;
 import org.fao.geonet.domain.UserGroup_;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -41,6 +42,7 @@ public class UserGroupRepositoryImpl implements UserGroupRepositoryCustom {
     }
 
     @Override
+    @Transactional
     public int deleteAllByIdAttribute(SingularAttribute<UserGroupId, Integer> idAttribute, Collection<Integer> ids) {
         String userIdPath = SortUtils.createPath(UserGroup_.id, idAttribute);
 

@@ -64,6 +64,7 @@
     "schematron-rules-inspire": "INSPIRE rules",
     "addFromDictionnary": "Add from dictionnary",
     "addKeywordNotFromThesaurus": "Add new keywords",
+    "resetKeywordsAnyway": "Remove keywords",
     "onlinesrc" : "Online resources",
     "parentMd" : "Parent Metadata",
     "datasets" : "Datasets",

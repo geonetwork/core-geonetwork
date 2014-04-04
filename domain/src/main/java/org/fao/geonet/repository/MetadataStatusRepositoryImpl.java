@@ -2,6 +2,7 @@ package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.MetadataStatusId_;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,6 +19,7 @@ public class MetadataStatusRepositoryImpl implements MetadataValidationRepositor
     EntityManager _entityManager;
 
     @Override
+    @Transactional
     public int deleteAllById_MetadataId(final int metadataId) {
         String entityType = MetadataStatus.class.getSimpleName();
         String metadataIdPropName = MetadataStatusId_.metadataId.getName();

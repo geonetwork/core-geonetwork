@@ -3,6 +3,7 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.MetadataRatingByIp;
 import org.fao.geonet.domain.MetadataRatingByIpId_;
 import org.fao.geonet.domain.MetadataRatingByIp_;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -37,6 +38,7 @@ public class MetadataRatingByIpRepositoryImpl implements MetadataRatingByIpRepos
     }
 
     @Override
+    @Transactional
     public int deleteAllById_MetadataId(final int metadataId) {
         String entityType = MetadataRatingByIp.class.getSimpleName();
         String metadataIdPropName = MetadataRatingByIpId_.metadataId.getName();

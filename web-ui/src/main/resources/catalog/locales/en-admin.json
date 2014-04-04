@@ -436,7 +436,7 @@
     "ogcwxs-datasetCategory": "Category for datasets metadata",
     "ogcwxs-topicCategory": "ISO category",
     "ogcwxs-createThumbnails": "Create thumbnail",
-    "ogcwxs-createThumbnailsHelp": "During harvesting, for each layer a GetMap request is made based on the layer's bounding box",
+    "ogcwxs-createThumbnailsHelp": "During harvesting, for each layer a GetMap request is made based on the layer's bounding box. Only for WMS service.",
     "ogcwxs-createMetadataForEachLayer": "Create record for each layer only using GetCapabilities information.",
     "ogcwxs-createMetadataForEachLayerHelp": "",
     "ogcwxs-createMetadataForEachLayerUsingMetadataURL": "Create record for each layer using MetadataURL attributes.",

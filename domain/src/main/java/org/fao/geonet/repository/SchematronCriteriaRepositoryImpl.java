@@ -3,6 +3,7 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.SchematronCriteria;
 import org.fao.geonet.domain.SchematronCriteriaGroup;
 import org.fao.geonet.domain.SchematronCriteriaGroup_;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,6 +28,7 @@ public class SchematronCriteriaRepositoryImpl {
      *
      * @param id id of criteria to delete
      */
+    @Transactional
     public void delete(Integer id) {
         SchematronCriteria criteria = _entityManager.getReference(SchematronCriteria.class, id);
         final CriteriaBuilder builder = _entityManager.getCriteriaBuilder();
@@ -57,6 +59,7 @@ public class SchematronCriteriaRepositoryImpl {
      *
      * @param criteria criteria to delete
      */
+    @Transactional
     public void delete(Iterable<SchematronCriteria> criteria) {
         for (SchematronCriteria schematronCriteria : criteria) {
             delete(schematronCriteria.getId());
@@ -68,6 +71,7 @@ public class SchematronCriteriaRepositoryImpl {
      *
      * @param criteria criteria to delete
      */
+    @Transactional
     public void delete(SchematronCriteria criteria) {
         delete(criteria.getId());
     }

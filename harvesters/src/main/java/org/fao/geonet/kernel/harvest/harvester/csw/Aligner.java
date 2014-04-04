@@ -174,7 +174,7 @@ public class Aligner extends BaseAligner
 		    }catch(Throwable t) {
 		        errors.add(new HarvestError(t, log));
                 log.error("Unable to process record from csw (" + this.params.name + ")");
-                log.error("   Record failed: " + ri.uuid); 
+                log.error("   Record failed: " + ri.uuid + ". Error is: " + t.getMessage());
 		    } finally {
 		        result.originalMetadata++;
 		    }
@@ -301,7 +301,7 @@ public class Aligner extends BaseAligner
 
                 OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
 				repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
-                
+
                 addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
                 metadata.getCategories().clear();
