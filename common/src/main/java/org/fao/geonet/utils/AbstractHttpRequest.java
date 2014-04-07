@@ -7,13 +7,17 @@ import org.apache.http.HttpHost;
 import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.AuthCache;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.LaxRedirectStrategy;
@@ -22,19 +26,16 @@ import org.fao.geonet.exceptions.BadSoapResponseEx;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.ClientHttpResponse;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Super class for classes that encapsulate requests.
@@ -59,6 +60,8 @@ public class AbstractHttpRequest {
     private int proxyPort;
     private ArrayList<NameValuePair> alSimpleParams = new ArrayList<NameValuePair>();
     private String postData;
+    private boolean preemptiveBasicAuth;
+    private HttpClientContext httpClientContext;
     private UsernamePasswordCredentials credentials;
     private UsernamePasswordCredentials proxyCredentials;
     private String fragment;
@@ -196,7 +199,18 @@ public class AbstractHttpRequest {
 //		return response;
 //	}
 
-    //---------------------------------------------------------------------------
+    public boolean isPreemptiveBasicAuth() {
+        return preemptiveBasicAuth;
+    }
+
+    public void setPreemptiveBasicAuth(boolean preemptiveBasicAuth) {
+        this.preemptiveBasicAuth = preemptiveBasicAuth;
+    }
+
+    public HttpClientContext getHttpClientContext() {
+        return httpClientContext;
+    }
+
     public void setCredentials(String username, String password) {
 
         this.credentials = new UsernamePasswordCredentials(username, password);
@@ -210,7 +224,29 @@ public class AbstractHttpRequest {
                 final BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
                 if (credentials != null) {
                     final URI uri = httpMethod.getURI();
-                    credentialsProvider.setCredentials(new AuthScope(new HttpHost(uri.getHost())), credentials);
+                    HttpHost hh = new HttpHost(
+                            uri.getHost(),
+                            uri.getPort(),
+                            uri.getScheme());
+                    credentialsProvider.setCredentials(new AuthScope(hh), credentials);
+
+                    // Preemptive authentication
+                    if (isPreemptiveBasicAuth()) {
+                        // Create AuthCache instance
+                        AuthCache authCache = new BasicAuthCache();
+                        // Generate BASIC scheme object and add it to the local auth cache
+                        BasicScheme basicAuth = new BasicScheme();
+                        authCache.put(hh, basicAuth);
+
+                        // Add AuthCache to the execution context
+                        httpClientContext = HttpClientContext.create();
+                        httpClientContext.setCredentialsProvider(credentialsProvider);
+                        httpClientContext.setAuthCache(authCache);
+                    } else {
+                        input.setDefaultCredentialsProvider(credentialsProvider);
+                    }
+                } else {
+                    input.setDefaultCredentialsProvider(credentialsProvider);
                 }
 
                 if (useProxy) {
@@ -220,12 +256,10 @@ public class AbstractHttpRequest {
                         credentialsProvider.setCredentials(new AuthScope(proxy), proxyCredentials);
                     }
                 }
-                input.setDefaultCredentialsProvider(credentialsProvider);
-
                 input.setRedirectStrategy(new LaxRedirectStrategy());
                 return null;
             }
-        });
+        }, this);
     }
 
     protected HttpRequestBase setupHttpMethod() throws IOException {
