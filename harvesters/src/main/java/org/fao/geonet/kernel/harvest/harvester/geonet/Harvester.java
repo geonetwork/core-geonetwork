@@ -92,6 +92,7 @@ class Harvester implements IHarvester<HarvestResult> {
 			try {
 				log.info("Login into : "+ params.name);
 				req.setCredentials(params.username, params.password);
+                req.setPreemptiveBasicAuth(true);
 				req.setAddress(params.getServletPath()+"/srv/eng/xml.info");
                 req.addParam("type", "me");
 
@@ -99,7 +100,7 @@ class Harvester implements IHarvester<HarvestResult> {
 				if(!response.getName().equals("info") || response.getChild("me") == null) {
 					pre29Login(req);
 				} else if(!"true".equals(response.getChild("me").getAttributeValue("authenticated"))) {
-                    log.warning("Authentication failed for user: "+ params.username);
+                    log.warning("Authentication failed for user: " + params.username);
                     throw new UserNotFoundEx(params.username);
 				}
 			} catch (Exception e) {
