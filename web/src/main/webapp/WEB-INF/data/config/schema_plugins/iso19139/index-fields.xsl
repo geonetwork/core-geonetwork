@@ -37,7 +37,8 @@
   
   <xsl:variable name="sextant-thesaurus" select="document(concat('file:///', $thesauriDir, '/local/thesauri/theme/sextant-theme.rdf'))"/>
   <xsl:variable name="sextant-theme" select="$sextant-thesaurus//*[name() = 'skos:Concept' or name() = 'rdf:Description']"/>
- 
+
+  <xsl:variable name="isMultilingual" select="count(/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']/gmd:locale/gmd:PT_Locale) > 0"/>
   
   <!-- If identification creation, publication and revision date
     should be indexed as a temporal extent information (eg. in INSPIRE 
@@ -199,9 +200,11 @@
 
       <!-- Multilingual indexing is taking care of properly index
       translation or value in main language. -->
-			<!--<xsl:for-each select="gmd:credit/gco:CharacterString">-->
-				<!--<Field name="credit" string="{string(.)}" store="true" index="true"/>-->
-			<!--</xsl:for-each>-->
+      <xsl:if test="not($isMultilingual)">
+        <xsl:for-each select="gmd:credit/gco:CharacterString">
+          <Field name="credit" string="{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
+      </xsl:if>
 
 			
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
