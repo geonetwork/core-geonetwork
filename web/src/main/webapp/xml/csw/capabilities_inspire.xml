@@ -70,10 +70,6 @@
                     <ows:Post xlink:href="$PROTOCOL://$HOST$PORT$SERVLET/srv/$LOCALE/$END-POINT"/>
                 </ows:HTTP>
             </ows:DCP>
-            <ows:Parameter name="typeName">
-                <ows:Value>csw:Record</ows:Value>
-                <ows:Value>gmd:MD_Metadata</ows:Value>
-            </ows:Parameter>
             <ows:Parameter name="outputFormat">
                 <ows:Value>application/xml</ows:Value>
             </ows:Parameter>
