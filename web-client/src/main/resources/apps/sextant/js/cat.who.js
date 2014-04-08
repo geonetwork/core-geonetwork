@@ -32,7 +32,11 @@ cat.who = function() {
 	                baseParams: {
 	                    field: 'orgName',
 	                    threshold: 1
-	                }
+	                },
+                  sortInfo: {
+                    field: 'value',
+                    direction: 'ASC'
+                  }
 	            });
 				mode='remote';
 			}
