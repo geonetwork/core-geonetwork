@@ -6,7 +6,11 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 	" >
-    <bean id="database-migration-bean" class="org.fao.geonet.DatabaseMigration">
+   <!--
+   Disable automatic migration on Sextant because
+   db migration is made manually.
+   
+   <bean id="database-migration-bean" class="org.fao.geonet.DatabaseMigration">
         <property name="migration" ref="migrationMap"/>
     </bean>
 
@@ -91,5 +95,5 @@
                 <value>WEB-INF/classes/setup/sql/migrate/v2110/6-copy-from-tmp-</value>
             </list>
         </entry>
-    </util:map>
+    </util:map>-->
 </beans>
