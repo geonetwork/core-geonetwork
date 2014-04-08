@@ -150,11 +150,13 @@
 
           // Default settings for pagination
           // TODO: put parameters in directive
-          scope.paginationInfo = {
-            pages: -1,
-            currentPage: 1,
-            hitsPerPage: 5
-          };
+          if (scope.paginationInfo === null) {
+            scope.paginationInfo = {
+              pages: -1,
+              currentPage: 1,
+              hitsPerPage: 5
+            };
+          }
         }
       };
     }]);

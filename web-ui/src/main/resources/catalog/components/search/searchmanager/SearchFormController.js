@@ -83,8 +83,9 @@
           $scope.triggerSearch();
         }
       });
-
-
+      $scope.$on('setPagination', function(evt, pagination) {
+        $scope.paginationInfo = pagination;
+      });
       $scope.$on('resetSearch', function(evt, searchParams) {
         if (searchParams) {
           $scope.params = searchParams;

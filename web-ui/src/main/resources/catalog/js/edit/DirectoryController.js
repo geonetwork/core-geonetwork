@@ -31,8 +31,17 @@
       $scope.activeType = null;
       $scope.activeEntry = null;
       $scope.ownerGroup = null;
-      // TODO: Use paging
-      $scope.maxEntries = 500;
+      $scope.subtemplateFilter = {
+        _isTemplate: 's',
+        any: '*',
+        _root: ''
+      };
+
+      $scope.paginationInfo = {
+        pages: -1,
+        currentPage: 1,
+        hitsPerPage: 10
+      };
 
       var dataTypesToExclude = [];
 
@@ -65,35 +74,24 @@
             $scope.ownerGroup = data[0]['id'];
           }
         });
+
         searchEntries();
       };
 
       var searchEntries = function() {
         $scope.tpls = null;
         gnSearchManagerService.search('qi@json?' +
-            'template=s&fast=index&from=1&to=' + $scope.maxEntries).
+            'template=s&fast=index&summaryOnly=true&resultType=subtemplates').
             then(function(data) {
-
+              $scope.$broadcast('setPagination', $scope.paginationInfo);
               $scope.mdList = data;
               $scope.hasEntries = data.count != '0';
-
               var types = [];
-              // TODO: A faster option, could be to rely on facet type
-              // But it may not be available
-              for (var i = 0; i < data.metadata.length; i++) {
-                var type = data.metadata[i].root || unknownType;
-                if (type instanceof Array) {
-                  for (var j = 0; j < type.length; j++) {
-                    if ($.inArray(type[j], dataTypesToExclude) === -1 &&
-                        $.inArray(type[j], types) === -1) {
-                      types.push(type[j]);
-                    }
-                  }
-                } else if ($.inArray(type, dataTypesToExclude) === -1 &&
-                    $.inArray(type, types) === -1) {
-                  types.push(type);
+              angular.forEach(data.facet.subTemplateTypes, function (value) {
+                if ($.inArray(value, dataTypesToExclude) === -1) {
+                  types.push(value['@name']);
                 }
-              }
+              });
               types.sort();
               $scope.mdTypes = types;
 
@@ -105,38 +103,17 @@
               } else {
                 // No templates available ?
               }
-            });
+          });
       };
 
       /**
        * Get all the templates for a given type.
-       * Will put this list into $scope.tpls variable.
        */
       $scope.getEntries = function(type) {
-        var tpls = [];
-        for (var i = 0; i < $scope.mdList.metadata.length; i++) {
-          var mdType = $scope.mdList.metadata[i].root || unknownType;
-          if (mdType instanceof Array) {
-            if (mdType.indexOf(type) >= 0) {
-              tpls.push($scope.mdList.metadata[i]);
-            }
-          } else if (mdType == type) {
-            tpls.push($scope.mdList.metadata[i]);
-          }
+        if (type) {
+          $scope.subtemplateFilter._root = type;
         }
-
-        // Sort template list
-        function compare(a, b) {
-          if (a.title < b.title)
-            return -1;
-          if (a.title > b.title)
-            return 1;
-          return 0;
-        }
-        tpls.sort(compare);
-
-        $scope.tpls = tpls;
-        $scope.activeTpl = null;
+        $scope.$broadcast('resetSearch', $scope.subtemplateFilter);
         return false;
       };
 
