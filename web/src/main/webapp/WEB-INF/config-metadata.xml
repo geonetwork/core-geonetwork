@@ -380,19 +380,19 @@
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.batch.admin.form">
+        <service name="metadata.batch.admin.form" deprecated="true">
             <class name=".services.metadata.PrepareBatchUpdatePrivileges" />
 
             <output sheet="metadata-admin.xsl" />
         </service>
 
-        <service name="xml.metadata.batch.admin.form">
+        <service name="xml.metadata.batch.admin.form" deprecated="true">
             <class name=".services.metadata.PrepareBatchUpdatePrivileges" />
         </service>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.batch.update.privileges">
+        <service name="metadata.batch.update.privileges" deprecated="true">
             <class name=".services.metadata.BatchUpdatePrivileges" />
 
             <output sheet="metadata-batch-results.xsl">
@@ -400,7 +400,7 @@
             </output>
         </service>
 
-        <service name="xml.metadata.batch.update.privileges">
+        <service name="xml.metadata.batch.update.privileges" deprecated="true">
             <class name=".services.metadata.BatchUpdatePrivileges" />
         </service>
 
@@ -555,7 +555,7 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.admin.form">
+        <service name="metadata.admin.form" deprecated="true">
             <class name=".services.metadata.GetAdminOper" />
 
             <output sheet="metadata-admin.xsl" />
@@ -566,7 +566,7 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.admin">
+        <service name="metadata.admin" deprecated="true">
             <class name=".services.metadata.UpdateAdminOper" />
 
         </service>

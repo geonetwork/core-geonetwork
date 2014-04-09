@@ -133,15 +133,7 @@
             }
             return selected;
           };
-          // Event on new search result
-          // compute page number for pagination
-          scope.$watchCollection('searchResults.records', function() {
-            if (scope.searchResults.records.length > 0) {
-              scope.paginationInfo.pages = Math.ceil(
-                  scope.searchResults.count /
-                  scope.paginationInfo.hitsPerPage, 0);
-            }
-          });
+
 
           scope.$on('resetSelection', function(evt) {
             scope.selection = [];

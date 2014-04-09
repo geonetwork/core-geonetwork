@@ -39,19 +39,21 @@
             <div class="list-group">
               <li class="list-group-item"
                 data-ng-repeat="e in searchResults.records"
-                data-ng-class="e['geonet:info'].id === activeEntry['@id'] ? 'active' : ''">
+                data-ng-class="e['geonet:info'].id === activeEntry['geonet:info'].id ? 'active' : ''">
                 <a href="" data-ng-click="selectEntry(e)"> {{e.title}} </a>
                 <div class="pull-right">
                   <a href="" data-ng-click="copyEntry(e)">
                     <i class="fa fa-copy"/>
                   </a>
-                  <a href="" data-ng-click="delEntry(e)">
+                  <a href=""
+                     data-ng-class="e['geonet:info'].edit !== 'true' ? 'invisible' : ''"
+                     data-ng-click="delEntry(e)">
                     <i class="fa fa-times text-danger"/>
                   </a>
                 </div>
               </li>
             </div>
-            <div data-gn-pagination="$parent.paginationInfo"/>
+            <div data-gn-pagination="paginationInfo"/>
           </form>
         </div>
       </div>
@@ -99,27 +101,39 @@
           <span data-translate="">{{activeEntry.title || activeEntry.defaultTitle}}</span>
           
           <div class="btn-toolbar">
-            <button type="button" class="btn btn-danger pull-right fa fa-sign-out" data-ng-click="close()" 
+            <button type="button" class="btn btn-danger pull-right fa fa-sign-out"
+                    data-ng-click="close()"
+                    data-ng-disabled="activeEntry['geonet:info'].edit !== 'true'"
               title="{{'closeEditor' | translate}}">
             </button>
-            <button type="button" class="btn btn-primary pull-right fa fa-save" data-ng-click="save()">
+            <button type="button" class="btn btn-primary pull-right fa fa-save"
+                    data-ng-click="save()"
+                    data-ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
               <span data-translate="">save</span>
+            </button>
+            <button type="button" class="btn btn-primary pull-right fa fa-link"
+                    data-ng-click="startSharing()"
+                    data-ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
+              <span data-translate="">share</span>
             </button>
           </div>
         </div>
         <div class="panel-body">
-          <div data-ng-include="editorFormUrl"
-            data-onload="onFormLoad()"></div>
+          <fieldset data-ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
+            <div data-ng-include="editorFormUrl"
+                 data-onload="onFormLoad()"></div>
+          </fieldset>
         </div>
+      </div>
+
+      <div data-gn-modal="" class="gn-share"
+           data-gn-popup-options="{title:'sharingSettings'}"
+           id="gn-share">
+        <div data-gn-share="activeEntry['geonet:info'].id"/>
       </div>
     </div>
   </div>
-  
-  <div data-gn-modal="" class="gn-import-entry"
-    data-gn-popup-options="{title:'importDirectoryEntry'}"
-    id="gn-import-entry">
-    <div data-gn-link-to-metadata="source" id="link-to-source"
-      class="link-source-md"></div>
+
+  <div data-ng-include="'../../catalog/templates/info.html'">
   </div>
-  
 </div>

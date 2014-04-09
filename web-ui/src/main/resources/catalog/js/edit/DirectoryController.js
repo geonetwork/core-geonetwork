@@ -34,7 +34,9 @@
       $scope.subtemplateFilter = {
         _isTemplate: 's',
         any: '*',
-        _root: ''
+        _root: '',
+        sortBy: 'title',
+        sortOrder: 'reverse'
       };
 
       $scope.paginationInfo = {
@@ -87,7 +89,7 @@
               $scope.mdList = data;
               $scope.hasEntries = data.count != '0';
               var types = [];
-              angular.forEach(data.facet.subTemplateTypes, function (value) {
+              angular.forEach(data.facet.subTemplateTypes, function(value) {
                 if ($.inArray(value, dataTypesToExclude) === -1) {
                   types.push(value['@name']);
                 }
@@ -103,7 +105,7 @@
               } else {
                 // No templates available ?
               }
-          });
+            });
       };
 
       /**
@@ -140,7 +142,8 @@
           .then(function(form) {
               $scope.savedStatus = gnCurrentEdit.savedStatus;
               $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('saveMetadataSuccess')
+                title: $translate('saveMetadataSuccess'),
+                timeout: 2
               });
             }, function(error) {
               $scope.savedStatus = gnCurrentEdit.savedStatus;
@@ -236,6 +239,14 @@
             }
         );
       };
+
+      $scope.startSharing = function() {
+        $('#gn-share').modal('show');
+      };
+
+      $scope.$on('PrivilegesUpdated', function() {
+        $('#gn-share').modal('hide');
+      });
 
       $scope.delEntry = function(e) {
         // md.delete?uuid=b09b1b16-769f-4dad-b213-fc25cfa9adc7

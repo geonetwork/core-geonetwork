@@ -50,6 +50,10 @@
             eng: 'eng/users/quickstartguide/new_metadata/index.html',
             fre: 'fra/users/editor/index.html'
           },
+          editor_sharing: {
+            eng: 'eng/users/managing_metadata/ownership/index.html',
+            fre: 'fra/users/editor/metadata_ownership/index.html'
+          },
           editor_geopublisher: {
             eng: 'eng/users/quickstartguide/new_metadata/linking.html' +
                 '#publish-uploaded-data-as-wms-wfs',
