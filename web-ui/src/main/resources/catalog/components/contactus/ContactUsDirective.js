@@ -1,7 +1,7 @@
 (function() {
-  goog.provide('gn_share_directive');
+  goog.provide('gn_contactus_directive');
 
-  var module = angular.module('gn_share_directive', []);
+  var module = angular.module('gn_contactus_directive', []);
 
   /**
    *
