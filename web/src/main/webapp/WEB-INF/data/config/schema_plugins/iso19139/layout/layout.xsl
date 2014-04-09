@@ -30,7 +30,6 @@
       
       <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
       <xsl:variable name="directive" select="gn-fn-metadata:getFieldAddDirective($editorConfig, $name)"/>
-      <xsl:message>#<xsl:value-of select="$name"/>: <xsl:value-of select="count(preceding-sibling::*[name() = $name])"/> </xsl:message>
 
       <xsl:call-template name="render-element-to-add">
         <!-- TODO: add xpath and isoType to get label ? -->
