@@ -19,7 +19,6 @@
             <jsSource webappPath="catalog/lib/proj4js-compressed.js" minimize="false"/>
             <jsSource webappPath="catalog/lib/ol.js"/>
             <jsSource webappPath="catalog/lib/d3.v3.min.js"/>
-            <jsSource webappPath="catalog/lib/d3.ext/gauge.js"/>
             <jsSource webappPath="catalog/lib/nv.d3.min.js"/>
             <jsSource webappPath="catalog/lib/jquery.ext/jquery.ui.widget.js"/>
             <jsSource webappPath="catalog/lib/jquery.ext/jquery.iframe-transport.js"/>

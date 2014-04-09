@@ -63,6 +63,14 @@
             function(data) {
               $scope.searchResults.records = data.metadata;
               $scope.searchResults.count = data.count;
+
+              // Event on new search result
+              // compute page number for pagination
+              if ($scope.searchResults.records.length > 0) {
+                $scope.paginationInfo.pages = Math.ceil(
+                    $scope.searchResults.count /
+                    $scope.paginationInfo.hitsPerPage, 0);
+              }
             });
       };
 
@@ -83,8 +91,9 @@
           $scope.triggerSearch();
         }
       });
-
-
+      $scope.$on('setPagination', function(evt, pagination) {
+        $scope.paginationInfo = pagination;
+      });
       $scope.$on('resetSearch', function(evt, searchParams) {
         if (searchParams) {
           $scope.params = searchParams;

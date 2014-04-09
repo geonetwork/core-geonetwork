@@ -33,8 +33,47 @@
         <param name="editTab" value="true"/>
       </class>
     </service>
-    
-    
+
+    <service name="md.privileges">
+      <documentation><![CDATA[
+          Return privileges info for a metadata record.
+
+          Parameters are:
+          * id: Metadata identifier
+          ]]></documentation>
+      <class name=".services.metadata.GetAdminOper"/>
+      <error sheet="../xslt/common/error.xsl"/>
+    </service>
+
+    <service name="md.privileges.update">
+      <documentation><![CDATA[
+          Update privileges info for a metadata record.
+
+          Parameters:
+          * id: Metadata identifier
+          * _<groupId>_<operationId>: on or off to activate or not an operation for a group.
+          ]]></documentation>
+      <class name=".services.metadata.UpdateAdminOper"/>
+    </service>
+
+    <service name="md.privileges.batch">
+      <documentation><![CDATA[
+          Return operations and groups for the user.
+          ]]></documentation>
+      <class name=".services.metadata.PrepareBatchUpdatePrivileges" />
+    </service>
+
+    <service name="md.privileges.batch.update">
+
+      <documentation><![CDATA[
+          Update privileges info for a set of metadata records.
+
+          Parameters:
+          * _<groupId>_<operationId>: on or off to activate or not an operation for a group.
+          ]]></documentation>
+      <class name=".services.metadata.BatchUpdatePrivileges" />
+    </service>
+
     <service name="md.insert">
       <documentation><![CDATA[
         Insert a metadata sending an XML document.

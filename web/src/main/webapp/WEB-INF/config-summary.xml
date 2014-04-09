@@ -36,6 +36,10 @@
 				sortBy="value" sortOrder="desc" max="40"/>
 			<item name="category" plural="categories" indexKey="category" max="40"/>
 		</hits>
+    <subtemplates>
+      <item name="subTemplateType" plural="subTemplateTypes"
+            indexKey="_root"/>
+    </subtemplates>
 		<titles>
 			<item name="title" plural="titles" indexKey="title" sortBy="freq" sortOrder="desc" max="100"
 			/>
