@@ -77,7 +77,7 @@
             <Field name="_defaultAbstract" string="{string($_defaultAbstract)}" store="true" index="true" token="false" />
 
             <xsl:apply-templates select="*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" mode="metadata"/>
-			<xsl:apply-templates mode="index" select="*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']"/>
+			<xsl:apply-templates mode="index" select="*"/>
 		</Document>
 	</xsl:template>
 	
