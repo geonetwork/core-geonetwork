@@ -5,8 +5,8 @@
 		<gco:CharacterString>ff518971-490c-4f55-9960-cfcb98d7bfa6</gco:CharacterString>
 	</gmd:fileIdentifier>
 	<gmd:language>
-		<gmd:LanguageCode codeList="resources/Codelist/gmxcodelists.xml#LanguageCode" codeListValue="eng">eng</gmd:LanguageCode>
-	</gmd:language>
+        	<gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng"/>
+        </gmd:language> 
 	<gmd:characterSet>
 		<gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_CharacterSetCode"/>
 	</gmd:characterSet>
