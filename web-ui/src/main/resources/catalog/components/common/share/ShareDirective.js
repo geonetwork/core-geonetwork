@@ -63,6 +63,10 @@
             });
           };
 
+          scope.sortByLabel = function (group) {
+            return group.label[scope.lang];
+          };
+
           scope.save = function() {
             gnShareService.savePrivileges(scope.id, scope.groups).then(
                 function(data) {
