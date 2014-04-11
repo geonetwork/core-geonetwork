@@ -416,7 +416,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="util.import">
+		<service name="util.import" deprecated="true">
 			<class name=".services.metadata.ImportFromDir" />
 
 			<output sheet="metadata-insert-results.xsl" />
@@ -1199,6 +1199,7 @@
 
     <include>config/config-service-admin-notification.xml</include>
     <include>config/config-service-admin-index.xml</include>
+    <include>config/config-service-admin-io.xml</include>
     <include>config/config-service-admin-logo.xml</include>
     <include>config/config-service-admin-user-and-group.xml</include>
     <include>config/config-service-admin-geoserver-publication.xml</include>

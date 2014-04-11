@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+
+    <service name="md.import">
+      <documentation><![CDATA[
+          Import MEF or XML document from a directory on the server.
+
+          Parameters:
+          * dir: The directory path
+          * file_type: single|mef
+          * recurse: on|off to search on subfolder or not
+          * uuidAction: nothing|overwrite|generateUUID
+          * styleSheet: The XSLT to apply before loading the record
+          * validate: on|off to validate or not the record. If invalid, the record
+          is not imported
+          * template: n|y|d. The type of record
+          * group: The group to insert the records in
+          * category: _none_ or the id of a category to attached to the records
+          * failOnError: on|off to fail on first error or continue.
+          * assign: on|off to assign records to current catalog
+
+          The response contains the total number of records found and the number
+          of imported record. For each error a report is provided. Exception could
+          be validation exception (XSD or schematron) or other type of exception like
+          database constraint error.
+
+          For large import, there is no option to have the current progress of the
+          import.
+          ]]></documentation>
+      <class name=".services.metadata.ImportFromDir" />
+      <error sheet="../xslt/error/error-json.xsl"/>
+    </service>
+  </services>
+</geonet>

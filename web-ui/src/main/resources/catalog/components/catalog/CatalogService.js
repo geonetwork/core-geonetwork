@@ -102,6 +102,24 @@
         },
 
         /**
+         * @ngdoc method
+         * @name gnMetadataManager#importFromDir
+         * @methodOf gnMetadataManager
+         *
+         * @description
+         * Import records from a directory on the server.
+         *
+         * @param {Object} data Params to send to md.import service
+         * @return {HttpPromise} Future object
+         */
+        importFromDir: function(data) {
+          return $http({
+            url: 'md.import@json?' + data,
+            method: 'GET'
+          });
+        },
+
+        /**
            * @ngdoc method
            * @name gnMetadataManager#create
            * @methodOf gnMetadataManager
