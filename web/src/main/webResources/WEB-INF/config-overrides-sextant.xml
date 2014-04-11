@@ -104,9 +104,19 @@
           <param name="filter" value="+_groupPublished:DCE"/>
         </class>
       </service>
-      <service name="csw-DCSMM">
+      <service name="csw-DCSMM_DISPOSITIFS_RETENUS_PDS">
         <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_groupPublished:DCSMM"/>
+          <param name="filter" value="+_groupPublished:DCSMM_DISPOSITIFS_RETENUS_PDS"/>
+        </class>
+      </service>
+      <service name="csw-DCSMM_EVALUATION_INITIALE">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:DCSMM_EVALUATION_INITIALE"/>
+        </class>
+      </service>
+      <service name="csw-DCSMM_INVENTAIRE_DISPOSITIFS_PDS">
+        <class name=".services.main.CswDiscoveryDispatcher">
+          <param name="filter" value="+_groupPublished:DCSMM_INVENTAIRE_DISPOSITIFS_PDS"/>
         </class>
       </service>
       <service name="csw-DELEGATION_REUNION">
