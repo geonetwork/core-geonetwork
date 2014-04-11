@@ -34,7 +34,7 @@
 	</xsl:template>
 
 	<xsl:template name="form">
-		<form name="xmlbatch" accept-charset="UTF-8" action="{/root/gui/locService}/util.import" method="post">
+		<form name="xmlbatch" accept-charset="UTF-8" action="{/root/gui/locService}/md.import" method="post">
 			<input type="submit" style="display: none;" />
 			
 			<table class="text-aligned-left">
