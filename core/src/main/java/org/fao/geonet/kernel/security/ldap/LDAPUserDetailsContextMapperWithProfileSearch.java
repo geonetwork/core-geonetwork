@@ -23,7 +23,9 @@
 package org.fao.geonet.kernel.security.ldap;
 
 import jeeves.component.ProfileManager;
+
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.LDAPUser;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.utils.Log;
 
@@ -34,6 +36,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;

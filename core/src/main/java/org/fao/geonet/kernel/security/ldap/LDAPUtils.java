@@ -32,7 +32,6 @@ import javax.naming.directory.Attribute;
 
 import org.fao.geonet.domain.*;
 import org.fao.geonet.utils.Log;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
@@ -78,6 +77,7 @@ public class LDAPUtils {
             }
             toSave = user.getUser();
         }
+        toSave.getSecurity().setAuthType(LDAPConstants.LDAP_FLAG);
         userRepo.save(toSave);
 
 		// Add user groups

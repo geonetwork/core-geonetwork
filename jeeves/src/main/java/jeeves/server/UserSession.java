@@ -23,6 +23,7 @@
 
 package jeeves.server;
 
+import org.fao.geonet.domain.LDAPUser;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -33,6 +34,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 
 import javax.servlet.http.HttpSession;
+
 import java.util.Hashtable;
 
 //=============================================================================
@@ -190,10 +192,15 @@ public class UserSession
 			return authentication;
 		}
 	}
+
 	public User getPrincipal() {
 		Authentication auth = auth();
-		if (auth != null && auth.getPrincipal() instanceof User) {
-			return (User) auth.getPrincipal(); 
+		if (auth != null) {
+			if (auth.getPrincipal() instanceof User) {
+				return (User) auth.getPrincipal();
+			} else if (auth.getPrincipal() instanceof LDAPUser) {
+				return ((LDAPUser) auth.getPrincipal()).getUser();
+			}
 		}
 		return null;
 	}
