@@ -171,6 +171,7 @@ GeoNetwork.Lang.pl = {
     'fullTextSearch': "Wyszukiwanie w całym tekście",
     'keyword': "Słowo kluczowe",
     'org': "Organizacja",
+    'altTitle': "Tytuł alternatywny",
     'mapTypes': "Typ mapy",
     'rsIdentifier': "Identyfikator zasobu",
     'inspireSearchOptions': 'Kryteria INSPIRE',

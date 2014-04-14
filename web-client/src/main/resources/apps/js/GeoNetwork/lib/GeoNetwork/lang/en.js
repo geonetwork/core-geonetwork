@@ -173,6 +173,7 @@ GeoNetwork.Lang.en = {
     'fullTextSearch': "Full text search",
     'keyword': "Keyword",
     'org': "Organisation",
+    'altTitle': "Alternate title",
     'mapTypes': "Map types",
     'rsIdentifier': "Resource identifier",
     'inspireSearchOptions': 'INSPIRE criteria',

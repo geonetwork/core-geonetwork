@@ -241,6 +241,19 @@ GeoNetwork.searchApp = function() {
                     .getMetadataTypeField(true);
             // var validField = GeoNetwork.util.SearchFormTools
             // .getValidField(true);
+            
+               
+            var titleField = new Ext.form.TextField({
+                fieldLabel: OpenLayers.i18n('title'),
+                name: 'E_title',
+                id: 'E_title'
+            });
+            var altTitleField = new Ext.form.TextField({
+                fieldLabel: OpenLayers.i18n('altTitle'),
+                name: 'E_altTitle',
+                id: 'E_altTitle'
+            });
+            
 
             // Add hidden fields to be use by quick metadata links from the
             // admin panel (eg. my metadata).
@@ -256,10 +269,18 @@ GeoNetwork.searchApp = function() {
                 name : 'E_siteId',
                 hidden : true
             });
-            var serviceTypeField = GeoNetwork.util.INSPIRESearchFormTools
-                    .getServiceTypeField(true);
-            advancedCriteria.push(themekeyField, orgNameField,
-                    metadataTypeField, ownerField, isHarvestedField, siteId);
+            
+            var whatFields = [themekeyField, orgNameField, metadataTypeField];
+            if (GeoNetwork.searchDefault.advSearchShowTitleField) {
+                whatFields.push(titleField);
+            }
+            if (GeoNetwork.searchDefault.advSearchShowAltTitleField) {
+                whatFields.push(altTitleField);
+            }               
+            whatFields.push(ownerField, isHarvestedField, siteId);
+            
+            
+            advancedCriteria = advancedCriteria.concat(whatFields);
 
             var sortByCombo = new Ext.form.TextField({
                 name : 'E_sortBy',
@@ -329,6 +350,8 @@ GeoNetwork.searchApp = function() {
                         withAnnex : true,
                         withTheme : true
                     });
+            var serviceTypeField = GeoNetwork.util.INSPIRESearchFormTools
+                    .getServiceTypeField(true);
             inspireFields.push(serviceTypeField);
 
             var inspire = {

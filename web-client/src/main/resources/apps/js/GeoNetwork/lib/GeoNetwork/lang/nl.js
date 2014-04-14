@@ -169,6 +169,7 @@ GeoNetwork.Lang.nl = {
 	'fullTextSearch': "Volledige tekst zoeken",
     'keyword': "zoekterm",
     'org': "Organisatie",
+    'altTitle': 'Alternatieve titel',
     'mapTypes': "Kaarttypes",
     'rsIdentifier': "Bronidentificator",
     'inspireSearchOptions': "INSPIRE criteria",
