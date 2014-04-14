@@ -11,7 +11,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
           xmlns="http://www.springframework.org/schema/beans">
           
-    <ctx:property-override location="WEB-INF/config-security-overrides.properties"/>
+    <ctx:property-override location="WEB-INF/config-security/config-security-overrides.properties"/>
 
 	<!-- Add ldap authentication to authentication manager -->
 	<bean id="ldapAuthenticationProviderPostProcessor"

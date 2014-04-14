@@ -31,8 +31,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.fao.geonet.utils.Log;
-
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.LDAPUser;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.GroupRepository;
