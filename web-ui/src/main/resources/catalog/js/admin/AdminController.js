@@ -12,13 +12,13 @@
   goog.require('gn_settings_controller');
   goog.require('gn_standards_controller');
   goog.require('gn_usergroup_controller');
-
+  goog.require('gn_report_controller');
 
   var module = angular.module('gn_admin_controller',
       ['gn_dashboard_controller', 'gn_usergroup_controller',
        'gn_admintools_controller', 'gn_settings_controller',
        'gn_adminmetadata_controller', 'gn_classification_controller',
-       'gn_harvest_controller', 'gn_standards_controller']);
+       'gn_harvest_controller', 'gn_standards_controller', 'gn_report_controller']);
 
 
   var tplFolder = '../../catalog/templates/admin/';
@@ -82,6 +82,12 @@
         when('/standards', {
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnStandardsController'}).
+        when('/reports', {
+            templateUrl: tplFolder + 'page-layout.html',
+            controller: 'GnReportController'}).
+        when('/reports/:tab', {
+          templateUrl: tplFolder + 'page-layout.html',
+          controller: 'GnReportController'}).
         otherwise({templateUrl: tplFolder + 'admin.html'});
   }]);
 
@@ -106,7 +112,9 @@
         {name: 'statisticsAndStatus', route: '#dashboard',
           classes: 'btn-success', icon: 'fa-dashboard'},
         {name: 'usersAndGroups', route: '#organization',
-          classes: 'btn-default', icon: 'fa-group'}
+          classes: 'btn-default', icon: 'fa-group'},
+        {name: 'reports', route: '#reports',
+              classes: 'btn-success', icon: 'fa-file-text-o'}
       ];
       $scope.menu = {
         UserAdmin: userAdminMenu,
@@ -132,7 +140,9 @@
           {name: 'settings', route: '#settings',
             classes: 'btn-warning', icon: 'fa-gear'},
           {name: 'tools', route: '#tools',
-            classes: 'btn-warning', icon: 'fa-medkit'}]
+            classes: 'btn-warning', icon: 'fa-medkit'},
+          {name: 'reports', route: '#reports',
+                classes: 'btn-success', icon: 'fa-file-text-o'}]
         // TODO : add other role menu
       };
 

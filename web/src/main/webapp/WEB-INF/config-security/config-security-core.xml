@@ -247,4 +247,8 @@
 	<bean id="webPrivilegeEvaluatorCore" class="org.springframework.security.web.access.DefaultWebInvocationPrivilegeEvaluator">
 		<constructor-arg ref="filterSecurityInterceptor"/>
 	</bean>
+
+  <!-- Listener to log the last login date in the database -->
+  <bean class="org.fao.geonet.kernel.security.listener.UpdateTimestampListener" id="updateTimestampListener">
+  </bean>
 </beans>

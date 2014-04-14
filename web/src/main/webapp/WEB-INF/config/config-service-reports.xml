@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<geonet>
+  <services package="org.fao.geonet">
+
+    <service name="reports">
+      <output sheet="reports/reportList.xsl" />
+    </service>
+
+    <!-- CSV service for records updated report -->
+    <service name="recordsupdated.csv">
+      <class name=".services.reports.ReportUpdatedMetadata"/>
+
+      <output sheet="reports/reportUpdated-output.xsl" contentType="text/x-csv; charset=UTF-8"/>
+    </service>
+
+    <!-- CSV service for records internal report -->
+    <service name="recordsinternal.csv">
+      <class name=".services.reports.ReportInternalMetadata"/>
+
+      <output sheet="reports/reportInternal-output.xsl" contentType="text/x-csv; charset=UTF-8"/>
+    </service>
+
+    <!-- CSV service for file uploads report -->
+    <service name="datauploads.csv">
+      <class name=".services.reports.ReportDataUploads" />
+
+      <output sheet="reports/reportDataUploads-output.xsl" contentType="text/x-csv; charset=UTF-8" />
+    </service>
+
+    <!-- CSV service for file downloads report -->
+    <service name="datadownloads.csv">
+      <class name=".services.reports.ReportDataDownloads" />
+
+      <output sheet="reports/reportDataDownloads-output.xsl" contentType="text/x-csv; charset=UTF-8" />
+    </service>
+
+    <!-- CSV service for users report -->
+    <service name="users.csv">
+      <class name=".services.reports.ReportUsers"/>
+
+      <output sheet="reports/reportUsers-output.xsl" contentType="text/x-csv; charset=UTF-8"/>
+    </service>
+  </services>
+</geonet>
+

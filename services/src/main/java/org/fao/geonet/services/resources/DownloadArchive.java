@@ -33,6 +33,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.services.resources.handlers.IResourceDownloadHandler;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.Util;
 import org.fao.geonet.utils.Xml;
@@ -208,6 +209,15 @@ public class DownloadArchive implements Service
 		if (elMd == null)
 			throw new MetadataNotFoundEx("Metadata not found - deleted?");
 
+        //--- manage the download hook
+        IResourceDownloadHandler downloadHook = (IResourceDownloadHandler) context.getApplicationContext().getBean("resourceDownloadHandler");
+        Element response = downloadHook.onDownloadMultiple(context, params, Integer.parseInt(id), files);
+
+        // Return null to do the default processing. TODO: Check to move the code to the default hook.
+        if (response != null) {
+            return response;
+
+        } else {
 		//--- transform record into brief version
 		String briefXslt = stylePath + Geonet.File.METADATA_BRIEF;
 		Element elBrief = Xml.transform(elMd, briefXslt);
@@ -258,7 +268,7 @@ public class DownloadArchive implements Service
 		//--- now close the zip file and send it out
 		if (out != null) out.close();
 		return BinaryFile.encode(200, zFile.getAbsolutePath(),true);
-
+        }
 	}
 
 	//----------------------------------------------------------------------------
