@@ -168,8 +168,16 @@
 			}
 
 			function runFileDownload(href,title) {
+        var url = "";
+
+        if (href.startsWith("http")) {
+          url = href;
+        } else {
+          url = getGNServiceURL(href);
+        }
+
 				if (href.include("resources.get")) { // do the file download direct
-					location.replace(getGNServiceURL(href));
+					location.replace(url);
 				} else { // show some dialog beforehand eg. constraints
 					Modalbox.show(getGNServiceURL(href),{title:title, height:400, width:600});
 				}
