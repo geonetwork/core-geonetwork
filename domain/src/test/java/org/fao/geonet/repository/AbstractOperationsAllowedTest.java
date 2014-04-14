@@ -3,12 +3,11 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.*;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Propagation;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-@Transactional
 public abstract class AbstractOperationsAllowedTest extends AbstractSpringDataTest {
 
     @Autowired

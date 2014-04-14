@@ -71,7 +71,7 @@ final class IndexMetadataTask implements Runnable {
             // servlet up so safe to index all metadata that needs indexing
             for (String metadataId : _metadataIds) {
                 try {
-                    dataManager.indexMetadata(metadataId);
+                    dataManager.indexMetadata(metadataId, false);
                 } catch (Exception e) {
                     Log.error(Geonet.INDEX_ENGINE, "Error indexing metadata '" + metadataId + "': " + e.getMessage()
                                                    + "\n" + Util.getStackTrace(e));

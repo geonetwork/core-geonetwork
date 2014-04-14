@@ -33,10 +33,8 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
@@ -62,6 +60,7 @@ public class UploadAndProcess implements Service {
         String filename = Util.getParam(params, Params.FILENAME);
         String access = Util.getParam(params, Params.ACCESS, "private");
         String overwrite = Util.getParam(params, Params.OVERWRITE, "no");
+        String description = Util.getParam(params, Params.TITLE, "");
 
         Lib.resource.checkEditPrivilege(context, id);
 
@@ -84,6 +83,7 @@ public class UploadAndProcess implements Service {
         // Set parameter and process metadata to reference the uploaded file
         params.addContent(new Element("url").setText(filename));
         params.addContent(new Element("name").setText(filename));
+        params.addContent(new Element("desc").setText(description));
         params.addContent(new Element("protocol")
                 .setText("WWW:DOWNLOAD-1.0-http--download"));
 

@@ -25,14 +25,13 @@ package org.fao.geonet.kernel.metadata;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
-import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
@@ -43,7 +42,9 @@ import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.util.MailSender;
 import org.jdom.JDOMException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -54,7 +55,6 @@ public class DefaultStatusActions implements StatusActions {
 
     private String host, port, username, password, from, fromDescr, replyTo, replyToDescr;
     private boolean useSSL;    protected ServiceContext context;
-    protected AccessManager am;
     protected String language;
     protected DataManager dm;
     protected String siteUrl;
@@ -85,7 +85,6 @@ public class DefaultStatusActions implements StatusActions {
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager sm = gc.getBean(SettingManager.class);
-        am = gc.getBean(AccessManager.class);
 
         siteName = sm.getSiteName();
         host = sm.getValue("system/feedback/mailServer/host");
@@ -137,7 +136,7 @@ public class DefaultStatusActions implements StatusActions {
             String changeMessage = String.format(LangUtils.translate(context, "statusUserEdit").get(this.language), replyToDescr,
                     replyTo, id);
             unsetAllOperations(id);
-            dm.setStatus(context, id, Integer.valueOf(Params.Status.DRAFT), new ISODate().toString(), changeMessage);
+            dm.setStatus(context, id, Integer.valueOf(Params.Status.DRAFT), new ISODate(), changeMessage);
         }
 
     }
@@ -150,7 +149,7 @@ public class DefaultStatusActions implements StatusActions {
      * @param changeDate The date the status was changed.
      * @param changeMessage The message explaining why the status has changed.
      */
-    public Set<Integer> statusChange(String status, Set<Integer> metadataIds, String changeDate, String changeMessage) throws Exception {
+    public Set<Integer> statusChange(String status, Set<Integer> metadataIds, ISODate changeDate, String changeMessage) throws Exception {
 
         Set<Integer> unchanged = new HashSet<Integer>();
 
@@ -177,10 +176,10 @@ public class DefaultStatusActions implements StatusActions {
 
         // --- inform content reviewers if the status is submitted
         if (status.equals(Params.Status.SUBMITTED)) {
-            informContentReviewers(metadataIds, changeDate, changeMessage);
+            informContentReviewers(metadataIds, changeDate.toString(), changeMessage);
             // --- inform owners if status is approved
         } else if (status.equals(Params.Status.APPROVED) || status.equals(Params.Status.REJECTED)) {
-            informOwners(metadataIds, changeDate, changeMessage, status);
+            informOwners(metadataIds, changeDate.toString(), changeMessage, status);
         }
 
         return unchanged;
@@ -219,8 +218,8 @@ public class DefaultStatusActions implements StatusActions {
         List<User> users = Lists.transform(results, new Function<Pair<Integer, User>, User>() {
             @Nullable
             @Override
-            public User apply(@Nullable Pair<Integer, User> input) {
-                return input.two();
+            public User apply(@Nonnull Pair<Integer, User> input) {
+                    return input.two();
             }
         });
 
@@ -232,10 +231,13 @@ public class DefaultStatusActions implements StatusActions {
                 changeDate, changeMessage);
     }
 
-    private String getTranslatedStatusName(String statusValueName) {
-        String translatedStatusName = _statusValueRepository.findOneByName(statusValueName).getLabel(this.language);
-        if (translatedStatusName==null) {
-            translatedStatusName = statusValueName;
+    private String getTranslatedStatusName(String statusValueId) {
+        String translatedStatusName = "";
+        StatusValue s = _statusValueRepository.findOneById(Integer.valueOf(statusValueId));
+        if (s == null) {
+            translatedStatusName = statusValueId;
+        } else {
+          translatedStatusName = s.getLabel(this.language);
         }
         return translatedStatusName;
     }

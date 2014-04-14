@@ -89,7 +89,15 @@ public class Set extends NotInReadOnlyModeService {
 		if (version != null && !dataMan.getVersion(id).equals(version))
 			throw new ConcurrentUpdateEx(id);
 
-		//-----------------------------------------------------------------------
+        boolean imageExists = testValidImage(new File(getFileName(file, true)), false);
+        imageExists |= testValidImage(new File(getFileName(file, false)), false);
+        imageExists |= testValidImage(new File(context.getUploadDir(), file), false);
+
+        if (!imageExists) {
+            throw new IllegalArgumentException("No image file uploaded");
+        }
+
+        //-----------------------------------------------------------------------
 		//--- create destination directory
 
 		String dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
@@ -149,7 +157,7 @@ public class Set extends NotInReadOnlyModeService {
 			dataMan.setThumbnail(context, id, type.equals("small"), file, false);
 		}
 
-        dataMan.indexMetadata(id);
+        dataMan.indexMetadata(id, false);
         //-----------------------------------------------------------------------
 
 		Element response = new Element("a");
@@ -159,6 +167,21 @@ public class Set extends NotInReadOnlyModeService {
 		return response;
 	}
 
+    private boolean testValidImage(File inFile, boolean mustExistAndBeValid) throws IOException {
+        if (inFile != null && inFile.exists()) {
+            // Test that file is an image before removing old files.
+            BufferedImage image = getImage(inFile.getAbsolutePath());
+            if (image == null) {
+                throw new IllegalArgumentException("Unable to create an image from: "+inFile);
+            }
+            return true;
+        } else {
+            if (mustExistAndBeValid) {
+                throw new IllegalArgumentException(inFile + ": expected but does not exist");
+            }
+            return false;
+        }
+    }
     /**
      * TODO javadoc.
      *
@@ -192,6 +215,14 @@ public class Set extends NotInReadOnlyModeService {
         String  type          = Util.getParam     (params, Params.TYPE);
 //        String  version       = Util.getParam     (params, Params.VERSION);
 
+        boolean imageExists = testValidImage(new File(getFileName(file, true)), false);
+        imageExists |= testValidImage(new File(getFileName(file, false)), false);
+        imageExists |= testValidImage(new File(context.getUploadDir(), file), false);
+
+        if (!imageExists) {
+            throw new IllegalArgumentException("No image file uploaded");
+        }
+
         if (createSmall) {
 			String smallFile = getFileName(file, true);
 			String inFile    = context.getUploadDir() + file;
@@ -209,57 +240,13 @@ public class Set extends NotInReadOnlyModeService {
         saveThumbnail(scaling, file, type, dataDir, scalingDir, scalingFactor, dataMan, id, context);
 
 		//-----------------------------------------------------------------------
-        dataMan.indexMetadata(id);
+        dataMan.indexMetadata(id, false);
         Element response = new Element("Response");
 		response.addContent(new Element("id").setText(id));
 		// NOT NEEDEDresponse.addContent(new Element("version").setText(dataMan.getNewVersion(id)));
 
 		return response;
 	}
-
-	public void addHarvested(Element params, ServiceContext context, DataManager dataMan) throws Exception
-        {
-            String  id            = Util.getParam     (params, Params.ID);
-            String dataDir = createDataDir(id, context);
-            String  type          = Util.getParam     (params, Params.TYPE);
-//            String  version       = Util.getParam     (params, Params.VERSION);
-            String  file          = Util.getParam     (params, Params.FNAME);
-            String  scalingDir    = Util.getParam     (params, Params.SCALING_DIR, "width");
-            boolean scaling       = Util.getParam     (params, Params.SCALING, false);
-            int     scalingFactor = Util.getParam     (params, Params.SCALING_FACTOR, 1);
-
-            boolean createSmall        = Util.getParam(params, Params.CREATE_SMALL,        false);
-            String  smallScalingDir    = Util.getParam(params, Params.SMALL_SCALING_DIR,   "");
-            int     smallScalingFactor = Util.getParam(params, Params.SMALL_SCALING_FACTOR, 0);
-
-
-
-            //-----------------------------------------------------------------------
-            //--- create the small thumbnail, removing the old one
-
-            if (createSmall) {
-                String smallFile = getFileName(file, true);
-                String inFile    = context.getUploadDir() + file;
-                String outFile   = dataDir + smallFile;
-                removeOldThumbnail(context , id, "small", false);
-                createThumbnail(inFile, outFile, smallScalingFactor, smallScalingDir);
-                dataMan.setThumbnail(context, id, true, smallFile, false);
-            }
-
-            //-----------------------------------------------------------------------
-            //--- create the requested thumbnail
-            
-            removeOldThumbnail(context, id, type, false);
-            saveThumbnail(scaling, file, type, dataDir, scalingDir, scalingFactor, dataMan, id, context);
-
-            dataMan.indexMetadata(id);
-        }
-        
-        public void removeHarvested(Element params, ServiceContext context) throws Exception {
-            String  id   = Util.getParam(params, Params.ID);
-            String  type = Util.getParam(params, Params.TYPE);
-            removeOldThumbnail(context,id,type, true);
-        }
 
 	//--------------------------------------------------------------------------
 	//---
@@ -299,7 +286,7 @@ public class Set extends NotInReadOnlyModeService {
 
 		DataManager dataMan = gc.getBean(DataManager.class);
 
-		Element result = dataMan.getThumbnails(id);
+		Element result = dataMan.getThumbnails(context, id);
 
 		if (result == null)
 			throw new IllegalArgumentException("Metadata not found --> " + id);

@@ -28,11 +28,6 @@ import jeeves.interfaces.Service;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Vector;
 
@@ -41,9 +36,6 @@ import java.util.Vector;
 /**
  * A container class for a service. It collect the method and the filter
  */
-@Component
-@Lazy
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ServiceInfo {
     private String appPath;
     private String match;
@@ -220,7 +212,6 @@ public class ServiceInfo {
     }
 
     //--------------------------------------------------------------------------
-    @Transactional
     private Element execService(final Service service, final Element params, final ServiceContext context) throws Exception {
         try {
             Element response = service.exec(params, context);
@@ -238,6 +229,10 @@ public class ServiceInfo {
 
             throw e;
         }
+    }
+
+    public Vector<Service> getServices() {
+        return vServices;
     }
 }
 

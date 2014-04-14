@@ -26,7 +26,6 @@ import static jeeves.constants.ConfigFile.Monitors.Child.*;
  * Date: 3/29/12
  * Time: 3:42 PM
  */
-@Component
 public class MonitorManager {
     public static final String HEALTH_CHECK_REGISTRY = "com.yammer.metrics.reporting.HealthCheckServlet.registry";
     public static final String CRITICAL_HEALTH_CHECK_REGISTRY = "com.yammer.metrics.reporting.HealthCheckServlet.registry.critical";

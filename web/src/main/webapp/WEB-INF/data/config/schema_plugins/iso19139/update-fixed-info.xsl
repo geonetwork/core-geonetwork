@@ -164,7 +164,7 @@
 		<xsl:copy>
 			<xsl:apply-templates select="@*"/>
 			<xsl:attribute name="codeList">
-			  <xsl:value-of select="concat('http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#',local-name(.))"/>
+			  <xsl:value-of select="concat('http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#',local-name(.))"/>
 			</xsl:attribute>
 		</xsl:copy>
 	</xsl:template>
@@ -329,6 +329,10 @@
 			<xsl:apply-templates select="node()"/>
 		</xsl:element>
 	</xsl:template>
+
+  <!-- Remove attribute indeterminatePosition having empty
+  value which is not a valid facet for it. -->
+  <xsl:template match="@indeterminatePosition[. = '']" priority="2"/>
 
 	<!-- ================================================================= -->
 	<!-- Adjust the namespace declaration - In some cases name() is used to get the 

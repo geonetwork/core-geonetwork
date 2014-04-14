@@ -7,7 +7,7 @@
         <input class="form-control" data-ng-model="harvesterSearch.$" autofocus=""
           placeholder="{{'filter' | translate}}"/>
         <div class="list-group">
-          <a class="list-group-item"
+          <a href="" class="list-group-item"
             data-ng-repeat="h in harvesters | filter:harvesterSearch | orderBy:'name'"
             data-ng-class="h['@id'] === harvesterSelected['@id'] ? 'active' : ''"
             data-ng-click="selectHarvester(h)"
@@ -30,7 +30,7 @@
           <ul class="dropdown-menu" role="menu">
             <li data-ng-repeat="(key, value) in harvesterTypes"
               data-ng-class="value.loaded ? '' : 'disabled'">
-              <a data-ng-click="addHarvester(key)"
+              <a href="" data-ng-click="addHarvester(key)"
                 title="{{'harvester-' + value.label + 'Help' | translate}}"> {{('harvester-' +
                 value.label) | translate}} <span data-ng-hide="value.loaded" data-translate=""
                   >notYetSupported</span>
@@ -46,7 +46,7 @@
           </button>
           <ul class="dropdown-menu" role="menu">
             <li data-ng-repeat="h in harvesters | orderBy:'site.name'">
-              <a data-ng-click="cloneHarvester(h['@id'])"
+              <a href="" data-ng-click="cloneHarvester(h['@id'])"
                 title="{{'cloneHarvester' | translate}} {{h.site.name}}"> {{h.site.name}}
                 ({{('harvester-' + h['@type']) | translate}}) </a>
             </li>
@@ -69,29 +69,41 @@
 
         <div class="btn-toolbar">
           <button type="button" class="btn btn-primary pull-right fa fa-play"
+            data-ng-hide="harvesterSelected['@id'] == ''"
             data-ng-click="runHarvester(harvesterSelected['@id'])"
-            data-ng-disabled="harvesterSelected.info.running === true" data-translate=""
+            data-ng-disabled="harvesterSelected.info.running === true"
+            data-translate=""
             >runHarvester</button>
           <button type="button" class="btn btn-primary pull-right fa fa-save"
-            data-ng-click="saveHarvester('#gn-harvester-edit')" data-translate=""
+            data-ng-click="saveHarvester('#gn-harvester-edit')"
+            data-translate=""
             >saveHarvester</button>
           <button type="button" class="btn btn-warning pull-right fa fa-trash"
             data-ng-hide="harvesterSelected['@id'] == ''"
             data-ng-click="deleteHarvesterRecord(harvesterSelected['@id'])"
-            title="{{'deleteHarvesterRecordsHelp' | translate}}" data-translate=""
+            data-ng-disabled="harvesterSelected.info.running === true"
+            title="{{'deleteHarvesterRecordsHelp' | translate}}"
+            data-translate=""
             >deleteHarvesterRecords</button>
           <button type="button" class="btn btn-danger pull-right fa fa-trash-o"
             data-ng-hide="harvesterSelected['@id'] == ''"
             data-ng-click="deleteHarvester(harvesterSelected['@id'])"
-            title="{{'deleteHarvesterHelp' | translate}}" data-translate="">deleteHarvester</button>
+            data-ng-disabled="harvesterSelected.info.running === true"
+            title="{{'deleteHarvesterHelp' | translate}}"
+            data-translate="">deleteHarvester</button>
         </div>
       </div>
       <div class="panel-body">
-
         <div class="alert alert-info" data-ng-show="harvesterSelected.info.running === true">
           <strong data-translate="">harvesterIsRunning</strong>
         </div>
-
+        <div class="alert alert-danger" data-ng-show="harvesterSelected.error">
+          <strong data-translate="">harvesterError</strong>
+          {{harvesterSelected.error['@id']}}
+          <pre>
+          {{harvesterSelected.error.message}}
+          </pre>
+        </div>
 
         <div data-ng-include="getTplForHarvester()"> </div>
       </div>
@@ -122,15 +134,20 @@
             <td>{{ h.harvestdate | gnFromNow }}</td>
             <td>{{h.elapsedtime}}</td>
             <td>
-              <ul>
-                <li data-ng-repeat="(key, value) in h.info[0]">{{key}}: <span data-ng-switch=""
-                    data-on="key">
-                    <pre data-ng-switch-when="stack">{{value}}</pre>
-                    <span data-ng-switch-when="logfile"/>
-                    <span data-ng-switch-default="">{{value}}</span>
-                  </span>
-                </li>
-              </ul>
+              <p data-ng-repeat="(key, value) in h">
+                <span data-ng-switch=""
+                  data-on="key">
+                  <span data-ng-switch-when="stack">{{key}}: {{value}}</span>
+                  <span data-ng-switch-when="logfile"/>
+                  <span data-ng-switch-when="id"/>
+                  <span data-ng-switch-when="harvestertype"/>
+                  <span data-ng-switch-when="harvesteruuid"/>
+                  <span data-ng-switch-when="harvestername"/>
+                  <span data-ng-switch-when="params"/>
+                  <span data-ng-switch-when="paramsasxml"/>
+                  <span data-ng-switch-default="">{{key}}: {{value}}</span>
+                </span>
+              </p>
 
               <a data-ng-show="h.info[0].logfile"
                 href="admin.harvester.log?file={{h.info[0].logfile}}" target="_blank"
@@ -142,16 +159,21 @@
     </div>
 
 
-    <div class="panel panel-default" data-ng-hide="harvesterSelected['@id'] == ''">
+    <div class="panel panel-default" data-ng-hide="harvesterSelected['@id'] == ''"
+         data-ng-controller="GnSearchFormController"
+         data-ng-show="searchResults.count != 0">
       <div class="panel-heading" data-translate="">harvesterRecords</div>
 
       <div class="panel-body">
         <!-- This information is not relevant for GeoNetwork protocol
             which attach records to the source catalogs which has different
             UUIDs. TODO -->
-        <div data-gn-search-results="harvesterRecords" data-allow-selection="false"/>
 
-        <div data-gn-pagination="harvesterRecordsPagination"/>
+        <div data-gn-search-form-results=""
+             data-gn-search-form-results-mode="title"
+             data-search-results="searchResults"
+             data-pagination-info="paginationInfo">
+        </div>
       </div>
     </div>
   </div>

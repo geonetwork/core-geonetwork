@@ -78,7 +78,7 @@ public class Insert extends NotInReadOnlyModeService {
 
 		String data       = Util.getParam(params, Params.DATA);
 		String group      = Util.getParam(params, Params.GROUP);
-		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
+        MetadataType metadataType = MetadataType.lookup(Util.getParam(params, Params.TEMPLATE, "n"));
 		String style      = Util.getParam(params, Params.STYLESHEET, "_none_");
 
 		boolean validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
@@ -98,7 +98,7 @@ public class Insert extends NotInReadOnlyModeService {
 
         String schema = dataMan.autodetectSchema(xml);
         if (schema == null)
-        	throw new BadParameterEx("Can't detect schema for metadata automatically.", schema);
+        	throw new BadParameterEx("Can't detect schema for metadata automatically.", "schema is unknown");
 
 		if (validate) DataManager.validateMetadata(schema, xml, context);
 
@@ -106,7 +106,7 @@ public class Insert extends NotInReadOnlyModeService {
 		//--- if the uuid does not exist and is not a template we generate it
 
 		String uuid;
-		if (isTemplate.equals("n"))
+		if (metadataType == MetadataType.TEMPLATE)
 		{
 			uuid = dataMan.extractUUID(schema, xml);
 			if (uuid.length() == 0) uuid = UUID.randomUUID().toString();
@@ -120,22 +120,21 @@ public class Insert extends NotInReadOnlyModeService {
 
 		final List<String> id = new ArrayList<String>();
 		final List<Element> md = new ArrayList<Element>();
-		String localId = null;
 		md.add(xml);
 		
 
         DataManager dm = gc.getBean(DataManager.class);
 
 		// Import record
-        Importer.importRecord(uuid, localId , uuidAction, md, schema, 0,
+        Importer.importRecord(uuid, uuidAction, md, schema, 0,
                 gc.getBean(SettingManager.class).getSiteId(), gc.getBean(SettingManager.class).getSiteName(), context, id, date,
-				date, group, isTemplate);
+				date, group, metadataType);
 		
 		int iId = Integer.parseInt(id.get(0));
 		
 		
 		// Set template
-		dm.setTemplate(iId, MetadataType.lookup(isTemplate), null);
+		dm.setTemplate(iId, metadataType, null);
 
 		
 		// Import category
@@ -151,7 +150,7 @@ public class Insert extends NotInReadOnlyModeService {
 		} 
 
 		// Index
-        dm.indexMetadata(id.get(0));
+        dm.indexMetadata(id.get(0), true);
 
         // Return response
 		Element response = new Element(Jeeves.Elem.RESPONSE);

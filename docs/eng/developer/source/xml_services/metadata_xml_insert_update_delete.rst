@@ -45,11 +45,18 @@ Parameters:
 - **validate**: Indicates if the metadata
   should be validated before inserting in the catalog. Values:
   on, off (default)
+  
+- **uuidAction**: 
+
+    - nothing (default value): uses the metadata uuid in the xml file, if the uuid already exists in the database throws an exception.
+    - overwrite: if the uuid exists in the database, overwrites the metadata with the inserted one.
+    - generateUUID: generates a new uuid for the metadata to be inserted.
+
 
 Insert metadata request example::
 
   Url:
-  http://localhost:8080/geonetwork/srv/en/metadata.insert
+  http://localhost:8080/geonetwork/srv/eng/metadata.insert
 
   Mime-type:
   application/xml

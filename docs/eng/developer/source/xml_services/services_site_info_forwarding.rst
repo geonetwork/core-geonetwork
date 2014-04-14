@@ -406,7 +406,7 @@ Request for info from a remote server::
 
     <request>
         <site>
-            <url>http://mynode.org:8080/geonetwork/srv/en/xml.info</url>
+            <url>http://mynode.org:8080/geonetwork/srv/eng/xml.info</url>
         </site>
         <params>
             <request>

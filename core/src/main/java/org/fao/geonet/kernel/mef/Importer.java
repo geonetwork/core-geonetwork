@@ -73,7 +73,7 @@ public class Importer {
 		String fileType = Util.getParam(params, "file_type", "mef");
 		if (fileType.equals("mef")) {
 			MEFLib.Version version = MEFLib.getMEFVersion(mefFile);
-			if (version.equals(MEFLib.Version.V2)) {
+			if (version != null && version.equals(MEFLib.Version.V2)) {
                 fileType = "mef2";
             }
 		}
@@ -120,9 +120,9 @@ public class Importer {
                 	Log.debug(Geonet.MEF, "info.xml says schema should be "+infoSchema);
 
 
-				Element metadataValidForImport = null;
+				Element metadataValidForImport;
 
-								Map<String,Pair<String,Element>> mdFiles = new HashMap<String,Pair<String,Element>>();
+                Map<String,Pair<String,Element>> mdFiles = new HashMap<String,Pair<String,Element>>();
                 for (File file : Files) {
                     if (file != null && !file.isDirectory()) {
                         Element metadata = Xml.loadFile(file);
@@ -143,7 +143,6 @@ public class Importer {
                             Log.debug(Geonet.MEF, "No schema match for "
                                 + lastUnknownMetadataFolderName + file.getName() 
                                 + ".");
-                            continue;
                         }
                     }
                 }
@@ -224,8 +223,7 @@ public class Importer {
 				// It is used in handleMetadataFiles as the first option to pick a 
 				// metadata file from those in a metadata dir in a MEF2
 				// String schema = null;
-				final String isTemplate;
-				String localId = null;
+				final MetadataType isTemplate;
 				String rating = null;
 				String popularity = null;
 				String groupId = null;
@@ -252,7 +250,7 @@ public class Importer {
 				// Handle non MEF files insertion
 				if (info.getChildren().size() == 0) {
                     source = Util.getParam(params, Params.SITE_ID, context.getBean(SettingManager.class).getSiteId());
-					isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
+					isTemplate = MetadataType.lookup(Util.getParam(params, Params.TEMPLATE, "n"));
 
 					String category = Util
 							.getParam(params, Params.CATEGORY, "");
@@ -277,10 +275,10 @@ public class Importer {
 					privileges.addContent(new Element("operation")
 							.setAttribute("name", "featured"));
 
-					// Get the Metadata uuid if it's not a template.
-					if (isTemplate.equals("n")) {
-						uuid = dm.extractUUID(schema, md.get(index));
-					} else if (isTemplate.equals("s")) {
+					if (isTemplate == MetadataType.METADATA) {
+                        // Get the Metadata uuid if it's not a template.
+                        uuid = dm.extractUUID(schema, md.get(index));
+					} else if (isTemplate== MetadataType.SUB_TEMPLATE) {
 					    // Get subtemplate uuid if defined in @uuid at root
                         uuid = md.get(index).getAttributeValue("uuid");
 					}
@@ -310,13 +308,11 @@ public class Importer {
 						// --- If siteId is not set, set to current node
                         source = Util.getParam(general, Params.SITE_ID, context.getBean(SettingManager.class).getSiteId());
 						sourceName = general.getChildText("siteName");
-						localId = general.getChildText("localId");
 
                         if(Log.isDebugEnabled(Geonet.MEF))
                             Log.debug(Geonet.MEF, "Assign to catalog: " + source);
 					}
-					isTemplate = general.getChildText("isTemplate").equals(
-							"true") ? "y" : "n";
+					isTemplate = general.getChildText("isTemplate").equals("true") ? MetadataType.TEMPLATE : MetadataType.METADATA;
 					rating = general.getChildText("rating");
 					popularity = general.getChildText("popularity");
 				}
@@ -329,7 +325,7 @@ public class Importer {
 				String uuidAction = Util.getParam(params, Params.UUID_ACTION,
 						Params.NOTHING);
 
-				importRecord(uuid, localId, uuidAction, md, schema, index,
+				importRecord(uuid, uuidAction, md, schema, index,
 						source, sourceName, context, metadataIdMap, createDate,
 						changeDate, groupId, isTemplate);
 
@@ -346,7 +342,7 @@ public class Importer {
                     String group = null, docType = null, title = null, category = null;
                     boolean ufo = false, indexImmediate = false;
                     String fcId = dm.insertMetadata(context, "iso19110", fc.get(index), uuid,
-                            userid, group, source, isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
+                            userid, group, source, isTemplate.codeString, docType, category, createDate, changeDate, ufo, indexImmediate);
 
                     if(Log.isDebugEnabled(Geonet.MEF))
                         Log.debug(Geonet.MEF, "Adding Feature catalog with uuid: " + uuid);
@@ -381,7 +377,7 @@ public class Importer {
                         if (finalRating != null) {
                             dataInfo.setRating(Integer.valueOf(finalRating));
                         }
-                        dataInfo.setType(MetadataType.lookup(isTemplate));
+                        dataInfo.setType(isTemplate);
                         metadata.getHarvestInfo().setHarvested(false);
 
                         addCategoriesToMetadata(metadata, finalCategs, context);
@@ -412,7 +408,7 @@ public class Importer {
                 IO.mkdirs(new File(pubDir), "MEF Importer public resources directory for metadata "+metadataIdMap);
                 IO.mkdirs(new File(priDir), "MEF Importer private resources directory for metadata "+metadataIdMap);
 
-                dm.indexMetadata(metadataIdMap.get(index));
+                dm.indexMetadata(metadataIdMap.get(index), false);
 			}
 
 			// --------------------------------------------------------------------
@@ -462,11 +458,11 @@ public class Importer {
         }
     }
 
-    public static void importRecord(String uuid, String localId,
-			String uuidAction, List<Element> md, String schema, int index,
-			String source, String sourceName, ServiceContext context,
-			List<String> id, String createDate, String changeDate,
-			String groupId, String isTemplate) throws Exception {
+    public static void importRecord(String uuid,
+                                    String uuidAction, List<Element> md, String schema, int index,
+                                    String source, String sourceName, ServiceContext context,
+                                    List<String> id, String createDate, String changeDate,
+                                    String groupId, MetadataType isTemplate) throws Exception {
 
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -531,7 +527,7 @@ public class Importer {
         boolean ufo = false, indexImmediate = false;
         id.add(index,
                 dm.insertMetadata(context, schema, md.get(index), uuid,
-                userid, groupId, source, isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate));
+                userid, groupId, source, isTemplate.codeString, docType, category, createDate, changeDate, ufo, indexImmediate));
 
 	}
 

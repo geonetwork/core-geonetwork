@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.OperationAllowedEntityListenerManager;
+
 import javax.annotation.Nonnull;
 import javax.persistence.*;
 
@@ -12,6 +14,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = OperationAllowed.TABLE_NAME)
 @Access(AccessType.PROPERTY)
+@EntityListeners(OperationAllowedEntityListenerManager.class)
 public class OperationAllowed extends GeonetEntity {
     /**
      * Name of the operationallowed table.

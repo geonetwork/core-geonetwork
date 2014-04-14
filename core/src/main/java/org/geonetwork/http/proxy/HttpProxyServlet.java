@@ -159,7 +159,7 @@ public class HttpProxyServlet extends HttpServlet {
 
                 } else {
                     returnExceptionMessage(response,
-                            httpResponse != null ? httpResponse.getStatusLine().getStatusCode() : HttpStatus.SC_BAD_REQUEST,
+                           httpResponse.getStatusLine().getStatusCode(),
                             "Unexpected failure: " + httpResponse.getStatusLine().getReasonPhrase()
                     );
                 }
@@ -269,12 +269,10 @@ public class HttpProxyServlet extends HttpServlet {
 
                 } else {
                 	returnExceptionMessage(response,
-                            httpResponse != null ? httpResponse.getStatusLine().getStatusCode() : HttpStatus.SC_BAD_REQUEST,
+                            httpResponse.getStatusLine().getStatusCode(),
                             "Unexpected failure: " + httpResponse.getStatusLine().getReasonPhrase()
                     );
                 }
-
-                httpPost.releaseConnection();
 
             } else {
                 //throw new ServletException("only HTTP(S) protocol supported");
@@ -283,7 +281,7 @@ public class HttpProxyServlet extends HttpServlet {
         } catch (UnknownHostException e) {
             e.printStackTrace();
             response.sendError(HttpStatus.SC_NOT_FOUND, "url can't be found");
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
             //throw new ServletException("Some unexpected error occurred. Error text was: " + e.getMessage());
             returnExceptionMessage(response, HttpStatus.SC_INTERNAL_SERVER_ERROR,

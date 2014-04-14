@@ -45,7 +45,6 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
                     .setUuid("uuid");
 
             metadata.getDataInfo()
-                    .setTitle("title")
                     .setSchemaId("iso19139");
 
             metadata.getSourceInfo()
@@ -76,7 +75,7 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
 	@Test
 	public void testInternalSelectHidingWithheldNullServiceContext() throws Exception {
         _settingManager.setHideWitheldElements(true);
-		Field field = ServiceContext.class.getDeclaredField("threadLocalInstance");
+		Field field = ServiceContext.class.getDeclaredField("THREAD_LOCAL_INSTANCE");
 		field.setAccessible(true);
 		InheritableThreadLocal<ServiceContext> threadLocalInstance = (InheritableThreadLocal<ServiceContext>) field.get(null);
 		threadLocalInstance.set(null);

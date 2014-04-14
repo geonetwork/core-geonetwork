@@ -21,7 +21,7 @@ if the widgets profile is not active
 <overrides>
 	<file name=".*/WEB-INF/config-gui.xml">
 		<replaceAtt xpath="client" attName="widget" value="true"/>
-		<replaceAtt xpath="client" attName="url" value="../../apps/tabsearch/"/>
+		<replaceAtt xpath="client" attName="url" value="tabsearch"/>
 		<replaceAtt xpath="client" attName="createParameter" value="#create"/>
 	</file>
 </overrides>

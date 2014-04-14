@@ -92,13 +92,16 @@ class Harvester implements IHarvester<HarvestResult> {
 			try {
 				log.info("Login into : "+ params.name);
 				req.setCredentials(params.username, params.password);
-				req.setAddress(params.getServletPath()+"/srv/eng/xml.info?type=me");
+                req.setPreemptiveBasicAuth(true);
+				req.setAddress(params.getServletPath()+"/srv/eng/xml.info");
+                req.addParam("type", "me");
 
 				Element response = req.execute();
 				if(!response.getName().equals("info") || response.getChild("me") == null) {
 					pre29Login(req);
 				} else if(!"true".equals(response.getChild("me").getAttributeValue("authenticated"))) {
-					throw new UserNotFoundEx(params.username);
+                    log.warning("Authentication failed for user: " + params.username);
+                    throw new UserNotFoundEx(params.username);
 				}
 			} catch (Exception e) {
 				pre29Login(req);
@@ -226,7 +229,7 @@ class Harvester implements IHarvester<HarvestResult> {
 	private Element doSearch(XmlRequest request, Search s) throws OperationAbortedEx
 	{
 		request.setAddress(params.getServletPath() +"/srv/en/"+ Geonet.Service.XML_SEARCH);
-		
+		request.clearParams();
 		try
 		{
 			log.info("Searching on : "+ params.name);

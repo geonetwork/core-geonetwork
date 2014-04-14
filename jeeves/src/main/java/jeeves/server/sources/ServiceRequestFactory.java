@@ -210,20 +210,22 @@ public final class ServiceRequestFactory
        return url.indexOf(JSON_URL_FLAG) != -1;
     }
 	//---------------------------------------------------------------------------
-	/** Extracts the language code from the url
-	  */
 
-	private static String extractLanguage(String url)
-	{
-		if (url == null)
-			return null;
+	/**
+     * Extracts the language code from the url.
+	 */
+	public static String extractLanguage(String url) {
+		if (url == null) {
+            return null;
+        }
 
 		url = url.substring(1);
 
 		int pos = url.indexOf('/');
 
-		if (pos == -1)
-			return null;
+		if (pos == -1) {
+            return null;
+        }
 
 		return url.substring(0, pos);
 	}

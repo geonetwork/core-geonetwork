@@ -7,7 +7,7 @@
   <xsl:output method="xml" media-type="application/rss+xml"/>
 
   <xsl:strip-space elements="*"/>
-
+  
   <xsl:include href="rss-utils.xsl"/>
 
   

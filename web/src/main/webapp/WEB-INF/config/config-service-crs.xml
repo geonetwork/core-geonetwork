@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+    <service name="crs.search">
+      <documentation><![CDATA[
+        Search a CRS in EPSG database.
+        
+        Parameters:
+        * name
+        * maxResults
+        * type
+        ]]></documentation>
+      <class name=".services.crs.Search"/>
+    </service>
+  </services>
+</geonet>

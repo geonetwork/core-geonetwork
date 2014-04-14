@@ -67,7 +67,7 @@ public class GetKeywords implements Service {
 			ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
 
             if(Log.isDebugEnabled("KeywordsManager")) Log.debug("KeywordsManager","Creating new keywords searcher");
-			searcher = new KeywordsSearcher(thesaurusMan);
+			searcher = new KeywordsSearcher(context, thesaurusMan);
 			searcher.search(context.getLanguage(), params);
 			searcher.sortResults(KeywordSort.defaultLabelSorter(SortDirection.DESC));
 			session

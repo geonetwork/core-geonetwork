@@ -46,6 +46,7 @@ import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.Updater;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
@@ -59,6 +60,7 @@ import org.fao.oaipmh.responses.ListIdentifiersResponse;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -311,19 +313,24 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
         String id = dataMan.insertMetadata(context, schema, md, ri.id, Integer.parseInt(params.ownerId), group, params.uuid,
-                         isTemplate, docType, title, category, ri.changeDate.toString(), ri.changeDate.toString(), ufo, indexImmediate);
+                         isTemplate, docType, category, ri.changeDate.toString(), ri.changeDate.toString(), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
 
-		dataMan.setTemplateExt(iId, MetadataType.METADATA, null);
+		dataMan.setTemplateExt(iId, MetadataType.METADATA);
 		dataMan.setHarvestedExt(iId, params.uuid);
 
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-        addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
+        context.getBean(MetadataRepository.class).update(iId, new Updater<Metadata>() {
+            @Override
+            public void apply(@Nonnull Metadata entity) {
+                addCategories(entity, params.getCategories(), localCateg, context, log, null);
+            }
+        });
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id);
+        dataMan.indexMetadata(id, false);
 		result.addedMetadata++;
 	}
 
@@ -480,12 +487,10 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
             addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
 
             metadata.getCategories().clear();
-            context.getBean(MetadataRepository.class).save(metadata);
-
-            addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
+            addCategories(metadata, params.getCategories(), localCateg, context, log, null);
 
             dataMan.flush();
-            dataMan.indexMetadata(id);
+            dataMan.indexMetadata(id, false);
 			result.updatedMetadata++;
 		}
 	}

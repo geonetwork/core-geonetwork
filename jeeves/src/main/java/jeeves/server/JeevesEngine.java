@@ -28,7 +28,6 @@
 package jeeves.server;
 
 import jeeves.component.ProfileManager;
-import jeeves.config.springutil.JeevesApplicationContext;
 import jeeves.constants.ConfigFile;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.ApplicationHandler;
@@ -53,28 +52,26 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import javax.annotation.PreDestroy;
-import javax.persistence.PersistenceContext;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.xml.transform.TransformerConfigurationException;
 import java.io.*;
 import java.util.*;
-
-import static org.springframework.web.context.support.WebApplicationContextUtils.getWebApplicationContext;
+import java.util.concurrent.TimeUnit;
 
 //=============================================================================
 
 /** This is the main class. It handles http connections and inits the system
   */
-@Component
 public class JeevesEngine {
-	private static final String TRANSFORMER_PATH = "/WEB-INF/classes/META-INF/services/javax.xml.transform.TransformerFactory";
-	private String _defaultSrv;
+    private static final String TRANSFORMER_PATH = "/WEB-INF/classes/META-INF/services/javax.xml.transform.TransformerFactory";
+    private static final int DEFAULT_MAX_UPLOAD_SIZE_MD = 50;
+    private static final int BYTES_PER_KB = 1024;
+
+    private String _defaultSrv;
 	private String _startupErrorSrv;
 	private String _defaultLang;
     private String _uploadDir;
@@ -93,6 +90,9 @@ public class JeevesEngine {
     private MonitorManager _monitorManager;
     @Autowired
 	private ScheduleManager _scheduleMan;
+    @Autowired
+	private ConfigurableApplicationContext _applicationContext;
+
     private Logger _appHandLogger = Log.createLogger(Log.APPHAND);
     private List<Element> _appHandList = new ArrayList<Element>();
     private Vector<ApplicationHandler> _appHandlers = new Vector<ApplicationHandler>();
@@ -107,16 +107,12 @@ public class JeevesEngine {
 
 	/** Inits the engine, loading all needed data.
 	  */
-    @Transactional
     public void init(final String appPath, final String configPath, final String baseUrl, final JeevesServlet servlet) throws ServletException
 	{
         ServletContext servletContext = null;
         if (servlet != null) {
             servletContext = servlet.getServletContext();
         }
-
-        // obtain application context so we can configure the serviceManager with it but we will configure it a bit later
-        final JeevesApplicationContext jeevesAppContext = (JeevesApplicationContext) getWebApplicationContext(servletContext);
 
         try {
             File log4jConfig = new File(configPath, "log4j.cfg");
@@ -132,9 +128,9 @@ public class JeevesEngine {
 
             long start = System.currentTimeMillis();
 
-            long maxMem = Runtime.getRuntime().maxMemory() / 1024;
-            long totMem = Runtime.getRuntime().totalMemory() / 1024;
-            long freeMem = Runtime.getRuntime().freeMemory() / 1024;
+            long maxMem = Runtime.getRuntime().maxMemory() / BYTES_PER_KB;
+            long totMem = Runtime.getRuntime().totalMemory() / BYTES_PER_KB;
+            long freeMem = Runtime.getRuntime().freeMemory() / BYTES_PER_KB;
 
             long usedMem = totMem - freeMem;
             long startFreeMem = maxMem - usedMem;
@@ -170,7 +166,7 @@ public class JeevesEngine {
             //--- with the ProfileManager already loaded
 
             for (int i = 0; i < _appHandList.size(); i++)
-                initAppHandler(_appHandList.get(i), servlet, jeevesAppContext);
+                initAppHandler(_appHandList.get(i), servlet);
 
             info("Starting schedule manager...");
             _scheduleMan.start();
@@ -178,10 +174,10 @@ public class JeevesEngine {
             //---------------------------------------------------------------------
 
             long end = System.currentTimeMillis();
-            long duration = (end - start) / 1000;
+            long duration = TimeUnit.MILLISECONDS.toSeconds(end - start);
 
-            freeMem = Runtime.getRuntime().freeMemory() / 1024;
-            totMem = Runtime.getRuntime().totalMemory() / 1024;
+            freeMem = Runtime.getRuntime().freeMemory() / BYTES_PER_KB;
+            totMem = Runtime.getRuntime().totalMemory() / BYTES_PER_KB;
             usedMem = totMem - freeMem;
 
             long endFreeMem = maxMem - usedMem;
@@ -192,15 +188,26 @@ public class JeevesEngine {
             info("Startup time is : " + duration + " (secs)");
 
             info("=== System working =========================================");
-        } catch (Exception e) {
-            fatal("Raised exception during init");
-            fatal("   Exception : " + e);
-            fatal("   Message   : " + e.getMessage());
-            fatal("   Stack     : " + Util.getStackTrace(e));
-
-            throw new RuntimeException("Exception raised", e);
+        } catch (Throwable e) {
+            handleStartupError(e);
         }
 
+    }
+
+    public static void handleStartupError(Throwable e) {
+        Log.fatal  (Log.ENGINE, "Raised exception during init");
+        Log.fatal  (Log.ENGINE, "   Exception : " + e);
+        Log.fatal  (Log.ENGINE, "   Message   : " + e.getMessage());
+        Log.fatal  (Log.ENGINE, "   Stack     : " + Util.getStackTrace(e));
+
+        if (Boolean.TRUE.toString().equalsIgnoreCase(System.getProperty(Jeeves.SHUTDOWN_ON_STARTUP_ERROR))) {
+            e.printStackTrace();
+            System.err.println("\n\n\tERROR STARTING UP GEONETWORK.  System property "+Jeeves.SHUTDOWN_ON_STARTUP_ERROR+" == "+System.getProperty(Jeeves.SHUTDOWN_ON_STARTUP_ERROR));
+            System.err.println("\n\n\t>> HARD SHUTDOWN INITIATED <<");
+            System.exit(1);
+        }
+
+        throw new RuntimeException("Exception raised", e);
     }
 
     /**
@@ -270,24 +277,26 @@ public class JeevesEngine {
 		Element elDefault = configRoot.getChild(ConfigFile.Child.DEFAULT);
 
 		if (!_generalLoaded) {
-			if (elGeneral == null)
-				throw new NullPointerException("Missing 'general' element in config file :" +file);
+			if (elGeneral == null) {
+                throw new NullPointerException("Missing 'general' element in config file :" + file);
+            }
 
-			if (elDefault == null)
-				throw new NullPointerException("Missing 'default' element in config file :" +file);
+			if (elDefault == null) {
+                throw new NullPointerException("Missing 'default' element in config file :" + file);
+            }
 
 			_generalLoaded = true;
 
 			initGeneral(elGeneral, serviceMan);
 			initDefault(elDefault, serviceMan);
-		}
-		else
-		{
-			if (elGeneral != null)
-				throw new IllegalArgumentException("Illegal 'general' element in secondary include");
+		} else {
+			if (elGeneral != null) {
+                throw new IllegalArgumentException("Illegal 'general' element in secondary include");
+            }
 
-			if (elDefault != null)
-				throw new IllegalArgumentException("Illegal 'default' element in secondary include");
+			if (elDefault != null) {
+                throw new IllegalArgumentException("Illegal 'default' element in secondary include");
+            }
 		}
 
 		//--- init app-handlers
@@ -297,34 +306,34 @@ public class JeevesEngine {
 		//--- init services
 
 		List<Element> srvList = configRoot.getChildren(ConfigFile.Child.SERVICES);
-		
-		for(int i=0; i<srvList.size(); i++)
-			initServices(srvList.get(i));
+
+        for (Element aSrvList : srvList) {
+            initServices(aSrvList);
+        }
 		
 		//--- init schedules
 
 		List<Element> schedList = configRoot.getChildren(ConfigFile.Child.SCHEDULES);
 
-		for(int i=0; i<schedList.size(); i++)
-			initSchedules(schedList.get(i));
+        for (Element aSchedList : schedList) {
+            initSchedules(aSchedList);
+        }
 
         //--- init monitoring
 
         List<Element> monitorList = configRoot.getChildren(ConfigFile.Child.MONITORS);
 
-        for(int i=0; i<monitorList.size(); i++)
-            _monitorManager.initMonitors(monitorList.get(i));
+        for (Element aMonitorList : monitorList) {
+            _monitorManager.initMonitors(aMonitorList);
+        }
 
 		//--- recurse on includes
 
 		List<Element> includes = configRoot.getChildren(ConfigFile.Child.INCLUDE);
 
-		for(int i=0; i<includes.size(); i++)
-		{
-			Element include = includes.get(i);
-
-			loadConfigFile(servletContext, path, include.getText(), serviceMan);
-		}
+        for (Element include : includes) {
+            loadConfigFile(servletContext, path, include.getText(), serviceMan);
+        }
 
 	}
 
@@ -334,36 +343,38 @@ public class JeevesEngine {
 	//---
 	//---------------------------------------------------------------------------
 
-	/** Setup parameters from config tag (config.xml)
-	  */
+	/**
+     * Setup parameters from config tag. (config.xml)
+	 */
 
-	private void initGeneral(Element general, ServiceManager serviceMan) throws BadInputEx
+	private void initGeneral (final Element general, final ServiceManager serviceMan) throws BadInputEx
 	{
 		info("Initializing general configuration...");
 
 		_uploadDir = Util.getParam(general, ConfigFile.General.Child.UPLOAD_DIR);
 		try {
 		    _maxUploadSize = Integer.parseInt(Util.getParam(general, ConfigFile.General.Child.MAX_UPLOAD_SIZE));
-		} 
-		catch(Exception e){
-		    _maxUploadSize = 50;
-		    error("Maximum upload size not properly configured in config.xml. Using default size of 50MB");
-            error("   Exception : " +e);
-            error("   Message   : " +e.getMessage());
-            error("   Stack     : " +Util.getStackTrace(e));
-	    }
+		} catch (Exception e) {
+            _maxUploadSize = DEFAULT_MAX_UPLOAD_SIZE_MD;
+            error("Maximum upload size not properly configured in config.xml. Using default size of 50MB");
+            error("   Exception : " + e);
+            error("   Message   : " + e.getMessage());
+            error("   Stack     : " + Util.getStackTrace(e));
+        }
 
-        if (!new File(_uploadDir).isAbsolute())
-			_uploadDir = _appPath + _uploadDir;
+        if (!new File(_uploadDir).isAbsolute()) {
+            _uploadDir = _appPath + _uploadDir;
+        }
 
-        if (!_uploadDir.endsWith("/"))
+        if (!_uploadDir.endsWith("/")) {
             _uploadDir += "/";
+        }
 
 		File uploadDirFile = new File(_uploadDir);
-		if( !uploadDirFile.mkdirs() && !uploadDirFile.exists()) {
-		    throw new RuntimeException("Unable to make upload directory: "+uploadDirFile);
+		if (!uploadDirFile.mkdirs() && !uploadDirFile.exists()) {
+		    throw new RuntimeException("Unable to make upload directory: " + uploadDirFile);
 		} else {
-		    Log.info(Log.JEEVES, "Upload directory is: "+ _uploadDir);
+		    Log.info(Log.JEEVES, "Upload directory is: " + _uploadDir);
 		}
 
 		_debugFlag = "true".equals(general.getChildText(ConfigFile.General.Child.DEBUG));
@@ -378,7 +389,8 @@ public class JeevesEngine {
 	//---
 	//---------------------------------------------------------------------------
 
-	/** Setup parameters from config tag (config.xml)
+	/**
+     * Setup parameters from config tag. (config.xml)
 	  */
 
 	@SuppressWarnings("unchecked")
@@ -404,8 +416,9 @@ public class JeevesEngine {
 
 		List<Element> errorPages = defaults.getChildren(ConfigFile.Default.Child.ERROR);
 
-		for(int i=0; i<errorPages.size(); i++)
-			serviceMan.addErrorPage(errorPages.get(i));
+        for (Element errorPage : errorPages) {
+            serviceMan.addErrorPage(errorPage);
+        }
 
 		Element gui = defaults.getChild(ConfigFile.Default.Child.GUI);
 
@@ -413,8 +426,9 @@ public class JeevesEngine {
 		{
 			List<Element> guiElems = gui.getChildren();
 
-			for(int i=0; i<guiElems.size(); i++)
-				serviceMan.addDefaultGui(guiElems.get(i));
+            for (Element guiElem : guiElems) {
+                serviceMan.addDefaultGui(guiElem);
+            }
 		}
 	}
 
@@ -424,7 +438,7 @@ public class JeevesEngine {
 	//---
 	//---------------------------------------------------------------------------
 
-	private void initAppHandler(Element handler, JeevesServlet servlet, JeevesApplicationContext jeevesApplicationContext) throws Exception
+	private void initAppHandler(Element handler, JeevesServlet servlet) throws Exception
 	{
 		if (handler == null) {
 			info("Handler not found");
@@ -443,7 +457,7 @@ public class JeevesEngine {
 
 			ApplicationHandler h = (ApplicationHandler) c.newInstance();
 
-			ServiceContext srvContext = _serviceMan.createServiceContext("AppHandler", jeevesApplicationContext);
+			ServiceContext srvContext = _serviceMan.createServiceContext("AppHandler", _applicationContext);
 			srvContext.setLanguage(_defaultLang);
 			srvContext.setLogger(_appHandLogger);
 			srvContext.setServlet(servlet);

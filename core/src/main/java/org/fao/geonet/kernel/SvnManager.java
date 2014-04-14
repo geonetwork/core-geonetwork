@@ -41,12 +41,9 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.tmatesoft.svn.core.*;
 import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
@@ -62,8 +59,6 @@ import java.sql.Connection;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Component
-@Lazy
 @Aspect
 public class SvnManager {
 
@@ -329,7 +324,6 @@ public class SvnManager {
      * @param context Describing the servicer and user carrying out operation
      * @throws Exception when something goes wrong
      */
-    @Transactional
     public void setHistory(final String id, final ServiceContext context) throws Exception {
 
         if (!_enabled) {
@@ -540,7 +534,6 @@ public class SvnManager {
      * @param editor ISVNEditor for commits to subversion repo
      * @throws SVNException if something goes wrong
      */
-    @Transactional
     public void commitMetadata(String id, ISVNEditor editor) throws Exception {
         if (!_enabled) {
             return;

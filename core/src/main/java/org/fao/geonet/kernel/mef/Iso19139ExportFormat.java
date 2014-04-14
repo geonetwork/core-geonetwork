@@ -19,7 +19,6 @@ import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA_19139;
  * Date: 11/8/13
  * Time: 3:35 PM
  */
-@Component
 public class Iso19139ExportFormat extends ExportFormat {
 
     @Override

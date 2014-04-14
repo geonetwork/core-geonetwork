@@ -1,25 +1,34 @@
 package org.fao.geonet.utils;
 
 import com.google.common.base.Function;
-import com.google.common.base.Functions;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
+import org.apache.http.HttpClientConnection;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.*;
+import org.apache.http.conn.ConnectionRequest;
+import org.apache.http.conn.HttpClientConnectionManager;
+import org.apache.http.conn.routing.HttpRoute;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.LaxRedirectStrategy;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.protocol.HttpContext;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.client.AbstractClientHttpResponse;
 import org.springframework.http.client.ClientHttpResponse;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Factory interface for making different kinds of requests.  This is an interface so that tests can mock their own implementations.
@@ -29,6 +38,22 @@ import java.net.URL;
  * Time: 4:16 PM
  */
 public class GeonetHttpRequestFactory {
+    private int numberOfConcurrentRequests = 20;
+    private PoolingHttpClientConnectionManager connectionManager;
+    private volatile HttpClientConnectionManager nonShutdownableConnectionManager;
+
+    @PreDestroy
+    public synchronized void shutdown() {
+        if (connectionManager != null) {
+            connectionManager.shutdown();
+        }
+        connectionManager = null;
+    }
+    public synchronized void setNumberOfConcurrentRequests(int numberOfConcurrentRequests) {
+        shutdown();
+        this.numberOfConcurrentRequests = numberOfConcurrentRequests;
+    }
+
     /**
      * Create a default XmlRequest.
      *
@@ -98,7 +123,9 @@ public class GeonetHttpRequestFactory {
         return execute(request, noop);
     }
 
-    public ClientHttpResponse execute(HttpUriRequest request, final Credentials credentials, final AuthScope authScope) throws IOException {
+    public ClientHttpResponse execute(HttpUriRequest request,
+                                      final Credentials credentials,
+                                      final AuthScope authScope) throws IOException {
         final Function<HttpClientBuilder, Void> setCredentials = new Function<HttpClientBuilder, Void>() {
             @Nullable
             @Override
@@ -113,29 +140,86 @@ public class GeonetHttpRequestFactory {
         };
         return execute(request, setCredentials);
     }
+    public ClientHttpResponse execute(HttpUriRequest request,
+                                      Function<HttpClientBuilder, Void> configurator) throws IOException {
+        final HttpClientBuilder clientBuilder = getDefaultHttpClientBuilder();
+        configurator.apply(clientBuilder);
+        CloseableHttpClient httpClient = clientBuilder.build();
 
-    public ClientHttpResponse execute(HttpUriRequest request, Function<HttpClientBuilder, Void> configurator) throws IOException {
-        CloseableHttpClient httpClient = null;
-        try {
-            final HttpClientBuilder builder = HttpClientBuilder.create();
-            builder.setRedirectStrategy(new LaxRedirectStrategy());
-            configurator.apply(builder);
+        return new AdaptingResponse(httpClient, httpClient.execute(request));
+    }
 
-            httpClient = builder.build();
-            return new AdaptingResponse(httpClient.execute(request));
-        } finally {
-            if (httpClient != null) {
-                httpClient.close();
-            }
+    public ClientHttpResponse execute(HttpUriRequest request,
+                                      Function<HttpClientBuilder, Void> configurator,
+                                      AbstractHttpRequest r) throws IOException {
+        final HttpClientBuilder clientBuilder = getDefaultHttpClientBuilder();
+        configurator.apply(clientBuilder);
+        CloseableHttpClient httpClient = clientBuilder.build();
+        if (r.isPreemptiveBasicAuth()) {
+            return new AdaptingResponse(httpClient, httpClient.execute(request, r.getHttpClientContext()));
+        } else {
+            return new AdaptingResponse(httpClient, httpClient.execute(request));
         }
+
+    }
+    public HttpClientBuilder getDefaultHttpClientBuilder() {
+        final HttpClientBuilder builder = HttpClientBuilder.create();
+        builder.setRedirectStrategy(new LaxRedirectStrategy());
+        builder.disableContentCompression();
+
+        synchronized (this) {
+            if (connectionManager == null) {
+                connectionManager = new PoolingHttpClientConnectionManager();
+                connectionManager.setMaxTotal(this.numberOfConcurrentRequests);
+                nonShutdownableConnectionManager = new HttpClientConnectionManager() {
+                    public void closeExpiredConnections() {
+                        connectionManager.closeExpiredConnections();
+                    }
+
+                    public ConnectionRequest requestConnection(HttpRoute route, Object state) {
+                        return connectionManager.requestConnection(route, state);
+                    }
+
+                    public void releaseConnection(HttpClientConnection managedConn, Object state, long keepalive, TimeUnit tunit) {
+                        connectionManager.releaseConnection(managedConn, state, keepalive, tunit);
+                    }
+
+                    public void connect(HttpClientConnection managedConn, HttpRoute route, int connectTimeout, HttpContext context) throws IOException {
+                        connectionManager.connect(managedConn, route, connectTimeout, context);
+                    }
+
+                    public void upgrade(HttpClientConnection managedConn, HttpRoute route, HttpContext context) throws IOException {
+                        connectionManager.upgrade(managedConn, route, context);
+                    }
+
+                    public void routeComplete(HttpClientConnection managedConn, HttpRoute route, HttpContext context) throws IOException {
+                        connectionManager.routeComplete(managedConn, route, context);
+                    }
+
+                    public void shutdown() {
+                        // don't shutdown pool
+                    }
+
+                    public void closeIdleConnections(long idleTimeout, TimeUnit tunit) {
+                        connectionManager.closeIdleConnections(idleTimeout, tunit);
+                    }
+                };
+            }
+            builder.setConnectionManager(nonShutdownableConnectionManager);
+        }
+
+
+        return builder;
     }
 
     private static class AdaptingResponse extends AbstractClientHttpResponse {
 
         private final CloseableHttpResponse _response;
+        private final CloseableHttpClient _client;
 
-        public AdaptingResponse(CloseableHttpResponse response) {
+        public AdaptingResponse(CloseableHttpClient client, CloseableHttpResponse response) {
             this._response = response;
+            this._client = client;
         }
 
         @Override
@@ -150,11 +234,8 @@ public class GeonetHttpRequestFactory {
 
         @Override
         public void close() {
-            try {
-                _response.close();
-            } catch (IOException e) {
-                Log.error("org.fao.geonet", "Failure closing HttpResponse", e);
-            }
+            IOUtils.closeQuietly(_response);
+            IOUtils.closeQuietly(_client);
         }
 
         @Override
@@ -177,5 +258,6 @@ public class GeonetHttpRequestFactory {
             return httpHeaders;
         }
     }
+
 
 }

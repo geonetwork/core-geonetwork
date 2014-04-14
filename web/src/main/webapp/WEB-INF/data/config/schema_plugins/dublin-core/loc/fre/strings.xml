@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
   <xml_dublin-core>Save this metadata as a Dublin Core XML file</xml_dublin-core>
+  
+  
+  <xml>XML</xml>
+  <default>Simple</default>
+  <advanced>Complète</advanced>
 </strings>

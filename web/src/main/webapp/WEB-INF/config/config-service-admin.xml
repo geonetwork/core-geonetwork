@@ -26,5 +26,30 @@
       </class>
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
+    
+    
+    <service name="system.properties.set">
+      <documentation><![CDATA[
+      Configure geonetwork's thread pool to not add tasks to thread pool but instead execute them in calling thread.
+      
+      Used by integration test.
+      
+      ]]></documentation>
+      <class name=".services.config.SetSystemProperties" />
+    </service>
+    
+    <service name="versioning.logdata">
+      <documentation><![CDATA[
+      Return versionning history.
+      
+      Parameters:
+      * id: (optional) metadata id.
+      ]]></documentation>
+      <class name=".guiservices.versioning.Get"/>
+    </service>
+    
+    <service name="contact.send">
+      <class name=".services.feedback.Insert" />
+    </service>
   </services>
 </geonet>

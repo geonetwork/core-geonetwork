@@ -211,7 +211,6 @@ public class Select implements Service
             throws SQLException {
 
         DataSource datasource = context.getBean(DataSource.class);
-        context.getEntityManager().flush();
 
         Connection conn = null;
         PreparedStatement stmt = null;

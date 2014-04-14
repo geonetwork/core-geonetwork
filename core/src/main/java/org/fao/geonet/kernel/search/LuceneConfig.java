@@ -59,9 +59,7 @@ import org.springframework.stereotype.Component;
  * @author fxprunayre
  * 
  */
-@Component(value = LuceneConfig.LUCENE_CONFIG_BEAN_NAME)
 public class LuceneConfig {
-    public static final String LUCENE_CONFIG_BEAN_NAME = "luceneConfig";
     public static final String USE_NRT_MANAGER_REOPEN_THREAD = "useNRTManagerReopenThread";
     private static final int ANALYZER_CLASS = 1;
 	private static final int BOOST_CLASS = 2;
@@ -127,13 +125,13 @@ public class LuceneConfig {
      * Facet configuration
      */
     public static class FacetConfig {
-        private String name;
-        private String plural;
-        private String indexKey;
-        private Facet.SortBy sortBy = Facet.SortBy.COUNT;
-        private Facet.SortOrder sortOrder = Facet.SortOrder.DESCENDING;
+        private final String name;
+        private final String plural;
+        private final String indexKey;
+        private final Facet.SortBy sortBy;
+        private final Facet.SortOrder sortOrder;
         private int max;
-        private String translator;
+        private final String translator;
         /**
          * Create a facet configuration from a summary configuration element.
          * 
@@ -152,7 +150,7 @@ public class LuceneConfig {
             } else {
                 max = Integer.parseInt(maxString);
             }
-            max = Math.min(Facet.MAX_SUMMARY_KEY, max);
+            this.max = Math.min(Facet.MAX_SUMMARY_KEY, max);
             
             String sortByConfig = summaryElement.getAttributeValue("sortBy");
             String sortOrderConfig = summaryElement.getAttributeValue("sortOrder");
@@ -161,8 +159,21 @@ public class LuceneConfig {
             
             if("asc".equals(sortOrderConfig)){
                 sortOrder = Facet.SortOrder.ASCENDING;
+            } else {
+                sortOrder = Facet.SortOrder.DESCENDING;
             }
         }
+
+        public FacetConfig(FacetConfig config) {
+            this.name = config.name;
+            this.plural = config.plural;
+            this.indexKey = config.indexKey;
+            this.translator = config.translator;
+            this.max = config.max;
+            this.sortBy = config.sortBy;
+            this.sortOrder = config.sortOrder;
+        }
+
         public String toString() {
             StringBuffer sb = new StringBuffer("Field: ");
             sb.append(indexKey);
@@ -214,6 +225,9 @@ public class LuceneConfig {
         public int getMax() {
             return max;
         }
+        public void setMax(int max) {
+            this.max = max;
+        }
         public Translator getTranslator(ServiceContext context, String langCode) {
             try {
                 return Translator.createTranslator(translator, context, langCode);
@@ -221,7 +235,8 @@ public class LuceneConfig {
                 throw new RuntimeException(e);
             }
         }
-	}
+
+    }
 
 	/**
 	 * List of taxonomy by taxonomy types (hits, hits_with_summary

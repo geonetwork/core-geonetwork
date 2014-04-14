@@ -88,7 +88,6 @@ import java.util.concurrent.*;
  * @author heikki doeleman
  * 
  */
-@Component(Harvest.NAME)
 public class Harvest extends AbstractOperation implements CatalogService {
 
 	static final String NAME = "Harvest";

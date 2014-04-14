@@ -61,7 +61,6 @@ public class DeleteElement implements Service {
         Thesaurus thesaurus = thesaurusMan.getThesaurusByName(sThesaurusName);
 
         // Optional keyword info - if none, selection is used
-        String namespace = Util.getParam(params, "namespace", "");
         String code = Util.getParam(params, "id", "");
 
         if ("".equals(code)) {
@@ -76,7 +75,7 @@ public class DeleteElement implements Service {
             }
 
         } else {
-            thesaurus.removeElement(namespace, code);
+            thesaurus.removeElement(code);
         }
 
         Element elResp = new Element(Jeeves.Elem.RESPONSE);

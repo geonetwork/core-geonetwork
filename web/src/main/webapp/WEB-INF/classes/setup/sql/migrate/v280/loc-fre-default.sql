@@ -1,12 +1,12 @@
 -- ISO 3 letter code migration
 INSERT INTO Languages VALUES ('fre','Français', 'y', 'n');
 
-UPDATE CategoriesDes (iddes, langid, label)             SET langid='fre' WHERE langid='fr';
+UPDATE CategoriesDes             SET langid='fre' WHERE langid='fr';
 UPDATE IsoLanguagesDes           SET langid='fre' WHERE langid='fr';
 UPDATE RegionsDes                SET langid='fre' WHERE langid='fr';
-UPDATE GroupsDes (iddes, langid, label)                 SET langid='fre' WHERE langid='fr';
+UPDATE GroupsDes                 SET langid='fre' WHERE langid='fr';
 UPDATE OperationsDes             SET langid='fre' WHERE langid='fr';
-UPDATE StatusValuesDes  (iddes, langid, label)           SET langid='fre' WHERE langid='fr';
+UPDATE StatusValuesDes           SET langid='fre' WHERE langid='fr';
 UPDATE CswServerCapabilitiesInfo SET langid='fre' WHERE langid='fr';
 DELETE FROM Languages WHERE id='fr';
 

@@ -23,26 +23,33 @@
 
 package jeeves.server.sources.http;
 
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import jeeves.config.springutil.JeevesApplicationContext;
+import jeeves.config.springutil.JeevesContextLoaderListener;
+import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.constants.Jeeves;
 import jeeves.server.JeevesEngine;
 import jeeves.server.UserSession;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequestFactory;
+
 import org.fao.geonet.Util;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.exceptions.FileUploadTooBigEx;
 import org.fao.geonet.utils.Log;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.web.context.support.WebApplicationContextUtils;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
+import org.springframework.context.ConfigurableApplicationContext;
 
 //=============================================================================
 
@@ -53,8 +60,8 @@ public class JeevesServlet extends HttpServlet
 {
     private static final long serialVersionUID = 1L;
 	public static final String USER_SESSION_ATTRIBUTE_KEY = Jeeves.Elem.SESSION;
-	private boolean initialized = false;
-    private transient JeevesApplicationContext jeevesAppContext;
+    public static final String NODES_INIT_PARAM = "nodes";
+    private boolean initialized = false;
 
     //---------------------------------------------------------------------------
 	//---
@@ -63,36 +70,27 @@ public class JeevesServlet extends HttpServlet
 	//---------------------------------------------------------------------------
 
     public void init() throws ServletException {
+        try {
         final ServletContext servletContext = getServletContext();
         final ServletPathFinder pathFinder = new ServletPathFinder(servletContext);
-        this.jeevesAppContext = (JeevesApplicationContext) WebApplicationContextUtils.getWebApplicationContext(servletContext);
 
-        jeevesAppContext.setAppPath(pathFinder.getAppPath());
+        // initialize each JeevesEngine now
+        for (String node : JeevesContextLoaderListener.getNodeIds(servletContext)) {
+            if (!node.trim().isEmpty()) {
+                JeevesApplicationContext jeevesAppContext = (JeevesApplicationContext) servletContext.getAttribute(
+                        User.NODE_APPLICATION_CONTEXT_KEY + node.trim());
+                jeevesAppContext.setServletConfig(getServletConfig());
+                jeevesAppContext.getBean(JeevesEngine.class).init(pathFinder.getAppPath(), pathFinder.getConfigPath(),
+                        pathFinder.getBaseUrl(), this);
 
-        // initialize all JPA Repositories.  This should be done outside of the init
-        // because spring-data-jpa first looks up named queries (based on method names) and
-        // if the query is not found an exception is thrown.  This exception will set rollback
-        // on the transaction if a transaction is active.
-        //
-        // We want to initialize all repositories here so they are not lazily initialized
-        // at random places through out the code where it may be in a transaction.
-        jeevesAppContext.getBeansOfType(JpaRepository.class, false, true);
+            }
+        }
 
-        jeevesAppContext.getBean(JeevesEngine.class).init(pathFinder.getAppPath(), pathFinder.getConfigPath(), pathFinder.getBaseUrl(), this);
         initialized = true;
+        } catch (Throwable e) {
+            JeevesEngine.handleStartupError(e);
+        }
     }
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Destroy
-	//---
-	//---------------------------------------------------------------------------
-
-	public void destroy()
-	{
-        jeevesAppContext.getBean(JeevesEngine.class).destroy();
-		super.destroy();
-	}
 
 	//---------------------------------------------------------------------------
 	//---
@@ -127,18 +125,20 @@ public class JeevesServlet extends HttpServlet
 		// if we do have the optional x-forwarded-for request header then
 		// use whatever is in it to record ip address of client
 		String forwardedFor = req.getHeader("x-forwarded-for");
-		if (forwardedFor != null) ip = forwardedFor;
+		if (forwardedFor != null) {
+            ip = forwardedFor;
+        }
 
-		Log.info (Log.REQUEST, "==========================================================");
-		Log.info (Log.REQUEST, "HTML Request (from "+ ip +") : "+ req.getRequestURI());
-        if(Log.isDebugEnabled(Log.REQUEST)) {
-            Log.debug(Log.REQUEST, "Method       : "+ req.getMethod());
-            Log.debug(Log.REQUEST, "Content type : "+ req.getContentType());
-    //		Log.debug(Log.REQUEST, "Context path : "+ req.getContextPath());
-    //		Log.debug(Log.REQUEST, "Char encoding: "+ req.getCharacterEncoding());
-            Log.debug(Log.REQUEST, "Accept       : "+ req.getHeader("Accept"));
-    //		Log.debug(Log.REQUEST, "Server name  : "+ req.getServerName());
-    //		Log.debug(Log.REQUEST, "Server port  : "+ req.getServerPort());
+		Log.info(Log.REQUEST, "==========================================================");
+        Log.info(Log.REQUEST, "HTML Request (from " + ip + ") : " + req.getRequestURI());
+        if (Log.isDebugEnabled(Log.REQUEST)) {
+            Log.debug(Log.REQUEST, "Method       : " + req.getMethod());
+            Log.debug(Log.REQUEST, "Content type : " + req.getContentType());
+    //		Log.debug(Log.REQUEST, "Context path : " + req.getContextPath());
+    //		Log.debug(Log.REQUEST, "Char encoding: " + req.getCharacterEncoding());
+            Log.debug(Log.REQUEST, "Accept       : " + req.getHeader("Accept"));
+    //		Log.debug(Log.REQUEST, "Server name  : " + req.getServerName());
+    //		Log.debug(Log.REQUEST, "Server port  : " + req.getServerPort());
         }
 //		for (Enumeration e = req.getHeaderNames(); e.hasMoreElements();) {
 //			String theHeader = (String)e.nextElement();
@@ -148,14 +148,15 @@ public class JeevesServlet extends HttpServlet
 //        }
 //		}
 		HttpSession httpSession = req.getSession();
-        if(Log.isDebugEnabled(Log.REQUEST)) Log.debug(Log.REQUEST, "Session id is "+httpSession.getId());
+        if (Log.isDebugEnabled(Log.REQUEST)) {
+            Log.debug(Log.REQUEST, "Session id is " + httpSession.getId());
+        }
 		UserSession session     = (UserSession) httpSession.getAttribute(USER_SESSION_ATTRIBUTE_KEY);
 
 		//------------------------------------------------------------------------
 		//--- create a new session if doesn't exist
 
-		if (session == null)
-		{
+		if (session == null) {
 			//--- create session
 
 			session = new UserSession();
@@ -163,44 +164,57 @@ public class JeevesServlet extends HttpServlet
 			httpSession.setAttribute(USER_SESSION_ATTRIBUTE_KEY, session);
 			session.setsHttpSession(httpSession);
 
-            if(Log.isDebugEnabled(Log.REQUEST)) Log.debug(Log.REQUEST, "Session created for client : " + ip);
+            if (Log.isDebugEnabled(Log.REQUEST)) {
+                Log.debug(Log.REQUEST, "Session created for client : " + ip);
+            }
 		}
 
 		//------------------------------------------------------------------------
 		//--- build service request
 
-		ServiceRequest srvReq = null;
+		ServiceRequest srvReq;
 
 		//--- create request
 
-        JeevesEngine jeeves = jeevesAppContext.getBean(JeevesEngine.class);
+        ConfigurableApplicationContext applicationContext = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext
+                (getServletContext());
+        JeevesEngine jeeves = applicationContext.getBean(JeevesEngine.class);
+
 		try {
 			srvReq = ServiceRequestFactory.create(req, res, jeeves.getUploadDir(), jeeves.getMaxUploadSize());
 		} catch (FileUploadTooBigEx e) {
-			StringBuffer sb = new StringBuffer();
-			sb.append("File upload too big - exceeds "+jeeves.getMaxUploadSize()+" Mb\n");
-			sb.append("Error : " +e.getClass().getName() +"\n");
-			res.sendError(400, sb.toString());
+            StringBuilder sb = new StringBuilder();
+            sb.append("File upload too big - exceeds ").append(jeeves.getMaxUploadSize()).append(" Mb\n")
+                .append("Error : ").append(e.getClass().getName()).append("\n");
 
-			// now stick the stack trace on the end and log the whole lot
-			sb.append("Stack :\n");
-			sb.append(Util.getStackTrace(e));
+            res.sendError(SC_BAD_REQUEST, sb.toString());
+
+            // now stick the stack trace on the end and log the whole lot
+			sb.append("Stack :\n").append(Util.getStackTrace(e));
+
 			Log.error(Log.REQUEST,sb.toString());
 			return;
 		} catch (Exception e) {
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 
-			sb.append("Cannot build ServiceRequest\n");
-			sb.append("Cause : " +e.getMessage() +"\n");
-			sb.append("Error : " +e.getClass().getName() +"\n");
-			res.sendError(400, sb.toString());
+            sb.append("Cannot build ServiceRequest\n").append("Cause : ").append(e.getMessage()).append("\n")
+                .append("Error : ").append(e.getClass().getName()).append("\n");
 
-			// now stick the stack trace on the end and log the whole lot
-			sb.append("Stack :\n");
-			sb.append(Util.getStackTrace(e));
-			Log.error(Log.REQUEST,sb.toString());
+            res.sendError(SC_BAD_REQUEST, sb.toString());
+
+            // now stick the stack trace on the end and log the whole lot
+			sb.append("Stack :\n").append(Util.getStackTrace(e));
+			Log.error(Log.REQUEST, sb.toString());
 			return;
 		}
+
+        // Set the language of the request as the preferred language in a cookie
+        final Cookie langCookie = new Cookie(Jeeves.LANG_COOKIE, srvReq.getLanguage());
+        langCookie.setMaxAge((int) TimeUnit.DAYS.toSeconds(7));
+        langCookie.setComment("Keeps the last language chosen to be the preferred language");
+        langCookie.setVersion(1);
+        langCookie.setPath("/");
+        res.addCookie(langCookie);
 
 		//--- execute request
 

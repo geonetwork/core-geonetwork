@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.csw;
 
 import jeeves.constants.ConfigFile;
+import jeeves.server.overrides.ConfigurationOverrides;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -36,14 +37,14 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-@Component
-@Lazy
+
 public class CatalogConfiguration {
 
 	// GetCapabilities variables
@@ -74,6 +75,9 @@ public class CatalogConfiguration {
 
     @Autowired
     private GeonetworkDataDirectory _dataDir;
+    @Autowired(required = false)
+    private ServletContext _servletContext;
+
     private volatile boolean initialized = false;
 
 
@@ -87,6 +91,7 @@ public class CatalogConfiguration {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+            initialized = true;
         }
     }
 	private void loadCatalogConfig(String path, String configFile)
@@ -96,8 +101,9 @@ public class CatalogConfiguration {
 		Log.info(Geonet.CSW, "Loading : " + configFile);
 
 		Element configRoot = Xml.loadFile(configFile);
+        ConfigurationOverrides.DEFAULT.updateWithOverrides(configFile, _servletContext, _dataDir.getWebappDir(), configRoot);
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         List<Element> operationsList = configRoot.getChildren(Csw.ConfigFile.Child.OPERATIONS);
 
         for (Element element : operationsList) {

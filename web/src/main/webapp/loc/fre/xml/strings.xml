@@ -24,8 +24,13 @@
         legacy UI 
         <statusSendEmail>%s\n\nRecords are available from the following URL:\n %s/main.search?_status=%s&amp;_statusChangeDate=%s</statusSendEmail>
         -->
-	<statusSendEmail>%s\n\nLa liste des changements d'état sont accessibles ici :\n %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search</statusSendEmail>
-	
+	<statusSendEmail>
+Commentaire de l'utilisateur lors du changement d'état :
+%s
+
+La liste des changements d'état sont accessibles ici :
+%s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search
+	</statusSendEmail>	
 	<otherValue>Autre :</otherValue>
 	<warning>Attention</warning>
 	<isAdmin>Est administrateur ?</isAdmin>
@@ -1422,4 +1427,5 @@
 	<welcome.text></welcome.text>
 	<tag_label>Tags</tag_label>
 	<map_label>Carte</map_label>
+    <unknown>Unknown</unknown>
 </strings>

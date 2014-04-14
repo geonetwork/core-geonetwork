@@ -11,7 +11,9 @@
 		<suggest name="gmx:Anchor"/>
 	</field>
 	
-	
+	<field name="gmd:hierarchyLevel">
+		<suggest name="gmd:MD_ScopeCode"/>
+	</field>
 	<field name="gmx:Anchor">
 		<suggest name="xlink:href"/>
 	</field>
@@ -71,7 +73,7 @@
     </field>
 	
 	
-	<!-- Contact info: suggest all by default. -->
+	<!-- Contact info: suggest all by default. 
 	<field name="gmd:CI_ResponsibleParty">
 		<suggest name="gmd:individualName"/>
 		<suggest name="gmd:organisationName"/>
@@ -97,11 +99,12 @@
 		<suggest name="gmd:country"/>
 		<suggest name="gmd:electronicMailAddress"/>
 		</field>
+	-->
 	
 	
 	<!-- INSPIRE Suggestion for contact suggest 
 		organisation name and email address as defined in metadata IR.
-		ie. less fields than in GeoNetwork default behaviour.
+		ie. less fields than in GeoNetwork default behaviour.-->
 	<field name="gmd:CI_ResponsibleParty">
 		<suggest name="gmd:organisationName"/>
 		<suggest name="gmd:contactInfo"/>
@@ -113,7 +116,7 @@
 	
 	<field name="gmd:CI_Address">
 		<suggest name="gmd:electronicMailAddress"/>
-	</field>-->
+	</field>
 	
 	
 	

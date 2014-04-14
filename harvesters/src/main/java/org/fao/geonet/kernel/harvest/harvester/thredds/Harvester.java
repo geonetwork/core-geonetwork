@@ -35,6 +35,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.exceptions.BadServerCertificateEx;
 import org.fao.geonet.exceptions.BadXmlResponseEx;
@@ -47,6 +48,8 @@ import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.Fragme
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.HarvestSummary;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.Updater;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.util.Sha1Encoder;
 import org.fao.geonet.utils.Xml;
@@ -63,6 +66,7 @@ import ucar.nc2.ncml.NcMLWriter;
 import ucar.nc2.units.DateType;
 import ucar.unidata.util.StringUtil;
 
+import javax.annotation.Nonnull;
 import javax.net.ssl.SSLHandshakeException;
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -430,16 +434,21 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
         String id = dataMan.insertMetadata(context, schema, md, uuid, Integer.parseInt(params.ownerId), group, params.uuid,
-                     isTemplate, docType, title, category, df.format(date), df.format(date), ufo, indexImmediate);
+                     isTemplate, docType, category, df.format(date), df.format(date), ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-        addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
-		
-		dataMan.setTemplateExt(iId, MetadataType.METADATA, null);
+        context.getBean(MetadataRepository.class).update(iId, new Updater<Metadata>() {
+            @Override
+            public void apply(@Nonnull Metadata entity) {
+                addCategories(entity, params.getCategories(), localCateg, context, log, null);
+            }
+        });
+
+		dataMan.setTemplateExt(iId, MetadataType.METADATA);
 		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(uri));
 
-        dataMan.indexMetadata(id);
+        dataMan.indexMetadata(id, false);
 
         dataMan.flush();
     }

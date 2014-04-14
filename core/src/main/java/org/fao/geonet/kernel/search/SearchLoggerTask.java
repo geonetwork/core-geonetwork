@@ -7,7 +7,7 @@ import org.fao.geonet.kernel.search.log.SearcherLogger;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Propagation;
 
 /**
  * Task to launch a new thread for search logging.
@@ -17,9 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author francois
  */
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@Transactional
 public class SearchLoggerTask implements Runnable {
     private ServiceContext srvContext;
     boolean logSpatialObject;

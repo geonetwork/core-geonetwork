@@ -24,10 +24,13 @@
 package org.fao.geonet.lib;
 
 import jeeves.server.context.ServiceContext;
+import jeeves.TransactionAspect;
+import jeeves.TransactionTask;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.springframework.context.ApplicationContext;
+import org.springframework.transaction.TransactionStatus;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -40,6 +43,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.concurrent.Callable;
 
 //=============================================================================
 
@@ -52,13 +56,21 @@ public class DbLib {
 
 	private static final String SQL_EXTENSION = ".sql";
 
-	public void insertData(ServletContext servletContext, ServiceContext context, String appPath, String filePath,
+	public void insertData(ServletContext servletContext, final ServiceContext context, String appPath, String filePath,
                            String filePrefix) throws Exception {
         if(Log.isDebugEnabled(Geonet.DB))
             Log.debug(Geonet.DB, "Filling database tables");
 
-		List<String> data = loadSqlDataFile(servletContext, context.getApplicationContext(), appPath, filePath, filePrefix);
-		runSQL(context.getEntityManager(), data, true);
+		final List<String> data = loadSqlDataFile(servletContext, context.getApplicationContext(), appPath, filePath, filePrefix);
+        TransactionAspect.runInTransaction("insert data into database from file", context.getApplicationContext(),
+                TransactionAspect.TransactionRequirement.CREATE_ONLY_WHEN_NEEDED, TransactionAspect.CommitBehavior.ALWAYS_COMMIT, false,
+                new TransactionTask<Object>() {
+                    @Override
+                    public Object doInTransaction(TransactionStatus transaction) throws Throwable {
+                        runSQL(context.getEntityManager(), data, true);
+                        return null;
+                    }
+                });
 	}
 
 	public void insertData(ServletContext servletContext, Statement statement, String appPath, String filePath,
@@ -91,7 +103,7 @@ public class DbLib {
                         final String trimmedSQL = sql.trim();
                         final Query query = entityManager.createNativeQuery(trimmedSQL);
                         if (trimmedSQL.startsWith("SELECT")) {
-							query.setFirstResult(1);
+							query.setMaxResults(1);
                             query.getSingleResult();
 						} else {
 							query.executeUpdate();
@@ -165,7 +177,10 @@ public class DbLib {
         }
 
         if (finalPath == null && servletContext != null) {
-            finalPath = servletContext.getRealPath(filePath + "/" + prefix + type + SQL_EXTENSION);
+            String realPath = servletContext.getRealPath(filePath + "/" + prefix + type + SQL_EXTENSION);
+            if (realPath != null) {
+                finalPath = testPath(realPath);
+            }
         }
         if (finalPath == null) {
             finalPath = testPath(filePath + "/" +  prefix + "default" + SQL_EXTENSION);
@@ -175,7 +190,7 @@ public class DbLib {
         }
 
         if (finalPath == null && servletContext != null) {
-            finalPath = servletContext.getRealPath(filePath + "/" +  prefix + "default" + SQL_EXTENSION);
+            finalPath = testPath(servletContext.getRealPath(filePath + "/" +  prefix + "default" + SQL_EXTENSION));
         }
 
 		if (finalPath != null)
@@ -218,28 +233,6 @@ public class DbLib {
 
             // --- load the sql data
             return Lib.text.load(servletContext, appPath, file, Constants.ENCODING);
-	}
-
-	private String getObjectName(String createStatem) {
-		StringTokenizer st = new StringTokenizer(createStatem, " ");
-		st.nextToken();
-		st.nextToken();
-
-		return st.nextToken();
-	}
-
-	// ---------------------------------------------------------------------------
-
-	private String getObjectType(String createStatem) {
-		StringTokenizer st = new StringTokenizer(createStatem, " ");
-		st.nextToken();
-
-		return st.nextToken();
-	}
-
-	static final class ObjectInfo {
-		public String name;
-		public String type;
 	}
 
 }

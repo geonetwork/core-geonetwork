@@ -32,8 +32,9 @@ public class MetadataStatusId implements Serializable {
      *
      * @param changedate the date of the status change in string form.
      */
-    public void setChangeDate(ISODate changedate) {
+    public MetadataStatusId setChangeDate(ISODate changedate) {
         this._changedate = changedate;
+        return this;
     }
 
     /**

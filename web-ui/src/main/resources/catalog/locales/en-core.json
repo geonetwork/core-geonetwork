@@ -5,10 +5,30 @@
     "password": "Password",
     "rememberMe": "Remember me",
     "signIn": "Sign in",
-    "signedInAs": "",
+    "signedInAs": " ",
+    "needHelp": "Need help",
+    "docNotFound": "<strong>Warning !</strong> Page <a href='{{page}}'>{{page}}</a> not found in documentation.",
+    
+    "METADATA": "Metadata",
+    "TEMPLATE": "Template",
+    "SUB_TEMPLATE": "Directory entry",
     
     "eng": "English",
     "fre": "Français",
+    "ara": "عربي",
+    "cat": "Català",
+    "chi": "中文",
+    "dut": "Nederlands",
+    "fin": "Suomeksi",
+    "ger": "Deutsch",
+    "ita": "Italiano",
+    "nor": "Norsk",
+    "por": "Рortuguês",
+    "rus": "Русский",
+    "spa": "Español",
+    "tur": "Türkçe",
+    "pol": "Polski",
+    
     "title": "Title",
     
     "east": "East",
@@ -25,6 +45,7 @@
     "save": "Save",
     
     "adminConsole": "Admin console",
+    "editorBoard": "Add new record",
     "needAnAccount": "Need an account ?",
     "needAnAccountInfo": "Then sign right up, it only takes a minute.",
     "createAnAccount": "Create an account",
@@ -56,14 +77,16 @@
     "passwordMinlength": "Password must contain at least 6 characters!",
     "updatePassword": "Update",
     "passwordUpdated": "Password successfully updated.",
-    
+    "resetPassword": "Reset password",
+    "resetPasswordTitle": "Reset {{user}} password.",
     "from": "From",
     "to": "To",
     "until": "Until",
     "by": "by",
     "previous": "Previous",
     "next": "Next",
-    
+    "passwordReminderError": "Error getting password information",
+    "sendPasswordLinkToMyEmail": "Send password link to my email",
     "noRecordFound": "No record found.",
     
     "anyPlaceHolder": "Search ...",
@@ -73,6 +96,8 @@
     "_indexingError": "Indexing error",
     "_cat": "Category",
     "keyword": "Keyword",
+    "keywords": "Keywords",
+    "keywordFilter": "Filter keyword",
     "filter": "Filter",
     "_groupPublished": "Published in that group",
     "_source": "Catalog",
@@ -97,6 +122,11 @@
     "Reviewer": "Reviewer",
     "UserAdmin": "User administrator",
     
+    "dataset": "Dataset",
+    "map": "Map",
+    "service": "Service",
+    "staticMap": "Static map",
+    "featureCatalog": "Feature catalog",
     
     "errorIs": "Error is ",
     
@@ -104,7 +134,16 @@
     "msgUserAuthenticated": "User {{username}} authenticated.",
     "msgNoCatalogInfo": "Could not retrieved catalog information.",
     "msgNoUserInfo": "Could not retrieve user details.",
-    
+    "toggleScrollSpy": "Toggle scrolling navigation",
+    "scrollTop": "Scroll to top",
     "passwordUpdateError": "Error when updating password",
-    "BadParameterEx": "Wrong parameter"
+    "BadParameterEx": "Wrong parameter",
+    "send": "Send",
+    "organization": "Organization",
+    "comments": "Comment",
+    "sendAComment": "Send us a comment",
+    "feedbackNotEnable": "Feedback is not enabled.",
+    "feebackSent": "Your message has been sent to the catalog manager.",
+    "url": "URL",
+    "upload": "Upload"
 }

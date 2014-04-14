@@ -15,6 +15,12 @@
   <xsl:include href="base-variables.xsl"/>
   <xsl:include href="functions-core.xsl"/>
   
+  
+  <!-- Initialized variables used in <schema>/utility-tpl.xsl
+  which are not used in that mode. To be improved. FIXME -->
+  <xsl:variable name="editorConfig"><null/></xsl:variable>
+  <xsl:variable name="metadata"><null/></xsl:variable>
+  
   <xsl:include href="blanks/metadata-schema01/layout/tpl-brief.xsl"/>
   <xsl:include href="blanks/metadata-schema02/layout/tpl-brief.xsl"/>
   <xsl:include href="blanks/metadata-schema03/layout/tpl-brief.xsl"/>
@@ -36,6 +42,8 @@
   <xsl:include href="blanks/metadata-schema19/layout/tpl-brief.xsl"/>
   <xsl:include href="blanks/metadata-schema20/layout/tpl-brief.xsl"/>
   
+  
+  <xsl:template match="*[name() = 'summary']" mode="brief"/>
   
   <xsl:template match="*" mode="brief">
     <xsl:variable name="schema" select="gn:info/schema"/>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-lazy-init="true"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd" >
+    <import resource="classpath*:/config-spring-geonetwork.xml"/>
+    <import resource="../config-db/database_migration.xml"/>
+
+    <context:property-override properties-ref="node1-configuration-overrides" />
+
+    <bean id="node1-configuration-overrides"
+          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="properties">
+            <props>
+                <prop key="jdbcDataSource.Url">jdbc:h2:h2_node1;LOCK_TIMEOUT=20000;DB_CLOSE_ON_EXIT=FALSE;MVCC=TRUE</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="nodeInfo" class="org.fao.geonet.NodeInfo">
+        <property name="id" value="node1" />
+        <property name="defaultNode" value="false" />
+    </bean>
+
+    <!-- Uncomment the database configuration you need to use -->
+    <import resource="../config-db/h2.xml"/>
+ 	<!--<import resource="config-db/jndi-postgres-postgis.xml"/> -->
+ 	<!--<import resource="config-db/oracle.xml"/>-->
+ 	<!--<import resource="config-db/mysql.xml"/> -->
+ 	<!--<import resource="config-db/db2.xml"/> -->
+ 	<!--<import resource="config-db/postgres.xml"/>-->
+ 	<!--<import resource="config-db/sqlserver.xml"/> -->
+
+</beans>

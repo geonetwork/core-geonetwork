@@ -12,22 +12,17 @@
 				<xsl:apply-templates select="/root/gui/strings/*[@js='true' and not(*) and not(@id)]" mode="js-translations"/>
 			};
 		</script>
+        <xsl:variable name="minimize">
+            <xsl:choose>
+                <xsl:when test="/root/request/debug">?minimize=false</xsl:when>
+                <xsl:otherwise></xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
 
-		<xsl:choose>
-			<xsl:when test="/root/request/debug">
-				<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/geonetwork.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/modalbox.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/form_check.js"/><xsl:text>&#10;</xsl:text>
-			</xsl:when>
-			<xsl:otherwise>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.scriptaculous.js"/><xsl:text>&#10;</xsl:text>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.js"/><xsl:text>&#10;</xsl:text>
-			</xsl:otherwise>
-		</xsl:choose>
-	</xsl:template>
+        <script type="text/javascript" src="{/root/gui/url}/static/gn.libs.js{$minimize}"/><xsl:text>&#10;</xsl:text>
+        <script type="text/javascript" src="{/root/gui/url}/static/gn.libs.scriptaculous.js{$minimize}"/><xsl:text>&#10;</xsl:text>
+        <script type="text/javascript" src="{/root/gui/url}/static/gn.js{$minimize}"/><xsl:text>&#10;</xsl:text>
+    </xsl:template>
 
 	<xsl:template name="geoCssHeader">
 		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/scripts/ext/resources/css/ext-all.css"/>
@@ -82,7 +77,7 @@
 				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/form/FileUploadField.js"/><xsl:text>&#10;</xsl:text>
 
 				<!-- For now using standard OpenLayers.js and GeoExt.js compressed files.  TODO: Change to use gn.geo.libs.js -->  
-				<!--script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.geo.libs.js"></script--> 
+				<!--script type="text/javascript" src="{/root/gui/url}/static/gn.geo.libs.js"></script-->
 
 				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/OpenLayers.js"/><xsl:text>&#10;</xsl:text>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/openlayers/lib/OpenLayers/Format/CSWGetRecords.js"/><xsl:text>&#10;</xsl:text>
@@ -149,8 +144,15 @@
 	<xsl:template name="edit-header">
 		<xsl:call-template name="ext-ux"/>
 
-		<!-- Load javascript needed for editor in debug mode.
-			 If not, they are part of gn.editor.js -->
+        <xsl:variable name="minimize">
+            <xsl:choose>
+                <xsl:when test="/root/request/debug">?minimize=false</xsl:when>
+                <xsl:otherwise></xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+
+        <!-- Load javascript needed for editor in debug mode.
+             If not, they are part of gn.editor.js -->
 		<xsl:choose>
 			<xsl:when test="/root/request/debug">
 				<!-- <script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js"/><xsl:text>&#10;</xsl:text> -->
@@ -165,7 +167,7 @@
 			<xsl:otherwise>
 				<!-- 
 					editor libs is already loaded in all page due to lots of dependencies
-				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.editor.js"/><xsl:text>&#10;</xsl:text>
+				<script type="text/javascript" src="{/root/gui/url}/static/gn.editor.js{$minimize}"/><xsl:text>&#10;</xsl:text>
 				-->
 			</xsl:otherwise>
 		</xsl:choose>

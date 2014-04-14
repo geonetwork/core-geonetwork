@@ -1,8 +1,10 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.UserGroupEntityListenerManager;
 import org.jdom.Element;
 
 import javax.persistence.*;
+import java.util.IdentityHashMap;
 
 /**
  * The mapping between user, the groups a user is a part of and the profiles the user has for each group.
@@ -12,6 +14,7 @@ import javax.persistence.*;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = UserGroupNamedQueries.TABLE_NAME)
+@EntityListeners(UserGroupEntityListenerManager.class)
 public class UserGroup extends GeonetEntity {
     private UserGroupId _id = new UserGroupId();
     private Group _group;
@@ -108,7 +111,7 @@ public class UserGroup extends GeonetEntity {
     }
 
     @Override
-    public Element asXml() {
+    protected Element asXml(IdentityHashMap<Object, Void> alreadyEncoded) {
         return new Element("record")
                 .addContent(new Element("group").setText(""+getId().getGroupId()))
                 .addContent(new Element("user").setText(""+getId().getUserId()))

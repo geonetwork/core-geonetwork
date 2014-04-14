@@ -56,6 +56,7 @@ import org.openrdf.sesame.query.QueryEvaluationException;
 import org.openrdf.sesame.query.QueryResultsTable;
 import org.openrdf.sesame.repository.local.LocalRepository;
 import org.openrdf.sesame.sail.StatementIterator;
+import org.springframework.context.ApplicationContext;
 
 import java.io.File;
 import java.io.IOException;
@@ -106,7 +107,7 @@ public class Thesaurus {
 	@SuppressWarnings("unused")
 	private String authority;
 */
-	private IsoLanguagesMapper isoLanguageMapper;
+	private ApplicationContext context;
 
 	/**
 	 * @param fname
@@ -114,12 +115,12 @@ public class Thesaurus {
 	 * @param type
 	 * @param dname category/domain name of thesaurus
 	 */
-	public Thesaurus(IsoLanguagesMapper mapper, String fname, String type, String dname, File thesaurusFile, String siteUrl) {
-	    this(mapper, fname, null, null, type, dname, thesaurusFile, siteUrl, false);
+	public Thesaurus(ApplicationContext context, String fname, String type, String dname, File thesaurusFile, String siteUrl) {
+	    this(context, fname, null, null, type, dname, thesaurusFile, siteUrl, false);
 	}
-    public Thesaurus(IsoLanguagesMapper mapper, String fname, String tname, String tnamespace, String type, String dname, File thesaurusFile, String siteUrl, boolean ignoreMissingError) {
+    public Thesaurus(ApplicationContext context, String fname, String tname, String tnamespace, String type, String dname, File thesaurusFile, String siteUrl, boolean ignoreMissingError) {
 		super();
-		this.isoLanguageMapper = mapper;
+		this.context = context;
 		this.fname = fname;
 		this.type = type;
 		this.dname = dname;
@@ -136,11 +137,6 @@ public class Thesaurus {
 		}
 	}
 
-	
-	public Thesaurus(String fname, String type, String dname, File thesaurusFile, String siteUrl) {
-		this(null, fname, type, dname, thesaurusFile, siteUrl);
-	}
-	
     /**
 	 * 
 	 * @return Thesaurus identifier
@@ -307,7 +303,7 @@ public class Thesaurus {
         }
         
         // Create subject
-        URI mySubject = myFactory.createURI(namespace, keyword.getRelativeCode());
+        URI mySubject = myFactory.createURI(keyword.getUriCode());
 
         URI skosClass = myFactory.createURI(namespaceSkos, "Concept");
         URI rdfType = myFactory.createURI(org.openrdf.vocabulary.RDF.TYPE);
@@ -390,7 +386,6 @@ public class Thesaurus {
     /**
      * Remove keyword from thesaurus.
      * 
-     * @param namespace
      * @param uri
      * @throws AccessDeniedException
      */
@@ -699,7 +694,8 @@ public class Thesaurus {
             theNSs.add(Namespace.getNamespace("dcterms", "http://purl.org/dc/terms/"));
 
             this.defaultNamespace = null;
-            Element title = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dc:title|rdf:Description/dc:title", theNSs);
+            Element title = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dc:title|skos:Collection/dc:title|rdf:Description/dc:title", theNSs);
+
             if (title != null) {
                 this.title = title.getValue();
                 this.defaultNamespace = title.getParentElement().getAttributeValue("about", rdfNamespace);
@@ -718,7 +714,7 @@ public class Thesaurus {
             	this.defaultNamespace += "#";
             }
 
-            Element dateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:issued", theNSs);
+            Element dateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:issued|skos:Collection/dc:date", theNSs);
 
             Date thesaususDate = parseThesaurusDate(dateEl);
 
@@ -798,7 +794,7 @@ public class Thesaurus {
 		}
 
         public IsoLanguagesMapper getIsoLanguageMapper() {
-            return isoLanguageMapper == null? IsoLanguagesMapper.getInstance() : isoLanguageMapper;
+            return context.getBean(IsoLanguagesMapper.class);
         }
 
         /**

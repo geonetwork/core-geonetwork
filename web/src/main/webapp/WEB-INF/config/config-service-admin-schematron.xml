@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+
+      <service name="admin.schematrontype">
+          <documentation>
+              <![CDATA[
+              List the various schematron's and the schematron criteria types.
+
+              Schematron Criteria types are used to define the options used to create a schematron criteria.
+              ]]>
+          </documentation>
+          <class name=".services.metadata.schema.SchematronCriteriaTypeService"/>
+      </service>
+
+      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+      <!-- SchematronC Admin services                             -->
+      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+      <service name="admin.schematron.list">
+          <documentation>
+              <![CDATA[
+              List schematron.
+
+              Parameters are:
+                 * id: (Optional) The id of a schematron to load
+              ]]>
+          </documentation>
+          <class name=".services.metadata.schema.SchematronService">
+              <param name="action" value="LIST"/>
+          </class>
+      </service>
+      <service name="admin.schematron.exists">
+          <documentation>
+              <![CDATA[
+              Check for the existance of a schematron
+
+              Parameters are:
+                 * id: The id of a schematron to check
+              ]]>
+          </documentation>
+          <class name=".services.metadata.schema.SchematronService">
+              <param name="action" value="EXISTS"/>
+          </class>
+      </service>
+      <service name="admin.schematron.update">
+          <documentation>
+              <![CDATA[
+              Update properties of a schematron
+
+              Parameters are:
+                 * id: The id of a schematron to update
+                 * displaypriority: the new display priority of the schematron
+              ]]>
+          </documentation>
+          <class name=".services.metadata.schema.SchematronService">
+              <param name="action" value="EDIT"/>
+          </class>
+      </service>
+
+      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+      <!-- SchematronCriteria Admin services                             -->
+      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+      <service name="admin.schematroncriteria.list">
+          <documentation>
+              <![CDATA[
+              List schematron criteria.
+
+              Parameters are:
+                 * id: (Optional) The id of a criteria to load
+                 * groupName: (Optional) filter listed criteria to those containing the groupName (it is recommended to be used in conjuction with schematronId)
+                 * schematronId: (Optional) filter listed criteria to those containing the schematronId (it is recommended to be used in conjuction with groupName)
+                 * includeGroup: (Optional) if true then each criteria will also contain the SchematronCriteriaGroup data
+
+              Response is:
+                <schematroncriteria>
+                  <record>
+                    <group>
+                    <!-- if includeGroup is true then the required attribute is also present in group -->
+                      <id>
+                        <name>*Generated*</name>
+                        <schematronid>100</schematronid>
+                      </id>
+                    </group>
+                    <id>101</id>
+                    <type>ALWAYS_ACCEPT</type>
+                    <value>_ignored_</value>
+                    <uitype>ALWAYS_ACCEPT</uitype>
+                    <uivalue>_ignored_</uivalue>
+                  </record>
+                </schematroncriteria>
+              ]]>
+          </documentation>
+          <class name=".services.metadata.schema.SchematronCriteriaService">
+              <param name="action" value="LIST"/>
+          </class>
+      </service>
+      <service name="admin.schematroncriteria.exists">
+          <documentation>
+              <![CDATA[
+              Check for the existence of a SchematronCriteria
+
+              Parameters are:
+                 * id: The id of a schematron to check
+
+              Return is:
+              <response>true</response>
+              ]]>
+          </documentation>
+          <class name=".services.metadata.schema.SchematronCriteriaService">
+              <param name="action" value="EXISTS"/>
+          </class>
+      </service>
+      <service name="admin.schematroncriteria.add">
+          <documentation>
+              <![CDATA[
+              Add a new SchematronCriteria.  If the SchematronCriteriaGroup identified by the parameters does not exist a
+              new one will be created.
+
+              Parameters are:
+                * groupName: Part 1 of the SchematronCriteriaGroup ID
+                * schematronId: Part 2 of the SchematronCriteriaGroup ID
+                * type: the SchematronCriteriaType identifier (the name of the enum)
+                * value: the value that will be passed when calculating if the criteria is satisfied
+                * uiType: a string for the UI to use as the type for display (for example Keyword instead of XPATH)
+                * uiValue: a string for displaying in the UI instead of value (for example building instead of the xpath expression matching the keyword building)
+              ]]>
+          </documentation>
+          <class name=".services.metadata.schema.SchematronCriteriaService">
+              <param name="action" value="ADD"/>
+          </class>
+      </service>
+      <service name="admin.schematroncriteria.update">
+          <documentation>
+              <![CDATA[
+              Edit an existing SchematronCriteria.
+
+              Parameters are:
+                * groupName: Part 1 of the SchematronCriteriaGroup ID
+                * schematronId: Part 2 of the SchematronCriteriaGroup ID
+                * type: the SchematronCriteriaType identifier (the name of the enum)
+                * value: the value that will be passed when calculating if the criteria is satisfied
+              ]]>
+          </documentation>
+          <class name=".services.metadata.schema.SchematronCriteriaService">
+              <param name="action" value="EDIT"/>
+          </class>
+      </service>
+      <service name="admin.schematroncriteria.delete">
+          <documentation>
+              <![CDATA[
+              Delete an existing SchematronCriteria.
+
+              Parameters are:
+                * id: the id of the SchematronCriteria to delete
+              ]]>
+          </documentation>
+          <class name=".services.metadata.schema.SchematronCriteriaService">
+              <param name="action" value="DELETE"/>
+          </class>
+      </service>
+
+
+      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+      <!-- SchematronCriteriaGroup Admin services                        -->
+      <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+      <service name="admin.schematroncriteriagroup.list">
+          <documentation>
+              <![CDATA[
+              List SchematronCriteriaGroup.  To list just one use both groupName and schematronId as they make up the primary key of
+              a SchematronCriteriaGroup.
+
+              Parameters are:
+                 * groupName: (Optional) filter listed criteria to those containing the groupName (it is recommended to be used in conjuction with schematronId)
+                 * schematrongId: (Optional) filter listed criteria to those containing the schematronId (it is recommended to be used in conjuction with groupName)
+                 * includeCriteria: (Optional) if true then each criteria data (instead of just the ids) will be included in the group
+                 * includeSchematron: (Optional) if true the schematron data (instead of just the ids) will be included in the group
+
+              Return is (when includeCriteria and include Schematron are true):
+  <schematroncriteriagroup>
+      <record>
+        <criteria>
+          <!-- if includeCriteria is false then only the criteria id is present -->
+          <criteria>
+            <group />
+            <id>101</id>
+            <type>ALWAYS_ACCEPT</type>
+            <value>_ignored_</value>
+          </criteria>
+        </criteria>
+        <id>
+          <name>*Generated*</name>
+          <schematronid>100</schematronid>
+        </id>
+        <requirement>REQUIRED</requirement>
+        <!-- Schematron only present when includeSchematron is true -->
+        <schematron>
+          <defaultrequirement>REQUIRED</defaultrequirement>
+          <file>schematron-rules-geonetwork.xsl</file>
+          <id>100</id>
+          <label>
+            <eng>schematron-rules-geonetwork</eng>
+          </label>
+          <rulename>schematron-rules-geonetwork</rulename>
+          <schemaname>iso19139</schemaname>
+        </schematron>
+      </record>
+  <schematroncriteriagroup>
+              ]]>
+          </documentation>
+          <class name=".services.metadata.schema.SchematronCriteriaGroupService">
+              <param name="action" value="LIST"/>
+          </class>
+      </service>
+      <service name="admin.schematroncriteria.exists">
+          <documentation>
+              <![CDATA[
+              Check for the existence of a SchematronCriteriaGroup
+
+              Parameters are:
+                * groupName: Part 1 of the SchematronCriteriaGroup ID
+                * schematronId: Part 2 of the SchematronCriteriaGroup ID
+              ]]>
+          </documentation>
+          <class name=".services.metadata.schema.SchematronCriteriaService">
+              <param name="action" value="EXISTS"/>
+          </class>
+      </service>
+      <service name="admin.schematroncriteriagroup.add">
+          <documentation>
+              <![CDATA[
+              Add a new SchematronCriteriaGroup.
+
+              Parameters are:
+                * groupName: Part 1 of the SchematronCriteriaGroup ID
+                * schematronId: Part 2 of the SchematronCriteriaGroup ID
+                * required: org.fao.geonet.domain.SchematronRequirement value of the group
+              ]]>
+          </documentation>
+          <class name=".services.metadata.schema.SchematronCriteriaGroupService">
+              <param name="action" value="ADD"/>
+          </class>
+      </service>
+      <service name="admin.schematroncriteriagroup.update">
+          <documentation>
+              <![CDATA[
+              Edit an existing SchematronCriteriaGroup.
+
+              Parameters are:
+                * groupName: Part 1 of the SchematronCriteriaGroup ID
+                * schematronId: Part 2 of the SchematronCriteriaGroup ID
+                * required: org.fao.geonet.domain.SchematronRequirement value of the group
+              ]]>
+          </documentation>
+          <class name=".services.metadata.schema.SchematronCriteriaGroupService">
+              <param name="action" value="EDIT"/>
+          </class>
+      </service>
+      <service name="admin.schematroncriteriagroup.delete">
+          <documentation>
+              <![CDATA[
+              Delete an existing SchematronCriteriaGroup.
+
+              Parameters are:
+                * groupName: Part 1 of the SchematronCriteriaGroup ID
+                * schematronId: Part 2 of the SchematronCriteriaGroup ID
+              ]]>
+          </documentation>
+          <class name=".services.metadata.schema.SchematronCriteriaGroupService">
+              <param name="action" value="DELETE"/>
+          </class>
+      </service>
+
+  </services>
+</geonet>

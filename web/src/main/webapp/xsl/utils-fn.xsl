@@ -96,11 +96,11 @@
     <xsl:variable name="codelistProfil">
       <xsl:choose>
         <xsl:when test="starts-with($schema,'iso19139.')">
-          <xsl:value-of select="$loc/*[name(.)=$schema]/codelists/codelist[@name = $qname]/entry[code = $code]/label"/>
+          <xsl:value-of select="$loc/*[name(.)=$schema]/codelists/codelist[@name = $qname and not(@displayIf)]/entry[code = $code]/label"/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:value-of
-            select="$loc/*[name(.)=$schema]/codelists/codelist[@name = $qname]/entry[code = $code]/label" />
+            select="$loc/*[name(.)=$schema]/codelists/codelist[@name = $qname and not(@displayIf)]/entry[code = $code]/label" />
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
@@ -111,7 +111,7 @@
       <xsl:otherwise>
           
               <xsl:value-of
-                select="$loc/*[name(.)='iso19139']/codelists/codelist[@name = $qname]/entry[code=$code]/label" />
+                select="$loc/*[name(.)='iso19139']/codelists/codelist[@name = $qname and not(@displayIf)]/entry[code=$code]/label" />
         
       </xsl:otherwise>
     </xsl:choose>

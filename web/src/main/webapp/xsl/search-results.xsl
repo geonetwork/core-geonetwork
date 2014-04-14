@@ -28,45 +28,33 @@
 		</script><xsl:text>&#10;</xsl:text>
 
 		<!-- To avoid an interaction with prototype and ExtJs.Tooltip, should be loadded before ExtJs -->
-		<xsl:choose>
-			<xsl:when test="/root/request/debug">
-				<script type="text/javascript" src="{/root/gui/url}/scripts/prototype.js"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.js"/>
-			</xsl:otherwise>
-		</xsl:choose>
 
+        <xsl:variable name="minimize">
+		    <xsl:choose>
+                <xsl:when test="/root/request/debug">?minimize=false</xsl:when>
+                <xsl:otherwise></xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+
+        <script type="text/javascript" src="{/root/gui/url}/static/gn.libs.js{$minimize}"/>
 
 		<xsl:choose>
 			<xsl:when test="/root/request/debug">
 				<script src="{/root/gui/url}/scripts/ext/ext-all-debug.js"  type="text/javascript"/>
 
-				<script type="text/javascript" src="{/root/gui/url}/scripts/geonetwork.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/scriptaculous/scriptaculous.js?load=slider,effects,controls"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/modalbox.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/form_check.js"/>
-
-				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/tooltip-manager.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/simpletooltip.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-show.js"/>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/adapter/ext/ext-base.js"/>
 				<script type="text/javascript" src="{/root/gui/url}/scripts/ext/ext-all.js"/>
+            </xsl:otherwise>
+        </xsl:choose>
 
-				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.libs.scriptaculous.js"/>
+        <script type="text/javascript" src="{/root/gui/url}/static/gn.libs.scriptaculous.js{$minimize}"/>
+        <!-- Editor JS is still required here at least for batch operation -->
+        <script type="text/javascript" src="{/root/gui/url}/static/gn.editor.js{$minimize}"/>
 
-				<!-- Editor JS is still required here at least for batch operation -->
-				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.editor.js"/>
-
-			</xsl:otherwise>
-		</xsl:choose>
-
-		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"></script>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/gn_search.js?"/>
+		<script type="text/javascript" src="{/root/gui/url}/static/kernel.js"></script>
+		<script type="text/javascript" src="{/root/gui/url}/static/gn_search.js{$minimize}"/>
 	</xsl:template>
 
 	<!--

@@ -80,11 +80,11 @@ public class AddElement implements Service {
 		ThesaurusManager manager = gc.getBean(ThesaurusManager.class);
 		Thesaurus thesaurus = manager.getThesaurusByName(ref);
 
-		if (thesaurus.isFreeCode(namespace, newid)) {
+		if (thesaurus.isFreeCode(null, newid)) {
 
 		    KeywordBean keyword = new KeywordBean()
 	            .setNamespaceCode(namespace)
-	            .setRelativeCode(newid);
+	            .setUriCode(newid);
 
             Map<Pair<String, String>, String> localizations = getLocalizedElements(params);
             if (localizations.isEmpty()) {

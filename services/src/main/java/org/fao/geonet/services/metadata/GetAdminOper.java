@@ -103,11 +103,7 @@ public class GetAdminOper implements Service
         Element elOper = new Element(Geonet.Elem.OPERATIONS);
 
         for (Operation operation : operationList) {
-            Element record = new Element("record")
-                .addContent(new Element("id").setText(Integer.toString(operation.getId())))
-                .addContent(new Element("name").setText(operation.getName()))
-                .addContent(new Element("isreserved").setText(Boolean.toString(operation.isReserved())));
-            elOper.addContent(record);
+            elOper.addContent(operation.asXml());
         }
 
         //-----------------------------------------------------------------------

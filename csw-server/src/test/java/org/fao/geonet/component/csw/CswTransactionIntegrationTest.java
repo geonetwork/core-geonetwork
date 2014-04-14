@@ -1,5 +1,6 @@
 package org.fao.geonet.component.csw;
 
+import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.Metadata;
@@ -10,13 +11,16 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataRepositoryTest;
 import org.fao.geonet.utils.Xml;
+import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -35,12 +39,17 @@ import static org.junit.Assert.*;
  */
 public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
     public static final String PHOTOGRAPHIC_UUID = "46E7F9B1-99F6-3241-9039-EAE7201534F4";
-    public static final String IDENTIFICATION_XPATH = "gmd:identificationInfo/gmd:MD_DataIdentification";
-    public static final String TITLE_XPATH = IDENTIFICATION_XPATH + "/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString";
+    public static final String IDENTIFICATION_XPATH = "gmd:identificationInfo/*";
+    public static final String TITLE_XPATH = IDENTIFICATION_XPATH + "/gmd:citation/gmd:CI_Citation/gmd:title";
+    public static final String TITLE_XPATH_DE_FREE_TEXT = TITLE_XPATH + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#DE']";
+    public static final String TITLE_XPATH_FR_FREE_TEXT = TITLE_XPATH + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#FR']";
+    public static final String TITLE_XPATH_EN_FREE_TEXT = TITLE_XPATH + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#EN']";
+    public static final String TITLE_XPATH_CHARSTRING = TITLE_XPATH + "/gco:CharacterString";
     private static final String ABSTRACT_XPATH = IDENTIFICATION_XPATH + "/gmd:abstract";
     private static final String TOTAL_UPDATED = "totalUpdated";
     private static final String TOTAL_INSERTED = "totalInserted";
     private static final String TOTAL_DELETED = "totalDeleted";
+
     @Autowired
     private MetadataRepository _metadataRepository;
     @Autowired
@@ -136,13 +145,13 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
         final String newTitle = "NewTitle";
-        Element params = createUpdateTransaction(TITLE_XPATH, newTitle);
+        Element params = createUpdateTransaction(TITLE_XPATH_CHARSTRING, newTitle);
 
         Element response = _transaction.execute(params, serviceContext);
 
         assertEquals(1, getUpdatedCount(response, TOTAL_UPDATED));
 
-        assertMetadataIsUpdated(TITLE_XPATH, newTitle);
+        assertMetadataIsUpdated(TITLE_XPATH_CHARSTRING, newTitle);
     }
 
     @Test
@@ -150,7 +159,7 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         addPhotographicMetadataToRepository(adminUserId());
 
         final Element metadata = Xml.loadStream(CswTransactionIntegrationTest.class.getResourceAsStream("metadata-photographic.xml"));
-        final String xpath = "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints";
+        final String xpath = "gmd:identificationInfo/*/gmd:resourceConstraints";
         Xml.selectElement(metadata, xpath, Arrays.asList(GMD)).detach();
 
         assertNotNull(Xml.selectElement(_metadataRepository.findOneByUuid(PHOTOGRAPHIC_UUID).getXmlData(false), xpath,
@@ -182,7 +191,7 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         Element response = _transaction.execute(params, serviceContext);
 
         assertEquals(1, getUpdatedCount(response, TOTAL_UPDATED));
-        assertMetadataIsUpdated(TITLE_XPATH, newTitle);
+        assertMetadataIsUpdated(TITLE_XPATH_CHARSTRING, newTitle);
 
     }
 
@@ -208,10 +217,10 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
         final String newTitle = "NewTitle";
-        Element params = createUpdateTransaction(TITLE_XPATH, newTitle);
+        Element params = createUpdateTransaction(TITLE_XPATH_CHARSTRING, newTitle);
         Element response = _transaction.execute(params, serviceContext);
         assertEquals(1, getUpdatedCount(response, TOTAL_UPDATED));
-        assertMetadataIsUpdated(TITLE_XPATH, newTitle);
+        assertMetadataIsUpdated(TITLE_XPATH_CHARSTRING, newTitle);
 
         String newAbstract = "updatedAbstract";
         params = createUpdateTransaction(ABSTRACT_XPATH, newAbstract);
@@ -219,9 +228,62 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
 
         assertEquals(1, getUpdatedCount(response, TOTAL_UPDATED));
 
-        assertMetadataIsUpdated(TITLE_XPATH, newTitle);
+        assertMetadataIsUpdated(TITLE_XPATH_CHARSTRING, newTitle);
         assertMetadataIsUpdated(ABSTRACT_XPATH, newAbstract);
 
+    }
+
+    @Test
+    public void testXPathRemoveElement() throws Exception {
+        addPhotographicMetadataToRepository(adminUserId());
+
+        ServiceContext serviceContext = createServiceContext();
+        loginAsAdmin(serviceContext);
+
+        final String newTitle = "AddedTitle";
+        Element params = createUpdateTransaction(TITLE_XPATH, newTitle);
+
+        Element response = _transaction.execute(params, serviceContext);
+
+        assertEquals(1, getUpdatedCount(response, TOTAL_UPDATED));
+
+        final Metadata updatedMetadata = _metadataRepository.findOneByUuid(PHOTOGRAPHIC_UUID);
+        assertEquals(1, Xml.selectNodes(updatedMetadata.getXmlData(false), TITLE_XPATH, Arrays.asList(GCO, GMD)).size());
+    }
+
+    @Test
+    public void testXPathAddXml() throws Exception {
+        addPhotographicMetadataToRepository(adminUserId());
+
+        ServiceContext serviceContext = createServiceContext();
+        loginAsAdmin(serviceContext);
+
+        String charStringValue = "charStringValue";
+        Element charStringEl = new Element("CharacterString", GCO).addContent(charStringValue);
+
+        String de = "deValue";
+        String fr = "frValue";
+        String en = "enValue";
+        Element ptFreeText = new Element("PT_FreeText", GMD)
+                .addContent(new Element("textGroup", GMD).addContent(new Element("LocalisedCharacterString", GMD)
+                        .setAttribute("locale", "#DE").addContent(de))
+                )
+                .addContent(new Element("textGroup", GMD).addContent(new Element("LocalisedCharacterString", GMD)
+                        .setAttribute("locale", "#FR").addContent(fr))
+                )
+                .addContent(new Element("textGroup", GMD).addContent(new Element("LocalisedCharacterString", GMD)
+                        .setAttribute("locale", "#EN").addContent(en))
+                );
+        final Element title = new Element("title", GMD).addContent(Lists.newArrayList(charStringEl, ptFreeText));
+        Element params = createUpdateTransaction(TITLE_XPATH, title);
+
+        Element response = _transaction.execute(params, serviceContext);
+
+        assertEquals(1, getUpdatedCount(response, TOTAL_UPDATED));
+
+        assertMetadataIsUpdated(TITLE_XPATH_DE_FREE_TEXT, de);
+        assertMetadataIsUpdated(TITLE_XPATH_EN_FREE_TEXT, en);
+        assertMetadataIsUpdated(TITLE_XPATH_FR_FREE_TEXT, fr);
     }
 
     private void assertMetadataIsUpdated(String updateXPath, String newValue) throws IOException, JDOMException {
@@ -241,10 +303,22 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
                         .addContent(constraint));
     }
 
-    private Element createRecordProperty(String newTitle, String propertyName) {
-        return new Element("RecordProperty", NAMESPACE_CSW)
-                .addContent(new Element("Name", NAMESPACE_CSW).setText(propertyName))
-                .addContent(new Element("Value", NAMESPACE_CSW).setText(newTitle));
+    private Element createRecordProperty(String propertyName, Object value) {
+        Element xml = new Element("RecordProperty", NAMESPACE_CSW)
+                .addContent(new Element("Name", NAMESPACE_CSW).setText(propertyName));
+
+        final Element valueEl = new Element("Value", NAMESPACE_CSW);
+        if (value instanceof Content) {
+            valueEl.addContent((Content) value);
+        } else if (value instanceof String) {
+            valueEl.setText((String) value);
+        } else {
+            throw new AssertionError("Not a supported new value : "+value);
+        }
+
+        xml.addContent(valueEl);
+
+        return xml;
     }
 
     private void addPhotographicMetadataToRepository(int ownerId) throws Exception {
@@ -255,18 +329,18 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         metadata.setDataAndFixCR(Xml.loadStream(CswTransactionIntegrationTest.class.getResourceAsStream("metadata-photographic.xml")));
         metadata = _metadataRepository.save(metadata);
         final String schemaDir = _schemaManager.getSchemaDir("iso19139");
-        List<Element> extras = Arrays.asList(
+        List<Element> extras = Lists.newArrayList(
                 SearchManager.makeField("_uuid", PHOTOGRAPHIC_UUID, false, true),
                 SearchManager.makeField("_isTemplate", "n", true, true),
                 SearchManager.makeField("_owner", "" + ownerId, true, true)
         );
         _searchManager.index(schemaDir, metadata.getXmlData(false), "" + metadata.getId(), extras,
-                MetadataType.METADATA, metadata.getDataInfo().getTitle());
+                MetadataType.METADATA, false);
     }
 
-    private Element createUpdateTransaction(String property, String newValue) {
+    private Element createUpdateTransaction(String property, Object newValue) {
         Element constraint = createConstraint();
-        Element recordProperty = createRecordProperty(newValue, property);
+        Element recordProperty = createRecordProperty(property, newValue);
 
         return new Element("Transaction", NAMESPACE_CSW)
                 .setAttribute("service", "CSW")

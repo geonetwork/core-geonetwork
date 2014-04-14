@@ -1,0 +1,8 @@
+<button type="button" class="btn btn-default"
+  data-ng-click="process()"
+  data-ng-disabled="processing"
+  title="{{help}}">
+  <i class="fa fa-cog"/>
+  <span>{{name}}</span>
+  <i data-ng-if="processing" class="fa fa-spinner fa-spin"/>
+</button>

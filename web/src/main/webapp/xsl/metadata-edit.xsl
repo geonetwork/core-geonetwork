@@ -23,24 +23,22 @@
 	-->
 	<!-- needs priority to succeed over match="/"  in main.xsl -->
 	<xsl:template mode="script" match="/" priority="20">
-		
 		<xsl:call-template name="geoHeader"/>
-		
-		<xsl:choose>
-            <xsl:when test="/root/request/debug">
-	    		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/metadata-editor.js"></script>
-        		<script type="text/javascript" src="{/root/gui/url}/scripts/editor/simpletooltip.js"></script>
-		    </xsl:when>
-            <xsl:otherwise>
-				<script type="text/javascript" src="{/root/gui/url}/scripts/lib/gn.editor.js"></script>
-            </xsl:otherwise>
-        </xsl:choose>
-	
-		<xsl:call-template name="edit-header"/>
+
+        <xsl:variable name="minimize">
+            <xsl:choose>
+                <xsl:when test="/root/request/debug">?minimize=false</xsl:when>
+                <xsl:otherwise></xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+
+        <script type="text/javascript" src="{/root/gui/url}/static/gn.editor.js{$minimize}"></script>
+
+        <xsl:call-template name="edit-header"/>
 
         <xsl:variable name="twoCharLangCode" select="java:twoCharLangCode(/root/gui/language)" />
 		<script type="text/javascript" src="{/root/gui/url}/scripts/ext/locale/ext-lang-{$twoCharLangCode}.js"/>
-		<script type="text/javascript" src="{/root/gui/url}/scripts/core/kernel/kernel.js"/>
+		<script type="text/javascript" src="{/root/gui/url}/static/kernel.js"/>
 		<script type="text/javascript" src="{/root/gui/url}/scripts/webtoolkit.aim.js"/>
 		<script type="text/javascript">
 			<xsl:if test="/root/gui/position!='-1'">

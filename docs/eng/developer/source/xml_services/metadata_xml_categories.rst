@@ -31,7 +31,7 @@ Request example:
 **POST**::
 
   Url:
-  http://localhost:8080/geonetwork/srv/en/xml.metadata.category
+  http://localhost:8080/geonetwork/srv/eng/xml.metadata.category
 
   Mime-type:
   application/xml
@@ -47,7 +47,7 @@ Request example:
 **GET**::
 
   Url:
-  http://localhost:8080/geonetwork/srv/en/xml.metadata.category?id=6&_1&_2
+  http://localhost:8080/geonetwork/srv/eng/xml.metadata.category?id=6&_1&_2
 
 Response
 ````````

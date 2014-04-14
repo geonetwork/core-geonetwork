@@ -11,7 +11,7 @@
 }
 
 .x-tool-newwindow {
-  background-image : url(../images/default/newwindow.png) !important;
+  background-image : url(../apps/images/default/newwindow.png) !important;
 }
 
 .metadata * img.logo {
@@ -41,12 +41,12 @@ img.thumb-small {
 span.success {
   padding-left : 15px !important;
   background-repeat : no-repeat;
-  background-image : url(../images/default/flag_green.png);
+  background-image : url(../apps/images/default/flag_green.png);
 }
 span.error {
   padding-left : 15px !important;
   background-repeat : no-repeat;
-  background-image : url(../images/default/flag_red.png);
+  background-image : url(../apps/images/default/flag_red.png);
 }
 .mandatory + td span input,
 .mandatory + td span textarea,
@@ -399,30 +399,30 @@ span.buttons a.small span {
 }
 .buttons a.find span {
   padding-left : 15px !important;
-  background-image : url(../images/default/find.png);
+  background-image : url(../apps/images/default/find.png);
 }
 .buttons a.findsub span {
   padding-left : 15px !important;
-  background-image : url(../images/default/find.png);
+  background-image : url(../apps/images/default/find.png);
 }
 .buttons a.error span {
   padding-left : 15px !important;
-  background-image : url(../images/default/flag_red.png);
+  background-image : url(../apps/images/default/flag_red.png);
 }
 .buttons a.add span {
-  background-image : url(../images/default/bullet_toggle_plus.png);
+  background-image : url(../apps/images/default/bullet_toggle_plus.png);
   background-size: 10px;
 }
 .buttons a.del span {
-  background-image : url(../images/default/bullet_toggle_minus.png);
+  background-image : url(../apps/images/default/bullet_toggle_minus.png);
   background-size: 10px;
 }
 .buttons a.up span {
-  background-image : url(../images/default/bullet_arrow_up.png);
+  background-image : url(../apps/images/default/bullet_arrow_up.png);
   background-size: 8px;
 }
 .buttons a.down span {
-  background-image : url(../images/default/bullet_arrow_down.png);
+  background-image : url(../apps/images/default/bullet_arrow_down.png);
   background-size: 8px;
 }
 
@@ -434,155 +434,155 @@ div.button {
 }
 
 .tgRight {
-  background-image : url(../images/default/bullet_arrow_right.png);
+  background-image : url(../apps/images/default/bullet_arrow_right.png);
 }
 .tgDown {
-  background-image : url(../images/default/bullet_arrow_down.png);
+  background-image : url(../apps/images/default/bullet_arrow_down.png);
   background-position: 50% 50%;
 }
 .edit {
-  background-image : url(../images/default/page_white.png) !important;
+  background-image : url(../apps/images/default/page_white.png) !important;
 }
 .editing {
-  background-image : url(../images/default/page_white_edit.png) !important;
+  background-image : url(../apps/images/default/page_white_edit.png) !important;
 }
 .saveMetadata {
-  background-image : url(../images/default/page_save.png) !important;
+  background-image : url(../apps/images/default/page_save.png) !important;
 }
 .quitMetadata {
-  background-image : url(../images/default/page_go.png) !important;
+  background-image : url(../apps/images/default/page_go.png) !important;
 }
 .validateMetadata {
-  background-image : url(../images/default/page_lightning.png) !important;
+  background-image : url(../apps/images/default/page_lightning.png) !important;
 }
 .refreshMetadata {
-  background-image : url(../images/default/page_refresh.png) !important;
+  background-image : url(../apps/images/default/page_refresh.png) !important;
 }
 .cancel {
-  background-image : url(../images/default/cancel.png) !important;
+  background-image : url(../apps/images/default/cancel.png) !important;
 }
 .configIcon {
-  background-image : url(../images/default/cog.png) !important;
+  background-image : url(../apps/images/default/cog.png) !important;
 }
 .groupKey {
-  background-image : url(../images/default/group_key.png) !important;
+  background-image : url(../apps/images/default/group_key.png) !important;
 }
 .flagGreen {
-  background-image : url(../images/default/flag_green.png) !important;
+  background-image : url(../apps/images/default/flag_green.png) !important;
 }
 .flagOrange {
-  background-image : url(../images/default/flag_orange.png) !important;
+  background-image : url(../apps/images/default/flag_orange.png) !important;
 }
 .flagRed {
-  background-image : url(../images/default/flag_red.png) !important;
+  background-image : url(../apps/images/default/flag_red.png) !important;
 }
 .valid-1 {
-  background-image : url(../images/default/flag_green.png) !important;
+  background-image : url(../apps/images/default/flag_green.png) !important;
 }
 .valid-0 {
-  background-image : url(../images/default/flag_red.png) !important;
+  background-image : url(../apps/images/default/flag_red.png) !important;
 }
 .valid--1 {
 }
 .addMenu {
-  background-image : url(../images/default/add.png) !important;
+  background-image : url(../apps/images/default/add.png) !important;
 }
-.cat-children, .cat-parent, .cat-sibling {
-  background-image : url(../images/default/chart_organisation.png) !important;
+.cat-children, .cat-parent, .cat-sibling, .cat-associated {
+  background-image : url(../apps/images/default/chart_organisation.png) !important;
 }
 .book {
-  background-image : url(../images/default/book.png) !important;
+  background-image : url(../apps/images/default/book.png) !important;
 }
 .feedback {
-    background-image : url(../images/default/feedback.png) !important;
+    background-image : url(../apps/images/default/feedback.png) !important;
 }
 .subtemplateIcon {
-  background-image : url(../images/default/report_magnify.png) !important;
+  background-image : url(../apps/images/default/report_magnify.png) !important;
 }
 .thumbnailIcon {
-  background-image : url(../images/default/picture.png) !important;
+  background-image : url(../apps/images/default/picture.png) !important;
 }
 .thumbnailAddIcon {
-  background-image : url(../images/default/picture_add.png) !important;
+  background-image : url(../apps/images/default/picture_add.png) !important;
 }
 .thumbnailDelIcon {
-  background-image : url(../images/default/picture_delete.png) !important;
+  background-image : url(../apps/images/default/picture_delete.png) !important;
 }
 .thumbnailGoIcon {
-  background-image : url(../images/default/picture_go.png) !important;
+  background-image : url(../apps/images/default/picture_go.png) !important;
 }
 .attached {
-  background-image : url(../images/default/folder_brick.png) !important;
+  background-image : url(../apps/images/default/folder_brick.png) !important;
 }
 .attachedAdd {
-  background-image : url(../images/default/folder_go.png) !important;
+  background-image : url(../apps/images/default/folder_go.png) !important;
 }
 .uploadIconAdd {
-  background-image : url(../images/default/folder_page_white.png) !important;
+  background-image : url(../apps/images/default/folder_page_white.png) !important;
 }
 .uploadIcon {
-  background-image : url(../images/default/folder_go.png) !important;
+  background-image : url(../apps/images/default/folder_go.png) !important;
 }
 .suggestionIcon {
-  background-image : url(../images/default/cog.png) !important;
+  background-image : url(../apps/images/default/cog.png) !important;
 }
 .suggestionRunIcon {
-  background-image : url(../images/default/page_gear.png) !important;
+  background-image : url(../apps/images/default/page_gear.png) !important;
 }
 .relatedAddIcon {
-  background-image : url(../images/default/link_add.png) !important;
+  background-image : url(../apps/images/default/link_add.png) !important;
 }
 .relatedDelIcon {
-  background-image : url(../images/default/link_del.png) !important;
+  background-image : url(../apps/images/default/link_del.png) !important;
 }
 .lightBox {
-  background-image : url(../images/default/map/icon_zoomin.png) !important;
+  background-image : url(../apps/images/default/map/icon_zoomin.png) !important;
 }
 
 .cat-thumbnail {
-  background-image : url(../images/default/picture_go.png) !important;
+  background-image : url(../apps/images/default/picture_go.png) !important;
 }
 .cat-applications {
-  background-image : url(../images/default/category/applications.png) !important;
+  background-image : url(../apps/images/default/category/applications.png) !important;
 }
 .cat-dataset {
-  background-image : url(../images/default/category/dataset.png) !important;
+  background-image : url(../apps/images/default/category/dataset.png) !important;
 }
 .cat-datasets {
-  background-image : url(../images/default/category/datasets.png) !important;
+  background-image : url(../apps/images/default/category/datasets.png) !important;
 }
 .cat-services, .cat-service {
-  background-image : url(../images/default/category/service.png) !important;
+  background-image : url(../apps/images/default/category/service.png) !important;
 }
 .cat-maps {
-  background-image : url(../images/default/category/maps.png) !important;
+  background-image : url(../apps/images/default/category/maps.png) !important;
 }
 .cat-audioVideo {
-  background-image : url(../images/default/category/audioVideo.png) !important;
+  background-image : url(../apps/images/default/category/audioVideo.png) !important;
 }
 .cat-caseStudies {
-  background-image : url(../images/default/category/caseStudies.png) !important;
+  background-image : url(../apps/images/default/category/caseStudies.png) !important;
 }
 .cat-directories {
-  background-image : url(../images/default/category/directories.png) !important;
+  background-image : url(../apps/images/default/category/directories.png) !important;
 }
 .cat-related, .cat-featureCatalogue, .cat-fcats {
-  background-image : url(../images/default/category/featureCatalogue.png) !important;
+  background-image : url(../apps/images/default/category/featureCatalogue.png) !important;
 }
 .cat-interactiveResources {
-  background-image : url(../images/default/category/interactiveResources.png) !important;
+  background-image : url(../apps/images/default/category/interactiveResources.png) !important;
 }
 .cat-model {
-  background-image : url(../images/default/category/model.png) !important;
+  background-image : url(../apps/images/default/category/model.png) !important;
 }
 .cat-photo {
-  background-image : url(../images/default/category/photo.png) !important;
+  background-image : url(../apps/images/default/category/photo.png) !important;
 }
 .cat-otherResources {
-  background-image : url(../images/default/category/otherResources.png) !important;
+  background-image : url(../apps/images/default/category/otherResources.png) !important;
 }
 .cat-proceedings {
-  background-image : url(../images/default/category/proceedings.png) !important;
+  background-image : url(../apps/images/default/category/proceedings.png) !important;
 }
 /* Icon and button - end */
 

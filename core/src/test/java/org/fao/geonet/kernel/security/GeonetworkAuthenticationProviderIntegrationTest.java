@@ -63,28 +63,46 @@ public class GeonetworkAuthenticationProviderIntegrationTest extends AbstractCor
 
     @Test(expected = UsernameNotFoundException.class)
     public void testUserNotFound() throws Exception{
-        final User user = userFoundSetup(false);
+        final User user = userFoundSetup(PasswordEncoding.CURRENT);
 
         _geonetworkAuthenticationProvider.retrieveUser(user.getUsername() + "not", authentication);
     }
 
+    enum PasswordEncoding {
+        UNSALTED, OLD, CURRENT
+    }
     /**
      * Makes dbms find a user.
      *
      * @throws Exception
      */
-    private User userFoundSetup(boolean oldPassword) throws Exception {
+    private User userFoundSetup(PasswordEncoding passwordEncoding) throws Exception {
         final User entity = UserRepositoryTest.newUser(_inc);
-        if (oldPassword) {
-            entity.getSecurity().getSecurityNotifications().add(UserSecurityNotification.HASH_UPDATE_REQUIRED);
+        switch (passwordEncoding) {
+            case CURRENT:
+                entity.getSecurity().setPassword(_encoder.encode(PASSWORD));
+                break;
+            case OLD:
+                entity.getSecurity().getSecurityNotifications().add(UserSecurityNotification.UPDATE_HASH_REQUIRED);
+                final Method method = PasswordUtil.class.getDeclaredMethod("oldScramble", String.class);
+                method.setAccessible(true);
+                final Object unsaltedScramble = method.invoke(null, PASSWORD);
+                entity.getSecurity().setPassword(unsaltedScramble.toString());
+                break;
+            case UNSALTED:
+                entity.getSecurity().getSecurityNotifications().add(UserSecurityNotification.UPDATE_HASH_REQUIRED);
+                final Method method2 = PasswordUtil.class.getDeclaredMethod("unsaltedScramble", String.class);
+                method2.setAccessible(true);
+                final Object oldScramble = method2.invoke(null, PASSWORD);
+                entity.getSecurity().setPassword(oldScramble.toString());
+                break;
         }
-        entity.getSecurity().setPassword(_encoder.encode(PASSWORD));
         return _userRepo.save(entity);
     }
 
     @Test
     public void testUserFound() throws Exception{
-        final User user = userFoundSetup(false);
+        final User user = userFoundSetup(PasswordEncoding.CURRENT);
 
         _geonetworkAuthenticationProvider.retrieveUser(user.getUsername(), authentication);
         TestCase.assertNotNull("User should be found",
@@ -93,13 +111,7 @@ public class GeonetworkAuthenticationProviderIntegrationTest extends AbstractCor
 
     @Test
     public void testFindUserWithAuthenticationTokenUnsalted() throws Exception{
-        final User user = userFoundSetup(true);
-        final Method method = PasswordUtil.class.getDeclaredMethod("unsaltedScramble", String.class);
-        method.setAccessible(true);
-        final Object unsaltedScramble = method.invoke(null, user.getPassword());
-        char[] hashPassword = unsaltedScramble.toString().toCharArray();
-        user.getSecurity().setPassword(hashPassword);
-        _userRepo.save(user);
+        final User user = userFoundSetup(PasswordEncoding.UNSALTED);
 
         mockAuthenticationSetup(user);
 
@@ -109,13 +121,7 @@ public class GeonetworkAuthenticationProviderIntegrationTest extends AbstractCor
 
     @Test
     public void testFindUserWithAuthenticationTokenOldPasswordHash() throws Exception{
-        final User user = userFoundSetup(true);
-        final Method method = PasswordUtil.class.getDeclaredMethod("oldScramble", String.class);
-        method.setAccessible(true);
-        final Object unsaltedScramble = method.invoke(null, user.getPassword());
-        char[] hashPassword = unsaltedScramble.toString().toCharArray();
-        user.getSecurity().setPassword(hashPassword);
-        _userRepo.save(user);
+        final User user = userFoundSetup(PasswordEncoding.OLD);
 
         mockAuthenticationSetup(user);
 
@@ -124,7 +130,7 @@ public class GeonetworkAuthenticationProviderIntegrationTest extends AbstractCor
     }
     @Test
     public void testFindUserWithAuthenticationToken() throws Exception{
-        final User user = userFoundSetup(false);
+        final User user = userFoundSetup(PasswordEncoding.CURRENT);
         mockAuthenticationSetup(user);
 
         final UserDetails userDetails = _geonetworkAuthenticationProvider.retrieveUser(user.getUsername(), authentication);
@@ -133,14 +139,14 @@ public class GeonetworkAuthenticationProviderIntegrationTest extends AbstractCor
 
     @Test(expected = IllegalArgumentException.class)
     public void testAuthenticateWithoutToken() throws Exception {
-        userFoundSetup(false);
+        userFoundSetup(PasswordEncoding.CURRENT);
 
         _geonetworkAuthenticationProvider.authenticate(authentication);
     }
 
     @Test(expected = BadCredentialsException.class)
     public void testAuthenticateWithTokenWithoutCredentials() throws Exception {
-        userFoundSetup(false);
+        userFoundSetup(PasswordEncoding.CURRENT);
         authentication = mock(UsernamePasswordAuthenticationToken.class);
 
         _geonetworkAuthenticationProvider.authenticate(authentication);
@@ -161,14 +167,14 @@ public class GeonetworkAuthenticationProviderIntegrationTest extends AbstractCor
 
     @Test(expected = BadCredentialsException.class)
     public void testAuthenticateWithUserNotFound() throws Exception {
-        userFoundSetup(false);
+        userFoundSetup(PasswordEncoding.CURRENT);
         mockAuthenticationSetup(null);
         _geonetworkAuthenticationProvider.authenticate(authentication);
     }
 
     @Test
     public void testAuthenticateWithTokenWithCorrectCredentials() throws Exception {
-        final User user = userFoundSetup(false);
+        final User user = userFoundSetup(PasswordEncoding.CURRENT);
         mockAuthenticationSetup(user);
         TestCase.assertNotNull("Authentication with correct credentials should succeed",
                 _geonetworkAuthenticationProvider.authenticate(authentication));

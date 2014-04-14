@@ -7,27 +7,6 @@
           metadata-complete="true">
 
     <display-name>geonetwork</display-name>
-	<context-param>
-		<param-name>contextClass</param-name>
- 		<param-value>
-	          jeeves.config.springutil.JeevesApplicationContext
-	      </param-value>
-	</context-param>
-	<!-- comma separated list of classes that implement 
-		 org.springframework.beans.factory.config.BeanFactoryPostProcessor
-
-		 This is an additional method of overriding the spring configuration
-		 besides multiple bean configuration files with overriding beans by using
-		 same id in multiple files. 
-		  -->
-	<context-param>
-		<param-name>applicationContextPostProcessors</param-name>
-		<param-value></param-value>
-	</context-param>
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>/WEB-INF/config-spring-geonetwork.xml</param-value>
-	</context-param>
     <listener>
         <listener-class>jeeves.config.springutil.JeevesContextLoaderListener</listener-class>
     </listener>
@@ -66,7 +45,15 @@
     <!-- Spring security -->
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>
-        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <filter-class>jeeves.config.springutil.JeevesDelegatingFilterProxy</filter-class>
+        <init-param>
+            <param-name>loginService</param-name>
+            <param-value>j_spring_security_check</param-value>
+        </init-param>
+        <init-param>
+            <param-name>trustedHost</param-name>
+            <param-value>localhost</param-value>
+        </init-param>
     </filter>
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
@@ -78,12 +65,12 @@
         <filter-name>UrlRewriteFilter</filter-name>
         <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
         <!-- set the amount of seconds the conf file will be checked for reload. can be a valid integer (0 denotes
-            check every time, empty/not set denotes no reload check)
-        <init-param>
-            <param-name>confReloadCheckInterval</param-name>
-            <param-value>60</param-value>
-        </init-param>
-        -->
+            check every time, empty/not set denotes no reload check) -->
+        <!--<init-param>-->
+            <!--<param-name>confReloadCheckInterval</param-name>-->
+            <!--<param-value>0</param-value>-->
+        <!--</init-param>-->
+
 
         <!-- sets up log level (will be logged to context log). Can be: TRACE, DEBUG, INFO (default), WARN, ERROR,
             FATAL, log4j, commons, sysout:{level} (ie, sysout:DEBUG). If you are having trouble using normal levels use
@@ -106,13 +93,13 @@
             <param-value>/status</param-value>
         </init-param>
     </filter>
-	<filter-mapping>
-		<filter-name>UrlRewriteFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>FORWARD</dispatcher>
-	</filter-mapping>
-	
+    <filter-mapping>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+
     <!-- Resources servlet -->
     <filter>
         <filter-name>resources</filter-name>
@@ -126,6 +113,28 @@
             <param-value>${system.specific.overrides},${web.xml.main.config.overrides}${web.xml.widget.config.overrides}</param-value>
         </init-param>
     </filter>
+    <filter>
+        <!--
+            WebResourceOptimizer is a WRO4J Filter (https://code.google.com/p/wro4j/wiki/Introduction)
+            which runs css and javascript linting, compiling, minification and compression.  We use it in two ways.
+
+            * Runtime as a Servlet Filter - at runtime WRO4J compiles, lints, minifies and compresses all javascript and css files.
+                                            This allows a developer to be able to get instant feed back when he/she changes a file.
+                                            By Default the javascript and css is minimized.  To not have it minized use ?minimize=false
+            * Maven build - The same configuration is run on all javascript files during build time.  The artifacts are ignored
+                            because they are generated at runtime but it a check to verify that when deployed all artifacts can be
+                            correctly built when the .
+        -->
+
+        <filter-name>WebResourceOptimizer</filter-name>
+        <filter-class>
+            ro.isdc.wro.http.WroFilter
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>WebResourceOptimizer</filter-name>
+        <url-pattern>/static/*</url-pattern>
+    </filter-mapping>
 
     <!-- Only allow administrators or localhost access to the monitoring metrics -->
     <filter>
@@ -173,66 +182,21 @@
         <filter-name>resources</filter-name>
         <url-pattern>/htmlcache/*</url-pattern>
     </filter-mapping>
-    
+
+    <!-- Print servlet -->
     <servlet>
-        <servlet-name>gn-servlet</servlet-name>
-        <servlet-class>jeeves.server.sources.http.JeevesServlet</servlet-class>
-        <!-- Specified what overrides to use if the 
-        	(servlet.getServletContext().getServletContextName()).jeeves.configuration.overrides.file 
-        	system parameter is not specified.
-        -->
-		<init-param>
-			<param-name>jeeves.configuration.overrides.file</param-name>
-			<param-value>${system.specific.overrides},${web.xml.main.config.overrides}${web.xml.widget.config.overrides}</param-value>
-		</init-param>
-        
-        <!--
-            Specified what geonetwork data directory to use.
-            <init-param>
-            <param-name>geonetwork.dir</param-name>
-            <param-value>/app/geonetwork_data_dir</param-value>
-        </init-param>-->
-        <load-on-startup>1</load-on-startup>
+        <servlet-name>mapfish.print</servlet-name>
+        <servlet-class>org.mapfish.print.servlet.MapPrinterServlet</servlet-class>
+        <init-param>
+              <param-name>config</param-name>
+              <param-value>WEB-INF/config-print/print-config.yaml</param-value>
+        </init-param>
     </servlet>
 
-        <!-- Servlet proxy -->
-    <servlet>
-        <servlet-name>HttpProxy</servlet-name>
-        <servlet-class>org.geonetwork.http.proxy.HttpProxyServlet</servlet-class>
-        
-        <!-- List of allowed content types -->
-    <init-param>
-      <param-name>AllowedContentTypes</param-name>
-      <param-value>
-          application/xml,text/xml,
-          text/html,
-          text/plain,
-          application/vnd.ogc.se_xml,
-          application/vnd.ogc.se+xml,
-          application/vnd.ogc.success+xml,
-          application/vnd.ogc.wms_xml,
-          application/vnd.ogc.context+xml,
-          application/vnd.ogc.gml,
-          application/vnd.ogc.sld+xml,
-          application/vnd.google-earth.kml+xml,
-          application/json
-      </param-value>
-    </init-param>
-
-    <!-- List of host alloed to be accesed by the proxy: If not specified or empty, any hosts is allowed -->
-    <init-param>
-        <param-name>AllowedHosts</param-name>
-        <param-value />
-    </init-param>
-
-    <!-- Default proxy url if none is provided -->
-    <init-param>
-        <param-name>DefaultProxyUrl</param-name>
-        <param-value>http://www.openlayers.org</param-value>
-    </init-param>
-
-    <load-on-startup>0</load-on-startup>
-    </servlet>
+    <servlet-mapping>
+        <servlet-name>mapfish.print</servlet-name>
+        <url-pattern>/pdf/*</url-pattern>
+    </servlet-mapping>
 
     <!-- Convenience servlet for linking to various webapps for accessing monitoring data
         Contains 4 sub mappings:
@@ -273,21 +237,6 @@
         </init-param>
     </servlet>
 
-    <!-- Print servlet -->
-    <servlet>
-        <servlet-name>mapfish.print</servlet-name>
-        <servlet-class>org.mapfish.print.servlet.MapPrinterServlet</servlet-class>
-        <init-param>
-              <param-name>config</param-name>
-              <param-value>print-config.yaml</param-value>
-        </init-param>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>mapfish.print</servlet-name>
-        <url-pattern>/pdf/*</url-pattern>
-    </servlet-mapping>
-
     <servlet-mapping>
         <servlet-name>monitor</servlet-name>
         <url-pattern>/monitor/*</url-pattern>
@@ -305,14 +254,105 @@
         <url-pattern>/expensivehealthcheck</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <description>
+            Handles requests that should be redirected to the page in the correct local.
+            For example index.html or index.jsp or error pages
+        </description>
+        <servlet-name>localeRedirects</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
-        <servlet-name>HttpProxy</servlet-name>
-        <url-pattern>/proxy</url-pattern>
+        <servlet-name>localeRedirects</servlet-name>
+        <url-pattern>/home</url-pattern>
     </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>localeRedirects</servlet-name>
+        <url-pattern>/login.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>localeRedirects</servlet-name>
+        <url-pattern>/accessDenied.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>gn-servlet</servlet-name>
+        <servlet-class>jeeves.server.sources.http.JeevesServlet</servlet-class>
+        <!-- Specified what overrides to use if the
+        	(servlet.getServletContext().getServletContextName()).jeeves.configuration.overrides.file
+        	system parameter is not specified.
+        -->
+        <init-param>
+            <param-name>jeeves.configuration.overrides.file</param-name>
+            <param-value>${system.specific.overrides},${web.xml.main.config.overrides}${web.xml.widget.config.overrides}</param-value>
+        </init-param>
+
+        <!--
+            Specified what geonetwork data directory to use.
+            <init-param>
+            <param-name>geonetwork.dir</param-name>
+            <param-value>/app/geonetwork_data_dir</param-value>
+        </init-param>-->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>gn-servlet</servlet-name>
         <url-pattern>/srv/*</url-pattern>
+    </servlet-mapping>
+
+    <!--
+    Multinode configuration: Add servlet mapping for each nodes
+    <servlet-mapping>
+        <servlet-name>gn-servlet</servlet-name>
+        <url-pattern>/node1/*</url-pattern>
+    </servlet-mapping>
+     -->
+    <!-- Servlet proxy -->
+    <servlet>
+        <servlet-name>HttpProxy</servlet-name>
+        <servlet-class>org.geonetwork.http.proxy.HttpProxyServlet</servlet-class>
+
+        <!-- List of allowed content types -->
+        <init-param>
+            <param-name>AllowedContentTypes</param-name>
+            <param-value>
+                application/xml,text/xml,
+                text/html,
+                text/plain,
+                application/vnd.ogc.se_xml,
+                application/vnd.ogc.se+xml,
+                application/vnd.ogc.success+xml,
+                application/vnd.ogc.wms_xml,
+                application/vnd.ogc.context+xml,
+                application/vnd.ogc.gml,
+                application/vnd.ogc.sld+xml,
+                application/vnd.google-earth.kml+xml,
+                application/json
+            </param-value>
+        </init-param>
+
+        <!-- List of host allowed to be accessed by the proxy: If not specified or empty, any hosts is allowed -->
+        <init-param>
+            <param-name>AllowedHosts</param-name>
+            <param-value />
+        </init-param>
+
+        <!-- Default proxy url if none is provided -->
+        <init-param>
+            <param-name>DefaultProxyUrl</param-name>
+            <param-value>http://www.openlayers.org</param-value>
+        </init-param>
+
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>HttpProxy</servlet-name>
+        <url-pattern>/proxy</url-pattern>
     </servlet-mapping>
 
     <!-- Web map context servlet -->
@@ -325,8 +365,9 @@
         <servlet-name>wmc</servlet-name>
         <url-pattern>/wmc/*</url-pattern>
     </servlet-mapping>
-    
+
     <welcome-file-list>
+        <welcome-file>home</welcome-file>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 

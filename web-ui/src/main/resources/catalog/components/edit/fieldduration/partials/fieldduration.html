@@ -1,0 +1,37 @@
+<div>
+  <label class="control-label col-xs-2">{{label}}</label>
+  <div class="col-xs-10">
+    <!-- The hidden field with the value. -->
+    <input type="hidden" class="form-control" name="{{ref}}" value="{{value}}"/>
+
+    <!-- Each components of a duration type -->
+    <input id="{{ref}}_neg" type="checkbox" data-ng-model="sign"/>
+    <label for="{{ref}}_neg" data-translate="">negative</label>
+    <div class="row">
+      <div class="col-xs-2">
+        <label for="{{ref}}_years" data-translate="">years</label>
+        <input id="{{ref}}_years" type="number" class="form-control" data-ng-model="years"/>
+      </div>
+      <div class="col-xs-2">
+        <label for="{{ref}}_monthes" data-translate="">monthes</label>
+        <input id="{{ref}}_monthes" type="number" class="form-control" data-ng-model="monthes"/>
+      </div>
+      <div class="col-xs-2">
+        <label for="{{ref}}_days" data-translate="">days</label>
+        <input id="{{ref}}_days" type="number" class="form-control" data-ng-model="days"/>
+      </div>
+      <div class="col-xs-2">
+        <label for="{{ref}}_hours" data-translate="">hours</label>
+        <input id="{{ref}}_hours" type="number" class="form-control" data-ng-model="hours"/>
+      </div>
+      <div class="col-xs-2">
+        <label for="{{ref}}_minutes" data-translate="">minutes</label>
+        <input id="{{ref}}_minutes" type="number" class="form-control" data-ng-model="minutes"/>
+      </div>
+      <div class="col-xs-2">
+        <label for="{{ref}}_secondes" data-translate="">secondes</label>
+        <input id="{{ref}}_secondes" type="number" class="form-control" data-ng-model="secondes"/>
+      </div>
+    </div>
+  </div>
+</div>

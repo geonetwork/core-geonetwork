@@ -23,12 +23,13 @@
 
 package org.fao.geonet.utils;
 
+import com.google.common.collect.FluentIterable;
+import com.google.common.io.Files;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.UserInfo;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import org.fao.geonet.Constants;
@@ -488,32 +489,35 @@ public final class BinaryFile
 	 */
 	public static void copyDirectory(File sourceLocation , File targetLocation)
     throws IOException {
-        
-        if (sourceLocation.isDirectory()) {
-            if (!targetLocation.mkdirs() && !targetLocation.exists()) {
-                throw new IOException("Unable to create target directory "+targetLocation);
-            }
-            
-            String[] children = sourceLocation.list();
-            for (int i=0; i<children.length; i++) {
-                copyDirectory(new File(sourceLocation, children[i]),
-                        new File(targetLocation, children[i]));
-            }
-        } else {
-            InputStream in = null;
-            OutputStream out = null;
-            try {
-                in = new FileInputStream(sourceLocation);
-                out = new FileOutputStream(targetLocation);
-                copy(in, out);
-            } finally {
-                IOUtils.closeQuietly(in);
-                IOUtils.closeQuietly(out);
+        final int filePrefixToRemove = sourceLocation.getPath().length();
+        final FluentIterable<File> files = Files.fileTreeTraverser().preOrderTraversal(sourceLocation);
+
+        for (File file : files) {
+            if (file.isFile()) {
+                final String part = file.getPath().substring(filePrefixToRemove);
+                final File destFile = new File(targetLocation, part);
+                if (!destFile.getParentFile().mkdirs() && !destFile.getParentFile().exists()) {
+                    throw new IOException("Unable to create directory: "+destFile.getParentFile());
+                }
+                copyFile(file, destFile);
             }
         }
     }
-	
-	//----------------------------------------------------------------------------
+
+    private static void copyFile(File file, File destFile) throws IOException {
+        FileInputStream in = null;
+        FileOutputStream out = null;
+        try {
+            in = new FileInputStream(file);
+            out = new FileOutputStream(destFile);
+            in.getChannel().transferTo(0, file.length(), out.getChannel());
+        } finally {
+            IOUtils.closeQuietly(in);
+            IOUtils.closeQuietly(out);
+        }
+    }
+
+    //----------------------------------------------------------------------------
 	// Returns the mime-type corresponding to the given file extension
 
 	private static String getContentType(String fName)
@@ -551,14 +555,21 @@ public final class BinaryFile
 
     public static void copy(File srcFile, File destFile) throws IOException {
         if(srcFile.isFile()) {
-            FileUtils.copyFile(srcFile, destFile);
+            BinaryFile.copyFile(srcFile, destFile);
         } else {
-            FileUtils.copyDirectory(srcFile, destFile);
+            BinaryFile.copyDirectory(srcFile, destFile);
             
         }
         
     }
 
+    public static void moveTo(File inFile, File outFile, String operationDescription) throws IOException {
+        IO.mkdirs(outFile.getParentFile(), "Error creating Parent File for operation: "+operationDescription);
+        if (!inFile.renameTo(outFile)) {
+            copy(inFile, outFile);
+            IO.delete(inFile, false, "org.fao.geonet");
+        }
+    }
 }
 
 //=============================================================================

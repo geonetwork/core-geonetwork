@@ -62,20 +62,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 //=============================================================================
-@Component
 public class ThesaurusManager implements ThesaurusFinder {
 
 	private ConcurrentHashMap<String, Thesaurus> thesauriMap = new ConcurrentHashMap<String, Thesaurus>();
-
 	private LocalService service = null;
-
 	private String thesauriDirectory = null;
+    private boolean initialized = false;
 
 
-	private SettingManager settingManager;
-
-
-	/**
+    /**
 	 * Initialize ThesaurusManager.
 	 *
      * @param context ServiceContext used to check when servlet is up only
@@ -83,8 +78,12 @@ public class ThesaurusManager implements ThesaurusFinder {
      * @param thesauriRepository
      * @throws Exception
 	 */
-	public void init(ServiceContext context, String appPath, String thesauriRepository)
+	public synchronized void init(ServiceContext context, String appPath, String thesauriRepository)
 			throws Exception {
+        if (this.initialized) {
+            return;
+        }
+        this.initialized = true;
 		// Get Sesame interface
 		service = Sesame.getService();
 
@@ -237,10 +236,10 @@ public class ThesaurusManager implements ThesaurusFinder {
                     continue;
                 }
 
-                gst = new Thesaurus(aRdfDataFile, root, thesauriDirectory.getName(), outputRdf, siteURL);
+                gst = new Thesaurus(context.getApplicationContext(), aRdfDataFile, root, thesauriDirectory.getName(), outputRdf, siteURL);
 
             } else {
-                gst = new Thesaurus(aRdfDataFile, root, thesauriDirectory.getName(), new File(thesauriDirectory, aRdfDataFile), siteURL);
+                gst = new Thesaurus(context.getApplicationContext(), aRdfDataFile, root, thesauriDirectory.getName(), new File(thesauriDirectory, aRdfDataFile), siteURL);
             }
 
             try {
@@ -263,7 +262,7 @@ public class ThesaurusManager implements ThesaurusFinder {
         Integer id = mdInfo.getId();
         final DataManager dataManager = context.getBean(DataManager.class);
         Element md = dataManager.getMetadata("" + id);
-        Processor.detachXLink(md);
+        Processor.detachXLink(md, context);
         final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
         Element env = Lib.prepareTransformEnv(mdInfo.getUuid(), mdInfo.getDataInfo().getChangeDate().getDateAndTime(),
                 "", siteURL, "");
@@ -398,7 +397,7 @@ public class ThesaurusManager implements ThesaurusFinder {
         String thesaurusFile = buildThesaurusFilePath(aRdfDataFile, root, type);
         File outputRdf = new File(thesaurusFile);
         final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
-        Thesaurus gst = new Thesaurus(aRdfDataFile, root, type, outputRdf, siteURL);
+        Thesaurus gst = new Thesaurus(context.getApplicationContext(), aRdfDataFile, root, type, outputRdf, siteURL);
 
 		FileOutputStream outputRdfStream = null;
 		try {

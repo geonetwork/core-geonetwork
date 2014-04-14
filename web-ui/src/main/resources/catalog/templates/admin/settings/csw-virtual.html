@@ -7,7 +7,7 @@
           placeholder="{{'filter' | translate}}"/>
         <input type="hidden" data-ng-model="virtualCSWSelected.id"/>
         <div class="list-group">
-          <a class="list-group-item"
+          <a href="" class="list-group-item"
             data-ng-repeat="v in cswVirtual | filter:virtualCSWSearch | orderBy:'name'"
             data-ng-click="selectVirtualCSW(v)" title="{{v.description}}"> {{v.name}} </a>
         </div>
@@ -111,8 +111,14 @@
             <div class="form-group">
               <label data-translate="" class="col-lg-4">_cat</label>
               <div class="col-lg-8">
-                <input type="text" name="_cat" class="form-control"
-                  data-ng-model="virtualCSWSelected.serviceParameters._cat"/>
+                <select data-ng-change="updatingVirtualCSW()"
+                        data-ng-model="virtualCSWSelected.serviceParameters._cat"
+                        class="form-control" name="_cat">
+                  <option value=""/>
+                  <option data-ng-repeat="c in categories" value="{{c['@id']}}"
+                          ng-selected="c['@id'] == virtualCSWSelected.serviceParameters._cat"
+                      >{{c.label[lang]}}</option>
+                </select>
               </div>
             </div>
             <div class="form-group">

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+    <service name="admin.ownership.editors">
+      <documentation><![CDATA[
+        List all editors that own a metadata
+        ]]></documentation>
+      <class name=".services.ownership.Editors"/>
+    </service>
+
+    <service name="admin.ownership.groups">
+      <documentation><![CDATA[
+                List all groups
+                ]]></documentation>
+      <class name=".services.ownership.Groups"/>
+    </service>
+
+    <service name="admin.ownership.transfer">
+      <documentation><![CDATA[
+                Transfert all records in a group from one user
+                to another user and another group.
+                
+                Parameters:
+                ```
+                <request>
+                  <sourceUser>349</sourceUser>
+                  <sourceGroup>328</sourceGroup>
+                  <targetUser>351</targetUser>
+                  <targetGroup>329</targetGroup></request>
+                ```
+                
+                Return the number of records altered.
+                ]]></documentation>
+      <class name=".services.ownership.Transfer"/>
+    </service>
+  </services>
+</geonet>

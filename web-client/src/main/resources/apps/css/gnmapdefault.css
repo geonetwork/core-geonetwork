@@ -2,113 +2,113 @@
   cursor : wait;
 }
 .print {
-  background-image : url(../images/default/map/icon_print.png) !important;
+  background-image : url(../apps/images/default/map/icon_print.png) !important;
   height : 20px !important;
   width : 20px !important;
 }
 .addLayerIcon {
-  background-image : url(../images/default/map/map_go.png) !important;
+  background-image : url(../apps/images/default/map/map_go.png) !important;
 }
 .addLayer {
-  background-image : url(../images/default/map/map_go.png) !important;
+  background-image : url(../apps/images/default/map/map_go.png) !important;
   height : 20px !important;
   width : 20px !important;
 }
 .deleteLayer {
-  background-image : url(../images/default/map/delete_layer.png) !important;
+  background-image : url(../apps/images/default/map/delete_layer.png) !important;
   height : 20px !important;
   width : 20px !important;
 }
 .measure {
-  background-image : url(../images/default/map/icon_measure.png) !important;
+  background-image : url(../apps/images/default/map/icon_measure.png) !important;
   height : 20px !important;
   width : 20px !important;
 }
 .zoomin {
-  background-image : url(../images/default/map/icon_zoomin.png) !important;
+  background-image : url(../apps/images/default/map/icon_zoomin.png) !important;
   height : 20px !important;
   width : 20px !important;
 }
 .zoomout {
-  background-image : url(../images/default/map/icon_zoomout.png) !important;
+  background-image : url(../apps/images/default/map/icon_zoomout.png) !important;
   height : 20px !important;
   width : 20px !important;
 }
 .zoomfull {
-  background-image : url(../images/default/map/icon_zoomfull.png) !important;
+  background-image : url(../apps/images/default/map/icon_zoomfull.png) !important;
   height : 20px !important;
   width : 20px !important;
 }
 .zoomlayer {
-  background-image : url(../images/default/map/icon_zoomlayer.png) !important;
+  background-image : url(../apps/images/default/map/icon_zoomlayer.png) !important;
   height : 20px !important;
   width : 20px !important;
 }
 
 .pan {
-  background-image : url(../images/default/map/icon_pan.png) !important;
+  background-image : url(../apps/images/default/map/icon_pan.png) !important;
   height : 20px !important;
   width : 20px !important;
 }
 .selextent {
-  background-image : url(../images/default/map/icon_selextent.png) !important;
+  background-image : url(../apps/images/default/map/icon_selextent.png) !important;
   height : 20px !important;
   width : 20px !important;
 }
 .query {
-  background-image : url(../images/default/map/icon_featureinfo.png) !important;
+  background-image : url(../apps/images/default/map/icon_featureinfo.png) !important;
   height : 20px !important;
   width : 20px !important;
 }
 .next {
-  background-image : url(../images/default/map/resultset_next.png) !important;
+  background-image : url(../apps/images/default/map/resultset_next.png) !important;
   height : 20px !important;
   width : 20px !important;
 }
 .back {
-  background-image : url(../images/default/map/resultset_previous.png) !important;
+  background-image : url(../apps/images/default/map/resultset_previous.png) !important;
   height : 20px !important;
   width : 20px !important;
 }
 .savewmc {
-  background-image : url(../images/default/map/icon_savewmc.png) !important;
+  background-image : url(../apps/images/default/map/icon_savewmc.png) !important;
   height : 20px !important;
   width : 20px !important;
 }
 .wmsTime {
-  background-image : url(../images/default/map/wmstime.gif) !important;
+  background-image : url(../apps/images/default/map/wmstime.gif) !important;
   height : 20px !important;
   width : 20px !important;
 }
 .layerStyles {
-  background-image : url(../images/default/map/layerstyles.png) !important;
+  background-image : url(../apps/images/default/map/layerstyles.png) !important;
   height : 20px !important;
   width : 20px !important;
 }
 .layerOpacity {
-  background-image : url(../images/default/map/opacity.png) !important;
+  background-image : url(../apps/images/default/map/opacity.png) !important;
   height : 20px !important;
   width : 20px !important;
 }
 .wmsInfo {
-  background-image : url(../images/default/map/wmsinfo.png) !important;
+  background-image : url(../apps/images/default/map/wmsinfo.png) !important;
   height : 20px !important;
   width : 20px !important;
 }
 
 .olControlLoadingPanel {
-  background-image : url(../images/default/map/indicator_medium.gif);
+  background-image : url(../apps/images/default/map/indicator_medium.gif);
   background-position : center;
   background-repeat : no-repeat;
 }
 
 .loadwmc {
-  background-image : url(../images/default/map/icon_loadwmc.png) !important;
+  background-image : url(../apps/images/default/map/icon_loadwmc.png) !important;
   height : 20px !important;
   width : 20px !important;
 }
 .selectfile {
-  background : url(../images/default/map/icon_selectfile.png) no-repeat 0 0 !important;
+  background : url(../apps/images/default/map/icon_selectfile.png) no-repeat 0 0 !important;
 }
 
 .olControlMousePosition {
@@ -146,29 +146,29 @@
   top : -5px;
 }
 .styler {
-  background-image : url(../images/default/map/layerstyles.png) !important;
+  background-image : url(../apps/images/default/map/layerstyles.png) !important;
 }
 .drawPolygon {
-  background-image : url(../images/default/map/draw_polygon_off.png) !important;
+  background-image : url(../apps/images/default/map/draw_polygon_off.png) !important;
 }
 .drawCircle {
-  background-image : url(../images/default/map/draw_circle_off.png) !important;
+  background-image : url(../apps/images/default/map/draw_circle_off.png) !important;
 }
 .drawRectangle {
-  background-image : url(../images/default/map/draw_rectangle_off.png) !important;
+  background-image : url(../apps/images/default/map/draw_rectangle_off.png) !important;
 }
 .clearPolygon {
-  background-image : url(../images/default/map/draw_polygon_clear_off.png) !important;
+  background-image : url(../apps/images/default/map/draw_polygon_clear_off.png) !important;
 }
 .icon-measure-length {
-  background : url(../images/default/map/ruler.png) no-repeat scroll 0 0 transparent !important;
+  background : url(../apps/images/default/map/ruler.png) no-repeat scroll 0 0 transparent !important;
   height : 16px !important;
   margin : 0 !important;
   width : 16px !important;
 }
 
 .icon-measure-area {
-  background : url(../images/default/map/ruler_square.png) no-repeat scroll 0 0 transparent !important;
+  background : url(../apps/images/default/map/ruler_square.png) no-repeat scroll 0 0 transparent !important;
   height : 16px !important;
   margin : 0 !important;
   width : 16px !important;

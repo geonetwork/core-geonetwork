@@ -56,7 +56,7 @@ public class GetKeywordById implements Service {
         String uri = Util.getParam(params, "id", null);
         String[] lang = Util.getParam(params, "lang", context.getLanguage()).split(",");
 
-        final IsoLanguagesMapper mapper = IsoLanguagesMapper.getInstance();
+        final IsoLanguagesMapper mapper = context.getBean(IsoLanguagesMapper.class);
         for (int i = 0; i < lang.length; i++) {
             lang[i] = mapper.iso639_2_to_iso639_1(lang[i]);
         }
@@ -76,7 +76,7 @@ public class GetKeywordById implements Service {
         if (uri == null) {
             root = new Element("descKeys");
         } else {
-            searcher = new KeywordsSearcher(thesaurusMan);
+            searcher = new KeywordsSearcher(context, thesaurusMan);
             KeywordBean kb = null;
             
             if (!multiple) {

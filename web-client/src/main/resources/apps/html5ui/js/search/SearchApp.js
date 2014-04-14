@@ -444,7 +444,7 @@ GeoNetwork.searchApp = function() {
         createBBar : function() {
 
             var previousAction = new Ext.Action({
-                id : 'previousBt',
+                id : 'previousBtFooter',
                 text : '&lt;&lt;',
                 handler : function() {
                     var from = catalogue.startRecord - 50;
@@ -460,7 +460,7 @@ GeoNetwork.searchApp = function() {
             });
 
             var nextAction = new Ext.Action({
-                id : 'nextBt',
+                id : 'nextBtFooter',
                 text : '&gt;&gt;',
                 handler : function() {
                     catalogue.startRecord += 50;
@@ -475,7 +475,7 @@ GeoNetwork.searchApp = function() {
                 items : [ previousAction, {
                     xtype : 'tbtext',
                     text : '',
-                    id : 'info'
+                    id : 'infoFooter'
                 }, nextAction  ]
             });
 
@@ -512,6 +512,7 @@ GeoNetwork.searchApp = function() {
 
             var tBar = new GeoNetwork.MetadataResultsToolbar({
                 catalogue : catalogue,
+                withPaging: true,
                 searchFormCmp : Ext
                         .getCmp('advanced-search-options-content-form'),
                 sortByCmp : Ext.getCmp('E_sortBy'),
@@ -522,6 +523,25 @@ GeoNetwork.searchApp = function() {
             });
 
             var bBar = this.createBBar();
+
+            // Add handlers for the pagination buttons in the top bar
+            Ext.getCmp('previousBt').on('click', function() {
+                var from = catalogue.startRecord - 50;
+                if (from > 0) {
+                    catalogue.startRecord = from;
+                    catalogue.search(
+                        'advanced-search-options-content-form',
+                        app.searchApp.loadResults, null,
+                        catalogue.startRecord, true);
+                }
+            });
+
+            Ext.getCmp('nextBt').on('click', function() {
+                catalogue.startRecord += 50;
+                catalogue.search('advanced-search-options-content-form',
+                    app.searchApp.loadResults, null,
+                    catalogue.startRecord, true);
+            });
 
             var resultPanel = new Ext.Panel({
                 id : 'resultsPanel',
@@ -549,10 +569,17 @@ GeoNetwork.searchApp = function() {
             Ext.getCmp('facets-panel').refresh(response);
 
             Ext.getCmp('previousBt').setDisabled(catalogue.startRecord === 1);
-            Ext
-                    .getCmp('nextBt')
+            Ext.getCmp('nextBt')
                     .setDisabled(
                             catalogue.startRecord + 50 > catalogue.metadataStore.totalLength);
+
+            Ext.getCmp('previousBtFooter').setDisabled(catalogue.startRecord === 1);
+            Ext.getCmp('nextBtFooter')
+                .setDisabled(
+                    catalogue.startRecord + 50 > catalogue.metadataStore.totalLength);
+
+            Ext.getCmp("infoFooter").update(Ext.getCmp("info").el.dom.textContent
+                || Ext.getCmp("info").el.dom.innerText);
 
             // Fix for width sortBy combo in toolbar
             // See this:

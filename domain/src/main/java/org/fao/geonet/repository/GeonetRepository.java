@@ -1,6 +1,5 @@
 package org.fao.geonet.repository;
 
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.repository.statistic.PathSpec;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
@@ -91,7 +90,7 @@ public interface GeonetRepository<T, ID extends Serializable> extends JpaReposit
      * @return all entities in XML.
      */
     @Nonnull
-    Element findAllAsXml(@Nonnull Specification<T> specification);
+    Element findAllAsXml(@Nullable Specification<T> specification);
 
     /**
      * Load all entities that satisfy the criteria provided and convert each to XML of the form:

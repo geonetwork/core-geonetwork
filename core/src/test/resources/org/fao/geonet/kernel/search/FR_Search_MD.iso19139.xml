@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.geocat.ch/2008/che ../../web/geonetwork/xml/schemas/iso19139.che/schema.xsd" gco:isoType="gmd:MD_Metadata">
+    <gmd:fileIdentifier>
+        <gco:CharacterString>FR-{uuid}</gco:CharacterString>
+    </gmd:fileIdentifier>
+    <gmd:language>
+        <gco:CharacterString>fre</gco:CharacterString>
+    </gmd:language>
+    <gmd:characterSet>
+        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>
+    </gmd:characterSet>
+    <gmd:hierarchyLevel>
+        <gmd:MD_ScopeCode codeListValue="service" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"/>
+    </gmd:hierarchyLevel>
+    <gmd:hierarchyLevelName>
+        <gco:CharacterString>Service</gco:CharacterString>
+    </gmd:hierarchyLevelName>
+    <gmd:dateStamp>
+        <gco:DateTime>2011-08-05T11:53:04</gco:DateTime>
+    </gmd:dateStamp>
+    <gmd:metadataStandardName>
+        <gco:CharacterString>GM03 2+</gco:CharacterString>
+    </gmd:metadataStandardName>
+    <gmd:metadataStandardVersion>
+        <gco:CharacterString>1.0</gco:CharacterString>
+    </gmd:metadataStandardVersion>
+    <gmd:locale xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <gmd:PT_Locale id="FR">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeListValue="fre" codeList="#LanguageCode">French</gmd:LanguageCode>
+            </gmd:languageCode>
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+            </gmd:characterEncoding>
+        </gmd:PT_Locale>
+    </gmd:locale>
+    <gmd:identificationInfo>
+        <gmd:SV_ServiceIdentification gco:isoType="srv:SV_ServiceIdentification">
+            <gmd:citation>
+                <gmd:CI_Citation>
+                    <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">FR "{timestamp}NonSpatialSearchQuerySpec" FRA Title polluée</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:title>
+                </gmd:CI_Citation>
+            </gmd:citation>
+            <gmd:abstract xsi:type="gmd:PT_FreeText_PropertyType">
+                <gmd:PT_FreeText>
+                    <gmd:textGroup>
+                        <gmd:LocalisedCharacterString locale="#FR">
+                        {timestamp}NonSpatialSearchQuerySpec FRx{timestamp} 1 abstract
+                        {timestamp}-hyphen
+                        {timestamp}_underscore
+                        {timestamp}/forwardSlash
+                        {timestamp}\backSlash
+                        {timestamp}. point
+                        {timestamp}, comma
+                        {timestamp} space
+                        FRxDEx{timestamp}
+                        </gmd:LocalisedCharacterString>
+                    </gmd:textGroup>
+                </gmd:PT_FreeText>
+            </gmd:abstract>
+            <srv:serviceType>
+                <gco:LocalName>OGC:WMS</gco:LocalName>
+            </srv:serviceType>
+            <srv:serviceTypeVersion>
+                <gco:CharacterString>1.1.1</gco:CharacterString>
+            </srv:serviceTypeVersion>
+            <srv:extent>
+                <gmd:EX_Extent>
+                    <gmd:description xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>Bern</gco:CharacterString>
+                    </gmd:description>
+                    <gmd:geographicElement>
+                        <gmd:EX_GeographicDescription>
+                            <gmd:geographicIdentifier>
+                                <gmd:MD_Identifier>
+                                    <gmd:code xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <gco:CharacterString>Bern</gco:CharacterString>
+                                    </gmd:code>
+                                </gmd:MD_Identifier>
+                            </gmd:geographicIdentifier>
+                        </gmd:EX_GeographicDescription>
+                    </gmd:geographicElement>
+                    <gmd:geographicElement>
+                        <gmd:EX_BoundingPolygon>
+                            <gmd:extentTypeCode>
+                                <gco:Boolean>true</gco:Boolean>
+                            </gmd:extentTypeCode>
+                            <gmd:polygon>
+                                <gml:MultiSurface gml:id="N9ac66cfe026144bea9777e3d6e92327e">
+                                    <gml:surfaceMember>
+                                        <gml:Polygon gml:id="N5d4036d6e91742f59bd7b5389ef5ef9c">
+                                            <gml:exterior>
+                                                <gml:LinearRing>
+                                                        <gml:posList>7.303 46.93 7.307 46.94 7.349 46.948 7.368 46.956 7.372 46.961 7.379 46.961 7.383 46.966 7.412 46.97 7.428 46.974 7.433 46.972 7.44 46.975 7.443 46.981 7.452 46.988 7.453 46.983 7.455 46.977 7.47 46.971 7.483 46.971 7.486 46.965 7.479 46.963 7.479 46.956 7.484 46.945 7.494 46.94 7.494 46.938 7.478 46.936 7.471 46.925 7.459 46.935 7.447 46.931 7.415 46.937 7.401 46.921 7.381 46.932 7.373 46.933 7.339 46.925 7.339 46.92 7.331 46.919 7.328 46.919 7.325 46.925 7.295 46.923 7.303 46.93</gml:posList>
+                                                </gml:LinearRing>
+                                            </gml:exterior>
+                                        </gml:Polygon>
+                                    </gml:surfaceMember>
+                                </gml:MultiSurface>
+                            </gmd:polygon>
+                        </gmd:EX_BoundingPolygon>
+                    </gmd:geographicElement>
+                </gmd:EX_Extent>
+            </srv:extent>
+        </gmd:SV_ServiceIdentification>
+    </gmd:identificationInfo>
+</gmd:MD_Metadata>

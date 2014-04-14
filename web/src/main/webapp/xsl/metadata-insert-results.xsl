@@ -35,7 +35,9 @@
                   <br/>
                   <ul>
                     <xsl:for-each select="/root/response/exceptions/exception">
+                      <xsl:sort select="@file"/>
                       <li>
+                        <strong><xsl:value-of select="@file"/></strong>:
                         <!-- Handle different types of errors -->
                         <xsl:choose>
                             <xsl:when test="geonet:schematronerrors">

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
+                     xmlns:gml="http://www.opengis.net/gml" gco:isoType="gmd:MD_Metadata">
+	<gmd:fileIdentifier xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<gco:CharacterString>XX-{uuid}</gco:CharacterString>
+	</gmd:fileIdentifier>
+	<gmd:language xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<gco:CharacterString>ger</gco:CharacterString>
+	</gmd:language>
+	<gmd:characterSet xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>
+	</gmd:characterSet>
+	<gmd:hierarchyLevel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<gmd:MD_ScopeCode codeListValue="dataset" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"/>
+	</gmd:hierarchyLevel>
+	<gmd:dateStamp xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<gco:DateTime>2011-07-04T14:08:21</gco:DateTime>
+	</gmd:dateStamp>
+	<gmd:metadataStandardName xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<gco:CharacterString>GM03 2+</gco:CharacterString>
+	</gmd:metadataStandardName>
+	<gmd:locale xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<gmd:PT_Locale id="FR">
+			<gmd:languageCode>
+				<gmd:LanguageCode codeListValue="fre" codeList="#LanguageCode">French</gmd:LanguageCode>
+			</gmd:languageCode>
+			<gmd:characterEncoding>
+				<gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+			</gmd:characterEncoding>
+		</gmd:PT_Locale>
+	</gmd:locale>
+	<gmd:locale xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<gmd:PT_Locale id="DE">
+			<gmd:languageCode>
+				<gmd:LanguageCode codeListValue="ger" codeList="#LanguageCode">German</gmd:LanguageCode>
+			</gmd:languageCode>
+			<gmd:characterEncoding>
+				<gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+			</gmd:characterEncoding>
+		</gmd:PT_Locale>
+	</gmd:locale>
+	<gmd:locale xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<gmd:PT_Locale id="IT">
+			<gmd:languageCode>
+				<gmd:LanguageCode codeListValue="ita" codeList="#LanguageCode">Italian</gmd:LanguageCode>
+			</gmd:languageCode>
+			<gmd:characterEncoding>
+				<gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+			</gmd:characterEncoding>
+		</gmd:PT_Locale>
+	</gmd:locale>
+	<gmd:locale xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<gmd:PT_Locale id="EN">
+			<gmd:languageCode>
+				<gmd:LanguageCode codeListValue="eng" codeList="#LanguageCode">English</gmd:LanguageCode>
+			</gmd:languageCode>
+			<gmd:characterEncoding>
+				<gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+			</gmd:characterEncoding>
+		</gmd:PT_Locale>
+	</gmd:locale>
+    <gmd:identificationInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<gmd:MD_DataIdentification gco:isoType="gmd:MD_DataIdentification">
+			<gmd:citation>
+				<gmd:CI_Citation>
+					<gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
+						<gmd:PT_FreeText>
+							<gmd:textGroup>
+								<gmd:LocalisedCharacterString locale="#FR">{timestamp}NonSpatialSearchQuerySpec FRA Title</gmd:LocalisedCharacterString>
+							</gmd:textGroup>
+							<gmd:textGroup>
+								<gmd:LocalisedCharacterString locale="#DE">{timestamp}NonSpatialSearchQuerySpec DE Title</gmd:LocalisedCharacterString>
+							</gmd:textGroup>
+							<gmd:textGroup>
+								<gmd:LocalisedCharacterString locale="#EN">{timestamp}NonSpatialSearchQuerySpec EN Title</gmd:LocalisedCharacterString>
+							</gmd:textGroup>
+						</gmd:PT_FreeText>
+					</gmd:title>
+					<gmd:date>
+						<gmd:CI_Date>
+							<gmd:date>
+								<gco:Date>2011-07-12</gco:Date>
+							</gmd:date>
+							<gmd:dateType>
+								<gmd:CI_DateTypeCode codeListValue="creation" codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"/>
+							</gmd:dateType>
+						</gmd:CI_Date>
+					</gmd:date>
+					<gmd:identifier>
+						<gmd:MD_Identifier>
+							<gmd:code xsi:type="gmd:PT_FreeText_PropertyType">
+								<gco:CharacterString>EN Citation ID</gco:CharacterString>
+								<gmd:PT_FreeText>
+									<gmd:textGroup>
+										<gmd:LocalisedCharacterString locale="#DE">DE Citation ID</gmd:LocalisedCharacterString>
+									</gmd:textGroup>
+								</gmd:PT_FreeText>
+							</gmd:code>
+						</gmd:MD_Identifier>
+					</gmd:identifier>
+				</gmd:CI_Citation>
+			</gmd:citation>
+			<gmd:abstract xsi:type="gmd:PT_FreeText_PropertyType">
+				<gmd:PT_FreeText>
+					<gmd:textGroup>
+						<gmd:LocalisedCharacterString locale="#FR">XX  {timestamp}NonSpatialSearchQuerySpec FRxDEx{timestamp} FRA abstract 1_1</gmd:LocalisedCharacterString>
+					</gmd:textGroup>
+					<gmd:textGroup>
+						<gmd:LocalisedCharacterString locale="#EN">{timestamp}NonSpatialSearchQuerySpec EN abstract </gmd:LocalisedCharacterString>
+					</gmd:textGroup>
+					<gmd:textGroup>
+						<gmd:LocalisedCharacterString locale="#DE">{timestamp}NonSpatialSearchQuerySpec DE abstract</gmd:LocalisedCharacterString>
+					</gmd:textGroup>
+				</gmd:PT_FreeText>
+			</gmd:abstract>
+			<gmd:language>
+				<gco:CharacterString>ger</gco:CharacterString>
+			</gmd:language>
+			<gmd:characterSet>
+				<gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>
+			</gmd:characterSet>
+			<gmd:topicCategory>
+				<gmd:MD_TopicCategoryCode>elevation</gmd:MD_TopicCategoryCode>
+			</gmd:topicCategory>
+            <gmd:extent xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+              <gmd:EX_Extent>
+                <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
+                  <gco:CharacterString>fribourg and vaud</gco:CharacterString>
+                </gmd:description>
+                <gmd:geographicElement>
+                  <gmd:EX_BoundingPolygon>
+                    <gmd:extentTypeCode>
+                      <gco:Boolean>true</gco:Boolean>
+                    </gmd:extentTypeCode>
+                    <gmd:polygon>
+                      <gml:MultiSurface gml:id="N3527eb61b46b448a935f4bd31a8191c2">
+                        <gml:surfaceMember>
+                          <gml:Polygon gml:id="N85a5be7d3c8d4547ad7cb30cacd3ab3e">
+                            <gml:exterior>
+                              <gml:LinearRing>
+                                <gml:posList>6.807 46.51 6.806 46.594 6.95 46.595 6.951 46.511 6.807 46.51</gml:posList>
+                              </gml:LinearRing>
+                            </gml:exterior>
+                          </gml:Polygon>
+                        </gml:surfaceMember>
+                      </gml:MultiSurface>
+                    </gmd:polygon>
+                  </gmd:EX_BoundingPolygon>
+                </gmd:geographicElement>
+              </gmd:EX_Extent>
+            </gmd:extent>
+		</gmd:MD_DataIdentification>
+	</gmd:identificationInfo>
+    <gmd:distributionInfo>
+        <gmd:MD_Distribution>
+        </gmd:MD_Distribution>
+    </gmd:distributionInfo>
+</gmd:MD_Metadata>

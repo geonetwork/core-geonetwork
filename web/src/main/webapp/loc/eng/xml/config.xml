@@ -202,16 +202,21 @@
 	<setting name="removedMetadata" label="Removed metadata"/>
 	<setting name="system/removedMetadata/dir" label="Directory">
 		Directory used to store metadata (in MEF format) when they are deleted.
-	</setting>
-	
-	<requestedlanguageonly>Search only in requested language</requestedlanguageonly>
-	<requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
-	<requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
-	<requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
-	<requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
-	<requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
-	
-	
+    </setting>
+
+    <setting name="system/requestedLanguage/ignorechars" label="Characters to ignore during indexing"/>
+    <requestedlanguageonly>Search only in requested language</requestedlanguageonly>
+    <requestedlanguage_offonly>All documents in all languages (No preferences)</requestedlanguage_offonly>
+    <requestedlanguageprefer_locale>Prefer documents with translations requested language</requestedlanguageprefer_locale>
+    <requestedlanguageprefer_docLocale>Prefer documents whose language is the requested language</requestedlanguageprefer_docLocale>
+    <requestedlanguage_localeonly>Translations in requested language</requestedlanguage_localeonly>
+    <requestedlanguage_docLocaleonly>Document language is the requested language</requestedlanguage_docLocaleonly>
+    <requestedlanguage_prefer_ui_locale>Prefer documents having translations in the UI language</requestedlanguage_prefer_ui_locale>
+    <requestedlanguage_only_ui_locale>Only documents having translations in the UI language</requestedlanguage_only_ui_locale>
+    <requestedlanguage_prefer_ui_docLocale>Prefer documents having the same language as the UI language</requestedlanguage_prefer_ui_docLocale>
+    <requestedlanguage_only_ui_docLocale>Only documents having the same language as the UI language</requestedlanguage_only_ui_docLocale>
+
+
 	<setting name="requestedLanguage" label="Search &amp; language"/>
 	<setting name="system/requestedLanguage/only" label="Search only in requested language"/>
 	<setting name="system/requestedLanguage/sorted" label="Search results in requested language sorted on top"/>

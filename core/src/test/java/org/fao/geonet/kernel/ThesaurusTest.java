@@ -23,6 +23,7 @@ import org.openrdf.sesame.config.AccessDeniedException;
 import org.openrdf.sesame.config.ConfigurationException;
 import org.openrdf.sesame.query.MalformedQueryException;
 import org.openrdf.sesame.query.QueryEvaluationException;
+import org.springframework.context.support.GenericXmlApplicationContext;
 
 public class ThesaurusTest extends AbstractThesaurusBasedTest {
 
@@ -32,7 +33,10 @@ public class ThesaurusTest extends AbstractThesaurusBasedTest {
     public void prepareEmptyThesaurus() throws ConfigurationException {
         File file = new File(this.thesaurusFile.getParentFile(), ThesaurusTest.class.getSimpleName()+"_empyt.rdf");
         file.delete();
-        this.writableThesaurus = new Thesaurus(isoLangMapper, file.getName(), null, null, Geonet.CodeList.LOCAL, file.getName(), file, null, true);
+        GenericXmlApplicationContext appContext = new GenericXmlApplicationContext();
+        appContext.getBeanFactory().registerSingleton("IsoLangMapper", isoLangMapper);
+
+        this.writableThesaurus = new Thesaurus(appContext, file.getName(), null, null, Geonet.CodeList.LOCAL, file.getName(), file, null, true);
         super.setRepository(writableThesaurus);
     }
     

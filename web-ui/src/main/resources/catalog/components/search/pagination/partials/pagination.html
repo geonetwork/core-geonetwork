@@ -1,0 +1,11 @@
+<ul class="pager" data-ng-show="config.pages > 1">
+  <li data-ng-class="config.currentPage == 1 ? 'disabled' : ''"
+    data-ng-show="config.pages > 0">
+    <a href="" data-ng-click="previous()" 
+       data-translate>previous</a></li>
+  <li>{{config.currentPage}} / {{config.pages}}</li>
+  <li data-ng-class="config.currentPage == config.pages ? 'disabled' : ''"
+    data-ng-show="config.pages > 0">
+    <a href="" data-ng-click="next()"
+      data-translate>next</a></li>
+</ul>

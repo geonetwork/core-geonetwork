@@ -30,6 +30,8 @@ import jeeves.constants.Jeeves;
 import org.apache.lucene.util.Version;
 import org.jdom.Namespace;
 
+import java.util.List;
+
 /**
  * TODO javadoc.
  */
@@ -164,6 +166,7 @@ public final class Geonet {
 		public static final String SEARCH_REQUEST_ID 		= "search_request_id";		
 		public static final String METADATA_SHOW			= "metadata.show";
 		public static final String METADATA_EDITING		= "metadata.editing";
+		public static final String METADATA_BEFORE_ANY_CHANGES = "metadata.before.any.changes";
         public static final String METADATA_EDITING_TAB   = "metadata.editing.tab";
 		public static final String METADATA_POSITION  = "metadata.position";
 		public static final String SEARCH_KEYWORDS_RESULT	= "search.keywords.result";
@@ -406,9 +409,11 @@ public final class Geonet {
 		public static final String RESULT_TYPE = "resultType";
 
 		public static final String FAST = "fast";
-		public static final String BUILD_SUMMARY = "buildSummary";
-		public static final String SUMMARY_ONLY = "summaryOnly";
+        public static final String INDEX = "index";
+        public static final String BUILD_SUMMARY = "buildSummary";
+        public static final String SUMMARY_ONLY = "summaryOnly";
         public static final String REQUESTED_LANGUAGE = "requestedLanguage";
+        public static final String SUMMARY_ITEMS = "summaryItems";
 
         /**
          * TODO javadoc.
@@ -422,6 +427,7 @@ public final class Geonet {
              * of the current search. 
              */
             public static final String RESULTS_WITH_SUMMARY     = "results_with_summary";
+            public static final String SUGGESTIONS = "suggestions";
         }
 
         /**
@@ -571,6 +577,7 @@ public final class Geonet {
     public static final String FEEDBACK = GEONETWORK + ".feedback";
     public static final String GEOPUBLISH = GEONETWORK + ".geopublisher";
     public static final String FORMATTER = GEONETWORK + ".formatter";
+    public static final String EDITOR_SESSION = GEONETWORK + ".editor.session";
     /**
      * Services.
      */
@@ -596,5 +603,8 @@ public final class Geonet {
 		public static final Namespace XSD = Namespace.getNamespace("xsd", XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		public static final Namespace XSI = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
         public static final Namespace OWS = Namespace.getNamespace("ows", "http://www.opengis.net/ows");
-	}
+        public static final Namespace OGC = Namespace.getNamespace("ogc", "http://www.opengis.net/ogc");
+        public static final Namespace GML = Namespace.getNamespace("gml", "http://www.opengis.net/gml");
+        public static final Namespace SVRL = Namespace.getNamespace("svrl", "http://purl.oclc.org/dsdl/svrl");
+    }
 }

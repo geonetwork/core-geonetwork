@@ -133,7 +133,7 @@ public class Update extends NotInReadOnlyModeService {
             if (user.getAddresses().isEmpty()) {
                 addressEntity = new Address();
             } else {
-                addressEntity = user.getPrimaryAddress();
+                addressEntity = user.getAddresses().iterator().next();
 
             }
             if (address != null) {
@@ -169,14 +169,15 @@ public class Update extends NotInReadOnlyModeService {
                 user = userRepository.save(user);
 
 				setUserGroups(user, params, context);
-			} else if (operation.equals(Params.Operation.FULLUPDATE) || operation.equals(Params.Operation.EDITINFO) ||
-                       operation.equals(Params.Operation.RESETPW)) {
+			} else if (operation.equals(Params.Operation.FULLUPDATE) || operation.equals(Params.Operation.EDITINFO)) {
                 user = userRepository.save(user);
 
                 //--- add groups
                 groupRepository.deleteAllByIdAttribute(UserGroupId_.userId, Arrays.asList(user.getId()));
 
                 setUserGroups(user, params, context);
+			} else if (operation.equals(Params.Operation.RESETPW)) {
+             user = userRepository.save(user);
 			} else {
                 throw new IllegalArgumentException("unknown user update operation " + operation);
             }

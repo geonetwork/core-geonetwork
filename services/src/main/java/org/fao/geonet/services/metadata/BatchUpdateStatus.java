@@ -100,7 +100,7 @@ public class BatchUpdateStatus extends NotInReadOnlyModeService {
 		}
 		}
 
-		String changeDate = new ISODate().toString();
+        ISODate changeDate = new ISODate();
 
 		//--- use StatusActionsFactory and StatusActions class to 
     //--- change status and carry out behaviours for status changes

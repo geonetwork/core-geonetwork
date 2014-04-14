@@ -6,7 +6,6 @@ import org.fao.geonet.domain.MetadataRelation;
 import org.fao.geonet.domain.MetadataRelationId;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -20,8 +19,6 @@ public class MetadataRelationRepositoryTest extends AbstractSpringDataTest {
     MetadataRelationRepository _repo;
     @Autowired
     MetadataRepository _metadataRepo;
-
-    AtomicInteger _inc = new AtomicInteger();
 
     @Test
     public void testFindOne() {
@@ -50,8 +47,11 @@ public class MetadataRelationRepositoryTest extends AbstractSpringDataTest {
     }
 
     private MetadataRelation newMetadataRelation() {
-        Metadata metadata1 = _metadataRepo.save(newMetadata(_inc));
-        Metadata metadata2 = _metadataRepo.save(newMetadata(_inc));
+        return newMetadataRelation(_inc, _metadataRepo);
+    }
+    public static MetadataRelation newMetadataRelation(AtomicInteger inc, MetadataRepository metadataRepo) {
+        Metadata metadata1 = metadataRepo.save(newMetadata(inc));
+        Metadata metadata2 = metadataRepo.save(newMetadata(inc));
 
         MetadataRelation relation = new MetadataRelation();
         relation.setId(new MetadataRelationId(metadata1.getId(), metadata2.getId()));

@@ -179,10 +179,6 @@ class UnusedSearcher extends MetaSearcher
         List<OperationAllowed> opsAllowed = operationAllowedRepository.findAll(spec);
 		return !opsAllowed.isEmpty();
 	}
-	private boolean hasInternetGroup(ServiceContext context, String id) throws SQLException
-	{
-		return hasInternetGroup(context, String.valueOf(id));
-	}
 
 	//--------------------------------------------------------------------------
 

@@ -36,13 +36,12 @@ import org.fao.geonet.csw.common.OutputSchema;
 import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.csw.common.util.Xml;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
@@ -79,6 +78,8 @@ public class Transaction extends AbstractOperation implements CatalogService {
     private SearchController _searchController;
     @Autowired
     private FieldMapper _fieldMapper;
+    @Autowired
+    SchemaManager _schemaManager;
 
     @Autowired
     public Transaction(ApplicationContext context) {
@@ -245,7 +246,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
         String docType = null, title = null, isTemplate = null;
         boolean ufo = true, indexImmediate = false;
         String id = dataMan.insertMetadata(context, schema, xml, uuid, userId, group, source,
-                isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
+                isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
 
         // Set metadata as public if setting enabled
         SettingManager sm = gc.getBean(SettingManager.class);
@@ -263,7 +264,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
             }
         }
 
-        dataMan.indexMetadata(id);
+        dataMan.indexMetadata(id, false);
 
         fileIds.add(uuid);
 
@@ -376,9 +377,12 @@ public class Transaction extends AbstractOperation implements CatalogService {
                     throw new NoApplicableCodeEx("Can't identify metadata schema");
                 }
 
-                Map<String, String> mapNs = retrieveNamepacesForSchema(gc.getBean(DataManager.class).getSchema(schemaId));
-
                 boolean metadataChanged = false;
+                EditLib editLib = new EditLib(_schemaManager);
+
+                MetadataSchema metadataSchema = _schemaManager.getSchema(schemaId);
+                final String settingId = SettingManager.CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS;
+                boolean createXpathNodeIfNotExists = gc.getBean(SettingManager.class).getValueAsBool(settingId);
 
                 // Process properties to update
                 for (Element recordProperty : recordProperties) {
@@ -386,8 +390,6 @@ public class Transaction extends AbstractOperation implements CatalogService {
                     Element propertyValueEl = recordProperty.getChild("Value", Csw.NAMESPACE_CSW);
 
                     String propertyName = propertyNameEl.getText();
-
-                    String propertyValue = propertyValueEl.getText();
 
                     // Get XPath for queriable name, i provided in propertyName.
                     // Otherwise assume propertyName contains full XPath to property to update
@@ -397,25 +399,24 @@ public class Transaction extends AbstractOperation implements CatalogService {
                     }
 
                     Log.info(Geonet.CSW, "Xpath of property: " + xpathProperty);
-                    XPath xpath = new JDOMXPath(xpathProperty);
-                    xpath.setNamespaceContext(new SimpleNamespaceContext(mapNs));
 
-                    Object propEl = xpath.selectSingleNode(metadata);
-                    Log.info(Geonet.CSW, "XPath found in metadata: " + (propEl != null));
-
-                    // If a property is not found in metadata, just ignore it.
-                    if (propEl != null) {
-                        if (propEl instanceof Element) {
-                            ((Element) propEl).setText(propertyValue);
-                            metadataChanged = true;
-
-                        } else if (propEl instanceof Attribute) {
-                            ((Attribute) propEl).setValue(propertyValue);
-                            metadataChanged = true;
+                    final List<Element> children = propertyValueEl.getChildren();
+                    AddElemValue propertyValue;
+                    if (children.isEmpty()) {
+                        propertyValue = new AddElemValue(propertyValueEl.getText());
+                        metadataChanged |= editLib.addElementOrFragmentFromXpath(metadata, metadataSchema, xpathProperty, propertyValue,
+                                createXpathNodeIfNotExists);
+                    } else {
+                        for (Element child : children) {
+                            propertyValue = new AddElemValue((Element) child.clone());
+                            metadataChanged |= editLib.addElementOrFragmentFromXpath(metadata, metadataSchema, xpathProperty, propertyValue,
+                                    createXpathNodeIfNotExists);
                         }
                     }
 
-                } // for(Element recordProperty : recordProperties)
+                    Log.info(Geonet.CSW, "Metadata has been updated: "+metadataChanged);
+
+                }
 
                 // Update the metadata with changes
                 if (metadataChanged) {

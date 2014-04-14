@@ -12,7 +12,7 @@
 			<xsl:with-param name="content">
 
 				<div id="status" align="center">
-					<xsl:if test="/root/response/statusvalues/*">
+					<xsl:if test="/root/response/statusvalue/*">
 							
 							<input name="id" type="hidden" value="{/root/response/id}"/>
 							<table>
@@ -24,7 +24,7 @@
 					
 								<!-- loop on all status -->
 		
-								<xsl:for-each select="/root/response/statusvalues/status">
+								<xsl:for-each select="/root/response/statusvalue/status">
 								  <xsl:sort select="displayorder"/>
 								  <xsl:sort select="label/child::*[name() = $lang]"/>
 									<tr>

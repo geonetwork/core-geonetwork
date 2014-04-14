@@ -49,7 +49,6 @@ import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.transaction.annotation.Transactional;
 
 //=============================================================================
 
@@ -86,7 +85,6 @@ public class ShibLogin extends NotInReadOnlyModeService {
      * 
      * @see jeeves.interfaces.Service#exec(org.jdom.Element, jeeves.server.context.ServiceContext)
      */
-    @Transactional
     public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
         // Get the header keys to lookup from the settings
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);

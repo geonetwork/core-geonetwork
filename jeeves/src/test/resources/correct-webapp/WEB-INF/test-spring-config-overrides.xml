@@ -6,6 +6,11 @@
 	</properties>
 	<spring>
 		<import file="${sharedPath}/imported-config.xml"/>
+		<add bean="testBeanFull" property="collectionProp" value="addedProperty"/>
+		<add bean="testBeanFull" property="collectionRef" ref="testBean2"/>
+		<set bean="testBeanFull" property="simpleRef" ref="testBean2"/>
+		<set bean="testBeanFull" property="basicProp" value="updatedBasicProp"/>
+		<set bean="testBeanFull" property="basicProp2" value="updatedBasicProp2"/>
 		<set bean="testBean" property="simpleRef" ref="testBean2"/>
 		<set bean="testBean" property="basicProp2" ref="astring"/>
 		<add bean="testBean" property="collectionProp" value="${db}" />

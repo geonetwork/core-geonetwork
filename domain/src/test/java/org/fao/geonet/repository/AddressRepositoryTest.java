@@ -4,20 +4,16 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.Address;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
 
-@Transactional
 public class AddressRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
     AddressRepository _repo;
-
-    AtomicInteger _inc = new AtomicInteger();
 
     @Test
     public void testFindOne() {
@@ -51,7 +47,10 @@ public class AddressRepositoryTest extends AbstractSpringDataTest {
     }
 
     private Address newAddress() {
-        int val = _inc.incrementAndGet();
+        return newAddress(_inc);
+    }
+    public static Address newAddress(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
         Address Address = new Address().setAddress("address" + val).setCity("city" + val).setCountry("country" + val).setState("state"
                                                                                                                                + val)
                 .setZip("zip" + val);

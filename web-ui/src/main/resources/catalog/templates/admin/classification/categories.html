@@ -9,7 +9,7 @@
           placeholder="{{'filter' | translate}}"/>
         <input type="hidden" data-ng-model="categorySelected['@id']"/>
         <div class="list-group">
-          <a class="list-group-item" data-ng-repeat="c in categories | filter:categorySearch"
+          <a href="" class="list-group-item" data-ng-repeat="c in categories | filter:categorySearch"
             data-ng-click="selectCategory(c)">
             <img src="../../images/category/{{c.name}}.png" alt="{{'categoryLogo' | translate}}"/>
             {{c.label[lang]}}</a>

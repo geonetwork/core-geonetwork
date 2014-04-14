@@ -2,9 +2,7 @@
 <geonet>
 	<services package="org.fao.geonet">
 		<service name="geoserver.publisher">
-			<class name=".services.publisher.Do">
-				<param name="configFile" value="WEB-INF/geoserver-nodes.xml" />
-			</class>			
+			<class name=".services.publisher.Do"/>
 		</service>
 	</services>
 </geonet>

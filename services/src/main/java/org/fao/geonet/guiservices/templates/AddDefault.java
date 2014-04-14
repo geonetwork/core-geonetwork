@@ -131,7 +131,7 @@ public class AddDefault implements Service {
                     String docType = null, category = null, createDate = null, changeDate = null;
                     boolean ufo = true, indexImmediate = true;
 					dataMan.insertMetadata(context, schemaName, xml, uuid, owner, groupOwner, siteId,
-                                           isTemplate, docType, title, category, createDate, changeDate, ufo, indexImmediate);
+                                           isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
 
 					status = "loaded";
 				} catch (Exception e) {

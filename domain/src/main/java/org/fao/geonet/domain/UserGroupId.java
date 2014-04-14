@@ -1,7 +1,6 @@
 package org.fao.geonet.domain;
 
 import javax.persistence.Embeddable;
-import javax.persistence.Transient;
 import java.io.Serializable;
 
 /**

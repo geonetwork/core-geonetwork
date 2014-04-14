@@ -22,6 +22,7 @@
 //==============================================================================
 package org.fao.geonet.kernel.security;
 
+import jeeves.config.springutil.JeevesAuthenticationDetails;
 import org.fao.geonet.utils.Log;
 
 import org.fao.geonet.domain.User;
@@ -37,10 +38,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 
 public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider 
 	implements UserDetailsService {
+
+    public boolean isCheckUserNameOrEmail() {
+        return checkUserNameOrEmail;
+    }
+
+    public void setCheckUserNameOrEmail(boolean checkUserNameOrEmail) {
+        this.checkUserNameOrEmail = checkUserNameOrEmail;
+    }
+
+    private boolean checkUserNameOrEmail = false;
 
     @Autowired
     private PasswordEncoder encoder;
@@ -64,7 +74,6 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
 		}
 	}
 
-	@Transactional
 	@Override
 	protected UserDetails retrieveUser(String username,
 			UsernamePasswordAuthenticationToken authentication)
@@ -72,14 +81,21 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
 	    try {
 			// Only check user with local db user (ie. authtype is '')
 	        User user = _userRepository.findOneByUsernameAndSecurityAuthTypeIsNullOrEmpty(username);
+            if (user == null && checkUserNameOrEmail) {
+                user = _userRepository.findOneByEmailAndSecurityAuthTypeIsNullOrEmpty(username);
+            }
 			if (user != null) {
 				if (authentication != null && authentication.getCredentials() != null) {
 					if(PasswordUtil.hasOldHash(user)) {
 						String oldPassword = user.getPassword();
 						String newPassword = authentication.getCredentials().toString();
-                        user = PasswordUtil.updatePasswordWithNew(true, oldPassword, newPassword, user.getId(), encoder, _userRepository);
+                        user = PasswordUtil.updatePasswordWithNew(true, oldPassword, newPassword, user, encoder, _userRepository);
 					}
 				}
+
+                if (authentication != null && authentication.getDetails() instanceof JeevesAuthenticationDetails) {
+                    user.getSecurity().setNodeId(((JeevesAuthenticationDetails) authentication.getDetails()).getNodeId());
+                }
 
 				return user;
 			}

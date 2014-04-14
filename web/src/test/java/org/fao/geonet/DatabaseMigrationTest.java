@@ -1,27 +1,26 @@
 package org.fao.geonet;
 
 import org.apache.commons.io.FileUtils;
-import org.fao.geonet.domain.Setting;
-import org.fao.geonet.domain.SettingDataType;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.statistic.SearchRequestParamRepository;
+import org.fao.geonet.repository.statistic.SearchRequestParamRepositoryTest;
 import org.fao.geonet.repository.statistic.SearchRequestRepository;
+import org.fao.geonet.repository.statistic.SearchRequestRepositoryTest;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 
+import javax.annotation.Nonnull;
 import javax.annotation.PreDestroy;
 import java.io.File;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.*;
 
@@ -96,41 +95,90 @@ public class DatabaseMigrationTest extends AbstractSpringDataTest {
     @Autowired
     private SearchRequestParamRepository _searchRequestParamRepo;
 
+
     @Test
     public void testMigrate() throws Exception {
+        final AtomicInteger _inc = new AtomicInteger(10000);
+        final AtomicInteger smallNumInt = new AtomicInteger(7);
+
         assertEquals(2, _addressRepo.count());
+        _addressRepo.saveAndFlush(AddressRepositoryTest.newAddress(_inc));
         assertEquals(64, _capInfoFieldRepo.count());
+        _capInfoFieldRepo.saveAndFlush(CswCapabilitiesInfoFieldRepositoryTest.newCswServerCapabilitiesInfo(smallNumInt).setLangId("eng"));
         assertEquals(0, _customElementRepo.count());
+        _customElementRepo.saveAndFlush(CustomElementSetRepositoryTest.newCustomElementSet(smallNumInt));
         assertEquals(4, _groupRepo.count());
         assertEquals(16, _groupRepo.findOne(1).getLabelTranslations().size());
+        final Group group = _groupRepo.saveAndFlush(GroupRepositoryTest.newGroup(_inc));
         assertEquals(22, _harvesterSettingRepo.count());
         assertEquals(1, _harvesterSettingRepo.findByName("name").size());
+        _harvesterSettingRepo.saveAndFlush(HarvesterSettingRepositoryTest.newSetting(_inc));
         assertEquals(1, _harvestHistoryRepo.count());
-        assertEquals(484, _isoLangRepo.count());
+        _harvestHistoryRepo.saveAndFlush(HarvestHistoryRepositoryTest.createHarvestHistory(_inc));
         assertEquals(16, _LanguageRepo.count());
+        Language newLang = LanguageRepositoryTest.newLanguage(smallNumInt);
+        _LanguageRepo.saveAndFlush(newLang);
+        assertEquals(484, _isoLangRepo.count());
+        IsoLanguage isoLang = new IsoLanguage();
+        isoLang.setCode("zzz");
+        isoLang.setShortCode("zz");
+        _isoLangRepo.saveAndFlush(isoLang);
         assertEquals(8, _mdRepo.count());
+        Metadata metadata = _mdRepo.saveAndFlush(MetadataRepositoryTest.newMetadata(_inc));
         assertEquals(13, _metadataCategoryRepo.count());
+        _metadataCategoryRepo.saveAndFlush(MetadataCategoryRepositoryTest.newMetadataCategory(_inc));
         assertEquals(1, _metadataNotificatierRepo.count());
+        _metadataNotificatierRepo.saveAndFlush(MetadataNotifierRepositoryTest.newMetadataNotifier(_inc));
         assertEquals(0, _metadataNotificationRepo.count());
+        _metadataNotificationRepo.saveAndFlush(MetadataNotificationRepositoryTest.newMetadataNotification(_inc, _metadataNotificatierRepo));
+        assertEquals(6, _statusValueRepo.count());
+        _statusValueRepo.saveAndFlush(StatusValueRepositoryTest.newStatusValue(_inc));
         assertEquals(1, _metadataStatusRepo.count());
+        final MetadataStatus metadataStatus = MetadataStatusRepositoryTest.newMetadataStatus(_inc, _statusValueRepo);
+        metadataStatus.getId().setMetadataId(metadata.getId());
+        _metadataStatusRepo.saveAndFlush(metadataStatus);
         assertEquals(3, _metadataValidationRepo.count());
-        assertEquals(72, _opAllowedRepo.count());
+        _metadataValidationRepo.saveAndFlush(MetadataValidationRepositoryTest.newValidation(_inc, _mdRepo));
         assertEquals(6, _operationRepo.count());
+        Operation operation = _operationRepo.saveAndFlush(OperationRepositoryTest.newOperation(_inc));
+        assertEquals(72, _opAllowedRepo.count());
+        _opAllowedRepo.saveAndFlush(new OperationAllowed(new OperationAllowedId(metadata.getId(), group.getId(), operation.getId())));
         assertEquals(2, _ratingRepo.count());
+        final MetadataRatingByIp ratingByIp = MetadataRatingByIpRepositoryTest.newMetadataRatingByIp(_inc);
+        ratingByIp.getId().setMetadataId(metadata.getId());
+        _ratingRepo.saveAndFlush(ratingByIp);
         assertEquals(0, _relationRepo.count());
+        _relationRepo.saveAndFlush(MetadataRelationRepositoryTest.newMetadataRelation(_inc, _mdRepo));
         assertEquals(4, _searchRequestParamRepo.count());
+        _searchRequestParamRepo.saveAndFlush(SearchRequestParamRepositoryTest.newRequestParam(_inc));
         assertEquals(39, _searchRequestRepo.count());
+        _searchRequestRepo.saveAndFlush(SearchRequestRepositoryTest.newSearchRequest(_inc));
         assertEquals(0, _serviceRepo.count());
+        Service service = ServiceRepositoryTest.newService(_inc);
+        service.getParameters().clear();
+        service = _serviceRepo.saveAndFlush(service);
+        service.getParameters().put("p1", "p2");
+        _serviceRepo.saveAndFlush(service);
         assertTrue(_settingRepo.count() > 0);
+        _settingRepo.update("system/csw/metadataPublic", new Updater<Setting>() {
+            @Override
+            public void apply(@Nonnull Setting entity) {
+                entity.setValue("true");
+            }
+        });
+        assertNotNull(_settingRepo.findOne(SettingManager.CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS));
         final Setting ignoreChars = _settingRepo.findOne(SettingManager.SYSTEM_LUCENE_IGNORECHARS);
         assertNotNull(ignoreChars);
         assertEquals(SettingDataType.STRING, ignoreChars.getDataType());
         assertEquals("", ignoreChars.getValue());
         assertEquals(1, _sourceRepo.count());
-        assertEquals(6, _statusValueRepo.count());
+        _sourceRepo.saveAndFlush(SourceRepositoryTest.newSource(_inc));
         assertEquals(0, _thesaurusActivationRepo.count());
-        assertEquals(1, _userGroupRepo.count());
+        _thesaurusActivationRepo.saveAndFlush(ThesaurusActivationRepositoryTest.newThesaurusActivation(_inc));
         assertEquals(2, _userRepo.count());
+        _userRepo.saveAndFlush(UserRepositoryTest.newUser(_inc));
+        assertEquals(1, _userGroupRepo.count());
+        _userGroupRepo.saveAndFlush(UserGroupRepositoryTest.getUserGroup(_inc, _userRepo, _groupRepo));
     }
 
 

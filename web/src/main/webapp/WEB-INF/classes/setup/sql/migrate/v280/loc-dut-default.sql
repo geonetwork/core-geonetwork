@@ -1,12 +1,12 @@
 -- ISO 3 letter code migration
 INSERT INTO Languages VALUES ('dut','Nederlands', 'y', 'n');
 
-UPDATE CategoriesDes (iddes, langid, label)             SET langid='dut' WHERE langid='nl';
+UPDATE CategoriesDes             SET langid='dut' WHERE langid='nl';
 UPDATE IsoLanguagesDes           SET langid='dut' WHERE langid='nl';
 UPDATE RegionsDes                SET langid='dut' WHERE langid='nl';
-UPDATE GroupsDes (iddes, langid, label)                 SET langid='dut' WHERE langid='nl';
+UPDATE GroupsDes                 SET langid='dut' WHERE langid='nl';
 UPDATE OperationsDes             SET langid='dut' WHERE langid='nl';
-UPDATE StatusValuesDes  (iddes, langid, label)           SET langid='dut' WHERE langid='nl';
+UPDATE StatusValuesDes           SET langid='dut' WHERE langid='nl';
 UPDATE CswServerCapabilitiesInfo SET langid='dut' WHERE langid='nl';
 DELETE FROM Languages WHERE id='nl';
 

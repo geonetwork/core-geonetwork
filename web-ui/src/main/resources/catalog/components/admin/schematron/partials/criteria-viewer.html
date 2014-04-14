@@ -1,0 +1,44 @@
+<div>
+    <a class="gn-action list-group-item" data-ng-hide="editing" data-ng-click="startEditing()">
+        <div class="row">
+            <i class="fa fa-edit" data-ng-class="calculateClassOnDirty('col-sm-1', null)" data-ng-show="isDirty()"/>
+            <div data-ng-class="calculateClassOnDirty('col-sm-10', 'col-sm-11')">{{describeCriteria()}}</div>
+
+            <div class="col-sm-1">
+                <i class="fa gn-action"
+                   data-ng-hide="!criteria.id || isDirty()"
+                   data-ng-class="hoverDelete"
+                   data-ng-init="hoverDelete = 'fa-times'"
+                   data-ng-mouseleave="hoverDelete = 'fa-times'"
+                   data-ng-mouseover="hoverDelete = 'fa-times-circle'"
+                   data-ng-click="$event.stopPropagation();deleteCriteria()"></i>
+            </div>
+        </div>
+    </a>
+    <div class="row">
+        <form class="form-inline" role="form" data-ng-show="editing"
+              data-ng-keyup="handleKeyUp($event.keyCode)">
+                <div class="form-group col-sm-3">
+                    <select
+                            class="form-control"
+                            data-ng-change="updateType(); updateTypeAhead(); updateValueField()"
+                            data-ng-model="criteria.uitype"
+                            data-ng-options="c as v.label for (c, v) in criteriaTypes">
+                    </select>
+                </div>
+                <div class="form-group col-sm-6">
+                    <input type="text"
+                           class="form-control"
+                           data-ng-disabled="criteria.uitype === 'ALWAYS_ACCEPT' || criteria.uitype === 'NEW'"
+                           placeholder="{{'criteriaValue' | translate}}"
+                           data-ng-model="criteria.uivalue"
+                            />
+                </div>
+                <div class="form-group col-sm-2">
+                    <a class="gn-action" data-ng-mousedown="handleFocus($event)" data-ng-click="saveEdit()" data-ng-disabled="criteria.uitype === 'NEW' || (criteria.uitype !== 'ALWAYS_ACCEPT' && criteria.uivalue === '')">{{'save' | translate}}</a>
+                    <br/>
+                    <a class="fa fa-times" data-ng-mousedown="handleFocus($event)" data-ng-click="cancelEditing()">{{'cancel' | translate}}</a>
+                </div>
+        </form>
+    </div>
+</div>

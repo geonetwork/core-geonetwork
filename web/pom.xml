@@ -28,7 +28,12 @@
 
   <!-- FIXME set common dependencies to the root pom.xml  -->
   <dependencies>
-	  <dependency>
+      <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-log4j12</artifactId>
+      </dependency>
+
+      <dependency>
       	<groupId>net.sf.ehcache</groupId>
       	<artifactId>ehcache-core</artifactId>
       </dependency>
@@ -89,10 +94,16 @@
           <artifactId>spring-tx</artifactId>
       </dependency>
       <dependency>
-          <groupId>org.springframework</groupId>
-          <artifactId>spring-web</artifactId>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-webmvc</artifactId>
+         <version>${spring.version}</version>
       </dependency>
-
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-web</artifactId>
+         <version>${spring.version}</version>
+      </dependency>
+ 
       <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
     <dependency>
       <groupId>org.dspace</groupId>
@@ -274,7 +285,7 @@
 	  <dependency>
       <groupId>org.mapfish.print</groupId>
       <artifactId>print-lib</artifactId>
-      <version>1.2.0</version>
+      <version>${print-lib.version}</version>
     </dependency>
   
     <!-- ====================== -->
@@ -411,6 +422,12 @@
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>web-ui</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
     
     <dependency>
 		<groupId>org.xhtmlrenderer</groupId>
@@ -452,6 +469,11 @@
           <version>${project.version}</version>
           <classifier>tests</classifier>
           <scope>test</scope>
+      </dependency>
+      <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>wro4j</artifactId>
+          <version>${project.version}</version>
       </dependency>
 	</dependencies>
 
@@ -538,268 +560,6 @@
           <doUpdate>false</doUpdate> 
         </configuration> 
       </plugin>
-      
-      <plugin>
-        <groupId>net.alchim31.maven</groupId>
-        <artifactId>yuicompressor-maven-plugin</artifactId>
-        <!--  mvn net.alchim31.maven:yuicompressor-maven-plugin:compress -->
-        <executions>
-          <execution>
-            <!-- 
-                This phase does not belong to the default lifecycle for a jar/war packaging.
-                It has to be run explicitely as mvn command argument for generating obfuscated js. 
-             --> 
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>compress</goal>
-              <!--<goal>jslint</goal>-->
-            </goals>
-          </execution>
-        </executions> 
-        <configuration>
-          <statistics>false</statistics>
-          <nosuffix>true</nosuffix>
-          <gzip>false</gzip>
-          <force>true</force>
-          <encoding>UTF-8</encoding>
-          <nomunge>false</nomunge>
-          <jswarn>${minify.verbose}</jswarn>
-          <excludes>
-            <exclude>apps/**/*</exclude>
-            <exclude>scripts/ext/**/*.js</exclude>
-            <exclude>scripts/lib/*.js</exclude>
-          </excludes>
-          <aggregations>
-            <aggregation>
-              <output>${build.webapp.resources}/scripts/lib/gn.libs.js</output>
-              <!-- files to include, path relative to output's directory or absolute path-->
-              <includes>
-                <include>${geonetwork.build.dir}/scripts/sarissa.js</include>
-                <include>${geonetwork.build.dir}/scripts/prototype.js</include>
-              </includes>
-            </aggregation>
-			 <aggregation>
-              <output>${geonetwork.webapp.dir}/scripts/lib/gn.libs.map.js</output>
-              <includes>
-				<include>${geonetwork.build.dir}/scripts/map/core/OGCUtil.js</include>
-                <include>${geonetwork.build.dir}/scripts/map/core/MapStateManager.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/core/CatalogueInterface.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/core/WMCManager.js</include>
-                
-                <include>${geonetwork.build.dir}/scripts/map/Control/ExtentBox.js</include>
-                <include>${geonetwork.build.dir}/scripts/map/Control/ZoomWheel.js</include>
-                
-				<include>${geonetwork.build.dir}/scripts/map/lang/en.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/lang/de.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/lang/nl.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/lang/fr.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/lang/no.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/lang/fi.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/lang/it.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/lang/tr.js</include>
-
-                <include>${geonetwork.build.dir}/scripts/map/Ext.ux/form/DateTime.js</include>
-                
-				<include>${geonetwork.build.dir}/scripts/map/widgets/tree/WMSListGenerator.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/widgets/tree/WMSTreeGenerator.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/widgets/wms/BrowserPanel.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/widgets/wms/LayerInfoPanel.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/widgets/wms/LayerStylesPanel.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/widgets/wms/PreviewPanel.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/widgets/wms/WMSLayerInfo.js</include>   
-                
-				<include>${geonetwork.build.dir}/scripts/map/widgets/FeatureInfoPanel.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/widgets/LegendPanel.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/widgets/OpacitySlider.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/widgets/PrintAction.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/widgets/ProjectionSelector.js</include>
-                <include>${geonetwork.build.dir}/scripts/map/widgets/TimeSelector.js</include>
-                
-				<include>${geonetwork.build.dir}/scripts/map/windows/BaseWindow.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/windows/SingletonWindowManager.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/windows/AddWMS.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/windows/FeatureInfo.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/windows/Opacity.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/windows/LoadWmc.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/windows/LayerStyles.js</include>
-				<include>${geonetwork.build.dir}/scripts/map/windows/WmsLayerMetadata.js</include>
-                <include>${geonetwork.build.dir}/scripts/map/windows/WMSTime.js</include>
-                <include>${geonetwork.build.dir}/scripts/map/windows/Disclaimer.js</include>
-                
-                <include>${geonetwork.build.dir}/scripts/ol_settings.js</include>		
-                <include>${geonetwork.build.dir}/scripts/ol_minimap.js</include>
-                <include>${geonetwork.build.dir}/scripts/ol_map.js</include>             
-              </includes>
-            </aggregation>
-			
-            <aggregation>
-              <output>${geonetwork.webapp.dir}/scripts/lib/gn.libs.scriptaculous.js</output>
-              <includes>
-                <include>${geonetwork.build.dir}/scripts/scriptaculous/effects.js</include>
-                <include>${geonetwork.build.dir}/scripts/scriptaculous/dragdrop.js</include>
-                <include>${geonetwork.build.dir}/scripts/scriptaculous/controls.js</include>
-                <include>${geonetwork.build.dir}/scripts/scriptaculous/builder.js</include>
-              </includes>
-            </aggregation>
-            <aggregation>
-              <output>${geonetwork.webapp.dir}/scripts/lib/gn.js</output>
-              <includes>
-                <include>${geonetwork.build.dir}/scripts/geonetwork.js</include>
-                <include>${geonetwork.build.dir}/scripts/modalbox.js</include>
-                <include>${geonetwork.build.dir}/scripts/form_check.js</include>
-              </includes>
-            </aggregation>
-            <aggregation>
-              <output>${geonetwork.webapp.dir}/scripts/lib/gn.search.js</output>
-              <includes>
-                <include>${geonetwork.build.dir}/scripts/gn_search.js</include>
-              </includes>
-            </aggregation>
-            <aggregation>
-              <output>${geonetwork.webapp.dir}/scripts/lib/gn.editor.js</output>
-              <includes>
-                <include>${geonetwork.build.dir}/scripts/editor/app.CRSSelectionPanel.js</include>
-                <include>${geonetwork.build.dir}/scripts/editor/app.KeywordSelectionPanel.js</include>
-                <include>${geonetwork.build.dir}/scripts/editor/csiro.EditorExtensions.js</include>
-                <include>${geonetwork.build.dir}/scripts/editor/csiro.ThesaurusTermSelectionPanel.js</include>
-                <include>${geonetwork.build.dir}/scripts/editor/csiro.CRSSelectionPanel.js</include>
-                <include>${geonetwork.build.dir}/scripts/editor/app.LinkedMetadataSelectionPanel.js</include>
-                <include>${geonetwork.build.dir}/scripts/editor/LogoSelectionPanel.js</include>
-                <include>${geonetwork.build.dir}/scripts/editor/app.GeoPublisherPanel.js</include>
-                <include>${geonetwork.build.dir}/scripts/editor/app.SearchField.js</include>
-                <include>${geonetwork.build.dir}/scripts/editor/csw.SearchTools.js</include>
-                <include>${geonetwork.build.dir}/scripts/editor/metadata-editor.js</include>
-                <include>${geonetwork.build.dir}/scripts/editor/metadata-show.js</include>
-                <include>${geonetwork.build.dir}/scripts/editor/simpletooltip.js</include>
-                <include>${geonetwork.build.dir}/scripts/editor/tooltip.js</include>
-                <include>${geonetwork.build.dir}/scripts/editor/tooltip-manager.js</include>                
-              </includes>
-            </aggregation>
-            <aggregation>
-              <output>${geonetwork.webapp.dir}/scripts/lib/gn.geo.libs.js</output>
-              <includes>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/SingleFile.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Util.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/BaseTypes.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/BaseTypes/Class.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/BaseTypes/Bounds.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/Rico/Corner.js</include>
-                <include>${geonetwork.build.dir}/scripts/geoext/lib/GeoExt/SingleFile.js</include>
-                <include>${geonetwork.build.dir}/scripts/geoext/lib/GeoExt.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Console.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format/CSWGetRecords.js</include>
-                <include>${geonetwork.build.dir}/scripts/geoext/lib/GeoExt/data/WMSCapabilitiesReader.js</include>
-                <include>${geonetwork.build.dir}/scripts/geoext/lib/GeoExt/data/LayerStore.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Events.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Icon.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Marker.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Popup.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Popup/Anchored.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Popup/AnchoredBubble.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Feature.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Feature/Vector.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format/WKT.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format/XML.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format/WMSGetFeatureInfo.js</include>                
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Geometry.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Control.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Control/PanZoom.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Control/PanZoomBar.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Tween.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Map.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Projection.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Layer.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Tile.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Tile/Image.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Layer/Image.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Geometry/Collection.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Geometry/Point.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Geometry/MultiPoint.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Geometry/Curve.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Geometry/LineString.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Geometry/LinearRing.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Handler.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Handler/Point.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Handler/Path.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Geometry/Polygon.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Handler/Polygon.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format/XML.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Geometry/MultiLineString.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Geometry/MultiPolygon.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format/GML.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format/GML/Base.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format/GML/v3.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/BaseTypes/Element.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Handler/MouseWheel.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Control/ZoomToMaxExtent.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Style.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Filter.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Filter/FeatureId.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Filter/Logical.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Filter/Comparison.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format/Filter.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Protocol.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Protocol/HTTP.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Renderer.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Renderer/Elements.js</include>
-                <include>${geonetwork.build.dir}/scripts/geoext/lib/GeoExt/widgets/MapPanel.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Handler/Feature.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/StyleMap.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Layer/Vector.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Layer/Vector/RootContainer.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Control/SelectFeature.js</include>
-                <include>${geonetwork.build.dir}/scripts/geoext/lib/GeoExt/data/WMSCapabilitiesStore.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Control/Attribution.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Request.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Request/XMLHttpRequest.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Ajax.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/BaseTypes/LonLat.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/BaseTypes/Size.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/BaseTypes/Pixel.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Lang.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Lang/en.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Handler/Drag.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Handler/Box.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Control/ZoomBox.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Control/DragPan.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Handler/Click.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Control/Navigation.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Layer/HTTPRequest.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Layer/Grid.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Layer/WMS.js</include>
-                <include>${geonetwork.build.dir}/scripts/geoext/lib/GeoExt/data/LayerRecord.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Renderer/SVG.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Layer/TileCache.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Control/Button.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format/GML/v2.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format/Filter/v1.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format/Filter/v1_0_0.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format/Filter/v1_1_0.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format/CSWGetRecords/v2_0_2.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format/WMSCapabilities.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format/WMSCapabilities/v1_1.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Control/Scale.js</include>
-                <include>${geonetwork.build.dir}/scripts/geoext/lib/GeoExt/widgets/Action.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Control/DrawFeature.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Rule.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Handler/Hover.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Control/MouseDefaults.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Control/MousePosition.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Handler/RegularPolygon.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Renderer/VML.js</include>
-                <include>${geonetwork.build.dir}/scripts/geoext/lib/GeoExt/data/LayerReader.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format/WMSCapabilities/v1_1_0.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Format/WMSCapabilities/v1_1_1.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/lib/OpenLayers/Control/ArgParser.js</include>
-                <include>${geonetwork.build.dir}/scripts/openlayers/addins/LoadingPanel.js</include>      
-                <include>${geonetwork.build.dir}/scripts/openlayers/addins/ScaleBar.js</include>              
-              </includes>
-            </aggregation>
-          </aggregations>
-        </configuration>
-      </plugin>
 
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
@@ -809,30 +569,36 @@
               (see src/main/filters) and copy them to the webapp -->
           <webResources>
             <resource>
+                <directory>${project.basedir}/../web-client/src/main/resources</directory>
+            </resource>
+            <resource>
+                  <directory>${project.basedir}/../web-ui/src/main/resources</directory>
+            </resource>
+            <resource>
               <directory>${build.webapp.resources}</directory>
             </resource>
-          
+
             <!-- Remove comment tag to include documentation in the build. 
             Python and Latex are required to build the documentation. -->
             
             <!--
             <resource>
-              <directory>../docs/eng/users/build/html</directory>
+              <directory>${rootProjectDir}/docs/eng/users/build/html</directory>
               <targetPath>docs/eng/users</targetPath>
             </resource>
             <resource>
-              <directory>../docs/eng/users/build/latex</directory>
+              <directory>${rootProjectDir}/docs/eng/users/build/latex</directory>
               <targetPath>docs/eng/users</targetPath>
                <includes>
                 <include>GeoNetworkUserManual.pdf</include>
               </includes>
             </resource>
             <resource>
-            <directory>../docs/eng/developer/build/html</directory>
+            <directory>${rootProjectDir}/docs/eng/developer/build/html</directory>
               <targetPath>docs/eng/developer</targetPath>
             </resource>  
             <resource>
-              <directory>../docs</directory>
+              <directory>${rootProjectDir}/docs</directory>
               <targetPath>docs</targetPath>
                <includes>
                 <include>changes.txt</include>
@@ -841,21 +607,14 @@
               </includes>
             </resource>
             <resource>
-              <directory>../docs/eng/developer/build/latex</directory>
+              <directory>${rootProjectDir}/docs/eng/developer/build/latex</directory>
               <targetPath>docs/eng/developer</targetPath>
                 <includes>
                   <include>GeoNetworkDeveloperManual.pdf</include>
                 </includes>
             </resource>-->
           </webResources>
-          <overlays>
-            <overlay>
-              <groupId>${project.groupId}</groupId>
-              <artifactId>geonetwork-client</artifactId>
-              <type>jar</type>
-            </overlay>
-          </overlays>
-          <!-- <packagingExcludes>WEB-INF/data/**</packagingExcludes> -->
+            <!-- <packagingExcludes>WEB-INF/data/**</packagingExcludes> -->
           <packagingExcludes>xml/schemas/**</packagingExcludes>
 <!--          <warSourceDirectory>src/main/geonetwork</warSourceDirectory> -->
           <webXml>${build.webapp.resources}/WEB-INF/web.xml</webXml>
@@ -867,7 +626,6 @@
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>jetty-maven-plugin</artifactId>
-        <version>8.1.9.v20130131</version>
         <configuration>
             <contextXml>${basedir}/jetty-context.xml</contextXml>
             <connectors>
@@ -895,13 +653,14 @@
             <contextPath>/geonetwork</contextPath>
             <descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
             <baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
-            <resourcesAsCSV>${basedir}/src/main/webapp,../web-ui/src/main/resources/,${build.webapp.resources}${widgets.webapp.resources}</resourcesAsCSV>
+            <resourcesAsCSV>${project.basedir}/src/main/webapp,${rootProjectDir}/web-ui/src/main/resources/,${build.webapp.resources},${rootProjectDir}/web-client/src/main/resources/</resourcesAsCSV>
             </baseResource>
           </webApp>
           <stopKey>JETTY_TOP</stopKey>
           <stopPort>8090</stopPort>
         </configuration>
       </plugin>
+
     </plugins>
   </build>
   
@@ -920,7 +679,81 @@
 			<groupId>org.codehaus.mojo</groupId>
 			<artifactId>findbugs-maven-plugin</artifactId>
 		  </plugin>
-		</plugins>
+
+            <!--
+                The following plugin is the maven configuration for:
+                Web Resource Optimizer For Java (WRO4J)  https://code.google.com/p/wro4j/wiki/Introduction
+
+                The output files are unimportant because the purpose of the maven plugin (in our usage) is to
+                only check that the javascript and css file can be correctly compiled, linted, compressed, etc...
+
+                There is a Servlet filter (see web.xml) that does the actual compilation,linting,compression at runtime.
+                The filter allows a developer to be able to make live modifications and automatically have the
+                compiling/linting/compression done during the development rather than just at build time.
+
+                WRO4J intelligently caches minified files (and automatically handles gzipping)
+            -->
+            <plugin>
+                <groupId>ro.isdc.wro4j</groupId>
+                <artifactId>wro4j-maven-plugin</artifactId>
+                <version>${wro.version}</version>
+                <executions>
+                    <execution>
+                        <id>test-javascript-optimization</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- The targetGroups are the groups to test for existence.  if they are not found then
+                         an error is raised.  Currently the groups from web-ui, web-client and web are listed
+                         here.  If web-client (for example) is removed then remove the group below
+
+                         Note:  all groups must be on the same line with not whitespace.
+                    -->
+                    <targetGroups>gn,gn_admin,gn_login,lib,gn.libs,gn.libs.map,gn.libs.scriptaculous,gn,gn.search,gn.editor,gn.geo.libs,kernel,geonetwork-client-ext-ux_css,geonetwork-client_css,geonetwork-client-mini-nomap,geonetwork-client-mini,geonetwork-client-search-app,geonetwork-client-tabsearch-app,geonetwork-client-html5ui-app,closure_deps,srv_custom_style</targetGroups>
+                    <minimize>true</minimize>
+                    <destinationFolder>${wro4jOutput}</destinationFolder>
+                    <cssDestinationFolder>${wro4jOutput}/css</cssDestinationFolder>
+                    <jsDestinationFolder>${wro4jOutput}/js</jsDestinationFolder>
+                    <contextFolder>${basedir}/src/main/webapp/</contextFolder>
+                    <wroManagerFactory>org.fao.geonet.wro4j.GeonetworkMavenWrojManagerFactory</wroManagerFactory>
+                    <extraConfigFile>${build.webapp.resources}/WEB-INF/wro.properties</extraConfigFile>
+                    <incrementalBuildEnabled>false</incrementalBuildEnabled>
+                    <parallelProcessing>true</parallelProcessing>
+                    <options>sub</options>
+                    <failFast>true</failFast>
+                    <failNever>false</failNever>
+                    <failThreshold>0</failThreshold>
+                </configuration>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>${project.groupId}</groupId>
+                        <artifactId>wro4j</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>${project.groupId}</groupId>
+                        <artifactId>web-ui</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>${project.groupId}</groupId>
+                        <artifactId>geonetwork-client</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.github.sommeri</groupId>
+                        <artifactId>less4j</artifactId>
+                        <version>1.2.1</version>
+                    </dependency>
+                </dependencies>
+
+            </plugin>
+        </plugins>
 		</build>
 	</profile>
     <profile>
@@ -974,21 +807,18 @@
       <id>widgets</id>
       <properties>
         <web.xml.widget.config.overrides>/WEB-INF/config-overrides-widget.xml</web.xml.widget.config.overrides>
-        <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
       </properties>
     </profile>
     <profile>
       <id>widgets-tab</id>
       <properties>
           <web.xml.widget.config.overrides>/WEB-INF/config-overrides-widgettab.xml</web.xml.widget.config.overrides>
-          <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
       </properties>
     </profile>
     <profile>
 		<id>html5ui</id>
 		<properties>
 			<web.xml.widget.config.overrides>/WEB-INF/config-overrides-html5ui.xml</web.xml.widget.config.overrides>
-			<widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
 		</properties>
     </profile>
     
@@ -1005,8 +835,8 @@
     <build.webapp.resources>${project.build.directory}/webapp</build.webapp.resources>
     <web.xml.main.config.overrides>/WEB-INF/config-overrides-${env}.xml</web.xml.main.config.overrides>
     <web.xml.widget.config.overrides></web.xml.widget.config.overrides>
-    <widgets.webapp.resources></widgets.webapp.resources>
     <system.specific.overrides></system.specific.overrides>
     <rootProjectDir>${basedir}/..</rootProjectDir>
+    <wro4jOutput>${project.build.directory}/wro4j-output/</wro4jOutput>
   </properties>
 </project>

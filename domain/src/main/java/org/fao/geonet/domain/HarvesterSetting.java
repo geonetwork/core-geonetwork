@@ -1,5 +1,6 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.HarvesterSettingEntityListenerManager;
 import org.hibernate.annotations.Type;
 
 import javax.annotation.Nonnull;
@@ -20,8 +21,10 @@ import static javax.persistence.CascadeType.*;
 @Entity
 @Table(name = "HarvesterSettings")
 @Access(AccessType.PROPERTY)
+@EntityListeners(HarvesterSettingEntityListenerManager.class)
+@SequenceGenerator(name=HarvesterSetting.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class HarvesterSetting extends GeonetEntity {
-    public static final int ROOT_ID = 0;
+    static final String ID_SEQ_NAME = "harvester_setting_id_seq";
 
     private int _id;
     private HarvesterSetting _parent;
@@ -35,7 +38,7 @@ public class HarvesterSetting extends GeonetEntity {
      * @return the setting id
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     @Column(name = "id", nullable = false)
     public int getId() {
         return _id;

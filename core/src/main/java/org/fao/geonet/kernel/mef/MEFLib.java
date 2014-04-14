@@ -440,7 +440,7 @@ public class MEFLib {
 		allowedRepository.findAllById_MetadataId(iId);
 
 		// Get group Owner ID
-		int grpOwnerId = md.getSourceInfo().getGroupOwner();
+		Integer grpOwnerId = md.getSourceInfo().getGroupOwner();
 		String grpOwnerName = "";
 
 		HashMap<String, ArrayList<String>> hmPriv = new HashMap<String, ArrayList<String>>();
@@ -470,7 +470,7 @@ public class MEFLib {
             Operation operation = operationRepository.findOne(operationAllowed.getId().getOperationId());
             String operName = operation.getName();
 
-            if (grpOwnerId == grpId) {
+            if (grpOwnerId != null && grpOwnerId == grpId) {
                 grpOwnerName = grpName;
             }
 

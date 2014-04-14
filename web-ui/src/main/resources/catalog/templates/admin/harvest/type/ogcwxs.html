@@ -66,8 +66,11 @@
 
         <div>
             <label class="control-label" data-translate="">ogcwxs-topicCategory</label>
-            <input type="text" class="form-control" data-ng-model="harvesterSelected.options.topic"
-            />
+            <div
+               data-schema-info-combo="codelist"
+               data-selected-info="harvesterSelected.options.topic"
+               data-gn-schema-info="gmd:MD_TopicCategoryCode"
+               lang="lang"></div>
         </div>
 
 
@@ -79,10 +82,10 @@
 
 
 
-        <!-- TODO: Could be nicer to have a list of languages -->
         <div>
             <label class="control-label" data-translate="">ogcwxs-metadataLanguage</label>
-            <input type="text" class="form-control" data-ng-model="harvesterSelected.options.lang"/>
+            <input type="text" class="form-control" data-ng-model="harvesterSelected.options.lang"
+             data-gn-language-picker=""/>
         </div>
 
         <div>
@@ -108,5 +111,5 @@
 
 
 
-    <div data-gn-harvester-privileges="harvesterSelected"/>
+    <div data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
 </form>

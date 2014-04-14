@@ -5,7 +5,6 @@ import org.fao.geonet.domain.HarvestHistory;
 import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,13 +13,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.*;
 
-@Transactional
 public class HarvestHistoryRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
     HarvestHistoryRepository _repo;
-
-    AtomicInteger _inc = new AtomicInteger();
 
     @Test
     public void testFindOne() {

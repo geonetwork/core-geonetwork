@@ -1,0 +1,15 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <i class="fa fa-cogs"/>&nbsp;
+    <span data-translate="">suggestions</span>
+    <button type="button" class="btn btn-default"
+      data-ng-click="load()"><i class="fa fa-refresh"></i></button>
+  </div>
+  <div class="panel-body">
+    <div class="list-group">
+      <a href="" class="list-group-item" data-ng-repeat="sugg in suggestions | orderBy:'name'"
+        data-ng-click="gnSuggestion.onSuggestionClick(sugg)"> {{sugg.name['#text'] || sugg.name}} </a>
+    </div>
+
+  </div>
+</div>

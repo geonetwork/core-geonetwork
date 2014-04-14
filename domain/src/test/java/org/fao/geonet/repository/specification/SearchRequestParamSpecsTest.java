@@ -11,7 +11,6 @@ import org.fao.geonet.repository.statistic.SearchRequestRepository;
 import org.fao.geonet.repository.statistic.SearchRequestRepositoryTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -27,14 +26,11 @@ import static org.junit.Assert.assertTrue;
  * Date: 10/8/13
  * Time: 11:26 AM
  */
-@Transactional
 public class SearchRequestParamSpecsTest extends AbstractSpringDataTest {
     @Autowired
     SearchRequestParamRepository _paramRepo;
     @Autowired
     SearchRequestRepository _requestRepo;
-
-    AtomicInteger _inc = new AtomicInteger();
 
     @Test
     public void testHasTermField() throws Exception {

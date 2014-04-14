@@ -38,7 +38,7 @@ public final class Csw {
 
 	public static final Namespace NAMESPACE_CSW = Namespace.getNamespace("csw", "http://www.opengis.net/cat/csw/2.0.2");
 	public static final Namespace NAMESPACE_CSW_OLD = Namespace.getNamespace("csw", "http://www.opengis.net/cat/csw");
-	public static final Namespace NAMESPACE_OGC = Namespace.getNamespace("ogc", "http://www.opengis.net/ogc");
+	public static final Namespace NAMESPACE_OGC = Geonet.Namespaces.OGC;
 	public static final Namespace NAMESPACE_OWS = Geonet.Namespaces.OWS;
 	public static final Namespace NAMESPACE_ENV = Namespace.getNamespace("env", "http://www.w3.org/2003/05/soap-envelope");
 	public static final Namespace NAMESPACE_GMD = Geonet.Namespaces.GMD;
@@ -60,7 +60,7 @@ public final class Csw {
 	public static final String SERVICE         = "CSW";
 
 	public static final String CSW_VERSION    = "2.0.2";
-	public static final String OWS_VERSION    = "1.0.0";
+	public static final String OWS_VERSION    = "1.2.0";
 	public static final String FILTER_VERSION_1_1 = "1.1.0";
 	public static final String FILTER_VERSION_1_0 = "1.0.0";
 	

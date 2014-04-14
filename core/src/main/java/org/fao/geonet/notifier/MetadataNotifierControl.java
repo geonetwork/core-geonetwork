@@ -34,13 +34,11 @@ import org.fao.geonet.constants.Geonet;
 
 public class MetadataNotifierControl {
     private ServiceContext srvContext;
-    private GeonetContext gc;
     private static final ScheduledExecutorService scheduler = Executors
             .newScheduledThreadPool(1);
 
-    public MetadataNotifierControl(ServiceContext srvContext, GeonetContext gc) {
+    public MetadataNotifierControl(ServiceContext srvContext) {
         this.srvContext = srvContext;
-        this.gc = gc;
     }
 
     public void runOnce() throws Exception {
@@ -49,7 +47,7 @@ public class MetadataNotifierControl {
         
         if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
             Log.debug(Geonet.DATA_MANAGER, "getUnregisteredMetadata after dbms");
-        final MetadataNotifierTask updateTask = srvContext.getBean(MetadataNotifierTask.class).configure(srvContext);
+        final MetadataNotifierTask updateTask = srvContext.getBean(MetadataNotifierTask.class);
 
         scheduler.schedule(updateTask, 20, TimeUnit.SECONDS);
         if(Log.isDebugEnabled(Geonet.DATA_MANAGER))

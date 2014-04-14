@@ -27,6 +27,15 @@ import com.google.common.collect.ComparisonChain;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.apache.lucene.facet.taxonomy.TaxonomyReader;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.Sort;
+import org.apache.lucene.search.WildcardQuery;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
+import org.fao.geonet.kernel.search.LuceneConfig;
+import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 import org.apache.commons.lang.StringUtils;
@@ -35,13 +44,13 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.SearchManager.TermFrequency;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
+import org.jdom.Content;
 import org.jdom.Element;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Return a list of suggestion for a field. The values could be filtered and
@@ -60,15 +69,28 @@ import java.util.List;
  * 
  * 
  * OpenSearch suggestion specification:
- * http://www.opensearch.org/Specifications/
- * OpenSearch/Extensions/Suggestions/1.0
+ * http://www.opensearch.org/Specifications/OpenSearch/Extensions/Suggestions/1.0
+ *
  */
 public class SearchSuggestion implements Service {
-    private static final String RECORDS_FIELD_VALUES = "RECORDS_FIELD_VALUES";
+    static final String RECORDS_FIELD_VALUES = "RECORDS_FIELD_VALUES";
 
-    private static final String INDEX_TERM_VALUES = "INDEX_TERM_VALUES";
+    static final String INDEX_TERM_VALUES = "INDEX_TERM_VALUES";
 
-    private static final String ORIGIN_ATTR = "origin";
+    static final String PARAM_ORIGIN = "origin";
+    static final String PARAM_FIELD = "field";
+    static final String PARAM_Q = "q";
+    static final String PARAM_MAX_NUMBER_OF_TERMS = "maxNumberOfTerms";
+    static final String PARAM_THRESHOLD = "threshold";
+    static final String PARAM_SORT_BY = "sortBy";
+    static final String ELEM_ITEMS = "items";
+    static final String ELEM_ITEM = "item";
+    static final String ATT_TERM = "term";
+    static final String ATT_FREQ = "freq";
+    static final String CONFIG_PARAM_MAX_NUMBER_OF_TERMS = "max_number_of_terms";
+    static final String CONFIG_PARAM_DEFAULT_SEARCH_FIELD = "default_search_field";
+    static final String CONFIG_PARAM_THRESHOLD = PARAM_THRESHOLD;
+    private static final String SUMMARY_FACET_CONFIG_KEY = "suggestions";
 
     /**
      * Max number of term's values to look in the index. For large catalogue
@@ -91,9 +113,9 @@ public class SearchSuggestion implements Service {
 
     private ServiceConfig _config;
     
-    private enum SORT_BY_OPTION {
+    enum SORT_BY_OPTION {
         FREQUENCY, ALPHA, STARTSWITHFIRST
-    };
+    }
     
     /**
      * Sort a TermFrequency collection by placing element starting with prefix on top
@@ -133,10 +155,10 @@ public class SearchSuggestion implements Service {
      * Set default parameters
      */
     public void init(String appPath, ServiceConfig config) throws Exception {
-        _threshold = Integer.valueOf(config.getValue("threshold"));
-        _maxNumberOfTerms = Integer.valueOf(config
-                .getValue("max_number_of_terms"));
-        _defaultSearchField = config.getValue("default_search_field");
+        _threshold = Integer.valueOf(config.getValue(PARAM_THRESHOLD));
+        String maxNumberOfTerms = config.getValue(CONFIG_PARAM_MAX_NUMBER_OF_TERMS);
+        _maxNumberOfTerms = Integer.valueOf(maxNumberOfTerms);
+        _defaultSearchField = config.getValue(CONFIG_PARAM_DEFAULT_SEARCH_FIELD);
         _config = config;
     }
 
@@ -146,21 +168,21 @@ public class SearchSuggestion implements Service {
     public Element exec(Element params, ServiceContext context)
             throws Exception {
         // The field to search in
-        String fieldName = Util.getParam(params, "field", _defaultSearchField);
+        String fieldName = Util.getParam(params, PARAM_FIELD, _defaultSearchField);
         // The value to search for
-        String searchValue = Util.getParam(params, "q", "");
+        String searchValue = Util.getParam(params, PARAM_Q, "");
         String searchValueWithoutWildcard = searchValue.replaceAll("[*?]", "");
 
         // Search index term and/or index records
-        String origin = Util.getParam(params, "origin", "");
+        String origin = Util.getParam(params, PARAM_ORIGIN, "");
         // The max number of terms to return - only apply while searching terms
-        int maxNumberOfTerms = Util.getParam(params, "maxNumberOfTerms",
+        int maxNumberOfTerms = Util.getParam(params, PARAM_MAX_NUMBER_OF_TERMS,
                 _maxNumberOfTerms);
         // The minimum frequency for a term value to be proposed in suggestion -
         // only apply while searching terms
-        int threshold = Util.getParam(params, "threshold", _threshold);
+        int threshold = Util.getParam(params, PARAM_THRESHOLD, _threshold);
         
-        String sortBy = Util.getParam(params, "sortBy", SORT_BY_OPTION.FREQUENCY.toString());
+        String sortBy = Util.getParam(params, PARAM_SORT_BY, SORT_BY_OPTION.FREQUENCY.toString());
         
         if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
             Log.debug(Geonet.SEARCH_ENGINE, 
@@ -176,7 +198,7 @@ public class SearchSuggestion implements Service {
                 .getHandlerContext(Geonet.CONTEXT_NAME);
         SearchManager sm = gc.getBean(SearchManager.class);
         // The response element
-        Element suggestionsResponse = new Element("items");
+        Element suggestionsResponse = new Element(ELEM_ITEMS);
         
         List<SearchManager.TermFrequency> listOfSuggestions = new ArrayList<SearchManager.TermFrequency>();
         
@@ -184,12 +206,9 @@ public class SearchSuggestion implements Service {
         // The main advantage is that only values from records visible to the
         // user are returned, because the search filter the results first.
         if (origin.equals("") || origin.equals(RECORDS_FIELD_VALUES)) {
-            LuceneSearcher searcher = (LuceneSearcher) sm.newSearcher(
-                    SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
-            
-            listOfSuggestions.addAll(searcher.getSuggestionForFields(
-                    context, fieldName, searchValue, _config, maxNumberOfTerms,
-                    threshold));
+            LuceneSearcher searcher = (LuceneSearcher) sm.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
+
+            searcher.getSuggestionForFields(context, fieldName, searchValue, _config, maxNumberOfTerms, threshold, listOfSuggestions);
         }
         // No values found from the index records field value ...
         if (origin.equals(INDEX_TERM_VALUES)
@@ -197,7 +216,7 @@ public class SearchSuggestion implements Service {
             // If a field is not stored, field values could not be retrieved
             // In that case search the index
             listOfSuggestions.addAll(sm.getTermsFequency(
-                    fieldName, searchValue, maxNumberOfTerms, threshold));
+                    fieldName, searchValue, maxNumberOfTerms, threshold, context));
         }
 
         if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
@@ -206,12 +225,11 @@ public class SearchSuggestion implements Service {
                             + " suggestions from " + origin + ".");
         }
         
-        suggestionsResponse.setAttribute(new Attribute(ORIGIN_ATTR, origin));
+        suggestionsResponse.setAttribute(new Attribute(PARAM_ORIGIN, origin));
         
         // Starts with element first
         if (sortBy.equalsIgnoreCase(SORT_BY_OPTION.STARTSWITHFIRST.toString())) {
-            Collections.sort(listOfSuggestions, new StartsWithComparator(
-                    searchValueWithoutWildcard));
+            Collections.sort(listOfSuggestions, new StartsWithComparator(searchValueWithoutWildcard));
         } else if (sortBy.equalsIgnoreCase(SORT_BY_OPTION.ALPHA.toString())) {
             // Sort by alpha and frequency
             Collections.sort(listOfSuggestions);
@@ -220,10 +238,10 @@ public class SearchSuggestion implements Service {
         }
 
         for (TermFrequency suggestion : listOfSuggestions) {
-            Element md = new Element("item");
+            Element md = new Element(ELEM_ITEM);
             // md.setAttribute("term", suggestion.replaceAll("\"",""));
-            md.setAttribute("term", suggestion.getTerm());
-            md.setAttribute("freq", suggestion.getFrequency() + "");
+            md.setAttribute(ATT_TERM, suggestion.getTerm());
+            md.setAttribute(ATT_FREQ, suggestion.getFrequency() + "");
             suggestionsResponse.addContent(md);
         }
 

@@ -3,15 +3,11 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.HarvestHistory;
 import org.fao.geonet.domain.HarvestHistory_;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaUpdate;
@@ -31,6 +27,7 @@ public class HarvestHistoryRepositoryImpl implements HarvestHistoryRepositoryCus
     EntityManager _entityManager;
 
     @Override
+    @Transactional
     public int deleteAllById(Collection<Integer> ids) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         CriteriaDelete<HarvestHistory> delete = cb.createCriteriaDelete(HarvestHistory.class);
@@ -47,6 +44,7 @@ public class HarvestHistoryRepositoryImpl implements HarvestHistoryRepositoryCus
     }
 
     @Override
+    @Transactional
     public int markAllAsDeleted(@Nonnull String harvesterUuid) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         final CriteriaUpdate<HarvestHistory> update = cb.createCriteriaUpdate(HarvestHistory.class);

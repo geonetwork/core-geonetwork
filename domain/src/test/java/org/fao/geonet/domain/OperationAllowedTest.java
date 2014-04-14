@@ -2,12 +2,11 @@ package org.fao.geonet.domain;
 
 import org.fao.geonet.repository.AbstractOperationsAllowedTest;
 import org.junit.Test;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Propagation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-@Transactional
 public class OperationAllowedTest extends AbstractOperationsAllowedTest {
     @Test
     public void testGetGroup() {

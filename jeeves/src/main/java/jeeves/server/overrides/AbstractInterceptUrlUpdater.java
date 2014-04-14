@@ -3,7 +3,7 @@ package jeeves.server.overrides;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import org.jdom.Element;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.util.RegexRequestMatcher;
@@ -49,18 +49,20 @@ abstract class AbstractInterceptUrlUpdater implements Updater {
         this.patternString = element.getAttributeValue("pattern");
     }
 
+    @Override
+    public boolean runOnFinish() {
+        return true;
+    }
+
     /**
      * Update the FilterInvocationSecurityMetadataSource beans
-     * 
-     * @param sources
      */
     protected abstract void update(Iterable<OverridesMetadataSource> sources);
 
     @Override
-    public Object update(ApplicationContext applicationContext, Properties properties) {
-        Map<String, FilterSecurityInterceptor> beansOfType = applicationContext.getBeansOfType(FilterSecurityInterceptor.class);
+    public void update(ConfigurableListableBeanFactory beanFactory, Properties properties) {
+        Map<String, FilterSecurityInterceptor> beansOfType = beanFactory.getBeansOfType(FilterSecurityInterceptor.class);
         Iterable<OverridesMetadataSource> sources = Iterables.transform(beansOfType.values(), TRANSFORMER);
         update(sources);
-        return null;
     }
 }

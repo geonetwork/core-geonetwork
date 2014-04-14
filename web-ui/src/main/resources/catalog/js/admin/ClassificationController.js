@@ -26,11 +26,11 @@
              icon: 'fa-archive',
              href: '#/classification/thesaurus'
            },{
-                  type: 'directory',
-                  label: 'manageDirectory',
-                  icon: 'fa-list-ul',
-                  href: 'subtemplate.admin' // TODO
-                },{
+              type: 'directory',
+              label: 'manageDirectory',
+              icon: 'fa-list-ul',
+              href: 'catalog.edit#/directory'
+            },{
              type: 'categories',
              label: 'manageCategory',
              icon: 'fa-tags',

@@ -1,12 +1,12 @@
 -- ISO 3 letter code migration
 INSERT INTO Languages VALUES ('por','Português', 'y', 'n');
 
-UPDATE CategoriesDes (iddes, langid, label)             SET langid='por' WHERE langid='pt';
+UPDATE CategoriesDes             SET langid='por' WHERE langid='pt';
 UPDATE IsoLanguagesDes           SET langid='por' WHERE langid='pt';
 UPDATE RegionsDes                SET langid='por' WHERE langid='pt';
-UPDATE GroupsDes (iddes, langid, label)                 SET langid='por' WHERE langid='pt';
+UPDATE GroupsDes                 SET langid='por' WHERE langid='pt';
 UPDATE OperationsDes             SET langid='por' WHERE langid='pt';
-UPDATE StatusValuesDes  (iddes, langid, label)           SET langid='por' WHERE langid='pt';
+UPDATE StatusValuesDes           SET langid='por' WHERE langid='pt';
 UPDATE CswServerCapabilitiesInfo SET langid='por' WHERE langid='pt';
 DELETE FROM Languages WHERE id='pt';
 

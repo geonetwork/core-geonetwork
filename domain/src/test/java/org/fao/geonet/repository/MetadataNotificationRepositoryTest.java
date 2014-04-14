@@ -7,21 +7,17 @@ import org.fao.geonet.domain.MetadataNotificationId;
 import org.fao.geonet.domain.MetadataNotifier;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
 
-@Transactional
 public class MetadataNotificationRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
     MetadataNotificationRepository _repo;
     @Autowired
     MetadataNotifierRepository _notifierRepo;
-
-    AtomicInteger _inc = new AtomicInteger();
 
     @Test
     public void testFindOne() {
@@ -79,11 +75,14 @@ public class MetadataNotificationRepositoryTest extends AbstractSpringDataTest {
     }
 
     private MetadataNotification newMetadataNotification() {
+        return newMetadataNotification(_inc, _notifierRepo);
+    }
+    public static MetadataNotification newMetadataNotification(AtomicInteger inc, MetadataNotifierRepository notifierRepo) {
 
-        MetadataNotifier notifier = MetadataNotifierRepositoryTest.newMetadataNotifier(_inc);
-        notifier = _notifierRepo.save(notifier);
+        MetadataNotifier notifier = MetadataNotifierRepositoryTest.newMetadataNotifier(inc);
+        notifier = notifierRepo.save(notifier);
 
-        int val = _inc.incrementAndGet();
+        int val = inc.incrementAndGet();
         MetadataNotification metadataNotification = new MetadataNotification();
 
         MetadataNotificationId mdNotId = new MetadataNotificationId();

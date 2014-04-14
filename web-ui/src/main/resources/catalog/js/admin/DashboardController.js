@@ -6,11 +6,13 @@
   goog.require('gn_dashboard_content_stat_controller');
   goog.require('gn_dashboard_search_stat_controller');
   goog.require('gn_dashboard_status_controller');
+  goog.require('gn_vcs_controller');
 
   var module = angular.module('gn_dashboard_controller',
       ['gn_dashboard_status_controller',
        'gn_dashboard_search_stat_controller',
-       'gn_dashboard_content_stat_controller']);
+       'gn_dashboard_content_stat_controller',
+       'gn_vcs_controller']);
 
 
   /**
@@ -44,6 +46,11 @@
               label: 'information',
               icon: 'fa-list-ul',
               href: '#/dashboard/information'
+            },{
+              type: 'versioning',
+              label: 'versioning',
+              icon: 'fa-rss',
+              href: '#/dashboard/versioning'
             }]
       };
 

@@ -1,6 +1,7 @@
 package org.fao.geonet.domain.statistic;
 
 import org.fao.geonet.domain.Constants;
+import org.fao.geonet.entitylistener.SearchRequestParamEntityListenerManager;
 
 import javax.persistence.*;
 
@@ -12,7 +13,10 @@ import javax.persistence.*;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "Params")
+@EntityListeners(SearchRequestParamEntityListenerManager.class)
+@SequenceGenerator(name=SearchRequestParam.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class SearchRequestParam {
+    static final String ID_SEQ_NAME = "search_request_params_id_seq";
     private int _id;
     private LuceneQueryParamType _queryType;
     private String _termField;
@@ -31,7 +35,7 @@ public class SearchRequestParam {
      * @return the id of the request parameters this entity represents.
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
         return _id;
     }

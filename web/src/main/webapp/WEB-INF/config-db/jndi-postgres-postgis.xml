@@ -5,7 +5,7 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 	">
 
-    <bean id="dbDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+    <bean id="jdbcDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
         <property name="jndiName" value="java:/comp/env"/>
         <property name="cache" value="true"/>
         <property name="exposeAccessContext" value="false"/>

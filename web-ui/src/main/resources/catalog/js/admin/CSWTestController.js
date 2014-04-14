@@ -22,6 +22,7 @@
       $scope.currentTestId = null;
       $scope.currentTest = null;
       $scope.currentTestResponse = null;
+      $scope.cswUrl = 'csw';
 
       function loadCSWTest() {
         $http.get('../../xml/csw/test/csw-tests.json').success(function(data) {
@@ -30,7 +31,7 @@
       }
 
       $scope.$watch('currentTestId', function() {
-        if ($scope.currentTestId != null) {
+        if ($scope.currentTestId !== null) {
           $http.get('../../xml/csw/test/' + $scope.currentTestId + '.xml')
           .success(function(data) {
                 $scope.currentTest = data;
@@ -41,7 +42,7 @@
 
       $scope.runCSWRequest = function() {
         $scope.currentTestResponse = '';
-        $http.post('csw', $scope.currentTest, {
+        $http.post($scope.cswUrl, $scope.currentTest, {
           headers: {'Content-type': 'application/xml'}
         }).success(function(data) {
           $scope.currentTestResponse = data;

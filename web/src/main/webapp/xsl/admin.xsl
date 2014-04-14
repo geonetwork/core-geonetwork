@@ -231,6 +231,15 @@
                         </xsl:call-template>
                     </xsl:variable>
 
+                    <!-- Metadata versioning log-->
+                    <xsl:variable name="mdVersionLog">
+                        <xsl:call-template name="addrow">
+                            <xsl:with-param name="service" select="'versioning.log'"/>
+                            <xsl:with-param name="title"
+                                            select="/root/gui/strings/metadata-versioning-log"/>
+                        </xsl:call-template>
+                    </xsl:variable>
+
                     <xsl:call-template name="addTitle">
                         <xsl:with-param name="icon">xml.png</xsl:with-param>
                         <xsl:with-param name="title"
@@ -295,6 +304,7 @@
                                     </xsl:with-param>
                                 </xsl:call-template>
                             </xsl:if>
+							<xsl:copy-of select="$mdVersionLog"/>
                         </xsl:with-param>
                     </xsl:call-template>
 
@@ -468,18 +478,6 @@
                                     />
                         </xsl:call-template>
 
-                        <!-- Only add the subtemplate if the client is widget based -->
-                        <xsl:if test="/root/gui/config/client/@widget">
-                            <tr>
-                                <td class="spacer"/>
-                            </tr>
-
-                            <xsl:call-template name="addrow">
-                                <xsl:with-param name="service" select="'subtemplate.admin'"/>
-                                <xsl:with-param name="title" select="/root/gui/strings/subtemplate.admin"/>
-                                <xsl:with-param name="desc" select="/root/gui/strings/subtemplate.admin.desc"/>
-                            </xsl:call-template>
-                        </xsl:if>
                     </xsl:variable>
 
                     <xsl:if test="not($readonly)">

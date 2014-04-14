@@ -8,9 +8,10 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specifications;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nullable;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -18,9 +19,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.*;
 
-@Transactional
 public class UserRepositoryTest extends AbstractSpringDataTest {
-
+    @PersistenceContext
+    private EntityManager _entityManager;
     @Autowired
     UserGroupRepository _userGroupRepository;
     @Autowired
@@ -30,7 +31,32 @@ public class UserRepositoryTest extends AbstractSpringDataTest {
     @Autowired
     UserRepository _userRepo;
 
-    AtomicInteger _inc = new AtomicInteger();
+    @Test
+    public void testNodeIdIsSetOnLoad() {
+        User user = newUser();
+        user.getEmailAddresses().add("test@geonetwork.com");
+
+        assertNull(user.getSecurity().getNodeId());
+
+        _userRepo.save(user);
+        // save sets the nodeId
+        assertNodeId(user);
+        // loading should also set nodeid
+        assertNodeId( _userRepo.findAll().get(0));
+        assertNodeId( _userRepo.findOne(user.getId()));
+        assertNodeId(_userRepo.findOneByUsername(user.getUsername()));
+        assertNodeId(_userRepo.findOneByEmail(user.getEmail()));
+        assertNodeId(_userRepo.findAllByProfile(user.getProfile()).get(0));
+
+    }
+
+    private void assertNodeId(User loaded4) {
+        String testNodeId = "testNodeId";
+        assertEquals(testNodeId, loaded4.getSecurity().getNodeId());
+        loaded4.getSecurity().setNodeId(null);
+        _entityManager.flush();
+        _entityManager.clear();
+    }
 
     @Test
     public void testFindByEmailAddress() {

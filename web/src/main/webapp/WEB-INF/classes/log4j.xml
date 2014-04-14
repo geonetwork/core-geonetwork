@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
-<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+<log4j:configuration debug="false">
 
 
 
     <!-- Appender Configurations -->
     <appender name="consoleAppender" class="org.apache.log4j.ConsoleAppender">
         <param name="Threshold" value="INFO" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c] - %m%n" />
+        </layout>
+    </appender>
+    <appender name="allConsoleAppender" class="org.apache.log4j.ConsoleAppender">
+        <param name="Threshold" value="ALL" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d{ISO8601} %-5p [%c] - %m%n" />
         </layout>
@@ -97,10 +103,6 @@
         <level value="WARN" />
     </logger>
 
-
-
-
-
     <!--  Jeeves module and submodule logger configuration -->
     <logger name="jeeves" additivity="false">
         <level value="DEBUG" />
@@ -172,15 +174,21 @@
     <logger name="org.jzkit.search.impl.LRUCache" additivity="false">
         <level value="WARN" />
     </logger>
-
-    <category name="org.hibernate.SQL">
-        <priority value="WARN" />
+    <logger name="ro.isdc.wro.http" additivity="false">
+        <level value="DEBUG" />
+        <appender-ref ref="allConsoleAppender" />
         <appender-ref ref="fileAppender" />
-    </category>
-    <category name="org.hibernate.type">
-        <priority value="WARN" />
+    </logger>
+    <logger name="org.hibernate.SQL" additivity="false">
+        <level value="WARN" />
+        <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
-    </category>
+    </logger>
+    <logger name="org.hibernate.type" additivity="false">
+        <level value="WARN" />
+        <appender-ref ref="consoleAppender" />
+        <appender-ref ref="fileAppender" />
+    </logger>
 
 
     <!-- Turn off logging except when explicitly declared below -->

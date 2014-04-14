@@ -5,19 +5,16 @@ import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.ReservedGroup;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.fao.geonet.repository.SpringDataTestSupport.assertSameContents;
 import static org.fao.geonet.repository.SpringDataTestSupport.setId;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-@Transactional
 public class GroupRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
@@ -25,8 +22,6 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
 
     @PersistenceContext
     EntityManager _entityManager;
-
-    private AtomicInteger _nextId = new AtomicInteger();
 
     @Test
     public void test_Save_Count_FindOnly_DeleteAll() throws Exception {
@@ -150,7 +145,7 @@ public class GroupRepositoryTest extends AbstractSpringDataTest {
     }
 
     private Group newGroup() {
-        return newGroup(_nextId);
+        return newGroup(_inc);
     }
 
     public static Group newGroup(AtomicInteger nextId) {

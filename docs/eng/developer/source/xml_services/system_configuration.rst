@@ -239,7 +239,7 @@ Example of xml.config.get response::
   </csw>
   <shib>
     <use>false</use>
-    <path>/geonetwork/srv/en/shib.user.login</path>
+    <path>/geonetwork/srv/eng/shib.user.login</path>
     <attrib>
       <username>REMOTE_USER</username>
       <surname>Shib-Person-surname</surname>

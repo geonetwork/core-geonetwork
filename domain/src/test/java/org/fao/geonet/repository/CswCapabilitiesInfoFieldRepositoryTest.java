@@ -4,7 +4,6 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.CswCapabilitiesInfoField;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -13,13 +12,10 @@ import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-@Transactional
 public class CswCapabilitiesInfoFieldRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
     CswCapabilitiesInfoFieldRepository _repo;
-
-    AtomicInteger _inc = new AtomicInteger();
 
     @Test
     public void testFindOne() {
@@ -111,7 +107,10 @@ public class CswCapabilitiesInfoFieldRepositoryTest extends AbstractSpringDataTe
     }
 
     private CswCapabilitiesInfoField newCswServerCapabilitiesInfo() {
-        int val = _inc.incrementAndGet();
+        return newCswServerCapabilitiesInfo(_inc);
+    }
+    public static CswCapabilitiesInfoField newCswServerCapabilitiesInfo(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
         CswCapabilitiesInfoField CswCapabilitiesInfoField = new CswCapabilitiesInfoField().setFieldName("field" + val).setValue("lang"
                                                                                                                                 + val)
                 .setLangId("l_" + val);

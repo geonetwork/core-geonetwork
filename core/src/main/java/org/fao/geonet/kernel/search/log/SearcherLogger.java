@@ -29,7 +29,6 @@ public class SearcherLogger {
 
 	private ServiceContext srvContext;
 	private boolean isEnabled;
-    private List<String> luceneTermsToExclude;
 
     /**
      * Constructor.
@@ -41,8 +40,7 @@ public class SearcherLogger {
 	public SearcherLogger(ServiceContext srvContext, boolean logSpatial, String luceneTermsList) {
 		this.srvContext = srvContext;
 
-        this.luceneTermsToExclude = Arrays.asList(luceneTermsList.split(","));
-		
+
 		if (srvContext == null) { // todo: handle exception/errors
 			Log.warning(Geonet.SEARCH_LOGGER, "null serviceContext object. will not be able to log queries...");
 			this.isEnabled = false;

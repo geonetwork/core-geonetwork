@@ -83,7 +83,7 @@
 	<element name="gfc:label">
         <label>Libellé</label>
         <description/>
-    </element>
+	</element>
     <element name="gfc:listedValue">
         <label>Liste de valeurs</label>
         <description></description>
@@ -125,7 +125,7 @@
         <description></description>
     </element>
     <element name="gfc:functionalLanguage">
-        <label>Langue</label>
+        <label>Langue fonctionnelle</label>
         <description></description>
     </element>
     <element name="gfc:definitionSource">
@@ -223,11 +223,11 @@
     </element>
          <!-- ==================================================== -->
     <element name="gmx:name"> 
-        <label>Name</label> 
-        <description>Feature catalogue name</description> 
+        <label>Nom</label> 
+        <description>Nom du modèle de données</description> 
     </element> 
     <element name="gmx:scope"> 
-        <label>Scope</label> 
+        <label>Domaine</label> 
         <description>Scope definition</description> 
     </element> 
     <element name="gmx:versionNumber"> 
@@ -239,7 +239,22 @@
         <description>Catalogue date</description> 
     </element> 
     <element name="gmx:fieldOfApplication"> 
-        <label>Field of application</label> 
-        <description>Field of application</description> 
-    </element> 
+        <label>Domaine d'application</label> 
+        <description></description> 
+    </element>
+    <element name="gml:metaDataProperty">
+        <label>Métadonnée sur la propriété</label>
+        <description></description>
+    </element>
+    <element name="gml:descriptionReference">
+        <label>Référence sur la description</label>
+        <description></description>
+    </element>
+    <element name="gml:remarks">
+        <label>Remarque</label>
+    </element>
+    <element name="gml:name">
+        <label>Nom</label>
+        <description></description>
+    </element>
 </labels>

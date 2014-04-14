@@ -24,6 +24,7 @@
 package org.fao.geonet.component.csw;
 
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 
@@ -764,8 +765,11 @@ public class GetRecords extends AbstractOperation implements CatalogService {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SearchManager sm = gc.getBean(SearchManager.class);
         boolean requestedLanguageOnTop = sm.getSettingInfo().getRequestedLanguageOnTop();
-		// we always want to keep the relevancy as part of the sorting mechanism
-		return LuceneSearcher.makeSort(sortFields, context.getLanguage(), requestedLanguageOnTop);
+
+        String preferredLanguage = LuceneSearcher.determineLanguage(context, request, sm.getSettingInfo()).presentationLanguage;
+
+        // we always want to keep the relevancy as part of the sorting mechanism
+		return LuceneSearcher.makeSort(sortFields, preferredLanguage, requestedLanguageOnTop);
 	}
 
 

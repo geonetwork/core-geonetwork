@@ -78,7 +78,7 @@ public class Get implements Service
 		//-----------------------------------------------------------------------
 		//--- get metadata
 
-		Element result = dataMan.getThumbnails(id);
+		Element result = dataMan.getThumbnails(context, id);
 
 		if (result == null)
 			throw new IllegalArgumentException("Metadata not found --> " + id);

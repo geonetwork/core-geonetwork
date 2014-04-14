@@ -23,6 +23,12 @@ var app;
 var cookie;
 var urlParameters;
 
+var nodeInfo = /([a-zA-Z0-9_\-]+)\/([a-z]{3})\/search/
+        .exec(window.location.href);
+var catalogueLang = nodeInfo[2] || GeoNetwork.Util.defaultLocale;
+var catalogueNode = nodeInfo[1] || 'srv';
+
+
 /**
  * Main App class. It should only contain specific GUI behaviour.
  */
@@ -241,16 +247,15 @@ GeoNetwork.app = function() {
                 listeners : {
                     select : function(cb, record, idx) {
 
-                        var lang = /srv\/([a-z]{3})\/search/
-                                .exec(window.location.href);
-
+                        var lang = catalogueLang || GeoNetwork.Util.defaultLocale;
+                        var node = catalogueNode || 'srv';
                         if (Ext.isArray(lang)) {
                             lang = lang[1];
                         }
 
                         if (lang === null) {
                             window.location.pathname = window.location.pathname
-                                    .replace('/srv/search', '/srv/'
+                                    .replace('/' + node + '/search', '/' + node + '/'
                                             + cb.getValue() + '/search');
                         } else {
                             window.location.pathname = window.location.pathname
@@ -549,18 +554,14 @@ GeoNetwork.app = function() {
          * Initializes cookies, connections, url, etc,...
          */
         initializeEnvironment : function() {
+
             var geonetworkUrl = window.location.href.match(
-                    /(http.*\/.*)\/srv\.*/, '')[1];
+                    /(http.*\/.*)\/.*\/.*\/.*/, '')[1];
 
             urlParameters = GeoNetwork.Util.getParameters(location.href);
 
-            var lang = /srv\/([a-z]{3})\/search/.exec(location.href);
-
-            if (lang === null) {
-                lang = GeoNetwork.Util.defaultLocale;
-            } else if (Ext.isArray(lang)) {
-                lang = lang[1];
-            }
+            var lang = catalogueLang || GeoNetwork.Util.defaultLocale;
+            var node = catalogueNode || 'srv';
 
             if (urlParameters.extent) {
                 urlParameters.bounds = new OpenLayers.Bounds(
@@ -580,10 +581,11 @@ GeoNetwork.app = function() {
                     {
                         // statusBarId: 'info',
                         lang : lang,
+                        node: node,
                         statusBarId : 'info',
                         hostUrl : geonetworkUrl,
                         mdOverlayedCmpId : 'resultsPanel',
-                        adminAppUrl : geonetworkUrl + '/srv/' + lang + '/admin.console',
+                        adminAppUrl : geonetworkUrl + '/' + node + '/' + lang + '/admin.console',
                         // Declare default store to be used for records and
                         // summary
                         metadataStore : GeoNetwork.Settings.mdStore ? new GeoNetwork.Settings.mdStore()
@@ -640,7 +642,16 @@ GeoNetwork.app = function() {
             this.loginApp = new GeoNetwork.loginApp();
             this.loginApp.init();
             this.mapApp = new GeoNetwork.mapApp();
-            this.mapApp.init();
+
+            var layers={}, options={};
+            if(GeoNetwork.map.CONTEXT || GeoNetwork.map.OWS) {
+                options = GeoNetwork.map.CONTEXT_MAIN_MAP_OPTIONS;
+            } else {
+                options = GeoNetwork.map.MAIN_MAP_OPTIONS;
+                layers  = GeoNetwork.map.BACKGROUND_LAYERS;
+            }
+
+            this.mapApp.init(options, layers);
             this.searchApp = new GeoNetwork.searchApp();
             this.searchApp.init();
 
@@ -670,16 +681,8 @@ Ext
 
             hideAdvancedSearch();
 
-            var lang = /srv\/([a-z]{3})\/search/.exec(location.href);
-
-            if (lang === null) {
-                lang = GeoNetwork.Util.defaultLocale;
-            } else if (Ext.isArray(lang)) {
-                lang = lang[1];
-            }
-
-            var url = /(.*)\/srv/.exec(location.href)[1];
-
+            var url = /(.*)\/[a-zA-Z0-9_\-]+/.exec(location.href)[1];
+            var lang = catalogueLang;
             GeoNetwork.Util.setLang(lang, url + '/apps');
 
             // This should be on search.xls, but IE9 is too fast

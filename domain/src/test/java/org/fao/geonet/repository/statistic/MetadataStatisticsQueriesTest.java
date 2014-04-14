@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -24,7 +23,6 @@ import static org.junit.Assert.assertEquals;
  * Date: 9/23/13
  * Time: 12:20 PM
  */
-@Transactional
 public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
 
     private static final int POPULARITY = 2;
@@ -47,8 +45,6 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
     SourceRepository _sourceRepository;
     @Autowired
     OperationAllowedRepository _operationAllowedRepository;
-
-    private AtomicInteger _inc = new AtomicInteger();
 
     @Test
     public void testGetMetadataCategoryToPopularityMap() throws Exception {

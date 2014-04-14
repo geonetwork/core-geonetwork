@@ -24,10 +24,7 @@
 package org.fao.geonet.kernel.setting;
 
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
@@ -35,10 +32,10 @@ import javax.persistence.PersistenceContext;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.utils.Log;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.domain.Setting;
@@ -54,12 +51,25 @@ import org.springframework.stereotype.Component;
  * class at the moment is to maintain backwards compatibility so not all code and xsl files
  * that make use of the settings need to be modified.
  */
-@Component
 public class SettingManager {
 
     public static final String SYSTEM_SITE_SITE_ID_PATH = "system/site/siteId";
     public static final String SYSTEM_SITE_NAME_PATH = "system/site/name";
-    public static final String SYSTEM_LUCENE_IGNORECHARS = "system/lucene/ignorechars";
+    public static final String CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS = "system/csw/transactionUpdateCreateXPath";
+
+    public static final String SYSTEM_PROXY_USE = "system/proxy/use";
+    public static final String SYSTEM_PROXY_HOST = "system/proxy/host";
+    public static final String SYSTEM_PROXY_PORT = "system/proxy/port";
+    public static final String SYSTEM_PROXY_USERNAME = "system/proxy/username";
+    public static final String SYSTEM_PROXY_PASSWORD = "system/proxy/password";
+
+    public static final String SYSTEM_LUCENE_IGNORECHARS = "system/requestedLanguage/ignorechars";
+    public static final String SYSTEM_REQUESTED_LANGUAGE_SORTED = "system/requestedLanguage/sorted";
+    public static final String SYSTEM_REQUESTED_LANGUAGE_ONLY = "system/requestedLanguage/only";
+    public static final String SYSTEM_AUTODETECT_ENABLE = "system/autodetect/enable";
+    public static final String SYSTEM_XLINKRESOLVER_ENABLE = "system/xlinkResolver/enable";
+
+
     @Autowired
     private SettingRepository _repo;
 
@@ -69,7 +79,8 @@ public class SettingManager {
     /**
      * Get all settings as xml.
      *
-     * @param asTree get the settings as a tree
+     * @param asTree get the settings as a tree. If true only settings
+     * from the system family will be returned.
      *
      * @return all settings as xml.
      */
@@ -81,7 +92,9 @@ public class SettingManager {
 
         for (Setting setting : settings) {
             if (asTree) {
-                buildXmlTree(env, pathElements, setting);
+                if (setting.getName().startsWith("system")) {
+                    buildXmlTree(env, pathElements, setting);
+                }
             } else {
                 Element settingEl = new Element("setting");
                 settingEl.setAttribute("name", setting.getName());
@@ -97,11 +110,11 @@ public class SettingManager {
     private void buildXmlTree(Element env, Map<String, Element> pathElements, Setting setting) {
         String[] segments = setting.getName().split("/");
         Element parent = env;
-        String path = "";
+        StringBuilder path = new StringBuilder();
         for (int i = 0; i < segments.length; i++) {
             String segment = segments[i];
-            path = path + "/" + segment;
-            Element currentElement = pathElements.get(path);
+            path.append("/").append(segment);
+            Element currentElement = pathElements.get(path.toString());
             if (currentElement == null) {
                 currentElement = new Element(segment);
                 currentElement.setAttribute("name", path.substring(1));
@@ -112,7 +125,7 @@ public class SettingManager {
                     currentElement.setText(setting.getValue());
                 }
                 parent.addContent(currentElement);
-                pathElements.put(path, currentElement);
+                pathElements.put(path.toString(), currentElement);
             }
 
             parent = currentElement;

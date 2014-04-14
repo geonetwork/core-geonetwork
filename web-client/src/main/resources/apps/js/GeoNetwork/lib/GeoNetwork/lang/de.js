@@ -20,6 +20,9 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
 GeoNetwork.Lang.de = {
+    'metadataRecordPublishedTitle': 'Metadata publication',
+    'metadataRecordPublished': '${title} is now visible to everyone.',
+    'metadataRecordUnPublished': '${title} is not published to everyone anymore.',
     'metadata-not-found': 'Metadata with UUID ${uuid} not found or not shared with you.',
     'harvestingAdmin': 'Harvesting',
     'filterGroup': 'Filter group ...',
@@ -446,7 +449,11 @@ GeoNetwork.Lang.de = {
 'deleteRecordFailure':'Fehler beim Löschen der Metadaten.',
 'advancedSearchOptions':'Erweiterte Kriterien',
 'relatedservices':'Related Service',
+'relatedsource': 'Source datasets',
+'relatedhassource': 'Is used in',
 'relatedchildren':'Kinder',
+'relatedsibling': 'Related records',
+'relatedassociated': 'Related records',
 'relatedfcats':'In Verbindung stehende Feature-Katalog',
 'relatedhasfeaturecat':'Datensätze',
 'relatedsources':'Quelldatensätze',

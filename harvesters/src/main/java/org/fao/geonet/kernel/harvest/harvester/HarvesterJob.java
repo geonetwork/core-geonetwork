@@ -22,11 +22,12 @@ public class HarvesterJob implements Job {
     public static final String ID_FIELD = "harvesterId";
     String harvesterId;
     AbstractHarvester harvester;
-    
+
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         try {
             harvester.harvest();
+
         } catch (Throwable t) {
             throw new JobExecutionException(t, false);
         }

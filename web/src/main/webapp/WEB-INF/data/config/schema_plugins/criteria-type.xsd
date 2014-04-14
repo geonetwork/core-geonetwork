@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:annotation>
+        <xs:documentation>
+            This file contains the schema for the schema-plugin's criteria-type.xml files.
+
+            The criteria-type.xml file contains information on the types of SchematronCriteria that can be created through the
+            Schematron Administration UI.
+            Each definition provides:
+            * the name of to display in the UI
+            * a mapping to a SchematronCriteriaType type
+            * a value that takes the User input and creates a value that the SchemtronCriteriaType can interpret
+            * Optionally a typeahead configuration
+             * The type ahead configuration is essentially the datasource configuration of the typeahead.js library:
+               http://twitter.github.io/typeahead.js/
+        </xs:documentation>
+    </xs:annotation>
+  <xs:element name="criteriaTypes" type="criteriaTypesType"/>
+  <xs:complexType name="typeType">
+    <xs:sequence minOccurs="1" maxOccurs="1">
+      <xs:element type="xs:string" name="value" minOccurs="1" maxOccurs="1">
+          <xs:annotation>
+              <xs:documentation>
+                  A string with @@value@@ placeholders that will be replaced with what the user wrote in the UI.
+                  This provides a mapping from the UI input to a value that the associated SchematronCriteriaType can interpret.
+
+                  For example: A keyword criteria would take a simple work as the user input but the value would be a full xpath to
+                               the keyword element along with the comparison.
+              </xs:documentation>
+          </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="type" minOccurs="1" maxOccurs="1">
+          <xs:annotation>
+              <xs:documentation>
+                  One of the SchematronCriteriaType values.
+              </xs:documentation>
+          </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="name" minOccurs="1" maxOccurs="1">
+          <xs:annotation>
+              <xs:documentation>
+                  A unique name identifying this criteria.  Translation are to be put in the criteria-type.xml files in the loc
+                  directory of the schema-plugins
+              </xs:documentation>
+          </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="allowArbitraryValue" minOccurs="0" maxOccurs="1">
+          <xs:documentation>
+              If true then allow the user to enter any value even if it is not one of the typeahead options.
+
+              If false then the user must choose one of the typeahead options.
+          </xs:documentation>
+      </xs:element>
+      <xs:choice minOccurs="1" maxOccurs="1">
+        <xs:element type="localType" name="local" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+                <xs:documentation>
+                    If this type is present then the typeahead will be created using a 'local' datasource
+                </xs:documentation>
+            </xs:annotation>
+        </xs:element>
+        <xs:element type="remoteType" name="remote"  minOccurs="1" maxOccurs="1">
+        <xs:element type="localType" name="local" minOccurs="1" maxOccurs="1">
+            <xs:annotation>
+                <xs:documentation>
+                    If this type is present then the typeahead will be created using a 'local' datasource
+                </xs:documentation>
+            </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tokensType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="token" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="remoteType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="cacheTime" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>
+              cacheTime > 0 indicates that the typeahead should download all values and cache them
+              If cacheTime is &lt; 0 then either the "values" element will be used or a remote search will be used for each completion.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="url" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Don't cache  Cache for 1 minute</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="selectRecordArray" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>The following 3 elements are functions (paramName) {function body} and will be converted to a javascript function
+                     in the UI by pre-pending function to the body text  The following 3 elements are functions (paramName) {function body} and will be converted to a javascript function
+                     in the UI by pre-pending function to the body text</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="selectLabelFunction" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="xs:string" name="selectTokensFunction" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>selectTokensFunction is optional</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="selectValueFunction" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="localType">
+    <xs:sequence>
+      <xs:element type="valueType" name="value" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="valueType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="value" minOccurs="1" maxOccurs="1"/>
+      <xs:element type="tokensType" name="tokens" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="criteriaTypesType">
+    <xs:sequence>
+      <xs:element type="typeType" name="type" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

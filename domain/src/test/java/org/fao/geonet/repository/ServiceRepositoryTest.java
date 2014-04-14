@@ -4,17 +4,14 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.Service;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.fao.geonet.repository.SpringDataTestSupport.assertSameContents;
 import static org.junit.Assert.assertEquals;
 
-@Transactional
 public class ServiceRepositoryTest extends AbstractSpringDataTest {
 
     @PersistenceContext
@@ -22,8 +19,6 @@ public class ServiceRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
     ServiceRepository _repo;
-
-    AtomicInteger _inc = new AtomicInteger();
 
     @Test
     public void testFindOne() throws Exception {
@@ -59,7 +54,10 @@ public class ServiceRepositoryTest extends AbstractSpringDataTest {
     }
 
     private Service newService() {
-        int val = _inc.incrementAndGet();
+        return newService(_inc);
+    }
+    public static Service newService(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
 
         Service service = new Service();
 

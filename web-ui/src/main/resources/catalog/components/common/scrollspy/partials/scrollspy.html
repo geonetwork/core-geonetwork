@@ -1,0 +1,22 @@
+<div class="visible-lg">
+  <div class="btn-toolbar" role="toolbar">
+    <button class="btn btn-link fa fa-sort-amount-asc"
+            data-toggle="collapse" data-target="#{{id}}-spy"
+            title="{{'toggleScrollSpy' | translate}}"/>
+    <button class="btn btn-link fa fa-arrow-circle-up"
+            data-ng-click="scrollTo()"
+            title="{{'scrollTop' | translate}}"/>
+  </div>
+  <ul class="nav nav-pills nav-stacked collapse"
+      data-ng-class="collapse ? '' : 'in'"
+      id="{{id}}-spy">
+    <li data-ng-repeat="s in spyElems" data-ng-class="s.active ? 'active' : ''">
+      <a href="" data-ng-click="scrollTo(s.id)"> {{s.label}} </a>
+      <ul class="nav">
+        <li data-ng-repeat="ss in s.children" data-ng-class="ss.active ? 'active' : ''">
+          <a href="" data-ng-click="scrollTo(ss.id)">{{ss.label}}</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>

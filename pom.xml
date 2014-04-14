@@ -92,11 +92,26 @@
     <!-- =========================================================== -->
     <pluginManagement>
       <plugins>
+          <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>jslint-maven-plugin</artifactId>
+              <version>1.0.1</version>
+          </plugin>
 		<plugin>
 			<groupId>org.bsc.maven</groupId>
 			<artifactId>maven-processor-plugin</artifactId>
           <version>2.2.3</version>
 		</plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>2.6</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>2.5</version>
+        </plugin>
         <plugin>
           <groupId>net.alchim31.maven</groupId>
           <artifactId>yuicompressor-maven-plugin</artifactId>
@@ -112,15 +127,20 @@
           <artifactId>exec-maven-plugin</artifactId>
           <version>1.2</version>
         </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-release-plugin</artifactId>
-          <version>2.0</version>
-        </plugin>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-release-plugin</artifactId>
+              <version>2.0</version>
+          </plugin>
+          <plugin>
+              <groupId>org.mortbay.jetty</groupId>
+              <artifactId>jetty-maven-plugin</artifactId>
+              <version>${jetty.version}</version>
+          </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>findbugs-maven-plugin</artifactId>
-          <version>2.5.2</version>
+          <version>2.5.3</version>
           <configuration>
             <effort>Default</effort>
             <threshold>Default</threshold>
@@ -166,7 +186,62 @@
     </pluginManagement>
 
     <plugins>
+      <plugin>
+          <groupId>org.codehaus.groovy.maven</groupId>
+          <artifactId>gmaven-plugin</artifactId>
+          <version>1.0</version>
+          <executions>
+              <execution>
+                  <id>Check memory settings</id>
+                  <goals>
+                      <goal>execute</goal>
+                  </goals>
+                  <phase>initialize</phase>
+                  <configuration>
+                      <source><![CDATA[
+                          def converters = [
+                                  "k": 1/10124,
+                                  "m": 1.0,
+                                  "g": 1024.0
+                          ]
+                          def parseInt = {value ->
+                              def intVal = Integer.parseInt(value.substring(0, value.length() - 1));
+                              def unit = value.substring(value.length() - 1).toLowerCase()
+                              def converter = converters[unit]
+                              if (converter == null) {
+                                  throw new AssertionError("unit: $unit is not a recognized unit.  One of k,m,g is required in : $value")
+                              }
+                              return intVal * converter
+                          }
 
+                          final String MAX_PREFIX = "-Xmx"
+                          final String PERMGEN_PREFIX = "-XX:MaxPermSize="
+                          def arguments = java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments()
+                          def mx = -1;
+                          def permgen = -1;
+                          arguments.each{param ->
+                              if (param.startsWith(MAX_PREFIX)) {
+                                  mx = parseInt (param.substring(MAX_PREFIX.length()))
+                              } else if (param.startsWith(PERMGEN_PREFIX)) {
+                                  permgen = parseInt (param.substring(PERMGEN_PREFIX.length()))
+                              }
+                          }
+
+                          log.info("\n\tMax Heap Memory: "+mx+" MB\n\tMax PermGen Size: "+permgen+" MB")
+                          if (permgen < 0 || mx < 0) {
+                              def mavenOpts = "MAVEN_OPTS=\"${MAX_PREFIX}512M ${PERMGEN_PREFIX}256M\""
+                              def errorMsg = "\n\nIn order for the build to complete both the $MAX_PREFIX parameter and the "+
+                                      "$PERMGEN_PREFIX must be set.  The e2e tests require this because the start Geonetwork and run " +
+                                      "tests against it which takes a lot of memory.\n\nCmd/Powershell:"+
+                                      "\n\n\t \$Env:${mavenOpts}\n\nBash/SH:\n\n\texport ${mavenOpts}"
+                              log.error(errorMsg);
+                              throw new AssertionError(errorMsg);
+                          }
+                          ]]></source>
+                  </configuration>
+              </execution>
+          </executions>
+      </plugin>
       <!--     Compilation.                                        -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -246,10 +321,13 @@
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
+            <version>2.16</version>
             <configuration>
                 <excludes>
                     <exclude>**/*IntegrationTest.java</exclude>
                 </excludes>
+                <argLine>-Dfile.encoding=UTF-8</argLine>
+                <forkCount>1</forkCount>
             </configuration>
             <executions>
                 <execution>
@@ -321,7 +399,7 @@
         <dependency>
             <groupId>com.github.lookfirst</groupId>
             <artifactId>sardine</artifactId>
-            <version>5.0.1</version>
+            <version>5.1-GEONETWORK</version>
         </dependency>
       <!-- universal character set detector -->
       <dependency>
@@ -421,7 +499,7 @@
       <dependency>
         <groupId>commons-fileupload</groupId>
         <artifactId>commons-fileupload</artifactId>
-        <version>1.2.1</version>
+        <version>1.3</version>
       </dependency>
       <dependency>
         <groupId>commons-collections</groupId>
@@ -454,10 +532,14 @@
         <version>1.6</version>
       </dependency>
       <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+        <version>1.7.5</version>
+      </dependency>
+      <dependency>
         <groupId>log4j</groupId>
         <artifactId>log4j</artifactId>
         <version>1.2.13</version>
-        <!-- Same as the dependency in commons-logging -->
       </dependency>
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
@@ -469,10 +551,12 @@
         <artifactId>xercesImpl</artifactId>
         <version>2.7.1</version>
       </dependency>
+			<!-- Patched XML Resolver 1.2 from apache xml-commons - fixes problems
+			     with windows URLs -->
       <dependency>
         <groupId>xml-resolver</groupId>
-        <artifactId>xml-resolver</artifactId>
-        <version>1.2</version>
+        <artifactId>xml-resolver-patched</artifactId>
+        <version>1.2.1</version>
       </dependency>
       <dependency>
         <groupId>org.apache.lucene</groupId>
@@ -532,6 +616,11 @@
         <version>2.5.3</version>
       </dependency>
 			-->
+			<dependency>
+				<groupId>org.eclipse.core</groupId>
+				<artifactId>org.eclipse.core.runtime</artifactId>
+				<version>3.7.0</version>
+			</dependency>
 
       <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
       <dependency>
@@ -656,14 +745,6 @@
             <artifactId>slf4j-log4j12</artifactId>
           </exclusion>
         </exclusions>
-      </dependency>
-      <!-- Load slf4g to match other dependency version (eg. quartz)
-      and replace the one loaded by eu.medsea.mimeutil.
-      -->
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-log4j12</artifactId>
-        <version>1.6.1</version>
       </dependency>
       <dependency>
         <groupId>joda-time</groupId>
@@ -815,11 +896,6 @@
         <artifactId>spring-context</artifactId>
         <version>${spring.version}</version>
       </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-web</artifactId>
-        <version>${spring.version}</version>
-      </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
@@ -855,8 +931,18 @@
 		    <artifactId>spring-expression</artifactId>
 		  </exclusion>
 		</exclusions>
-      </dependency>
-      <dependency>
+       </dependency>
+       <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-webmvc</artifactId>
+         <version>${spring.version}</version>
+       </dependency>
+       <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-web</artifactId>
+         <version>${spring.version}</version>
+       </dependency>
+       <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-cas</artifactId>
         <version>${spring.security.version}</version>
@@ -882,7 +968,12 @@
 		<version>${spring.version}</version>
 		<scope>test</scope>
 	  </dependency>
-	  
+	  <dependency>
+		<groupId>org.springframework</groupId>
+		<artifactId>spring-aspects</artifactId>
+		<version>${spring.version}</version>
+	  </dependency>
+
 	  <!-- Persistence dependencies -->
     <dependency>
 	  <groupId>org.hibernate</groupId>
@@ -928,19 +1019,6 @@
       <artifactId>junit</artifactId>
       <!-- The version number is specified above. -->
       <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.jdom</groupId>
-      <artifactId>jdom</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>jdbm</groupId>
-      <artifactId>jdbm</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
     </dependency>
   </dependencies>
 
@@ -995,6 +1073,7 @@
 
   </repositories>
 
+
   <pluginRepositories>
     <pluginRepository>
       <name>oss.sonatype.org - github-releases</name>
@@ -1012,6 +1091,7 @@
     <module>jeeves</module>
     <module>sde</module>
     <module>web-ui</module>
+    <module>web-ui-docs</module>
     <module>domain</module>
     <module>oaipmh</module>
     <module>core</module>
@@ -1020,7 +1100,9 @@
     <module>healthmonitor</module>
     <module>services</module>
     <module>web-client</module>
+    <module>wro4j</module>
     <module>web</module>
+    <module>e2e-tests</module>
   </modules>
 
   <profiles>
@@ -1065,14 +1147,18 @@
   </distributionManagement>
 
   <properties>
-    <jetty.version>7.3.1.v20110307</jetty.version>
+    <jetty.version>8.1.9.v20130131</jetty.version>
     <geotools.version>8.6</geotools.version>
     <lucene.version>4.1.0</lucene.version>
-    <spring.version>3.2.4.RELEASE</spring.version>
-	<spring.security.version>3.1.4.RELEASE</spring.security.version>
+    <spring.version>3.2.5.RELEASE</spring.version>
+    <spring.security.version>3.1.4.RELEASE</spring.security.version>
     <metrics.version>2.1.1</metrics.version>
     <maven.build.timestamp.format>yyyy-MM-dd'T'HH'\:'mm'\:'ssZ</maven.build.timestamp.format>
     <build.timestamp>${maven.build.timestamp}</build.timestamp>
     <rootProjectDir>..</rootProjectDir>
+    <wro.version>1.7.1</wro.version>
+    <node.version>v0.10.24</node.version>
+    <npm.version>1.3.23</npm.version>
+    <print-lib.version>2.0.0</print-lib.version>
   </properties>
 </project>

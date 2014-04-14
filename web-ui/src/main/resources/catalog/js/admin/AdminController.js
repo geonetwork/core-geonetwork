@@ -31,6 +31,12 @@
         when('/metadata/:tab', {
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnAdminMetadataController'}).
+        when('/metadata/schematron/:schemaName', {
+          templateUrl: tplFolder + 'page-layout.html',
+          controller: 'GnAdminMetadataController'}).
+        when('/metadata/schematron/:schemaName/:schematronId', {
+          templateUrl: tplFolder + 'page-layout.html',
+          controller: 'GnAdminMetadataController'}).
         when('/metadata/:tab/:metadataAction/:schema', {
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnAdminMetadataController'}).
@@ -59,6 +65,9 @@
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnAdminToolsController'}).
         when('/tools/:tab', {
+          templateUrl: tplFolder + 'page-layout.html',
+          controller: 'GnAdminToolsController'}).
+        when('/tools/:tab/select/:selectAll/process/:processId', {
           templateUrl: tplFolder + 'page-layout.html',
           controller: 'GnAdminToolsController'}).
         when('/harvest', {
@@ -107,7 +116,7 @@
             classes: 'btn-primary', icon: 'fa-archive'},
           {name: 'io',
             // Metadata import is made in the widget apps
-            url: 'home?insert',
+            url: '../../home?insert&hl=' + $scope.lang,
             classes: 'btn-primary',
             icon: 'fa-upload'},
           {name: 'harvesters', route: '#harvest', //url: 'harvesting',

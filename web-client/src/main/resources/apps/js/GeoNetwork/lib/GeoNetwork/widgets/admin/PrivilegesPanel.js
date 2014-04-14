@@ -18,7 +18,7 @@ GeoNetwork.admin.PrivilegesPanel = Ext.extend(Ext.grid.GridPanel, {
      * id of the metadata for which privileges are loaded
      */
     id : undefined,
-   
+    
     /**
      * Return true is the <on/> element exists in the n element where <id> 
      * match with the field name.
@@ -59,7 +59,20 @@ GeoNetwork.admin.PrivilegesPanel = Ext.extend(Ext.grid.GridPanel, {
             convert: this.convertOper
         }
     },
-    
+    isTopGroups : function(id) {
+        if (GeoNetwork.Settings.privileges && GeoNetwork.Settings.privileges.topGroups) {
+            return GeoNetwork.Settings.privileges.topGroups.indexOf(id) !== -1;
+        } else {
+            return false;
+        }
+    },
+    getColumnOrder : function() {
+        if (GeoNetwork.Settings.privileges && GeoNetwork.Settings.privileges.columnOrder) {
+            return GeoNetwork.Settings.privileges.columnOrder;
+        } else {
+            return null;
+        }
+    },
     initComponent : function() {
         
         Ext.applyIf(this, this.defaultConfig);
@@ -157,6 +170,8 @@ GeoNetwork.admin.PrivilegesPanel = Ext.extend(Ext.grid.GridPanel, {
             columns:[]
         });
         
+        var self = this;
+        
         // Store the grid is based on : contains all groups informations
         var store = new Ext.data.XmlStore({
             autoDestroy: true,
@@ -179,7 +194,9 @@ GeoNetwork.admin.PrivilegesPanel = Ext.extend(Ext.grid.GridPanel, {
                          var label = Ext.DomQuery.selectNode('label/' + catalogue.lang,n);
                          var prefix = "";
                          var id = Ext.DomQuery.selectNode('id', n);
-                         if (catalogue.getNodeText(id) <= 1) {
+                         
+                         if (catalogue.getNodeText(id) <= 1 || 
+                                 self.isTopGroups(catalogue.getNodeText(id))) {
                              prefix = " - ";
                          }
                          var trueLabel = 
@@ -219,12 +236,8 @@ GeoNetwork.admin.PrivilegesPanel = Ext.extend(Ext.grid.GridPanel, {
         // Load the store to get the Ext.grid.ColumnModel, the view and the datas
         store.load({
             callback: function(recs,opt,suc) {
-                var ops = Ext.DomQuery.selectNode('operation',store.reader.xmlData);
-                if (ops === undefined) {
-                    ops = Ext.DomQuery.selectNode('operations',store.reader.xmlData);
-                }
-                operationsStore.loadData(ops);
-
+                operationsStore.loadData(Ext.DomQuery.selectNode('operations',store.reader.xmlData));
+                
                 // Disable groups you d'ont have rights on
                 var groupOwner = this.batch ? '' : catalogue.getNodeText(store.reader.xmlData.getElementsByTagName('groupOwner')[0]);
                 var isOwner = this.batch ? '' : catalogue.getNodeText(store.reader.xmlData.getElementsByTagName('owner')[0]);
@@ -236,16 +249,32 @@ GeoNetwork.admin.PrivilegesPanel = Ext.extend(Ext.grid.GridPanel, {
                     width: 220
                 }];
                 
-                // build column depending on operations Store
-                operationsStore.each(function(rec) {
-                    columns.push({
-                        xtype: 'checkcolumn',
-                        header: rec.get('label'),
-                        dataIndex: 'oper'+rec.get('id'),
-                        width: 80,
-                        align: 'center'
+                // build column depending on operations Store or columnOrder array
+                if (self.getColumnOrder()) {
+                    Ext.each(self.getColumnOrder(), function(id) {
+                        var recId = operationsStore.find('id',id);
+                        if (recId !== undefined) {
+                            var rec = operationsStore.getAt(recId);
+                            columns.push({
+                                 xtype: 'checkcolumn',
+                                 header: rec.get('label'),
+                                 dataIndex: 'oper'+rec.get('id'),
+                                 width: 80,
+                                 align: 'center'
+                             });
+                        }
                     });
-                });
+                } else {
+                    operationsStore.each(function(rec) {
+                        columns.push({
+                            xtype: 'checkcolumn',
+                            header: rec.get('label'),
+                            dataIndex: 'oper'+rec.get('id'),
+                            width: 80,
+                            align: 'center'
+                        });
+                    });
+                }
                 
                 columns.push({
                     xtype: 'checkcolumn',
@@ -267,7 +296,7 @@ GeoNetwork.admin.PrivilegesPanel = Ext.extend(Ext.grid.GridPanel, {
                 // grid view to disable rows depending on rights
                 this.getView().getRowClass = function(record, index) {
                     var css = record.get('userGroup') == "true" ? '' : 'privilges-not-user-groups ';
-                    if(record.id == 0 || record.id == -1 || record.id == 1) {
+                    if(record.id == 0 || record.id == -1 || record.id == 1 || self.isTopGroups(record.id)) {
                         if(catalogue.canSetInternalPrivileges()) {
                             return css + 'privileges-internal';
                         }

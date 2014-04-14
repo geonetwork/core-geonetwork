@@ -33,7 +33,7 @@ import org.jdom.Element;
 
 public class WebDavParams extends AbstractParams
 {
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
@@ -83,7 +83,6 @@ public class WebDavParams extends AbstractParams
 		icon     = Util.getParam(site,  "icon", icon);
 
 		recurse  = Util.getParam(opt, "recurse",  recurse);
-		
 		subtype  = Util.getParam(opt, "subtype",  subtype);
 	}
 
@@ -115,11 +114,22 @@ public class WebDavParams extends AbstractParams
 	//---
 	//---------------------------------------------------------------------------
 
+    /**
+     * url of webdav folder to harvest
+     */
 	public String url;
+    /**
+     * Icon to use for harvester
+     */
 	public String icon;
 
+    /**
+     * If true recurse into directories.
+     */
 	public boolean recurse;
-	
+    /**
+     * Flag indicating if WAFRetriever or WebDavRetriever should be used.
+     */
 	public String subtype;
 }
 

@@ -28,7 +28,7 @@
   <xsl:variable name="replaceMode"
     select="geonet:parseBoolean($replace)"/>
   <xsl:variable name="serviceUrl"
-    select="concat($gurl, '/srv/', $lang, '/xml.search.keywords?pNewSearch=true&amp;pTypeSearch=2&amp;pKeyword=')"/>
+    select="concat($gurl, '/srv/', $lang, '/keywords?pNewSearch=true&amp;pTypeSearch=2&amp;pKeyword=')"/>
 
 
 
@@ -54,7 +54,7 @@
                       and ../gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='place']"/>
     <xsl:if test="$geoKeywords">
       <suggestion process="add-extent-from-geokeywords" id="{generate-id()}" category="keyword" target="extent">
-        <name><xsl:value-of select="geonet:i18n($add-extent-loc, 'a', $guiLang)"/><xsl:value-of select="string-join($geoKeywords/*, ', ')"/>
+        <name><xsl:value-of select="geonet:i18n($add-extent-loc, 'a', $guiLang)"/><xsl:value-of select="string-join($geoKeywords/gco:CharacterString, ', ')"/>
           <xsl:value-of select="geonet:i18n($add-extent-loc, 'b', $guiLang)"/></name>
         <operational>true</operational>
         <params>{gurl:{type:'string', defaultValue:'<xsl:value-of select="$gurl"/>'},
@@ -182,11 +182,14 @@
   <!-- Loop on all non empty keywords -->
   <xsl:template name="add-extent">
     <xsl:param name="srv" select="false()"/>
+    <!-- Only check keyword in main metadata language
+     TODO: support multilingual keyword -->
     <xsl:for-each
-      select="gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword[not(gco:CharacterString/@gco:nilReason)]">
-
+      select="gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword[
+        normalize-space(gco:CharacterString) != '' and
+        not(gco:CharacterString/@gco:nilReason)]">
       <xsl:call-template name="get-bbox">
-        <xsl:with-param name="word" select="*[normalize-space(.)!='']"/>
+        <xsl:with-param name="word" select="gco:CharacterString"/>
         <xsl:with-param name="srv" select="$srv"/>
       </xsl:call-template>
 
@@ -198,12 +201,12 @@
   <xsl:template name="get-bbox">
     <xsl:param name="word"/>
     <xsl:param name="srv" select="false()"/>
-    
+
     <xsl:if test="normalize-space($word)!=''">
       <!-- Get keyword information -->
       <xsl:variable name="keyword" select="document(concat($serviceUrl, $word))"/>
       <xsl:variable name="knode" select="exslt:node-set($keyword)"/>
-  
+
       <!-- It should be one but if one keyword is found in more
           thant one thesaurus, then each will be processed.-->
       <xsl:for-each select="$knode/response/descKeys/keyword">

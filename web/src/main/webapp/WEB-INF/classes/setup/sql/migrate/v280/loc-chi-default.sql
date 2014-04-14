@@ -1,12 +1,12 @@
 -- ISO 3 letter code migration
 INSERT INTO Languages VALUES ('chi','??', 'n', 'n');
 
-UPDATE CategoriesDes (iddes, langid, label)             SET langid='chi' WHERE langid='cn';
+UPDATE CategoriesDes             SET langid='chi' WHERE langid='cn';
 UPDATE IsoLanguagesDes           SET langid='chi' WHERE langid='cn';
 UPDATE RegionsDes                SET langid='chi' WHERE langid='cn';
-UPDATE GroupsDes (iddes, langid, label)                 SET langid='chi' WHERE langid='cn';
+UPDATE GroupsDes                 SET langid='chi' WHERE langid='cn';
 UPDATE OperationsDes             SET langid='chi' WHERE langid='cn';
-UPDATE StatusValuesDes  (iddes, langid, label)           SET langid='chi' WHERE langid='cn';
+UPDATE StatusValuesDes           SET langid='chi' WHERE langid='cn';
 UPDATE CswServerCapabilitiesInfo SET langid='chi' WHERE langid='cn';
 DELETE FROM Languages WHERE id='cn';
 

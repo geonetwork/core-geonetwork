@@ -2,10 +2,7 @@ package org.fao.geonet.kernel.search.index;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import org.apache.lucene.store.Directory;
 import org.fao.geonet.utils.IO;
@@ -88,7 +85,7 @@ class TaxonomyIndexTracker {
     }
 
 
-    void addDocument(Document doc, List<CategoryPath> categories) {
+    void addDocument(Document doc, Collection<CategoryPath> categories) {
         try {
             FacetFields facetFields = new FacetFields(taxonomyWriter);
             facetFields.addFields(doc, categories);
@@ -107,8 +104,10 @@ class TaxonomyIndexTracker {
 
     void close(List<Throwable> errors) throws IOException {
         try {
-            if(taxonomyReader != null)
+            if(taxonomyReader != null) {
                 taxonomyReader.close();
+                taxonomyReader = null;
+            }
         } catch (Throwable e) {
             errors.add(e);
         }
@@ -120,12 +119,18 @@ class TaxonomyIndexTracker {
         expiredReaders.clear();
 
         try {
-            taxonomyWriter.close();
+            if (taxonomyWriter != null) {
+                taxonomyWriter.close();
+                taxonomyWriter = null;
+            }
         } catch (Throwable e) {
             errors.add(e);
         }
         try {
-            cachedFSDir.close();
+            if (cachedFSDir != null) {
+                cachedFSDir.close();
+                cachedFSDir = null;
+            }
         } catch (Throwable e) {
             errors.add(e);
         }

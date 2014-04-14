@@ -4,9 +4,9 @@
   var module = angular.module('gn_importxsl_directive', []);
 
   /**
-     * Provide a list of available XSLT transformation
-     *
-     */
+   * Provide a list of available XSLT transformation
+   *
+   */
   module.directive('gnImportXsl', ['$http', '$translate',
     function($http, $translate) {
 
@@ -20,9 +20,10 @@
         templateUrl: '../../catalog/components/admin/importxsl/partials/' +
             'importxsl.html',
         link: function(scope, element, attrs) {
-          $http.get('info@json?type=importStylesheets').success(function(data) {
-            scope.stylesheets = data.stylesheets;
-          });
+          $http.get('admin.harvester.info@json?type=importStylesheets')
+            .success(function(data) {
+                scope.stylesheets = data[0];
+              });
         }
       };
     }]);

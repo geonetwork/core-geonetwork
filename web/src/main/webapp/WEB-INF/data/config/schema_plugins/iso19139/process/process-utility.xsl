@@ -7,7 +7,12 @@
   
   <!-- Language of the GUI -->
   <xsl:param name="guiLang" select="'eng'"/>
+  
+  <!-- Webapp name-->
   <xsl:param name="baseUrl" select="''"/>
+  
+  <!-- Catalog URL from protocol to lang -->
+  <xsl:param name="catalogUrl" select="''"/>
   
   <!-- Search for any of the searchStrings provided -->
   <xsl:function name="geonet:parseBoolean" as="xs:boolean">

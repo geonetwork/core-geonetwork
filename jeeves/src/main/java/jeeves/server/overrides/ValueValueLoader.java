@@ -1,5 +1,6 @@
 package jeeves.server.overrides;
 
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
 
 import java.util.Properties;
@@ -13,8 +14,7 @@ class ValueValueLoader implements ValueLoader {
     }
 
     @Override
-    public String load(ApplicationContext context, Properties properties) {
-        return this.value;
+    public Object load(ConfigurableBeanFactory beanFactory, Properties properties) {
+        return value;
     }
-    
 }

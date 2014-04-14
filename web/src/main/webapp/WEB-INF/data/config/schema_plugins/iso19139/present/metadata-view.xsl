@@ -34,7 +34,7 @@
       </xsl:with-param>
       <xsl:with-param name="relatedResources">
         <xsl:apply-templates mode="relatedResources"
-          select="gmd:distributionInfo"
+          select="."
         />
       </xsl:with-param>
       <xsl:with-param name="tabs" select="$tabs"/>
@@ -107,10 +107,11 @@
           </xsl:with-param>
         </xsl:call-template>
 
-
+        <xsl:variable name="modifiedDate" select="gmd:dateStamp/*[1]"/>
         <span class="madeBy">
-          <xsl:value-of select="/root/gui/strings/changeDate"/><xsl:value-of select="substring-before(gmd:dateStamp, 'T')"/> | 
-          <xsl:value-of select="/root/gui/strings/uuid"/><xsl:value-of select="gmd:fileIdentifier"/>
+          <xsl:value-of select="/root/gui/strings/changeDate"/>&#160;<xsl:value-of 
+            select="if (contains($modifiedDate, 'T')) then substring-before($modifiedDate, 'T') else $modifiedDate"/> | 
+          <xsl:value-of select="/root/gui/strings/uuid"/>&#160;<xsl:value-of select="gmd:fileIdentifier"/>
         </span>
 
       </xsl:with-param>
@@ -260,7 +261,7 @@
         
         
         <xsl:variable name="type" select="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue"/>
-        <xsl:if test="$type">
+        <xsl:if test="$type != ''">
           (<xsl:value-of
             select="/root/gui/schemas/*[name(.)='iso19139']/codelists/codelist[@name = 'gmd:MD_KeywordTypeCode']/
             entry[code = $type]/label"/>)
@@ -517,13 +518,13 @@
   <!-- List of related resources defined in the online resource section of the metadata record.
 -->
   <xsl:template mode="relatedResources"
-    match="gmd:distributionInfo">
+    match="*">
     <table class="related">
       <tbody>
         <tr style="display:none;"><!-- FIXME needed by JS to append other type of relation from xml.relation service -->
           <td class="main"></td><td></td>
         </tr>
-        <xsl:for-each-group select="descendant::gmd:onLine[gmd:CI_OnlineResource/gmd:linkage/gmd:URL!='']" group-by="gmd:CI_OnlineResource/gmd:protocol">
+        <xsl:for-each-group select="gmd:distributionInfo/descendant::gmd:onLine[gmd:CI_OnlineResource/gmd:linkage/gmd:URL!='']" group-by="gmd:CI_OnlineResource/gmd:protocol">
         <tr>
           <td class="main">
             <!-- Usually, protocole format is OGC:WMS-version-blahblah, remove ':' and get

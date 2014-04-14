@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="sources" type="sourcesType"/>
+    <xs:complexType name="sourcesType">
+        <xs:sequence>
+            <xs:element type="includeType" name="include" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="requireType" name="require" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="declarativeType" name="declarative" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="includeType">
+        <xs:annotation>
+            <xs:documentation>
+                Include another wro-source.xml file that contains elements to add to the model.
+                Care must be taken to not duplicate group names in included files.
+
+                By default the file attribute is relative to the file containing the include but the file attribute
+                may also be a URL or be prefixed with classpath: to search the classpath for all instances with the provided name.
+
+                Examples:
+
+                classpath:wro-sources.xml  <!-- Find all load all files on the classpath called wro-sources.xml -->
+                http://abc.com/wro-sources.xml <!-- load the resources file from the website abc.com -->
+                ../wro-sources.xml <!-- find the wro-sources.xml in the parent directory of the included file -->
+
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute type="xs:string" name="file" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="requireType">
+        <xs:annotation>
+            <xs:documentation>
+                For each jsSource search the path provided and use the goog.require and goog.provide method calls in the javascript
+                files to identify the dependencies between javascript files.
+                For each js file a wro Group will be created which contains all dependencies required by that file. This allows one to
+                write all the js files and simply include the one that is needed without needing to consider which dependencies that
+                file has.
+
+                For each cssSource search all subdirectories of the path provided and create a group from the name of each css or less
+                file found.
+
+                If a css file and a js file have the same name then they will be part of the same group.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element type="requireJsSourceType" name="jsSource" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="requireCssSourceType" name="cssSource" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="pathOnDisk" use="optional">
+            <xs:annotation>
+                <xs:documentation>
+                    pathOnDisk is only used when running unit tests or when running the maven build. it identifies the path to
+                    a resource relative the the root module. This value is added to the webappPath attribute when running in tests
+                    or in maven build to create a path to the directory to search.
+
+                    For example, even if the wro-sources.xml file is in the web/src/main/webResources/WEB-INF folder, the pathOnDisk
+                    should be web-ui/src/main/resources for the web-ui javascript files.
+
+                    Note: the webappPath contains the path required to load using ServletContext.getRealPath and the pathOnDisk
+                    is prefixed to that path to create a path for maven and junit tests
+
+                    Note: The value on this element can be overridded by the value on an individual jsSource element. This is simply
+                    intended to reduce redundant declarations.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="declarativeType">
+        <xs:annotation>
+            <xs:documentation>
+                Create a single group with the given name and add each jsSource and cssSource in the order they are defined.
+                No wild cards are currently accepted.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element type="declareJsSourceType" name="jsSource" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element type="declareCssSourceType" name="cssSource" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="pathOnDisk" use="optional">
+            <xs:annotation>
+                <xs:documentation>
+                    pathOnDisk is only used when running unit tests or when running the maven build. it identifies the path to
+                    a resource relative the the root module. This value is added to the webappPath attribute when running in tests
+                    or in maven build to create a path to the actual javascript file.
+
+                    For example, even if the wro-sources.xml file is in the web/src/main/webResources/WEB-INF folder, the pathOnDisk
+                    should be web-ui/src/main/resources for the web-ui javascript files.
+
+                    Note: the webappPath contains the path required to load using ServletContext.getRealPath and the pathOnDisk
+                    is prefixed to that path to create a path for maven and junit tests.
+
+                    Note: The value on this element can be overridded by the value on an individual jsSource element. This is simply
+                    intended to reduce redundant declarations.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="name" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="requireJsSourceType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:element type="collectionType" name="notMinimized" maxOccurs="1" minOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="webappPath" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    the path to the javascript file or the search directory that is used with running as a webapp. The path
+                    is resolved using ServletContext#getRealPath() to locate the actual file.
+
+                    For maven builds or junit tests this will be appended to pathOnDisk.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="pathOnDisk" use="optional">
+            <xs:annotation>
+                <xs:documentation>
+                    pathOnDisk is only used when running unit tests or when running the maven build. it identifies the path to
+                    a resource relative the the root module. This value is added to the webappPath attribute when running in tests
+                    or in maven build to create a path to the actual javascript file or search directory.
+
+                    For example, even if the wro-sources.xml file is in the web/src/main/webResources/WEB-INF folder, the
+                    pathOnDisk
+                    should be web-ui/src/main/resources for the web-ui javascript files.
+
+                    Note: the webappPath contains the path required to load using ServletContext.getRealPath and the pathOnDisk
+                    is prefixed to that path to create a path for maven and junit tests.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="declareJsSourceType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="webappPath" use="required">
+                    <xs:annotation>
+                        <xs:documentation>
+                            the path to the javascript file or the search directory that is used with running as a webapp. The path
+                            is resolved using ServletContext#getRealPath() to locate the actual file.
+
+                            For maven builds or junit tests this will be appended to pathOnDisk.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute type="xs:string" name="pathOnDisk" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>
+                            pathOnDisk is only used when running unit tests or when running the maven build. it identifies the path to
+                            a resource relative the the root module. This value is added to the webappPath attribute when running in tests
+                            or in maven build to create a path to the actual javascript file or search directory.
+
+                            For example, even if the wro-sources.xml file is in the web/src/main/webResources/WEB-INF folder, the
+                            pathOnDisk
+                            should be web-ui/src/main/resources for the web-ui javascript files.
+
+                            Note: the webappPath contains the path required to load using ServletContext.getRealPath and the pathOnDisk
+                            is prefixed to that path to create a path for maven and junit tests.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute type="xs:boolean" name="minimize" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>
+                            if true or not present then the file will be passed all the minizing processors in the processing chain
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="requireCssSourceType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:element type="collectionType" name="notMinimized" maxOccurs="1" minOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute type="xs:string" name="webappPath" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    the path to the javascript file or the search directory that is used with running as a webapp. The path
+                    is resolved using ServletContext#getRealPath() to locate the actual file.
+
+                    For maven builds or junit tests this will be appended to pathOnDisk.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="pathOnDisk" use="optional">
+            <xs:annotation>
+                <xs:documentation>
+                    pathOnDisk is only used when running unit tests or when running the maven build. it identifies the path to
+                    a resource relative the the root module. This value is added to the webappPath attribute when running in tests
+                    or in maven build to create a path to the actual css/less file or search directory.
+
+                    For example, even if the wro-sources.xml file is in the web/src/main/webResources/WEB-INF folder, the
+                    pathOnDisk
+                    should be web-ui/src/main/resources for the web-ui javascript files.
+
+                    Note: the webappPath contains the path required to load using ServletContext.getRealPath and the pathOnDisk
+                    is prefixed to that path to create a path for maven and junit tests.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="declareCssSourceType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute type="xs:string" name="webappPath" use="required">
+                    <xs:annotation>
+                        <xs:documentation>
+                            the path to the javascript file or the search directory that is used with running as a webapp. The path
+                            is resolved using ServletContext#getRealPath() to locate the actual file.
+
+                            For maven builds or junit tests this will be appended to pathOnDisk.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute type="xs:string" name="pathOnDisk" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>
+                            pathOnDisk is only used when running unit tests or when running the maven build. it identifies the path to
+                            a resource relative the the root module. This value is added to the webappPath attribute when running in tests
+                            or in maven build to create a path to the actual css/less file or search directory.
+
+                            For example, even if the wro-sources.xml file is in the web/src/main/webResources/WEB-INF folder, the
+                            pathOnDisk
+                            should be web-ui/src/main/resources for the web-ui javascript files.
+
+                            Note: the webappPath contains the path required to load using ServletContext.getRealPath and the pathOnDisk
+                            is prefixed to that path to create a path for maven and junit tests.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute type="xs:boolean" name="minimize" use="optional">
+                    <xs:annotation>
+                        <xs:documentation>
+                            if true or not present then the file will be passed all the minizing processors in the processing chain
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="collectionType">
+        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+            <xs:element type="xs:string" name="file" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

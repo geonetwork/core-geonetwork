@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.MetadataRelationEntityListenerManager;
+
 import javax.persistence.*;
 
 /**
@@ -22,6 +24,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Relations")
 @Access(AccessType.PROPERTY)
+@EntityListeners(MetadataRelationEntityListenerManager.class)
 public class MetadataRelation extends GeonetEntity {
     private MetadataRelationId _id = new MetadataRelationId();
 

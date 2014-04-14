@@ -5,7 +5,6 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -14,7 +13,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
 
-@Transactional
 public class MetadataCategoryRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
@@ -25,8 +23,6 @@ public class MetadataCategoryRepositoryTest extends AbstractSpringDataTest {
 
     @PersistenceContext
     EntityManager _entityManager;
-
-    AtomicInteger _inc = new AtomicInteger();
 
     @Test
     public void testFindOne() {
@@ -106,7 +102,7 @@ public class MetadataCategoryRepositoryTest extends AbstractSpringDataTest {
         MetadataCategory metadataCategory = new MetadataCategory();
         metadataCategory.setName("name" + val);
         metadataCategory.getLabelTranslations().put("eng", "engLab" + val);
-        metadataCategory.getLabelTranslations().put("fra", "fraLab" + val);
+        metadataCategory.getLabelTranslations().put("fre", "fraLab" + val);
         metadataCategory.getLabelTranslations().put("ger", "gerLab" + val);
 
         return metadataCategory;

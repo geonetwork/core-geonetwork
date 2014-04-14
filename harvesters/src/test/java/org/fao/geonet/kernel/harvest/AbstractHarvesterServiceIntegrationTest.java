@@ -4,6 +4,8 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
+import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.jdom.Element;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Date: 10/22/13
  * Time: 4:17 PM
  */
-public abstract class AbstractHarvesterServiceIntegrationTest extends AbstractCoreIntegrationTest {
+public abstract class AbstractHarvesterServiceIntegrationTest
+        extends AbstractCoreIntegrationTest {
 
     @Autowired
     protected HarvestManagerImpl _harvestManager;
@@ -37,6 +40,7 @@ public abstract class AbstractHarvesterServiceIntegrationTest extends AbstractCo
      * @return a basic configuration.
      */
     protected Element createHarvesterParams(String type) {
+
         return new Element("node")
                 .setAttribute("id", "1")
                 .setAttribute("type", type)

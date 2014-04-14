@@ -16,9 +16,10 @@
    */
   module.controller('GnCatController', [
     '$scope', '$http', '$q', '$rootScope', '$translate',
-    'gnSearchManagerService',
+    'gnSearchManagerService', 'gnConfigService',
+    'gnMap',
     function($scope, $http, $q, $rootScope, $translate,
-            gnSearchManagerService) {
+            gnSearchManagerService, gnConfigService, gnMap) {
       $scope.version = '0.0.1';
       // TODO : add language
       $scope.lang = location.href.split('/')[5];
@@ -50,6 +51,11 @@
       $scope.user = {};
       $scope.authenticated = false;
       $scope.initialized = false;
+
+      gnConfigService.load().then(function(c) {
+        // Config loaded
+        gnMap.importProj4js();
+      });
 
       /**
        * Catalog facet summary providing
@@ -149,18 +155,6 @@
         }
       });
 
-
-
-
-
-
-
-      $scope.selectMetadata = function(uuid) {
-        console.log('select ' + uuid);
-      };
-      $scope.selectAllMetadata = function() {
-        console.log('select all ');
-      };
 
 
       $scope.loadCatalogInfo();

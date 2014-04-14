@@ -63,7 +63,6 @@ import org.springframework.stereotype.Component;
  * Harvester settings depend on the harvester's protocol.
  * 
  */
-@Component
 public class HarvesterSettingsManager {
 
     @Autowired
@@ -85,7 +84,7 @@ public class HarvesterSettingsManager {
     // ---------------------------------------------------------------------------
 
     /**
-     * Get the indicated setting and its children up-to the indicated depth
+     * Get the indicated setting and its children up-to the indicated depth.
      * 
      * @param path path to the setting that is root of the subtree
      * @param level depth of tree to create

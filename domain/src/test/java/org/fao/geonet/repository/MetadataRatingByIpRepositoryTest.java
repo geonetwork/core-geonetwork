@@ -5,20 +5,16 @@ import org.fao.geonet.domain.MetadataRatingByIp;
 import org.fao.geonet.domain.MetadataRatingByIpId;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
 
-@Transactional
 public class MetadataRatingByIpRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
     MetadataRatingByIpRepository _repo;
-
-    AtomicInteger _inc = new AtomicInteger();
 
     @Test
     public void testFindOne() {
@@ -104,7 +100,10 @@ public class MetadataRatingByIpRepositoryTest extends AbstractSpringDataTest {
     }
 
     private MetadataRatingByIp newMetadataRatingByIp() {
-        int val = _inc.incrementAndGet();
+        return newMetadataRatingByIp(_inc);
+    }
+    public static MetadataRatingByIp newMetadataRatingByIp(AtomicInteger inc) {
+        int val = inc.incrementAndGet();
         MetadataRatingByIp metadataRatingByIp = new MetadataRatingByIp();
         metadataRatingByIp.setRating(1);
         MetadataRatingByIpId id = new MetadataRatingByIpId();

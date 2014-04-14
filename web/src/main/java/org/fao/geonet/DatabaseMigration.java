@@ -12,9 +12,11 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.lib.ServerLib;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
@@ -77,10 +79,16 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
                     }
                     path = new File(currentPath, pathToWebapp).getAbsolutePath()+"/";
                 } else {
-                    servletContext = _applicationContext.getBean(ServletContext.class);
-                    if (servletContext == null) {
-                        _logger.warning("No servletContext found.  Database migration aborted.");
-                        return bean;
+                    try {
+                        servletContext = _applicationContext.getBean(ServletContext.class);
+                    } catch (NoSuchBeanDefinitionException e) {
+                        if (_applicationContext instanceof WebApplicationContext) {
+                            WebApplicationContext context = (WebApplicationContext) _applicationContext;
+                            servletContext = context.getServletContext();
+                        } else {
+                            _logger.warning("No servletContext found.  Database migration aborted.");
+                            return bean;
+                        }
                     }
 
                     ServerLib sl = new ServerLib(servletContext, null);

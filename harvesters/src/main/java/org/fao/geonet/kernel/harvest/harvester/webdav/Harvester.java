@@ -27,21 +27,22 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.OperationAllowedId_;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.*;
+import org.fao.geonet.repository.HarvesterDataRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.Updater;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -77,8 +78,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 	public HarvestResult harvest(Logger log) throws Exception {
 		this.log = log;
         if(log.isDebugEnabled()) log.debug("Retrieving remote metadata information for : "+ params.name);
-		
-		RemoteRetriever rr = null;		
+        RemoteRetriever rr = null;
         if (params.subtype.equals("webdav")) {
             rr = new WebDavRetriever();
         } else if (params.subtype.equals("waf")) {
@@ -86,13 +86,14 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         } else {
             throw new IllegalArgumentException(params.subtype + " is not one of webdav or waf");
         }
-		
-		Log.info(Log.SERVICE, "webdav harvest subtype : "+params.subtype);		
-		rr.init(log, context, params);
-		List<RemoteFile> files = rr.retrieve();
-        if(log.isDebugEnabled()) log.debug("Remote files found : "+ files.size());
-		align(files);
-		rr.destroy();
+        try {
+            Log.info(Log.SERVICE, "webdav harvest subtype : "+params.subtype);
+            rr.init(log, context, params);
+            List<RemoteFile> files = rr.retrieve();
+            if(log.isDebugEnabled()) log.debug("Remote files found : "+ files.size());
+            align(files);
+        } finally { rr.destroy();
+        }
 		return result;
 	}
 
@@ -117,7 +118,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             if (!exists(files, uri)) {
                 // only one metadata record created per uri by this harvester
                 String id = localUris.getRecords(uri).get(0).id;
-                if (log.isDebugEnabled()) log.debug("  - Removing old metadata with local id:"+ id);
+                if (log.isDebugEnabled()){
+                    log.debug("  - Removing old metadata with local id:"+ id);
+                }
                 try {
                     dataMan.deleteMetadataGroup(context, id);
                 } catch (Exception e) {
@@ -134,10 +137,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 		for(RemoteFile rf : files) {
 			result.totalMetadata++;
 			List<RecordInfo> records = localUris.getRecords(rf.getPath());
-			if (records == null)	{
+			if (records == null) {
 				addMetadata(rf);
-			}
-			else {
+			} else {
 				// only one metadata record created per uri by this harvester 
 				updateMetadata(rf, records.get(0));
 			}
@@ -225,20 +227,25 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
         String id = dataMan.insertMetadata(context, schema, md, uuid, Integer.parseInt(params.ownerId), group, params.uuid,
-                     isTemplate, docType, title, category, rf.getChangeDate(), rf.getChangeDate(), ufo, indexImmediate);
+                     isTemplate, docType, category, rf.getChangeDate().getDateAndTime(), rf.getChangeDate().getDateAndTime(), ufo, indexImmediate);
 
 
 		int iId = Integer.parseInt(id);
 
-		dataMan.setTemplateExt(iId, MetadataType.METADATA, null);
+		dataMan.setTemplateExt(iId, MetadataType.METADATA);
 		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(rf.getPath()));
 
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-        addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
+        context.getBean(MetadataRepository.class).update(iId, new Updater<Metadata>() {
+            @Override
+            public void apply(@Nonnull Metadata entity) {
+                addCategories(entity, params.getCategories(), localCateg, context, log, null);
+            }
+        });
 
         dataMan.flush();
 
-        dataMan.indexMetadata(id);
+        dataMan.indexMetadata(id, false);
 		result.addedMetadata++;
 	}
 	
@@ -327,7 +334,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             boolean index = false;
             String language = context.getLanguage();
             final Metadata metadata = dataMan.updateMetadata(context, record.id, md, validate, ufo, index, language,
-                    rf.getChangeDate(), false);
+                    rf.getChangeDate().getDateAndTime(), false);
 
             //--- the administrator could change privileges and categories using the
 			//--- web interface so we have to re-set both
@@ -336,12 +343,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             addPrivileges(record.id, params.getPrivileges(), localGroups, dataMan, context, log);
 
             metadata.getCategories().clear();
-            context.getBean(MetadataRepository.class).save(metadata);
-            addCategories(record.id, params.getCategories(), localCateg, dataMan, context, log, null);
+            addCategories(metadata, params.getCategories(), localCateg, context, log, null);
 
             dataMan.flush();
 
-            dataMan.indexMetadata(record.id);
+            dataMan.indexMetadata(record.id, false);
 			result.updatedMetadata++;
 		}
 	}
@@ -380,8 +386,8 @@ interface RemoteRetriever {
 
 interface RemoteFile {
 	public String  getPath();
-	public String  getChangeDate();
-	public Element getMetadata(SchemaManager  schemaMan) throws JDOMException, IOException, Exception;
+	public ISODate getChangeDate();
+	public Element getMetadata(SchemaManager  schemaMan) throws Exception;
 	public boolean isMoreRecentThan(String localDate);
 }
 

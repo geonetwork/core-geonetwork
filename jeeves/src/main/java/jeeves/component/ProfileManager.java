@@ -23,10 +23,12 @@
 
 package jeeves.component;
 
+import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.intercept.AbstractSecurityInterceptor;
@@ -34,9 +36,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.FilterInvocation;
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.ServletContext;
 import java.util.Collection;
@@ -47,8 +46,7 @@ import java.util.Set;
 
 /** This class is a container for the user-profiles.xml file
   */
-@Component
-public class ProfileManager 
+public class ProfileManager
 {
 	//--------------------------------------------------------------------------
 	//---
@@ -137,7 +135,7 @@ public class ProfileManager
         ServiceContext serviceContext = ServiceContext.get();
         if(serviceContext == null) return true;
         ServletContext servletContext = serviceContext.getServlet().getServletContext();
-        WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+        ConfigurableApplicationContext springContext = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext(servletContext);
         if(springContext == null) return true;
         return springContext.containsBean(beanId);
     }
@@ -156,7 +154,7 @@ public class ProfileManager
         ServiceContext serviceContext = ServiceContext.get();
         if(serviceContext == null) return true;
         ServletContext servletContext = serviceContext.getServlet().getServletContext();
-        WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+        ConfigurableApplicationContext springContext = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext(servletContext);
         SecurityContext context = SecurityContextHolder.getContext();
         if(springContext == null || context == null) return true;
         

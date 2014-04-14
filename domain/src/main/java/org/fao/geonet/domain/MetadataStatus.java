@@ -1,5 +1,6 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.AbstractEntityListenerManager;
 import org.jdom.Element;
 
 import javax.persistence.*;
@@ -15,7 +16,9 @@ import javax.persistence.*;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "MetadataStatus")
+@EntityListeners(MetadataStatus.EntityListener.class)
 public class MetadataStatus extends GeonetEntity {
+    public static class EntityListener extends AbstractEntityListenerManager<MetadataStatus> {}
     /**
      * The Root element of the xml returned by {@link #getAsXml}.
      */

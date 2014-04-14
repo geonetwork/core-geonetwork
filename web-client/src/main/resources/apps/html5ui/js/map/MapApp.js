@@ -40,20 +40,42 @@ GeoNetwork.mapApp = function() {
 
     var layers;
 
-    var generateMaps = function() {
+    var generateMaps = function(options, layers, scales) {
+        var map;
 
-        var map = new OpenLayers.Map({
-            maxExtent : GeoNetwork.map.MAP_OPTIONS.maxExtent.clone(),
-            projection : GeoNetwork.map.MAP_OPTIONS.projection,
-            resolutions : GeoNetwork.map.MAP_OPTIONS.resolutions,
-            restrictedExtent : GeoNetwork.map.MAP_OPTIONS.restrictedExtent
-                    .clone(),
-            controls : []
-        });
+        if (GeoNetwork.map.CONTEXT) {
+            // Load map context
+            var request = OpenLayers.Request.GET({
+                url: GeoNetwork.map.CONTEXT,
+                async: false
+            });
+            if (request.responseText) {
 
-        Ext.each(GeoNetwork.map.BACKGROUND_LAYERS, function(layer) {
-            map.addLayer(layer.clone());
-        });
+                var text = request.responseText;
+                var format = new OpenLayers.Format.WMC();
+                map = format.read(text, {map:options});
+            }
+        }
+        else if (GeoNetwork.map.OWS) {
+            // Load map context
+            var request = OpenLayers.Request.GET({
+                url: GeoNetwork.map.OWS,
+                async: false
+            });
+            if (request.responseText) {
+                var parser = new OpenLayers.Format.OWSContext();
+                var text = request.responseText;
+                map = parser.read(text, {map: options});
+            }
+        }
+        else {
+            map = new OpenLayers.Map('ol_map', options);
+            fixedScales = scales;
+
+            Ext.each(GeoNetwork.map.BACKGROUND_LAYERS, function(layer) {
+                map.addLayer(layer.clone());
+            });
+        }
 
         map.events.register("click", map, function(e) {
             app.showBigMap();
@@ -89,21 +111,51 @@ GeoNetwork.mapApp = function() {
         });
         Ext.get("mini-map").setVisibilityMode(Ext.Element.DISPLAY);
 
-        var map2 = new OpenLayers.Map({
-            maxExtent : GeoNetwork.map.MAP_OPTIONS.maxExtent.clone(),
-            projection : GeoNetwork.map.MAP_OPTIONS.projection,
-            resolutions : GeoNetwork.map.MAP_OPTIONS.resolutions,
-            restrictedExtent : GeoNetwork.map.MAP_OPTIONS.restrictedExtent
+        var map2;
+
+        if (GeoNetwork.map.CONTEXT) {
+            // Load map context
+            var request = OpenLayers.Request.GET({
+                url: GeoNetwork.map.CONTEXT,
+                async: false
+            });
+            if (request.responseText) {
+
+                var text = request.responseText;
+                var format = new OpenLayers.Format.WMC();
+                map2 = format.read(text, {map:options});
+            }
+        }
+        else if (GeoNetwork.map.OWS) {
+            // Load map context
+            var request = OpenLayers.Request.GET({
+                url: GeoNetwork.map.OWS,
+                async: false
+            });
+            if (request.responseText) {
+                var parser = new OpenLayers.Format.OWSContext();
+                var text = request.responseText;
+                map2 = parser.read(text, {map: options});
+            }
+        }
+        else {
+            map2 = new OpenLayers.Map({
+                maxExtent : GeoNetwork.map.MAP_OPTIONS.maxExtent.clone(),
+                projection : GeoNetwork.map.MAP_OPTIONS.projection,
+                resolutions : GeoNetwork.map.MAP_OPTIONS.resolutions,
+                restrictedExtent : GeoNetwork.map.MAP_OPTIONS.restrictedExtent
                     .clone(),
-            controls : []
-        });
+                controls : []
+            });
+
+            Ext.each(GeoNetwork.map.BACKGROUND_LAYERS, function(layer) {
+                map2.addLayer(layer.clone());
+            });
+
+        }
 
         Ext.each(GeoNetwork.map.MAP_OPTIONS.controls_, function(control) {
             map2.addControl(new control());
-        });
-
-        Ext.each(GeoNetwork.map.BACKGROUND_LAYERS, function(layer) {
-            map2.addLayer(layer.clone());
         });
 
         var scaleLinePanel = new Ext.Panel({
@@ -1514,8 +1566,17 @@ GeoNetwork.mapApp = function() {
                         ol_layer.dimensions = layerCap.dimensions;
                         ol_layer.metadataURLs = layerCap.metadataURLs;
                         ol_layer.abstractInfo = layerCap['abstract'];
+                        map.addLayer(ol_layer);
+                    } else {
+                        //Someone used the wrong layername. doh!
+                        //let them correct it
+                        //show wms layer selection
+                        GeoNetwork.WindowManager.showWindow("addwms");
+                        var panel = Ext.getCmp(GeoNetwork.WindowManager
+                                .getWindow("addwms").browserPanel.id);
+                        panel.setURL(caps.capability.request.getcapabilities.href);
                     }
-                    map.addLayer(ol_layer);
+
                 }
             }
 
@@ -1815,8 +1876,8 @@ GeoNetwork.mapApp = function() {
             return app.mapApp.maps[0];
         },
         maps : [],
-        init : function() {
-            generateMaps();
+        init : function(options, layers, fixedScales) {
+            generateMaps(options, layers, fixedScales);
         },
         initPrint : function() {
             createPrintPanel(app.mapApp.getMap());
@@ -1949,7 +2010,7 @@ GeoNetwork.mapApp = function() {
          * Given a URL, return the list of associated layers (WMS)
          * 
          * @param url
-         * @returns
+         * @returns WMS Capabilities
          */
         getCapabilitiesWMS : function(url) {
             var layers = [];
@@ -1986,7 +2047,7 @@ GeoNetwork.mapApp = function() {
          * Given a URL, return the list of associated layers (WMS)
          * 
          * @param url
-         * @returns
+         * @returns WFS Capabilities
          */
         getCapabilitiesWFS : function(url) {
             var layers = [];

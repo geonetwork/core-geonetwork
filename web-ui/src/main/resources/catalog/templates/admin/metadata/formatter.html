@@ -1,0 +1,117 @@
+<div class="row" data-ng-controller="GnAdminMetadataController">
+  <div class="col-lg-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span data-translate="">metadataFormatter</span>
+      </div>
+      <div class="panel-body">
+
+        <input class="form-control" data-ng-model="formatterSearch.$" autofocus=""
+          placeholder="{{'filter' | translate}}"/>
+        <input type="hidden" data-ng-model="formatterSelected"/>
+        <div class="list-group">
+          <a href="" class="list-group-item"
+            data-ng-repeat="f in formatters | filter:formatterSearch"
+            data-ng-class="f === userSelected ? 'active' : ''" data-ng-click="selectFormatter(f)">
+            {{f}} </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span data-translate="">addAFormatter</span>
+      </div>
+      <div class="panel-body">
+        <form id="fileupload" action="metadata.formatter.register@json" method="POST"
+          enctype="multipart/form-data" data-file-upload="formatterUploadOptions">
+          <span class="btn btn-success btn-block fileinput-button" ng-class="{disabled: disabled}">
+            <i class="fa fa-plus fa fa-white"/>
+            <span data-translate="">chooseFormatter</span>
+            <input type="file" name="fname" multiple="true" autofocus="" ng-disabled="disabled"/>
+          </span>
+          <div class="col-lg-5 fade" data-ng-class="{in: active()}">
+            <div class="progress progress-striped active" data-file-upload-progress="progress()"
+              data-file-upload-done="loadFormatter()">
+              <div class="progress-bar progress-bar-success" data-ng-style="{width: num + '%'}"/>
+            </div>
+            <div class="progress-extended">&nbsp;</div>
+          </div>
+          <p class="help-block" data-translate="">formatterUploadHelp</p>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8" data-ng-hide="formatterSelected == null">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span data-ng-hide="formatterSelected == ''" data-translate="">configureFormatter</span>
+        <strong>{{formatterSelected}}</strong>
+
+        <div class="btn-toolbar">
+          <button type="button" class="btn btn-default pull-right fa fa-download"
+            data-ng-click="downloadFormatter(formatterSelected)">&nbsp;<span data-translate="">download</span></button>
+          <button type="button" class="btn btn-default pull-right fa fa-trash-o"
+            data-ng-click="formatterDelete(formatterSelected)">&nbsp;<span data-translate="">delete</span></button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <form class="form-horizontal" id="gn-formatter-file-edit">
+          <div class="form-group">
+            <label class="control-label col-sm-3" data-translate="">chooseAFile</label>
+            <div class="col-sm-9">
+              <select class="form-control" data-ng-model="selectedFile"
+                data-ng-options="file['@name'] group by file.dir for file in formatterFiles"/>
+            </div>
+          </div>
+          <div class="form-group hidden">
+            <input class="form-control" type="text" name="id" data-ng-model="formatterSelected"/>
+            <input class="form-control" type="text" name="fname"
+              data-ng-model="selectedFile['@path']"/>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-12">
+              <textarea class="form-control" name="data" data-gn-autogrow=""
+                data-ng-model="formatterFile"/>
+            </div>
+          </div>
+          <button type="button" class="btn btn-primary pull-right"
+            data-ng-click="saveFormatterFile('#gn-formatter-file-edit')">
+            <i class=" fa fa-save"/>&nbsp; <span data-translate="">saveFile</span></button>
+        </form>
+      </div>
+    </div>
+
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span data-ng-hide="formatterSelected == ''" data-translate="">testFormatter</span>
+        <strong>{{formatterSelected}}</strong>
+      </div>
+      <div class="panel-body">
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label class="control-label col-sm-3" data-translate="">metadataInternalId</label>
+            <div class="col-sm-9">
+              <!-- Could be nice to have a metadata list by autocompletion -->
+              <input class="form-control" type="text" name="id" data-ng-model="metadataId"/>
+            </div>
+          </div>
+
+          <div class="btn-toolbar pull-right">
+            <button type="button" class="btn btn-primary" data-ng-disabled="metadataId == ''"
+              data-ng-click="testFormatter('XML')">
+              <i class=" fa fa-cog"/>&nbsp; <span data-translate="">viewXML</span></button>
+            <button type="button" class="btn btn-primary" data-ng-disabled="metadataId == ''"
+              data-ng-click="testFormatter('HTML')">
+              <i class=" fa fa-cog"/>&nbsp; <span data-translate="">viewHTML</span></button>
+            <button type="button" class="btn btn-primary" data-ng-disabled="metadataId == ''"
+              data-ng-click="testFormatter('DEBUG')">
+              <i class=" fa fa-cog"/>&nbsp; <span data-translate="">viewDEBUG</span></button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>

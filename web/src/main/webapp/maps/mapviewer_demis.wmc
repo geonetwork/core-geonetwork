@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<ViewContext xmlns="http://www.opengis.net/context" version="1.1.0" id="OpenLayers_Context_1278" xsi:schemaLocation="http://www.opengis.net/context
+http://schemas.opengis.net/context/1.1.0/context.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <General>
+        <Window width="973" height="741"/>
+        <BoundingBox minx="-180" miny="-90" maxx="180" maxy="90" SRS="EPSG:4326"/>
+        <Title/>
+        <Extension>
+            <ol:maxExtent xmlns:ol="http://openlayers.org/context" minx="-180.000000000000000"
+                          miny="-90.0000000000000000" maxx="180.000000000000000" maxy="90.0000000000000000"/>
+        </Extension>
+    </General>
+    <LayerList>
+        <Layer queryable="0" hidden="0">
+            <Server service="OGC:WMS" version="1.1.1">
+                <OnlineResource xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                xlink:href="http://www2.demis.nl/mapserver/wms.asp?"/>
+            </Server>
+            <Name>Countries</Name>
+            <Title>Background layer</Title>
+            <FormatList>
+                <Format current="1">image/jpeg</Format>
+            </FormatList>
+            <StyleList>
+                <Style current="1">
+                    <Name/>
+                    <Title>Default</Title>
+                </Style>
+            </StyleList>
+            <Extension>
+                <ol:maxExtent xmlns:ol="http://openlayers.org/context" minx="-180.000000000000000"
+                              miny="-90.0000000000000000" maxx="180.000000000000000" maxy="90.0000000000000000"/>
+                <ol:tileSize xmlns:ol="http://openlayers.org/context" width="256" height="256"/>
+                <ol:numZoomLevels xmlns:ol="http://openlayers.org/context">16</ol:numZoomLevels>
+                <ol:units xmlns:ol="http://openlayers.org/context">degrees</ol:units>
+                <ol:isBaseLayer xmlns:ol="http://openlayers.org/context">true</ol:isBaseLayer>
+                <ol:displayInLayerSwitcher xmlns:ol="http://openlayers.org/context">true</ol:displayInLayerSwitcher>
+                <ol:singleTile xmlns:ol="http://openlayers.org/context">false</ol:singleTile>
+            </Extension>
+        </Layer>
+    </LayerList>
+</ViewContext>

@@ -42,7 +42,7 @@ The CSW operations can be accesed using POST, GET methods and SOAP encoding.
 
 The GeoNetwork opensource catalog CSW Discovery service operations are accessible through the url:
 
-**http://localhost:8080/geonetwork/srv/en/csw**
+**http://localhost:8080/geonetwork/srv/eng/csw**
 
 .. _GetCapabilities:
 
@@ -56,12 +56,12 @@ Request examples
 
 GET request::
 
-  http://localhost:8080/geonetwork/srv/en/csw?request=GetCapabilities&service=CSW&acceptVersions=2.0.2&acceptFormats=application%2Fxml
+  http://localhost:8080/geonetwork/srv/eng/csw?request=GetCapabilities&service=CSW&acceptVersions=2.0.2&acceptFormats=application%2Fxml
 
 POST request::
 
   Url:
-  http://localhost:8080/geonetwork/srv/en/csw
+  http://localhost:8080/geonetwork/srv/eng/csw
 
   Content-type:
   application/xml
@@ -80,7 +80,7 @@ POST request::
 SOAP request::
 
   Url:
-  http://localhost:8080/geonetwork/srv/en/csw
+  http://localhost:8080/geonetwork/srv/eng/csw
 
   Content-type:
   application/soap+xml
@@ -116,12 +116,12 @@ Request examples
 
 GET request::
 
-  http://localhost:8080/geonetwork/srv/en/csw?request=DescribeRecord&service=CSW&version=2.0.2&outputFormat=application%2Fxml&schemaLanguage=http%3A%2F%2Fwww.w3.org%2FXML%2FSchema&namespace=csw%3Ahttp%3A%2F%2Fwww.opengis.net%2Fcat%2Fcsw%2F2.0.2
+  http://localhost:8080/geonetwork/srv/eng/csw?request=DescribeRecord&service=CSW&version=2.0.2&outputFormat=application%2Fxml&schemaLanguage=http%3A%2F%2Fwww.w3.org%2FXML%2FSchema&namespace=csw%3Ahttp%3A%2F%2Fwww.opengis.net%2Fcat%2Fcsw%2F2.0.2
 
 POST request::
 
   Url:
-  http://localhost:8080/geonetwork/srv/en/csw
+  http://localhost:8080/geonetwork/srv/eng/csw
 
   Content-type:
   application/xml
@@ -133,7 +133,7 @@ POST request::
 SOAP request::
 
   Url:
-  http://localhost:8080/geonetwork/srv/en/csw
+  http://localhost:8080/geonetwork/srv/eng/csw
 
   Content-type:
   application/soap+xml
@@ -160,12 +160,12 @@ Request examples
 
 GET request::
 
-  http://localhost:8080/geonetwork/srv/en/csw?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=5df54bf0-3a7d-44bf-9abf-84d772da8df1
+  http://localhost:8080/geonetwork/srv/eng/csw?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=5df54bf0-3a7d-44bf-9abf-84d772da8df1
 
 POST request::
 
   Url:
-  http://localhost:8080/geonetwork/srv/en/csw
+  http://localhost:8080/geonetwork/srv/eng/csw
 
   Content-type:
   application/xml
@@ -180,7 +180,7 @@ POST request::
 SOAP request::
 
   Url:
-  http://localhost:8080/geonetwork/srv/en/csw
+  http://localhost:8080/geonetwork/srv/eng/csw
 
   Content-type:
   application/soap+xml
@@ -211,12 +211,12 @@ Request examples
 GET request (using CQL language)::
 
   Url:
-  http://localhost:8080/geonetwork/srv/en/csw?request=GetRecords&service=CSW&version=2.0.2&namespace=xmlns%28csw%3Dhttp%3A%2F%2Fwww.opengis.net%2Fcat%2Fcsw%2F2.0.2%29%2Cxmlns%28gmd%3Dhttp%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd%29&constraint=AnyText+like+%25africa%25&constraintLanguage=CQL_TEXT&constraint_language_version=1.1.0&typeNames=csw%3ARecord
+  http://localhost:8080/geonetwork/srv/eng/csw?request=GetRecords&service=CSW&version=2.0.2&namespace=xmlns%28csw%3Dhttp%3A%2F%2Fwww.opengis.net%2Fcat%2Fcsw%2F2.0.2%29%2Cxmlns%28gmd%3Dhttp%3A%2F%2Fwww.isotc211.org%2F2005%2Fgmd%29&constraint=AnyText+like+%25africa%25&constraintLanguage=CQL_TEXT&constraint_language_version=1.1.0&typeNames=csw%3ARecord
 
 POST request::
 
   Url:
-  http://localhost:8080/geonetwork/srv/en/csw
+  http://localhost:8080/geonetwork/srv/eng/csw
 
   Content-type:
   application/xml
@@ -239,7 +239,7 @@ POST request::
 SOAP request::
 
   Url:
-  http://localhost:8080/geonetwork/srv/en/csw
+  http://localhost:8080/geonetwork/srv/eng/csw
 
   Content-type:
   application/soap+xml
@@ -266,7 +266,7 @@ SOAP request::
 
 The GeoNetwork opensource catalog CSW Publication service operations are accessible through the url:
 
-**http://localhost:8080/geonetwork/srv/en/csw-publication**
+**http://localhost:8080/geonetwork/srv/eng/csw-publication**
 
 .. _Harvest:
 
@@ -283,7 +283,7 @@ Synchronous one-run Harvest example
 POST request::
 
   Url:
-  http://localhost:8080/geonetwork/srv/en/csw-publication
+  http://localhost:8080/geonetwork/srv/eng/csw-publication
 
   Content-type:
   application/xml
@@ -298,7 +298,7 @@ POST request::
 GET request::
 
   Url:
-    http://localhost:8080/geonetwork/srv/en/csw-publication?request=Harvest&service=CSW&version=2.0.2&Source=http://[ URL to the target CSW server ]&ResourceType=http://www.isotc211.org/schemas/2005/gmd/
+    http://localhost:8080/geonetwork/srv/eng/csw-publication?request=Harvest&service=CSW&version=2.0.2&Source=http://[ URL to the target CSW server ]&ResourceType=http://www.isotc211.org/schemas/2005/gmd/
 
 Response::
 
@@ -320,7 +320,7 @@ Aynchronous one-run Harvest example
 POST request::
 
   Url:
-  http://localhost:8080/geonetwork/srv/en/csw-publication
+  http://localhost:8080/geonetwork/srv/eng/csw-publication
 
   Content-type:
   application/xml
@@ -336,7 +336,7 @@ POST request::
 GET request::
 
   Url:
-    http://localhost:8080/geonetwork/srv/en/csw-publication?request=Harvest&service=CSW&version=2.0.2&Source=http://[ URL to the target CSW server ]&ResourceType=http://www.isotc211.org/schemas/2005/gmd/&ResponseHandler=[ URI or email address of response handler ]
+    http://localhost:8080/geonetwork/srv/eng/csw-publication?request=Harvest&service=CSW&version=2.0.2&Source=http://[ URL to the target CSW server ]&ResourceType=http://www.isotc211.org/schemas/2005/gmd/&ResponseHandler=[ URI or email address of response handler ]
 
 Response::
 
@@ -370,7 +370,7 @@ Insert operation example
 POST request::
 
   Url:
-  http://localhost:8080/geonetwork/srv/en/csw-publication
+  http://localhost:8080/geonetwork/srv/eng/csw-publication
 
   Content-type:
   application/xml
@@ -402,7 +402,7 @@ Update operation example
 POST request::
 
   Url:
-  http://localhost:8080/geonetwork/srv/en/csw
+  http://localhost:8080/geonetwork/srv/eng/csw-publication
 
   Content-type:
   application/xml
@@ -442,7 +442,7 @@ Delete operation example
 POST request::
 
   Url:
-  http://localhost:8080/geonetwork/srv/en/csw
+  http://localhost:8080/geonetwork/srv/eng/csw-publication
 
   Content-type:
   application/xml

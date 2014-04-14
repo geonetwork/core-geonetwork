@@ -5,7 +5,6 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.HarvestHistory;
 import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.Source;
 import org.fao.geonet.kernel.harvest.harvester.csw.CswHarvesterIntegrationTest;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.repository.*;
@@ -13,7 +12,6 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

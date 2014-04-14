@@ -47,25 +47,9 @@
       // List of catalog groups
       $scope.groups = null;
       $scope.groupSelected = {id: $routeParams.userOrGroup};
-      // List of metadata records attached to the selected group
-      $scope.groupRecords = null;
-      $scope.groupRecordsFilter = null;
       // On going changes group ...
       $scope.groupUpdated = false;
       $scope.groupSearch = {};
-
-      // Register the search results, filter and pager
-      // and get the search function back
-      $scope.groupRecordsSearch = gnSearchManagerService.register({
-        records: 'groupRecords',
-        filter: 'groupRecordsFilter',
-        pager: 'groupRecordsPagination'
-      }, $scope);
-
-      // When the current page change trigger the search
-      $scope.$watch('groupRecordsPagination.currentPage', function() {
-        $scope.groupRecordsSearch();
-      });
 
 
       // Scope for user
@@ -80,28 +64,7 @@
       // On going changes for user ...
       $scope.userUpdated = false;
       $scope.passwordCheck = '';
-      // The pagination config
-      $scope.userRecordsPagination = {
-        pages: -1,
-        currentPage: 0,
-        hitsPerPage: 10
-      };
-      // List of metadata records attached to the selected user
-      $scope.userRecords = null;
-      $scope.userRecordsFilter = null;
 
-      // Register the search results, filter and pager
-      // and get the search function back
-      $scope.userRecordsSearch = gnSearchManagerService.register({
-        records: 'userRecords',
-        filter: 'userRecordsFilter',
-        pager: 'userRecordsPagination'
-      }, $scope);
-
-      // When the current page change trigger the search
-      $scope.$watch('userRecordsPagination.currentPage', function() {
-        $scope.userRecordsSearch();
-      });
 
 
 
@@ -176,7 +139,7 @@
         $scope.userSelected = null;
         $scope.userGroups = null;
         $scope.userUpdated = false;
-        $scope.userRecords = null;
+        $scope.$broadcast('clearResults');
         $scope.userOperation = 'editinfo';
       };
 
@@ -185,6 +148,7 @@
        * metadata records.
        */
       $scope.selectUser = function(u) {
+        $scope.userOperation = 'editinfo';
         // Load user group and then select user
         $http.get('admin.usergroups.list@json?id=' + u.id)
                 .success(function(data) {
@@ -195,17 +159,42 @@
               // TODO
             });
 
-
         // Retrieve records in that group
-        $scope.userRecordsFilter = {
+        $scope.$broadcast('resetSearch', {
           template: 'y or n',
           _owner: u.id,
           sortBy: 'title'
-        };
-        $scope.userRecordsSearch();
+        });
+
         $scope.userUpdated = false;
       };
 
+
+      $scope.resetPassword1 = null;
+      $scope.resetPassword2 = null;
+      $scope.resetPassword = function() {
+        $scope.resetPassword1 = null;
+        $scope.resetPassword2 = null;
+        $('#passwordResetModal').modal();
+      };
+
+      $scope.saveNewPassword = function() {
+        var params = {operation: 'resetpw',
+          id: $scope.userSelected.id,
+          password: $scope.resetPassword1,
+          password2: $scope.resetPassword2
+        };
+
+        $http.post('user.update@json', null, {params: params})
+              .success(function(data) {
+              $scope.resetPassword1 = null;
+              $scope.resetPassword2 = null;
+              $('#passwordResetModal').modal('hide');
+            }).error(function(data) {
+              // TODO
+            });
+
+      };
 
       /**
        * Check if the groupId is in the user groups
@@ -245,8 +234,7 @@
               $('#groups_' + $scope.profiles[i])[0].selectedIndex = -1;
             }
           }
-          $scope.userSelected.profile =
-              $scope.userIsAdmin ? 'Administrator' : $scope.profiles[0];
+          $scope.userSelected.profile = 'Administrator';
         } else {
           // Define the highest profile for user
           var newprofile = 'RegisteredUser';
@@ -322,15 +310,6 @@
             });
       };
 
-      /**
-       * Return true if selected user has metadata record.
-       * This information could be useful to disable a delete button
-       * for example.
-       */
-      $scope.userHasRecords = function() {
-        return $scope.userRecords && $scope.userRecords.metadata &&
-            $scope.userRecords.metadata.length > 0;
-      };
 
 
 
@@ -384,33 +363,24 @@
             });
       };
 
-
-      /**
-       * Return true if selected group has metadata record.
-       * This information could be useful to disable a delete button
-       * for example.
-       */
-      $scope.groupHasRecords = function() {
-        return $scope.groupRecords && $scope.groupRecords.metadata &&
-            $scope.groupRecords.metadata.length > 0;
+      $scope.sortByLabel = function(group) {
+        return group.label[$scope.lang];
       };
-
       $scope.unselectGroup = function() {
         $scope.groupSelected = null;
         $scope.groupUpdated = false;
-        $scope.groupRecords = null;
+        $scope.$broadcast('clearResults');
       };
 
       $scope.selectGroup = function(g) {
         $scope.groupSelected = g;
 
         // Retrieve records in that group
-        $scope.groupRecordsFilter = {
+        $scope.$broadcast('resetSearch', {
           template: 'y or n',
           group: g.id,
           sortBy: 'title'
-        };
-        $scope.groupRecordsSearch();
+        });
         $scope.groupUpdated = false;
       };
 

@@ -623,8 +623,10 @@ if (goog.DEPENDENCIES_ENABLED) {
         }
       }
 
-      doc.write(
-          '<script type="text/javascript" src="' + src + '"></' + 'script>');
+      // ** GN Specific
+      //doc.write(
+      //    '<script type="text/javascript" src="' + src + '"></' + 'script>');
+      
       return true;
     } else {
       return false;

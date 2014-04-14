@@ -9,6 +9,7 @@ import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Set;
 
 /**
@@ -21,6 +22,7 @@ public class UserSecurity extends GeonetEntity implements Serializable {
     private char[] _password;
     private Set<UserSecurityNotification> _securityNotifications = new HashSet<UserSecurityNotification>();
     private String _authType;
+    private String _nodeId;
 
     /**
      * Get the hashed password. This is a required property.
@@ -28,10 +30,9 @@ public class UserSecurity extends GeonetEntity implements Serializable {
      * @return the hashed password
      */
     @Column(nullable = false, length = 120)
-    public
     @Nonnull
-    char[] getPassword() {
-        return _password.clone();
+    public char[] getPassword() {
+        return _password == null ? new char[0] : _password.clone();
     }
 
     /**
@@ -131,15 +132,14 @@ public class UserSecurity extends GeonetEntity implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof UserSecurity)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         UserSecurity that = (UserSecurity) o;
 
         if (_authType != null ? !_authType.equals(that._authType) : that._authType != null) return false;
+        if (_nodeId != null ? !_nodeId.equals(that._nodeId) : that._nodeId != null) return false;
         if (!Arrays.equals(_password, that._password)) return false;
-        if (_securityNotifications != null ? !_securityNotifications.equals(that._securityNotifications) : that._securityNotifications
-                                                                                                           != null)
-            return false;
+        if (!_securityNotifications.equals(that._securityNotifications)) return false;
 
         return true;
     }
@@ -147,15 +147,33 @@ public class UserSecurity extends GeonetEntity implements Serializable {
     @Override
     public int hashCode() {
         int result = _password != null ? Arrays.hashCode(_password) : 0;
-        result = 31 * result + (_securityNotifications != null ? _securityNotifications.hashCode() : 0);
+        result = 31 * result + _securityNotifications.hashCode();
         result = 31 * result + (_authType != null ? _authType.hashCode() : 0);
+        result = 31 * result + (_nodeId != null ? _nodeId.hashCode() : 0);
         return result;
     }
 
+    /**
+     * Get the id of the node this user was loaded from.
+     *
+     * @return the id of the node this user was loaded from.
+     */
+    public String getNodeId() {
+        return _nodeId;
+    }
+
+    /**
+     * Set id of the node this user was loaded from.
+     *
+     * @param associatedNode id of the node this user was loaded from.
+     */
+    public void setNodeId(final String associatedNode) {
+        this._nodeId = associatedNode;
+    }
 
     @Override
-    public Element asXml() {
-        final Element element = super.asXml();
+    protected Element asXml(IdentityHashMap<Object, Void> alreadyEncoded) {
+        final Element element = super.asXml(alreadyEncoded);
         element.removeChild("password");
         return element;
     }

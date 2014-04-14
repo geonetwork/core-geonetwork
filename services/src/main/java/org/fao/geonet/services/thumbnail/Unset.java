@@ -72,7 +72,7 @@ public class Unset extends NotInReadOnlyModeService {
 		if (version != null && !dataMan.getVersion(id).equals(version))
 			throw new ConcurrentUpdateEx(id);
 
-		Element result = dataMan.getThumbnails(id);
+		Element result = dataMan.getThumbnails(context, id);
 
 		if (result == null)
 			throw new OperationAbortedEx("Metadata not found", id);

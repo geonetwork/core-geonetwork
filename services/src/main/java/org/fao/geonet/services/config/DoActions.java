@@ -45,7 +45,7 @@ import org.jdom.Element;
  */
 public class DoActions implements Service
 {
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
@@ -92,12 +92,12 @@ public class DoActions implements Service
         try {
     		// Load proxy information into Jeeves
     		ProxyInfo pi = JeevesProxyInfo.getInstance();
-    		boolean useProxy = settingMan.getValueAsBool("system/proxy/use", false);
+    		boolean useProxy = settingMan.getValueAsBool(SettingManager.SYSTEM_PROXY_USE, false);
     		if (useProxy) {
-    			String  proxyHost      = settingMan.getValue("system/proxy/host");
-    			String  proxyPort      = settingMan.getValue("system/proxy/port");
-    			String  username       = settingMan.getValue("system/proxy/username");
-    			String  password       = settingMan.getValue("system/proxy/password");
+    			String  proxyHost      = settingMan.getValue(SettingManager.SYSTEM_PROXY_HOST);
+    			String  proxyPort      = settingMan.getValue(SettingManager.SYSTEM_PROXY_PORT);
+    			String  username       = settingMan.getValue(SettingManager.SYSTEM_PROXY_USERNAME);
+    			String  password       = settingMan.getValue(SettingManager.SYSTEM_PROXY_PASSWORD);
     			pi.setProxyInfo(proxyHost, Integer.valueOf(proxyPort), username, password);
     		}
     	} catch (Exception e) {

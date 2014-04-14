@@ -1,8 +1,10 @@
 package jeeves.server.overrides;
 
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -21,9 +23,19 @@ public class SpringPropertyOverrides {
         }
     }
 
-    public void applyOverrides(ApplicationContext applicationContext) throws BeansException {
+    public void onFinishedRefresh(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         for (Updater updater : updaters) {
-            updater.update(applicationContext, properties);
+            if (updater.runOnFinish()) {
+                updater.update(beanFactory, properties);
+            }
+        }
+    }
+
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        for (Updater updater : updaters) {
+            if (!updater.runOnFinish()) {
+                updater.update(beanFactory, properties);
+            }
         }
     }
     Updater create(Element element) {
@@ -39,4 +51,5 @@ public class SpringPropertyOverrides {
             throw new IllegalArgumentException(element.getName()+" is not known type of updater");
         }
     }
+
 }

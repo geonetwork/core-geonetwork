@@ -27,20 +27,31 @@
 
 package org.fao.geonet.kernel;
 
+import static org.fao.geonet.kernel.schema.MetadataSchema.SCHEMATRON_DIR;
 import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
+
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+
+import com.google.common.collect.Lists;
+import jeeves.TransactionAspect;
+import jeeves.TransactionTask;
 import org.eclipse.jetty.util.ConcurrentHashSet;
+import jeeves.TransactionAspect;
+import jeeves.TransactionTask;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
+
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.Xml.ErrorHandler;
+
 import jeeves.xlink.Processor;
 
 import org.apache.commons.lang.StringUtils;
@@ -73,16 +84,13 @@ import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.CheckForNull;
@@ -103,6 +111,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.Vector;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
@@ -112,9 +121,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * Handles all operations on metadata (select,insert,update,delete etc...).
  *
  */
-@Component
-@Lazy
-@Transactional
+//@Transactional(propagation = Propagation.REQUIRED, noRollbackFor = {XSDValidationErrorEx.class, NoSchemaMatchesException.class})
 public class DataManager {
 
     private static final String FS = File.separator;
@@ -324,7 +331,9 @@ public class DataManager {
             int start = index;
             int count = Math.min(perThread,metadataIds.size()-start);
             // create threads to process this chunk of ids
-            Runnable worker = new IndexMetadataTask(context, metadataIds.subList(start, count), batchIndex, transactionStatus);
+            Runnable worker = new IndexMetadataTask(context,
+                    metadataIds.subList(start, start + count - 1),
+                    batchIndex, transactionStatus);
             executor.execute(worker);
             index += count;
         }
@@ -348,7 +357,7 @@ public class DataManager {
 
     public void indexMetadata(final List<String> metadataIds) throws Exception {
         for (String metadataId : metadataIds) {
-            indexMetadata(metadataId);
+            indexMetadata(metadataId, false);
         }
     }
     /**
@@ -357,7 +366,7 @@ public class DataManager {
      * @param metadataId
      * @throws Exception
      */
-    public void indexMetadata(final String metadataId) throws Exception {
+    public void indexMetadata(final String metadataId, boolean forceRefreshReaders) throws Exception {
         indexLock.lock();
         try {
             if (waitForIndexing.contains(metadataId)) {
@@ -393,7 +402,7 @@ public class DataManager {
                         sb.append(xlink.getValue()); sb.append(" ");
                     }
                     moreFields.add(SearchManager.makeField("_xlink", sb.toString(), true, true));
-                    Processor.detachXLink(md);
+                    Processor.detachXLink(md, servContext);
                 } else {
                     moreFields.add(SearchManager.makeField("_hasxlinks", "0", true, true));
                 }
@@ -409,14 +418,13 @@ public class DataManager {
             final String  source     = fullMd.getSourceInfo().getSourceId();
             final MetadataType metadataType = fullMd.getDataInfo().getType();
             final String  root       = fullMd.getDataInfo().getRoot();
-            final String  title      = fullMd.getDataInfo().getTitle();
             final String  uuid       = fullMd.getUuid();
             final String  isHarvested = String.valueOf(Constants.toYN_EnabledChar(fullMd.getHarvestInfo().isHarvested()));
             final String  owner      = String.valueOf(fullMd.getSourceInfo().getOwner());
             final String  groupOwner = String.valueOf(fullMd.getSourceInfo().getGroupOwner());
             final String  popularity = String.valueOf(fullMd.getDataInfo().getPopularity());
             final String  rating     = String.valueOf(fullMd.getDataInfo().getRating());
-            final String  displayOrder = String.valueOf(fullMd.getDataInfo().getDisplayOrder());
+            final String  displayOrder = fullMd.getDataInfo().getDisplayOrder() == null ? null : String.valueOf(fullMd.getDataInfo().getDisplayOrder());
 
             if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER, "record schema (" + schema + ")"); //DEBUG
@@ -429,7 +437,6 @@ public class DataManager {
             moreFields.add(SearchManager.makeField("_changeDate",  changeDate,  true, true));
             moreFields.add(SearchManager.makeField("_source",      source,      true, true));
             moreFields.add(SearchManager.makeField("_isTemplate",  metadataType.codeString,  true, true));
-            moreFields.add(SearchManager.makeField("_title",       title,       true, true));
             moreFields.add(SearchManager.makeField("_uuid",        uuid,        true, true));
             moreFields.add(SearchManager.makeField("_isHarvested", isHarvested, true, true));
             moreFields.add(SearchManager.makeField("_owner",       owner,       true, true));
@@ -502,7 +509,7 @@ public class DataManager {
                 }
                 moreFields.add(SearchManager.makeField("_valid", isValid, true, true));
             }
-            searchMan.index(schemaMan.getSchemaDir(schema), md, metadataId, moreFields, metadataType, title);
+            searchMan.index(schemaMan.getSchemaDir(schema), md, metadataId, moreFields, metadataType, forceRefreshReaders);
         } catch (Exception x) {
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId + " is corrupt/invalid - ignoring it. Error: " + x.getMessage(), x);
         } finally {
@@ -697,6 +704,89 @@ public class DataManager {
     }
 
     /**
+     * Start an editing session. This will record the original metadata record
+     * in the session under the {@link Geonet.Session.METADATA_BEFORE_ANY_CHANGES} + id
+     * session property.
+     * 
+     * The record contains geonet:info element.
+     * 
+     * Note: Only the metadata record is stored in session. If the editing
+     * session upload new documents or thumbnails, those documents will not
+     * be cancelled. This needs improvements.
+     * 
+     * @param context
+     * @param id
+     * @throws Exception
+     */
+    public void startEditingSession(ServiceContext context, String id)
+        throws Exception {
+      if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
+        Log.debug(Geonet.EDITOR_SESSION, "Editing session starts for record " + id);
+      }
+      
+      boolean keepXlinkAttributes = false;
+      boolean forEditing = false;
+      boolean withValidationErrors = false;
+      Element metadataBeforeAnyChanges = getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
+      context.getUserSession().setProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id, metadataBeforeAnyChanges);
+    }
+
+    /**
+     * Rollback to the record in the state it was when the editing session started
+     * (See {@link #startEditingSession(ServiceContext, String)}).
+     * 
+     * @param context
+     * @param id
+     * @throws Exception
+     */
+    public void cancelEditingSession(ServiceContext context,
+        String id) throws Exception {
+        UserSession session = context.getUserSession();
+        Element metadataBeforeAnyChanges = (Element) session.getProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id);
+        
+        if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
+              Log.debug(Geonet.EDITOR_SESSION, 
+                  "Editing session end. Cancel changes. Restore record " + id + 
+                  ". Replace by original record which was: ");
+        }
+        
+        if (metadataBeforeAnyChanges != null) {
+            if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
+              Log.debug(Geonet.EDITOR_SESSION, " > restoring record: ");
+              Log.debug(Geonet.EDITOR_SESSION, Xml.getString(metadataBeforeAnyChanges));
+            }
+            Element info = metadataBeforeAnyChanges.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+            boolean validate = false;
+            boolean ufo = false;
+                boolean index = true;
+                metadataBeforeAnyChanges.removeChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+                updateMetadata(context, id, metadataBeforeAnyChanges, 
+                    validate, ufo, index, 
+                    context.getLanguage(), info.getChildText(Edit.Info.Elem.CHANGE_DATE), false);
+                endEditingSession(id, session);
+        } else {
+            if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
+              Log.debug(Geonet.EDITOR_SESSION, 
+                  " > nothing to cancel for record " + id + 
+                  ". Original record was null. Use starteditingsession to.");
+            }
+        }
+    }
+
+    /**
+     * Remove the original record stored in session.
+     * 
+     * @param id
+     * @param session
+     */
+    public void endEditingSession(String id, UserSession session) {
+        if(Log.isDebugEnabled(Geonet.EDITOR_SESSION)) {
+          Log.debug(Geonet.EDITOR_SESSION, "Editing session end.");
+        }
+        session.removeProperty(Geonet.Session.METADATA_BEFORE_ANY_CHANGES + id);
+    }
+
+    /**
      *
      * @param md
      * @return
@@ -817,13 +907,14 @@ public class DataManager {
                         report.addContent(xmlReport);
                         // add results to persitent validation information
                         int firedRules = 0;
-                        Iterator<?> firedRulesElems = xmlReport.getDescendants(new ElementFilter ("fired-rule", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
+                        Iterator<?> firedRulesElems = xmlReport.getDescendants(new ElementFilter ("fired-rule", Namespaces.SVRL));
                         while (firedRulesElems.hasNext()) {
                             firedRulesElems.next();
                             firedRules ++;
                         }
                         int invalidRules = 0;
-                        Iterator<?> faileAssertElements = xmlReport.getDescendants(new ElementFilter ("failed-assert", Namespace.getNamespace("http://purl.oclc.org/dsdl/svrl")));
+                        Iterator<?> faileAssertElements = xmlReport.getDescendants(new ElementFilter ("failed-assert",
+                                Namespaces.SVRL));
                         while (faileAssertElements.hasNext()) {
                             faileAssertElements.next();
                             invalidRules ++;
@@ -1065,26 +1156,21 @@ public class DataManager {
      * @throws Exception
      */
     public void setTemplate(final int id, final MetadataType type, final String title) throws Exception {
-        setTemplateExt(id, type, title);
-        indexMetadata(Integer.toString(id));
+        setTemplateExt(id, type);
+        indexMetadata(Integer.toString(id), true);
     }
 
     /**
      * TODO javadoc.
      *
      * @param id
-     * @param title
      * @throws Exception
      */
-    public void setTemplateExt(final int id, final MetadataType metadataType, final String title) throws Exception {
+    public void setTemplateExt(final int id, final MetadataType metadataType) throws Exception {
         _metadataRepository.update(id, new Updater<Metadata>() {
             @Override
             public void apply(@Nonnull Metadata metadata) {
                 final MetadataDataInfo dataInfo = metadata.getDataInfo();
-                if (title != null) {
-                    dataInfo.setTitle(title);
-                }
-
                 dataInfo.setType(metadataType);
             }
         });
@@ -1099,7 +1185,7 @@ public class DataManager {
      */
     public void setHarvested(int id, String harvestUuid) throws Exception {
         setHarvestedExt(id, harvestUuid);
-        indexMetadata(Integer.toString(id));
+        indexMetadata(Integer.toString(id), false);
     }
 
     /**
@@ -1128,9 +1214,7 @@ public class DataManager {
                 MetadataHarvestInfo harvestInfo = metadata.getHarvestInfo();
                 harvestInfo.setUuid(harvestUuid);
                 harvestInfo.setHarvested(harvestUuid != null);
-                if (harvestUri.isPresent()) {
-                    harvestInfo.setUri(harvestUri.get());
-                }
+                harvestInfo.setUri(harvestUri.orNull());
             }
         });
     }
@@ -1145,7 +1229,7 @@ public class DataManager {
      * @throws NoSchemaMatchesException
      * @return
      */
-    public @Nonnull String autodetectSchema(Element md) throws SchemaMatchConflictException, NoSchemaMatchesException {
+    public @CheckForNull String autodetectSchema(Element md) throws SchemaMatchConflictException, NoSchemaMatchesException {
         return autodetectSchema(md, schemaMan.getDefaultSchema());
     }
 
@@ -1197,7 +1281,7 @@ public class DataManager {
         GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
         if (!gc.isReadOnly()) {
             final IncreasePopularityTask task = srvContext.getBean(IncreasePopularityTask.class);
-            task.configure(this, srvContext, Integer.valueOf(id));
+            task.setMetadataId(Integer.valueOf(id));
             gc.getThreadPool().runTask(task);
         } else {
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
@@ -1239,7 +1323,7 @@ public class DataManager {
             }
         });
 
-        indexMetadata(Integer.toString(metadataId));
+        indexMetadata(Integer.toString(metadataId), false);
 
         return rating;
     }
@@ -1301,13 +1385,14 @@ public class DataManager {
         newMetadata.getCategories().addAll(filteredCategories);
 
         int finalId = insertMetadata(context, newMetadata, xml, false, true, true, UpdateDatestamp.YES,
-                fullRightsForGroup).getId();
+                fullRightsForGroup, true).getId();
 
         return String.valueOf(finalId);
     }
 
     /**
      * Inserts a metadata into the database, optionally indexing it, and optionally applying automatic changes to it (update-fixed-info).
+     *
      *
      *
      * @param context the context describing the user and service
@@ -1317,9 +1402,8 @@ public class DataManager {
      * @param owner user who owns this metadata
      * @param groupOwner group this metadata belongs to
      * @param source id of the origin of this metadata (harvesting source, etc.)
-     * @param isTemplate whether this metadata is a template
+     * @param metadataType whether this metadata is a template
      * @param docType ?!
-     * @param title title of this metadata
      * @param category category of this metadata
      * @param createDate date of creation
      * @param changeDate date of modification
@@ -1329,7 +1413,7 @@ public class DataManager {
      * @throws Exception hmm
      */
     public String insertMetadata(ServiceContext context, String schema, Element metadataXml, String uuid, int owner, String groupOwner, String source,
-                                 String isTemplate, String docType, String title, String category, String createDate, String changeDate, boolean ufo, boolean index) throws Exception {
+                                 String metadataType, String docType, String category, String createDate, String changeDate, boolean ufo, boolean index) throws Exception {
 
         boolean notifyChange = true;
 
@@ -1337,8 +1421,8 @@ public class DataManager {
             source = settingMan.getSiteId();
         }
 
-        if(StringUtils.isBlank(isTemplate)) {
-            isTemplate = MetadataType.METADATA.codeString;
+        if(StringUtils.isBlank(metadataType)) {
+            metadataType = MetadataType.METADATA.codeString;
         }
         final Metadata newMetadata = new Metadata().setUuid(uuid);
         final ISODate isoChangeDate = changeDate != null ? new ISODate(changeDate) : new ISODate();
@@ -1348,9 +1432,8 @@ public class DataManager {
                 .setCreateDate(isoCreateDate)
                 .setSchemaId(schema)
                 .setDoctype(docType)
-                .setTitle(title)
                 .setRoot(metadataXml.getQualifiedName())
-                .setType(MetadataType.lookup(isTemplate));
+                .setType(MetadataType.lookup(metadataType));
         newMetadata.getSourceInfo()
                 .setOwner(owner)
                 .setSourceId(source);
@@ -1368,14 +1451,14 @@ public class DataManager {
         boolean fullRightsForGroup = false;
 
         int finalId = insertMetadata(context, newMetadata, metadataXml, notifyChange, index, ufo, UpdateDatestamp.NO,
-                fullRightsForGroup).getId();
+                fullRightsForGroup, false).getId();
 
         return String.valueOf(finalId);
     }
 
     private Metadata insertMetadata(ServiceContext context, Metadata newMetadata, Element metadataXml, boolean notifyChange,
                                     boolean index, boolean updateFixedInfo, UpdateDatestamp updateDatestamp,
-                                    boolean fullRightsForGroup) throws Exception {
+                                    boolean fullRightsForGroup, boolean forceRefreshReaders) throws Exception {
         final String schema = newMetadata.getDataInfo().getSchemaId();
 
         //--- force namespace prefix for iso19139 metadata
@@ -1391,11 +1474,15 @@ public class DataManager {
         final Metadata savedMetadata = xmlSerializer.insert(newMetadata, metadataXml, context);
 
         final String stringId = String.valueOf(savedMetadata.getId());
-        final String groupId = String.valueOf(newMetadata.getSourceInfo().getGroupOwner());
+        String groupId = null;
+        final Integer groupIdI = newMetadata.getSourceInfo().getGroupOwner();
+        if (groupIdI != null) {
+            groupId = String.valueOf(groupIdI);
+        }
         copyDefaultPrivForGroup(context, stringId, groupId, fullRightsForGroup);
 
         if (index) {
-            indexMetadata(stringId);
+            indexMetadata(stringId, forceRefreshReaders);
         }
 
         if (notifyChange) {
@@ -1472,7 +1559,7 @@ public class DataManager {
                 if (keepXlinkAttributes) {
                     Processor.processXLink(metadataXml, srvContext);
                 } else {
-                    Processor.detachXLink(metadataXml);
+                    Processor.detachXLink(metadataXml, srvContext);
                 }
             }
         }
@@ -1587,6 +1674,9 @@ public class DataManager {
             metadataXml = updateFixedInfo(schema, Optional.of(intId), null, metadataXml, parentUuid, (updateDateStamp ? UpdateDatestamp.YES : UpdateDatestamp.NO), context);
         }
 
+        //--- force namespace prefix for iso19139 metadata
+        setNamespacePrefixUsingSchemas(schema, md);
+
         // Notifies the metadata change to metatada notifier service
         final Metadata metadata = _metadataRepository.findOne(metadataId);
 
@@ -1611,7 +1701,7 @@ public class DataManager {
         } finally {
             if(index) {
                 //--- update search criteria
-                indexMetadata(metadataId);
+                indexMetadata(metadataId, false);
             }
         }
         return metadata;
@@ -1661,46 +1751,46 @@ public class DataManager {
                 Xml.validate(doc);
                 Integer[] results = {1, 0, 0};
                 valTypeAndStatus.put("dtd", results);
-                if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
+                if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                     Log.debug(Geonet.DATA_MANAGER, "Valid.");
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 Integer[] results = {0, 0, 0};
                 valTypeAndStatus.put("dtd", results);
-                if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
+                if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                     Log.debug(Geonet.DATA_MANAGER, "Invalid.");
+                }
                 valid = false;
             }
         } else {
-            if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
+            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER, "Validating against XSD " + schema);
+            }
             // do XSD validation
             Element md = doc.getRootElement();
-            Element xsdErrors = getXSDXmlReport(schema,md);
+            Element xsdErrors = getXSDXmlReport(schema, md);
             if (xsdErrors != null && xsdErrors.getContent().size() > 0) {
                 Integer[] results = {0, 0, 0};
                 valTypeAndStatus.put("xsd", results);
-                if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
+                if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
                     Log.debug(Geonet.DATA_MANAGER, "Invalid.");
                 valid = false;
             } else {
                 Integer[] results = {1, 0, 0};
                 valTypeAndStatus.put("xsd", results);
-                if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
+                if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
                     Log.debug(Geonet.DATA_MANAGER, "Valid.");
             }
-            // then do schematron validation
-            Element schematronError = null;
             try {
                 editLib.enumerateTree(md);
-                schematronError = getSchemaTronXmlReport(schema, md, lang, valTypeAndStatus);
+                //Apply custom schematron rules
+                Element errors = applyCustomSchematronRules(schema, Integer.parseInt(metadataId), doc.getRootElement(), lang, valTypeAndStatus);
+                valid = valid && errors == null;
                 editLib.removeEditingInfo(md);
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.error(Geonet.DATA_MANAGER, "Could not run schematron validation on metadata "+metadataId+": "+e.getMessage());
-                valid = false;
-            }
-            if (schematronError != null && schematronError.getContent().size() > 0) {
+                Log.error(Geonet.DATA_MANAGER, "Could not run schematron validation on metadata " + metadataId + ": " + e.getMessage());
                 valid = false;
             }
         }
@@ -1721,19 +1811,19 @@ public class DataManager {
      *
      * @param session
      * @param schema
-     * @param id
+     * @param metadataId
      * @param md
      * @param lang
      * @param forEditing TODO
      * @return
      * @throws Exception
      */
-    public Pair <Element, String> doValidate(UserSession session, String schema, String id, Element md, String lang, boolean forEditing) throws Exception {
+    public Pair <Element, String> doValidate(UserSession session, String schema, String metadataId, Element md, String lang, boolean forEditing) throws Exception {
         String version = null;
         if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Creating validation report for record #" + id + " [schema: " + schema + "].");
+            Log.debug(Geonet.DATA_MANAGER, "Creating validation report for record #" + metadataId + " [schema: " + schema + "].");
 
-        Element sessionReport = (Element)session.getProperty(Geonet.Session.VALIDATION_REPORT + id);
+        Element sessionReport = (Element)session.getProperty(Geonet.Session.VALIDATION_REPORT + metadataId);
         if (sessionReport != null && !forEditing) {
             if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
                 Log.debug(Geonet.DATA_MANAGER, "  Validation report available in session.");
@@ -1741,70 +1831,219 @@ public class DataManager {
             return Pair.read(sessionReport, version);
         }
 
-        Map <String, Integer[]> valTypeAndStatus = new HashMap<String, Integer[]>();
-        Element errorReport = new Element ("report", Edit.NAMESPACE);
-        errorReport.setAttribute("id", id, Edit.NAMESPACE);
+        Map<String, Integer[]> valTypeAndStatus = new HashMap<String, Integer[]>();
+        Element errorReport = new Element("report", Edit.NAMESPACE);
+        errorReport.setAttribute("id", metadataId, Edit.NAMESPACE);
 
         //-- get an XSD validation report and add results to the metadata
         //-- as geonet:xsderror attributes on the affected elements
-        Element xsdErrors = getXSDXmlReport(schema,md);
+        Element xsdErrors = getXSDXmlReport(schema, md);
         if (xsdErrors != null && xsdErrors.getContent().size() > 0) {
             errorReport.addContent(xsdErrors);
             Integer[] results = {0, 0, 0};
             valTypeAndStatus.put("xsd", results);
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER, "  - XSD error: " + Xml.getString(xsdErrors));
+            }
         } else {
             Integer[] results = {1, 0, 0};
             valTypeAndStatus.put("xsd", results);
+
+            if (Log.isTraceEnabled(Geonet.DATA_MANAGER)) {
+                Log.trace(Geonet.DATA_MANAGER, "Valid.");
+            }
         }
 
         // ...then schematrons
-        Element schematronError;
+        Element schematronError = null;
 
         // edit mode
+        Element error = null;
         if (forEditing) {
-            if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
+            if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
                 Log.debug(Geonet.DATA_MANAGER, "  - Schematron in editing mode.");
             //-- now expand the elements and add the geonet: elements
             editLib.expandElements(schema, md);
-            version = editLib.getVersionForEditing(schema, id, md);
+            version = editLib.getVersionForEditing(schema, metadataId, md);
 
-            //-- get a schematron error report if no xsd errors and add results
-            //-- to the metadata as a geonet:schematronerrors element with
-            //-- links to the ref id of the affected element
-            schematronError = getSchemaTronXmlReport(schema, md, lang, valTypeAndStatus);
-            if (schematronError != null) {
-                md.addContent((Element)schematronError.clone());
-                if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                    Log.debug(Geonet.DATA_MANAGER, "  - Schematron error: " + Xml.getString(schematronError));
-            }
+            //Apply custom schematron rules
+            error = applyCustomSchematronRules(schema, Integer.parseInt(metadataId), md, lang, valTypeAndStatus);
         } else {
-            // enumerate the metadata xml so that we can report any problems found
-            // by the schematron_xml script to the geonetwork editor
-            editLib.enumerateTree(md);
+            try {
+                // enumerate the metadata xml so that we can report any problems found
+                // by the schematron_xml script to the geonetwork editor
+                editLib.enumerateTree(md);
 
-            // get an xml version of the schematron errors and return for error display
-            schematronError = getSchemaTronXmlReport(schema, md, lang, valTypeAndStatus);
+                //Apply custom schematron rules
+                error = applyCustomSchematronRules(schema, Integer.parseInt(metadataId), md, lang, valTypeAndStatus);
 
-            // remove editing info added by enumerateTree
-            editLib.removeEditingInfo(md);
+                // remove editing info added by enumerateTree
+                editLib.removeEditingInfo(md);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.error(Geonet.DATA_MANAGER, "Could not run schematron validation on metadata " + metadataId + ": " + e.getMessage());
+            }
         }
 
-        if (schematronError != null && schematronError.getContent().size() > 0) {
-            Element schematron = new Element("schematronerrors", Edit.NAMESPACE);
-            Element idElem = new Element("id", Edit.NAMESPACE);
-            idElem.setText(id);
-            schematron.addContent(idElem);
-            errorReport.addContent(schematronError);
-            //throw new SchematronValidationErrorEx("Schematron errors detected - see schemaTron report for "+id+" in htmlCache for more details",schematron);
+        if (error != null) {
+            errorReport.addContent(error);
         }
 
         // Save report in session (invalidate by next update) and db
-        session.setProperty(Geonet.Session.VALIDATION_REPORT + id, errorReport);
-        saveValidationStatus(id, valTypeAndStatus, new ISODate().toString());
+        try {
+            saveValidationStatus(metadataId, valTypeAndStatus, new ISODate().toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.error(Geonet.DATA_MANAGER, "Could not save validation status on metadata " + metadataId + ": " + e.getMessage());
+        }
 
         return Pair.read(errorReport, version);
+    }
+
+
+    /**
+     *
+     * Creates XML schematron report for each set of rules defined in schema
+     * directory. This method assumes that you've run enumerateTree on the
+     * metadata
+     *
+     * Returns null if no error on validation.
+     *
+     *
+     * @param schema
+     * @param metadataId
+     *@param md
+     * @param lang
+     * @param valTypeAndStatus    @return errors
+     */
+    public Element applyCustomSchematronRules(String schema, int metadataId, Element md,
+                                              String lang, Map<String, Integer[]> valTypeAndStatus) {
+        MetadataSchema metadataSchema = getSchema(schema);
+        final String schemaDir = this.schemaMan.getSchemaDir(schema);
+
+        Element schemaTronXmlOut = new Element("schematronerrors", Edit.NAMESPACE);
+        try {
+            final SchematronRepository schematronRepository = _applicationContext.getBean(SchematronRepository.class);
+            final SchematronCriteriaGroupRepository criteriaGroupRepository = _applicationContext.getBean(SchematronCriteriaGroupRepository.class);
+
+            final List<Schematron> schematronList = schematronRepository.findAllBySchemaName(metadataSchema.getName());
+
+            //Loop through all xsl files
+            for (Schematron schematron : schematronList) {
+
+                int id = schematron.getId();
+                //it contains absolute path to the xsl file
+                String rule = schematron.getRuleName();
+                String dbident = ""+id;
+
+                List<SchematronCriteriaGroup> criteriaGroups = criteriaGroupRepository.findAllById_SchematronId(schematron.getId());
+
+                //Loop through all criteria to see if apply schematron
+                //if any criteria does not apply, do not apply at all (AND)
+                SchematronRequirement requirement = SchematronRequirement.DISABLED;
+                for (SchematronCriteriaGroup criteriaGroup : criteriaGroups) {
+                    List<SchematronCriteria> criterias = criteriaGroup.getCriteria();
+                    boolean apply = false;
+                    for(SchematronCriteria criteria : criterias) {
+                        boolean tmpApply = criteria.accepts(_applicationContext, metadataId, md, metadataSchema.getSchemaNS());
+
+                        if(!tmpApply) {
+                            apply = false;
+                            break;
+                        } else {
+                            apply = true;
+                        }
+
+                    }
+
+                    if (apply) {
+                        if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+                            Log.debug(Geonet.DATA_MANAGER, " - Schematron group is accepted:" + criteriaGroup.getId().getName() + " for schematron: "+schematron.getRuleName());
+                        }
+                        requirement = requirement.highestRequirement(criteriaGroup.getRequirement());
+                    } else {
+                        requirement = SchematronRequirement.DISABLED;
+                    }
+                }
+
+                if(requirement != SchematronRequirement.DISABLED) {
+                    if(Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+                        Log.debug(Geonet.DATA_MANAGER, " - rule:" + rule);
+                    }
+
+
+                    Integer ifNotValid = (requirement == SchematronRequirement.REQUIRED ? 0 : 2);
+
+                    String ruleId = schematron.getRuleName();
+
+                    Element report = new Element("report", Edit.NAMESPACE);
+                    report.setAttribute("rule", ruleId,
+                            Edit.NAMESPACE);
+                    report.setAttribute("displayPriority", ""+schematron.getDisplayPriority(),
+                            Edit.NAMESPACE);
+                    report.setAttribute("dbident", dbident,
+                            Edit.NAMESPACE);
+                    report.setAttribute("required", requirement.toString(), Edit.NAMESPACE);
+
+                    try {
+                        Map<String,String> params = new HashMap<String,String>();
+                        params.put("lang", lang);
+                        params.put("rule", ruleId);
+                        params.put("thesaurusDir", this.thesaurusDir);
+
+                        String file = schemaDir + SCHEMATRON_DIR + File.separator + schematron.getFile();
+                        Element xmlReport = Xml.transform(md, file, params);
+                        if (xmlReport != null) {
+                            report.addContent(xmlReport);
+                            // add results to persistent validation information
+                            int firedRules = 0;
+                            @SuppressWarnings("unchecked")
+                            Iterator<Element> i = xmlReport.getDescendants(new ElementFilter ("fired-rule", Namespaces.SVRL));
+                            while (i.hasNext()) {
+                                i.next();
+                                firedRules ++;
+                            }
+                            int invalidRules = 0;
+                            i = xmlReport.getDescendants(new ElementFilter ("failed-assert", Namespaces.SVRL));
+                            while (i.hasNext()) {
+                                i.next();
+                                invalidRules ++;
+                            }
+                            Integer[] results = {invalidRules!=0?ifNotValid:1, firedRules, invalidRules};
+                            if (valTypeAndStatus != null) {
+                                valTypeAndStatus.put(ruleId, results);
+                            }
+                        }
+                    } catch (Exception e) {
+                        Log.error(Geonet.DATA_MANAGER,"WARNING: schematron xslt "+rule+" failed");
+
+                        // If an error occurs that prevents to verify schematron rules, add to show in report
+                        Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
+                        errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
+                        report.addContent(errorReport);
+
+                        e.printStackTrace();
+                    }
+
+                    // -- append report to main XML report.
+                    schemaTronXmlOut.addContent(report);
+
+
+                }
+
+            }
+        } catch (Throwable e) {
+            Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
+            errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
+            schemaTronXmlOut.addContent(errorReport);
+        }
+
+        if(schemaTronXmlOut.getChildren().isEmpty()) {
+            schemaTronXmlOut = null;
+        }
+
+        return schemaTronXmlOut;
     }
 
     /**
@@ -1935,8 +2174,8 @@ public class DataManager {
      * @return
      * @throws Exception
      */
-    public Element getThumbnails(String metadataId) throws Exception {
-        Element md = xmlSerializer.select(metadataId);
+    public Element getThumbnails(ServiceContext context, String metadataId) throws Exception {
+        Element md = xmlSerializer.select(context, metadataId);
 
         if (md == null)
             return null;
@@ -2065,7 +2304,7 @@ public class DataManager {
             notifyMetadataChange(md, metadataId);
 
             //--- update search criteria
-            indexMetadata(metadataId);
+            indexMetadata(metadataId, true);
         }
     }
 
@@ -2121,7 +2360,7 @@ public class DataManager {
      */
     private void manageCommons(ServiceContext context, String id, Element env, String styleSheet) throws Exception {
         Lib.resource.checkEditPrivilege(context, id);
-        Element md = xmlSerializer.select(id);
+        Element md = xmlSerializer.select(context, id);
 
         if (md == null) return;
 
@@ -2405,9 +2644,9 @@ public class DataManager {
      *
      * @return the saved status entity object
      */
-    public MetadataStatus setStatus(ServiceContext context, int id, int status, String changeDate, String changeMessage) throws Exception {
+    public MetadataStatus setStatus(ServiceContext context, int id, int status, ISODate changeDate, String changeMessage) throws Exception {
         MetadataStatus statusObject = setStatusExt(context, id, status, changeDate, changeMessage);
-        indexMetadata(Integer.toString(id));
+        indexMetadata(Integer.toString(id), true);
         return statusObject;
     }
 
@@ -2424,7 +2663,7 @@ public class DataManager {
      *
      * @return the saved status entity object
      */
-    public MetadataStatus setStatusExt(ServiceContext context, int id, int status, String changeDate, String changeMessage) throws Exception {
+    public MetadataStatus setStatusExt(ServiceContext context, int id, int status, ISODate changeDate, String changeMessage) throws Exception {
         final StatusValueRepository statusValueRepository = _applicationContext.getBean(StatusValueRepository.class);
 
         MetadataStatus metatatStatus = new MetadataStatus();
@@ -2434,7 +2673,9 @@ public class DataManager {
         MetadataStatusId mdStatusId = new MetadataStatusId()
                 .setStatusId(status)
                 .setMetadataId(id)
+                .setChangeDate(changeDate)
                 .setUserId(userId);
+        mdStatusId.setChangeDate(changeDate);
 
         metatatStatus.setId(mdStatusId);
 
@@ -2758,13 +2999,7 @@ public class DataManager {
             addElement(info, Edit.Info.Elem.VERSION, version);
         }
 
-        buildExtraMetadataInfo(context, id, info);
-
-        if (accessMan.isVisibleToAll(id)) {
-            addElement(info, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, "true");
-        } else {
-            addElement(info, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, "false");
-        }
+        buildPrivilegesMetadataInfo(context, id, info);
 
         // add owner name
         User user = _applicationContext.getBean(UserRepository.class).findOne(owner);
@@ -2828,21 +3063,29 @@ public class DataManager {
     }
 
     /**
-     * Add extra information about the metadata record
-     * which depends on context and could not be stored in db or Lucene index.
+     * Add privileges information about the metadata record
+     * which depends on context and usually could not be stored in db 
+     * or Lucene index because depending on the current user
+     * or current client IP address.
      *
      * @param context
-     * @param id
-     * @param info
+     * @param id    The metadata id
+     * @param info  The element to add the info into
      * @throws Exception
      */
-    public void buildExtraMetadataInfo(ServiceContext context, String id,
+    public void buildPrivilegesMetadataInfo(ServiceContext context, String id,
                                        Element info) throws Exception {
         if (accessMan.canEdit(context, id))
             addElement(info, Edit.Info.Elem.EDIT, "true");
 
         if (accessMan.isOwner(context, id)) {
             addElement(info, Edit.Info.Elem.OWNER, "true");
+        }
+
+        if (accessMan.isVisibleToAll(id)) {
+            addElement(info, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, "true");
+        } else {
+            addElement(info, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, "false");
         }
 
         Set<Operation> operations = accessMan.getAllOperations(context, id, context.getIpAddress());
@@ -2963,7 +3206,8 @@ public class DataManager {
 
     public void notifyMetadataChange (Element md, String metadataId) throws Exception {
 
-        if (_metadataRepository.findOne(metadataId).getDataInfo().getType() == MetadataType.METADATA) {
+        final Metadata metadata = _metadataRepository.findOne(metadataId);
+        if (metadata != null && metadata.getDataInfo().getType() == MetadataType.METADATA) {
 
             XmlSerializer.removeWithheldElements(md, servContext.getBean(SettingManager.class));
             String uuid = getMetadataUuid( metadataId);
@@ -2972,10 +3216,28 @@ public class DataManager {
     }
 
     public void flush() {
-        _entityManager.flush();
+        TransactionAspect.runInTransaction("DataManager flush()", _applicationContext,
+                TransactionAspect.TransactionRequirement.CREATE_ONLY_WHEN_NEEDED,
+                TransactionAspect.CommitBehavior.ALWAYS_COMMIT, false, new TransactionTask<Object>() {
+            @Override
+            public Object doInTransaction(TransactionStatus transaction) throws Throwable {
+                _entityManager.flush();
+                return null;
+            }
+        });
+
     }
 
-    public void deleteBatchMetadata(String harvesterUUID) {
-        _metadataRepository.deleteAll(MetadataSpecs.hasHarvesterUuid(harvesterUUID));
+    public void batchDeleteMetadataAndUpdateIndex(Specification<Metadata> specification) throws Exception {
+        final List<Integer> idsOfMetadataToDelete = _metadataRepository.findAllIdsBy(specification);
+
+        searchMan.delete("_id", Lists.transform(idsOfMetadataToDelete, new Function<Integer, String>() {
+            @Nullable
+            @Override
+            public String apply(@Nonnull Integer input) {
+                return input.toString();
+            }
+        }));
+        _metadataRepository.deleteAll(specification);
     }
 }

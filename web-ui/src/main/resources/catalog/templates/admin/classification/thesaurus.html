@@ -8,7 +8,7 @@
           placeholder="{{'filter' | translate}}"/>
         <input type="hidden" data-ng-model="thesaurusSelected.id"/>
         <div class="list-group">
-          <a class="list-group-item"
+          <a href="" class="list-group-item"
             data-ng-repeat="t in thesaurus | filter:thesaurusSearch | orderBy:'title'"
             data-ng-click="selectThesaurus(t)"> {{t.title}} ({{t.dname}}) </a>
         </div>
@@ -22,13 +22,13 @@
           </button>
           <ul class="dropdown-menu" role="menu">
             <li>
-              <a data-ng-click="addThesaurus('new')" data-translate="">newEmptyThesaurus</a>
+              <a href="" data-ng-click="addThesaurus('new')" data-translate="">newEmptyThesaurus</a>
             </li>
             <li>
-              <a data-ng-click="addThesaurus('file')" data-translate="">fromLocalFile</a>
+              <a href="" data-ng-click="addThesaurus('file')" data-translate="">fromLocalFile</a>
             </li>
             <li>
-              <a data-ng-click="addThesaurus('url')" data-translate="">fromURL</a>
+              <a href="" data-ng-click="addThesaurus('url')" data-translate="">fromURL</a>
             </li>
           </ul>
         </div>
@@ -122,10 +122,13 @@
           </div>
         </form>
         <ul>
-          <li data-ng-repeat="k in keywords">{{k.value['#text']}} <i
+          <li data-ng-repeat="k in keywords">
+            <a href=""  data-ng-click="editKeyword(k)">{{k.value['#text']}}
+              <i class="fa fa-edit pull-right" data-ng-class="isExternal() ? 'fa-info' : 'fa-edit'"/>
+            </a>
+            <a href=""
               class="fa fa-trash-o text-danger pull-right" data-ng-hide="isExternal()"
               data-ng-click="deleteKeyword(k)"/>
-            <i class="fa fa-edit pull-right" data-ng-click="editKeyword(k)"/>
           </li>
         </ul>
 
@@ -310,7 +313,7 @@
         <div class="modal-footer">
           <button type="button" class="btn fa fa-ban-circle" data-dismiss="modal" data-translate=""
             >cancel</button>
-          <button type="button" class="btn btn-primary fa fa-save" data-ng-hide="isNewKeyword()"
+          <button type="button" class="btn btn-primary fa fa-save" data-ng-hide="isNewKeyword() || isExternal()"
             data-translate="" data-ng-click="updateKeyword()">updateKeyword</button>
           <button type="button" class="btn btn-primary fa fa-plus" data-ng-show="isNewKeyword()"
             data-translate="" data-ng-click="createKeyword()">createKeyword</button>

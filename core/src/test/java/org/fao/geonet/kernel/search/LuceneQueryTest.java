@@ -43,7 +43,7 @@ public class LuceneQueryTest {
         _analyzer = new PerFieldAnalyzerWrapper(new GeoNetworkAnalyzer(), analyzers);
 
         final String configFile = "/WEB-INF/config-lucene.xml";
-        final String appDir = new File(LuceneQueryTest.class.getResource(configFile).getFile()).getParentFile().getParent();
+        final String appDir = new File(LuceneQueryTest.class.getResource(configFile).getFile()).getParentFile().getParent()+"/";
         final GeonetworkDataDirectory dataDirectory = new GeonetworkDataDirectory();
         dataDirectory.init("test", appDir, new ServiceConfig(), null);
         LuceneConfig lc = new LuceneConfig();

@@ -49,7 +49,6 @@ import static org.quartz.JobBuilder.newJob;
 import static org.quartz.impl.matchers.GroupMatcher.jobGroupEquals;
 
 //=============================================================================
-@Component
 public class ScheduleManager
 {
     /**

@@ -1408,4 +1408,5 @@ ISO 19115 не позволяет иметь более одного.
 	<welcome.text>Welcome to GeoNetwork</welcome.text>
 	<tag_label>Tags</tag_label>
 	<map_label>Map</map_label>
+    <unknown>Unknown</unknown>
 </strings>

@@ -1,5 +1,6 @@
 package org.fao.geonet.domain;
 
+import org.fao.geonet.entitylistener.HarvestHistoryEntityListenerManager;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.hibernate.annotations.Type;
@@ -11,6 +12,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.*;
 import java.io.IOException;
+import java.util.IdentityHashMap;
 
 /**
  * An entity representing a harvesting task that may have been completed or possibly ending in error.
@@ -20,7 +22,10 @@ import java.io.IOException;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "HarvestHistory")
+@EntityListeners(HarvestHistoryEntityListenerManager.class)
+@SequenceGenerator(name=HarvestHistory.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class HarvestHistory extends GeonetEntity {
+    static final String ID_SEQ_NAME = "harvest_history_id_seq";
     private int _id;
     private ISODate _harvestDate;
     private int _elapsedTime;
@@ -38,7 +43,7 @@ public class HarvestHistory extends GeonetEntity {
      * @return the id
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
         return _id;
     }
@@ -305,9 +310,10 @@ public class HarvestHistory extends GeonetEntity {
         return this;
     }
 
+
     @Override
-    public Element asXml() {
-        final Element element = super.asXml();
+    protected Element asXml(IdentityHashMap<Object, Void> alreadyEncoded) {
+        final Element element = super.asXml(alreadyEncoded);
 
 
         Element infoAsXml = null;

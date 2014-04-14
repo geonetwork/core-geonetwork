@@ -21,7 +21,6 @@ import java.util.Set;
  * Date: 9/21/13
  * Time: 4:23 PM
  */
-@Component
 public class MetadataStatisticsQueries {
 
     private final EntityManager _entityManager;
@@ -85,7 +84,7 @@ public class MetadataStatisticsQueries {
         final Path<Integer> groupIdPath = groupRoot.get(Group_.id);
         cbQuery.where(cb.equal(groupOwnerPath, groupIdPath));
 
-        cbQuery.groupBy(groupOwnerPath);
+        cbQuery.groupBy(groupRoot);
 
         cbQuery.select(cb.tuple(groupRoot, spec.getSelection(cb, metadataRoot)));
 
@@ -115,7 +114,7 @@ public class MetadataStatisticsQueries {
         final Path<Integer> userIdPath = userRoot.get(User_.id);
         cbQuery.where(cb.equal(ownerPath, userIdPath));
 
-        cbQuery.groupBy(ownerPath);
+        cbQuery.groupBy(userRoot);
 
         cbQuery.select(cb.tuple(userRoot, spec.getSelection(cb, metadataRoot)));
 
@@ -264,12 +263,15 @@ public class MetadataStatisticsQueries {
         final Root<StatusValue> statusValueRoot = cbQuery.from(StatusValue.class);
 
         final Path<StatusValue> statusValuePath = metadataStatusRoot.get(MetadataStatus_.statusValue);
-        final Predicate equalMetadataId = cb.equal(metadataRoot.get(Metadata_.id), metadataStatusRoot.get(MetadataStatus_.id).get
-                (MetadataStatusId_.metadataId));
+
+        final Predicate equalMetadataId = cb.equal(
+                metadataRoot.get(Metadata_.id),
+                metadataStatusRoot.get(MetadataStatus_.id)
+                        .get(MetadataStatusId_.metadataId));
         final Predicate equalStatusValue = cb.equal(statusValuePath, statusValueRoot);
         cbQuery.select(cb.tuple(statusValueRoot, spec.getSelection(cb, metadataRoot)))
                 .where(cb.and(equalStatusValue, equalMetadataId))
-                .groupBy(statusValuePath);
+                .groupBy(statusValueRoot);
 
         Map<StatusValue, Integer> results = new HashMap<StatusValue, Integer>();
         for (Tuple tuple : _entityManager.createQuery(cbQuery).getResultList()) {

@@ -29,7 +29,7 @@
 				<script type="text/javascript" src="{$widgetPath}/js/ext/ext-all.js"/>
 			</xsl:otherwise>
 		</xsl:choose>
-		<script type="text/javascript" src="{$widgetPath}/js/GeoNetwork-mini.js"/>
+		<script type="text/javascript" src="{$widgetPath}/../static/geonetwork-client-mini.js"/>
 		
 		<xsl:if test="/root/request/debug">
             <script type="text/javascript" src="{$widgetPath}/js/GeoNetwork/lib/GeoNetwork/data/ThesaurusFeedStore.js" />

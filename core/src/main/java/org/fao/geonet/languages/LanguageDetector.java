@@ -86,11 +86,13 @@ public class LanguageDetector {
     /**
      * Detects language of input string.
      *
+     *
+     * @param srvContext
      * @param input text to analyze
      * @return iso 639-2 code of detected language
      * @throws Exception hmm
      */
-    public String detect(String input) throws Exception {
+    public String detect(ServiceContext srvContext, String input) throws Exception {
         if(!LanguageDetector.languageLevelSupported) {
             throw new Exception(LanguageDetector.upgradeMessage);
         }
@@ -101,9 +103,11 @@ public class LanguageDetector {
         if(detectedLanguage.length() > 2) {
             detectedLanguage = detectedLanguage.substring(0, 2);
         }
-        String iso639_2 = IsoLanguagesMapper.getInstance().iso639_1_to_iso639_2(detectedLanguage);
-        if(Log.isDebugEnabled(Geonet.LANGUAGEDETECTOR))
-            Log.debug(Geonet.LANGUAGEDETECTOR, "detected language: " + iso639_2);
+        String iso639_2 = srvContext.getBean(IsoLanguagesMapper.class).iso639_1_to_iso639_2(detectedLanguage);
+        Log.debug(Geonet.LANGUAGEDETECTOR,
+                    "detected language: " + iso639_2 +
+                    " for text:" + input);
+
         return iso639_2;
     }
 

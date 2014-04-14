@@ -78,6 +78,7 @@ public class LDAPUtils {
             }
             toSave = user.getUser();
         }
+        userRepo.save(toSave);
 
 		// Add user groups
 		if (importPrivilegesFromLdap && !Profile.Administrator.equals(user.getUser().getProfile())) {

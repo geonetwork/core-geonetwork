@@ -22,26 +22,29 @@
 //==============================================================================
 package org.fao.geonet.kernel.security.ldap;
 
-import java.util.Collection;
-
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
+import java.util.Collection;
 
 public class LDAPUser implements UserDetails {
 	
     private static final long serialVersionUID = -879282571127799714L;
+    private final String _userName;
 
     private Multimap<String, Profile> _groupsAndProfile = HashMultimap.create();
 
 	private User _user;
 
 	public LDAPUser(String username) {
-		_user.setUsername(username);
+        this._userName = username;
+        this._user = new User();
+        _user.setUsername(username);
+
 		// FIXME Should we here populate the LDAP user with LDAP attributes instead of in the GNLDAPUserDetailsMapper ?
 		// TODO : populate userId which should be in session
 	}
@@ -61,6 +64,7 @@ public class LDAPUser implements UserDetails {
     }
 	public void setUser(User user) {
         this._user = user;
+        user.setUsername(_userName);
     }
 
     @Override

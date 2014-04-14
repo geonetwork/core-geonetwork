@@ -2,6 +2,8 @@
 <geonet>
   <services package="org.fao.geonet">
     
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    
     <service name="md.processing.batch">
       <documentation>Processing a set of metadata record previously selected.
         The process is an XSL schema dependant process defined in the 
@@ -9,6 +11,16 @@
       <class name=".services.metadata.BatchXslProcessing"/>
       <error sheet="../xslt/error/error-json.xsl"/>
     </service>
+    
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    
+    <service name="md.processing">
+         <documentation>Processing one metadata to add onelinsrc for exemple.
+         The process is an XSL</documentation>
+    
+      <class name=".services.metadata.XslProcessing"/>
+        <output forward="md.edit"/>
+      </service>
     
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
     <service name="md.processing.batch.report">
@@ -55,6 +67,18 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
       </documentation>
       <class name=".services.metadata.XslProcessingReportGet"/>
       <error sheet="../xslt/error/error-json.xsl"/>
+    </service>
+
+    <service name="resource-onlinesrc-upload">
+    <documentation>Upload online resource</documentation>
+      <class name=".services.resources.UploadAndProcess"/>
+      
+      <!-- FIXME : this is a default success response XSL -->
+      <output sheet="admin-logo-add.xsl"/>
+      
+      <error sheet="error-modal.xsl">
+        <xml name="error" file="xml/file-upload-unsuccessful.xml"/>
+      </error>
     </service>
 
 

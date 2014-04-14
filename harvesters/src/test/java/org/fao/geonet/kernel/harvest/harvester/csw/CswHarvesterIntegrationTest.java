@@ -1,25 +1,15 @@
 package org.fao.geonet.kernel.harvest.harvester.csw;
 
-import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import jeeves.server.context.ServiceContext;
-import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.kernel.harvest.AbstractHarvesterIntegrationTest;
-import org.fao.geonet.kernel.harvest.Common;
 import org.fao.geonet.kernel.harvest.MockRequestFactoryGeonet;
-import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.utils.*;
 import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.junit.Assert;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nullable;
-import java.io.IOException;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -39,8 +29,9 @@ public class CswHarvesterIntegrationTest extends AbstractHarvesterIntegrationTes
     public static final String CAPABILITIES_URL = REQUEST + CAPABILITIES_QUERY_STRING;
     public static final String OUTPUT_SCHEMA = "http://www.isotc211.org/2005/gmd";
 
-    @Autowired
-    private CswHarvester _harvester;
+    public CswHarvesterIntegrationTest() {
+        super("csw");
+    }
 
     protected void mockHttpRequests(MockRequestFactoryGeonet bean) {
         final MockXmlRequest cswServerRequest = new MockXmlRequest(HOST, PORT, PROTOCOL);
@@ -79,8 +70,8 @@ public class CswHarvesterIntegrationTest extends AbstractHarvesterIntegrationTes
         }).thenReturn(fileStream("getRecords.xml"));
 
 
-        bean.registerRequest(HOST, PORT, PROTOCOL, cswServerRequest);
-        bean.registerRequest(null, 80, PROTOCOL, cswServerRequest);
+        bean.registerRequest(true, HOST, PORT, PROTOCOL, cswServerRequest);
+        bean.registerRequest(true, null, 80, PROTOCOL, cswServerRequest);
     }
 
     protected void customizeParams(Element params) {
@@ -94,12 +85,12 @@ public class CswHarvesterIntegrationTest extends AbstractHarvesterIntegrationTes
     }
 
     @Override
-    protected void assertExpectedResult(Element result) {
-        assertEquals(Xml.getString(result), 2, Integer.parseInt(result.getChildText("added")));
+    protected int getExpectedAdded() {
+        return 2;
     }
 
     @Override
-    protected AbstractHarvester getHarvesterUnderTest() {
-        return _harvester;
+    protected int getExpectedTotalFound() {
+        return 2;
     }
 }

@@ -1,64 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans default-lazy-init="true"
-	xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:util="http://www.springframework.org/schema/util"
-	xsi:schemaLocation="
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 " >
 
+    <import resource="config-security/config-security.xml"/>
+    <import resource="classpath:JZkitApplicationContext.xml"/>
 
-	<import resource="config-security/config-security.xml"/>
-	<import resource="classpath*:/config-spring-geonetwork.xml"/>
-	<import resource="classpath:JZkitApplicationContext.xml"/>
-
-    <import resource="config-db/database_migration.xml"/>
     <import resource="config-db/initial_data.xml"/>
-    <import resource="config-versioning.xml"/>
+    <import resource="config-print/config-spring-print.xml"/>
 
-    <!-- Uncomment the database configuration you need to use -->
-    <import resource="config-db/h2.xml"/>
- 	<!--<import resource="config-db/jndi-postgres-postgis.xml"/> -->
- 	<!--<import resource="config-db/oracle.xml"/>-->
- 	<!--<import resource="config-db/mysql.xml"/> -->
- 	<!--<import resource="config-db/db2.xml"/> -->
- 	<!--<import resource="config-db/postgres.xml"/>-->
- 	<!--<import resource="config-db/sqlserver.xml"/> -->
+
+    <!-- Uncomment if you want to use a non-shapefile datastore -->
+    <!--<import resource="config-db/postgis-shared-datasource.xml"/>-->
+    <!--<import resource="config-db/postgis-alternate-datasource.xml"/>-->
 
     <!--
-        Choose the XmlSerializer to use.
-        If the XmlSerializer is the SvnSerializer then subversion versioning will be enabled
-        otherwiser it will be disabled
+        Import the versioning configuration (subversion etc...)
     -->
-    <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerSvn" lazy-init="true" />
-    <!-- <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerDb"  lazy-init="true" /> -->
+    <import resource="config-versioning.xml"/>
+
 
     <bean id="scheduler"
           class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="applicationContextSchedulerContextKey" value="applicationContext"/>
     </bean>
     <bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory" lazy-init="true"/>
-    <bean id="httpRequestFactor" class="org.fao.geonet.utils.GeonetHttpRequestFactory" />
+    <bean id="httpRequestFactor" class="org.fao.geonet.utils.GeonetHttpRequestFactory">
+        <property name="numberOfConcurrentRequests" value="30" />
+    </bean>
 
+    <bean id="defaultLanguage" class="java.lang.String">
+        <constructor-arg index="0" value="eng" />
+    </bean>
     <!-- Define the languages in the UI.  Seems like these should come from database at some point but at the moment they
          are needed here.
      -->
-	<util:set id="languages">
-		<value>ara</value>
-		<value>cat</value>
-		<value>chi</value>
-		<value>dut</value>
-		<value>eng</value>
-		<value>fin</value>
-		<value>fre</value>
-		<value>ger</value>
-		<value>ita</value>
-		<value>nor</value>
-		<value>pol</value>
-		<value>por</value>
-		<value>rus</value>
-		<value>spa</value>
-		<value>tur</value>
-	</util:set>
+    <util:set id="languages">
+        <value>ara</value>
+        <value>cat</value>
+        <value>chi</value>
+        <value>dut</value>
+        <value>eng</value>
+        <value>fin</value>
+        <value>fre</value>
+        <value>ger</value>
+        <value>ita</value>
+        <value>nor</value>
+        <value>pol</value>
+        <value>por</value>
+        <value>rus</value>
+        <value>spa</value>
+        <value>tur</value>
+    </util:set>
 </beans>

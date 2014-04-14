@@ -89,13 +89,11 @@ public class GetRecord implements OaiPmhService {
                                          String prefix) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SchemaManager sm = gc.getBean(SchemaManager.class);
-        DataManager dm = gc.getBean(DataManager.class);
 
         Metadata metadata = context.getBean(MetadataRepository.class).findOne(spec);
         if (metadata == null)
             throw new IdDoesNotExistException(spec.toString());
 
-        String id = metadata.getId() + "";
         String uuid = metadata.getUuid();
         final MetadataDataInfo dataInfo = metadata.getDataInfo();
         String schema = dataInfo.getSchemaId();

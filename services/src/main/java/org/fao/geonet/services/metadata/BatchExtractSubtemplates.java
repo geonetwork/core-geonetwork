@@ -275,7 +275,7 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 						boolean ufo = false, indexImmediate = false;
 
                         String sId = dataMan.insertMetadata(context, mdInfo.getSchemaId(), (Element) elem.clone(), uuid, user, group,
-                                gc.getBean(SettingManager.class).getSiteId(), "s", docType, title, category, createDate, changeDate, ufo, indexImmediate);
+                                gc.getBean(SettingManager.class).getSiteId(), "s", docType, category, createDate, changeDate, ufo, indexImmediate);
 						subtemplates.add(Integer.valueOf(sId));
 					}
 				}

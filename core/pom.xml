@@ -61,11 +61,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
         </dependency>
-        <dependency>
-            <groupId>aspectj</groupId>
-            <artifactId>aspectjweaver</artifactId>
-        </dependency>
-
         <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
         <dependency>
             <groupId>org.dspace</groupId>
@@ -257,7 +252,7 @@
         <dependency>
             <groupId>org.mapfish.print</groupId>
             <artifactId>print-lib</artifactId>
-            <version>1.2.0</version>
+            <version>${print-lib.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-httpclient</groupId>
@@ -391,4 +386,27 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>run-static-analysis</id>
+            <activation>
+                <property>
+                    <name>!skipTests</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+    <properties>
+        <rootProjectDir>${basedir}/..</rootProjectDir>
+    </properties>
+
 </project>

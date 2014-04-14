@@ -5,7 +5,7 @@
         <db.pass>geonetwork</db.pass>
         <db.driver>org.postgresql.Driver</db.driver>
         <db.url>jdbc:postgresql://localhost:5432/geonetwork</db.url> -->
-        <widget.url>../../srv/eng/search</widget.url>
+        <widget.url>search</widget.url>
         <widget.parameters></widget.parameters>
     </properties>
 </overrides>

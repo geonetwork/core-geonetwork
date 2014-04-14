@@ -461,4 +461,85 @@ USA.
 		</sch:rule>
 	</sch:pattern>
 
+
+    <sch:pattern>
+        <sch:title>$loc/strings/requiredElements</sch:title>
+        <sch:rule context="//gmd:identificationInfo/*/gmd:abstract">
+            <sch:let name="text" value="(gco:CharacterString | .//gmd:LocalisedCharacterString)[normalize-space(text()) != '']"/>
+            <sch:let name="nilReason" value="@gco:nilReason and not(./node())"/>
+            <sch:assert test="$text or $nilReason">
+                <sch:value-of select="$loc/strings/alert.requiredAbstract"/>
+            </sch:assert>
+            <sch:report test="$text or $nilReason" >
+                <sch:value-of select="$loc/strings/report.requiredAbstract"/>
+            </sch:report>
+        </sch:rule>
+        <sch:rule context="//gmd:identificationInfo/*/gmd:citation/*/gmd:title">
+            <sch:let name="text" value="(gco:CharacterString | .//gmd:LocalisedCharacterString)[normalize-space(text()) != '']"/>
+            <sch:let name="nilReason" value="@gco:nilReason and not(./node())"/>
+            <sch:assert test="$text or $nilReason">
+                <sch:value-of select="$loc/strings/alert.requiredTitle"/>
+            </sch:assert>
+            <sch:report test="$text or $nilReason" >
+                <sch:value-of select="$loc/strings/report.requiredTitle"/>
+            </sch:report>
+        </sch:rule>
+        <sch:rule context="//gmd:identificationInfo/*/gmd:citation/*/gmd:date/*/gmd:date">
+            <sch:let name="text" value="gco:Date|gco:DateTime"/>
+            <sch:let name="nilReason" value="@gco:nilReason and not(./node())"/>
+            <sch:assert test="$text or $nilReason">
+                <sch:value-of select="$loc/strings/alert.requiredDate"/>
+            </sch:assert>
+            <sch:report test="$text or $nilReason" >
+                <sch:value-of select="$loc/strings/report.requiredDate"/>
+            </sch:report>
+        </sch:rule>
+        <sch:rule context="//gmd:identificationInfo/*/gmd:citation/*/gmd:date/*/gmd:dateType">
+            <sch:let name="text" value="gmd:CI_DateTypeCode"/>
+            <sch:let name="nilReason" value="@gco:nilReason and not(./node())"/>
+            <sch:assert test="$text or $nilReason">
+                <sch:value-of select="$loc/strings/alert.requiredDateType"/>
+            </sch:assert>
+            <sch:report test="$text or $nilReason" >
+                <sch:value-of select="$loc/strings/report.requiredDateType"/>
+            </sch:report>
+        </sch:rule>
+        <sch:rule context="/*/gmd:contact">
+            <sch:assert test="node() | @gco:nilReason">
+                <sch:value-of select="$loc/strings/alert.requiredContact"/>
+            </sch:assert>
+            <sch:report test="node() | @gco:nilReason" >
+                <sch:value-of select="$loc/strings/report.requiredContact"/>
+            </sch:report>
+        </sch:rule>
+        <sch:rule context="/*/gmd:language">
+            <sch:assert test="node() | @gco:nilReason">
+                <sch:value-of select="$loc/strings/alert.requiredLanguage"/>
+            </sch:assert>
+            <sch:report test="node() | @gco:nilReason" >
+                <sch:value-of select="$loc/strings/report.requiredLanguage"/>
+            </sch:report>
+        </sch:rule>
+        <sch:rule context="//gmd:identificationInfo/*/gmd:language">
+            <sch:assert test="node() | @gco:nilReason">
+                <sch:value-of select="$loc/strings/alert.requiredLanguage"/>
+            </sch:assert>
+            <sch:report test="node() | @gco:nilReason" >
+                <sch:value-of select="$loc/strings/report.requiredLanguage"/>
+            </sch:report>
+        </sch:rule>
+    </sch:pattern>
+
+    <sch:pattern>
+        <sch:title>$loc/strings/requireCitation</sch:title>
+        <sch:rule context="//gmd:identificationInfo/*/gmd:citation">
+            <sch:assert test="gmd:CI_Citation | @gco:nilReason">
+                <sch:value-of select="$loc/strings/alert.requiredCitation"/>
+            </sch:assert>
+            <sch:report test="gmd:CI_Citation | @gco:nilReason" >
+                <sch:value-of select="$loc/strings/report.requiredCitation"/>
+            </sch:report>
+        </sch:rule>
+    </sch:pattern>
+
 </sch:schema>
