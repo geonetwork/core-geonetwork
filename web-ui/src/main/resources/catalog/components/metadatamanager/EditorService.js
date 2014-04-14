@@ -188,6 +188,18 @@
              $(gnCurrentEdit.formId).
              find('input[id="version"]').val(version);
            },
+           assignGroup: function(groupId) {
+             var defer = $q.defer();
+             $http.get('md.group.update?id=' + gnCurrentEdit.id +
+                 '&groupid=' + groupId)
+               .success(function(data) {
+               defer.resolve(data);
+             })
+               .error(function(data) {
+               defer.reject(data);
+             });
+             return defer.promise;
+           },
            /**
             * Called after the edit form has been loaded.
             * Fill gnCurrentEdit all the info of the current
