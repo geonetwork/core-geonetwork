@@ -1194,6 +1194,27 @@ public class LuceneQueryTest {
         // verify query
         assertEquals("unexpected Lucene query", "+title:humph +_isTemplate:n", query.toString());
     }
+    
+     /**	
+     * 'altTitle' parameter.	
+     */	
+    @Test
+    public void testAltTitle() {	
+        // create request object	
+        JDOMFactory factory = new DefaultJDOMFactory();	
+        Element request = factory.element("request");	
+        Element altTitle = factory.element("altTitle");	
+        altTitle.addContent("humph");	
+        request.addContent(altTitle);	
+        // build lucene query input	
+        LuceneQueryInput lQI = new LuceneQueryInput(request);	
+        // build lucene query	
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, 
+                _analyzer, null).build(lQI);	
+        // verify query	
+        assertEquals("unexpected Lucene query", "+altTitle:humph +_isTemplate:n", 
+                query.toString());	
+    }
 
     /**
      * 'protocol' parameter.

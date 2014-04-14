@@ -776,6 +776,7 @@ Records are available from the following URL:\r\n
 	<Reviewer>Content reviewer</Reviewer>
 	<rss>Open RSS feed</rss>
 	<rtitle>Title</rtitle>
+        <altTitle>Alternative title</altTitle>
 	<save>Save</save>
 	<saveAndClose>Save and close</saveAndClose>
 	<saveAndValidate>Check</saveAndValidate>
@@ -1151,12 +1152,13 @@ Records are available from the following URL:\r\n
 		<upload>Upload thesaurus</upload>
 	</thesaurus>
 	<searchhelp>
-		<searchAllText>Enter free text here</searchAllText>
-		<rtitle>Enter title here</rtitle>
-		<abstract>Enter abstract here</abstract>
-		<keywords>Pick keywords from existing metadata records</keywords>
-		<thesaurus>Pick keywords from thesauri</thesaurus>
-	</searchhelp>
+            <altTitle>Enter alternate title here</altTitle>
+            <searchAllText>Enter free text here</searchAllText>
+            <rtitle>Enter title here</rtitle>
+            <abstract>Enter abstract here</abstract>
+            <keywords>Pick keywords from existing metadata records</keywords>
+            <thesaurus>Pick keywords from thesauri</thesaurus>
+        </searchhelp>
 
 	<inspire>
         <serviceType>

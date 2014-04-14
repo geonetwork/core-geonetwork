@@ -775,6 +775,7 @@ ISO 19115 не позволяет иметь более одного.
 	<Reviewer>Обозреватель содержимого</Reviewer>
 	<rss>Открыть ленту RSS</rss>
 	<rtitle>Название</rtitle>
+        <altTitle>Alternate title</altTitle>
 	<save>Сохранить</save>
 	<saveAndClose>Сохранить и закрыть</saveAndClose>
 	<saveAndValidate>Проверить</saveAndValidate>
@@ -1148,13 +1149,14 @@ ISO 19115 не позволяет иметь более одного.
 		<updateelement>Обновить элемент</updateelement>
 		<upload>Выгрузить тезаурус</upload>
 	</thesaurus>
-	<searchhelp>
-		<searchAllText>Введите любой текст</searchAllText>
-		<rtitle>Введите название</rtitle>
-		<abstract>Введите аннотацию</abstract>
-		<keywords>Выберите ключевые слова из существующих записей метаданных</keywords>
-		<thesaurus>Выберите ключевые слова из тезауруса</thesaurus>
-	</searchhelp>
+        <searchhelp>
+            <altTitle>Enter alternate title here</altTitle>
+            <searchAllText>Введите любой текст</searchAllText>
+            <rtitle>Введите название</rtitle>
+            <abstract>Введите аннотацию</abstract>
+            <keywords>Выберите ключевые слова из существующих записей метаданных</keywords>
+            <thesaurus>Выберите ключевые слова из тезауруса</thesaurus>
+        </searchhelp>
 
 	<inspire>
         <serviceType>

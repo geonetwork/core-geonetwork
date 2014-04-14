@@ -777,6 +777,7 @@
 	<Reviewer>Content reviewer</Reviewer>
 	<rss>فتح RSS</rss>
 	<rtitle>عنوان</rtitle>
+        <altTitle>Alternative title</altTitle>
 	<save>حفظ</save>
 	<saveAndClose>حفظ وإغلاق</saveAndClose>
 	<saveAndValidate>التحقق</saveAndValidate>
@@ -1153,11 +1154,12 @@
 		<upload>Upload thesaurus</upload>
 	</thesaurus>
 	<searchhelp>
-		<searchAllText>Enter free text here</searchAllText>
-		<rtitle>Enter title here</rtitle>
-		<abstract>Enter abstract here</abstract>
-		<keywords>Pick keywords from existing metadata records</keywords>
-		<thesaurus>Pick keywords from thesauri</thesaurus>
+            <altTitle>Enter alternate title here</altTitle>
+            <searchAllText>Enter free text here</searchAllText>
+            <rtitle>Enter title here</rtitle>
+            <abstract>Enter abstract here</abstract>
+            <keywords>Pick keywords from existing metadata records</keywords>
+            <thesaurus>Pick keywords from thesauri</thesaurus>
 	</searchhelp>
 
 	<inspire>

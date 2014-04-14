@@ -770,6 +770,7 @@
 	<Reviewer>Content reviewer</Reviewer>
 	<rss>Open RSS feed</rss>
 	<rtitle>Tittel</rtitle>
+        <altTitle>Alternate title</altTitle>
 	<save>Lagre</save>
 	<saveAndClose>Lagre og lukk</saveAndClose>
 	<saveAndValidate>Kontrollér</saveAndValidate>
@@ -1145,11 +1146,12 @@
 		<upload>Upload thesaurus</upload>
 	</thesaurus>
 	<searchhelp>
-		<searchAllText>Enter free text here</searchAllText>
-		<rtitle>Enter title here</rtitle>
-		<abstract>Enter abstract here</abstract>
-		<keywords>Pick keywords from existing metadata records</keywords>
-		<thesaurus>Pick keywords from thesauri</thesaurus>
+            <altTitle>Enter alternate title here</altTitle>
+            <searchAllText>Enter free text here</searchAllText>
+            <rtitle>Enter title here</rtitle>
+            <abstract>Enter abstract here</abstract>
+            <keywords>Pick keywords from existing metadata records</keywords>
+            <thesaurus>Pick keywords from thesauri</thesaurus>
 	</searchhelp>	
 
 	<inspire>

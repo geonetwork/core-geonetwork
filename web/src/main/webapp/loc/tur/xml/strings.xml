@@ -815,6 +815,7 @@
 	<Reviewer>İçerik Görüntüleyici</Reviewer>
 	<rss>RSS beslemeyi Aç</rss>
 	<rtitle>Başlık</rtitle>
+        <altTitle>Alternate title</altTitle>
 	<save>Kaydet</save>
 	<saveAndClose>Kaydet ve kapat</saveAndClose>
 	<saveAndValidate>Kontrol Et</saveAndValidate>
@@ -1194,12 +1195,13 @@
 		<upload>Eşanlamlılar Sözlüğü Yükle</upload>
 	</thesaurus>
 	<searchhelp>
-		<searchAllText>Serbest Metni buraya giriniz</searchAllText>
-		<rtitle>Başlığı buraya giriniz</rtitle>
-		<abstract>Özeti buraya giriniz</abstract>
-		<keywords>Mevcut metaveri kayıtlarından anahtar kelimeler seçiniz</keywords>
-		<thesaurus>Eşanlamlılar Sözlüğünden anahtar kelimeler seçiniz</thesaurus>
-	</searchhelp>
+            <altTitle>Enter alternate title here</altTitle>
+            <searchAllText>Serbest Metni buraya giriniz</searchAllText>
+            <rtitle>Başlığı buraya giriniz</rtitle>
+            <abstract>Özeti buraya giriniz</abstract>
+            <keywords>Mevcut metaveri kayıtlarından anahtar kelimeler seçiniz</keywords>
+            <thesaurus>Eşanlamlılar Sözlüğünden anahtar kelimeler seçiniz</thesaurus>
+        </searchhelp>
 
 	<inspire>
 
