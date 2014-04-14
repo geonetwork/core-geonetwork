@@ -183,7 +183,7 @@ public class ThumbnailMaker {
         BufferedImage result = new BufferedImage(neww, newh, Transparency.TRANSLUCENT);
         Graphics2D g = result.createGraphics();
         g.translate((neww-w)/2, (newh-h)/2);
-        g.rotate(angle, w/2, h/2);
+        g.rotate(angle, w/2.0, h/2.0);
         g.drawRenderedImage(image, null);
         g.dispose();
         return result;
