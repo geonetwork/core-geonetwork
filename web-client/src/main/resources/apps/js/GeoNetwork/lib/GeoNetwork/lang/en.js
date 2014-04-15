@@ -285,7 +285,7 @@ GeoNetwork.Lang.en = {
     'status': 'Change status',
     'updateStatus': 'Update status',
     'currentStatus': ' (current status is ${status})',
-    'enableWorkflow': 'Enable worklow',
+    'enableWorkflow': 'Enable workflow',
     'enableWorkflowTT': 'Set metadata status to draft and enable workflow',
     'enableWorkflowStart': 'Metadata status set to draft.',
     'updateVersion': 'Activate versioning',
