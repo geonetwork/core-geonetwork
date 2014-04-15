@@ -24,11 +24,13 @@
 package org.fao.geonet.services.resources.handlers;
 
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataFileUpload;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 import java.io.File;
@@ -58,7 +60,7 @@ public class DefaultResourceRemoveHandler implements IResourceRemoveHandler {
             storeFileUploadDeleteRequest(context, metadataId, fileName);
 
         } catch (Exception ex) {
-            // TODO: Log exception
+            Log.error(Geonet.RESOURCES, "DefaultResourceRemoveHandler (onDelete): " + ex.getMessage());
             ex.printStackTrace();
             throw new ResourceHandlerException(ex);
         }
@@ -70,16 +72,18 @@ public class DefaultResourceRemoveHandler implements IResourceRemoveHandler {
      * @param context
      * @param metadataId
      * @param fileName
-     * @throws java.sql.SQLException
      */
     private void storeFileUploadDeleteRequest(ServiceContext context, int metadataId, String fileName) {
         MetadataFileUploadRepository repo = context.getBean(MetadataFileUploadRepository.class);
-        MetadataFileUpload metadataFileUpload = repo.findByMetadataIdAndFileNameNotDeleted(metadataId, fileName);
 
-       if (metadataFileUpload != null) {
-           metadataFileUpload.setDeletedDate(new ISODate().toString());
+        try {
+            MetadataFileUpload metadataFileUpload = repo.findByMetadataIdAndFileNameNotDeleted(metadataId, fileName);
+            metadataFileUpload.setDeletedDate(new ISODate().toString());
 
-           repo.save(metadataFileUpload);
-       }
+            repo.save(metadataFileUpload);
+
+        } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
+            Log.warning(Geonet.RESOURCES, "Delete file upload request: No upload request for (metadataid, file): (" + metadataId + "," + fileName + ")");
+        }
     }
 }

@@ -5,9 +5,11 @@ import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Util;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 import java.io.*;
@@ -34,14 +36,15 @@ public class DefaultResourceDownloadHandler implements IResourceDownloadHandler 
             return BinaryFile.encode(200, file.getAbsolutePath());
 
         } catch (Exception ex) {
-            // TODO: Log exception
+            Log.error(Geonet.RESOURCES, "DefaultResourceDownloadHandler (onDownload): " + ex.getMessage());
             ex.printStackTrace();
             throw new ResourceHandlerException(ex);
         }
     }
 
     @Override
-    public Element onDownloadMultiple(ServiceContext context, Element params, int metadataId, List<Element> files) throws ResourceHandlerException {
+    public Element onDownloadMultiple(ServiceContext context, Element params, int metadataId, List<Element> files)
+            throws ResourceHandlerException {
 
         try {
             String requesterName =  Util.getParam(params, "name", "");
@@ -79,7 +82,7 @@ public class DefaultResourceDownloadHandler implements IResourceDownloadHandler 
             return null;
 
         } catch (Exception ex) {
-            // TODO: Log exception
+            Log.error(Geonet.RESOURCES, "DefaultResourceDownloadHandler (onDownloadMultiple): " + ex.getMessage());
             ex.printStackTrace();
             throw new ResourceHandlerException(ex);
         }
@@ -97,17 +100,26 @@ public class DefaultResourceDownloadHandler implements IResourceDownloadHandler 
      * @param requesterOrg
      * @param requesterComments
      * @param downloadDate
-     * @throws ResourceHandlerException
      */
     private void storeFileDownloadRequest(ServiceContext context, int metadataId, String fname,
                                           String requesterName, String requesterMail,
                                           String requesterOrg, String requesterComments,
-                                          String downloadDate) throws ResourceHandlerException {
+                                          String downloadDate) {
+        MetadataFileUpload metadataFileUpload;
+
+        // Each download is related to a file upload record
         try {
-            // Each download is related to a file upload record
-            MetadataFileUpload metadataFileUpload = context.getBean(MetadataFileUploadRepository.class).
+            metadataFileUpload = context.getBean(MetadataFileUploadRepository.class).
                     findByMetadataIdAndFileNameNotDeleted(metadataId, fname);
 
+        } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
+            Log.warning(Geonet.RESOURCES, "Store file download request: No upload request for (metadataid, file): (" + metadataId + "," + fname + ")");
+
+            // No related upload is found
+            metadataFileUpload = null;
+        }
+
+        if (metadataFileUpload != null) {
             MetadataFileDownloadRepository repo = context.getBean(MetadataFileDownloadRepository.class);
 
             MetadataFileDownload metadataFileDownload = new MetadataFileDownload();
@@ -124,11 +136,6 @@ public class DefaultResourceDownloadHandler implements IResourceDownloadHandler 
             metadataFileDownload.setFileUploadId(metadataFileUpload.getId());
 
             repo.save(metadataFileDownload);
-
-        } catch (Exception ex) {
-            // TODO: Log exception
-            ex.printStackTrace();
-            throw new ResourceHandlerException(ex);
         }
     }
 }

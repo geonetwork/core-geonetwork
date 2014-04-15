@@ -26,11 +26,13 @@ package org.fao.geonet.services.resources.handlers;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.Util;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
 import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 import java.io.File;
@@ -59,7 +61,7 @@ public class DefaultResourceUploadHandler implements IResourceUploadHandler {
             storeFileUploadRequest(context, metadataId, fileName, fileSize);
 
         } catch (Exception ex) {
-            // TODO: Log exception
+            Log.error(Geonet.RESOURCES, "DefaultResourceUploadHandler (onUpload): " + ex.getMessage());
             ex.printStackTrace();
             throw new ResourceHandlerException(ex);
         }
@@ -71,7 +73,6 @@ public class DefaultResourceUploadHandler implements IResourceUploadHandler {
      * @param context
      * @param metadataId
      * @param fileName
-     * @throws java.sql.SQLException
      */
     private void storeFileUploadRequest(ServiceContext context, int metadataId, String fileName, double fileSize) {
         MetadataFileUploadRepository repo = context.getBean(MetadataFileUploadRepository.class);

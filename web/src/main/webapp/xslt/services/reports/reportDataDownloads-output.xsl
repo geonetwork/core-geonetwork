@@ -18,7 +18,7 @@
                 <xsl:otherwise>
                     <!--<xsl:value-of select="normalize-space(name(.))"/> -->
                     <xsl:variable name="columnKey" select="normalize-space(name(.))"/>
-                    <xsl:value-of select="/root/gui/strings/reports/updatedRecords/*[name() = $columnKey]"/>
+                    <xsl:value-of select="/root/gui/reports/dataDownloads/*[name() = $columnKey]"/>
 
                     <xsl:value-of select="$sep"/>
                 </xsl:otherwise>

@@ -10,11 +10,11 @@
     <!--<xsl:variable name="sep" select="'&#009;'"/>-->
     <xsl:variable name="sep"><xsl:text>,</xsl:text></xsl:variable>
 
+    <xsl:variable name="apos">&#x27;</xsl:variable>
 
     <!-- Intra field separator -->
     <xsl:variable name="internalSep" select="'###'"/>
 
-    <xsl:include href="../utils.xsl"/>
 
     <!-- A template to add a new line \n with no extra space. -->
     <xsl:template name="newLine">
