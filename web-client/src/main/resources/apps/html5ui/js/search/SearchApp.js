@@ -241,19 +241,6 @@ GeoNetwork.searchApp = function() {
                     .getMetadataTypeField(true);
             // var validField = GeoNetwork.util.SearchFormTools
             // .getValidField(true);
-            
-               
-            var titleField = new Ext.form.TextField({
-                fieldLabel: OpenLayers.i18n('title'),
-                name: 'E_title',
-                id: 'E_title'
-            });
-            var altTitleField = new Ext.form.TextField({
-                fieldLabel: OpenLayers.i18n('altTitle'),
-                name: 'E_altTitle',
-                id: 'E_altTitle'
-            });
-            
 
             // Add hidden fields to be use by quick metadata links from the
             // admin panel (eg. my metadata).
@@ -272,9 +259,38 @@ GeoNetwork.searchApp = function() {
             
             var whatFields = [themekeyField, orgNameField, metadataTypeField];
             if (GeoNetwork.searchDefault.advSearchShowTitleField) {
+                var titleStore = new GeoNetwork.data.OpenSearchSuggestionStore({
+                    url : catalogue.services.opensearchSuggest,
+                    rootId : 1,
+                    baseParams : {
+                        field : 'title'
+                    }
+                });
+                var titleField = new Ext.ux.form.SuperBoxSelect({
+                    hideLabel : false,
+                    minChars : 0,
+                    queryParam : 'q',
+                    hideTrigger : false,
+                    field: 'title',
+                    id : 'E_title',
+                    name : 'E_title',
+                    store : titleStore,
+                    valueField : 'value',
+                    displayField : 'value',
+                    valueDelimiter : ' or ',
+                    // tpl: tpl,
+                    fieldLabel: OpenLayers.i18n('title')
+                });
+
                 whatFields.push(titleField);
             }
             if (GeoNetwork.searchDefault.advSearchShowAltTitleField) {
+                var altTitleField = new Ext.form.TextField({
+                    fieldLabel: OpenLayers.i18n('altTitle'),
+                    name: 'E_altTitle',
+                    id: 'E_altTitle'
+                });
+            
                 whatFields.push(altTitleField);
             }               
             whatFields.push(ownerField, isHarvestedField, siteId);
