@@ -90,8 +90,10 @@ UPDATE Settings SET name = 'system/threadedindexing/maxthreads', datatype = 1 WH
 UPDATE Settings SET name = 'system/autodetect/enable', datatype = 2 WHERE id = 951;
 UPDATE Settings SET name = 'system/requestedLanguage/only', datatype = 0 WHERE id = 953;
 UPDATE Settings SET name = 'system/requestedLanguage/sorted', datatype = 2 WHERE id = 954;
-UPDATE Settings SET name = 'system/hidewithheldelements/enable', datatype = 2, internal = 'n' WHERE id = 957;
-UPDATE Settings SET name = 'system/hidewithheldelements/keepMarkedElement', datatype = 2 WHERE id = 958;
+
+
+DELETE FROM Settings WHERE id = 957;
+DELETE FROM Settings WHERE id = 958;
 
 
 UPDATE Settings SET internal = 'y' WHERE internal IS NULL;

@@ -308,12 +308,4 @@ public class SettingManager {
 
         return protocol + "://" + host + (port.equals("80") ? "" : ":" + port) + locServ;
     }
-
-    public boolean getHideWitheldElements() {
-        return getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable", false);
-    }
-
-    public boolean setHideWitheldElements(boolean value) {
-        return setValue("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/enable", value);
-    }
 }
