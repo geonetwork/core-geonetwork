@@ -874,7 +874,7 @@ INSERT INTO settings (name, value, datatype, position) VALUES ('system/site/orga
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/platform/version', '2.11.0', 0, 150);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/platform/subVersion', 'SNAPSHOT', 0, 160);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/site/svnUuid', '', 0, 170);
-INSERT INTO settings (name, value, datatype, position) VALUES ('system/server/host', 'www.ifremer.fr', 0, 210);
+INSERT INTO settings (name, value, datatype, position) VALUES ('system/server/host', 'sextant.ifremer.fr', 0, 210);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/server/port', '80', 1, 220);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/server/protocol', 'http', 0, 230);
 INSERT INTO settings (name, value, datatype, position) VALUES ('system/server/securePort', '8443', 1, 240);
@@ -983,7 +983,7 @@ INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1243, 1228, 'o
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1244, 966, 'privileges', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1245, 966, 'categories', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1246, 1245, 'category', '1');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1247, 1228, 'host', 'http://www.ifremer.fr/geonetwork/');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1247, 1228, 'host', 'http://sextant.ifremer.fr/geonetwork/');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1248, 1228, 'createRemoteCategory', 'false');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1249, 1228, 'mefFormatFull', 'false');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1250, 1228, 'xslfilter', '');
@@ -1020,7 +1020,7 @@ INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1280, 1265, 'o
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1281, 1041, 'privileges', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1282, 1041, 'categories', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1283, 1282, 'category', '2');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1284, 1265, 'host', 'http://www.ifremer.fr/geonetwork/');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1284, 1265, 'host', 'http://sextant.ifremer.fr/geonetwork/');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1285, 1265, 'createRemoteCategory', 'false');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1286, 1265, 'mefFormatFull', 'false');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1287, 1265, 'xslfilter', '');
@@ -1057,7 +1057,7 @@ INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1317, 1302, 'o
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1318, 1116, 'privileges', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1319, 1116, 'categories', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1320, 1319, 'category', '4');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1321, 1302, 'host', 'http://www.ifremer.fr/geonetwork/');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1321, 1302, 'host', 'http://sextant.ifremer.fr/geonetwork/');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1322, 1302, 'createRemoteCategory', 'false');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1323, 1302, 'mefFormatFull', 'false');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1324, 1302, 'xslfilter', '');
