@@ -37,5 +37,7 @@ cat.lang.fr = {
     ,"onlineResFromManual": "Saisie manuelle"
     ,"refineSearch": "Précisez votre recherche"
     ,"inspirethemes": "Thèmes Inspire"
+    ,"onlineResExits" : "La ressource en ligne existe déjà"
+    ,"onlineResExitsMsg" : 'La ressource en ligne existe déjà selon la clé<ul class="msgbox"><li>nom</li><li>protocole</li><li>url</li></ul>'
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, cat.lang.fr);

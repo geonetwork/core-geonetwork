@@ -172,7 +172,11 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
     versionField: undefined,
     mdStore: undefined,
     layerNames : undefined,
-
+    editUrl: undefined,
+    editName: undefined,
+    editProtocol: undefined,
+    editDesc: undefined,
+    xmlRelations: undefined,
     
     /**
      * Only used if multiple metadata selection form is provided.
@@ -686,8 +690,8 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 fieldLabel: OpenLayers.i18n('URL'),
                 value: this.editUrl,
                 name: 'href',
-                validator: function(value){
-                    if(value && value.indexOf('http') == 0) {
+                validFn: function(value){
+                    if(value && !(value.indexOf('ftp') == 0)) {
                         var request = OpenLayers.Request.HEAD({
                             url: value,
                             async: false
@@ -703,7 +707,13 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                                 this.el.removeClass('x-form-valid');
                             }
                             this.el.addClass('x-form-invalid');
-
+                        }
+                    } else {
+                        if(this.el.hasClass('x-form-valid')) {
+                            this.el.removeClass('x-form-valid');
+                        }
+                        if(this.el.hasClass('x-form-invalid')) {
+                            this.el.removeClass('x-form-invalid');
                         }
                     }
                 },
@@ -739,15 +749,20 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         });
         
         var reloadCapabilitiesStore = function(stringUrl, protocol, callback) {
+            
             if(this.isGetMap(protocol)) {
                 var params = {};
                 this.layerNames = [];
                 if(stringUrl.split('?').length == 2) {
                     params = Ext.urlDecode(stringUrl.split('?')[1]);
                 }
-                params = Ext.applyIf(params, {
-                    request: 'getCapabilities',
-                    service: 'WMS'
+                var paramsUpper = {};
+                for(var p in params){
+                    paramsUpper[p.toUpperCase()] = params[p];
+                }
+                params = Ext.applyIf(paramsUpper, {
+                    REQUEST: 'getCapabilities',
+                    SERVICE: 'WMS'
                 });
                 
                 if(protocol && protocol.indexOf('1.3.0') >= 0 ) {
@@ -763,20 +778,25 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         };
         
         // Specific MyOcean --
-        // If we edit a WMS getCapabilitie, we load the grid from the URL, then
+        // If we edit a WMS getCapability, we load the grid from the URL, then
         // - we select the layers that were in the MD
         // - we update the title of the layers corresponding to <description> element of the MD
         var updateGridFromLoadedValues = function(layers, options, store) {
             var grid = protocolCombo.ownerCt.find('name', 'capabilitiesGrid')[0];
             var recs = this.capabilitiesStore.queryBy(function(rec, id) {
-                return (names.indexOf(rec.get('name')) >= 0);
+                if(names) {
+                    return (names.indexOf(rec.get('name')) >= 0);
+                }
             }, this);
-            grid.getSelectionModel().selectRecords(recs.items);
             
-            recs.each(function(rec) {
-                var idx = names.indexOf(rec.get('name'));
-                rec.set('title', descs[idx]);
-            });
+            if(recs) {
+                grid.getSelectionModel().selectRecords(recs.items);
+                
+                recs.each(function(rec) {
+                    var idx = names.indexOf(rec.get('name'));
+                    rec.set('title', descs[idx]);
+                });
+            }
         }
         // --
         
@@ -873,6 +893,40 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             }
         });
         
+        var onlinesrcExists = function(formValues) {
+            
+            // We are editing, no value has changed
+            if(formValues.href == this.editUrl && formValues.protocol == this.editProtocol &&
+                    formValues.name == this.editName) {
+                return false;
+            }
+
+            for(i=0;i<this.xmlRelations.getCount();i++) {
+                var relation = this.xmlRelations.get(i);
+                var url = relation.get('id').split('||')[0];
+                var info = relation.get('title').split('||')[0].trim().split(' ');
+                var protocol = info.pop();
+                var name = info.join(' ');
+                
+                protocol = protocol.substring(1, protocol.length -1);
+                protocol = (protocol == 'OGC:WMS:getCapabilities') ? 'OGC:WMS' : protocol;
+                
+                // The triple key already exists
+                if(url == formValues.href && 
+                        protocol == formValues.protocol && 
+                        name == formValues.name ) {
+                     Ext.Msg.show({
+                        title:OpenLayers.i18n('onlineResExits'),
+                        msg: OpenLayers.i18n('onlineResExitsMsg'),
+                        buttons: Ext.Msg.OK,
+                        icon: Ext.MessageBox.ERROR
+                     });
+                     return true;
+                }
+            }
+            return false;
+        };
+        
         this.uploadForm = new Ext.form.FormPanel({
             fileUpload: true,
             title: OpenLayers.i18n('onlineResFromManual'),
@@ -921,6 +975,9 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 handler: function () {
                     if (this.uploadForm.getForm().isValid()) {
                         var self = this;
+                        if(onlinesrcExists.call(this, this.uploadForm.getForm().getFieldValues())) {
+                            return;
+                        }
                         if (this.uploadDocument) {
                             this.uploadForm.getForm().submit({
                                 url: catalogue.services.uploadResource,
@@ -1382,8 +1439,11 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         var action = this.catalogue.services.mdProcessing + 
             "?id=" + this.metadataId + 
             "&process=" + this.type + (this.editUrl ? "-edit" : "-add") +
-            parameters + '&oldUrl=' + this.editUrl + '&oldName=' + this.editName;
-
+            parameters + '&oldUrl=' + encodeURIComponent(this.editUrl) + 
+                         '&oldName=' + encodeURIComponent(this.editName) + 
+                         '&oldProtocol=' + encodeURIComponent(this.editProtocol == 'OGC:WMS' ? 'OGC:WMS:getCapabilities' : this.editProtocol)
+        ;
+        
         this.editor.process(action);
         
         this.close();
