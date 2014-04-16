@@ -172,6 +172,7 @@ GeoNetwork.Lang.ca={
     'fullTextSearch': "Cerca completa de text",
     'keyword': "Paraules clau",
     'org': "Organització",
+    'altTitle': "Títol alternatiu",
     'mapTypes': "Tipus de mapa",
     'rsIdentifier': "Identificador de recurs",
     'inspireSearchOptions': 'criteris INSPIRE',

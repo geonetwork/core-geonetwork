@@ -770,6 +770,7 @@
 	<Reviewer>Reviewer</Reviewer>
 	<rss>RSS feed öffnen</rss>
 	<rtitle>Titel</rtitle>
+        <altTitle>Alternative titel</altTitle>
 	<save>Speichern</save>
 	<saveAndClose>Speichern und Schliessen</saveAndClose>
 	<saveAndValidate>Überprüfen</saveAndValidate>
@@ -1135,11 +1136,12 @@
 		<upload>Thesaurus hochladen</upload>
 	</thesaurus>
 	<searchhelp>
-		<searchAllText>Freitext hier eingeben</searchAllText>
-		<rtitle>Titel hier eingeben</rtitle>
-		<abstract>Kurzbeschreibung hier eingeben</abstract>
-		<keywords>Schlüsselwörter von existierenden Metadaten auswählen</keywords>
-		<thesaurus>Schlüsselwörter aus Thesaurus auswählen</thesaurus>
+            <altTitle>Alternative titel hier eingeben</altTitle>
+            <searchAllText>Freitext hier eingeben</searchAllText>
+            <rtitle>Titel hier eingeben</rtitle>
+            <abstract>Kurzbeschreibung hier eingeben</abstract>
+            <keywords>Schlüsselwörter von existierenden Metadaten auswählen</keywords>
+            <thesaurus>Schlüsselwörter aus Thesaurus auswählen</thesaurus>
 	</searchhelp>
 
 	<inspire>

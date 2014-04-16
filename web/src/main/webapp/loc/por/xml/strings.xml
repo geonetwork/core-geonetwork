@@ -775,6 +775,7 @@
 	<Reviewer>Revisor de conteúdo</Reviewer>
 	<rss>Abrir RSS feed</rss>
 	<rtitle>Título</rtitle>
+        <altTitle>Alternate title</altTitle>
 	<save>Gravar</save>
 	<saveAndClose>Gravar e sair</saveAndClose>
 	<saveAndValidate>Gravar e avaliar</saveAndValidate>
@@ -1151,13 +1152,14 @@
 		<updateelement>Actualizar elemento</updateelement>
 		<upload>Upload Thesaurus</upload>
 	</thesaurus>
-	<searchhelp>
-			<searchAllText>Enter free text here</searchAllText>
-		<rtitle>Enter title here</rtitle>
-		<abstract>Enter abstract here</abstract>
-		<keywords>Pick keywords from existing metadata records</keywords>
-		<thesaurus>Pick keywords from thesauri</thesaurus>
-	</searchhelp>
+        <searchhelp>
+            <altTitle>Enter alternate title here</altTitle>
+            <searchAllText>Enter free text here</searchAllText>
+            <rtitle>Enter title here</rtitle>
+            <abstract>Enter abstract here</abstract>
+            <keywords>Pick keywords from existing metadata records</keywords>
+            <thesaurus>Pick keywords from thesauri</thesaurus>
+        </searchhelp>
 
 	<inspire>
         <serviceType>

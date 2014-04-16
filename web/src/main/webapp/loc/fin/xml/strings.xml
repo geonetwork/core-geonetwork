@@ -776,6 +776,7 @@
 	<Reviewer>Sisällön arvioija</Reviewer>
 	<rss>Avaa RSS-syöte</rss>
 	<rtitle>Otsikko</rtitle>
+        <altTitle>Alternate title</altTitle>
 	<save>Tallenna</save>
 	<saveAndClose>Tallenna ja sulje</saveAndClose>
 	<saveAndValidate>Tallenna ja validoi</saveAndValidate>
@@ -1172,11 +1173,12 @@ Kuvailujen tekemiseksi tarvitset käyttäjätunnuksen. Pyydä se osoitteesta <a 
 		<upload>Lataa sanasto</upload>
 	</thesaurus>
 	<searchhelp>
-		<searchAllText>Enter free text here</searchAllText>
-		<rtitle>Enter title here</rtitle>
-		<abstract>Enter abstract here</abstract>
-		<keywords>Pick keywords from existing metadata records</keywords>
-		<thesaurus>Pick keywords from thesauri</thesaurus>
+            <altTitle>Enter alternate title here</altTitle>
+            <searchAllText>Enter free text here</searchAllText>
+            <rtitle>Enter title here</rtitle>
+            <abstract>Enter abstract here</abstract>
+            <keywords>Pick keywords from existing metadata records</keywords>
+            <thesaurus>Pick keywords from thesauri</thesaurus>
 	</searchhelp>
 
 	<inspire>

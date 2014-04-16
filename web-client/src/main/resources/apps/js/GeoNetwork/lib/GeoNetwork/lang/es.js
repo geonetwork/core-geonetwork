@@ -166,6 +166,7 @@ GeoNetwork.Lang.es = {
     'fullTextSearch':'Búsqueda de texto completo',
     'keyword':'Palabra clave',
     'org':'Organización',
+    'altTitle': 'Título alternativo',
     'mapTypes':'Tipos de mapas',
     'rsIdentifier':'Identificador de recursos',
     'inspireSearchOptions':'INSPIRE criterios',

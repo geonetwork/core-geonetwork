@@ -762,6 +762,7 @@
 	<Reviewer>Corrector de contingut</Reviewer>
 	<rss>Obrir alimentació RSS</rss>
 	<rtitle>Títol</rtitle>
+        <altTitle>Títol alternatiu</altTitle>
 	<save>Salvar</save>
 	<saveAndClose>Salvar i tancar</saveAndClose>
 	<saveAndValidate>Salvar i comprovar</saveAndValidate>
@@ -1137,11 +1138,12 @@
 		<upload>Carregar tesaurus</upload>
 	</thesaurus>
 	<searchhelp>
-		<searchAllText>Introdueixi un text lliure aquí</searchAllText>
-		<rtitle>Introdueixi el títol aquí</rtitle>
-		<abstract>Introdueixi el resum aquí</abstract>
-		<keywords>Seleccioni les paraules clau associades a metadades</keywords>
-		<thesaurus>Seleccioni les paraules clau del tesaurus</thesaurus>
+            <altTitle>Introdueixi el títol alternatiu aquí</altTitle>
+            <searchAllText>Introdueixi un text lliure aquí</searchAllText>
+            <rtitle>Introdueixi el títol aquí</rtitle>
+            <abstract>Introdueixi el resum aquí</abstract>
+            <keywords>Seleccioni les paraules clau associades a metadades</keywords>
+            <thesaurus>Seleccioni les paraules clau del tesaurus</thesaurus>
 	</searchhelp>
 
 	<inspire>

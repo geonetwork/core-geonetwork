@@ -602,6 +602,7 @@ GeoNetwork.Lang.de = {
 'Poweredby':'Bereitgestellt von',
 'About':'Uber',
 'org':'Organisation',
+'altTitle':'Alternative titel',
 'When':'Wenn',
 'Where':'Wo',
 'What':'Wass',
