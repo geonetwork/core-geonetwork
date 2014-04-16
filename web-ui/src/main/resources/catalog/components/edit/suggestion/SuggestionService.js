@@ -67,10 +67,12 @@
          * Call GN service to load all suggestion for the current
          * metadata
          */
-        load: function() {
+        load: function(lang, gurl) {
           return gnHttp.callService('suggestionsList', {
             id: gnCurrentEdit.id,
-            action: 'analyze'
+            action: 'analyze',
+            lang: lang,
+            gurl: gurl
           });
         },
 

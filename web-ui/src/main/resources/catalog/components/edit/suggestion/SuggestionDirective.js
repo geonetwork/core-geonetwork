@@ -20,7 +20,7 @@
               scope.gnCurrentEdit = gnCurrentEdit;
 
               scope.load = function() {
-                gnSuggestion.load().success(function(data) {
+                gnSuggestion.load(scope.$parent.lang || 'eng').success(function(data) {
                   if (data && !angular.isString(data)) {
                     scope.suggestions = data;
                   }
