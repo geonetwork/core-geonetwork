@@ -1854,6 +1854,18 @@ GeoNetwork.mapApp = function() {
                 });
             });
         },
+        addWMC: function (url) {
+          var map = this.getMap();
+          showBigMap();
+
+          OpenLayers.Request.GET({
+            url: url,
+            scope: this,
+            callback: function (response) {
+              GeoNetwork.WMCManager.loadWmc(map, response.responseText);
+            }
+          });
+        },
         getViewport : function() {
             if (viewport === null) {
                 app.mapApp.init();
