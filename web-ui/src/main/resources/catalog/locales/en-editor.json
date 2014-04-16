@@ -165,5 +165,7 @@
     "file": "File",
     "error": "Error",
     "importRecords": "Import",
-    "importFromDirReport": "{{success}}/{{records}} record(s) imported successfully in {{time}} seconds."
+    "importFromDirReport": "{{success}}/{{records}} record(s) imported successfully in {{time}} seconds.",
+    "setMetadataGroup": "Change metadata group",
+    "current": "current"
 }

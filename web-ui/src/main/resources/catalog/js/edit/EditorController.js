@@ -153,6 +153,7 @@
             $scope.metadataNotFoundId = $routeParams.id;
 
             $scope.mdSchema = data.metadata[0]['geonet:info'].schema;
+            $scope.groupOwner = data.metadata[0].groupOwner;
             $scope.mdTitle = data.metadata[0].title ||
                 data.metadata[0].defaultTitle;
 

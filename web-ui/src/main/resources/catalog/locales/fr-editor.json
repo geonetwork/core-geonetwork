@@ -170,5 +170,7 @@
     "file": "Fichier",
     "error": "Erreur",
     "importRecords": "Importer",
-    "importFromDirReport": "{{success}}/{{records}} fiches(s) importée(s) en {{time}} secondes."
+    "importFromDirReport": "{{success}}/{{records}} fiches(s) importée(s) en {{time}} secondes.",
+    "setMetadataGroup": "Changer le groupe de la fiche",
+    "current": "actuel"
 }

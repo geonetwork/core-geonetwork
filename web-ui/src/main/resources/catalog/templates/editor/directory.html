@@ -40,7 +40,7 @@
               <li class="list-group-item"
                 data-ng-repeat="e in searchResults.records"
                 data-ng-class="e['geonet:info'].id === activeEntry['geonet:info'].id ? 'active' : ''">
-                <a href="" data-ng-click="selectEntry(e)"> {{e.title}} </a>
+                <a href="" data-ng-click="selectEntry(e)">{{e.title}}</a>
                 <div class="pull-right">
                   <a href="" data-ng-click="copyEntry(e)">
                     <i class="fa fa-copy"/>
@@ -99,24 +99,30 @@
       <div class="panel-default panel">
         <div class="panel-heading">
           <span data-translate="">{{activeEntry.title || activeEntry.defaultTitle}}</span>
-          
-          <div class="btn-toolbar">
-            <button type="button" class="btn btn-danger pull-right fa fa-sign-out"
+          <div class="pull-right">
+            <div data-gn-metadata-group-updater="activeEntry.groupOwner"/>
+
+            <button type="button" class="btn btn-primary"
+                    data-ng-click="startSharing()"
+                    data-ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
+              <i class="fa fa-link"></i>&nbsp;<span data-translate="">share</span>
+            </button>
+
+            <button type="button" class="btn btn-primary"
+                    data-ng-click="save()"
+                    data-ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
+              <i class="fa fa-save"></i>&nbsp;<span data-translate="">save</span>
+            </button>
+
+            <button type="button" class="btn btn-danger"
                     data-ng-click="close()"
                     data-ng-disabled="activeEntry['geonet:info'].edit !== 'true'"
               title="{{'closeEditor' | translate}}">
-            </button>
-            <button type="button" class="btn btn-primary pull-right fa fa-save"
-                    data-ng-click="save()"
-                    data-ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
-              <span data-translate="">save</span>
-            </button>
-            <button type="button" class="btn btn-primary pull-right fa fa-link"
-                    data-ng-click="startSharing()"
-                    data-ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
-              <span data-translate="">share</span>
+              <i class="fa fa-sign-out"></i>&nbsp;
             </button>
           </div>
+          <br/>
+          <br/>
         </div>
         <div class="panel-body">
           <fieldset data-ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
