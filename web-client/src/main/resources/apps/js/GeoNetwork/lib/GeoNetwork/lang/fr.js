@@ -176,6 +176,7 @@ GeoNetwork.Lang.fr = {
     'fullTextSearch': "Rechercher ...",
     'keyword': "Mots-clés",
     'org': "Organisation",
+    'altTitle': "Titre alternatif",
     'mapTypes': "Type de données",
     'rsIdentifier': "Identifiant de la ressource",
     'inspireSearchOptions': 'INSPIRE',

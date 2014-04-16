@@ -28,6 +28,7 @@ import com.google.common.collect.Lists;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -40,6 +41,7 @@ import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.util.MailSender;
+import org.fao.geonet.util.XslUtil;
 import org.jdom.JDOMException;
 
 import javax.annotation.Nonnull;
@@ -47,9 +49,12 @@ import javax.annotation.Nullable;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DefaultStatusActions implements StatusActions {
 
@@ -222,16 +227,53 @@ public class DefaultStatusActions implements StatusActions {
                     return input.two();
             }
         });
-
+        String mdChanged = buildMetadataChangedMessage(metadata);
         String translatedStatusName = getTranslatedStatusName(Params.Status.SUBMITTED);
         String subject = String.format(LangUtils.translate(context, "statusInform").get(this.language), siteName,
                 translatedStatusName, replyToDescr, replyTo, changeDate);
 
         processList(users, subject, Params.Status.SUBMITTED,
-                changeDate, changeMessage);
+                changeDate, changeMessage, mdChanged);
     }
 
-    private String getTranslatedStatusName(String statusValueId) {
+    public static Pattern metadataLuceneField = Pattern.compile("\\{\\{index:([^\\}]+)\\}\\}");
+    
+    private String buildMetadataChangedMessage(Set<Integer> metadata) {
+    	String statusMetadataDetails = null;
+    	String message = "";
+ 
+    	try {
+    		statusMetadataDetails = LangUtils.translate(context, "statusMetadataDetails").get(this.language);
+		} catch (Exception e) {}
+    	// Fallback on a default value if statusMetadataDetails not resolved
+    	if (statusMetadataDetails == null) {
+    		statusMetadataDetails = "* {{index:title}} ({{serverurl}}/search?uuid={{index:_uuid}})";
+    	}
+    	
+    	ArrayList<String> fields = new ArrayList<String>();
+    	
+    	Matcher m = metadataLuceneField.matcher(statusMetadataDetails);
+        Iterable<Metadata> mds = this.context.getBean(MetadataRepository.class).findAll(metadata);
+        
+    	while (m.find()) {
+    		fields.add(m.group(1));
+    	}
+    	
+    	for (Metadata md : mds) {
+    		String curMdDetails = new String(statusMetadataDetails);
+    		// First substitution for variables not stored in the index
+    		curMdDetails = curMdDetails.replace("{{serverurl}}", siteUrl);
+    		
+    		for (String f: fields) {
+    			String mdf = XslUtil.getIndexField(null, md.getUuid(), f, this.language);
+    			curMdDetails = curMdDetails.replace("{{index:" + f + "}}", mdf);
+    		}
+    		message = message.concat(curMdDetails + "\r\n");
+    	}
+		return message;
+	}
+
+	private String getTranslatedStatusName(String statusValueId) {
         String translatedStatusName = "";
         StatusValue s = _statusValueRepository.findOneById(Integer.valueOf(statusValueId));
         if (s == null) {
@@ -256,7 +298,8 @@ public class DefaultStatusActions implements StatusActions {
         // --- get metadata owners (sorted on owner userid)
         String subject = String.format(LangUtils.translate(context, "statusInform").get(this.language), siteName,
                 translatedStatusName, replyToDescr, replyTo, changeDate);
-
+        String mdChanged = buildMetadataChangedMessage(metadataIds);
+        
         Iterable<Metadata> metadata = this.context.getBean(MetadataRepository.class).findAll(metadataIds);
         List<User> owners = new ArrayList<User>();
         UserRepository userRepo = this.context.getBean(UserRepository.class);
@@ -266,7 +309,7 @@ public class DefaultStatusActions implements StatusActions {
             owners.add(userRepo.findOne(ownerId));
         }
 
-        processList(owners, subject, status, changeDate, changeMessage);
+        processList(owners, subject, status, changeDate, changeMessage, mdChanged);
 
     }
 
@@ -280,10 +323,10 @@ public class DefaultStatusActions implements StatusActions {
      * @param changeMessage The message indicating why the status has changed
      */
     protected void processList(List<User> users, String subject, String status, String changeDate,
-                               String changeMessage) throws Exception {
+                               String changeMessage, String mdChanged) throws Exception {
 
         for (User user : users) {
-            sendEmail(user.getEmail(), subject, status, changeDate, changeMessage);
+            sendEmail(user.getEmail(), subject, status, changeDate, changeMessage, mdChanged);
         }
     }
 
@@ -296,15 +339,17 @@ public class DefaultStatusActions implements StatusActions {
      * @param changeDate Datestamp of status change
      * @param changeMessage The message indicating why the status has changed
      */
-    protected void sendEmail(String sendTo, String subject, String status, String changeDate, String changeMessage) throws Exception {
-        String message = String.format(LangUtils.translate(context, "statusSendEmail").get(this.language), changeMessage, siteUrl, status,
+    protected void sendEmail(String sendTo, String subject, String status, String changeDate, String changeMessage, String mdChanged) throws Exception {
+        String message = String.format(LangUtils.translate(context, "statusSendEmail").get(this.language), changeMessage, mdChanged, siteUrl, status,
                 changeDate);
+        
 
         if (!emailNotes) {
             context.info("Would send email \nTo: " + sendTo + "\nSubject: " + subject + "\n Message:\n" + message);
         } else {
             MailSender sender = new MailSender(context);
-            sender.sendWithReplyTo(host, Integer.parseInt(port), username, password, useSSL, from, fromDescr, sendTo, null, replyTo, replyToDescr, subject, message);
+            sender.sendWithReplyTo(host, Integer.parseInt(port), username, password, useSSL, from, fromDescr,
+            		sendTo, null, replyTo, replyToDescr, subject, message);
         }
     }
 }

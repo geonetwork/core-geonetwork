@@ -23,7 +23,7 @@
         legacy UI 
         <statusSendEmail>Change log message: %s\n\nRecords are available from the following URL:\n %s/main.search?_status=%s&amp;_statusChangeDate=%s</statusSendEmail>
         -->
-	<statusSendEmail>Change log message: %s\r\n\r\nRecords are available from the following URL:\r\n %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search</statusSendEmail>
+	<statusSendEmail>Change log message: %s\r\n\r\nMetadatas concerned by the change are the following:\r\n%s\r\nRecords are available from the following URL:\r\n %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search</statusSendEmail>
 
 	<otherValue>Other:</otherValue>
 	<warning>Warning</warning>
@@ -762,6 +762,7 @@
 	<Reviewer>Corrector de contingut</Reviewer>
 	<rss>Obrir alimentació RSS</rss>
 	<rtitle>Títol</rtitle>
+        <altTitle>Títol alternatiu</altTitle>
 	<save>Salvar</save>
 	<saveAndClose>Salvar i tancar</saveAndClose>
 	<saveAndValidate>Salvar i comprovar</saveAndValidate>
@@ -1137,11 +1138,12 @@
 		<upload>Carregar tesaurus</upload>
 	</thesaurus>
 	<searchhelp>
-		<searchAllText>Introdueixi un text lliure aquí</searchAllText>
-		<rtitle>Introdueixi el títol aquí</rtitle>
-		<abstract>Introdueixi el resum aquí</abstract>
-		<keywords>Seleccioni les paraules clau associades a metadades</keywords>
-		<thesaurus>Seleccioni les paraules clau del tesaurus</thesaurus>
+            <altTitle>Introdueixi el títol alternatiu aquí</altTitle>
+            <searchAllText>Introdueixi un text lliure aquí</searchAllText>
+            <rtitle>Introdueixi el títol aquí</rtitle>
+            <abstract>Introdueixi el resum aquí</abstract>
+            <keywords>Seleccioni les paraules clau associades a metadades</keywords>
+            <thesaurus>Seleccioni les paraules clau del tesaurus</thesaurus>
 	</searchhelp>
 
 	<inspire>

@@ -63,7 +63,7 @@
             });
           };
 
-          scope.sortByLabel = function (group) {
+          scope.sortByLabel = function(group) {
             return group.label[scope.lang];
           };
 

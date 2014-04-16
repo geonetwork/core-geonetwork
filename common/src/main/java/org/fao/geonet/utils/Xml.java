@@ -452,10 +452,19 @@ public final class Xml
             Log.debug(Log.XML_RESOLVER, "Trying to resolve "+href+":"+base);
         }
         Source s = catResolver.resolve(href, base);
+
+         boolean isFile = false;
+         try {
+             final File file = new File(s.getSystemId());
+             isFile = file.isFile();
+         } catch (Exception e) {
+             isFile = false;
+         }
+
         // If resolver has a blank XSL file use it to replace
         // resolved file that doesn't exist...
         String blankXSLFile = resolver.getBlankXSLFile();
-        if (blankXSLFile != null && s.getSystemId().endsWith(".xsl")) {
+        if (blankXSLFile != null && s.getSystemId().endsWith(".xsl") && !isFile) {
             try {
                 if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
                     Log.debug(Log.XML_RESOLVER, "  Check if exist " + s.getSystemId());
@@ -465,7 +474,7 @@ public final class Xml
                     Log.debug(Log.XML_RESOLVER, "Check on "+f.getPath()+" exists returned: "+f.exists());
                 // If the resolved resource does not exist, set it to blank file path to not trigger FileNotFound Exception
 
-                if (!(f == null || f.exists())) {
+                if (f == null || !(f.exists())) {
                     if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
                         Log.debug(Log.XML_RESOLVER, "  Resolved resource " + s.getSystemId() + " does not exist. blankXSLFile returned instead.");
                     }

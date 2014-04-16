@@ -23,7 +23,7 @@
         legacy UI 
         <statusSendEmail>Change log message: %s\n\nRecords are available from the following URL:\n %s/main.search?_status=%s&amp;_statusChangeDate=%s</statusSendEmail>
         -->
-	<statusSendEmail>Change log message: %s\r\n\r\nRecords are available from the following URL:\r\n %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search</statusSendEmail>
+	<statusSendEmail>Change log message: %s\r\n\r\nMetadatas concerned by the change are the following:\r\n%s\r\nRecords are available from the following URL:\r\n %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search</statusSendEmail>
 
 	<otherValue>Other:</otherValue>
 	<warning>Warning</warning>
@@ -768,6 +768,7 @@
 	<Reviewer>Content reviewer</Reviewer>
 	<rss>开放的RSS馈入</rss>
 	<rtitle>题名</rtitle>
+        <altTitle>Alternate title</altTitle>
 	<save>保存</save>
 	<saveAndClose>保存并关闭</saveAndClose>
 	<saveAndValidate>检查</saveAndValidate>
@@ -1139,11 +1140,12 @@
 		<upload>Upload thesaurus</upload>
 	</thesaurus>
 	<searchhelp>
-		<searchAllText>Enter free text here</searchAllText>
-		<rtitle>Enter title here</rtitle>
-		<abstract>Enter abstract here</abstract>
-		<keywords>Pick keywords from existing metadata records</keywords>
-		<thesaurus>Pick keywords from thesauri</thesaurus>
+            <altTitle>Enter alternate title here</altTitle>
+            <searchAllText>Enter free text here</searchAllText>
+            <rtitle>Enter title here</rtitle>
+            <abstract>Enter abstract here</abstract>
+            <keywords>Pick keywords from existing metadata records</keywords>
+            <thesaurus>Pick keywords from thesauri</thesaurus>
 	</searchhelp>
 
 	<inspire>

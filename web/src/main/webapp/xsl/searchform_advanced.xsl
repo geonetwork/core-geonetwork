@@ -512,6 +512,16 @@
 			</div>
 		</xsl:if>
 	</div>
+        <!-- Alternate title -->
+        <!--
+        <div class="row">
+            <span class="labelField"><xsl:value-of select="root/gui/strings/altTitle" /></span>
+            <span title="{/root/gui/strings/searchhelp/altTitle}">
+                <input name="altTitle" id="altTitle" class="content" size="31" value="{/root/gui/searchDefaults/altTitle}" />
+            </span>
+        </div>
+        -->
+        
 	
 	<!-- Abstract -->	
 	<div class="row">  <!-- div row-->

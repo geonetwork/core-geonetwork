@@ -90,7 +90,7 @@ public class BatchUpdateStatus extends NotInReadOnlyModeService {
 
 
             final Integer iId = Integer.valueOf(id);
-            if (metadataRepository.exists(iId)) {
+            if (! metadataRepository.exists(iId)) {
 				notFound.add(iId);
 			} else if (!accessMan.isOwner(context, id)) {
 				notOwner.add(iId);

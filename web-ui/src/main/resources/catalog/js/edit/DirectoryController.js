@@ -68,14 +68,15 @@
       };
 
       var init = function() {
-        $http.get('admin.group.list@json').success(function(data) {
-          $scope.groups = data !== 'null' ? data : null;
+        $http.get('admin.group.list@json', {cache: true}).
+            success(function(data) {
+              $scope.groups = data !== 'null' ? data : null;
 
-          // Select by default the first group.
-          if ($scope.ownerGroup === null && data) {
-            $scope.ownerGroup = data[0]['id'];
-          }
-        });
+              // Select by default the first group.
+              if ($scope.ownerGroup === null && data) {
+                $scope.ownerGroup = data[0]['id'];
+              }
+            });
 
         searchEntries();
       };
@@ -119,8 +120,6 @@
         return false;
       };
 
-
-
       /**
        * Update the form according to the target tab
        * properties and save.
@@ -137,6 +136,37 @@
       /**
        * FIXME: duplicate from EditorController
        */
+      $scope.add = function(ref, name, insertRef, position, attribute) {
+        if (attribute) {
+          // save the form and add attribute
+          // after save is done. When adding an attribute
+          // the snippet returned contains the current field
+          // and the newly created attributes.
+          // Save to not lose current edits in main field.
+          gnEditor.save(false)
+            .then(function() {
+                gnEditor.add(gnCurrentEdit.id, ref, name,
+                    insertRef, position, attribute);
+              });
+        } else {
+          gnEditor.add(gnCurrentEdit.id, ref, name,
+              insertRef, position, attribute);
+        }
+        return false;
+      };
+      $scope.addChoice = function(ref, name, insertRef, position) {
+        gnEditor.addChoice(gnCurrentEdit.id, ref, name,
+            insertRef, position);
+        return false;
+      };
+      $scope.remove = function(ref, parent, domRef) {
+        gnEditor.remove(gnCurrentEdit.id, ref, parent, domRef);
+        return false;
+      };
+      $scope.removeAttribute = function(ref) {
+        gnEditor.removeAttribute(gnCurrentEdit.id, ref);
+        return false;
+      };
       $scope.save = function(refreshForm) {
         gnEditor.save(refreshForm)
           .then(function(form) {
@@ -173,7 +203,6 @@
         return false;
       };
 
-
       /**
        * When the form is loaded, this function is called.
        * Use it to retrieve form variables or initialize
@@ -208,7 +237,6 @@
           });
 
           $scope.gnCurrentEdit = gnCurrentEdit;
-
           $scope.editorFormUrl = gnEditor
             .buildEditUrlPrefix('md.edit') +
               '&starteditingsession=yes&random=' + i++;

@@ -74,6 +74,18 @@
       <class name=".services.metadata.BatchUpdatePrivileges" />
     </service>
 
+    <service name="md.group.update">
+      <documentation><![CDATA[
+          Change the group the metadata is in. Groupowner database column.
+
+          Parameters are:
+          * id: Metadata identifier
+          * groupid: Group identifier
+          ]]></documentation>
+      <class name=".services.metadata.UpdateGroupOwner"/>
+      <error sheet="../xslt/common/error.xsl"/>
+    </service>
+
     <service name="md.insert">
       <documentation><![CDATA[
         Insert a metadata sending an XML document.
