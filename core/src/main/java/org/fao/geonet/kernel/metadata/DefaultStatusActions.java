@@ -236,15 +236,19 @@ public class DefaultStatusActions implements StatusActions {
                 changeDate, changeMessage, mdChanged);
     }
 
-    public static Pattern metadataLuceneField = Pattern.compile("\\{\\{([^\\}]+)\\}\\}");
+    public static Pattern metadataLuceneField = Pattern.compile("\\{\\{index:([^\\}]+)\\}\\}");
     
     private String buildMetadataChangedMessage(Set<Integer> metadata) {
-    	String statusMetadataDetails = "* {{title}} ({{altTitle}})";
+    	String statusMetadataDetails = null;
     	String message = "";
  
     	try {
     		statusMetadataDetails = LangUtils.translate(context, "statusMetadataDetails").get(this.language);
 		} catch (Exception e) {}
+    	// Fallback on a default value if statusMetadataDetails not resolved
+    	if (statusMetadataDetails == null) {
+    		statusMetadataDetails = "* {{index:title}} ({{serverurl}}/search?uuid={{index:_uuid}})";
+    	}
     	
     	ArrayList<String> fields = new ArrayList<String>();
     	
@@ -257,9 +261,12 @@ public class DefaultStatusActions implements StatusActions {
     	
     	for (Metadata md : mds) {
     		String curMdDetails = new String(statusMetadataDetails);
+    		// First substitution for variables not stored in the index
+    		curMdDetails = curMdDetails.replace("{{serverurl}}", siteUrl);
+    		
     		for (String f: fields) {
     			String mdf = XslUtil.getIndexField(null, md.getUuid(), f, this.language);
-    			curMdDetails = curMdDetails.replace("{{" + f + "}}", mdf);
+    			curMdDetails = curMdDetails.replace("{{index:" + f + "}}", mdf);
     		}
     		message = message.concat(curMdDetails + "\r\n");
     	}
