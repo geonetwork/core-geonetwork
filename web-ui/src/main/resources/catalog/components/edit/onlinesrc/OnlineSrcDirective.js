@@ -304,8 +304,10 @@
 
               scope.popupid = attrs['gnPopupid'];
 
-              gnOnlinesrc.register('onlinesrc', function() {
+              gnOnlinesrc.register('onlinesrc', function(options) {
                 scope.metadataId = gnCurrentEdit.id;
+                scope.popupOptions = options;
+
                 $(scope.popupid).modal('show');
 
               });
