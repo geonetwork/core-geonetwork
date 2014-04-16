@@ -11,7 +11,11 @@
     <property name="jstout" location="${basedir}/lib/web-client/jst"/>
     <property name="examplesout" location="${basedir}/examples"/>
     <property name="examplescode" location="${basedir}/../../web-client/src/main/resources/apps/js/GeoNetwork/examples"/>
-    <property name="unix.path" value="/bin:/usr/bin:/usr/local/bin:/opt/local/bin"/>
+    <!--property name="unix.path" value="/bin:/usr/bin:/usr/local/bin:/opt/local/bin"/-->
+	
+    <condition property="unix.path" value="" else="/bin:/usr/bin:/usr/local/bin:/opt/local/bin">
+        <os family="windows" />
+    </condition>
 
     <target name="init">
         <tstamp/>
@@ -30,7 +34,7 @@
             </fileset>
         </concat>-->
 
-        <exec executable="/usr/local/bin/jst" failonerror="true">
+        <exec executable="jst" failonerror="true">
             <env key="PATH" path="${unix.path}"/>
             <arg value="jst.cfg"/>
         </exec>
@@ -39,7 +43,7 @@
     <target name="doc" depends="clean, init, jst" description="build documentation">
         <echo>Building docs.</echo>
         <exec executable="make" failonerror="true">
-            <env key="PATH" path="${unix.path}"/>
+            <!--env key="PATH" path="${unix.path}"/-->
             <arg line="html"/>
         </exec>
     </target>
