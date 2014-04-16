@@ -16,10 +16,12 @@
   </xsl:variable>
 
   <!-- GeoNetwork base url -->
-  <xsl:param name="gurl" select="'http://localhost:8080/geonetwork'"/>
+  <xsl:param name="siteUrl" select="'http://localhost:8080/geonetwork/srv/eng'"/>
+  <xsl:param name="gurl" select="$siteUrl"/>
 
   <!-- The UI language. Thesaurus search is made according to GUI language -->
-  <xsl:param name="lang" select="'eng'"/>
+  <xsl:param name="guiLang" select="'eng'"/>
+  <xsl:param name="lang" select="$guiLang"/>
 
   <!-- Replace or not existing extent -->
   <xsl:param name="replace" select="'0'"/>
@@ -28,7 +30,7 @@
   <xsl:variable name="replaceMode"
     select="geonet:parseBoolean($replace)"/>
   <xsl:variable name="serviceUrl"
-    select="concat($gurl, '/srv/', $lang, '/keywords?pNewSearch=true&amp;pTypeSearch=2&amp;pKeyword=')"/>
+    select="concat($gurl, '/keywords?pNewSearch=true&amp;pTypeSearch=2&amp;pKeyword=')"/>
 
 
 
@@ -204,7 +206,7 @@
 
     <xsl:if test="normalize-space($word)!=''">
       <!-- Get keyword information -->
-      <xsl:variable name="keyword" select="document(concat($serviceUrl, $word))"/>
+      <xsl:variable name="keyword" select="document(concat($serviceUrl, encode-for-uri($word)))"/>
       <xsl:variable name="knode" select="exslt:node-set($keyword)"/>
 
       <!-- It should be one but if one keyword is found in more
