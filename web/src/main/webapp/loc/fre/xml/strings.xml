@@ -32,7 +32,7 @@ La liste des métadonnées concernées par le changement est la suivante:
 La liste des changements d'état sont accessibles ici :
 %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search
 	</statusSendEmail>
-	<statusMetadataDetails>* {{title}} ({{altTitle}})</statusMetadataDetails>
+  <statusMetadataDetails>* {{index:title}} ({{serverurl}}/search?uuid={{index:_uuid}})</statusMetadataDetails>
 	<otherValue>Autre :</otherValue>
 	<warning>Attention</warning>
 	<isAdmin>Est administrateur ?</isAdmin>
