@@ -27,9 +27,13 @@
 		-->
 	<statusSendEmail>Change log message: %s
 
-Records are available from the following URL:\r\n 
+Metadatas concerned by this change are the following:
+%s
+
+Records are available from the following URL:
 %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search
 	</statusSendEmail>
+	<statusMetadataDetails>* {{title}} ({{altTitle}})</statusMetadataDetails>
 	<metadata-versioning-log>Metadata versioning log</metadata-versioning-log>
 	<otherValue>Other:</otherValue>
 	<warning>Warning</warning>
