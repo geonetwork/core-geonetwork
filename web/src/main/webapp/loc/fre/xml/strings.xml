@@ -27,10 +27,12 @@
 	<statusSendEmail>
 Commentaire de l'utilisateur lors du changement d'état :
 %s
-
+La liste des métadonnées concernées par le changement est la suivante:
+%s
 La liste des changements d'état sont accessibles ici :
 %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search
-	</statusSendEmail>	
+	</statusSendEmail>
+	<statusMetadataDetails>* {{title}} ({{altTitle}})</statusMetadataDetails>
 	<otherValue>Autre :</otherValue>
 	<warning>Attention</warning>
 	<isAdmin>Est administrateur ?</isAdmin>

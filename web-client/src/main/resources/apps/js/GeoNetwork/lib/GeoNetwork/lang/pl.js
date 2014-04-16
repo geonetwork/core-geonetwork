@@ -283,7 +283,7 @@ GeoNetwork.Lang.pl = {
     'status': 'Status',
     'updateStatus': 'Zaktualizuj status',
     'currentStatus': ' (current status is ${status})',
-    'enableWorkflow': 'Enable worklow',
+    'enableWorkflow': 'Enable workflow',
     'enableWorkflowTT': 'Set metadata status to draft and enable workflow',
     'enableWorkflowStart': 'Metadata status set to draft.',
     'updateVersion': 'Aktywuj wersjonowanie',
