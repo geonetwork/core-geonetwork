@@ -39,6 +39,7 @@ import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.metadata.XslProcessing;
 import org.fao.geonet.services.metadata.XslProcessingReport;
+import org.fao.geonet.services.resources.handlers.IResourceRemoveHandler;
 import org.jdom.Element;
 
 import java.io.File;
@@ -76,12 +77,9 @@ public class RemoveAndProcess extends NotInReadOnlyModeService {
         if ("".equals(filename))
             throw new OperationAbortedEx("Empty filename. Unable to delete resource.");
 
-        // delete the file
-        File dir = new File(Lib.resource.getDir(context, access, id));
-        File file = new File(dir, filename);
-
-        if (file.exists() && !file.delete())
-            throw new OperationAbortedEx("unable to delete resource");
+        // Remove the file and update the file upload/downloads tables
+        IResourceRemoveHandler removeHook = (IResourceRemoveHandler) context.getApplicationContext().getBean("resourceRemoveHandler");
+        removeHook.onDelete(context, params, Integer.parseInt(id), filename, access);
 
         // Set parameter and process metadata to remove reference to the uploaded file
         params.addContent(new Element("name").setText(filename));
