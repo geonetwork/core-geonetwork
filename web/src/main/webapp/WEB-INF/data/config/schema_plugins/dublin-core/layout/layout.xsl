@@ -89,6 +89,8 @@
   </xsl:template>
 
 
+  <!-- Hide from the editor the dct:references pointing to uploaded files -->
+  <xsl:template mode="mode-dublin-core" priority="101" match="dct:references[starts-with(., 'http') or contains(. , 'resources.get') or contains(., 'file.disclaimer')]" />
 
 
   <!-- the other elements in DC. -->
