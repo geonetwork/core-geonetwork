@@ -1,0 +1,79 @@
+<div class="row">
+
+  <!--  metadata internal report -->
+  <div class="col-lg-7">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <strong data-translate="">reportInternalMetadata-title</strong>
+
+        <p data-translate="">reportInternalMetadata-description</p>
+
+        <div class="btn-toolbar">
+          <button type="button" class="btn btn-primary pull-right fa fa-save"
+                  data-ng-disabled="!gnMetadataInternalReport.$valid && !gnMetadataInternalReport.dirty"
+                  data-ng-click="createReport('#gn-metadata-internal-report', 'recordsinternal.csv')"
+                  data-translate="">createReport
+          </button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <form id="gn-metadata-internal-report" name="gnMetadataInternalReport" class="form-horizontal">
+          <fieldset>
+            <div
+              class="form-group">
+
+              <label class="control-label col-sm-3" data-translate=""></label>
+              <div class="col-sm-9">
+                <select id="suggestedDate" class="form-control" data-ng-model="report.suggestedDate">
+                  <option value="" data-translate="">reportDateSelect</option>
+                  <option value="currentMonth" data-translate="">reportDateCurrentMonth</option>
+                  <option value="previousMonth" data-translate="">reportDatePreviousMonth</option>
+                  <option value="currentYear" data-translate="">reportDateCurrentYear</option>
+                  <option value="previousYear" data-translate="">reportDatePreviousYear</option>
+                </select>
+              </div>
+            </div>
+
+            <div
+              data-ng-class="gnMetadataInternalReport.dateFrom.$error.required ? 'has-error' : ''" class="form-group">
+
+              <label class="control-label col-sm-3" data-translate="">reportInternalMetadata-metadataCreationDateBegin</label>
+              <div class="col-sm-9">
+                <input type="date" name="dateFrom" class="form-control" data-ng-model="report.dateFrom"
+                       data-ng-required="true"
+                       value="{{ date | date: 'yyyy-MM-dd' }}" />
+              </div>
+            </div>
+
+            <div
+              data-ng-class="gnMetadataInternalReport.dateTo.$error.required ? 'has-error' : ''" class="form-group">
+
+              <label class="control-label col-sm-3" data-translate="">reportInternalMetadata-metadataCreationDateEnd</label>
+              <div class="col-sm-9">
+                <input type="date" name="dateTo" class="form-control" data-ng-model="report.dateTo"
+                       data-ng-required="true"
+                       value="{{ date | date: 'yyyy-MM-dd' }}" />
+              </div>
+            </div>
+
+            <div
+              class="form-group">
+
+              <label class="control-label col-sm-3" data-translate="">Groups</label>
+              <div class="col-sm-9">
+                <select multiple="multiple" id="groups" name="groups"
+                        class="form-control">
+                  <option data-ng-repeat="g in groups" value="{{g.id}}"
+                          data-ng-selected="isUserGroup(g.id, 'RegisteredUser')"
+                    >{{g.label[lang]}}</option>
+                </select>
+              </div>
+            </div>
+          </fieldset>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+</div>

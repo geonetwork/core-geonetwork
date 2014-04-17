@@ -13,4 +13,12 @@
 	<bean id="MetadataRegionsDAO" class="org.fao.geonet.services.region.MetadataRegionDAO">
 		<property name="cacheAllRegionsInMemory" value="false"/>
 	</bean>
+
+  <bean id="resourceUploadHandler" class="org.fao.geonet.services.resources.handlers.DefaultResourceUploadHandler" />
+
+  <bean id="resourceDownloadHandler" class="org.fao.geonet.services.resources.handlers.DefaultResourceDownloadHandler" />
+
+  <bean id="resourceRemoveHandler" class="org.fao.geonet.services.resources.handlers.DefaultResourceRemoveHandler" />
+
+
 </beans>
