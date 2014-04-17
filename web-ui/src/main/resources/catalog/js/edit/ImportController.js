@@ -54,7 +54,7 @@
         formatExceptionArray();
       };
 
-      $scope.import = function(formId) {
+      $scope.importRecords = function(formId) {
         $scope.importing = true;
         $scope.report = null;
         $scope.error = null;

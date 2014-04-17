@@ -30,7 +30,7 @@
         legacy UI 
         <statusSendEmail>Change log message: %s\n\nRecords are available from the following URL:\n %s/main.search?_status=%s&amp;_statusChangeDate=%s</statusSendEmail>
         -->
-	<statusSendEmail>Change log message: %s\r\n\r\nRecords are available from the following URL:\r\n %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search</statusSendEmail>
+	<statusSendEmail>Change log message: %s\r\n\r\nMetadatas concerned by the change are the following:\r\n%s\r\nRecords are available from the following URL:\r\n %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search</statusSendEmail>
 
 	<otherValue>Other:</otherValue>
 	<warning>Warning</warning>
@@ -815,6 +815,7 @@
 	<Reviewer>İçerik Görüntüleyici</Reviewer>
 	<rss>RSS beslemeyi Aç</rss>
 	<rtitle>Başlık</rtitle>
+        <altTitle>Alternate title</altTitle>
 	<save>Kaydet</save>
 	<saveAndClose>Kaydet ve kapat</saveAndClose>
 	<saveAndValidate>Kontrol Et</saveAndValidate>
@@ -1194,12 +1195,13 @@
 		<upload>Eşanlamlılar Sözlüğü Yükle</upload>
 	</thesaurus>
 	<searchhelp>
-		<searchAllText>Serbest Metni buraya giriniz</searchAllText>
-		<rtitle>Başlığı buraya giriniz</rtitle>
-		<abstract>Özeti buraya giriniz</abstract>
-		<keywords>Mevcut metaveri kayıtlarından anahtar kelimeler seçiniz</keywords>
-		<thesaurus>Eşanlamlılar Sözlüğünden anahtar kelimeler seçiniz</thesaurus>
-	</searchhelp>
+            <altTitle>Enter alternate title here</altTitle>
+            <searchAllText>Serbest Metni buraya giriniz</searchAllText>
+            <rtitle>Başlığı buraya giriniz</rtitle>
+            <abstract>Özeti buraya giriniz</abstract>
+            <keywords>Mevcut metaveri kayıtlarından anahtar kelimeler seçiniz</keywords>
+            <thesaurus>Eşanlamlılar Sözlüğünden anahtar kelimeler seçiniz</thesaurus>
+        </searchhelp>
 
 	<inspire>
 

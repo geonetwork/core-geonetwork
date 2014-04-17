@@ -74,6 +74,7 @@ public class LuceneIndexField {
     public static final String TEMPORALEXTENT_BEGIN = "tempExtentBegin";
     public static final String TEMPORALEXTENT_END = "tempExtentEnd";
     public static final String TITLE = "title";
+    public static final String ALT_TITLE = "altTitle";
 	public static final String TOPIC_CATEGORY = "topicCat";
 	public static final String TYPE = "type";
 	public static final String UUID = "_uuid";

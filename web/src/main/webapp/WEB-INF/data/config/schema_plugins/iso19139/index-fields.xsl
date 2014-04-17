@@ -458,6 +458,10 @@
                     <Field name="protocol" string="{string($protocol)}" store="true" index="true"/>
                 </xsl:if>
 
+        <xsl:if test="string($title)!='' and string($desc)!='' and not(contains($linkage,$download_check))">
+          <Field name="linkage_name_des" string="{string(concat($title, ':::', $desc))}" store="true" index="true"/>
+        </xsl:if>
+
                 <xsl:if test="normalize-space($mimetype)!=''">
 					<Field name="mimetype" string="{$mimetype}" store="true" index="true"/>
 				</xsl:if>

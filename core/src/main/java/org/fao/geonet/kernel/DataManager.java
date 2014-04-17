@@ -48,6 +48,8 @@ import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
+import org.fao.geonet.repository.specification.*;
+import org.fao.geonet.repository.statistic.PathSpec;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.Xml.ErrorHandler;
@@ -71,10 +73,6 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.repository.*;
-import org.fao.geonet.repository.specification.MetadataSpecs;
-import org.fao.geonet.repository.specification.MetadataStatusSpecs;
-import org.fao.geonet.repository.specification.UserGroupSpecs;
-import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.util.ThreadUtils;
 import org.jdom.Attribute;
 import org.jdom.Document;
@@ -98,6 +96,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -2105,6 +2105,18 @@ public class DataManager {
         _applicationContext.getBean(MetadataRatingByIpRepository.class).deleteAllById_MetadataId(intId);
         _applicationContext.getBean(MetadataValidationRepository.class).deleteAllById_MetadataId(intId);
         _applicationContext.getBean(MetadataStatusRepository.class).deleteAllById_MetadataId(intId);
+
+        // Logical delete for metadata file uploads
+        PathSpec<MetadataFileUpload, String> deletedDatePathSpec = new PathSpec<MetadataFileUpload, String>() {
+            @Override
+            public Path<String> getPath(Root<MetadataFileUpload> root) {
+                return root.get(MetadataFileUpload_.deletedDate);
+            }
+        };
+
+        _applicationContext.getBean(MetadataFileUploadRepository.class).createBatchUpdateQuery(deletedDatePathSpec,
+                new ISODate().toString(),
+                MetadataFileUploadSpecs.isNotDeletedForMetadata(intId));
 
         //--- remove metadata
         xmlSerializer.delete(id, context);

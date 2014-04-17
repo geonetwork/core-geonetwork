@@ -281,20 +281,19 @@ function initAdvancedSearch()
 	initCalendar();
 }
 
-function runAdvancedSearch(type)
-{
-  if (type != "pdf")
-	   preparePresent();
-
-	setSort();
-
-	var pars = $('advanced_search_form').serialize(true);
-
-    if (type == "pdf")
-       gn_searchpdf(pars);
-    else
-	   // Load results via AJAX
-	   gn_search(pars);
+function runAdvancedSearch(type) {
+    if (type !== "pdf") {
+        preparePresent();
+    }
+    setSort();
+    var pars = $('advanced_search_form').serialize(true);
+    
+    if (type === "pdf")  {
+        gn_searchpdf(pars);
+    } else {
+        // Load results via AJAX
+        gn_search(pars);
+    }
 }
 
 function resetAdvancedSearch()

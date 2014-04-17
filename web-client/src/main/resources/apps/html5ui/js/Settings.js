@@ -26,7 +26,11 @@ GeoNetwork.Util.defaultLocale = 'eng';
 //            ['fr', 'Français']
 //    ];
 GeoNetwork.searchDefault = {
-    activeMapControlExtent: false
+    activeMapControlExtent: false,
+    // show "Title" field in advanced search form
+    advSearchShowTitleField: false,
+    // show "Alternate title" in advanced search form
+    advSearchShowAltTitleField: false
 };
 GeoNetwork.advancedFormButton = true;
 
@@ -84,4 +88,5 @@ GeoNetwork.Settings.results = {
         //featurecolorCSS: "border-width: 5px;border-style: solid; border-color: ${featurecolor}"
         featurecolorCSS: undefined
 };
+
 

@@ -19,6 +19,7 @@
       link: function(scope, element, attrs) {
         scope.types = scope.typeList ||
             ['theme', 'discipline', 'place', 'stratum', 'temporal'];
+        scope.fieldname = attrs.fieldname || 'dname';
       }
     };
   }]);

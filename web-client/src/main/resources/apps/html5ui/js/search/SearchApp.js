@@ -256,10 +256,47 @@ GeoNetwork.searchApp = function() {
                 name : 'E_siteId',
                 hidden : true
             });
-            var serviceTypeField = GeoNetwork.util.INSPIRESearchFormTools
-                    .getServiceTypeField(true);
-            advancedCriteria.push(themekeyField, orgNameField,
-                    metadataTypeField, ownerField, isHarvestedField, siteId);
+            
+            var whatFields = [themekeyField, orgNameField, metadataTypeField];
+            if (GeoNetwork.searchDefault.advSearchShowTitleField) {
+                var titleStore = new GeoNetwork.data.OpenSearchSuggestionStore({
+                    url : catalogue.services.opensearchSuggest,
+                    rootId : 1,
+                    baseParams : {
+                        field : 'title'
+                    }
+                });
+                var titleField = new Ext.ux.form.SuperBoxSelect({
+                    hideLabel : false,
+                    minChars : 0,
+                    queryParam : 'q',
+                    hideTrigger : false,
+                    field: 'title',
+                    id : 'E_title',
+                    name : 'E_title',
+                    store : titleStore,
+                    valueField : 'value',
+                    displayField : 'value',
+                    valueDelimiter : ' or ',
+                    // tpl: tpl,
+                    fieldLabel: OpenLayers.i18n('title')
+                });
+
+                whatFields.push(titleField);
+            }
+            if (GeoNetwork.searchDefault.advSearchShowAltTitleField) {
+                var altTitleField = new Ext.form.TextField({
+                    fieldLabel: OpenLayers.i18n('altTitle'),
+                    name: 'E_altTitle',
+                    id: 'E_altTitle'
+                });
+            
+                whatFields.push(altTitleField);
+            }               
+            whatFields.push(ownerField, isHarvestedField, siteId);
+            
+            
+            advancedCriteria = advancedCriteria.concat(whatFields);
 
             var sortByCombo = new Ext.form.TextField({
                 name : 'E_sortBy',
@@ -329,6 +366,8 @@ GeoNetwork.searchApp = function() {
                         withAnnex : true,
                         withTheme : true
                     });
+            var serviceTypeField = GeoNetwork.util.INSPIRESearchFormTools
+                    .getServiceTypeField(true);
             inspireFields.push(serviceTypeField);
 
             var inspire = {

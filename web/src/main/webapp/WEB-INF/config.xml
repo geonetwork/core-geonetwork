@@ -1223,4 +1223,6 @@
   <include>config/config-ui-admin.xml</include>
   
   <include>config/config-service-monitoring.xml</include>
+
+  <include>config/config-service-reports.xml</include>
 </geonet>

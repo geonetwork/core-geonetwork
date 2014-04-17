@@ -3,6 +3,7 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.repository.reports.MetadataReportsQueries;
 import org.fao.geonet.repository.statistic.MetadataStatisticsQueries;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +26,14 @@ public interface MetadataRepositoryCustom {
      * @return an object for performing statistic calculation queries.
      */
     MetadataStatisticsQueries getMetadataStatistics();
+
+    /**
+     * Return an object that contains functions for calculating several different statistical calculations (related to the metadata)
+     * based on the data in the database.
+     *
+     * @return an object for performing statistic calculation queries.
+     */
+    MetadataReportsQueries getMetadataReports();
 
     /**
      * Permit finding a metadata by its ids as a string.
