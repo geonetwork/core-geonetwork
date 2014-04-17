@@ -2,6 +2,13 @@ package org.fao.geonet.domain;
 
 import javax.persistence.*;
 
+/**
+ * Entity to model a metadata file download request: metadata identifier, download date, user, file name, etc.
+ *
+ * It is related to a {@link org.fao.geonet.domain.MetadataFileUpload} entity.
+ *
+ * @author Jose García
+ */
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "MetadataFileDownloads")

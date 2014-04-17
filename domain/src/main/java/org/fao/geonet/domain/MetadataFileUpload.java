@@ -4,7 +4,11 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.*;
 
-
+/**
+ * Entity to model a metadata file upload request: metadata identifier, upload date, user, file name, etc.
+ *
+ * @author Jose García
+ */
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "MetadataFileUploads")

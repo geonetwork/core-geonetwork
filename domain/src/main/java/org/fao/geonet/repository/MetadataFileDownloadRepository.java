@@ -4,7 +4,7 @@ import org.fao.geonet.domain.MetadataFileDownload;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
- * Data Access object for accessing {@link org.fao.geonet.domain.MetadataFileUpload} entities.
+ * Data Access object for accessing {@link org.fao.geonet.domain.MetadataFileDownload} entities.
  *
  * @author Jose García
  */

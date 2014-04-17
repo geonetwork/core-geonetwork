@@ -6,11 +6,22 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
 
-
+/**
+ * Implementation for methods in {@link MetadataFileUploadRepositoryCustom}.
+ *
+ * @author Jose García
+ */
 public class MetadataFileUploadRepositoryImpl implements MetadataFileUploadRepositoryCustom {
     @PersistenceContext
     EntityManager _entityManager;
 
+    /**
+     * Returns a {@link org.fao.geonet.domain.MetadataFileUpload} by file name that is not deleted.
+     *
+     * @param metadataId
+     * @param fileName
+     * @return
+     */
     @Override
     public MetadataFileUpload findByMetadataIdAndFileNameNotDeleted(int metadataId, String fileName) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
