@@ -43,7 +43,8 @@
 
   <xsl:template match="dct:references">
     <xsl:copy>
-      <xsl:variable name="value" select="."/>
+      <xsl:variable name="value" select="normalize-space(.)"/>
+
       <xsl:choose>
         <!-- convention: use upload@ prefix in dct:references to identify an uploaded file from metadata editor
                          dct:refereces stores then the URL to download the uploaded file.

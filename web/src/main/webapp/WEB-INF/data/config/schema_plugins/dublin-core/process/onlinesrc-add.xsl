@@ -10,6 +10,7 @@ Stylesheet used to update metadata adding a reference to a parent record.
 
   <xsl:param name="url"/>
 
+
   <xsl:template match="/simpledc">
     <xsl:copy>
       <xsl:copy-of select="@*"/>
@@ -18,7 +19,7 @@ Stylesheet used to update metadata adding a reference to a parent record.
 
       <dct:references>
         <xsl:choose>
-          <xsl:when test="contains($url , 'resources.get') or contains($url, 'file.disclaimer')">
+          <xsl:when test="not(starts-with($url, 'http'))">
             upload@<xsl:value-of select="$url"/>
           </xsl:when>
           <xsl:otherwise>

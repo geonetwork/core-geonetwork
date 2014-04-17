@@ -206,6 +206,7 @@
                mdOtherLanguages: getInputValue('otherLanguages'),
                showValidationErrors: getInputValue('showvalidationerrors'),
                uuid: getInputValue('uuid'),
+               schema: getInputValue('schema'),
                version: getInputValue('version'),
                geoPublisherConfig:
                angular.fromJson(getInputValue('geoPublisherConfig')),
