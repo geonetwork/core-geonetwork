@@ -23,9 +23,10 @@
 package org.fao.geonet.kernel.security;
 
 import jeeves.config.springutil.JeevesAuthenticationDetails;
-import org.fao.geonet.utils.Log;
 
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.security.ldap.LDAPConstants;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +39,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider 
 	implements UserDetailsService {
@@ -65,6 +64,7 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
 			UsernamePasswordAuthenticationToken authentication)
 			throws AuthenticationException {
 		User gnDetails = (User) userDetails;
+				
 		if (authentication.getCredentials() == null) {
 			Log.warning(Log.JEEVES, "Authentication failed: no credentials provided");
 			throw new BadCredentialsException("Authentication failed: no credentials provided");
@@ -76,7 +76,6 @@ public class GeonetworkAuthenticationProvider extends AbstractUserDetailsAuthent
 		}
 	}
 
-	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
 	protected UserDetails retrieveUser(String username,
 			UsernamePasswordAuthenticationToken authentication)

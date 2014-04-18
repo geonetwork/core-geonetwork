@@ -88,7 +88,7 @@ public class Format extends AbstractFormatService {
         String url = gc.getBean(SettingManager.class).getSiteURL(context);
 
         root.addContent (new Element("url").setText(url));
-        String locUrl = url+"/srv/"+context.getLanguage()+"/";
+        String locUrl = url+"/" + context.getNodeId() + "/"+context.getLanguage()+"/";
         root.addContent (new Element("locUrl").setText(locUrl));
         String resourceUrl = locUrl+"/metadata.formatter.resource?"+Params.ID+"="+xslid+"&"+Params.FNAME+"=";
         root.addContent(new Element("resourceUrl").setText(resourceUrl));

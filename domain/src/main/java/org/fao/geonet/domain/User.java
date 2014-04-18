@@ -20,7 +20,7 @@ import java.util.*;
 @Table(name = "Users")
 @Cacheable
 @EntityListeners(value = {UserEntityListenerManager.class})
-@SequenceGenerator(name=User.ID_SEQ_NAME, initialValue=100, allocationSize=1)
+@SequenceGenerator(name = User.ID_SEQ_NAME, initialValue = 100, allocationSize = 1)
 public class User extends GeonetEntity implements UserDetails {
     public static final String NODE_APPLICATION_CONTEXT_KEY = "jeevesNodeApplicationContext_";
     private static final long serialVersionUID = 2589607276443866650L;
@@ -32,11 +32,12 @@ public class User extends GeonetEntity implements UserDetails {
     private String _surname;
     private String _name;
     private Set<String> _email = new HashSet<String>();
-    private Set<Address> _addresses = new HashSet<Address>();
+    private Set<Address> _addresses = new LinkedHashSet<Address>();
     private String _organisation;
     private String _kind;
     private Profile _profile = Profile.RegisteredUser;
     private UserSecurity _security = new UserSecurity();
+    private String _lastLoginDate;
 
     /**
      * Get the userid.   This is a generated value and as such new instances should not have this set as it will simply be ignored
@@ -45,7 +46,7 @@ public class User extends GeonetEntity implements UserDetails {
      * @return the user id
      */
     @Id
-    @GeneratedValue (strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ_NAME)
     public int getId() {
         return _id;
     }
@@ -211,11 +212,14 @@ public class User extends GeonetEntity implements UserDetails {
     Address getPrimaryAddress() {
         Set<Address> addresses = getAddresses();
 
-        if (addresses.isEmpty()) {
-            addresses.add(new Address());
+        final Address addressCopy = new Address();
+        if (!addresses.isEmpty()) {
+            final Address otherAddress = addresses.iterator().next();
+            addressCopy.mergeAddress(otherAddress, true);
+            addressCopy.setId(otherAddress.getId());
         }
 
-        return addresses.iterator().next();
+        return addressCopy;
     }
 
     /**
@@ -305,13 +309,35 @@ public class User extends GeonetEntity implements UserDetails {
         return this;
     }
 
+    /**
+     * Get the last login date of the user.  May be null
+     *
+     * @return the last login date of the user.  May be null
+     */
+    @Nullable
+    public String getLastLoginDate() {
+        return _lastLoginDate;
+    }
+
+    /**
+     * Set the last login date  of the user.  May be null
+     *
+     * @param lastLoginDate the last login date of the user.  May be null
+     * @return this user object
+     */
+    @Nonnull
+    public User setLastLoginDate(@Nullable String lastLoginDate) {
+        this._lastLoginDate = lastLoginDate;
+        return this;
+    }
+
     @Transient
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         ArrayList<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
         final String nodeId = getSecurity().getNodeId();
         if (nodeId != null) {
-            auths.add(new SimpleGrantedAuthority(NODE_APPLICATION_CONTEXT_KEY+nodeId));
+            auths.add(new SimpleGrantedAuthority(NODE_APPLICATION_CONTEXT_KEY + nodeId));
         }
 
         if (_profile != null) {
@@ -422,6 +448,7 @@ public class User extends GeonetEntity implements UserDetails {
         if (!_security.equals(user._security)) return false;
         if (_surname != null ? !_surname.equals(user._surname) : user._surname != null) return false;
         if (_username != null ? !_username.equals(user._username) : user._username != null) return false;
+        if (_lastLoginDate != null ? !_lastLoginDate.equals(user._lastLoginDate) : user._lastLoginDate != null) return false;
 
         return true;
     }
@@ -438,6 +465,7 @@ public class User extends GeonetEntity implements UserDetails {
         result = 31 * result + (_kind != null ? _kind.hashCode() : 0);
         result = 31 * result + (_profile != null ? _profile.hashCode() : 0);
         result = 31 * result + _security.hashCode();
+        result = 31 * result + (_lastLoginDate != null ? _lastLoginDate.hashCode() : 0);
         return result;
     }
 }

@@ -40,7 +40,8 @@
         // Get core statistics for q service
         $http.get('statistics-search@json?service=q')
         .success(function(data) {
-              $scope.statistics.search.mainSearchStatistics.q = data;
+              $scope.statistics.search.mainSearchStatistics.q =
+                  (data === 'null' ? null : data);
             }).error(function(data) {
               // TODO
             });
@@ -48,7 +49,8 @@
         // Get core statistics for csw service
         $http.get('statistics-search@json?service=csw')
         .success(function(data) {
-              $scope.statistics.search.mainSearchStatistics.csw = data;
+              $scope.statistics.search.mainSearchStatistics.csw =
+                  (data === 'null' ? null : data);
             }).error(function(data) {
               // TODO
             });

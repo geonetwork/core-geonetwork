@@ -36,6 +36,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.fao.geonet.domain.SchematronCriteria;
+import org.fao.geonet.domain.SchematronCriteriaGroup;
+import org.fao.geonet.domain.SchematronCriteriaGroupId;
+import org.fao.geonet.domain.SchematronCriteriaType;
+import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
+import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 
@@ -49,6 +55,7 @@ public class MetadataSchema
 {
 	private static final String XSL_FILE_EXTENSION = ".xsl";
     private static final String SCH_FILE_EXTENSION = ".sch";
+    public static final String SCHEMATRON_DIR = "schematron";
     private Map<String,List<String>> hmElements = new HashMap<String,List<String>>();
 	private Map<String,List<List<String>>> hmRestric  = new HashMap<String,List<List<String>>>();
 	private Map<String, MetadataType> hmTypes    = new HashMap<String, MetadataType>();
@@ -67,15 +74,20 @@ public class MetadataSchema
 
 	private List<Element> rootAppInfoElements;
 
+    private SchematronRepository schemaRepo;
+    private SchematronCriteriaGroupRepository criteriaGroupRepository;
+
 	//---------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
 	//---------------------------------------------------------------------------
 
-	MetadataSchema() {
-		schemaName = "UNKNOWN";
-	}
+    MetadataSchema(SchematronRepository schemaRepo, SchematronCriteriaGroupRepository criteriaGroupRepository) {
+        schemaName = "UNKNOWN";
+        this.schemaRepo = schemaRepo;
+        this.criteriaGroupRepository = criteriaGroupRepository;
+    }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -336,8 +348,8 @@ public class MetadataSchema
 
 	public void buildchematronRules(String basePath) {
         String schematronResourceDir = basePath + "WEB-INF" 
-                + File.separator + "classes" + File.separator + "schematron" + File.separator ;
-        String schemaSchematronDir = schemaDir + File.separator + "schematron";
+                + File.separator + "classes" + File.separator + SCHEMATRON_DIR + File.separator ;
+        String schemaSchematronDir = schemaDir + File.separator + SCHEMATRON_DIR;
         String schematronCompilationFile = schematronResourceDir + "iso_svrl_for_xslt2.xsl";
         
         if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
@@ -373,23 +385,54 @@ public class MetadataSchema
             }
         }
     }
-	
-	/**
-	 * Compile and register all schematron rules available for current schema.
-	 * Schematron rules files are in schema schematron directory
-	 * and start with "schematron-rules" prefix.
-	 * 
-	 * @return
-	 */
-	public void loadSchematronRules(String basePath) {
-	    // Compile schema schematron rules
-	    buildchematronRules(basePath);
-	    
-		String saSchemas[] = new File(schemaDir + File.separator + "schematron").list(new SchematronReportRulesFilter());
-		setSchematronRules(saSchemas);
-	}
 
-	/**
+    /**
+     * Compile and register all schematron rules available for current schema.
+     * Schematron rules files are in schema schematron directory
+     * and start with "schematron-rules" prefix.
+     *
+     * @return
+     */
+    public void loadSchematronRules(String basePath) {
+        // Compile schema schematron rules
+        buildchematronRules(basePath);
+
+        String saSchemas[] = new File(schemaDir + File.separator + SCHEMATRON_DIR).list(new SchematronReportRulesFilter());
+
+        if(saSchemas != null) {
+            int displayPriority = 0;
+
+            for(String schematronFileName : saSchemas) {
+                displayPriority++;
+
+                //if schematron not already exists
+                if(schemaRepo.findOneByFileAndSchemaName(schematronFileName, schemaName) == null) {
+                    org.fao.geonet.domain.Schematron schematron = new org.fao.geonet.domain.Schematron();
+                    schematron.setSchemaName(schemaName);
+                    schematron.setFile(schematronFileName);
+                    schematron.setDisplayPriority(displayPriority);
+                    schematron.getLabelTranslations().put(Geonet.DEFAULT_LANGUAGE, schematron.getRuleName());
+                    schemaRepo.saveAndFlush(schematron);
+
+                    final SchematronCriteriaGroup schematronCriteriaGroup = new SchematronCriteriaGroup();
+                    schematronCriteriaGroup.setId(new SchematronCriteriaGroupId("*Generated*", schematron.getId()));
+                    schematronCriteriaGroup.setRequirement(schematron.getDefaultRequirement());
+
+                    SchematronCriteria criteria = new SchematronCriteria();
+                    criteria.setValue("_ignored_");
+                    criteria.setType(SchematronCriteriaType.ALWAYS_ACCEPT);
+
+                    schematronCriteriaGroup.addCriteria(criteria);
+
+                    criteriaGroupRepository.saveAndFlush(schematronCriteriaGroup);
+                }
+            }
+        }
+
+        setSchematronRules(saSchemas);
+    }
+
+    /**
 	 * Schematron rules filename is like "schematron-rules-iso.xsl
 	 * 
 	 */

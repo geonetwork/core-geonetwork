@@ -5,7 +5,6 @@ import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specifications;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.Assert.*;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
-@Transactional
 public class UserGroupRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
@@ -23,8 +21,6 @@ public class UserGroupRepositoryTest extends AbstractSpringDataTest {
     UserRepository _userRepo;
     @Autowired
     GroupRepository _groupRepo;
-
-    AtomicInteger _inc = new AtomicInteger();
 
     @Test
     public void testFindUserIds() {

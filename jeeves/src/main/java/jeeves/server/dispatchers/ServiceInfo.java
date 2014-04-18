@@ -28,12 +28,6 @@ import jeeves.interfaces.Service;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Vector;
 
@@ -218,7 +212,6 @@ public class ServiceInfo {
     }
 
     //--------------------------------------------------------------------------
-    @Transactional(propagation = Propagation.REQUIRED)
     private Element execService(final Service service, final Element params, final ServiceContext context) throws Exception {
         try {
             Element response = service.exec(params, context);
@@ -236,6 +229,10 @@ public class ServiceInfo {
 
             throw e;
         }
+    }
+
+    public Vector<Service> getServices() {
+        return vServices;
     }
 }
 

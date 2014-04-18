@@ -148,6 +148,8 @@ public class GeonetWroModelFactory implements WroModelFactory {
                         }
                     }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             } finally {
                 if (streams != null) {
                     for (IncludesStream stream : streams) {

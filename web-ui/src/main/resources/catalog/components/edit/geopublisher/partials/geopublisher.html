@@ -8,18 +8,21 @@
     <ul class="dropdown-menu" role="menu">
       <li data-ng-repeat="r in resources">
         <a href="" data-ng-click="showPanel(r)">
-          {{r.fileName}}
+          {{r.name}}
         </a>
       </li>
     </ul>
   </div>
+  <div data-gn-need-help="editor_geopublisher"
+       data-icon-only="true"
+       class="pull-right"></div>
 
   <div class="panel panel-default" data-ng-hide="hidden">
     <div class="panel-heading">
-      <span data-translate="" data-translate-values="{layer: '{{fileName}}'}">publishIn</span>
+      <span data-translate="" data-translate-values="{layer: '{{name}}'}">publishIn</span>
 
       <select data-ng-model="nodeId"
-              data-ng-change="checkNode(nodeId)">
+              data-ng-change="selectNode(nodeId)">
         <option data-ng-repeat="node in nodes" value="{{node.id}}">
           {{node.name}}
         </option>
@@ -90,9 +93,4 @@
       <div class="alert alert-info" data-ng-if="statusCode">{{statusCode}}</div>
     </div>
   </div>
-  
-  <div data-ng-if="snippet">
-    <input name="{{snippetRef}}" class="hidden" value="{{snippet}}"/>
-  </div>
-  
 </div>

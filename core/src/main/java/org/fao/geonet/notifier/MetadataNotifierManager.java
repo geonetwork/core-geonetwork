@@ -32,8 +32,7 @@ import org.fao.geonet.repository.Updater;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -45,78 +44,62 @@ import java.util.*;
  * @author jose garcia
  */
 public class MetadataNotifierManager {
+    @Autowired
     private MetadataNotifierClient client = new MetadataNotifierClient();
-
-    private List<MetadataNotifier> notifierServices = new ArrayList<MetadataNotifier>();
-    private boolean loadNotifierServices = true;
-
-
-    public void setLoadNotifierServices(boolean loadNotifierServices) {
-        this.loadNotifierServices = loadNotifierServices;
-    }
+    @Autowired
+    private MetadataNotificationRepository _metadataNotificationRepository;
+    @Autowired
+    private MetadataNotifierRepository _metadataNotifierRepository;
+    @Autowired
+    private MetadataRepository _metadataRepository;
 
     /**
      * Updates all unregistered metadata.
      *
      * @throws MetadataNotifierException
      */
-    public void updateMetadataBatch(ServiceContext context) throws MetadataNotifierException {
+    public void updateMetadataBatch() throws MetadataNotifierException {
         if (Log.isDebugEnabled("MetadataNotifierManager"))
             Log.debug("MetadataNotifierManager", "updateMetadata unregistered");
-        final ApplicationContext applicationContext = context.getApplicationContext();
 
-        loadNotifiers(context);
-
-        for (MetadataNotifier service : notifierServices) {
-            int notifierId = service.getId();
-            String notifierUrl = service.getUrl();
-            String username = service.getUsername();
-            char[] password = service.getPassword();
+        for (MetadataNotifier notifier : loadNotifiers()) {
 
             try {
-                final Map<Metadata, MetadataNotification> unregisteredMetadata = getUnnotifiedMetadata(applicationContext, notifierId,
+                final Map<Metadata, MetadataNotification> unregisteredMetadata = getUnnotifiedMetadata(notifier.getId(),
                         MetadataNotificationAction.UPDATE);
 
                 // process metadata
                 for (Map.Entry<Metadata, MetadataNotification> entry : unregisteredMetadata.entrySet()) {
                     Metadata metadata = entry.getKey();
 
-                    int id = metadata.getId();
-                    String uuid = metadata.getUuid();
-                    String metadataString = metadata.getData();
-
                     // Update/insert notification
-                    client.webUpdate(notifierUrl, username, String.valueOf(password), metadataString, uuid, context);
+                    client.webUpdate(notifier, metadata.getData(), metadata.getUuid());
 
                     // mark metadata as notified for current notifier service
-                    setMetadataNotified(context, id, notifierId, false);
-
+                    setMetadataNotified(metadata.getId(), notifier, false);
                 }
 
-                Map<Metadata, MetadataNotification> unregisteredMetadataToDelete = getUnnotifiedMetadata(applicationContext,
-                        notifierId, MetadataNotificationAction.DELETE);
+                Map<Metadata, MetadataNotification> unregisteredMetadataToDelete = getUnnotifiedMetadata(notifier.getId(), MetadataNotificationAction.DELETE);
 
                 // process metadata
-                for (Map.Entry<Metadata, MetadataNotification> entry : unregisteredMetadata.entrySet()) {
+                for (Map.Entry<Metadata, MetadataNotification> entry : unregisteredMetadataToDelete.entrySet()) {
                     Metadata metadata = entry.getKey();
 
-                    int id = metadata.getId();
                     String uuid = metadata.getUuid();
 
                     // Delete notification
-                    client.webDelete(notifierUrl, username, String.valueOf(password), uuid, context);
+                    client.webDelete(notifier, uuid);
 
                     // mark metadata as notified for current notifier service
-                    setMetadataNotified(context, id, notifierId, true);
+                    setMetadataNotified(metadata.getId(), notifier, true);
                 }
 
             } catch (Exception ex) {
                 Log.error("MetadataNotifierManager", "updateMetadataBatch ERROR: " + ex.getMessage());
                 ex.printStackTrace();
             }
-
         }
-    }
+     }
 
     /**
      * Updates/inserts a metadata record.
@@ -128,7 +111,7 @@ public class MetadataNotifierManager {
      */
     public void updateMetadata(Element ISO19139, String id, String uuid, ServiceContext context) throws MetadataNotifierException {
         Timer t = new Timer();
-        t.schedule(new UpdateTask(ISO19139, id, uuid, context), 10);
+        t.schedule(new UpdateTask(ISO19139, id, uuid), 10);
     }
 
     /**
@@ -140,23 +123,17 @@ public class MetadataNotifierManager {
      */
     public void deleteMetadata(String id, String uuid, ServiceContext context) throws MetadataNotifierException {
         Timer t = new Timer();
-        t.schedule(new DeleteTask(id, uuid, context), 10);
+        t.schedule(new DeleteTask(id, uuid), 10);
     }
 
 
-    private void loadNotifiers(ServiceContext context) throws MetadataNotifierException {
-        if (loadNotifierServices) {
+    private List<MetadataNotifier> loadNotifiers() throws MetadataNotifierException {
             try {
-                final MetadataNotifierRepository notifierRepository = context.getBean(MetadataNotifierRepository.class);
-
-                this.notifierServices = notifierRepository.findAllByEnabled(true);
-                loadNotifierServices = false;
+                return _metadataNotifierRepository.findAllByEnabled(true);
             } catch (Exception ex) {
-                Log.error("MetadataNotifierManager", "loadNotifiers: " + ex.getMessage());
-                ex.printStackTrace();
+                Log.error("MetadataNotifierManager", "loadNotifiers: " + ex.getMessage(), ex);
                 throw new MetadataNotifierException(ex.getMessage());
             }
-        }
     }
 
     @SuppressWarnings("serial")
@@ -167,14 +144,12 @@ public class MetadataNotifierManager {
     }
 
     class UpdateTask extends TimerTask {
-        private ServiceContext context;
         private int metadataId;
         private Element ISO19139;
         private String uuid;
 
-        UpdateTask(Element ISO19139, String metadatId, String uuid, ServiceContext context) {
-            this.context = context;
-            this.metadataId = Integer.valueOf(metadatId);
+        UpdateTask(Element ISO19139, String metadataId, String uuid) {
+            this.metadataId = Integer.valueOf(metadataId);
             this.uuid = uuid;
             this.ISO19139 = ISO19139;
         }
@@ -186,36 +161,32 @@ public class MetadataNotifierManager {
                     Log.debug("MetadataNotifierManager", "updateMetadata before (uuid): " + uuid);
                 }
 
-                loadNotifiers(context);
 
-                for (MetadataNotifier service : notifierServices) {
-                    int notifierId = service.getId();
-                    String notifierUrl = service.getUrl();
-                    String username = service.getUsername();
-                    String password = String.valueOf(service.getPassword());
+
+                for (MetadataNotifier service : loadNotifiers()) {
 
                     // Catch individual errors
                     try {
-                        client.webUpdate(notifierUrl, username, password, metadataString, uuid, context);
+                        client.webUpdate(service, metadataString, uuid);
 
                         if (Log.isDebugEnabled("MetadataNotifierManager")) {
                             Log.debug("MetadataNotifierManager", "updateMetadata (uuid): " + uuid);
                         }
 
                         // mark metadata as notified for current notifier service
-                        setMetadataNotified(context, metadataId, notifierId, false);
+                        setMetadataNotified(metadataId, service, false);
 
                     } catch (Exception ex) {
                         Log.error("MetadataNotifierManager", "updateMetadata ERROR (uuid): " + uuid + "notifier url "
-                                                             + notifierUrl + " " + ex.getMessage());
+                                                             + service.getUrl()+ " " + ex.getMessage());
                         ex.printStackTrace();
 
                         // mark metadata as not notified for current notifier service
                         try {
-                            setMetadataNotifiedError(context, metadataId, notifierId, false, ex.getMessage());
+                            setMetadataNotifiedError(metadataId, service, false, ex.getMessage());
                         } catch (Exception ex2) {
                             Log.error("MetadataNotifierManager", "updateMetadata ERROR (uuid): " + uuid + "notifier url " +
-                                                                 notifierUrl + " " + ex2.getMessage());
+                                                                 service.getUrl() + " " + ex2.getMessage());
                         }
                     }
 
@@ -228,21 +199,17 @@ public class MetadataNotifierManager {
 
 
     class DeleteTask extends TimerTask {
-        private ServiceContext context;
         private int metadataId;
         private String uuid;
 
-        DeleteTask(String metadataId, String uuid, ServiceContext context) {
-            this.context = context;
+        DeleteTask(String metadataId, String uuid) {
             this.metadataId = Integer.valueOf(metadataId);
             this.uuid = uuid;
         }
 
         public void run() {
             try {
-                loadNotifiers(context);
-
-                for (MetadataNotifier service : notifierServices) {
+                for (MetadataNotifier service : loadNotifiers()) {
                     int notifierId = service.getId();
                     String notifierUrl = service.getUrl();
                     String username = service.getUsername();
@@ -252,7 +219,7 @@ public class MetadataNotifierManager {
                         if (Log.isDebugEnabled("MetadataNotifierManager")) {
                             Log.debug("MetadataNotifierManager", "deleteMetadata before (uuid): " + uuid);
                         }
-                        client.webDelete(notifierUrl, username, password, uuid, context);
+                        client.webDelete(service, uuid);
                         if (Log.isDebugEnabled("MetadataNotifierManager")) {
                             Log.debug("MetadataNotifierManager", "deleteMetadata (uuid): " + uuid);
                         }
@@ -260,7 +227,7 @@ public class MetadataNotifierManager {
                         System.out.println("deleteMetadata (id): " + metadataId + " notifier id: " + notifierId);
 
                         // mark metadata as notified for current notifier service
-                        setMetadataNotified(context, metadataId, notifierId, true);
+                        setMetadataNotified(metadataId, service, true);
                     } catch (Exception ex) {
                         System.out.println("deleteMetadata ERROR:" + ex.getMessage());
 
@@ -270,7 +237,7 @@ public class MetadataNotifierManager {
 
                         // mark metadata as not notified for current notifier service
                         try {
-                            setMetadataNotifiedError(context, metadataId, notifierId, true, ex.getMessage());
+                            setMetadataNotifiedError(metadataId, service, true, ex.getMessage());
                         } catch (Exception ex2) {
                             Log.error("MetadataNotifierManager", "updateMetadata ERROR (uuid): " + uuid + "notifier url " +
                                                                  notifierUrl + " " + ex2.getMessage());
@@ -292,15 +259,13 @@ public class MetadataNotifierManager {
      * @return
      * @throws Exception
      */
-    private Map<Metadata, MetadataNotification> getUnnotifiedMetadata(ApplicationContext context, int notifierId,
+    private Map<Metadata, MetadataNotification> getUnnotifiedMetadata(int notifierId,
                                                                       MetadataNotificationAction... actions) throws Exception {
         if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
             Log.debug(Geonet.DATA_MANAGER, "getUnnotifiedMetadata start");
         }
 
-        MetadataNotificationRepository metadataNotifierRepository = context.getBean(MetadataNotificationRepository.class);
-        List<MetadataNotification> unNotified = metadataNotifierRepository.findAllNotNotifiedForNotifier(Integer.valueOf(notifierId),
-                actions);
+        List<MetadataNotification> unNotified = _metadataNotificationRepository.findAllNotNotifiedForNotifier(notifierId, actions);
 
         Map<Integer, MetadataNotification> idToNotification = new HashMap<Integer, MetadataNotification>();
         for (MetadataNotification metadataNotification : unNotified) {
@@ -308,8 +273,7 @@ public class MetadataNotifierManager {
 
         }
 
-        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-        final Iterable<Metadata> allMetadata = metadataRepository.findAll(idToNotification.keySet());
+        final Iterable<Metadata> allMetadata = _metadataRepository.findAll(idToNotification.keySet());
         Map<Metadata, MetadataNotification> notificationMap = new HashMap<Metadata, MetadataNotification>();
 
         for (Metadata metadata : allMetadata) {
@@ -325,29 +289,28 @@ public class MetadataNotifierManager {
     /**
      * Marks a metadata record as notified for a notifier service.
      *
-     * @param metadataId         Metadata identifier
-     * @param notifierId         Notifier service identifier
      * @param deleteNotification Indicates if the notification was a delete action
      * @throws Exception
      */
-    private void setMetadataNotified(ServiceContext context, int metadataId, int notifierId,
+    private void setMetadataNotified(int metadataId, MetadataNotifier notifier,
                                      boolean deleteNotification) throws Exception {
 
-        final MetadataNotificationRepository notificationRepository = context.getBean(MetadataNotificationRepository.class);
 
-        final MetadataNotificationId notificationId = new MetadataNotificationId().setMetadataId(metadataId).setNotifierId(notifierId);
+        final MetadataNotificationId notificationId = new MetadataNotificationId().
+                setMetadataId(metadataId).
+                setNotifierId(notifier.getId());
         if (deleteNotification) {
-            MetadataNotification notification = notificationRepository.findOne(notificationId);
+            _metadataNotificationRepository.delete(notificationId);
+        } else {
+            MetadataNotification notification = _metadataNotificationRepository.findOne(notificationId);
             notification.setNotified(true);
             notification.setAction(MetadataNotificationAction.UPDATE);
-            notificationRepository.save(notification);
-        } else {
-            notificationRepository.delete(notificationId);
+            _metadataNotificationRepository.save(notification);
         }
 
         if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-            Log.debug(Geonet.DATA_MANAGER, "setMetadataNotified finished for metadata with id " + metadataId + "and notitifer with id "
-                                           + notifierId);
+            Log.debug(Geonet.DATA_MANAGER, "setMetadataNotified finished for metadata with id " + metadataId + "and notifier with id "
+                                           + notifier.getId());
         }
     }
 
@@ -355,19 +318,17 @@ public class MetadataNotifierManager {
      * Marks a metadata record as notified for a notifier service.
      *
      *
-     * @param context
      * @param metadataId Metadata identifier
-     * @param notifierId Notifier service identifier
      * @throws Exception
      */
-    private void setMetadataNotifiedError(final ServiceContext context, final int metadataId, final int notifierId,
+    private void setMetadataNotifiedError(final int metadataId, final MetadataNotifier notifier,
                                           final boolean deleteNotification, final String error) throws Exception {
         if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
             Log.debug(Geonet.DATA_MANAGER, "setMetadataNotifiedError");
         }
         try {
-            MetadataNotificationId id = new MetadataNotificationId().setMetadataId(metadataId).setNotifierId(notifierId);
-            context.getBean(MetadataNotificationRepository.class).update(id, new Updater<MetadataNotification>() {
+            MetadataNotificationId id = new MetadataNotificationId().setMetadataId(metadataId).setNotifierId(notifier.getId());
+            _metadataNotificationRepository.update(id, new Updater<MetadataNotification>() {
                 @Override
                 public void apply(@Nonnull MetadataNotification entity) {
                     entity.setErrorMessage(error);
@@ -382,7 +343,7 @@ public class MetadataNotifierManager {
 
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
                 Log.debug(Geonet.DATA_MANAGER, "setMetadataNotifiedError finished for metadata with id " + metadataId + "and notitifer " +
-                                               "with id " + notifierId);
+                                               "with id " + notifier.getId());
         } catch (Exception ex) {
             ex.printStackTrace();
             throw ex;

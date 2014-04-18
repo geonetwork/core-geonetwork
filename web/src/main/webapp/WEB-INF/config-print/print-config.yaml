@@ -1,0 +1,116 @@
+ #===========================================================================
+# allowed DPIs
+#===========================================================================
+dpis:
+  - 600
+  - 254
+  - 190
+  - 127
+
+#===========================================================================
+# the allowed scales
+#===========================================================================
+scales:
+  - 5000
+  - 10000
+  - 25000
+  - 50000
+  - 100000
+  - 200000
+  - 500000
+  - 1000000
+  - 2000000
+  - 4000000
+  - 40000000
+  - 100000000
+  - 140000000
+
+formats:
+  - pdf
+  - png
+  - jpeg
+
+#===========================================================================
+# the list of allowed hosts
+#===========================================================================
+hosts:
+  - !localMatch
+    dummy: true
+ 
+  - !ipMatch
+    host: 127.0.0.1
+    # Allow to all hosts
+    mask: 0.0.0.0
+   
+layouts:
+  #===========================================================================
+  Thumbnail:
+    mainPage:
+      rotation: false
+      pageSize: LEGAL
+      landscape: true
+      backgroundPdf: '${configDir}/template-thumbnail.pdf'
+      items:
+        - !map
+          spacingAfter: 0
+          width: 1008
+          height: 612
+          absoluteX: 0
+          absoluteY: 612
+  #===========================================================================
+  A4 portrait:
+    mainPage:
+      rotation: true
+      pageSize: A4
+      backgroundPdf: '${configDir}/template.pdf'
+      header:
+        height: 50
+        items:
+          - !text
+            font: Helvetica
+            fontSize: 30
+            align: right
+  #            text: '${mapTitle}'
+      items:
+        - !map
+          spacingAfter: 30
+          width: 480
+          height: 380
+          absoluteX:58
+          absoluteY:707
+        - !columns
+          absoluteX: 57
+          absoluteY: 305
+          width: 160
+          items:
+            - !scalebar
+              align: left
+              maxSize: 160
+              type: 'bar sub'
+              intervals: 5
+        - !columns
+          absoluteX: 515
+          absoluteY: 360
+          width: 30
+          items:
+            - !image
+              maxWidth: 30
+              maxHeight: 30
+              url: 'file://${configDir}/Arrow_North_CFCF.svg'
+              rotation: '${rotation}'
+        - !columns
+          absoluteX: 57
+          absoluteY: 270
+          width: 300
+          items:
+            - !text
+                text: '${comment}'
+        - !columns
+          absoluteX: 57
+          absoluteY: 70
+          width: 300
+          items:
+            - !text
+              text: '${now yyyy} GeoNetwork opensource'
+              fontEncoding: Cp1252
+              fontSize: 10

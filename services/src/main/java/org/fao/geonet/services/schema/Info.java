@@ -33,6 +33,7 @@ import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 //=============================================================================
@@ -203,9 +204,14 @@ public class Info implements Service {
             String currContext = currElem.getAttributeValue("context");
 
             currName = findNamespace(currName, scm, schema);
-            
+
             if (currName == null) {
-                throw new OperationAbortedEx("No namespace found for currName  ");
+                Log.warning(Geonet.SCHEMA_MANAGER, "Namespace prefix for element " +
+                        currElem.getAttributeValue("name") +
+                        " not found in " + schema + " schema namespaces." +
+                        "Check the element namespace or remove it " +
+                        "from the labels.xml file.");
+                continue;
             }
 
             if(!currName.equals(name)) {

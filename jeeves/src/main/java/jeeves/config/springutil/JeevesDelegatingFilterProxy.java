@@ -81,12 +81,15 @@ public class JeevesDelegatingFilterProxy extends GenericFilterBean {
 
     private String extractNodeIdFromUrl(String referer) {
         final String[] split = referer.split(getServletContext().getContextPath(), 2);
-
-        final int nextSlash = split[1].indexOf('/', 1);
-        if (nextSlash > -1 ) {
-            return split[1].substring(1, nextSlash);
-        } else {
+        if (split.length == 1) {    // Referer does not contains node information
             return null;
+        } else {
+            final int nextSlash = split[1].indexOf('/', 1);
+            if (nextSlash > -1 ) {
+                return split[1].substring(1, nextSlash);
+            } else {
+                return null;
+            }
         }
     }
 

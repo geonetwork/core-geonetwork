@@ -26,7 +26,7 @@
         legacy UI 
         <statusSendEmail>Change log message: %s\n\nRecords are available from the following URL:\n %s/main.search?_status=%s&amp;_statusChangeDate=%s</statusSendEmail>
         -->
-	<statusSendEmail>Change log message: %s\r\n\r\nRecords are available from the following URL:\r\n %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search</statusSendEmail>
+	<statusSendEmail>Change log message: %s\r\n\r\nMetadatas concerned by the change are the following:\r\n%s\r\nRecords are available from the following URL:\r\n %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search</statusSendEmail>
 
 	<otherValue>Other:</otherValue>
 	<warning>Warning</warning>
@@ -832,6 +832,7 @@
 	<Reviewer>Przeglądarka zawartości</Reviewer>
 	<rss>Otwórz RSS feed</rss>
 	<rtitle>Tytuł</rtitle>
+        <altTitle>Alternate title</altTitle>
 	<save>Zapisz</save>
 	<saveAndClose>Zapisz i zamknij</saveAndClose>
 	<saveAndValidate>Sprawdź</saveAndValidate>
@@ -1209,11 +1210,12 @@
 		<upload>Załaduj tezaurus</upload>
 	</thesaurus>
 	<searchhelp>
-		<searchAllText>Wprowadź dowolny tekst tutaj</searchAllText>
-		<rtitle>Wprowadź tytuł tutaj</rtitle>
-		<abstract>Wprowadź streszczenie tutaj</abstract>
-		<keywords>Pobierz słowa kluczowe z istniejącego rekordu metadanych</keywords>
-		<thesaurus>Pobierz słowa kluczowe z tezaurusa</thesaurus>
+            <altTitle>Enter alternate title here</altTitle>
+            <searchAllText>Wprowadź dowolny tekst tutaj</searchAllText>
+            <rtitle>Wprowadź tytuł tutaj</rtitle>
+            <abstract>Wprowadź streszczenie tutaj</abstract>
+            <keywords>Pobierz słowa kluczowe z istniejącego rekordu metadanych</keywords>
+            <thesaurus>Pobierz słowa kluczowe z tezaurusa</thesaurus>
 	</searchhelp>
 
 	<inspire>

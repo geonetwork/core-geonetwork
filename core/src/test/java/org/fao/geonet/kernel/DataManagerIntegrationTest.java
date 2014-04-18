@@ -1,20 +1,26 @@
 package org.fao.geonet.kernel;
 
 import static org.junit.Assert.*;
+import static org.springframework.data.jpa.domain.Specifications.where;
+
+import com.google.common.base.Optional;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.kernel.search.IndexAndTaxonomy;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 
+import javax.annotation.Nonnull;
 import java.io.ByteArrayInputStream;
 import java.util.UUID;
 
@@ -33,6 +39,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
 
     @Test
     public void testDeleteMetadata() throws Exception {
+        int count = (int) _metadataRepository.count();
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
         final UserSession userSession = serviceContext.getUserSession();
@@ -41,11 +48,11 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
                 "" + ReservedGroup.all.getId(), "sourceid", "n", "doctype", null, new ISODate().getDateAndTime(), new ISODate().getDateAndTime(),
                 false, false);
 
-        assertEquals(1, _metadataRepository.count());
+        assertEquals(count + 1, _metadataRepository.count());
 
         _dataManager.deleteMetadata(serviceContext, mdId);
 
-        assertEquals(0, _metadataRepository.count());
+        assertEquals(count, _metadataRepository.count());
     }
 
     @Test
@@ -87,10 +94,7 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
 
-        final Element sampleMetadataXml = super.getSampleMetadataXml();
-        final ByteArrayInputStream stream = new ByteArrayInputStream(Xml.getString(sampleMetadataXml).getBytes("UTF-8"));
-        final int metadataId = importMetadataXML(serviceContext, "uuidSetStatus", stream, MetadataType.METADATA,
-                ReservedGroup.all.getId(), Params.GENERATE_UUID);
+        final int metadataId = importMetadata(this, serviceContext);
 
         final MetadataStatus status = _dataManager.getStatus(metadataId);
 
@@ -108,8 +112,99 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         assertEquals(metadataId, loadedStatus.getId().getMetadataId());
         assertEquals(0, loadedStatus.getId().getStatusId());
         assertEquals(serviceContext.getUserSession().getUserIdAsInt(), loadedStatus.getId().getUserId());
-
-
-
     }
+
+    @Test
+    public void testSetHarvesterData() throws Exception {
+        final ServiceContext serviceContext = createServiceContext();
+        loginAsAdmin(serviceContext);
+
+        final int metadataId = importMetadata(this, serviceContext);
+
+        doSetHarvesterDataTest(_metadataRepository, _dataManager, metadataId);
+    }
+
+    static void doSetHarvesterDataTest(MetadataRepository metadataRepository, DataManager dataManager, int metadataId) throws Exception {
+        Metadata metadata = metadataRepository.findOne(metadataId);
+
+        assertNull(metadata.getHarvestInfo().getUuid());
+        assertNull(metadata.getHarvestInfo().getUri());
+        assertFalse(metadata.getHarvestInfo().isHarvested());
+
+        final String harvesterUuid = "harvesterUuid";
+        dataManager.setHarvestedExt(metadataId, harvesterUuid);
+        metadata = metadataRepository.findOne(metadataId);
+        assertEquals(harvesterUuid, metadata.getHarvestInfo().getUuid());
+        assertTrue(metadata.getHarvestInfo().isHarvested());
+        assertNull(metadata.getHarvestInfo().getUri());
+
+
+        final String newSource = "newSource";
+        // check that another update doesn't break the last setting
+        // there used to a bug where this was the case because entity manager wasn't being flushed
+        metadataRepository.update(metadataId, new Updater<Metadata>() {
+            @Override
+            public void apply(@Nonnull Metadata entity) {
+                entity.getSourceInfo().setSourceId(newSource);
+            }
+        });
+
+        assertEquals(newSource, metadata.getSourceInfo().getSourceId());
+        assertEquals(harvesterUuid, metadata.getHarvestInfo().getUuid());
+        assertTrue(metadata.getHarvestInfo().isHarvested());
+        assertNull(metadata.getHarvestInfo().getUri());
+
+        final String harvesterUuid2 = "harvesterUuid2";
+        final String harvesterUri = "harvesterUri";
+        dataManager.setHarvestedExt(metadataId, harvesterUuid2, Optional.of(harvesterUri));
+        metadata = metadataRepository.findOne(metadataId);
+        assertEquals(harvesterUuid2, metadata.getHarvestInfo().getUuid());
+        assertTrue(metadata.getHarvestInfo().isHarvested());
+        assertEquals(harvesterUri, metadata.getHarvestInfo().getUri());
+
+        dataManager.setHarvestedExt(metadataId, null);
+        metadata = metadataRepository.findOne(metadataId);
+        assertNull(metadata.getHarvestInfo().getUuid());
+        assertNull(metadata.getHarvestInfo().getUri());
+        assertFalse(metadata.getHarvestInfo().isHarvested());
+    }
+
+    @Test
+    public void testDeleteBatchMetadata() throws Exception {
+        ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+
+        final SearchManager searchManager = context.getBean(SearchManager.class);
+        final long startMdCount = _metadataRepository.count();
+        IndexAndTaxonomy indexReader = searchManager.getNewIndexReader("eng");
+        final int startIndexDocs = indexReader.indexReader.numDocs();
+        indexReader.close();
+
+        int md1 = importMetadata(this, context);
+        int md2 = importMetadata(this, context);
+
+        indexReader = searchManager.getNewIndexReader("eng");
+
+        assertEquals(startIndexDocs + 2, indexReader.indexReader.numDocs());
+        assertEquals(startMdCount + 2, _metadataRepository.count());
+
+        indexReader.close();
+
+        Specification<Metadata> spec = where(MetadataSpecs.hasMetadataId(md1)).or(MetadataSpecs.hasMetadataId(md2));
+        _dataManager.batchDeleteMetadataAndUpdateIndex(spec);
+
+        assertEquals(startMdCount, _metadataRepository.count());
+
+        indexReader = searchManager.getNewIndexReader("eng");
+        assertEquals(startIndexDocs, indexReader.indexReader.numDocs());
+        indexReader.indexReader.releaseToNRTManager();
+    }
+
+    static int importMetadata(AbstractCoreIntegrationTest test, ServiceContext serviceContext) throws Exception {
+        final Element sampleMetadataXml = test.getSampleMetadataXml();
+        final ByteArrayInputStream stream = new ByteArrayInputStream(Xml.getString(sampleMetadataXml).getBytes("UTF-8"));
+        return test.importMetadataXML(serviceContext, "uuid", stream, MetadataType.METADATA,
+                ReservedGroup.all.getId(), Params.GENERATE_UUID);
+    }
+
 }

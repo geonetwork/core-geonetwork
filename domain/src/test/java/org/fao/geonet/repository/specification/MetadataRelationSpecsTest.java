@@ -8,7 +8,6 @@ import org.fao.geonet.repository.MetadataRelationRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -24,14 +23,11 @@ import static org.junit.Assert.assertEquals;
  * Date: 9/30/13
  * Time: 7:58 PM
  */
-@Transactional
 public class MetadataRelationSpecsTest extends AbstractSpringDataTest {
     @Autowired
     MetadataRelationRepository _repo;
     @Autowired
     MetadataRepository _metadataRepo;
-
-    AtomicInteger _inc = new AtomicInteger();
 
     @Test
     public void testHasMetadataId() throws Exception {

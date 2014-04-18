@@ -48,11 +48,12 @@
     "records": " fiche(s)",
     
     "adminConsole": "Console d'admin",
+    "editorBoard": "Ajouter des données, services ou cartes",
     "needAnAccount": "Besoin d'un compte?",
     "needAnAccountInfo": "Enregistrez-vous, cela ne prend qu'une minute.",
     "createAnAccount": "Créer un compte",
     "forgetDetails": "Vous avez oublié vos données?",
-    "forgetDetailsInfo": "Utiliser le service de récupration de mot de passe afin de le réinitialiser.",
+    "forgetDetailsInfo": "Utiliser le service de récupération de mot de passe afin de le réinitialiser.",
     "recoverPassword": "Vous avez oublié votre mot de passe",
     "userPreferences": "Préférences utilisateur",
     "userDetails": "Données utilisateur",
@@ -91,7 +92,7 @@
     "selectAll": "Tous",
     "selectNone": "Aucun",
     
-    "noRecordFound": "Pas d'enregistrement trouvé",
+    "noRecordFound": "Pas d'enregistrement trouvé.",
     "map": "Carte",
     "dataset": "Données",
     "service": "Service",
@@ -129,6 +130,7 @@
     "msgNoUserInfo": "Ne peut retrouver les informations utilisateurs",
 
     "toggleScrollSpy": "Afficher/cacher la navigation défilante",
+    "scrollTop": "Retourner en haut de la page",
     "passwordUpdateError": "Erreur lors de la mise à jour du mot de passe",
     "BadParameterEx": "Paramètre incorrect",
     "send": "Envoyer",
@@ -136,5 +138,8 @@
     "comments": "Commentaire",
     "sendAComment": "Envoyer nous un commentaire",
     "feedbackNotEnable": "L'envoi de commentaire n'est pas activé.",
-    "feebackSent": "Votre message a été envoyé au gestionnaire du catalogue."
+    "feebackSent": "Votre message a été envoyé au gestionnaire du catalogue.",
+
+    "url": "URL",
+    "upload": "Téléchargement"
 }

@@ -111,7 +111,9 @@ public class Get implements Service
         List<Integer> displayOrderList = new ArrayList<Integer>();
         for (Element record : responseRecords) {
             String displayOrder = record.getChildText("displayorder");
-            if (displayOrder == null || displayOrder.equals("")) {
+            if (displayOrder == null ||
+                    displayOrder.equals("") ||
+                    displayOrder.equals("null")) {
                 displayOrder = "-1";
             }
             Integer displayOrderI = Integer.parseInt(displayOrder);

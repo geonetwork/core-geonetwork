@@ -458,6 +458,10 @@
                     <Field name="protocol" string="{string($protocol)}" store="true" index="true"/>
                 </xsl:if>
 
+        <xsl:if test="string($title)!='' and string($desc)!='' and not(contains($linkage,$download_check))">
+          <Field name="linkage_name_des" string="{string(concat($title, ':::', $desc))}" store="true" index="true"/>
+        </xsl:if>
+
                 <xsl:if test="normalize-space($mimetype)!=''">
 					<Field name="mimetype" string="{$mimetype}" store="true" index="true"/>
 				</xsl:if>
@@ -551,21 +555,13 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 		<!-- === General stuff === -->		
 		<!-- Metadata type  -->
-		<xsl:choose>
-			<xsl:when test="gmd:hierarchyLevel">
-				<xsl:for-each select="gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue">
-					<Field name="type" string="{string(.)}" store="true" index="true"/>
-				</xsl:for-each>
-			</xsl:when>
-			<xsl:otherwise>
-				<!-- If not defined, record is a dataset -->
-				<Field name="type" string="dataset" store="true" index="true"/>
-			</xsl:otherwise>
-		</xsl:choose>
-		
-		
+
 		<!-- Metadata on maps -->
-		<xsl:variable name="isDataset" select="count(gmd:hierarchyLevel[gmd:MD_ScopeCode/@codeListValue='dataset']) > 0"/>
+    <xsl:variable name="isDataset"
+                  select="
+                  count(gmd:hierarchyLevel[gmd:MD_ScopeCode/@codeListValue='dataset']) > 0 or
+                  count(gmd:hierarchyLevel) = 0"/>
+
 		<xsl:variable name="isMapDigital" select="count(gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/
 			gmd:presentationForm[gmd:CI_PresentationFormCode/@codeListValue = 'mapDigital']) > 0"/>
 		<xsl:variable name="isStatic" select="count(gmd:distributionInfo/gmd:MD_Distribution/
@@ -574,19 +570,30 @@
 			gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString[contains(., 'OGC:WMC') or contains(., 'OGC:OWS-C')]) > 0"/>
 		<xsl:variable name="isPublishedWithWMCProtocol" select="count(gmd:distributionInfo/gmd:MD_Distribution/
 			gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:protocol[starts-with(gco:CharacterString, 'OGC:WMC')]) > 0"/>
-		
-		<xsl:if test="$isDataset and $isMapDigital and ($isStatic or $isInteractive or $isPublishedWithWMCProtocol)">
-			<Field name="type" string="map" store="true" index="true"/>
-			<xsl:choose>
-				<xsl:when test="$isStatic">
-					<Field name="type" string="staticMap" store="true" index="true"/>
-				</xsl:when>
-				<xsl:when test="$isInteractive or $isPublishedWithWMCProtocol">
-					<Field name="type" string="interactiveMap" store="true" index="true"/>
-				</xsl:when>
-			</xsl:choose>
-		</xsl:if>
-		
+
+    <xsl:choose>
+      <xsl:when test="$isDataset and $isMapDigital and
+        ($isStatic or $isInteractive or $isPublishedWithWMCProtocol)">
+        <Field name="type" string="map" store="true" index="true"/>
+        <xsl:choose>
+          <xsl:when test="$isStatic">
+            <Field name="type" string="staticMap" store="true" index="true"/>
+          </xsl:when>
+          <xsl:when test="$isInteractive or $isPublishedWithWMCProtocol">
+            <Field name="type" string="interactiveMap" store="true" index="true"/>
+          </xsl:when>
+        </xsl:choose>
+      </xsl:when>
+      <xsl:when test="$isDataset">
+        <Field name="type" string="dataset" store="true" index="true"/>
+      </xsl:when>
+      <xsl:when test="gmd:hierarchyLevel">
+        <xsl:for-each select="gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue[.!='']">
+          <Field name="type" string="{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
+      </xsl:when>
+    </xsl:choose>
+
 
 		<xsl:choose>
 			<!-- Check if metadata is a service metadata record -->
@@ -626,8 +633,8 @@
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
-		<xsl:for-each select="gmd:dateStamp">
-			<Field name="changeDate" string="{string(gco:DateTime|gco:Date)}" store="true" index="true"/>
+		<xsl:for-each select="gmd:dateStamp/*">
+			<Field name="changeDate" string="{string(.)}" store="true" index="true"/>
 		</xsl:for-each>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

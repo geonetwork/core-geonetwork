@@ -122,7 +122,11 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             iconCls: 'md-mn-copy',
             handler: function(){
                 var id = this.record.get('id');
+              if (GeoNetwork.Settings.hideAngularEditor === true) {
+                GeoNetwork.editor.EditorTools.showNewMetadataWindow(this, id, OpenLayers.i18n('duplicate'), false);
+              } else {
                 catalogue.metadataEdit2(id, true, null, false, 'n', null);
+              }
             },
             scope: this
         });
@@ -131,7 +135,11 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             iconCls: 'childIcon',
             handler: function(){
                 var id = this.record.get('id');
+              if (GeoNetwork.Settings.hideAngularEditor === true) {
+                GeoNetwork.editor.EditorTools.showNewMetadataWindow(this, id, OpenLayers.i18n('createChild'), true);
+              } else {
                 catalogue.metadataEdit2(id, true, null, true, 'n', null);
+              }
             },
             scope: this
         });

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <schematron.title>ISO Validation Rules</schematron.title>
     <M6>Attribut darf nicht leer sein</M6>
     <M7>Bedingungen für CRS Attribute</M7>
     <M8>[ISOFTDS19139:2005-TableA1-Row24] - Name, Organisation oder Position ist obligatorisch.</M8>
@@ -59,5 +60,24 @@
     <alert.M29><div>Angebe eines Shortnames ist obligatorisch ausser wenn Datentyp = CodelistElement</div></alert.M29>
     <alert.M30><div>Kontrollpunktbeschreibung obligatorisch wenn unter "Kontrollpunktverfügbarkeit" mit Ja geantwortet wird</div></alert.M30>
     <alert.M61><div><h2>Bezeichnung der Hierarchieebene ist obligatorisch wenn Hierarchiebene nicht "Datenbestand"</h2></div></alert.M61>
-    
+
+    <alert.requiredAbstract>Data Identification Abstract is a required element</alert.requiredAbstract>
+    <report.requiredAbstract>Data Identification Abstract found</report.requiredAbstract>
+    <alert.requiredTitle>Data Identification Citation Title is a required element</alert.requiredTitle>
+    <report.requiredTitle>Data Identification Citation Title found</report.requiredTitle>
+    <alert.requiredDate>Data Identification Citation Date is a required element</alert.requiredDate>
+    <report.requiredDate>Data Identification Citation Date found</report.requiredDate>
+    <alert.requiredDateType>Data Identification Citation DateType is a required element</alert.requiredDateType>
+    <report.requiredDateType>Data Identification Citation DateType is found</report.requiredDateType>
+    <alert.requiredContact>Contact is a required Element</alert.requiredContact>
+    <report.requiredContact>Contact found</report.requiredContact>
+    <alert.requiredLanguage>Language is a required element</alert.requiredLanguage>
+    <report.requiredLanguage>Language found</report.requiredLanguage>
+    <alert.requiredLanguage>Data Identification Language is a required element</alert.requiredLanguage>
+    <report.requiredLanguage>Data Identification Language found</report.requiredLanguage>
+    <alert.requiredCitation>Data Identification Citation is a required element</alert.requiredCitation>
+    <report.requiredCitation>Data Identification Citation found</report.requiredCitation>
+    <requiredElements>Required Elements</requiredElements>
+    <requireCitation>Citation</requireCitation>
+
 </strings>

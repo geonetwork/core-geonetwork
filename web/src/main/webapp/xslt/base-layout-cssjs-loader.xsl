@@ -33,7 +33,8 @@
     <script>var geonet={provide:function(s){},require:function(s){}}</script>
     <xsl:choose>
       <xsl:when test="$isDebugMode">
-        
+
+        <script src="{$uiResourcesPath}lib/modernizr.js"></script>
         <script src="{$uiResourcesPath}lib/closure/base.js"></script>
         
         <script src="{$uiResourcesPath}lib/jquery-2.0.3.js"></script>
@@ -46,13 +47,13 @@
         
         <script src="{$uiResourcesPath}lib/angular-translate.js"></script>
         <script src="{$uiResourcesPath}lib/angular-md5.js"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/datetimepicker.js"></script>
         
         <script src="{$uiResourcesPath}lib/bootstrap-3.0.1.js"></script>
         <script src="{$uiResourcesPath}lib/proj4js-compressed.js"></script>
         <script src="{$uiResourcesPath}lib/ol-whitespace.js"></script>
         <xsl:if test="$withD3">
           <script src="{$uiResourcesPath}lib/d3.v3.js"></script>
-          <script src="{$uiResourcesPath}lib/d3.ext/gauge.js"></script>
           <script src="{$uiResourcesPath}lib/nv.d3.js"></script>
         </xsl:if>
         

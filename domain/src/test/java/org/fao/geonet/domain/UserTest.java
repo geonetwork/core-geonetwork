@@ -105,6 +105,9 @@ public class UserTest extends AbstractSpringDataTest {
                 assertEqualAddress(add2, city2, country2, state2, zip2, address);
             }
         }
+
+        assertEqualAddress(add1, city1, country1, state1, zip1, xml.getChild("primaryaddress"));
+
     }
 
     private void assertEqualAddress(String add1, String city1, String country1, String state1, String zip1, Element address) {

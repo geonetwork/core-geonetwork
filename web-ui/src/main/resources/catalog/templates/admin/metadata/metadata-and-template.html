@@ -41,7 +41,7 @@
           </div>
           <div class="col-lg-6">
             <button type="button" class="btn btn-primary btn-block"
-              data-ng-disabled="!selectedSchemas.length > 0 sampleLoadRunning === true || tplLoadRunning === true"
+              data-ng-disabled="!selectedSchemas.length > 0 || sampleLoadRunning === true || tplLoadRunning === true"
               data-ng-click="loadSamples()">
               <i class="fa fa-upload"/>
               <span data-translate="">loadSamplesForSelectedSchema</span>

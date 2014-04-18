@@ -160,4 +160,8 @@
 		<description>A person or organization owning or managing rights over the resource.</description>
 	</element>
 	<!-- ==================================================== -->
+  <element name="dct:isPartOf">
+    <label>Is part of</label>
+    <description>A related resource in which the described resource is physically or logically included.</description>
+  </element>
 </labels>

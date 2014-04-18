@@ -17,6 +17,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.io.File;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 /**
@@ -104,7 +105,7 @@ public class JeevesContextLoaderListener implements ServletContextListener {
             File file = nodeConfigurationFiles[i];
             ids[i] = Files.getNameWithoutExtension(file.getName());
         }
-
+        Arrays.sort(ids);
         return ids;
     }
 

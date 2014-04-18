@@ -143,7 +143,7 @@
       getMetadataStat('schema');
       getMetadataStat('template', '%');
       getMetadataStat('source');
-      getMetadataStat('harvest');
+      getMetadataStat('harvested');
       getMetadataStat('category');
       getMetadataStat('status');
       getMetadataStat('validity');

@@ -108,7 +108,7 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 	//--------------------------------------------------------------------------
 
 	private String stylePath;
-    private ArrayList<Exception> exceptions = new ArrayList<Exception>();
+    private Map<String, Exception> exceptions = new HashMap<String, Exception>();
     private boolean failOnError;
 	private static final String CONFIG_FILE = "import-config.xml";
 
@@ -169,17 +169,20 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 		
 		if (exceptions.size() > 0) {
 			Element ex = new Element("exceptions").setAttribute("count", ""+exceptions.size());
-			for (Exception e : exceptions)
-                if (e instanceof SchematronValidationErrorEx) {
-                    ex.addContent(new Element("exception").addContent((Element) ((SchematronValidationErrorEx) e).getObject()));
-
+			for (Map.Entry<String, Exception> e : exceptions.entrySet()) {
+                Element exceptionInfo = new Element("exception");
+                exceptionInfo.setAttribute("file", e.getKey());
+                if (e.getValue() instanceof SchematronValidationErrorEx) {
+                    exceptionInfo.addContent((Element)
+                            ((SchematronValidationErrorEx) e.getValue()).getObject());
                 } else if (e instanceof XSDValidationErrorEx) {
-                        ex.addContent(new Element("exception").addContent((Element) ((XSDValidationErrorEx) e).getObject()));
-
+                    exceptionInfo.addContent((Element)
+                            ((XSDValidationErrorEx) e.getValue()).getObject());
                 } else {
-                    ex.addContent(new Element("exception").setText(e.getMessage()));
-
+                    exceptionInfo.setText(e.getValue().getMessage());
                 }
+                ex.addContent(exceptionInfo);
+            }
 			response.addContent(ex);
 		}
 
@@ -192,7 +195,7 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 	//---
 	//--------------------------------------------------------------------------
 
-	public static final class ImportCallable implements Callable<List<Exception>> {
+	public static final class ImportCallable implements Callable<HashMap<String, Exception>> {
 		private final File files[];
 		private final int beginIndex, count;
 		private final Element params;
@@ -222,8 +225,8 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 		    this.context.setUserSession(session);
 		}
 		
-		public List<Exception> call() throws Exception {
-			List<Exception> exceptions = new ArrayList<Exception>();
+		public HashMap<String, Exception> call() throws Exception {
+			HashMap<String, Exception> exceptions = new HashMap<String, Exception>();
 			
 			login();
 			
@@ -234,7 +237,7 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 					if (failOnError)
 						throw e;
 					
-					exceptions.add(e);
+					exceptions.put(files[i].getName(), e);
 				}
 			}
 			return exceptions;
@@ -246,7 +249,7 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 		File files[];
 		String stylePath;
 		ServiceContext context;
-		ArrayList<Exception> exceptions = new ArrayList<Exception>();
+        HashMap<String, Exception> exceptions = new HashMap<String, Exception>();
 
 
 		public ImportMetadataReindexer(DataManager dm, Element params, ServiceContext context, List<File> fileList, String stylePath, boolean failOnError) {
@@ -267,20 +270,22 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 			else perThread = files.length / threadCount;
 			int index = 0;
 
-			List<Future<List<Exception>>> submitList = new ArrayList<Future<List<Exception>>>();
+			List<Future<HashMap<String, Exception>>> submitList =
+                    new ArrayList<Future<HashMap<String, Exception>>>();
 			while(index < files.length) {
 				int start = index;
 				int count = Math.min(perThread,files.length-start);
 				// create threads to process this chunk of files
-				Callable<List<Exception>> worker = new ImportCallable(files, start, count, params, context, stylePath, failOnError);
-				Future<List<Exception>> submit = executor.submit(worker);
+				Callable<HashMap<String, Exception>> worker =
+                        new ImportCallable(files, start, count, params, context, stylePath, failOnError);
+				Future<HashMap<String, Exception>> submit = executor.submit(worker);
 				submitList.add(submit);
 				index += count;
 			}
 
-			for (Future<List<Exception>> future : submitList) {
+			for (Future<HashMap<String, Exception>> future : submitList) {
 				try {
-					exceptions.addAll(future.get());
+					exceptions.putAll(future.get());
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} catch (ExecutionException e) {
@@ -290,7 +295,7 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 			executor.shutdown();
 		}
 
-		public ArrayList<Exception> getExceptions() {
+		public Map<String, Exception> getExceptions() {
 			return exceptions;
 		}
 	}

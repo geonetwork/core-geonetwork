@@ -79,11 +79,13 @@ public class SearchStatistics extends NotInReadOnlyModeService {
 
         final SearchRequestRepository requestRepository = context.getBean(SearchRequestRepository.class);
 
-        String begin = requestRepository.getOldestRequestDate().getDateAndTime();
-        String end = requestRepository.getMostRecentRequestDate().getDateAndTime();
-
-        DateTime beginDate = ISODate.parseBasicOrFullDateTime(begin);
-        DateTime endDate = ISODate.parseBasicOrFullDateTime(end);
+        ISODate begin = requestRepository.getOldestRequestDate();
+        ISODate end = requestRepository.getMostRecentRequestDate();
+        if (begin == null || end == null) {
+            return response;    // No stats available.
+        }
+        DateTime beginDate = ISODate.parseBasicOrFullDateTime(begin.getDateAndTime());
+        DateTime endDate = ISODate.parseBasicOrFullDateTime(end.getDateAndTime());
         int days = Days.daysBetween(beginDate, endDate).getDays();
         int nonZeroDays = days == 0 ? 1 : days;
         int months = Months.monthsBetween(beginDate, endDate).getMonths();

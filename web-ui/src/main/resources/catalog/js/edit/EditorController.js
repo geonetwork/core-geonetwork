@@ -12,53 +12,79 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   goog.require('gn_directory_controller');
   goog.require('gn_editorboard_controller');
   goog.require('gn_fields');
+  goog.require('gn_import_controller');
   goog.require('gn_new_metadata_controller');
   goog.require('gn_scroll_spy');
+  goog.require('gn_share');
   goog.require('gn_thesaurus');
   goog.require('gn_utility_directive');
 
   var module = angular.module('gn_editor_controller',
       ['gn_fields', 'gn_new_metadata_controller',
-       'gn_editorboard_controller',
+       'gn_import_controller',
+       'gn_editorboard_controller', 'gn_share',
        'gn_directory_controller', 'gn_utility_directive',
-       'gn_scroll_spy', 'gn_thesaurus']);
+       'gn_scroll_spy', 'gn_thesaurus', 'ui.bootstrap.datetimepicker']);
 
   var tplFolder = '../../catalog/templates/editor/';
 
-  module.config(['$routeProvider', function($routeProvider) {
-    $routeProvider.
-        when('/metadata/:id', {
-          templateUrl: tplFolder + 'editor.html',
-          controller: 'GnEditorController'}).
-        when('/metadata/:id/tab/:tab', {
-          templateUrl: tplFolder + 'editor.html',
-          controller: 'GnEditorController'}).
-        when('/metadata/:id/tab/:tab/:displayAttributes', {
-          templateUrl: tplFolder + 'editor.html',
-          controller: 'GnEditorController'}).
-        when('/create', {
-          templateUrl: tplFolder + 'new-metadata.html',
-          controller: 'GnNewMetadataController'}).
-        when('/create/from/:id/in/:group/astemplate/:template', {
-          templateUrl: tplFolder + 'editor.html',
-          controller: 'GnNewMetadataController'}).
-        when('/directory', {
-          templateUrl: tplFolder + 'directory.html',
-          controller: 'GnDirectoryController'}).
-        when('/directory/type/:type', {
-          templateUrl: tplFolder + 'directory.html',
-          controller: 'GnDirectoryController'}).
-        when('/directory/id/:id', {
-          templateUrl: tplFolder + 'directory.html',
-          controller: 'GnDirectoryController'}).
-        otherwise({
-          templateUrl: tplFolder + 'editorboard.html',
-          controller: 'GnEditorBoardController'
-        });
-  }]);
+  module.config(['$routeProvider',
+    function($routeProvider) {
+
+
+      $routeProvider.
+          when('/metadata/:id', {
+            templateUrl: tplFolder + 'editor.html',
+            controller: 'GnEditorController'}).
+          when('/metadata/:id/tab/:tab', {
+            templateUrl: tplFolder + 'editor.html',
+            controller: 'GnEditorController'}).
+          when('/metadata/:id/tab/:tab/:displayAttributes', {
+            templateUrl: tplFolder + 'editor.html',
+            controller: 'GnEditorController'}).
+          when('/create', {
+            templateUrl: tplFolder + 'new-metadata.html',
+            controller: 'GnNewMetadataController'}).
+          when('/create/from/:id/in/:group/astemplate/:template', {
+            templateUrl: tplFolder + 'editor.html',
+            controller: 'GnNewMetadataController'}).
+          when('/directory', {
+            templateUrl: tplFolder + 'directory.html',
+            controller: 'GnDirectoryController'}).
+          when('/directory/type/:type', {
+            templateUrl: tplFolder + 'directory.html',
+            controller: 'GnDirectoryController'}).
+          when('/directory/id/:id', {
+            templateUrl: tplFolder + 'directory.html',
+            controller: 'GnDirectoryController'}).
+          when('/import', {
+            templateUrl: tplFolder + 'import.html',
+            controller: 'GnImportController'}).
+          otherwise({
+            templateUrl: tplFolder + 'editorboard.html',
+            controller: 'GnEditorBoardController'
+          });
+    }]);
 
   /**
    * Metadata editor controller - draft
@@ -127,6 +153,7 @@
             $scope.metadataNotFoundId = $routeParams.id;
 
             $scope.mdSchema = data.metadata[0]['geonet:info'].schema;
+            $scope.groupOwner = data.metadata[0].groupOwner;
             $scope.mdTitle = data.metadata[0].title ||
                 data.metadata[0].defaultTitle;
 
@@ -293,15 +320,19 @@
         return false;
       };
       $scope.save = function(refreshForm) {
+        $scope.saveError = false;
+
         gnEditor.save(refreshForm)
           .then(function(form) {
               $scope.savedStatus = gnCurrentEdit.savedStatus;
+              $scope.saveError = false;
               $scope.toggleAttributes();
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('saveMetadataSuccess')
               });
             }, function(error) {
               $scope.savedStatus = gnCurrentEdit.savedStatus;
+              $scope.saveError = true;
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('saveMetadataError'),
                 error: error,

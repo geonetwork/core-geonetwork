@@ -108,6 +108,26 @@ div.gn-scroll-spy {
   min-height: 100px;
   max-height: 800px;
   z-index: 2000;
+
+  .gn-share-grid {
+    width: 100%;
+    height: 75%;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    table {
+      /* The col section define column width */
+      table-layout: fixed;
+
+      th, td {
+        font-size: 70%;
+      }
+      /* Group name often contains long upper case value */
+      td {
+        word-break: break-all;
+      }
+    }
+  }
 }
 
 .onlinesrc-popup {

@@ -27,10 +27,12 @@
 	<statusSendEmail>
 Commentaire de l'utilisateur lors du changement d'état :
 %s
-
+La liste des métadonnées concernées par le changement est la suivante:
+%s
 La liste des changements d'état sont accessibles ici :
 %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search
-	</statusSendEmail>	
+	</statusSendEmail>
+  <statusMetadataDetails>* {{index:title}} ({{serverurl}}/search?uuid={{index:_uuid}})</statusMetadataDetails>
 	<otherValue>Autre :</otherValue>
 	<warning>Attention</warning>
 	<isAdmin>Est administrateur ?</isAdmin>
@@ -781,6 +783,7 @@ La liste des changements d'état sont accessibles ici :
 	<Reviewer>Relecteur</Reviewer>
 	<rss>Ouvrez flux RSS</rss>
 	<rtitle>Titre</rtitle>
+        <altTitle>Titre alternatif</altTitle>
 	<save>Sauver</save>
 	<saveAndClose>Sauver et fermer</saveAndClose>
 	<saveAndValidate>Sauver et valider</saveAndValidate>
@@ -1167,11 +1170,12 @@ La liste des changements d'état sont accessibles ici :
 		<upload>Télécharger un thésaurus</upload>
 	</thesaurus>
 	<searchhelp>
-		<searchAllText>Enter free text here</searchAllText>
-		<rtitle>Enter title here</rtitle>
-		<abstract>Enter abstract here</abstract>
-		<keywords>Pick keywords from existing metadata records</keywords>
-		<thesaurus>Pick keywords from thesauri</thesaurus>
+            <altTitle>Enter alternate title here</altTitle>
+            <searchAllText>Enter free text here</searchAllText>
+            <rtitle>Enter title here</rtitle>
+            <abstract>Enter abstract here</abstract>
+            <keywords>Pick keywords from existing metadata records</keywords>
+            <thesaurus>Pick keywords from thesauri</thesaurus>
 	</searchhelp>
 
     <inspire>

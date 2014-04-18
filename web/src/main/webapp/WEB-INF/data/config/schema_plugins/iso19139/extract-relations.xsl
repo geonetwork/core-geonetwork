@@ -9,7 +9,7 @@
   xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"
   xmlns:gmx="http://www.isotc211.org/2005/gmx" 
   xmlns:geonet="http://www.fao.org/geonetwork" 
-  xmlns:util="xalan://org.fao.geonet.util.XslUtil"
+  xmlns:util="java:org.fao.geonet.util.XslUtil"
   xmlns:exslt="http://exslt.org/common"
   exclude-result-prefixes="geonet exslt">
 

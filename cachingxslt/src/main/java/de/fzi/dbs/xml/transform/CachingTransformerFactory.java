@@ -65,26 +65,19 @@ public class CachingTransformerFactory extends TransformerFactoryImpl
     throws TransformerConfigurationException
   {
     // Check that source in a StreamSource
-    if (source instanceof StreamSource)
-      try
-      {
+    if (source instanceof StreamSource) {
+      try {
         // Create URI of the source
 				String srcId = source.getSystemId();
-				if (srcId.indexOf(':') == 1) { // fix up windows path so that uri works
-					srcId = srcId.replaceAll("\\\\","/");
-					srcId = srcId.substring(2);
-					srcId = srcId.replaceAll(" ","%20");
-				}
         final URI uri = new URI(srcId);
         // If URI points to a file, load transformer from the file
         // (or from the cache)
         if ("file".equalsIgnoreCase(uri.getScheme()))
           return newTransformer(new File(uri.getPath()));
-      }
-      catch (URISyntaxException urise)
-      {
+      } catch (URISyntaxException urise) {
         throw new TransformerConfigurationException(urise);
       }
+		}
     return super.newTransformer(source);
   }
 
@@ -113,7 +106,7 @@ public class CachingTransformerFactory extends TransformerFactoryImpl
     // If no templatesEntry is found or this entry was obsolete
     if (templatesCacheEntry == null)
     {
-//      System.out.println("Loading transformation [" + file.getAbsolutePath() + "].");
+      //System.out.println("Loading transformation [" + file.getAbsolutePath() + "].");
       // If this file does not exists, throw the exception
       if (!file.exists())
       {
@@ -130,10 +123,10 @@ public class CachingTransformerFactory extends TransformerFactoryImpl
       // Save this entry to the cache
       write(file.getAbsolutePath(), templatesCacheEntry);
     }
-//    else
-//    {
-//      System.out.println("Using cached transformation [" + file.getAbsolutePath() + "].");
-//    }
+    else
+    {
+      //System.out.println("Using cached transformation [" + file.getAbsolutePath() + "].");
+    }
     return templatesCacheEntry.templates.newTransformer();
   }
 

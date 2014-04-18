@@ -170,9 +170,7 @@ public class Save extends NotInReadOnlyModeService {
                 }
             }
         }
-        // reload in-memory representation of notifiers
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        gc.getBean(MetadataNotifierManager.class).setLoadNotifierServices(true);
+
 		return new Element("ok");
 	}
 

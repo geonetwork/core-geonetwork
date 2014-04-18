@@ -76,20 +76,8 @@ import java.util.regex.Pattern;
          <replaceAtt xpath="default/gui" attName="newAtt" value="newValue"/>
 
          <!-- This example will replace all the xml in resources with the contained xml -->
-         <replaceXML xpath="resources">
-           <resource enabled="${enabled}">
-             <name>main-db</name>
-             <provider>jeeves.resources.dbms.DbmsPool</provider>
-              <config>
-                  <user>admin</user>
-                  <password>admin</password>
-                  <driver>oracle.jdbc.driver.OracleDriver</driver>
-                  <!-- ${host} will be updated to be local host -->
-                  <url>jdbc:oracle:thin:@${host}:1521:fs</url>
-                  <poolSize>10</poolSize>
-              </config>
-           </resource>
-         </replaceXML>
+         TODO
+
          <!-- This example simple replaces the text of an element -->
          <replaceText xpath="default/language">${lang}</replaceText>
          <!-- This examples shows how only the text is replaced not the nodes -->

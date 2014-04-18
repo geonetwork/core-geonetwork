@@ -84,7 +84,7 @@
               var field = $('#' + scope.id + '_' + fieldName);
               var value = '';
               if (field.attr('type') === 'checkbox') {
-                value = field.is(":checked") ?  'true' : 'false';
+                value = field.is(':checked') ? 'true' : 'false';
               } else {
                 value = field.val() || '';
               }

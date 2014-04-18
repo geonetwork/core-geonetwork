@@ -304,7 +304,7 @@ public class SettingManager {
         String protocol = getValue(Geonet.Settings.SERVER_PROTOCOL);
         String host    = getValue(Geonet.Settings.SERVER_HOST);
         String port    = getValue(Geonet.Settings.SERVER_PORT);
-        String locServ = baseURL +"/"+ Jeeves.Prefix.SERVICE +"/" + lang;
+        String locServ = baseURL +"/"+ context.getNodeId() +"/" + lang;
 
         return protocol + "://" + host + (port.equals("80") ? "" : ":" + port) + locServ;
     }

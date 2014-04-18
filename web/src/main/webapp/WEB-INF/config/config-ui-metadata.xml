@@ -33,8 +33,59 @@
         <param name="editTab" value="true"/>
       </class>
     </service>
-    
-    
+
+    <service name="md.privileges">
+      <documentation><![CDATA[
+          Return privileges info for a metadata record.
+
+          Parameters are:
+          * id: Metadata identifier
+          ]]></documentation>
+      <class name=".services.metadata.GetAdminOper"/>
+      <error sheet="../xslt/common/error.xsl"/>
+    </service>
+
+    <service name="md.privileges.update">
+      <documentation><![CDATA[
+          Update privileges info for a metadata record.
+
+          Parameters:
+          * id: Metadata identifier
+          * _<groupId>_<operationId>: on or off to activate or not an operation for a group.
+          ]]></documentation>
+      <class name=".services.metadata.UpdateAdminOper"/>
+    </service>
+
+    <service name="md.privileges.batch">
+      <documentation><![CDATA[
+          Return operations and groups for the user.
+          ]]></documentation>
+      <class name=".services.metadata.PrepareBatchUpdatePrivileges" />
+    </service>
+
+    <service name="md.privileges.batch.update">
+
+      <documentation><![CDATA[
+          Update privileges info for a set of metadata records.
+
+          Parameters:
+          * _<groupId>_<operationId>: on or off to activate or not an operation for a group.
+          ]]></documentation>
+      <class name=".services.metadata.BatchUpdatePrivileges" />
+    </service>
+
+    <service name="md.group.update">
+      <documentation><![CDATA[
+          Change the group the metadata is in. Groupowner database column.
+
+          Parameters are:
+          * id: Metadata identifier
+          * groupid: Group identifier
+          ]]></documentation>
+      <class name=".services.metadata.UpdateGroupOwner"/>
+      <error sheet="../xslt/common/error.xsl"/>
+    </service>
+
     <service name="md.insert">
       <documentation><![CDATA[
         Insert a metadata sending an XML document.
@@ -238,8 +289,21 @@
         ]]></documentation>
       <class name=".services.thumbnail.Unset"/>
     </service>
-    
-    
+
+    <service name="md.thumbnail.generate">
+      <documentation><![CDATA[
+        Generate a thumbnail. Metadata must be on
+        editing session.
+
+        Parameters:
+        * id: the metadata identifier
+        * version: the editing version.
+        * config: Mapfish print JSON map specification
+        * rotation: (optional) Rotation angle. May be needed if PDF is using landscape mode.
+        ]]></documentation>
+      <class name=".services.thumbnail.Generate"/>
+    </service>
+
     <service name="md.relations">
       <documentation>Return a list of all relation of the given metadata. Relations are mainly online resources
       like thumbnails, onlineresources etc ..</documentation>
@@ -268,9 +332,7 @@
         
         ]]></documentation>
       <class name=".services.metadata.Validate"/>
-      <output sheet="../xslt/services/metadata/validate.xsl" contentType="text/xml; charset=UTF-8">
-        <xml name="validation" file="xml/metadata-validate.xml" />
-      </output>
+      <output sheet="../xslt/services/metadata/validate.xsl" contentType="text/xml; charset=UTF-8"/>
     </service>
 
   </services>

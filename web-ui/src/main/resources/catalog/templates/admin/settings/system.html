@@ -1,10 +1,8 @@
 <div class="panel panel-default" data-ng-controller="GnSystemSettingsController">
   <div class="gn-scroll-spy" data-gn-scroll-spy="gn-settings-spy-target" 
       data-watch="sectionsLevel1" data-depth="1"/>
-
   <div class="panel-heading">
     <span data-translate="">settings</span>
-
     <div class="btn-toolbar">
       <button type="submit" class="btn btn-primary pull-right fa fa-save" id="gn-btn-settings-save"
         data-ng-click="saveSettings('#gn-settings')" data-translate="">saveSettings</button>
@@ -155,5 +153,7 @@
           data-ng-click="saveSettings('#gn-settings')" data-translate="">saveSettings</button>
       </fieldset>
     </form>
+
+    <div data-gn-need-help="admin_settings" class="pull-right"></div>
   </div>
 </div>

@@ -30,10 +30,14 @@
           }
         },
 
-        publishNode: function(node, fileName) {
+        publishNode: function(node, fileName,
+                              title, moreInfo) {
           if (node) {
             return gnHttp.callService('geoserverNodes', {
               metadataId: gnCurrentEdit.id,
+              metadataUuid: gnCurrentEdit.uuid,
+              metadataTitle: title,
+              metadataAbstract: moreInfo,
               access: 'private',
               action: 'CREATE',
               nodeId: node,

@@ -25,7 +25,7 @@
 
 
   <div class="col-lg-8" data-ng-hide="groupSelected.id == null">
-    <div class="panel panel-default">
+    <div class="panel panel-default" data-ng-controller="GnSearchFormController">
       <div class="panel-heading"
         title="{{groupHasRecords() ? ('cantDeleteGroupHavingRecords' | translate) : ''}}">
         <span data-ng-hide="groupSelected.id == ''" data-translate="">updateGroup</span>
@@ -37,7 +37,7 @@
             data-ng-click="saveGroup('#gn-group-edit')" data-translate="" id="gn-btn-group-save"
             >saveGroup</button>
           <button type="button" class="btn btn-primary pull-right btn-danger fa fa-trash-o"
-            data-ng-disabled="groupHasRecords()" data-ng-hide="groupSelected.id == ''"
+            data-ng-disabled="searchResults.count > 0" data-ng-hide="groupSelected.id == ''"
             data-ng-click="deleteGroup(groupSelected.id)" data-translate="" id="gn-btn-group-delete"
             >deleteGroup</button>
         </div>
@@ -76,21 +76,21 @@
         </div>
 
 
-
-
-        <div data-ng-hide="!groupRecords">
+        <div data-ng-show="searchResults.count != 0">
           <h3>
-            <ng-pluralize count="groupRecords.count"
-              when="{'0': ('noRecordFound' | translate),
-                  'one': '1' +  ('groupRecord' | translate) + ' {{groupSelected.label[lang]}}',
-                  'other': '{}' +  ('groupRecords' | translate) + ' {{groupSelected.label[lang]}}'}"
-            > </ng-pluralize>
+            <ng-pluralize count="searchResults.count"
+                          when="{'0': ('noRecordFound' | translate),
+                'one': '1' +  ('groupRecord' | translate) + ' {{groupSelected.label[lang]}}',
+                'other': '{}' +  ('groupRecords' | translate) + ' {{groupSelected.label[lang]}}'}"
+                > </ng-pluralize>
           </h3>
-
-          <div data-gn-search-results="groupRecords" data-allow-selection="false"/>
-
-          <div data-gn-pagination="groupRecordsPagination"/>
+          <div data-gn-search-form-results=""
+               data-gn-search-form-results-mode="title"
+               data-search-results="searchResults"
+               data-pagination-info="paginationInfo">
+          </div>
         </div>
+
       </div>
     </div>
   </div>

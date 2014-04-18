@@ -500,7 +500,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 StringBuilder test = new StringBuilder();
 
                 LuceneQueryInput luceneQueryInput = new LuceneQueryInput(request);
-                Map<String, Set<String>> searchCriteria = luceneQueryInput.getSearchCriteria();
+                Map<String, Set<String>> searchCriteria = luceneQueryInput.getTextCriteria();
                 if (!searchCriteria.isEmpty()) {
                     for (Set<String> value : searchCriteria.values()) {
                         for (String v : value) {

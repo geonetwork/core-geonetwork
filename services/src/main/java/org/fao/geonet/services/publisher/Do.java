@@ -30,6 +30,8 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.overrides.ConfigurationOverrides;
+import org.fao.geonet.domain.MapServer;
+import org.fao.geonet.repository.MapServerRepository;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
@@ -83,16 +85,9 @@ public class Do implements Service {
 	public static final String MODULE = "geonetwork.GeoServerPublisher";
 
 	/**
-	 * XML document containing Geoserver node configuration defined in
-	 * geoserver-nodes.xml
-	 */
-	private Element geoserverConfig;
-	private String geoserverConfigFile;
-	private boolean geoserverConfigLoaded = false;
-	/**
 	 * List of current known nodes
 	 */
-	private HashMap<String, GeoServerNode> geoserverNodes = new HashMap<String, GeoServerNode>();
+	private HashMap<Integer, GeoServerNode> geoserverNodes = new HashMap<Integer, GeoServerNode>();
 
 	/**
 	 * Error code received when publishing
@@ -127,12 +122,6 @@ public class Do implements Service {
 	 */
 	public void init(String appPath, ServiceConfig params) throws Exception {
 		Log.createLogger(MODULE);
-
-		// Load configuration
-		geoserverConfigFile = appPath
-				+ params.getValue("configFile", "");
-
-		Log.info(MODULE, "Using configuration: " + geoserverConfigFile);
 	}
 
     /**
@@ -143,22 +132,65 @@ public class Do implements Service {
      */
     public Element exec(Element params, ServiceContext context)
     		throws Exception {
-        if (!geoserverConfigLoaded) {
-            loadConfiguration(geoserverConfigFile, context);
-        }
     	GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-    	SettingManager settingsManager = gc.getBean(SettingManager.class);
+        MapServerRepository repo = context.getBean(MapServerRepository.class);
+        SettingManager settingsManager = gc.getBean(SettingManager.class);
     	String baseUrl = settingsManager.getValue(Geonet.Settings.SERVER_PROTOCOL)
     			+ "://" + settingsManager.getValue(Geonet.Settings.SERVER_HOST)
     			+ ":" + settingsManager.getValue("system/server/port")
-    			+ context.getBaseUrl()
-    			+ "/srv/" + context.getLanguage() + "/";
+    			+ context.getBaseUrl();
     	
     	
     	ACTION action = ACTION.valueOf(Util.getParam(params, "action"));
     	if (action.equals(ACTION.LIST)) {
-    		return list();
-    	} else if (action.equals(ACTION.CREATE) || action.equals(ACTION.UPDATE)
+            return loadDbConfiguration(context);
+    	} else if (action.equals(ACTION.ADD_NODE)) {
+            MapServer m = new MapServer()
+                    .setName(Util.getParam(params, "name", ""))
+                    .setDescription(Util.getParam(params, "description", ""))
+                    .setConfigurl(Util.getParam(params, "configurl", ""))
+                    .setWmsurl(Util.getParam(params, "wmsurl", ""))
+                    .setWfsurl(Util.getParam(params, "wfsurl", ""))
+                    .setWcsurl(Util.getParam(params, "wcsurl", ""))
+                    .setStylerurl(Util.getParam(params, "stylerurl", ""))
+                    .setUsername(Util.getParam(params, "username", ""))
+                    .setPassword(Util.getParam(params, "password", ""))
+                    .setNamespace(Util.getParam(params, "namespace", ""))
+                    .setNamespacePrefix(Util.getParam(params, "namespaceprefix", ""));
+            context.getBean(MapServerRepository.class).save(m);
+            return new Element(action.toString())
+                        .setText("ok")
+                        .setAttribute("id", String.valueOf(m.getId()));
+        } else if (action.equals(ACTION.REMOVE_NODE)) {
+            MapServer m = repo.findOneById(Util.getParam(params, "id"));
+            if (m != null) {
+                repo.delete(m);
+            }
+            return new Element(action.toString()).setText("ok");
+        } else if (action.equals(ACTION.UPDATE_NODE)) {
+            MapServer m = repo.findOneById(Util.getParam(params, "id"));
+            if (m != null) {
+                m.setName(Util.getParam(params, "name", ""))
+                    .setDescription(Util.getParam(params, "description", ""))
+                    .setConfigurl(Util.getParam(params, "configurl", ""))
+                    .setWmsurl(Util.getParam(params, "wmsurl", ""))
+                    .setWfsurl(Util.getParam(params, "wfsurl", ""))
+                    .setWcsurl(Util.getParam(params, "wcsurl", ""))
+                    .setStylerurl(Util.getParam(params, "stylerurl", ""))
+                    .setNamespace(Util.getParam(params, "namespace", ""))
+                    .setNamespacePrefix(Util.getParam(params, "namespaceprefix", ""));
+                repo.save(m);
+            }
+            return new Element(action.toString()).setText("ok");
+        } else if (action.equals(ACTION.UPDATE_NODE_ACCOUNT)) {
+            MapServer m = repo.findOneById(Util.getParam(params, "id"));
+            if (m != null) {
+                m.setUsername(Util.getParam(params, "username", ""))
+                    .setPassword(Util.getParam(params, "password", ""));
+                repo.save(m);
+            }
+            return new Element(action.toString()).setText("ok");
+        } else if (action.equals(ACTION.CREATE) || action.equals(ACTION.UPDATE)
     			|| action.equals(ACTION.DELETE) || action.equals(ACTION.GET)) {
     
     		// Check parameters
@@ -169,16 +201,13 @@ public class Do implements Service {
     		String metadataTitle = Util.getParam(params, "metadataTitle", "").replace("\\n","");
     		// unescape \\n from metadataAbstract so they're properly sent to geoserver
     		String metadataAbstract = Util.getParam(params, "metadataAbstract", "").replace("\\n","\n");
-    		GeoServerNode g = geoserverNodes.get(nodeId);
-    		if (g == null) {
-                throw new IllegalArgumentException(
-                        "Invalid node id " + nodeId + ". Can't find node id in current registered nodes. "
-                        + "Use action=LIST parameter to retrieve the list of valid nodes.");
-            }
-
+            MapServer m = repo.findOneById(nodeId);
+            GeoServerNode g = new GeoServerNode(m);
 
             final GeonetHttpRequestFactory requestFactory = context.getBean(GeonetHttpRequestFactory.class);
-            GeoServerRest gs = new GeoServerRest(requestFactory, g.getUrl(), g.getUsername(), g.getUserpassword(), g.getNamespacePrefix(), baseUrl);
+            GeoServerRest gs = new GeoServerRest(requestFactory, g.getUrl(),
+                    g.getUsername(), g.getUserpassword(),
+                    g.getNamespacePrefix(), baseUrl);
     
     		String file = Util.getParam(params, "file");
     		String access = Util.getParam(params, "access");
@@ -217,52 +246,33 @@ public class Do implements Service {
     	return null;
     }
 
-    private void loadConfiguration(String geoserverConfigFile, ServiceContext context) throws IOException, JDOMException {
-        geoserverConfig = Xml.loadFile(geoserverConfigFile);
-        ServletContext servletContext = null;
-        if(context.getServlet() != null) {
-            servletContext = context.getServlet().getServletContext();
+    private Element loadDbConfiguration(ServiceContext context) {
+        final java.util.List<MapServer> mapservers =
+                context.getBean(MapServerRepository.class)
+                        .findAll();
+        geoserverNodes.clear();
+        Element geoserverConfig = new Element("nodes");
+        for (MapServer m : mapservers) {
+            GeoServerNode g = new GeoServerNode(m);
+
+            if (g != null) {
+                geoserverNodes.put(m.getId(), g);
+
+                Element node = new Element("node");
+                node.addContent(new Element("id").setText(m.getId() + ""));
+                node.addContent(new Element("name").setText(m.getName()));
+                node.addContent(new Element("description").setText(m.getDescription()));
+                node.addContent(new Element("namespacePrefix").setText(m.getNamespacePrefix()));
+                node.addContent(new Element("namespaceUrl").setText(m.getNamespace()));
+                node.addContent(new Element("adminUrl").setText(m.getConfigurl()));
+                node.addContent(new Element("wmsUrl").setText(m.getWmsurl()));
+                node.addContent(new Element("wfsUrl").setText(m.getWfsurl()));
+                node.addContent(new Element("wcsUrl").setText(m.getWcsurl()));
+                node.addContent(new Element("stylerUrl").setText(m.getStylerurl()));
+                geoserverConfig.addContent(node);
+            }
         }
-		ConfigurationOverrides.DEFAULT.updateWithOverrides(geoserverConfigFile, 
-		        servletContext, context.getAppPath(), geoserverConfig);
-		
-		if (geoserverConfig == null) {
-			Log.error(MODULE, "Failed to load geoserver configuration file "
-					+ geoserverConfigFile);
-			return;
-		}
-
-		// Read configuration and register node
-        if(Log.isDebugEnabled(MODULE))
-            Log.debug(MODULE, "Start node registration");
-		@SuppressWarnings("unchecked")
-        Collection<Element> nodes = geoserverConfig.getChildren("node");
-		for (Element node : nodes) {
-			// TODO : check mandatory values and reject node when relevant
-			String id = node.getChildText("id");
-			String name = node.getChildText("name");
-            if(Log.isDebugEnabled(MODULE))
-                Log.debug(MODULE, "  Register node:" + name);
-			String url = node.getChildText("adminUrl");
-			String namespacePrefix = node.getChildText("namespacePrefix");
-			String namespaceUrl = node.getChildText("namespaceUrl");
-            String user = node.getChildText("user");
-			String password = node.getChildText("password");
-
-			// sanitize data that will be returned when the list action is requested
-			node.removeChild("user");
-			node.removeChild("password");
-
-			GeoServerNode g = new GeoServerNode(id, name, url, namespacePrefix,
-					namespaceUrl, user, password);
-
-			if (g != null)
-				geoserverNodes.put(id, g);
-		}
-        if(Log.isDebugEnabled(MODULE))
-            Log.debug(MODULE, "End node registration.");
-        
-        geoserverConfigLoaded = true;
+        return geoserverConfig;
     }
 
 	/**
@@ -272,8 +282,10 @@ public class Do implements Service {
 		/**
 		 * Return list of nodes
 		 */
-		LIST, CREATE, UPDATE, DELETE, GET
-	};
+		LIST, CREATE, UPDATE, DELETE, GET,
+        ADD_NODE, REMOVE_NODE, UPDATE_NODE,
+        UPDATE_NODE_ACCOUNT
+    };
 
 	/**
 	 * Register a database table in GeoServer
@@ -545,14 +557,5 @@ public class Do implements Service {
 			Log.error(MODULE, "Exception " + e.getMessage());
 		}
 		return false;
-	}
-
-	/**
-	 * Return list of registered node
-	 * 
-	 * @return
-	 */
-	private Element list() {
-		return geoserverConfig;
 	}
 }

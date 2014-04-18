@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <schematron.title>Geonetwork Validation Rules</schematron.title>
     <M500>[Language] - Jos metatiedot määritellään vain yhdellä kielellä, se on määriteltävä metatiedon kielenä. Muut kielet määritellään vaihtoehtoisina kielinä.</M500>
     <alert.M500>
         <div>Jos metatiedot määritellään vain yhdellä kielellä, se on määriteltävä metatiedon kielenä. Muut kielet määritellään vaihtoehtoisina kielinä. <br/>

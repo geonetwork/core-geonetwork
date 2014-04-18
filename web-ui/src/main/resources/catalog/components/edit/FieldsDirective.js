@@ -91,7 +91,7 @@
                            html += helpText;
                          }
                        });
-                     } else {
+                     } else if (info.help) {
                        html += info.help;
                      }
 

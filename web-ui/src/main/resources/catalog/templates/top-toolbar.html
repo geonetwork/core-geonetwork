@@ -15,7 +15,13 @@
                 <a href="admin.console#/organization/users/{{user.username}}"  
                     title="{{'userDetails' | translate}}" class="navbar-link">
                     {{user.name}} {{user.surname}} ({{user.profile | translate}})<i class="fa fa-user"></i></a>
-                <a href="../../j_spring_security_logout" title="{{'signout' | translate}}"><i class="fa fa-sign-out"></i></a>
+                <a href="catalog.edit"
+                   title="{{'editorBoard' | translate}}">
+                  <i class="fa fa-pencil"></i>
+                </a>
+                <a href="../../j_spring_security_logout" title="{{'signout' | translate}}">
+                  <i class="fa fa-sign-out"></i>
+                </a>
             </p>
         </li>
         <li>

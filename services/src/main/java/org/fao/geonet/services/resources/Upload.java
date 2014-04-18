@@ -29,7 +29,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.utils.IO;
+import org.fao.geonet.services.resources.handlers.IResourceUploadHandler;
 import org.fao.geonet.Util;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.constants.Geonet;
@@ -66,12 +66,9 @@ public class Upload implements Service {
 
     public Element exec(Element params, ServiceContext context)
             throws Exception {
-        String uploadDir = context.getUploadDir();
 
         String id = Utils.getIdentifierFromParameters(params, context);
         String ref = Util.getParam(params, Params.REF);
-        String access = Util.getParam(params, Params.ACCESS);
-        String overwrite = Util.getParam(params, Params.OVERWRITE, "no");
 
         Lib.resource.checkEditPrivilege(context, id);
 
@@ -96,8 +93,9 @@ public class Upload implements Service {
         if (fsize == null)
             fsize = "0";
 
-        File dir = new File(Lib.resource.getDir(context, access, id));
-        moveFile(context, uploadDir, fname, dir, overwrite);
+
+        IResourceUploadHandler uploadHook = (IResourceUploadHandler) context.getApplicationContext().getBean("resourceUploadHandler");
+        uploadHook.onUpload(context, params, Integer.parseInt(id), fname, new Double(fsize).doubleValue());
 
         context.info("UPLOADED:" + fname + "," + id + "," + mdUuid + ","
                 + context.getIpAddress() + "," + username);
@@ -109,44 +107,6 @@ public class Upload implements Service {
         return new Element("response").addContent(
                 new Element("fname").setText(fname)).addContent(
                 new Element("fsize").setText(fsize));
-    }
-
-    protected static void moveFile(ServiceContext context, String sourceDir,
-            String filename, File targetDir, String overwrite) throws Exception {
-        // move uploaded file to destination directory
-        // note: uploadDir and rootDir must be in the same volume
-        IO.mkdirs(targetDir, "directory to move a file to");
-
-        // get ready to move uploaded file to destination directory
-        File oldFile = new File(sourceDir, filename);
-        File newFile = new File(targetDir, filename);
-
-        context.info("Source : " + oldFile.getAbsolutePath());
-        context.info("Destin : " + newFile.getAbsolutePath());
-
-        if (!oldFile.exists()) {
-            throw new Exception("File upload unsuccessful "
-                    + oldFile.getAbsolutePath() + " does not exist");
-        }
-
-        // check if file already exists and do whatever overwrite wants
-        if (newFile.exists() && overwrite.equals("no")) {
-            throw new Exception("File upload unsuccessful because "
-                    + newFile.getName()
-                    + " already exists and overwrite was not permitted");
-        }
-
-        // move uploaded file to destination directory - have two goes
-        try {
-            FileUtils.moveFile(oldFile, newFile);
-        } catch (Exception e) {
-            context.warning("Cannot move uploaded file");
-            context.warning(" (C) Source : " + oldFile.getAbsolutePath());
-            context.warning(" (C) Destin : " + newFile.getAbsolutePath());
-            IO.delete(oldFile, false, context);
-            throw new Exception(
-                    "Unable to move uploaded file to destination directory");
-        }
     }
 }
 

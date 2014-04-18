@@ -1,7 +1,9 @@
 <div class="container" id="gn-directory-container">
   <ul class="nav nav-pills">
-    <li class="disabled"><a data-translate="" href="javascript:void(0);">directoryManager</a></li>
-    <li data-ng-repeat="type in mdTypes" data-ng-class="activeType === type ? 'active' : ''">
+    <li class="disabled"><a data-translate=""
+                            href="javascript:void(0);">directoryManager</a></li>
+    <li data-ng-repeat="type in mdTypes"
+        data-ng-class="activeType === type ? 'active' : ''">
       <a href="" data-ng-click="selectType(type)">
         <i class="fa {{getTypeIcon(type)}}"/>&nbsp;{{type | translate}}</a></li>
   </ul>
@@ -19,24 +21,40 @@
             </a>
           </div>
         </div>
-        <div class="panel-body" data-ng-if="tpls">
-          <input class="form-control" data-ng-model="entrySearch.$" autofocus=""
-            placeholder="{{'filter' | translate}}"/>
-          <div class="list-group">
-            <li class="list-group-item"
-              data-ng-repeat="e in tpls | filter:entrySearch | orderBy:'title'"
-              data-ng-class="e['geonet:info'].id === activeEntry['@id'] ? 'active' : ''">
-              <a href="" data-ng-click="selectEntry(e)"> {{e.title}} </a>
-              <div class="pull-right">
-                <a href="" data-ng-click="copyEntry(e)">
-                  <i class="fa fa-copy"/>
-                </a>
-                <a href="" data-ng-click="delEntry(e)">
-                  <i class="fa fa-times text-danger"/>
-                </a>
-              </div>
-            </li>
-          </div>
+        <div class="panel-body">
+          <input class="form-control" type="text"
+                 data-ng-change="getEntries()"
+                 placeholder="{{'search' | translate}}" autofocus=""
+                 data-ng-model="subtemplateFilter.any"/>
+
+          <form data-ng-controller="GnSearchFormController">
+            <div>
+              <ng-pluralize count="searchResults.count"
+                            when="{'0 ': ('noRecordFound' | translate),
+              'one': '1 ' +  ('record' | translate),
+              'other': '{} ' +  ('records' | translate)}"
+                  > </ng-pluralize>
+            </div>
+
+            <div class="list-group">
+              <li class="list-group-item"
+                data-ng-repeat="e in searchResults.records"
+                data-ng-class="e['geonet:info'].id === activeEntry['geonet:info'].id ? 'active' : ''">
+                <a href="" data-ng-click="selectEntry(e)">{{e.title}}</a>
+                <div class="pull-right">
+                  <a href="" data-ng-click="copyEntry(e)">
+                    <i class="fa fa-copy"/>
+                  </a>
+                  <a href=""
+                     data-ng-class="e['geonet:info'].edit !== 'true' ? 'invisible' : ''"
+                     data-ng-click="delEntry(e)">
+                    <i class="fa fa-times text-danger"/>
+                  </a>
+                </div>
+              </li>
+            </div>
+            <div data-gn-pagination="paginationInfo"/>
+          </form>
         </div>
       </div>
     </div>
@@ -81,29 +99,47 @@
       <div class="panel-default panel">
         <div class="panel-heading">
           <span data-translate="">{{activeEntry.title || activeEntry.defaultTitle}}</span>
-          
-          <div class="btn-toolbar">
-            <button type="button" class="btn btn-danger pull-right fa fa-sign-out" data-ng-click="close()" 
-              title="{{'closeEditor' | translate}}">
+          <div class="pull-right">
+            <div data-gn-metadata-group-updater="activeEntry.groupOwner"/>
+
+            <button type="button" class="btn btn-primary"
+                    data-ng-click="startSharing()"
+                    data-ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
+              <i class="fa fa-link"></i>&nbsp;<span data-translate="">share</span>
             </button>
-            <button type="button" class="btn btn-primary pull-right fa fa-save" data-ng-click="save()">
-              <span data-translate="">save</span>
+
+            <button type="button" class="btn btn-primary"
+                    data-ng-click="save()"
+                    data-ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
+              <i class="fa fa-save"></i>&nbsp;<span data-translate="">save</span>
+            </button>
+
+            <button type="button" class="btn btn-danger"
+                    data-ng-click="close()"
+                    data-ng-disabled="activeEntry['geonet:info'].edit !== 'true'"
+              title="{{'closeEditor' | translate}}">
+              <i class="fa fa-sign-out"></i>&nbsp;
             </button>
           </div>
+          <br/>
+          <br/>
         </div>
         <div class="panel-body">
-          <div data-ng-include="editorFormUrl"
-            data-onload="onFormLoad()"></div>
+          <fieldset data-ng-disabled="activeEntry['geonet:info'].edit !== 'true'">
+            <div data-ng-include="editorFormUrl"
+                 data-onload="onFormLoad()"></div>
+          </fieldset>
         </div>
+      </div>
+
+      <div data-gn-modal="" class="gn-share"
+           data-gn-popup-options="{title:'sharingSettings'}"
+           id="gn-share">
+        <div data-gn-share="activeEntry['geonet:info'].id"/>
       </div>
     </div>
   </div>
-  
-  <div data-gn-modal="" class="gn-import-entry"
-    data-gn-popup-options="{title:'importDirectoryEntry'}"
-    id="gn-import-entry">
-    <div data-gn-link-to-metadata="source" id="link-to-source"
-      class="link-source-md"></div>
+
+  <div data-ng-include="'../../catalog/templates/info.html'">
   </div>
-  
 </div>

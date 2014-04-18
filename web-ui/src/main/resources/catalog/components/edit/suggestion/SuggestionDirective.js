@@ -20,7 +20,7 @@
               scope.gnCurrentEdit = gnCurrentEdit;
 
               scope.load = function() {
-                gnSuggestion.load().success(function(data) {
+                gnSuggestion.load(scope.$parent.lang || 'eng').success(function(data) {
                   if (data && !angular.isString(data)) {
                     scope.suggestions = data;
                   }
@@ -55,7 +55,10 @@
                 'partials/runprocess.html',
             link: function(scope, element, attrs) {
               scope.gnSuggestion = gnSuggestion;
-
+              // Indicate if processing is running
+              scope.processing = false;
+              // Indicate if one process is complete
+              scope.processed = false;
               /**
                * Init form parameters.
                * This function is registered to be called on each
@@ -69,8 +72,17 @@
                   scope.params[key] = p[key].defaultValue;
                 }
               };
-              gnSuggestion.register(initParams);
 
+              scope.runProcess = function() {
+                scope.processing = true;
+                gnSuggestion.runProcess(
+                    gnSuggestion.getCurrent()['@process'],
+                    scope.params).then(function() {
+                  scope.processing = false;
+                  scope.processed = true;
+                });
+              };
+              gnSuggestion.register(initParams);
             }
           };
         }]);

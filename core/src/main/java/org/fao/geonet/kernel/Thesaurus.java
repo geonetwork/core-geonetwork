@@ -694,7 +694,8 @@ public class Thesaurus {
             theNSs.add(Namespace.getNamespace("dcterms", "http://purl.org/dc/terms/"));
 
             this.defaultNamespace = null;
-            Element title = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dc:title|rdf:Description/dc:title", theNSs);
+            Element title = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dc:title|skos:Collection/dc:title|rdf:Description/dc:title", theNSs);
+
             if (title != null) {
                 this.title = title.getValue();
                 this.defaultNamespace = title.getParentElement().getAttributeValue("about", rdfNamespace);
@@ -713,7 +714,7 @@ public class Thesaurus {
             	this.defaultNamespace += "#";
             }
 
-            Element dateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:issued", theNSs);
+            Element dateEl = Xml.selectElement(thesaurusEl, "skos:ConceptScheme/dcterms:issued|skos:Collection/dc:date", theNSs);
 
             Date thesaususDate = parseThesaurusDate(dateEl);
 

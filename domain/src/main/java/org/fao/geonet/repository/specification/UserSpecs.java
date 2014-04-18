@@ -1,9 +1,6 @@
 package org.fao.geonet.repository.specification;
 
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserSecurity_;
-import org.fao.geonet.domain.User_;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.repository.UserRepository;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -90,6 +87,36 @@ public final class UserSpecs {
             @Override
             public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 return root.get(User_.id).in(ids);
+            }
+        };
+    }
+
+    public static Specification<User> loginDateBetweenAndByGroups(final ISODate loginDateFrom,
+                                                                  final ISODate loginDateTo,
+                                                                  final Collection<Integer> groups) {
+        return new Specification<User>() {
+            @Override
+            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                query.distinct(true);
+
+                Path<String> lastLoginDateAttributePath = root.get(User_.lastLoginDate);
+                Path<Integer> userIdPath = root.get(User_.id);
+                Predicate userLastLoginBetweenPredicate = cb.between(lastLoginDateAttributePath,
+                        loginDateFrom.toString(), loginDateTo.toString());
+
+                if (!groups.isEmpty()) {
+                    final Root<UserGroup> userGroupRoot = query.from(UserGroup.class);
+                    final Path<Integer> groupGPath = userGroupRoot.get(UserGroup_.group).get(Group_.id);
+                    final Path<Integer> userGPath = userGroupRoot.get(UserGroup_.user).get(User_.id);
+
+                    Predicate inGroups = groupGPath.in(groups);
+
+                    userLastLoginBetweenPredicate = cb.and(cb.equal(userGPath,
+                            userIdPath), cb.and(userLastLoginBetweenPredicate, inGroups));
+                }
+
+
+                return userLastLoginBetweenPredicate;
             }
         };
     }

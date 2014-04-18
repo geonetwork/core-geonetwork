@@ -179,7 +179,9 @@
             </div>
 
 
-            <div data-gn-thesaurus-type="" data-gn-model="thesaurusImportType"/>
+            <div data-gn-thesaurus-type=""
+                 data-fieldname="dir"
+                 data-gn-model="thesaurusImportType"/>
 
             <ul>
               <li data-ng-repeat="file in queue">{{file.name}} ({{file.type}} / {{file.size}} KB) <i
@@ -313,7 +315,7 @@
         <div class="modal-footer">
           <button type="button" class="btn fa fa-ban-circle" data-dismiss="modal" data-translate=""
             >cancel</button>
-          <button type="button" class="btn btn-primary fa fa-save" data-ng-hide="isNewKeyword()"
+          <button type="button" class="btn btn-primary fa fa-save" data-ng-hide="isNewKeyword() || isExternal()"
             data-translate="" data-ng-click="updateKeyword()">updateKeyword</button>
           <button type="button" class="btn btn-primary fa fa-plus" data-ng-show="isNewKeyword()"
             data-translate="" data-ng-click="createKeyword()">createKeyword</button>

@@ -35,16 +35,16 @@
            * Triggered on a metadata row click.
            * Call the function given in directive parameter on-md-click.
            * If this function is not defined, then call the select method
-           * if the directive has a selection model. 
+           * if the directive has a selection model.
            */
           scope.onClick = function(md) {
-            if (angular.isFunction(scope.onMdClick)){
+            if (angular.isFunction(scope.onMdClick)) {
               scope.onMdClick(md);
-            } else if(angular.isFunction(scope.select)) {
+            } else if (angular.isFunction(scope.select)) {
               scope.select(md);
             }
           };
-          
+
           // Manage selection
           if (scope.options.selection.mode) {
             scope.selection = [];
@@ -133,15 +133,7 @@
             }
             return selected;
           };
-          // Event on new search result
-          // compute page number for pagination
-          scope.$watchCollection('searchResults.records', function() {
-            if (scope.searchResults.records.length > 0) {
-              scope.paginationInfo.pages = Math.ceil(
-                  scope.searchResults.count /
-                  scope.paginationInfo.hitsPerPage, 0);
-            }
-          });
+
 
           scope.$on('resetSelection', function(evt) {
             scope.selection = [];
@@ -150,11 +142,13 @@
 
           // Default settings for pagination
           // TODO: put parameters in directive
-          scope.paginationInfo = {
-            pages: -1,
-            currentPage: 1,
-            hitsPerPage: 5
-          };
+          if (scope.paginationInfo === null) {
+            scope.paginationInfo = {
+              pages: -1,
+              currentPage: 1,
+              hitsPerPage: 5
+            };
+          }
         }
       };
     }]);

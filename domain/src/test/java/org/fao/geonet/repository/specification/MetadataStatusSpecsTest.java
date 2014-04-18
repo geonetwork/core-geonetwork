@@ -8,7 +8,6 @@ import org.fao.geonet.repository.MetadataStatusRepositoryTest;
 import org.fao.geonet.repository.StatusValueRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -24,15 +23,12 @@ import static org.junit.Assert.assertEquals;
  * Time: 10:31 AM
  * To change this template use File | Settings | File Templates.
  */
-@Transactional
 public class MetadataStatusSpecsTest extends AbstractSpringDataTest {
     @Autowired
     private StatusValueRepository _statusRepo;
 
     @Autowired
     private MetadataStatusRepository _repo;
-
-    private AtomicInteger _inc = new AtomicInteger();
 
     @Test
     public void testHasMetadataId() throws Exception {

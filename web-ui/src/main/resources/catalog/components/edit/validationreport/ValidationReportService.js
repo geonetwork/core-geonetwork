@@ -1,4 +1,5 @@
 (function() {
+  'use strict';
   goog.provide('gn_validation_service');
 
   var module = angular.module('gn_validation_service', [

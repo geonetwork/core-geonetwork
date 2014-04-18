@@ -90,8 +90,10 @@
           select="if (gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code) 
           then gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code 
           else $listOfThesaurus/thesaurus[title=$thesaurusTitle]/key"/>
-        <xsl:variable name="thesaurusKey" select="substring-after($thesaurusInternalKey, 'geonetwork.thesaurus.')"></xsl:variable>
-
+        <xsl:variable name="thesaurusKey"
+                      select="if (starts-with($thesaurusInternalKey, 'geonetwork.thesaurus.'))
+                      then substring-after($thesaurusInternalKey, 'geonetwork.thesaurus.')
+                      else $thesaurusInternalKey"/>
 
         <!-- Single quote are escaped inside keyword. 
           TODO: support multilingual editing of keywords

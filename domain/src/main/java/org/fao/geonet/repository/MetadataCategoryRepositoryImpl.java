@@ -3,6 +3,7 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataCategory_;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -40,6 +41,7 @@ public class MetadataCategoryRepositoryImpl implements MetadataCategoryRepositor
     }
 
     @Override
+    @Transactional
     public void deleteCategoryAndMetadataReferences(int id) {
         /*
          * Start of HACK.

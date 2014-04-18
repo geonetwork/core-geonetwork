@@ -13,9 +13,9 @@
         replace: true,
         transclude: true,
         scope: {
-          allowSelection: '@allowSelection',
-          authenticated: '=authenticated',
-          selectedRecordsCount: '=selectedRecordsCount',
+          allowSelection: '@',
+          authenticated: '=',
+          selectedRecordsCount: '=',
           searchResults: '=gnSearchResults'
         },
         templateUrl: '../../catalog/components/search/searchresults/partials/' +

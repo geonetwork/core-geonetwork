@@ -57,10 +57,10 @@
        * if favicon parameter is set to true.
        */
       $scope.setCatalogLogo = function(logoName, favicon) {
-        var setFavicon = favicon ? 1 : 0;
+        var setFavicon = favicon ? '1' : '0';
 
         $http.get('admin.logo.update?fname=' + logoName +
-                  '&favicon=' + favicon)
+            '&favicon=' + setFavicon)
           .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('logoUpdated'),

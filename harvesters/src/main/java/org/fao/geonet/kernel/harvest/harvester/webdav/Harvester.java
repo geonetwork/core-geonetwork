@@ -36,11 +36,13 @@ import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.repository.HarvesterDataRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.Updater;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -234,7 +236,12 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
 		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(rf.getPath()));
 
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-        addCategories(id, params.getCategories(), localCateg, dataMan, context, log, null);
+        context.getBean(MetadataRepository.class).update(iId, new Updater<Metadata>() {
+            @Override
+            public void apply(@Nonnull Metadata entity) {
+                addCategories(entity, params.getCategories(), localCateg, context, log, null);
+            }
+        });
 
         dataMan.flush();
 
@@ -336,8 +343,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
             addPrivileges(record.id, params.getPrivileges(), localGroups, dataMan, context, log);
 
             metadata.getCategories().clear();
-            context.getBean(MetadataRepository.class).save(metadata);
-            addCategories(record.id, params.getCategories(), localCateg, dataMan, context, log, null);
+            addCategories(metadata, params.getCategories(), localCateg, context, log, null);
 
             dataMan.flush();
 

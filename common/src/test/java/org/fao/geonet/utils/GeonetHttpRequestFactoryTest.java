@@ -6,11 +6,13 @@ import com.sun.net.httpserver.HttpServer;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.jdom.Element;
+import org.junit.Ignore;
 import org.junit.Test;
 
-import javax.net.ServerSocketFactory;
 import java.io.IOException;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -51,11 +53,31 @@ public class GeonetHttpRequestFactoryTest {
             httpServer.stop(0);
         }
     }
+
+    @Test
+    @Ignore // Ignore because it requires a running instance
+    public void testBasicAuthenticationWithPreemptiveMode() throws Exception {
+        XmlRequest req = new GeonetHttpRequestFactory().
+                createXmlRequest(new URL("http://localhost:8081"));
+        req.setCredentials("admin", "admin");
+        req.setAddress("/geonetwork/srv/eng/xml.info");
+        req.addParam("type", "me");
+
+        Element response = req.execute();
+        assertEquals(response.getName(), "info");
+        assertEquals(response.getChild("me").getAttributeValue("authenticated"), "false");
+
+        req.setPreemptiveBasicAuth(true);
+        response = req.execute();
+        assertEquals(response.getName(), "info");
+        assertEquals(response.getChild("me").getAttributeValue("authenticated"), "true");
+    }
     @Test
     public void testFollowsRedirects() throws Exception {
         final int port = 29484;
         InetSocketAddress address = new InetSocketAddress(port);
         HttpServer httpServer = HttpServer.create(address, 0);
+
         final Element expectedResponse = new Element("resource").addContent(new Element("id").setText("test"));
         HttpHandler finalHandler = new HttpHandler() {
 
