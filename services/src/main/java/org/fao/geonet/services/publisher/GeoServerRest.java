@@ -695,7 +695,7 @@ public class GeoServerRest {
 		try {
 			m.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(username, password), m));
 		} catch (AuthenticationException a) {
-			Log.warn(LOGGER_NAME, "Failed to add the authentication Header, error is: " + e.getMessage());
+			Log.warn(LOGGER_NAME, "Failed to add the authentication Header, error is: " + a.getMessage());
 		};
 
         final ClientHttpResponse httpResponse = factory.execute(m, new UsernamePasswordCredentials(username, password), AuthScope.ANY);
