@@ -525,8 +525,8 @@ public class GeoServerRest {
             checkResponseCode(status);
 
 		} catch (Exception e) {
-            if(Log.isDebugEnabled("GeoServerRest"))
-                Log.debug("GeoServerRest", "Failed to create style for layer: "
+			if(Log.isDebugEnabled(LOGGER_NAME))
+				Log.debug(LOGGER_NAME, "Failed to create style for layer: "
 					+ layer + ", error is: " + e.getMessage());
 		}
 
