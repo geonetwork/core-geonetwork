@@ -690,9 +690,13 @@ public class GeoServerRest {
 
 		m.setConfig(RequestConfig.custom().setAuthenticationEnabled(true).build());
 
+		// apparently this is needed to preemptively send the auth, for servers that dont require it but
+		// dont send the same data if you're authenticated or not.
 		try {
-		m.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(username, password), m));
-		} catch (AuthenticationException a) {};
+			m.addHeader(new BasicScheme().authenticate(new UsernamePasswordCredentials(username, password), m));
+		} catch (AuthenticationException a) {
+			Log.warn(LOGGER_NAME, "Failed to add the authentication Header, error is: " + e.getMessage());
+		};
 
         final ClientHttpResponse httpResponse = factory.execute(m, new UsernamePasswordCredentials(username, password), AuthScope.ANY);
 
