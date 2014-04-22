@@ -40,6 +40,7 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.metadata.XslProcessing;
 import org.fao.geonet.services.metadata.XslProcessingReport;
+import org.fao.geonet.services.resources.handlers.IResourceUploadHandler;
 import org.jdom.Element;
 
 /**
@@ -54,12 +55,9 @@ public class UploadAndProcess implements Service {
 
     public Element exec(Element params, ServiceContext context)
             throws Exception {
-        String uploadDir = context.getUploadDir();
 
         String id = Utils.getIdentifierFromParameters(params, context);
         String filename = Util.getParam(params, Params.FILENAME);
-        String access = Util.getParam(params, Params.ACCESS, "private");
-        String overwrite = Util.getParam(params, Params.OVERWRITE, "no");
         String description = Util.getParam(params, Params.TITLE, "");
 
         Lib.resource.checkEditPrivilege(context, id);
@@ -73,9 +71,13 @@ public class UploadAndProcess implements Service {
 
         Element fnameElem = params.getChild("filename");
         String fname = fnameElem.getText();
+        String fsize = fnameElem.getAttributeValue("size");
+        if (fsize == null)
+            fsize = "0";
+
+        IResourceUploadHandler uploadHook = (IResourceUploadHandler) context.getApplicationContext().getBean("resourceUploadHandler");
+        uploadHook.onUpload(context, params, Integer.parseInt(id), fname, new Double(fsize).doubleValue());
         
-        File dir = new File(Lib.resource.getDir(context, access, id));
-        Upload.moveFile(context, uploadDir, fname, dir, overwrite);
 
         context.info("UPLOADED:" + fname + "," + id + ","
                 + context.getIpAddress() + "," + username);

@@ -198,7 +198,7 @@
             fast: false,
             id: gnCurrentEdit.id
           }, {
-            method: 'post',
+            method: 'get',
             headers: {
               'Content-type': 'application/xml'
             }

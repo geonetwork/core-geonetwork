@@ -57,7 +57,7 @@ public class View extends ShowViewBaseService {
 
         boolean witholdWithheldElements = Util.getParam(params, "hide_withheld", false);
         if (witholdWithheldElements) {
-           XmlSerializer.getThreadLocal(true).setForceHideWithheld(witholdWithheldElements);
+           XmlSerializer.getThreadLocal(true).setForceFilterEditOperation(witholdWithheldElements);
         }
 
 		// -----------------------------------------------------------------------

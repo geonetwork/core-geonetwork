@@ -36,6 +36,7 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.metadata.Update;
+import org.fao.geonet.services.resources.handlers.IResourceRemoveHandler;
 import org.jdom.Element;
 
 import java.io.File;
@@ -86,12 +87,9 @@ public class Remove extends NotInReadOnlyModeService {
 
 		String fname = elem.getText();
 
-		// delete online resource
-		File dir  = new File(Lib.resource.getDir(context, access, id));
-		File file = new File(dir, fname);
-
-		if (file.exists() && !file.delete())
-			throw new OperationAbortedEx("unable to delete resource");
+        // Remove the file and update the file upload/downloads tables
+        IResourceRemoveHandler removeHook = (IResourceRemoveHandler) context.getApplicationContext().getBean("resourceRemoveHandler");
+        removeHook.onDelete(context, params, Integer.parseInt(id), fname, access);
 
 		// update the metadata
 		params.addContent(new Element("_" + ref));

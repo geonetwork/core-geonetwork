@@ -172,10 +172,10 @@
     <xsl:variable name="e" select="substring-after($coverage,'East ')"/>
     <xsl:variable name="east" select="substring-before($e,',')"/>
     <xsl:variable name="w" select="substring-after($coverage,'West ')"/>
-    <xsl:variable name="west" select="substring-before($w,'. ')"/>
-    <xsl:variable name="p" select="substring-after($coverage,'(')"/>
-    <xsl:variable name="place" select="substring-before($p,')')"/>
-    
+    <xsl:variable name="west" select="if (contains($w, '. '))
+                                      then substring-before($w,'. ') else $w"/>
+    <xsl:variable name="place" select="substring-after($coverage,'. ')"/>
+
     <xsl:call-template name="render-boxed-element">
       <xsl:with-param name="label"
         select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..),'','')/label"/>
@@ -189,7 +189,8 @@
           data-hbottom="{$south}"
           data-htop="{$north}"
           data-dc-ref="_{gn:element/@ref}"
-          data-lang="lang"></div>
+          data-lang="lang"
+          data-location="{$place}"></div>
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>

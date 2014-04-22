@@ -139,13 +139,17 @@ public class AccessManager {
      * @return
      * @throws Exception
      */
-    public Set<Operation> getAllOperations(ServiceContext context, String mdId, String ip) throws Exception {
-        HashSet<Operation> operations = new HashSet<Operation>();
+	public Set<Operation> getAllOperations(ServiceContext context, String mdId, String ip) throws Exception {
+	    HashSet<Operation> operations = new HashSet<Operation>();
+        Set<Integer> groups = getUserGroups(context.getUserSession(),
+                ip, false);
         for (OperationAllowed opAllow: _opAllowedRepository.findByMetadataId(mdId)) {
-            operations.add(_opRepository.findOne(opAllow.getId().getOperationId()));
-        }
-        return operations;
-    }
+            if (groups.contains(opAllow.getId().getGroupId())) {
+                operations.add(_opRepository.findOne(opAllow.getId().getOperationId()));
+            }
+	    }
+		return operations;
+	}
 
     /**
      * Returns all groups accessible by the user (a set of ids).
@@ -362,6 +366,41 @@ public class AccessManager {
         }
     }
 
+    /**
+     * Returns whether a particular metadata is downloadable.
+     *
+     * @param context
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    public boolean canDownload(final ServiceContext context, final String id) throws Exception {
+        if (isOwner(context, id)) {
+            return true;
+        }
+        int downloadId = ReservedOperation.download.getId();
+        Set<Operation> ops = getOperations(context, id, null);
+        for (Operation op : ops) {
+            if (op.getId() == downloadId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean canDynamic(final ServiceContext context, final String id) throws Exception {
+        if (isOwner(context, id)) {
+            return true;
+        }
+        int dynamicId = ReservedOperation.dynamic.getId();
+        Set<Operation> ops = getOperations(context, id, null);
+        for (Operation op : ops) {
+            if (op.getId() == dynamicId) {
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * Check if the group has the permission.
      *

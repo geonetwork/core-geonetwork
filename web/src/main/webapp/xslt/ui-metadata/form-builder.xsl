@@ -439,11 +439,15 @@
 
                         <xsl:attribute name="{$directiveAttributeName}">
                           <xsl:choose>
-                            <xsl:when test="$keyValues and count($keyValues/field[@name = $valueLabelKey]/
+                            <xsl:when test="$keyValues and
+                                            count($keyValues/field[@name = $valueLabelKey]/
                               directiveAttributes[@name = $directiveAttributeName]) > 0">
                               <xsl:value-of select="$keyValues/field[@name = $valueLabelKey]/
                               directiveAttributes[@name = $directiveAttributeName]/text()"/>
-                              </xsl:when>
+                            </xsl:when>
+                            <xsl:when test="starts-with(., 'eval#')">
+                              <!-- Empty value for XPath to evaluate. -->
+                            </xsl:when>
                             <xsl:otherwise>
                               <xsl:value-of select="."/>
                             </xsl:otherwise>

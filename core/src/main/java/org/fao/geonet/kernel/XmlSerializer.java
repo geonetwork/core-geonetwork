@@ -23,70 +23,49 @@
 
 package org.fao.geonet.kernel;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
-import com.vividsolutions.jts.util.Assert;
-import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
 import jeeves.xlink.Processor;
-
-import org.apache.log4j.Priority;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
-import org.jdom.filter.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class is responsible of reading and writing xml on the database. 
  * It works on tables like (id, data, lastChangeDate).
  */
 public abstract class XmlSerializer {
-
-	private static final List<Namespace> XML_SELECT_NAMESPACE = Arrays.asList(Geonet.Namespaces.GCO);
-	private static final String WITHHELD = "withheld";	
-	@SuppressWarnings("serial")
-	private static final Filter EMPTY_WITHHELD = new Filter() {
-		
-		@Override
-		public boolean matches(Object obj) {
-			if (obj instanceof Element) {
-				Element elem = (Element) obj;
-				String withheld = elem.getAttributeValue("nilReason", Geonet.Namespaces.GCO);
-				if(WITHHELD.equalsIgnoreCase(withheld) && elem.getChildren().size() == 0 && elem.getTextTrim().isEmpty()) {
-					return true;
-				}
-			}
-			return false;
-		}
-	};
-
 	public static class ThreadLocalConfiguration {
-	    private boolean forceHideWithheld = false;
+	    private boolean forceFilterEditOperation = false;
 
-        public boolean isForceHideWithheld() {
-            return forceHideWithheld;
+        public boolean isForceFilterEditOperation() {
+            return forceFilterEditOperation;
         }
-        public void setForceHideWithheld(boolean forceHideWithheld) {
-            this.forceHideWithheld = forceHideWithheld;
+        public void setForceFilterEditOperation(boolean forceFilterEditOperation) {
+            this.forceFilterEditOperation = forceFilterEditOperation;
         }
 	}
 
     @Autowired
     protected SettingManager _settingManager;
+    @Autowired
+    protected DataManager _dataManager;
     @Autowired
     private MetadataRepository _metadataRepository;
 
@@ -144,43 +123,47 @@ public abstract class XmlSerializer {
 		String xmlData = metadata.getData();
 		Element metadataXml = Xml.loadString(xmlData, false);
 
-		logEmptyWithheld(id, metadataXml, "XmlSerializer.internalSelect");
-		
-		if (!isIndexingTask) { 
-			boolean hideWithheldElements = _settingManager.getHideWitheldElements();
-			ServiceContext context = ServiceContext.get();
-    		if(context != null) {
-    			GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-    			boolean canEdit = gc.getBean(AccessManager.class).canEdit(context, id);
-    			if(canEdit) {
-    				hideWithheldElements = false;
-    			}
+		if (!isIndexingTask) {
+            ServiceContext context = ServiceContext.get();
+            MetadataSchema mds = _dataManager.getSchema(metadata.getDataInfo().getSchemaId());
+
+            // Check if a filter is defined for this schema
+            // for the editing operation ie. user who can not edit
+            // will not see those elements.
+            Pair<String, Element> editXpathFilter = mds.getOperationFilter(ReservedOperation.editing);
+            boolean filterEditOperationElements = editXpathFilter != null;
+            List<Namespace> namespaces = mds.getNamespaces();
+            if(context != null) {
+                GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+                AccessManager am = gc.getBean(AccessManager.class);
+                if (editXpathFilter != null) {
+                    boolean canEdit = am.canEdit(context, id);
+                    if(canEdit) {
+                        filterEditOperationElements = false;
+                    }
+                }
+                Pair<String, Element> downloadXpathFilter = mds.getOperationFilter(ReservedOperation.download);
+                if (downloadXpathFilter != null) {
+                    boolean canDownload = am.canDownload(context, id);
+                    if(!canDownload) {
+                        removeFilteredElement(metadataXml, downloadXpathFilter, namespaces);
+                    }
+                }
+                Pair<String, Element> dynamicXpathFilter = mds.getOperationFilter(ReservedOperation.dynamic);
+                if (dynamicXpathFilter != null) {
+                    boolean canDynamic = am.canDynamic(context, id);
+                    if(!canDynamic) {
+                      removeFilteredElement(metadataXml, dynamicXpathFilter, namespaces);
+                    }
+                }
     		}
-    		if (hideWithheldElements || (getThreadLocal(false) != null && getThreadLocal(false).forceHideWithheld)) {
-    		    removeWithheldElements(metadataXml, _settingManager);
-    		}
+    		if (filterEditOperationElements || (getThreadLocal(false) != null && getThreadLocal(false).forceFilterEditOperation)) {
+                removeFilteredElement(metadataXml, editXpathFilter, namespaces);
+            }
 		}
 		return (Element) metadataXml.detach();
 	}
 
-    private boolean logEmptyWithheld(String id, Element metadata, String methodName) {
-        boolean hideWithheldElements = _settingManager.getValueAsBool("system/" + Geonet.Config.HIDE_WITHHELD_ELEMENTS + "/enable", false);
-        if (hideWithheldElements && Log.isEnabledFor(Geonet.DATA_MANAGER, Priority.WARN_INT)) {
-            Iterator<?> emptyWithheld = metadata.getDescendants(EMPTY_WITHHELD);
-            if (emptyWithheld.hasNext()) {
-                StringBuilder withheld = new StringBuilder();
-                while (emptyWithheld.hasNext()) {
-                    Element next = (Element) emptyWithheld.next();
-                    withheld.append("\n    ");
-                    xpath(withheld, next);
-                }
-                Log.warning(Geonet.DATA_MANAGER, "[" + WITHHELD + "] " + "In method [" + methodName + "] Metadata id=" + id
-                        + " has withheld elements that don't contain any data: " + withheld);
-                return true;
-            }
-        }
-        return false;
-    }
     private void xpath(StringBuilder buffer, Element next) {
 		if(next.getParentElement() != null) {
 			xpath(buffer, next.getParentElement());
@@ -198,27 +181,43 @@ public abstract class XmlSerializer {
 		}
 	}
 
-	public static void removeWithheldElements(Element metadata, SettingManager sm) throws JDOMException {
-        boolean keepMarkedElement = sm.getValueAsBool("system/"+Geonet.Config.HIDE_WITHHELD_ELEMENTS+"/keepMarkedElement", false);
-        List<?> nodes = Xml.selectNodes(metadata, "*[@gco:nilReason = '"+WITHHELD+"'] | *//*[@gco:nilReason = '"+WITHHELD+"']", XML_SELECT_NAMESPACE);
+    public static void removeFilteredElement(Element metadata,
+                                             final Pair<String, Element> xPathAndMarkedElement,
+                                             List<Namespace> namespaces) throws JDOMException {
+        String xpath = xPathAndMarkedElement.one();
+        Element mark = xPathAndMarkedElement.two();
+
+        List<?> nodes = Xml.selectNodes(metadata,
+                xpath,
+                namespaces);
         for (Object object : nodes) {
-        	if (object instanceof Element) {
-        		Element element = (Element) object;
-        		
-        		if(keepMarkedElement) {
-        			element.removeContent();
-        			Attribute nilReason = element.getAttribute("nilReason", Geonet.Namespaces.GCO);
-        			@SuppressWarnings("unchecked")
-        			List<Attribute> atts = new ArrayList<Attribute>(element.getAttributes());
-        			for (Attribute attribute : atts) {
-        				if(attribute != nilReason) {
-        					attribute.detach();
-        				}
-        			}
-        		} else {
-        			element.detach();
-        		}
-        	}
+            if (object instanceof Element) {
+                Element element = (Element) object;
+                if(mark != null) {
+                    element.removeContent();
+
+                    // Remove attributes
+                    @SuppressWarnings("unchecked")
+                    List<Attribute> atts = new ArrayList<Attribute>(element.getAttributes());
+                    for (Attribute attribute : atts) {
+                        attribute.detach();
+                    }
+
+                    // Insert attributes or children element of the mark
+                    List<Attribute> markAtts = new ArrayList<Attribute>(mark.getAttributes());
+                    for (Attribute attribute : markAtts) {
+                        element.setAttribute((Attribute) attribute.clone());
+                    }
+                    for (Object o : mark.getChildren()) {
+                        if (o instanceof Element) {
+                            Element e = (Element) o;
+                            element.setContent((Element) e.clone());
+                        }
+                    }
+                } else {
+                    element.detach();
+                }
+            }
         }
     }
 
@@ -255,34 +254,7 @@ public abstract class XmlSerializer {
                             final String uuid) throws SQLException {
 
 		if (resolveXLinks()) Processor.removeXLink(xml);
-        if (logEmptyWithheld(id, xml, "XmlSerializer.updateDb")) {
-            StackTraceElement[] stacktrace = new Exception("").getStackTrace();
-            StringBuffer info = new StringBuffer();
-            info.append('[').append(WITHHELD).append(']');
-            info.append("Extra information related to updating the metadata with an empty withheld element:");
-            final String indent = "\n    ";
-            ServiceContext serviceContext = ServiceContext.get();
-            if (serviceContext != null) {
-                UserSession userSession = serviceContext.getUserSession();
-                if (userSession != null) {
-                    UserSession session = userSession;
-                    info.append(indent).append("User: ").append(session.getUsername());
-                    info.append(indent).append("Userid: ").append(session.getUserId());
-                }
-                info.append(indent).append("IP: ").append(serviceContext.getIpAddress());
-            }
 
-            info.append(indent).append("StackTrace: ");
-            final String doubleIndent = "\n        ";
-            for (int i = 0; i < stacktrace.length; i++) {
-                StackTraceElement traceElement = stacktrace[i];
-                if (traceElement.getClassName().startsWith("org.fao.geonet")) {
-                    info.append(doubleIndent).append(traceElement.getClassName()).append('.').append(traceElement.getMethodName())
-                            .append('(').append(traceElement.getLineNumber()).append(')');
-                }
-            }
-            Log.warning(Geonet.DATA_MANAGER, info.toString());
-        }
         int metadataId = Integer.valueOf(id);
         Metadata md = _metadataRepository.findOne(metadataId);
 

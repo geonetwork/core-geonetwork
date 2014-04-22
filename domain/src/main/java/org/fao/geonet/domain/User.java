@@ -37,6 +37,7 @@ public class User extends GeonetEntity implements UserDetails {
     private String _kind;
     private Profile _profile = Profile.RegisteredUser;
     private UserSecurity _security = new UserSecurity();
+    private String _lastLoginDate;
 
     /**
      * Get the userid.   This is a generated value and as such new instances should not have this set as it will simply be ignored
@@ -308,6 +309,28 @@ public class User extends GeonetEntity implements UserDetails {
         return this;
     }
 
+    /**
+     * Get the last login date of the user.  May be null
+     *
+     * @return the last login date of the user.  May be null
+     */
+    @Nullable
+    public String getLastLoginDate() {
+        return _lastLoginDate;
+    }
+
+    /**
+     * Set the last login date  of the user.  May be null
+     *
+     * @param lastLoginDate the last login date of the user.  May be null
+     * @return this user object
+     */
+    @Nonnull
+    public User setLastLoginDate(@Nullable String lastLoginDate) {
+        this._lastLoginDate = lastLoginDate;
+        return this;
+    }
+
     @Transient
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -425,6 +448,7 @@ public class User extends GeonetEntity implements UserDetails {
         if (!_security.equals(user._security)) return false;
         if (_surname != null ? !_surname.equals(user._surname) : user._surname != null) return false;
         if (_username != null ? !_username.equals(user._username) : user._username != null) return false;
+        if (_lastLoginDate != null ? !_lastLoginDate.equals(user._lastLoginDate) : user._lastLoginDate != null) return false;
 
         return true;
     }
@@ -441,6 +465,7 @@ public class User extends GeonetEntity implements UserDetails {
         result = 31 * result + (_kind != null ? _kind.hashCode() : 0);
         result = 31 * result + (_profile != null ? _profile.hashCode() : 0);
         result = 31 * result + _security.hashCode();
+        result = 31 * result + (_lastLoginDate != null ? _lastLoginDate.hashCode() : 0);
         return result;
     }
 }
