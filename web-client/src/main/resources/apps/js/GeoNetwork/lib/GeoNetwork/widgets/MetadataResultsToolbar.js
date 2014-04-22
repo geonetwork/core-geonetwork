@@ -721,8 +721,8 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             this.setVisible(vis);
             if(vis)nbVisible++;
         });
-        
-        this.actionOnSelectionMenu.setVisible(nbVisible > 0 && this.catalogue.isAdmin());
+
+        this.actionOnSelectionMenu && this.actionOnSelectionMenu.setVisible(nbVisible > 0 && catalogue.identifiedUser != undefined);
     },
     /** private: method[onDestroy] 
      *
