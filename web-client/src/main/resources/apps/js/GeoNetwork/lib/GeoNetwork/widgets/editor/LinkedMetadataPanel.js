@@ -160,7 +160,7 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
     /** public: method[addRelation] 
      *  Open the GeoNetwork.editor.LinkResourcesWindow to add a relation
      */
-    addRelation: function (type) {
+    addRelation: function (type, url, name, protocol, descr) {
         var window, config = {
                 type: type,
                 editor: this.editor,
