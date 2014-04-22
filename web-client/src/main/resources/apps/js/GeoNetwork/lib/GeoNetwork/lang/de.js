@@ -507,6 +507,7 @@ GeoNetwork.Lang.de = {
 'denominators': 'Scale denominators',
 'orgName': 'organization',
 'orgNames': 'Organisationen',
+'types': 'Types',
 'serviceTypes': 'Art des Dienstes',
 'facetMore': '+ Mehr zeigen',
 'facetLess': '- Weniger zeigen',
