@@ -384,7 +384,7 @@ GeoNetwork.util.SearchTools = {
                 var geometry = geocat.vectorLayer.features[0].geometry;
                 var proj = new OpenLayers.Projection("EPSG:4326");
                 Ext.each(geocat.vectorLayer.features, function(feature) {
-                    geometry = feature.geometry.transform(app.mapApp.getMap()
+                    geometry = feature.geometry.clone().transform(app.mapApp.getMap()
                             .getProjection(), proj);
                     filters.push("geometry" + "="
                             + encodeURIComponent(geometry.toString()));
