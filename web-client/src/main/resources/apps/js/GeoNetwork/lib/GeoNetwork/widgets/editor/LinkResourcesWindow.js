@@ -761,7 +761,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                     paramsUpper[p.toUpperCase()] = params[p];
                 }
                 params = Ext.applyIf(paramsUpper, {
-                    REQUEST: 'getCapabilities',
+                    REQUEST: 'GetCapabilities',
                     SERVICE: 'WMS'
                 });
                 
