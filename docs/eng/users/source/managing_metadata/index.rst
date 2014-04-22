@@ -17,3 +17,4 @@ Managing Metadata
     processing/index.rst
     fragments/index.rst
     schemas/index.rst
+    massive_replace/index.rst
