@@ -94,7 +94,7 @@ public class Show extends ShowViewBaseService
 		
 		boolean witholdWithheldElements = Util.getParam(params, "hide_withheld", false);
 		if (XmlSerializer.getThreadLocal(false) != null || witholdWithheldElements) {
-		   XmlSerializer.getThreadLocal(true).setForceHideWithheld(witholdWithheldElements);
+		   XmlSerializer.getThreadLocal(true).setForceFilterEditOperation(witholdWithheldElements);
 		}
 		if (id == null) {
             throw new MetadataNotFoundEx("Metadata not found.");

@@ -39,8 +39,6 @@ import com.google.common.collect.Lists;
 import jeeves.TransactionAspect;
 import jeeves.TransactionTask;
 import org.eclipse.jetty.util.ConcurrentHashSet;
-import jeeves.TransactionAspect;
-import jeeves.TransactionTask;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
@@ -111,7 +109,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.Vector;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
@@ -3220,8 +3217,10 @@ public class DataManager {
 
         final Metadata metadata = _metadataRepository.findOne(metadataId);
         if (metadata != null && metadata.getDataInfo().getType() == MetadataType.METADATA) {
+            MetadataSchema mds = servContext.getBean(DataManager.class).getSchema(metadata.getDataInfo().getSchemaId());
+            Pair<String, Element> editXpathFilter = mds.getOperationFilter(ReservedOperation.editing);
+            XmlSerializer.removeFilteredElement(md, editXpathFilter, mds.getNamespaces());
 
-            XmlSerializer.removeWithheldElements(md, servContext.getBean(SettingManager.class));
             String uuid = getMetadataUuid( metadataId);
             servContext.getBean(MetadataNotifierManager.class).updateMetadata(md, metadataId, uuid, servContext);
         }
