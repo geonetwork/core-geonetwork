@@ -16,7 +16,7 @@
             ifNotOperation="editing">
       <keepMarkedElement gco:nilReson="withheld"/>
     </filter>
-    <filter xpath="*//gmd:onLine[*/gmd:protocol/gco:CharacterString = 'WWW:DOWNLOAD-1.0-http--download']"
+    <filter xpath="*//gmd:onLine[*/gmd:protocol/gco:CharacterString = 'WWW:DOWNLOAD-1.0-http--download' or */gmd:protocol/gco:CharacterString = 'FILE' or */gmd:protocol/gco:CharacterString = 'DB' or */gmd:protocol/gco:CharacterString = 'COPYFILE']"
             ifNotOperation="download"/>
     <filter xpath="*//gmd:onLine[starts-with(*/gmd:protocol/gco:CharacterString, 'OGC:WMS')]"
             ifNotOperation="dynamic"/>
