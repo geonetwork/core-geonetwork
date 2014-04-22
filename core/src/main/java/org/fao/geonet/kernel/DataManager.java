@@ -2823,6 +2823,7 @@ public class DataManager {
 
             //--- setup environment
             Element env = new Element("env");
+            env.addContent(new Element("id").setText(metadata.getId() + ""));
             env.addContent(new Element("uuid").setText(uuid));
             Element schemaLoc = new Element("schemaLocation");
             schemaLoc.setAttribute(schemaMan.getSchemaLocation(schema,context));
