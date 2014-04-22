@@ -21,7 +21,7 @@
         	<sch:let name="emptyGeoId" value="che:basicGeodataID/gco:CharacterString!='' and (not(che:basicGeodataIDType) or che:basicGeodataIDType/che:basicGeodataIDTypeCode/@codeListValue='')"/>
    
             <!--  Check that basicGeodataId is defined -->
-            <sch:assert test="not($emptyGeoId)">$loc/strings/alert.M100</sch:assert>
+            <sch:assert test="not($emptyGeoId)"><sch:value-of select="$loc/strings/alert.M100"/></sch:assert>
             <sch:report test="not($emptyGeoId)"><sch:value-of select="$loc/strings/report.M100/div"/></sch:report>
         </sch:rule>
     </sch:pattern>
@@ -40,11 +40,11 @@
         <sch:title>$loc/strings/M102</sch:title>
         <sch:rule
             context="//*[*/@codeListValue]">
-        	<sch:let name="emptyCodeList" value="*/@codeListValue=''"/>
+        	<sch:let name="emptyCodeList" value="*/@codeListValue='' and not(name(.) = 'che:basicGeodataIDType' and ./@gco:nilReason)"/>
    
             <!--  Check that basicGeodataId is defined -->
-            <sch:assert test="not($emptyCodeList)">$loc/strings/alert.M102</sch:assert>
-            <sch:report test="not($emptyCodeList)"><sch:value-of select="$loc/strings/report.M102/div"/></sch:report>
+            <sch:assert test="not($emptyCodeList)">'<sch:value-of select="name(.)"/>' - <sch:value-of select="$loc/strings/alert.M102"/></sch:assert>
+            <sch:report test="not($emptyCodeList)">'<sch:value-of select="name(.)"/>' - <sch:value-of select="$loc/strings/report.M102/div"/></sch:report>
         </sch:rule>
     </sch:pattern>
     <sch:pattern>

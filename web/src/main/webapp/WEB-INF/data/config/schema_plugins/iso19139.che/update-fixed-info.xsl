@@ -181,6 +181,20 @@
 	</xsl:template>
 
 	<!-- ================================================================= -->
+
+	<xsl:template match="che:basicGeodataIDType">
+		<xsl:copy>
+			<xsl:copy-of select="@*[not(name()='gco:nilReason')]"/>
+			<xsl:if test="normalize-space(che:basicGeodataIDTypeCode/@codeListValue)=''">
+				<xsl:attribute name="gco:nilReason">
+					<xsl:value-of select="'missing'"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:apply-templates select="che:basicGeodataIDTypeCode"/>
+		</xsl:copy>
+	</xsl:template>
+
+	<!-- ================================================================= -->
 	<!-- codelists: set @codeList path -->
 	<!-- ================================================================= -->
 	
