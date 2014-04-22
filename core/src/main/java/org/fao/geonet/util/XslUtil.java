@@ -98,9 +98,14 @@ public final class XslUtil
     public static String parseMarkupToText(String src, MarkupParser markupParser) {
         String html;
         if(markupParser != null) {
-            html = markupParser.parseToHtml(src.toString());
-            html = extractFromFullHtml(html);
-            return html;
+            try {
+                html = markupParser.parseToHtml(src.toString());
+                html = extractFromFullHtml(html);
+                return html;
+            } catch (RuntimeException e) {
+                Log.error(Geonet.GEONETWORK, "XslUtil.parseMarkupToText error. Error message is: " + e.getMessage());
+                return src;
+            }
         } else {
             html = src;
         }
