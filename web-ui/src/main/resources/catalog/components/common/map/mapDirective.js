@@ -19,7 +19,8 @@
              hleftRef: '@',
              hrightRef: '@',
              dcRef: '@',
-             lang: '='
+             lang: '=',
+             location: '@'
            },
            link: function(scope, element, attrs) {
              scope.drawing = false;
@@ -32,7 +33,7 @@
               */
              var setDcOutput = function() {
                if (scope.dcRef) {
-                 scope.dcExtent = gnMap.getDcExtent(scope.extent.md);
+                 scope.dcExtent = gnMap.getDcExtent(scope.extent.md, scope.location);
                }
              };
 
