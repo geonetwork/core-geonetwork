@@ -2819,11 +2819,12 @@ public class DataManager {
             }
 
             String currentUuid = metadata != null ? metadata.getUuid() : null;
+            String id = metadata != null ? metadata.getId() + "" : null;
             uuid = uuid == null ? currentUuid : uuid;
 
             //--- setup environment
             Element env = new Element("env");
-            env.addContent(new Element("id").setText(metadata.getId() + ""));
+            env.addContent(new Element("id").setText(id));
             env.addContent(new Element("uuid").setText(uuid));
             Element schemaLoc = new Element("schemaLocation");
             schemaLoc.setAttribute(schemaMan.getSchemaLocation(schema,context));
