@@ -114,12 +114,12 @@
                * Dirty check if the node is a Mapserver REST API
                * or a GeoServer REST API.
                *
-               * @param gsNode
-               * @returns {boolean}
+               * @param {Object} gsNode
+               * @return {boolean}
                */
-              var isMRA = function (gsNode) {
+              var isMRA = function(gsNode) {
                 return gsNode.adminUrl.indexOf('/mra') !== -1;
-              }
+              };
               /**
                * Add the layer of the node to the current
                * map.
@@ -127,8 +127,8 @@
               var addLayerToMap = function(layer) {
                 // TODO: drop existing layer before adding new
                 var layerName = isMRA(gsNode) ?
-                  scope.wmsLayerName :
-                  gsNode.namespacePrefix +
+                    scope.wmsLayerName :
+                    gsNode.namespacePrefix +
                     ':' + scope.wmsLayerName;
 
                 map.addLayer(new ol.layer.Tile({

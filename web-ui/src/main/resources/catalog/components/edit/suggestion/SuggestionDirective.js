@@ -20,14 +20,15 @@
               scope.gnCurrentEdit = gnCurrentEdit;
 
               scope.load = function() {
-                gnSuggestion.load(scope.$parent.lang || 'eng').success(function(data) {
-                  if (data && !angular.isString(data)) {
-                    scope.suggestions = data;
-                  }
-                  else {
-                    scope.suggestions = [];
-                  }
-                });
+                gnSuggestion.load(scope.$parent.lang || 'eng').
+                    success(function(data) {
+                      if (data && !angular.isString(data)) {
+                        scope.suggestions = data;
+                      }
+                      else {
+                        scope.suggestions = [];
+                      }
+                    });
               };
 
               // Reload suggestions list when a directive requires it
