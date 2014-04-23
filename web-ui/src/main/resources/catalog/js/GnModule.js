@@ -22,7 +22,6 @@
   goog.require('gn_search_controller');
   goog.require('gn_search_form_controller');
   goog.require('gn_search_manager');
-  goog.require('gn_search_results');
   goog.require('gn_utility');
 
   var module = angular.module('gn', [
@@ -33,7 +32,6 @@
     'gn_utility',
     'gn_search_manager',
     'gn_metadata_manager',
-    'gn_search_results',
     'gn_pagination',
     'gn_cat_controller',
     'gn_search_controller',
