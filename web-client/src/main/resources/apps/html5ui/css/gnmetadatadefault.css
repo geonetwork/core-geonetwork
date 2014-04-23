@@ -51,7 +51,7 @@ span.error {
 
 .metadata .mandatory+td input.error,.metadata .mandatory+td textarea.error,.metadata .mandatory+td select.error
 	{
-	border: 1px solid #7EADD9;
+    border: 2px solid #ff0000;
 }
 
 .metadata * div.info {
