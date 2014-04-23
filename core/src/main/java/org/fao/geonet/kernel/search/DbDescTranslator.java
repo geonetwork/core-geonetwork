@@ -135,6 +135,9 @@ public class DbDescTranslator extends Translator {
                         // Call to the method with wrong argument type.
                     }
                 }
+                if (entity != null) {
+                    break;
+                }
             }
         }
 
