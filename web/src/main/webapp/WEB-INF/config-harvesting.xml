@@ -78,6 +78,12 @@
 			<class name=".services.harvesting.Info" />
 		</service>
 
+				<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.harvesting.history">
+			<class name=".services.harvesting.History" />
+		</service>
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="harvesting.log">

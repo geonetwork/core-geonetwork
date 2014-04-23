@@ -566,7 +566,9 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             Log.debug(Geonet.LUCENE, "determined language is: " + finalDetectedLanguage);
         }
 
-        String presentationLanguage = finalDetectedLanguage;
+        String presentationLanguage = finalDetectedLanguage == null ?
+                                        srvContext.getLanguage() :
+                                        finalDetectedLanguage;
         if (settingInfo.getRequestedLanguageOnly() == SettingInfo.SearchRequestLanguage.ONLY_UI_DOC_LOCALE ||
                 settingInfo.getRequestedLanguageOnly() == SettingInfo.SearchRequestLanguage.ONLY_UI_LOCALE  ||
                 settingInfo.getRequestedLanguageOnly() == SettingInfo.SearchRequestLanguage.PREFER_UI_DOC_LOCALE ||
