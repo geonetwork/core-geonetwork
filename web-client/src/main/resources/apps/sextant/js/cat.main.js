@@ -492,7 +492,7 @@ cat.app = function() {
             item.setVisible(false);
         });
 
-        catalogue.on('afterReset', search, this);
+//        catalogue.on('afterReset', search, this);
 
         var searchForm = new GeoNetwork.SearchFormPanel({
             id : 'searchForm',
