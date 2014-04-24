@@ -219,8 +219,8 @@
          *
          * @param {string} type of the directive that calls it.
          */
-        onOpenPopup: function(type) {
-          openCb[type]();
+        onOpenPopup: function(type, additionalParams) {
+          openCb[type](additionalParams);
         },
 
         /**

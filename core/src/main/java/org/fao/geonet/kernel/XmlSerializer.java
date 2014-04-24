@@ -184,6 +184,9 @@ public abstract class XmlSerializer {
     public static void removeFilteredElement(Element metadata,
                                              final Pair<String, Element> xPathAndMarkedElement,
                                              List<Namespace> namespaces) throws JDOMException {
+        // xPathAndMarkedElement seem can be null in some schemas like dublin core
+        if (xPathAndMarkedElement == null) return;
+
         String xpath = xPathAndMarkedElement.one();
         Element mark = xPathAndMarkedElement.two();
 
