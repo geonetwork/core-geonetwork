@@ -52,8 +52,7 @@ public class UserQueryInput {
             SearchParameter.OWNER, 
             SearchParameter.ISADMIN, 
             SearchParameter.ISREVIEWER, 
-            SearchParameter.ISUSERADMIN, 
-            LuceneIndexField.GROUP_OWNER);
+            SearchParameter.ISUSERADMIN);
 
     /**
      * Don't take into account those field in search (those field are not 
