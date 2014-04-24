@@ -72,6 +72,12 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+		<service name="xml.harvesting.history">
+			<class name=".services.harvesting.History" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
 		<service name="harvesting.history">
 			<class name=".services.harvesting.History" />
 			<output sheet="harvesting/harvesting-history.xsl">

@@ -119,6 +119,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.harvesting.run!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.harvesting.info!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.harvesting.clone!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.harvesting.history!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/harvesting.history.full!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/harvesting.history!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/harvesting.history.delete!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
