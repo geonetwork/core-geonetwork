@@ -31,15 +31,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import org.fao.geonet.domain.SchematronCriteria;
-import org.fao.geonet.domain.SchematronCriteriaGroup;
-import org.fao.geonet.domain.SchematronCriteriaGroupId;
-import org.fao.geonet.domain.SchematronCriteriaType;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
 import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.utils.Log;
@@ -63,6 +57,8 @@ public class MetadataSchema
 	private Map<String, String> hmSubsLink = new HashMap<String, String>();
 	private Map<String,Namespace> hmNameSpaces = new HashMap<String,Namespace>();
 	private Map<String,Namespace> hmPrefixes = new HashMap<String,Namespace>();
+    private Map<String, Pair<String, Element>> hmOperationFilters =
+            new HashMap<String, Pair<String, Element>>();
 	private String	schemaName;
 	private String	schemaDir;
 	private String	primeNS;
@@ -317,6 +313,18 @@ public class MetadataSchema
 		}
 	}
 
+    /**
+     * Return the list of namespaces for the schema.
+     * @return
+     */
+    public List<Namespace> getNamespaces() {
+        List<Namespace> list = new ArrayList<Namespace>(hmNameSpaces.size());
+        for (Namespace ns : hmNameSpaces.values()) {
+            list.add(ns);
+        }
+        return list;
+    }
+
 	//---------------------------------------------------------------------------
 
 	public String getPrefix(String theNSUri)
@@ -430,6 +438,20 @@ public class MetadataSchema
         }
 
         setSchematronRules(saSchemas);
+    }
+
+    public void setOperationFilters(Map<String, Pair<String, Element>> operationFilters) {
+        this.hmOperationFilters = operationFilters;
+    }
+
+    /**
+     * Get the XPath filter for the reserved operation.
+     *
+     * @param operation
+     * @return The XPath to select element to filter or null
+     */
+    public Pair<String, Element> getOperationFilter(ReservedOperation operation) {
+        return hmOperationFilters.get(operation.name());
     }
 
     /**

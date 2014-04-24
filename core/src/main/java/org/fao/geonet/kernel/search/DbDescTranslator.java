@@ -48,12 +48,13 @@ public class DbDescTranslator extends Translator {
     private final String _langCode;
     private Class<? extends JpaRepository> _repositoryClass;
     private final String _methodName;
+    private final String _parameterType;
     private String _beanName;
 
 
     public DbDescTranslator(ApplicationContext applicationContext, String langCode, String param)
             throws IOException, JDOMException, ClassNotFoundException {
-        String[] parts = param.split(":", 2);
+        String[] parts = param.split(":", 3);
         try {
             this._repositoryClass = (Class<? extends JpaRepository>) Class.forName(parts[0]);
         } catch (Exception e) {
@@ -61,6 +62,7 @@ public class DbDescTranslator extends Translator {
         }
 
         this._methodName = parts.length == 2 ? parts[1] : "findOne";
+        this._parameterType = parts.length == 3 ? parts[2] : "String";
 
         _applicationContext = applicationContext;
         _langCode = langCode;
@@ -105,27 +107,36 @@ public class DbDescTranslator extends Translator {
         Localized entity = null;
         for (Method method : methods) {
             if (method.getName().equals(this._methodName) && method.getParameterTypes().length == 1) {
-                entity = (Localized) method.invoke(repository, key);
-                if (entity == null) {
-                    entity = (Localized) method.invoke(repository, Integer.valueOf(key));
+                try {
+                    if (_parameterType.equals("int")) {
+                        entity = (Localized) method.invoke(repository, Integer.valueOf(key));
+                    } else if (_parameterType.equals("long")) {
+                        entity = (Localized) method.invoke(repository, Long.valueOf(key));
+                    } else if (_parameterType.equals("double")) {
+                        entity = (Localized) method.invoke(repository, Double.valueOf(key));
+                    } else if (_parameterType.equals("float")) {
+                        entity = (Localized) method.invoke(repository, Float.valueOf(key));
+                    } else if (_parameterType.equals("boolean")) {
+                        entity = (Localized) method.invoke(repository, Boolean.valueOf(key));
+                    } else if (_parameterType.equals("short")) {
+                        entity = (Localized) method.invoke(repository, Short.valueOf(key));
+                    } else if (_parameterType.equals("char")) {
+                        entity = (Localized) method.invoke(repository, key.charAt(0));
+                    } else {
+                        entity = (Localized) method.invoke(repository, key);
+                    }
+                } catch (java.lang.IllegalArgumentException e) {
+                    // Call to the method with wrong argument type.
                 }
                 if (entity == null) {
-                    entity = (Localized) method.invoke(repository, Long.valueOf(key));
+                    try {
+                        entity = (Localized) method.invoke(repository, key);
+                   } catch (java.lang.IllegalArgumentException e) {
+                        // Call to the method with wrong argument type.
+                    }
                 }
-                if (entity == null) {
-                    entity = (Localized) method.invoke(repository, Double.valueOf(key));
-                }
-                if (entity == null) {
-                    entity = (Localized) method.invoke(repository, Float.valueOf(key));
-                }
-                if (entity == null) {
-                    entity = (Localized) method.invoke(repository, Boolean.valueOf(key));
-                }
-                if (entity == null) {
-                    entity = (Localized) method.invoke(repository, key.charAt(0));
-                }
-                if (entity == null) {
-                    entity = (Localized) method.invoke(repository, Short.valueOf(key));
+                if (entity != null) {
+                    break;
                 }
             }
         }

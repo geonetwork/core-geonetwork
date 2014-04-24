@@ -99,6 +99,9 @@
     <logger name="geonetwork.GeoServerPublisher" additivity="false">
         <level value="WARN" />
     </logger>
+    <logger name="geonetwork.GeoServerRest" additivity="false">
+        <level value="WARN" />
+    </logger>
     <logger name="geonetwork.data.directory" additivity="false">
         <level value="WARN" />
     </logger>

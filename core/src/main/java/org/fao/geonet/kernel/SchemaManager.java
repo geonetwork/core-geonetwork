@@ -980,6 +980,7 @@ public class SchemaManager {
         Pair<String, String> idInfo = extractIdInfo(xmlIdFile, name);
 
         mds.setReadwriteUUID(extractReadWriteUuid(xmlIdFile));
+        mds.setOperationFilters(extractOperationFilters(xmlIdFile));
         Log.debug(Geonet.SCHEMA_MANAGER, "  UUID is read/write mode: " + mds.isReadwriteUUID());
 
         putSchemaInfo(
@@ -1415,6 +1416,39 @@ public class SchemaManager {
 		}
 		return false;
 	}
+
+    /**
+     * true if schema requires to synch the uuid column schema info
+     * with the uuid in the metadata record (updated on editing or in UFO).
+     *
+     * @param xmlIdFile
+     * @return
+     * @throws Exception
+     */
+    private Map<String, Pair<String, Element>> extractOperationFilters(String xmlIdFile) throws Exception {
+        Element root = Xml.loadFile(xmlIdFile);
+        Element filters = root.getChild("filters", GEONET_SCHEMA_NS);
+        Map<String, Pair<String, Element>> filterRules =
+                new HashMap<String, Pair<String, Element>>();
+        if (filters == null) {
+            return filterRules;
+        } else {
+            for(Object rule : filters.getChildren("filter", GEONET_SCHEMA_NS)) {
+                if (rule instanceof Element) {
+                    Element ruleElement = (Element) rule;
+                    String xpath = ruleElement.getAttributeValue("xpath");
+                    String ifNotOperation = ruleElement.getAttributeValue("ifNotOperation");
+                    Element markedElement = ruleElement.getChild("keepMarkedElement", GEONET_SCHEMA_NS);
+                    if (StringUtils.isNotBlank(ifNotOperation) &&
+                            StringUtils.isNotBlank(xpath)) {
+                        filterRules.put(ifNotOperation, Pair.read(xpath, markedElement));
+                    }
+                }
+            }
+        }
+        return filterRules;
+    }
+
 	/**
      * Extract schema version and uuid info from identification file and compare specified name with name in
      * identification file.

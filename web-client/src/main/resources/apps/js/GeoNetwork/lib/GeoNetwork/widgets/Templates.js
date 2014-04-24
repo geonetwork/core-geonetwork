@@ -241,7 +241,7 @@ GeoNetwork.Templates.FULL = new Ext.XTemplate(
                       // metadata contact are not displayed.
                       '<tpl if="applies==\'resource\'">',
                           '<span title="{role} - {applies}"><tpl if="values.logo !== undefined && values.logo !== \'\'">',
-                              '<img src="{logo}" class="orgLogo"/>',
+                              '<img src="{logo}" class="orgLogo"/>&nbsp;',
                           '</tpl>',
                           '{name}&nbsp;&nbsp;</span>',
                       '</tpl>',

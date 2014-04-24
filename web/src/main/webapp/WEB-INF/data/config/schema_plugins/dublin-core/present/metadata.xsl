@@ -93,7 +93,121 @@
 			<xsl:with-param name="text"><xsl:value-of select="."/></xsl:with-param>
 		</xsl:apply-templates>
 	</xsl:template>
-	
+
+  <!--
+    references
+    Add file upload support
+    -->
+  <xsl:template mode="dublin-core"  match="dct:references">
+    <xsl:param name="schema"/>
+    <xsl:param name="edit"/>
+
+    <xsl:apply-templates mode="complexElement" select=".">
+      <xsl:with-param name="schema"   select="$schema"/>
+      <xsl:with-param name="edit"   	select="$edit"/>
+      <xsl:with-param name="content">
+        <xsl:variable name="value" select="."/>
+        <xsl:choose>
+          <xsl:when test="$edit">
+            <xsl:variable name="id" select="generate-id(.)"/>
+            <div id="{$id}"/>
+            <xsl:variable name="ref" select="geonet:element/@ref"/>
+            <!--<xsl:variable name="button" select="normalize-space(.)!=''"/>-->
+            <xsl:variable name="button" select="contains($value, 'fname=')" />
+            <xsl:call-template name="simpleElementGui">
+              <xsl:with-param name="schema" select="$schema"/>
+              <xsl:with-param name="edit" select="$edit"/>
+              <xsl:with-param name="title" select="/root/gui/strings/file"/>
+              <xsl:with-param name="text">
+                <button class="content" onclick="startFileUpload({//geonet:info/id}, '{$ref}');" type="button">
+                  <xsl:value-of select="/root/gui/strings/insertFileMode"/>
+                </button>
+              </xsl:with-param>
+              <xsl:with-param name="id" select="concat('db_',$ref)"/>
+              <xsl:with-param name="visible" select="not($button)"/>
+            </xsl:call-template>
+            <!-- Remove button -->
+            <xsl:if test="$button">
+              <xsl:apply-templates mode="dublinCoreFileRemove" select=".">
+                <xsl:with-param name="access" select="'private'"/>
+                <xsl:with-param name="id" select="$id"/>
+              </xsl:apply-templates>
+            </xsl:if>
+
+            <!-- Displays the Upload button, if no uploaded resource related (id prefix =  'db_').
+                            Hidden if an uploaded resource is related -->
+            <xsl:call-template name="simpleElementGui">
+              <xsl:with-param name="schema" select="$schema"/>
+              <xsl:with-param name="edit" select="$edit"/>
+              <xsl:with-param name="title">
+                <xsl:call-template name="getTitle">
+                  <xsl:with-param name="name"   select="name(.)"/>
+                  <xsl:with-param name="schema" select="$schema"/>
+                </xsl:call-template>
+              </xsl:with-param>
+              <xsl:with-param name="text">
+                <xsl:choose>
+                  <!-- Check if uploaded resource to display read-only value and Remove button to remove the uploaded resource -->
+                  <xsl:when test="contains($value, 'fname=')">
+                    <xsl:variable name="fileName" select="substring-before(substring-after($value, 'fname='), '&amp;')" />
+                    <input id="_{$ref}" class="md" type="text" name="_{$ref}" value="{$fileName}" size="40">
+                      <xsl:if test="$button">
+                        <xsl:attribute name="disabled">disabled</xsl:attribute>
+                      </xsl:if>
+                    </input>
+                  </xsl:when>
+                  <!-- If NOT uploaded resource display normal edit field -->
+                  <xsl:otherwise>
+                    <input id="_{$ref}" class="md" type="text" name="_{$ref}" value="{$value}" size="40" />
+                  </xsl:otherwise>
+                </xsl:choose>
+
+                <!-- Field checked in metadata-editor.js (doFileUploadSubmit), to execute custom code for Dublin core metadata editor -->
+                <input id="dc_{$ref}" class="md" type="hidden" name="dc_{$ref}" />
+              </xsl:with-param>
+              <xsl:with-param name="id" select="concat('di_',$ref)"/>
+            </xsl:call-template>
+          </xsl:when>
+
+          <xsl:otherwise>
+            <xsl:if test="string($value)">
+              <!-- Add an hyperlink in view mode -->
+              <xsl:call-template name="simpleElementGui">
+                <xsl:with-param name="schema" select="$schema"/>
+                <xsl:with-param name="edit" select="$edit"/>
+                <xsl:with-param name="title">
+                  <xsl:call-template name="getTitle">
+                    <xsl:with-param name="name"   select="name(.)"/>
+                    <xsl:with-param name="schema" select="$schema"/>
+                  </xsl:call-template>
+                </xsl:with-param>
+                <xsl:with-param name="text">
+                  <xsl:choose>
+                    <!-- Internal url to uploaded resource -->
+                    <xsl:when test="starts-with($value, 'http') and contains($value, 'fname=')">
+                      <xsl:variable name="fileName" select="substring-before(substring-after($value, 'fname='), '&amp;')" />
+                      <a href="{$value}" title="{$fileName}" onclick="runFileDownload(this.href, 'Order Confirmation: ' + this.title); return false;"><xsl:value-of select="$fileName"/></a>
+                    </xsl:when>
+
+                    <!-- External url: keep link -->
+                    <xsl:when test="starts-with($value, 'http')">
+                      bbb<a href="{$value}"><xsl:value-of select="."/></a>
+                    </xsl:when>
+
+                    <!-- Other values -->
+                    <xsl:otherwise>
+                      <p><xsl:value-of select="."/></p>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </xsl:with-param>
+              </xsl:call-template>
+            </xsl:if>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:with-param>
+    </xsl:apply-templates>
+  </xsl:template>
+
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	<!-- dublin-core brief formatting -->
 	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -140,6 +254,34 @@
 			<xsl:copy-of select="geonet:*"/>
 		</metadata>
 	</xsl:template>
+
+  <!-- ============================================================================= -->
+
+  <xsl:template mode="dublinCoreFileRemove" match="*">
+    <xsl:param name="access" select="'public'"/>
+    <xsl:param name="id"/>
+    <xsl:call-template name="simpleElementGui">
+      <xsl:with-param name="title" select="/root/gui/strings/file"/>
+      <xsl:with-param name="text">
+        <table width="100%"><tr>
+          <xsl:variable name="ref" select="geonet:element/@ref"/>
+          <td width="70%">
+            <xsl:choose>
+              <xsl:when test="contains(., 'fname=')">
+                <xsl:variable name="fileName" select="substring-before(substring-after(., 'fname='), '&amp;')" />
+                <a href="{.}"><xsl:value-of select="$fileName"/></a>
+              </xsl:when>
+              <xsl:otherwise>
+                <a href="{.}"><xsl:value-of select="."/></a>
+              </xsl:otherwise>
+            </xsl:choose>
+          </td>
+          <td align="right"><button class="content" onclick="javascript:doFileRemoveAction('{/root/gui/locService}/resources.del','{$ref}','{$access}','{$id}')"><xsl:value-of select="/root/gui/strings/remove"/></button></td>
+        </tr></table>
+      </xsl:with-param>
+      <xsl:with-param name="schema"/>
+    </xsl:call-template>
+  </xsl:template>
 
 	<xsl:template name="dublin-core-javascript"/>
 </xsl:stylesheet>
