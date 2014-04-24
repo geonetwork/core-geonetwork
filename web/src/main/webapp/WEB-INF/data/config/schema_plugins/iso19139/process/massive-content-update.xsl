@@ -6,6 +6,23 @@
                 xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 exclude-result-prefixes="gmd xsl gco srv geonet">
 
+
+  <!-- Example of replacements parameter:
+
+     <replacements>
+      <caseInsensitive>i</caseInsensitive>
+      <replacement>
+        <field>id.contact.individualName</field>
+        <searchValue>John Doe</searchValue>
+        <replaceValue>Jennifer Smith</replaceValue>
+      </replacement>
+      <replacement>
+        <field>id.contact.organisationName</field>
+        <searchValue>Acme</searchValue>
+        <replaceValue>New Acme</replaceValue>
+      </replacement>
+    </replacements>
+  -->
   <xsl:param name="replacements"/>
 
   <!-- by default is case sensitive, sending i value in the param makes replacements case insensitive -->
@@ -1320,13 +1337,13 @@
       <xsl:when test="string($case_insensitive)">
         <xsl:call-template name="replaceCaseInsensitive">
           <xsl:with-param name="fieldId" select="$fieldId" />
-          <xsl:with-param name="value" select="$value" />
+          <xsl:with-param name="currentValue" select="$value" />
         </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
         <xsl:call-template name="replaceCaseSensitive">
           <xsl:with-param name="fieldId" select="$fieldId" />
-          <xsl:with-param name="value" select="$value" />
+          <xsl:with-param name="currentValue" select="$value" />
         </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
@@ -1335,36 +1352,43 @@
 
   <xsl:template name="replaceCaseInsensitive">
     <xsl:param name="fieldId" />
-    <xsl:param name="value" />
+    <xsl:param name="currentValue" />
 
-    <xsl:variable name="currentVal" select="."/>
-    <xsl:variable name="newVal"
-                  select="replace($value, $replacements/replacements/replacement[field = $fieldId]/searchValue, $replacements/replacements/replacement[field = $fieldId]/replaceValue, $case_insensitive)"/>
+    <xsl:variable name="newValue"
+                  select="replace($currentValue, $replacements/replacements/replacement[field = $fieldId]/searchValue, $replacements/replacements/replacement[field = $fieldId]/replaceValue, $case_insensitive)"/>
 
-    <xsl:if test="$currentVal != $newVal">
+    <!--<xsl:message>====== replaceCaseInsensitive fieldId:<xsl:value-of select="$fieldId" /></xsl:message>
+    <xsl:message>====== replaceCaseInsensitive currentVal:<xsl:value-of select="$currentValue" /></xsl:message>
+    <xsl:message>====== replaceCaseInsensitive newVal:<xsl:value-of select="$newValue" /></xsl:message>-->
+
+
+    <xsl:if test="$currentValue != $newValue">
       <xsl:attribute name="geonet:change" select="$fieldId"/>
-      <xsl:attribute name="geonet:original" select="$currentVal"/>
-      <xsl:attribute name="geonet:new" select="$newVal"/>
+      <xsl:attribute name="geonet:original" select="$currentValue"/>
+      <xsl:attribute name="geonet:new" select="$newValue"/>
     </xsl:if>
 
-    <xsl:value-of select="$newVal"/>
+    <xsl:value-of select="$newValue"/>
   </xsl:template>
 
 
   <xsl:template name="replaceCaseSensitive">
     <xsl:param name="fieldId" />
-    <xsl:param name="value" />
+    <xsl:param name="currentValue" />
 
-    <xsl:variable name="currentVal" select="."/>
-    <xsl:variable name="newVal"
-                  select="replace($value, $replacements/replacements/replacement[field = $fieldId]/searchValue, $replacements/replacements/replacement[field = $fieldId]/replaceValue)"/>
+    <xsl:variable name="newValue"
+                  select="replace($currentValue, $replacements/replacements/replacement[field = $fieldId]/searchValue, $replacements/replacements/replacement[field = $fieldId]/replaceValue)"/>
 
-    <xsl:if test="$currentVal != $newVal">
+    <!--<xsl:message>====== replaceCaseSensitive fieldId:<xsl:value-of select="$fieldId" /></xsl:message>
+    <xsl:message>====== replaceCaseSensitive currentVal:<xsl:value-of select="$currentValue" /></xsl:message>
+    <xsl:message>====== replaceCaseSensitive newVal:<xsl:value-of select="$newValue" /></xsl:message>-->
+
+    <xsl:if test="$currentValue != $newValue">
       <xsl:attribute name="geonet:change" select="$fieldId"/>
-      <xsl:attribute name="geonet:original" select="$currentVal"/>
-      <xsl:attribute name="geonet:new" select="$newVal"/>
+      <xsl:attribute name="geonet:original" select="$currentValue"/>
+      <xsl:attribute name="geonet:new" select="$newValue"/>
     </xsl:if>
 
-    <xsl:value-of select="$newVal"/>
+    <xsl:value-of select="$newValue"/>
   </xsl:template>
 </xsl:stylesheet>

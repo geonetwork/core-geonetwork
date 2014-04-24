@@ -261,14 +261,22 @@ function buildDuration(ref) {
  * Massive metadata replacemnets
  **********************************************************************/
 
-function executeMassiveMetadataReplace(action,title,message) {
+function massiveMetadataReplace_test(action) {
+  massiveMetadataReplace_action(action, true);
+}
+
+function massiveMetadataReplace_execute(action) {
+  massiveMetadataReplace_action(action, false);
+}
+
+function massiveMetadataReplace_action(action, test) {
 
   // Validate that has been defined at least 1 replacement
   var massiveUpdatesTable = $('massivereplace-updates');
   if (massiveUpdatesTable.rows.length == 1) {
     Ext.Msg.show({
-      title: title,
-      msg: message,
+      title: OpenLayers.i18n('massivereplace-title'),
+      msg: OpenLayers.i18n('massivereplace-noreplacements'),
       buttons: Ext.Msg.OK
     });
 
@@ -276,14 +284,14 @@ function executeMassiveMetadataReplace(action,title,message) {
   }
 
   // Set form to non test mode
-  $('test').value = "false";
+  $('test').value = test;
 
   // Clean results report
   $('massivereplace-results-container').innerHTML = "";
 
   Ext.Msg.show({
-    title: title,
-    msg: 'The process is going to apply the replacements to the selected metadata. Do you want to proceed?',
+    title: OpenLayers.i18n('massivereplace-title'),
+    msg: (test?OpenLayers.i18n('massivereplace-test'):OpenLayers.i18n('massivereplace-execute')),
     buttons: Ext.Msg.YESNO,
     fn: function (id, value) {
       if (id === 'yes') {
@@ -307,53 +315,7 @@ function executeMassiveMetadataReplace(action,title,message) {
 }
 
 
-function testMassiveMetadataReplace(action,title,message) {
-
-  // Validate that has been defined at least 1 replacement
-  var massiveUpdatesTable = $('massivereplace-updates');
-  if (massiveUpdatesTable.rows.length == 1) {
-    Ext.Msg.show({
-      title: title,
-      msg: message,
-      buttons: Ext.Msg.OK
-    });
-
-    return false;
-  }
-
-  // Clean results report
-  $('massivereplace-results-container').innerHTML = "";
-
-  // Set form to test mode
-  $('test').value = "true";
-
-  Ext.Msg.show({
-    title: title,
-    msg: 'The process is going to test the replacements to the selected metadata. Do you want to proceed?',
-    buttons: Ext.Msg.YESNO,
-    fn: function (id, value) {
-      if (id === 'yes') {
-        Ext.get("MB_loading").show();
-
-        OpenLayers.Request.GET({
-          url: catalogue.services.rootUrl + action + "?" + Ext.Ajax.serializeForm(Ext.getDom('massiveupdateform')),
-          success: function(response){
-              Ext.get('MB_loading').hide();
-              Ext.get('massivereplace-results-container').show();
-              $('massivereplace-results-container').innerHTML = response.responseText;
-          },
-          failure: function(response){
-            Ext.get('MB_loading').hide();
-            Ext.Msg.alert('', response.responseText);
-          }
-        });
-      }
-    }
-  });
-}
-
-
-function setDropDown(field, data, method, index) {
+function massiveMetadataReplace_setDropDown(field, data, method, index) {
   field.options.length = index == null ? 1 : index;
 
   Ext.each(data, function(e) {
@@ -382,11 +344,11 @@ function massiveMetadataReplace_updateFields(section) {
   }
 
   // Empty mdfields list
-  setDropDown(mdfieldsSelectBox ,[]);
+  massiveMetadataReplace_setDropDown(mdfieldsSelectBox ,[]);
 
 
   // Fill mdfields list depending on section selection
-  setDropDown(
+  massiveMetadataReplace_setDropDown(
     mdfieldsSelectBox,
     sectionValues.FIELDS,
     function(e) {
@@ -406,8 +368,8 @@ function massiveMetadataReplace_addRow() {
       ($('replaceValue').value === '')) {
 
     Ext.Msg.show({
-      title: 'Add replacement',
-      msg: 'Fill all the replacement information',
+      title: OpenLayers.i18n('massivereplace-add-title'),
+      msg: OpenLayers.i18n('massivereplace-add-msg'),
       buttons: Ext.Msg.OK
     });
 
@@ -416,9 +378,13 @@ function massiveMetadataReplace_addRow() {
 
   var massiveUpdatesTable = $('massivereplace-updates');
 
+  // Show replacements table
   Ext.get('massivereplace-updates').show();
   Ext.get('noReplacements').setVisibilityMode(Ext.Element.DISPLAY);
   Ext.get('noReplacements').hide();
+
+  // Clean results report
+  $('massivereplace-results-container').innerHTML = "";
 
   var newDate = new Date;
   var tmpID = newDate.getTime();
@@ -464,10 +430,14 @@ function massiveMetadataReplace_removeRow(id) {
   var massiveUpdatesTableRow = $(id+"-row");
   massiveUpdatesTableRow.parentNode.removeChild(massiveUpdatesTableRow);
 
+  // Hide replacements table if no replacements defined
   var massiveUpdatesTable = $('massivereplace-updates');
   if (massiveUpdatesTable.rows.length == 1) {
     Ext.get('noReplacements').show();
     Ext.get('massivereplace-updates').setVisibilityMode(Ext.Element.DISPLAY);
     Ext.get('massivereplace-updates').hide();
   }
+
+  // Clean results report
+  $('massivereplace-results-container').innerHTML = "";
 }
