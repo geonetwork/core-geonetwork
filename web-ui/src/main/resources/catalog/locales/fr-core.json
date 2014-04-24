@@ -99,6 +99,7 @@
     "staticMap": "Carte statique",
     "featureCatalog": "Catalogue d'attributs",
 
+    "filterSearch": "Afficher les options de recherche",
     "any": "Plein texte",
     "orgNames": "Contact de la ressource",
     "createDateYears": "Année de création",
@@ -112,6 +113,7 @@
     "keyword": "Mot-clé",
     "filter": "Filtre",
     "_groupOwner": "Groupe",
+    "groupOwners": "Groupes",
     "owner": "Owner",
     
     
