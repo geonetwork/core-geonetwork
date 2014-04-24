@@ -670,7 +670,13 @@ GeoNetwork.Lang.es = {
     'mdInsertFailure': 'Error while inserting metadata : ',
     'mdRecordsProcessed': 'Total number of metadata records processed',
     'mdRecordsAdded': 'Total number of metadata records added',
-    'chooseCategory': 'Choose a category'
+    'chooseCategory': 'Choose a category',
+    'massivereplace-title': 'Metadata massive replacements',
+    'massivereplace-add-title': 'Add replacement',
+    'massivereplace-add-msg': 'Fill all the replacement information',
+    'massivereplace-noreplacements': 'No replacements defined',
+    'massivereplace-test': 'The process is going to test the replacements to the selected metadata. Do you want to proceed?',
+    'massivereplace-execute': 'The process is going to apply the replacements to the selected metadata. Do you want to proceed?'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.es, GeoNetwork.Lang.es);
