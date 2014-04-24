@@ -156,7 +156,7 @@
               <xsl:value-of select="/root/gui/massive-replace/massiveReplaceForm/no-replacements-defined"/>
             </p>
 
-            <table id="massivereplace-updates">
+            <table id="massivereplace-updates" style="display: none">
               <colgroup>
                 <col span="1" style="width: 15%;"/>
                 <col span="1" style="width: 40%;"/>
@@ -205,13 +205,13 @@
         <div id="massivereplace-buttons">
           <center>
             <button class="content"
-                    onclick="executeMassiveMetadataReplace('metadata.batch.replace','{concat(/root/gui/strings/results,' ',/root/gui/massive-replace/massiveReplaceForm/title)}', '{/root/gui/massive-replace/massiveReplaceForm/fillFormFields}')"
+                    onclick="massiveMetadataReplace_execute('metadata.batch.replace')"
                     type="button">
               <xsl:value-of select="/root/gui/massive-replace/massiveReplaceForm/update"/>
             </button>
             &#160;
             <button class="content"
-                    onclick="testMassiveMetadataReplace('metadata.batch.replace','{concat(/root/gui/strings/results,' ',/root/gui/massive-replace/massiveReplaceForm/title)}', '{/root/gui/massive-replace/massiveReplaceForm/fillFormFields}')"
+                    onclick="massiveMetadataReplace_test('metadata.batch.replace')"
                     type="button">
               <xsl:value-of select="/root/gui/massive-replace/massiveReplaceForm/test"/>
             </button>
