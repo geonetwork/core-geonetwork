@@ -455,6 +455,7 @@ public class DataManager {
 
             // get privileges
             OperationAllowedRepository operationAllowedRepository = _applicationContext.getBean(OperationAllowedRepository.class);
+            GroupRepository groupRepository = _applicationContext.getBean(GroupRepository.class);
             List<OperationAllowed> operationsAllowed = operationAllowedRepository.findAllById_MetadataId(id$);
 
             for (OperationAllowed operationAllowed : operationsAllowed) {
@@ -464,8 +465,10 @@ public class DataManager {
 
                 moreFields.add(SearchManager.makeField("_op" + operationId, String.valueOf(groupId), true, true));
                 if(operationId == ReservedOperation.view.getId()) {
-                    String name = ReservedOperation.view.name();
-                    moreFields.add(SearchManager.makeField("_groupPublished", name, true, true));
+                    Group g = groupRepository.findOne(groupId);
+                    if (g != null) {
+                        moreFields.add(SearchManager.makeField("_groupPublished", g.getName(), true, true));
+                    }
                 }
             }
 
