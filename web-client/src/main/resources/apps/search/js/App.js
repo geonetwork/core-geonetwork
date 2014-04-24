@@ -475,6 +475,12 @@ GeoNetwork.app = function () {
         
         tBar = new GeoNetwork.MetadataResultsToolbar({
             catalogue: catalogue,
+            config : {
+              selectAction : true,
+              sortByAction : true,
+              templateView : true,
+              otherActions : true
+            },
             searchFormCmp: Ext.getCmp('searchForm'),
             sortByCmp: Ext.getCmp('E_sortBy'),
             metadataResultsView: metadataResultsView,
