@@ -28,10 +28,10 @@
 
         // Cleaning facets
         for (var facet in data.summary) {
-          if (facet != '@count') {
+          if (facet != '@count' && facet != '@type') {
             facets[facet] = data.summary[facet];
             facets[facet].name = facet;
-          } else {
+          } else if (facet == '@count') {
             // Number of results
             results = data.summary[facet];
           }

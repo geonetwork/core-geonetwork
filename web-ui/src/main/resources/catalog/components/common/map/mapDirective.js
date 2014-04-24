@@ -33,7 +33,9 @@
               */
              var setDcOutput = function() {
                if (scope.dcRef) {
-                 scope.dcExtent = gnMap.getDcExtent(scope.extent.md, scope.location);
+                 scope.dcExtent = gnMap.getDcExtent(
+                 scope.extent.md,
+                 scope.location);
                }
              };
 

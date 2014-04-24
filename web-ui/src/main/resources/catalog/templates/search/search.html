@@ -4,18 +4,30 @@
 
   <div class="row">
     <div class="col-lg-12">
-      <input class="form-control" type="text" 
-          autofocus=""
-          placeholder="{{'anyPlaceHolder' | translate}}"
-        data-ng-keyup="searchRecordsSearchFor($event)"/>
+
+      <form data-ng-controller="GnSearchFormController">
+
+        <input class="form-control" type="text"
+               data-ng-change="triggerSearch()"
+               placeholder="{{'anyPlaceHolder' | translate}}" autofocus=""
+               data-ng-model="params.any"/>
+
+        <div>
+          <ng-pluralize count="searchResults.count"
+                        when="{'0 ': ('noRecordFound' | translate),
+              'one': '1 ' +  ('record' | translate),
+              'other': '{} ' +  ('records' | translate)}"
+              ></ng-pluralize>
+        </div>
+
+        <div class="list-group">
+          <li class="list-group-item"
+              data-ng-repeat="e in searchResults.records">
+            <a href="../../?uuid={{e['geonet:info'].uuid}}">{{e.title}}</a>
+          </li>
+        </div>
+        <div data-gn-pagination="paginationInfo"/>
+      </form>
     </div>
   </div>
-  <p>
-    <div data-gn-search-results="searchRecords"
-      data-selected-records-count="selectedRecordsCount"
-      data-allow-selection="false"
-      data-authenticated="authenticated"/>
-
-    <div data-gn-pagination="searchRecordsPagination"/>
-  </p>
 </div>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simpledc xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/">
+  <dc:title>Template for Dublin Core - Related resource</dc:title>
+  <dc:publisher/>
+  <dc:creator/>
+  <dc:subject/>
+  <dc:subject/>
+  <dc:description/>
+  <dc:relation>http://...</dc:relation>
+  <dct:created/>
+  <dct:dateSubmitted/>
+  <dc:rights/>
+  <dc:type/>
+  <dc:format>text/plain</dc:format>
+  <dct:references/>
+  <dc:coverage>North 90, South -90, East 180, West -180. Global</dc:coverage>
+  <dc:language>eng</dc:language>
+  <dc:identifier/>
+</simpledc>

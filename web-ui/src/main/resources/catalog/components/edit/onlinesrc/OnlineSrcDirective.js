@@ -306,6 +306,8 @@
 
               gnOnlinesrc.register('onlinesrc', function() {
                 scope.metadataId = gnCurrentEdit.id;
+                scope.schema = gnCurrentEdit.schema;
+
                 $(scope.popupid).modal('show');
 
               });

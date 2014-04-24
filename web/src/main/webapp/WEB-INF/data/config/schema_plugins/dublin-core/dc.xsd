@@ -41,8 +41,8 @@
   <xs:import namespace="http://www.w3.org/XML/1998/namespace"
              schemaLocation="xml.xsd"/>
 
-  <!--xs:import namespace="http://purl.org/dc/terms/"
-              schemaLocation="dcterms.xsd"/-->
+  <xs:import namespace="http://purl.org/dc/terms/"
+              schemaLocation="dcterms.xsd"/>
 
 
   <xs:complexType name="SimpleLiteral">

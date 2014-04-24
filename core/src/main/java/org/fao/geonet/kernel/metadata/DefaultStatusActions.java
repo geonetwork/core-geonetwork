@@ -236,7 +236,7 @@ public class DefaultStatusActions implements StatusActions {
                 changeDate, changeMessage, mdChanged);
     }
 
-    public static Pattern metadataLuceneField = Pattern.compile("\\{\\{index:([^\\}]+)\\}\\}");
+    public static final Pattern metadataLuceneField = Pattern.compile("\\{\\{index:([^\\}]+)\\}\\}");
     
     private String buildMetadataChangedMessage(Set<Integer> metadata) {
     	String statusMetadataDetails = null;
@@ -260,7 +260,7 @@ public class DefaultStatusActions implements StatusActions {
     	}
     	
     	for (Metadata md : mds) {
-    		String curMdDetails = new String(statusMetadataDetails);
+    		String curMdDetails = statusMetadataDetails;
     		// First substitution for variables not stored in the index
     		curMdDetails = curMdDetails.replace("{{serverurl}}", siteUrl);
     		

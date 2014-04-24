@@ -123,12 +123,12 @@
           getDcExtent: function(extent, location) {
             if (angular.isArray(extent)) {
               var dc = 'North ' + extent[3] + ', ' +
-                    'South ' + extent[1] + ', ' +
-                    'East ' + extent[0] + ', ' +
-                    'West ' + extent[2];
+                  'South ' + extent[1] + ', ' +
+                  'East ' + extent[0] + ', ' +
+                  'West ' + extent[2];
               if (location) {
-                  dc += '. ' + location;
-                }
+                dc += '. ' + location;
+              }
               return dc;
             } else {
               return '';

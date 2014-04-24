@@ -26,7 +26,6 @@
 <summary>
 	<def>
 		<hits>
-
       <item name="keyword" plural="keywords" indexKey="keyword" max="15"/>
 			<item name="inspireTheme" plural="inspireThemes" indexKey="inspiretheme" sortBy="value" sortOrder="asc" max="35"/>
 			<item name="denominator" plural="denominators" indexKey="denominator" sortBy="numValue" sortOrder="desc"/>
