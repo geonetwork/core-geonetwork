@@ -263,7 +263,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 
 		String sFast = request.getChildText(Geonet.SearchResult.FAST);
 		boolean fast = sFast != null && sFast.equals("true");
-		boolean inFastMode = fast || "index".equals(sFast);
+		boolean inFastMode = fast || "index".equals(sFast) || "indexpdf".equals(sFast);
 		
 		// build response
 		Element response =  new Element("response");
@@ -284,6 +284,8 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 
 			int nrHits = getTo() - (getFrom()-1);
 			if (tdocs.scoreDocs.length >= nrHits) {
+                Set<Integer> userGroups = null;
+
 				for (int i = 0; i < nrHits; i++) {
 					Document doc;
                     IndexAndTaxonomy indexAndTaxonomy = _sm.getIndexReader(_language.presentationLanguage, _versionToken);
@@ -306,6 +308,14 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 					if (fast) {
 						md = LuceneSearcher.getMetadataFromIndex(doc, id, false, null, null, null);
 					}
+                    else if ("indexpdf".equals(sFast)) {
+                        if (userGroups == null) {
+                            userGroups = gc.getBean(AccessManager.class).getUserGroups(srvContext.getUserSession(),  srvContext.getIpAddress(), false);
+                        }
+
+                        // Retrieve information from the index for the record
+                        md = LuceneSearcher.getMetadataFromIndexForPdf(srvContext.getUserSession(), userGroups, doc, id, _language.presentationLanguage, _luceneConfig.getMultilingualSortFields(), _luceneConfig.getDumpFields());
+                    }
                     else if ("index".equals(sFast)) {
 					    // Retrieve information from the index for the record
 						md = LuceneSearcher.getMetadataFromIndex(doc, id, true, _language.presentationLanguage, _luceneConfig.getMultilingualSortFields(), _luceneConfig.getDumpFields());
@@ -1416,6 +1426,78 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 		}
 		return new FacetSearchParams(requests);
 	}
+
+	/**
+	 * Retrieves metadata from the index . Used in metadata selection pdf print.
+	 * 
+	 * @param us
+	 * @param userGroups
+	 * @param doc
+	 * @param id
+	 * @param searchLang
+	 * @param multiLangSearchTerm
+	 * @param dumpFields			dump only the fields define in {@link LuceneConfig#getDumpFields()}.
+	 * @return
+	 */
+    private static Element getMetadataFromIndexForPdf(UserSession us, Set<Integer> userGroups, Document doc, String id, String searchLang, Set<String> multiLangSearchTerm, Map<String, String> dumpFields){
+        Element md = LuceneSearcher.getMetadataFromIndex(doc, id, true, searchLang, multiLangSearchTerm, dumpFields);
+
+        // Add download/dynamic privileges
+        Element info = md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+
+        if ( us.getProfile() == Profile.Administrator) {
+            info.addContent(new Element(Edit.Info.Elem.DOWNLOAD).setText("true"));
+            info.addContent(new Element(Edit.Info.Elem.DYNAMIC).setText("true"));
+
+        } else {
+            // Owner
+            boolean isOwner = false;
+            IndexableField[] values = doc.getFields(LuceneIndexField.OWNER);
+
+            if (us.isAuthenticated()) {
+                for (IndexableField f : values) {
+                    if (f != null) {
+                        if (us.getUserId().equals(f.stringValue())) {
+                            isOwner = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (isOwner) {
+                info.addContent(new Element(Edit.Info.Elem.DOWNLOAD).setText("true"));
+                info.addContent(new Element(Edit.Info.Elem.DYNAMIC).setText("true"));
+
+            } else {
+                // Download
+                values = doc.getFields(LuceneIndexField._OP1);
+                for (IndexableField f : values) {
+                    if (f != null) {
+                        if (userGroups.contains(Integer.parseInt(f.stringValue()))) {
+                            info.addContent(new Element(Edit.Info.Elem.DOWNLOAD).setText("true"));
+                            break;
+                        }
+                    }
+                }
+
+                // Dynamic
+                values = doc.getFields(LuceneIndexField._OP5);
+                for (IndexableField f : values) {
+                    if (f != null) {
+                        if (userGroups.contains(Integer.parseInt(f.stringValue()))) {
+                            info.addContent(new Element(Edit.Info.Elem.DYNAMIC).setText("true"));
+                            break;
+                        }
+                    }
+                }
+            }
+
+        }
+
+
+        return md;
+    }
 
 	/**
 	 * Retrieves metadata from the index.

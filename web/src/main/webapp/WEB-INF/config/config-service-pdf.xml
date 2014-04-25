@@ -39,7 +39,8 @@
         Used after pdf.selection.search to print results from session.
         ]]></documentation>
       <class name=".services.main.Result">
-        <param name="range" value="1000" /> 
+        <param name="range" value="1000" />
+        <param name="fast" value="indexpdf" />
       </class>
       <output sheet="../xslt/services/pdf/portal-present-fop.xsl" file="true" contentType="application/pdf">
         <call name="siteURL" class=".guiservices.util.GetSiteURL" />
