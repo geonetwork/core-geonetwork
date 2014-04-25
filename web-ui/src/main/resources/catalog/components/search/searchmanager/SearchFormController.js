@@ -34,7 +34,11 @@
         records: [],
         count: 0
       };
-      $scope.paginationInfo = null;
+      $scope.paginationInfo = {
+        pages: -1,
+        currentPage: 1,
+        hitsPerPage: 20
+      };
       $scope.currentFacet = gnCurrentFacet;
       /**
        * If an object {paginationInfo} is defined inside the
@@ -116,7 +120,9 @@
         $scope.clearResults();
       });
       $scope.$watchCollection('currentFacet', function() {
-        if (gnCurrentFacet.facets) {
+        if (gnCurrentFacet.facets
+          && (!$.isEmptyObject(gnCurrentFacet.facets) ||
+              !$.isEmptyObject(gnCurrentFacet.deletedFacets))) {
           // Drop delete facets from params
           angular.forEach(gnCurrentFacet.deletedFacets, function(value, key) {
             delete $scope.params[key];

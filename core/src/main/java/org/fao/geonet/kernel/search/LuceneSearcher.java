@@ -258,17 +258,17 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
     public Element present(ServiceContext srvContext, Element request, ServiceConfig config) throws Exception {
         updateSearchRange(request);
         GeonetContext gc = null;
-        if (srvContext != null)
-            gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
+		if (srvContext != null)
+			gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
 
-        String sFast = request.getChildText(Geonet.SearchResult.FAST);
-        boolean fast = sFast != null && sFast.equals("true");
-        boolean inFastMode = fast || "index".equals(sFast);
-
-        // build response
-        Element response =  new Element("response");
-        response.setAttribute("from",  getFrom()+"");
-        response.setAttribute("to",    getTo()+"");
+		String sFast = request.getChildText(Geonet.SearchResult.FAST);
+		boolean fast = sFast != null && sFast.equals("true");
+		boolean inFastMode = fast || "index".equals(sFast) || "indexpdf".equals(sFast);
+		
+		// build response
+		Element response =  new Element("response");
+		response.setAttribute("from",  getFrom()+"");
+		response.setAttribute("to",    getTo()+"");
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, Xml.getString(response));
 
@@ -283,9 +283,11 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             TopDocs tdocs = performQuery(srvContext, getFrom()-1, getTo(), false); // get enough hits to show a page
 
             int nrHits = getTo() - (getFrom()-1);
-            if (tdocs.scoreDocs.length >= nrHits) {
-                for (int i = 0; i < nrHits; i++) {
-                    Document doc;
+			if (tdocs.scoreDocs.length >= nrHits) {
+                Set<Integer> userGroups = null;
+
+				for (int i = 0; i < nrHits; i++) {
+					Document doc;
                     IndexAndTaxonomy indexAndTaxonomy = _sm.getIndexReader(_language.presentationLanguage, _versionToken);
                     _versionToken = indexAndTaxonomy.version;
                     try {
@@ -300,11 +302,20 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                     } finally {
                         _sm.releaseIndexReader(indexAndTaxonomy);
                     }
-                    String id = doc.get("_id");
-                    Element md = null;
 
-                    if (fast) {
-                        md = LuceneSearcher.getMetadataFromIndex(doc, id, false, null, null, null);
+					String id = doc.get("_id");
+					Element md = null;
+	
+					if (fast) {
+						md = LuceneSearcher.getMetadataFromIndex(doc, id, false, null, null, null);
+					}
+                    else if ("indexpdf".equals(sFast)) {
+                        if (userGroups == null) {
+                            userGroups = gc.getBean(AccessManager.class).getUserGroups(srvContext.getUserSession(),  srvContext.getIpAddress(), false);
+                        }
+
+                        // Retrieve information from the index for the record
+                        md = LuceneSearcher.getMetadataFromIndexForPdf(srvContext.getUserSession(), userGroups, doc, id, _language.presentationLanguage, _luceneConfig.getMultilingualSortFields(), _luceneConfig.getDumpFields());
                     }
                     else if ("index".equals(sFast)) {
                         // Retrieve information from the index for the record
@@ -1387,44 +1398,117 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         }
     }
 
-    /**
-     * Build facet search params according to the summary configuration file.
-     *
-     * FacetRequest sort order and sort by option is the default (ie. by count descending).
-     * Then the results may be sorted when creating the summary {@link #buildFacetSummary(org.jdom.Element, java.util.Map, org.apache.lucene.facet.search.FacetsCollector, String)}.
-     *
-     * @param summaryConfigValues
-     * @return
-     */
-    private static FacetSearchParams buildFacetSearchParams(
-            Map<String, FacetConfig> summaryConfigValues) {
-        List<FacetRequest> requests = new ArrayList<FacetRequest>(summaryConfigValues.size());
 
-        for (Map.Entry<String, FacetConfig> entry : summaryConfigValues.entrySet()) {
-            FacetConfig config = entry.getValue();
-            String key = entry.getKey();
+	/**
+	 * Build facet search params according to the summary configuration file.
+	 * 
+	 * FacetRequest sort order and sort by option is the default (ie. by count descending).
+	 * Then the results may be sorted when creating the summary {@link #buildFacetSummary(org.jdom.Element, java.util.Map, org.apache.lucene.facet.search.FacetsCollector, String)}.
+	 * 
+	 * @param summaryConfigValues
+	 * @return
+	 */
+	private static FacetSearchParams buildFacetSearchParams(
+			Map<String, FacetConfig> summaryConfigValues) {
+            List<FacetRequest> requests = new ArrayList<FacetRequest>(summaryConfigValues.size());
+		
+		for (Map.Entry<String, FacetConfig> entry : summaryConfigValues.entrySet()) {
+			FacetConfig config = entry.getValue();
+			String key = entry.getKey();
 
-            int max = config.getMax();
+			int max = config.getMax();
+			
+			FacetRequest facetRequest = new CountFacetRequest(
+					new CategoryPath(key), max);
+			facetRequest.setSortBy(SortBy.VALUE);
+			facetRequest.setSortOrder(SortOrder.DESCENDING);
+			requests.add(facetRequest);
+		}
+		return new FacetSearchParams(requests);
+	}
 
-            FacetRequest facetRequest = new CountFacetRequest(
-                    new CategoryPath(key), max);
-            facetRequest.setSortBy(SortBy.VALUE);
-            facetRequest.setSortOrder(SortOrder.DESCENDING);
-            requests.add(facetRequest);
+	/**
+	 * Retrieves metadata from the index . Used in metadata selection pdf print.
+	 * 
+	 * @param us
+	 * @param userGroups
+	 * @param doc
+	 * @param id
+	 * @param searchLang
+	 * @param multiLangSearchTerm
+	 * @param dumpFields			dump only the fields define in {@link LuceneConfig#getDumpFields()}.
+	 * @return
+	 */
+    private static Element getMetadataFromIndexForPdf(UserSession us, Set<Integer> userGroups, Document doc, String id, String searchLang, Set<String> multiLangSearchTerm, Map<String, String> dumpFields){
+        Element md = LuceneSearcher.getMetadataFromIndex(doc, id, true, searchLang, multiLangSearchTerm, dumpFields);
+
+        // Add download/dynamic privileges
+        Element info = md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
+
+        if ( us.getProfile() == Profile.Administrator) {
+            info.addContent(new Element(Edit.Info.Elem.DOWNLOAD).setText("true"));
+            info.addContent(new Element(Edit.Info.Elem.DYNAMIC).setText("true"));
+
+        } else {
+            // Owner
+            boolean isOwner = false;
+            IndexableField[] values = doc.getFields(LuceneIndexField.OWNER);
+
+            if (us.isAuthenticated()) {
+                for (IndexableField f : values) {
+                    if (f != null) {
+                        if (us.getUserId().equals(f.stringValue())) {
+                            isOwner = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (isOwner) {
+                info.addContent(new Element(Edit.Info.Elem.DOWNLOAD).setText("true"));
+                info.addContent(new Element(Edit.Info.Elem.DYNAMIC).setText("true"));
+
+            } else {
+                // Download
+                values = doc.getFields(LuceneIndexField._OP1);
+                for (IndexableField f : values) {
+                    if (f != null) {
+                        if (userGroups.contains(Integer.parseInt(f.stringValue()))) {
+                            info.addContent(new Element(Edit.Info.Elem.DOWNLOAD).setText("true"));
+                            break;
+                        }
+                    }
+                }
+
+                // Dynamic
+                values = doc.getFields(LuceneIndexField._OP5);
+                for (IndexableField f : values) {
+                    if (f != null) {
+                        if (userGroups.contains(Integer.parseInt(f.stringValue()))) {
+                            info.addContent(new Element(Edit.Info.Elem.DYNAMIC).setText("true"));
+                            break;
+                        }
+                    }
+                }
+            }
+
         }
-        return new FacetSearchParams(requests);
+
+
+        return md;
     }
 
-    /**
-     * Retrieves metadata from the index.
-     *
-     * @param doc
-     * @param id
-     * @param dumpAllField	If dumpFields is null and dumpAllField set to true, dump all index content.
-     * @param dumpFields	If not null, dump only the fields define in {@link LuceneConfig#getDumpFields()}.
-     * @return
-     */
-    private static Element getMetadataFromIndex(Document doc, String id, boolean dumpAllField, String searchLang, Set<String> multiLangSearchTerm, Map<String, String> dumpFields){
+	/**
+	 * Retrieves metadata from the index.
+	 * 
+	 * @param doc
+	 * @param id
+	 * @param dumpAllField	If dumpFields is null and dumpAllField set to true, dump all index content.
+	 * @param dumpFields	If not null, dump only the fields define in {@link LuceneConfig#getDumpFields()}.
+	 * @return
+	 */
+	private static Element getMetadataFromIndex(Document doc, String id, boolean dumpAllField, String searchLang, Set<String> multiLangSearchTerm, Map<String, String> dumpFields){
         // Retrieve the info element
         String schema     = doc.get("_schema");
         String source     = doc.get("_source");
