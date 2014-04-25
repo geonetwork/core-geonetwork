@@ -22,8 +22,11 @@
    */
   module.controller('GnThesaurusController', [
     '$scope', '$http', '$rootScope', '$translate',
-    function($scope, $http, $rootScope, $translate) {
+    'gnConfig', 'gnSearchManagerService',
+    function($scope, $http, $rootScope, $translate,
+             gnConfig, gnSearchManagerService) {
 
+      $scope.gnConfig = gnConfig;
       /**
        * Type of relations in SKOS thesaurus
        */
@@ -82,6 +85,7 @@
 
       $scope.maxNumberOfKeywords = 50;
 
+      $scope.recordsRelatedToThesaurus = 0;
       /**
        * The type of thesaurus import. Could be new, file or url.
        */
@@ -108,6 +112,7 @@
        */
       searchThesaurusKeyword = function() {
         if ($scope.thesaurusSelected) {
+          $scope.recordsRelatedToThesaurus = 0;
           $http.get('keywords@json?pNewSearch=true&pTypeSearch=1' +
               '&pThesauri=' + $scope.thesaurusSelected.key +
                       '&pMode=searchBox' +
@@ -117,6 +122,12 @@
                       '&pKeyword=' + ($scope.keywordFilter || '*')
           ).success(function(data) {
             $scope.keywords = data[0];
+            gnSearchManagerService.gnSearch({
+              summaryOnly: 'true',
+              thesaurusIdentifier: $scope.thesaurusSelected.key}).
+                then(function(results) {
+                  $scope.recordsRelatedToThesaurus = parseInt(results.count);
+                });
           });
         }
       };
@@ -273,6 +284,17 @@
         ).success(function(data) {
           // TODO
         });
+      };
+
+      $scope.reindexRecords = function() {
+        gnSearchManagerService.indexSetOfRecords({
+          thesaurusIdentifier: $scope.thesaurusSelected.key}).
+            then(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate('indexingRecordsRelatedToTheThesaurus'),
+                timeout: 2
+              });
+            });
       };
 
       /**
