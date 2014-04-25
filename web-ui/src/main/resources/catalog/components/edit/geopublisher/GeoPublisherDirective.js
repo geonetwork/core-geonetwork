@@ -28,6 +28,7 @@
               scope.resources = angular.fromJson(scope.config);
               scope.hidden = true;
               scope.loaded = false;
+              scope.hasStyler = false;
 
               var map, gsNode;
 
@@ -109,7 +110,12 @@
                   gnEditor.save(true);
                 });
               };
-
+              scope.openStyler = function() {
+                window.open(gsNode.stylerUrl +
+                  "?namespace=" + gsNode.namespacePrefix +
+                  "&layer=" + gsNode.namespacePrefix +
+                  ':' + scope.wmsLayerName);
+              };
               /**
                * Dirty check if the node is a Mapserver REST API
                * or a GeoServer REST API.
@@ -194,6 +200,7 @@
               scope.selectNode = function(nodeId) {
                 gsNode = getNodeById(nodeId);
                 scope.checkNode(nodeId);
+                scope.hasStyler = !angular.isArray(gsNode.stylerUrl);
               };
 
               /**
