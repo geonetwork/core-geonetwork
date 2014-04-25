@@ -1606,46 +1606,6 @@ public class LuceneQueryTest {
         assertEquals("unexpected Lucene query", "+(_cat:hoeperdepoep _cat:\"zat op de stoep\") +_isTemplate:n", query.toString());
     }
 
-    /**
-     * 'groupOwner' parameter with a single value (it should be ignored and not go into the query).
-     */
-    @Test
-    public void testSingleGroupOwner() {
-        // create request object
-        JDOMFactory factory = new DefaultJDOMFactory();
-        Element request = factory.element("request");
-        Element any = factory.element("_groupOwner");
-        any.addContent("JanMetDeKorteNaam");
-        request.addContent(any);
-        // build lucene query input
-        LuceneQueryInput lQI = new LuceneQueryInput(request);
-        // build lucene query
-        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
-        // verify query
-        assertEquals("unexpected Lucene query", "+_isTemplate:n", query.toString());
-    }
-
-    /**
-     * 'groupOwner' parameter with multiple values (it should be ignored and not go into the query).
-     */
-    @Test
-    public void testMultipleGroupOwner() {
-        // create request object
-        JDOMFactory factory = new DefaultJDOMFactory();
-        Element request = factory.element("request");
-        Element any = factory.element("_groupOwner");
-        any.addContent("JanMetDeKorteNaam");
-        request.addContent(any);
-        Element any2 = factory.element("_groupOwner");
-        any2.addContent("GregoriusMetDeLangeNaam");
-        request.addContent(any2);
-        // build lucene query input
-        LuceneQueryInput lQI = new LuceneQueryInput(request);
-        // build lucene query
-        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
-        // verify query
-        assertEquals("unexpected Lucene query", "+_isTemplate:n", query.toString());
-    }
 
     /**
      * 'editable' parameter true.

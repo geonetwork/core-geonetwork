@@ -4,12 +4,16 @@
 
 
 
+
+
   goog.require('gn_catalog_service');
+  goog.require('gn_facet_service');
   goog.require('gn_search_form_results_directive');
   goog.require('gn_urlutils_service');
 
   var module = angular.module('gn_search_form_controller', [
     'gn_catalog_service',
+    'gn_facet_service',
     'gn_urlutils_service',
     'gn_search_form_results_directive'
   ]);
@@ -20,7 +24,8 @@
   module.controller('GnSearchFormController', [
     '$scope',
     'gnSearchManagerService',
-    function($scope, gnSearchManagerService) {
+    'gnCurrentFacet',
+    function($scope, gnSearchManagerService, gnCurrentFacet) {
       var defaultServiceUrl = 'qi@json';
       var defaultParams = {
         fast: 'index'
@@ -30,7 +35,7 @@
         count: 0
       };
       $scope.paginationInfo = null;
-
+      $scope.currentFacet = gnCurrentFacet;
       /**
        * If an object {paginationInfo} is defined inside the
        * SearchFormController, then add from and to  params
@@ -63,6 +68,7 @@
             function(data) {
               $scope.searchResults.records = data.metadata;
               $scope.searchResults.count = data.count;
+              $scope.searchResults.facet = data.facet;
 
               // Event on new search result
               // compute page number for pagination
@@ -108,6 +114,20 @@
       });
       $scope.$on('clearResults', function() {
         $scope.clearResults();
+      });
+      $scope.$watchCollection('currentFacet', function() {
+        if (gnCurrentFacet.facets) {
+          // Drop delete facets from params
+          angular.forEach(gnCurrentFacet.deletedFacets, function(value, key) {
+            delete $scope.params[key];
+            delete gnCurrentFacet.deletedFacets[key];
+          });
+          // Add new facets
+          angular.forEach(gnCurrentFacet.facets, function(facet, key) {
+            $scope.params[key] = facet.value;
+          });
+          $scope.triggerSearch();
+        }
       });
 
     }

@@ -2,9 +2,10 @@
   goog.provide('gn_directory_controller');
 
   goog.require('gn_catalog_service');
+  goog.require('gn_facets_directive');
 
   var module = angular.module('gn_directory_controller',
-      ['gn_catalog_service']);
+      ['gn_catalog_service', 'gn_facets_directive']);
 
   /**
    * Controller to create new metadata record.
@@ -36,7 +37,8 @@
         any: '*',
         _root: '',
         sortBy: 'title',
-        sortOrder: 'reverse'
+        sortOrder: 'reverse',
+        resultType: 'subtemplates'
       };
 
       $scope.paginationInfo = {
