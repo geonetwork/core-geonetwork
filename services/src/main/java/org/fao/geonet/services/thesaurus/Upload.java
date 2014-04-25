@@ -127,8 +127,8 @@ public class Upload implements Service {
 				URI uri = new URI(url);
 				rdfFile = File.createTempFile("thesaurus", ".rdf");
 
-				XmlRequest httpReq = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(uri.getHost(),
-						uri.getPort());
+				XmlRequest httpReq = context.getBean(GeonetHttpRequestFactory.class).
+                        createXmlRequest(uri.toURL());
 				httpReq.setAddress(uri.getPath());
 
 				Lib.net.setupProxy(context, httpReq);
