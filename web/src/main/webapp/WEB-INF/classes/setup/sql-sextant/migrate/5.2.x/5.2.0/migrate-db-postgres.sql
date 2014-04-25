@@ -270,6 +270,9 @@ INSERT INTO USERS SELECT * FROM USERS_TMP;
 DROP TABLE USERS_TMP;
 
 
+UPDATE metadata SET owner = 13 WHERE owner = 1 AND groupOwner = 4 AND isHarvested = 'n';
+UPDATE metadata SET owner = 13 WHERE owner not in (SELECT id FROM USERS);
+
 ALTER TABLE metadata ADD CONSTRAINT metadata_owner_fkey FOREIGN KEY (owner)
       REFERENCES users (id);
 ALTER TABLE metadatastatus ADD CONSTRAINT metadatastatus_userid_fkey FOREIGN KEY (userid)
