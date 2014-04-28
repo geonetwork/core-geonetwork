@@ -86,8 +86,13 @@
               if (scope.type == 'codelist') {
                 gnSchemaManagerService.getCodelist(config).then(
                     function(data) {
-                      scope.infos = data !== 'null' ?
-                          data[0].entry : null;
+                      if (data !== 'null') {
+                        scope.infos = [];
+                        angular.copy(data[0].entry, scope.infos);
+                      } else {
+                        scope.infos = data[0].entry;
+                      }
+
                       addBlankValueAndSetDefault();
                     });
               }
