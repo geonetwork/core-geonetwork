@@ -301,7 +301,7 @@ public class SearchController {
 		String schemaDir  = schemaManager.getSchemaCSWPresentDir(schema)+ File.separator;
 		String styleSheet = schemaDir + prefix +"-"+ elementSetName +".xsl";
 
-		Map<String, String> params = new HashMap<String, String>();
+		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("lang", displayLanguage);
 		params.put("displayInfo", resultType == ResultType.RESULTS_WITH_SUMMARY ? "true" : "false");
 

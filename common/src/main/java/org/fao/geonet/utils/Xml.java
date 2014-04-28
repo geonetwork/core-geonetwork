@@ -390,19 +390,19 @@ public final class Xml
     /**
      * Transforms an xml tree into another using a stylesheet on disk and pass parameters.
      *
+     *
      * @param xml
      * @param styleSheetPath
      * @param params
      * @return
      * @throws Exception
      */
-	public static Element transform(Element xml, String styleSheetPath, Map<String,String> params) throws Exception
+	public static Element transform(Element xml, String styleSheetPath, Map<String, Object> params) throws Exception
 	{
 		JDOMResult resXml = new JDOMResult();
 		transform(xml, styleSheetPath, resXml, params);
 		return (Element)resXml.getDocument().getRootElement().detach();
 	}
-
 	//--------------------------------------------------------------------------
 
     /**
@@ -499,13 +499,14 @@ public final class Xml
     /**
      * Transforms an xml tree putting the result to a stream with optional parameters.
      *
+     *
      * @param xml
      * @param styleSheetPath
      * @param result
      * @param params
      * @throws Exception
      */
-	public static void transform(Element xml, String styleSheetPath, Result result, Map<String,String> params) throws Exception
+	public static void transform(Element xml, String styleSheetPath, Result result, Map<String, Object> params) throws Exception
 	{
 		File styleSheet = new File(styleSheetPath);
 		Source srcXml   = new JDOMSource(new Document((Element)xml.detach()));
@@ -529,14 +530,13 @@ public final class Xml
 		} finally {
 			Transformer t = transFact.newTransformer(srcSheet);
 			if (params != null) {
-				for (Map.Entry<String,String> param : params.entrySet()) {
+				for (Map.Entry<String,Object> param : params.entrySet()) {
 					t.setParameter(param.getKey(),param.getValue());
 				}
 			}
 			t.transform(srcXml, result);
 		}
 	}
-
 	//--------------------------------------------------------------------------
 
     /**

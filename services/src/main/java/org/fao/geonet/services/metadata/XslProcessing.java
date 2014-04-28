@@ -198,7 +198,7 @@ public class XslProcessing extends NotInReadOnlyModeService {
 	            // -- here we send parameters set by user from URL if needed.
 	            @SuppressWarnings("unchecked")
 	            List<Element> children = params.getChildren();
-	            Map<String, String> xslParameter = new HashMap<String, String>();
+	            Map<String, Object> xslParameter = new HashMap<String, Object>();
 	            xslParameter.put("guiLang", context.getLanguage());
 	            xslParameter.put("baseUrl", context.getBaseUrl());
                 xslParameter.put("catalogUrl", settingsMan.getSiteURL(context));
