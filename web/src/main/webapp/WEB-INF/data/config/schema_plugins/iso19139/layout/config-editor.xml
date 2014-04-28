@@ -761,8 +761,8 @@
               <snippet>
                 <gmd:spatialResolution>
                   <gmd:MD_Resolution>
-                    <gmd:distance uom="m">
-                      <gco:Integer/>
+                    <gmd:distance>
+                      <gco:Distance uom="m"/>
                     </gmd:distance>
                   </gmd:MD_Resolution>
                 </gmd:spatialResolution>
