@@ -390,7 +390,9 @@
             <jsSource webappPath="apps/html5ui/js/App.js"/>
     </declarative>
 
-    <declarative name="geonetwork-client-sextant-app" pathOnDisk="${project.basedir}/src/main/resources">
+    <declarative name="geonetwork-client-sextant-app"
+                 pathOnDisk="${project.basedir}/src/main/resources">
+      <jsSource webappPath="apps/js/GeoNetwork/lib/GeoNetwork/widgets/CategoryTree.js"/>
       <jsSource webappPath="apps/sextant/js/Settings.js"/>
       <jsSource webappPath="apps/sextant/js/Settings.js"/>
       <jsSource webappPath="apps/sextant/js/cat.map/Settings.js"/>
