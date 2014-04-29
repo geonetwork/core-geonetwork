@@ -1312,15 +1312,21 @@ public class SearchManager {
 	}
 
     /**
-	 *  Rebuilds the Lucene index.
+	 *  Rebuilds the Lucene index. If xlink or from selection parameters
+     *  are defined, reindex a subset of record. Otherwise reindex all records.
 	 *
 	 *  @param context
-	 *  @param xlinks
+	 *  @param xlinks   Search all docs with XLinks, clear the XLinks cache and index all records found.
+     *  @param reset
+     *  @param fromSelection    Reindex all records from selection.
 	 *
      * @return
      * @throws Exception
      */
-	public boolean rebuildIndex(ServiceContext context, boolean xlinks, boolean reset) throws Exception {
+	public boolean rebuildIndex(ServiceContext context,
+                                boolean xlinks,
+                                boolean reset,
+                                boolean fromSelection) throws Exception {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
 		DataManager dataMan = gc.getBean(DataManager.class);
@@ -1331,15 +1337,16 @@ public class SearchManager {
 			        setupIndex(false);
                 }
 			}
-			if (!xlinks) {
-			    synchronized (_tracker) {
-			        setupIndex(true);
+            if (fromSelection) {
+                dataMan.rebuildIndexForSelection(context, xlinks);
+            } else if (xlinks) {
+                dataMan.rebuildIndexXLinkedMetadata(context);
+            } else {
+                synchronized (_tracker) {
+                    setupIndex(true);
                 }
-			    dataMan.init(context, true);
-			}
-            else {
-				dataMan.rebuildIndexXLinkedMetadata(context);
-			}
+                dataMan.init(context, true);
+            }
 			return true;
 		}
         catch (Exception e) {

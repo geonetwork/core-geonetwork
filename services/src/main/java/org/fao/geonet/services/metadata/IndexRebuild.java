@@ -62,7 +62,8 @@ public class IndexRebuild implements Service
 	{
 		boolean xlinks = false;
 		boolean reset = "yes".equals(Util.getParam(params, "reset", "no"));
-		String rebuildXLinkIndex = _config.getValue("rebuildxlinkindex");
+        boolean fromSelection = "yes".equals(Util.getParam(params, "fromSelection", "no"));
+        String rebuildXLinkIndex = _config.getValue("rebuildxlinkindex");
 		if (rebuildXLinkIndex != null) {
 			xlinks = rebuildXLinkIndex.equals("yes");
 		}
@@ -71,7 +72,7 @@ public class IndexRebuild implements Service
 
 		SearchManager searchMan = gc.getBean(SearchManager.class);
 		
-		boolean info = searchMan.rebuildIndex(context, xlinks, reset);
+		boolean info = searchMan.rebuildIndex(context, xlinks, reset, fromSelection);
 
 		Element elResp = new Element(Jeeves.Elem.RESPONSE);
 		elResp.addContent(new Element("status").setText((info?"true":"false")));

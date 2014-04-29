@@ -275,7 +275,9 @@ public class DataManager {
     }
 
     /**
-     * TODO javadoc.
+     * Search for all records having XLinks (ie. indexed with
+     * _hasxlinks flag), clear the cache and reindex all
+     * records found.
      *
      * @param context
      * @throws Exception
@@ -297,6 +299,49 @@ public class DataManager {
             }
             // execute indexing operation
             batchIndexInThreadPool(context, stringIds);
+        }
+    }
+
+    /**
+     * Reindex all records in current selection.
+     *
+     * @param context
+     * @param clearXlink
+     * @throws Exception
+     */
+    public synchronized void rebuildIndexForSelection(final ServiceContext context,
+                                                      boolean clearXlink)
+            throws Exception {
+
+        // get all metadata ids from selection
+        ArrayList<String> listOfIdsToIndex = new ArrayList<String>();
+        UserSession session = context.getUserSession();
+        SelectionManager sm = SelectionManager.getManager(session);
+
+        synchronized (sm.getSelection("metadata")) {
+            for (Iterator<String> iter = sm.getSelection("metadata").iterator();
+                 iter.hasNext(); ) {
+                String uuid = (String) iter.next();
+                String id = getMetadataId(uuid);
+                if (id != null) {
+                    listOfIdsToIndex.add(id);
+                }
+            }
+        }
+
+        if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+            Log.debug(Geonet.DATA_MANAGER, "Will index " +
+                    listOfIdsToIndex.size() + " records from selection.");
+        }
+
+        if (listOfIdsToIndex.size() > 0) {
+            // clean XLink Cache so that cache and index remain in sync
+            if (clearXlink) {
+                Processor.clearCache();
+            }
+
+            // execute indexing operation
+            batchIndexInThreadPool(context, listOfIdsToIndex);
         }
     }
 
@@ -323,13 +368,28 @@ public class DataManager {
         if (metadataIds.size() < threadCount) perThread = metadataIds.size();
         else perThread = metadataIds.size() / threadCount;
         int index = 0;
-
+        if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+            Log.debug(Geonet.INDEX_ENGINE, "Indexing " + metadataIds.size() + " records.");
+            Log.debug(Geonet.INDEX_ENGINE, metadataIds.toString());
+        }
         while(index < metadataIds.size()) {
             int start = index;
-            int count = Math.min(perThread,metadataIds.size()-start);
+            int count = Math.min(perThread, metadataIds.size() - start);
+            int nbRecords = start + count;
+
+            if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+                Log.debug(Geonet.INDEX_ENGINE, "Indexing records from " + start + " to " + nbRecords);
+            }
+
+            List<String> subList = metadataIds.subList(start, nbRecords);
+
+            if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+                Log.debug(Geonet.INDEX_ENGINE, subList.toString());
+            }
+
             // create threads to process this chunk of ids
             Runnable worker = new IndexMetadataTask(context,
-                    metadataIds.subList(start, start + count - 1),
+                    subList,
                     batchIndex, transactionStatus);
             executor.execute(worker);
             index += count;

@@ -179,6 +179,43 @@
             });
         return defer.promise;
       };
+      var indexSetOfRecords = function(params) {
+        var defer = $q.defer();
+        var defaultParams = {
+          fast: 'index',
+          summaryOnly: 'true'
+        };
+        angular.extend(params, defaultParams);
+
+        gnSearch(params).then(function(data) {
+          if (parseInt(data.count) > 0) {
+            selectAll().then(function() {
+              index(false, true).then(function(data) {
+                defer.resolve(data);
+              });
+            });
+          } else {
+            defer.reject('No records to index');
+          }
+        });
+        return defer.promise;
+      };
+      var index = function(reset, fromSelection) {
+        var defer = $q.defer();
+        var url = 'admin.index.rebuildxlinks?reset=';
+        url += reset ? 'yes' : 'no';
+        url += '&fromSelection=';
+        url += fromSelection ? 'yes' : 'no';
+
+        $http.get(url).
+            success(function(data, status) {
+              defer.resolve(data);
+            }).
+            error(function(data, status) {
+              defer.reject(error);
+            });
+        return defer.promise;
+      };
       var select = function(uuid, andClearSelection) {
         return _select(uuid, andClearSelection, 'add');
       };
@@ -199,7 +236,8 @@
         select: select,
         unselect: unselect,
         selectAll: selectAll,
-        selectNone: selectNone
+        selectNone: selectNone,
+        indexSetOfRecords: indexSetOfRecords
       };
     }
   ]);
