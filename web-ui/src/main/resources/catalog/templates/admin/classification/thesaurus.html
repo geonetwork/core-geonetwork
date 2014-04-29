@@ -41,11 +41,21 @@
       <div class="panel-heading">
         <strong>{{thesaurusSelected.title}} ({{thesaurusSelected.dname}})</strong>
         <a href="{{thesaurusSelected.url}}" data-translate="">download</a>
-
-        <div class="btn-toolbar">
-          <button type="button" class="btn btn-primary pull-right btn-danger fa fa-trash-o"
-            data-ng-click="deleteThesaurus()" data-translate="">deleteThesaurus</button>
+        <div class="btn-toolbar pull-right">
+          <button type="button" class="btn btn-default"
+                  data-ng-show="gnConfig[gnConfig.key.isXLinkEnabled] && !isExternal() && recordsRelatedToThesaurus > 0"
+                  data-ng-click="reindexRecords()"
+                  title="{{'reindexRecords-help' | translate}}">
+            <i class="fa fa-cog"></i>&nbsp;
+            <span data-translate=""
+                data-translate-values="{records: '{{recordsRelatedToThesaurus}}'}">reindexRecords</span>
+          </button>
+          <button type="button" class="btn btn-danger"
+            data-ng-click="deleteThesaurus()">
+            <i class="fa fa-trash-o"></i>&nbsp;<span data-translate="">deleteThesaurus</span>
+          </button>
         </div>
+
       </div>
 
       <div class="panel-body">

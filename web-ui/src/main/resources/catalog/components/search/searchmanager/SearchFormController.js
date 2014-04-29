@@ -120,9 +120,9 @@
         $scope.clearResults();
       });
       $scope.$watchCollection('currentFacet', function() {
-        if (gnCurrentFacet.facets
-          && (!$.isEmptyObject(gnCurrentFacet.facets) ||
-              !$.isEmptyObject(gnCurrentFacet.deletedFacets))) {
+        if (gnCurrentFacet.facets &&
+            (!$.isEmptyObject(gnCurrentFacet.facets) ||
+            !$.isEmptyObject(gnCurrentFacet.deletedFacets))) {
           // Drop delete facets from params
           angular.forEach(gnCurrentFacet.deletedFacets, function(value, key) {
             delete $scope.params[key];

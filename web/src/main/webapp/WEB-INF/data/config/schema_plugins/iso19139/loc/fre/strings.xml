@@ -25,7 +25,7 @@
   <referenceSystemInfo>Système de réf.</referenceSystemInfo>
   <contentInfo>Contenu</contentInfo>
   <portrayalCatalogueInfo>Représentation</portrayalCatalogueInfo>
-  <metadataConstraints>Md. constraintes</metadataConstraints>
+  <metadataConstraints>Md. contraintes</metadataConstraints>
   <metadataMaintenance>Md. maintenance</metadataMaintenance>
   <applicationSchemaInfo>Extension</applicationSchemaInfo>
   
@@ -68,7 +68,7 @@
   <format>Format</format>
   <indeterminatePosition>Position indéterminée</indeterminatePosition>
   <format_version>Version</format_version>
-  <bboxesSection>Rectangle de délimitation géographique</bboxesSection>
+  <bboxesSection></bboxesSection>
   <temporalRangeSection>Étendue temporelle</temporalRangeSection>
   <beginPosition>Date de début</beginPosition>
   <endPosition>Date de fin</endPosition>

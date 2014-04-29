@@ -377,11 +377,10 @@
           <section name="bboxesSection">
             <field
               xpath="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification/
-              srv:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox"> </field>
+              srv:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox"/>
             <field
               xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
-              gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox"
-            > </field>
+              gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox"/>
           </section>
 
           <action type="add" name="extent" or="extent"
@@ -761,8 +760,8 @@
               <snippet>
                 <gmd:spatialResolution>
                   <gmd:MD_Resolution>
-                    <gmd:distance uom="m">
-                      <gco:Integer/>
+                    <gmd:distance>
+                      <gco:Distance uom="m"/>
                     </gmd:distance>
                   </gmd:MD_Resolution>
                 </gmd:spatialResolution>

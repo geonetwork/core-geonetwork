@@ -112,9 +112,9 @@
               };
               scope.openStyler = function() {
                 window.open(gsNode.stylerUrl +
-                  "?namespace=" + gsNode.namespacePrefix +
-                  "&layer=" + gsNode.namespacePrefix +
-                  ':' + scope.wmsLayerName);
+                    '?namespace=' + gsNode.namespacePrefix +
+                    '&layer=' + gsNode.namespacePrefix +
+                    ':' + scope.wmsLayerName);
               };
               /**
                * Dirty check if the node is a Mapserver REST API

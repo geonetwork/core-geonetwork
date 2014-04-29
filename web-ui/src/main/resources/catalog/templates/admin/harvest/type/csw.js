@@ -69,7 +69,7 @@ var gnHarvestercsw = {
       + '  <site>'
       + '    <name>' + h.site.name + '</name>'
       + '    <rejectDuplicateResource>' + h.site.rejectDuplicateResource + '</rejectDuplicateResource>'
-      + '    <capabilitiesUrl>' + h.site.capabilitiesUrl + '</capabilitiesUrl>'
+      + '    <capabilitiesUrl>' + h.site.capabilitiesUrl.replace(/&/g, '&amp;') + '</capabilitiesUrl>'
       + '    <icon>' + h.site.icon + '</icon>'
       + '    <account>'
       + '      <use>' + h.site.account.use + '</use>'

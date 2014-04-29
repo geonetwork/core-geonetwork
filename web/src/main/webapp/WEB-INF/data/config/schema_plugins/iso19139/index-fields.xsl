@@ -111,9 +111,10 @@
 		match="gmd:extent/gmd:EX_Extent/gmd:description/gco:CharacterString[normalize-space(.) != '']">
 		<Field name="extentDesc" string="{string(.)}" store="false" index="true"/>
 	</xsl:template>
-  
-	
-	<!-- ========================================================================================= -->
+
+
+
+  <!-- ========================================================================================= -->
 
 	<xsl:template match="*" mode="metadata">
 
@@ -232,8 +233,8 @@
 				</xsl:for-each>
 			</xsl:for-each>
 
-			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
-
+			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+      
 			<xsl:for-each select="//gmd:MD_Keywords">
 			  
 				<xsl:for-each select="gmd:keyword/gco:CharacterString|gmd:keyword/gmx:Anchor|gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
@@ -279,12 +280,25 @@
                         </xsl:if>
                     </xsl:if>
                 </xsl:for-each>
-
+        <xsl:for-each select="gmd:thesaurusName/gmd:CI_Citation">
+          <xsl:if test="gmd:identifier/gmd:MD_Identifier/gmd:code/gmx:Anchor/text() != ''">
+            <Field name="thesaurusIdentifier"
+                   string="{substring-after(
+                              gmd:identifier/gmd:MD_Identifier/gmd:code/gmx:Anchor/text(),
+                              'geonetwork.thesaurus.')}"
+                   store="true" index="true"/>
+          </xsl:if>
+          <xsl:if test="gmd:title/gco:CharacterString/text() != ''">
+            <Field name="thesaurusName"
+                   string="{gmd:title/gco:CharacterString/text()}"
+                   store="true" index="true"/>
+          </xsl:if>
+        </xsl:for-each>
 				<xsl:for-each select="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue">
 					<Field name="keywordType" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
 			</xsl:for-each>
-	
+
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 	
             <xsl:variable name="email" select="/gmd:MD_Metadata/gmd:contact[1]/gmd:CI_ResponsibleParty[1]/gmd:contactInfo[1]/gmd:CI_Contact[1]/gmd:address[1]/gmd:CI_Address[1]/gmd:electronicMailAddress[1]/gco:CharacterString[1]"/>
