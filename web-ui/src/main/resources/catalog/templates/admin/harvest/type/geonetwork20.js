@@ -58,7 +58,7 @@ var gnHarvestergeonetwork20 = {
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>' 
                 + '  <site>' 
                 + '    <name>' + h.site.name + '</name>' 
-                + '    <host>' + h.site.host + '</host>'
+                + '    <host>' + h.site.host.replace(/&/g, '&amp;') + '</host>'
                 + '    <icon>' + h.site.icon + '</icon>' 
                 + '    <account>'
                 + '      <use>' + h.site.account.use + '</use>'

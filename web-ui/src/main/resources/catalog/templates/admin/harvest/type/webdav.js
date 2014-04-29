@@ -50,7 +50,7 @@ var gnHarvesterwebdav = {
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>' 
                 + '  <site>' 
                 + '    <name>' + h.site.name + '</name>' 
-                + '    <url>' + h.site.url + '</url>'
+                + '    <url>' + h.site.url.replace(/&/g, '&amp;') + '</url>'
                 + '    <icon>' + h.site.icon + '</icon>'
                 + '  </site>' 
                 + '    <account>'

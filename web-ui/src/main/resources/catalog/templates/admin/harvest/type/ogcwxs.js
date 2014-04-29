@@ -57,7 +57,7 @@ var gnHarvesterogcwxs = {
                 + '  <site>' 
                 + '    <name>' + h.site.name + '</name>' 
                 + '    <ogctype>' + h.site.ogctype + '</ogctype>' 
-                + '    <url>' + h.site.url + '</url>'
+                + '    <url>' + h.site.url.replace(/&/g, '&amp;') + '</url>'
                 + '    <icon>' + h.site.icon + '</icon>' 
                 + '    <account>'
                 + '      <use>' + h.site.account.use + '</use>'
