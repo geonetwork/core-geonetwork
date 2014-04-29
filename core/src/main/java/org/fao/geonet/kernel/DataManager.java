@@ -2228,6 +2228,10 @@ public class DataManager {
         env.addContent(new Element("host").setText(host));
         env.addContent(new Element("port").setText(port));
         env.addContent(new Element("baseUrl").setText(baseUrl));
+        // TODO: Remove host, port, baseUrl and simplify the
+        // URL created in the XSLT. Keeping it for the time
+        // as many profiles depend on it.
+        env.addContent(new Element("url").setText(settingMan.getSiteURL(context)));
 
         manageThumbnail(context, id, small, env, Geonet.File.SET_THUMBNAIL, indexAfterChange);
     }
