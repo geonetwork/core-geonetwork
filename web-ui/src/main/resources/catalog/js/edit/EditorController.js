@@ -228,15 +228,17 @@
        * properties and save.
        */
       $scope.switchToTab = function(tabIdentifier, mode) {
-        //          $scope.tab = tabIdentifier;
-        //          FIXME: this trigger an edit
-        //          better to use ng-model in the form ?
+        // Scroll top
+        if (tabIdentifier !== $('#currTab')[0].value) {
+          gnUtilityService.scrollTo();
+        }
+
         $('#currTab')[0].value = tabIdentifier;
         $('#flat')[0].value = mode === 'flat';
 
-        // Make the current form disapearing
+        // Make the current form disapearing TODO: in save
+        // Disable form + indicator ?
         //        $($scope.formId + ' > fieldset').fadeOut(duration);
-
         $scope.save(true);
       };
 
