@@ -218,15 +218,12 @@
 			</xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-      <xsl:message>#indexing keyword </xsl:message>
 
       <xsl:for-each select="//gmd:MD_Keywords">
 
         <xsl:for-each
             select="gmd:keyword/gco:CharacterString|gmd:keyword/gmx:Anchor|gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
-          <xsl:variable name="keywordLower" select="lower-case(.)"/>
           <Field name="keyword" string="{string(.)}" store="true" index="true"/>
-<xsl:message>#index <xsl:value-of select="."/> </xsl:message>
           <xsl:if test="$inspire='true'">
             <xsl:if test="string-length(.) &gt; 0">
 
