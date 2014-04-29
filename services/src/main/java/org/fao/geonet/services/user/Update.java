@@ -130,7 +130,8 @@ public class Update extends NotInReadOnlyModeService {
             }
 
             Address addressEntity;
-            if (user.getAddresses().isEmpty()) {
+            boolean hasNoAddress = user.getAddresses().isEmpty();
+            if (hasNoAddress) {
                 addressEntity = new Address();
             } else {
                 addressEntity = user.getAddresses().iterator().next();
@@ -152,7 +153,10 @@ public class Update extends NotInReadOnlyModeService {
                 addressEntity.setCountry(country);
             }
 
-            user.getAddresses().add(addressEntity);
+            if (hasNoAddress) {
+                user.getAddresses().add(addressEntity);
+            }
+
             if (email != null) {
                 user.getEmailAddresses().add(email);
             }
