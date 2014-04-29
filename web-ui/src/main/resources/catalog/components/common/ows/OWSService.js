@@ -42,11 +42,13 @@
             if (url) {
               //merge URL parameters with default ones
               var parts = url.split('?');
-              var urlParams = gnUrlUtils.parseKeyValue(parts[1].toLowerCase());
+              var urlParams = parts.length === 1 ? {} :
+                gnUrlUtils.parseKeyValue(parts[1]);
+
               var defaultParams = {
                 service: 'WMS',
                 request: 'getCapabilities',
-                version: '1.3.0' //FIXME to remove its not mandatory
+                version: '1.3.0' //FIXME to remove it's not mandatory
               };
               angular.extend(defaultParams, urlParams);
 
