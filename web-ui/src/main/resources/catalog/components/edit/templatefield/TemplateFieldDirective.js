@@ -124,7 +124,7 @@
           angular.forEach(values, function(value, key) {
             var selector = '#' + scope.id + '_' + fields[key];
             if ($(selector).attr('type') === 'checkbox') {
-              $(selector).prop('checked', value);
+              $(selector).attr('checked', value === 'true');
             } else {
               $(selector).val(value);
             }
