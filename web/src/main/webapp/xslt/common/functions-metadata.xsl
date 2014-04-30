@@ -295,7 +295,7 @@
 
 
   <!-- Return if a flat mode exception has been defined in the current view for a field. -->
-  <xsl:function name="gn-fn-metadata:getFieldFlatModeException" as="xs:string">
+  <xsl:function name="gn-fn-metadata:getFieldFlatModeException" as="xs:boolean">
     <xsl:param name="configuration" as="node()"/>
     <xsl:param name="name" as="xs:string"/>
 
@@ -303,8 +303,8 @@
    
     <xsl:value-of
         select="if ($exception > 0)
-      then 'true'
-      else ''"
+      then true()
+      else false()"
         />
   </xsl:function>
 

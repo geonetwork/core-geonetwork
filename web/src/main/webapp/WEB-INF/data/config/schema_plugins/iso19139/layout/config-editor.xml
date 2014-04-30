@@ -1209,9 +1209,9 @@
       </tab>
       
       <!-- Elements that should not use the "flat" mode --> 
-      <!--<flatModeExceptions>
+      <flatModeExceptions>
         <for name="gmd:descriptiveKeywords" />
-      </flatModeExceptions>-->
+      </flatModeExceptions>
     </view>
     <view name="advanced">
       <tab id="identificationInfo" default="true">

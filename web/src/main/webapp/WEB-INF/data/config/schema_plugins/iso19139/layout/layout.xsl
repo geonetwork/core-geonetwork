@@ -31,7 +31,7 @@
 
     <!-- TODO: this should be common to all schemas -->
 	<xsl:if test="$isEditing and
-      (not($isFlatMode) or ($flatModeException = 'true'))">
+      (not($isFlatMode) or $flatModeException)">
       
       <xsl:variable name="directive" select="gn-fn-metadata:getFieldAddDirective($editorConfig, $name)"/>
 
