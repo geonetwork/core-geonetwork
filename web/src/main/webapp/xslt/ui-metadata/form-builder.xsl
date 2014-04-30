@@ -338,8 +338,14 @@
         <!-- Create a title indicating that the element is missing in the current
         record. A checkbox display the template field to be populated. -->
         <xsl:if test="$isMissingLabel != ''">
-          <div data-gn-template-field-toggle="{$tagId}"
-              data-label="{$isMissingLabel}"/>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox"
+                     id="gn-template-unset-{$tagId}"
+                      checked="checked"/>
+              <xsl:value-of select="$isMissingLabel"/>
+            </label>
+          </div>
         </xsl:if>
         <div id="{$tagId}">
           <xsl:if test="$isMissingLabel != ''">
@@ -500,6 +506,9 @@
                         data-keys="{string-join($template/values/key/@label, '$$$')}"
                         data-values="{if ($keyValues and count($keyValues/*) > 0)
                           then string-join($keyValues/field/value, '$$$') else ''}">
+                <xsl:if test="$isMissingLabel != ''">
+                  <xsl:attribute name="data-not-set-check" select="$tagId"/>
+                </xsl:if>
                 <xsl:copy-of select="$template/snippet/*"/>
               </textarea>
             </div>
