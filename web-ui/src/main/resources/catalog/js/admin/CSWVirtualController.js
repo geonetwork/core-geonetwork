@@ -34,10 +34,6 @@
         $scope.virtualCSWSelected = {};
         $http.get('admin.config.virtualcsw.list@json').success(function(data) {
           $scope.cswVirtual = data != 'null' ? data : [];
-          if (angular.isString($scope.cswVirtual.parameters)) {
-            // Format info if only parameter returned
-
-          }
         }).error(function(data) {
           // TODO
         });
