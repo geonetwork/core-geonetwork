@@ -51,6 +51,7 @@
         function($http, gnSchemaManagerService) {
           return {
             restrict: 'A',
+            replace: true,
             templateUrl: '../../catalog/components/search/formfields/' +
                 'partials/schemainfocombo.html',
             scope: {
