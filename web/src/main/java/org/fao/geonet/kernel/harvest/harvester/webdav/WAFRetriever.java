@@ -72,10 +72,21 @@ class WAFRetriever implements RemoteRetriever {
         Elements links = doc.select("a[href]");
         for (Element link : links) {
             String url = link.attr("abs:href");
-            if(getFileType(url) != null)
-            	files.add(new WAFRemoteFile(url));
-            else
-            	continue;
+            String fileType = getFileType(url);
+
+            if(fileType == null) {
+                continue;
+            } else if (fileType.equals(type_dir)) {
+                if (params.recurse) {
+                    // Parent directory or same directory links, ignore
+                    if (!url.contains(wafurl) || url.equals(wafurl)) continue;
+
+                    // Try as a directory
+                    retrieveFiles(url);
+                }
+            } else {
+                files.add(new WAFRemoteFile(url));
+            }
         }
 			
 	}
@@ -88,12 +99,15 @@ class WAFRetriever implements RemoteRetriever {
 	
 	public static String getFileType(String path)
 	{
-		if(path.toUpperCase().contains("REQUEST=GETCAPABILITIES"))
+		if(path.toUpperCase().contains("REQUEST=GETCAPABILITIES")) {
 			return type_GetCapabilities;
-		else if(path.toUpperCase().endsWith(".XML"))
+        } else if(path.toUpperCase().endsWith(".XML")) {
 			return	type_xml;
-		else
+        } else if(path.toUpperCase().endsWith("/")) {
+            return type_dir;
+        } else {
 			return null;
+        }
 	}
 
 	//---------------------------------------------------------------------------
@@ -108,7 +122,8 @@ class WAFRetriever implements RemoteRetriever {
 	
 	public static final String type_GetCapabilities = "GetCapabilities";
 	public static final String type_xml = "xml";
-	
+    public static final String type_dir = "directory";
+
 }
 
 //=============================================================================
