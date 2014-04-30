@@ -72,8 +72,11 @@ public class Delete extends NotInReadOnlyModeService {
 			IO.delete(item, true, Geonet.THESAURUS);
 
             // Delete thesaurus record in the database
-            context.getBean(ThesaurusActivationRepository.class).delete(thesaurus.getFname());
-            String query = "DELETE FROM Thesaurus WHERE id =?";
+            ThesaurusActivationRepository repo = context.getBean(ThesaurusActivationRepository.class);
+            String thesaurusId = thesaurus.getFname();
+            if (repo.exists(thesaurusId)) {
+                repo.delete(thesaurusId);
+            }
         } else {
             throw new IllegalArgumentException("Thesaurus not found --> " + name);
         }
