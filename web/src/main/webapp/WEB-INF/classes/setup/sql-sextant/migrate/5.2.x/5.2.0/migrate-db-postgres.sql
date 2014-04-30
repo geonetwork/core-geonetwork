@@ -332,3 +332,130 @@ CREATE INDEX ParamsNDX1 ON Params(requestId);
 CREATE INDEX ParamsNDX2 ON Params(queryType);
 CREATE INDEX ParamsNDX3 ON Params(termField);
 CREATE INDEX ParamsNDX4 ON Params(termText);
+
+
+
+
+
+
+-- Add virtual CSW config
+delete from serviceparameters;
+delete from services;
+
+INSERT INTO services (id, name, class, description) VALUES (1, 'csw-AIRESMARINES', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (1, '_groupPublished', 'AIRESMARINES');
+
+INSERT INTO services (id, name, class, description) VALUES (2, 'csw-ATLAS_CHARM', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (2, '_groupPublished', 'ATLAS_CHARM');
+
+INSERT INTO services (id, name, class, description) VALUES (3, 'csw-CLUB_SIG_MAYOTTE', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (3, '_groupPublished', 'CLUB_SIG_MAYOTTE');
+
+INSERT INTO services (id, name, class, description) VALUES (4, 'csw-DCE', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (4, '_groupPublished', 'DCE');
+
+INSERT INTO services (id, name, class, description) VALUES (5, 'csw-DCSMM', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (5, '_groupPublished', 'DCSMM');
+
+INSERT INTO services (id, name, class, description) VALUES (6, 'csw-DELEGATION_REUNION', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (6, '_groupPublished', 'DELEGATION_REUNION');
+
+INSERT INTO services (id, name, class, description) VALUES (7, 'csw-EMODNET_Chemistry', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (7, '_groupPublished', 'EMODNET_Chemistry');
+
+INSERT INTO services (id, name, class, description) VALUES (8, 'csw-EMODNET_HYDROGRAPHY_CPRD', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (8, '_groupPublished', 'EMODNET_HYDROGRAPHY_CPRD');
+
+INSERT INTO services (id, name, class, description) VALUES (9, 'csw-EMODNET_HYDROGRAPHY_PRODUCT', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (9, '_groupPublished', 'EMODNET_HYDROGRAPHY_PRODUCT');
+
+INSERT INTO services (id, name, class, description) VALUES (10, 'csw-EUROSHELL', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (10, '_groupPublished', 'EUROSHELL');
+
+INSERT INTO services (id, name, class, description) VALUES (11, 'csw-GEOCATALOGUE', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (11, '_groupPublished', 'GEOCATALOGUE');
+
+INSERT INTO services (id, name, class, description) VALUES (12, 'csw-GEO_SEAS_CPRD', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (12, '_groupPublished', 'GEO_SEAS_CPRD');
+
+INSERT INTO services (id, name, class, description) VALUES (13, 'csw-GEO_SEAS_PRODUCT', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (13, '_groupPublished', 'GEO_SEAS_PRODUCT');
+
+INSERT INTO services (id, name, class, description) VALUES (14, 'csw-GRANULATS', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (14, '_groupPublished', 'GRANULATS');
+
+INSERT INTO services (id, name, class, description) VALUES (15, 'csw-LITTORAL_ENVIRONNEMENT', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (15, '_groupPublished', 'LITTORAL_ENVIRONNEMENT');
+
+INSERT INTO services (id, name, class, description) VALUES (16, 'csw-MIMEL', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (16, '_groupPublished', 'MIMEL');
+
+INSERT INTO services (id, name, class, description) VALUES (18, 'csw-MYOCEAN-CORE-PRODUCTS', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (18, '_groupPublished', 'MYOCEAN-CORE-PRODUCTS');
+
+INSERT INTO services (id, name, class, description) VALUES (19, 'csw-MYOCEAN-DOCUMENTS', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (19, '_groupPublished', 'MYOCEAN-DOCUMENTS');
+
+INSERT INTO services (id, name, class, description) VALUES (20, 'csw-MYOCEAN-INTERMEDIATE-PRODUCTS', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (20, '_groupPublished', 'MYOCEAN-INTERMEDIATE-PRODUCTS');
+
+INSERT INTO services (id, name, class, description) VALUES (21, 'csw-MYOCEAN-SERVICES-AND-DATASETS', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (21, '_groupPublished', 'MYOCEAN-SERVICES-AND-DATASETS');
+
+INSERT INTO services (id, name, class, description) VALUES (23, 'csw-MYOCEAN-UPSTREAM-PRODUCTS', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (23, '_groupPublished', 'MYOCEAN-UPSTREAM-PRODUCTS');
+
+INSERT INTO services (id, name, class, description) VALUES (24, 'csw-NATURA2000', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (24, '_groupPublished', 'NATURA2000');
+
+INSERT INTO services (id, name, class, description) VALUES (25, 'csw-Netmar', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (25, '_groupPublished', 'Netmar');
+
+INSERT INTO services (id, name, class, description) VALUES (26, 'csw-Netmar_Cedre', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (26, '_groupPublished', 'Netmar_Cedre');
+
+INSERT INTO services (id, name, class, description) VALUES (27, 'csw-NOUVELLE_CALEDONIE', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (27, '_groupPublished', 'NOUVELLE_CALEDONIE');
+
+INSERT INTO services (id, name, class, description) VALUES (28, 'csw-OCEAN_INDIEN', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (28, '_groupPublished', 'OCEAN_INDIEN');
+
+INSERT INTO services (id, name, class, description) VALUES (29, 'csw-PELAGIS', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (29, '_groupPublished', 'PELAGIS');
+
+INSERT INTO services (id, name, class, description) VALUES (30, 'csw-PERSIG', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (30, '_groupPublished', 'PERSIG');
+
+INSERT INTO services (id, name, class, description) VALUES (31, 'csw-PHOTOS_ANCIENNES', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (31, '_groupPublished', 'PHOTOS_ANCIENNES');
+
+INSERT INTO services (id, name, class, description) VALUES (32, 'csw-PREVIMER', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (32, '_groupPublished', 'PREVIMER');
+
+INSERT INTO services (id, name, class, description) VALUES (33, 'csw-REBENT', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (33, '_groupPublished', 'REBENT');
+
+INSERT INTO services (id, name, class, description) VALUES (34, 'csw-REMATA', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (34, '_groupPublished', 'REMATA');
+
+INSERT INTO services (id, name, class, description) VALUES (35, 'csw-ROLNP', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (35, '_groupPublished', 'ROLNP');
+
+INSERT INTO services (id, name, class, description) VALUES (36, 'csw-SEADATANET', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (36, '_groupPublished', 'SEADATANET');
+
+INSERT INTO services (id, name, class, description) VALUES (37, 'csw-SIG972', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (37, '_groupPublished', 'SIG972');
+
+INSERT INTO services (id, name, class, description) VALUES (38, 'csw-SINPMER', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (38, '_groupPublished', 'SINPMER');
+
+INSERT INTO services (id, name, class, description) VALUES (39, 'csw-SURVEILLANCE_LITTORALE', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (39, '_groupPublished', 'SURVEILLANCE_LITTORALE');
+
+INSERT INTO services (id, name, class, description) VALUES (40, 'csw-UR_ANTILLES', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (40, '_groupPublished', 'UR_ANTILLES');
+
+INSERT INTO services (id, name, class, description) VALUES (41, 'csw-VALMER', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (41, '_groupPublished', 'VALMER');
+
