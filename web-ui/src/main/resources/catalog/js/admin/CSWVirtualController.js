@@ -28,8 +28,8 @@
       var operation = '';
 
       /**
-         * Load catalog settings and extract CSW settings
-         */
+       * Load catalog settings and extract CSW settings
+       */
       function loadCSWVirtual() {
         $scope.virtualCSWSelected = {};
         $http.get('admin.config.virtualcsw.list@json').success(function(data) {
@@ -63,16 +63,16 @@
       $scope.selectVirtualCSW = function(v) {
         operation = 'updateservice';
         $http.get('admin.config.virtualcsw.get@json?id=' + v.id)
-              .success(function(data) {
+          .success(function(data) {
               var params = [];
               angular.copy(data.serviceParameters, params);
               $scope.virtualCSWSelected = data;
               $scope.virtualCSWSelected.serviceParameters = {};
               angular.forEach(params,
-                function (param) {
-                  $scope.virtualCSWSelected.
-                    serviceParameters[param['@name']] = param['#text'];
-              });
+                  function(param) {
+                    $scope.virtualCSWSelected.
+                        serviceParameters[param['@name']] = param['#text'];
+                  });
               $scope.virtualCSWUpdated = false;
             }).error(function(data) {
               // TODO
@@ -101,7 +101,7 @@
       $scope.saveVirtualCSW = function(formId) {
 
         $http.get('admin.config.virtualcsw.update@json?operation=' + operation +
-                  '&' + $(formId).serialize())
+            '&' + $(formId).serialize())
           .success(function(data) {
               loadCSWVirtual();
               $rootScope.$broadcast('StatusUpdated', {
@@ -120,7 +120,7 @@
 
       $scope.deleteVirtualCSW = function() {
         $http.get('admin.config.virtualcsw.remove?id=' +
-                  $scope.virtualCSWSelected.id)
+            $scope.virtualCSWSelected.id)
           .success(function(data) {
               loadCSWVirtual();
             })
