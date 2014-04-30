@@ -216,7 +216,8 @@
                isTemplate: getInputValue('template'),
                mdLanguage: getInputValue('language'),
                mdOtherLanguages: getInputValue('otherLanguages'),
-               showValidationErrors: getInputValue('showvalidationerrors'),
+               showValidationErrors:
+               getInputValue('showvalidationerrors') == 'true',
                uuid: getInputValue('uuid'),
                schema: getInputValue('schema'),
                version: getInputValue('version'),

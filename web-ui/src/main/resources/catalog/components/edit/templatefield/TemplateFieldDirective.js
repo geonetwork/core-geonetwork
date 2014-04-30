@@ -95,7 +95,7 @@
             }
           };
 
-          var init = function () {
+          var init = function() {
             // Register change event on each fields to be
             // replaced in the XML snippet.
             angular.forEach(fields, function(value) {
@@ -118,7 +118,7 @@
             if (unsetCheckbox[0] !== undefined) {
               unsetCheckbox.change(function() {
                 $('#' + scope.notSetCheck).toggleClass('hidden');
-                if(unsetCheckbox[0].checked) {
+                if (unsetCheckbox[0].checked) {
                   element[0].innerHTML = '';
                 } else {
                   generateSnippet();
@@ -127,7 +127,7 @@
             }
 
             generateSnippet();
-          }
+          };
 
           init();
         }

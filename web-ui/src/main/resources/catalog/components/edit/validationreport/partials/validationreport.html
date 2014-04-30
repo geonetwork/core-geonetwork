@@ -7,8 +7,14 @@
       data-ng-show="hasErrors"
       data-ng-click="toggleShowErrors()"
       data-translate="">onlyErrors</button>
+
+    <button type="button" class="btn btn-default"
+            data-ng-click="load()">
+      <i data-ng-hide="loading" class="fa fa-refresh"/>
+      <i data-ng-show="loading" class="fa fa-spinner fa-spin"/>
+    </button>
   </div>
-  <div class="panel-body">
+  <div class="panel-body" data-ng-show="ruleTypes.length !== 0">
     <div class="gn-validation-report">
       <div data-ng-repeat="type in ruleTypes">
         <h4><span class="gn-schematron-title">{{type.label | translate}}</span>
