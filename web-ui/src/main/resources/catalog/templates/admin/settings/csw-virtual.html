@@ -4,12 +4,12 @@
       <div class="panel-heading" data-translate="">virtualCSW</div>
       <div class="panel-body">
         <input class="form-control" data-ng-model="virtualCSWSearch.$" autofocus=""
-          placeholder="{{'filter' | translate}}"/>
+               placeholder="{{'filter' | translate}}"/>
         <input type="hidden" data-ng-model="virtualCSWSelected.id"/>
         <div class="list-group">
           <a href="" class="list-group-item"
-            data-ng-repeat="v in cswVirtual | filter:virtualCSWSearch | orderBy:'name'"
-            data-ng-click="selectVirtualCSW(v)" title="{{v.description}}"> {{v.name}} </a>
+             data-ng-repeat="v in cswVirtual | filter:virtualCSWSearch | orderBy:'name'"
+             data-ng-click="selectVirtualCSW(v)" title="{{v.description}}"> {{v.name}} </a>
         </div>
 
         <button type="button" class="btn btn-primary btn-block" data-ng-click="addVirtualCSW()">
@@ -29,39 +29,39 @@
         <span data-ng-hide="virtualCSWSelected.id != ''" data-translate="">newVirtualCSW</span>
         <strong>{{virtualCSWSelected.name}}</strong> (<a
           href="{{getCapabilitiesUrl(virtualCSWSelected)}}" data-translate="">capabilities</a>)
-          <button type="button" class="btn btn-primary pull-right fa fa-save"
-          data-ng-disabled="!virtualCSWUpdated || gnVirtualCSWEdit.servicename.$error.pattern"
-          data-ng-click="saveVirtualCSW('#gn-virtualcsw-edit')" data-translate=""
-          >saveVirtualCSW</button>
+        <button type="button" class="btn btn-primary pull-right fa fa-save"
+                data-ng-disabled="!virtualCSWUpdated || gnVirtualCSWEdit.servicename.$error.pattern"
+                data-ng-click="saveVirtualCSW('#gn-virtualcsw-edit')" data-translate=""
+            >saveVirtualCSW</button>
         <button type="button" class="btn btn-primary pull-right btn-danger fa fa-trash-o"
-          data-ng-hide="virtualCSWSelected.id == ''"
-          data-ng-click="deleteVirtualCSW(virtualCSWSelected.id)" data-translate=""
-          >deleteVirtualCSW</button>
+                data-ng-hide="virtualCSWSelected.id == ''"
+                data-ng-click="deleteVirtualCSW(virtualCSWSelected.id)" data-translate=""
+            >deleteVirtualCSW</button>
       </div>
       <div class="panel-body">
         <form id="gn-virtualcsw-edit" name="gnVirtualCSWEdit" class="form-horizontal"
-          data-ng-keypress="updatingVirtualCSW()">
+              data-ng-keypress="updatingVirtualCSW()">
           <fieldset>
             <legend data-translate="">serviceDescription</legend>
             <input type="hidden" name="id" data-ng-model="virtualCSWSelected.id"
-              value="{{virtualCSWSelected.id}}"/>
+                   value="{{virtualCSWSelected.id}}"/>
             <div data-ng-class="gnVirtualCSWEdit.servicename.$valid != true ? 'has-error' : ''">
               <label data-translate="">virtualCSWName</label>
               <input type="text" name="servicename" class="form-control" required=""
-                data-ng-pattern="/csw-[\d\w]{1,}/" data-ng-model="virtualCSWSelected.name"/>
+                     data-ng-pattern="/csw-[\d\w]{1,}/" data-ng-model="virtualCSWSelected.name"/>
               <p class="help-block" data-translate="">virtualCSWNameHelp</p>
               <p class="help-block error"
-                data-ng-show="gnVirtualCSWEdit.servicename.$error.pattern || gnVirtualCSWEdit.servicename.$error.required"
-                data-translate="">virtualCSWNamePattern</p>
+                 data-ng-show="gnVirtualCSWEdit.servicename.$error.pattern || gnVirtualCSWEdit.servicename.$error.required"
+                 data-translate="">virtualCSWNamePattern</p>
             </div>
 
             <label data-translate="">virtualCSWNameDescription</label>
             <textarea name="servicedescription" class="form-control"
-              data-ng-model="virtualCSWSelected.description"/>
+                      data-ng-model="virtualCSWSelected.description"/>
             <p class="help-block" data-translate="">virtualCSWNameDescriptionHelp</p>
 
             <input type="hidden" name="classname" class="form-control"
-              value=".services.main.CswDiscoveryDispatcher"/>
+                   value=".services.main.CswDiscoveryDispatcher"/>
           </fieldset>
 
           <fieldset>
@@ -70,42 +70,42 @@
               <label data-translate="" class="col-lg-4">any</label>
               <div class="col-lg-8">
                 <input type="text" name="any" class="form-control"
-                  data-ng-model="virtualCSWSelected.serviceParameters.any"/>
+                       data-ng-model="virtualCSWSelected.serviceParameters.any"/>
               </div>
             </div>
             <div class="form-group">
               <label data-translate="" class="col-lg-4">title</label>
               <div class="col-lg-8">
                 <input type="text" name="title" class="form-control"
-                  data-ng-model="virtualCSWSelected.serviceParameters.title"/>
+                       data-ng-model="virtualCSWSelected.serviceParameters.title"/>
               </div>
             </div>
             <div class="form-group">
               <label data-translate="" class="col-lg-4">abstract</label>
               <div class="col-lg-8">
                 <input type="text" name="abstract" class="form-control"
-                  data-ng-model="virtualCSWSelected.serviceParameters.abstract"/>
+                       data-ng-model="virtualCSWSelected.serviceParameters.abstract"/>
               </div>
             </div>
             <div class="form-group">
               <label data-translate="" class="col-lg-4">keyword</label>
               <div class="col-lg-8">
                 <input type="text" name="keyword" class="form-control"
-                  data-ng-model="virtualCSWSelected.serviceParameters.keyword"/>
+                       data-ng-model="virtualCSWSelected.serviceParameters.keyword"/>
               </div>
             </div>
             <div class="form-group">
               <label data-translate="" class="col-lg-4">denominator</label>
               <div class="col-lg-8">
                 <input type="text" name="denominator" class="form-control"
-                  data-ng-model="virtualCSWSelected.serviceParameters.denominator"/>
+                       data-ng-model="virtualCSWSelected.serviceParameters.denominator"/>
               </div>
             </div>
             <div class="form-group">
               <label data-translate="" class="col-lg-4">_source</label>
               <div class="col-lg-8">
                 <input type="text" name="_source" class="form-control"
-                  data-ng-model="virtualCSWSelected.serviceParameters._source"/>
+                       data-ng-model="virtualCSWSelected.serviceParameters._source"/>
               </div>
             </div>
             <div class="form-group">
@@ -125,12 +125,12 @@
               <label data-translate="" class="col-lg-4">_groupPublished</label>
               <div class="col-lg-8">
                 <select data-ng-change="updatingVirtualCSW()"
-                  data-ng-model="virtualCSWSelected.serviceParameters._groupPublished"
-                  class="form-control" name="_groupPublished">
+                        data-ng-model="virtualCSWSelected.serviceParameters._groupPublished"
+                        class="form-control" name="_groupPublished">
                   <option value=""/>
-                  <option data-ng-repeat="g in groupsFilter" value="{{g.id}}"
-                    ng-selected="g.id == virtualCSWSelected.serviceParameters._groupPublished"
-                    >{{g.label[lang]}}</option>
+                  <option data-ng-repeat="g in groupsFilter | orderBy:sortByLabel" value="{{g.name}}"
+                          ng-selected="g.name == virtualCSWSelected.serviceParameters._groupPublished"
+                      >{{g.label[lang]}}</option>
                 </select>
               </div>
             </div>
