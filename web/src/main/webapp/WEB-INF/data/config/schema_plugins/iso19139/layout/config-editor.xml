@@ -1203,7 +1203,7 @@
 
           <field name="metadataPointOfContact" templateModeOnly="true"
             notDisplayedIfMissing="true"
-            xpath="/gmd:MD_Metadata/gmd:contact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='pointOfContact']" del=".">
+            xpath="/gmd:MD_Metadata/gmd:contact" del=".">
             <template>
               <values readonlyIf="count(@xlink:href) > 0">
                 <key label="organisationName"
@@ -1212,6 +1212,10 @@
                   xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
                   gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
                   use="email"/>
+                <key label="role"
+                     xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
+                  <codelist name="gmd:CI_RoleCode"/>
+                </key>
               </values>
               <snippet>
                 <gmd:contact>
