@@ -69,6 +69,7 @@
   <indeterminatePosition>Position indéterminée</indeterminatePosition>
   <format_version>Version</format_version>
   <bboxesSection></bboxesSection>
+  <inspireTheme>Thème INSPIRE</inspireTheme>
   <temporalRangeSection>Étendue temporelle</temporalRangeSection>
   <beginPosition>Date de début</beginPosition>
   <endPosition>Date de fin</endPosition>
