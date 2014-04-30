@@ -1,0 +1,56 @@
+<div data-ng-controller="gnViewerController">
+  <div id="header" class="navbar navbar-fixed-top"></div>
+  <div id="map" class="map" gn-map="" gn-map-map="map"></div>
+  <div id="pulldown">
+    <div id="pulldown-content" class="panel-group content in">
+      <div class="panel">
+        <a id="shareHeading" class="panel-heading accordion-toggle collapsed" data-toggle="collapse"
+           data-parent="#pulldown-content" href="#share">
+          <i class="visible-collapsed icon-caret-right spacer"></i>
+          <i class="hidden-collapsed icon-caret-down"></i>
+          <i class="icon-share"></i>
+          <span translate="" class="ng-scope">Partager</span>
+        </a>
+
+        <div id="share" class="panel-collapse collapse">
+          <div class="panel-body">
+            <a href="" data-toggle="modal" data-target="#wmsModal">Import WMS</a>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <a id="managerHeading" class="panel-heading accordion-toggle" data-toggle="collapse"
+           data-parent="#pulldown-content" href="#manager">
+          <i class="fa fa-caret-right"></i>
+          <span translate="" class="ng-scope">layer_manager</span>
+        </a>
+
+        <div id="manager" class="panel-collapse collapse">
+          <div class="panel-body">
+            <div class="panel-body panel-body-wide" gn-layermanager gn-layermanager-map="map">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+          <a id="selectionHeading" class="panel-heading accordion-toggle" data-toggle="collapse">
+            <i class="visible-collapsed icon-caret-right"></i>
+            <i class="hidden-collapsed icon-caret-down"></i>
+            <span translate>layer_selection</span>
+          </a>
+          <div id="selection" class="panel-collapse collapse">
+            <div class="panel-body panel-body-wide" gn-layermanager gn-layermanager-map="map">
+            </div>
+        </div>
+      </div> <!-- .panel -->
+
+  </div>
+    <div tpye="button" data-toggle="collapse" data-target="#pulldown-content" class="toggle btn btn-default">
+      Fermer
+    </div>
+  </div>
+  <div class="modal fade" id="wmsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div gn-wms-import="" gn-wms-import-map="map"></div>
+  </div>
+</div>

@@ -1,0 +1,243 @@
+@import "gn.less";
+@import "../lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.less";
+@import "../lib/style/ol.css";
+@import "../lib/style/datetimepicker.css";
+@import "../lib/jquery.ext/jquery.fileupload-ui.css";
+
+/* app css stylesheet */
+
+*, *:before, *:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+#header {
+    overflow: visible;
+    height: 89px;
+    padding: 0 .4em 0 0;
+    background-color: rgba(255,255,255,0.9);
+    -webkit-box-shadow: 6px 6px 12px rgba(0,0,0,0.175);
+    box-shadow: 6px 6px 12px rgba(0,0,0,0.175);
+}
+
+#map {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#pulldown {
+    position: absolute;
+    left: 0;
+    width: 320px;
+    z-index: 1000;
+    top: 89px;
+}
+#pulldown-content {
+    -webkit-box-shadow: 6px 6px 12px rgba(0,0,0,0.175);
+    box-shadow: 6px 6px 12px rgba(0,0,0,0.175);
+    border-right: 1px solid #bdbdbd;
+    border-bottom: 1px solid #bdbdbd;
+}
+#pulldown .panel-group {
+    margin-bottom: 0px;
+}
+
+#pulldown-content .panel>.accordion-toggle.collapsed {
+    background-color: #999;
+    color: #fff;
+    font-weight: normal;
+    border-bottom: 1px solid #afafaf;
+}
+#pulldown-content .panel>.accordion-toggle {
+    border-bottom: 1px solid #c7c7c7;
+    font-weight: bold;
+    -webkit-transition: background-color .35s ease;
+    transition: background-color .35s ease;
+}
+#pulldown-content .accordion-toggle, #pulldown-content .panel-body-wide a {
+    display: block;
+    background-color: #fff;
+    color: #000;
+    text-decoration: none;
+}
+.panel-group .panel-heading {
+    border-bottom: 0;
+}
+
+#pulldown .panel {
+    margin: 0;
+    border: 0;
+    overflow: visible;
+}
+.toggle {
+    font-weight: bold;
+    -webkit-box-shadow: 6px 6px 12px rgba(0,0,0,0.175);
+    box-shadow: 6px 6px 12px rgba(0,0,0,0.175);
+    width: 75%;
+    -webkit-transition: all .35s ease;
+    transition: all .35s ease;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-left: 12.5%;
+    z-index: 1200;
+    background-color: #474949;
+    border-color: #474949;
+    color: #fff;
+}
+.layers-lit {
+    height: 300px;
+    overflow-y: scroll;
+}
+
+.gn-import-wms {
+  width: 750px;
+  input[name=url], .tt-dropdown-menu {
+    width: 586px;
+    padding-right: 30px;
+  }
+
+  table {
+    width: 320px;
+    margin: 0px;
+    table-layout: fixed;
+    font-size: 12px !important;
+
+    thead, tbody, tr {
+      width: 100%;
+    }
+
+    thead, th, td, tr {
+      height: 35px;
+    }
+
+    th, td {
+      width: 515px;
+      border-left: 1px solid #dddddd;
+    }
+
+    tbody > tr:first-child td { /* first-row of table content */
+      border-top: none;
+    }
+
+    tr > :first-child { /* first-col */
+      width: 25px;
+      border-left: none;
+    }
+
+    tr, .icon-zoom-in {
+      cursor: pointer;
+    }
+
+    tr.success {
+      cursor: default;
+    }
+  }
+
+  textarea[readonly] {
+    resize: none;
+    width: 364px;
+    height: 206px;
+    cursor: auto;
+    background-color: #ffffff;
+    font-size: 12px;
+  }
+
+  .tt-dropdown-menu {
+    height: 280px;
+    overflow-y: auto;
+    border: 1px solid black;
+    background-color: white;
+
+    p {
+      margin: 5px 10px;
+    }
+  }
+
+  .tt-is-under-cursor {
+    background-color: #f0f0f0;
+  }
+
+  .tt-hint {
+    color: #999
+  }
+
+  .modal-backdrop {
+    position: absolute;
+
+    .progress {
+      position: absolute;
+      top: 50%;
+      margin-top: -20px;
+      left: 50%;
+      margin-left: -100px;
+      width: 200px;
+    }
+  }
+
+  .gn-import-wms-container {
+    width: 550px;
+    border: 1px solid #dddddd;
+    border-collapse: separate;
+    border-radius: 4px;
+    z-index: 50;
+
+    th {
+      border-bottom: none;
+    }
+  }
+
+  .gn-import-wms-content {
+    width: 100%;
+    height: 240px;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-top: 1px solid #dddddd;
+  }
+
+  .gn-import-wms-filter {
+    padding-top: 10px;
+    width: 80%;
+  }
+
+  .gn-import-wms-container, .ga-import-wms-descr {
+    display: inline-block;
+    position: relative;
+    margin: 5px 0px 0px 0px;
+  }
+
+  .ga-import-wms-connect {
+    position: absolute;
+    left: 596px;
+    top: 0px;
+    width: 120px;
+  }
+
+  .ga-import-wms-open {
+    cursor: pointer;
+    position: absolute;
+    left: 566px;
+    top: .7em;
+    font-size: 14px;
+  }
+
+  .ga-import-wms-descr {
+    vertical-align: top;
+    margin-left: 20px;
+  }
+
+  .ga-import-wms-add {
+    width: 100%;
+    margin-top: 10px;
+  }
+}

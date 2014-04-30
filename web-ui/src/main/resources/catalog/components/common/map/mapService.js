@@ -125,6 +125,50 @@
                 'West ' + extent[2] + '. Global';
 
             return dc;
+          },
+
+          addWmsToMap : function(map, layerParams, layerOptions, index) {
+            var createWmsLayer = function(params, options, index) {
+              options = options || {};
+              var attributions;
+
+/*
+              if (options.attribution) {
+                attributions = [
+                  gnMapUtils.getAttribution(options.attribution)
+                ];
+              }
+*/
+
+              var source = new ol.source.TileWMS({
+                params: params,
+                url: options.url,
+                extent: options.extent,
+                attributions: attributions,
+                ratio: options.ratio || 1
+              });
+
+              var layer = new ol.layer.Tile({
+                url: options.url,
+                type: 'WMS',
+                opacity: options.opacity,
+                visible: options.visible,
+                attribution: options.attribution,
+                source: source
+              });
+              /*gaDefinePropertiesForLayer(layer);*/
+              layer.preview = options.preview;
+              layer.label = options.label;
+              return layer;
+            };
+
+            var olLayer = createWmsLayer(layerParams, layerOptions);
+            if (index) {
+              map.getLayers().insertAt(index, olLayer);
+            } else {
+              map.addLayer(olLayer);
+            }
+            return olLayer;
           }
         };
       }];

@@ -39,6 +39,7 @@
               $service = 'node-change-warning') then 'gn_login'
     else if ($service = 'contact.us') then 'gn_contact_us'
     else if ($service = 'catalog.edit') then 'gn_editor'
+    else if ($service = 'catalog.viewer') then 'gn_viewer'
     else 'gn'"/>
   
   <!-- Catalog settings -->

@@ -1,0 +1,26 @@
+<ul>
+  <li ng-repeat="layer in layers" class="ga-layer-folded {{layer.time ? 'ga-layer-time-enabled' : ''}}">
+    <button type="button" ng-click="removeLayerFromMap(layer)" class="btn btn-primary btn-xs">&times;</button>
+    <label class="ga-checkbox">
+      <input type="checkbox" ng-model="layer.visible" />
+      <span></span>
+      {{layer.label}}
+    </label>
+    <span class="ga-layer-tools">
+      <label class="ga-layer-transparency">
+        <span translate>transparency</span>&nbsp;
+        <input type="range" min="0" max="1" step="0.05" value="1" ng-model="layer.invertedOpacity" ng-if="rangeSupported"/>
+        <select ng-model="layer.invertedOpacity" ng-if="!rangeSupported" ng-options="i.key as i.value for i in opacityValues">
+        </select>
+      </label>
+      <a href="#" class="ga-layer-info" ng-show="isBodLayer(layer)" ng-click="displayLayerMetadata($event, layer)"><i class="icon-info-sign"></i></a>
+      <div class="ga-layer-ordering">
+        <a href="#" class="icon-arrow-up" ng-if="!$first" ng-click="moveLayer(layer, 1)"></a>
+        <i class="icon-arrow-up" ng-if="$first"></i>
+        <a href="#" class="icon-arrow-down" ng-if="!$last" ng-click="moveLayer(layer, -1)"></a>
+        <i class="icon-arrow-down" ng-if="$last"></i>
+      </div>
+    </span>
+    <i class="icon-gear"></i>
+  </li>
+</ul>
