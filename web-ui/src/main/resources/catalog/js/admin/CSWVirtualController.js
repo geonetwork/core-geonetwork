@@ -34,6 +34,10 @@
         $scope.virtualCSWSelected = {};
         $http.get('admin.config.virtualcsw.list@json').success(function(data) {
           $scope.cswVirtual = data != 'null' ? data : [];
+          if (angular.isString($scope.cswVirtual.parameters)) {
+            // Format info if only parameter returned
+
+          }
         }).error(function(data) {
           // TODO
         });
@@ -64,9 +68,15 @@
         operation = 'updateservice';
         $http.get('admin.config.virtualcsw.get@json?id=' + v.id)
               .success(function(data) {
+              var params = [];
+              angular.copy(data.serviceParameters, params);
               $scope.virtualCSWSelected = data;
-              // FIXME: XML to JSON converter only convert
-              // lonely child as array and not as object
+              $scope.virtualCSWSelected.serviceParameters = {};
+              angular.forEach(params,
+                function (param) {
+                  $scope.virtualCSWSelected.
+                    serviceParameters[param['@name']] = param['#text'];
+              });
               $scope.virtualCSWUpdated = false;
             }).error(function(data) {
               // TODO
@@ -127,6 +137,9 @@
             });
       };
 
+      $scope.sortByLabel = function(group) {
+        return group.label[$scope.lang];
+      };
       $scope.getCapabilitiesUrl = function(v) {
         if (v) {
           return v.name + '?SERVICE=CSW&REQUEST=GetCapabilities';

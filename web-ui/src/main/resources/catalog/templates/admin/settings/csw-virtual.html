@@ -128,8 +128,8 @@
                   data-ng-model="virtualCSWSelected.serviceParameters._groupPublished"
                   class="form-control" name="_groupPublished">
                   <option value=""/>
-                  <option data-ng-repeat="g in groupsFilter" value="{{g.id}}"
-                    ng-selected="g.id == virtualCSWSelected.serviceParameters._groupPublished"
+                  <option data-ng-repeat="g in groupsFilter | orderBy:sortByLabel" value="{{g.name}}"
+                    ng-selected="g.name == virtualCSWSelected.serviceParameters._groupPublished"
                     >{{g.label[lang]}}</option>
                 </select>
               </div>
