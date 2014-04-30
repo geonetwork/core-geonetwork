@@ -214,7 +214,7 @@
             del="../..">
             <template> 
               <values>
-                <key label="url" xpath="gmd:URL"/>
+                <key label="url" xpath="gmd:URL" tooltip="gmd:linkage"/>
               </values>
               <snippet>
                 <gmd:linkage>
@@ -247,7 +247,9 @@
             if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
             <template>
               <values>
-                <key label="code" xpath="gmd:MD_Identifier/gmd:code/gco:CharacterString"/>
+                <key label="code"
+                     xpath="gmd:MD_Identifier/gmd:code/gco:CharacterString"
+                     tooltip="gmd:code|gmd:MD_Identifier"/>
               </values>
               <snippet>
                 <gmd:identifier>
@@ -267,7 +269,9 @@
             if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
             <template>
               <values>
-                <key label="code" xpath="gmd:MD_Identifier/gmd:code/gco:CharacterString"/>
+                <key label="code"
+                     xpath="gmd:MD_Identifier/gmd:code/gco:CharacterString"
+                     tooltip="gmd:code|gmd:MD_Identifier"/>
               </values>
               <snippet>
                 <gmd:identifier>
@@ -299,7 +303,7 @@
           <action type="batch" process="add-resource-id" params=""
                   if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/
             gmd:identifier[ends-with(gmd:MD_Identifier/gmd:code/gco:CharacterString, //gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString)]) = 0"/>
-          <!-- [ends-with(gmd:MD_Identifier/gmd:code/gco:CharacterString, root()/gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString)] -->
+
 
 
 
@@ -308,7 +312,9 @@
             del=".">
             <template>
               <values>
-                <key label="format" xpath="gmd:MD_Format/gmd:name/gco:CharacterString">
+                <key label="format"
+                     xpath="gmd:MD_Format/gmd:name/gco:CharacterString"
+                     tooltip="gmd:name|gmd:MD_Format">
                   <helper name="gmd:name" context="gmd:MD_Format"/>
                 </key>
                 <key label="format_version" xpath="gmd:MD_Format/gmd:version/gco:CharacterString"/>
@@ -447,7 +453,9 @@
             del="../..">
             <template>
               <values>
-                <key label="code" xpath="gmd:RS_Identifier/gmd:code/gco:CharacterString"/>
+                <key label="code"
+                     xpath="gmd:RS_Identifier/gmd:code/gco:CharacterString"
+                     tooltip="gmd:MD_ReferenceSystem"/>
                 <!-- TODO: Get the helper -->
               </values>
               <snippet>
@@ -497,7 +505,10 @@
               del=".">
               <template>
                 <values>
-                  <key label="date" xpath="gmd:CI_Date/gmd:date/*" use="gn-date-picker"/>
+                  <key label="date"
+                       xpath="gmd:CI_Date/gmd:date/*"
+                       use="gn-date-picker"
+                       tooltip="gmd:date||/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date"/>
                 </values>
                 <snippet>
                   <gmd:date>
@@ -520,7 +531,10 @@
               if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
               <template>
                 <values>
-                  <key label="date" xpath="gmd:CI_Date/gmd:date/*" use="gn-date-picker"/>
+                  <key label="date"
+                       xpath="gmd:CI_Date/gmd:date/*"
+                       use="gn-date-picker"
+                       tooltip="gmd:date||/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date"/>
                 </values>
                 <snippet>
                   <gmd:date>
@@ -543,7 +557,10 @@
               if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
               <template>
                 <values>
-                  <key label="date" xpath="gmd:CI_Date/gmd:date/*" use="gn-date-picker"/>
+                  <key label="date"
+                       xpath="gmd:CI_Date/gmd:date/*"
+                       use="gn-date-picker"
+                       tooltip="gmd:date||/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date"/>
                 </values>
                 <snippet>
                   <gmd:date>
@@ -565,7 +582,10 @@
               if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
               <template>
                 <values>
-                  <key label="date" xpath="gmd:CI_Date/gmd:date/*" use="gn-date-picker"/>
+                  <key label="date"
+                       xpath="gmd:CI_Date/gmd:date/*"
+                       use="gn-date-picker"
+                       tooltip="gmd:date||/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date"/>
                 </values>
                 <snippet>
                   <gmd:date>
@@ -587,7 +607,10 @@
               if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
               <template>
                 <values>
-                  <key label="date" xpath="gmd:CI_Date/gmd:date/*" use="gn-date-picker"/>
+                  <key label="date"
+                       xpath="gmd:CI_Date/gmd:date/*"
+                       use="gn-date-picker"
+                       tooltip="gmd:date||/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date"/>
                 </values>
                 <snippet>
                   <gmd:date>
@@ -609,7 +632,10 @@
               if="count(gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0">
               <template>
                 <values>
-                  <key label="date" xpath="gmd:CI_Date/gmd:date/*" use="gn-date-picker"/>
+                  <key label="date"
+                       xpath="gmd:CI_Date/gmd:date/*"
+                       use="gn-date-picker"
+                       tooltip="gmd:date||/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date"/>
                 </values>
                 <snippet>
                   <gmd:date>
@@ -636,12 +662,14 @@
                 <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
                 <key label="beginPosition"
                   xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
-                  use="gn-date-picker">
+                  use="gn-date-picker"
+                  tooltip="gmd:extent|gmd:EX_TemporalExtent">
                   <directiveAttributes data-tag-name="gml:beginPosition"/>
                 </key>
                 <key label="endPosition"
                   xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
                   use="gn-date-picker"
+                  tooltip="gmd:extent|gmd:EX_TemporalExtent"
                 >
                   <directiveAttributes
                       data-tag-name="gml:endPosition"
@@ -670,10 +698,12 @@
               <values>
                 <key label="beginPosition"
                      xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
-                     use="gn-date-picker"/>
+                     use="gn-date-picker"
+                     tooltip="gmd:extent|gmd:EX_TemporalExtent"/>
                 <key label="endPosition"
                      xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
                      use="gn-date-picker"
+                     tooltip="gmd:extent|gmd:EX_TemporalExtent"
                     />
                 <key label="indeterminatePosition"
                      xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"
@@ -770,7 +800,6 @@
           </action>
 
           <field name="conformity" templateModeOnly="true"
-                 notDisplayedIfMissing="true"
                  isMissingLabel="notEvaluated"
             xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result"
             del="../..">
@@ -778,7 +807,8 @@
               <values>
                 <key label="conformity_title"
                   xpath="gmd:DQ_ConformanceResult/
-                  gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString">
+                  gmd:specification/gmd:CI_Citation/gmd:title/gco:CharacterString"
+                  tooltip="gmd:pass">
                   <helper name="gmd:title" context="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult/gmd:specification/gmd:CI_Citation/gmd:title"></helper>
                 </key>
                 <key label="conformity_date"
@@ -840,7 +870,7 @@
           </field>
 
 
-          <action type="add" name="conformity" or="report"
+          <!--<action type="add" name="conformity" or="report"
             in="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality">
             <template>
               <snippet>
@@ -879,7 +909,7 @@
                 </gmd:report>
               </snippet>
             </template>
-          </action>
+          </action>-->
 
 
 

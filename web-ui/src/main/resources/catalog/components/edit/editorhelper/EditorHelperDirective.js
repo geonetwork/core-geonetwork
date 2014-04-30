@@ -26,7 +26,8 @@
           ref: '@',
           type: '@',
           relatedElement: '@',
-          relatedAttr: '@'
+          relatedAttr: '@',
+          tooltip: '@'
         },
         templateUrl: '../../catalog/components/edit/editorhelper/partials/' +
             'editorhelper.html',

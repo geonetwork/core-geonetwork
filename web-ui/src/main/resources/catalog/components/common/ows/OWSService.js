@@ -43,7 +43,7 @@
               //merge URL parameters with default ones
               var parts = url.split('?');
               var urlParams = parts.length === 1 ? {} :
-                gnUrlUtils.parseKeyValue(parts[1]);
+                  gnUrlUtils.parseKeyValue(parts[1]);
 
               var defaultParams = {
                 service: 'WMS',
