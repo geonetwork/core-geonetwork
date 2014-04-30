@@ -234,7 +234,7 @@
 			</xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-      
+
 			<xsl:for-each select="//gmd:MD_Keywords">
 			  
 				<xsl:for-each select="gmd:keyword/gco:CharacterString|gmd:keyword/gmx:Anchor|gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
@@ -280,6 +280,7 @@
                         </xsl:if>
                     </xsl:if>
                 </xsl:for-each>
+
         <xsl:for-each select="gmd:thesaurusName/gmd:CI_Citation">
           <xsl:if test="gmd:identifier/gmd:MD_Identifier/gmd:code/gmx:Anchor/text() != ''">
             <Field name="thesaurusIdentifier"

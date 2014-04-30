@@ -18,11 +18,8 @@
 
 
   module.factory('gnSchemaManagerService',
-      ['$q',
-       '$http',
-       '$cacheFactory',
-       function($q, $http, 
-           $cacheFactory) {
+      ['$q', '$http', '$cacheFactory',
+       function($q, $http, $cacheFactory) {
          /**
           * Cache field info and codelist info
           *
@@ -80,22 +77,33 @@
                defer.resolve(fromCache);
              } else {
                var getPostRequestBody = function() {
-                 var info = config.split('|'),
-                 requestBody = '<request><element schema="' + info[0] +
-                 '" name="' + info[1] +
-                 '" context="' + info[2] +
-                 '" fullContext="' + info[3] +
-                 '" isoType="' + info[4] + '" /></request>';
+                 var info = config.split('|');
+                 var requestBody = null;
+
+                 // Check at least element name is defined
+                 // to get information about that element.
+                 if (info[1] !== '') {
+                   requestBody = '<request><element schema="' + info[0] +
+                   '" name="' + info[1] +
+                   '" context="' + (info[2] || '') +
+                   '" fullContext="' + (info[3] || '') +
+                   '" isoType="' + (info[4] || '') + '" /></request>';
+                 }
                  return requestBody;
                };
 
-               $http.post('md.element.info@json', getPostRequestBody(), {
-                 headers: {'Content-type': 'application/xml'}
-               }).
-               success(function(data) {
-                 infoCache.put(config, data);
-                 defer.resolve(data);
-               });
+               var requestBody = getPostRequestBody();
+               if (requestBody === null) {
+                 defer.reject({error: 'Invalid config.', config: config});
+               } else {
+                 $http.post('md.element.info@json', requestBody, {
+                   headers: {'Content-type': 'application/xml'}
+                 }).
+                 success(function(data) {
+                   infoCache.put(config, data);
+                   defer.resolve(data);
+                 });
+               }
              }
              return defer.promise;
            }

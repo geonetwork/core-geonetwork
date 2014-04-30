@@ -29,25 +29,6 @@
         }
       };
     }]),
-  module.directive('gnTemplateFieldToggle', [
-    function() {
-      return {
-        restrict: 'A',
-        replace: true,
-        templateUrl: '../../catalog/components/edit/templatefield/' +
-            'partials/togglefield.html',
-        scope: {
-          id: '@gnTemplateFieldToggle',
-          label: '@'
-        },
-        link: function(scope, element, attrs) {
-          scope.checked = true;
-          scope.toggle = function() {
-            $(scope.id).toggleClass('hidden');
-          };
-        }
-      };
-    }]),
   /**
      * The template field directive managed a custom field which
      * is based on an XML snippet to be sent in the form with some
@@ -68,7 +49,8 @@
         scope: {
           id: '@gnTemplateField',
           keys: '@',
-          values: '@'
+          values: '@',
+          notSetCheck: '@'
         },
         link: function(scope, element, attrs) {
           var xmlSnippetTemplate = element[0].innerHTML;
@@ -80,6 +62,7 @@
           // Replace all occurence of {{fieldname}} by its value
           var generateSnippet = function() {
             var xmlSnippet = xmlSnippetTemplate, updated = false;
+
             angular.forEach(fields, function(fieldName) {
               var field = $('#' + scope.id + '_' + fieldName);
               var value = '';
@@ -112,25 +95,41 @@
             }
           };
 
-          // Register change event on each fields to be
-          // replaced in the XML snippet.
-          angular.forEach(fields, function(value) {
-            $('#' + scope.id + '_' + value).change(function() {
-              generateSnippet();
+          var init = function() {
+            // Register change event on each fields to be
+            // replaced in the XML snippet.
+            angular.forEach(fields, function(value) {
+              $('#' + scope.id + '_' + value).change(function() {
+                generateSnippet();
+              });
             });
-          });
 
-          // Initialize all values
-          angular.forEach(values, function(value, key) {
-            var selector = '#' + scope.id + '_' + fields[key];
-            if ($(selector).attr('type') === 'checkbox') {
-              $(selector).attr('checked', value === 'true');
-            } else {
-              $(selector).val(value);
+            // Initialize all values
+            angular.forEach(values, function(value, key) {
+              var selector = '#' + scope.id + '_' + fields[key];
+              if ($(selector).attr('type') === 'checkbox') {
+                $(selector).attr('checked', value === 'true');
+              } else {
+                $(selector).val(value);
+              }
+            });
+
+            var unsetCheckbox = $('#gn-template-unset-' + scope.notSetCheck);
+            if (unsetCheckbox[0] !== undefined) {
+              unsetCheckbox.change(function() {
+                $('#' + scope.notSetCheck).toggleClass('hidden');
+                if (unsetCheckbox[0].checked) {
+                  element[0].innerHTML = '';
+                } else {
+                  generateSnippet();
+                }
+              });
             }
-          });
 
-          generateSnippet();
+            generateSnippet();
+          };
+
+          init();
         }
       };
     }]);

@@ -70,6 +70,7 @@
   <electronicMailAddress>Email</electronicMailAddress>
   <role>Role</role>
   <encoding>Encoding</encoding>
+  <inspireTheme>INSPIRE themes</inspireTheme>
   <format>Format</format>
   <format_version>Version</format_version>
   <lineage>Lineage</lineage>

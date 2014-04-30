@@ -513,13 +513,13 @@
               loadHarvesterTemplates();
             }
           });
-      $scope.getHarvesterTypes = function () {
+      $scope.getHarvesterTypes = function() {
         var array = [];
-        angular.forEach($scope.harvesterTypes,  function (h) {
+        angular.forEach($scope.harvesterTypes, function(h) {
           array.push(h);
         });
         return array;
-      }
+      };
     }]);
 
 })();
