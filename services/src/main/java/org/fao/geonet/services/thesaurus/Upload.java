@@ -135,7 +135,7 @@ public class Upload implements Service {
 
 				httpReq.executeLarge(rdfFile);
 
-				fname = url.substring(url.lastIndexOf("/") + 1, url.length());
+				fname = url.substring(url.lastIndexOf("/") + 1, url.length()).replaceAll("\\s+", "");
 				
 				// File with no extension in URL
 				if (fname.lastIndexOf('.') == -1) {
@@ -153,6 +153,7 @@ public class Upload implements Service {
 			}
 			
 			rdfFile = new File(uploadDir, fname);
+            fname = fname.replaceAll("\\s+", "");
 		}
 
 		if (fname == null || "".equals(fname)) {
