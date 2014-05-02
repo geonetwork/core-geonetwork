@@ -131,6 +131,12 @@
             <xs:documentation>A tab is composed of a set of elements.</xs:documentation>
           </xs:annotation>
         </xs:element>
+        <xs:element minOccurs="0" maxOccurs="1" ref="flatModeExceptions">
+          <xs:annotation>
+            <xs:documentation>Elements to apply "flat" mode exceptions. By default, 
+            "flat" mode does not display elements containing only children and no value.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
       </xs:sequence>
       <xs:attribute name="name" use="required" type="xs:string">
         <xs:annotation>
@@ -186,6 +192,19 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="flatModeExceptions">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="unbounded" ref="for">
+          <xs:annotation>
+            <xs:documentation>>Elements to apply "flat" mode exceptions. By default, 
+            "flat" mode does not display elements containing only children and no value.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
   <xs:attribute name="mode" fixed="flat" type="xs:string">
     <xs:annotation>
       <xs:documentation>"flat" mode does not display elements containing only children and no value.
