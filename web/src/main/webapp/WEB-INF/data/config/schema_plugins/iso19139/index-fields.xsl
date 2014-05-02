@@ -336,6 +336,9 @@
 			<xsl:for-each select="gmd:language/gco:CharacterString|gmd:language/gmd:LanguageCode/@codeListValue">
 				<Field name="datasetLang" string="{string(.)}" store="true" index="true"/>
 			</xsl:for-each>
+      <xsl:for-each select="gmd:language/gco:CharacterString">
+        <Field name="useLanguageString" string="true" store="false" index="true"/>
+      </xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 
@@ -666,7 +669,9 @@
 			|gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue">
 			<Field name="language" string="{string(.)}" store="true" index="true"/>
 		</xsl:for-each>
-
+    <xsl:for-each select="gmd:language/gco:CharacterString">
+      <Field name="useLanguageString" string="true" store="false" index="true"/>
+    </xsl:for-each>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 
 		<xsl:for-each select="gmd:fileIdentifier/gco:CharacterString">
