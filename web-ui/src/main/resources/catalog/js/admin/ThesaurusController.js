@@ -111,7 +111,7 @@
                       '&maxResults=' +
                       ($scope.maxNumberOfKeywords ||
                               defaultMaxNumberOfKeywords) +
-                      '&pKeyword=' + ($scope.keywordFilter || '*')
+                      '&pKeyword=' + (encodeURI($scope.keywordFilter) || '*')
           ).success(function(data) {
             $scope.keywords = data[0];
             gnSearchManagerService.gnSearch({
