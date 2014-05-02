@@ -3922,6 +3922,13 @@ l’IGN (WPS)
       <option value="Conditions inconnues">Conditions inconnues</option>
       <option value="Utilisation libre sous réserve de mentionner la source (a minima le nom du producteur) et la date de sa dernière mise à jour" title="Utilisation libre sous réserve de mentionner la source (a minima le nom du producteur) et la date de sa dernière mise à jour">Utilisation libre sous réserve de mentionner la source ...</option>
       <option value="Données ouvertes">Données ouvertes</option>
+      <option value="Licence ouverte / Open licence : http://www.etalab.gouv.fr/pages/licence-ouverte-open-licence-5899923.html">Licence ouverte / Open licence : http://www.etalab.gouv.fr/pages/licence-ouverte-open-licence-5899923.html</option>
+      <option value="Licence Creatives Commons - Paternité : http://creativecommons.org/licenses/by/3.0/fr/">Licence Creatives Commons - Paternité : http://creativecommons.org/licenses/by/3.0/fr/</option>
+      <option value="Licence Creatives Commons - Paternité + Pas de Modification : http://creativecommons.org/licenses/by-nd/3.0/fr/">Licence Creatives Commons - Paternité + Pas de Modification : http://creativecommons.org/licenses/by-nd/3.0/fr/</option>
+      <option value="Licence Creatives Commons - Paternité + Pas d’Utilisation Commerciale + Pas de Modification : http://creativecommons.org/licenses/by-nc-nd/3.0/fr/">Licence Creatives Commons - Paternité + Pas d’Utilisation Commerciale + Pas de Modification : http://creativecommons.org/licenses/by-nc-nd/3.0/fr/</option>
+      <option value="Licence Creatives Commons - Paternité + Pas d’Utilisation Commerciale : http://creativecommons.org/licenses/by-nc/3.0/fr/">Licence Creatives Commons - Paternité + Pas d’Utilisation Commerciale : http://creativecommons.org/licenses/by-nc/3.0/fr/</option>
+      <option value="Licence Creatives Commons - Paternité + Pas d’Utilisation Commerciale + Partage dans les mêmes conditions : http://creativecommons.org/licenses/by-nc-sa/3.0/fr/">Licence Creatives Commons - Paternité + Pas d’Utilisation Commerciale + Partage dans les mêmes conditions : http://creativecommons.org/licenses/by-nc-sa/3.0/fr/</option>
+      <option value="Licence Creatives Commons - Paternité + Partage dans les mêmes conditions : http://creativecommons.org/licenses/by-sa/3.0/fr/">Licence Creatives Commons - Paternité + Partage dans les mêmes conditions : http://creativecommons.org/licenses/by-sa/3.0/fr/</option>
     </helper>
   </element>
   <element name="gmd:userContactInfo" id="66.0">
