@@ -59,12 +59,6 @@ public class KeywordBean {
 	private final Map<String, String> definitions = new LinkedHashMap<String,String>();
     private IsoLanguagesMapper isoLanguageMapper;
     private String defaultLang;
-	/**
-	 * Create keyword bean with the default IsoLanguageMapper
-	 */
-    public KeywordBean() {
-        this(null);
-    }
     
     public KeywordBean(IsoLanguagesMapper isoLangMapper) {
         this.isoLanguageMapper = isoLangMapper;
@@ -623,7 +617,7 @@ public class KeywordBean {
     }
 
     public IsoLanguagesMapper getIsoLanguageMapper() {
-        return isoLanguageMapper == null? IsoLanguagesMapper.getInstance() : isoLanguageMapper;
+        return isoLanguageMapper;
     }
 
     /**

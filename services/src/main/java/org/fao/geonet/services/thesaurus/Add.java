@@ -66,7 +66,7 @@ public class Add extends NotInReadOnlyModeService {
 		String type = Util.getParam(params, "type");
 		String activated = Util.getParam(params, "activated", "y");
 
-		fname = fname.trim();
+		fname = fname.trim().replaceAll("\\s+", "");
 		
 		if (!fname.endsWith(".rdf")){
 			fname = fname + ".rdf";

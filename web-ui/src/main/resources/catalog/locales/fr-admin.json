@@ -536,6 +536,7 @@
     "reindexRecords-help": "Après la mise à jour des mots clés, il est recommandé de réindexer les fiches associées lorsque les XLinks sont utilisés (du fait du système de cache de XLinks).",
     "indexingRecordsRelatedToTheThesaurus": "Les fiches utilisant des mots clés de ce thésaurus sont en cours d'indexation ...",
     "thesaurus": "Théasurus",
+    "keywordNotAvailableInThisLanguage": "- non disponible dans cette langue -",
     "addThesaurus": "Ajouter un thésaurus",
     "createThesaurusTitle": "Créer un thésaurus",
     "chooseThesaurus": "Sélectionner ou déposer un fichier ici",

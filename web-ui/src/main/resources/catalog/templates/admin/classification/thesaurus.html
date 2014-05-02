@@ -134,7 +134,9 @@
         </form>
         <ul>
           <li data-ng-repeat="k in keywords">
-            <a href=""  data-ng-click="editKeyword(k)">{{k.value['#text']}}
+            <a href=""  data-ng-click="editKeyword(k)"
+                data-ng-class="k.value['#text'] ? '' : 'text-warning'">
+              {{k.value['#text'] || ('keywordNotAvailableInThisLanguage' | translate)}}
               <i class="fa fa-edit pull-right" data-ng-class="isExternal() ? 'fa-info' : 'fa-edit'"/>
             </a>
             <a href=""

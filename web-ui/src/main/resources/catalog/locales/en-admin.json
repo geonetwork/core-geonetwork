@@ -608,6 +608,7 @@
     "translationForCategory": "Translations for ",
     
     "manageThesaurus": "Thesaurus",
+    "keywordNotAvailableInThisLanguage": "- not available in current language -",
     "reindexRecords": "Reindex {{records}} related record(s)",
     "reindexRecords-help": "After updating keywords and when records are using XLinks, records using this thesaurus should be reindex (due to the XLinks cache system).",
     "indexingRecordsRelatedToTheThesaurus": "Records related to this thesaurus are being indexed ...",
