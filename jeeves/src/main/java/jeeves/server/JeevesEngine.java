@@ -161,6 +161,7 @@ public class JeevesEngine {
             _scheduleMan.setBaseUrl(baseUrl);
 
             loadConfigFile(servletContext, configPath, Jeeves.CONFIG_FILE, _serviceMan);
+            loadConfigDB(_applicationContext, -1);
 
             //--- handlers must be started here because they may need the context
             //--- with the ProfileManager already loaded
