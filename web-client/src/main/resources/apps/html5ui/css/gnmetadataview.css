@@ -555,14 +555,14 @@ div.help ul li {
 
 #show-advanced,#hide-advanced {
 	margin: 0;
-	padding: 5px 30px 5px 10px;
+	padding: 6px 10px 6px 10px;
 	background-position: right 50%;
 	white-space: nowrap;
 }
 
 #advanced-search-options #hide-advanced {
 	margin: 0;
-	padding: 5px 30px 5px 10px;
+	padding: 5px 10px 5px 10px;
 	border-left: 1px solid #e5e5e5;
 	border-bottom: 1px solid #e5e5e5;
 	background-position: right 50%;
@@ -1146,11 +1146,10 @@ ul.gn-relation-thumbnail {
 /* admin */
 .user-button a {
 	padding-top: 0px;
-	padding-left: 25px;
 }
 
 a#administration_button {
-	background-position: 0 -17px
+	background-position: 0 -10px
 }
 
 #metadata-panel .x-btn-over .book,#metadata-panel .x-btn-pressed .book {

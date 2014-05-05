@@ -1401,4 +1401,6 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
 	<tag_label>Tags</tag_label>
 	<map_label>Mappa</map_label>
   <about.text>About this site</about.text>
+  <signIn>Sign In</signIn>
+  <signOut>Sign Out</signOut>
 </strings>

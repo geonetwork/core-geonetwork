@@ -20,6 +20,10 @@ nav a {
 	color: #376690;
 }
 
+nav a:hover {
+  background: #F1F18A;
+}
+
 nav a.selected {
 	background: #376690; 
 	color: white;
@@ -125,13 +129,12 @@ div#tabs .x-tab-strip-active .x-tab-right {
 }
 
 #search-form input {
-	border: #000;
+	border: solid 1px #000;
 }
 
 #search-submit {
-	background-color: #fff;
-	border: #000;
-	color: transparent;
+  background-color: #47a8dd !important;
+  color:#fff !important;
 }
 
 #show-advanced,#hide-advanced {

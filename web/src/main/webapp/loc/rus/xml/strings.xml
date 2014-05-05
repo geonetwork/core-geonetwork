@@ -1399,4 +1399,6 @@ ISO 19115 не позволяет иметь более одного.
 	<tag_label>Tags</tag_label>
 	<map_label>Map</map_label>
   <about.text>About this site</about.text>
+  <signIn>Sign In</signIn>
+  <signOut>Sign Out</signOut>
 </strings>

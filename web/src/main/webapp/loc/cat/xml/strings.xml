@@ -1396,3 +1396,5 @@
 	<map_label>Map</map_label>
   <about.text>About this site</about.text>
 </strings>
+  <signIn>Sign In</signIn>
+  <signOut>Sign Out</signOut>
