@@ -199,27 +199,6 @@ body {
   color:#fff;
 }
 
-#lang-form div {
-	display: inline;
-	padding-right: 7px;
-}
-
-#lang-form div div form {
-	background: transparent;
-	border: none;
-}
-
-#lang-form div div form div input {
-  background:transparent;
-  color:#898989;
-  border:none;
-  text-align:right;
-}
-
-#lang-form div div form div img {
-	text-align: right;
-}
-
 #bread-crumb-app {
   font-weight:bolder;
   color:#43788A;
@@ -341,7 +320,7 @@ nav {
   display: block;
 }
 
-#printer-button,#rss-button,#lang-form input,#sitemap-button,#feedback-site-button,#help-tab,#contact-tab {
+#printer-button,#rss-button,#lang-button,#sitemap-button,#feedback-site-button,#help-tab,#contact-tab {
   display: inline;
   padding-right: 5px;
   text-decoration: none;
@@ -353,7 +332,7 @@ nav {
   padding-left: 15px;
 }
 
-#help-tab,#contact-tab {
+#help-tab,#contact-tab,#lang-button {
   float: right;
 }
 
@@ -369,8 +348,16 @@ nav {
   background-image: url('../images/default/comment_top.gif');
 }
 
-#lang-form,#sitemap-button,#contact-button {
+#sitemap-button,#contact-button {
   float: right;
+}
+
+#lang-menu {
+  height: auto;
+}
+
+#lang-menu ul.x-menu-list {
+  height: auto !important;
 }
 
 #cloud-tag {
@@ -1356,11 +1343,20 @@ div.facets * .facet-more-bt,div.facets * .facet-less-bt {
 #login-form {
 	position: absolute;
 	left: 200px;
-  z-index: 1000;
 	top: 20px;
 	background: none;
 	z-index: 50;
 }
+
+/* Language form
+ */
+#lang-form {
+	position: absolute;
+	right: 50px;
+	top: 24px;
+	z-index: 5000;
+}
+
 
 #login_div {
 	width: 210px;

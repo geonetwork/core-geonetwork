@@ -183,6 +183,14 @@
 						</form>
 				  </span>
 					<a id="help-tab" target="_blank" href="/geonetwork/docs/eng/users">Help</a>
+					<a id="lang-button" href="javascript:toggle('lang-form');">
+            <xsl:for-each select="/root/gui/config/languages/*">
+              <xsl:variable name="lang" select="name(.)"/>
+              <xsl:if test="/root/gui/language=$lang">
+                <span id="current-lang"><xsl:value-of select="/root/gui/strings/*[name(.)=$lang]"/></span>&#160;<i class="fa fa-angle-double-down"></i>
+              </xsl:if>
+            </xsl:for-each>
+          </a>
 					<div id="lang-form" style="display:none;"></div>
 			</div>
 				
