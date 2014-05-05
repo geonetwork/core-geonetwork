@@ -1,6 +1,7 @@
 package fr.ifremer.seagis.catalogue.controller;
 
 import java.io.Serializable;
+import java.lang.String;
 import java.util.logging.Logger;
 
 import javax.faces.context.FacesContext;
@@ -32,6 +33,7 @@ public class CatalogueController implements Serializable {
     private String geoviewerurl;
     private String panierurl;
     private String typeSearch;
+    private String listThesaurus;
     
     public void sendLayerToGeoviewer() {
         CATALOGUESERVICE.sendLayerToGeoviewer(FacesContext.getCurrentInstance(), wmsurl, wmsversion, layername, layergroup);        
@@ -63,6 +65,7 @@ public class CatalogueController implements Serializable {
             geoviewerurl = sextantConfig.getGeoviewerUrl();
             panierurl = sextantConfig.getPanierUrl();
             typeSearch= sextantConfig.getCatalogueTypeSearch();
+            listThesaurus = sextantConfig.getCatalogueListThesaurus();
         } else {
             maxextent = null;
             geonetworkurl = null;
@@ -71,7 +74,8 @@ public class CatalogueController implements Serializable {
             mdviewerurl = null;
             geoviewerurl = null;
             panierurl = null;
-	    typeSearch = null;
+	        typeSearch = null;
+            listThesaurus = null;
         }
     	
     }
@@ -96,7 +100,15 @@ public class CatalogueController implements Serializable {
     public void setTypeSearch(String typeSearch) {
         this.typeSearch = typeSearch;
     }
-    
+
+    public String getListThesaurus() {
+        return listThesaurus;
+    }
+
+    public void setListThesaurus(String listThesaurus) {
+        this.listThesaurus = listThesaurus;
+    }
+
     public String getLayername() {
         return layername;
     }
