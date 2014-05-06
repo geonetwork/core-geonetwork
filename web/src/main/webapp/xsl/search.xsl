@@ -338,6 +338,9 @@
 					<!-- #main -->
 
 					<div id="footer">
+            <xsl:if test="/root/gui/config/html5ui-footer!='true'">
+              <xsl:attribute name="style">display:none;</xsl:attribute>
+            </xsl:if>
 						<footer class="wrapper">
 							<ul>
 								<li style="float:left">

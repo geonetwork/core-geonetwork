@@ -24,14 +24,16 @@ html,body,button,input,select,textarea {
 
 #main {
 	padding: 3px;
-	padding-bottom: 40px; /* height of the footer */
+	padding-bottom: 150px; /* height of the footer */
 }
 
 #footer {
 	position: absolute;
 	bottom: 0;
 	width: 100%;
-	height: 40px; /* height of the footer */
+	height: 150px; /* height of the footer */
+  background-image: url('../images/map_header.png');
+  background-color: #636363;
   text-align: right;
   font-size: 11px;
 }
