@@ -27,7 +27,8 @@
 
 package org.fao.geonet.kernel.schema;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 //==============================================================================
 
@@ -37,7 +38,7 @@ public class MetadataAttribute
 	public String  defValue;
 	public boolean required;
 
-	public  ArrayList<String> values = new ArrayList<String>();
+	public Set<String> values = new HashSet<String>();
 
 	//---------------------------------------------------------------------------
 	//---
