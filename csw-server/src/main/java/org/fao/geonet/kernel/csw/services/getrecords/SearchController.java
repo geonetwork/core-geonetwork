@@ -290,11 +290,11 @@ public class SearchController {
         String prefix ;
         if (outputSchema == OutputSchema.OGC_CORE) {
             prefix = "ogc";
-        }
-        else if (outputSchema == OutputSchema.ISO_PROFILE || outputSchema == OutputSchema.OWN) {
+        } else if (outputSchema == OutputSchema.ISO_PROFILE) {
             prefix = "iso";
-        }
-        else {
+        } else if (outputSchema == OutputSchema.OWN) {
+            prefix = "own";
+        } else {
             throw new InvalidParameterValueEx("outputSchema not supported for metadata " + id + " schema.", schema);
         }
 
