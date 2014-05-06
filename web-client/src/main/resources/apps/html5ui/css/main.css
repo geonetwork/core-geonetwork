@@ -642,6 +642,9 @@ nav li:last-child a {
 
 #search-form input#E_any {
   height: 28px;
+  /* box-sizing is for IE which uses this method (which includes border size)
+     to calculate height */
+  box-sizing: border-box; 
 }
 
 #search-submit {
