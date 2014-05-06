@@ -251,6 +251,7 @@ GeoNetwork.app = function() {
               floating: false,
               border: false,
               plain: true,
+              showSeparator: false,
               items: items
         });
     };
