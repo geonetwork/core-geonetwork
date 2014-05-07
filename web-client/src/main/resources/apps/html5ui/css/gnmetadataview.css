@@ -581,7 +581,7 @@ div.help ul li {
 	vertical-align: bottom;
 }
 
-#latest-metadata header h1,#popular-metadata header h1 {
+#latest-metadata header h1,#popular-metadata header h1,#tags header h1 {
 	font-size: 14px;
 	font-weight: bold;
 	line-height: 1.2em;

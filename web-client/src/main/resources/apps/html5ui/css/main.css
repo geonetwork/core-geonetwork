@@ -178,9 +178,15 @@ body {
   margin:10px;
   float:left;
   width:18%;
+  min-height: 400px;
 }
 
-#welcome-text,#about-text {
+#welcome-text {
+  color:#393939;
+  font-size:1.1em;
+}
+
+#about-text {
   margin:13px;
   margin-left:30px;
   color:#393939;
@@ -363,15 +369,8 @@ nav {
 }
 
 #cloud-tag {
-  width: 550px;
+  margin-top: 10px;
   min-height: 150px;
-  position:absolute; 
-  z-index: 4000;
-  background-color: #EDEDEB;
-  border-bottom: 1px solid #A6A6A5;
-  border-right: 1px solid #A6A6A5;
-  border-left: 1px solid #F6F6F4;
-  border-top: 1px solid #F6F6F4;
 }
 
 #tag-cloud-button {
@@ -644,7 +643,7 @@ nav li:last-child a {
   height: 28px;
   /* box-sizing is for IE which uses this method (which includes border size)
      to calculate height */
-  box-sizing: border-box; 
+  box-sizing: border-box;
 }
 
 #search-submit {
@@ -1695,7 +1694,8 @@ ul li.tag-cloud a {
 }
 
 #latest-metadata .md-thumbnail, #popular-metadata .md-thumbnail {
-	width: 30%;
+  height: 280px;
+  width: 180px;
 }
 
 #latest-metadata .md-thumbnail .thumbnail, #popular-metadata .md-thumbnail .thumbnail {
@@ -1707,12 +1707,7 @@ ul li.tag-cloud a {
 	margin: auto;
 }
 
-#latest-metadata header h1,#popular-metadata header h1 {
-	background-image: url('../images/pattern_hr.png');
-	background-repeat: repeat-x;
-}
-
-#latest-metadata header h1 span,#popular-metadata header h1 span{
+#latest-metadata header h1 span,#popular-metadata header h1 span,#tags header h1 span{
 	padding:12px;
 	background: white;
 	min-height: 20px;
@@ -1814,13 +1809,6 @@ dl.xml * dd {
 .md-over .overthumb {
 	display: block;
 	position: absolute;
-}
-
-#latest-metadata header h1,#popular-metadata header h1 {
-	text-transform: uppercase;
-	font-size: 26px;
-	color: #3B6688;
-	text-align: center;
 }
 
 #when_adv_search,#where_adv_search,#what-inspire{display:inline-block;width:32%;}
