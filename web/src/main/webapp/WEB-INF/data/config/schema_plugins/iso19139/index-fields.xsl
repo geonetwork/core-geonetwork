@@ -224,6 +224,7 @@
         <xsl:for-each
             select="gmd:keyword/gco:CharacterString|gmd:keyword/gmx:Anchor|gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
           <Field name="keyword" string="{string(.)}" store="true" index="true"/>
+          <Field name="keywordAndTopicCategory" string="{string(.)}" store="false" index="true"/>
           <xsl:if test="$inspire='true'">
             <xsl:if test="string-length(.) &gt; 0">
 
@@ -293,7 +294,7 @@
 	
 			<xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode">
 				<Field name="topicCat" string="{string(.)}" store="true" index="true"/>
-				<Field name="keyword" string="{string(.)}" store="true" index="true"/>
+				<Field name="keywordAndTopicCategory" string="{string(.)}" store="false" index="true"/>
 			</xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
