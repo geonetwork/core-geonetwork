@@ -241,9 +241,9 @@
         } else {
           $http.get('thesaurus.upload?' + $(formId).serialize())
               .success(uploadThesaurusDone)
-              .error(function (data) {
-              uploadThesaurusError(null, data);
-            });
+              .error(function(data) {
+                uploadThesaurusError(null, data);
+              });
         }
       };
 
