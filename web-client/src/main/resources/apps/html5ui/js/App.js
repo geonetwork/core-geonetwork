@@ -494,6 +494,10 @@ GeoNetwork.app = function() {
 							renderTo: "recent-viewed-div",
 							id: "recent-items-panel"
         		});
+
+            catalogue.on('afterLogout', function() {
+              store.removeAll(); // empty store underlying dataview
+            });
         }
 
         var description = record.get('abstract');
