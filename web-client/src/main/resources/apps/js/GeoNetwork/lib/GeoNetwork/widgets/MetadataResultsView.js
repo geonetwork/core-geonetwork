@@ -583,7 +583,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                     
                     var linkButton = [], label = null, currentType = null, bt,
                          allowDynamic = r.get('dynamic'), allowDownload = r.get('download'),
-                         hasDownloadAction = false;
+                         hasDownloadAction = 0;
                 
                     var nid = 0;
                     store.each(function (record) {
@@ -604,9 +604,6 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                                 label = OpenLayers.i18n(labelKey);
                                 if (label === labelKey) { // Default label if not found in translation
                                     label = OpenLayers.i18n('linklabel-');
-                                }
-                                if (currentType === 'application/x-compressed') {
-                                    hasDownloadAction = true;
                                 }
                             }
                             
@@ -636,11 +633,12 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                                     href: record.get('href')
                                 });
                             } else {
-                                // If link is uploaded to GeoNetwork the resources.get service is used
+                                // If link is uploaded to GeoNetwork the resources.get service or file.disclaimer service is used
                                 // Check if allowDownload 
                                 var displayLink = true;
                                 if ((record.get('href').indexOf('resources.get') !== -1) || (record.get('href').indexOf('file.disclaimer') !== -1)) {
                                     displayLink = allowDownload;
+                                    if (displayLink) hasDownloadAction++;
                                 } else if (currentType === 'application/vnd.google-earth.kml+xml') {
                                     // Google earth link is provided when a WMS is provided
                                     displayLink = allowDynamic;
@@ -663,8 +661,9 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                         view.addLinkMenu(linkId, linkButton, label, currentType, el);
                     }
                     
-                    // Add the download all button
-                    if (hasDownloadAction) {
+                    // Add the download selector/all button if more than one
+                    // download link on this record
+                    if (hasDownloadAction > 1) {
                         nid++;
                         linkId = nid+"-"+uuid;
                         view.addLinkMenu(linkId, [{
@@ -673,7 +672,6 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                                 // FIXME : this call require the catalogue to be named catalogue
                                 catalogue.metadataPrepareDownload(id);
                             },
-                            href: record.get('href')
                         }], OpenLayers.i18n('prepareDownload'), 'downloadAllIcon', el);
                     }
                 }
@@ -691,16 +689,15 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
           return;
         }
 
-        var href = linkButton[0].href;
-        var isDownload = (href.indexOf('resources.get') !== -1) || (href.indexOf('file.disclaimer') !== -1);
+        var href = linkButton[0].href,
+            isDownload = (currentType === 'downloadAllIcon') || (href.indexOf('resources.get') !== -1) || (href.indexOf('file.disclaimer') !== -1);
+
         if (linkButton.length === 1) {
             var handler = linkButton[0].handler || function () {
                 window.open(linkButton[0].href);
             };
-						var tTip = label + ' ' + href;
-						if (linkButton[0].text == '') {
-							tTip = linkButton[0].text;
-						}
+						var tTip = label;
+            if (href) tTip += ' ' + href;
             if (linkButton[0].menu) {
               bt = new Ext.Button({
                 id: buttonId,
