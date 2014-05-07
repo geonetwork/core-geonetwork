@@ -65,7 +65,7 @@
         <label>Update time</label>
         <description></description>
     </element>
-    <element name="gmd:credit" context="gmd:MD_DataIdentification">
+    <element name="gmd:supplementalInformation" context="gmd:MD_DataIdentification">
         <label>Display priority</label>
         <description></description>
     </element>
