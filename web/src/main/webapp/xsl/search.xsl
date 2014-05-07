@@ -272,20 +272,28 @@
 					
 
 	                    <div id="browser">
-	                    	<div id="welcome-text">
-	                      	<xsl:copy-of select="/root/gui/strings/welcome.text"/>
-												</div>
-												<div>
-	                        <a href="javascript:toggle('cloud-tag')" id="tag-cloud-button"> <xsl:value-of select="/root/gui/strings/tag_label" /></a>
-	                        <div id="cloud-tag" style="display:none;"></div>
-	                        <section>
-	                            <div id="latest-metadata"><header>
-                                        <h1><span><xsl:value-of select="/root/gui/strings/latestDatasets" /></span></h1></header></div>
-	                            <div id="popular-metadata"><header>
-                                        <h1><span><xsl:value-of select="/root/gui/strings/popularDatasets" /></span></h1></header></div>
-	                        </section>
-												</div>
-	                    </div>
+                        <aside class="main-aside">
+	                    	  <div id="welcome-text">
+	                      	  <xsl:copy-of select="/root/gui/strings/welcome.text"/>
+												  </div>
+                          <div id="tags">
+                            <header><h1><span><xsl:value-of select="/root/gui/strings/tag_label" /></span></h1></header>
+                            <div id="cloud-tag"></div>
+                          </div>
+                        </aside>
+                        <article>
+                          <div>
+                            <section>
+                              <div id="latest-metadata">
+                                <header><h1><span><xsl:value-of select="/root/gui/strings/latestDatasets" /></span></h1></header>
+                              </div>
+                              <div id="popular-metadata">
+                                <header><h1><span><xsl:value-of select="/root/gui/strings/popularDatasets" /></span></h1></header>
+                              </div>
+                            </section>
+                          </div>
+                        </article>
+                      </div>
 
 	                    <div id="about" style="display:none;">
 	                    	<div id="about-text">
