@@ -98,7 +98,11 @@
           <xsl:variable name="loc" select="/root/gui"/>
           <xsl:for-each select="$menu/*">
             <xsl:variable name="labelId" select="@label"/>
-            <xsl:variable name="labelText" select="$loc/strings/*[name(.) = $labelId]|$loc/schemas/*[name(.) = $schema]/strings/*[name(.) = $labelId]"/>
+            <xsl:variable name="labelTextFromSchema"
+                          select="$loc/schemas/*[name(.) = $schema]/strings/*[name(.) = $labelId]"/>
+            <xsl:variable name="labelText"
+                          select="if ($labelTextFromSchema != '') then $labelTextFromSchema else $loc/strings/*[name(.) = $labelId]"/>
+
             <xsl:call-template name="displayTab">
               <xsl:with-param name="tab">
                 <xsl:value-of select="."/>

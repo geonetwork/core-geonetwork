@@ -15,13 +15,18 @@
               groups: '='
             },
             link: function(scope, element, attrs) {
-              $http.get('admin.group.list@json', {cache: true}).
+              var url = 'info@json?type=groupsIncludingSystemGroups';
+              if (attrs.profile) {
+                url = 'info@json?type=groups&profile=' + attrs.profile;
+              }
+              $http.get(url, {cache: true}).
                   success(function(data) {
-                    scope.groups = data !== 'null' ? data : null;
+                    scope.groups = data !== 'null' ? data.group : null;
 
                     // Select by default the first group.
-                    if (scope.ownerGroup === '' && data) {
-                      scope.ownerGroup = data[0]['id'];
+                    if ((angular.isUndefined(scope.ownerGroup) ||
+                         scope.ownerGroup === '') && data.group) {
+                      scope.ownerGroup = data.group[0]['@id'];
                     }
                   });
             }

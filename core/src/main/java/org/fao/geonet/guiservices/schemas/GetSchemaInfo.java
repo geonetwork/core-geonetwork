@@ -62,6 +62,7 @@ public class GetSchemaInfo implements Service
 					String fname = entry.getKey();
 					Element response = xf.exec(new Element("junk"), context);
 					response.setName(FilenameUtils.removeExtension(fname));
+                    response.removeAttribute("noNamespaceSchemaLocation", Geonet.Namespaces.XSI);
 					Element schemaElem = new Element(schema);
 					schemaElem.addContent(response);
 					schemas.addContent(schemaElem);

@@ -294,6 +294,19 @@
   </xsl:function>
 
 
+  <!-- Return if a flat mode exception has been defined in the current view for a field. -->
+  <xsl:function name="gn-fn-metadata:getFieldFlatModeException" as="xs:boolean">
+    <xsl:param name="configuration" as="node()"/>
+    <xsl:param name="name" as="xs:string"/>
+
+    <xsl:variable name="exception" select="count($configuration/flatModeExceptions/for[@name = $name])"/>
+   
+    <xsl:value-of
+        select="if ($exception > 0)
+      then true()
+      else false()"
+        />
+  </xsl:function>
 
   <xsl:function name="gn-fn-metadata:getXPath" as="xs:string">
     <xsl:param name="node" as="node()"/>

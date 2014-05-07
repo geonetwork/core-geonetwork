@@ -1293,6 +1293,11 @@
           <field xpath="/gmd:MD_Metadata/gmd:featureAttribute"/>
         </section>
       </tab>
+      
+      <!-- Elements that should not use the "flat" mode --> 
+      <flatModeExceptions>
+        <for name="gmd:descriptiveKeywords" />
+      </flatModeExceptions>
     </view>
     <view name="advanced">
       <tab id="identificationInfo" default="true">
