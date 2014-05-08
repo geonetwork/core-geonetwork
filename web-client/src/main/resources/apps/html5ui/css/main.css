@@ -178,6 +178,12 @@ body {
   margin:10px;
   float:left;
   width:18%;
+}
+
+.tag-aside {
+  margin:10px;
+  float:left;
+  width:18%;
   min-height: 400px;
 }
 

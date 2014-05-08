@@ -272,7 +272,7 @@
 					
 
 	                    <div id="browser">
-                        <aside class="main-aside">
+                        <aside class="tag-aside">
 	                    	  <div id="welcome-text">
 	                      	  <xsl:copy-of select="/root/gui/strings/welcome.text"/>
 												  </div>
