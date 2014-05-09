@@ -160,7 +160,7 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
         }
     }
 
-    private String getUserInfo(Map<String, ArrayList<String>> userInfo,
+    protected String getUserInfo(Map<String, ArrayList<String>> userInfo,
             String attributeName) {
         return getUserInfo(userInfo, attributeName, "");
     }

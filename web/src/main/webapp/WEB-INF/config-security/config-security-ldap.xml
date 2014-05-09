@@ -81,7 +81,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
     where profile and groups are stored in one attribute. A custom pattern is defined to extract 
     those information.
 
-    <bean id="ldapUserContextMapper" class="org.fao.geonet.kernel.security.ldap.LDAPUserDetailsContextMapperWithPattern">
+    <bean id="ldapUserContextMapper" class="org.fao.geonet.kernel.security.ldap.SextantLDAPUserDetailsContextMapper">
         <property name="mapping">
             <map/>
         </property>
