@@ -747,6 +747,7 @@
 	<rawMetadata>Wstaw "surowe" metadane</rawMetadata>
 	<rebuild>Przebuduj</rebuild>
 	<recentAdditions>Ostatnie zmiany</recentAdditions>
+	<recentlyViewed>Recent</recentlyViewed>
 	<refSysTab>Układ odniesienia</refSysTab>
 	<protocolChoice show="y" value="ESRI:AIMS--http--configuration">ArcIMS Map Service Configuration File (*.AXL)</protocolChoice>
 	<protocolChoice show="y" value="ESRI:AIMS--http-get-feature">ArcIMS Internet Feature Map Service</protocolChoice>
@@ -1460,4 +1461,7 @@
 	<welcome.text>Welcome to GeoNetwork</welcome.text>
 	<tag_label>Tags</tag_label>
 	<map_label>Map</map_label>
+  <about.text>About this site</about.text>
+  <signIn>Sign In</signIn>
+  <signOut>Sign Out</signOut>
 </strings>

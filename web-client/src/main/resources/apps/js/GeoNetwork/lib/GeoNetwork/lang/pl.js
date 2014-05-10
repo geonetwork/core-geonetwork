@@ -661,7 +661,10 @@ GeoNetwork.Lang.pl = {
     'linklabel-image/png': 'Image link',
     'linklabel-image/jpeg': 'Image link',
     'linklabel-': 'Link',
-		'bigMap': 'Open map and hide search results'
+		'bigMap': 'Open map and hide search results',
+    'createThesaurus': 'Create Thesaurus',
+	'Online data': 'Web Services',
+	'Data for download': 'Data Available'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.pl, GeoNetwork.Lang.pl);

@@ -296,13 +296,14 @@ Display hyperlink as text next to element
 	background-image: url(../images/default/user.png) !important;
 }
 
+.md-mn-badd {
+	background-image: url(../images/default/brick_add.png) !important;
+}
+
+/* overriden by main.css
 .md-mn-pdf {
 	background-image: url(../images/default/page_white_acrobat.png)
 		!important;
-}
-
-.md-mn-badd {
-	background-image: url(../images/default/brick_add.png) !important;
 }
 
 .md-mn-zip {
@@ -320,6 +321,7 @@ Display hyperlink as text next to element
 .md-mn-download {
 	background-image: url(../images/default/download.png) !important;
 }
+*/
 
 .mn-user-location {
 	background-image: url(../images/default/user_location.png) !important;
@@ -553,14 +555,14 @@ div.help ul li {
 
 #show-advanced,#hide-advanced {
 	margin: 0;
-	padding: 5px 30px 5px 10px;
+	padding: 6px 10px 6px 10px;
 	background-position: right 50%;
 	white-space: nowrap;
 }
 
 #advanced-search-options #hide-advanced {
 	margin: 0;
-	padding: 5px 30px 5px 10px;
+	padding: 5px 10px 5px 10px;
 	border-left: 1px solid #e5e5e5;
 	border-bottom: 1px solid #e5e5e5;
 	background-position: right 50%;
@@ -579,7 +581,7 @@ div.help ul li {
 	vertical-align: bottom;
 }
 
-#latest-metadata header h1,#popular-metadata header h1 {
+#latest-metadata header h1,#popular-metadata header h1,#tags header h1 {
 	font-size: 14px;
 	font-weight: bold;
 	line-height: 1.2em;
@@ -636,6 +638,13 @@ div.help ul li {
 #popular-metadata .md-thumbnail.md-over {
 	border: 1px solid #e5e5e5;
 	background: url(../images/default/bg_stripe.png) !important;
+}
+
+/* search result --- right sidebar */
+#search-container .secondary-aside header {
+	padding: 4px 6px 4px 6px;
+	text-transform: uppercase;
+	font-size: 14px;
 }
 
 /* search result --- left sidebar */
@@ -809,11 +818,6 @@ div#resultsPanel .x-toolbar-right {
 #resultsPanel .md-simple .md-links {
 	margin: 0px 0px 0px 4px;
 	float: left;
-}
-/* search result --- right sidebar */
-#search-container #secondary-aside {
-	margin-left: 3px;
-	padding-top: 0px
 }
 
 #search-container #secondary-aside .x-panel-header {
@@ -1142,11 +1146,10 @@ ul.gn-relation-thumbnail {
 /* admin */
 .user-button a {
 	padding-top: 0px;
-	padding-left: 25px;
 }
 
 a#administration_button {
-	background-position: 0 -17px
+	background-position: 0 -10px
 }
 
 #metadata-panel .x-btn-over .book,#metadata-panel .x-btn-pressed .book {

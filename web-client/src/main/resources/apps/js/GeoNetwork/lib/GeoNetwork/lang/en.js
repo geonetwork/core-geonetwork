@@ -661,7 +661,10 @@ GeoNetwork.Lang.en = {
     'linklabel-': 'Link',
     'cookies.warning': 'This webpage uses cookies, which will save on your computer information about your usage and statistics.',
     'no-thumbnail': 'No thumbnail available',
-		'bigMap': 'Open Map and hide search results'
+		'bigMap': 'Open Map and hide search results',
+    'createThesaurus': 'Create Thesaurus',
+	'Online data': 'Web Services',
+	'Data for download': 'Data Available'
 };
 
 OpenLayers.Util.extend(OpenLayers.Lang.en, GeoNetwork.Lang.en);

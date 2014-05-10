@@ -736,6 +736,7 @@
 	<rawMetadata>Añade fila de Metadatos</rawMetadata>
 	<rebuild>Regenerar</rebuild>
 	<recentAdditions>Agregados recientemente</recentAdditions>
+	<recentlyViewed>Recent</recentlyViewed>
 	<refSysTab>Sistema de Referencia</refSysTab>
 	<region>Región</region>
 	<register>Registrarse</register>
@@ -1402,4 +1403,7 @@
 	<welcome.text>Bienvenido a GeoNetwork</welcome.text>
 	<tag_label>TAGS</tag_label>
 	<map_label>Mapa</map_label>
+  <about.text>About this site</about.text>
+  <signIn>Sign In</signIn>
+  <signOut>Sign Out</signOut>
 </strings>

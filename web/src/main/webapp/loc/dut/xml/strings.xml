@@ -746,6 +746,7 @@
 	<rawMetadata>Invoer ruwe metadata</rawMetadata>
 	<rebuild>Vernieuw</rebuild>
 	<recentAdditions>Recente wijzigingen</recentAdditions>
+	<recentlyViewed>Recent</recentlyViewed>
 	<refSysTab>Ref. systeem</refSysTab>
 	<region>Regio</region>
 	<register>Registreren</register>
@@ -1408,4 +1409,7 @@
 	<welcome.text>Welcome to GeoNetwork</welcome.text>
 	<tag_label>Tags</tag_label>
 	<map_label>Map</map_label>
+  <about.text>About this site</about.text>
+  <signIn>Sign In</signIn>
+  <signOut>Sign Out</signOut>
 </strings>

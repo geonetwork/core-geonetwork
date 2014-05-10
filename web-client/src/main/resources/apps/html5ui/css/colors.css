@@ -20,6 +20,10 @@ nav a {
 	color: #376690;
 }
 
+nav a:hover {
+  background: #F1F18A;
+}
+
 nav a.selected {
 	background: #376690; 
 	color: white;
@@ -39,7 +43,8 @@ div#advSearchTabs .x-panel-header {
 }
 
 .user-button {
-	background-color: #CCC34E;
+	background-color: rgba(118,123,126,0.0);
+	outline: none;
 }
 
 #lang-form div div form div input {
@@ -124,13 +129,12 @@ div#tabs .x-tab-strip-active .x-tab-right {
 }
 
 #search-form input {
-	border: #000;
+	border: solid 1px #000;
 }
 
 #search-submit {
-	background-color: #fff;
-	border: #000;
-	color: transparent;
+  background-color: #47a8dd !important;
+  color:#fff !important;
 }
 
 #show-advanced,#hide-advanced {
@@ -167,7 +171,7 @@ div.facets * .facet-more-bt,div.facets * .facet-less-bt {
 }
 
 .user-button a {
-	color: white;
+	color: #767B7E;
 }
 
 #permalink-div {
@@ -232,8 +236,12 @@ ul li.tag-cloud a {
 }
 
 /** Recent viewed **/
-#secondary-aside,#recent-viewed {
+#recent-viewed {
 	background: white;
+}
+
+#secondary-aside {
+	background: #47A8DD;
 }
 
 #recent-viewed span.x-view-over {
@@ -292,3 +300,8 @@ div#tabs .x-tab-strip span.x-tab-strip-text {
 .emptyThumbnail span {
 	color: #376690;	
 }
+
+#latest-metadata header h1,#popular-metadata header h1,#tags header h1 {
+	color: #3B6688;
+}
+

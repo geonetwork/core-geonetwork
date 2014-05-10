@@ -733,6 +733,7 @@
 	<rawMetadata>Sett inn rå-metadata</rawMetadata>
 	<rebuild>Bygg på nytt</rebuild>
 	<recentAdditions>Nylige endringer</recentAdditions>
+	<recentlyViewed>Recent</recentlyViewed>
 	<refSysTab>Ref. system</refSysTab>
 	<region>Område</region>
 	<register>Register</register>
@@ -1394,4 +1395,7 @@
 	<welcome.text>Welcome to GeoNetwork</welcome.text>
 	<tag_label>Tags</tag_label>
 	<map_label>Map</map_label>
+  <about.text>About this site</about.text>
+  <signIn>Sign In</signIn>
+  <signOut>Sign Out</signOut>
 </strings>

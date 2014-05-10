@@ -16,6 +16,8 @@
  -->
  
  <client type="redirect" widget="false" url="main.home" />
+
+ <html5ui-footer>true</html5ui-footer>
  
  <!-- Classic interface using the xslt layout-templates -->
  <!-- <client type="redirect" widget="false" url="main.home" parameters="" stateId="" createParameter=""/> -->
