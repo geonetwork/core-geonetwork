@@ -1040,7 +1040,9 @@ cat.app = function() {
 }
 
 Ext.onReady(function() {
-    
+
+    GeoNetwork.Bootstrap.run();
+
     var urlParameters = GeoNetwork.Util.getParameters(location.href);
     cat.language = cat.language || urlParameters.hl || GeoNetwork.Util.defaultLocale;
     

@@ -15,6 +15,23 @@
         <cssSource webappPath="apps/js/ext-ux/MultiselectItemSelector-3.0/Multiselect.css"/>
         <cssSource webappPath="apps/js/ext-ux/FileUploadField/file-upload.css"/>
     </declarative>
+
+    <declarative name="geonetwork-sextant_css" pathOnDisk="${project.basedir}/src/main/resources">
+        <cssSource webappPath="apps/js/ext/resources/css/ext-all.css"/>
+        <cssSource webappPath="apps/js/ext/resources/css/xtheme-gray.css"/>
+        <cssSource webappPath="apps/js/ext-ux/Rating/rating.css"/>
+        <cssSource webappPath="apps/js/OpenLayers/theme/default/style.css"/>
+        <cssSource webappPath="apps/js/ext-ux/SuperBoxSelect/superboxselect-sextant.css"/>
+        <cssSource webappPath="apps/js/ext-ux/LightBox/lightbox.css"/>
+        <cssSource webappPath="apps/js/ext-ux/FileUploadField/file-upload.css"/>
+        <cssSource webappPath="apps/js/ext-ux/MultiselectItemSelector-3.0/Multiselect.css"/>
+        <cssSource webappPath="apps/sextant/css/gndefault.css"/>
+        <cssSource webappPath="apps/sextant/css/gnmapdefault.css"/>
+        <cssSource webappPath="apps/sextant/css/gnmetadatadefault.css"/>
+        <cssSource webappPath="apps/sextant/css/metadata-view.css"/>
+        <cssSource webappPath="apps/sextant/css/main.css"/>
+    </declarative>
+
     <!-- GeoNetwork-mini-nomap.js -->
     <declarative name="geonetwork-client-mini-nomap" pathOnDisk="${project.basedir}/src/main/resources">
             <jsSource webappPath="apps/js/ext-ux/TwinTriggerComboBox/TwinTriggerComboBox.js"/>
@@ -412,6 +429,12 @@
       <jsSource webappPath="apps/sextant/js/cat.who.js"/>
       <jsSource webappPath="apps/sextant/js/Shortcuts.js"/>
       <jsSource webappPath="apps/sextant/js/cat.main.js"/>
+    </declarative>
+
+    <declarative name="geonetwork-client-sextant-full-prod"
+                 pathOnDisk="${project.basedir}/src/main/resources">
+        <jsSource webappPath="apps/js/ext/adapter/ext/ext-base.js" minimize="false"/>
+        <jsSource webappPath="apps/js/ext/ext-all.js" minimize="false"/>
     </declarative>
 
     <!-- search/css/style.css

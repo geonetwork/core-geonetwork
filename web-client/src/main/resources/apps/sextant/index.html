@@ -36,33 +36,36 @@
 
     <div id="lang-form"></div>
     <div id="login-form"></div>
-    <div id="casLogin-frame-win" style="display:none"></div>
-    
-    <div id="main-viewport"></div>
-    
-    <div id="infoContent"></div>
-    <div id="tag"></div>
 
-	<input type="hidden" value="layername" id="layername" />
-	<input type="hidden" value="wmsurl" id="wmsurl" />
-	<input type="hidden" value="layergroup" id="layergroup" />
-	<input type="hidden" value="wmsversion" id="wmsversion" />
-	<input type="hidden" value="getrecordbyidurl" id="getrecordbyidurl" />
-	<input type="hidden" value="" id="configmaxextent" />
-	<input type="hidden" value="" id="configwhat" />
-	<input type="hidden" value="" id="configwho" />
-	<input type="hidden" id="configmdviewerurl" value="configmdviewerurl" />
-	<input type="hidden" id="configgeoviewerurl" value="configgeoviewerurl" />
-	<input type="hidden" id="configpanierurl" value="configpanierurl" />
+    <div id="main-viewport"></div>
+<!--
 	<input type="hidden" id="configtypesearch" value="simple,advanced,facet" />
+-->
 
 	<a id="panierButton" value="panierButton" style="visibility:hidden;"></a>
 	<a id="viewerButton" value="viewerButton" style="visibility:hidden;"></a>
-	
-    <script type="text/javascript" src="../js/ext/adapter/ext/ext-base.js"></script>
-    <script type="text/javascript" src="../js/ext/ext-all.js"></script>
+
+    <script type="text/javascript" src="../../static/geonetwork-client-sextant-full-prod.js"></script>
     <script type="text/javascript" src="../../static/geonetwork-client-mini-nomap.js"></script>
     <script type="text/javascript" src="../../static/geonetwork-client-mini.js"></script>
     <script type="text/javascript" src="../../static/geonetwork-client-sextant-app.js"></script>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+
+    <script type="text/javascript">
+        GeoNetwork.Settings.bootsrap = {
+            layername: '',
+            wmsurl: '',
+            layergroup: '',
+            wmsversion: '',
+            getrecordbyidurl: '',
+            configmaxextent: '',
+            configwhat: '',
+            configwho: '',
+            configmdviewerurl: 'configmdviewerurl',
+            configgeoviewerurl: 'configgeoviewerurl',
+            configpanierurl: 'configpanierurl',
+            configtypesearch: 'simple,advanced'
+        }
+    </script>
   </body>
 </html>
