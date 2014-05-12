@@ -210,19 +210,19 @@ cat.what = function() {
                 dir: "asc"
             });
 
-            
-            
-            
             var sextantThemeThesaurusStore = new Ext.data.Store({
-                url: services.searchKeyword,
-                baseParams: {
-                    pNewSearch: true,
-                    pTypeSearch: 1,
-                    pThesauri: 'local.theme.sextant-theme',
-                    pMode: 'searchBox',
-                    maxResults: 200
-                },
-                reader: new Ext.data.XmlReader({
+              proxy : new Ext.data.HttpProxy({
+                method: 'GET',
+                url: services.searchKeyword
+              }),
+              baseParams: {
+                  pNewSearch: true,
+                  pTypeSearch: 1,
+                  pThesauri: 'local.theme.sextant-theme',
+                  pMode: 'searchBox',
+                  maxResults: 200
+              },
+              reader: new Ext.data.XmlReader({
                     record: 'keyword',
                     id: 'name'
                 }, Ext.data.Record.create([{
@@ -231,12 +231,12 @@ cat.what = function() {
                 }, {
                     name: 'name',
                     mapping: 'uri'
-                }])),
-                fields: ["name", "label"],
-                listeners: {
-                }
+              }])),
+              fields: ["name", "label"],
+              listeners: {
+              }
             });
-            sextantThemeThesaurusStore.load();
+
             
 	        // Use searchSuggestion to load categories (that way they can be filtered)
 	        var baseParams = {
