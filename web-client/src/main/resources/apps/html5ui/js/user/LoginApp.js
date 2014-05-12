@@ -48,7 +48,7 @@ GeoNetwork.loginApp = function() {
                                 Ext.get("username").dom.value = ("");
                                 Ext.get("password").dom.value = ("");
                                 if (Ext.isIE) {
-                                    Ext.get("user-button").dom.innerText = OpenLayers
+                                    Ext.get("user-button_label").dom.innerText = OpenLayers
                                             .i18n("logout");
                                     Ext.get("username_label").dom.innerText = user.username;
                                     Ext.get("name_label").dom.innerText = " "
@@ -56,7 +56,7 @@ GeoNetwork.loginApp = function() {
                                     Ext.get("profile_label").dom.innerText = "("
                                             + user.role + ")";
                                 } else {
-                                    Ext.get("user-button").update(
+                                    Ext.get("user-button_label").update(
                                             OpenLayers.i18n("logout"));
                                     Ext.get("username_label").update(
                                             user.username);
@@ -67,7 +67,7 @@ GeoNetwork.loginApp = function() {
                                 }
                                 Ext.get("user-button").dom.href = "javascript:app.loginApp.logout();";
 
-                                show("administration_button");
+                                show("administration-button");
 
                                 if (user.type && user.type === "advanced") {
                                     user.searchTemplate = 'FULL';
@@ -79,16 +79,16 @@ GeoNetwork.loginApp = function() {
                 cookie.set('user', undefined);
 
                 Ext.getCmp('md-selection-info').hide();
-                hide("administration_button");
+                hide("administration-button");
                 if (Ext.isIE) {
-                    Ext.get("user-button").dom.innerText = OpenLayers
+                    Ext.get("user-button_label").dom.innerText = OpenLayers
                             .i18n("login");
 
                     Ext.get("username_label").dom.innerText = ("");
                     Ext.get("name_label").dom.innerText = ("");
                     Ext.get("profile_label").dom.innerText = ("");
                 } else {
-                    Ext.get("user-button").update(OpenLayers.i18n("login"));
+                    Ext.get("user-button_label").update(OpenLayers.i18n("login"));
 
                     Ext.get("username_label").update("");
                     Ext.get("name_label").update("");

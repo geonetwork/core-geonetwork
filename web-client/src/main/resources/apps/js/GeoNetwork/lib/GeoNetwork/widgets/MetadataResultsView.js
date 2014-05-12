@@ -79,6 +79,11 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
     projectionFrom: undefined,
     projectionTo: undefined,
     styleInitialized: false,
+
+		/** Function to map protocol/mime-types to CSS: should be supplied by 
+		 * otherwise GeoNetwork.Util.protocolToCSS will be used
+		 */
+		protocolToCSS: undefined,
     
     /** api: property[mdSelectionUuids] 
      *  Current selection uuids
@@ -689,6 +694,8 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
           return;
         }
 
+				if (!this.protocolToCSS) this.protocolToCSS = GeoNetwork.Util.protocolToCSS;
+
         var href = linkButton[0].href,
             isDownload = (currentType === 'downloadAllIcon') || (href.indexOf('resources.get') !== -1) || (href.indexOf('file.disclaimer') !== -1);
 
@@ -703,7 +710,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                 id: buttonId,
                 tooltip: tTip,
                 menu: linkButton[0].menu,
-                iconCls: GeoNetwork.Util.protocolToCSS(currentType, isDownload),
+                iconCls: this.protocolToCSS(currentType, isDownload),
                 renderTo: el
               });
             } else {
@@ -711,7 +718,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                 id: buttonId,
                 tooltip: tTip,
                 handler: handler,
-                iconCls: GeoNetwork.Util.protocolToCSS(currentType, isDownload),
+                iconCls: this.protocolToCSS(currentType, isDownload),
                 renderTo: el
               });
             }
@@ -728,7 +735,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                 	id: buttonId,
                 	tooltip: label,
                 	menu: new Ext.menu.Menu({cls: 'links-mn', items: items}),
-                	iconCls: GeoNetwork.Util.protocolToCSS(currentType, isDownload),
+                	iconCls: this.protocolToCSS(currentType, isDownload),
                 	renderTo: el
             	});
 						} else {
@@ -736,7 +743,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                 	id: buttonId,
                 	tooltip: label,
                 	menu: new Ext.menu.Menu({cls: 'links-mn', items: linkButton}),
-                	iconCls: GeoNetwork.Util.protocolToCSS(currentType, isDownload),
+                	iconCls: this.protocolToCSS(currentType, isDownload),
                 	renderTo: el
             	});
 						}

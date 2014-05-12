@@ -91,6 +91,8 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
     tooltips: [],
     buttonWidth : undefined,
     buttonHeight : undefined,
+		viewPanelButtonCSS : undefined,
+
     /** api: method[getLinkedData]
      *  Get related metadata records for current metadata using xml.relation service.
      */
@@ -344,7 +346,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
         return new Ext.Button({
             width: this.buttonWidth,
             height: this.buttonHeight,
-            iconCls: 'print',
+            iconCls: this.viewPanelButtonCSS ? this.viewPanelButtonCSS('viewpanel-print') : 'print',
             id : 'viewpanel-print',
             tooltip: OpenLayers.i18n('printTT'),
             listeners: {
@@ -366,7 +368,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
         return new Ext.Button({
             width: this.buttonWidth,
             height: this.buttonHeight,
-            iconCls: 'feedback',
+            iconCls: this.viewPanelButtonCSS ? this.viewPanelButtonCSS('viewpanel-feedback') : 'feedback',
             id : 'viewpanel-feedback',
             tooltip: OpenLayers.i18n('Feedback'),
             disabled: disabledButton,
@@ -385,7 +387,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
             height: this.buttonHeight,
             enableToggle: true,
             pressed: this.displayTooltip,
-            iconCls: 'book',
+            iconCls: this.viewPanelButtonCSS ? this.viewPanelButtonCSS('viewpanel-tooltip') : 'book',
             id : 'viewpanel-tooltip',
             tooltip: OpenLayers.i18n('enableTooltip'),
             listeners: {

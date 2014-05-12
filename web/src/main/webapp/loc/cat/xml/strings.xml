@@ -1395,6 +1395,8 @@
 	<tag_label>Tags</tag_label>
 	<map_label>Map</map_label>
   <about.text>About this site</about.text>
-</strings>
   <signIn>Sign In</signIn>
   <signOut>Sign Out</signOut>
+	<rss-button>RSS</rss-button>
+	<print-button>Print</print-button>
+</strings>
