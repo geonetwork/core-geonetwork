@@ -100,7 +100,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
     -->
 
     <bean id="ldapUserContextMapper"
-          class="org.fao.geonet.kernel.security.ldap.LDAPUserDetailsContextMapperWithPattern">
+          class="org.fao.geonet.kernel.security.ldap.SextantLDAPUserDetailsContextMapper">
         <property name="mapping">
             <map/>
          </property>
