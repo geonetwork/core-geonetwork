@@ -1403,4 +1403,6 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
   <about.text>About this site</about.text>
   <signIn>Sign In</signIn>
   <signOut>Sign Out</signOut>
+	<rss-button>RSS</rss-button>
+	<print-button>Print</print-button>
 </strings>

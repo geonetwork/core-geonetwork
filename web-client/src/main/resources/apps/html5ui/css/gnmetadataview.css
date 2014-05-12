@@ -1143,15 +1143,6 @@ ul.gn-relation-thumbnail {
 
 
 
-/* admin */
-.user-button a {
-	padding-top: 0px;
-}
-
-a#administration_button {
-	background-position: 0 -10px
-}
-
 #metadata-panel .x-btn-over .book,#metadata-panel .x-btn-pressed .book {
 	background-position: 0px 0px;
 }

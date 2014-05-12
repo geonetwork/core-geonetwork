@@ -292,8 +292,8 @@ GeoNetwork.app = function() {
 
         Ext.get("metadata-info").update("");
 
-        var button_width = 101;
-        var button_height = 38;
+        var button_width = '24px';
+        var button_height = '24px';
         var aResTab = new GeoNetwork.view.ViewPanel({
             serviceUrl : catalogue.services.mdView + '?uuid=' + uuid,
             lang : catalogue.lang,
@@ -312,7 +312,8 @@ GeoNetwork.app = function() {
             metadataUuid : uuid,
             record : record,
             buttonWidth : button_width,
-            buttonHeight : button_height
+            buttonHeight : button_height,
+						viewPanelButtonCSS: GeoNetwork.Settings.viewPanelButtonCSS
         });
 
         // aResTab.on("afterrender", function() {
@@ -373,7 +374,7 @@ GeoNetwork.app = function() {
 
         // Adding social capabilities
         Ext.getCmp("metadata-panel").getTopToolbar().addButton({
-            id : 'share-button',
+            id : 'viewpanel-share',
             width : button_width,
             height : button_height,
             handler : function() {
@@ -383,7 +384,8 @@ GeoNetwork.app = function() {
             tooltip : 'Share this',
             type : 'submit',
             tooltip : OpenLayers.i18n('Social Share'),
-            enableToggle : true
+            enableToggle : true,
+						iconCls: GeoNetwork.Settings.viewPanelButtonCSS('viewpanel-share')
         });
 
         GeoNetwork.Util.removeMetaTags({
@@ -434,7 +436,7 @@ GeoNetwork.app = function() {
 
         // Adding permalink
         Ext.getCmp("metadata-panel").getTopToolbar().addButton({
-            id : 'permalink-button',
+            id : 'viewpanel-permalink',
             width : button_width,
             height : button_height,
             handler : function() {
@@ -445,7 +447,8 @@ GeoNetwork.app = function() {
             text : '',
             tooltip : OpenLayers.i18n('Permalink'),
             enableToggle : true,
-            type : 'submit'
+            type : 'submit',
+						iconCls: GeoNetwork.Settings.viewPanelButtonCSS('viewpanel-permalink')
         });
 
         Ext.getCmp("metadata-panel").doLayout();

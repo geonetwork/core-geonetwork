@@ -1401,4 +1401,6 @@ ISO 19115 не позволяет иметь более одного.
   <about.text>About this site</about.text>
   <signIn>Sign In</signIn>
   <signOut>Sign Out</signOut>
+	<rss-button>RSS</rss-button>
+	<print-button>Print</print-button>
 </strings>

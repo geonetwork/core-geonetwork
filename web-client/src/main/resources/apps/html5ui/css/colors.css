@@ -305,3 +305,23 @@ div#tabs .x-tab-strip span.x-tab-strip-text {
 	color: #3B6688;
 }
 
+#result-panel div#resultsPanel .md-mn-kml {
+	color: #0847a4;
+}
+
+#result-panel div#resultsPanel .md-mn-www {
+	color: #3184ff;
+}
+
+#result-panel div#resultsPanel .md-mn-download {
+	color: #ffb977;
+}
+
+#result-panel div#resultsPanel .md-mn-bookmark {
+	color: #FFCC00;
+}
+
+#result-panel div#resultsPanel .md-mn-wms {
+	color: #28dc78;
+}
+
