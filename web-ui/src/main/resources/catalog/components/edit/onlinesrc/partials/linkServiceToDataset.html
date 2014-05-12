@@ -1,0 +1,38 @@
+<div>
+  <form class="form-horizontal" role="form"
+    data-ng-controller="GnSearchFormController">
+    <div class="onlinesrc-container">
+      <div class="form-group">
+        <div class="col-sm-10">
+          <div class="input-group">
+            <span class="input-group-addon"><i
+              class="fa fa-search" /></span>
+              <input class="form-control"
+              data-ng-change="triggerSearch()"
+              type="text" data-ng-model="params.any"
+              placeholder="{{'search' | translate}}" autofocus="" />
+          </div>
+        </div>
+      </div>
+      <div data-gn-search-form-results
+        data-gn-search-form-results-mode="simple"
+        data-gn-search-form-results-selection-mode="local simple"
+        data-search-results="searchResults"
+        data-select-records="stateObj.selectRecords"
+        data-pagination-info="paginationInfo">
+      </div>
+      <div data-gn-layers-grid 
+        data-gn-selection-mode="multiple"
+        data-layers="layers"
+        data-selection="srcParams.layers">
+      </div>
+    </div>
+    <div class="">
+      <button type="button" class="btn navbar-btn btn-success"
+        data-ng-click="linkTo()"
+        data-ng-class="{'disabled': (stateObj.selectRecords.length < 1)}">
+        <i class="fa fa-cloud" /> <span data-translate="">linkToService</span>
+      </button>
+    </div>
+  </form>
+</div>

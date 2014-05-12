@@ -1,0 +1,28 @@
+<div>
+  <div class="alert alert-info">{{currentSuggestion.name['#text'] || currentSuggestion.name}}</div>
+  <form class="form-horizontal" role="form">
+    <div class="form-group" data-ng-repeat="(key,param) in gnSuggestion.getCurrent().params">
+      <label data-ng-if="param.type == 'string'" class="col-sm-4 control-label">
+        {{key | translate}}
+      </label>
+      <div data-ng-if="param.type == 'string'" class="col-sm-8">
+        <input data-ng-if="param.type == 'string'" type="text" 
+          data-ng-model="params[key]">
+      </div>
+      <div data-ng-if="param.type == 'boolean'" class="col-sm-offset-4 col-sm-8">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" data-ng-model="params[key]">
+            {{key | translate}}
+          </label>
+        </div>
+      </div>
+    </div>
+  </form>
+  <button type="button" class="btn navbar-btn btn-success"
+    data-ng-click="runProcess()"
+    data-ng-disabled="processing">
+    <i class="fa fa-play"/> <span data-translate="">process</span>
+    <i data-ng-if="processing" class="fa fa-spinner fa-spin"/>
+  </button>
+</div>

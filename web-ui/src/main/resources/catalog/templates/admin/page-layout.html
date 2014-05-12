@@ -1,0 +1,14 @@
+<div data-ng-controller="GnAdminController">
+  <ul class="nav nav-pills">
+    <li data-ng-repeat="t in pageMenu.tabs"
+        data-ng-class="type === t.type && 'active'">
+      <a href="{{t.href}}">
+        <i class="fa {{t.icon || 'fa-fw'}}"/>
+        <span data-translate="">{{t.label}}</span>
+      </a>
+    </li>
+  </ul>
+  <br/>
+
+  <div class="col-lg-12" data-ng-include="getTpl(pageMenu)"></div>
+</div>

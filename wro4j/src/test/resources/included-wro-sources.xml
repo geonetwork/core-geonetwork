@@ -1,0 +1,4 @@
+<sources xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="../../../../web/src/main/webResources/WEB-INF/wro-sources.xsd">
+    <include file="transitive-included-wro-sources.xml" />
+</sources>

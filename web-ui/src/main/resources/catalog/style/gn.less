@@ -1,0 +1,208 @@
+@import "../lib/style/bootstrap-3.0.1/bootstrap.less";
+@import "../lib/style/font-awesome-4.0.3/less/font-awesome.less";
+@import "gn_doc.less";
+
+/**
+ * Nav bar title may be longer than default
+ */
+.navbar-brand {
+  max-width: 280px;
+}
+
+[ng\:cloak],
+[ng-cloak],
+.ng-cloak{
+  display:none !important;
+}
+
+/**
+ * Required when displaying long text like
+ * exception report. Eg. catalog health check.
+ */
+.list-group-item-text{
+  word-break:break-word;
+}
+
+
+.gn-sidebar .nav .nav > li > a{
+  padding-top:3px;
+  padding-bottom:3px;
+  padding-left:30px;
+  font-size:90%;
+}
+
+.gn-info{
+  position:fixed;
+  z-index:9999;
+  top:5px;
+  left:5px;
+}
+
+/**
+ * Logo in nav bar can't be big
+ */
+.gn-logo {
+  max-height: 20px;
+}
+
+/**
+ * Properly break stack trace error.
+ */
+.gn-stack,
+.gn-code{
+  white-space:normal;
+}
+
+div.gn-scroll-spy {
+  position: fixed;
+  bottom: 0%;
+  right: 0px;
+  opacity: 0.8;
+  font-size: 80%;
+  width: 150px;
+  z-index: 999;
+  background-color: @panel-bg;
+  border-top-left-radius: @panel-border-radius;
+  border-top: 1px solid @panel-default-border;
+  border-left: 1px solid @panel-default-border;
+  
+  button {
+    .pull-right();
+  }
+  ul {
+    opacity: 1;
+    li {
+      a {
+      padding-left: 5px;
+      padding-right: 5px;
+      padding-top: 1px;
+      padding-bottom: 1px;
+      }
+      ul {
+        li {
+          a {
+            padding-top: 1px;
+            padding-bottom: 1px;
+            padding-left: 15px;
+            font-size: 90%;
+          }
+        }
+        li.active > a {
+            font-weight: bold;
+        }
+      }
+    }
+    li.active > a {
+      font-weight: bold;
+      color: @brand-primary;
+      background-color: @navbar-default-brand-hover-bg;
+    }
+  }
+}
+
+.gn-popup {
+  display: none;
+  overflow: hidden;
+  min-width: 200px;
+  max-width: 600px;
+  min-height: 100px;
+  max-height: 800px;
+  z-index: 2000;
+
+  .gn-share-grid {
+    width: 100%;
+    height: 75%;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    table {
+      /* The col section define column width */
+      table-layout: fixed;
+
+      th, td {
+        font-size: 70%;
+      }
+      /* Group name often contains long upper case value */
+      td {
+        word-break: break-all;
+      }
+    }
+  }
+}
+
+.onlinesrc-popup {
+  max-width: none;
+  max-height: none;
+  display: none;
+}
+.onlinesrc-popup .modal-content {
+  width: 750px;
+}
+img.thumb-small {
+max-width: 80px;
+max-height: 80px;
+min-height: 40px;
+}
+.gn-layers-grid-container {
+overflow:auto;
+height:200px;
+font-size: small;
+}
+.gn-layers-grid-container tr {
+  cursor: pointer;
+}
+.gn-layers-grid-container .table > thead > tr > td.active tr.active > td {
+  color: red;
+  background-color: #428bca;
+}
+
+/* typeahead styles */
+
+.tt-query {
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.tt-hint {
+  color: #999
+}
+
+.tt-dropdown-menu {
+  width: 422px;
+  margin-top: 12px;
+  padding: 8px 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
+  -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+          box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+
+.tt-suggestion {
+  padding: 3px 20px;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.tt-suggestion.tt-is-under-cursor {
+  color: #fff;
+  background-color: #0097cf;
+
+}
+
+.tt-suggestion p {
+  margin: 0;
+}
+
+.bootstrap-tagsinput {
+  width: 100%;
+}
+
+span.twitter-typeahead {
+  display: block !important;
+}

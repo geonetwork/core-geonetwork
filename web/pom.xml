@@ -425,9 +425,14 @@
 		<artifactId>flying-saucer-pdf-itext5</artifactId>
 		<version>9.0.1</version>
 	</dependency>
-	
-	
-	</dependencies>
+
+      <dependency>
+          <groupId>${project.groupId}</groupId>
+          <artifactId>wro4j</artifactId>
+          <version>${project.version}</version>
+      </dependency>
+
+  </dependencies>
 
   
   <build>

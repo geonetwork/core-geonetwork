@@ -1,0 +1,64 @@
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation"
+     data-ng-if="!unsupportedSchema">
+  <div>
+    <ul class="gn-view-menu-button pull-left nav navbar-nav">
+      <!-- An empty drown down updated when form is loaded -->
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown">
+          <i class="fa fa-eye"></i>
+          <b class="caret"/>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="pull-left">
+    <div class="form-group navbar-btn">
+      <div class="btn-group">
+        <button type="button" class="btn btn-default"
+          data-ng-class="{'active': !isTemplate()}" data-ng-click="setTemplate(false)"
+          ><span data-translate="">METADATA</span>
+          <i class="fa" data-ng-class="isTemplate() ? 'fa-circle-o' : 'fa-dot-circle-o'"></i>
+        </button>
+        <button type="button" class="btn btn-default"
+          data-ng-class="{'active': isTemplate()}" data-ng-click="setTemplate(true)"
+          ><i class="fa" data-ng-class="isTemplate() ? 'fa-dot-circle-o' : 'fa-circle-o'"></i>
+          <span data-translate="">TEMPLATE</span></button>
+      </div>
+    </div>
+  </div>
+
+  <p class="navbar-text gn-tooltip"
+    data-ng-mouseover="getSaveStatus()" title="{{saveStatus}}">
+    <span data-ng-class="saveError ? 'text-danger' : ''">{{savedStatus}}</span>
+  </p>
+  
+  <div class="pull-right">
+    <!--<button type="button" class="btn btn-primary navbar-btn gn-tooltip" data-ng-click="share()"
+      data-title="{{'share-help' | translate}}" data-placement="bottom">
+      <i class="fa fa-lock"/>
+      <span data-translate="">share</span>
+    </button>-->
+
+    <div data-gn-metadata-group-updater="groupOwner"/>
+
+    <button type="button" class="btn btn-primary navbar-btn" data-ng-click="save()">
+      <i class="fa fa-save"/>
+      <span data-translate="">save</span>
+    </button>
+    <button type="button" class="btn navbar-btn" data-ng-click="validate()">
+      <i class="fa fa-check"/>
+      <span data-translate=""
+            title="{{'validate-help' | translate}}">validate</span>
+    </button>
+    <!-- TODO: automatic save status -->
+    <button type="button" class="btn btn-danger navbar-btn gn-tooltip" data-ng-click="cancel()" 
+      data-ng-mouseover="getCancelStatus()" title="{{cancelStatus}}">
+      <i class="fa fa-undo"/>
+      <span data-translate="">cancel</span>
+    </button>
+    <button type="button" class="btn btn-danger navbar-btn gn-tooltip" data-ng-click="close()">
+      <i class="fa fa-sign-out"/>
+      <span data-translate="">closeEditor</span>
+    </button>
+  </div>
+</nav>

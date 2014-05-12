@@ -1,0 +1,4 @@
+<select data-ng-model="protocol">
+  <option data-ng-repeat="p in protocols" value="{{p['@value']}}"
+    data-ng-selected="p['id'] == protocol">{{p['#text']}}</option>
+</select>

@@ -1,0 +1,10 @@
+<div class="gn-facet" data-ng-show="facets[facet].length > 1">
+  <h3>{{facet | translate}}</h3>
+  <div class="list-group">
+    <a class="list-group-item" data-ng-repeat="f in facets[facet]"
+        data-ng-click="add(f)">
+      <span class="gn-facet-label">{{f['@label'] || f['@name']}}</span>
+      <span class="gn-facet-count">({{f['@count']}})</span>
+    </a>
+  </div>
+</div>

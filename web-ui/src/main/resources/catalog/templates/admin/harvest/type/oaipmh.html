@@ -1,0 +1,80 @@
+<form data-ng-keypress="updatingHarvester()">
+
+    <div class="row">
+        <div class="col-lg-6" data-gn-harvester-identification="harvesterSelected"/>
+
+        <div class="col-lg-6" data-gn-harvester-schedule="harvesterSelected"/>
+    </div>
+
+    <fieldset>
+        <legend><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+            harvesterSelected['@type']) | translate}}</legend>
+        <div data-ng-class="harvesterSelected.site.host == '' ? 'has-error' : ''">
+            <label class="control-label" data-translate="">oaipmh-url</label>
+            <input type="text" class="form-control" data-ng-model="harvesterSelected.site.url"/>
+            <p class="help-block" data-translate="">oaipmh-urlHelp</p>
+
+            <div class="alert alert-danger" data-ng-show="oaipmhInfo !== null"> {{oaipmhInfo}}
+            </div>
+        </div>
+
+        <fieldset class="form-horizontal">
+            <legend data-translate="">harvesterFilter</legend>
+
+
+            <div>
+                <label class="control-label col-lg-4" data-translate="">from</label>
+                <div class="col-lg-8">
+                    <input type="date" class="form-control"
+                        data-ng-model="harvesterSelected.searches[0].from"/>
+                </div>
+            </div>
+
+            <div>
+                <label class="control-label col-lg-4" data-translate="">until</label>
+                <div class="col-lg-8">
+                    <input type="date" class="form-control"
+                        data-ng-model="harvesterSelected.searches[0].until"/>
+                </div>
+            </div>
+
+            <div>
+                <label class="control-label col-lg-4" data-translate="">set</label>
+                <div class="col-lg-8">
+                    <select class="form-control"
+                            data-ng-model="harvesterSelected.searches[0].set"
+                            data-ng-options="s.name as (s.label + '(' + s.name + ')') for s in oaipmhSets">
+                      <option value=""></option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label class="control-label col-lg-4" data-translate="">prefix</label>
+                <div class="col-lg-8">
+                    <select class="form-control"
+                        data-ng-model="harvesterSelected.searches[0].prefix"
+                        data-ng-options="p for p in oaipmhPrefix"> </select>
+                </div>
+            </div>
+
+        </fieldset>
+
+    </fieldset>
+
+
+    <fieldset>
+        <legend><span data-translate="">harvesterAdvancedConfigurationFor</span>
+            {{harvesterSelected['@type'] | translate}}</legend>
+
+        <div data-gn-harvester-account="harvesterSelected"/>
+
+        <div data-gn-category="harvesterSelected.categories[0]['@id']" data-lang="{{lang}}"
+            data-label="category"/>
+
+
+    </fieldset>
+
+
+    <div data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
+</form>

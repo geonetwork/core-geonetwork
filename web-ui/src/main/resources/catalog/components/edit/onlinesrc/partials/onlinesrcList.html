@@ -1,0 +1,243 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <i class="fa fa-link"></i><i class="icon-external-link"></i> <span
+      data-translate="">associatedResources</span>
+    <div class="btn-group" data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true">
+      <button type="button"
+        class="btn btn-link dropdown-toggle fa fa-plus"
+        data-toggle="dropdown">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu pull-right" role="menu">
+        <li data-ng-show="isCategoryEnable('thumbnail')"
+            ><a href="" data-toggle="modal"
+          data-target="#addthumbnail-popup"> <i
+            class="fa fa-picture-o"></i> <i class="icon-external-link"></i>
+            <span data-translate="">addThumbnail</span>
+        </a></li>
+        <li data-ng-show="isCategoryEnable('onlinesrc')">
+          <a href="" data-ng-click="onlinesrcService.onOpenPopup('onlinesrc')"> <i class="fa fa-link"></i>
+            <i class="icon-external-link"></i> <span data-translate="">addOnlinesrc</span>
+        </a></li>
+
+        <li class="divider"
+            data-ng-show="isCategoryEnable('thumbnail') || isCategoryEnable('onlinesrc')"></li>
+        <li data-ng-show="isCategoryEnable('parent')"><a href=""
+            data-ng-click="onlinesrcService.onOpenPopup('parent')"> <i
+            class="fa fa-sitemap"></i> <i class="icon-external-link"></i>
+            <span data-translate="">linkToParent</span>
+        </a></li>
+        <li data-ng-show="isCategoryEnable('service') && !gnCurrentEdit.isService">
+          <a href="" data-ng-click="onlinesrcService.onOpenPopup('service')">
+          <i class="fa fa-cloud"></i> <i
+            class="icon-external-link"></i> <span data-translate="">linkToService</span>
+        </a></li>
+        <li data-ng-show="isCategoryEnable('dataset') && gnCurrentEdit.isService">
+          <a href="" data-ng-click="onlinesrcService.onOpenPopup('dataset')"> <i
+            class="fa fa-files-o"></i> <i class="icon-external-link"></i>
+            <span data-translate="">linkToDataset</span>
+        </a></li>
+        <li data-ng-show="isCategoryEnable('source')">
+          <a href=""
+             data-ng-click="onlinesrcService.onOpenPopup('source')"> <i
+            class="fa fa-sitemap fa-rotate-180"></i> <i class="icon-external-link"></i>
+            <span data-translate="">linkToSource</span>
+        </a></li>
+        <li data-ng-show="isCategoryEnable('fcats')">
+          <a href=""
+            data-ng-click="onlinesrcService.onOpenPopup('fcats')"> <i
+            class="fa fa-table"></i> <i class="icon-external-link"></i>
+            <span data-translate="">linkToFeatureCatalog</span>
+        </a></li>
+        <li data-ng-show="isCategoryEnable('sibling')">
+          <a href=""
+            data-ng-click="onlinesrcService.onOpenPopup('sibling')"> <i
+            class="fa fa-sign-out"></i> <i class="icon-external-link"></i>
+            <span data-translate="">linkToSibling</span>
+        </a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div class="gn-onlinesrc-panel">
+      
+      <!-- ******* Display Thumbnails ******* -->
+      <ul class="list-inline">
+        <li data-ng-repeat="thumb in relations.thumbnail"><img
+          class="thumb-small" data-ng-src="{{thumb.id}}" />
+          <a href="" class="onlinesrc-remove"
+            data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
+            data-ng-click="onlinesrcService.removeThumbnail(thumb)">
+            <i class="btn fa fa-times text-danger"></i>
+          </a> 
+        </li>
+      </ul>
+
+      <!-- ******* List of online resources ******* -->
+      <h4 class="onlinesrc-title" data-ng-show="relations.onlinesrc">
+        <a href=""
+           data-ng-click="onlinesrcService.onOpenPopup('onlinesrc')">
+          <i class="fa fa-link"></i><i class="icon-external-link"></i>
+          <span data-translate="">onlinesrc</span>  
+          <i class="fa fa-plus"></i>
+        </a>
+      </h4>
+      <ul class="list-group">
+        <li class="list-group-item" href=""
+          data-ng-repeat="resource in relations.onlinesrc | orderBy:'title'">
+          <i class="fa" data-ng-class="onlinesrcService.getIconByProtocol(resource.protocol)"/>
+          <a href="" data-ng-click="onlinesrcService.openLink(resource.url)">
+            {{resource.title}}
+         </a> 
+         <span class="onlinesrc-remove"
+            data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
+            data-ng-click="onlinesrcService.removeOnlinesrc(resource)"><i class="btn fa fa-times text-danger pull-right"></i></span>
+        </li>
+      </ul>
+
+      <!-- ******* List of datasets ******* -->
+      <h4 class="onlinesrc-title" data-ng-show="relations.datasets">
+        <a href=""
+          data-ng-click="onlinesrcService.onOpenPopup('dataset')"> 
+          <i class="fa fa-files-o"></i><i class="icon-external-link"></i>
+          <span data-translate="">datasets</span> 
+          <i class="fa fa-plus"></i>
+        </a>
+      </h4>
+      <ul class="list-group">
+        <li class="list-group-item"
+          data-ng-repeat="resource in relations.datasets | orderBy:'title'">
+          {{resource.title}} <a href="" class="onlinesrc-remove"
+            data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
+          data-ng-click="onlinesrcService.removeDataset(resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
+        </li>
+      </ul>
+
+      <!-- ******* List of services ******* -->
+      <h4 class="onlinesrc-title" data-ng-show="relations.services">
+        <a href=""
+          data-ng-click="onlinesrcService.onOpenPopup('service')">
+          <i class="fa fa-share-square-o"></i>
+          <i class="icon-external-link"></i>
+          <span data-translate="">service</span>
+          <i class="fa fa-plus"></i>
+        </a>
+      </h4>
+      <ul class="list-group">
+        <li class="list-group-item"
+          data-ng-repeat="resource in relations.services | orderBy:'title'">
+          {{resource.title}} <a href="" class="onlinesrc-remove"
+            data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
+            data-ng-click="onlinesrcService.removeService(resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
+        </li>
+      </ul>
+
+      <!--******* List of parent ******* -->
+      <h4 class="onlinesrc-title" data-ng-show="relations.parent">
+        <a href=""
+          data-ng-click="onlinesrcService.onOpenPopup('parent')">
+          <i class="fa fa-sitemap" data-ng-class="onlinesrcService.reload ? 'fa-spin' : ''"></i>
+          <i class="icon-external-link"></i>
+          <span data-translate="">parentMd</span>
+          <i class="fa fa-plus"></i>
+        </a>
+      </h4>
+      <ul class="list-group">
+        <li class="list-group-item"
+          data-ng-repeat="resource in relations.parent | orderBy:'title'">
+          {{resource.title}} <a href="" class="onlinesrc-remove"
+            data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
+            data-ng-click="onlinesrcService.removeMdLink('parent', resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
+        </li>
+      </ul>
+
+      <!-- ******* List of sources ******* -->
+      <h4 class="onlinesrc-title" data-ng-show="relations.sources">
+        <a href=""
+          data-ng-click="onlinesrcService.onOpenPopup('source')">
+          <i class="fa fa-file-text-o" 
+            data-ng-class="onlinesrcService.reload ? 'fa-spin' : ''"></i>
+          <i class="icon-external-link"></i>
+          <span data-translate="">sourceDatasets</span>
+          <i class="fa fa-plus"></i>
+        </a>
+      </h4>
+      <ul class="list-group">
+        <li class="list-group-item"
+          data-ng-repeat="resource in relations.sources | orderBy:'title'">
+          {{resource.title}} <a href="" class="onlinesrc-remove"
+            data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
+            data-ng-click="onlinesrcService.removeMdLink('source', resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
+        </li>
+      </ul>
+
+      <!-- ******* List of feature catalogs ******* -->
+      <h4 class="onlinesrc-title" data-ng-show="relations.fcats">
+        <a href="" data-ng-click="onlinesrcService.onOpenPopup('fcats')">
+          <i class="fa fa-list-alt"
+            data-ng-class="onlinesrcService.reload ? 'fa-spin' : ''"></i>
+          <i class="icon-external-link"></i>
+          <span data-translate="">featureCatalog</span>
+          <i class="fa fa-plus"></i>
+        </a>
+      </h4>
+      <ul class="list-group">
+        <li class="list-group-item"
+          data-ng-repeat="resource in relations.fcats | orderBy:'title'">
+          {{resource.title}} <a href="" class="onlinesrc-remove"
+            data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
+            data-ng-click="onlinesrcService.removeFeatureCatalog(resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
+        </li>
+      </ul>
+      
+      <!-- ******* List of datasets associated with this feature catalogs ******* -->
+      <h4 class="onlinesrc-title" data-ng-show="relations.hasfeaturecat">
+        <i class="fa fa-files-o"></i>
+        <i class="icon-external-link"></i>
+        <span data-translate="">hasFeatureCatalog</span>
+      </h4>
+      <ul class="list-group">
+        <li class="list-group-item"
+          data-ng-repeat="resource in relations.hasfeaturecat | orderBy:'title'">
+          {{resource.title}}</li>
+        </li>
+      </ul>
+      
+      
+      <!-- ******* List of siblings ******* -->
+      <h4 class="onlinesrc-title" data-ng-show="relations.sibling">
+        <a href="" data-ng-click="onlinesrcService.onOpenPopup('sibling')">
+          <i class="fa fa-sign-out"
+            data-ng-class="onlinesrcService.reload ? 'fa-spin' : ''"></i>
+          <i class="icon-external-link"></i>
+          <span data-translate="">siblings</span>
+          <i class="fa fa-plus"></i>
+        </a>
+      </h4>
+      <ul class="list-group">
+        <li class="list-group-item"
+          data-ng-repeat="resource in relations.sibling | orderBy:'title'">
+          {{resource.title}} 
+          <span>{{'(' + resource.subType.toUpperCase() + ')'}}</span>
+          <a href="" class="onlinesrc-remove"
+            data-ng-if="gnCurrentEdit.schemaConfig.related.readonly !== true"
+            data-ng-click="onlinesrcService.removeSibling(resource)"><i class="btn fa fa-times text-danger pull-right"></i></a>
+        </li>
+      </ul>
+      
+      <!-- ******* List of associated records (reverse direction of siblings) ******* -->
+      <h4 class="onlinesrc-title" data-ng-show="relations.associated">
+        <i class="fa fa-sign-out"></i>
+        <i class="icon-external-link"></i>
+        <span data-translate="">siblings</span>
+      </h4>
+      <ul class="list-group">
+        <li class="list-group-item"
+          data-ng-repeat="resource in relations.associated | orderBy:'title'">
+          {{resource.title}}</li>
+          </li>
+      </ul>
+      
+    </div>
+  </div>
+</div>

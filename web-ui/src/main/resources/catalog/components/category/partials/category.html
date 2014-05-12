@@ -1,0 +1,12 @@
+<div data-ng-hide="categories.length === 0">
+    <label class="control-label">{{label | translate}}</label>
+    <select class="form-control" data-ng-model="element">
+        <option></option>
+        <option data-ng-repeat="c in categories" value="{{c['@id']}}" 
+            data-ng-selected="c['@id'] == element">
+            <!--
+                Could be nice to have category icon. Not supported in select
+                <img src="../../images/category/{{c.name}}.png" alt="{{'categoryLogo' | translate}}"/>-->
+            {{c.label[lang] | translate}}</option>
+    </select>
+</div>

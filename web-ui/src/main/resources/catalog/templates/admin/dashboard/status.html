@@ -1,0 +1,69 @@
+<div data-ng-controller="GnDashboardStatusController">
+  <div class="row">
+    <div class="col-lg-4">
+      <div class="panel panel-default" data-ng-hide="healthy === undefined"
+        data-ng-class="healthy ? 'panel-success' : 'panel-danger'">
+        <div class="panel-heading" data-translate="">systemStatus</div>
+
+        <div class="panel-body">
+          <ul class="list-group">
+            <li class="list-group-item" data-ng-repeat="info in healthcheck">
+              <span class="badge"
+                data-ng-class="info.status === 'OK' ? 'badge-success' : 'badge-danger'">
+                {{info.status}} </span>
+              <h4 class="list-group-item-heading"> {{info.name}} </h4>
+              <p class="list-group-item-text" data-ng-hide="!info.msg">{{info.msg}}</p>
+              <p class="list-group-item-text" data-ng-hide="!info.exception">{{info.exception}}</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-8" data-ng-show="mdWithIndexingError">
+      <div class="panel panel-default panel-danger">
+        <div class="panel-heading" data-translate="">metadataWithIndexingErrors</div>
+        <div class="panel-body">
+          <table class="table table-striped">
+            <tr data-ng-repeat="md in mdWithIndexingError.metadata">
+              <td>{{md.title || md['geonet:info'].uuid}}</td>
+              <td>{{md.idxMsg}}</td>
+              <td>
+                <a href="../../?uuid={{md['geonet:info'].uuid}}">
+                  <i class="fa fa-eye"></i>
+                </a>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="panel panel-default">
+      <div class="panel-heading" data-translate="">Metrics</div>
+      <div class="panel-body">
+        <ul>
+          <li>
+            <a href="../../monitor/metrics?pretty=true" data-translate="">Metrics</a>
+          </li>
+          <li>
+            <a href="../../monitor/healthcheck" data-translate="">Health Check</a>
+          </li>
+          <li>
+            <a href="../../monitor/threads" data-translate="">Threads</a>
+          </li>
+          <!--https://github.com/geonetwork/core-geonetwork/issues/409-->
+          <!--<li>-->
+            <!--<a href="debug.filehandles?max=100&amp;filter=^((?!\.jar).)*$" data-translate="">-->
+              <!--Open File Descriptors</a>-->
+          <!--</li>-->
+          <!--<li>-->
+            <!--<a href="debug.openconnection.accessors" data-translate="">-->
+              <!--Open Connections-->
+            <!--</a>-->
+          <!--</li>-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

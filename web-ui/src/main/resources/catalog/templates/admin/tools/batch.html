@@ -1,0 +1,197 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="panel panel-default">
+      <div class="panel-heading" data-translate="">chooseRecordsToUpdate</div>
+      <!-- Add criteria - this should be in a custom search form directive ? -->
+      <div class="panel-body">
+        <form data-ng-controller="GnSearchFormController">
+          <div class="form-group">
+            <label class="checkbox-inline">
+              <input type="checkbox" data-ng-change="setTemplate(params); triggerSearch();"
+                data-ng-model="batchSearchTemplateN" id="batchSearchTemplateN"/>
+              <span data-translate="">METADATA</span>
+            </label>
+            <label class="checkbox-inline">
+              <input type="checkbox" data-ng-change="setTemplate(params); triggerSearch();"
+                data-ng-model="batchSearchTemplateY" id="batchSearchTemplateY"/>
+              <span data-translate="">TEMPLATE</span>
+            </label>
+            <label class="checkbox-inline">
+              <input type="checkbox" data-ng-change="setTemplate(params); triggerSearch();"
+                data-ng-model="batchSearchTemplateS" id="batchSearchTemplateS"/>
+              <span data-translate="">SUB_TEMPLATE</span>
+            </label>
+            <input class="form-control" type="hidden" 
+              data-ng-model="params._isTemplate" data-ng-init="params._isTemplate = 'y or n'"/>
+          </div>
+
+          <div class="form-group">
+            <input class="form-control" type="text" 
+              data-ng-change="triggerSearch()"
+              placeholder="{{'search' | translate}}" autofocus=""
+              data-ng-model="params.any"/>
+          </div>
+
+          <fieldset class="form-horizontal">
+            <div class="form-group">
+              <label data-translate="" class="col-lg-4 control-label">_groupOwner</label>
+              <div class="col-lg-8">
+                <select class="form-control" id="gn-batchSearchGroupOwner"
+                  data-ng-change="triggerSearch()"
+                  data-ng-model="params.group">
+                  <option/>
+                  <option data-ng-repeat="g in batchSearchGroups" value="{{g.id}}"
+                    >{{g.label[lang]}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label data-translate="" class="col-lg-4 control-label">owner</label>
+              <div class="col-lg-8">
+                <select class="form-control" id="gn-batchSearchOwner"
+                  data-ng-change="triggerSearch()"
+                  data-ng-model="params._owner">
+                  <option/>
+                  <option data-ng-repeat="u in batchSearchUsers" value="{{u.id}}">{{u.name}}
+                    {{u.surname}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label data-translate="" class="col-lg-4 control-label">_cat</label>
+              <div class="col-lg-8">
+                <select class="form-control" id="gn-batchSearchCategory"
+                  data-ng-change="triggerSearch()"
+                  data-ng-model="params.category">
+                  <option/>
+                  <option data-ng-repeat="c in batchSearchCategories" value="{{c.name}}"
+                    >{{c.label[lang]}}</option>
+                </select>
+              </div>
+            </div>
+          </fieldset>
+          
+          <div data-gn-search-form-results=""
+            data-gn-search-form-results-mode="title"
+            data-gn-search-form-results-selection-mode="multiple"
+            data-search-results="searchResults"
+            data-select-records="selectRecords"
+            data-pagination-info="paginationInfo">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="col-lg-12">
+    <div class="panel panel-default">
+      <div class="panel-heading" data-translate="">configureProcess</div>
+      <div class="panel-body">
+        <form class="form-horizontal" id="gn-batch-process">
+
+          <select class="form-control" data-ng-disabled="selection.length == 0"
+            data-ng-model="selectedProcess"
+            data-ng-options="p.key | translate for p in batchProcesses"/>
+          <!-- ng-options set only a index for the select value, 
+          bound the process name in a hidden field -->
+          <input type="hidden" name="process" value="{{selectedProcess.key}}"/>
+
+          <fieldset data-ng-hide="!selectedProcess">
+            <legend data-translate="">batchProcessParameters</legend>
+            <div data-ng-repeat="p in selectedProcess.params track by $index" data-ng-switch=""
+              data-on="p.type" class="form-group">
+              <label for="batch_param_{{p.name}}" class="col-lg-4 control-label">{{p.name |
+                translate}}</label>
+              <div class="col-lg-8">
+                <textarea data-ng-switch-when="textarea" class="form-control"
+                  id="batch_param_{{p.name}}" name="{{p.name}}">{{p.value}}</textarea>
+                <input data-ng-switch-default="" id="batch_param_{{p.name}}" name="{{p.name}}"
+                  type="{{p.type || 'text'}}" class="form-control" placeholder="{{p.value}}"/>
+
+                <p class="help-block"
+                  data-ng-show="((p.name + '-help') | translate) != (p.name + '-help')"
+                  data-translate="">{{(p.name + '-help')}}</p>
+              </div>
+            </div>
+            <div class="btn-toolbar">
+              <button type="button" class="btn btn-primary btn-lg pull-right"
+                data-ng-disabled="!selectedProcess" data-ng-click="runProcess('#gn-batch-process')">
+                <i class="fa fa-play"/>
+                <span data-translate="">runProcess</span>
+              </button>
+            </div>
+          </fieldset>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-12" data-ng-hide="!processing && !processReport" id="gn-batch-process-report">
+    <div class="panel panel-default"
+      data-ng-class="processReportWarning ? 'panel-warning' : 'panel-success'">
+      <div class="panel-heading">
+        <span data-translate="">processReportFor</span> {{processReport['@process'] | translate}}<br/>
+        <p> {{numberOfRecordsProcessed}} <span data-translate="">recordsProcessed</span>
+          ({{processReport['@startDate']}} <span data-ng-show="processReport['@running'] == 'true'"
+            >...</span>
+          <span data-ng-show="processReport['@running'] != 'true'"> -
+            {{processReport['@reportDate']}}</span>) </p>
+      </div>
+      <div class="panel-body">
+        <div class="progress progress-striped active"
+          data-ng-show="processReport['@running'] == 'true'">
+          <div class="progress-bar" style="width: 100%"/>
+        </div>
+
+
+
+        <table class="table table-striped">
+          <tr>
+            <td>{{('processReportTotalRecords') | translate}}</td>
+            <td class="text-right">{{processReport['@totalRecords']}}</td>
+          </tr>
+          <tr>
+            <td>{{('processReportProcessedRecords') | translate}}</td>
+            <td class="text-right">{{processReport['@processedRecords']}}</td>
+          </tr>
+          <tr>
+            <td>{{('processReportNullRecords') | translate}}</td>
+            <td class="text-right">{{processReport['@nullRecords']}}</td>
+          </tr>
+          <tr>
+            <td>{{('processReportErrors') | translate}}</td>
+            <td class="text-right">{{processReport.metadataErrorReport.length}}</td>
+          </tr>
+          <tr>
+            <td>{{('processReportNoProcessFound') | translate}}</td>
+            <td class="text-right">{{processReport['notProcessFound']}}</td>
+          </tr>
+          <tr>
+            <td>{{('processReportNotOwner') | translate}}</td>
+            <td class="text-right">{{processReport['notOwner']}}</td>
+          </tr>
+        </table>
+
+        <div data-ng-hide="processReport.metadataErrorReport.length == 0">
+          <h2 data-translate="">metadataErrorReport</h2>
+          <table class="table table-striped">
+            <tr>
+              <th data-transalte="">identifier</th>
+              <th data-translate="">error</th>
+            </tr>
+            <tr data-ng-repeat="m in processReport.metadataErrorReport">
+              <td>{{m['@id']}}</td>
+              <td>
+                <h4>{{m.message}}</h4>
+                <pre>{{m.stack}}</pre>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

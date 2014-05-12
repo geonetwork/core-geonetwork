@@ -121,6 +121,28 @@
             <param-value>${system.specific.overrides},${web.xml.main.config.overrides}${web.xml.widget.config.overrides}</param-value>
         </init-param>
     </filter>
+    <filter>
+        <!--
+            WebResourceOptimizer is a WRO4J Filter (https://code.google.com/p/wro4j/wiki/Introduction)
+            which runs css and javascript linting, compiling, minification and compression.  We use it in two ways.
+
+            * Runtime as a Servlet Filter - at runtime WRO4J compiles, lints, minifies and compresses all javascript and css files.
+                                            This allows a developer to be able to get instant feed back when he/she changes a file.
+                                            By Default the javascript and css is minimized.  To not have it minized use ?minimize=false
+            * Maven build - The same configuration is run on all javascript files during build time.  The artifacts are ignored
+                            because they are generated at runtime but it a check to verify that when deployed all artifacts can be
+                            correctly built when the .
+        -->
+
+        <filter-name>WebResourceOptimizer</filter-name>
+        <filter-class>
+            ro.isdc.wro.http.WroFilter
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>WebResourceOptimizer</filter-name>
+        <url-pattern>/static/*</url-pattern>
+    </filter-mapping>
 
     <!-- Only allow administrators or localhost access to the monitoring metrics -->
     <filter>

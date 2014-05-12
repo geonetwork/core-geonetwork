@@ -1,0 +1,11 @@
+<table class="table table-striped">
+  <tr 
+    data-ng-repeat="(key, value) in element.label track by $index">
+    <td>{{key}}</td>
+    <td><input type="text" class="form-control" 
+      id="translation-{{key}}" value="{{value}}"
+      data-ng-model="element.label[key]" 
+      data-ng-keyup="saveTranslation(this)"
+    /></td>
+  </tr>
+</table>

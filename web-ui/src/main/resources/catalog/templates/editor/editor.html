@@ -1,0 +1,102 @@
+<div data-ng-hide="metadataFound">
+  <div class="alert alert-warning" 
+    data-translate="" 
+    data-translate-values="{ id: '{{metadataNotFoundId}}'}">metadataNotFound</div>
+</div>
+
+<div data-ng-show="metadataFound">
+
+  <div
+    data-ng-include="'../../catalog/templates/editor/top-toolbar.html'">
+  </div>
+  <div class="row gn-editor-container">
+    <div class="col-md-8">
+      
+      <div class="alert alert-danger" data-ng-if="unsupportedSchema" 
+        data-translate=""
+        data-translate-values="{title: '{{mdTitle}}', schema: '{{mdSchema}}'}">unsupportedSchemaAlert</div>
+      
+      <div data-ng-include="editorFormUrl"
+        data-onload="onFormLoad()"></div>
+    </div>
+    <div class="col-md-4" 
+      data-ng-if="gnSchemaConfig.related.display === true || gnSchemaConfig.validation.display === true || gnSchemaConfig.suggestion.display === true">
+      <div class="gn-editor-tools-container">
+        
+        <div data-gn-onlinesrc-list="" data-ng-if="gnSchemaConfig.related.display === true"></div>
+        
+        <div data-ng-if="gnCurrentEdit.geoPublisherConfig" gn-geo-publisher=""
+          data-config="{{gnCurrentEdit.geoPublisherConfig}}"
+          data-lang="lang"></div>
+        <br/>
+        
+        <div data-gn-validation-report="" data-ng-if="gnSchemaConfig.validation.display === true"></div>
+
+        <div data-gn-suggestion-list="" data-ng-if="gnSchemaConfig.suggestion.display === true"></div>
+
+        <div data-gn-need-help="editor"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div data-gn-modal="" class="onlinesrc-popup"
+  data-gn-popup-options="{title:'addThumbnailTitle'}"
+  id="addthumbnail-popup">
+  <div data-gn-add-thumbnail="" class="add-thumbnail"
+    data-gn-popupid="#addthumbnail-popup"></div>
+</div>
+
+<div data-gn-modal="" class="onlinesrc-popup"
+  data-gn-popup-options="{title:'addOnlinesrcTitle'}"
+  id="addonlinesrc-popup">
+  <div data-gn-add-onlinesrc="" class="add-onlinesrc"
+    data-gn-popupid="#addonlinesrc-popup"></div>
+</div>
+
+<div data-gn-modal="" class="onlinesrc-popup"
+  data-gn-popup-options="{title:'linkToParentTitle'}"
+  id="linktoparent-popup">
+  <div data-gn-link-to-metadata="parent" class="link-parent-md"></div>
+</div>
+
+<div data-gn-modal="" class="onlinesrc-popup"
+  data-gn-popup-options="{title:'linkToServiceTitle'}"
+  id="linktoservice-popup">
+  <div data-gn-link-service-to-dataset="service"
+    id="link-to-service" class="link-service-md"></div>
+</div>
+
+<div data-gn-modal="" class="onlinesrc-popup"
+  data-gn-popup-options="{title:'linkToDatasetTitle'}"
+  id="linktodataset-popup">
+  <div data-gn-link-service-to-dataset="dataset"
+    id="link-to-dataset" class="link-dataset-md"></div>
+</div>
+
+<div data-gn-modal="" class="onlinesrc-popup"
+  data-gn-popup-options="{title:'linkToSourceTitle'}"
+  id="linktosource-popup">
+  <div data-gn-link-to-metadata="source" id="link-to-source"
+    class="link-source-md"></div>
+</div>
+
+<div data-gn-modal="" class="onlinesrc-popup"
+  data-gn-popup-options="{title:'linkToFeatureCatalogTitle'}"
+  id="linktofcats-popup">
+  <div data-gn-link-to-metadata="fcats" id="link-to-fcatalog"
+    class="link-fcatalog-md" data-gn-parent-id="#gnLinkToMetadata"></div>
+</div>
+
+<div data-gn-modal="" class="onlinesrc-popup"
+  data-gn-popup-options="{title:'applySuggestion'}"
+  id="runsuggestion-popup">
+  <div data-gn-run-suggestion="" id="run-suggestion"></div>
+</div>
+
+<div data-gn-modal="" class="onlinesrc-popup"
+  data-gn-popup-options="{title:'linkToSiblingTitle'}"
+  id="linktosibling-popup">
+  <div data-gn-link-to-sibling="#linktosibling-popup" id="link-to-sibling"
+    class="link-sibling-md"></div>
+</div>

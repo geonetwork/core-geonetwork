@@ -1,0 +1,35 @@
+<a class="navbar-brand" href="{{pages.home}}">
+  <img class="gn-logo" ng-src="../../images/logos/{{info.site.siteId}}.gif?{{info.site.lastUpdate}}"/>
+  {{info.site.name}}</a>
+<a class="navbar-brand" href="{{pages.signin}}" 
+    data-ng-show="!authenticated"
+    data-ng-keypress="$event"
+    data-translate="">signIn</a>
+<a class="navbar-brand" href="{{pages.admin}}" data-ng-show="authenticated" data-translate>adminConsole</a>
+
+
+<div class="navbar-collapse navbar-ex1-collapse pull-right">
+    <ul class="nav navbar-nav">
+        <li data-ng-show="authenticated">
+            <p class="navbar-text"><img class="img-circle" ng-src="http://gravatar.com/avatar/{{u.email | md5}}?s=18"/>
+                <a href="admin.console#/organization/users/{{user.username}}"  
+                    title="{{'userDetails' | translate}}" class="navbar-link">
+                    {{user.name}} {{user.surname}} ({{user.profile | translate}})<i class="fa fa-user"></i></a>
+                <a href="catalog.edit"
+                   title="{{'editorBoard' | translate}}">
+                  <i class="fa fa-pencil"></i>
+                </a>
+                <a href="../../j_spring_security_logout" title="{{'signout' | translate}}">
+                  <i class="fa fa-sign-out"></i>
+                </a>
+            </p>
+        </li>
+        <li>
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group pull-right" data-gn-language-switcher="lang" data-langs="langs"/>
+            </form>
+        </li>
+    </ul>
+</div>
+
+

@@ -1,0 +1,65 @@
+<form data-ng-keypress="updatingHarvester()">
+
+
+    <div class="row">
+        <div class="col-lg-6" data-gn-harvester-identification="harvesterSelected" lang=""/>
+
+        <div class="col-lg-6" data-gn-harvester-schedule="harvesterSelected"/>
+    </div>
+
+
+    <fieldset>
+        <legend><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+            harvesterSelected['@type']) | translate}}</legend>
+
+
+        <div data-ng-class="harvesterSelected.site.url == '' ? 'has-error' : ''">
+            <label class="control-label" data-translate="">webdav-url</label>
+            <input type="text" class="form-control" data-ng-model="harvesterSelected.site.url"/>
+            <p class="help-block" data-translate="">webdav-urlHelp</p>
+        </div>
+
+        <div data-ng-class="harvesterSelected.options.subtype == '' ? 'has-error' : ''">
+            <label class="control-label" data-translate="">webdav-subtype</label>
+
+            <select class="form-control" data-ng-model="harvesterSelected.options.subtype">
+                <option data-ng-repeat="t in ['waf', 'webdav']" value="{{t}}"
+                    data-ng-selected="t == harvesterSelected.options.subtype">{{t |
+                    translate}}</option>
+            </select>
+
+            <p class="help-block" data-translate="">webdav-subtypeHelp</p>
+        </div>
+    </fieldset>
+
+
+    <fieldset>
+        <legend><span data-translate="">harvesterAdvancedConfigurationFor</span>
+            {{harvesterSelected['@type'] | translate}}</legend>
+
+        <div>
+            <label class="control-label">
+                <input type="checkbox" data-ng-model="harvesterSelected.options.recurse"/>
+                <span data-translate="">webdav-recurse</span>
+            </label>
+            <p class="help-block" data-translate="">webdav-recurseHelp</p>
+        </div>
+
+        <div data-gn-harvester-account="harvesterSelected"/>
+
+        <div data-gn-category="harvesterSelected.categories[0]['@id']" data-lang="{{lang}}"
+            data-label="category"/>
+
+        <div>
+            <label class="control-label">
+                <input type="checkbox" data-ng-model="harvesterSelected.content.validate"/>
+                <span data-translate="">harvesterValidate</span>
+            </label>
+            <p class="help-block" data-translate="">harvesterValidateHelp</p>
+        </div>
+    </fieldset>
+
+
+
+    <div data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
+</form>

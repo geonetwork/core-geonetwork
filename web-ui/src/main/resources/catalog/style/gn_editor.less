@@ -1,0 +1,279 @@
+@import "gn.less";
+@import "../lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.less";
+@import "../lib/style/ol.css";
+@import "../lib/style/datetimepicker.css";
+@import "../lib/jquery.ext/jquery.fileupload-ui.css";
+
+body {
+  
+}
+
+input[type=text], input[type=number], select {
+  .form-control;
+}
+
+/* Cancel the rule above for tagsinput and typeahead */
+.bootstrap-tagsinput input,
+.bootstrap-tagsinput input:focus {
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  width: auto !important;
+  max-width: inherit;
+}
+span.twitter-typeahead {
+  display: inline-block !important;
+}
+
+
+
+.gn-drawmap-panel {
+  table .form-group {
+    width: 150px;
+  }
+  .form-group {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+  .col-left, .col-right {
+   width: 25%;
+  }
+  .col-middle {
+   width: 50%;
+  }
+  table {
+   width:100%
+  }
+  .map {
+   height: 300px;
+   width: 100%;
+  }
+  
+  .gn-proj-select {
+    width: 250px;
+    vertical-align: top;
+  }
+  .gn-region-picker {
+    width: 400px;
+  }
+}
+.gn-geopublisher-panel {
+  .map {
+   height: 300px;
+   width: 100%;
+  }
+}
+.gn-thumbnail-maker-panel {
+  .map {
+    height: 300px;
+    width: 100%;
+  }
+}
+
+
+.gn-editor-container {
+  padding: 10px;
+}
+
+form.gn-editor {
+  /* Move each sub fieldset to the left */
+  @editor-fieldset-padding-left: 5px;
+  
+  /**
+   * Make space on the following element of a well 
+   */
+  div.well + fieldset, div.well + div {
+    padding-top: 10px;
+  }
+  
+  div.well {
+    margin-bottom: 0px;
+  }
+
+  /**
+   * Add bottom line
+   */
+  fieldset > div.form-group.gn-field,
+  fieldset > div.row.gn-field {
+    border-top: 1px solid #EEE;
+//    padding-left:  (@grid-gutter-width / 2);
+    padding-top: 5px;
+  }
+  fieldset > div.form-group.gn-extra-field,
+  fieldset > div.row.gn-extra-field{
+    border-top: none;
+  }
+  /**
+   * Hide label in field which are not
+   * first and do not break line to not
+   * loose space.
+   */
+  div.gn-extra-field > label {
+    visibility: hidden;
+    white-space: nowrap;
+  }
+
+
+  fieldset fieldset {
+    padding-left: @editor-fieldset-padding-left;
+  }
+  
+  .form-group {
+    margin-bottom: 5px;
+  }
+  
+  legend {
+    margin-bottom: 10px;
+  }
+
+  .gn-textarea-xml {
+    font-family: courier;
+    font-size: 12px;
+    min-height: 700px;
+  }
+  
+  .gn-autocomplete-list {
+    position: absolute;
+    margin-top: 4px;
+    width: inherit;
+    z-index: 999;
+
+    /**/
+    .tt-suggestion:hover {
+      color: #fff;
+      background-color: #0097cf;
+    }
+  }
+  
+  .gn-debug {
+    display: none;
+  }
+  
+  .control-label {
+    color: #858585;
+  }
+  
+  .gn-required > label {
+    color: #333333;
+  }
+  
+  .gn-move {
+    .pull-right();
+  }
+  
+  legend > div.gn-move {
+    position: absolute;
+  }
+  
+  /* text danger takes priority above colors
+   */
+  .text-danger label,
+  .text-danger legend {
+    .text-danger();
+  }
+  
+  .gn-has-xlink {
+    label, fieldset > legend {
+      opacity: .7;
+    }
+  }
+  
+  .gn-multilingual-field {
+    .nav > li > a {
+      padding: 2px 5px;
+      margin-top: 2px;
+      font-size: 8px;
+    }
+    .label {
+      line-height: 2;
+      font-size: 8px;
+    }
+  }
+
+  /* Date picker is composed of a date and
+   * a time input. Align them on the same
+   * line instead of 100% width in input group.
+   */
+  .gn-date-picker {
+    > input.gn-date {
+      width: 50%;
+    }
+    .gn-indeterminate-position {
+      display: table-cell;
+      > select {
+        border-bottom-right-radius: 0px;
+        border-top-right-radius: 0px;
+      }
+    }
+  }
+
+  /* Reset margin in helper for documentation
+   * to properly align radios
+   */
+  .helper .help-block {
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+  
+  
+  /* Avoid white on white when i:hover
+   */
+  .btn:hover {
+    color: #000;
+  }
+  
+  /**
+   * Keyword selector directive
+   */
+   *[data-gn-keyword-selector] {
+       margin-bottom: 10px;
+   }
+}
+
+form.gn-tab-inspire {
+  .control-label {
+    color: inherit;
+  }
+  .well {
+    display: none;
+  }
+}
+
+/* Onlinesrc styles */
+.onlinesrc-container {
+  width: 680px;
+  .list-group {
+    max-height:50%;
+    overflow: auto;
+  }
+  .list-group.fixed {
+    height: 400px;
+  }
+}
+
+#gn-new-metadata-container {
+  /*
+   * Increase default panel heading size in order
+   * to preserve heading alignement if title is on
+   * one or two lines.
+   */
+  .panel-default > .panel-heading {
+    min-height: 60px;
+  }
+  /*
+   * Center icons and text for selecting type of
+   * record.
+   */
+  .gn-record-type > a.list-group-item {
+    text-align: center;
+  }
+}
+
+.gn-popover {
+}
+
+.gn-schematron-title {
+  word-wrap: break-word;
+}

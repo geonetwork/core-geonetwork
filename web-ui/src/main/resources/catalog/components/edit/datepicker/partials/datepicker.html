@@ -1,0 +1,69 @@
+<div class="form-group">
+  <label class="control-label col-sm-2" data-ng-if="label">{{label}}</label>
+  <div data-ng-class="label ? 'col-sm-9' : 'col-sm-12'">
+    <!-- The hidden field with the value. -->
+    <input type="hidden" class="form-control"
+           name="{{elementRef}}" value="{{xmlSnippet}}"/>
+
+
+    <div class="input-group gn-date-picker" data-ng-show="dateTypeSupported === true">
+      <div class="input-group gn-indeterminate-position"
+          data-ng-show="withIndeterminatePosition"
+          data-schema-info-combo="codelist"
+          data-selected-info="indeterminatePosition"
+          data-gn-schema-info="indeterminatePosition"
+          data-allow-blank=""
+          lang="lang"></div>
+
+      <input type="number" class="form-control"
+             data-ng-model="year"
+             data-ng-show="mode === 'year'"/>
+      <input type="month" class="form-control"
+             data-ng-model="month"
+             data-ng-show="mode === 'month'"/>
+      <input type="date" class="form-control gn-date"
+             data-ng-model="date"
+             data-ng-show="mode === ''"/>
+      <input type="time" class="form-control gn-date"
+             data-ng-model="time"
+             data-ng-show="mode === ''"/>
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+          <i class="fa fa-clock-o"></i>&nbsp;<span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu pull-right"
+            role="menu" aria-labelledby="{{'chooseOtherTypeOfDate' | translate}}">
+          <li role="presentation"><a role="menuitem" data-translate=""
+             data-ng-click="setMode('')">dateMode</a></li>
+          <li role="presentation"><a role="menuitem" data-translate=""
+             data-ng-click="setMode('month')">yearAndMonthMode</a></li>
+          <li role="presentation"><a role="menuitem" data-translate=""
+             data-ng-click="setMode('year')">yearMode</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="input-group gn-date-picker" data-ng-show="dateTypeSupported !== true">
+      <div class="input-group gn-indeterminate-position"
+           data-ng-show="withIndeterminatePosition"
+           data-schema-info-combo="codelist"
+           data-selected-info="indeterminatePosition"
+           data-gn-schema-info="indeterminatePosition"
+           data-allow-blank=""
+           lang="lang"></div>
+      <input type="text"
+        class="form-control"
+        data-ng-model="dateInput">
+      <div class="input-group-btn">
+        <button type="button" class="btn btn-default dropdown-toggle"
+                data-toggle="dropdown">
+          <i class="fa fa-calendar"></i>&nbsp;
+        </button>
+        <ul class="dropdown-menu pull-right">
+          <datetimepicker data-ng-model="dateDropDownInput"
+                          data-on-set-time="formatFromDatePicker"
+                          data-datetimepicker-config="{minView: 'minute', dropdownSelector: '#dropdown2' }"/>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

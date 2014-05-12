@@ -1,0 +1,136 @@
+<div>
+  <form id="gn-upload-onlinesrc" class="form-horizontal" role="form"
+    method="POST" enctype="{{enctype}}" action="{{action}}"
+     data-file-upload="onlinesrcUploadOptions">
+     
+    <div class="onlinesrc-container">
+    
+      <!-- mode switcher -->
+      <div class="form-group" >
+        <div class="btn-group col-sm-offset-2 col-sm-10">
+          <button type="button" class="btn btn-default"
+            data-ng-class="{'btn-primary': mode == 'url'}"
+            data-ng-click="mode = 'url'">
+            {{'url' | translate}}</button>
+          <button type="button" class="btn btn-default"
+            data-ng-class="{'btn-primary': mode == 'upload'}"
+            data-ng-click="mode = 'upload'">
+            {{'upload' | translate}}</button>
+          <button type="button" class="btn btn-default"
+            data-ng-class="{'btn-primary': mode == 'thumbnailMaker'}"
+            data-ng-click="mode = 'thumbnailMaker'">
+            {{'thumbnailMaker' | translate}}</button>
+        </div>
+      </div>
+      
+      <!-- Hidden filed -->
+      <div class="hidden">
+        <input name="scalingDir" value="width">
+        <input name="smallScalingDir" value="width">
+        <input name="type" value="large">
+        <input name="scalingFactor" value="1000">
+        <input name="smallScalingFactor" value="180">
+        <input name="version" data-ng-model="params.version">
+        <input name="id" data-ng-model="metadataId"/>
+      </div>
+      
+      <!-- URL text field -->
+      <div class="form-group" data-ng-show="mode == 'url'">
+        <label for="onlinesrcUrl" class="col-sm-2 control-label"
+            data-translate="">url</label>
+        <div class="col-sm-10">
+          <input ng-model="params.thumbnail_url" class="form-control"
+            id="onlinesrcUrl" placeholder="http://">
+        </div>
+      </div>
+      
+      <!-- Upload panel -->
+      <div class="form-group" data-ng-show="mode == 'upload'">
+        <label for="onlinesrcUrl" class="col-sm-2 control-label">upload</label>
+        <div class="col-sm-10">
+      
+          <div class="panel panel-default">
+            <div class="panel-body">
+            
+            <span
+              class="btn btn-success btn-block fileinput-button" ng-class="{disabled: disabled}">
+              <i class="fa fa-plus fa fa-white"/>
+              <span data-translate="">chooseOnlinesrc</span>
+              <input type="file" id="gn-onlinesrc-file" name="fname" multiple="false"
+                ng-disabled="disabled"/>
+            </span>
+            
+            <ul>
+              <li data-ng-repeat="file in queue">
+                <div class="preview" >
+                    <a data-ng-href="{{file.url}}"
+                       title="{{file.name}}"
+                       download="{{file.name}}"
+                       data-gallery=""><img data-ng-src="{{file.thumbnailUrl}}" alt=""></a>
+                </div>
+                <div class="preview" data-file-upload-preview="file"></div>
+                {{file.name}} ({{file.type}} / {{file.size | formatFileSize}})
+                <i class="fa fa-trash-o" data-ng-click="clear(file)"/>
+              </li>
+            </ul>
+              <div class="checkbox">
+                <label>
+                  <span data-translate="">createSmall</span>
+                  <input type="checkbox" name="createSmall">
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image of the url thumnail -->
+      <div class="form-group" data-ng-show="mode == 'url' && params.thumbnail_url">
+        <label for="onlinesrcUrl" class="col-sm-2 control-label"
+            data-translate="">overview</label>
+        <div class="col-sm-10">
+          <img ng-src="{{params.thumbnail_url}}" class="img-thumbnail">
+        </div>
+      </div>
+
+      <!-- Description Text area -->
+      <div class="form-group" data-ng-show="mode == 'url'">
+        <label for="onlinesrcDescr" class="col-sm-2 control-label"
+            data-translate="">description</label>
+        <div class="col-sm-10">
+          <textarea rows="3" ng-model="params.thumbnail_desc"
+            class="form-control" id="onlinesrcDescr"
+            placeholder="" name="thumbnail_desc" />
+        </div>
+      </div>
+
+      <!-- Thumbnail maker panel -->
+      <div class="form-group gn-thumbnail-maker-panel" data-ng-show="mode == 'thumbnailMaker'">
+        <textarea class="form-control hidden" name="config">{{jsonSpec}}</textarea>
+        <input type="hidden" name="rotation" value="90"/>
+        <div class="row">
+          <div class="col-xs-8">
+            <div id="{{mapId}}" class="map"></div>
+
+            <div class="alert alert-warning"
+                data-ng-if="layers === undefined"
+                data-translate="">noLayersForThumbnail</div>
+          </div>
+          <div class="col-xs-4">
+            <p class="help-block" data-translate="">thumbnailMaker-help</p>
+            <div class="panel-body">
+              <div data-ga-print="" data-layout="Thumbnail"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="">
+    <button type="button" class="btn navbar-btn btn-success"
+      data-ng-click="addThumbnail()">
+      <i class="fa fa-picture-o" /> <span data-translate="">addThumbnail</span>
+    </button>
+  </div>
+
+</div>

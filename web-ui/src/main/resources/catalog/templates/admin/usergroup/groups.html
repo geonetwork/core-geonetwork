@@ -1,0 +1,97 @@
+<div class="row" data-ng-controller="GnUserGroupController">
+  <div class="col-lg-4">
+    <div class="panel panel-default">
+      <div class="panel-heading" data-translate="">groups</div>
+      <div class="panel-body">
+        <input class="form-control" data-ng-model="groupSearch.$" autofocus=""
+          placeholder="{{'filter' | translate}}"/>
+        <input type="hidden" data-ng-model="groupSelected.id"/>
+        <div class="list-group">
+          <a href="" class="list-group-item"
+            data-ng-repeat="g in groups | filter:groupSearch | orderBy:'name'"
+            data-ng-class="g.id === groupSelected.id ? 'active' : ''" data-ng-click="selectGroup(g)"
+            > {{g.label[lang]}} </a>
+        </div>
+
+        <button type="button" class="btn btn-primary btn-block" data-ng-click="addGroup()"
+          id="gn-btn-group-add">
+          <i class="fa fa-plus"/>
+          <span data-translate="">newGroup</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="col-lg-8" data-ng-hide="groupSelected.id == null">
+    <div class="panel panel-default" data-ng-controller="GnSearchFormController">
+      <div class="panel-heading"
+        title="{{groupHasRecords() ? ('cantDeleteGroupHavingRecords' | translate) : ''}}">
+        <span data-ng-hide="groupSelected.id == ''" data-translate="">updateGroup</span>
+        <span data-ng-hide="groupSelected.id != ''" data-translate="">newGroup</span>
+        <strong>{{groupSelected.name}}</strong>
+        <div class="btn-toolbar">
+          <button type="button" class="btn btn-primary pull-right fa fa-save"
+            data-ng-disabled="!gnGroupEdit.$valid && !gnGroupEdit.dirty"
+            data-ng-click="saveGroup('#gn-group-edit')" data-translate="" id="gn-btn-group-save"
+            >saveGroup</button>
+          <button type="button" class="btn btn-primary pull-right btn-danger fa fa-trash-o"
+            data-ng-disabled="searchResults.count > 0" data-ng-hide="groupSelected.id == ''"
+            data-ng-click="deleteGroup(groupSelected.id)" data-translate="" id="gn-btn-group-delete"
+            >deleteGroup</button>
+        </div>
+      </div>
+
+
+      <div class="panel-body">
+        <form id="gn-group-edit" name="gnGroupEdit" data-ng-keypress="updatingGroup()">
+          <fieldset>
+            <input type="hidden" name="id" data-ng-model="groupSelected.id"
+              value="{{groupSelected.id}}"/>
+            <div data-ng-class="gnGroupEdit.name.$error.required ? 'has-error' : ''">
+              <label class="control-label" data-translate="">groupName</label>
+              <input type="text" name="name" class="form-control" data-ng-model="groupSelected.name"
+                data-ng-required="true"/>
+              <p class="help-block" data-translate="">groupNameHelp</p>
+            </div>
+            <label data-translate="">groupDescription</label>
+            <textarea name="description" class="form-control"
+              data-ng-model="groupSelected.description"/>
+            <p class="help-block" data-translate="">groupDescriptionHelp</p>
+            <div
+              data-ng-class="gnGroupEdit.email.$error.email || gnGroupEdit.email.$error.required ? 'has-error' : ''">
+              <label class="control-label" data-translate="">groupEmail</label>
+              <input type="email" name="email" class="form-control"
+                data-ng-model="groupSelected.email"/>
+              <p class="help-block" data-translate="">groupEmailHelp</p>
+            </div>
+          </fieldset>
+        </form>
+
+
+        <div data-ng-hide="!groupSelected.label">
+          <h3><span data-translate="">translationForGroup</span> {{groupSelected.name}}</h3>
+          <div data-gn-db-translation="groupSelected" data-type="group"/>
+        </div>
+
+
+        <div data-ng-show="searchResults.count != 0">
+          <h3>
+            <ng-pluralize count="searchResults.count"
+                          when="{'0': ('noRecordFound' | translate),
+                'one': '1' +  ('groupRecord' | translate) + ' {{groupSelected.label[lang]}}',
+                'other': '{}' +  ('groupRecords' | translate) + ' {{groupSelected.label[lang]}}'}"
+                > </ng-pluralize>
+          </h3>
+          <div data-gn-search-form-results=""
+               data-gn-search-form-results-mode="title"
+               data-search-results="searchResults"
+               data-pagination-info="paginationInfo">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

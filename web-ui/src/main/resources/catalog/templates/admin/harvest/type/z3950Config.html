@@ -1,0 +1,82 @@
+<form data-ng-keypress="updatingHarvester()">
+
+    <div class="row">
+        <div class="col-lg-6" data-gn-harvester-identification="harvesterSelected"/>
+
+        <div class="col-lg-6" data-gn-harvester-schedule="harvesterSelected"/>
+    </div>
+
+    <fieldset>
+        <legend><span data-translate="">harvesterMainConfigurationFor</span> {{('harvester-' +
+            harvesterSelected['@type']) | translate}}</legend>
+        <div data-ng-class="harvesterSelected.site.host == '' ? 'has-error' : ''">
+            <label class="control-label" data-translate="">z3950-host</label>
+            <input type="text" class="form-control" data-ng-model="harvesterSelected.site.host"/>
+            <p class="help-block" data-translate="">z3950-hostHelp</p>
+        </div>
+        <div data-ng-class="harvesterSelected.site.port == '' ? 'has-error' : ''">
+            <label class="control-label" data-translate="">z3950-port</label>
+            <input type="text" class="form-control" data-ng-model="harvesterSelected.site.port"/>
+            <p class="help-block" data-translate="">z3950-portHelp</p>
+        </div>
+
+        <fieldset class="form-horizontal">
+            <legend data-translate="">harvesterFilter</legend>
+
+            <div>
+                <label class="control-label col-lg-4" data-translate="">any</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control"
+                        data-ng-model="harvesterSelected.searches[0].freeText"/>
+                </div>
+            </div>
+
+            <div>
+                <label class="control-label col-lg-4" data-translate="">title</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control"
+                        data-ng-model="harvesterSelected.searches[0].title"/>
+                </div>
+            </div>
+
+            <div>
+                <label class="control-label col-lg-4" data-translate="">abstract</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control"
+                        data-ng-model="harvesterSelected.searches[0].abstract"/>
+                </div>
+            </div>
+
+            <div>
+                <label class="control-label col-lg-4" data-translate="">keyword</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control"
+                        data-ng-model="harvesterSelected.searches[0].keywords"/>
+                </div>
+            </div>
+
+        </fieldset>
+
+    </fieldset>
+
+
+    <fieldset>
+        <legend><span data-translate="">harvesterAdvancedConfigurationFor</span>
+            {{harvesterSelected['@type'] | translate}}</legend>
+
+        <div data-gn-harvester-account="harvesterSelected"/>
+
+        <div>
+            <label class="control-label">
+                <input type="checkbox" data-ng-model="harvesterSelected.options.clearConfig"/>
+                <span data-translate="">z3950-clearConfig</span>
+            </label>
+            <p class="help-block" data-translate="">z3950-clearConfigHelp</p>
+        </div>
+
+
+    </fieldset>
+
+
+    <div data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"/>
+</form>

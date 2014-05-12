@@ -1,0 +1,66 @@
+<div class="row">
+  <div class="col-lg-8">
+    <div class="panel panel-default">
+      <div class="panel-heading" data-translate="">availableStandards</div>
+
+      <div class="panel-body">
+        <div class="list-group">
+          <a class="list-group-item" data-ng-repeat="s in schemas">
+            <h4 class="list-group-item-heading">{{s.id | translate}}</h4>
+            <p> {{(s.id + '-help') | translate}} </p>
+            <p>
+              <ul>
+                <li data-ng-show="s.props['@namespaces']">
+                  <span data-translate="">namespace</span>
+                  <pre>{{s.props['@namespaces']}}</pre>
+                </li>
+              </ul>
+            </p>
+            <div class="btn-toolbar">
+              <button type="button" class="btn btn-primary pull-right fa fa-trash-o"
+                data-ng-click="removeStandard(s.id)" data-translate="">removeStandard</button>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="panel panel-default">
+      <div class="panel-heading" data-translate="">addOrUpdateStandards</div>
+      <div class="panel-body">
+        <form id="gn-standard-add" action="admin.standards.add@json">
+          <div class="form-group">
+            <label class="control-label" data-translate="">standardName</label>
+            <input type="text" name="schema" class="form-control"/>
+            <p class="help-block" data-translate="">standardLoadHelp</p>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label" data-translate="">standardPath</label>
+            <input type="text" name="fname" class="form-control"/>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label" data-translate="">standardUrl</label>
+            <input type="text" name="url" class="form-control"/>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label" data-translate="">standardRecordUUID</label>
+            <input type="text" name="uuid" class="form-control"/>
+          </div>
+
+          <div class="btn-toolbar">
+            <button type="button" class="btn btn-primary pull-right fa fa-plus"
+              data-ng-click="addStandard('#gn-standard-add', 'add')" data-translate=""
+              >addStandard</button>
+            <button type="button" class="btn btn-primary pull-right fa fa-save"
+              data-ng-click="updateStandard('#gn-standard-add', 'update')" data-translate=""
+              >updateStandard</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,159 @@
+<div class="panel panel-default" data-ng-controller="GnSystemSettingsController">
+  <div class="gn-scroll-spy" data-gn-scroll-spy="gn-settings-spy-target" 
+      data-watch="sectionsLevel1" data-depth="1"/>
+  <div class="panel-heading">
+    <span data-translate="">settings</span>
+    <div class="btn-toolbar">
+      <button type="submit" class="btn btn-primary pull-right fa fa-save" id="gn-btn-settings-save"
+        data-ng-click="saveSettings('#gn-settings')" data-translate="">saveSettings</button>
+    </div>
+  </div>
+  <div class="panel-body">
+    <form id="gn-settings" class="form-horizontal">
+      <fieldset data-ng-repeat="(key, section1) in sectionsLevel1 | orderObjectBy:'@position'"
+        id="gn-settings-spy-target">
+        <h1>{{section1.name | translate}}</h1>
+        <fieldset data-ng-repeat="section2 in section1.children | orderObjectBy:'@position'"
+          id="{{section2.name.replace('/', '-')}}">
+          <legend>{{section2.name | translate}}</legend>
+          <!-- According to data type -->
+          <div data-ng-repeat="s in section2.children | orderObjectBy:'@position'"
+            data-ng-switch="s['@datatype']">
+            <div data-ng-switch-when="BOOLEAN">
+              <label class="col-sm-4 control-label" for="{{s['@name']}}"> {{s['@name'] | translate}} </label>
+              <div class="col-sm-8">
+                <input type="checkbox" id="{{s['@name']}}" name="{{s.formName}}"
+                  data-ng-model="s['#text']"/>
+
+                <p class="help-block ">{{s['@name'] + '-help' | translate}}</p>
+
+              </div>
+            </div>
+            <div data-ng-switch-default="" class="form-group">
+              <label class="col-sm-4 control-label" for="{{s['@name']}}">{{s['@name'] |
+                translate}}</label>
+              <!-- According to entry -->
+              <div class="col-sm-8" data-ng-switch="s['@name']">
+
+                <!-- List of user to be used as CSW contact -->
+                <select data-ng-switch-when="system/csw/contactId" class="form-control"
+                  name="{{s.formName}}">
+                  <option data-ng-repeat="u in systemUsers" value="{{u.id}}"
+                    ng-selected="u.id == s['#text']">{{u.name + ' ' + u.surname}}</option>
+                </select>
+                <textarea 
+                  data-gn-autogrow=""
+                  data-ng-switch-when="system/harvesting/mail/template" type="text"
+                  class="form-control" id="{{s['@name']}}" name="{{s.formName}}"
+                  >{{s['#text']}}</textarea>
+                <textarea 
+                  data-gn-autogrow=""
+                  data-ng-switch-when="system/harvesting/mail/templateError" type="text"
+                  class="form-control" id="{{s['@name']}}" name="{{s.formName}}"
+                  >{{s['#text']}}</textarea>
+                <textarea 
+                  data-gn-autogrow=""
+                  data-ng-switch-when="system/harvesting/mail/templateWarning" type="text"
+                  class="form-control" id="{{s['@name']}}" name="{{s.formName}}"
+                  >{{s['#text']}}</textarea>
+                
+                <!-- JSON configuration for map and editor -->
+                <textarea 
+                  data-gn-autogrow=""
+                  data-ng-switch-when="map/config" type="text"
+                  class="form-control" id="{{s['@name']}}" name="{{s.formName}}"
+                  >{{s['#text']}}</textarea>
+                <textarea 
+                  data-gn-autogrow=""
+                  data-ng-switch-when="metadata/editor/schemaConfig" type="text"
+                  class="form-control" id="{{s['@name']}}" name="{{s.formName}}"
+                  >{{s['#text']}}</textarea>
+                
+                <select data-ng-switch-when="system/server/protocol" class="form-control"
+                      name="{{s.formName}}">
+                  <option value="http"
+                          ng-selected="'http' == s['#text']">http</option>
+                  <option value="https"
+                          ng-selected="'https' == s['#text']">https</option>
+                </select>
+                <select data-ng-switch-when="system/oai/mdmode" class="form-control"
+                      name="{{s.formName}}">
+                  <option value="1"
+                          ng-selected="'1' == s['#text']">{{'system/oai/mdmode-valueTemporaExtent' | translate}}</option>
+                  <option value="2"
+                          ng-selected="'2' == s['#text']">{{'system/oai/mdmode-valueModificationDate' | translate}}</option>
+                </select>
+                <select data-ng-switch-when="system/requestedLanguage/only" class="form-control"
+                      name="{{s.formName}}">
+                  <option value="off"
+                          ng-selected="'off' == s['#text']">{{'system/requestedLanguage/only-value1' | translate}}</option>
+                  <option value="prefer_locale"
+                          ng-selected="'prefer_locale' == s['#text']">{{'system/requestedLanguage/only-value2' | translate}}</option>
+                  <option value="prefer_docLocale"
+                          ng-selected="'prefer_docLocale' == s['#text']">{{'system/requestedLanguage/only-value3' | translate}}</option>
+                  <option value="only_locale"
+                          ng-selected="'only_locale' == s['#text']">{{'system/requestedLanguage/only-value4' | translate}}</option>
+                  <option value="only_docLocale"
+                          ng-selected="'only_docLocale' == s['#text']">{{'system/requestedLanguage/only-value5' | translate}}</option>
+                  <option value="prefer_ui_locale"
+                          ng-selected="'prefer_ui_locale' == s['#text']">{{'system/requestedLanguage/only-value6' | translate}}</option>
+                  <option value="only_ui_locale"
+                          ng-selected="'only_ui_locale' == s['#text']">{{'system/requestedLanguage/only-value7' | translate}}</option>
+                  <option value="prefer_ui_docLocale"
+                          ng-selected="'prefer_ui_docLocale' == s['#text']">{{'system/requestedLanguage/only-value8' | translate}}</option>
+                  <option value="only_ui_docLocale"
+                          ng-selected="'only_ui_docLocale' == s['#text']">{{'system/requestedLanguage/only-value9' | translate}}</option>
+                </select>
+
+                <!-- Read only fields -->
+                <input data-ng-switch-when="system/platform/version" type="text" class="form-control"
+                     id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}" readonly="readonly"/>
+                <input data-ng-switch-when="system/platform/subVersion" type="text" class="form-control"
+                     id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}" readonly="readonly"/>
+                <input data-ng-switch-when="system/site/svnUuid" type="text" class="form-control"
+                     id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}" readonly="readonly"/>
+
+                <div data-ng-switch-when="system/server/host">
+                  <div class="input-group">
+                    <input type="text" class="form-control"
+                      id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}"
+                      data-ng-model="s['#text']"
+                      data-ng-change="processRecommended('siteIdChange', s['@name'])"/>
+                    <span class="input-group-btn" data-ng-show="processName !== null">
+                        <button type="submit" class="btn btn-warning"
+                          title="{{processTitle}}" 
+                          data-ng-click="saveAndProcessSettings('#gn-settings')">
+                          <i class="fa fa-medkit"></i>&nbsp;<span data-translate=""
+                          >processRecommendedOnHostChange</span></button>
+                      </span>
+                  </div>
+                </div>
+                
+                <div data-ng-switch-when="system/server/port">
+                  <input type="text" class="form-control"
+                    id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}"
+                    data-ng-model="s['#text']"
+                    data-ng-change="processRecommended('siteIdChange', s['@name'])"/>
+                </div>
+                
+                <!-- Default -->
+                <input data-ng-switch-default="" type="text" class="form-control"
+                  id="{{s['@name']}}" name="{{s.formName}}" value="{{s['#text']}}"/>
+
+                <p class="help-block"
+                  data-ng-show="(s['@name'] + '-help' | translate) != (s['@name'] + '-help')">
+                  {{s['@name'] + '-help' | translate}} </p>
+              </div>
+            </div>
+          </div>
+
+        </fieldset>
+
+        <button type="submit" class="btn btn-primary pull-right fa fa-save"
+          data-ng-click="saveSettings('#gn-settings')" data-translate="">saveSettings</button>
+      </fieldset>
+    </form>
+
+    <div data-gn-need-help="admin_settings" class="pull-right"></div>
+  </div>
+</div>

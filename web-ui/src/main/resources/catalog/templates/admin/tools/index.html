@@ -1,0 +1,60 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="panel panel-default">
+      <div class="panel-heading" data-translate="">indexAdmin</div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-lg-4">
+            <button type="button" class="btn btn-danger btn-lg btn-block" autofocus=""
+              data-ng-click="rebuildIndex()" data-ng-disabled="isIndexing" data-translate=""
+              >rebuildIndex</button>
+
+            <div data-ng-show="isIndexing">
+              <h4 class="text-warning" data-translate="">indexingInProgress</h4>
+
+              <div class="progress progress-striped active">
+                <div class="progress-bar" style="width: 100%"/>
+              </div>
+
+              <p data-ng-show="numberOfIndexedRecords > 0"> {{numberOfIndexedRecords}} <span
+                  data-translate="">recordsIndexed</span>
+              </p>
+            </div>
+          </div>
+          <div class="col-lg-8" data-translate="">rebuildIndexHelp</div>
+        </div>
+        <br/>
+        <div class="row">
+          <div class="col-lg-4">
+            <button type="button" class="btn btn-warning btn-lg btn-block"
+              data-ng-click="optimizeIndex()" data-ng-disabled="isIndexing" data-translate=""
+              >optimizeIndex</button>
+
+          </div>
+          <div class="col-lg-8" data-translate="">optimizeIndexHelp</div>
+        </div>
+
+        <br/>
+        <div class="row">
+          <div class="col-lg-4">
+
+            <button type="button" class="btn btn-warning btn-lg btn-block"
+              data-ng-click="reloadLuceneConfig()" data-ng-disabled="isIndexing" data-translate=""
+              >reloadLuceneConfig</button>
+
+          </div>
+          <div class="col-lg-8" data-translate="">reloadLuceneConfigHelp</div>
+        </div>
+
+        <br/>
+        <div class="row">
+          <div class="col-lg-4">
+            <button type="button" class="btn btn-primary btn-lg btn-block"
+              data-ng-click="clearXLinkCache()" data-ng-disabled="isIndexing" data-translate="">clearXLinkCache</button>
+          </div>
+          <div class="col-lg-8" data-translate="">xlinkCacheHelp</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
