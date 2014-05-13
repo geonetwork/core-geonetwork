@@ -31,73 +31,93 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 
 public class LDAPUser implements UserDetails {
-	
-    private static final long serialVersionUID = -879282571127799714L;
-    private final String _userName;
 
-    private Multimap<String, Profile> _groupsAndProfile = HashMultimap.create();
+	private static final long serialVersionUID = -879282571127799714L;
+	private final String _userName;
+
+	private Multimap<String, Profile> _groupsAndProfile = HashMultimap.create();
 
 	private User _user;
 
 	public LDAPUser(String username) {
-        this._userName = username;
-        this._user = new User();
-        _user.setUsername(username);
+		this._userName = username;
+		this._user = new User();
+		_user.setUsername(username);
 
-		// FIXME Should we here populate the LDAP user with LDAP attributes instead of in the GNLDAPUserDetailsMapper ?
+		// FIXME Should we here populate the LDAP user with LDAP attributes
+		// instead of in the GNLDAPUserDetailsMapper ?
 		// TODO : populate userId which should be in session
 	}
-	
+
 	public void addPrivilege(String group, Profile profile) {
 		_groupsAndProfile.put(group, profile);
 	}
+
 	public void setPrivileges(Multimap<String, Profile> privileges) {
 		_groupsAndProfile = privileges;
 	}
+
 	public Multimap<String, Profile> getPrivileges() {
 		return _groupsAndProfile;
 	}
 
 	public User getUser() {
-        return _user;
-    }
+		return _user;
+	}
+
 	public void setUser(User user) {
-        this._user = user;
-        user.setUsername(_userName);
-    }
+		this._user = user;
+		user.setUsername(_userName);
+	}
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return _user.getAuthorities();
-    }
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return _user.getAuthorities();
+	}
 
-    @Override
-    public String getPassword() {
-        return _user.getUsername();
-    }
+	@Override
+	public String getPassword() {
+		return _user.getUsername();
+	}
 
-    @Override
-    public String getUsername() {
-        return _user.getUsername();
-    }
+	@Override
+	public String getUsername() {
+		return _user.getUsername();
+	}
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return _user.isAccountNonExpired();
-    }
+	@Override
+	public boolean isAccountNonExpired() {
+		return _user.isAccountNonExpired();
+	}
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return _user.isAccountNonLocked();
-    }
+	@Override
+	public boolean isAccountNonLocked() {
+		return _user.isAccountNonLocked();
+	}
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return _user.isCredentialsNonExpired();
-    }
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return _user.isCredentialsNonExpired();
+	}
 
-    @Override
-    public boolean isEnabled() {
-        return _user.isEnabled();
-    }
+	@Override
+	public boolean isEnabled() {
+		return _user.isEnabled();
+	}
+
+	public void setProfile(Profile p) {
+		_user.setProfile(p);
+	}
+
+	public Profile getProfile() {
+		return _user.getProfile();
+	}
+
+	public String getOrganisation() {
+		return _user.getOrganisation() != null ? _user.getOrganisation() : "";
+	}
+
+	public void setOrganisation(String string) {
+		_user.setOrganisation(string);
+	}
 }

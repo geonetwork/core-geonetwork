@@ -57,9 +57,8 @@ attached it to the metadata for data.
                         <gmd:MD_Distribution>
                             <xsl:copy-of
                                 select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"/>
-                            <xsl:copy-of
-								select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor"/>
-                            
+
+                            <xsl:copy-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor"/>
                             <!-- Copy non existing ressource attached to one responsible party  -->
                             <xsl:for-each select="//extra/gmd:MD_Metadata">
                                 <xsl:call-template name="onlinecopy"/>

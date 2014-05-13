@@ -323,7 +323,7 @@
                                 gmd:dimension[1]/gmd:MD_RangeDimension/gmd:descriptor/gco:CharacterString"/></gco:CharacterString>
                 </xsl:copy>
         </xsl:template>
-	
+
         <!-- Set local identifier to the first 3 letters of iso code. Locale ids
 		are used for multilingual charcterString using #iso2code for referencing.
 	-->

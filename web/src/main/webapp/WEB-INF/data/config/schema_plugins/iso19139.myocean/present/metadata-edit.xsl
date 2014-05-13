@@ -629,19 +629,22 @@
 					<xsl:with-param name="edit"   select="$edit"/>
 				</xsl:apply-templates>-->
 				
-				
-				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:credit">
+				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:supplementalInformation">
 					<xsl:apply-templates mode="simpleElement" select=".">
 						<xsl:with-param name="schema"  select="$schema"/>
 						<xsl:with-param name="edit"   select="$edit"/>
-						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/labels/element[@name='gmd:credit']/label"/>
+						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/labels/element[@name='gmd:supplementalInformation']/label"/>
 						<xsl:with-param name="text">
-							<input type="number" class="md" 
+							<xsl:variable name="displayPriorityPrefix" select="'display priority: '"/>
+							<input type="hidden" class="md" 
 								name="_{gco:CharacterString/geonet:element/@ref}" 
 								id="_{gco:CharacterString/geonet:element/@ref}"  
-								onkeyup="validateNumber(this,true,true);"
-								onchange="validateNumber(this,true,true);"
 								value="{gco:CharacterString}" size="30"/>
+							
+							<input type="number" class="md" 
+								onkeyup="document.getElementById('_{gco:CharacterString/geonet:element/@ref}').value = '{$displayPriorityPrefix}' + this.value"
+								onchange="document.getElementById('_{gco:CharacterString/geonet:element/@ref}').value = '{$displayPriorityPrefix}' + this.value"
+								value="{substring-after(gco:CharacterString, $displayPriorityPrefix)}" size="30"/>
 						</xsl:with-param>
 					</xsl:apply-templates>
 				</xsl:for-each>

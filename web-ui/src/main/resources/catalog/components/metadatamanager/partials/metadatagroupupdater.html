@@ -8,12 +8,12 @@
     <li role="presentation" class="dropdown-header"
         data-translate="">setMetadataGroup</li>
     <li data-ng-repeat="g in groups | orderBy:sortByLabel"
-        data-ng-class="g.id == groupOwner ? 'disabled' : ''">
+        data-ng-class="g['@id'] == groupOwner ? 'disabled' : ''">
       <a
           data-ng-click="assignGroup(g)"
           href="">
         <span data-translate="">{{g.label[lang]}}</span>
-        <span data-ng-show="g.id == groupOwner">(<span data-translate="">current</span>)</span>
+        <span data-ng-show="g['@id'] == groupOwner">(<span data-translate="">current</span>)</span>
       </a>
     </li>
   </ul>
