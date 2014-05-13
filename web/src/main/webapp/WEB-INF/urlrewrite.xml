@@ -174,7 +174,7 @@
         <from>^.*/.*/xml.user.login(\?.*)</from>
         <to type="permanent-redirect" last="true">%{context-path}/j_spring_security_check$1</to>
     </rule>
-    
+
     <!-- hide jsession id from google bot -->
     <outbound-rule encodefirst="true">
         <condition name="user-agent">googlebot.*</condition>

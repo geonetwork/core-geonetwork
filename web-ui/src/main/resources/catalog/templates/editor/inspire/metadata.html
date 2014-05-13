@@ -1,0 +1,107 @@
+<div class="row" data-ng-controller="GnInspireController">
+
+
+    <!-- Modal dialogs -->
+
+
+    <div id="editContactModal" tabindex="-1" class="modal fade">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" >{{contactUnderEdit.title | translate}}</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="col-xs-12 form-horizontal" role="form" >
+                        <div class="form-group">
+                            <label class="col-xs-3 control-label" ><span data-translate="">name</span>: </label>
+                            <div class="col-xs-4">
+                                <input id="contactName" class="form-control" ng-model="contactUnderEdit.name"></select>
+                            </div>
+                            <div class="col-xs-5">
+                                <input id="contactSurname" class="form-control" ng-model="contactUnderEdit.surname"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactEmail" class="col-xs-3 control-label" ><span data-translate="">email</span>: </label>
+                            <div class="col-xs-9">
+                                <input id="contactEmail" class="form-control" ng-model="contactUnderEdit.email"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactRole" class="col-xs-3 control-label" ><span data-translate="">role</span>: </label>
+                            <div class="col-xs-9">
+                                <select id="contactRole" class="form-control" ng-model="contactUnderEdit.role"
+                                        data-ng-options="role for role in data.roleOptions"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactOrganization" class="col-xs-3 control-label" ><span data-translate="">organization</span>: </label>
+                            <div class="col-xs-9">
+                                <input id="contactOrganization" class="form-control" ng-model="contactUnderEdit.organization">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-ng-translate="" data-ng-click="">new</button>
+                    <button type="button" class="btn btn-primary" data-ng-translate="" data-ng-click="">update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+     <!-- End dialogs -->
+
+    <!-- Main Form -->
+
+
+    <form id="inspireForm" class="col-xs-12 form-horizontal" role="form" >
+        <fieldset id="metadata">
+            <legend data-translate="">metadata</legend>
+            <div class="form-group">
+                <label for="metadataLanguage" class="col-xs-3 control-label" ><span data-translate="">language</span>: </label>
+                <div class="col-xs-8">
+                    <select id="metadataLanguage" class="form-control" ng-model="data.language" data-ng-options="lang | translate for lang in languages">
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-3 control-label"><span data-translate="">otherLanguages</span>: </label>
+                <div class="col-xs-8">
+                    <button data-ng-repeat="lang in languages"
+                            data-ng-click="toggleLanguage(lang)"
+                            class="btn btn-default btn-sm"
+                            data-ng-class="{active: isOtherLanguage(lang)}">{{lang | translate}}</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="hierarchyLevel" class="col-xs-3 control-label"><span data-translate="">hierarchyLevel</span>: </label>
+                <div class="col-xs-8">
+                    <select id="hierarchyLevel" class="form-control" data-ng-model="data.hierarchyLevel" data-ng-options="opt for opt in data.hierarchyLevelOptions">
+                    </select>
+                </div>
+            </div>
+            <div data-ng-contact data-contact="data.contact" data-title="contact" data-edit-contact="editContact('contact', data.contact)"></div>
+        </fieldset>
+        <fieldset id="identification">
+            <legend data-translate="">identificationInfo</legend>
+            <div class="form-group">
+                <label for="title" class="col-xs-3 control-label" ><span data-translate="">title</span>: </label>
+                <div class="col-xs-9">
+                    <input id="title" class="form-control col-xs-12" value="{{data.identification.title[editLang]}}" />
+                    <ul class="nav nav-pills">
+                        <li data-ng-class="lang === editLang ? 'active' : ''" data-ng-repeat="lang in data.otherLanguages">
+                            <a data-ng-click="editLang = lang">{{lang | translate}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </fieldset>
+</div>

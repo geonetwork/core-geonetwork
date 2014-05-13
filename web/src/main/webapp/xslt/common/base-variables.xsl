@@ -39,17 +39,18 @@
               $service = 'node-change-warning') then 'gn_login'
     else if ($service = 'contact.us') then 'gn_contact_us'
     else if ($service = 'catalog.edit') then 'gn_editor'
+    else if ($service = 'inspire.edit') then 'gn_inspire_editor'
     else if ($service = 'catalog.search') then 'gn_search'
     else 'gn'"/>
   
   <!-- Catalog settings -->
-  <xsl:variable name="env" select="/root/gui/systemConfig"/>
+  <xsl:variable name="env" select="/root/gui/env"/>
   
   <!-- Only system settings (use for backward compatibility replacing
   /root/gui/env by $envSystem is equivalent). New reference to setting
   should use $env.
   -->
-  <xsl:variable name="envSystem" select="/root/gui/systemConfig/system"/>
+  <xsl:variable name="envSystem" select="/root/gui/env/system"/>
   
   <!-- URL for services - may not be defined FIXME or use fullURL instead -->
   <xsl:variable name="siteURL" select="/root/gui/siteURL"/>

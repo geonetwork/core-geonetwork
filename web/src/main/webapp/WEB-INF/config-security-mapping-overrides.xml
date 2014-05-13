@@ -124,6 +124,8 @@
 			    <sec:intercept-url pattern="/srv/.*/monitoring.indexing!?.*" access="hasRole('Administrator')"/>
 			    <sec:intercept-url pattern="/srv/.*/metadata.selection.index!?.*" access="hasRole('Administrator')" />
 
+			    <sec:intercept-url pattern="/srv/.*/inspire.edit!?.*" access="hasRole('Editor')" />
+
 
 			    <sec:intercept-url pattern="/srv/.*/metadata.validation.status!?.*" access="permitAll" />
 

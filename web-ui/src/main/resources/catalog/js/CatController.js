@@ -79,7 +79,7 @@
         // Retrieve site information
         // TODO: Add INSPIRE, harvester, ... information
         var catInfo = promiseStart.then(function(value) {
-          url = $scope.url + 'info@json?type=site&type=auth';
+          url = $scope.url + 'xml.info@json?type=site&type=auth';
           return $http.get(url).
               success(function(data, status) {
                 $scope.info = data;
@@ -103,11 +103,13 @@
 
         // Retrieve user information if catalog is online
         var userLogin = catInfo.then(function(value) {
-          url = $scope.url + 'info@json?type=me';
+          url = $scope.url + 'xml.info@json?type=me';
           return $http.get(url).
               success(function(data, status) {
-                $scope.user = data.me;
-                $scope.authenticated = data.me['@authenticated'] !== 'false';
+                if (data && data.length > 0) {
+                  $scope.user = data[0];
+                  $scope.authenticated = data[0]['@authenticated'] !== 'false';
+                }
                 // TODO : should not be here, redirect to home
                 //                  if ($scope.authenticated) {
                 //                  // User is logged in

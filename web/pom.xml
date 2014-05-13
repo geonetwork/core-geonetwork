@@ -859,11 +859,16 @@
             </resource>-->
           </webResources>
           <overlays>
-            <overlay>
-              <groupId>${project.groupId}</groupId>
-              <artifactId>geonetwork-client</artifactId>
-              <type>jar</type>
-            </overlay>
+              <overlay>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>geonetwork-client</artifactId>
+                  <type>jar</type>
+              </overlay>
+              <overlay>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>web-ui</artifactId>
+                  <type>jar</type>
+              </overlay>
           </overlays>
           <!-- <packagingExcludes>WEB-INF/data/**</packagingExcludes> -->
           <packagingExcludes>xml/schemas/**</packagingExcludes>
@@ -905,7 +910,7 @@
             <contextPath>/geonetwork</contextPath>
           	<descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
 						<baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
-							<resourcesAsCSV>${basedir}/src/main/webapp,${build.webapp.resources}${widgets.webapp.resources}</resourcesAsCSV>
+							<resourcesAsCSV>${basedir}/src/main/webapp,${basedir}/../web-ui/src/main/resources,${build.webapp.resources}${widgets.webapp.resources}</resourcesAsCSV>
 						</baseResource>
           </webAppConfig>
           <stopKey>JETTY_STOP</stopKey>

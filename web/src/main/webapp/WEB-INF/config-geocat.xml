@@ -592,5 +592,37 @@
             <output sheet="banner-template.xsl" />
         </service>
 
+        <service name="inspire.edit">
+            <documentation>
+                <![CDATA[
+        Edit a metadata record to make the metadata INSPIRE compliant.
+
+        Parameters:
+        * id or uuid
+        ]]></documentation>
+            <output sheet="../xslt/ui-metadata/edit/inspire.xsl"/>
+            <error sheet="../xslt/common/error.xsl"/>
+        </service>
+
+        <service name="inspire.edit.model">
+            <documentation>
+                <![CDATA[
+        Edit a metadata record to make the metadata INSPIRE compliant.
+
+        Parameters:
+        * id or uuid
+        ]]></documentation>
+            <class name=".services.metadata.GetEditableData"></class>
+            <output sheet="../xslt/ui-metadata/edit/inspire-model.xsl" contentType="application/json">
+                <call name="serviceKeywords" class=".guiservices.keywords.GetAllInThesaurus">
+                    <param name="thesaurus" value="external.theme.inspire-service-taxonomy" />
+                </call>
+                <call name="dataKeywords" class=".guiservices.keywords.GetAllInThesaurus">
+                    <param name="thesaurus" value="external.theme.inspire-theme" />
+                </call>
+            </output>
+            <error sheet="../xslt/common/error.xsl"/>
+        </service>
+
     </services>
 </geonet>

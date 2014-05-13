@@ -24,6 +24,8 @@
 				<sec:filter-chain pattern="/maps/**" filters="" />
 				<sec:filter-chain pattern="/htmlcache/**" filters="" />
 				<sec:filter-chain pattern="/scripts/**" filters="" />
+				<sec:filter-chain pattern="/static/**" filters="" />
+				<sec:filter-chain pattern="/catalog/**" filters="" />
 				<sec:filter-chain pattern="/pdf/**" filters="" />
 				<sec:filter-chain pattern="/loc/**" filters="" />
 				<sec:filter-chain pattern="/xml/csw/test/*" filters="" />
