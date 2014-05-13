@@ -135,18 +135,17 @@ public class SextantLDAPUserDetailsContextMapper extends
 				group.setName(k);
 				groupRepository.saveAndFlush(group);
 			}
-			if (! ugroups.contains(group)) {
-				// Then add a new entry for the user / group
 
-				// We need to iterate over every children profiles
-				Profile prof = (Profile) privs.get(k).toArray()[0];
-				
-				for (Profile profile : prof.getAll()) {
-					UserGroup newUg = new UserGroup().setGroup(group).setUser(u.getUser()).setProfile(profile);
-					userGroupRepository.saveAndFlush(newUg);
-					// Adds it (in case of multiple listesiteweb entries)
-					ugroups.add(newUg);
-				}
+			// Then add a new entry for the user / group
+
+			// We need to iterate over every children profiles
+			Profile prof = (Profile) privs.get(k).toArray()[0];
+
+			for (Profile profile : prof.getAll()) {
+				UserGroup newUg = new UserGroup().setGroup(group).setUser(u.getUser()).setProfile(profile);
+				userGroupRepository.saveAndFlush(newUg);
+				// Adds it (in case of multiple listesiteweb entries)
+				ugroups.add(newUg);
 			}
 		}
 	}
