@@ -39,6 +39,7 @@ import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.ldap.core.DirContextAdapter;
@@ -72,6 +73,9 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
     protected ApplicationContext applicationContext;
 
     protected DefaultSpringSecurityContextSource contextSource;
+
+    @Autowired
+    protected UserRepository userRepository;
 
     public void mapUserToContext(UserDetails user, DirContextAdapter ctx) {
     }

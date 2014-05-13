@@ -11,18 +11,18 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.LDAPUser;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.utils.Log;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.LDAPUser;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.UserGroup;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,6 +37,12 @@ public class SextantLDAPUserDetailsContextMapper extends
 	private int groupIndexInPattern;
 	private int profilIndexInPattern;
 
+	@Autowired
+	private UserGroupRepository userGroupRepository;
+	
+	@Autowired
+	private GroupRepository groupRepository;
+	
 	public void setPrivilegePattern(String privilegePattern) {
 		this.privilegePattern = privilegePattern;
 		pattern = Pattern.compile(privilegePattern);
@@ -73,8 +79,7 @@ public class SextantLDAPUserDetailsContextMapper extends
 		LDAPUser userDetails = new LDAPUser(username);
 
 		// Checks if the user already exists
-		User user = applicationContext.getBean(UserRepository.class)
-				.findOneByUsername(username);
+		User user = userRepository.findOneByUsername(username);
 
 		// Uses the newly created user (from LDAPUser)
 		if (user == null) {
@@ -108,7 +113,7 @@ public class SextantLDAPUserDetailsContextMapper extends
 		}
 
 		// Saves the user
-		applicationContext.getBean(UserRepository.class).saveAndFlush(user);
+		userRepository.saveAndFlush(user);
 		
 		// updates the groups informations
 		updateGroupOwnership(userDetails);
@@ -125,14 +130,12 @@ public class SextantLDAPUserDetailsContextMapper extends
 
 		for (String k : privs.keys()) {
 			// first, try to find the group
-			Group group = applicationContext.getBean(GroupRepository.class)
-					.findByName(k);
+			Group group = groupRepository.findByName(k);
 			// Group not found, creating it ...
 			if (group == null) {
 				group = new Group();
 				group.setName(k);
-				applicationContext.getBean(GroupRepository.class).saveAndFlush(
-						group);
+				groupRepository.saveAndFlush(group);
 			}
 			if (! ugroups.contains(group)) {
 				// Then add a new entry for the user / group
@@ -140,8 +143,7 @@ public class SextantLDAPUserDetailsContextMapper extends
 				newUg.setGroup(group);
 				newUg.setUser(u.getUser());
 				newUg.setProfile((Profile) privs.get(k).toArray()[0]);
-				applicationContext.getBean(UserGroupRepository.class)
-						.saveAndFlush(newUg);
+				userGroupRepository.saveAndFlush(newUg);
 				// Adds it (in case of multiple listesiteweb entries
 				ugroups.add(newUg);
 			}
