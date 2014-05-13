@@ -124,9 +124,7 @@ public class SextantLDAPUserDetailsContextMapper extends
 	private void updateGroupOwnership(LDAPUser u) {
 		Multimap<String, Profile> privs = u.getPrivileges();
 		// List of known groups for the current user
-		List<UserGroup> ugroups = applicationContext.getBean(
-				UserGroupRepository.class).findAll(
-				UserGroupSpecs.hasUserId(u.getUser().getId()));
+		List<UserGroup> ugroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(u.getUser().getId()));
 
 		for (String k : privs.keys()) {
 			// first, try to find the group
@@ -139,13 +137,16 @@ public class SextantLDAPUserDetailsContextMapper extends
 			}
 			if (! ugroups.contains(group)) {
 				// Then add a new entry for the user / group
-				UserGroup newUg = new UserGroup();
-				newUg.setGroup(group);
-				newUg.setUser(u.getUser());
-				newUg.setProfile((Profile) privs.get(k).toArray()[0]);
-				userGroupRepository.saveAndFlush(newUg);
-				// Adds it (in case of multiple listesiteweb entries
-				ugroups.add(newUg);
+
+				// We need to iterate over every children profiles
+				Profile prof = (Profile) privs.get(k).toArray()[0];
+				
+				for (Profile profile : prof.getAll()) {
+					UserGroup newUg = new UserGroup().setGroup(group).setUser(u.getUser()).setProfile(profile);
+					userGroupRepository.saveAndFlush(newUg);
+					// Adds it (in case of multiple listesiteweb entries)
+					ugroups.add(newUg);
+				}
 			}
 		}
 	}
@@ -239,15 +240,8 @@ public class SextantLDAPUserDetailsContextMapper extends
 			} else {
 				// 2. a privilegePattern is defined which define a
 				// combination of group and profile pair.
-				ArrayList<String> privileges = userInfo.get(mapping
-						.get("privilege")[0]);
-				// This should come from the LDAP, not from userDetails
-				// which might not be completely initialized yet.
-				// was: if(userDetails.getOrganisation().equals("IFREMER")) {
-				ArrayList<String> orgUsr = userInfo.get(mapping
-						.get("organisation")[0]);
-				if (orgUsr != null && orgUsr.contains("IFREMER")) {
-					userDetails.setOrganisation("IFREMER");
+				ArrayList<String> privileges = userInfo.get(mapping.get("privilege")[0]);
+				if(userDetails.getOrganisation().equals("IFREMER")) {
 
 					if (privileges == null) {
 						privileges = new ArrayList<String>();
