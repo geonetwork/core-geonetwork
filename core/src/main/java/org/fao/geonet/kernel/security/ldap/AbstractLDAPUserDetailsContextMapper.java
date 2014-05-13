@@ -69,7 +69,7 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
 
     private boolean createNonExistingLdapGroup = true;
 
-    private ApplicationContext applicationContext;
+    protected ApplicationContext applicationContext;
 
     protected DefaultSpringSecurityContextSource contextSource;
 

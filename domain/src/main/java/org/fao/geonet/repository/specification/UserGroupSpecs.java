@@ -33,7 +33,6 @@ public final class UserGroupSpecs {
             }
         };
     }
-
     public static Specification<UserGroup> hasProfile(final Profile profile) {
         return new Specification<UserGroup>() {
             @Override
