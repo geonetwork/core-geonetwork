@@ -774,11 +774,12 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         
         var grid = new Ext.grid.GridPanel({
             border: false,
-            anchor: '100% 80%',
             store: this.mdStore,
             colModel: colModel,
             sm: checkboxSM,
-            autoExpandColumn: 'title'
+            autoExpandColumn: 'title',
+						width: 680,
+						autoHeight: true
         });
         
         grid.getSelectionModel().on('rowselect', function (sm, rowIndex, r) {
