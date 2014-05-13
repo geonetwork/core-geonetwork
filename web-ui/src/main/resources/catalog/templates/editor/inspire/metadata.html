@@ -13,39 +13,11 @@
                 </div>
                 <div class="modal-body">
                     <form class="col-xs-12 form-horizontal" role="form" >
-                        <div class="form-group">
-                            <label class="col-xs-3 control-label" ><span data-translate="">name</span>: </label>
-                            <div class="col-xs-4">
-                                <input id="contactName" class="form-control" ng-model="contactUnderEdit.name"></select>
-                            </div>
-                            <div class="col-xs-5">
-                                <input id="contactSurname" class="form-control" ng-model="contactUnderEdit.surname"></select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="contactEmail" class="col-xs-3 control-label" ><span data-translate="">email</span>: </label>
-                            <div class="col-xs-9">
-                                <input id="contactEmail" class="form-control" ng-model="contactUnderEdit.email"></select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="contactRole" class="col-xs-3 control-label" ><span data-translate="">role</span>: </label>
-                            <div class="col-xs-9">
-                                <select id="contactRole" class="form-control" ng-model="contactUnderEdit.role"
-                                        data-ng-options="role for role in data.roleOptions"></select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="contactOrganization" class="col-xs-3 control-label" ><span data-translate="">organization</span>: </label>
-                            <div class="col-xs-9">
-                                <input id="contactOrganization" class="form-control" ng-model="contactUnderEdit.organization">
-                            </div>
-                        </div>
+
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-default" data-ng-translate="" data-ng-click="">new</button>
+                    <button type="button" class="btn btn-default" data-ng-translate="" data-ng-click="updateContact()">new</button>
                     <button type="button" class="btn btn-primary" data-ng-translate="" data-ng-click="">update</button>
                 </div>
             </div>
@@ -87,21 +59,26 @@
                     </select>
                 </div>
             </div>
-            <div data-ng-contact data-contact="data.contact" data-title="contact" data-edit-contact="editContact('contact', data.contact)"></div>
+            <div data-ng-contact data-contact="data.contact" data-title="contact"
+                 data-role-options="data.roleOptions" data-edit-contact="editContact('contact', data.contact)"></div>
         </fieldset>
+
         <fieldset id="identification">
             <legend data-translate="">identificationInfo</legend>
-            <div class="form-group">
-                <label for="title" class="col-xs-3 control-label" ><span data-translate="">title</span>: </label>
-                <div class="col-xs-9">
-                    <input id="title" class="form-control col-xs-12" value="{{data.identification.title[editLang]}}" />
-                    <ul class="nav nav-pills">
-                        <li data-ng-class="lang === editLang ? 'active' : ''" data-ng-repeat="lang in data.otherLanguages">
-                            <a data-ng-click="editLang = lang">{{lang | translate}}</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
+            <div data-multilingual-text
+                 data-title="title"
+                 data-rows="1"
+                 data-main-lang="data.language"
+                 data-languages="data.otherLanguages"
+                 data-field="data.identification.title"/>
+            <div data-multilingual-text
+                 data-title="abstract"
+                 data-rows="3"
+                 data-main-lang="data.language"
+                 data-languages="data.otherLanguages"
+                 data-field="data.identification.abstract"/>
+            <div data-ng-contact data-contact="data.identification.pointOfContact" data-title="pointOfContact"
+                 data-role-options="data.roleOptions" data-edit-contact="editContact('pointOfContact', data.identification.pointOfContact)"></div>
         </fieldset>
+    </form>
 </div>

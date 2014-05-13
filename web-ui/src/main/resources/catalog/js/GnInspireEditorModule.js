@@ -36,11 +36,13 @@
           'Dataset'
         ],
         contact: {
+          id: '2',
           name: 'Jesse',
           surname: 'Eichar',
           email: 'jesse.eichar@camptocamp.com',
           organization: "camptocamp SA",
-          role: 'pointOfContact'
+          role: 'pointOfContact',
+          validated: true
         },
         otherLanguages: ['eng', 'ger'],
         identification: {
@@ -52,16 +54,17 @@
           citationIdentifier: 'identifier',
           abstract: {fre: 'Abstract'},
           pointOfContact:  {
+            id: '1',
             name: 'Florent',
             surname: 'Gravin',
             email: 'florent.gravin@camptocamp.com',
             organization: "camptocamp SA",
-            role: 'owner'
+            role: 'owner',
+            validated: false
           },
           keyword: 'building'
         }
       };
-      $scope.editLang = $scope.data.language;
       $scope.$watch("data.language", function (newVal, oldVal) {
         var langs =  $scope.data.otherLanguages;
         var i = langs.indexOf(oldVal);
@@ -69,7 +72,6 @@
           langs.splice(i, 1);
         }
         langs.push(newVal);
-        $scope.editLang = newVal;
       });
       $scope.$watchCollection("data.otherLanguages", function() {
         var langs =  $scope.data.otherLanguages;
@@ -109,6 +111,17 @@
         $scope.contactUnderEdit.title = title;
         var modal = $('#editContactModal');
         modal.modal('show');
+      };
+      $scope.updateContact = function(newContact) {
+        $scope.contactUnderEdit.id = newContact ? newContact.id : '';
+        $scope.contactUnderEdit.name = newContact ? newContact.name : '';
+        $scope.contactUnderEdit.surname = newContact ? newContact.surname : '';
+        $scope.contactUnderEdit.email = newContact ? newContact.email : '';
+        $scope.contactUnderEdit.role = newContact ? newContact.role : $scope.data.roleOptions[0];
+        $scope.contactUnderEdit.organization = newContact ? newContact.organization : '';
+        $scope.contactUnderEdit.validated = newContact ? newContact.validated : false;
+        var modal = $('#editContactModal');
+        modal.modal('hide');
       }
   }]);
 
@@ -117,19 +130,40 @@
       scope: {
         title: '@',
         contact: '=',
+        roleOptions: '=',
         editContact: '&'
       },
       restrict: 'A',
       replace: 'true',
       template: '<div class="form-group">' +
         '<label class="col-xs-3 control-label"><span data-translate="">{{title}}</span>: </label>' +
-          '<div class="col-xs-8">' +
-            '<p class="form-control-static">{{contact.name}} {{contact.surname}}</p>' +
-            '<p class="form-control-static">{{contact.email}}</p>' +
-            '<p class="form-control-static">{{contact.role}}</p>' +
-            '<p class="form-control-static">{{contact.organization}}</p>' +
-            '<button type="button" class="btn btn-default" data-ng-click="editContact()" data-translate="">modify</button>' +
-        '</div></div></form>'
+        '<div class="col-xs-8">' +
+        '<div class="form-group">' +
+        '<div class="col-xs-6">' +
+        '<input ng-disabled="contact.validated" id="contactName" class="form-control" ng-model="contact.name" placeholder="{{\'name\' | translate}}"></select>' +
+        '</div>' +
+        '<div class="col-xs-6">' +
+        '<input ng-disabled="contact.validated" id="contactSurname" class="form-control" ng-model="contact.surname" placeholder="{{\'surname\' | translate}}"></select>' +
+        '</div>' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<div class="col-xs-12">' +
+        '<input ng-disabled="contact.validated" id="contactEmail" class="form-control" ng-model="contact.email" placeholder="{{\'email\' | translate}}"></select>' +
+        '</div>' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<div class="col-xs-12">' +
+        '<select ng-disabled="contact.validated" id="contactRole" class="form-control" ng-model="contact.role"' +
+        'data-ng-options="role for role in roleOptions"></select>' +
+        '</div>' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<div class="col-xs-12">' +
+        '<input ng-disabled="contact.validated" id="contactOrganization" class="form-control" ng-model="contact.organization" placeholder="{{\'organization\' | translate}}">' +
+        '</div>' +
+        '</div>' +
+        '<button type="button" class="btn btn-default" data-ng-click="editContact()" data-translate="">modify</button>' +
+        '</div></div>'
     };
   });
   module.directive('multilingualText', function() {
@@ -138,19 +172,31 @@
         title: '@',
         rows: '@',
         languages: '=',
+        mainLang: '=',
         field: '='
       },
       restrict: 'A',
       replace: 'true',
+      link: function($scope) {
+        $scope.editLang = $scope.mainLang;
+        $scope.setEditLang = function(lang) {
+          $scope.editLang = lang;
+        }
+      },
       template: '<div class="form-group">' +
-        '<label class="col-xs-3 control-label"><span data-translate="">{{title}}</span>: </label>' +
-          '<div class="col-xs-8">' +
-            '<p class="form-control-static">{{contact.name}} {{contact.surname}}</p>' +
-            '<p class="form-control-static">{{contact.email}}</p>' +
-            '<p class="form-control-static">{{contact.role}}</p>' +
-            '<p class="form-control-static">{{contact.organization}}</p>' +
-            '<button type="button" class="btn btn-default" data-ng-click="editContact()" data-translate="">modify</button>' +
-        '</div></div></form>'
+        '<label for="title" class="col-xs-3 control-label" ><span data-translate="">{{title}}</span>: </label>' +
+        '<div class="col-xs-9">' +
+        '<textarea rows="{{rows}}" id="title" class="form-control col-xs-12" data-ng-repeat="lang in languages" data-ng-model="field[lang]" data-ng-show="editLang === lang || editLang === \'all\'" placeholder="{{lang | translate}}" />' +
+        '<ul class="nav nav-pills">' +
+        '<li data-ng-class="lang === editLang ? \'active\' : \'\'" data-ng-repeat="lang in languages" data-ng-hide="editLang === \'all\'"> ' +
+        '<a data-ng-click="setEditLang(lang)">{{lang | translate}}</a>' +
+        '</li>' +
+        '<li>' +
+        '<a data-ng-click="editLang === \'all\' ? setEditLang(mainLang) : setEditLang(\'all\')">' +
+        '{{editLang === \'all\' ? \'collapse\' : \'all\' | translate}}</a>' +
+        '</li>' +
+        '</ul>' +
+        '</div></div>'
     };
   });
 
