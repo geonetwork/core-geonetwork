@@ -838,25 +838,9 @@ nav {
 	height: inherit;
 }
 
-.WWWLINK,.website,.UKST {
-  background-image: url(../../smart/img/icon_web_link.png) !important;
-}
-
 .x-btn-text-icon .x-btn-icon-small-left .x-btn-text .WFSDownloadIcon {
   min-height:24px;
   padding-left:25px;
-}
-
-.WWWDOWNLOAD,.WFSDownloadIcon,.OGCWMC,.OGCKML,.OGCGML,.INSPIRE-ATOM {
-  background-image: url(../../smart/img/icon_download_dataset.png) !important;
-}
-
-.OGCWMS,.OGCWMTS,.OGCWCS {
-  background-image: url(../../smart/img/icon_show_map.png) !important;
-}
-
-.OGCSOS,.OGCWPS,.OGCCSW,.OGCWCTS,.OGCWFSG,.OGCSPS,.OGCSAS,.OGCWNS,.OGCODS,.OGCOGS,.OGCOUS,.OGCOPS,.OGCORS{
-  background-image: url(../../smart/img/icon_service.png) !important;
 }
 
 li.services {

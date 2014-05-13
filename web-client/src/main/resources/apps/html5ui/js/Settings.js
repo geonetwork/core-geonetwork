@@ -120,7 +120,6 @@ GeoNetwork.Settings.viewPanelButtonCSS = function(buttonId) {
         'viewpanel-share':     'viewpanel-button fabutton fa fa-share md-vw-share',
         'viewpanel-permalink': 'viewpanel-button fabutton fa fa-link md-vw-link'
 		  };
-			console.log("Called with "+buttonId+" returning "+buttonsAndClasses[buttonId]);
 			return buttonsAndClasses[buttonId];
 }
 
