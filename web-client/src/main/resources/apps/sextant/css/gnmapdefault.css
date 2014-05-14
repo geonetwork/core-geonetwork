@@ -215,7 +215,7 @@ div.map-overlay {
 
 .x-collapsed-title {
   color : #15428B;
-  font : bold 11px / 15pxtahoma, arial, verdana, sans-serif;
+  font : bold 11px tahoma, arial, verdana, sans-serif;
   padding : 2px 5px;
 }
 

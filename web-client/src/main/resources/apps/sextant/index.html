@@ -1,32 +1,13 @@
 <!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <title>GeoNetwork</title>
+    <title>GeoNetwork - Sextant</title>
 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-      <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-
     <link rel="icon" type="image/gif" href="../../images/logos/favicon.gif" />
-    <link href="../../srv/en/rss.latest?georss=gml" rel="alternate" type="application/rss+xml"
-      title="GeoNetwork opensource GeoRSS | Recent Changes"/>
-    <link href="../../srv/en/portal.opensearch" rel="search"
-      type="application/opensearchdescription+xml" title="GeoNetwork"/>
 
-    
-    <link rel="stylesheet" type="text/css" href="../js/ext/resources/css/ext-all.css"/>
-    <link rel="stylesheet" type="text/css" href="../js/ext/resources/css/xtheme-gray.css"/>
-    <link rel="stylesheet" type="text/css" href="../js/ext-ux/Rating/rating.css"/>
-    <link rel="stylesheet" type="text/css" href="../js/OpenLayers/theme/default/style.css"/>
-    <link rel="stylesheet" type="text/css" href="../js/ext-ux/SuperBoxSelect/superboxselect-sextant.css" />
-    <link rel="stylesheet" type="text/css" href="../js/ext-ux/LightBox/lightbox.css"/>
-    <link rel="stylesheet" type="text/css" href="../js/ext-ux/FileUploadField/file-upload.css"/>
-    <link rel="stylesheet" type="text/css" href="../js/ext-ux/MultiselectItemSelector-3.0/Multiselect.css"/>
-    <link rel="stylesheet" type="text/css" href="css/gndefault.css"/>
-    <link rel="stylesheet" type="text/css" href="css/gnmapdefault.css"/>
-    <link rel="stylesheet" type="text/css" href="css/gnmetadatadefault.css"/>
-    <link rel="stylesheet" type="text/css" href="../js/GeoNetwork/resources/css/metadata-view.css"/>
-    <link rel="stylesheet" type="text/css" href="css/main.css"/>
- 
+    <link rel="stylesheet" type="text/css" href="css/sextant.less"/>
+
   </head>
   <body>
     <div id="loading-mask"></div>
@@ -38,34 +19,27 @@
     <div id="login-form"></div>
 
     <div id="main-viewport"></div>
-<!--
-	<input type="hidden" id="configtypesearch" value="simple,advanced,facet" />
--->
 
-	<a id="panierButton" value="panierButton" style="visibility:hidden;"></a>
-	<a id="viewerButton" value="viewerButton" style="visibility:hidden;"></a>
+    <a id="panierButton" value="panierButton" style="visibility:hidden;"></a>
+    <a id="viewerButton" value="viewerButton" style="visibility:hidden;"></a>
 
     <script type="text/javascript" src="../../static/geonetwork-client-sextant-full-prod.js"></script>
-    <script type="text/javascript" src="../../static/geonetwork-client-mini-nomap.js"></script>
-    <script type="text/javascript" src="../../static/geonetwork-client-mini.js"></script>
-    <script type="text/javascript" src="../../static/geonetwork-client-sextant-app.js"></script>
-    <script type="text/javascript" src="js/bootstrap.js"></script>
 
     <script type="text/javascript">
-        GeoNetwork.Settings.bootsrap = {
-            layername: '',
-            wmsurl: '',
-            layergroup: '',
-            wmsversion: '',
-            getrecordbyidurl: '',
-            configmaxextent: '',
-            configwhat: '',
-            configwho: '',
-            configmdviewerurl: 'configmdviewerurl',
-            configgeoviewerurl: 'configgeoviewerurl',
-            configpanierurl: 'configpanierurl',
-            configtypesearch: 'simple,advanced'
-        }
+      GeoNetwork.Settings.bootstrap = {
+        layername: '',
+        wmsurl: '',
+        layergroup: '',
+        wmsversion: '',
+        getrecordbyidurl: '',
+        configmaxextent: '',
+        configwhat: '',
+        configwho: '',
+        configmdviewerurl: 'configmdviewerurl',
+        configgeoviewerurl: 'configgeoviewerurl',
+        configpanierurl: 'configpanierurl',
+        configtypesearch: 'simple,advanced'
+      }
     </script>
   </body>
 </html>
