@@ -69,7 +69,13 @@
 
             <output sheet="shared-user/user-xml.xsl" contentType="text/xml; charset=UTF-8" />
         </service>
-        
+
+        <service name="plain.xml.user.get">
+            <class name=".services.user.Get">
+                <param name="xml" />
+            </class>
+        </service>
+
         <service name="validated.shared.user.admin">
             <class name=".services.user.List" >
                 <param name="type" value="VALIDATED_SHARED"/>

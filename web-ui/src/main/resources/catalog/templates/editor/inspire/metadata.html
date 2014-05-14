@@ -12,13 +12,31 @@
                     <h4 class="modal-title" >{{contactUnderEdit.title | translate}}</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="col-xs-12 form-horizontal" role="form" >
-
-                    </form>
+                    <div class="well">
+                        <input class="form-control" autofocus="" type="search" placeholder="{{'search' | translate}}" ng-model="userSearch.search"/>
+                    </div>
+                    <div class="list-group">
+                        <a class="list-group-item"
+                           data-ng-class="selectedSharedUser === user ? 'active' : ''"
+                           data-ng-click="setSharedUser(user)"
+                           data-ng-repeat="user in sharedUsers.validated | filter:userSearch:strict">
+                            <i class="fa fa-check-circle-o" style="color: green"></i>
+                            {{user.desc}}
+                        </a>
+                        <a class="list-group-item"
+                           data-ng-class="selectedSharedUser === user ? 'active' : ''"
+                           data-ng-click="setSharedUser(user)"
+                           data-ng-repeat="user in sharedUsers.nonValidated | filter:userSearch:strict">
+                            <i class="fa fa-circle-o" style="color: red"></i>
+                            {{user.desc}}
+                        </a>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-ng-translate="" data-ng-click="updateContact()">new</button>
-                    <button type="button" class="btn btn-primary" data-ng-translate="" data-ng-click="">update</button>
+                    <button type="button" class="btn btn-default" data-ng-translate="" data-ng-click="updateContact()">create</button>
+                    <button type="button" class="btn btn-primary" data-ng-translate=""
+                            data-ng-disabled="!selectedSharedUser.id"
+                            data-ng-click="linkToOtherContact()">xlink</button>
                 </div>
             </div>
         </div>
@@ -59,26 +77,28 @@
                     </select>
                 </div>
             </div>
-            <div data-ng-contact data-contact="data.contact" data-title="contact"
-                 data-role-options="data.roleOptions" data-edit-contact="editContact('contact', data.contact)"></div>
+            <div data-inspire-contact data-contact="data.contact" data-title="contact"
+                 data-role-options="data.roleOptions" data-edit-contact="editContact('contact', data.contact)"
+                 data-main-lang="data.language" data-languages="data.otherLanguages"></div>
         </fieldset>
 
         <fieldset id="identification">
             <legend data-translate="">identificationInfo</legend>
-            <div data-multilingual-text
+            <div data-inspire-multilingual-text
                  data-title="title"
                  data-rows="1"
                  data-main-lang="data.language"
                  data-languages="data.otherLanguages"
                  data-field="data.identification.title"/>
-            <div data-multilingual-text
+            <div data-inspire-multilingual-text
                  data-title="abstract"
-                 data-rows="3"
+                 data-rows="5"
                  data-main-lang="data.language"
                  data-languages="data.otherLanguages"
                  data-field="data.identification.abstract"/>
-            <div data-ng-contact data-contact="data.identification.pointOfContact" data-title="pointOfContact"
-                 data-role-options="data.roleOptions" data-edit-contact="editContact('pointOfContact', data.identification.pointOfContact)"></div>
+            <div data-inspire-contact data-contact="data.identification.pointOfContact" data-title="pointOfContact"
+                 data-role-options="data.roleOptions" data-edit-contact="editContact('pointOfContact', data.identification.pointOfContact)"
+                 data-main-lang="data.language" data-languages="data.otherLanguages"></div>
         </fieldset>
     </form>
 </div>

@@ -131,6 +131,7 @@
 
 			    <sec:intercept-url pattern="/srv/.*/json.format.get!?.*" access="permitAll" />
 			    <sec:intercept-url pattern="/srv/.*/json.keyword.get!?.*" access="permitAll" />
+			    <sec:intercept-url pattern="/srv/.*/plain.xml.user.get!?.*" access="permitAll" />
 
                 <sec:intercept-url pattern="/srv/.*/header-template.xml!?.*" access="permitAll"/>
                 <sec:intercept-url pattern="/srv/.*/reusable.list.js!?.*" access="hasRole('Administrator')"/>

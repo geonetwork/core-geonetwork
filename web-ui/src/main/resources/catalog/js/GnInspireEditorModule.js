@@ -2,8 +2,15 @@
   goog.provide('gn_inspire_editor');
 
   goog.require('gn');
+  goog.require('inspire_contact_directive');
+  goog.require('inspire_multilingual_text_directive');
+  goog.require('inspire_get_shared_users_factory');
 
-  var module = angular.module('gn_inspire_editor', ['gn']);
+  goog.require('inspire_mock_full_metadata_factory');
+
+  var module = angular.module('gn_inspire_editor',
+    ['gn', 'inspire_contact_directive', 'inspire_multilingual_text_directive', 'inspire_metadata_factory',
+      'inspire_get_shared_users_factory']);
 
   // Define the translation files to load
   module.constant('$LOCALES', ['core', 'editor', 'inspire']);
@@ -22,56 +29,30 @@
     }]);
 
   module.controller('GnInspireController', [
-    '$scope', '$http', '$q', '$rootScope', '$translate',
-    function($scope, $http, $q, $rootScope, $translate) {
+    '$scope', 'inspireMetadataLoader', 'inspireGetSharedUsersFactory', '$translate',
+    function($scope, inspireMetadataLoader, inspireGetSharedUsersFactory, $translate) {
       $scope.languages = ['ger', 'fre', 'ita', 'eng'];
-      $scope.data = {
-        roleOptions: ['pointOfContact', 'owner', 'custodian'],
-        language: "eng",
-        characterSet: "UTF8",
-        hierarchyLevel: "Dataset",
-        hierarchyLevelOptions: [
-          'Attribute',
-          'AttributeType',
-          'Dataset'
-        ],
-        contact: {
-          id: '2',
-          name: 'Jesse',
-          surname: 'Eichar',
-          email: 'jesse.eichar@camptocamp.com',
-          organization: "camptocamp SA",
-          role: 'pointOfContact',
-          validated: true
-        },
-        otherLanguages: ['eng', 'ger'],
-        identification: {
-          type: 'data',
-          title: {eng: 'Title',fre: 'Titre'},
-          date: '12-12-2008',
-          dateType: 'creation',
-          dateTypeOptions: ['creation', 'publication', 'revision'],
-          citationIdentifier: 'identifier',
-          abstract: {fre: 'Abstract'},
-          pointOfContact:  {
-            id: '1',
-            name: 'Florent',
-            surname: 'Gravin',
-            email: 'florent.gravin@camptocamp.com',
-            organization: "camptocamp SA",
-            role: 'owner',
-            validated: false
-          },
-          keyword: 'building'
-        }
-      };
+
+      var params = window.location.search;
+      var mdId = params.substring(params.indexOf("id=") + 3);
+      var indexOfAmp = mdId.indexOf('&');
+      if (indexOfAmp > -1) {
+        mdId = mdId.substring(0, indexOfAmp);
+      }
+
+      inspireMetadataLoader($scope.url, mdId).then(function (data) {
+        $scope.data = data;
+      });
+
       $scope.$watch("data.language", function (newVal, oldVal) {
         var langs =  $scope.data.otherLanguages;
         var i = langs.indexOf(oldVal);
         if (i > -1) {
           langs.splice(i, 1);
         }
-        langs.push(newVal);
+        if (langs.indexOf(newVal) < 0) {
+          langs.push(newVal);
+        }
       });
       $scope.$watchCollection("data.otherLanguages", function() {
         var langs =  $scope.data.otherLanguages;
@@ -109,95 +90,34 @@
       $scope.editContact = function(title, contact) {
         $scope.contactUnderEdit = contact;
         $scope.contactUnderEdit.title = title;
+        $scope.selectedSharedUser = {}
         var modal = $('#editContactModal');
         modal.modal('show');
       };
+      $scope.linkToOtherContact = function() {
+        var userId = $scope.selectedSharedUser.id;
+        inspireGetSharedUsersFactory.loadDetails($scope.url, userId).then($scope.updateContact);
+      };
+
       $scope.updateContact = function(newContact) {
         $scope.contactUnderEdit.id = newContact ? newContact.id : '';
         $scope.contactUnderEdit.name = newContact ? newContact.name : '';
         $scope.contactUnderEdit.surname = newContact ? newContact.surname : '';
         $scope.contactUnderEdit.email = newContact ? newContact.email : '';
-        $scope.contactUnderEdit.role = newContact ? newContact.role : $scope.data.roleOptions[0];
+
+        var role = newContact ? newContact.role : $scope.contactUnderEdit.role;
+        $scope.contactUnderEdit.role = role ? role : $scope.data.roleOptions[0];
         $scope.contactUnderEdit.organization = newContact ? newContact.organization : '';
         $scope.contactUnderEdit.validated = newContact ? newContact.validated : false;
         var modal = $('#editContactModal');
         modal.modal('hide');
+      };
+      inspireGetSharedUsersFactory.loadAll($scope.url).then(function(sharedUsers) {
+        $scope.sharedUsers = sharedUsers;
+        $scope.selectedSharedUser = {};
+      })
+      $scope.setSharedUser = function(user) {
+        $scope.selectedSharedUser = user;
       }
   }]);
-
-  module.directive('contact', function() {
-    return {
-      scope: {
-        title: '@',
-        contact: '=',
-        roleOptions: '=',
-        editContact: '&'
-      },
-      restrict: 'A',
-      replace: 'true',
-      template: '<div class="form-group">' +
-        '<label class="col-xs-3 control-label"><span data-translate="">{{title}}</span>: </label>' +
-        '<div class="col-xs-8">' +
-        '<div class="form-group">' +
-        '<div class="col-xs-6">' +
-        '<input ng-disabled="contact.validated" id="contactName" class="form-control" ng-model="contact.name" placeholder="{{\'name\' | translate}}"></select>' +
-        '</div>' +
-        '<div class="col-xs-6">' +
-        '<input ng-disabled="contact.validated" id="contactSurname" class="form-control" ng-model="contact.surname" placeholder="{{\'surname\' | translate}}"></select>' +
-        '</div>' +
-        '</div>' +
-        '<div class="form-group">' +
-        '<div class="col-xs-12">' +
-        '<input ng-disabled="contact.validated" id="contactEmail" class="form-control" ng-model="contact.email" placeholder="{{\'email\' | translate}}"></select>' +
-        '</div>' +
-        '</div>' +
-        '<div class="form-group">' +
-        '<div class="col-xs-12">' +
-        '<select ng-disabled="contact.validated" id="contactRole" class="form-control" ng-model="contact.role"' +
-        'data-ng-options="role for role in roleOptions"></select>' +
-        '</div>' +
-        '</div>' +
-        '<div class="form-group">' +
-        '<div class="col-xs-12">' +
-        '<input ng-disabled="contact.validated" id="contactOrganization" class="form-control" ng-model="contact.organization" placeholder="{{\'organization\' | translate}}">' +
-        '</div>' +
-        '</div>' +
-        '<button type="button" class="btn btn-default" data-ng-click="editContact()" data-translate="">modify</button>' +
-        '</div></div>'
-    };
-  });
-  module.directive('multilingualText', function() {
-    return {
-      scope: {
-        title: '@',
-        rows: '@',
-        languages: '=',
-        mainLang: '=',
-        field: '='
-      },
-      restrict: 'A',
-      replace: 'true',
-      link: function($scope) {
-        $scope.editLang = $scope.mainLang;
-        $scope.setEditLang = function(lang) {
-          $scope.editLang = lang;
-        }
-      },
-      template: '<div class="form-group">' +
-        '<label for="title" class="col-xs-3 control-label" ><span data-translate="">{{title}}</span>: </label>' +
-        '<div class="col-xs-9">' +
-        '<textarea rows="{{rows}}" id="title" class="form-control col-xs-12" data-ng-repeat="lang in languages" data-ng-model="field[lang]" data-ng-show="editLang === lang || editLang === \'all\'" placeholder="{{lang | translate}}" />' +
-        '<ul class="nav nav-pills">' +
-        '<li data-ng-class="lang === editLang ? \'active\' : \'\'" data-ng-repeat="lang in languages" data-ng-hide="editLang === \'all\'"> ' +
-        '<a data-ng-click="setEditLang(lang)">{{lang | translate}}</a>' +
-        '</li>' +
-        '<li>' +
-        '<a data-ng-click="editLang === \'all\' ? setEditLang(mainLang) : setEditLang(\'all\')">' +
-        '{{editLang === \'all\' ? \'collapse\' : \'all\' | translate}}</a>' +
-        '</li>' +
-        '</ul>' +
-        '</div></div>'
-    };
-  });
-
 })();
