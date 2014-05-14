@@ -1350,6 +1350,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             casLoginFrame.id = 'casLoginFrame';
             casLoginFrame.onload = onCasCheck;
             casLoginFrame.setAttribute('src',this.URL+'/srv/'+this.LANG+'/login.form?casLogin');
+            casLoginFrame.setAttribute('style','display:none');
             document.body.appendChild(casLoginFrame);
             
         } else {
