@@ -34,7 +34,8 @@
         identification: {
           type: 'data',
           title: {eng: 'Title',fre: 'Titre'},
-          date: '12-12-2008',
+          date: '2008-06-23',
+          dateTagName: 'gco:Date',
           dateType: 'creation',
           citationIdentifier: 'identifier',
           abstract: {fre: 'Abstract'},

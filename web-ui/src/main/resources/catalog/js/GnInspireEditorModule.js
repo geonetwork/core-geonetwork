@@ -5,12 +5,13 @@
   goog.require('inspire_contact_directive');
   goog.require('inspire_multilingual_text_directive');
   goog.require('inspire_get_shared_users_factory');
+  goog.require('inspire_date_picker_directive');
 
   goog.require('inspire_mock_full_metadata_factory');
 
   var module = angular.module('gn_inspire_editor',
     ['gn', 'inspire_contact_directive', 'inspire_multilingual_text_directive', 'inspire_metadata_factory',
-      'inspire_get_shared_users_factory']);
+      'inspire_get_shared_users_factory', 'inspire_date_picker_directive']);
 
   // Define the translation files to load
   module.constant('$LOCALES', ['core', 'editor', 'inspire']);
@@ -109,6 +110,7 @@
         $scope.contactUnderEdit.role = role ? role : $scope.data.roleOptions[0];
         $scope.contactUnderEdit.organization = newContact ? newContact.organization : '';
         $scope.contactUnderEdit.validated = newContact ? newContact.validated : false;
+
         var modal = $('#editContactModal');
         modal.modal('hide');
       };

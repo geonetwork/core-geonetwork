@@ -90,12 +90,31 @@
                  data-main-lang="data.language"
                  data-languages="data.otherLanguages"
                  data-field="data.identification.title"/>
+            <div class="form-group">
+                <label for="citationIdentifier" class="col-xs-3 control-label"><span data-translate="">citationIdentifier</span>: </label>
+                <div class="col-xs-8">
+                    <input id="citationIdentifier" class="form-control" data-ng-model="data.identification.citationIdentifier" />
+                </div>
+            </div>
             <div data-inspire-multilingual-text
                  data-title="abstract"
                  data-rows="5"
                  data-main-lang="data.language"
                  data-languages="data.otherLanguages"
                  data-field="data.identification.abstract"/>
+
+            <div class="form-group">
+                <label class="col-xs-3 control-label"><span data-translate="">date</span>: </label>
+                <div class="col-xs-8">
+                    <div data-inspire-date-picker="data.identification.date"
+                         data-tag-name="{{data.identification.dateTagName}}"></div>
+                </div>
+                <div class="col-xs-offset-3 col-xs-8">
+                    <select id="dateType" class="form-control" data-ng-model="data.identification.dateType" data-ng-options="opt for opt in data.dateTypeOptions">
+                    </select>
+                </div>
+            </div>
+
             <div data-inspire-contact data-contact="data.identification.pointOfContact" data-title="pointOfContact"
                  data-role-options="data.roleOptions" data-edit-contact="editContact('pointOfContact', data.identification.pointOfContact)"
                  data-main-lang="data.language" data-languages="data.otherLanguages"></div>
