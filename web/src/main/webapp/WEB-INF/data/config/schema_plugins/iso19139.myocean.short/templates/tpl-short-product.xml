@@ -25,7 +25,7 @@
                     <gmd:address>
                         <gmd:CI_Address>
                             <gmd:electronicMailAddress>
-                                <gco:CharacterString>servicedesk@myocean.eu.org</gco:CharacterString>
+                                <gco:CharacterString>servicedesk@myocean.eu</gco:CharacterString>
                             </gmd:electronicMailAddress>
                         </gmd:CI_Address>
                     </gmd:address>
@@ -85,7 +85,7 @@
                             <gmd:address>
                                 <gmd:CI_Address>
                                     <gmd:electronicMailAddress>
-                                        <gco:CharacterString>servicedesk@myocean.eu.org</gco:CharacterString>
+                                        <gco:CharacterString>service.desk@myocean.eu</gco:CharacterString>
                                     </gmd:electronicMailAddress>
                                 </gmd:CI_Address>
                             </gmd:address>

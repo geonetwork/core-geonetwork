@@ -565,7 +565,13 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 url: this.services.getSiteInfo,
                 async: false
             });
-            
+
+            //IE10 issue
+            if(!request.responseXML) {
+              var parser = new DOMParser();
+              request.responseXML = parser.parseFromString(request.responseText, "application/xml");
+            }
+
             if (request.responseXML) {
                 var xml = request.responseXML.documentElement;
                 Ext.each(properties, function(item, idx){
@@ -590,6 +596,12 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             url: this.services.getInspireInfo,
             async: false
         });
+
+        //IE10 issue
+        if(!request.responseXML) {
+          var parser = new DOMParser();
+          request.responseXML = parser.parseFromString(request.responseText, "application/xml");
+        }
 
         if (request.responseXML) {
             var xml = request.responseXML.documentElement;

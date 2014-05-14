@@ -79,9 +79,9 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
     
     <!-- Get all user information from the LDAP user's attributes (including profile and groups) 
     where profile and groups are stored in one attribute. A custom pattern is defined to extract 
-    those information.
+    those information. -->
 
-    <bean id="ldapUserContextMapper" class="org.fao.geonet.kernel.security.ldap.LDAPUserDetailsContextMapperWithPattern">
+    <bean id="ldapUserContextMapper" class="org.fao.geonet.kernel.security.ldap.SextantLDAPUserDetailsContextMapper">
         <property name="mapping">
             <map/>
         </property>
@@ -96,28 +96,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
         <property name="profilIndexInPattern" value="${ldap.privilege.pattern.idx.profil}"/>
         
         <property name="contextSource" ref="contextSource" />
-    </bean>
-    -->
-
-    <bean id="ldapUserContextMapper"
-          class="org.fao.geonet.kernel.security.ldap.LDAPUserDetailsContextMapperWithPattern">
-        <property name="mapping">
-            <map/>
-         </property>
-        <property name="profileMapping">
-            <map/>
-        </property>
-        <!-- Privileges extraction
-         * current trunk only support one group.
-         * here we support more than one group
-         * and we may support profile/group setup with this proposal http://trac.osgeo.org/geonetwork/wiki/proposals/UserProfileByGroup
-        -->
-        <property name="importPrivilegesFromLdap" value="${ldap.privilege.import}"/>
-        <property name="privilegePattern" value="${ldap.privilege.pattern}" />
-        <property name="groupIndexInPattern" value="${ldap.privilege.pattern.idx.group}"/>
-        <property name="profilIndexInPattern" value="${ldap.privilege.pattern.idx.profil}"/>
-
-        <property name="createNonExistingLdapGroup" value="${ldap.privilege.create.nonexisting.groups}" />
     </bean>
 
     <!-- Get all user information from the LDAP user's attributes excluding profiles and groups

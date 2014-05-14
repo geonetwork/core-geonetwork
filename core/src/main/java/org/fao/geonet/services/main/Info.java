@@ -23,13 +23,10 @@
 
 package org.fao.geonet.services.main;
 
-import static org.springframework.data.jpa.domain.Specifications.where;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import jeeves.component.ProfileManager;
@@ -42,7 +39,6 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.Group_;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
@@ -62,11 +58,8 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.IsoLanguageRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.MetadataRatingByIpRepository;
 import org.fao.geonet.repository.OperationRepository;
 import org.fao.geonet.repository.SettingRepository;
-import org.fao.geonet.repository.SettingRepositoryCustom;
-import org.fao.geonet.repository.SettingRepositoryImpl;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.StatusValueRepository;
@@ -77,8 +70,6 @@ import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.services.util.z3950.RepositoryInfo;
 import org.fao.geonet.utils.Xml;
-import org.hibernate.cfg.SettingsFactory;
-import org.hsqldb.lib.HashMap;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specifications;
@@ -369,7 +360,7 @@ public class Info implements Service {
             result = groupRepository.findAllAsXml(null, sort);
         } else {
             Specifications<UserGroup> spec = Specifications.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt()));
-            // you're no Administrator
+            // you're not Administrator
             // retrieve your groups
 			if (profile != null) {
                 spec = spec.and(UserGroupSpecs.hasProfile(profile));
