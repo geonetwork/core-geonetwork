@@ -84,22 +84,40 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
 	    	
 	    	Ext.get(Ext.query('input[id*=layername]')[0]).dom.value = c[0];
 	    	Ext.get(Ext.query('input[id*=wmsurl]')[0]).dom.value = c[2];
-	        
-	    	var p='';
-	    	switch (c[3]) {
-	        case "OGC:WMS-1.0.0-http-get-map":
-	            p = "WMS_1.0.0";
-	            break;
-	        case "OGC:WMS-1.1.1-http-get-map":
-	            p = "WMS_1.1.1";
-	            break;
-	        case "OGC:WMS-1.3.0-http-get-map":
-	            p = "WMS_1.3.0";
-	            break;
-	        }
-	    	
+
+        var p='';
+        switch (c[3]) {
+          case "OGC:WMS-1.0.0-http-get-map":
+            p = "WMS_1.0.0";
+            break;
+          case "OGC:WMS-1.1.1-http-get-map":
+            p = "WMS_1.1.1";
+            break;
+          case "OGC:WMS-1.3.0-http-get-map":
+            p = "WMS_1.3.0";
+            break;
+        }
+
+        Ext.Ajax.request({
+          url: catalogue.services.mdLayerSelect,
+          params: {
+            name: c[0],
+            description: c[1],
+            url: c[2],
+            version:p,
+            selected: 'add',
+            type: 'wms'
+          },
+          success: function(res) {
+            if(!res.responseXML) {
+              var parser = new DOMParser();
+              res.responseXML = parser.parseFromString(res.responseText, "application/xml");
+            }
+          }
+        });
+
 	    	Ext.get(Ext.query('input[id*=wmsversion]')[0]).set({value:p});
-	    	url=Ext.get(Ext.query('input[id*=configgeoviewerurl]')[0]).getValue();
+	    	url='http://localhost:8080/geonetwork/srv/eng/md.layer.select?action=get' ///Ext.get(Ext.query('input[id*=configgeoviewerurl]')[0]).getValue();
 	    	
 	    	//check if configgeoviewerurl is on the same host
 	    	var aElt = document.createElement('a');
@@ -110,7 +128,8 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
 	    	    window.open(url,'_blank');
 	    	}
 	    	else {
-	    	    Ext.query('a[id*=viewerButton]')[0].onclick();
+	    	    //Ext.query('a[id*=viewerButton]')[0].onclick();
+          console.log('same host');
 	    	}
     	}
     	else if(type=='ows') {

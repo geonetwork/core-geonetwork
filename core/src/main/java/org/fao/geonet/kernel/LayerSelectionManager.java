@@ -1,19 +1,9 @@
 package org.fao.geonet.kernel;
 
-import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.kernel.search.MetadataRecordSelector;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.setting.SettingInfo;
-import org.fao.geonet.util.MarkupParserCache;
-import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
 
 import javax.annotation.Nonnull;
@@ -46,7 +36,6 @@ public class LayerSelectionManager {
 	 * <ul>
 	 * <li>[selected=add] : add selected element</li>
 	 * <li>[selected=remove] : remove non selected element</li>
-	 * <li>[selected=add-all] : select all elements</li>
 	 * <li>[selected=remove-all] : clear the selection</li>
 	 * <li>[selected=clear-add] : clear the selection and add selected element</li>
 	 * <li>[selected=status] : number of selected elements</li>
@@ -65,15 +54,16 @@ public class LayerSelectionManager {
 	 */
 	public static int updateSelection(String type, UserSession session, Element params, ServiceContext context) {
 
-		// Get ID of the selected/deselected metadata
-		String paramid = params.getChildText(Params.ID);
 		String selected = params.getChildText(Params.SELECTED);
-        String layerName = params.getChildText(Params.LAYER_NAME);
+        String layerName = params.getChildText(Params.NAME);
+        String descr = params.getChildText(Params.DESCRIPTION);
+        String version = params.getChildText(Params.VERSION);
+        String serviceUrl = params.getChildText(Params.URL);
 
-		// Get the selection manager or create it
+		// Get the layer selection manager or create it
 		LayerSelectionManager manager = getManager(session);
 
-		return manager.updateSelection(type, context, selected, paramid, layerName);
+		return manager.updateSelection(type, context, selected, layerName, serviceUrl, descr, version);
 	}
 
 	/**
@@ -84,15 +74,15 @@ public class LayerSelectionManager {
 	 * @param type
 	 *            The type of selected element handled in session
 	 * @param context
-     * @param selected
-	 *            true, false, single, all, none
-	 * @param paramid
-	 *            id of the selected element
-	 * 
-	 * @return number of selected element
+     * @param selected true, false, single, all, none
+	 * @param serviceUrl url of the OWS service
+     * @param layerDescr description of the layer
+     * @param serviceVersion versice of the service (WMS_1.3.0)
+     *
+     * @return number of selected element
 	 */
 	public int updateSelection(String type, ServiceContext context, String selected,
-                String paramid, String layerName) {
+                               String layerName, String serviceUrl, String layerDescr, String serviceVersion) {
 
 		// Get the selection manager or create it
 		Set<Hashtable<String, String>> selection = this.getSelection(type);
@@ -105,23 +95,27 @@ public class LayerSelectionManager {
         if (selected != null) {
             if (selected.equals(REMOVE_ALL_SELECTED))
                 this.close(type);
-            else if (selected.equals(ADD_SELECTED) && (paramid != null))
-                selection.add(createLayerElement(layerName,paramid));
-            else if (selected.equals(REMOVE_SELECTED) && (paramid != null))
-                selection.remove(createLayerElement(layerName,paramid));
-            else if (selected.equals(CLEAR_ADD_SELECTED) && (paramid != null)) {
+            else if (selected.equals(ADD_SELECTED) && (layerName != null))
+                selection.add(createLayerElement(layerName, serviceUrl, layerDescr, serviceVersion));
+            else if (selected.equals(REMOVE_SELECTED) && (layerName != null))
+                selection.remove(createLayerElement(layerName, serviceUrl, layerDescr, serviceVersion));
+            else if (selected.equals(CLEAR_ADD_SELECTED) && (layerName != null)) {
                 this.close(type);
-                selection.add(createLayerElement(layerName,paramid));
+                selection.add(createLayerElement(layerName, serviceUrl, layerDescr, serviceVersion));
             }
         }
 
         return selection.size();
     }
 
-    private Hashtable<String, String> createLayerElement(String layerName, String paramid) {
+    private Hashtable<String, String> createLayerElement(String layerName,
+                    String serviceUrl, String layerDescr, String serviceVersion) {
+
         Hashtable<String, String> layer = new Hashtable<String, String>(0);
-        layer.put(Params.LAYER_NAME, layerName);
-        layer.put(Params.UUID, paramid);
+        layer.put(Params.NAME, layerName);
+        layer.put(Params.URL, serviceUrl);
+        layer.put(Params.DESCRIPTION, layerDescr);
+        layer.put(Params.VERSION, serviceVersion);
 
         return layer;
     }
