@@ -844,12 +844,13 @@ nav {
 }
 
 li.services {
-  background-image: url(../../smart/img/icon_service.png);
+  background-image: url(../../html5ui/img/icon_service.png);
   background-repeat: no-repeat;
+	text-indent: 20;
 }
 
 li.children,li.related,li.parent,li.datasets {
-  background-image: url(../../smart/img/icon_dataset.png);
+  background-image: url(../../html5ui/img/icon_dataset.png);
   background-repeat: no-repeat;
 	text-indent: 20;
 }
@@ -938,13 +939,13 @@ li.children,li.related,li.parent,li.datasets {
 }
 
 .addLayerIcon,.addLayer {
-	background-image: url(../../smart/img/icon_show_map.png) !important;
+	background-image: url(../../html5ui/img/icon_show_map.png) !important;
   width: 24px !important;
   height: 24px !important;
 }
 
 button.addLayerButton {
-  background-image:url(../../smart/images/default/picture_add.png);
+  background-image:url(../../html5ui/images/default/picture_add.png);
   background-position:0 center;
 }
 
@@ -1206,7 +1207,7 @@ li.x-menu-list-item img.md-mn-pdf {
 }
 
 .md-mn-service {
-  background-image: url(../../smart/img/icon_service.png) !important;
+  background-image: url(../../html5ui/img/icon_service.png) !important;
   width: 24px !important;
   height: 24px !important;
 }
@@ -1457,7 +1458,7 @@ Share social
 
 a#custom-tweet-button {
 	padding: 2px 5px 2px 20px;
-	background: url('../../smart/images/default/bird_blue_16.png') 1px center
+	background: url('../../html5ui/images/default/bird_blue_16.png') 1px center
 		no-repeat;
 	border: 1px solid #ccc;
 	text-decoration: none;
