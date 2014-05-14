@@ -1346,7 +1346,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 }, 200);
             };
             
-            var casLoginFrame = document.createElement('frame');
+            var casLoginFrame = document.createElement('iframe');
             casLoginFrame.id = 'casLoginFrame';
             casLoginFrame.onload = onCasCheck;
             casLoginFrame.setAttribute('src',this.URL+'/srv/'+this.LANG+'/login.form?casLogin');
