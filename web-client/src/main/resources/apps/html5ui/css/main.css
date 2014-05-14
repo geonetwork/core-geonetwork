@@ -851,6 +851,7 @@ li.services {
 li.children,li.related,li.parent,li.datasets {
   background-image: url(../../smart/img/icon_dataset.png);
   background-repeat: no-repeat;
+	text-indent: 20;
 }
 
 #metadata-info .related .relatedResource span.desc {
