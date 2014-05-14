@@ -114,6 +114,9 @@ cat.app = function() {
     
     function createLoginForm() {
 
+      if(!Ext.get('login-form')){
+        return;
+      }
         // Refresh login form if needed
         var user = cookie.get('user');
         if (user) {
