@@ -33,6 +33,9 @@
   module.controller('GnInspireController', [
     '$scope', 'inspireMetadataLoader', 'inspireGetSharedUsersFactory', '$translate',
     function($scope, inspireMetadataLoader, inspireGetSharedUsersFactory, $translate) {
+      window.onbeforeunload = function() {
+        return $translate('beforeUnloadEditor');
+      };
       $scope.languages = ['ger', 'fre', 'ita', 'eng'];
 
       var params = window.location.search;

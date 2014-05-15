@@ -6,5 +6,6 @@
   "modify": "Modify",
   "identificationInfo": "Identification Info",
   "metadata": "Metadata",
-  "date": "Date"
+  "date": "Date",
+  "overwriteContactConfirmation": "The contact information will be overwritten. Are you sure you want to update the contact?"
 }

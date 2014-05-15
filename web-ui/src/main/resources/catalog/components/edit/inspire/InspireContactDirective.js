@@ -6,26 +6,28 @@
   var module = angular.module('inspire_contact_directive', ['inspire_multilingual_text_directive', 'inspire_get_shared_users_factory']);
 
   module.controller('InspireContactController', [
-    '$scope', 'inspireGetSharedUsersFactory',
-    function($scope, inspireGetSharedUsersFactory) {
+    '$scope', 'inspireGetSharedUsersFactory', '$translate',
+    function($scope, inspireGetSharedUsersFactory, $translate) {
       $scope.linkToOtherContact = function() {
         var userId = $scope.selectedSharedUser.id;
         inspireGetSharedUsersFactory.loadDetails($scope.url, userId).then($scope.updateContact);
       };
 
       $scope.updateContact = function(newContact) {
-        $scope.$parent.contactUnderEdit.id = newContact ? newContact.id : '';
-        $scope.$parent.contactUnderEdit.name = newContact ? newContact.name : '';
-        $scope.$parent.contactUnderEdit.surname = newContact ? newContact.surname : '';
-        $scope.$parent.contactUnderEdit.email = newContact ? newContact.email : '';
+        if (confirm($translate('overwriteContactConfirmation'))) {
+          $scope.$parent.contactUnderEdit.id = newContact ? newContact.id : '';
+          $scope.$parent.contactUnderEdit.name = newContact ? newContact.name : '';
+          $scope.$parent.contactUnderEdit.surname = newContact ? newContact.surname : '';
+          $scope.$parent.contactUnderEdit.email = newContact ? newContact.email : '';
 
-        var role = newContact ? newContact.role : $scope.$parent.contactUnderEdit.role;
-        $scope.$parent.contactUnderEdit.role = role ? role : $scope.data.roleOptions[0];
-        $scope.$parent.contactUnderEdit.organization = newContact ? newContact.organization : '';
-        $scope.$parent.contactUnderEdit.validated = newContact ? newContact.validated : false;
+          var role = newContact ? newContact.role : $scope.$parent.contactUnderEdit.role;
+          $scope.$parent.contactUnderEdit.role = role ? role : $scope.data.roleOptions[0];
+          $scope.$parent.contactUnderEdit.organization = newContact ? newContact.organization : '';
+          $scope.$parent.contactUnderEdit.validated = newContact ? newContact.validated : false;
 
-        var modal = $('#editContactModal');
-        modal.modal('hide');
+          var modal = $('#editContactModal');
+          modal.modal('hide');
+        }
       };
       inspireGetSharedUsersFactory.loadAll($scope.url).then(function(sharedUsers) {
         $scope.sharedUsers = sharedUsers;
