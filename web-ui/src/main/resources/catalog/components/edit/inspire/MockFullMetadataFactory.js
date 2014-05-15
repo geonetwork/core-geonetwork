@@ -50,8 +50,24 @@
             role: 'owner',
             validated: false
           },
-          descriptiveKeyword: [
-            {words: {eng: 'building'}}, {words: {eng: 'farm', ger: 'Bauernhof'}}]
+          descriptiveKeywords: [
+            {words: {eng: 'building'}}, {words: {eng: 'farm', ger: 'Bauernhof'}}],
+          extents: [
+            {
+              description: {
+                eng: 'Bern',
+                ger: 'Bern'
+              },
+              geom: "kantone:2"
+            },
+            {
+              description: {
+                eng: 'Fribourg',
+                ger: 'Fribourg'
+              },
+              geom: "gemeinden:2196"
+            }
+          ]
         }
       });
 

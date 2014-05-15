@@ -1,7 +1,7 @@
 <div class="row" data-ng-controller="GnInspireController">
 
 
-    <!-- Modal dialogs -->
+    <!-- Contact Modal dialog -->
     <div id="editContactModal" tabindex="-1" class="modal fade" data-ng-controller="InspireContactController">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -10,10 +10,8 @@
                     <h4 class="modal-title" >{{contactUnderEdit.title | translate}}</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="well">
-                        <input class="form-control" type="search" placeholder="{{'search' | translate}}" ng-model="userSearch.search"/>
-                    </div>
-                    <div class="list-group">
+                    <input class="form-control" type="search" placeholder="{{'search' | translate}}" ng-model="userSearch.search"/>
+                    <div class="list-group well">
                         <a class="list-group-item"
                            data-ng-class="selectedSharedUser === user ? 'active' : ''"
                            data-ng-click="setSharedUser(user)"
@@ -41,40 +39,7 @@
         </div>
     </div>
 
-    <div id="editKeywordModal" tabindex="-1" class="modal fade" data-ng-controller="InspireKeywordController">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" data-ng-translate="">descriptiveKeyword</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="well">
-                        <input class="form-control" type="search"
-                               placeholder="{{'search' | translate}}" ng-model="keywordSearch.$"/>
-                    </div>
-                    <div class="list-group">
-                        <a class="list-group-item"
-                           data-ng-repeat="keyword in keywords[data.identification.type] | filter:keywordSearch:strict"
-                           data-ng-class="selectedKeyword === keyword ? 'active' : ''"
-                           data-ng-click="selectKeyword(keyword)">
-                            {{keyword.words[lang]}}
-                        </a>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" data-ng-translate="">cancel</button>
-                    <button type="button" class="btn btn-primary" data-ng-translate=""
-                            data-ng-disabled="!selectedKeyword.uri"
-                            data-ng-click="linkToOtherKeyword()">update</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-     <!-- End dialogs -->
+     <!-- End Contact dialogs -->
 
     <!-- Main Form -->
 
@@ -111,6 +76,8 @@
                  data-role-options="data.roleOptions" data-edit-contact="editContact('contact', data.contact)"
                  data-main-lang="data.language" data-languages="data.otherLanguages"></div>
         </fieldset>
+
+        <!-- ------------------------------  Identification Section   ---------------------------------- -->
 
         <fieldset id="identification">
             <legend data-translate="">identificationInfo</legend>
@@ -149,25 +116,134 @@
                  data-role-options="data.roleOptions" data-edit-contact="editContact('pointOfContact', data.identification.pointOfContact)"
                  data-main-lang="data.language" data-languages="data.otherLanguages"></div>
 
-            <div class="form-group">
-                <label class="col-xs-3 control-label"><span data-translate="">descriptiveKeyword</span>: </label>
-                <div class="col-xs-9 input-group"
-                     data-ng-class="$first ? '' : 'col-xs-offset-3'"
-                     data-ng-repeat="keyword in data.identification.descriptiveKeyword">
-                    <div data-inspire-multilingual-text
-                         data-rows="1"
-                         data-main-lang="data.language"
-                         data-languages="data.otherLanguages"
-                         data-field="keyword.words"/>
-                    <a class="input-group-addon inspire-input-group" data-ng-click="editKeyword(keyword)">
-                        <i class="fa fa-edit fa-fw"></i>
-                    </a>
-                    <a data-ng-hide="$first" class="input-group-addon inspire-input-group" style="color: red" data-ng-click="deleteKeyword(keyword)">
-                        <i class="fa fa-times fa-fw"></i>
-                    </a>
 
+            <!---------------------------   Keywords Section  ----------------------------------------------------------->
+            <div data-ng-controller="InspireKeywordController">
+                <div id="editKeywordModal" tabindex="-1" class="modal fade" >
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title" data-ng-translate="">descriptiveKeyword</h4>
+                            </div>
+                            <div class="modal-body">
+                                <input class="form-control" type="search"
+                                       placeholder="{{'search' | translate}}" ng-model="keywordSearch.$"/>
+                                <div class="list-group well">
+                                    <a class="list-group-item"
+                                       data-ng-repeat="keyword in keywords[data.identification.type] | filter:keywordSearch:strict"
+                                       data-ng-class="selectedKeyword === keyword ? 'active' : ''"
+                                       data-ng-click="selectKeyword(keyword)">
+                                        {{keyword.words[lang]}}
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal" data-ng-translate="">cancel</button>
+                                <button type="button" class="btn btn-primary" data-ng-translate=""
+                                        data-ng-disabled="!selectedKeyword.uri"
+                                        data-ng-click="linkToOtherKeyword()">update</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-xs-3 control-label"><span data-translate="">descriptiveKeyword</span>: </label>
+                    <div class="col-xs-9 input-group"
+                         data-ng-class="$first ? '' : 'col-xs-offset-3'"
+                         data-ng-repeat="keyword in data.identification.descriptiveKeywords">
+                        <div data-inspire-multilingual-text
+                             data-rows="1"
+                             data-main-lang="data.language"
+                             data-languages="data.otherLanguages"
+                             data-field="keyword.words"/>
+                        <a class="input-group-addon inspire-input-group" data-ng-click="editKeyword(keyword)">
+                            <i class="fa fa-edit fa-fw"></i>
+                        </a>
+                        <a data-ng-hide="$first" class="input-group-addon inspire-input-group" style="color: red" data-ng-click="deleteKeyword(keyword)">
+                            <i class="fa fa-times fa-fw"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
+
+
+            <!---------------------------   End Keywords Section  ----------------------------------------------------------->
+
+            <!---------------------------   Extents Section  ----------------------------------------------------------->
+            <div data-ng-controller="InspireExtentController">
+                <div id="editExtentModal" tabindex="-1" class="modal fade" >
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title" data-ng-translate="">extent</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="input-group">
+                                    <input class="form-control" type="search"
+                                           placeholder="{{'search' | translate}}"
+                                           ng-keyup="$event.keyCode == 13 ? searchExtents(extentSearch) : null"
+                                           ng-model="extentSearch"/>
+
+                                    <a id="extentSearchButton" class="input-group-addon"
+                                       data-ng-class="(extentSearch && extentSearch.length > 2) ? 'extent-search-enabled' : 'extent-search-disabled'"
+                                       data-ng-click="searchExtents(extentSearch)">
+                                        <i class="fa fa-search fa-fw"></i>
+                                    </a>
+                                </div>
+                                <div class="list-group well" data-ng-show="extents && extents.length > 0">
+                                    <a class="list-group-item"
+                                       data-ng-repeat="extent in extents"
+                                       data-ng-class="selectedExtent === extent ? 'active' : ''"
+                                       data-ng-click="selectExtent(extent)">
+                                        <img data-ng-src="{{extentImgSrc(50, extent)}}" />
+                                        {{extent.description[lang]}}
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal" data-ng-translate="">cancel</button>
+                                <button type="button" class="btn btn-primary" data-ng-translate=""
+                                        data-ng-disabled="!selectedKeyword.uri"
+                                        data-ng-click="linkToOtherKeyword()">update</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label class="col-xs-3 control-label"><span data-translate="">extent</span>: </label>
+                    <div class="col-xs-9" style="padding-bottom: 2em"
+                         data-ng-class="$first ? '' : 'col-xs-offset-3'"
+                         data-ng-repeat="extent in data.identification.extents">
+                        <div class="col-xs-6" >
+                            <div data-inspire-multilingual-text
+                                 data-rows="3"
+                                 data-main-lang="data.language"
+                                 data-languages="data.otherLanguages"
+                                 data-field="extent.description"/>
+
+                        </div>
+                        <div class="col-xs-6 input-group" >
+                            <img data-ng-if="extent && extent.geom" data-ng-src="{{extentImgSrc(200, extent)}}">
+
+                            <a class="input-group-addon inspire-input-group" data-ng-click="editExtent(extent)">
+                                <i class="fa fa-edit fa-fw"></i>
+                            </a>
+                            <a data-ng-hide="$first" class="input-group-addon inspire-input-group" style="color: red" data-ng-click="deleteExtent(keyword)">
+                                <i class="fa fa-times fa-fw"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!---------------------------   End Extents Section  ----------------------------------------------------------->
         </fieldset>
+
+
+        <!---------------------------   End Identification Section  ----------------------------------------------------------->
     </form>
 </div>

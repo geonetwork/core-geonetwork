@@ -6,13 +6,15 @@
   goog.require('inspire_multilingual_text_directive');
   goog.require('inspire_get_shared_users_factory');
   goog.require('inspire_get_keywords_factory');
+  goog.require('inspire_get_extents_factory');
   goog.require('inspire_date_picker_directive');
 
   goog.require('inspire_mock_full_metadata_factory');
 
   var module = angular.module('gn_inspire_editor',
-    ['gn', 'inspire_contact_directive', 'inspire_multilingual_text_directive', 'inspire_metadata_factory',
-      'inspire_get_shared_users_factory', 'inspire_get_keywords_factory', 'inspire_date_picker_directive']);
+    [ 'gn', 'inspire_contact_directive', 'inspire_multilingual_text_directive', 'inspire_metadata_factory',
+      'inspire_get_shared_users_factory', 'inspire_get_keywords_factory', 'inspire_get_extents_factory',
+      'inspire_date_picker_directive']);
 
   // Define the translation files to load
   module.constant('$LOCALES', ['core', 'editor', 'inspire']);
@@ -101,6 +103,12 @@
         modal.modal('show');
       };
 
+  }]);
+
+
+  module.controller('InspireKeywordController', [
+    '$scope', 'inspireGetKeywordsFactory',
+    function($scope, inspireGetKeywordsFactory) {
       $scope.editKeyword = function(keyword) {
         $scope.keywordUnderEdit = keyword;
         $scope.selectedKeyword = {};
@@ -108,15 +116,10 @@
         modal.modal('show');
       };
       $scope.deleteKeyword = function(keyword) {
-        var keywords = $scope.data.identification.descriptiveKeyword;
+        var keywords = $scope.data.identification.descriptiveKeywords;
         keywords.splice(keywords.indexOf(keyword), 1);
       };
-  }]);
 
-
-  module.controller('InspireKeywordController', [
-    '$scope', 'inspireGetKeywordsFactory',
-    function($scope, inspireGetKeywordsFactory) {
       $scope.keywords = {
         data: {},
         service: {}
@@ -129,15 +132,45 @@
       });
 
       $scope.selectKeyword = function(keyword) {
-        $scope.$parent.selectedKeyword = keyword;
+        $scope.selectedKeyword = keyword;
       };
 
       $scope.linkToOtherKeyword = function() {
-        var keyword = $scope.$parent.selectedKeyword;
+        var keyword = $scope.selectedKeyword;
         $scope.keywordUnderEdit.uri = keyword.uri;
         $scope.keywordUnderEdit.words = keyword.words;
         var modal = $('#editKeywordModal');
         modal.modal('hide');
+      }
+    }]);
+
+
+  module.controller('InspireExtentController', [
+    '$scope', 'inspireGetExtentsFactory',
+    function($scope, inspireGetExtentsFactory) {
+
+      $scope.extentImgSrc = function (width, extent) {
+        return $scope.url + 'region.getmap.png?mapsrs=EPSG:21781&background=geocat&width=' + width + '&id=' + extent.geom;
+      };
+      $scope.editExtent = function(extent) {
+        $scope.extentUnderEdit = extent;
+        $scope.selectedExtent = {};
+        var modal = $('#editExtentModal');
+        modal.modal('show');
+      };
+      $scope.deleteExtent = function(extent) {
+        var extents = $scope.data.identification.extents;
+        extents.splice(extents.indexOf(extent), 1);
+      };
+
+      $scope.selectExtent = function (extent) {
+        $scope.selectedExtent = extent;
+      };
+
+      $scope.searchExtents = function (query) {
+        inspireGetExtentsFactory($scope.url, query).then (function (extents){
+          $scope.extents = extents;
+        });
       }
     }]);
 
