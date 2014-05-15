@@ -50,7 +50,8 @@
             role: 'owner',
             validated: false
           },
-          keyword: 'building'
+          descriptiveKeyword: [
+            {words: {eng: 'building'}}, {words: {eng: 'farm', ger: 'Bauernhof'}}]
         }
       });
 

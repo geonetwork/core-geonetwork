@@ -2,9 +2,7 @@
 
 
     <!-- Modal dialogs -->
-
-
-    <div id="editContactModal" tabindex="-1" class="modal fade">
+    <div id="editContactModal" tabindex="-1" class="modal fade" data-ng-controller="InspireContactController">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -13,7 +11,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="well">
-                        <input class="form-control" autofocus="" type="search" placeholder="{{'search' | translate}}" ng-model="userSearch.search"/>
+                        <input class="form-control" type="search" placeholder="{{'search' | translate}}" ng-model="userSearch.search"/>
                     </div>
                     <div class="list-group">
                         <a class="list-group-item"
@@ -33,10 +31,44 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-ng-translate="" data-ng-click="updateContact()">create</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-ng-translate="">cancel</button>
+                    <button type="button" class="btn btn-default" data-ng-translate="" data-ng-click="updateContact()">createNew</button>
                     <button type="button" class="btn btn-primary" data-ng-translate=""
                             data-ng-disabled="!selectedSharedUser.id"
-                            data-ng-click="linkToOtherContact()">xlink</button>
+                            data-ng-click="linkToOtherContact()">update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div id="editKeywordModal" tabindex="-1" class="modal fade" data-ng-controller="InspireKeywordController">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" data-ng-translate="">descriptiveKeyword</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="well">
+                        <input class="form-control" type="search"
+                               placeholder="{{'search' | translate}}" ng-model="keywordSearch.$"/>
+                    </div>
+                    <div class="list-group">
+                        <a class="list-group-item"
+                           data-ng-repeat="keyword in keywords[data.identification.type] | filter:keywordSearch:strict"
+                           data-ng-class="selectedKeyword === keyword ? 'active' : ''"
+                           data-ng-click="selectKeyword(keyword)">
+                            {{keyword.words[lang]}}
+                        </a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-ng-translate="">cancel</button>
+                    <button type="button" class="btn btn-primary" data-ng-translate=""
+                            data-ng-disabled="!selectedKeyword.uri"
+                            data-ng-click="linkToOtherKeyword()">update</button>
                 </div>
             </div>
         </div>
@@ -54,7 +86,7 @@
             <legend data-translate="">metadata</legend>
             <div class="form-group">
                 <label for="metadataLanguage" class="col-xs-3 control-label" ><span data-translate="">language</span>: </label>
-                <div class="col-xs-8">
+                <div class="col-xs-9">
                     <select id="metadataLanguage" class="form-control" ng-model="data.language" data-ng-options="lang | translate for lang in languages">
                     </select>
                 </div>
@@ -62,7 +94,7 @@
 
             <div class="form-group">
                 <label class="col-xs-3 control-label"><span data-translate="">otherLanguages</span>: </label>
-                <div class="col-xs-8">
+                <div class="col-xs-9">
                     <button data-ng-repeat="lang in languages"
                             data-ng-click="toggleLanguage(lang)"
                             class="btn btn-default btn-sm"
@@ -72,7 +104,7 @@
 
             <div class="form-group">
                 <label for="hierarchyLevel" class="col-xs-3 control-label"><span data-translate="">hierarchyLevel</span>: </label>
-                <div class="col-xs-8">
+                <div class="col-xs-9">
                     <select id="hierarchyLevel" class="form-control" data-ng-model="data.hierarchyLevel" data-ng-options="opt for opt in data.hierarchyLevelOptions">
                     </select>
                 </div>
@@ -92,7 +124,7 @@
                  data-field="data.identification.title"/>
             <div class="form-group">
                 <label for="citationIdentifier" class="col-xs-3 control-label"><span data-translate="">citationIdentifier</span>: </label>
-                <div class="col-xs-8">
+                <div class="col-xs-9">
                     <input id="citationIdentifier" class="form-control" data-ng-model="data.identification.citationIdentifier" />
                 </div>
             </div>
@@ -105,11 +137,11 @@
 
             <div class="form-group">
                 <label class="col-xs-3 control-label"><span data-translate="">date</span>: </label>
-                <div class="col-xs-8">
+                <div class="col-xs-9">
                     <div data-inspire-date-picker="data.identification.date"
                          data-tag-name="{{data.identification.dateTagName}}"></div>
                 </div>
-                <div class="col-xs-offset-3 col-xs-8">
+                <div class="col-xs-offset-3 col-xs-9">
                     <select id="dateType" class="form-control" data-ng-model="data.identification.dateType" data-ng-options="opt for opt in data.dateTypeOptions">
                     </select>
                 </div>
@@ -118,6 +150,26 @@
             <div data-inspire-contact data-contact="data.identification.pointOfContact" data-title="pointOfContact"
                  data-role-options="data.roleOptions" data-edit-contact="editContact('pointOfContact', data.identification.pointOfContact)"
                  data-main-lang="data.language" data-languages="data.otherLanguages"></div>
+
+            <div class="form-group">
+                <label class="col-xs-3 control-label"><span data-translate="">descriptiveKeyword</span>: </label>
+                <div class="col-xs-9 input-group"
+                     data-ng-class="$first ? '' : 'col-xs-offset-3'"
+                     data-ng-repeat="keyword in data.identification.descriptiveKeyword">
+                    <div data-inspire-multilingual-text
+                         data-rows="1"
+                         data-main-lang="data.language"
+                         data-languages="data.otherLanguages"
+                         data-field="keyword.words"/>
+                    <a class="input-group-addon inspire-input-group" data-ng-click="editKeyword(keyword)">
+                        <i class="fa fa-edit fa-fw"></i>
+                    </a>
+                    <a data-ng-hide="$first" class="input-group-addon inspire-input-group" style="color: red" data-ng-click="deleteKeyword(keyword)">
+                        <i class="fa fa-times fa-fw"></i>
+                    </a>
+
+                </div>
+            </div>
         </fieldset>
     </form>
 </div>

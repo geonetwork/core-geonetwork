@@ -44,7 +44,7 @@
             role: '',
             validated: false
           },
-          keyword: ''
+          descriptiveKeyword: []
         }
       });
 

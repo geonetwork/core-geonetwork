@@ -5,13 +5,14 @@
   goog.require('inspire_contact_directive');
   goog.require('inspire_multilingual_text_directive');
   goog.require('inspire_get_shared_users_factory');
+  goog.require('inspire_get_keywords_factory');
   goog.require('inspire_date_picker_directive');
 
   goog.require('inspire_mock_full_metadata_factory');
 
   var module = angular.module('gn_inspire_editor',
     ['gn', 'inspire_contact_directive', 'inspire_multilingual_text_directive', 'inspire_metadata_factory',
-      'inspire_get_shared_users_factory', 'inspire_date_picker_directive']);
+      'inspire_get_shared_users_factory', 'inspire_get_keywords_factory', 'inspire_date_picker_directive']);
 
   // Define the translation files to load
   module.constant('$LOCALES', ['core', 'editor', 'inspire']);
@@ -88,38 +89,53 @@
           }
         }
       };
+
       $scope.editContact = function(title, contact) {
         $scope.contactUnderEdit = contact;
         $scope.contactUnderEdit.title = title;
-        $scope.selectedSharedUser = {}
+        $scope.selectedSharedUser = {};
         var modal = $('#editContactModal');
         modal.modal('show');
       };
-      $scope.linkToOtherContact = function() {
-        var userId = $scope.selectedSharedUser.id;
-        inspireGetSharedUsersFactory.loadDetails($scope.url, userId).then($scope.updateContact);
+
+      $scope.editKeyword = function(keyword) {
+        $scope.keywordUnderEdit = keyword;
+        $scope.selectedKeyword = {};
+        var modal = $('#editKeywordModal');
+        modal.modal('show');
       };
-
-      $scope.updateContact = function(newContact) {
-        $scope.contactUnderEdit.id = newContact ? newContact.id : '';
-        $scope.contactUnderEdit.name = newContact ? newContact.name : '';
-        $scope.contactUnderEdit.surname = newContact ? newContact.surname : '';
-        $scope.contactUnderEdit.email = newContact ? newContact.email : '';
-
-        var role = newContact ? newContact.role : $scope.contactUnderEdit.role;
-        $scope.contactUnderEdit.role = role ? role : $scope.data.roleOptions[0];
-        $scope.contactUnderEdit.organization = newContact ? newContact.organization : '';
-        $scope.contactUnderEdit.validated = newContact ? newContact.validated : false;
-
-        var modal = $('#editContactModal');
-        modal.modal('hide');
+      $scope.deleteKeyword = function(keyword) {
+        var keywords = $scope.data.identification.descriptiveKeyword;
+        keywords.splice(keywords.indexOf(keyword), 1);
       };
-      inspireGetSharedUsersFactory.loadAll($scope.url).then(function(sharedUsers) {
-        $scope.sharedUsers = sharedUsers;
-        $scope.selectedSharedUser = {};
-      })
-      $scope.setSharedUser = function(user) {
-        $scope.selectedSharedUser = user;
-      }
   }]);
+
+
+  module.controller('InspireKeywordController', [
+    '$scope', 'inspireGetKeywordsFactory',
+    function($scope, inspireGetKeywordsFactory) {
+      $scope.keywords = {
+        data: {},
+        service: {}
+      };
+      inspireGetKeywordsFactory($scope.url, 'external.theme.inspire-theme').then (function (keywords) {
+        $scope.keywords.data = keywords;
+      });
+      inspireGetKeywordsFactory($scope.url, 'external.theme.inspire-service-taxonomy').then (function (keywords) {
+        $scope.keywords.service = keywords;
+      });
+
+      $scope.selectKeyword = function(keyword) {
+        $scope.$parent.selectedKeyword = keyword;
+      };
+
+      $scope.linkToOtherKeyword = function() {
+        var keyword = $scope.$parent.selectedKeyword;
+        $scope.keywordUnderEdit.uri = keyword.uri;
+        $scope.keywordUnderEdit.words = keyword.words;
+        var modal = $('#editKeywordModal');
+        modal.modal('hide');
+      }
+    }]);
+
 })();

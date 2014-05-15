@@ -32,7 +32,7 @@
       },
       template: '<div class="form-group">' +
         '<label data-ng-show="title" for="title" class="col-xs-3 control-label" ><span data-translate="">{{title}}</span>: </label>' +
-        '<div class="col-xs-9">' +
+        '<div data-ng-class="title ? \'col-xs-9\' : \'col-xs-12\'" >' +
         '<textarea data-ng-disabled="disabled" rows="{{rows}}" id="title" class="form-control col-xs-12" ' +
         '          data-ng-repeat="lang in languages" data-ng-model="field[lang]" ' +
         '          data-ng-show="editLang === lang || editLang === \'all\'" ' +
