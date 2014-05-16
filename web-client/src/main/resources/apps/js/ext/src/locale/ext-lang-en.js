@@ -1,11 +1,23 @@
 /*
- * Ext JS Library 2.3.0
- * Copyright(c) 2006-2009, Ext JS, LLC.
- * licensing@extjs.com
- * 
- * http://extjs.com/license
- */
+This file is part of Ext JS 3.4
 
+Copyright (c) 2011-2013 Sencha Inc
+
+Contact:  http://www.sencha.com/contact
+
+GNU General Public License Usage
+This file may be used under the terms of the GNU General Public License version 3.0 as
+published by the Free Software Foundation and appearing in the file LICENSE included in the
+packaging of this file.
+
+Please review the following information to ensure the GNU General Public License version 3.0
+requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+
+If you are unsure which license is appropriate for your use, please contact the sales department
+at http://www.sencha.com/contact.
+
+Build date: 2013-04-03 15:07:25
+*/
 /**
  * List compiled by mystix on the extjs.com forums.
  * Thank you Mystix!
@@ -15,6 +27,10 @@
  */
 
 Ext.UpdateManager.defaults.indicatorText = '<div class="loading-indicator">Loading...</div>';
+
+if(Ext.data.Types){
+    Ext.data.Types.stripRe = /[\$,%]/g;
+}
 
 if(Ext.DataView){
   Ext.DataView.prototype.emptyText = "";
@@ -133,6 +149,10 @@ if(Ext.PagingToolbar){
   });
 }
 
+if(Ext.form.BasicForm){
+    Ext.form.BasicForm.prototype.waitTitle = "Please Wait..."
+}
+
 if(Ext.form.Field){
   Ext.form.Field.prototype.invalidText = "The value in this field is invalid";
 }
@@ -165,7 +185,8 @@ if(Ext.form.DateField){
     maxText           : "The date in this field must be before {0}",
     invalidText       : "{0} is not a valid date - it must be in the format {1}",
     format            : "m/d/y",
-    altFormats        : "m/d/Y|m-d-y|m-d-Y|m/d|m-d|md|mdy|mdY|d|Y-m-d"
+    altFormats        : "m/d/Y|m-d-y|m-d-Y|m/d|m-d|md|mdy|mdY|d|Y-m-d",
+    startDay          : 0
   });
 }
 
@@ -178,8 +199,8 @@ if(Ext.form.ComboBox){
 
 if(Ext.form.VTypes){
   Ext.apply(Ext.form.VTypes, {
-    emailText    : 'This field should be an e-mail address in the format "user@domain.com"',
-    urlText      : 'This field should be a URL in the format "http:/'+'/www.domain.com"',
+    emailText    : 'This field should be an e-mail address in the format "user@example.com"',
+    urlText      : 'This field should be a URL in the format "http:/'+'/www.example.com"',
     alphaText    : 'This field should only contain letters and _',
     alphanumText : 'This field should only contain letters, numbers and _'
   });
@@ -283,8 +304,30 @@ if(Ext.grid.PropertyColumnModel){
   Ext.apply(Ext.grid.PropertyColumnModel.prototype, {
     nameText   : "Name",
     valueText  : "Value",
-    dateFormat : "m/j/Y"
+    dateFormat : "m/j/Y",
+    trueText: "true",
+    falseText: "false"
   });
+}
+
+if(Ext.grid.BooleanColumn){
+   Ext.apply(Ext.grid.BooleanColumn.prototype, {
+      trueText  : "true",
+      falseText : "false",
+      undefinedText: '&#160;'
+   });
+}
+
+if(Ext.grid.NumberColumn){
+    Ext.apply(Ext.grid.NumberColumn.prototype, {
+        format : '0,000.00'
+    });
+}
+
+if(Ext.grid.DateColumn){
+    Ext.apply(Ext.grid.DateColumn.prototype, {
+        format : 'm/d/Y'
+    });
 }
 
 if(Ext.layout.BorderLayout && Ext.layout.BorderLayout.SplitRegion){

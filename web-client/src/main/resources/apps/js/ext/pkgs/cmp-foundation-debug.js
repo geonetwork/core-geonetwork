@@ -1,9 +1,23 @@
-/*!
- * Ext JS Library 3.4.0
- * Copyright(c) 2006-2011 Sencha Inc.
- * licensing@sencha.com
- * http://www.sencha.com/license
- */
+/*
+This file is part of Ext JS 3.4
+
+Copyright (c) 2011-2013 Sencha Inc
+
+Contact:  http://www.sencha.com/contact
+
+GNU General Public License Usage
+This file may be used under the terms of the GNU General Public License version 3.0 as
+published by the Free Software Foundation and appearing in the file LICENSE included in the
+packaging of this file.
+
+Please review the following information to ensure the GNU General Public License version 3.0
+requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+
+If you are unsure which license is appropriate for your use, please contact the sales department
+at http://www.sencha.com/contact.
+
+Build date: 2013-04-03 15:07:25
+*/
 /**
  * @class Ext.ComponentMgr
  * <p>Provides a registry of all Components (instances of {@link Ext.Component} or any subclass
@@ -282,6 +296,7 @@ textarea         {@link Ext.form.TextArea}
 textfield        {@link Ext.form.TextField}
 timefield        {@link Ext.form.TimeField}
 trigger          {@link Ext.form.TriggerField}
+twintrigger      {@link Ext.form.TwinTriggerField}
 
 Chart components
 ---------------------------------------
@@ -954,7 +969,7 @@ new Ext.Panel({
     }
 });
 </code></pre>
-     * <p>See also <tt>{@link #getEl getEl}</p>
+     * <p>See also <tt>{@link #getEl getEl}</tt></p>
      * @type Ext.Element
      * @property el
      */
@@ -1027,7 +1042,7 @@ new Ext.Panel({
      * The initial set of data to apply to the <code>{@link #tpl}</code> to
      * update the content area of the Component.
      */
-    
+
     /**
      * @cfg {Array} bubbleEvents
      * <p>An array of events that, when fired, should be bubbled to any parent container.
@@ -1755,7 +1770,7 @@ var isBoxInstance = t.isXType('box', true); // false, not a direct BoxComponent 
      * <pre><code>
 var c = new Ext.Component();
 console.log(c.isXType(c));
-console.log(c.isXType(Ext.Component)); 
+console.log(c.isXType(Ext.Component));
 </code></pre>
      * @param {Boolean} shallow (optional) False to check whether this Component is descended from the xtype (this is
      * the default), or true to check whether this Component is directly of the specified xtype.
@@ -1822,7 +1837,7 @@ alert(t.getXTypes());  // alerts 'component/box/field/textfield'
             return c.isXType(xtype, shallow);
         });
     },
-    
+
     /**
      * Bubbles up the component/container heirarchy, calling the specified function with each component. The scope (<i>this</i>) of
      * function call will be the scope provided or the current component. The arguments to the function
@@ -2227,9 +2242,7 @@ Ext.Action = Ext.extend(Object, {
      * Executes this action manually using the handler function specified in the original config object
      * or the handler function set with <code>{@link #setHandler}</code>.  Any arguments passed to this
      * function will be passed on to the handler function.
-     * @param {Mixed} arg1 (optional) Variable number of arguments passed to the handler function
-     * @param {Mixed} arg2 (optional)
-     * @param {Mixed} etc... (optional)
+     * @param {Mixed...} args Variable number of arguments passed to the handler function
      */
     execute : function(){
         this.initialConfig.handler.apply(this.initialConfig.scope || window, arguments);
@@ -2725,7 +2738,7 @@ Ext.Shadow = function(config) {
             a.w = 0;
             a.l = a.t = o;
             a.t -= 1;
-            if (Ext.isIE) {
+            if (Ext.isIE9m) {
                 a.l -= this.offset + rad;
                 a.t -= this.offset + rad;
                 a.w -= rad;
@@ -2737,7 +2750,7 @@ Ext.Shadow = function(config) {
             a.w = (o * 2);
             a.l = -o;
             a.t = o - 1;
-            if (Ext.isIE) {
+            if (Ext.isIE9m) {
                 a.l -= (this.offset - rad);
                 a.t -= this.offset + rad;
                 a.l += 1;
@@ -2751,7 +2764,7 @@ Ext.Shadow = function(config) {
             a.l = a.t = -o;
             a.t += 1;
             a.h -= 2;
-            if (Ext.isIE) {
+            if (Ext.isIE9m) {
                 a.l -= (this.offset - rad);
                 a.t -= (this.offset - rad);
                 a.l += 1;
@@ -2796,7 +2809,7 @@ Ext.Shadow.prototype = {
             }
         }
         this.el.setStyle("z-index", this.zIndex || parseInt(target.getStyle("z-index"), 10) - 1);
-        if (Ext.isIE) {
+        if (Ext.isIE9m) {
             this.el.dom.style.filter = "progid:DXImageTransform.Microsoft.alpha(opacity=50) progid:DXImageTransform.Microsoft.Blur(pixelradius=" + (this.offset) + ")";
         }
         this.realign(
@@ -2842,7 +2855,7 @@ Ext.Shadow.prototype = {
         if (s.width != sws || s.height != shs) {
             s.width = sws;
             s.height = shs;
-            if (!Ext.isIE) {
+            if (!Ext.isIE9m) {
                 cn = d.childNodes;
                 sww = Math.max(0, (sw - 12)) + "px";
                 cn[0].childNodes[1].style.width = sww;
@@ -2879,7 +2892,7 @@ Ext.Shadow.prototype = {
 // Private utility class that manages the internal Shadow cache
 Ext.Shadow.Pool = function() {
     var p = [],
-        markup = Ext.isIE ?
+        markup = Ext.isIE9m ?
             '<div class="x-ie-shadow"></div>':
             '<div class="x-shadow"><div class="xst"><div class="xstl"></div><div class="xstc"></div><div class="xstr"></div></div><div class="xsc"><div class="xsml"></div><div class="xsmc"></div><div class="xsmr"></div></div><div class="xsb"><div class="xsbl"></div><div class="xsbc"></div><div class="xsbr"></div></div></div>';
     return {
@@ -2933,7 +2946,7 @@ Ext.BoxComponent = Ext.extend(Ext.Component, {
      * by a Container which has been configured to use a <b>{@link Ext.layout.BoxLayout BoxLayout}.</b>
      * Each child Component with a <code>flex</code> property will be flexed either vertically (by a VBoxLayout)
      * or horizontally (by an HBoxLayout) according to the item's <b>relative</b> <code>flex</code> value
-     * compared to the sum of all Components with <code>flex</flex> value specified. Any child items that have
+     * compared to the sum of all Components with <code>flex</code> value specified. Any child items that have
      * either a <code>flex = 0</code> or <code>flex = undefined</code> will not be 'flexed' (the initial size will not be changed).
      */
     // Configs below are used for all Components when rendered by AnchorLayout.
@@ -3508,7 +3521,7 @@ Ext.SplitBar = function(dragElement, resizingElement, orientation, placement, ex
 
     /** @private */
     this.el = Ext.get(dragElement, true);
-    this.el.dom.unselectable = "on";
+    this.el.unselectable();
     /** @private */
     this.resizingEl = Ext.get(resizingElement, true);
 
@@ -3577,11 +3590,11 @@ Ext.SplitBar = function(dragElement, resizingElement, orientation, placement, ex
     this.adapter.init(this);
 
     if(this.orientation == Ext.SplitBar.HORIZONTAL){
-        /** @private */
+        /** @ignore */
         this.placement = placement || (this.el.getX() > this.resizingEl.getX() ? Ext.SplitBar.LEFT : Ext.SplitBar.RIGHT);
         this.el.addClass("x-splitbar-h");
     }else{
-        /** @private */
+        /** @ignore */
         this.placement = placement || (this.el.getY() > this.resizingEl.getY() ? Ext.SplitBar.TOP : Ext.SplitBar.BOTTOM);
         this.el.addClass("x-splitbar-v");
     }
@@ -5032,7 +5045,7 @@ Ext.layout.ContainerLayout = Ext.extend(Object, {
                 if (Ext.isNumber(position)) {
                     position = target.dom.childNodes[position];
                 }
-                
+
                 target.dom.insertBefore(c.getPositionEl().dom, position || null);
                 c.container = target;
                 this.configureItem(c);
@@ -5061,7 +5074,7 @@ Ext.layout.ContainerLayout = Ext.extend(Object, {
             var t = c.getPositionEl ? c.getPositionEl() : c;
             t.addClass(this.extraCls);
         }
-        
+
         // If we are forcing a layout, do so *before* we hide so elements have height/width
         if (c.doLayout && this.forceLayout) {
             c.doLayout();
@@ -5116,7 +5129,7 @@ Ext.layout.ContainerLayout = Ext.extend(Object, {
 
     // private
     setContainer : function(ct){
-        /**
+        /*
          * This monitorResize flag will be renamed soon as to avoid confusion
          * with the Container version which hooks onWindowResize to doLayout
          *
@@ -5147,7 +5160,7 @@ Ext.layout.ContainerLayout = Ext.extend(Object, {
         }
         var ms  = v.split(' '),
             len = ms.length;
-            
+
         if (len == 1) {
             ms[1] = ms[2] = ms[3] = ms[0];
         } else if(len == 2) {
@@ -5156,7 +5169,7 @@ Ext.layout.ContainerLayout = Ext.extend(Object, {
         } else if(len == 3) {
             ms[3] = ms[1];
         }
-        
+
         return {
             top   :parseInt(ms[0], 10) || 0,
             right :parseInt(ms[1], 10) || 0,
@@ -5534,7 +5547,7 @@ anchor: '-50 75%'
             // IE in strict mode will return a width of 0 on the 1st pass of getViewSize.
             // Use getStyleSize to verify the 0 width, the adjustment pass will then work properly
             // with getViewSize
-            if (Ext.isIE && Ext.isStrict && ret.width == 0){
+            if (Ext.isIE9m && Ext.isStrict && ret.width == 0){
                 ret =  target.getStyleSize();
             }
             ret.width -= target.getPadding('lr');
@@ -5768,7 +5781,7 @@ Ext.layout.ColumnLayout = Ext.extend(Ext.layout.ContainerLayout, {
             // IE in strict mode will return a width of 0 on the 1st pass of getViewSize.
             // Use getStyleSize to verify the 0 width, the adjustment pass will then work properly
             // with getViewSize
-            if (Ext.isIE && Ext.isStrict && ret.width == 0){
+            if (Ext.isIE9m && Ext.isStrict && ret.width == 0){
                 ret =  target.getStyleSize();
             }
 
@@ -5801,7 +5814,7 @@ Ext.layout.ColumnLayout = Ext.extend(Ext.layout.ContainerLayout, {
 
         var size = this.getLayoutTargetSize();
 
-        if(size.width < 1 && size.height < 1){ // display none?
+        if (Ext.isIE9m && (size.width < 1 && size.height < 1)) { // display none?
             return;
         }
 
@@ -5835,7 +5848,7 @@ Ext.layout.ColumnLayout = Ext.extend(Ext.layout.ContainerLayout, {
 
         // Browsers differ as to when they account for scrollbars.  We need to re-measure to see if the scrollbar
         // spaces were accounted for properly.  If not, re-layout.
-        if (Ext.isIE) {
+        if (Ext.isIE9m) {
             if (i = target.getStyle('overflow') && i != 'hidden' && !this.adjustmentPass) {
                 var ts = this.getLayoutTargetSize();
                 if (ts.width != size.width){
@@ -6047,7 +6060,7 @@ Ext.layout.BorderLayout = Ext.extend(Ext.layout.ContainerLayout, {
                 collapsed[i].collapse(false);
             }
         }
-        if(Ext.isIE && Ext.isStrict){ // workaround IE strict repainting issue
+        if(Ext.isIE9m && Ext.isStrict){ // workaround IE strict repainting issue
             target.repaint();
         }
         // Putting a border layout into an overflowed container is NOT correct and will make a second layout pass necessary.
@@ -6085,8 +6098,9 @@ Ext.layout.BorderLayout = Ext.extend(Ext.layout.ContainerLayout, {
 /**
  * @class Ext.layout.BorderLayout.Region
  * <p>This is a region of a {@link Ext.layout.BorderLayout BorderLayout} that acts as a subcontainer
- * within the layout.  Each region has its own {@link Ext.layout.ContainerLayout layout} that is
- * independent of other regions and the containing BorderLayout, and can be any of the
+ * within the layout. Each region in the layout is a component, the region itself is constructed on top
+ * of that component, acting like a mixin. Each region has its own {@link Ext.layout.ContainerLayout layout} 
+ * that is independent of other regions and the containing BorderLayout, and can be any of the
  * {@link Ext.layout.ContainerLayout valid Ext layout types}.</p>
  * <p>Region size is managed automatically and cannot be changed by the user -- for
  * {@link #split resizable regions}, see {@link Ext.layout.BorderLayout.SplitRegion}.</p>
@@ -7142,21 +7156,23 @@ Ext.layout.FormLayout = Ext.extend(Ext.layout.AnchorLayout, {
     // private
     setContainer : function(ct){
         Ext.layout.FormLayout.superclass.setContainer.call(this, ct);
-        if(ct.labelAlign){
-            ct.addClass('x-form-label-'+ct.labelAlign);
+        ct.labelAlign = ct.labelAlign || this.labelAlign;
+        if (ct.labelAlign) {
+            ct.addClass('x-form-label-' + ct.labelAlign);
         }
 
-        if(ct.hideLabels){
+        if (ct.hideLabels || this.hideLabels) { 
             Ext.apply(this, {
                 labelStyle: 'display:none',
                 elementStyle: 'padding-left:0;',
                 labelAdjust: 0
             });
-        }else{
+        } else {
             this.labelSeparator = Ext.isDefined(ct.labelSeparator) ? ct.labelSeparator : this.labelSeparator;
-            ct.labelWidth = ct.labelWidth || 100;
+            ct.labelWidth = ct.labelWidth || this.labelWidth || 100;
             if(Ext.isNumber(ct.labelWidth)){
-                var pad = Ext.isNumber(ct.labelPad) ? ct.labelPad : 5;
+                var pad = ct.labelPad || this.labelPad;
+                pad = Ext.isNumber(pad) ? pad : 5;
                 Ext.apply(this, {
                     labelAdjust: ct.labelWidth + pad,
                     labelStyle: 'width:' + ct.labelWidth + 'px;',
@@ -7334,7 +7350,7 @@ new Ext.Template(
     // private
     adjustWidthAnchor: function(value, c){
         if(c.label && !this.isHide(c) && (this.container.labelAlign != 'top')){
-            var adjust = Ext.isIE6 || (Ext.isIE && !Ext.isStrict);
+            var adjust = Ext.isIE6 || Ext.isIEQuirks;
             return value - this.labelAdjust + (adjust ? -3 : 0);
         }
         return value;
@@ -8115,7 +8131,7 @@ Ext.layout.BoxLayout = Ext.extend(Ext.layout.ContainerLayout, {
             // IE in strict mode will return a width of 0 on the 1st pass of getViewSize.
             // Use getStyleSize to verify the 0 width, the adjustment pass will then work properly
             // with getViewSize
-            if (Ext.isIE && Ext.isStrict && ret.width == 0){
+            if (Ext.isIE9m && Ext.isStrict && ret.width == 0){
                 ret =  target.getStyleSize();
             }
 
@@ -9033,6 +9049,7 @@ Ext.layout.HBoxLayout = Ext.extend(Ext.layout.BoxLayout, {
      * the height of the container</div></li>
      * <li><b><tt>stretchmax</tt></b> : <div class="sub-desc">child items are stretched vertically to
      * the height of the largest item.</div></li>
+     * </ul></div>
      */
     align: 'top', // top, middle, stretch, strechmax
 
@@ -9096,7 +9113,7 @@ Ext.layout.HBoxLayout = Ext.extend(Ext.layout.BoxLayout, {
             boxes        = [],
 
             //used in the for loops below, just declared here for brevity
-            child, childWidth, childHeight, childSize, childMargins, canLayout, i, calcs, flexedWidth, 
+            child, childWidth, childHeight, childSize, childMargins, canLayout, i, calcs, flexedWidth,
             horizMargins, vertMargins, stretchHeight;
 
         //gather the total flex of all flexed items and the width taken up by fixed width items
@@ -9151,13 +9168,13 @@ Ext.layout.HBoxLayout = Ext.extend(Ext.layout.BoxLayout, {
                 width    : childWidth  || undefined
             });
         }
-                
+
         var shortfall = desiredWidth - width,
             tooNarrow = minimumWidth > width;
-            
+
         //the width available to the flexed items
         var availableWidth = Math.max(0, width - nonFlexWidth - paddingHoriz);
-        
+
         if (tooNarrow) {
             for (i = 0; i < visibleCount; i++) {
                 boxes[i].width = visibleItems[i].minWidth || visibleItems[i].width || boxes[i].width;
@@ -9167,12 +9184,10 @@ Ext.layout.HBoxLayout = Ext.extend(Ext.layout.BoxLayout, {
             //the shortfall has been accounted for
             if (shortfall > 0) {
                 var minWidths = [];
-                
-                /**
-                 * When we have a shortfall but are not tooNarrow, we need to shrink the width of each non-flexed item.
-                 * Flexed items are immediately reduced to their minWidth and anything already at minWidth is ignored.
-                 * The remaining items are collected into the minWidths array, which is later used to distribute the shortfall.
-                 */
+
+                // When we have a shortfall but are not tooNarrow, we need to shrink the width of each non-flexed item.
+                // Flexed items are immediately reduced to their minWidth and anything already at minWidth is ignored.
+                // The remaining items are collected into the minWidths array, which is later used to distribute the shortfall.
                 for (var index = 0, length = visibleCount; index < length; index++) {
                     var item     = visibleItems[index],
                         minWidth = item.minWidth || 0;
@@ -9189,12 +9204,12 @@ Ext.layout.HBoxLayout = Ext.extend(Ext.layout.BoxLayout, {
                         });
                     }
                 }
-                
+
                 //sort by descending amount of width remaining before minWidth is reached
                 minWidths.sort(function(a, b) {
                     return a.available > b.available ? 1 : -1;
                 });
-                
+
                 /*
                  * Distribute the shortfall (difference between total desired with of all items and actual width available)
                  * between the non-flexed items. We try to distribute the shortfall evenly, but apply it to items with the
@@ -9203,20 +9218,20 @@ Ext.layout.HBoxLayout = Ext.extend(Ext.layout.BoxLayout, {
                  */
                 for (var i = 0, length = minWidths.length; i < length; i++) {
                     var itemIndex = minWidths[i].index;
-                    
+
                     if (itemIndex == undefined) {
                         continue;
                     }
-                        
+
                     var item      = visibleItems[itemIndex],
                         box       = boxes[itemIndex],
                         oldWidth  = box.width,
                         minWidth  = item.minWidth,
                         newWidth  = Math.max(minWidth, oldWidth - Math.ceil(shortfall / (length - i))),
                         reduction = oldWidth - newWidth;
-                    
+
                     boxes[itemIndex].width = newWidth;
-                    shortfall -= reduction;                    
+                    shortfall -= reduction;
                 }
             } else {
                 //temporary variables used in the flex width calculations below
@@ -9242,22 +9257,22 @@ Ext.layout.HBoxLayout = Ext.extend(Ext.layout.BoxLayout, {
                 }
             }
         }
-        
+
         if (isCenter) {
             leftOffset += availableWidth / 2;
         } else if (isEnd) {
             leftOffset += availableWidth;
         }
-        
+
         //finally, calculate the left and top position of each item
         for (i = 0; i < visibleCount; i++) {
             child = visibleItems[i];
             calcs = boxes[i];
-            
+
             childMargins = child.margins;
             leftOffset  += childMargins.left;
             vertMargins  = childMargins.top + childMargins.bottom;
-            
+
             calcs.left = leftOffset;
             calcs.top  = topOffset + childMargins.top;
 
@@ -9278,7 +9293,7 @@ Ext.layout.HBoxLayout = Ext.extend(Ext.layout.BoxLayout, {
                         calcs.top = topOffset + vertMargins + (diff / 2);
                     }
             }
-            
+
             leftOffset += calcs.width + childMargins.right;
         }
 
@@ -9379,9 +9394,9 @@ Ext.layout.VBoxLayout = Ext.extend(Ext.layout.BoxLayout, {
 
             //used to cache the calculated size and position values for each child item
             boxes        = [],
-            
+
             //used in the for loops below, just declared here for brevity
-            child, childWidth, childHeight, childSize, childMargins, canLayout, i, calcs, flexedHeight, 
+            child, childWidth, childHeight, childSize, childMargins, canLayout, i, calcs, flexedHeight,
             horizMargins, vertMargins, stretchWidth, length;
 
         //gather the total flex of all flexed items and the width taken up by fixed width items
@@ -9411,7 +9426,7 @@ Ext.layout.VBoxLayout = Ext.extend(Ext.layout.BoxLayout, {
                     childHeight = childSize.height;
                 }
             }
-            
+
             childMargins = child.margins;
             vertMargins  = childMargins.top + childMargins.bottom;
 
@@ -9436,13 +9451,13 @@ Ext.layout.VBoxLayout = Ext.extend(Ext.layout.BoxLayout, {
                 width    : childWidth || undefined
             });
         }
-                
+
         var shortfall = desiredHeight - height,
             tooNarrow = minimumHeight > height;
 
         //the height available to the flexed items
         var availableHeight = Math.max(0, (height - nonFlexHeight - paddingVert));
-        
+
         if (tooNarrow) {
             for (i = 0, length = visibleCount; i < length; i++) {
                 boxes[i].height = visibleItems[i].minHeight || visibleItems[i].height || boxes[i].height;
@@ -9453,11 +9468,9 @@ Ext.layout.VBoxLayout = Ext.extend(Ext.layout.BoxLayout, {
             if (shortfall > 0) {
                 var minHeights = [];
 
-                /**
-                 * When we have a shortfall but are not tooNarrow, we need to shrink the height of each non-flexed item.
-                 * Flexed items are immediately reduced to their minHeight and anything already at minHeight is ignored.
-                 * The remaining items are collected into the minHeights array, which is later used to distribute the shortfall.
-                 */
+                // When we have a shortfall but are not tooNarrow, we need to shrink the height of each non-flexed item.
+                // Flexed items are immediately reduced to their minHeight and anything already at minHeight is ignored.
+                // The remaining items are collected into the minHeights array, which is later used to distribute the shortfall.
                 for (var index = 0, length = visibleCount; index < length; index++) {
                     var item      = visibleItems[index],
                         minHeight = item.minHeight || 0;
@@ -9468,7 +9481,7 @@ Ext.layout.VBoxLayout = Ext.extend(Ext.layout.BoxLayout, {
                         boxes[index].height = minHeight;
                     } else {
                         minHeights.push({
-                            minHeight: minHeight, 
+                            minHeight: minHeight,
                             available: boxes[index].height - minHeight,
                             index    : index
                         });
@@ -9507,7 +9520,7 @@ Ext.layout.VBoxLayout = Ext.extend(Ext.layout.BoxLayout, {
                 //temporary variables used in the flex height calculations below
                 var remainingHeight = availableHeight,
                     remainingFlex   = totalFlex;
-                
+
                 //calculate the height of each flexed item
                 for (i = 0; i < visibleCount; i++) {
                     child = visibleItems[i];
@@ -9542,11 +9555,11 @@ Ext.layout.VBoxLayout = Ext.extend(Ext.layout.BoxLayout, {
             childMargins = child.margins;
             topOffset   += childMargins.top;
             horizMargins = childMargins.left + childMargins.right;
-            
+
 
             calcs.left = leftOffset + childMargins.left;
             calcs.top  = topOffset;
-            
+
             switch (this.align) {
                 case 'stretch':
                     stretchWidth = availWidth - horizMargins;
@@ -9567,7 +9580,7 @@ Ext.layout.VBoxLayout = Ext.extend(Ext.layout.BoxLayout, {
 
             topOffset += calcs.height + childMargins.bottom;
         }
-        
+
         return {
             boxes: boxes,
             meta : {
@@ -10103,7 +10116,7 @@ Ext.Container.LAYOUTS.toolbar = Ext.layout.ToolbarLayout;
         if(ct.floating){
             if(w){
                 ct.setWidth(w);
-            }else if(Ext.isIE){
+            }else if(Ext.isIE9m){
                 ct.setWidth(Ext.isStrict && (Ext.isIE7 || Ext.isIE8 || Ext.isIE9) ? 'auto' : ct.minWidth);
                 var el = ct.getEl(), t = el.dom.offsetWidth; // force recalc
                 ct.setWidth(ct.getLayoutTarget().getWidth() + el.getFrameWidth('lr'));
@@ -10188,9 +10201,6 @@ Ext.Viewport = Ext.extend(Ext.Container, {
      */
     /**
      * @cfg {Mixed} renderTo @hide
-     */
-    /**
-     * @cfg {Boolean} hideParent @hide
      */
     /**
      * @cfg {Number} height @hide
@@ -10934,8 +10944,8 @@ new Ext.Panel({
              * @event iconchange
              * Fires after the Panel icon class has been {@link #iconCls set} or {@link #setIconClass changed}.
              * @param {Ext.Panel} p the Panel which has had its {@link #iconCls icon class} changed.
-             * @param {String} The new icon class.
-             * @param {String} The old icon class.
+             * @param {String} newIcon The new icon class.
+             * @param {String} oldIcon The old icon class.
              */
             'iconchange',
             /**
@@ -11531,7 +11541,7 @@ new Ext.Panel({
          * an instance of {@link Ext.dd.DragSource} which handles dragging the Panel.</p>
          * The developer must provide implementations of the abstract methods of {@link Ext.dd.DragSource}
          * in order to supply behaviour for each stage of the drag/drop process. See {@link #draggable}.
-         * @type Ext.dd.DragSource.
+         * @type Ext.dd.DragSource
          * @property dd
          */
         this.dd = new Ext.Panel.DD(this, Ext.isBoolean(this.draggable) ? null : this.draggable);
@@ -11721,7 +11731,7 @@ new Ext.Panel({
                     if(this.bottomToolbar){
                         this.bottomToolbar.setSize(w);
                         // The bbar does not move on resize without this.
-                        if (Ext.isIE) {
+                        if (Ext.isIE9m) {
                             this.bbar.setStyle('position', 'static');
                             this.bbar.setStyle('position', '');
                         }
@@ -11730,7 +11740,7 @@ new Ext.Panel({
                 if(this.footer){
                     this.footer.setWidth(w);
                     if(this.fbar){
-                        this.fbar.setSize(Ext.isIE ? (w - this.footer.getFrameWidth('lr')) : 'auto');
+                        this.fbar.setSize(Ext.isIE9m ? (w - this.footer.getFrameWidth('lr')) : 'auto');
                     }
                 }
 
@@ -12532,7 +12542,7 @@ cp.colors = ['000000', '993300', '333300'];
         };
         Ext.ColorPalette.superclass.onRender.call(this, container, position);
         var t = this.tpl || new Ext.XTemplate(
-            '<tpl for="."><a href="#" class="color-{.}" hidefocus="on"><em><span style="background:#{.}" unselectable="on">&#160;</span></em></a></tpl>'
+            '<tpl for="."><a href="#" class="color-{.}" hidefocus="on"><em><span style="background:#{.}" class="x-unselectable" unselectable="on">&#160;</span></em></a></tpl>'
         );
         t.overwrite(this.el, this.colors);
         this.mon(this.el, this.clickEvent, this.handleClick, this, {delegate: 'a'});
@@ -12848,7 +12858,7 @@ Ext.DatePicker = Ext.extend(Ext.BoxComponent, {
         Ext.DatePicker.superclass.onEnable.call(this);
         this.doDisabled(false);
         this.update(initial ? this.value : this.activeDate);
-        if(Ext.isIE){
+        if(Ext.isIE9m){
             this.el.repaint();
         }
 
@@ -12858,7 +12868,7 @@ Ext.DatePicker = Ext.extend(Ext.BoxComponent, {
     onDisable : function(){
         Ext.DatePicker.superclass.onDisable.call(this);
         this.doDisabled(true);
-        if(Ext.isIE && !Ext.isIE8){
+        if(Ext.isIE9m && !Ext.isIE8){
             /* Really strange problem in IE6/7, when disabled, have to explicitly
              * repaint each of the nodes to get them to display correctly, simply
              * calling repaint on the main element doesn't appear to be enough.
@@ -14496,8 +14506,8 @@ Ext.ProgressBar = Ext.extend(Ext.BoxComponent, {
              * @event update
              * Fires after each update interval
              * @param {Ext.ProgressBar} this
-             * @param {Number} The current progress value
-             * @param {String} The current progress text
+             * @param {Number} value  The current progress value
+             * @param {String} text The current progress text
              */
             "update"
         );

@@ -1,25 +1,41 @@
 /*
- * Ext JS Library 2.3.0
- * Copyright(c) 2006-2009, Ext JS, LLC.
- * licensing@extjs.com
- * 
- * http://extjs.com/license
- */
+This file is part of Ext JS 3.4
 
+Copyright (c) 2011-2013 Sencha Inc
+
+Contact:  http://www.sencha.com/contact
+
+GNU General Public License Usage
+This file may be used under the terms of the GNU General Public License version 3.0 as
+published by the Free Software Foundation and appearing in the file LICENSE included in the
+packaging of this file.
+
+Please review the following information to ensure the GNU General Public License version 3.0
+requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+
+If you are unsure which license is appropriate for your use, please contact the sales department
+at http://www.sencha.com/contact.
+
+Build date: 2013-04-03 15:07:25
+*/
 /*
- * Ukrainian translation
- * By zlatko (utf-8 encoding)
+ * Ukrainian translations for ExtJS (UTF-8 encoding)
+ *
+ * Original translation by zlatko
  * 3 October 2007
+ *
+ * Updated by dev.ashevchuk@gmail.com
+ * 01.09.2009
  */
 
-Ext.UpdateManager.defaults.indicatorText = '<div class="loading-indicator">Триває завантаження...</div>';
+Ext.UpdateManager.defaults.indicatorText = '<div class="loading-indicator">Завантаження...</div>';
 
 if(Ext.View){
-   Ext.View.prototype.emptyText = "";
+   Ext.View.prototype.emptyText = "<Порожньо>";
 }
 
 if(Ext.grid.GridPanel){
-   Ext.grid.GridPanel.prototype.ddText = "{0} вибраних стрічок";
+   Ext.grid.GridPanel.prototype.ddText = "{0} обраних рядків";
 }
 
 if(Ext.TabPanelItem){
@@ -27,7 +43,7 @@ if(Ext.TabPanelItem){
 }
 
 if(Ext.form.Field){
-   Ext.form.Field.prototype.invalidText = "Значення у цьому полі невірне";
+   Ext.form.Field.prototype.invalidText = "Хибне значення";
 }
 
 if(Ext.LoadMask){
@@ -55,7 +71,7 @@ Date.dayNames = [
    "Вівторок",
    "Середа",
    "Четвер",
-   "Пятниця",
+   "П’ятниця",
    "Субота"
 ];
 
@@ -79,12 +95,12 @@ if(Ext.util.Format){
 if(Ext.DatePicker){
    Ext.apply(Ext.DatePicker.prototype, {
       todayText         : "Сьогодні",
-      minText           : "Ця дата менше мінімальної дати",
-      maxText           : "Ця дата більше максимальної дати",
+      minText           : "Ця дата меньша за мінімальну допустиму дату",
+      maxText           : "Ця дата більша за максимальну допустиму дату",
       disabledDaysText  : "",
       disabledDatesText : "",
       monthNames        : Date.monthNames,
-      dayNames	        : Date.dayNames,
+      dayNames          : Date.dayNames,
       nextText          : 'Наступний місяць (Control+Вправо)',
       prevText          : 'Попередній місяць (Control+Вліво)',
       monthYearText     : 'Вибір місяця (Control+Вверх/Вниз для вибору року)',
@@ -104,8 +120,8 @@ if(Ext.PagingToolbar){
       prevText       : "Попередня сторінка",
       nextText       : "Наступна сторінка",
       lastText       : "Остання сторінка",
-      refreshText    : "Обновити",
-      displayMsg     : "Відображаються записи з {0} по {1}, всього {2}",
+      refreshText    : "Освіжити",
+      displayMsg     : "Відображення записів з {0} по {1}, всього {2}",
       emptyMsg       : 'Дані для відображення відсутні'
    });
 }
@@ -122,9 +138,9 @@ if(Ext.form.TextField){
 
 if(Ext.form.NumberField){
    Ext.apply(Ext.form.NumberField.prototype, {
-      minText : "Значення цього поля не може бути менше {0}",
-      maxText : "Значення цього поля не може бути більше {0}",
-      nanText : "{0} не являється числом"
+      minText : "Значення у цьому полі не може бути меньше {0}",
+      maxText : "Значення у цьому полі не може бути більше {0}",
+      nanText : "{0} не є числом"
    });
 }
 
@@ -132,10 +148,11 @@ if(Ext.form.DateField){
    Ext.apply(Ext.form.DateField.prototype, {
       disabledDaysText  : "Не доступно",
       disabledDatesText : "Не доступно",
-      minText           : "Дата в цьому полі повинна бути більше {0}",
-      maxText           : "Дата в цьому полі повинна бути менше {0}",
-      invalidText       : "{0} неправильна дата - дата повинна бути вказана у  форматі {1}",
-      format            : "d.m.y"
+      minText           : "Дата у цьому полі повинна бути більша {0}",
+      maxText           : "Дата у цьому полі повинна бути меньша {0}",
+      invalidText       : "{0} хибна дата - дата повинна бути вказана у форматі {1}",
+      format            : "d.m.y",
+      startDay          : 1
    });
 }
 
@@ -148,8 +165,8 @@ if(Ext.form.ComboBox){
 
 if(Ext.form.VTypes){
    Ext.apply(Ext.form.VTypes, {
-      emailText    : 'Це поле повинно містити адресу електронної почти у форматі "user@domain.com"',
-      urlText      : 'Це поле повинно містити URL у форматі "http:/'+'/www.domain.com"',
+      emailText    : 'Це поле повинно містити адресу електронної пошти у форматі "user@example.com"',
+      urlText      : 'Це поле повинно містити URL у форматі "http:/'+'/www.example.com"',
       alphaText    : 'Це поле повинно містити виключно латинські літери та символ підкреслення "_"',
       alphanumText : 'Це поле повинно містити виключно латинські літери, цифри та символ підкреслення "_"'
    });
@@ -161,42 +178,42 @@ if(Ext.form.HtmlEditor){
      buttonTips : {
             bold : {
                title: 'Напівжирний (Ctrl+B)',
-               text: 'Застосування напівжирного до виділеного тексту.',
+               text: 'Зробити напівжирним виділений текст.',
                cls: 'x-html-editor-tip'
             },
             italic : {
                title: 'Курсив (Ctrl+I)',
-               text: ' Застосування курсиву до виділеного тексту.',
+               text: 'Зробити курсивом виділений текст.',
                cls: 'x-html-editor-tip'
             },
             underline : {
                title: 'Підкреслений (Ctrl+U)',
-               text: ' Застосування підкреслення до виділенного тексту.',
+               text: 'Зробити підкресленим виділений текст.',
                cls: 'x-html-editor-tip'
            },
            increasefontsize : {
                title: 'Збільшити розмір',
-               text: 'Збільшення розміру шрифта.',
+               text: 'Збільшити розмір шрифта.',
                cls: 'x-html-editor-tip'
            },
            decreasefontsize : {
-               title: 'Зменшити розмір',
-               text: 'Зменшення розміру шрифта.',
+               title: 'Зменьшити розмір',
+               text: 'Зменьшити розмір шрифта.',
                cls: 'x-html-editor-tip'
            },
            backcolor : {
                title: 'Заливка',
-               text: 'Зміна кольору фону для виділеного тексту або абзацу.',
+               text: 'Змінити колір фону для виділеного тексту або абзацу.',
                cls: 'x-html-editor-tip'
            },
            forecolor : {
                title: 'Колір тексту',
-               text: 'Зміна кольору тексту.',
+               text: 'Змінити колір виділеного тексту або абзацу.',
                cls: 'x-html-editor-tip'
            },
            justifyleft : {
-               title: 'Вирівняти текст по лівій границі',
-               text: 'Вирівнювання тексту по лівій границі.',
+               title: 'Вирівняти текст по лівому полю',
+               text: 'Вирівнювання тексту по лівому полю.',
                cls: 'x-html-editor-tip'
            },
            justifycenter : {
@@ -205,8 +222,8 @@ if(Ext.form.HtmlEditor){
                cls: 'x-html-editor-tip'
            },
            justifyright : {
-               title: 'Вирівняти текст по правій границі',
-               text: 'Вирівнювання тексту по правій границі.',
+               title: 'Вирівняти текст по правому полю',
+               text: 'Вирівнювання тексту по правому полю.',
                cls: 'x-html-editor-tip'
            },
            insertunorderedlist : {
@@ -225,8 +242,8 @@ if(Ext.form.HtmlEditor){
                cls: 'x-html-editor-tip'
            },
            sourceedit : {
-               title: 'Вихідний код',
-               text: 'Переключитись на вихідний код.',
+               title: 'Джерельний код',
+               text: 'Режим редагування джерельного коду.',
                cls: 'x-html-editor-tip'
            }
         }
@@ -237,9 +254,9 @@ if(Ext.grid.GridView){
    Ext.apply(Ext.grid.GridView.prototype, {
       sortAscText  : "Сортувати по зростанню",
       sortDescText : "Сортувати по спаданню",
-      lockText     : "Закріпити колонку",
-      unlockText   : "Зняти закріплення колонки",
-      columnsText  : "Колонки"
+      lockText     : "Закріпити стовпець",
+      unlockText   : "Відкріпити стовпець",
+      columnsText  : "Стовпці"
    });
 }
 

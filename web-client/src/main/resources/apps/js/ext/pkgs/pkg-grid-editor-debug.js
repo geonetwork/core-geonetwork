@@ -1,9 +1,23 @@
-/*!
- * Ext JS Library 3.4.0
- * Copyright(c) 2006-2011 Sencha Inc.
- * licensing@sencha.com
- * http://www.sencha.com/license
- */
+/*
+This file is part of Ext JS 3.4
+
+Copyright (c) 2011-2013 Sencha Inc
+
+Contact:  http://www.sencha.com/contact
+
+GNU General Public License Usage
+This file may be used under the terms of the GNU General Public License version 3.0 as
+published by the Free Software Foundation and appearing in the file LICENSE included in the
+packaging of this file.
+
+Please review the following information to ensure the GNU General Public License version 3.0
+requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+
+If you are unsure which license is appropriate for your use, please contact the sales department
+at http://www.sencha.com/contact.
+
+Build date: 2013-04-03 15:07:25
+*/
 /**
  * @class Ext.grid.CellSelectionModel
  * @extends Ext.grid.AbstractSelectionModel
@@ -562,6 +576,10 @@ grid.on('validateedit', function(e) {
                     col: col
                 };
                 this.activeEditor = ed;
+                if (ed.field.isXType('checkbox')) {
+                    ed.allowBlur = false;
+                    this.setupCheckbox(ed.field);    
+                }
                 // Set the selectSameEditor flag if we are reusing the same editor again and
                 // need to prevent the editor from firing onBlur on itself.
                 ed.selectSameEditor = (this.activeEditor == this.lastActiveEditor);
@@ -574,6 +592,24 @@ grid.on('validateedit', function(e) {
                 }).defer(50);
             }
         }
+    },
+    
+    setupCheckbox: function(field){
+        var me = this,
+            fn = function() {
+                field.el.on('click', me.onCheckClick, me, {single: true});
+            };
+        if (field.rendered) {
+            fn();
+        } else {
+            field.on('render', fn, null, {single: true});
+        }
+    },
+    
+    onCheckClick: function(){
+        var ed = this.activeEditor;
+        ed.allowBlur = true;
+        ed.field.focus(false, 10);   
     },
 
     // private
