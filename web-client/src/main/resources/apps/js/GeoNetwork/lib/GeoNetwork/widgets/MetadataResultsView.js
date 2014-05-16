@@ -301,6 +301,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
     actionMenuInit: function(idx, node){
         this.acMenu = Ext.get(Ext.DomQuery.selectNode('div.md-action-menu', node));
         if (this.acMenu) {
+          this.acMenu.removeAllListeners();
 	        this.acMenu.on('click', function(){
 	            this.createMenu(idx, this);
 	            this.contextMenu.showAt([this.acMenu.getX(), this.acMenu.getY() + this.acMenu.getHeight()]);

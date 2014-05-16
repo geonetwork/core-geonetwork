@@ -465,10 +465,9 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         GeoNetwork.MetadataMenu.superclass.initComponent.call(this);
         
         this.statusStore = new GeoNetwork.data.StatusStore(this.catalogue.services.getStatus);
-        this.statusStore.on('load', function () {
-            this.create();
-        }, this);
-        this.statusStore.load();
+        this.statusStore.load({callback:function () {
+          this.create();
+        }, scope:this});
     }
 });
 
