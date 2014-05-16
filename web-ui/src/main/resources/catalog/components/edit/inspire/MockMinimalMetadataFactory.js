@@ -18,7 +18,7 @@
         language: "",
         characterSet: "",
         hierarchyLevel: "",
-        contact: {
+        contact: [{
           id: '',
           name: '',
           surname: '',
@@ -26,7 +26,7 @@
           organization: {},
           role: '',
           validated: false
-        },
+        }],
         otherLanguages: [],
         identification: {
           type: 'data',
@@ -35,7 +35,7 @@
           dateType: '',
           citationIdentifier: '',
           abstract: {fre: ''},
-          pointOfContact:  {
+          pointOfContact:  [{
             id: '',
             name: '',
             surname: '',
@@ -43,7 +43,7 @@
             organization: {},
             role: '',
             validated: false
-          },
+          }],
           descriptiveKeywords: [],
           extents: []
         }

@@ -72,9 +72,28 @@
                     </select>
                 </div>
             </div>
-            <div data-inspire-contact data-contact="data.contact" data-title="contact"
-                 data-role-options="data.roleOptions" data-edit-contact="editContact('contact', data.contact)"
-                 data-main-lang="data.language" data-languages="data.otherLanguages"></div>
+            <div class="table-responsive col-xs-12">
+                <table class="table table-condensed">
+                    <tr data-ng-class="$first ? '' : 'col-xs-offset-3'"
+                        data-ng-repeat="contact in data.contact">
+                        <td>
+                            <div data-inspire-contact data-contact="contact" data-title="contact"  data-show-title="{{$first ? 'true' : ''}}"
+                                 data-role-options="data.roleOptions" data-edit-contact="editContact('contact', contact)"
+                                 data-main-lang="data.language" data-languages="data.otherLanguages"></div>
+                        </td>
+                        <td width="24px">
+                            <a class="inspire-input-group" data-ng-click="editContact('contact', contact)">
+                                <i class="fa fa-edit fa-fw"></i>
+                            </a>
+                        </td>
+                        <td width="24px">
+                            <a class="inspire-input-group" data-ng-hide="$first" style="color: red" data-ng-click="deleteContact(data.contact, contact)">
+                                <i class="fa fa-times fa-fw"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </fieldset>
 
         <!-- ------------------------------  Identification Section   ---------------------------------- -->
@@ -112,10 +131,29 @@
                 </div>
             </div>
 
-            <div data-inspire-contact data-contact="data.identification.pointOfContact" data-title="pointOfContact"
-                 data-role-options="data.roleOptions" data-edit-contact="editContact('pointOfContact', data.identification.pointOfContact)"
-                 data-main-lang="data.language" data-languages="data.otherLanguages"></div>
 
+            <div class="table-responsive col-xs-12">
+                <table class="table table-condensed">
+                    <tr data-ng-class="$first ? '' : 'col-xs-offset-3'"
+                        data-ng-repeat="contact in data.identification.pointOfContact">
+                        <td>
+                            <div data-inspire-contact data-contact="contact" data-title="pointOfContact" data-show-title="{{$first ? 'true' : ''}}"
+                                 data-role-options="data.roleOptions" data-edit-contact="editContact('pointOfContact', contact)"
+                                 data-main-lang="data.language" data-languages="data.otherLanguages"></div>
+                        </td>
+                        <td width="24px">
+                            <a class="inspire-input-group" data-ng-click="editContact('pointOfContact', contact)">
+                                <i class="fa fa-edit fa-fw"></i>
+                            </a>
+                        </td>
+                        <td width="24px">
+                            <a class="inspire-input-group" data-ng-hide="$first" style="color: red" data-ng-click="deleteContact(data.identification.pointOfContact, contact)">
+                                <i class="fa fa-times fa-fw"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
 
             <!---------------------------   Keywords Section  ----------------------------------------------------------->
             <div data-ng-controller="InspireKeywordController">
@@ -150,20 +188,30 @@
 
                 <div class="form-group">
                     <label class="col-xs-3 control-label"><span data-translate="">descriptiveKeyword</span>: </label>
-                    <div class="col-xs-9 input-group"
-                         data-ng-class="$first ? '' : 'col-xs-offset-3'"
-                         data-ng-repeat="keyword in data.identification.descriptiveKeywords">
-                        <div data-inspire-multilingual-text
-                             data-rows="1"
-                             data-main-lang="data.language"
-                             data-languages="data.otherLanguages"
-                             data-field="keyword.words"/>
-                        <a class="input-group-addon inspire-input-group" data-ng-click="editKeyword(keyword)">
-                            <i class="fa fa-edit fa-fw"></i>
-                        </a>
-                        <a data-ng-hide="$first" class="input-group-addon inspire-input-group" style="color: red" data-ng-click="deleteKeyword(keyword)">
-                            <i class="fa fa-times fa-fw"></i>
-                        </a>
+                    <div class="table-responsive col-xs-9">
+                        <table class="table table-condensed">
+                            <tr data-ng-class="$first ? '' : 'col-xs-offset-3'"
+                                 data-ng-repeat="keyword in data.identification.descriptiveKeywords">
+                                <td width="98%">
+                                    <div data-inspire-multilingual-text
+                                         data-rows="1"
+                                         data-disabled="true"
+                                         data-main-lang="data.language"
+                                         data-languages="data.otherLanguages"
+                                         data-field="keyword.words"/>
+                                </td>
+                                <td width="24px">
+                                    <a class="inspire-input-group" data-ng-click="editKeyword(keyword)">
+                                        <i class="fa fa-edit fa-fw"></i>
+                                    </a>
+                                </td>
+                                <td width="24px">
+                                    <a class="inspire-input-group" data-ng-hide="$first" style="color: red" data-ng-click="deleteKeyword(keyword)">
+                                        <i class="fa fa-times fa-fw"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -184,7 +232,7 @@
                                 <div class="input-group">
                                     <input class="form-control" type="search"
                                            placeholder="{{'search' | translate}}"
-                                           ng-keyup="$event.keyCode == 13 ? searchExtents(extentSearch) : null"
+                                           ng-keyup="$event.preventDefault(); ($event.keyCode == 13 && (extentSearch && extentSearch.length > 2) ? searchExtents(extentSearch) : null)"
                                            ng-model="extentSearch"/>
 
                                     <a id="extentSearchButton" class="input-group-addon"
@@ -206,8 +254,8 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal" data-ng-translate="">cancel</button>
                                 <button type="button" class="btn btn-primary" data-ng-translate=""
-                                        data-ng-disabled="!selectedKeyword.uri"
-                                        data-ng-click="linkToOtherKeyword()">update</button>
+                                        data-ng-disabled="!selectedExtent.geom"
+                                        data-ng-click="linkToOtherExtent()">update</button>
                             </div>
                         </div>
                     </div>
@@ -216,27 +264,34 @@
 
                 <div class="form-group">
                     <label class="col-xs-3 control-label"><span data-translate="">extent</span>: </label>
-                    <div class="col-xs-9" style="padding-bottom: 2em"
-                         data-ng-class="$first ? '' : 'col-xs-offset-3'"
-                         data-ng-repeat="extent in data.identification.extents">
-                        <div class="col-xs-6" >
-                            <div data-inspire-multilingual-text
-                                 data-rows="3"
-                                 data-main-lang="data.language"
-                                 data-languages="data.otherLanguages"
-                                 data-field="extent.description"/>
-
-                        </div>
-                        <div class="col-xs-6 input-group" >
-                            <img data-ng-if="extent && extent.geom" data-ng-src="{{extentImgSrc(200, extent)}}">
-
-                            <a class="input-group-addon inspire-input-group" data-ng-click="editExtent(extent)">
-                                <i class="fa fa-edit fa-fw"></i>
-                            </a>
-                            <a data-ng-hide="$first" class="input-group-addon inspire-input-group" style="color: red" data-ng-click="deleteExtent(keyword)">
-                                <i class="fa fa-times fa-fw"></i>
-                            </a>
-                        </div>
+                    <div class="table-responsive col-xs-9">
+                        <table class="table table-condensed">
+                            <tr style="padding-bottom: 2em"
+                                 data-ng-class="$first ? '' : 'col-xs-offset-3'"
+                                 data-ng-repeat="extent in data.identification.extents">
+                                <td>
+                                    <div data-inspire-multilingual-text
+                                         data-rows="3"
+                                         data-disabled="true"
+                                         data-main-lang="data.language"
+                                         data-languages="data.otherLanguages"
+                                         data-field="extent.description"/>
+                                </td>
+                                <td width="200px">
+                                    <img data-ng-if="extent && extent.geom" data-ng-src="{{extentImgSrc(200, extent)}}">
+                                </td>
+                                <td width="24px">
+                                    <a class="inspire-input-group" data-ng-click="editExtent(extent)">
+                                        <i class="fa fa-edit fa-fw"></i>
+                                    </a>
+                                </td>
+                                <td width="24px">
+                                    <a data-ng-hide="$first" class="inspire-input-group" style="color: red" data-ng-click="deleteExtent(keyword)">
+                                        <i class="fa fa-times fa-fw"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>

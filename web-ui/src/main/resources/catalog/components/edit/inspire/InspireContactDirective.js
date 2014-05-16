@@ -42,6 +42,7 @@
     return {
       scope: {
         title: '@',
+        showTitle: '@',
         contact: '=',
         roleOptions: '=',
         languages: '=',
@@ -51,8 +52,8 @@
       restrict: 'A',
       replace: 'true',
       template: '<div class="form-group">' +
-        '<label class="col-xs-3 control-label"><span data-translate="">{{title}}</span>: </label>' +
-        '<div class="col-xs-9">' +
+        '<label data-ng-if="showTitle" class="col-xs-3 control-label"><span data-translate="">{{title}}</span>: </label>' +
+        '<div data-ng-class="showTitle ? \'\' : \'col-xs-offset-3\'" class="col-xs-9">' +
         '<div class="form-group">' +
         '<div class="col-xs-6">' +
         '<input ng-disabled="contact.validated" id="contactName" class="form-control" ng-model="contact.name" placeholder="{{\'name\' | translate}}"></select>' +
@@ -76,7 +77,7 @@
         '<div class="col-xs-12">' +
         '<div data-ng-disabled="contact.validated" data-inspire-multilingual-text data-field="contact.organization" ' +
         '     data-placeholder="{{\'organization\' | translate}}" data-rows="1" data-main-lang="mainLang" data-languages="languages"/>' +
-        '<button type="button" class="btn btn-default" data-ng-click="editContact()" ><i class="fa fa-edit" style="padding-right: 5px"></i>{{\'modify\' | translate }}</button>' +
+//        '<button type="button" class="btn btn-default" data-ng-click="editContact()" ><i class="fa fa-edit" style="padding-right: 5px"></i>{{\'modify\' | translate }}</button>' +
         '</div>' +
         '</div>' +
         '</div></div>'

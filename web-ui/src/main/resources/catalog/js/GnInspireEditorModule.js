@@ -8,13 +8,14 @@
   goog.require('inspire_get_keywords_factory');
   goog.require('inspire_get_extents_factory');
   goog.require('inspire_date_picker_directive');
+  goog.require('inspire_edit_delete_directive');
 
   goog.require('inspire_mock_full_metadata_factory');
 
   var module = angular.module('gn_inspire_editor',
     [ 'gn', 'inspire_contact_directive', 'inspire_multilingual_text_directive', 'inspire_metadata_factory',
       'inspire_get_shared_users_factory', 'inspire_get_keywords_factory', 'inspire_get_extents_factory',
-      'inspire_date_picker_directive']);
+      'inspire_date_picker_directive', 'inspire_edit_delete_directive']);
 
   // Define the translation files to load
   module.constant('$LOCALES', ['core', 'editor', 'inspire']);
@@ -102,6 +103,12 @@
         var modal = $('#editContactModal');
         modal.modal('show');
       };
+      $scope.deleteContact = function(model, contactToRemove) {
+        var i = model.indexOf(contactToRemove);
+        if (i > -1) {
+          model.splice(i, 1);
+        }
+      }
 
   }]);
 
@@ -171,6 +178,13 @@
         inspireGetExtentsFactory($scope.url, query).then (function (extents){
           $scope.extents = extents;
         });
+
+        $scope.linkToOtherExtent = function () {
+          $scope.extentUnderEdit.geom = $scope.selectedExtent.geom;
+          $scope.extentUnderEdit.description = $scope.selectedExtent.description;
+          var modal = $('#editExtentModal');
+          modal.modal('hide');
+        };
       }
     }]);
 

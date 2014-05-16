@@ -18,7 +18,17 @@
         language: "eng",
         characterSet: "UTF8",
         hierarchyLevel: "Dataset",
-        contact: {
+        contact: [{
+          id: '1',
+          name: 'Florent',
+          surname: 'Gravin',
+          email: 'florent.gravin@camptocamp.com',
+          organization: {
+            eng:"camptocamp SA"
+          },
+          role: 'owner',
+          validated: false
+        },{
           id: '2',
           name: 'Jesse',
           surname: 'Eichar',
@@ -29,7 +39,7 @@
           },
           role: 'pointOfContact',
           validated: true
-        },
+        }],
         otherLanguages: ['eng', 'ger'],
         identification: {
           type: 'data',
@@ -39,7 +49,7 @@
           dateType: 'creation',
           citationIdentifier: 'identifier',
           abstract: {fre: 'Abstract'},
-          pointOfContact:  {
+          pointOfContact:  [{
             id: '1',
             name: 'Florent',
             surname: 'Gravin',
@@ -49,7 +59,18 @@
             },
             role: 'owner',
             validated: false
-          },
+          },{
+            id: '2',
+            name: 'Jesse',
+            surname: 'Eichar',
+            email: 'jesse.eichar@camptocamp.com',
+            organization: {
+              eng: "Camptocamp SA",
+              ger: "Camptocamp AG"
+            },
+            role: 'pointOfContact',
+            validated: true
+          }],
           descriptiveKeywords: [
             {words: {eng: 'building'}}, {words: {eng: 'farm', ger: 'Bauernhof'}}],
           extents: [
