@@ -44,22 +44,6 @@
             <body data-ng-controller="GnCatController">
                 <!-- AngularJS application -->
                 <div data-ng-cloak="" class="ng-cloak">
-                    <nav class="navbar navbar-default" role="navigation">
-                        <div class="container-fluid">
-                            <div class="navbar-header">
-                                <a class="navbar-brand" href="#"><img height="24" src="../../images/logos/logo.gif"></img></a>
-                            </div>
-
-                            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                                <ul class="nav navbar-nav navbar-right">
-                                    <form class="navbar-form navbar-left" role="search">
-                                        <div class="form-group pull-right" data-gn-language-switcher="lang" data-langs="langs"/>
-                                    </form>
-                                </ul>
-                            </div><!-- /.navbar-collapse -->
-                        </div><!-- /.container-fluid -->
-                    </nav>
-
                     <div data-ng-include="'{$uiResourcesPath}templates/editor/inspire/metadata.html'"></div>
 
                     <xsl:if test="$isJsEnabled">

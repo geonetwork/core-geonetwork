@@ -41,6 +41,60 @@
 
      <!-- End Contact dialogs -->
 
+    <!-- Header/Action bar  -->
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#"><img height="24" src="../../images/logos/logo.gif"></img></a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-ng-translate="">inspire<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a data-ng-click="" data-ng-translate="">defaultView</a></li>
+                            <li class="divider"></li>
+                            <li><a data-ng-click="saveMetadata('metadata')" data-ng-translate="">metadata</a></li>
+                            <li><a data-ng-click="saveMetadata('identification')" data-ng-translate="">identification</a></li>
+                            <li><a data-ng-click="saveMetadata('maintenance')" data-ng-translate="">maintenance</a></li>
+                            <li><a data-ng-click="saveMetadata('constraints')" data-ng-translate="">constraints</a></li>
+                            <li><a data-ng-click="saveMetadata('spatial')" data-ng-translate="">spatialInfo</a></li>
+                            <li><a data-ng-click="saveMetadata('refSys')" data-ng-translate="">referenceSystemInfo</a></li>
+                            <li><a data-ng-click="saveMetadata('distribution')" data-ng-translate="">distribution</a></li>
+                            <li><a data-ng-click="saveMetadata('dataQuality')" data-ng-translate="">dataQuality</a></li>
+                            <li><a data-ng-click="saveMetadata('appSchInfo')" data-ng-translate="">appSchema</a></li>
+                            <li><a data-ng-click="saveMetadata('porCatInfo')" data-ng-translate="">portrayalCatalogInfo</a></li>
+                            <li><a data-ng-click="saveMetadata('contentInfo')" data-ng-translate="">contentInfo</a></li>
+                            <li><a data-ng-click="saveMetadata('extensionInfo')" data-ng-translate="">extensionInfo</a></li>
+                            <li><a data-ng-click="saveMetadata('legislationInformation')" data-ng-translate="">legislationInfo</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-ng-translate="">save<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a data-ng-click="saveMetadata()" data-ng-translate="">save</a></li>
+                            <li><a data-ng-click="saveMetadataAndExit()" data-ng-translate="">saveAndExit</a></li>
+                            <li><a data-ng-click="stopEditing()" data-ng-translate="">cancel</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <form class="navbar-form navbar-left" role="language">
+                            <div class="form-group pull-right" data-gn-language-switcher="lang" data-langs="langs"/>
+                        </form>
+                    </li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+
+
+    <!-- End Header/Action bar  -->
+
+
     <!-- Main Form -->
 
 

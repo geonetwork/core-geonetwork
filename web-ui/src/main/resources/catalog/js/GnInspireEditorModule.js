@@ -8,14 +8,13 @@
   goog.require('inspire_get_keywords_factory');
   goog.require('inspire_get_extents_factory');
   goog.require('inspire_date_picker_directive');
-  goog.require('inspire_edit_delete_directive');
 
   goog.require('inspire_mock_full_metadata_factory');
 
   var module = angular.module('gn_inspire_editor',
     [ 'gn', 'inspire_contact_directive', 'inspire_multilingual_text_directive', 'inspire_metadata_factory',
       'inspire_get_shared_users_factory', 'inspire_get_keywords_factory', 'inspire_get_extents_factory',
-      'inspire_date_picker_directive', 'inspire_edit_delete_directive']);
+      'inspire_date_picker_directive']);
 
   // Define the translation files to load
   module.constant('$LOCALES', ['core', 'editor', 'inspire']);
@@ -34,10 +33,13 @@
     }]);
 
   module.controller('GnInspireController', [
-    '$scope', 'inspireMetadataLoader', 'inspireGetSharedUsersFactory', '$translate',
-    function($scope, inspireMetadataLoader, inspireGetSharedUsersFactory, $translate) {
+    '$scope', 'inspireMetadataLoader', 'inspireGetSharedUsersFactory', '$translate', '$http',
+    function($scope, inspireMetadataLoader, inspireGetSharedUsersFactory, $translate, $http) {
+      var allowUnload = false;
       window.onbeforeunload = function() {
-        return $translate('beforeUnloadEditor');
+        if (!allowUnload) {
+          return $translate('beforeUnloadEditor');
+        }
       };
       $scope.languages = ['ger', 'fre', 'ita', 'eng'];
 
@@ -47,7 +49,7 @@
       if (indexOfAmp > -1) {
         mdId = mdId.substring(0, indexOfAmp);
       }
-
+      $scope.mdId = mdId;
       inspireMetadataLoader($scope.url, mdId).then(function (data) {
         $scope.data = data;
       });
@@ -108,6 +110,28 @@
         if (i > -1) {
           model.splice(i, 1);
         }
+      };
+
+      $scope.saveMetadata = function(editTab) {
+        return $http.post($scope.url + "inspire.save?id=" + mdId, {data: 'data=' + $scope.data}).success(function (data, status, headers, config, statusText) {
+          if (editTab) {
+            allowUnload = true;
+            window.location.href = 'metadata.edit?id=' + mdId + '&currTab=' + editTab;
+          }
+        }).error(function (data) {
+          alert($translate("saveError")  + data);
+        });
+      };
+
+      $scope.stopEditing = function() {
+        allowUnload = true;
+        window.location.href = 'metadata.show?id=' + mdId;
+      };
+
+      $scope.saveMetadataAndExit = function (){
+        $scope.saveMetadata().success(function(){
+          $scope.stopEditing();
+        });
       }
 
   }]);
@@ -185,6 +209,7 @@
           var modal = $('#editExtentModal');
           modal.modal('hide');
         };
+
       }
     }]);
 

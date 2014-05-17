@@ -613,20 +613,22 @@
         <service name="inspire.edit.model">
             <documentation>
                 <![CDATA[
-        Edit a metadata record to make the metadata INSPIRE compliant.
+        Obtain the json/model required by inspire.edit
 
         Parameters:
         * id or uuid
         ]]></documentation>
-            <class name=".services.metadata.GetEditableData"></class>
-            <output sheet="../xslt/ui-metadata/edit/inspire-model.xsl" contentType="application/json">
-                <call name="serviceKeywords" class=".guiservices.keywords.GetAllInThesaurus">
-                    <param name="thesaurus" value="external.theme.inspire-service-taxonomy" />
-                </call>
-                <call name="dataKeywords" class=".guiservices.keywords.GetAllInThesaurus">
-                    <param name="thesaurus" value="external.theme.inspire-theme" />
-                </call>
-            </output>
+            <error sheet="../xslt/common/error.xsl"/>
+        </service>
+
+        <service name="inspire.save">
+            <documentation>
+                <![CDATA[
+        Save the changes made in inspire.edit
+
+        Parameters:
+        * id or uuid
+        ]]></documentation>
             <error sheet="../xslt/common/error.xsl"/>
         </service>
 
