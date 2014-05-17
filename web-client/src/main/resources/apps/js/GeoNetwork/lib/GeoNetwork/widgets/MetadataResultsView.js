@@ -81,9 +81,15 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
     styleInitialized: false,
 
 		/** Function to map protocol/mime-types to CSS: should be supplied by 
-		 * otherwise GeoNetwork.Util.protocolToCSS will be used
+		 * GeoNetwork.Settings.protocolToCSS but if not 
+		 * GeoNetwork.Util.protocolToCSS will be used
 		 */
 		protocolToCSS: undefined,
+		/** Function to map related records to CSS: should be supplied by 
+		 * GeoNetwork.Settings.relatedToCSS otherwise a default mapping will be
+		 * be used. See widgets/ViewPanel.js
+		 */
+		relationToCSS: undefined,
     
     /** api: property[mdSelectionUuids] 
      *  Current selection uuids
@@ -321,7 +327,8 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                 catalogue: catalogue,
                 record: record,
                 resultsView: dv,
-                addCustomAction: this.addCustomAction
+                addCustomAction: this.addCustomAction,
+								protocolToCSS: protocolToCSS
             });
         } else {
             this.contextMenu.setRecord(record);
@@ -543,212 +550,15 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
      *  
      */
     dislayLinks: function (records) {
-        var view = this;
-
         Ext.each(records, function (r) {
-            var links = r.get('links'),
-                id = r.get('id'),
-                uuid = r.get('uuid'),
-                div = Ext.query('#md-links-' + id, view.el.dom.body),
+            var id = r.get('id'),
+						    div = Ext.query('#md-links-' + id, this.el.dom.body),
                 el = Ext.get(div[0]);
 
-            // Add permanent link (can copy for bookmark)
-            var menu = new Ext.menu.Menu(),
-                bHref = this.catalogue.services.rootUrl + 'search?&uuid=' + escape(uuid);
-
-            var permalinkMenu = new Ext.menu.TextItem({text: '<input value="' + bHref + '"/></br><a href="' + bHref + '">Link</a>'});
-            menu.add('<b class="menu-title">' 
-                      + OpenLayers.i18n('permalinkInfo') + '</b>',
-                      permalinkMenu);
-            view.addLinkMenu(id, [{
-              text: 'Bookmark Link',
-              href: bHref,
-              menu: menu
-            }], OpenLayers.i18n('Bookmark Link'), 'bookmark', el);
-
-            
-            if (links.length > 0) {
-                
-                // The template may not defined a md-links placeholder
-                if (el) {
-                    var store = new Ext.data.ArrayStore({
-                        autoDestroy: true,
-                        idIndex: 0,  
-                        fields: [
-                            {name: 'href', mapping: 'href'}, 
-                            {name: 'name', mapping: 'name'}, 
-                            {name: 'protocol', mapping: 'protocol'}, 
-                            {name: 'title', mapping: 'title'}, 
-                            {name: 'type', mapping: 'type'}
-                        ],
-                        data: links
-                    });
-                    store.sort('type');
-                    
-                    
-                    var linkButton = [], label = null, currentType = null, bt,
-                         allowDynamic = r.get('dynamic'), allowDownload = r.get('download'),
-                         hasDownloadAction = 0;
-                
-                    var nid = 0;
-                    store.each(function (record) {
-                        nid += 1;
-                        var linkId = nid+"-"+uuid;
-                        // Avoid empty URL
-                        if (record.get('href') !== '') {
-                            // Check that current record type is the same as the previous record
-                            // In such case, add the previous button if exist
-                            // or create a new button to be added later
-                            if (currentType === null || currentType !== record.get('type')) {
-                                if (linkButton.length !== 0) {
-                                    view.addLinkMenu(linkId, linkButton, label, currentType, el);
-                                }
-                                linkButton = [];
-                                currentType = record.get('type');
-                                var labelKey = 'linklabel-' + currentType;
-                                label = OpenLayers.i18n(labelKey);
-                                if (label === labelKey) { // Default label if not found in translation
-                                    label = OpenLayers.i18n('linklabel-');
-                                }
-                            }
-                            
-                            var text = null, handler = null;
-                            
-                            // Only display WMS link if dynamic property set to true for current user & record
-                            if (currentType === 'application/vnd.ogc.wms_xml' || (currentType.indexOf('OGC:WMS') > -1)) {
-                                if (allowDynamic) {
-                                    linkButton.push({
-                                        text: record.get('title') || record.get('name'),
-                                        handler: function (b, e) {
-                                            // FIXME : ref to app
-                                            app.switchMode('1', true);
-                                            app.getIMap().addWMSLayer([[record.get('title'), record.get('href'), record.get('name'), uuid]]);
-                                        },
-                                        href: record.get('href')
-                                    });
-                                }
-                            } else if (currentType === 'application/vnd.ogc.wmc') {
-                                linkButton.push({
-                                    text: record.get('title') || record.get('name'),
-                                    handler: function (b, e) {
-                                        // FIXME : ref to app
-                                        app.switchMode('1', true);
-                                        app.getIMap().addWMC(record.get('href'));
-                                    },
-                                    href: record.get('href')
-                                });
-                            } else {
-                                // If link is uploaded to GeoNetwork the resources.get service or file.disclaimer service is used
-                                // Check if allowDownload 
-                                var displayLink = true;
-                                if ((record.get('href').indexOf('resources.get') !== -1) || (record.get('href').indexOf('file.disclaimer') !== -1)) {
-                                    displayLink = allowDownload;
-                                    if (displayLink) hasDownloadAction++;
-                                } else if (currentType === 'application/vnd.google-earth.kml+xml') {
-                                    // Google earth link is provided when a WMS is provided
-                                    displayLink = allowDynamic;
-                                }
-                                if (displayLink) {
-                                    linkButton.push({
-                                        text: (record.get('title') || record.get('name')),
-                                        href: record.get('href')
-                                    });
-                                }
-                            }
-                            
-                        }
-                        
-                    });
-                    // Add the last button
-                    nid++;
-                    var linkId = nid+"-"+uuid;
-                    if (linkButton !== null && linkButton.length !== 0) {
-                        view.addLinkMenu(linkId, linkButton, label, currentType, el);
-                    }
-                    
-                    // Add the download selector/all button if more than one
-                    // download link on this record
-                    if (hasDownloadAction > 1) {
-                        nid++;
-                        linkId = nid+"-"+uuid;
-                        view.addLinkMenu(linkId, [{
-                            text: 'download',
-                            handler: function () {
-                                // FIXME : this call require the catalogue to be named catalogue
-                                catalogue.metadataPrepareDownload(id);
-                            },
-                        }], OpenLayers.i18n('prepareDownload'), 'downloadAllIcon', el);
-                    }
-                }
-            }
+						GeoNetwork.util.LinkTools.addLinks(this.catalogue, r, el, this.protocolToCSS);
         }, this);
-    },
-    /** private: method[addLinkMenu]
-     *  Display a menu with links for a metadata record for a protocol.
-     *  If there is only one element in the linkButton array, display a menu
-     *  and display a dropdown menu if not.
-     */
-    addLinkMenu: function (parentId, linkButton, label, currentType, el) {
-        var buttonId = label+'-'+parentId;
-        if (Ext.get(buttonId)) { // don't need to add them again
-          return;
-        }
+		},
 
-				if (!this.protocolToCSS) this.protocolToCSS = GeoNetwork.Util.protocolToCSS;
-
-        var href = linkButton[0].href,
-            isDownload = (currentType === 'downloadAllIcon') || (href.indexOf('resources.get') !== -1) || (href.indexOf('file.disclaimer') !== -1);
-
-        if (linkButton.length === 1) {
-            var handler = linkButton[0].handler || function () {
-                window.open(linkButton[0].href);
-            };
-						var tTip = label;
-            if (href) tTip += ' ' + href;
-            if (linkButton[0].menu) {
-              bt = new Ext.Button({
-                id: buttonId,
-                tooltip: tTip,
-                menu: linkButton[0].menu,
-                iconCls: this.protocolToCSS(currentType, isDownload),
-                renderTo: el
-              });
-            } else {
-              bt = new Ext.Button({
-                id: buttonId,
-                tooltip: tTip,
-                handler: handler,
-                iconCls: this.protocolToCSS(currentType, isDownload),
-                renderTo: el
-              });
-            }
-        } else {
-						if (linkButton[0].handler) { // if handlers then create button list
-							var items = [];
-            	Ext.each(linkButton, function (button) {
-              	items.push(new Ext.Button({
-                	handler: button.handler,
-                	text: button.text
-              	}));
-					  	});
-            	bt = new Ext.Button({
-                	id: buttonId,
-                	tooltip: label,
-                	menu: new Ext.menu.Menu({cls: 'links-mn', items: items}),
-                	iconCls: this.protocolToCSS(currentType, isDownload),
-                	renderTo: el
-            	});
-						} else {
-            	bt = new Ext.Button({
-                	id: buttonId,
-                	tooltip: label,
-                	menu: new Ext.menu.Menu({cls: 'links-mn', items: linkButton}),
-                	iconCls: this.protocolToCSS(currentType, isDownload),
-                	renderTo: el
-            	});
-						}
-        }
-    },
     /** private: method[dislayRelations]
      *  Search for children for all records which are series.
      *  All members are displayed in a UL element identified by "md-relation-{metadata_id}".

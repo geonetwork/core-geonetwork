@@ -325,3 +325,23 @@ div#tabs .x-tab-strip span.x-tab-strip-text {
 	color: #28dc78;
 }
 
+td.linksAuto .md-mn-kml {
+	color: #0847a4;
+}
+
+td.linksAuto .md-mn-www {
+	color: #3184ff;
+}
+
+td.linksAuto .md-mn-download {
+	color: #ffb977;
+}
+
+td.linksAuto .md-mn-bookmark {
+	color: #FFCC00;
+}
+
+td.linksAuto .md-mn-wms {
+	color: #28dc78;
+}
+

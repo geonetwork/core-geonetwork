@@ -496,6 +496,10 @@ div.help ul li {
 	font-size: 12px;
 }
 
+#metadata-info .relation {
+	font-size: 10px;
+}
+
 #metadata-info .title {
 	color: #069;
 }
@@ -1020,6 +1024,7 @@ div.showBigMapItemInactive:hover {
 	border-right: 0;
 	width: 1px;
 	padding: 0;
+	text-align: center;
 }
 
 #metadata-info .related td {

@@ -843,18 +843,6 @@ nav {
   padding-left:25px;
 }
 
-li.services {
-  background-image: url(../../html5ui/img/icon_service.png);
-  background-repeat: no-repeat;
-	text-indent: 20;
-}
-
-li.children,li.related,li.parent,li.datasets {
-  background-image: url(../../html5ui/img/icon_dataset.png);
-  background-repeat: no-repeat;
-	text-indent: 20;
-}
-
 #metadata-info .related .relatedResource span.desc {
   padding-left:10px;
   font-size:10px;
@@ -872,6 +860,11 @@ li.children,li.related,li.parent,li.datasets {
 .fabutton {
 	font-family: FontAwesome !important;
 	font-size: 2em !important;
+}
+
+.fabutton-1x {
+	font-family: FontAwesome !important;
+	font-size: 1.5em !important;
 }
 
 #result-panel div#resultsPanel .xmlIcon {
