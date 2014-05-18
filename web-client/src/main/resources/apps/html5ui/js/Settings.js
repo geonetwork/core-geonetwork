@@ -136,7 +136,7 @@ GeoNetwork.Settings.relationToCSS = function(type, subType) {
 				'fcats':     'fabutton-1x fa fa-table' 
 		  };
 			/* If the type isn't listed then the relationship won't be displayed */
-			console.log('Mapped type: '+type+' (subtype: '+subType+') to '+typesAndClasses[type]);
+			//console.log('Mapped type: '+type+' (subtype: '+subType+') to '+typesAndClasses[type]);
 			return typesAndClasses[type];
 }
 
