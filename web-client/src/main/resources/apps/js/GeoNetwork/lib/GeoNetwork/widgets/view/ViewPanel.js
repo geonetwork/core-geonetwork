@@ -91,6 +91,19 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
     tooltips: [],
     buttonWidth : undefined,
     buttonHeight : undefined,
+		viewPanelButtonCSS : undefined,
+
+    /** api: method[displayLinks]
+     *  Display metadata links.
+     */
+    displayLinks : function() {
+        var links = Ext.query('td.linksAuto div.md-links', this.body.dom);
+				if (links) { // skip if not present
+        	var el = Ext.get(links[0]);
+					GeoNetwork.util.LinkTools.addLinks(this.catalogue, this.record, el, this.resultsView.protocolToCSS);
+				}
+		},
+
     /** api: method[getLinkedData]
      *  Get related metadata records for current metadata using xml.relation service.
      */
@@ -118,8 +131,17 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
         if (exist !== null) {
             exist.next().child('li').insertHtml('afterEnd', link);
         } else {
-            el.child('tr').insertHtml('beforeBegin', '<tr><td class="main ' + type + '"><span class="cat-' + type +' icon">' + OpenLayers.i18n('related' + type) + '</span></td>' + 
+					if (this.resultsView.relationToCSS) {
+						var faIconType = this.resultsView.relationToCSS(type, subType);
+						if (faIconType) {
+            	el.child('tr').insertHtml('beforeBegin', '<tr><td class="main ' + type + '"><i class="' + faIconType +'"></i><span class="relation">' + OpenLayers.i18n('related' + type) + '</span></td><td><ul>' + link + '</ul></td></tr>');
+						} else {
+							//console.log('Skipping '+type+' '+subType);
+						}
+					} else {
+            	el.child('tr').insertHtml('beforeBegin', '<tr><td class="main ' + type + '"><span class="cat-' + type +' icon">' + OpenLayers.i18n('related' + type) + '</span></td>' + 
             '<td><ul>' + link + '</ul></td></tr>');
+					}
         }
     },
     extractorWindow: null,
@@ -338,13 +360,16 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
             this.getLinkedData();
         }
         
+        // Display download links 
+				this.displayLinks();
+
         this.registerTooltip();
     },
     createPrintMenu: function(){
         return new Ext.Button({
             width: this.buttonWidth,
             height: this.buttonHeight,
-            iconCls: 'print',
+            iconCls: this.viewPanelButtonCSS ? this.viewPanelButtonCSS('viewpanel-print') : 'print',
             id : 'viewpanel-print',
             tooltip: OpenLayers.i18n('printTT'),
             listeners: {
@@ -366,7 +391,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
         return new Ext.Button({
             width: this.buttonWidth,
             height: this.buttonHeight,
-            iconCls: 'feedback',
+            iconCls: this.viewPanelButtonCSS ? this.viewPanelButtonCSS('viewpanel-feedback') : 'feedback',
             id : 'viewpanel-feedback',
             tooltip: OpenLayers.i18n('Feedback'),
             disabled: disabledButton,
@@ -385,7 +410,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
             height: this.buttonHeight,
             enableToggle: true,
             pressed: this.displayTooltip,
-            iconCls: 'book',
+            iconCls: this.viewPanelButtonCSS ? this.viewPanelButtonCSS('viewpanel-tooltip') : 'book',
             id : 'viewpanel-tooltip',
             tooltip: OpenLayers.i18n('enableTooltip'),
             listeners: {

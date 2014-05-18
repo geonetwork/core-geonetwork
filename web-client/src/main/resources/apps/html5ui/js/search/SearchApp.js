@@ -501,6 +501,8 @@ GeoNetwork.searchApp = function() {
                 displaySerieMembers : true,
                 autoScroll : true,
                 autoWidth : false,
+								protocolToCSS: GeoNetwork.Settings.protocolToCSS,
+								relationToCSS: GeoNetwork.Settings.relationToCSS,
                 tpl : GeoNetwork.HTML5UI.Templates.FULL,
                 templates : {
                     SIMPLE : GeoNetwork.HTML5UI.Templates.SIMPLE,

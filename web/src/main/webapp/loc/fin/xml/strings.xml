@@ -1425,4 +1425,6 @@ Kuvailujen tekemiseksi tarvitset käyttäjätunnuksen. Pyydä se osoitteesta <a 
   <about.text>About this site</about.text>
   <signIn>Sign In</signIn>
   <signOut>Sign Out</signOut>
+	<rss-button>RSS</rss-button>
+	<print-button>Print</print-button>
 </strings>

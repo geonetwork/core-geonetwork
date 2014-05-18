@@ -496,6 +496,10 @@ div.help ul li {
 	font-size: 12px;
 }
 
+#metadata-info .relation {
+	font-size: 10px;
+}
+
 #metadata-info .title {
 	color: #069;
 }
@@ -1020,6 +1024,8 @@ div.showBigMapItemInactive:hover {
 	border-right: 0;
 	width: 1px;
 	padding: 0;
+	text-align: center;
+	line-height: 10px;
 }
 
 #metadata-info .related td {
@@ -1142,15 +1148,6 @@ ul.gn-relation-thumbnail {
 
 
 
-
-/* admin */
-.user-button a {
-	padding-top: 0px;
-}
-
-a#administration_button {
-	background-position: 0 -10px
-}
 
 #metadata-panel .x-btn-over .book,#metadata-panel .x-btn-pressed .book {
 	background-position: 0px 0px;

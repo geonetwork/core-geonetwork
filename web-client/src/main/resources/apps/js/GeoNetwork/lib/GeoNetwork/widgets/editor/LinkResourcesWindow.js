@@ -82,7 +82,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 value: 'dataset'
             }    // If dataset search should be restricted to ISO19139 or profil add criteria on schema. 
             //, {name: 'S__schema', value: 'iso19139'}
-            ],
+						],
             fcats: [{
                 name: 'E__schema',
                 value: 'iso19110'
@@ -774,11 +774,11 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         
         var grid = new Ext.grid.GridPanel({
             border: false,
-            anchor: '100% 80%',
             store: this.mdStore,
             colModel: colModel,
             sm: checkboxSM,
-            autoExpandColumn: 'title'
+            autoExpandColumn: 'title',
+						anchor: '100% 80%'
         });
         
         grid.getSelectionModel().on('rowselect', function (sm, rowIndex, r) {
@@ -817,7 +817,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
             }
             //this.validate();
         }, this);
-        
+      
         // Focus on first row
         grid.getStore().on('load', function (store) {
             grid.getSelectionModel().selectFirstRow();
@@ -825,13 +825,28 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         }, grid);
         
         var cmp = [];
-        this.getHiddenFormInput(cmp);
-        this.getFormFieldForSibling(cmp);
-        cmp.push(this.getSearchInput());
+				var formCmp = [];
+        this.getHiddenFormInput(formCmp);
+        this.getFormFieldForSibling(formCmp);
+        formCmp.push(this.getSearchInput());
+
+				cmp.push(new Ext.form.FormPanel({ 
+					anchor: '100%',
+					items: formCmp,
+				}));
         cmp.push(grid);
-        this.getFormFieldForService(cmp);
-        
-        this.formPanel = new Ext.form.FormPanel({
+
+				var serviceCmp = [];
+				this.getFormFieldForService(serviceCmp);
+				cmp.push(new Ext.form.FormPanel({ 
+					anchor: '100%',
+					items: serviceCmp
+				}));
+       
+			 	// This should be Ext.form.FormPanel but that doesn't lay out
+				// the gridpanel properly (no rows displayed)!
+        this.formPanel = new Ext.Panel({
+						layout: 'anchor', // wouldn't be necessary in formpanel
             items: cmp,
             buttons: [{
                 text: OpenLayers.i18n('createLink'),

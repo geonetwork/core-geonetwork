@@ -135,20 +135,29 @@
 			<body>
 
 			<div class="grey">
-					<a href="javascript:window.print();" id="printer-button">Print</a>
-					<a id="rss-button" href="/geonetwork/srv/eng/rss.latest">RSS</a>
-					<span class="user-button">
+					<a href="javascript:window.print();" id="printer-button"><i class="fa fa-print"></i><xsl:value-of select="/root/gui/strings/print-button"/></a>
+					<a id="rss-button" href="/geonetwork/srv/eng/rss.latest"><i class="fa fa-rss-square"></i><xsl:value-of select="/root/gui/strings/rss-button"/></a>
+					<span id="login-stuff">
 						<a id="user-button">
 							<xsl:choose>
 								<xsl:when test="string(/root/gui/session/userId)=''">
-								  <xsl:attribute name="href">javascript:toggleLogin();</xsl:attribute>
-									<xsl:value-of select="/root/gui/strings/signIn"/>
-							  </xsl:when>
+							  	<xsl:attribute name="href">javascript:toggleLogin();</xsl:attribute>
+							 	</xsl:when>
 								<xsl:otherwise>
-								  <xsl:attribute name="href">javascript:app.loginApp.logout();</xsl:attribute>
-									<xsl:value-of select="/root/gui/strings/signOut"/>
-							  </xsl:otherwise>
+							  	<xsl:attribute name="href">javascript:app.loginApp.logout();</xsl:attribute>
+							 	</xsl:otherwise>
 						  </xsl:choose>
+							<i class="fa fa-user"></i>
+							<span id="user-button_label">
+								<xsl:choose>
+									<xsl:when test="string(/root/gui/session/userId)=''">
+										<xsl:value-of select="/root/gui/strings/signIn"/>
+							 		</xsl:when>
+									<xsl:otherwise>
+										<xsl:value-of select="/root/gui/strings/signOut"/>
+							 		</xsl:otherwise>
+						  	</xsl:choose>
+							</span>
 						</a>
 						<label id="username_label">
 							<xsl:if test="string(/root/gui/session/userId)!=''">
@@ -165,10 +174,11 @@
 								<xsl:value-of select="concat('(',/root/gui/session/profile,')')"/>	
 							</xsl:if>
 						</label>
-						<a href="javascript:catalogue.admin();" id="administration_button">
+						<a href="javascript:catalogue.admin();" id="administration-button">
 							<xsl:if test="string(/root/gui/session/userId)=''">
 								<xsl:attribute name="style">display:none;</xsl:attribute>
 							</xsl:if>
+							<i class="fa fa-wrench"></i>
 							<xsl:value-of select="/root/gui/strings/admin"/>
 						</a>
 						<script>function false_(){ return false; }</script>
@@ -182,7 +192,11 @@
 					  	</div>
 						</form>
 				  </span>
-					<a id="help-tab" target="_blank" href="/geonetwork/docs/eng/users">Help</a>
+					<!-- from here on, all elements are floated to the right so 
+					     they are in reverse order -->
+					<a id="help-button" target="_blank" href="/geonetwork/docs/eng/users">
+						<i class="fa fa-question-circle"></i><xsl:value-of select="/root/gui/strings/help"/>
+					</a>
 					<a id="lang-button" href="javascript:toggle('lang-form');">
             <xsl:for-each select="/root/gui/config/languages/*">
               <xsl:variable name="lang" select="name(.)"/>
@@ -190,8 +204,8 @@
                 <span id="current-lang"><xsl:value-of select="/root/gui/strings/*[name(.)=$lang]"/></span>&#160;<i class="fa fa-angle-double-down"></i>
               </xsl:if>
             </xsl:for-each>
+						<div id="lang-form" style="display:none;"></div>
           </a>
-					<div id="lang-form" style="display:none;"></div>
 			</div>
 				
       <div id="page-container">  

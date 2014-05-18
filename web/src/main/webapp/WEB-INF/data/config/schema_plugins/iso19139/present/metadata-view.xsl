@@ -523,11 +523,18 @@
         <tr style="display:none;"><!-- FIXME needed by JS to append other type of relation from xml.relation service -->
           <td class="main"></td><td></td>
         </tr>
+				<tr>
+					<td colspan="2" class="linksAuto">
+						<div class="md-links">
+						</div>
+					</td>
+				</tr>
+					<!--
         <xsl:for-each-group select="gmd:distributionInfo/descendant::gmd:onLine[gmd:CI_OnlineResource/gmd:linkage/gmd:URL!='']" group-by="gmd:CI_OnlineResource/gmd:protocol">
         <tr>
           <td class="main">
-            <!-- Usually, protocole format is OGC:WMS-version-blahblah, remove ':' and get
-            prefix of the protocol to set the CSS icon class-->
+            <!- - Usually, protocole format is OGC:WMS-version-blahblah, remove ':' and get
+            prefix of the protocol to set the CSS icon class- ->
             <span class="{translate(substring-before(current-grouping-key(), '-'), ':', '')} icon">
                 <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name = 'gmd:protocol']/helper/option[@value=normalize-space(current-grouping-key())]"/>
             </span>
@@ -545,7 +552,7 @@
                   <a href="{gmd:CI_OnlineResource/gmd:linkage/gmd:URL}">
                     <xsl:choose>
                       <xsl:when test="contains(current-grouping-key(), 'OGC') or contains(current-grouping-key(), 'DOWNLOAD')">
-                        <!-- Name contains layer, feature type, coverage ... -->
+                        <!- - Name contains layer, feature type, coverage ... - ->
                         <xsl:choose>
                           <xsl:when test="normalize-space($desc)!=''">
                             <xsl:value-of select="$desc"/>
@@ -579,7 +586,7 @@
                     </xsl:choose>
                   </a>
                   
-                  <!-- Display add to map action for WMS -->
+                  <!- - Display add to map action for WMS - ->
                   <xsl:if test="contains(current-grouping-key(), 'WMS')">
                   &#160;
                   <a href="#" class="md-mn addLayer"
@@ -594,6 +601,7 @@
           </td>
         </tr>
       </xsl:for-each-group>
+						-->
       </tbody>
     </table>
   </xsl:template>
