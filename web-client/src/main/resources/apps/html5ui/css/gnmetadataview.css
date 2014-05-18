@@ -1025,6 +1025,7 @@ div.showBigMapItemInactive:hover {
 	width: 1px;
 	padding: 0;
 	text-align: center;
+	line-height: 10px;
 }
 
 #metadata-info .related td {
