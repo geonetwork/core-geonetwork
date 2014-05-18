@@ -127,15 +127,16 @@ GeoNetwork.Settings.viewPanelButtonCSS = function(buttonId) {
  * records eg. parent, sibling, children, fcat
  */
 GeoNetwork.Settings.relationToCSS = function(type, subType) {
-      /* 'service|children|related|parent|dataset|fcat|sibling|associated' */
+      /* 'servicess|children|related|parent|dataset|fcats|sibling|associated' */
       var typesAndClasses = {
         'parent':    'fabutton-1x fa fa-long-arrow-up',
         'sibling':   'fabutton-1x fa fa-arrows-h',
         'children':  'fabutton-1x fa fa-long-arrow-down',
-				/* 'service':   'fabutton-1x fa fa-cog', */
-				'fcat':      'fabutton-1x fa fa-table' 
+				'services':   'fabutton-1x fa fa-cog',
+				'fcats':     'fabutton-1x fa fa-table' 
 		  };
 			/* If the type isn't listed then the relationship won't be displayed */
+			console.log('Mapped type: '+type+' (subtype: '+subType+') to '+typesAndClasses[type]);
 			return typesAndClasses[type];
 }
 
