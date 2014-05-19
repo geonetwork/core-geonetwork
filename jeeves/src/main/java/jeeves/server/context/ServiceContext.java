@@ -214,6 +214,8 @@ public class ServiceContext extends BasicContext
 
 	public Element execute(LocalServiceRequest request) throws Exception {
 		ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), getXmlCacheManager(), getMonitorManager(), getProviderManager(), getSerialFactory(), getProfileManager(), htContexts) {
+			/* This override causes database connections to be consumed..... 
+			   Comment out for now. sppigot May, 2014
 			public ResourceManager getResourceManager() {
 				return new ResourceManager(getMonitorManager(), getProviderManager()) {
 					@Override
@@ -238,6 +240,7 @@ public class ServiceContext extends BasicContext
 					}
 				};
 			}
+			*/
 		};
 		
 		UserSession session = userSession;
