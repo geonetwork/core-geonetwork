@@ -22,7 +22,7 @@ public class TemplatesUriLocator implements UriLocator {
 
 	@Override
     public InputStream locate(String uri) throws IOException {
-    	StringBuilder javascript;
+	    StringBuilder javascript;
     	if(uri.startsWith(URI_PREFIX_HEADER)) {
     		javascript = getHeader();
     	}
@@ -39,16 +39,22 @@ public class TemplatesUriLocator implements UriLocator {
             else {
             	realPath = path;
             }
+
+            // Check to avoid NullPointerException
+            if (realPath == null) {
+                return new ByteArrayInputStream(javascript.toString().getBytes("UTF-8"));
+            }
+
             File folder = new File(realPath);
-        	File[] files = folder.listFiles();
-        	if(files != null) {
-        		for(int i=0;i<files.length;++i) {
-        			
-        			BufferedReader br = null;
-        			StringBuilder template = null;
-        			
-    				String sCurrentLine;
-    				template = new StringBuilder();
+            File[] files = folder.listFiles();
+            if(files != null) {
+                for(int i=0;i<files.length;++i) {
+
+                    BufferedReader br = null;
+                    StringBuilder template = null;
+
+                    String sCurrentLine;
+                    template = new StringBuilder();
                     final Reader reader = new InputStreamReader(new FileInputStream(files[i]), "UTF-8");
                     try {
                         br = new BufferedReader(reader);
@@ -64,13 +70,14 @@ public class TemplatesUriLocator implements UriLocator {
 
                         javascript.append(
                                 String.format("$templateCache.put('%s', '%s');",
-                                "../.." + path.replace('\\','/') + '/' + files[i].getName(),
-                                sTemplate));
+                                        "../.." + path.replace('\\','/') + '/' + files[i].getName(),
+                                        sTemplate));
                     } finally {
                         IOUtils.closeQuietly(reader);
                     }
-        		}
-        	}
+                }
+
+            }
     	}
         return new ByteArrayInputStream(javascript.toString().getBytes("UTF-8"));
     }

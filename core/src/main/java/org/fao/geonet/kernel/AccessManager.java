@@ -339,10 +339,10 @@ public class AccessManager {
         Element resultEl = new Element("results");
         for (Pair<Integer, User> integerUserPair : results) {
             resultEl.addContent(new Element("record").
-                    addContent(new Element("userid")).
-                    addContent(new Element("name")).
-                    addContent(new Element("surname")).
-                    addContent(new Element("email"))
+                    addContent(new Element("userid").setText(user.getId() + "")).
+                    addContent(new Element("name").setText(user.getName())).
+                    addContent(new Element("surname").setText(user.getSurname())).
+                    addContent(new Element("email").setText(user.getEmail()))
             );
         }
         return resultEl;
