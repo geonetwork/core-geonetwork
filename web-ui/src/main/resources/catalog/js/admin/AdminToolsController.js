@@ -2,6 +2,7 @@
   goog.provide('gn_admintools_controller');
 
 
+
   var module = angular.module('gn_admintools_controller',
       []);
 
@@ -405,6 +406,73 @@
             });
       };
 
-    }]);
+ 
+
+      // Dependent groups batch replace
+      // FIXME put this object in a service or a JSON config file
+      $scope.batchReplacerGroups = {
+        "metadata": {
+            "elements": [
+            {
+              "key": "id.contact.individualName",
+              "label": "Contact > Individual Name"
+            }, {
+              "key": "id.contact.organisationName",
+              "label": "valueContact > Organization Name"
+            }, {
+              "key": "id.contact.voicePhone",
+              "label": "Contact > Voice phone"
+            }, {
+              "key": "id.contact.faxPhone",
+              "label": "Contact > Fax phone"
+            }, {
+              "key": "id.contact.address",
+              "label": "Contact > Delivery Point"
+            }, {
+              "key": "id.contact.city",
+              "label": "Contact > City"
+            }, {
+              "key": "id.contact.province",
+              "label": "Contact > Administrative Area (Province)"
+            }, {
+              "key": "id.contact.postalCode",
+              "label": "Contact > Postal code"
+            }, {
+              "key": "id.contact.country",
+              "label": "Contact > Country"
+            }, {
+              "key": "id.contact.email",
+              "label": "Contact > Email"
+            }, {
+              "key": "id.contact.or.url",
+              "label": "Contact > OnlineRes > URL"
+            }, {
+              "key": "id.contact.or.ap",
+              "label": "Contact > OnlineRes > Application Profile"
+            }, {
+              "key": "id.contact.or.name",
+              "label": "Contact > OnlineRes > Name"
+            }, {
+              "key": "id.contact.or.description",
+              "label": "Contact > OnlineRes > Description"
+            }, {
+              "key": "id.contact.hoursOfService",
+              "label": "Contact > Hours of service"
+            }, {
+              "key": "id.contact.contactInstructions",
+              "label": "Contact > Contact Instructions"
+            }]
+          }
+      };
+
+      $scope.$watch("replacer.params.group", function(newValue, oldValue) {
+
+      });
+
+     }]);
+
+
+
+
 
 })();

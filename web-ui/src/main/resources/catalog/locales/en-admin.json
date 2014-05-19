@@ -715,6 +715,7 @@
     "configureProcess": "Configure a process",
     "chooseProcess": "Choose",
     "batchProcessParameters": "Process parameters",
+    "batchProcessTypeUnsupported": "Process type {{type}} unsupported",
     "runProcess": "Run",
     "recordsProcessed": "records processed",
     "processReportFor": "Report for process: ",

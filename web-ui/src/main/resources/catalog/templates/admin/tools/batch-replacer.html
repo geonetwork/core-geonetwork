@@ -1,0 +1,22 @@
+<div id="batchForm">
+	<fieldset class="form-horizontal">
+		<div class="form-group">
+			<label data-translate="" class="col-lg-4 control-label">_group</label>
+			<div class="col-lg-8">
+				<select class="form-control" id="gn-batchReplacerGroup"
+					data-ng-model="replacer.params.group" ng-options="group for (group, elements) in batchReplacerGroups">
+					<option></option>
+				</select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label data-translate="" class="col-lg-4 control-label">_element</label>
+			<div class="col-lg-8">
+				<select class="form-control" id="gn-batchReplacerElement" ng-disabled="!elements"
+					data-ng-model="replacer.params.element" ng-options="element for (key, label) in elements">
+					<option></option>
+				</select>
+			</div>
+		</div>
+	</fieldset>
+</div>
