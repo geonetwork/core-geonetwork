@@ -222,23 +222,23 @@
             });
       }
 
-      $scope.runProcess2222 = function(formId) {
+      $scope.runProcess = function(formId) {
         $scope.runProcess(formId, undefined, undefined);
       }
 
       $scope.runProcess = function(formId) {
 
         var formParams = $(formId).serialize();
-        /*if (testMode != undefined) {
+        if (testMode != undefined) {
           formParams += '&test=' + testMode;
-        }*/
+        }
 
         var service =  '';
-        /*if (process != undefined) {
+        if (process != undefined) {
           service =  process;
         } else {
           service =  'md.processing.batch@json';
-        }*/
+        }
 
         service =  'md.processing.batch@json';
 
