@@ -274,11 +274,16 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         } else if (type === 'onlinesrc') {
             parameters += "&url=" + encodeURIComponent(id);
 
+          if(this.metadataSchema.indexOf('iso19139.myocean')==-1) {
+            parameters += "&name=" + encodeURIComponent(uuid.trim().split(' ')[0]);
+          }
+          else {
             var name = uuid.split('||')[0].trim().split(' ');
             var protocol = name.pop();
             parameters += "&name=" + encodeURIComponent(name.join(' '));
             parameters += "&protocol=" + protocol.substring(1, protocol.length -1);
-            
+          }
+
             // if a file is upload remove the file before removing the link
             if (uuid.indexOf('WWW:DOWNLOAD-1.0-http--download') !== -1) {
                 this.removeUploadedFile(uuid, parameters);
@@ -397,8 +402,40 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
      */
     initComponent: function () {
         Ext.applyIf(this, this.defaultConfig);
-        
-        
+
+      this.tpl = new Ext.XTemplate(
+        '<ul class="gn-relation-{type}">',
+        '<tpl for=".">',
+        '<tpl for="data">',
+        '<tpl if="type === \'thumbnail\'">',
+        '<li alt="{title}">',
+        '<tpl if="(typeof id != \'undefined\') && id != \'\'">',
+        '<a rel="lightbox-set" href="{id}"><img class="thumb-small" src="{id}"/></a>',
+        '</tpl>',
+          '<span class="button" id="remove' + this.sep + '{type}' + this.sep + '{title}' + this.sep + '{id}"></span>',
+        '</li>',
+        '</tpl>',
+        '<tpl if="type !== \'thumbnail\'">',
+          '<li alt="{abstract}">' +
+          '<tpl if="type === \'onlinesrc\'">',
+        '<a href="{id}" target="_blank">{title}</a> ',
+        '</tpl>',
+        '<tpl if="type !== \'onlinesrc\'">',
+        '{title} ',
+        '</tpl>',
+          '<tpl if="subType"><span class="relation-type">({subType})</span></tpl>' +
+          '<tpl if="type === \'onlinesrc\'">',
+          '<span class="button" id="remove' + this.sep + '{type}' + this.sep + '{title}' + this.sep + '{id}"></span>',
+        '</tpl>',
+        '<tpl if="type !== \'onlinesrc\'">',
+          '<span class="button" id="remove' + this.sep + '{type}' + this.sep + '{uuid}"></span></li>',
+        '</tpl>',
+        '</tpl>',
+        '</tpl>',
+        '</tpl>',
+        '</ul>'
+      );
+
         this.title = OpenLayers.i18n('relatedResources');
         this.tools = [{
             id : 'refresh',
@@ -406,65 +443,24 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                 panel.reload(panel, panel.metadataId);
             }
         }];
-        this.tpl = new Ext.XTemplate(
-            '<ul class="gn-relation-{type}">',
-            '<tpl for=".">',
-              '<tpl for="data">',
-                '<tpl if="type === \'thumbnail\'">',
-                  '<li alt="{title}">',
-                     '<tpl if="(typeof id != \'undefined\') && id != \'\'">',
-                        '<a rel="lightbox-set" href="{id}"><img class="thumb-small" src="{id}"/></a>',
-                     '</tpl>',
-                    '<span class="button" id="remove' + this.sep + '{type}' + this.sep + '{title}' + this.sep + '{id}"></span>',
-                  '</li>',
-                '</tpl>',
-                '<tpl if="type !== \'thumbnail\'">',
-                  '<li alt="{abstract}">' + 
-                    '<tpl if="type === \'onlinesrc\'">',
-                      '<a href="{id}" target="_blank">{[this.getTitle(values.title)]}</a> ',
-                    '</tpl>',
-                    '<tpl if="type !== \'onlinesrc\'">',
-                      '{title} ',
-                    '</tpl>',
-                    '<tpl if="subType"><span class="relation-type">({subType})</span></tpl>' +
-                    '<tpl if="type === \'onlinesrc\'">',
-                      '<span class="button" id="remove' + this.sep + '{type}' + this.sep + '{title}' + this.sep + '{id}"></span>',
-                    '</tpl>',
-                    '<tpl if="type !== \'onlinesrc\'">',
-                      '<span class="button" id="remove' + this.sep + '{type}' + this.sep + '{uuid}"></span></li>',
-                    '</tpl>',
-                '</tpl>',
-              '</tpl>',
-            '</tpl>',
-            '</ul>',
-            {
-                isDownloadProtocol: function(protocol){
-                    return protocol.indexOf('WWW:DOWNLOAD-1.0-http--download') >= 0;
-                },
-                getTitle: function(title) {
-                    if(title.indexOf('||') < 0) return title;
-                    return title.split('||')[0];
-                }
-            }
-        );
-        
-        GeoNetwork.editor.LinkedMetadataPanel.superclass.initComponent.call(this);
-        
+
+      GeoNetwork.editor.LinkedMetadataPanel.superclass.initComponent.call(this);
+
         var panel = this;
         
         this.store = new GeoNetwork.data.MetadataRelationStore(this.catalogue.services.mdRelation, {
             fast: false,
             id: this.metadataId
         }, true);
-        
-        
+
+
         this.store.on('load', function (store, records) {
             // Generate HTML layout
             var html = '', schema = this.metadataSchema;
             
             this.hasChildren = false;
-            
-            // Default list of types to iso19139 schema for ISO profile
+
+          // Default list of types to iso19139 schema for ISO profile
             if (this.metadataSchema.indexOf('iso19139.') !== -1 && 
                     this.resourcesTypesCfg[this.metadataSchema] === undefined) {
                 this.resourcesTypes = this.resourcesTypesCfg['iso19139'];
@@ -477,59 +473,62 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                 // Group title with a place for actions
                 var id = 'add' + this.sep + type;
                 var mds = store.query('type', type);
-                
+
+
+              if(this.metadataSchema.indexOf('iso19139.myocean') >= 0) {
                 // Specific MyOcean
                 if(type == 'onlinesrc') {
-                    var datasets = [];
-                    
-                    // get a list of unique pair name + url
-                    mds.each(function(md) {
-                        var dsInStore = false;
-                        for(var i=0;i<datasets.length;i++) {
-                            if(datasets[i].url == md.get('id') && md.get('parentName') != '' && 
-                                    datasets[i].parentName == md.get('parentName')) {
-                                dsInStore = true;
-                                break;
-                            }
-                        }
-                        if(!dsInStore) {
-                            datasets.push({url:md.get('id'),parentName:md.get('parentName')});
-                        }
+                  var datasets = [];
+
+                  // get a list of unique pair name + url
+                  mds.each(function(md) {
+                    var dsInStore = false;
+                    for(var i=0;i<datasets.length;i++) {
+                      if(datasets[i].url == md.get('id') && md.get('parentName') != '' &&
+                        datasets[i].parentName == md.get('parentName')) {
+                        dsInStore = true;
+                        break;
+                      }
+                    }
+                    if(!dsInStore) {
+                      datasets.push({url:md.get('id'),parentName:md.get('parentName')});
+                    }
+                  });
+
+                  Ext.each(datasets, function(ds) {
+                    // get all relations that belong to the same dataset
+                    var mdsPerDataset = store.queryBy(function(rec,id) {
+                      return (rec.get('id') == ds.url && rec.get('parentName') != '' &&
+                        rec.get('parentName') == ds.parentName);
                     });
-                    
-                    Ext.each(datasets, function(ds) {
-                        // get all relations that belong to the same dataset
-                        var mdsPerDataset = store.queryBy(function(rec,id) {
-                            return (rec.get('id') == ds.url && rec.get('parentName') != '' && 
-                                    rec.get('parentName') == ds.parentName);
+                    if(mdsPerDataset.getCount() > 1) {
+                      var rec = new store.recordType();
+                      mdsPerDataset.each(function(mdPerUrl) {
+                        store.fields.each(function(f) {
+                          rec.set(f.name, (rec.get(f.name) ? rec.get(f.name) + '||' : '') + mdPerUrl.get(f.name));
                         });
-                        if(mdsPerDataset.getCount() > 1) {
-                            var rec = new store.recordType();
-                            mdsPerDataset.each(function(mdPerUrl) {
-                                store.fields.each(function(f) {
-                                    rec.set(f.name, (rec.get(f.name) ? rec.get(f.name) + '||' : '') + mdPerUrl.get(f.name)); 
-                                });
-                                mds.remove(mdPerUrl);
-                            });
-                            rec.set('id', ds.url);
-                            rec.set('type', type);
-                            
-                            // Fill if dataset desc is empty
-                            if(rec.get('title').split('||').length > rec.get('abstract').split('||').length) {
-                                rec.set('abstract', '||' + rec.get('abstract'));
-                            }
-                            mds.add(rec);
-                        }
-                    });
-                    mds.sort('ASC', function(a,b,c) {
-                        if (a.get('title') === b.get('title')) {
-                            return 0;
-                        }
-                        return a.get('title').toLowerCase() < b.get('title').toLowerCase() ? -1 : 1;
-                    });
-                    this.xmlRelations = mds;
+                        mds.remove(mdPerUrl);
+                      });
+                      rec.set('id', ds.url);
+                      rec.set('type', type);
+
+                      // Fill if dataset desc is empty
+                      if(rec.get('title').split('||').length > rec.get('abstract').split('||').length) {
+                        rec.set('abstract', '||' + rec.get('abstract'));
+                      }
+                      mds.add(rec);
+                    }
+                  });
+                  mds.sort('ASC', function(a,b,c) {
+                    if (a.get('title') === b.get('title')) {
+                      return 0;
+                    }
+                    return a.get('title').toLowerCase() < b.get('title').toLowerCase() ? -1 : 1;
+                  });
+                  this.xmlRelations = mds;
                 }
-                
+              }
+
                 mds.items.type = type;
                 if (panel.addMenuByType || (panel.addMenuByType === false && mds.items.length !== 0)) {
                     html += '<h2>' + OpenLayers.i18n(type) + '<span class="button" id="' + id + '"></span>' + 
@@ -540,11 +539,9 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                 if (type === 'children' && mds.items.length !== 0) {
                     this.hasChildren = true;
                 }
-                
             }, this);
+
             this.update('<div><div id="add-menu-content"></div>' + html + '</div>');
-            
-            
             
             if (!this.addMenuByType) {
                 this.generateAddMenu();
