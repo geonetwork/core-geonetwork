@@ -103,7 +103,15 @@ public final class Processor {
     * Detach all XLinks child of the input XML document.
     */
 	public static Element detachXLink(Element xml) {
-		searchXLink(xml, ACTION_DETACH, null);
+		return detachXLink(xml, null);
+	}
+
+	//--------------------------------------------------------------------------
+  /**
+    * Detach all XLinks child of the input XML document.
+    */
+	public static Element detachXLink(Element xml, ServiceContext srvContext) {
+		searchXLink(xml, ACTION_DETACH, srvContext);
 		searchLocalXLink(xml, ACTION_DETACH);
 		return xml;
 	}
@@ -161,9 +169,12 @@ public final class Processor {
 	public static Element resolveXLink(String uri, String idSearch, ServiceContext srvContext) throws IOException, JDOMException, CacheException {
 
 		cleanFailures();
-		if (failures.size()>MAX_FAILURES) {
-			throw new RuntimeException("There have been "+failures.size()+" timeouts resolving xlinks in the last "+ELAPSE_TIME+" ms");
-		}
+// Just refusing to resolve after MAX_FAILURES breaks links that do resolve
+// so don't do that! A better strategy is needed...so disable breaking
+// behaviour for now
+//		if (failures.size()>MAX_FAILURES) {
+//			throw new RuntimeException("There have been "+failures.size()+" timeouts resolving xlinks in the last "+ELAPSE_TIME+" ms");
+//		}
 
 		JeevesJCS xlinkCache = JeevesJCS.getInstance(XLINK_JCS);
 		Element remoteFragment = (Element) xlinkCache.get(uri.toLowerCase());
@@ -173,13 +184,17 @@ public final class Processor {
 			
 			try {
 				if(uri.startsWith(XLink.LOCAL_PROTOCOL)) {
-					LocalServiceRequest request = LocalServiceRequest.create(uri.replaceAll("&amp;", "&"));
-					request.setDebug(false);
-					if(request.getLanguage() == null) {
-						request.setLanguage(srvContext.getLanguage());
+					if (srvContext != null) {
+						LocalServiceRequest request = LocalServiceRequest.create(uri.replaceAll("&amp;", "&"));
+						request.setDebug(false);
+						if(request.getLanguage() == null) {
+							request.setLanguage(srvContext.getLanguage());
+						}
+						request.setInputMethod(InputMethod.GET);
+						remoteFragment = srvContext.execute(request);
+					} else {
+						Log.error(Log.XLINK_PROCESSOR,"Uri is "+uri+" but srvContext is null - cannot resolve");
 					}
-					request.setInputMethod(InputMethod.GET);
-					remoteFragment = srvContext.execute(request);
 				} else {
 					URL url = new URL(uri.replaceAll("&amp;", "&"));
 					
@@ -196,8 +211,11 @@ public final class Processor {
 					}
 				}
 			} catch (Exception e) {	// MalformedURLException, IOException
-				synchronized(Processor.class) {
-					failures.add (System.currentTimeMillis());
+				// Don't add failures on local protocol - they're fast
+				if (!uri.startsWith(XLink.LOCAL_PROTOCOL)) {
+					synchronized(Processor.class) {
+						failures.add (System.currentTimeMillis());
+					}
 				}
 				Log.error(Log.XLINK_PROCESSOR,"Failed on " + uri 
 						+ " with exception message " + e.getMessage());
