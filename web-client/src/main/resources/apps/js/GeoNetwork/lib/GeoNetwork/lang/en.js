@@ -627,6 +627,8 @@ GeoNetwork.Lang.en = {
     'orgName': 'organization',
     'orgNames': 'Organizations',
     'types': 'Types',
+    'format': 'Format',
+    'formats': 'Formats',
     'serviceTypes': 'Service types',
     //tabbed search
     'Home': "Home",
