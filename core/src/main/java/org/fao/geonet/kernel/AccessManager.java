@@ -338,6 +338,7 @@ public class AccessManager {
 
         Element resultEl = new Element("results");
         for (Pair<Integer, User> integerUserPair : results) {
+            User user = integerUserPair.two();
             resultEl.addContent(new Element("record").
                     addContent(new Element("userid").setText(user.getId() + "")).
                     addContent(new Element("name").setText(user.getName())).
