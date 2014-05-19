@@ -101,6 +101,7 @@
 
           <fieldset data-ng-hide="!selectedProcess">
             <legend data-translate="">batchProcessParameters</legend>
+
             <div data-ng-switch="selectedProcess.type">
               <div data-ng-switch-when="fixed-params">
                 <div data-ng-repeat="p in selectedProcess.params track by $index" data-ng-switch=""
@@ -118,23 +119,26 @@
                       data-translate="">{{(p.name + '-help')}}</p>
                   </div>
                 </div>
+
+                <div class="btn-toolbar" data-ng-show="selectedProcess.type != 'template'" >
+                  <button type="button" class="btn btn-primary fa fa-play btn-lg pull-right"
+                          data-ng-disabled="!selectedProcess" data-ng-click="runProcess('#gn-batch-process')">
+                    <span data-translate="">runProcess</span>
+                  </button>
+                </div>
               </div>
+
               <div data-ng-switch-when="template">
                 <div data-ng-include="selectedProcess.template">
                 </div>
               </div><!-- end ng-switch-when-->
+
               <div data-ng-switch-default class="alert alert-danger" 
                    data-translate="batchProcessTypeUnsupported"
                    data-translate-values="{type: selectedProcess.type}">                
               </div><!-- end ng-switch-default -->
+
             </div><!-- end ng-switch -->
-            <div class="btn-toolbar">
-              <button type="button" class="btn btn-primary btn-lg pull-right"
-                data-ng-disabled="!selectedProcess" data-ng-click="runProcess('#gn-batch-process')">
-                <i class="fa fa-play"/>
-                <span data-translate="">runProcess</span>
-              </button>
-            </div>
           </fieldset>
 
         </form>
@@ -142,69 +146,138 @@
     </div>
   </div>
 
-  <div class="col-lg-12" data-ng-hide="!processing && !processReport" id="gn-batch-process-report">
-    <div class="panel panel-default"
-      data-ng-class="processReportWarning ? 'panel-warning' : 'panel-success'">
-      <div class="panel-heading">
-        <span data-translate="">processReportFor</span> {{processReport['@process'] | translate}}<br/>
-        <p> {{numberOfRecordsProcessed}} <span data-translate="">recordsProcessed</span>
-          ({{processReport['@startDate']}} <span data-ng-show="processReport['@running'] == 'true'"
-            >...</span>
-          <span data-ng-show="processReport['@running'] != 'true'"> -
-            {{processReport['@reportDate']}}</span>) </p>
-      </div>
-      <div class="panel-body">
-        <div class="progress progress-striped active"
-          data-ng-show="processReport['@running'] == 'true'">
-          <div class="progress-bar" style="width: 100%"/>
+  <!-- Report -->
+  <div data-ng-switch="selectedProcess.type">
+    <div class="col-lg-12" data-ng-hide="!processing && !processReport" id="gn-batch-process-report" data-ng-switch-when="fixed-params">
+      <div class="panel panel-default"
+        data-ng-class="processReportWarning ? 'panel-warning' : 'panel-success'">
+        <div class="panel-heading">
+          <span data-translate="">processReportFor</span> {{processReport['@process'] | translate}}<br/>
+          <p> {{numberOfRecordsProcessed}} <span data-translate="">recordsProcessed</span>
+            ({{processReport['@startDate']}} <span data-ng-show="processReport['@running'] == 'true'"
+              >...</span>
+            <span data-ng-show="processReport['@running'] != 'true'"> -
+              {{processReport['@reportDate']}}</span>) </p>
         </div>
+        <div class="panel-body">
+          <div class="progress progress-striped active"
+            data-ng-show="processReport['@running'] == 'true'">
+            <div class="progress-bar" style="width: 100%"/>
+          </div>
 
-
-
-        <table class="table table-striped">
-          <tr>
-            <td>{{('processReportTotalRecords') | translate}}</td>
-            <td class="text-right">{{processReport['@totalRecords']}}</td>
-          </tr>
-          <tr>
-            <td>{{('processReportProcessedRecords') | translate}}</td>
-            <td class="text-right">{{processReport['@processedRecords']}}</td>
-          </tr>
-          <tr>
-            <td>{{('processReportNullRecords') | translate}}</td>
-            <td class="text-right">{{processReport['@nullRecords']}}</td>
-          </tr>
-          <tr>
-            <td>{{('processReportErrors') | translate}}</td>
-            <td class="text-right">{{processReport.metadataErrorReport.length}}</td>
-          </tr>
-          <tr>
-            <td>{{('processReportNoProcessFound') | translate}}</td>
-            <td class="text-right">{{processReport['notProcessFound']}}</td>
-          </tr>
-          <tr>
-            <td>{{('processReportNotOwner') | translate}}</td>
-            <td class="text-right">{{processReport['notOwner']}}</td>
-          </tr>
-        </table>
-
-        <div data-ng-hide="processReport.metadataErrorReport.length == 0">
-          <h2 data-translate="">metadataErrorReport</h2>
           <table class="table table-striped">
             <tr>
-              <th data-transalte="">identifier</th>
-              <th data-translate="">error</th>
+              <td>{{('processReportTotalRecords') | translate}}</td>
+              <td class="text-right">{{processReport['@totalRecords']}}</td>
             </tr>
-            <tr data-ng-repeat="m in processReport.metadataErrorReport">
-              <td>{{m['@id']}}</td>
-              <td>
-                <h4>{{m.message}}</h4>
-                <pre>{{m.stack}}</pre>
-              </td>
+            <tr>
+              <td>{{('processReportProcessedRecords') | translate}}</td>
+              <td class="text-right">{{processReport['@processedRecords']}}</td>
+            </tr>
+            <tr>
+              <td>{{('processReportNullRecords') | translate}}</td>
+              <td class="text-right">{{processReport['@nullRecords']}}</td>
+            </tr>
+            <tr>
+              <td>{{('processReportErrors') | translate}}</td>
+              <td class="text-right">{{processReport.metadataErrorReport.length}}</td>
+            </tr>
+            <tr>
+              <td>{{('processReportNoProcessFound') | translate}}</td>
+              <td class="text-right">{{processReport['notProcessFound']}}</td>
+            </tr>
+            <tr>
+              <td>{{('processReportNotOwner') | translate}}</td>
+              <td class="text-right">{{processReport['notOwner']}}</td>
             </tr>
           </table>
+
+          <div data-ng-hide="processReport.metadataErrorReport.length == 0">
+            <h2 data-translate="">metadataErrorReport</h2>
+            <table class="table table-striped">
+              <tr>
+                <th data-transalte="">identifier</th>
+                <th data-translate="">error</th>
+              </tr>
+              <tr data-ng-repeat="m in processReport.metadataErrorReport">
+                <td>{{m['@id']}}</td>
+                <td>
+                  <h4>{{m.message}}</h4>
+                  <pre>{{m.stack}}</pre>
+                </td>
+              </tr>
+            </table>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+
+    <div data-ng-switch-when="template">
+      <!--<div data-ng-include="selectedProcess.reportTemplate">
+      </div>-->
+
+      <div class="col-lg-12" data-ng-hide="!processing && !processReport" id="gn-batch-process-report2">
+
+
+        <div class="panel panel-default"
+             data-ng-class="processReportWarning ? 'panel-warning' : 'panel-success'">
+          <div class="panel-heading">
+            <span data-translate="">processReportFor</span> {{processReport['@process'] | translate}}<br/>
+            <p> {{numberOfRecordsProcessed}} <span data-translate="">recordsProcessed</span>
+              ({{processReport['@startDate']}} <span data-ng-show="processReport['@running'] == 'true'"
+                >...</span>
+          <span data-ng-show="processReport['@running'] != 'true'"> -
+            {{processReport['@reportDate']}}</span>) </p>
+          </div>
+          <div class="panel-body">
+            <div class="progress progress-striped active"
+                 data-ng-show="processReport['@running'] == 'true'">
+              <div class="progress-bar" style="width: 100%"/>
+            </div>
+
+            <table class="table table-striped">
+              <tr>
+                <td>{{('processReportTotalRecords') | translate}}</td>
+                <td class="text-right">{{processReport['@total']}}</td>
+              </tr>
+              <tr>
+                <td>{{('processReportChangedRecords') | translate}}</td>
+                <td class="text-right">{{processReport.report.changed.length}}
+
+                  <ul class="text-left" data-ng-show="processReport.report.changed.length > 0">
+                    <li class="animate-repeat" ng-repeat="changed in processReport.report.changed">
+                      {{changed['@title']}} ({{changed['@uuid']}})<br/>
+                      Field: {{'batchreplacer-el-'+changed.change.fieldid | translate}}<br/>
+                      Original value: {{changed.change.originalval}}<br/>
+                      Changed value: {{changed.change.changedval}}<br/>
+                    </li>
+                  </ul>
+
+                </td>
+              </tr>
+              <tr>
+                <td>{{('processReportNotChangedRecords') | translate}}</td>
+                <td class="text-right">{{processReport.report.notChanged.length}}
+
+                  <ul class="text-left" data-ng-show="processReport.report.notChanged.length > 0">
+                    <li class="animate-repeat" ng-repeat="notchanged in processReport.report.notChanged">
+                      {{notchanged['@title']}} ({{notchanged['@uuid']}})
+
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td>{{('processReportNoProcessFound') | translate}}</td>
+                <td class="text-right">{{processReport['notProcessFound']}}</td>
+              </tr>
+              <tr>
+                <td>{{('processReportNotOwner') | translate}}</td>
+                <td class="text-right">{{processReport['notOwner']}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div><!-- end ng-switch-when-->
 </div>

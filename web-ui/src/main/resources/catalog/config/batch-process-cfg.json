@@ -22,6 +22,7 @@
     }, {
         "key": "batch-replacer",
         "type": "template",
-        "template": "../../catalog/templates/admin/tools/batch-replacer.html"
+        "template": "../../catalog/templates/admin/tools/batch-replacer.html",
+        "reportTemplate": "../../catalog/templates/admin/tools/batch-replacer-report.html"
     }]
 }
