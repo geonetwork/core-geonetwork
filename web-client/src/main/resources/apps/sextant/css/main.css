@@ -724,6 +724,9 @@ font-size: 30px;
 }
 .x-superboxselect li {
 	line-height: 12px;
+    max-width: 167px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .x-superboxselect-item-close {
 	top: -1px;
