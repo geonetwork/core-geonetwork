@@ -601,7 +601,6 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
           var parser = new DOMParser();
           request.responseXML = parser.parseFromString(request.responseText, "application/xml");
         }
-
         if (request.responseXML) {
             var xml = request.responseXML.documentElement;
             Ext.each(properties, function(item, idx){
@@ -1196,11 +1195,12 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             url: this.services.getMyInfo,
             async: false
         }), exception, authenticated, me;
-       
+
         if(!response.responseXML) {
             var parser = new DOMParser();
             response.responseXML = parser.parseFromString(response.responseText, "application/xml");
         }
+
        me = response.responseXML.getElementsByTagName('me')[0];
        authenticated = me.getAttribute('authenticated') == 'true';
        
