@@ -10,14 +10,14 @@
         roleOptions: ['pointOfContact', 'owner', 'custodian'],
         dateTypeOptions: ['creation', 'publication', 'revision'],
         hierarchyLevelOptions: [
-          'Attribute',
-          'AttributeType',
-          'Dataset'
+          'attribute',
+          'attributeType',
+          'dataset'
         ],
 
         language: "eng",
-        characterSet: "UTF8",
-        hierarchyLevel: "Dataset",
+        characterSet: "utf8",
+        hierarchyLevel: "dataset",
         contact: [{
           id: '1',
           name: 'Florent',
@@ -50,16 +50,6 @@
           citationIdentifier: 'identifier',
           abstract: {fre: 'Abstract'},
           pointOfContact:  [{
-            id: '1',
-            name: 'Florent',
-            surname: 'Gravin',
-            email: 'florent.gravin@camptocamp.com',
-            organization: {
-              eng:"camptocamp SA"
-            },
-            role: 'owner',
-            validated: false
-          },{
             id: '2',
             name: 'Jesse',
             surname: 'Eichar',
@@ -70,9 +60,20 @@
             },
             role: 'pointOfContact',
             validated: true
+          },{
+            id: '1',
+            name: 'Florent',
+            surname: 'Gravin',
+            email: 'florent.gravin@camptocamp.com',
+            organization: {
+              eng:"camptocamp SA"
+            },
+            role: 'owner',
+            validated: false
           }],
           descriptiveKeywords: [
-            {words: {eng: 'building'}}, {words: {eng: 'farm', ger: 'Bauernhof'}}],
+            {code: 'http://rdfdata.eionet.europa.eu/inspirethemes/themes/15', words: {eng: 'Buildings'}},
+            {code: 'http://rdfdata.eionet.europa.eu/inspirethemes/themes/9', words: {eng: 'Hydrography', ger: 'Schutzgebiete'}}],
           extents: [
             {
               description: {

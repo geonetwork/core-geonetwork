@@ -113,7 +113,11 @@
       };
 
       $scope.saveMetadata = function(editTab) {
-        return $http.post($scope.url + "inspire.save?id=" + mdId, {data: 'data=' + $scope.data}).success(function (data, status, headers, config, statusText) {
+        return $http({
+          method: 'POST',
+          url: $scope.url + "inspire.edit.save?id=" + mdId,
+          params: {id: mdId, data: $scope.data}
+        }).success(function (data, status, headers, config, statusText) {
           if (editTab) {
             allowUnload = true;
             window.location.href = 'metadata.edit?id=' + mdId + '&currTab=' + editTab;

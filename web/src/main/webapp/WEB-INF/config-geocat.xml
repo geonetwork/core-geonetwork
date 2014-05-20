@@ -618,10 +618,11 @@
         Parameters:
         * id or uuid
         ]]></documentation>
+            <class name=".services.metadata.inspire.GetEditModel" />
             <error sheet="../xslt/common/error.xsl"/>
         </service>
 
-        <service name="inspire.save">
+        <service name="inspire.edit.save">
             <documentation>
                 <![CDATA[
         Save the changes made in inspire.edit
@@ -629,6 +630,7 @@
         Parameters:
         * id or uuid
         ]]></documentation>
+            <class name=".services.metadata.inspire.Save" />
             <error sheet="../xslt/common/error.xsl"/>
         </service>
 

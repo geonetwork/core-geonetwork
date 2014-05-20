@@ -31,3 +31,4 @@ web-client/src/main/resources/apps/geocatch/js/App-mini.js
 web/dev-config/log4j-delawen.cfg
 
 web/geonetwork.log.*
+web/src/main/webapp/WEB-INF/data/data/
