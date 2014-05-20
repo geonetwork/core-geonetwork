@@ -769,7 +769,10 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                     params.version = '1.3.0';
                 } else if(protocol && protocol.indexOf('1.1.1') >= 0 ) {
                     params.version = '1.1.1';
+                } else {
+                  params.version = '1.1.1';
                 }
+
                 var url = Ext.urlAppend(stringUrl.split('?')[0], Ext.urlEncode(params));
                 
                 this.capabilitiesStore.baseParams.url = url;
@@ -901,28 +904,30 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 return false;
             }
 
-            for(i=0;i<this.xmlRelations.getCount();i++) {
+            if(this.xmlRelations) {
+              for (i = 0; i < this.xmlRelations.getCount(); i++) {
                 var relation = this.xmlRelations.get(i);
                 var url = relation.get('id').split('||')[0];
                 var info = relation.get('title').split('||')[0].trim().split(' ');
                 var protocol = info.pop();
                 var name = info.join(' ');
-                
-                protocol = protocol.substring(1, protocol.length -1);
+
+                protocol = protocol.substring(1, protocol.length - 1);
                 protocol = (protocol == 'OGC:WMS:getCapabilities') ? 'OGC:WMS' : protocol;
-                
+
                 // The triple key already exists
-                if(url == formValues.href && 
-                        protocol == formValues.protocol && 
-                        name == formValues.name ) {
-                     Ext.Msg.show({
-                        title:OpenLayers.i18n('onlineResExits'),
-                        msg: OpenLayers.i18n('onlineResExitsMsg'),
-                        buttons: Ext.Msg.OK,
-                        icon: Ext.MessageBox.ERROR
-                     });
-                     return true;
+                if (url == formValues.href &&
+                  protocol == formValues.protocol &&
+                  name == formValues.name) {
+                  Ext.Msg.show({
+                    title: OpenLayers.i18n('onlineResExits'),
+                    msg: OpenLayers.i18n('onlineResExitsMsg'),
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.MessageBox.ERROR
+                  });
+                  return true;
                 }
+              }
             }
             return false;
         };

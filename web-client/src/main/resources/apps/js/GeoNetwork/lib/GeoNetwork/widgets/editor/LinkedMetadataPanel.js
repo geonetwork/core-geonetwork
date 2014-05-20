@@ -403,6 +403,8 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
     initComponent: function () {
         Ext.applyIf(this, this.defaultConfig);
 
+      var that = this;
+
       this.tpl = new Ext.XTemplate(
         '<ul class="gn-relation-{type}">',
         '<tpl for=".">',
@@ -418,14 +420,17 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         '<tpl if="type !== \'thumbnail\'">',
           '<li alt="{abstract}">' +
           '<tpl if="type === \'onlinesrc\'">',
-        '<a href="{id}" target="_blank">{title}</a> ',
+        '<a href="{id}" target="_blank">{[this.getTitle(values.title)]}</a> ',
         '</tpl>',
         '<tpl if="type !== \'onlinesrc\'">',
         '{title} ',
         '</tpl>',
           '<tpl if="subType"><span class="relation-type">({subType})</span></tpl>' +
           '<tpl if="type === \'onlinesrc\'">',
-          '<span class="button" id="remove' + this.sep + '{type}' + this.sep + '{title}' + this.sep + '{id}"></span>',
+          '<div class="button" id="remove' + this.sep + '{type}' + this.sep + '{title}' + this.sep + '{id}"></div>',
+        '<tpl if="!this.isDownloadProtocol(title) && this.isMyocean()">',
+          '<div class="button" id="edit' + this.sep + '{type}' + this.sep + '{title}' + this.sep + '{id}' + this.sep + '{abstract}"></div>',
+        '</tpl>',
         '</tpl>',
         '<tpl if="type !== \'onlinesrc\'">',
           '<span class="button" id="remove' + this.sep + '{type}' + this.sep + '{uuid}"></span></li>',
@@ -433,7 +438,19 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         '</tpl>',
         '</tpl>',
         '</tpl>',
-        '</ul>'
+        '</ul>',
+        {
+          isDownloadProtocol: function(protocol){
+            return protocol.indexOf('WWW:DOWNLOAD-1.0-http--download') >= 0;
+          },
+          isMyocean: function(protocol){
+            return that.metadataSchema.indexOf('iso19139.myocean') >= 0;
+          },
+          getTitle: function(title) {
+            if(title.indexOf('||') < 0) return title;
+            return title.split('||')[0];
+          }
+        }
       );
 
         this.title = OpenLayers.i18n('relatedResources');
@@ -585,8 +602,15 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                             panel.removeRelation(info[1], info[2], info[3]);
                         }
                     });
-                } 
-                
+                } else if (info[0] === 'edit') {
+                  bt = new Ext.Button({
+                    text: OpenLayers.i18n('edit'),
+                    renderTo: button,
+                    handler: function () {
+                      panel.editRelation(info[1], info[2], info[3], info[4]);
+                    }
+                  });
+                }
             });
             
         }, this);
