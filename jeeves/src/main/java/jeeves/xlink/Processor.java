@@ -169,12 +169,9 @@ public final class Processor {
 	public static Element resolveXLink(String uri, String idSearch, ServiceContext srvContext) throws IOException, JDOMException, CacheException {
 
 		cleanFailures();
-// Just refusing to resolve after MAX_FAILURES breaks links that do resolve
-// so don't do that! A better strategy is needed...so disable breaking
-// behaviour for now
-//		if (failures.size()>MAX_FAILURES) {
-//			throw new RuntimeException("There have been "+failures.size()+" timeouts resolving xlinks in the last "+ELAPSE_TIME+" ms");
-//		}
+		if (failures.size()>MAX_FAILURES) {
+			throw new RuntimeException("There have been "+failures.size()+" timeouts resolving xlinks in the last "+ELAPSE_TIME+" ms");
+		}
 
 		JeevesJCS xlinkCache = JeevesJCS.getInstance(XLINK_JCS);
 		Element remoteFragment = (Element) xlinkCache.get(uri.toLowerCase());
