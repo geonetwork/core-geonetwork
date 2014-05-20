@@ -463,6 +463,12 @@ function doSaveAction(action,validateAction)
 
 	var metadataId = document.mainForm.id.value;
 	var divToRestore = null;
+
+	// Cannot cancel or reset in editor when too much text in the field of the form. #331
+    if (action.include('forget')) {
+        $('editForm').reset();
+    }
+
 //  Opener is not used in GeoNetwork trunk. #306
 //  Only used in Bluenet
 //  if (opener) {
