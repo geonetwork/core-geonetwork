@@ -864,8 +864,8 @@
 										<div style="margin-left: 168px;">
                       <!-- When form field is disabled, they are not posted. Add an empty field
                       to enable when the calendar field is disabled. -->
-                      <input type="hidden" id="_{$ref}_disabled_field" name="_{$ref}" value="">
-                        <xsl:if test="@indeterminatePosition != 'unknown'">
+                      <input type="hidden" id="_{$ref}_disabled_field" value="" name="_{$ref}">
+                        <xsl:if test="string(@indeterminatePosition) != 'unknown'">
                           <xsl:attribute name="disabled">disabled</xsl:attribute>
                         </xsl:if>
                       </input>
