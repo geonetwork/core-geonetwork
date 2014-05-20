@@ -43,46 +43,46 @@ import org.jdom.Element;
  */
 public class XslProcessingReport {
  
-    private final String processId;
-    private final ISODate startDate;
+    protected final String processId;
+    protected final ISODate startDate;
  
     /**
      * The total number of records to process
      */
-    private int totalRecords = 0;
+    protected int totalRecords = 0;
     /**
      * The number of records processed when the report was generated
      */
-    private int processedRecords = 0;
+    protected int processedRecords = 0;
     /**
      * The number of records when a null metadata identifier is processed (may happen when a record is in the selection but was deleted
      * after the selection)
      */
-    private int nullRecords = 0;
+    protected int nullRecords = 0;
  
     /**
      * The list of record identifiers successfully processed
      */
-    private Set<Integer> metadata = new HashSet<Integer>();
+    protected Set<Integer> metadata = new HashSet<Integer>();
  
     /**
      * The list of record identifiers not found (may be deleted)
      */
-    private Set<Integer> notFound = new HashSet<Integer>();
+    protected Set<Integer> notFound = new HashSet<Integer>();
  
     /**
      * The list of records identifiers the user who starts the process is not allowed to edit
      */
-    private Set<Integer> notEditable = new HashSet<Integer>();
+    protected Set<Integer> notEditable = new HashSet<Integer>();
  
     /**
      * The list of record identifiers for which the schema does not provide process with that process id
      */
-    private Set<Integer> noProcessFound = new HashSet<Integer>();
+    protected Set<Integer> noProcessFound = new HashSet<Integer>();
     /**
      * The list of records with error and exception details
      */
-    private Map<Integer, Exception> metadataErrors = new HashMap<Integer, Exception>();
+    protected Map<Integer, Exception> metadataErrors = new HashMap<Integer, Exception>();
  
     /**
      * Initialize a report and its start date.
@@ -93,8 +93,8 @@ public class XslProcessingReport {
         this.processId = processId;
         this.startDate = new ISODate();
     }
- 
-    private synchronized boolean isProcessing() {
+
+    protected synchronized boolean isProcessing() {
         return totalRecords != processedRecords;
     }
  

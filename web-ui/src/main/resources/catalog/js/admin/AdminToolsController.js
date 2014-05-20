@@ -226,7 +226,7 @@
         $scope.runProcess(formId, undefined, undefined);
       }
 
-      $scope.runProcess = function(formId) {
+      $scope.runProcess = function(formId, process, testMode) {
 
         var formParams = $(formId).serialize();
         if (testMode != undefined) {
@@ -239,8 +239,6 @@
         } else {
           service =  'md.processing.batch@json';
         }
-
-        service =  'md.processing.batch@json';
 
         $scope.processing = true;
         $scope.processReport = null;

@@ -816,7 +816,7 @@
     "reportUsers-userLoginDateEnd": "User login date (end)",
     "reportUsers-description": "Select criteria to extract a list of user names, emails and last login date. The report results can be imported into MS Access and Excel.",
 
-    "batch-replacer": "Batch replacer",
+    "massive-content-update": "Batch replacer",
     "batchreplacer-addReplacement": "Add replacement",
     "batchreplacer-remove": "Remove",
     "batchreplacer-package": "Package",

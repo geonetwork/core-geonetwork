@@ -902,7 +902,9 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
           <documentation><![CDATA[
           Service to apply the metadata massive update process configured to the selected metadata.
           ]]></documentation>
-          <class name=".services.metadata.replace.MassiveReplaceContent"/>
+          <class name=".services.metadata.replace.MassiveReplaceContent">
+            <param name="fullResponse" value="true" />
+          </class>
 
           <output sheet="../xslt/ui-metadata/replace/replace-results.xsl">
             <xml name="massive-replace" file="xml/metadata-massive-replace.xml" />
