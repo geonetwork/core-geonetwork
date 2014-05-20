@@ -200,7 +200,10 @@ public class HttpProxyServlet extends HttpServlet {
                paramString.append(paramName).append("=").append(request.getParameter(paramName));
             }
         }
-        return url + '?' + paramString;
+        if(paramString.length() > 0) {
+            url += "?" + paramString;
+        }
+        return url;
     }
 
     private void configureProxy(HttpRequestBase httpGet, String proxyHost, String proxyPort) {

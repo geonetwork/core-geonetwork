@@ -344,7 +344,8 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 id: 'capabilitiesStore',
                 proxy: new Ext.data.HttpProxy({
                     url: catalogue.services.proxy,
-                    method: 'GET'
+                    method: 'GET',
+                    disableCaching: false
                 }),
                 listeners: {
                     exception: function (proxy, type, action, options, res, arg) {
@@ -751,27 +752,36 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         var reloadCapabilitiesStore = function(stringUrl, protocol, callback) {
             
             if(this.isGetMap(protocol)) {
-                var params = {};
+                var params = {}, paramsUpper = {}, requestProp = [];
                 this.layerNames = [];
                 if(stringUrl.split('?').length == 2) {
                     params = Ext.urlDecode(stringUrl.split('?')[1]);
                 }
-                var paramsUpper = {};
                 for(var p in params){
+                    requestProp.push(p);
                     paramsUpper[p.toUpperCase()] = params[p];
                 }
                 params = Ext.applyIf(paramsUpper, {
                     REQUEST: 'GetCapabilities',
                     SERVICE: 'WMS'
                 });
-                
-                if(protocol && protocol.indexOf('1.3.0') >= 0 ) {
-                    params.version = '1.3.0';
-                } else if(protocol && protocol.indexOf('1.1.1') >= 0 ) {
-                    params.version = '1.1.1';
-                } else {
-                  params.version = '1.1.1';
+
+                if(!params.VERSION) {
+                  if (protocol && protocol.indexOf('1.3.0') >= 0) {
+                    params.VERSION = '1.3.0';
+                  } else if (protocol && protocol.indexOf('1.1.1') >= 0) {
+                    params.VERSION = '1.1.1';
+                  }
                 }
+
+                for (var i=0; i<requestProp.length; i++) {
+                  if(requestProp[i] != requestProp[i].toUpperCase) {
+                    params[requestProp[i]] = params[requestProp[i].toUpperCase()];
+                    delete params[requestProp[i].toUpperCase()];
+                  }
+                }
+
+                console.log(params);
 
                 var url = Ext.urlAppend(stringUrl.split('?')[0], Ext.urlEncode(params));
                 
