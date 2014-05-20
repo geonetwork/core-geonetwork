@@ -80,16 +80,16 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
     projectionTo: undefined,
     styleInitialized: false,
 
-		/** Function to map protocol/mime-types to CSS: should be supplied by 
-		 * GeoNetwork.Settings.protocolToCSS but if not 
-		 * GeoNetwork.Util.protocolToCSS will be used
-		 */
-		protocolToCSS: undefined,
-		/** Function to map related records to CSS: should be supplied by 
-		 * GeoNetwork.Settings.relatedToCSS otherwise a default mapping will be
-		 * be used. See widgets/ViewPanel.js
-		 */
-		relationToCSS: undefined,
+	/** Function to map protocol/mime-types to CSS: should be supplied by 
+	 * GeoNetwork.Settings.protocolToCSS but if not 
+	 * GeoNetwork.Util.protocolToCSS will be used
+	 */
+	protocolToCSS: GeoNetwork.Util.protocolToCSS,
+	/** Function to map related records to CSS: should be supplied by 
+	 * GeoNetwork.Settings.relatedToCSS otherwise a default mapping will be
+	 * be used. See widgets/ViewPanel.js
+	 */
+	relationToCSS: undefined,
     
     /** api: property[mdSelectionUuids] 
      *  Current selection uuids
@@ -328,7 +328,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                 record: record,
                 resultsView: dv,
                 addCustomAction: this.addCustomAction,
-								protocolToCSS: protocolToCSS
+				protocolToCSS: this.protocolToCSS
             });
         } else {
             this.contextMenu.setRecord(record);
