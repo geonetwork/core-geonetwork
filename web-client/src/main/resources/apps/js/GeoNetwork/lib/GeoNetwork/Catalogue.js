@@ -348,7 +348,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 Delete: serviceUrl + 'metadata.batch.delete',
                 Privileges: serviceUrl + 'metadata.batch.admin.form',
                 Versioning: serviceUrl + 'metadata.batch.version',
-                Status: serviceUrl + 'metadata.batch.status.form'
+                Status: serviceUrl + 'metadata.batch.status.form',
+                Replace: serviceUrl + 'metadata.batch.replace.form'
             },
             metadataMassiveUpdatePrivilege: serviceUrl + 'metadata.batch.update.privileges',
             metadataMassiveUpdateCategories: serviceUrl + 'metadata.batch.update.categories',
@@ -1428,6 +1429,9 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 onlyUserGroup: this.info.userGroupOnly.toLowerCase() === 'true' || false
             });
             this.modalAction(OpenLayers.i18n('setBatchPrivileges'), privilegesPanel, cb);
+        } else  if (type === 'Replace') {
+          var url = this.services.massiveOp[type];
+          this.modalAction(OpenLayers.i18n('massiveOp') + " - " + type, url, cb, true);
         } else {
             var url = this.services.massiveOp[type];
             this.modalAction(OpenLayers.i18n('massiveOp') + " - " + type, url, cb);
@@ -1443,7 +1447,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  TODO : retrieve error message on error (currently HTML services are
      *  called with HTML response not easy to parse)
      */
-    modalAction: function(title, urlOrPanel, cb){
+    modalAction: function(title, urlOrPanel, cb, scripts){
         if (urlOrPanel) {
             var app = this, win, defaultCb = function(el, success, response, options) {
                 if (!success){
@@ -1451,13 +1455,19 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                     win.close();
                 }
             };
-            
+
+
+            if(typeof(scripts) == 'undefined') {
+              scripts = false;
+            }
+
             var item;
             if(typeof(urlOrPanel) == 'string') {
                 item = new Ext.Panel({
                     autoLoad: {
                         url: urlOrPanel,
                         callback: cb || defaultCb,
+                        scripts: scripts,
                         scope: win
                     },
                     border: false,
@@ -1468,6 +1478,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             else {
                 item =urlOrPanel;
             }
+
+
             win = new Ext.Window({
                 id: 'modalWindow',
                 layout: 'fit',
