@@ -1,6 +1,7 @@
 package org.fao.geonet.kernel.search.index;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assume.assumeTrue;
 
 import com.google.common.io.Files;
 import org.apache.lucene.document.Document;
@@ -105,6 +106,8 @@ public class LuceneIndexLanguageTrackerTest {
 
     @Test
     public void testCanResetWhenFileIsLockedByProcess() throws Exception {
+        assumeTrue( System.getProperty( "os.name" ).toLowerCase().contains( "windows" ) );
+
         GeonetworkDataDirectory datadir = Mockito.mock(GeonetworkDataDirectory.class);
         final File root = folder.getRoot();
         Mockito.when(datadir.getLuceneDir()).thenReturn(root);
@@ -155,7 +158,6 @@ public class LuceneIndexLanguageTrackerTest {
             addDocumentAndAssertCorrectlyAdded(tracker).indexReader.releaseToNRTManager();
         }
         List<Closeable> openFile = new ArrayList<Closeable>();
-        List<MappedByteBuffer> memoryMappedBuffers = new ArrayList<MappedByteBuffer>();
 
         for (File file : Files.fileTreeTraverser().postOrderTraversal(folder.getRoot())) {
                 if (file.isFile()) {
@@ -180,7 +182,6 @@ public class LuceneIndexLanguageTrackerTest {
             for (Closeable closeable : openFile) {
                 closeable.close();
             }
-            memoryMappedBuffers = null;
             Runtime.getRuntime().gc();
         }
 

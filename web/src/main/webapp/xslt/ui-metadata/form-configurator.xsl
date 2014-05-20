@@ -374,12 +374,23 @@
             <xsl:variable name="id" select="concat($xpathFieldId, '_xml')"/>
             <xsl:variable name="isMissingLabel" select="@isMissingLabel"/>
 
+            <!-- Node does not exist, stripped gn:copy element from template. -->
+            <xsl:variable name="templateWithoutGnCopyElement" as="node()">
+              <template>
+                <xsl:copy-of select="$template/values"/>
+                <snippet>
+                  <xsl:apply-templates mode="gn-element-cleaner"
+                                       select="$template/snippet/*"/>
+                </snippet>
+              </template>
+            </xsl:variable>
+
             <xsl:call-template name="render-element-template-field">
               <xsl:with-param name="name" select="$strings/*[name() = $name]"/>
               <xsl:with-param name="id" select="$id"/>
               <xsl:with-param name="xpathFieldId" select="$xpathFieldId"/>
               <xsl:with-param name="isExisting" select="false()"/>
-              <xsl:with-param name="template" select="$template"/>
+              <xsl:with-param name="template" select="$templateWithoutGnCopyElement"/>
               <xsl:with-param name="isMissingLabel" select="$strings/*[name() = $isMissingLabel]"/>
             </xsl:call-template>
           </xsl:if>

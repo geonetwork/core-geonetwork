@@ -226,8 +226,13 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult> {
         //
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
+        // In forWAF harvester, rf.getChangeDate() returns null null
+        String date = null;
+        if (rf.getChangeDate() != null) {
+            date = rf.getChangeDate().getDateAndTime();
+        }
         String id = dataMan.insertMetadata(context, schema, md, uuid, Integer.parseInt(params.ownerId), group, params.uuid,
-                     isTemplate, docType, category, rf.getChangeDate().getDateAndTime(), rf.getChangeDate().getDateAndTime(), ufo, indexImmediate);
+                isTemplate, docType, category, date, date, ufo, indexImmediate);
 
 
 		int iId = Integer.parseInt(id);

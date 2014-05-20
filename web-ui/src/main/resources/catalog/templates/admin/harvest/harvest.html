@@ -28,12 +28,11 @@
             <span class="caret"/>
           </button>
           <ul class="dropdown-menu" role="menu">
-            <li data-ng-repeat="(key, value) in harvesterTypes"
-              data-ng-class="value.loaded ? '' : 'disabled'">
-              <a href="" data-ng-click="addHarvester(key)"
-                title="{{'harvester-' + value.label + 'Help' | translate}}"> {{('harvester-' +
-                value.label) | translate}} <span data-ng-hide="value.loaded" data-translate=""
-                  >notYetSupported</span>
+            <li data-ng-repeat="h in getHarvesterTypes() | orderBy:'text'"
+              data-ng-class="h.loaded ? '' : 'disabled'">
+              <a href="" data-ng-click="addHarvester(h.label)"
+                title="{{'harvester-' + h.label + 'Help' | translate}}">{{h.text}}
+                <span data-ng-hide="h.loaded" data-translate="">notYetSupported</span>
               </a>
             </li>
           </ul>

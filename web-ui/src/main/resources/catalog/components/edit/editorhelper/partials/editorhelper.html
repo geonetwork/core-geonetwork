@@ -4,7 +4,8 @@
          data-ng-repeat="o in config.option">
       <div class="col-xs-12">
         <label title="{{mode == 'radio_withdesc' ? '' : o['@title']}}">
-          <input type="radio" data-ng-click="select(o)" name="ignore_{{ref}}"
+          <input type="radio"
+                 data-ng-click="select(o)" name="ignore_{{ref}}"
                  data-ng-checked="o['@value'] === config.value">
           {{o['#text']}}
         </label>
@@ -26,6 +27,7 @@
       <div class="col-xs-10">
         <input type="text" id="otherValue_{{ref}}" class="form-control"
                data-ng-click="selectOtherRadio()"
+               data-gn-field-tooltip="{{tooltip}}"
                data-ng-model="otherValue['@value']" value="{{otherValue['@value']}}"
                data-ng-keyup="updateWithOtherValue()"/>
       </div>
@@ -34,6 +36,7 @@
   <div class="row" data-ng-switch-default="">
     <div class="col-xs-8">
       <input type="{{type}}" class="form-control"
+             data-gn-field-tooltip="{{tooltip}}"
              data-ng-model="config.value"/>
     </div>
     <div class="col-xs-4">

@@ -13,6 +13,7 @@
   
   <!-- Catalog URL from protocol to lang -->
   <xsl:param name="catalogUrl" select="''"/>
+  <xsl:param name="nodeId" select="''"/>
   
   <!-- Search for any of the searchStrings provided -->
   <xsl:function name="geonet:parseBoolean" as="xs:boolean">

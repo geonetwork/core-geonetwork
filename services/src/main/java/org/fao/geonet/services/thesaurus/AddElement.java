@@ -35,6 +35,7 @@ import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Element;
 
 import java.util.HashMap;
@@ -82,7 +83,7 @@ public class AddElement implements Service {
 
 		if (thesaurus.isFreeCode(null, newid)) {
 
-		    KeywordBean keyword = new KeywordBean()
+		    KeywordBean keyword = new KeywordBean(context.getBean(IsoLanguagesMapper.class))
 	            .setNamespaceCode(namespace)
 	            .setUriCode(newid);
 

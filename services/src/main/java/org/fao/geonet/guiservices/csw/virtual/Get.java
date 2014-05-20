@@ -51,7 +51,8 @@ public class Get implements Service {
 
         Element elParameters = new Element("serviceParameters");
         for (Map.Entry<String, String> parameter : parameters.entrySet()) {
-            elParameters.addContent(new Element(parameter.getKey())
+            elParameters.addContent(new Element("parameter")
+                    .setAttribute("name", parameter.getKey())
                     .setText(parameter.getValue()));
         }
         return new Element("service")

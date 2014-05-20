@@ -99,9 +99,10 @@
 		match="gmd:extent/gmd:EX_Extent/gmd:description/gco:CharacterString[normalize-space(.) != '']">
 		<Field name="extentDesc" string="{string(.)}" store="false" index="true"/>
 	</xsl:template>
-  
-	
-	<!-- ========================================================================================= -->
+
+
+
+  <!-- ========================================================================================= -->
 
 	<xsl:template match="*" mode="metadata">
 
@@ -216,42 +217,54 @@
 				</xsl:for-each>
 			</xsl:for-each>
 
-			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
+			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-			<xsl:for-each select="//gmd:MD_Keywords">
-			  
-				<xsl:for-each select="gmd:keyword/gco:CharacterString|gmd:keyword/gmx:Anchor|gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
-                    <xsl:variable name="keywordLower" select="lower-case(.)"/>
-                    <Field name="keyword" string="{string(.)}" store="true" index="true"/>
-					
-                    <xsl:if test="$inspire='true'">
-                        <xsl:if test="string-length(.) &gt; 0">
-                         
-                          <xsl:variable name="inspireannex">
-                            <xsl:call-template name="determineInspireAnnex">
-                              <xsl:with-param name="keyword" select="string(.)"/>
-                              <xsl:with-param name="inspireThemes" select="$inspire-theme"/>
-                            </xsl:call-template>
-                          </xsl:variable>
-                          
-                          <!-- Add the inspire field if it's one of the 34 themes -->
-                          <xsl:if test="normalize-space($inspireannex)!=''">
-                            <!-- Maybe we should add the english version to the index to not take the language into account 
-                            or create one field in the metadata language and one in english ? -->
-                            <Field name="inspiretheme" string="{string(.)}" store="false" index="true"/>
-                          	<Field name="inspireannex" string="{$inspireannex}" store="false" index="true"/>
-                            <!-- FIXME : inspirecat field will be set multiple time if one record has many themes -->
-                          	<Field name="inspirecat" string="true" store="false" index="true"/>
-                          </xsl:if>
-                        </xsl:if>
-                    </xsl:if>
-                </xsl:for-each>
+      <xsl:for-each select="//gmd:MD_Keywords">
 
-				<xsl:for-each select="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue">
-					<Field name="keywordType" string="{string(.)}" store="true" index="true"/>
-				</xsl:for-each>
-			</xsl:for-each>
-	
+        <xsl:for-each
+            select="gmd:keyword/gco:CharacterString|gmd:keyword/gmx:Anchor|gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
+          <Field name="keyword" string="{string(.)}" store="true" index="true"/>
+          <xsl:if test="$inspire='true'">
+            <xsl:if test="string-length(.) &gt; 0">
+
+              <xsl:variable name="inspireannex">
+                <xsl:call-template name="determineInspireAnnex">
+                  <xsl:with-param name="keyword" select="string(.)"/>
+                  <xsl:with-param name="inspireThemes" select="$inspire-theme"/>
+                </xsl:call-template>
+              </xsl:variable>
+
+              <!-- Add the inspire field if it's one of the 34 themes -->
+              <xsl:if test="normalize-space($inspireannex)!=''">
+                <!-- Maybe we should add the english version to the index to not take the language into account
+                or create one field in the metadata language and one in english ? -->
+                <Field name="inspiretheme" string="{string(.)}" store="false" index="true"/>
+                <Field name="inspireannex" string="{$inspireannex}" store="false" index="true"/>
+                <!-- FIXME : inspirecat field will be set multiple time if one record has many themes -->
+                <Field name="inspirecat" string="true" store="false" index="true"/>
+              </xsl:if>
+            </xsl:if>
+          </xsl:if>
+        </xsl:for-each>
+        <xsl:for-each select="gmd:thesaurusName/gmd:CI_Citation">
+          <xsl:if test="gmd:identifier/gmd:MD_Identifier/gmd:code/gmx:Anchor/text() != ''">
+            <Field name="thesaurusIdentifier"
+                   string="{substring-after(
+                              gmd:identifier/gmd:MD_Identifier/gmd:code/gmx:Anchor/text(),
+                              'geonetwork.thesaurus.')}"
+                   store="true" index="true"/>
+          </xsl:if>
+          <xsl:if test="gmd:title/gco:CharacterString/text() != ''">
+            <Field name="thesaurusName"
+                   string="{gmd:title/gco:CharacterString/text()}"
+                   store="true" index="true"/>
+          </xsl:if>
+        </xsl:for-each>
+        <xsl:for-each select="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue">
+          <Field name="keywordType" string="{string(.)}" store="true" index="true"/>
+        </xsl:for-each>
+      </xsl:for-each>
+
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 	
             <xsl:variable name="email" select="/gmd:MD_Metadata/gmd:contact[1]/gmd:CI_ResponsibleParty[1]/gmd:contactInfo[1]/gmd:CI_Contact[1]/gmd:address[1]/gmd:CI_Address[1]/gmd:electronicMailAddress[1]/gco:CharacterString[1]"/>

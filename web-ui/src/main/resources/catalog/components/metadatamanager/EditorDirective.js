@@ -30,9 +30,9 @@
           scope.lang = scope.$parent.lang;
 
           var init = function() {
-            $http.get('admin.group.list@json', {cache: true}).
+            $http.get('info@json?type=groups&profile=Editor', {cache: true}).
                 success(function(data) {
-                  scope.groups = data !== 'null' ? data : null;
+                  scope.groups = data !== 'null' ? data.group : null;
                 });
           };
 
@@ -41,9 +41,9 @@
           };
 
           scope.assignGroup = function(g) {
-            gnEditor.assignGroup(g.id)
+            gnEditor.assignGroup(g['@id'])
               .then(function() {
-                  scope.groupOwner = g.id;
+                  scope.groupOwner = g['@id'];
                 }, function(error) {
                   $rootScope.$broadcast('StatusUpdated', {
                     title: $translate('changeGroupError'),

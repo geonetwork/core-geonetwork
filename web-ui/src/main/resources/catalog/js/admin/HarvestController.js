@@ -67,7 +67,7 @@
               angular.forEach(data[0], function(value) {
                 $scope.harvesterTypes[value] = {
                   label: value,
-                  text: $translate(value)
+                  text: $translate('harvester-' + value)
                 };
                 $.getScript('../../catalog/templates/admin/harvest/type/' +
                     value + '.js')
@@ -513,6 +513,13 @@
               loadHarvesterTemplates();
             }
           });
+      $scope.getHarvesterTypes = function() {
+        var array = [];
+        angular.forEach($scope.harvesterTypes, function(h) {
+          array.push(h);
+        });
+        return array;
+      };
     }]);
 
 })();

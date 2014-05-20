@@ -416,7 +416,9 @@ public class Thesaurus {
 	}
 
     private String toiso639_1_Lang(String lang) {
-         String defaultCode = getIsoLanguageMapper().iso639_2_to_iso639_1(Geonet.DEFAULT_LANGUAGE, Geonet.DEFAULT_LANGUAGE.substring(2));
+         String defaultCode = getIsoLanguageMapper().iso639_2_to_iso639_1(
+                 Geonet.DEFAULT_LANGUAGE,
+                 Geonet.DEFAULT_LANGUAGE.substring(0, 2));
         return getIsoLanguageMapper().iso639_2_to_iso639_1(lang, defaultCode);
      }
 

@@ -175,7 +175,9 @@
     <xsl:for-each select="$res/*[name() != 'summary' and name() != 'from' and name() != 'to']">
 
       <xsl:variable name="md">
-        <xsl:apply-templates mode="brief" select="."/>
+        <!--<xsl:apply-templates mode="briefPdf" select="."/>-->
+        <!-- Using search service with fast=index to retrieve the information directly from the index -->
+        <xsl:copy-of select="." />
       </xsl:variable>
       <xsl:variable name="metadata" select="exslt:node-set($md)/*[1]"/>
       <xsl:variable name="source" select="string($metadata/geonet:info/source)"/>
@@ -283,14 +285,20 @@
     <xsl:param name="metadata"/>
 
     <fo:block padding-top="4pt" padding-bottom="4pt" padding-right="4pt" padding-left="4pt">
+      <!-- Format:
+         <image>thumbnail|resources.get?uuid=da165110-88fd-11da-a88f-000d939bc5d8&fname=thumbnail_s.gif&access=public</image>
+      -->
+
       <!-- Thumbnails - Use the first one only -->
       <xsl:if test="$metadata/image">
+        <xsl:variable name="image" select="tokenize($metadata/image[1], '\|')[2]" />
+
         <xsl:choose>
-          <xsl:when test="contains($metadata/image[1] ,'://')">
+          <xsl:when test="contains($image ,'://')">
             <fo:external-graphic content-width="4.6cm">
               <xsl:attribute name="src">
                 <xsl:text>url('</xsl:text>
-                <xsl:value-of select="$metadata/image[1]"/>
+                <xsl:value-of select="$image"/>
                 <xsl:text>')"</xsl:text>
               </xsl:attribute>
             </fo:external-graphic>
@@ -300,8 +308,7 @@
               <xsl:attribute name="src">
                 <xsl:text>url('</xsl:text>
                 <xsl:value-of
-                  select="concat($env/system/server/protocol, '://', $env/system/server/host,':', 
-                  $env/system/server/port, $metadata/image[1])"/>
+                  select="concat($fullURLForService, '/', $image)"/>
                 <xsl:text>')"</xsl:text>
               </xsl:attribute>
             </fo:external-graphic>
@@ -347,19 +354,32 @@
         </xsl:choose>
 
         <xsl:if test="$metadata/geonet:info/download='true'">
-          <xsl:for-each select="$metadata/link[@type='download']">
+          <!-- Format:
+          <link>phy.zip|Physiography of North and Central Eurasia Landform (Gif Format)|http://localhost:8080/geonetwork/srv/en/resources.get?uuid=78f93047-74f8-4419-ac3d-fc62e4b0477b&fname=phy.zip&access=private|WWW:DOWNLOAD-1.0-http- -download|application/zip</link>
+          -->
+
+          <xsl:for-each select="$metadata/link[contains(., 'WWW:DOWNLOAD-1.0-http--download')]">
+            <xsl:variable name="link" select="tokenize(., '\|')[3]" />
+
             <fo:basic-link text-decoration="underline" color="blue">
-              <xsl:attribute name="external-destination"> url('<xsl:value-of select="."/>') </xsl:attribute>
+              <xsl:attribute name="external-destination"> url('<xsl:value-of select="$link"/>') </xsl:attribute>
               <xsl:value-of select="$oldGuiStrings/download"/>
             </fo:basic-link> | </xsl:for-each>
         </xsl:if>
 
         <xsl:if test="$metadata/geonet:info/dynamic='true'">
-          <xsl:for-each select="$metadata/link[@type='application/vnd.ogc.wms_xml']">
+          <!-- Format:
+          <link>landform|Physiography of North and Central Eurasia Landform|http://geonetwork3.fao.org/ows/7386_landf|OGC:WMS-1.1.1-http-get-map|application/vnd.ogc.wms_xml</link>
+          -->
+
+          <xsl:for-each select="$metadata/link[contains(., 'application/vnd.ogc.wms_xml')]">
+            <xsl:variable name="title" select="tokenize(., '\|')[2]" />
+            <xsl:variable name="link" select="tokenize(., '\|')[3]" />
+
             <fo:basic-link text-decoration="underline" color="blue">
-              <xsl:attribute name="external-destination"> url('<xsl:value-of select="@href"/>') </xsl:attribute>
+              <xsl:attribute name="external-destination"> url('<xsl:value-of select="$link"/>') </xsl:attribute>
               <xsl:value-of select="$oldGuiStrings/visualizationService"/> (<xsl:value-of
-                select="@title"/>) </fo:basic-link> | </xsl:for-each>
+                select="$title"/>) </fo:basic-link> | </xsl:for-each>
         </xsl:if>
 
       </xsl:with-param>

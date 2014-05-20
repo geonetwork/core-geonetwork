@@ -1,0 +1,10 @@
+<div class="gn-facet-breadcrumb">
+  <ol class="breadcrumb">
+    <li data-ng-repeat="(key, facet) in currentFacet">
+      <a data-ng-click="remove(key)">
+      <span>{{key | translate}}: {{facet.label}}</span>
+      <i class="fa fa-times text-danger"/>
+      </a>
+    </li>
+  </ol>
+</div>

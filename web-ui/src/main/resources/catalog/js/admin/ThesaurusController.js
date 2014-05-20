@@ -1,10 +1,8 @@
 (function() {
   goog.provide('gn_thesaurus_controller');
 
-  goog.require('gn_thesaurus_type');
-
   var module = angular.module('gn_thesaurus_controller',
-      ['gn_thesaurus_type', 'blueimp.fileupload']);
+      ['blueimp.fileupload']);
 
 
   /**
@@ -22,18 +20,15 @@
    */
   module.controller('GnThesaurusController', [
     '$scope', '$http', '$rootScope', '$translate',
-    function($scope, $http, $rootScope, $translate) {
+    'gnConfig', 'gnSearchManagerService',
+    function($scope, $http, $rootScope, $translate,
+             gnConfig, gnSearchManagerService) {
 
+      $scope.gnConfig = gnConfig;
       /**
        * Type of relations in SKOS thesaurus
        */
       var relationTypes = ['broader', 'narrower', 'related'];
-
-      /**
-       * Thesaurus type list as defined in ISO19139
-       */
-      $scope.thesaurusClass = ['theme', 'discipline',
-                               'place', 'stratum', 'temporal'];
 
       /**
        * The list of thesaurus
@@ -82,6 +77,7 @@
 
       $scope.maxNumberOfKeywords = 50;
 
+      $scope.recordsRelatedToThesaurus = 0;
       /**
        * The type of thesaurus import. Could be new, file or url.
        */
@@ -108,15 +104,22 @@
        */
       searchThesaurusKeyword = function() {
         if ($scope.thesaurusSelected) {
+          $scope.recordsRelatedToThesaurus = 0;
           $http.get('keywords@json?pNewSearch=true&pTypeSearch=1' +
               '&pThesauri=' + $scope.thesaurusSelected.key +
                       '&pMode=searchBox' +
                       '&maxResults=' +
                       ($scope.maxNumberOfKeywords ||
                               defaultMaxNumberOfKeywords) +
-                      '&pKeyword=' + ($scope.keywordFilter || '*')
+                      '&pKeyword=' + (encodeURI($scope.keywordFilter) || '*')
           ).success(function(data) {
             $scope.keywords = data[0];
+            gnSearchManagerService.gnSearch({
+              summaryOnly: 'true',
+              thesaurusIdentifier: $scope.thesaurusSelected.key}).
+                then(function(results) {
+                  $scope.recordsRelatedToThesaurus = parseInt(results.count);
+                });
           });
         }
       };
@@ -127,6 +130,7 @@
       $scope.addThesaurus = function(type) {
         creatingThesaurus = true;
 
+        $scope.thesaurusImportType = 'theme';
         $scope.importAs = type;
         $scope.thesaurusSelected = {
           title: '',
@@ -174,7 +178,6 @@
             '<tns>' + $scope.thesaurusSelected.defaultNamespace + '</tns>' +
             '<dname>' + $scope.thesaurusSelected.dname + '</dname>' +
             '<type>local</type></request>';
-
         $http.post('thesaurus.update', xml, {
           headers: {'Content-type': 'application/xml'}
         })
@@ -208,10 +211,10 @@
       /**
        * Thesaurus uploaded with error, broadcast it.
        */
-      uploadThesaurusError = function(data) {
+      uploadThesaurusError = function(e, data) {
         $rootScope.$broadcast('StatusUpdated', {
           title: $translate('thesaurusUploadError'),
-          error: data,
+          error: data.jqXHR.responseJSON,
           timeout: 0,
           type: 'danger'});
       };
@@ -238,7 +241,9 @@
         } else {
           $http.get('thesaurus.upload?' + $(formId).serialize())
               .success(uploadThesaurusDone)
-              .error(uploadThesaurusError);
+              .error(function(data) {
+                uploadThesaurusError(null, data);
+              });
         }
       };
 
@@ -269,10 +274,21 @@
         $http.get('thesaurus.activate@json?' +
                 'ref=' + $scope.thesaurusSelected.key +
                 '&activated=' +
-                    ($scope.thesaurusSelectedActivated ? 'y' : 'n')
+                    ($scope.thesaurusSelectedActivated ? 'n' : 'y')
         ).success(function(data) {
           // TODO
         });
+      };
+
+      $scope.reindexRecords = function() {
+        gnSearchManagerService.indexSetOfRecords({
+          thesaurusIdentifier: $scope.thesaurusSelected.key}).
+            then(function(data) {
+              $rootScope.$broadcast('StatusUpdated', {
+                title: $translate('indexingRecordsRelatedToTheThesaurus'),
+                timeout: 2
+              });
+            });
       };
 
       /**
@@ -490,6 +506,12 @@
       function loadThesaurus() {
         $http.get('thesaurus@json').success(function(data) {
           $scope.thesaurus = data[0];
+        }).error(function(data) {
+          $rootScope.$broadcast('StatusUpdated', {
+            title: $translate('thesaurusListError'),
+            error: data,
+            timeout: 0,
+            type: 'danger'});
         });
       }
 

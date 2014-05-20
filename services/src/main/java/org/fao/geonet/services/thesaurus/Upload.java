@@ -127,15 +127,15 @@ public class Upload implements Service {
 				URI uri = new URI(url);
 				rdfFile = File.createTempFile("thesaurus", ".rdf");
 
-				XmlRequest httpReq = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(uri.getHost(),
-						uri.getPort());
+				XmlRequest httpReq = context.getBean(GeonetHttpRequestFactory.class).
+                        createXmlRequest(uri.toURL());
 				httpReq.setAddress(uri.getPath());
 
 				Lib.net.setupProxy(context, httpReq);
 
 				httpReq.executeLarge(rdfFile);
 
-				fname = url.substring(url.lastIndexOf("/") + 1, url.length());
+				fname = url.substring(url.lastIndexOf("/") + 1, url.length()).replaceAll("\\s+", "");
 				
 				// File with no extension in URL
 				if (fname.lastIndexOf('.') == -1) {
@@ -153,6 +153,7 @@ public class Upload implements Service {
 			}
 			
 			rdfFile = new File(uploadDir, fname);
+            fname = fname.replaceAll("\\s+", "");
 		}
 
 		if (fname == null || "".equals(fname)) {

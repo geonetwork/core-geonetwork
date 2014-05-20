@@ -26,7 +26,6 @@
 <summary>
 	<def>
 		<hits>
-
       <item name="keyword" plural="keywords" indexKey="keyword" max="15"/>
 			<item name="inspireTheme" plural="inspireThemes" indexKey="inspiretheme" sortBy="value" sortOrder="asc" max="35"/>
 			<item name="denominator" plural="denominators" indexKey="denominator" sortBy="numValue" sortOrder="desc"/>
@@ -41,6 +40,8 @@
     <subtemplates>
       <item name="subTemplateType" plural="subTemplateTypes"
             indexKey="_root"/>
+      <item name="groupOwner" plural="groupOwners" indexKey="_groupOwner"
+            max="99" sortBy="value" translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
     </subtemplates>
 		<titles>
 			<item name="title" plural="titles" indexKey="title" sortBy="freq" sortOrder="desc" max="100"

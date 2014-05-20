@@ -31,15 +31,15 @@ public class DbDescTranslatorIntegrationTest extends AbstractCoreIntegrationTest
 
     @Test
     public void testTranslateStringKey() throws Exception {
-        testTranslation("key");
+        testTranslation("key", null);
     }
 
     @Test
     public void testTranslateIntKey() throws Exception {
-        testTranslation(1);
+        testTranslation(1, "int");
     }
 
-    private<T extends Serializable> void testTranslation(T key) throws IOException, JDOMException, ClassNotFoundException {
+    private<T extends Serializable> void testTranslation(T key, String type) throws IOException, JDOMException, ClassNotFoundException {
         JpaRepository<Object, T> repo = mock(JpaRepository.class);
         ValueObject value = new ValueObject();
 
@@ -48,17 +48,23 @@ public class DbDescTranslatorIntegrationTest extends AbstractCoreIntegrationTest
         StaticApplicationContext appContext = new StaticApplicationContext(_appContext);
         appContext.getBeanFactory().registerSingleton(beanName, repo);
 
-        DbDescTranslator translator = new DbDescTranslator(appContext, "eng", repo.getClass().getName() + "");
-        final String translation = translator.translate("" + key);
-        assertEquals(value.getLabel("eng"), translation);
+        if ("int".equals(type)) {
+            DbDescTranslator translator3 = new DbDescTranslator(appContext, "eng", repo.getClass().getName() + ":findOne:int");
+            final String translation3 = translator3.translate("" + key);
+            assertEquals(value.getLabel("eng"), translation3);
+        } else {
+            DbDescTranslator translator = new DbDescTranslator(appContext, "eng", repo.getClass().getName() + "");
+            final String translation = translator.translate("" + key);
+            assertEquals(value.getLabel("eng"), translation);
 
-        DbDescTranslator translator2 = new DbDescTranslator(appContext, "eng", beanName + "");
-        final String translation2 = translator2.translate("" + key);
-        assertEquals(value.getLabel("eng"), translation2);
+            DbDescTranslator translator2 = new DbDescTranslator(appContext, "eng", beanName + "");
+            final String translation2 = translator2.translate("" + key);
+            assertEquals(value.getLabel("eng"), translation2);
 
-        DbDescTranslator translator3 = new DbDescTranslator(appContext, "eng", repo.getClass().getName() + ":findOne");
-        final String translation3 = translator3.translate("" + key);
-        assertEquals(value.getLabel("eng"), translation3);
+            DbDescTranslator translator3 = new DbDescTranslator(appContext, "eng", repo.getClass().getName() + ":findOne");
+            final String translation3 = translator3.translate("" + key);
+            assertEquals(value.getLabel("eng"), translation3);
+        }
 
     }
 

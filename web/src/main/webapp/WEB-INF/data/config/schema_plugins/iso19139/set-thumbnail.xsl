@@ -128,12 +128,11 @@
 			<gmd:MD_BrowseGraphic>
 				<gmd:fileName>
 					<xsl:variable name="metadataId"   select="/root/*/gmd:fileIdentifier/gco:CharacterString/text()" />
-					<xsl:variable name="serverHost"   select="/root/env/host" />
-					<xsl:variable name="serverPort"   select="/root/env/port" />
-					<xsl:variable name="baseUrl"   select="/root/env/baseUrl" />
-					<xsl:variable name="serverPrefix" select="concat('http://',$serverHost,':',$serverPort, $baseUrl, '/srv/eng/resources.get?')"/>
 					<gco:CharacterString>
-						<xsl:value-of select="$serverPrefix"/><xsl:text>uuid=</xsl:text><xsl:value-of select="$metadataId" /><xsl:text>&amp;fname=</xsl:text><xsl:value-of select="/root/env/file"/>
+					  <xsl:value-of select="concat(
+					    /root/env/url, '/resources.get?',
+					    'uuid=', $metadataId, 
+					    '&amp;fname=', /root/env/file)"/>
 					</gco:CharacterString>
 				</gmd:fileName>
 

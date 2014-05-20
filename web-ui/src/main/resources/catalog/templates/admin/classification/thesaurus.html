@@ -41,11 +41,21 @@
       <div class="panel-heading">
         <strong>{{thesaurusSelected.title}} ({{thesaurusSelected.dname}})</strong>
         <a href="{{thesaurusSelected.url}}" data-translate="">download</a>
-
-        <div class="btn-toolbar">
-          <button type="button" class="btn btn-primary pull-right btn-danger fa fa-trash-o"
-            data-ng-click="deleteThesaurus()" data-translate="">deleteThesaurus</button>
+        <div class="btn-toolbar pull-right">
+          <button type="button" class="btn btn-default"
+                  data-ng-show="gnConfig[gnConfig.key.isXLinkEnabled] && !isExternal() && recordsRelatedToThesaurus > 0"
+                  data-ng-click="reindexRecords()"
+                  title="{{'reindexRecords-help' | translate}}">
+            <i class="fa fa-cog"></i>&nbsp;
+            <span data-translate=""
+                data-translate-values="{records: '{{recordsRelatedToThesaurus}}'}">reindexRecords</span>
+          </button>
+          <button type="button" class="btn btn-danger"
+            data-ng-click="deleteThesaurus()">
+            <i class="fa fa-trash-o"></i>&nbsp;<span data-translate="">deleteThesaurus</span>
+          </button>
         </div>
+
       </div>
 
       <div class="panel-body">
@@ -74,10 +84,11 @@
 
             <div>
               <label class="control-label" data-translate="">thesaurusClass</label>
-              <select name="dname" class="form-control" data-ng-disabled="!isNew()"
-                data-ng-model="thesaurusSelected.dname">
-                <option data-ng-repeat="t in thesaurusClass" data-translate="">{{t}}</option>
-              </select>
+              <div data-ng-disabled="!isNew()"
+                  data-schema-info-combo="codelist"
+                  data-selected-info="thesaurusSelected.dname"
+                  data-gn-schema-info="gmd:MD_KeywordTypeCode"
+                  lang="lang"></div>
             </div>
 
             <label>
@@ -123,7 +134,9 @@
         </form>
         <ul>
           <li data-ng-repeat="k in keywords">
-            <a href=""  data-ng-click="editKeyword(k)">{{k.value['#text']}}
+            <a href=""  data-ng-click="editKeyword(k)"
+                data-ng-class="k.value['#text'] ? '' : 'text-warning'">
+              {{k.value['#text'] || ('keywordNotAvailableInThisLanguage' | translate)}}
               <i class="fa fa-edit pull-right" data-ng-class="isExternal() ? 'fa-info' : 'fa-edit'"/>
             </a>
             <a href=""
@@ -177,12 +190,13 @@
               <input type="url" name="url" data-ng-model="thesaurusUrl" id="gn-thesaurus-url"
                 class="form-control" placeholder="http://"/>
             </div>
-
-
-            <div data-gn-thesaurus-type=""
-                 data-fieldname="dir"
-                 data-gn-model="thesaurusImportType"/>
-
+            <br/>
+            <div
+                data-schema-info-combo="codelist"
+                data-selected-info="thesaurusImportType"
+                data-gn-schema-info="gmd:MD_KeywordTypeCode"
+                lang="lang"></div>
+            <input type="text" class="hidden" name="dir" data-ng-model="thesaurusImportType"/>
             <ul>
               <li data-ng-repeat="file in queue">{{file.name}} ({{file.type}} / {{file.size}} KB) <i
                   class="fa fa-trash-o" data-ng-click="clear(file)"/>
@@ -214,9 +228,14 @@
               <input type="text" name="filename" class="form-control" data-ng-disabled="!isNew()"
                 data-ng-keyup="computeThesaurusNs()" data-ng-model="thesaurusSelected.filename"/>
             </div>
-
-            <div data-gn-thesaurus-type="" data-gn-model="thesaurusSelected.dname"
-              data-gn-disabled="!isNew()"/>
+            <div>
+              <label class="control-label" data-translate="">thesaurusClass</label>
+              <div
+                  data-schema-info-combo="codelist"
+                  data-selected-info="thesaurusSelected.dname"
+                  data-gn-schema-info="gmd:MD_KeywordTypeCode"
+                  lang="lang"></div>
+             </div>
 
             <div>
               <label class="control-label" data-translate="">thesaurusNamespace</label>

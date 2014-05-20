@@ -18,10 +18,15 @@
             link: function(scope, element, attrs) {
               scope.gnSuggestion = gnSuggestion;
               scope.gnCurrentEdit = gnCurrentEdit;
+              scope.suggestions = [];
+              scope.loading = false;
 
               scope.load = function() {
+                scope.loading = true;
+                scope.suggestions = [];
                 gnSuggestion.load(scope.$parent.lang || 'eng').
                     success(function(data) {
+                      scope.loading = false;
                       if (data && !angular.isString(data)) {
                         scope.suggestions = data;
                       }
@@ -40,11 +45,11 @@
               });
 
               // When saving is done, refresh validation report
-              scope.$watch('gnCurrentEdit.saving', function(newValue) {
-                if (newValue === false) {
-                  scope.load();
-                }
-              });
+              // scope.$watch('gnCurrentEdit.saving', function(newValue) {
+              //   if (newValue === false) {
+              //     scope.load();
+              //   }
+              // });
             }
           };
         }])
