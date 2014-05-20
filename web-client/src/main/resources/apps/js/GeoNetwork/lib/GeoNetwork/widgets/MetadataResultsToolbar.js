@@ -401,6 +401,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                   width: 600,
                   height: 420,
                   layout: 'fit',
+                  y:70,
                   modal: true,
                   items: newMetadataPanel,
                   closeAction: 'hide',
