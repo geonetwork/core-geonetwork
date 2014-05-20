@@ -27,6 +27,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 
@@ -56,7 +57,9 @@ public class GetCurrentMDTab implements Service
 		{
 			context.info("Creating default metadata tab");
 
-			data = "simple";
+            GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+            data =  gc.getSettingManager().getValue("system/metadata/defaultView");
+            if (data == null) data = "simple";
 
 			session.setProperty(Geonet.Session.METADATA_SHOW, data);
 		}
