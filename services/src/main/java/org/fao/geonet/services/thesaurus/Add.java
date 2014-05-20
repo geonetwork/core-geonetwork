@@ -78,7 +78,7 @@ public class Add extends NotInReadOnlyModeService {
 		
 		File rdfFile = new File(filePath);
         final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
-        Thesaurus thesaurus = new Thesaurus(null, fname, tname, tnamespace, type, dname, rdfFile, siteURL, false);
+        Thesaurus thesaurus = new Thesaurus(context.getApplicationContext(), fname, tname, tnamespace, type, dname, rdfFile, siteURL, false);
 		tm.addThesaurus(thesaurus, true);
 
 		// Save activated status in the database
