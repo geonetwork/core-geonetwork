@@ -22,10 +22,14 @@
 //==============================================================================
 package org.fao.geonet.services.metadata.replace;
 
+import org.fao.geonet.Util;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.services.metadata.XslProcessingReport;
 import org.jdom.Element;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class to model the massive replace report.
@@ -33,83 +37,68 @@ import java.util.List;
  * @author Jose García
  *
  */
-public class MassiveReplaceReport {
-    private List<MassiveReplaceReportEntry> notFound;
-    private List<MassiveReplaceReportEntry> notOwner;
-    private List<MassiveReplaceReportEntry> notValidStatus;
-    private List<MassiveReplaceReportEntry> changed;
-    private List<MassiveReplaceReportEntry> notChanged;
+public class MassiveReplaceReport extends XslProcessingReport {
 
-    private List<String> errors;
-    private List<String> warnings;
+    private List<MassiveReplaceReportEntry> notFoundList = new ArrayList<MassiveReplaceReportEntry>();
+    private List<MassiveReplaceReportEntry> notEditableList = new ArrayList<MassiveReplaceReportEntry>();
+    private List<MassiveReplaceReportEntry> changedList = new ArrayList<MassiveReplaceReportEntry>();
+    private List<MassiveReplaceReportEntry> notChangedList = new ArrayList<MassiveReplaceReportEntry>();
+    private List<MassiveReplaceReportEntry> noProcessFoundList = new ArrayList<MassiveReplaceReportEntry>();
 
-    public List<MassiveReplaceReportEntry> getNotFound() {
-        return notFound;
-    }
-
-    public List<MassiveReplaceReportEntry> getNotOwner() {
-        return notOwner;
-    }
-
-    public List<MassiveReplaceReportEntry> getChanged() {
-        return changed;
-    }
-
-    public List<MassiveReplaceReportEntry> getNotChanged() {
-        return notChanged;
-    }
-
-    public MassiveReplaceReport() {
-        notFound = new ArrayList<MassiveReplaceReportEntry>();
-        notOwner = new ArrayList<MassiveReplaceReportEntry>();
-        notValidStatus = new ArrayList<MassiveReplaceReportEntry>();
-        changed = new ArrayList<MassiveReplaceReportEntry>();
-        notChanged = new ArrayList<MassiveReplaceReportEntry>();
-        errors = new ArrayList<String>();
-        warnings = new ArrayList<String>();
+    public MassiveReplaceReport(String processId) {
+        super(processId);
     }
 
     public void addNotFound(MassiveReplaceReportEntry entry) {
-        notFound.add(entry);
+        notFoundList.add(entry);
     }
 
-    public void addNotOwner(MassiveReplaceReportEntry entry) {
-        notOwner.add(entry);
+    public void addNotEditable(MassiveReplaceReportEntry entry) {
+        notEditableList.add(entry);
     }
-
-    public void addNotValidStatus(MassiveReplaceReportEntry entry) {
-        notValidStatus.add(entry);
-    }
-
 
     public void addChanged(MassiveReplaceReportEntry entry) {
-        changed.add(entry);
+        changedList.add(entry);
     }
 
     public void addNotChanged(MassiveReplaceReportEntry entry) {
-        notChanged.add(entry);
+        notChangedList.add(entry);
     }
 
-    public void addError(String error) {
-        errors.add(error);
+    public void addNoProcessFound(MassiveReplaceReportEntry entry) {
+        noProcessFoundList.add(entry);
     }
 
-    public void addWarning(String warning) {
-        warnings.add(warning);
+    @Override
+    public synchronized int getNotFoundMetadataCount() {
+        return this.notFoundList.size();
     }
 
-    public int getTotalRecords() {
+    @Override
+    public synchronized int getNotEditableMetadataCount() {
+        return this.notEditableList.size();
+    }
+
+    /*public int getTotalRecords() {
         return notFound.size() + notOwner.size() + notValidStatus.size() + changed.size() +  notChanged.size();
-    }
+    }*/
 
 
-    public Element toXml() {
-        Element report = new Element("report");
-        report.setAttribute("total", getTotalRecords() + "");
+    @Override
+    public synchronized Element toXml() {
+        Element xmlReport = new Element("report");
+        xmlReport.setAttribute("total", getTotalRecords() + "");
 
+        xmlReport.setAttribute("startDate", startDate.toString());
+        xmlReport.setAttribute("reportDate", new ISODate().toString());
+        xmlReport.setAttribute("running", String.valueOf(isProcessing()));
+        xmlReport.setAttribute("totalRecords", totalRecords + "");
+        xmlReport.setAttribute("processedRecords", processedRecords + "");
+        xmlReport.setAttribute("nullRecords", nullRecords + "");
+
+        // Changed metadata
         Element changedEl = new Element("changed");
-        int i = 1;
-        for(MassiveReplaceReportEntry mdInfo: this.changed) {
+        for(MassiveReplaceReportEntry mdInfo: this.changedList) {
             Element metadataEl = new Element("metadata");
             metadataEl.setAttribute("uuid",  mdInfo.getMetadataUuid());
             metadataEl.setAttribute("title",  mdInfo.getMetadataTitle());
@@ -124,66 +113,64 @@ public class MassiveReplaceReport {
             }
 
             changedEl.addContent(metadataEl);
-            i++;
         }
-        report.addContent(changedEl);
+        xmlReport.addContent(changedEl);
 
+        // Not editable metadata
         Element notOwnerEl = new Element("notOwner");
-        i = 1;
-        for(MassiveReplaceReportEntry mdInfo: this.notOwner) {
+        for(MassiveReplaceReportEntry mdInfo: this.notEditableList) {
             Element metadataEl = new Element("metadata");
             metadataEl.setAttribute("uuid", mdInfo.getMetadataUuid());
             metadataEl.setAttribute("title", mdInfo.getMetadataTitle());
 
             notOwnerEl.addContent(metadataEl);
-            i++;
         }
-        report.addContent(notOwnerEl);
+        xmlReport.addContent(notOwnerEl);
 
+        // Not found metadata
         Element notFoundEl = new Element("notFound");
-        i = 1;
-        for(MassiveReplaceReportEntry mdInfo: this.notFound) {
+        for(MassiveReplaceReportEntry mdInfo: this.notFoundList) {
             Element metadataEl = new Element("metadata");
             metadataEl.setAttribute("uuid", mdInfo.getMetadataUuid());
             metadataEl.setAttribute("title", mdInfo.getMetadataTitle());
 
             notFoundEl.addContent(metadataEl);
-            i++;
         }
-        report.addContent(notFoundEl);
+        xmlReport.addContent(notFoundEl);
 
+        // Not changed metadata
         Element notChangedEl = new Element("notChanged");
-        i = 1;
-        for(MassiveReplaceReportEntry mdInfo: this.notChanged) {
+        for(MassiveReplaceReportEntry mdInfo: this.notChangedList) {
             Element metadataEl = new Element("metadata");
             metadataEl.setAttribute("uuid",  mdInfo.getMetadataUuid());
             metadataEl.setAttribute("title",  mdInfo.getMetadataTitle());
 
             notChangedEl.addContent(metadataEl);
-            i++;
         }
-        report.addContent(notChangedEl);
+        xmlReport.addContent(notChangedEl);
 
-        Element errorsEl = new Element("errors");
+        // No process found for the metadata
+        Element notProcessFoundEl = new Element("noProcessFound");
+        for(MassiveReplaceReportEntry mdInfo: this.noProcessFoundList) {
+            Element metadataEl = new Element("metadata");
+            metadataEl.setAttribute("uuid",  mdInfo.getMetadataUuid());
+            metadataEl.setAttribute("title",  mdInfo.getMetadataTitle());
 
-        for(String error: this.errors) {
-            Element errorEl = new Element("error");
-            errorEl.setText(error);
-
-            errorsEl.addContent(errorEl);
+            notProcessFoundEl.addContent(metadataEl);
         }
-        report.addContent(errorsEl);
+        xmlReport.addContent(notProcessFoundEl);
 
-        Element warningsEl = new Element("warnings");
-
-        for(String error: this.warnings) {
-            Element warningEl = new Element("warning");
-            warningEl.setText(error);
-
-            warningsEl.addContent(warningEl);
+        // Errors
+        Element mdErrorReport = new Element("metadataErrorReport");
+        for (Map.Entry<Integer, Exception> e : metadataErrors.entrySet()) {
+            Element info = new Element("metadata");
+            info.setAttribute("id", e.getKey() + "");
+            info.addContent(new Element("message").setText(e.getValue().getMessage()));
+            info.addContent(new Element("stack").setText(Util.getStackTrace(e.getValue())));
+            mdErrorReport.addContent(info);
         }
-        report.addContent(warningsEl);
+        xmlReport.addContent(mdErrorReport);
 
-        return report;
+        return xmlReport;
     }
 }

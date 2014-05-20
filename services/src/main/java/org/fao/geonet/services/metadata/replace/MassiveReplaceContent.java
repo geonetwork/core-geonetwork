@@ -1,13 +1,14 @@
 package org.fao.geonet.services.metadata.replace;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDataInfo;
@@ -15,6 +16,7 @@ import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
@@ -38,8 +40,15 @@ import java.util.*;
  *
  * @author Jose García
  */
-public class MassiveReplaceContent implements Service {
-    public void init(String appPath, ServiceConfig params) throws Exception { }
+public class MassiveReplaceContent extends NotInReadOnlyModeService {
+    private boolean fullResponse = false;
+
+    public void init(String appPath, ServiceConfig params) throws Exception {
+        // Used to return different response depending on UI invoking the service:
+        //  - ExtJs UI: fullResponse = true
+        //  - Angular UI: fullResponse = false or not provided
+        fullResponse = Boolean.parseBoolean(params.getValue("fullResponse", "false"));
+    }
 
     // --------------------------------------------------------------------------
     // ---
@@ -47,24 +56,27 @@ public class MassiveReplaceContent implements Service {
     // ---
     // --------------------------------------------------------------------------
 
-    public Element exec(Element params, ServiceContext context)
+    public Element serviceSpecificExec(Element params, ServiceContext context)
             throws Exception {
-        MassiveReplaceReport report = new MassiveReplaceReport();
         String process = "massive-content-update";
+        MassiveReplaceReport report = new MassiveReplaceReport(process);
 
         GeonetContext gc = (GeonetContext) context
                 .getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dataMan = gc.getBean(DataManager.class);
         UserSession session = context.getUserSession();
 
+        // Clear previous report
+        session.removeProperty("BATCH_PROCESSING_REPORT");
+
+        // Apply the process to the selection
         Set<Integer> metadata = new HashSet<Integer>();
 
         context.info("Get selected metadata");
         SelectionManager sm = SelectionManager.getManager(session);
 
-
-        // Apply the process to the selection
         synchronized (sm.getSelection("metadata")) {
+            report.setTotalRecords(sm.getSelection("metadata").size());
             MassiveXslMetadataReindexer m = new MassiveXslMetadataReindexer(dataMan,
                     sm.getSelection("metadata").iterator(),
                     process, params,
@@ -72,16 +84,21 @@ public class MassiveReplaceContent implements Service {
             m.process();
         }
 
+        // Add the report to the session
+        session.setProperty("BATCH_PROCESSING_REPORT", report);
 
-        // -- for the moment just return the sizes - we could return the ids
-        // -- at a later stage for some sort of result display
-        return new Element(Jeeves.Elem.RESPONSE)
+
+        if (fullResponse) {
+            return new Element(Jeeves.Elem.RESPONSE)
                 .addContent(
                         report.toXml())
                 .addContent(
                         (Element) params.clone())
                 .addContent(
                         new Element("test").setText(params.getChildText("test")));
+        } else {
+            return report.toXml();
+        }
     }
 
     // --------------------------------------------------------------------------
@@ -180,8 +197,18 @@ public class MassiveReplaceContent implements Service {
             SchemaManager schemaMan = gc.getBean(SchemaManager.class);
             AccessManager accessMan = gc.getBean(AccessManager.class);
 
-            final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-            Metadata metadataEntity = metadataRepository.findOne(Integer.parseInt(id));
+            report.incrementProcessedRecords();
+
+            // When a record is deleted the UUID is in the selection manager
+            // and when retrieving id, return null
+            if (id == null) {
+                report.incrementNullRecords();
+                return null;
+            }
+
+            int iId = Integer.valueOf(id);
+
+            Metadata metadataEntity =  context.getBean(MetadataRepository.class).findOne(iId);
             MetadataDataInfo info = metadataEntity.getDataInfo();
 
             // Get metadata title from the index
@@ -196,7 +223,7 @@ public class MassiveReplaceContent implements Service {
             } else if (!accessMan.isOwner(context, id)) {
                 MassiveReplaceReportEntry notOwnerEntry =
                         new MassiveReplaceReportEntry(metadataEntity.getUuid(), metadataTitle, null);
-                report.addNotOwner(notOwnerEntry);
+                report.addNotEditable(notOwnerEntry);
             } else {
 
                 // -----------------------------------------------------------------------
@@ -207,60 +234,70 @@ public class MassiveReplaceContent implements Service {
                 if (!xslProcessing.exists()) {
                     context.info("  Processing instruction not found for " + schema
                             + " schema.");
-                    //notProcessFound.add(new Integer(id));
+
+                    MassiveReplaceReportEntry notOwnerEntry =
+                            new MassiveReplaceReportEntry(metadataEntity.getUuid(), metadataTitle, null);
+                    report.addNoProcessFound(notOwnerEntry);
+
                     return null;
                 }
                 // --- Process metadata
-                Element md = dataMan.getMetadataNoInfo(context, id);
+                Element processedMetadata = null;
 
-                // -- here we send parameters set by user from
-                // URL if needed.
-                List<Element> children = params.getChildren();
-                Map<String, Object> xslParameter = new HashMap<String, Object>();
-                for (Element param : children) {
-                    if (param.getChildren().size() > 0) {
-                        xslParameter.put(param.getName(), param);
-                    } else {
-                        xslParameter.put(param.getName(), param.getTextTrim());
+                try {
+                    Element md = dataMan.getMetadataNoInfo(context, id);
 
+                    // -- here we send parameters set by user from
+                    // URL if needed.
+                    List<Element> children = params.getChildren();
+                    Map<String, Object> xslParameter = new HashMap<String, Object>();
+                    for (Element param : children) {
+                        if (param.getChildren().size() > 0) {
+                            xslParameter.put(param.getName(), param);
+                        } else {
+                            xslParameter.put(param.getName(), param.getTextTrim());
+
+                        }
                     }
+
+                    processedMetadata = Xml.transformWithXmlParam(md, filePath, paramNameXml, paramXml);
+
+                    // Get changes
+                    String filePath2 = schemaMan.getSchemaDir(schema) + "/process/massive-content-update-extract-changes.xsl";
+                    List<Element> changesEl = Xml.transform(processedMetadata, filePath2).getChildren("change");
+
+                    boolean hasChanges = (changesEl.size() > 0);
+
+
+                    MassiveReplaceReportEntry mdEntry = new MassiveReplaceReportEntry(metadataEntity.getUuid(),
+                            metadataTitle,
+                            changesEl);
+
+                    if (hasChanges) {
+                        report.addChanged(mdEntry);
+                    } else {
+                        report.addNotChanged(mdEntry);
+                    }
+
+                    // --- save metadata and return status
+                    if ((changesEl.size() > 0) && (!params.getChildText("test").equalsIgnoreCase("true"))) {
+                        // Clean geonet:changes elements
+                        String filePath3 = schemaMan.getSchemaDir(schema) + "/process/massive-content-update-clean-changes.xsl";
+                        processedMetadata = Xml.transform(processedMetadata, filePath3);
+
+                        dataMan.updateMetadata(context, id, processedMetadata,
+                                false, true, true,
+                                context.getLanguage(),
+                                new ISODate().toString(), true);
+                    }
+
+
+                    metadata.add(new Integer(id));
+                } catch (Exception e) {
+                    report.addMetadataError(iId, e);
+                    context.error("  Processing failed with error " + e.getMessage());
+                    e.printStackTrace();
                 }
-
-                //xslParameter.put("siteUrl", siteUrl);
-
-                Element processedMetadata = Xml.transformWithXmlParam(md, filePath, paramNameXml, paramXml);
-
-                // Get changes
-                String filePath2 = schemaMan.getSchemaDir(schema) + "/process/massive-content-update-extract-changes.xsl";
-                List<Element> changesEl = Xml.transform(processedMetadata, filePath2).getChildren("change");
-
-                boolean hasChanges = (changesEl.size() > 0);
-
-
-                MassiveReplaceReportEntry mdEntry = new MassiveReplaceReportEntry(metadataEntity.getUuid(),
-                        metadataTitle,
-                        changesEl);
-
-                if (hasChanges) {
-                    report.addChanged(mdEntry);
-                } else {
-                    report.addNotChanged(mdEntry);
-                }
-
-                // --- save metadata and return status
-                if ((changesEl.size() > 0) && (!params.getChildText("test").equalsIgnoreCase("true"))) {
-                    // Clean geonet:changes elements
-                    String filePath3 = schemaMan.getSchemaDir(schema) + "/process/massive-content-update-clean-changes.xsl";
-                    processedMetadata = Xml.transform(processedMetadata, filePath3);
-
-                    dataMan.updateMetadata(context, id, processedMetadata,
-                            false, true, true,
-                            context.getLanguage(),
-                            new ISODate().toString(), true);
-                }
-
-                //dataMan.indexMetadata(id);
-                metadata.add(new Integer(id));
 
                 return processedMetadata;
             }
