@@ -37,7 +37,8 @@
 			<item name="createDateYear" plural="createDateYears" indexKey="createDateYear"
 				sortBy="value" sortOrder="desc" max="40"/>
       <item name="category" plural="categories" indexKey="category" max="40"/>
-    </hits>
+      <item name="format"  plural="formats" indexKey="format" max="15" sortBy="value"/>
+		</hits>
     <subtemplates>
       <item name="subTemplateType" plural="subTemplateTypes"
             indexKey="_root"/>

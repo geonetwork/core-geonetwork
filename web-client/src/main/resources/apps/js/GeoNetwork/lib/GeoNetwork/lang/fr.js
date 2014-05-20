@@ -652,6 +652,8 @@ GeoNetwork.Lang.fr = {
     'orgNames': 'Contact pour la ressource',
     'serviceTypes': 'Type de service',
     'types': 'Type de ressource',
+    'format': 'Format',
+    'formats': 'Formats',
     'facetMore': '+ Voir tous les filtres',
     'facetLess': '- Voir moins de filtres',
 	'List': "Liste",
