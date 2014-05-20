@@ -81,7 +81,7 @@ public class FragmentHarvester extends BaseAligner{
 
 		SettingInfo si = new SettingInfo(context);
 		String siteUrl = si.getSiteUrl() + context.getBaseUrl();
-		metadataGetService = siteUrl + "/srv/en/xml.metadata.get";
+		metadataGetService = "local://xml.metadata.get";
 
 		if (params.templateId != null && !params.templateId.equals("0")) {
 			loadTemplate();
