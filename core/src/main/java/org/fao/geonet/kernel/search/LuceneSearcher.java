@@ -365,7 +365,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
      */
     public void getSuggestionForFields(ServiceContext srvContext,
                                        final String searchField, final String searchValue, ServiceConfig config, int maxNumberOfTerms,
-                                       int threshold, Collection<SearchManager.TermFrequency> suggestions) throws Exception {
+                                       int threshold, String groupPublished, Collection<SearchManager.TermFrequency> suggestions) throws Exception {
         if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
             Log.debug(Geonet.SEARCH_ENGINE, "Get suggestion on field: '"
                     + searchField + "'" + "\tsearching: '" + searchValue + "'"
@@ -392,6 +392,11 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         if (!searchValue.equals("")) {
             elData.addContent(new Element(searchField).setText(searchValue));
         }
+        //Begin Specific Sextant V5
+        // If configwhat is set, filter search by catalog to reduce suggestion scope
+        elData.addContent(new Element("_groupPublished").addContent(groupPublished.replace(","," or ")));
+        // End Specific Sextant V5
+
         elData.addContent(new Element("from").setText("1"));
         elData.addContent(new Element("to").setText(Integer.MAX_VALUE + ""));
         elData.addContent(new Element(Geonet.SearchResult.RESULT_TYPE).setText(Geonet.SearchResult.ResultType.SUGGESTIONS));
