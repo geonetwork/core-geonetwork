@@ -1,33 +1,15 @@
 package org.fao.geonet.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.StringReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.io.WKTWriter;
 import jeeves.exceptions.JeevesException;
 import jeeves.server.ProfileManager;
-import jeeves.server.context.ServiceContext;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-
 import jeeves.utils.Log;
 import jeeves.utils.TransformerFactoryFactory;
 import net.sf.saxon.Configuration;
@@ -39,7 +21,6 @@ import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.om.SingletonIterator;
 import net.sf.saxon.om.UnfailingIterator;
 import net.sf.saxon.type.Type;
-
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneSearcher;
@@ -59,14 +40,26 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.io.WKTWriter;
+import java.io.ByteArrayInputStream;
+import java.io.StringReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 /**
  * These are all extension methods for calling from xsl docs. Note: All params
@@ -88,7 +81,7 @@ public final class XslUtil {
             "http://www.isotc211.org/2005/gmd");
     public static final Namespace SRV_NAMESPACE = Namespace.getNamespace("srv",
             "http://www.isotc211.org/2005/srv");
-    public static final Namespace CHE_NAMESPACE = Namespace.getNamespace("gco",
+    public static final Namespace CHE_NAMESPACE = Namespace.getNamespace("che",
             "http://www.geocat.ch/2008/che");
     public static final Namespace GCO_NAMESPACE = Namespace.getNamespace("gco",
             "http://www.isotc211.org/2005/gco");

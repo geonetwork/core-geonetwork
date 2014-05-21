@@ -136,8 +136,22 @@
         $scope.saveMetadata().success(function(){
           $scope.stopEditing();
         });
-      }
+      };
 
+      $scope.updateCategory = function(index, selectId) {
+        if (index > -1) {
+          var categories = $scope.data.identification.topicCategory;
+          var newCategory = $scope.data.topicCategoryOptions[$('#' + selectId).val()];
+          categories[index] = newCategory;
+        }
+      };
+      $scope.deleteTopicCategory = function(category) {
+        var categories = $scope.data.identification.topicCategory;
+        var index = categories.indexOf(category);
+        if (index > -1) {
+          categories.splice (index, 1);
+        }
+      };
   }]);
 
 

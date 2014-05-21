@@ -13,10 +13,11 @@
     <xsl:include href="../../base-layout-cssjs-loader.xsl"/>
 
     <xsl:template match="/">
+        <xsl:variable name="env" select="/root/gui/env"/>
         <html ng-app="{$angularApp}" lang="{$lang}" id="ng-app">
             <head>
                 <title>
-                    <xsl:value-of select="concat($env/system/site/name, ' - ', $env/system/site/organization)"
+                    <xsl:value-of select="concat($env/site/name, ' - ', $env/site/organization)"
                         />
                 </title>
                 <meta charset="utf-8"/>

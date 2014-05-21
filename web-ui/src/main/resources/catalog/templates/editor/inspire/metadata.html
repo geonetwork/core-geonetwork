@@ -126,6 +126,13 @@
                     </select>
                 </div>
             </div>
+            <div class="form-group" data-ng-hide="data.hierarchyLevel.indexOf('dataset') != -1">
+                <label for="hierarchyLevelName" class="col-xs-3 control-label"><span data-translate="">hierarchyLevelName</span>: </label>
+                <div class="col-xs-9">
+                    <input type="text" id="hierarchyLevelName" class="form-control" data-ng-model="data.hierarchyLevelName" >
+                    </select>
+                </div>
+            </div>
             <div class="table-responsive col-xs-12">
                 <table class="table table-condensed">
                     <tr data-ng-class="$first ? '' : 'col-xs-offset-3'"
@@ -154,6 +161,14 @@
 
         <fieldset id="identification">
             <legend data-translate="">identificationInfo</legend>
+            <div class="form-group">
+                <label for="identificationMetadataLanguage" class="col-xs-3 control-label" ><span data-translate="">metadataLanguage</span>: </label>
+                <div class="col-xs-9">
+                    <select id="identificationMetadataLanguage" class="form-control" ng-model="data.identification.language" data-ng-options="lang | translate for lang in languages">
+                    </select>
+                </div>
+            </div>
+
             <div data-inspire-multilingual-text
                  data-title="title"
                  data-rows="1"
@@ -182,6 +197,31 @@
                 <div class="col-xs-offset-3 col-xs-9">
                     <select id="dateType" class="form-control" data-ng-model="data.identification.dateType" data-ng-options="opt for opt in data.dateTypeOptions">
                     </select>
+                </div>
+            </div>
+
+            <div class="form-group" data-ng-show="!data.hierarchyLevel || data.hierarchyLevel.indexOf('dataset') != -1 || data.hierarchyLevel.indexOf('series') != -1">
+                <label class="col-xs-3 control-label" ><span data-translate="">topicCategory</span>: </label>
+                <div class="table-responsive col-xs-9">
+                    <table class="table table-condensed">
+                        <tr
+                                data-ng-repeat="category in data.identification.topicCategory">
+                            <td>
+                                <select id="topicCategory{{$index}}" class="form-control" data-ng-model="category"
+                                        data-ng-change="updateCategory($index, 'topicCategory'+$index)"
+                                        data-ng-options="catOpt | translate for catOpt in data.topicCategoryOptions">
+                                </select>
+                            </td>
+                            <td width="24px">
+
+                            </td>
+                            <td width="24px">
+                                <a class="inspire-input-group" data-ng-hide="$first" style="color: red" data-ng-click="deleteTopicCategory(category)">
+                                    <i class="fa fa-times fa-fw"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
             </div>
 
