@@ -93,7 +93,6 @@ import java.util.concurrent.Executors;
  */
 public class DataManager {
 
-
     //--------------------------------------------------------------------------
     //---
     //--- Constructor
@@ -148,7 +147,6 @@ public class DataManager {
      *
      **/
     public synchronized void init(ServiceContext context, Dbms dbms, Boolean force) throws Exception {
-
 
         // get all metadata from DB
         Element result = dbms.select("SELECT id, changeDate FROM Metadata ORDER BY id ASC");
@@ -452,7 +450,7 @@ public class DataManager {
                         sb.append(xlink.getValue()); sb.append(" ");
                     }
                     moreFields.add(SearchManager.makeField("_xlink", sb.toString(), true, true));
-                    Processor.detachXLink(md);
+                    Processor.detachXLink(md, servContext);
                 }
                 else {
                     moreFields.add(SearchManager.makeField("_hasxlinks", "0", true, true));
@@ -1663,7 +1661,7 @@ public class DataManager {
                 if (keepXlinkAttributes) {
                     Processor.processXLink(md, srvContext);
                 } else {
-                    Processor.detachXLink(md);
+                    Processor.detachXLink(md, srvContext);
                 }
             }
         }
