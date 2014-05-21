@@ -3,6 +3,7 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.HarvestHistory;
 import org.fao.geonet.domain.HarvestHistory_;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
@@ -26,6 +27,7 @@ public class HarvestHistoryRepositoryImpl implements HarvestHistoryRepositoryCus
     EntityManager _entityManager;
 
     @Override
+    @Transactional
     public int deleteAllById(Collection<Integer> ids) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         CriteriaDelete<HarvestHistory> delete = cb.createCriteriaDelete(HarvestHistory.class);
@@ -42,6 +44,7 @@ public class HarvestHistoryRepositoryImpl implements HarvestHistoryRepositoryCus
     }
 
     @Override
+    @Transactional
     public int markAllAsDeleted(@Nonnull String harvesterUuid) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         final CriteriaUpdate<HarvestHistory> update = cb.createCriteriaUpdate(HarvestHistory.class);

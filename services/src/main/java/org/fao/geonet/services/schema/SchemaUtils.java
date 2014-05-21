@@ -122,14 +122,14 @@ public class SchemaUtils {
 			zipArchive = new File(fname);
 		}
 
-		Element response = doSchema(scm, schema, zipArchive, add);
+		Element response = doSchema(context, scm, schema, zipArchive, add);
 		if (deleteTempZip) IO.delete(zipArchive, false, Geonet.SCHEMA_MANAGER);
 		return response;
 	}
 
 	// --------------------------------------------------------------------------
 
-	private Element doSchema(SchemaManager scm, String schema, File zipArchive, boolean add) throws Exception { 
+	private Element doSchema(ServiceContext context, SchemaManager scm, String schema, File zipArchive, boolean add) throws Exception {
 
 		Element response = new Element("response");
 
@@ -151,9 +151,9 @@ public class SchemaUtils {
 		// -- manager
 		try {
 			if (add) {
-				scm.addPluginSchema(schema, inputStream);
+				scm.addPluginSchema(context.getApplicationContext(), schema, inputStream);
 			} else {
-				scm.updatePluginSchema(schema, inputStream);
+				scm.updatePluginSchema(context.getApplicationContext(), schema, inputStream);
 			}
      	response.setAttribute("status", "ok");
      	response.setAttribute("message", "Schema "+schema+" has been added/updated");

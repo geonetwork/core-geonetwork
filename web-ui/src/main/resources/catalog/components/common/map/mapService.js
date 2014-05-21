@@ -8,7 +8,8 @@
   module.provider('gnMap', function() {
     this.$get = [
       'gnConfig',
-      function(gnConfig) {
+      'gnDefinePropertiesForLayer',
+      function(gnConfig, gnDefinePropertiesForLayer) {
 
         var defaultMapConfig = {
           'useOSM': 'true',
@@ -116,15 +117,23 @@
            * Transform map extent into dublin-core schema for
            * dc:coverage metadata element.
            * Ex :
+           * North 90, South -90, East 180, West -180
+           * or
            * North 90, South -90, East 180, West -180. Global
            */
           getDcExtent: function(extent) {
-            var dc = 'North ' + extent[3] + ', ' +
-                'South ' + extent[1] + ', ' +
-                'East ' + extent[0] + ', ' +
-                'West ' + extent[2] + '. Global';
-
-            return dc;
+            if (angular.isArray(extent)) {
+              var dc = 'North ' + extent[3] + ', ' +
+                  'South ' + extent[1] + ', ' +
+                  'East ' + extent[0] + ', ' +
+                  'West ' + extent[2];
+              if (location) {
+                dc += '. ' + location;
+              }
+              return dc;
+            } else {
+              return '';
+            }
           },
 
           addWmsToMap : function(map, layerParams, layerOptions, index) {
@@ -156,9 +165,10 @@
                 attribution: options.attribution,
                 source: source
               });
-              /*gaDefinePropertiesForLayer(layer);*/
+              gnDefinePropertiesForLayer(layer);
               layer.preview = options.preview;
               layer.label = options.label;
+              layer.displayInLayerManager = true;
               return layer;
             };
 
@@ -173,4 +183,159 @@
         };
       }];
   });
+
+  /**
+   * This service is a function that define properties (data and accessor
+   * descriptors) for the OpenLayers layer passed as an argument.
+   *
+   * Adding descriptors to layers makes it possible to control the states
+   * of layers (visibility, opacity, etc.) through ngModel. (ngModel indeed
+   * requires the expression to be "assignable", and there's currently no
+   * way pass to pass getter and setter functions to ngModel.)
+   */
+  module.provider('gnDefinePropertiesForLayer', function() {
+
+    this.$get = function() {
+      return function defineProperties(olLayer) {
+        Object.defineProperties(olLayer, {
+          attribution: {
+            get: function() {
+              return this.get('attribution');
+            },
+            set: function(val) {
+              this.set('attribution', val);
+            }
+          },
+          visible: {
+            get: function() {
+              return this.getVisible();
+            },
+            set: function(val) {
+              this.setVisible(val);
+            }
+          },
+          invertedOpacity: {
+            get: function() {
+              return (Math.round((1 - this.getOpacity()) * 100) / 100) + '';
+            },
+            set: function(val) {
+              this.setOpacity(1 - val);
+            }
+          },
+          id: {
+            get: function() {
+              return this.get('id') || this.bodId;
+            },
+            set: function(val) {
+              this.set('id', val);
+            }
+          },
+          bodId: {
+            get: function() {
+              return this.get('bodId');
+            },
+            set: function(val) {
+              this.set('bodId', val);
+            }
+          },
+          label: {
+            get: function() {
+              return this.get('label');
+            },
+            set: function(val) {
+              this.set('label', val);
+            }
+          },
+          url: {
+            get: function() {
+              return this.get('url');
+            },
+            set: function(val) {
+              this.set('url', val);
+            }
+          },
+          type: {
+            get: function() {
+              return this.get('type');
+            },
+            set: function(val) {
+              this.set('type', val);
+            }
+          },
+          timeEnabled: {
+            get: function() {
+              return this.get('timeEnabled');
+            },
+            set: function(val) {
+              this.set('timeEnabled', val);
+            }
+          },
+          time: {
+            get: function() {
+              if (this instanceof ol.layer.Layer) {
+                var src = this.getSource();
+                if (src instanceof ol.source.WMTS) {
+                  return src.getDimensions().Time;
+                } else if (src instanceof ol.source.ImageWMS ||
+                    src instanceof ol.source.TileWMS) {
+                  return src.getParams().TIME;
+                }
+              }
+              return undefined;
+            },
+            set: function(val) {
+              if (this instanceof ol.layer.Layer) {
+                var src = this.getSource();
+                if (src instanceof ol.source.WMTS) {
+                  src.updateDimensions({'Time': val});
+                } else if (src instanceof ol.source.ImageWMS ||
+                    src instanceof ol.source.TileWMS) {
+                  src.updateParams({'TIME': val});
+                }
+              }
+            }
+          },
+          background: {
+            writable: true,
+            value: false
+          },
+          displayInLayerManager: {
+            writable: true,
+            value: true
+          },
+          preview: {
+            writable: true,
+            value: false
+          }
+        });
+      };
+    };
+  });
+
+  module.provider('gaLayerFilters', function() {
+    this.$get = function() {
+      return {
+        /**
+         * Filters out background layers, preview
+         * layers, draw, measure.
+         * In other words, all layers that
+         * were actively added by the user and that
+         * appear in the layer manager
+         */
+        selected: function(layer) {
+          return layer.displayInLayerManager;
+        },
+        /**
+         * Keep only time enabled layer
+         */
+        timeEnabledLayersFilter: function(layer) {
+          return !layer.background &&
+              layer.timeEnabled &&
+              layer.visible;
+        }
+      };
+    };
+  });
+
+
 })();

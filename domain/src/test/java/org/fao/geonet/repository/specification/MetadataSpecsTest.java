@@ -8,7 +8,6 @@ import org.fao.geonet.repository.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,14 +26,11 @@ import static org.fao.geonet.repository.specification.MetadataSpecs.*;
  * Date: 9/4/13
  * Time: 10:08 PM
  */
-@Transactional
 public class MetadataSpecsTest extends AbstractSpringDataTest {
     @Autowired
     MetadataRepository _repository;
     @Autowired
     MetadataCategoryRepository _categoryRepo;
-
-    private AtomicInteger _inc = new AtomicInteger();
 
     @Test
     public void testHasMetadataId() throws Exception {

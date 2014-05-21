@@ -30,7 +30,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.services.resources.handlers.IResourceDownloadHandler;
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -162,7 +162,8 @@ public class Download implements Service
 			}
 		}
 
-		return BinaryFile.encode(200, file.getAbsolutePath());
+        IResourceDownloadHandler downloadHook = (IResourceDownloadHandler) context.getApplicationContext().getBean("resourceDownloadHandler");
+        return downloadHook.onDownload(context, params, Integer.parseInt(id), fname, file);
 	}
 }
 

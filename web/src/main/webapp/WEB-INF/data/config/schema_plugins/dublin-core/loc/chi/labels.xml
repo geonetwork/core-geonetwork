@@ -146,5 +146,150 @@
 		<label>Rights Holder</label>
 		<description>A person or organization owning or managing rights over the resource.</description>
 	</element>
-	<!-- ==================================================== -->
+  <!-- ==================================================== -->
+  <element name="dct:references">
+    <label>Related resource</label>
+    <description>A related resource that is referenced, cited, or otherwise pointed to by the described resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:accessRights">
+    <label>Access Rights</label>
+    <description>Information about who can access the resource or an indication of its security status.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:alternative">
+    <label>Alternative Title</label>
+    <description>An alternative name for the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:bibliographicCitation">
+    <label>Bibliographic Citation</label>
+    <description>A bibliographic reference for the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:conformsTo">
+    <label>Conforms To</label>
+    <description>An established standard to which the described resource conforms.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:created">
+    <label>Date Created</label>
+    <description>Date of creation of the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:dateAccepted">
+    <label>Date Accepted</label>
+    <description>Date of acceptance of the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:dateCopyrighted">
+    <label>Date Copyrighted</label>
+    <description>Date of copyright.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:dateSubmitted">
+    <label>Date Submitted</label>
+    <description>Date of submission of the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:educationLevel">
+    <label>Audience Education Level</label>
+    <description>A class of entity, defined in terms of progression through an educational or training context, for which the described resource is intended.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:extent">
+    <label>Extent</label>
+    <description>The size or duration of the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:hasFormat">
+    <label>Has Format</label>
+    <description>A related resource that is substantially the same as the pre-existing described resource, but in another format.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:hasPart">
+    <label>Has Part</label>
+    <description>A related resource that is included either physically or logically in the described resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:hasVersion">
+    <label>Has Version</label>
+    <description>A related resource that is a version, edition, or adaptation of the described resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:isFormatOf">
+    <label>Is Format Of</label>
+    <description>A related resource that is substantially the same as the described resource, but in another format.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:isPartOf">
+    <label>Is Part Of</label>
+    <description>A related resource in which the described resource is physically or logically included.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:isReferencedBy">
+    <label>Is Referenced By</label>
+    <description>A related resource that references, cites, or otherwise points to the described resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:isReplacedBy">
+    <label>Is Replaced By</label>
+    <description>A related resource that supplants, displaces, or supersedes the described resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:isRequiredBy">
+    <label>Is Required By</label>
+    <description>A related resource that requires the described resource to support its function, delivery, or coherence.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:isVersionOf">
+    <label>Is Version Of</label>
+    <description>A related resource of which the described resource is a version, edition, or adaptation.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:issued">
+    <label>Date Issued</label>
+    <description>Date of formal issuance (e.g., publication) of the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:license">
+    <label>License</label>
+    <description>A legal document giving official permission to do something with the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:mediator">
+    <label>Mediator</label>
+    <description>An entity that mediates access to the resource and for whom the resource is intended or useful.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:medium">
+    <label>Medium</label>
+    <description>The material or physical carrier of the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:replaces">
+    <label>Replaces</label>
+    <description>A related resource that is supplanted, displaced, or superseded by the described resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:requires">
+    <label>Requires</label>
+    <description>A related resource that is required by the described resource to support its function, delivery, or coherence.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:tableOfContents">
+    <label>Table Of Contents</label>
+    <description>A list of subunits of the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:temporal">
+    <label>Temporal Coverage</label>
+    <description>Temporal characteristics of the resource.</description>
+  </element>
+  <!-- ==================================================== -->
+  <element name="dct:valid">
+    <label>Date Valid</label>
+    <description>Date (often a range) of validity of a resource.</description>
+  </element>
+  <!-- ==================================================== -->
 </labels>

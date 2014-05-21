@@ -53,7 +53,7 @@
     "needAnAccountInfo": "Enregistrez-vous, cela ne prend qu'une minute.",
     "createAnAccount": "Créer un compte",
     "forgetDetails": "Vous avez oublié vos données?",
-    "forgetDetailsInfo": "Utiliser le service de récupration de mot de passe afin de le réinitialiser.",
+    "forgetDetailsInfo": "Utiliser le service de récupération de mot de passe afin de le réinitialiser.",
     "recoverPassword": "Vous avez oublié votre mot de passe",
     "userPreferences": "Préférences utilisateur",
     "userDetails": "Données utilisateur",
@@ -99,6 +99,7 @@
     "staticMap": "Carte statique",
     "featureCatalog": "Catalogue d'attributs",
 
+    "filterSearch": "Afficher les options de recherche",
     "any": "Plein texte",
     "orgNames": "Contact de la ressource",
     "createDateYears": "Année de création",
@@ -112,6 +113,7 @@
     "keyword": "Mot-clé",
     "filter": "Filtre",
     "_groupOwner": "Groupe",
+    "groupOwners": "Groupes",
     "owner": "Owner",
     
     
@@ -138,5 +140,8 @@
     "comments": "Commentaire",
     "sendAComment": "Envoyer nous un commentaire",
     "feedbackNotEnable": "L'envoi de commentaire n'est pas activé.",
-    "feebackSent": "Votre message a été envoyé au gestionnaire du catalogue."
+    "feebackSent": "Votre message a été envoyé au gestionnaire du catalogue.",
+
+    "url": "URL",
+    "upload": "Téléchargement"
 }

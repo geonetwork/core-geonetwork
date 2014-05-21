@@ -589,6 +589,11 @@
                               '{gmd:CI_OnlineResource/gmd:linkage/gmd:URL}', 
                               '{gmd:CI_OnlineResource/gmd:name/gco:CharacterString}', '{generate-id()}']]);">&#160;</a>
                   </xsl:if>
+                  <xsl:if test="contains(current-grouping-key(), 'WMC')">
+                    &#160;
+                    <a href="#" class="md-mn addLayer"
+                       onclick="app.switchMode('1', true);app.getIMap().addWMC('{gmd:CI_OnlineResource/gmd:linkage/gmd:URL}');">&#160;</a>
+                  </xsl:if>
                 </li>
               </xsl:for-each>
             </ul>

@@ -49,6 +49,7 @@ import org.fao.geonet.lib.ServerLib;
 import org.fao.geonet.notifier.MetadataNotifierControl;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
 import org.fao.geonet.services.util.z3950.Repositories;
 import org.fao.geonet.services.util.z3950.Server;
 import org.fao.geonet.util.ThreadPool;
@@ -247,7 +248,7 @@ public class Geonetwork implements ApplicationHandler {
         logger.info("			- Schema plugins directory: " + schemaPluginsDir);
         logger.info("			- Schema Catalog File     : " + schemaCatalogueFile);
         SchemaManager schemaMan = _applicationContext.getBean(SchemaManager.class);
-        schemaMan.configure(appPath, Resources.locateResourcesDir(context), schemaCatalogueFile,
+        schemaMan.configure(_applicationContext, appPath, Resources.locateResourcesDir(context), schemaCatalogueFile,
                 schemaPluginsDir, context.getLanguage(), handlerConfig.getMandatoryValue(Geonet.Config.PREFERRED_SCHEMA),
                 createOrUpdateSchemaCatalog);
 
@@ -353,6 +354,8 @@ public class Geonetwork implements ApplicationHandler {
 
         _applicationContext.getBean(DataManager.class).init(context, false);
         _applicationContext.getBean(HarvestManager.class).init(context, gnContext.isReadOnly());
+
+        _applicationContext.getBean(ThumbnailMaker.class).init(context);
 
         logger.info("Site ID is : " + settingMan.getSiteId());
 

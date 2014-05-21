@@ -9,10 +9,12 @@
         'gnOnlinesrc',
         'gnGeoPublisher',
         'gnEditor',
+        'gnCurrentEdit',
         '$timeout',
         '$translate',
         function(gnMap, gnOnlinesrc, 
-            gnGeoPublisher, gnEditor, $timeout, $translate) {
+            gnGeoPublisher, gnEditor, gnCurrentEdit,
+            $timeout, $translate) {
           return {
             restrict: 'A',
             replace: true,
@@ -26,6 +28,7 @@
               scope.resources = angular.fromJson(scope.config);
               scope.hidden = true;
               scope.loaded = false;
+              scope.hasStyler = false;
 
               var map, gsNode;
 
@@ -34,7 +37,7 @@
                   layers: [
                     gnMap.getLayersFromConfig()
                   ],
-                  renderer: ol.RendererHint.CANVAS,
+                  renderer: 'canvas',
                   view: new ol.View2D({
                     center: [0, 0],
                     projection: gnMap.getMapConfig().projection,
@@ -88,29 +91,57 @@
                * depending on scope.protocols options.
                */
               scope.linkService = function() {
-                scope.snippet = gnOnlinesrc.addFromGeoPublisher(scope.layerName,
+                var snippet =
+                    gnOnlinesrc.addFromGeoPublisher(scope.wmsLayerName,
                     gsNode, scope.protocols);
 
-                scope.snippetRef = gnEditor.buildXMLFieldName(
+                var snippetRef = gnEditor.buildXMLFieldName(
                     scope.refParent, 'gmd:onLine');
+                var formId = '#gn-editor-' + gnCurrentEdit.id;
+                var form = $(formId);
+                if (form) {
+                  var field = $('<textarea style="display:none;" name="' +
+                      snippetRef + '">' +
+                      snippet + '</textarea>');
+                  form.append(field);
+                }
 
                 $timeout(function() {
                   gnEditor.save(true);
                 });
               };
-
+              scope.openStyler = function() {
+                window.open(gsNode.stylerUrl +
+                    '?namespace=' + gsNode.namespacePrefix +
+                    '&layer=' + gsNode.namespacePrefix +
+                    ':' + scope.wmsLayerName);
+              };
+              /**
+               * Dirty check if the node is a Mapserver REST API
+               * or a GeoServer REST API.
+               *
+               * @param {Object} gsNode
+               * @return {boolean}
+               */
+              var isMRA = function(gsNode) {
+                return gsNode.adminUrl.indexOf('/mra') !== -1;
+              };
               /**
                * Add the layer of the node to the current
                * map.
                */
               var addLayerToMap = function(layer) {
                 // TODO: drop existing layer before adding new
+                var layerName = isMRA(gsNode) ?
+                    scope.wmsLayerName :
+                    gsNode.namespacePrefix +
+                    ':' + scope.wmsLayerName;
+
                 map.addLayer(new ol.layer.Tile({
                   source: new ol.source.TileWMS({
                     url: gsNode.wmsUrl,
                     params: {
-                      'LAYERS': gsNode.namespacePrefix +
-                          ':' + scope.wmsLayerName
+                      'LAYERS': layerName
                     }
                   })
                 }));
@@ -123,7 +154,6 @@
                */
               var readResponse = function(data, action) {
                 if (data['@status'] == '404') {
-                  // TODO: i18n
                   scope.statusCode = $translate('datasetNotFound');
 
                   if (scope.isPublished) {
@@ -140,6 +170,12 @@
                   } else if (action == 'publish') {
                     scope.statusCode = $translate('publishSuccess');
                   }
+                } else if (data['status'] !== '') {
+                  if (scope.isPublished) {
+                    map.getLayerGroup().getLayers().pop();
+                  }
+                  scope.statusCode = data['status'];
+                  scope.isPublished = false;
                 }
               };
 
@@ -164,6 +200,7 @@
               scope.selectNode = function(nodeId) {
                 gsNode = getNodeById(nodeId);
                 scope.checkNode(nodeId);
+                scope.hasStyler = !angular.isArray(gsNode.stylerUrl);
               };
 
               /**
@@ -172,7 +209,7 @@
                * a layer configuration if published.
                */
               scope.checkNode = function(nodeId) {
-                var p = gnGeoPublisher.checkNode(nodeId, scope.fileName);
+                var p = gnGeoPublisher.checkNode(nodeId, scope.name);
                 if (p) {
                   p.success(function(data) {
                     readResponse(data, 'check');
@@ -184,7 +221,10 @@
                * Publish the layer on the gsNode
                */
               scope.publish = function(nodeId) {
-                var p = gnGeoPublisher.publishNode(nodeId, scope.fileName);
+                var p = gnGeoPublisher.publishNode(nodeId,
+                    scope.name,
+                    scope.resource.title,
+                    scope.resource['abstract']);
                 if (p) {
                   p.success(function(data) {
                     readResponse(data, 'publish');
@@ -196,7 +236,7 @@
                * Unpublish the layer on the gsNode
                */
               scope.unpublish = function(nodeId) {
-                var p = gnGeoPublisher.unpublishNode(nodeId, scope.fileName);
+                var p = gnGeoPublisher.unpublishNode(nodeId, scope.name);
                 if (p) {
                   p.success(readResponse);
                 }
@@ -216,7 +256,8 @@
                 // FIXME: only one publisher in a page ?
                 scope.ref = r.ref;
                 scope.refParent = r.refParent;
-                scope.fileName = r.fileName;
+                scope.name = r.name;
+                scope.resource = r;
 
                 if (!scope.loaded) {
                   init();
@@ -224,7 +265,7 @@
                 }
 
                 // Build layer name based on file name
-                scope.layerName = r.fileName
+                scope.layerName = r.name
                   .replace(/.zip$|.tif$|.tiff$/, '');
                 scope.wmsLayerName = scope.layerName;
                 if (scope.layerName.match('^jdbc')) {

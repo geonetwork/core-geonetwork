@@ -4,12 +4,16 @@
 
 
 
+
+
   goog.require('gn_catalog_service');
+  goog.require('gn_facet_service');
   goog.require('gn_search_form_results_directive');
   goog.require('gn_urlutils_service');
 
   var module = angular.module('gn_search_form_controller', [
     'gn_catalog_service',
+    'gn_facet_service',
     'gn_urlutils_service',
     'gn_search_form_results_directive'
   ]);
@@ -20,7 +24,8 @@
   module.controller('GnSearchFormController', [
     '$scope',
     'gnSearchManagerService',
-    function($scope, gnSearchManagerService) {
+    'gnCurrentFacet',
+    function($scope, gnSearchManagerService, gnCurrentFacet) {
       var defaultServiceUrl = 'qi@json';
       var defaultParams = {
         fast: 'index'
@@ -29,8 +34,12 @@
         records: [],
         count: 0
       };
-      $scope.paginationInfo = null;
-
+      $scope.paginationInfo = {
+        pages: -1,
+        currentPage: 1,
+        hitsPerPage: 20
+      };
+      $scope.currentFacet = gnCurrentFacet;
       /**
        * If an object {paginationInfo} is defined inside the
        * SearchFormController, then add from and to  params
@@ -63,6 +72,15 @@
             function(data) {
               $scope.searchResults.records = data.metadata;
               $scope.searchResults.count = data.count;
+              $scope.searchResults.facet = data.facet;
+
+              // Event on new search result
+              // compute page number for pagination
+              if ($scope.searchResults.records.length > 0) {
+                $scope.paginationInfo.pages = Math.ceil(
+                    $scope.searchResults.count /
+                    $scope.paginationInfo.hitsPerPage, 0);
+              }
             });
       };
 
@@ -83,8 +101,9 @@
           $scope.triggerSearch();
         }
       });
-
-
+      $scope.$on('setPagination', function(evt, pagination) {
+        $scope.paginationInfo = pagination;
+      });
       $scope.$on('resetSearch', function(evt, searchParams) {
         if (searchParams) {
           $scope.params = searchParams;
@@ -99,6 +118,22 @@
       });
       $scope.$on('clearResults', function() {
         $scope.clearResults();
+      });
+      $scope.$watchCollection('currentFacet', function() {
+        if (gnCurrentFacet.facets &&
+            (!$.isEmptyObject(gnCurrentFacet.facets) ||
+            !$.isEmptyObject(gnCurrentFacet.deletedFacets))) {
+          // Drop delete facets from params
+          angular.forEach(gnCurrentFacet.deletedFacets, function(value, key) {
+            delete $scope.params[key];
+            delete gnCurrentFacet.deletedFacets[key];
+          });
+          // Add new facets
+          angular.forEach(gnCurrentFacet.facets, function(facet, key) {
+            $scope.params[key] = facet.value;
+          });
+          $scope.triggerSearch();
+        }
       });
 
     }

@@ -202,6 +202,7 @@ public class XslProcessing extends NotInReadOnlyModeService {
 	            xslParameter.put("guiLang", context.getLanguage());
 	            xslParameter.put("baseUrl", context.getBaseUrl());
                 xslParameter.put("catalogUrl", settingsMan.getSiteURL(context));
+                xslParameter.put("nodeId", context.getNodeId());
                 
 	            for (Element param : children) {
 	                // Add extra metadata

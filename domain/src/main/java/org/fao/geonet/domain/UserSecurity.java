@@ -9,6 +9,7 @@ import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Set;
 
 /**
@@ -171,8 +172,8 @@ public class UserSecurity extends GeonetEntity implements Serializable {
     }
 
     @Override
-    public Element asXml() {
-        final Element element = super.asXml();
+    protected Element asXml(IdentityHashMap<Object, Void> alreadyEncoded) {
+        final Element element = super.asXml(alreadyEncoded);
         element.removeChild("password");
         return element;
     }

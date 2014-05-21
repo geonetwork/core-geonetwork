@@ -363,7 +363,9 @@
             });
       };
 
-
+      $scope.sortByLabel = function(group) {
+        return group.label[$scope.lang];
+      };
       $scope.unselectGroup = function() {
         $scope.groupSelected = null;
         $scope.groupUpdated = false;

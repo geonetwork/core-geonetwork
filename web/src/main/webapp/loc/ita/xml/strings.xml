@@ -23,7 +23,7 @@
         legacy UI 
         <statusSendEmail>Change log message: %s\n\nRecords are available from the following URL:\n %s/main.search?_status=%s&amp;_statusChangeDate=%s</statusSendEmail>
         -->
-	<statusSendEmail>Change log message: %s\r\n\r\nRecords are available from the following URL:\r\n %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search</statusSendEmail>
+	<statusSendEmail>Change log message: %s\r\n\r\nMetadatas concerned by the change are the following:\r\n%s\r\nRecords are available from the following URL:\r\n %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search</statusSendEmail>
 
 	<recurse>Also search in subfolders</recurse>
 	<otherValue>Other:</otherValue>
@@ -771,6 +771,7 @@
 	<Reviewer>Revisore</Reviewer>
 	<rss>Apri un feed RSS</rss>
 	<rtitle>Titolo</rtitle>
+        <altTitle>Titolo alternativo</altTitle>
 	<save>Salva</save>
 	<saveAndClose>Salva e chiudi</saveAndClose>
 	<saveAndValidate>Controlla</saveAndValidate>
@@ -1145,11 +1146,12 @@ Questo elemento fornisce anche informazioni su eventuali tariffe richieste per a
 		<upload>Carica thesaurus</upload>
 	</thesaurus>
 	<searchhelp>
-		<searchAllText>Inserisci qui il testo libero</searchAllText>
-		<rtitle>Inserisci qui il titolo</rtitle>
-		<abstract>Inserisci qui la descrizione</abstract>
-		<keywords>Estrai parole chiave da record esistenti di metadati</keywords>
-		<thesaurus>Estrai parole chiave da thesauri</thesaurus>
+            <altTitle>Inserisci qui il titolo alternativo</altTitle>
+            <searchAllText>Inserisci qui il testo libero</searchAllText>
+            <rtitle>Inserisci qui il titolo</rtitle>
+            <abstract>Inserisci qui la descrizione</abstract>
+            <keywords>Estrai parole chiave da record esistenti di metadati</keywords>
+            <thesaurus>Estrai parole chiave da thesauri</thesaurus>
 	</searchhelp>
 
 	<inspire>      

@@ -49,7 +49,7 @@
               var defaultParams = {
                 service: 'WMS',
                 request: 'getCapabilities',
-                version: '1.3.0' //FIXME to remove its not mandatory
+                version: '1.3.0' //FIXME to remove it's not mandatory
               };
               angular.extend(defaultParams, urlParams);
 

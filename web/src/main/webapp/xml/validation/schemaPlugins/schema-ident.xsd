@@ -54,6 +54,7 @@
       <xs:element name="schemaLocation" type="xs:string" minOccurs="1"/>
       <xs:element name="autodetect"     type="gns:autodetectType" 
         minOccurs="1" maxOccurs="1"/>
+      <xs:element name="filters" type="gns:filters" minOccurs="0" maxOccurs="1"/>
       <xs:element name="readwriteUuid"  type="xs:boolean" minOccurs="0" maxOccurs="1"/>
     </xs:sequence>
   </xs:complexType>
@@ -142,4 +143,62 @@
 		</xs:attribute>
   </xs:complexType>
 
+  <xs:complexType name="filters">
+    <xs:annotation>
+      <xs:documentation>
+        Define the filter rules to apply to the
+        metadata record using this schema by reserved
+        operation.
+
+        A maximum of 3 filters could be defined, one for
+        each reserved operation editing, download and dynamic.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="filter" type="gns:filter" minOccurs="1" maxOccurs="3"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="filter">
+    <xs:annotation>
+      <xs:documentation>A filter define an operation
+        to check for the user groups and apply the filter
+        defined by the XPath. All elements matching the XPath
+        are removed from the record before being returned
+        to the user.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="keepMarkedElement" minOccurs="0" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>An optional element definition to substitute
+            the replaced element by (if a match is found this element
+            attributes or children are inserted).
+            This is used to highlight removed element.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:any namespace="##any" processContents="skip" minOccurs="0" maxOccurs="1"/>
+          </xs:sequence>
+          <xs:anyAttribute namespace="##any" processContents="skip"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="xpath" use="required">
+      <xs:annotation><xs:documentation>
+        An XPath to select elements to filter
+      </xs:documentation></xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="ifNotOperation" use="required">
+      <xs:annotation><xs:documentation>
+        An operation (which match canEdit, canDownload, canDynamic method in AccessManager)
+      </xs:documentation></xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="editing"/>
+          <xs:enumeration value="download"/>
+          <xs:enumeration value="dynamic"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
 </xs:schema>

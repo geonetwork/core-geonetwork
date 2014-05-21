@@ -12,7 +12,10 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ConnectionRequest;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.routing.HttpRoute;
-import org.apache.http.impl.client.*;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.protocol.HttpContext;
 import org.springframework.http.HttpHeaders;
@@ -120,7 +123,9 @@ public class GeonetHttpRequestFactory {
         return execute(request, noop);
     }
 
-    public ClientHttpResponse execute(HttpUriRequest request, final Credentials credentials, final AuthScope authScope) throws IOException {
+    public ClientHttpResponse execute(HttpUriRequest request,
+                                      final Credentials credentials,
+                                      final AuthScope authScope) throws IOException {
         final Function<HttpClientBuilder, Void> setCredentials = new Function<HttpClientBuilder, Void>() {
             @Nullable
             @Override
@@ -135,14 +140,28 @@ public class GeonetHttpRequestFactory {
         };
         return execute(request, setCredentials);
     }
-
-    public ClientHttpResponse execute(HttpUriRequest request, Function<HttpClientBuilder, Void> configurator) throws IOException {
+    public ClientHttpResponse execute(HttpUriRequest request,
+                                      Function<HttpClientBuilder, Void> configurator) throws IOException {
         final HttpClientBuilder clientBuilder = getDefaultHttpClientBuilder();
         configurator.apply(clientBuilder);
         CloseableHttpClient httpClient = clientBuilder.build();
-            return new AdaptingResponse(httpClient, httpClient.execute(request));
+
+        return new AdaptingResponse(httpClient, httpClient.execute(request));
     }
 
+    public ClientHttpResponse execute(HttpUriRequest request,
+                                      Function<HttpClientBuilder, Void> configurator,
+                                      AbstractHttpRequest r) throws IOException {
+        final HttpClientBuilder clientBuilder = getDefaultHttpClientBuilder();
+        configurator.apply(clientBuilder);
+        CloseableHttpClient httpClient = clientBuilder.build();
+        if (r.isPreemptiveBasicAuth()) {
+            return new AdaptingResponse(httpClient, httpClient.execute(request, r.getHttpClientContext()));
+        } else {
+            return new AdaptingResponse(httpClient, httpClient.execute(request));
+        }
+
+    }
     public HttpClientBuilder getDefaultHttpClientBuilder() {
         final HttpClientBuilder builder = HttpClientBuilder.create();
         builder.setRedirectStrategy(new LaxRedirectStrategy());

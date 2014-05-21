@@ -23,18 +23,7 @@
 
 package jeeves.server.dispatchers;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.servlet.http.HttpServletResponse;
-
+import com.yammer.metrics.core.TimerContext;
 import jeeves.component.ProfileManager;
 import jeeves.constants.ConfigFile;
 import jeeves.constants.Jeeves;
@@ -54,7 +43,6 @@ import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.HttpServiceRequest;
 import jeeves.server.sources.http.JeevesServlet;
-
 import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.Util;
@@ -62,222 +50,243 @@ import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.NotAllowedEx;
 import org.fao.geonet.exceptions.ServiceNotFoundEx;
 import org.fao.geonet.exceptions.ServiceNotMatchedEx;
-import org.fao.geonet.utils.BLOB;
-import org.fao.geonet.utils.BinaryFile;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.SOAPUtil;
-import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.*;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.yammer.metrics.core.TimerContext;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 //=============================================================================
-@Transactional(propagation = Propagation.REQUIRED)
 public class ServiceManager {
-	private Map<String, ArrayList<ServiceInfo>> htServices = new HashMap<String, ArrayList<ServiceInfo>>(100);
-	private Map<String, Object> htContexts = new HashMap<String, Object>();
-	private List<ErrorPage> vErrorPipe = new ArrayList<ErrorPage>();
-	private List<GuiService> vDefaultGui = new ArrayList<GuiService>();
+    private Map<String, ArrayList<ServiceInfo>> htServices = new HashMap<String, ArrayList<ServiceInfo>>(100);
+    private Map<String, Object> htContexts = new HashMap<String, Object>();
+    private List<ErrorPage> vErrorPipe = new ArrayList<ErrorPage>();
+    private List<GuiService> vDefaultGui = new ArrayList<GuiService>();
 
 
-    private String  appPath;
-    private String  baseUrl;
-    private String  uploadDir;
-    private int     maxUploadSize;
-    private String  defaultLang;
-    private String  defaultContType;
+    private String appPath;
+    private String baseUrl;
+    private String uploadDir;
+    private int maxUploadSize;
+    private String defaultLang;
+    private String defaultContType;
     private boolean defaultLocal;
     private JeevesServlet servlet;
     private boolean startupError = false;
-    private Map<String,String> startupErrors;
+    private Map<String, String> startupErrors;
     @Autowired
     private ConfigurableApplicationContext jeevesApplicationContext;
     @PersistenceContext
     private EntityManager entityManager;
 
     //---------------------------------------------------------------------------
-	//---
-	//--- API methods
-	//---
-	//---------------------------------------------------------------------------
+    //---
+    //--- API methods
+    //---
+    //---------------------------------------------------------------------------
 
-	public void setAppPath        (String  path)  { appPath        = path;  }
-	public void setDefaultLang    (String  lang)  { defaultLang    = lang;  }
-	public void setDefaultContType(String  type)  { defaultContType= type;  }
-	public void setUploadDir      (String  dir)   { uploadDir      = dir;   }
-    public void setMaxUploadSize  (int  size)     { maxUploadSize  = size;  }
-	public void setDefaultLocal   (boolean yesno) { defaultLocal   = yesno; }
+    public void setAppPath(String path) {
+        appPath = path;
+    }
 
-    public void setServlet(JeevesServlet serv) { servlet = serv; }
-    public void setStartupErrors(Map<String,String> errors)   { startupErrors = errors; startupError = true; }
-	public boolean isStartupError() { return startupError; }
+    public void setDefaultLang(String lang) {
+        defaultLang = lang;
+    }
 
-	//---------------------------------------------------------------------------
+    public void setDefaultContType(String type) {
+        defaultContType = type;
+    }
 
-	public void setBaseUrl(String name)
-	{
-		baseUrl = name;
+    public void setUploadDir(String dir) {
+        uploadDir = dir;
+    }
 
-		if (!baseUrl.startsWith("/") && baseUrl.length() != 0)
-			baseUrl = "/"+ baseUrl;
-	}
+    public void setMaxUploadSize(int size) {
+        maxUploadSize = size;
+    }
 
-	//---------------------------------------------------------------------------
+    public void setDefaultLocal(boolean yesno) {
+        defaultLocal = yesno;
+    }
 
-	public void registerContext(String name, Object context)
-	{
-		htContexts.put(name, context);
-	}
-	//---------------------------------------------------------------------------
+    public void setServlet(JeevesServlet serv) {
+        servlet = serv;
+    }
 
-	public void addDefaultGui(Element gui) throws Exception
-	{
-		vDefaultGui.add(getGuiService("", gui));
-	}
+    public void setStartupErrors(Map<String, String> errors) {
+        startupErrors = errors;
+        startupError = true;
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Registering methods (service)
-	//---
-	//---------------------------------------------------------------------------
+    public boolean isStartupError() {
+        return startupError;
+    }
 
-	@SuppressWarnings("unchecked")
-	public void addService(String pack, Element srv) throws Exception
-	{
-		String name  = srv.getAttributeValue(ConfigFile.Service.Attr.NAME);
-		String match = srv.getAttributeValue(ConfigFile.Service.Attr.MATCH);
-		String sheet = srv.getAttributeValue(ConfigFile.Service.Attr.SHEET);
-		String cache = srv.getAttributeValue(ConfigFile.Service.Attr.CACHE);
+    //---------------------------------------------------------------------------
 
-		ServiceInfo si = this.jeevesApplicationContext.getBean(ServiceInfo.class);
+    public void setBaseUrl(String name) {
+        baseUrl = name;
+
+        if (!baseUrl.startsWith("/") && baseUrl.length() != 0)
+            baseUrl = "/" + baseUrl;
+    }
+
+    //---------------------------------------------------------------------------
+
+    public void registerContext(String name, Object context) {
+        htContexts.put(name, context);
+    }
+    //---------------------------------------------------------------------------
+
+    public void addDefaultGui(Element gui) throws Exception {
+        vDefaultGui.add(getGuiService("", gui));
+    }
+
+    //---------------------------------------------------------------------------
+    //---
+    //--- Registering methods (service)
+    //---
+    //---------------------------------------------------------------------------
+
+    @SuppressWarnings("unchecked")
+    public ServiceInfo addService(String pack, Element srv) throws Exception {
+        String name = srv.getAttributeValue(ConfigFile.Service.Attr.NAME);
+        String match = srv.getAttributeValue(ConfigFile.Service.Attr.MATCH);
+        String sheet = srv.getAttributeValue(ConfigFile.Service.Attr.SHEET);
+        String cache = srv.getAttributeValue(ConfigFile.Service.Attr.CACHE);
+
+        ServiceInfo si = this.jeevesApplicationContext.getBean(ServiceInfo.class);
         si.setAppPath(appPath);
-		si.setMatch(match);
-		si.setSheet(sheet);
-		si.setCache(cache);
+        si.setMatch(match);
+        si.setSheet(sheet);
+        si.setCache(cache);
 
-		ArrayList<ServiceInfo> al = htServices.get(name);
+        ArrayList<ServiceInfo> al = htServices.get(name);
 
-		if (al == null) {
-			al = new ArrayList<ServiceInfo>();
-			htServices.put(name, al);
-		} else {
-		    info("Service " + name + " already exist, re-register it.");
-		    htServices.remove(name);
-		    al = new ArrayList<ServiceInfo>();
-		    htServices.put(name, al);
-		}
+        if (al == null) {
+            al = new ArrayList<ServiceInfo>();
+            htServices.put(name, al);
+        } else {
+            info("Service " + name + " already exist, re-register it.");
+            htServices.remove(name);
+            al = new ArrayList<ServiceInfo>();
+            htServices.put(name, al);
+        }
 
-		al.add(si);
+        al.add(si);
 
-		//--- parse classes elements
+        //--- parse classes elements
 
-		List<Element> classes = srv.getChildren(ConfigFile.Service.Child.CLASS);
+        List<Element> classes = srv.getChildren(ConfigFile.Service.Child.CLASS);
 
-		for (Element classe : classes) {
-			si.addService(buildService(pack, classe));
-		}
+        for (Element classe : classes) {
+            si.addService(buildService(pack, classe));
+        }
 
-		//--- parse output pages
+        //--- parse output pages
 
-		List<Element> outputs = srv.getChildren(ConfigFile.Service.Child.OUTPUT);
+        List<Element> outputs = srv.getChildren(ConfigFile.Service.Child.OUTPUT);
 
-		for(Element output : outputs) {
-			si.addOutputPage(buildOutputPage(pack, output));
-		}
+        for (Element output : outputs) {
+            si.addOutputPage(buildOutputPage(pack, output));
+        }
 
-		//--- parse error pages
+        //--- parse error pages
 
-		List<Element> errors = srv.getChildren(ConfigFile.Service.Child.ERROR);
+        List<Element> errors = srv.getChildren(ConfigFile.Service.Child.ERROR);
 
-		for(Element error : errors) {
-			si.addErrorPage(buildErrorPage(error));
-		}
-	}
+        for (Element error : errors) {
+            si.addErrorPage(buildErrorPage(error));
+        }
+        return si;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	@SuppressWarnings("unchecked")
-   private Service buildService(String pack, Element clas) throws Exception
-	{
-		//--- get class name
+    @SuppressWarnings("unchecked")
+    private Service buildService(String pack, Element clas) throws Exception {
+        //--- get class name
 
-		String name = clas.getAttributeValue(ConfigFile.Class.Attr.NAME);
+        String name = clas.getAttributeValue(ConfigFile.Class.Attr.NAME);
 
-		if (name == null) {
+        if (name == null) {
             throw new IllegalArgumentException("Missing 'name' attrib in 'class' element");
         }
 
-		if (name.startsWith(".")) {
+        if (name.startsWith(".")) {
             name = pack + name;
         }
 
-		//--- create instance
+        //--- create instance
 
-		Service service = (Service) Class.forName(name).newInstance();
+        Service service = (Service) Class.forName(name).newInstance();
 
-		service.init(appPath, new ServiceConfig(clas.getChildren(ConfigFile.Class.Child.PARAM)));
+        service.init(appPath, new ServiceConfig(clas.getChildren(ConfigFile.Class.Child.PARAM)));
 
-		return service;
-	}
+        return service;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	@SuppressWarnings("unchecked")
-	private OutputPage buildOutputPage(String pack, Element output) throws Exception
-	{
-		OutputPage outPage = new OutputPage();
+    @SuppressWarnings("unchecked")
+    private OutputPage buildOutputPage(String pack, Element output) throws Exception {
+        OutputPage outPage = new OutputPage();
 
-		outPage.setStyleSheet   (output.getAttributeValue(ConfigFile.Output.Attr.SHEET));
-		outPage.setForward      (output.getAttributeValue(ConfigFile.Output.Attr.FORWARD));
-		outPage.setTestCondition(output.getAttributeValue(ConfigFile.Output.Attr.TEST));
-		outPage.setFile         (output.getAttributeValue(ConfigFile.Output.Attr.FILE) != null);
-		outPage.setBLOB         (output.getAttributeValue(ConfigFile.Output.Attr.BLOB) != null);
+        outPage.setStyleSheet(output.getAttributeValue(ConfigFile.Output.Attr.SHEET));
+        outPage.setForward(output.getAttributeValue(ConfigFile.Output.Attr.FORWARD));
+        outPage.setTestCondition(output.getAttributeValue(ConfigFile.Output.Attr.TEST));
+        outPage.setFile(output.getAttributeValue(ConfigFile.Output.Attr.FILE) != null);
+        outPage.setBLOB(output.getAttributeValue(ConfigFile.Output.Attr.BLOB) != null);
 
-		//--- set content type
+        //--- set content type
 
-		String contType = output.getAttributeValue(ConfigFile.Output.Attr.CONTENT_TYPE);
+        String contType = output.getAttributeValue(ConfigFile.Output.Attr.CONTENT_TYPE);
 
-		if (contType == null)
-			contType = defaultContType;
+        if (contType == null)
+            contType = defaultContType;
 
-		outPage.setContentType(contType);
+        outPage.setContentType(contType);
 
-		//--- handle children
+        //--- handle children
 
-		List<Element> guiList = output.getChildren();
+        List<Element> guiList = output.getChildren();
 
-		for(Element gui : guiList) {
-			outPage.addGuiService(getGuiService(pack, gui));
-		}
+        for (Element gui : guiList) {
+            outPage.addGuiService(getGuiService(pack, gui));
+        }
 
-		return outPage;
-	}
+        return outPage;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private GuiService getGuiService(String pack, Element elem) throws Exception
-	{
-		if (ConfigFile.Output.Child.XML.equals(elem.getName()))
-			return new XmlFile(elem, defaultLang, defaultLocal);
+    private GuiService getGuiService(String pack, Element elem) throws Exception {
+        if (ConfigFile.Output.Child.XML.equals(elem.getName()))
+            return new XmlFile(elem, defaultLang, defaultLocal);
 
-		if (ConfigFile.Output.Child.CALL.equals(elem.getName()))
-			return new Call(elem, pack, appPath);
+        if (ConfigFile.Output.Child.CALL.equals(elem.getName()))
+            return new Call(elem, pack, appPath);
 
-		throw new IllegalArgumentException("Unknown GUI element : "+ Xml.getString(elem));
-	}
+        throw new IllegalArgumentException("Unknown GUI element : " + Xml.getString(elem));
+    }
 
 	//---------------------------------------------------------------------------
 
 	@SuppressWarnings("unchecked")
-	private ErrorPage buildErrorPage(Element err) throws Exception
-	{
+    private ErrorPage buildErrorPage(Element err) throws Exception {
 		ErrorPage errPage = new ErrorPage();
 
-		errPage.setStyleSheet   (err.getAttributeValue(ConfigFile.Error.Attr.SHEET));
+        errPage.setStyleSheet(err.getAttributeValue(ConfigFile.Error.Attr.SHEET));
 		errPage.setTestCondition(err.getAttributeValue(ConfigFile.Error.Attr.ID));
 
 		//--- set content type
@@ -306,56 +315,53 @@ public class ServiceManager {
 
 		List<Element> guiList = err.getChildren();
 
-		for(Element gui : guiList) {
+        for (Element gui : guiList) {
 			errPage.addGuiService(getGuiService("?", gui));	
 		}
 
 		return errPage;
 	}
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Registering methods (error)
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Registering methods (error)
+    //---
+    //---------------------------------------------------------------------------
 
-	public void addErrorPage(Element err) throws Exception
-	{
-		vErrorPipe.add(buildErrorPage(err));
-	}
+    public void addErrorPage(Element err) throws Exception {
+        vErrorPipe.add(buildErrorPage(err));
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	public ServiceContext createServiceContext(String name, ConfigurableApplicationContext appContext)
-	{
-		ServiceContext context = new ServiceContext(name, appContext, htContexts,
+    public ServiceContext createServiceContext(String name, ConfigurableApplicationContext appContext) {
+        ServiceContext context = new ServiceContext(name, appContext, htContexts,
                 entityManager);
 
-		context.setBaseUrl(baseUrl);
-		context.setLanguage("?");
-		context.setUserSession(null);
-		context.setIpAddress("?");
-		context.setAppPath(appPath);
-		context.setUploadDir(uploadDir);
+        context.setBaseUrl(baseUrl);
+        context.setLanguage("?");
+        context.setUserSession(null);
+        context.setIpAddress("?");
+        context.setAppPath(appPath);
+        context.setUploadDir(uploadDir);
         context.setMaxUploadSize(maxUploadSize);
-		context.setServlet(servlet);
+        context.setServlet(servlet);
 
-		return context;
-	}
+        return context;
+    }
 
-	public void dispatch(ServiceRequest req, UserSession session) {
-		ServiceContext context = new ServiceContext(req.getService(), jeevesApplicationContext,
+    public void dispatch(ServiceRequest req, UserSession session) {
+        ServiceContext context = new ServiceContext(req.getService(), jeevesApplicationContext,
                 htContexts, entityManager);
-		dispatch(req, session, context);
-	}
+        dispatch(req, session, context);
+    }
 
 	//---------------------------------------------------------------------------
 	//---
 	//--- Dispatching methods
 	//---
 	//---------------------------------------------------------------------------
-	public void dispatch(ServiceRequest req, UserSession session, ServiceContext context)
-	{
+    public void dispatch(ServiceRequest req, UserSession session, ServiceContext context) {
 		context.setBaseUrl(baseUrl);
 		context.setLanguage(req.getLanguage());
 		context.setUserSession(session);
@@ -373,11 +379,10 @@ public class ServiceManager {
 
 		//--- invoke service and build result
 
-		Element     response = null;
-		ServiceInfo srvInfo  = null;
+        Element response = null;
+        ServiceInfo srvInfo = null;
 
-		try
-		{
+        try {
 			while (true) {
 				String srvName = req.getService();
 
@@ -386,9 +391,8 @@ public class ServiceManager {
 
 				ArrayList<ServiceInfo> al = htServices.get(srvName);
 
-				if (al == null)
-				{
-					error("Service not found : " +srvName);
+                if (al == null) {
+                    error("Service not found : " + srvName);
 					throw new ServiceNotFoundEx(srvName);
 				}
 
@@ -400,7 +404,7 @@ public class ServiceManager {
 				}
 
 				if (srvInfo == null) {
-					error("Service not matched in list : " +srvName);
+                    error("Service not matched in list : " + srvName);
 					throw new ServiceNotMatchedEx(srvName);
 				}
 
@@ -442,7 +446,8 @@ public class ServiceManager {
                         HttpServiceRequest req2 = (HttpServiceRequest) req;
 
                         req2.getHttpServletResponse().setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
-                        req2.getHttpServletResponse().setHeader("Location", baseUrl +  "/" + context.getApplicationContext().getBean(NodeInfo.class).getId() + "/" +  req.getLanguage() + "/" + forward); 
+                        req2.getHttpServletResponse().setHeader("Location", baseUrl + "/" + context.getApplicationContext().getBean
+                                (NodeInfo.class).getId() + "/" + req.getLanguage() + "/" + forward);
 
                         return;
                     } else {
@@ -460,11 +465,9 @@ public class ServiceManager {
 				}
 			}
 		}
-		}
-		catch(Throwable e)
-		{
-			if(e instanceof NotAllowedEx) {
-				throw (NotAllowedEx)e;
+        } catch (Throwable e) {
+            if (e instanceof NotAllowedEx) {
+                throw (NotAllowedEx) e;
 			} else {
 				handleError(req, response, context, srvInfo, e);
 			}
@@ -480,58 +483,46 @@ public class ServiceManager {
 	//---------------------------------------------------------------------------
 
 	private void handleError(ServiceRequest req, Element response, ServiceContext context,
-										ServiceInfo srvInfo, Throwable e)
-	{
+                             ServiceInfo srvInfo, Throwable e) {
 		Element error = getError(req, e, response);
-		String  id    = error.getAttributeValue("id");
-		int     code  = getErrorCode(e);
-		boolean cache = (srvInfo == null) ? false : srvInfo.isCacheSet();
+        String id = error.getAttributeValue("id");
+        int code = getErrorCode(e);
+		boolean cache = (srvInfo != null) && srvInfo.isCacheSet();
 
-		if(isDebug()) debug("Raised exception while executing service\n"+ Xml.getString(error));
+        if (isDebug()) debug("Raised exception while executing service\n" + Xml.getString(error));
 
-		try
-		{
-			InputMethod  input  = req.getInputMethod();
+        try {
+            InputMethod input = req.getInputMethod();
 			OutputMethod output = req.getOutputMethod();
 
-			if (input == InputMethod.SOAP || output == OutputMethod.SOAP)
-			{
+            if (input == InputMethod.SOAP || output == OutputMethod.SOAP) {
 				req.setStatusCode(code);
 				req.beginStream("application/soap+xml; charset=UTF-8", cache);
 
 				error.setAttribute("encodingStyle", "http://www.geonetwork.org/encoding/error",
 										SOAPUtil.NAMESPACE_ENV);
 
-				boolean sender  = (code < 500);
-				String  message = error.getChildText("class") +" : "+ error.getChildText("message");
+                boolean sender = (code < 500);
+                String message = error.getChildText("class") + " : " + error.getChildText("message");
 
 				req.write(SOAPUtil.embedExc(error, sender, id, message));
-			}
-
-			else if (input == InputMethod.XML || output == OutputMethod.XML)
-			{
+            } else if (input == InputMethod.XML || output == OutputMethod.XML) {
 				req.setStatusCode(code);
 				req.beginStream("application/xml; charset=UTF-8", cache);
 				req.write(error);
-			}
-
-			else
-			{
+            } else {
 				//--- try to dispatch to the error output
 
-				ErrorPage errPage=null;
-				if (srvInfo!=null) 
-					errPage=srvInfo.findErrorPage(id);
+                ErrorPage errPage = null;
+                if (srvInfo != null)
+                    errPage = srvInfo.findErrorPage(id);
 
 				if (errPage == null)
 					errPage = findErrorPage(id);
 
-				try
-				{
+                try {
 					dispatchError(req, context, error, errPage, cache);
-				}
-				catch(Exception ex)
-				{
+                } catch (Exception ex) {
 					//--- ok, if we are here there is no error page
 					//--- so we display plain xml data
 
@@ -540,13 +531,11 @@ public class ServiceManager {
 					req.write(error);
 				}
 			}
-		}
-		catch(Exception ex)
-		{
+        } catch (Exception ex) {
 			error("Raised exception while writing response to exception");
-			error("  Exception : " +ex);
-			error("  Message   : " +ex.getMessage());
-			error("  Stack     : " +Util.getStackTrace(ex));
+            error("  Exception : " + ex);
+            error("  Message   : " + ex.getMessage());
+            error("  Stack     : " + Util.getStackTrace(ex));
 		}
 	}
 
@@ -554,19 +543,18 @@ public class ServiceManager {
 	//--- Dispatch output
 	//---------------------------------------------------------------------------
 
-	/** Takes a service's response and builds the output
+    /**
+     * Takes a service's response and builds the output
 	  */
 
 	private String dispatchOutput(ServiceRequest req, ServiceContext context,
-									Element response, OutputPage outPage, boolean cache) throws Exception
-	{
-		info("   -> dispatching to output for : "+ req.getService());
+                                  Element response, OutputPage outPage, boolean cache) throws Exception {
+        info("   -> dispatching to output for : " + req.getService());
 
 		//------------------------------------------------------------------------
 		//--- check if the output page is a foward
 
-		if (outPage != null)
-		{
+        if (outPage != null) {
 			String sForward = outPage.getForward();
 
 			if (sForward != null)
@@ -576,24 +564,21 @@ public class ServiceManager {
 		//------------------------------------------------------------------------
 		//--- write result to output page
 
-		if (outPage == null)
-		{
+        if (outPage == null) {
 			//--- if there is no output page we output the xml result (if any)
 
-			if	(response == null)
-				warning("Response is null and there is no output page for : " +req.getService());
-			else
-			{
-				info("     -> writing xml for : " +req.getService());
+            if (response == null)
+                warning("Response is null and there is no output page for : " + req.getService());
+            else {
+                info("     -> writing xml for : " + req.getService());
 
 				//--- this logging is usefull for xml services that are called by javascript code
-                if(isDebug()) debug("Service xml is :\n"+Xml.getString(response));
+                if (isDebug()) debug("Service xml is :\n" + Xml.getString(response));
 
-				InputMethod  in  = req.getInputMethod();
+                InputMethod in = req.getInputMethod();
 				OutputMethod out = req.getOutputMethod();
 
-				if (in == InputMethod.SOAP || out == OutputMethod.SOAP)
-				{
+                if (in == InputMethod.SOAP || out == OutputMethod.SOAP) {
 
                     // Did we set up a status code for the response?
                     if (context.getStatusCode() != null) {
@@ -623,8 +608,7 @@ public class ServiceManager {
 
 		//--- FILE output
 
-		else if (outPage.isFile())
-		{
+        else if (outPage.isFile()) {
 			// PDF Output
 			if (outPage.getContentType().equals("application/pdf") && !outPage.getStyleSheet().equals("")) {
 
@@ -638,7 +622,8 @@ public class ServiceManager {
                     guiServicesTimerContext.stop();
                 }
 
-				addPrefixes(guiElem, context.getLanguage(), req.getService(), context.getApplicationContext().getBean(NodeInfo.class).getId());
+                addPrefixes(guiElem, context.getLanguage(), req.getService(), context.getApplicationContext().getBean(NodeInfo.class)
+                        .getId());
 
 				Element rootElem = new Element(Jeeves.Elem.ROOT)
 												.addContent(guiElem)
@@ -654,14 +639,13 @@ public class ServiceManager {
 				styleSheet = appPath + Jeeves.Path.XSL + styleSheet;
 
 				if (!new File(styleSheet).exists())
-					error(" -> stylesheet not found on disk, aborting : " +styleSheet);
-				else
-				{
-					info(" -> transforming with stylesheet : " +styleSheet);
+                    error(" -> stylesheet not found on disk, aborting : " + styleSheet);
+                else {
+                    info(" -> transforming with stylesheet : " + styleSheet);
 
-					try
-					{
-                        TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer.class).time();
+                    try {
+                        TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer.class)
+                                .time();
                         String file;
                         try {
                             //--- first we do the transformation
@@ -670,18 +654,16 @@ public class ServiceManager {
                             timerContext.stop();
                         }
                         response = BinaryFile.encode(200, file, "document.pdf", true);
-                    }
-					catch(Exception e)
-					{
-						error(" -> exception during XSL/FO transformation for : " +req.getService());
-						error(" -> (C) stylesheet : "+ styleSheet);
-						error(" -> (C) message : "+ e.getMessage());
-						error(" -> (C) exception : "+ e.getClass().getSimpleName());
+                    } catch (Exception e) {
+                        error(" -> exception during XSL/FO transformation for : " + req.getService());
+                        error(" -> (C) stylesheet : " + styleSheet);
+                        error(" -> (C) message : " + e.getMessage());
+                        error(" -> (C) exception : " + e.getClass().getSimpleName());
 
 						throw e;
 					}
 
-					info(" -> end transformation for : " +req.getService());
+                    info(" -> end transformation for : " + req.getService());
 				}
 
 				
@@ -692,7 +674,7 @@ public class ServiceManager {
 				contentType = "application/octet-stream";
 
 			String contentDisposition = BinaryFile.getContentDisposition(response);
-			String contentLength      = BinaryFile.getContentLength(response);
+            String contentLength = BinaryFile.getContentLength(response);
 
 			int cl = (contentLength == null) ? -1 : Integer.parseInt(contentLength);
 
@@ -708,15 +690,14 @@ public class ServiceManager {
 
 		//--- BLOB output
 
-		else if (outPage.isBLOB())
-		{
+        else if (outPage.isBLOB()) {
 			String contentType = BLOB.getContentType(response);
 
 			if (contentType == null)
 				contentType = "application/octet-stream";
 
 			String contentDisposition = BLOB.getContentDisposition(response);
-			String contentLength      = BLOB.getContentLength(response);
+            String contentLength = BLOB.getContentLength(response);
 
 			int cl = (contentLength == null) ? -1 : Integer.parseInt(contentLength);
 
@@ -727,11 +708,10 @@ public class ServiceManager {
 
 		//--- HTML/XML output
 
-		else
-		{
+        else {
 			//--- build the xml data for the XSL translation
 
-			String  styleSheet = outPage.getStyleSheet();
+            String styleSheet = outPage.getStyleSheet();
 			Element guiElem;
             TimerContext guiServicesTimerContext = getMonitorManager().getTimer(ServiceManagerGuiServicesTimer.class).time();
             try {
@@ -740,7 +720,8 @@ public class ServiceManager {
                 guiServicesTimerContext.stop();
             }
 
-            addPrefixes(guiElem, context.getLanguage(), req.getService(), context.getApplicationContext().getBean(NodeInfo.class).getId());
+            addPrefixes(guiElem, context.getLanguage(), req.getService(), context.getApplicationContext().getBean(NodeInfo.class).getId
+                    ());
 
 			Element rootElem = new Element(Jeeves.Elem.ROOT)
 											.addContent(guiElem)
@@ -753,29 +734,25 @@ public class ServiceManager {
 
 			//--- do an XSL translation or send xml data to a debug routine
 
-			if (req.hasDebug())
-			{
+            if (req.hasDebug()) {
 				req.beginStream("application/xml; charset=UTF-8", cache);
 				req.write(rootElem);
-			}
-			else
-			{
+            } else {
 				//--- do an XSL transformation
 
 				styleSheet = appPath + Jeeves.Path.XSL + styleSheet;
 
 				if (!new File(styleSheet).exists())
-					error("     -> stylesheet not found on disk, aborting : " +styleSheet);
-				else
-				{
-					info("     -> transforming with stylesheet : " +styleSheet);
-					try
-					{
+                    error("     -> stylesheet not found on disk, aborting : " + styleSheet);
+                else {
+                    info("     -> transforming with stylesheet : " + styleSheet);
+                    try {
 						//--- then we set the content-type and output the result
 					    // If JSON output requested, run the XSLT transformation and the JSON
                         if (req.hasJSONOutput()) {
                             Element xsltResponse = null;
-                            TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer.class).time();
+                            TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer
+                                    .class).time();
                             try {
                                 //--- first we do the transformation
                                 xsltResponse = Xml.transform(rootElem, styleSheet);
@@ -787,7 +764,8 @@ public class ServiceManager {
                             req.endStream();
                         } else {
                             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                            TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer.class).time();
+                            TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer
+                                    .class).time();
                             try {
                                 //--- first we do the transformation
                                 Xml.transform(rootElem, styleSheet, baos);
@@ -798,18 +776,16 @@ public class ServiceManager {
                             req.getOutputStream().write(baos.toByteArray());
                             req.endStream();
                         }
-					}
-					catch(Exception e)
-					{
-						error("   -> exception during transformation for : " +req.getService());
-						error("   ->  (C) stylesheet : "+ styleSheet);
-						error("   ->  (C) message    : "+ e.getMessage());
-						error("   ->  (C) exception  : "+ e.getClass().getSimpleName());
+                    } catch (Exception e) {
+                        error("   -> exception during transformation for : " + req.getService());
+                        error("   ->  (C) stylesheet : " + styleSheet);
+                        error("   ->  (C) message    : " + e.getMessage());
+                        error("   ->  (C) exception  : " + e.getClass().getSimpleName());
 
 						throw e;
 					}
 
-					info("     -> end transformation for : " +req.getService());
+                    info("     -> end transformation for : " + req.getService());
 				}
 			}
 		}
@@ -817,7 +793,7 @@ public class ServiceManager {
 		//------------------------------------------------------------------------
 		//--- end data stream
 
-		info("   -> output ended for : "+ req.getService());
+        info("   -> output ended for : " + req.getService());
 
 		return null;
 	}
@@ -826,18 +802,18 @@ public class ServiceManager {
 	//--- Dispatch error
 	//---------------------------------------------------------------------------
 
-	/** Takes a service's response and builds the output
+    /**
+     * Takes a service's response and builds the output
 	  */
 
 	private void dispatchError(ServiceRequest req, ServiceContext context,
-									   Element response, ErrorPage outPage, boolean cache) throws Exception
-	{
-		info("   -> dispatching to error for : "+ req.getService());
+                               Element response, ErrorPage outPage, boolean cache) throws Exception {
+        info("   -> dispatching to error for : " + req.getService());
 
 		//--- build the xml data for the XSL translation
 
-		String  styleSheet = outPage.getStyleSheet();
-		Element guiElem    = outPage.invokeGuiServices(context, response, vDefaultGui);
+        String styleSheet = outPage.getStyleSheet();
+        Element guiElem = outPage.invokeGuiServices(context, response, vDefaultGui);
 		
 		// Dispatch HTTP status code
 		req.setStatusCode(outPage.getStatusCode());
@@ -848,120 +824,125 @@ public class ServiceManager {
 										.addContent(guiElem)
 										.addContent(response);
 
-		if (req.hasDebug())
-		{
+        if (req.hasDebug()) {
 			req.beginStream("application/xml; charset=UTF-8", cache);
 			req.write(rootElem);
-		}
-		else
-		{
+        } else {
 			//--- do an XSL transformation
 
 			styleSheet = appPath + Jeeves.Path.XSL + styleSheet;
 
-			info("     -> transforming with stylesheet : " +styleSheet);
+            info("     -> transforming with stylesheet : " + styleSheet);
 
-			try
-			{
+            try {
 				req.beginStream(outPage.getContentType(), cache);
 				Xml.transform(rootElem, styleSheet, req.getOutputStream());
 				req.endStream();
-			}
-			catch(Exception e)
-			{
+            } catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 
-		info("     -> end error transformation for : " +req.getService());
-		info("   -> error ended for : "+ req.getService());
+        info("     -> end error transformation for : " + req.getService());
+        info("   -> error ended for : " + req.getService());
 	}
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private ErrorPage findErrorPage(String id)
-	{
-		for(int i=0; i<vErrorPipe.size(); i++)
-		{
-			ErrorPage p = (ErrorPage) vErrorPipe.get(i);
+    private ErrorPage findErrorPage(String id) {
+        for (int i = 0; i < vErrorPipe.size(); i++) {
+            ErrorPage p = (ErrorPage) vErrorPipe.get(i);
 
-			if (p.matches(id))
-				return p;
-		}
+            if (p.matches(id))
+                return p;
+        }
 
-		error("No default error found for id : " +id);
-		throw new NullPointerException("No default error found for id : " +id);
-	}
+        error("No default error found for id : " + id);
+        throw new NullPointerException("No default error found for id : " + id);
+    }
 
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
+    //---
+    //--- Private methods
+    //---
+    //---------------------------------------------------------------------------
 
-	private Element getError(ServiceRequest req, Throwable t, Element response)
-	{
-		Element params = new Element(Jeeves.Elem.REQUEST)
-								.addContent(new Element("language").setText(req.getLanguage()))
-								.addContent(new Element("service") .setText(req.getService()));
+    private Element getError(ServiceRequest req, Throwable t, Element response) {
+        Element params = new Element(Jeeves.Elem.REQUEST)
+                .addContent(new Element("language").setText(req.getLanguage()))
+                .addContent(new Element("service").setText(req.getService()));
 
-		Element error = JeevesException.toElement(t)
-								.addContent(params);
+        Element error = JeevesException.toElement(t)
+                .addContent(params);
 
-		//--- add response (if any)
+        //--- add response (if any)
 
-		if (response != null)
-			error.addContent((Element) response.clone());
+        if (response != null)
+            error.addContent((Element) response.clone());
 
-		return error;
-	}
+        return error;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private int getErrorCode(Throwable t)
-	{
-		int code = 500;
+    private int getErrorCode(Throwable t) {
+        int code = 500;
 
-		if (t instanceof JeevesException)
-			code = ((JeevesException) t).getCode();
+        if (t instanceof JeevesException)
+            code = ((JeevesException) t).getCode();
 
-		return code;
-	}
+        return code;
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	private void addPrefixes(Element root, String lang, String service, String nodeId)
-	{
-		root.addContent(new Element(Jeeves.Elem.LANGUAGE)    .setText(lang));
-		root.addContent(new Element(Jeeves.Elem.REQ_SERVICE) .setText(service));
-		root.addContent(new Element(Jeeves.Elem.BASE_URL)    .setText(baseUrl));
-		root.addContent(new Element(Jeeves.Elem.LOC_URL)     .setText(baseUrl +"/loc/"+ lang));
-		root.addContent(new Element(Jeeves.Elem.BASE_SERVICE).setText(baseUrl +"/"+ nodeId));
-		root.addContent(new Element(Jeeves.Elem.NODE_ID)     .setText(nodeId));
-		root.addContent(new Element(Jeeves.Elem.LOC_SERVICE) .setText(baseUrl +"/"+ nodeId +"/"+ lang));
-	}
+    private void addPrefixes(Element root, String lang, String service, String nodeId) {
+        root.addContent(new Element(Jeeves.Elem.LANGUAGE).setText(lang));
+        root.addContent(new Element(Jeeves.Elem.REQ_SERVICE).setText(service));
+        root.addContent(new Element(Jeeves.Elem.BASE_URL).setText(baseUrl));
+        root.addContent(new Element(Jeeves.Elem.LOC_URL).setText(baseUrl + "/loc/" + lang));
+        root.addContent(new Element(Jeeves.Elem.BASE_SERVICE).setText(baseUrl + "/" + nodeId));
+        root.addContent(new Element(Jeeves.Elem.NODE_ID).setText(nodeId));
+        root.addContent(new Element(Jeeves.Elem.LOC_SERVICE).setText(baseUrl + "/" + nodeId + "/" + lang));
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-	@SuppressWarnings("unchecked")
-	private void logParameters(Element params)
-	{
-		List<Element> paramsList = params.getChildren();
+    @SuppressWarnings("unchecked")
+    private void logParameters(Element params) {
+        List<Element> paramsList = params.getChildren();
 
-		if (paramsList.size() == 0)
-            if(isDebug()) debug(" -> no input parameters");
-		else
-            if(isDebug()) debug(" -> parameters are : \n"+ Xml.getString(params));
-	}
+        if (paramsList.size() == 0)
+            if (isDebug()) debug(" -> no input parameters");
+            else if (isDebug()) debug(" -> parameters are : \n" + Xml.getString(params));
+    }
 
-	//---------------------------------------------------------------------------
+    //---------------------------------------------------------------------------
 
-    private boolean isDebug() {return Log.isDebugEnabled(Log.SERVICE);}
-    private void debug  (String message) { Log.debug  (Log.SERVICE, message); }
-	static  void info   (String message) { Log.info   (Log.SERVICE, message); }
-	private void warning(String message) { Log.warning(Log.SERVICE, message); }
-	static  void error  (String message) { Log.error  (Log.SERVICE, message); }
-	public ProfileManager getProfileManager() { return jeevesApplicationContext.getBean(ProfileManager.class); }
+    private boolean isDebug() {
+        return Log.isDebugEnabled(Log.SERVICE);
+    }
+
+    private void debug(String message) {
+        Log.debug(Log.SERVICE, message);
+    }
+
+    static void info(String message) {
+        Log.info(Log.SERVICE, message);
+    }
+
+    private void warning(String message) {
+        Log.warning(Log.SERVICE, message);
+    }
+
+    static void error(String message) {
+        Log.error(Log.SERVICE, message);
+    }
+
+    public ProfileManager getProfileManager() {
+        return jeevesApplicationContext.getBean(ProfileManager.class);
+    }
+
 }
 
 //=============================================================================

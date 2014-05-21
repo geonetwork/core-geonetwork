@@ -294,9 +294,11 @@ Ext
 
                         link = link.substring(link.indexOf("|") + 1);
 
-                        return window.location.href.match(
-                                /(http.*\/.*)\/srv\.*/, '')[1]
-                                + '/srv/search' + "/?uuid=" + link;
+                        // Get base url and language
+                        var urlParts = window.location.href.match(/(http.*\/.*)\/srv\/(.*)\/.*/, '');
+
+                        return urlParts[1]
+                          + '/srv/' + urlParts[2] + '/search' + "?uuid=" + link;
                     },
                     /**
                      * api: method[getLink] :param base: ``String`` The base

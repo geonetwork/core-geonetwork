@@ -41,9 +41,11 @@
             <div>
                 <label class="control-label col-lg-4" data-translate="">set</label>
                 <div class="col-lg-8">
-                    <select class="form-control" data-ng-model="harvesterSelected.searches[0].set"
-                        data-ng-options="s.name as (s.label + '(' + s.name + ')') for s in oaipmhSets"
-                    > </select>
+                    <select class="form-control"
+                            data-ng-model="harvesterSelected.searches[0].set"
+                            data-ng-options="s.name as (s.label + '(' + s.name + ')') for s in oaipmhSets">
+                      <option value=""></option>
+                    </select>
                 </div>
             </div>
 

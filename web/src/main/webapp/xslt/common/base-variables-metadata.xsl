@@ -14,6 +14,18 @@
   <!-- The metadata record in whatever profile -->
   <xsl:variable name="metadata" select="/root/*[name(.)!='gui' and name(.) != 'request']"/>
   
+  
+  <!-- Get the last gn:info element in case something added it twice to the record 
+  which may break the editor. In that case, XML view can help fixing the record. -->
+  <xsl:variable name="metadataInfo" select="$metadata/gn:info[position() = last()]"/>
+  
+  <!-- The metadata schema -->
+  <xsl:variable name="schema" select="$metadataInfo/schema"/>
+  <xsl:variable name="metadataUuid" select="$metadataInfo/uuid"/>
+  <xsl:variable name="metadataId" select="$metadataInfo/id"/>
+  <xsl:variable name="isTemplate" select="$metadataInfo/isTemplate"/>
+  <xsl:variable name="isService" select="count($metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
+  
   <xsl:variable name="metadataLanguage">
     <saxon:call-template name="{concat('get-', $schema, '-language')}"/>
   </xsl:variable>
@@ -28,12 +40,6 @@
   <!-- The list of thesaurus -->
   <xsl:variable name="listOfThesaurus" select="/root/gui/thesaurus/thesauri"/>
   
-  <!-- The metadata schema -->
-  <xsl:variable name="schema" select="$metadata/gn:info/schema"/>
-  <xsl:variable name="metadataUuid" select="$metadata/gn:info/uuid"/>
-  <xsl:variable name="metadataId" select="$metadata/gn:info/id"/>
-  <xsl:variable name="isTemplate" select="$metadata/gn:info/isTemplate"/>
-  <xsl:variable name="isService" select="count($metadata/gmd:identificationInfo/srv:SV_ServiceIdentification) > 0"/>
   
   <!-- The labels, codelists and profiles specific strings -->
   <!-- TODO : label inheritance between profiles - maybe in Java ? -->

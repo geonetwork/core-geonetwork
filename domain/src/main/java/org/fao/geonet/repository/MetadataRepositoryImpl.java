@@ -1,6 +1,7 @@
 package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.*;
+import org.fao.geonet.repository.reports.MetadataReportsQueries;
 import org.fao.geonet.repository.statistic.MetadataStatisticsQueries;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -31,6 +32,11 @@ public class MetadataRepositoryImpl implements MetadataRepositoryCustom {
     @Override
     public MetadataStatisticsQueries getMetadataStatistics() {
         return new MetadataStatisticsQueries(_entityManager);
+    }
+
+    @Override
+    public MetadataReportsQueries getMetadataReports() {
+        return new MetadataReportsQueries(_entityManager);
     }
 
     @Override

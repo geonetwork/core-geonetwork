@@ -1,0 +1,55 @@
+<div>
+  <div class="pull-left" data-translate="">whoCanAccess</div>
+  <div data-gn-need-help="editor_sharing" class="pull-right"></div>
+  <!-- TODO: simplify layout if only one group -->
+  <div class="gn-share-grid">
+    <table class="table table-striped">
+      <col width="25%"/>
+      <col width="{{70 / operations.length}}%" data-ng-repeat="o in operations" />
+      <col width="5%"/>
+      <tr>
+        <th>
+          <input class="form-control" data-ng-model="groupSearch.$"
+                 placeholder="{{'filter' | translate}}"/>
+        </th>
+        <th data-ng-repeat="o in operations">{{o.label[lang]}}</th>
+        <th></th>
+      </tr>
+      <tr data-ng-repeat="g in groups | filter:{reserved: 'true'} | orderBy:'id':true">
+        <td title="{{g.description}}"><strong>{{g.label[lang]}}</strong></td>
+        <td data-ng-repeat="o in operations" class="text-center">
+          <input type="checkbox"
+                 data-ng-disabled="!isAdminOrReviewer"
+                 data-ng-class="internalGroups.indexOf(g.id) != -1 && internalOperations.indexOf(o.id) != -1 ? 'hidden' : ''"
+                 data-ng-model="g.privileges[o.id].value"/>
+        </td>
+        <td>
+          <input type="checkbox"
+                 data-ng-disabled="!isAdminOrReviewer"
+                 data-ng-click="checkAll(g)"
+                 data-ng-model="g.isCheckedAll"/>
+        </td>
+      </tr>
+      <tr data-ng-repeat="g in groups | filter:{reserved: 'false'} | filter:groupSearch | orderBy:sortByLabel">
+        <td title="{{g.description}}">{{g.label[lang]}}</td>
+        <td data-ng-repeat="o in operations" class="text-center">
+          <input type="checkbox"
+                 data-ng-disabled="g.privileges[o.id].disabled"
+                 data-ng-model="g.privileges[o.id].value"/>
+        </td>
+        <td>
+          <input type="checkbox"
+                 data-ng-click="checkAll(g)"
+                 data-ng-model="g.isCheckedAll"/>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="btn-toolbar">
+    <button type="button" class="btn btn-primary pull-right fa fa-save"
+            data-ng-click="save()">
+      <span data-translate="">save</span>
+    </button>
+  </div>
+</div>

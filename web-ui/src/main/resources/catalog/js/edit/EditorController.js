@@ -12,17 +12,37 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   goog.require('gn_directory_controller');
   goog.require('gn_editorboard_controller');
   goog.require('gn_fields');
+  goog.require('gn_import_controller');
   goog.require('gn_new_metadata_controller');
   goog.require('gn_scroll_spy');
+  goog.require('gn_share');
   goog.require('gn_thesaurus');
   goog.require('gn_utility_directive');
 
   var module = angular.module('gn_editor_controller',
       ['gn_fields', 'gn_new_metadata_controller',
-       'gn_editorboard_controller',
+       'gn_import_controller',
+       'gn_editorboard_controller', 'gn_share',
        'gn_directory_controller', 'gn_utility_directive',
        'gn_scroll_spy', 'gn_thesaurus', 'ui.bootstrap.datetimepicker']);
 
@@ -57,6 +77,9 @@
           when('/directory/id/:id', {
             templateUrl: tplFolder + 'directory.html',
             controller: 'GnDirectoryController'}).
+          when('/import', {
+            templateUrl: tplFolder + 'import.html',
+            controller: 'GnImportController'}).
           otherwise({
             templateUrl: tplFolder + 'editorboard.html',
             controller: 'GnEditorBoardController'
@@ -130,6 +153,7 @@
             $scope.metadataNotFoundId = $routeParams.id;
 
             $scope.mdSchema = data.metadata[0]['geonet:info'].schema;
+            $scope.groupOwner = data.metadata[0].groupOwner;
             $scope.mdTitle = data.metadata[0].title ||
                 data.metadata[0].defaultTitle;
 
@@ -204,15 +228,17 @@
        * properties and save.
        */
       $scope.switchToTab = function(tabIdentifier, mode) {
-        //          $scope.tab = tabIdentifier;
-        //          FIXME: this trigger an edit
-        //          better to use ng-model in the form ?
+        // Scroll top
+        if (tabIdentifier !== $('#currTab')[0].value) {
+          gnUtilityService.scrollTo();
+        }
+
         $('#currTab')[0].value = tabIdentifier;
         $('#flat')[0].value = mode === 'flat';
 
-        // Make the current form disapearing
+        // Make the current form disapearing TODO: in save
+        // Disable form + indicator ?
         //        $($scope.formId + ' > fieldset').fadeOut(duration);
-
         $scope.save(true);
       };
 

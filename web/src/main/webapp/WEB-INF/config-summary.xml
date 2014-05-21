@@ -10,13 +10,23 @@
 	* (optional) sortBy: the ordering for the facet. Defaults is by count.
 	* (optional) sortOrder: asc or desc. Defaults is descendant.
 	* (optional) max: the number of values to be returned for the facet. Defaults is 10.
+  * (optional) translator: Define a DB translator to retrieve label from description
+  tables (eg. categoriesdes) or codelist translator to retrieve label from schema
+  codelists files.
 
-	When an item is modified or added, the index MUST be rebuild.
+  eg. for category
+  <item name="category" plural="categories" indexKey="_cat" max="45"
+            translator="db:org.fao.geonet.repository.MetadataCategoryRepository:findOneByName"/>
+  or for group
+  <item name="groupOwner" plural="groupOwners" indexKey="_groupOwner"
+        max="99" sortBy="value" translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+
+  When an item is modified or added, the index MUST be rebuild.
 -->
 <summary>
 	<def>
 		<hits>
-			<item name="keyword" plural="keywords" indexKey="keyword" max="15"/>
+      <item name="keyword" plural="keywords" indexKey="keyword" max="15"/>
 			<item name="inspireTheme" plural="inspireThemes" indexKey="inspiretheme" sortBy="value" sortOrder="asc" max="35"/>
 			<item name="denominator" plural="denominators" indexKey="denominator" sortBy="numValue" sortOrder="desc"/>
 			<item name="spatialRepresentationType" plural="spatialRepresentationTypes" indexKey="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
@@ -27,6 +37,12 @@
 			<item name="createDateYear" plural="createDateYears" indexKey="createDateYear"
 				sortBy="value" sortOrder="desc" max="40"/>
 		</hits>
+    <subtemplates>
+      <item name="subTemplateType" plural="subTemplateTypes"
+            indexKey="_root"/>
+      <item name="groupOwner" plural="groupOwners" indexKey="_groupOwner"
+            max="99" sortBy="value" translator="db:org.fao.geonet.repository.GroupRepository:findOne:int"/>
+    </subtemplates>
 		<titles>
 			<item name="title" plural="titles" indexKey="title" sortBy="freq" sortOrder="desc" max="100"
 			/>

@@ -3,47 +3,51 @@
   <div id="map" class="map" gn-map="" gn-map-map="map"></div>
   <div id="pulldown">
     <div id="pulldown-content" class="panel-group content in">
+
+      <!--Tools-->
       <div class="panel">
-        <a id="shareHeading" class="panel-heading accordion-toggle collapsed" data-toggle="collapse"
-           data-parent="#pulldown-content" href="#share">
-          <i class="visible-collapsed icon-caret-right spacer"></i>
-          <i class="hidden-collapsed icon-caret-down"></i>
-          <i class="icon-share"></i>
-          <span translate="" class="ng-scope">Partager</span>
+        <a id="toolsHeading" class="panel-heading accordion-toggle collapsed" data-toggle="collapse"
+           data-parent="#pulldown-content" href="#tools">
+          <i class="visible-collapsed fa fa-caret-right spacer"></i>
+          <i class="hidden-collapsed fa fa-caret-down"></i>
+          <i class="fa fa-asterisk"></i>
+          <span translate="" class="ng-scope">Tools</span>
         </a>
 
-        <div id="share" class="panel-collapse collapse">
-          <div class="panel-body">
-            <a href="" data-toggle="modal" data-target="#wmsModal">Import WMS</a>
+        <div id="tools" class="collapse">
+          <div class="panel-body panel-body-wide panel-cursor">
+            <ul>
+              <a href="" data-toggle="modal" data-target="#wmsModal">Import WMS</a>
+              <li><!-- Measure -->
+                <a href=""  ng-click="isMeasureActive = !isMeasureActive">
+                  <span  ng-class="{'selected': isMeasureActive}" translate>measure</span>
+                </a>
+              </li>
+              <li><!-- Draw -->
+                <a href=""  ng-click="isDrawActive = !isDrawActive">
+                  <span  ng-class="{'selected': isDrawActive}" translate>draw</span>
+                </a>
+              </li>
+             </ul>
           </div>
+
         </div>
       </div>
+
+      <!-- Layer Manager -->
       <div class="panel">
-        <a id="managerHeading" class="panel-heading accordion-toggle" data-toggle="collapse"
-           data-parent="#pulldown-content" href="#manager">
-          <i class="fa fa-caret-right"></i>
+        <a id="selectionHeading" class="panel-heading accordion-toggle light"
+           data-toggle="collapse" href="#selection">
+          <i class="visible-collapsed fa fa-caret-right"></i>
+          <i class="hidden-collapsed fa fa-caret-down"></i>
           <span translate="" class="ng-scope">layer_manager</span>
         </a>
 
-        <div id="manager" class="panel-collapse collapse">
-          <div class="panel-body">
-            <div class="panel-body panel-body-wide" gn-layermanager gn-layermanager-map="map">
-            </div>
+        <div id="selection" class="">
+          <div class="panel-body panel-body-wide gn-layermanager" gn-layermanager gn-layermanager-map="map">
           </div>
         </div>
       </div>
-
-      <div class="panel">
-          <a id="selectionHeading" class="panel-heading accordion-toggle" data-toggle="collapse">
-            <i class="visible-collapsed icon-caret-right"></i>
-            <i class="hidden-collapsed icon-caret-down"></i>
-            <span translate>layer_selection</span>
-          </a>
-          <div id="selection" class="panel-collapse collapse">
-            <div class="panel-body panel-body-wide" gn-layermanager gn-layermanager-map="map">
-            </div>
-        </div>
-      </div> <!-- .panel -->
 
   </div>
     <div tpye="button" data-toggle="collapse" data-target="#pulldown-content" class="toggle btn btn-default">
@@ -53,4 +57,24 @@
   <div class="modal fade" id="wmsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div gn-wms-import="" gn-wms-import-map="map"></div>
   </div>
+
+  <!-- Popup: Measure -->
+  <div gn-popup="isMeasureActive"
+       gn-popup-options="{title:'measure',showPrint:true}"
+       gn-draggable=".gn-popup-title"
+       id="measure-popup" >
+      <div gn-measure
+           gn-measure-map="map"
+           gn-measure-options="options"
+           gn-measure-active="isMeasureActive"></div>
+  </div><!-- end Measure -->
+
+  <!-- Popup: Draw -->
+  <div gn-popup="isDrawActive"
+       gn-popup-options="{title:'draw'}"
+       gn-draggable=".ga-popup-title"
+       id="draw-popup" >
+    <div gn-draw gn-draw-map="map" gn-draw-options="options" gn-draw-active="isDrawActive"></div>
+  </div><!-- end Draw -->
+
 </div>

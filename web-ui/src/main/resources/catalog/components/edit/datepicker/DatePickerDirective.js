@@ -22,7 +22,9 @@
           label: '@',
           elementName: '@',
           elementRef: '@',
-          id: '@'
+          id: '@',
+          tagName: '@',
+          indeterminatePosition: '@'
         },
         templateUrl: '../../catalog/components/edit/datepicker/partials/' +
             'datepicker.html',
@@ -33,6 +35,10 @@
           // support year or month only mode in this case)
           scope.dateTypeSupported = Modernizr.inputtypes.date;
 
+          var namespaces = {
+            gco: 'http://www.isotc211.org/2005/gco',
+            gml: 'http://www.opengis.net/gml'
+          };
           // Format date when datetimepicker is used.
           scope.formatFromDatePicker = function(date) {
             var format = 'YYYY-MM-DDTHH:mm:ss';
@@ -42,6 +48,8 @@
 
           scope.mode = scope.year = scope.month = scope.time =
               scope.date = scope.dateDropDownInput = '';
+          scope.withIndeterminatePosition =
+              attrs.indeterminatePosition !== undefined;
 
           // Default date is empty
           // Compute mode based on date length. The format
@@ -69,24 +77,43 @@
             scope.mode = mode;
           };
 
+          var resetDateIfNeeded = function() {
+            // Reset date if indeterminate position is now
+            // or unknows.
+            if (scope.withIndeterminatePosition &&
+                (scope.indeterminatePosition === 'now' ||
+                scope.indeterminatePosition === 'unknown')) {
+              scope.dateInput = '';
+              scope.date = '';
+              scope.year = '';
+              scope.month = '';
+              scope.time = '';
+            }
+          };
 
           // Build xml snippet based on input date.
           var buildDate = function() {
-            var tag = 'gco:Date';
+            var tag = scope.tagName !== undefined ?
+                scope.tagName : 'gco:Date';
+            var namespace = tag.split(':')[0];
 
             if (scope.dateTypeSupported !== true) {
+
               if (scope.dateInput === undefined) {
                 return;
+              } else {
+                tag = scope.tagName !== undefined ? scope.tagName :
+                    (scope.dateInput.indexOf('T') === -1 ?
+                    'gco:Date' : 'gco:DateTime');
               }
-              tag = scope.dateInput.indexOf('T') === -1 ?
-                  'gco:Date' : 'gco:DateTime';
               scope.dateTime = scope.dateInput;
             } else if (scope.mode === 'year') {
               scope.dateTime = scope.year;
             } else if (scope.mode === 'month') {
               scope.dateTime = scope.month;
             } else if (scope.time) {
-              tag = 'gco:DateTime';
+              tag = scope.tagName !== undefined ?
+                  scope.tagName : 'gco:DateTime';
               var time = scope.time;
               // TODO: Set seconds, Timezone ?
               scope.dateTime = scope.date;
@@ -99,9 +126,24 @@
             } else {
               scope.dateTime = scope.date;
             }
-            scope.xmlSnippet = '<' + tag +
-                ' xmlns:gco="http://www.isotc211.org/2005/gco">' +
-                scope.dateTime + '</' + tag + '>';
+            if (tag === '') {
+              scope.xmlSnippet = scope.dateTime;
+            } else {
+              if (scope.dateTime != '' || scope.indeterminatePosition != '') {
+                var attribute = '';
+                if (scope.withIndeterminatePosition &&
+                    scope.indeterminatePosition !== '') {
+                  attribute = ' indeterminatePosition="' +
+                      scope.indeterminatePosition + '"';
+                }
+                scope.xmlSnippet = '<' + tag +
+                    ' xmlns:' + namespace + '="' + namespaces[namespace] + '"' +
+                    attribute + '>' +
+                    scope.dateTime + '</' + tag + '>';
+              } else {
+                scope.xmlSnippet = '';
+              }
+            }
           };
 
           scope.$watch('date', buildDate);
@@ -109,6 +151,8 @@
           scope.$watch('year', buildDate);
           scope.$watch('month', buildDate);
           scope.$watch('dateInput', buildDate);
+          scope.$watch('indeterminatePosition', buildDate);
+          scope.$watch('indeterminatePosition', resetDateIfNeeded);
           scope.$watch('xmlSnippet', function() {
             if (scope.id) {
               $(scope.id).val(scope.xmlSnippet);

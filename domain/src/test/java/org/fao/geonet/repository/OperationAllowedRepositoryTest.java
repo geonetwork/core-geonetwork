@@ -6,13 +6,11 @@ import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.junit.Test;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.junit.Assert.*;
 
-@Transactional
 public class OperationAllowedRepositoryTest extends AbstractOperationsAllowedTest {
 
     @Test

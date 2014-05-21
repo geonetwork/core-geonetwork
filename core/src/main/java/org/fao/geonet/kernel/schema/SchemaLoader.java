@@ -35,6 +35,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
+import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 
@@ -43,6 +45,11 @@ import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
+import org.fao.geonet.utils.ResolverWrapper;
+import org.fao.geonet.utils.Resolver;
+
+import java.net.URI;
+import java.util.*;
 
 //==============================================================================
 
@@ -88,11 +95,12 @@ public class SchemaLoader
 	//---
 	//---------------------------------------------------------------------------
 
-	public MetadataSchema load(String xmlSchemaFile, String xmlSubstitutionsFile) throws Exception
+	public MetadataSchema load(String xmlSchemaFile, String xmlSubstitutionsFile, SchematronRepository schemaRepo,
+                               SchematronCriteriaGroupRepository criteriaGroupRepository) throws Exception
 	{
 		ssOverRides = new SchemaSubstitutions(xmlSubstitutionsFile);
 
-		if (!new File(xmlSchemaFile).exists()) return new MetadataSchema();
+		if (!new File(xmlSchemaFile).exists()) return new MetadataSchema(schemaRepo, criteriaGroupRepository);
 
 		//--- PHASE 1 : pre-processing
 		//---
@@ -128,7 +136,7 @@ public class SchemaLoader
 
 		//--- PHASE 3 : get appinfo, add namespaces and elements
 
-		MetadataSchema mds = new MetadataSchema();
+		MetadataSchema mds = new MetadataSchema(schemaRepo, criteriaGroupRepository);
 		mds.setPrimeNS(elFirst.getAttributeValue("targetNamespace"));
 
 
@@ -686,14 +694,33 @@ public class SchemaLoader
             else if (name.equals("import") || name.equals("include")) {
                 String schemaLoc = elChild.getAttributeValue("schemaLocation");
 
-                //--- we must prevent imports from the web
-
+                //--- we must try to resolve imports from the web using the
+                //--- oasis catalog
+                String scFile;
                 if (schemaLoc.startsWith("http:")) {
-                    int lastSlash = schemaLoc.lastIndexOf('/');
-                    schemaLoc = schemaLoc.substring(lastSlash + 1);
+                    Resolver resolver = ResolverWrapper.getInstance();
+                    scFile = resolver.getXmlResolver().resolveURI(schemaLoc);
+
+                    if (Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
+                          Log.debug(Geonet.SCHEMA_MANAGER, "Cats: " +
+                                  Arrays.toString(resolver.getXmlResolver().getCatalogList()) +
+                                  " Resolved " + schemaLoc +
+                                  " " + scFile);
+                    }
+
+                    if (scFile == null) { // what use is this? old behaviour
+                        Log.warning(Geonet.SCHEMA_MANAGER, "Cannot resolve " + schemaLoc +
+                                ": will append last component to current path (not sure it will help though!)");
+                        int lastSlash = schemaLoc.lastIndexOf('/');
+                        scFile = path + schemaLoc.substring(lastSlash + 1);
+                    } else {  // this is good - get the path of resolved URI
+                        scFile = new URI(scFile).getPath();
+                    }
+                } else {
+                    scFile = path + schemaLoc;
                 }
-                if (!loadedFiles.contains(new File(path + schemaLoc).getCanonicalPath())) {
-                    alElementFiles.addAll(loadFile(path + schemaLoc, loadedFiles));
+                if (!loadedFiles.contains(new File(scFile).getCanonicalPath())) {
+                    alElementFiles.addAll(loadFile(scFile, loadedFiles));
                 }
             }
             else {

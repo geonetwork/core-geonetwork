@@ -43,7 +43,12 @@
         link: function(scope, element, attrs) {
           scope.checked = true;
           scope.toggle = function() {
-            $(scope.id).toggleClass('hidden');
+            $('#' + scope.id).toggleClass('hidden');
+            if (scope.checked) {
+              $('#' + scope.id).find('input,select,textarea').each(function(e) {
+                $(this).val('');
+              });
+            }
           };
         }
       };
@@ -80,6 +85,7 @@
           // Replace all occurence of {{fieldname}} by its value
           var generateSnippet = function() {
             var xmlSnippet = xmlSnippetTemplate, updated = false;
+
             angular.forEach(fields, function(fieldName) {
               var field = $('#' + scope.id + '_' + fieldName);
               var value = '';
@@ -124,7 +130,7 @@
           angular.forEach(values, function(value, key) {
             var selector = '#' + scope.id + '_' + fields[key];
             if ($(selector).attr('type') === 'checkbox') {
-              $(selector).prop('checked', value);
+              $(selector).attr('checked', value === 'true');
             } else {
               $(selector).val(value);
             }

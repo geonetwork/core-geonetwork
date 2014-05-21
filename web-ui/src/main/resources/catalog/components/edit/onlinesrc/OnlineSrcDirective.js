@@ -1,6 +1,8 @@
 (function() {
   goog.provide('gn_onlinesrc_directive');
 
+
+  goog.require('ga_print_directive');
   goog.require('gn_utility');
 
   /**
@@ -19,7 +21,8 @@
    */
   angular.module('gn_onlinesrc_directive', [
     'gn_utility',
-    'blueimp.fileupload'
+    'blueimp.fileupload',
+    'ga_print_directive'
   ])
 
   /**
@@ -76,6 +79,20 @@
                       scope.relations = data;
                     });
               };
+              scope.isCategoryEnable = function(category) {
+                var config = gnCurrentEdit.schemaConfig.related;
+                if (config.readonly === true) {
+                  return false;
+                } else {
+                  if (config.categories &&
+                      config.categories.length > 0 &&
+                      $.inArray(category, config.categories) === -1) {
+                    return false;
+                  } else {
+                    return true;
+                  }
+                }
+              };
 
               // Reload relations when a directive requires it
               scope.$watch('onlinesrcService.reload', function() {
@@ -109,11 +126,14 @@
    * On submit, the metadata is saved, the thumbnail is added, then the form
    * and online resource list are refreshed.
    */
-   .directive('gnAddThumbnail', [
+   .directive('gnAddThumbnail', ['$http',
         'gnOnlinesrc',
         'gnEditor',
         'gnCurrentEdit',
-        function(gnOnlinesrc, gnEditor, gnCurrentEdit) {
+        'gnConfig',
+        'gnMap',
+        function($http, gnOnlinesrc, gnEditor, gnCurrentEdit,
+                 gnConfig, gnMap) {
           return {
             restrict: 'A',
             scope: {
@@ -126,11 +146,60 @@
 
               // mode can be 'url' or 'upload'
               scope.mode = 'url';
+              scope.action = 'md.thumbnail.upload@json';
 
               // the form params that will be submited
               scope.params = {};
 
               scope.popupid = attrs['gnPopupid'];
+              scope.mapId = 'gn-thumbnail-maker-map';
+              scope.loaded = false;
+
+              scope.map;
+
+              var init = function() {
+
+                if (scope.mode === 'thumbnailMaker') {
+                  if (!scope.loaded) {
+                    scope.map = new ol.Map({
+                      layers: [],
+                      renderer: 'canvas',
+                      view: new ol.View2D({
+                        center: [0, 0],
+                        projection: gnMap.getMapConfig().projection,
+                        zoom: 2
+                      })
+                    });
+
+                    // we need to wait the scope.hidden binding is done
+                    // before rendering the map.
+                    scope.map.setTarget(scope.mapId);
+                    scope.loaded = true;
+                  }
+
+                  scope.layers = gnCurrentEdit.layerConfig;
+
+                  // Reset map
+                  angular.forEach(scope.map.getLayers(), function(layer) {
+                    scope.map.removeLayer(layer);
+                  });
+
+                  scope.map.addLayer(gnMap.getLayersFromConfig());
+
+                  // Add each WMS layer to the map
+                  angular.forEach(scope.layers, function(layer) {
+                    scope.map.addLayer(new ol.layer.Tile({
+                      source: new ol.source.TileWMS({
+                        url: layer.url,
+                        params: {
+                          'LAYERS': layer.name,
+                          'URL': layer.url
+                        }
+                      })
+                    }));
+                  });
+                }
+              };
 
               // TODO: should be in gnEditor ?
               var getVersion = function() {
@@ -174,11 +243,26 @@
                   .then(function(data) {
                         scope.submit();
                       });
-                }
-                else {
+                } else if (scope.mode == 'thumbnailMaker') {
+                  getVersion();
+                  gnEditor.save(false, true)
+                    .then(function(data) {
+                        scope.action = 'md.thumbnail.generate@json';
+                        $http.post('md.thumbnail.generate@json',
+                            $('#gn-upload-onlinesrc').serialize(), {
+                              headers: {'Content-Type':
+                                    'application/x-www-form-urlencoded'}
+                            }).success(function(data) {
+                          uploadOnlinesrcDone();
+                        });
+                      });
+                } else {
                   gnOnlinesrc.addThumbnailByURL(scope.params, scope.popupid);
                 }
               };
+
+              scope.$watch('mode', init);
+
             }
           };
         }])
@@ -222,6 +306,8 @@
 
               gnOnlinesrc.register('onlinesrc', function() {
                 scope.metadataId = gnCurrentEdit.id;
+                scope.schema = gnCurrentEdit.schema;
+
                 $(scope.popupid).modal('show');
 
               });
@@ -270,8 +356,7 @@
               scope.addOnlinesrc = function() {
                 if (scope.mode == 'upload') {
                   scope.submit();
-                }
-                else {
+                } else {
                   gnOnlinesrc.addOnlinesrc(scope.params, scope.popupid);
                 }
               };

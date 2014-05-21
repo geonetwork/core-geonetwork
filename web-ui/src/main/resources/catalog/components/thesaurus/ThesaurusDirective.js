@@ -15,8 +15,8 @@
        'gnThesaurusService', 'gnEditor',
        'gnEditorXMLService', 'gnCurrentEdit',
        function($timeout,
-       gnThesaurusService, gnEditor,
-       gnEditorXMLService, gnCurrentEdit) {
+               gnThesaurusService, gnEditor,
+               gnEditorXMLService, gnCurrentEdit) {
 
          return {
            restrict: 'A',
@@ -45,12 +45,12 @@
 
              scope.add = function() {
                gnEditor.add(gnCurrentEdit.id,
-                   scope.elementRef, scope.elementName, scope.domId, 'before');
+               scope.elementRef, scope.elementName, scope.domId, 'before');
              };
 
              scope.addThesaurus = function(thesaurusIdentifier) {
                gnThesaurusService
-               .getXML(thesaurusIdentifier).then(
+                .getXML(thesaurusIdentifier).then(
                function(data) {
                  // Add the fragment to the form
                  scope.snippet = gnEditorXMLService.
@@ -91,7 +91,7 @@
        'gnThesaurusService', 'gnEditor',
        'Keyword',
        function($timeout,
-       gnThesaurusService, gnEditor, Keyword) {
+               gnThesaurusService, gnEditor, Keyword) {
 
          return {
            restrict: 'A',
@@ -117,13 +117,14 @@
              scope.results = null;
              scope.snippet = null;
              scope.isInitialized = false;
+             scope.elementRefBackup = scope.elementRef;
              scope.invalidKeywordMatch = false;
              scope.selected = [];
              scope.initialKeywords = scope.keywords ?
-                 scope.keywords.split(',') : [];
+             scope.keywords.split(',') : [];
              scope.transformationLists =
-                 scope.transformations.indexOf(',') !== -1 ?
-                 scope.transformations.split(',') : [scope.transformations];
+             scope.transformations.indexOf(',') !== -1 ?
+             scope.transformations.split(',') : [scope.transformations];
 
 
 
@@ -140,7 +141,12 @@
                }
                return 0;
              };
-
+             scope.resetKeywords = function() {
+               scope.selected = [];
+               scope.elementRef = scope.elementRefBackup;
+               scope.invalidKeywordMatch = false;
+               checkState();
+             };
 
 
              var init = function() {
@@ -156,22 +162,22 @@
                    // One keyword only and exact match search
                    gnThesaurusService.getKeywords(keyword,
                    scope.thesaurusKey, 1, 2).then(function(listOfKeywords) {
-                     counter++;
+                      counter++;
 
-                     listOfKeywords[0] &&
+                      listOfKeywords[0] &&
                      scope.selected.push(listOfKeywords[0]);
-                     // Init done when all keywords are selected
-                     if (counter === scope.initialKeywords.length) {
-                       scope.isInitialized = true;
-                       scope.invalidKeywordMatch =
+                      // Init done when all keywords are selected
+                      if (counter === scope.initialKeywords.length) {
+                        scope.isInitialized = true;
+                        scope.invalidKeywordMatch =
                        scope.selected.length !== scope.initialKeywords.length;
 
-                       // Get the matching XML snippet for
-                       // the initial set of keywords
-                       // once the loaded keywords are all selected.
-                       checkState();
-                     }
-                   });
+                        // Get the matching XML snippet for
+                        // the initial set of keywords
+                        // once the loaded keywords are all selected.
+                        checkState();
+                      }
+                    });
                  });
                }
 
@@ -199,24 +205,24 @@
                  // Load all keywords from thesaurus on startup
                  gnThesaurusService.getKeywords('',
                  scope.thesaurusKey, scope.max)
-                      .then(function(listOfKeywords) {
+                  .then(function(listOfKeywords) {
 
-                       var field = $(id).tagsinput('input');
-                       field.typeahead({
-                         valueKey: 'label',
-                         local: listOfKeywords,
-                         // Then filter on typing
-                         remote: {
-                           wildcard: 'QUERY',
-                           url: gnThesaurusService.getKeywordsSearchUrl('QUERY',
-                               scope.thesaurusKey, scope.max),
-                           filter: gnThesaurusService.parseKeywordsResponse
-                         },
-                         minLength: 0,
-                         limit: gnThesaurusService.DEFAULT_NUMBER_OF_SUGGESTIONS
-                         // template: '<p>{{label}}</p>'
-                         // TODO: could be nice to have definition
-                       }).bind('typeahead:selected',
+                   var field = $(id).tagsinput('input');
+                   field.typeahead({
+                     valueKey: 'label',
+                     local: listOfKeywords,
+                     // Then filter on typing
+                     remote: {
+                       wildcard: 'QUERY',
+                       url: gnThesaurusService.getKeywordsSearchUrl('QUERY',
+                       scope.thesaurusKey, scope.max),
+                       filter: gnThesaurusService.parseKeywordsResponse
+                     },
+                     minLength: 0,
+                     limit: gnThesaurusService.DEFAULT_NUMBER_OF_SUGGESTIONS
+                     // template: '<p>{{label}}</p>'
+                     // TODO: could be nice to have definition
+                   }).bind('typeahead:selected',
                    $.proxy(function(obj, keyword) {
                      // Add to tags
                      this.tagsinput('add', keyword);
@@ -229,41 +235,41 @@
                      // Clear typeahead
                      this.tagsinput('input').typeahead('setQuery', '');
                    }, $(id))
-                       );
+                   );
 
-                       $(id).on('itemRemoved', function() {
-                         scope.selected = $(this).tagsinput('items');
-                         getSnippet();
-                       });
+                   $(id).on('itemRemoved', function() {
+                     scope.selected = $(this).tagsinput('items');
+                     getSnippet();
+                   });
 
-                       // Display full list when input is clicked
-                       // TODO: add config for that
-                       // From http://stackoverflow.com/questions/18768401/
-                       //   typeahead-js-displaying-all-prefetched-datums
-                       $(element).find('input.tt-query')
-                         .on('click', function() {
-                         var $input = $(this);
+                   // Display full list when input is clicked
+                   // TODO: add config for that
+                   // From http://stackoverflow.com/questions/18768401/
+                   //   typeahead-js-displaying-all-prefetched-datums
+                   $(element).find('input.tt-query')
+                      .on('click', function() {
+                     var $input = $(this);
 
-                         // these are all expected to be objects
-                         // so falsey check is fine
-                         if (!$input.data() || !$input.data().ttView ||
-                             !$input.data().ttView.datasets ||
-                             !$input.data().ttView.dropdownView ||
-                             !$input.data().ttView.inputView) {
+                     // these are all expected to be objects
+                     // so falsey check is fine
+                     if (!$input.data() || !$input.data().ttView ||
+                     !$input.data().ttView.datasets ||
+                     !$input.data().ttView.dropdownView ||
+                     !$input.data().ttView.inputView) {
                        return;
-                         }
+                     }
 
-                         var ttView = $input.data().ttView;
+                     var ttView = $input.data().ttView;
 
-                         var toggleAttribute = $input.attr('data-toggled');
+                     var toggleAttribute = $input.attr('data-toggled');
 
-                         if (!toggleAttribute || toggleAttribute === 'off') {
-                           $input.attr('data-toggled', 'on');
+                     if (!toggleAttribute || toggleAttribute === 'off') {
+                       $input.attr('data-toggled', 'on');
 
                        $input.typeahead('setQuery', '');
 
                        if ($.isArray(ttView.datasets) &&
-                           ttView.datasets.length > 0) {
+                       ttView.datasets.length > 0) {
                          // only pulling the first dataset for this hack
                          var fullSuggestionList = [];
                          // renderSuggestions expects a
@@ -277,14 +283,14 @@
                          ttView.inputView.setHintValue('');
                          ttView.dropdownView.open();
                        }
-                         }
-                         else if (toggleAttribute === 'on') {
-                           $input.attr('data-toggled', 'off');
+                     }
+                     else if (toggleAttribute === 'on') {
+                       $input.attr('data-toggled', 'off');
                        ttView.dropdownView.close();
-                         }
+                     }
                    });
 
-                      });
+                 });
                });
              };
 
@@ -310,7 +316,7 @@
              var search = function() {
                gnThesaurusService.getKeywords(scope.filter,
                scope.thesaurusKey, scope.max)
-              .then(function(listOfKeywords) {
+                .then(function(listOfKeywords) {
                  // Remove from search already selected keywords
                  scope.results = $.grep(listOfKeywords, function(n) {
                    var alreadySelected = true;
@@ -341,7 +347,7 @@
 
              var getSnippet = function() {
                gnThesaurusService
-              .getXML(scope.thesaurusKey,
+                .getXML(scope.thesaurusKey,
                getKeywordIds(), scope.currentTransformation).then(
                function(data) {
                  scope.snippet = data;

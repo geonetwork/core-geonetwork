@@ -28,12 +28,11 @@
             <span class="caret"/>
           </button>
           <ul class="dropdown-menu" role="menu">
-            <li data-ng-repeat="(key, value) in harvesterTypes"
-              data-ng-class="value.loaded ? '' : 'disabled'">
-              <a href="" data-ng-click="addHarvester(key)"
-                title="{{'harvester-' + value.label + 'Help' | translate}}"> {{('harvester-' +
-                value.label) | translate}} <span data-ng-hide="value.loaded" data-translate=""
-                  >notYetSupported</span>
+            <li data-ng-repeat="h in getHarvesterTypes() | orderBy:'text'"
+              data-ng-class="h.loaded ? '' : 'disabled'">
+              <a href="" data-ng-click="addHarvester(h.label)"
+                title="{{'harvester-' + h.label + 'Help' | translate}}">{{h.text}}
+                <span data-ng-hide="h.loaded" data-translate="">notYetSupported</span>
               </a>
             </li>
           </ul>
@@ -69,21 +68,28 @@
 
         <div class="btn-toolbar">
           <button type="button" class="btn btn-primary pull-right fa fa-play"
+            data-ng-hide="harvesterSelected['@id'] == ''"
             data-ng-click="runHarvester(harvesterSelected['@id'])"
-            data-ng-disabled="harvesterSelected.info.running === true" data-translate=""
+            data-ng-disabled="harvesterSelected.info.running === true"
+            data-translate=""
             >runHarvester</button>
           <button type="button" class="btn btn-primary pull-right fa fa-save"
-            data-ng-click="saveHarvester('#gn-harvester-edit')" data-translate=""
+            data-ng-click="saveHarvester('#gn-harvester-edit')"
+            data-translate=""
             >saveHarvester</button>
           <button type="button" class="btn btn-warning pull-right fa fa-trash"
             data-ng-hide="harvesterSelected['@id'] == ''"
             data-ng-click="deleteHarvesterRecord(harvesterSelected['@id'])"
-            title="{{'deleteHarvesterRecordsHelp' | translate}}" data-translate=""
+            data-ng-disabled="harvesterSelected.info.running === true"
+            title="{{'deleteHarvesterRecordsHelp' | translate}}"
+            data-translate=""
             >deleteHarvesterRecords</button>
           <button type="button" class="btn btn-danger pull-right fa fa-trash-o"
             data-ng-hide="harvesterSelected['@id'] == ''"
             data-ng-click="deleteHarvester(harvesterSelected['@id'])"
-            title="{{'deleteHarvesterHelp' | translate}}" data-translate="">deleteHarvester</button>
+            data-ng-disabled="harvesterSelected.info.running === true"
+            title="{{'deleteHarvesterHelp' | translate}}"
+            data-translate="">deleteHarvester</button>
         </div>
       </div>
       <div class="panel-body">

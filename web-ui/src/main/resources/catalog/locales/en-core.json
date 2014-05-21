@@ -88,7 +88,8 @@
     "passwordReminderError": "Error getting password information",
     "sendPasswordLinkToMyEmail": "Send password link to my email",
     "noRecordFound": "No record found.",
-    
+
+    "filterSearch": "Display search options",
     "anyPlaceHolder": "Search ...",
     "any": "Full text",
     "orgName": "Contact for the resource",
@@ -102,6 +103,7 @@
     "_groupPublished": "Published in that group",
     "_source": "Catalog",
     "_groupOwner": "Group",
+    "groupOwners": "Groups",
     "owner": "Owner",
     "selectAll": "All",
     "selectNone": "None",
@@ -143,5 +145,7 @@
     "comments": "Comment",
     "sendAComment": "Send us a comment",
     "feedbackNotEnable": "Feedback is not enabled.",
-    "feebackSent": "Your message has been sent to the catalog manager."
+    "feebackSent": "Your message has been sent to the catalog manager.",
+    "url": "URL",
+    "upload": "Upload"
 }

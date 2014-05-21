@@ -211,8 +211,8 @@
     <axsl:param name="lang" />
     <axsl:param name="thesaurusDir" />
     <axsl:param name="rule"/>
-   
-    <axsl:variable name="loc" select="document(concat('../loc/', $lang, '/', substring-before($rule, '.xsl'), '.xml'))"/> 
+
+    <axsl:variable name="loc" select="document(concat('../loc/', $lang, '/', $rule, '.xml'))"/>
 </xsl:template>
 
 <!-- Overrides skeleton.xsl -->

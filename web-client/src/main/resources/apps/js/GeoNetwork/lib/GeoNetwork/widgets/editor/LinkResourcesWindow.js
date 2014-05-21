@@ -695,7 +695,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                     params = Ext.urlDecode(stringUrl.split('?')[1]);
                 }
                 params = Ext.applyIf(params, {
-                    request: 'getCapabilities',
+                    request: 'GetCapabilities',
                     service: 'WMS'
                 });
                 

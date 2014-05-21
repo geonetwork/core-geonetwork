@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <schematron.title>INSPIRE Validation Rules</schematron.title>
     <!-- INSPIRE metadata rules translation / START -->
     
     <!-- List of pattern title -->

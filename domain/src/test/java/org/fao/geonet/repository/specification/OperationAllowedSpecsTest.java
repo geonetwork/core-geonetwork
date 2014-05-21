@@ -7,14 +7,12 @@ import org.fao.geonet.repository.SortUtils;
 import org.junit.Test;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.fao.geonet.repository.SpringDataTestSupport.setId;
 import static org.junit.Assert.assertEquals;
 
-@Transactional
 public class OperationAllowedSpecsTest extends AbstractOperationsAllowedTest {
     private String metadataIdPath() {
         return SortUtils.createPath(OperationAllowed_.id, OperationAllowedId_.metadataId);

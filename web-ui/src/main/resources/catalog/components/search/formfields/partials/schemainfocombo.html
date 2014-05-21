@@ -1,9 +1,5 @@
-<select data-ng-model="selectedInfo">
-
-  <option data-ng-repeat="p in infos" data-ng-if="type == 'element'" value="{{p['@value']}}"
-    data-ng-selected="p == selectedInfo">{{p['#text']}}</option>
-    
-  <option data-ng-repeat="p in infos" data-ng-if="type == 'codelist'" value="{{p.code}}"
-    data-ng-selected="p == selectedInfo">{{p.label}}</option>
-    
+<!-- TODO: could be nice to set tooltip on each option.
+     Not available in Angular select directive. -->
+<select class="form-control" data-ng-model="selectedInfo"
+    data-ng-options="p.code as p.label for p in infos">
 </select>

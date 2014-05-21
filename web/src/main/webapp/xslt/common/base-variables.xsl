@@ -40,6 +40,7 @@
     else if ($service = 'contact.us') then 'gn_contact_us'
     else if ($service = 'catalog.edit') then 'gn_editor'
     else if ($service = 'catalog.viewer') then 'gn_viewer'
+    else if ($service = 'catalog.search') then 'gn_search'
     else 'gn'"/>
   
   <!-- Catalog settings -->
@@ -73,4 +74,6 @@
   <!-- TODO: retrieve from settings -->
   <xsl:variable name="geopublishMatchingPattern"
     select="'^WWW:DOWNLOAD.*|^FILE:GEO|FILE:RASTER|^DB:POSTGIS'"/>
+  <xsl:variable name="layerMatchingPattern"
+                select="'^OGC:WMS.*'"/>
 </xsl:stylesheet>

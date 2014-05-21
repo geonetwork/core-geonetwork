@@ -8,17 +8,14 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.fao.geonet.repository.SpringDataTestSupport.assertSameContents;
 import static org.junit.Assert.*;
 
-@Transactional
 public class MetadataRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
@@ -193,7 +190,7 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
      */
     public static Metadata newMetadata(AtomicInteger inc) {
         int val = inc.incrementAndGet();
-        Metadata metadata = new Metadata().setUuid("uuid" + val).setData("metadata" + val);
+        Metadata metadata = new Metadata().setUuid("uuid" + val).setData("<md>metadata" + val + "</md>");
         metadata.getDataInfo().setSchemaId("customSchema" + val);
         metadata.getSourceInfo().setSourceId("source" + val);
         metadata.getHarvestInfo().setUuid("huuid" + val);

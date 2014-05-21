@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<geonet>
+  <services package="org.fao.geonet">
+
+    <service name="recordsupdated.csv">
+      <documentation><![CDATA[
+       CSV service for records updated during a period report.
+
+        Parameters:
+        * dateFrom: begin date (yyyy-mm-dd) to filter the metadata change date.
+        * dateTo:  end date (yyyy-mm-dd) to filter the metadata change date.
+        * groups (optional): list of groups identifiers (metadata group owner).
+      ]]></documentation>
+      <class name=".services.reports.ReportUpdatedMetadata"/>
+
+      <output sheet="../xslt/services/reports/reportUpdated-output.xsl" contentType="text/x-csv; charset=UTF-8">
+        <xml name="reports" file="xml/reports.xml" />
+      </output>
+    </service>
+
+    <service name="recordsinternal.csv">
+      <documentation><![CDATA[
+        CSV service for records internal (not published to ALL group) report.
+
+        Parameters:
+        * dateFrom: begin date (yyyy-mm-dd) to filter the metadata create date.
+        * dateTo:  end date (yyyy-mm-dd) to filter the metadata create date.
+        * groups (optional): list of groups identifiers (metadata group owner).
+      ]]></documentation>
+      <class name=".services.reports.ReportInternalMetadata"/>
+
+      <output sheet="../xslt/services/reports/reportInternal-output.xsl" contentType="text/x-csv; charset=UTF-8">
+        <xml name="reports" file="xml/reports.xml" />
+      </output>
+    </service>
+
+    <service name="datauploads.csv">
+      <documentation><![CDATA[
+         CSV service for metadata file uploads report.
+
+        Parameters:
+        * dateFrom: begin date (yyyy-mm-dd) to filter the metadata files upload date.
+        * dateTo:  end date (yyyy-mm-dd) to filter the metadata files upload date.
+        * groups (optional): list of groups identifiers (metadata group owner).
+      ]]></documentation>
+      <class name=".services.reports.ReportDataUploads" />
+
+      <output sheet="../xslt/services/reports/reportDataUploads-output.xsl" contentType="text/x-csv; charset=UTF-8">
+        <xml name="reports" file="xml/reports.xml" />
+      </output>
+    </service>
+
+    <service name="datadownloads.csv">
+      <documentation><![CDATA[
+         CSV service for metadata file downloads report.
+
+        Parameters:
+        * dateFrom: begin date (yyyy-mm-dd) to filter the metadata files download date.
+        * dateTo:  end date (yyyy-mm-dd) to filter the metadata files download date.
+        * groups (optional): list of groups identifiers (metadata group owner).
+      ]]></documentation>
+      <class name=".services.reports.ReportDataDownloads" />
+
+      <output sheet="../xslt/services/reports/reportDataDownloads-output.xsl" contentType="text/x-csv; charset=UTF-8">
+        <xml name="reports" file="xml/reports.xml" />
+      </output>
+    </service>
+
+    <service name="users.csv">
+      <documentation><![CDATA[
+         CSV service for users report.
+
+        Parameters:
+        * dateFrom: begin date (yyyy-mm-dd) to filter the users login date.
+        * dateTo:  end date (yyyy-mm-dd) to filter the users login date.
+        * groups (optional): list of groups identifiers (user groups).
+      ]]></documentation>
+      <class name=".services.reports.ReportUsers"/>
+
+      <output sheet="../xslt/services/reports/reportUsers-output.xsl" contentType="text/x-csv; charset=UTF-8">
+        <xml name="reports" file="xml/reports.xml" />
+      </output>
+    </service>
+  </services>
+</geonet>
+

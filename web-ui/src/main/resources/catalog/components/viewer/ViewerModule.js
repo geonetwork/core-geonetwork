@@ -6,14 +6,20 @@
   goog.require('gn_viewer_service');
   goog.require('gn_wmsimport_directive');
   goog.require('gn_layermanager_directive');
+  goog.require('gn_measure_directive');
+  goog.require('gn_draw_directive');
   goog.require('gn_ows');
+  goog.require('gn_popup');
 
   var module = angular.module('gn_viewer', [
     'gn_viewer_service',
     'gn_viewer_directive',
     'gn_wmsimport_directive',
     'gn_layermanager_directive',
+    'gn_measure_directive',
+    'gn_draw_directive',
     'gn_ows',
+    'gn_popup',
     'gn'
   ]);
 
@@ -21,6 +27,12 @@
     ['$scope', 'gnConfig',
       function($scope, gnConfig) {
         $scope.gnConfig = gnConfig;
+        var bgLayer = new ol.layer.Tile({
+          source: new ol.source.OSM()
+        });
+        bgLayer.displayInLayerManager = false;
+        bgLayer.background = true;
+
         $scope.map = new ol.Map({
           renderer: 'canvas',
           layers: [
@@ -36,9 +48,7 @@
               })
             }),
 */
-            new ol.layer.Tile({
-              source: new ol.source.OSM()
-            })
+            bgLayer
           ],
           target: 'map',
           view: new ol.View2D({

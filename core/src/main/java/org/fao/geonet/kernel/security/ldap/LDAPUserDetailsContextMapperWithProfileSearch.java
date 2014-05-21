@@ -22,6 +22,13 @@
 //==============================================================================
 package org.fao.geonet.kernel.security.ldap;
 
+import jeeves.component.ProfileManager;
+
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.LDAPUser;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.utils.Log;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -34,12 +41,6 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchResult;
-
-import jeeves.component.ProfileManager;
-import org.fao.geonet.utils.Log;
-
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Profile;
 
 /**
  * Get all user information from the LDAP user's attributes excluding profiles
@@ -100,12 +101,17 @@ public class LDAPUserDetailsContextMapperWithProfileSearch extends
                     boolean b = m.matches();
                     if (b) {
                         Profile p = Profile.findProfileIgnoreCase(m.group(1));
+                        if (p == null) {
+                            Log.debug(Geonet.LDAP, "profile is null " + getClass() + ".setProfilesAndPrivileges()");
+                        }
                         if (profileMapping != null) {
-                            Profile mapped = profileMapping.get(p.name());
+                            Profile mapped = profileMapping.get(m.group(1));
                             if (mapped != null) {
                                 p = mapped;
                             }
                         }
+                        Log.debug(Geonet.LDAP, "ldap profileName is " + profileName + ", pattern matched " + m.group(1) + " adding profile " + p.name());
+
                         profileList.add(p);
                     } else {
                         Log.error(Geonet.LDAP, "LDAP profile '" + profileName

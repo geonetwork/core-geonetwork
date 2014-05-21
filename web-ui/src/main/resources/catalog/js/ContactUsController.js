@@ -1,10 +1,10 @@
 (function() {
   goog.provide('gn_contact_us_controller');
 
-  goog.require('gn_share_directive');
+  goog.require('gn_contactus_directive');
 
   var module = angular.module('gn_contact_us_controller',
-      ['gn_share_directive']);
+      ['gn_contactus_directive']);
 
   module.constant('$LOCALES', ['core']);
 

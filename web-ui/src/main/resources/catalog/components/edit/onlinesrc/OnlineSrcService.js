@@ -198,7 +198,7 @@
             fast: false,
             id: gnCurrentEdit.id
           }, {
-            method: 'post',
+            method: 'get',
             headers: {
               'Content-type': 'application/xml'
             }
@@ -219,8 +219,8 @@
          *
          * @param {string} type of the directive that calls it.
          */
-        onOpenPopup: function(type) {
-          openCb[type]();
+        onOpenPopup: function(type, additionalParams) {
+          openCb[type](additionalParams);
         },
 
         /**

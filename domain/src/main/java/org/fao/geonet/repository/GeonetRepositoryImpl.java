@@ -6,6 +6,7 @@ import org.jdom.Element;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
@@ -49,6 +50,7 @@ public class GeonetRepositoryImpl<T extends GeonetEntity, ID extends Serializabl
         updater.apply(entity);
 
         _entityManager.persist(entity);
+        _entityManager.flush();
 
         return entity;
     }
@@ -84,6 +86,7 @@ public class GeonetRepositoryImpl<T extends GeonetEntity, ID extends Serializabl
     }
 
     @Override
+    @Transactional
     public int deleteAll(@Nonnull Specification<T> specification) {
         final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
         final CriteriaDelete<T> criteriaDelete = cb.createCriteriaDelete(_entityClass);

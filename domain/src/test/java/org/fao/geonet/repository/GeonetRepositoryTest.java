@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nullable;
 import javax.persistence.criteria.Path;
@@ -29,13 +28,10 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  * Date: 9/5/13
  * Time: 11:44 AM
  */
-@Transactional
 public class GeonetRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
     MetadataRepository _repo;
-
-    AtomicInteger _inc = new AtomicInteger();
 
     @Test(expected = JpaObjectRetrievalFailureException.class)
     public void testUpdateMetadataBadId() throws Exception {

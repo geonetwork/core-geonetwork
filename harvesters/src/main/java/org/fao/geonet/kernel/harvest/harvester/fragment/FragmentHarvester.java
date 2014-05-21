@@ -40,11 +40,13 @@ import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.Updater;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
+import javax.annotation.Nonnull;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -376,9 +378,14 @@ public class FragmentHarvester extends BaseAligner {
 		int iId = Integer.parseInt(id);
 
         addPrivileges(id, params.privileges, localGroups, dataMan, context, log);
-        addCategories(id, params.categories, localCateg, dataMan, context, log, null);
-	
-		dataMan.setTemplateExt(iId, MetadataType.SUB_TEMPLATE);
+        context.getBean(MetadataRepository.class).update(iId, new Updater<Metadata>() {
+            @Override
+            public void apply(@Nonnull Metadata entity) {
+                addCategories(entity, params.categories, localCateg, context, log, null);
+            }
+        });
+
+        dataMan.setTemplateExt(iId, MetadataType.SUB_TEMPLATE);
 		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(harvestUri));
 		dataMan.indexMetadata(id, false);
 
@@ -561,8 +568,7 @@ public class FragmentHarvester extends BaseAligner {
          addPrivileges(id, params.privileges, localGroups, dataMan, context, log);
 
          metadata.getCategories().clear();
-         metadataRepository.save(metadata);
-         addCategories(id, params.categories, localCateg, dataMan, context, log, null);
+         addCategories(metadata, params.categories, localCateg, context, log, null);
 
          if(doExt) {
              dataMan.setTemplateExt(iId, MetadataType.SUB_TEMPLATE);

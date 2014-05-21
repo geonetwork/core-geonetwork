@@ -14,11 +14,12 @@
    */
   module.directive('gnLayermanager', [
     'gnOwsCapabilities',
-    'gnMap',
+    'gaLayerFilters',
     '$translate',
-    function (gnOwsCapabilities, gnMap, $translate) {
+    function (gnOwsCapabilities, gaLayerFilters, $translate) {
     return {
       restrict: 'A',
+      replace: true,
       templateUrl: '../../catalog/components/viewer/layermanager/' +
         'partials/layermanager.html',
       scope: {
@@ -28,12 +29,14 @@
 
         scope.layers = scope.map.getLayers().getArray();
 
+        scope.layerFilter = gaLayerFilters.selected;
+
         scope.removeLayerFromMap = function(layer) {
-          map.removeLayer(layer);
+          scope.map.removeLayer(layer);
         };
 
         scope.moveLayer = function(layer, delta) {
-          var index = scope.layers.indexOf(layer);
+          var index = scope.filterLayers.indexOf(layer);
           var layersCollection = scope.map.getLayers();
           layersCollection.removeAt(index);
           layersCollection.insertAt(index + delta, layer);

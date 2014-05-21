@@ -54,7 +54,6 @@
         <script src="{$uiResourcesPath}lib/ol-whitespace.js"></script>
         <xsl:if test="$withD3">
           <script src="{$uiResourcesPath}lib/d3.v3.js"></script>
-          <script src="{$uiResourcesPath}lib/d3.ext/gauge.js"></script>
           <script src="{$uiResourcesPath}lib/nv.d3.js"></script>
         </xsl:if>
         
