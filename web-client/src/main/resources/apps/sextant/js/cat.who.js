@@ -48,8 +48,9 @@ cat.who = function() {
 						what.getCatalogueField().getValue() : what.getConfigWhat();
 			};
 			what.getCatalogueField().on('additem', updateOrgList);
-			what.getCatalogueField().on('removeitem', updateOrgList);
-			
+            what.getCatalogueField().on('removeitem', updateOrgList);
+            what.getCatalogueField().on('reset', updateOrgList);
+
 	        var groupField = new Ext.ux.form.SuperBoxSelect({
 	            hideLabel: false,
 	            width: 230,
