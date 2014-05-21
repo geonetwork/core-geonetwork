@@ -775,7 +775,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 }
 
                 for (var i=0; i<requestProp.length; i++) {
-                  if(requestProp[i] != requestProp[i].toUpperCase) {
+                  if(requestProp[i] != requestProp[i].toUpperCase()) {
                     params[requestProp[i]] = params[requestProp[i].toUpperCase()];
                     delete params[requestProp[i].toUpperCase()];
                   }
