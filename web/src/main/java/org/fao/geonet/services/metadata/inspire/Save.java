@@ -416,7 +416,7 @@ public class Save implements Service {
                 Element lastNameEl = new Element("individualLastName", CHE_NAMESPACE).addContent(
                         new Element(EL_CHARACTER_STRING, GCO).setText(contact.getString(JSON_LAST_NAME)));
                 Element roleEl = new Element("role", GMD).addContent(
-                        new Element("CI_RoleCode", GCO).
+                        new Element("CI_RoleCode", GMD).
                                 setAttribute(ATT_CODE_LIST_VALUE, role).
                                 setAttribute(ATT_CODE_LIST, "http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode")
                 );

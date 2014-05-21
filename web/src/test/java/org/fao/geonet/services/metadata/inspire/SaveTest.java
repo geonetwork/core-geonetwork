@@ -250,7 +250,7 @@ public class SaveTest {
         for (Pair<String, String> org : orgs) {
             assertCorrectTranslation(contact, "che:CHE_CI_ResponsibleParty/gmd:organisationName", org.one(), org.two());
         }
-        assertEquals(role, Xml.selectString(contact, "che:CHE_CI_ResponsibleParty/gmd:role/gco:CI_RoleCode/@codeListValue", NS).trim());
+        assertEquals(role, Xml.selectString(contact, "che:CHE_CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue", NS).trim());
 
         isValidatedSharedObject(contact, validated);
     }

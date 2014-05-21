@@ -190,7 +190,7 @@ class SaveServiceTestImpl extends Save {
                 append("        </gmd:CI_Contact>\n").
                 append("      </gmd:contactInfo>\n").
                 append("      <gmd:role>\n").
-                append("        <gco:CI_RoleCode codeListValue=\"").append(role).append("\" ").
+                append("        <gmd:CI_RoleCode codeListValue=\"").append(role).append("\" ").
                 append("                   codeList=\"http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode\" />\n").
                 append("      </gmd:role>\n").
                 append("      <gco:individualFirstName xmlns:gco=\"http://www.geocat.ch/2008/che\">\n").
