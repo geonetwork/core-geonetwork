@@ -358,7 +358,9 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         					: 
         					false,
             status = this.record.get('status'),
-            disableIfSubmittedForEditor = (status == 4 && this.catalogue.identifiedUser.role === 'Editor' ? true : false),
+            // sextant v5 specific (myocean workflow)
+            statusRestriction = ((status == 4 || status == 2 || status == 3)
+                && this.catalogue.identifiedUser.role === 'Editor' ? true : false),
             isHarvested = this.record.get('isharvested') === 'y' ? true : false,
             isPublished = this.record.get('isPublishedToAll') === 'true' ? true : false,
             isAdmin = (this.catalogue.identifiedUser && this.catalogue.identifiedUser.role !== 'Administrator'),
@@ -416,12 +418,17 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         this.adminMenuSeparator.setVisible(identified);
         
         /* Actions status depend on records */
+        // sextant v5 specific (myocean workflow)
         if(GeoNetwork.Settings && GeoNetwork.Settings.editor && GeoNetwork.Settings.editor.disableIfSubmittedForEditor) {
-            this.extEditorAction.setDisabled(disableIfSubmittedForEditor || !isEditable || isReadOnly);
-            this.angularEditorAction.setDisabled(disableIfSubmittedForEditor || !isEditable || isReadOnly);
+            this.extEditorAction.setDisabled(statusRestriction || !isEditable || isReadOnly);
+            this.angularEditorAction.setDisabled(statusRestriction || !isEditable || isReadOnly);
+            this.statusAction.setDisabled(statusRestriction || (!isEditable && !isHarvested) || isReadOnly);
+            this.deleteAction.setDisabled((!isEditable && !isHarvested) || isReadOnly || statusRestriction);
         } else {
             this.extEditorAction.setDisabled(!isEditable || isReadOnly);
             this.angularEditorAction.setDisabled(!isEditable || isReadOnly);
+            this.statusAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
+            this.deleteAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
         }
         this.adminAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
         
@@ -436,12 +443,9 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             this.publicationToggleAction.setText(OpenLayers.i18n('publish'));
         }
         
-        
-        this.statusAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
         this.enableWorkflowAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
         this.versioningAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
         this.categoryAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
-        this.deleteAction.setDisabled((!isEditable && !isHarvested) || isReadOnly);
         this.duplicateAction.setDisabled(isReadOnly);
         this.createChildAction.setDisabled(!isEditable || isReadOnly);
 
