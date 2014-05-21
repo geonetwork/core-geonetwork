@@ -67,7 +67,7 @@ public class XmlSerializerTest {
 		}
 
 		@Override
-		public Element select(Dbms dbms, String table, String id)
+		public Element select(Dbms dbms, String table, String id, ServiceContext context)
 				throws Exception {
 			throw new UnsupportedOperationException();
 		}

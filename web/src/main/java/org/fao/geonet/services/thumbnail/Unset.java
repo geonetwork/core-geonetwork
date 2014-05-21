@@ -76,7 +76,7 @@ public class Unset extends NotInReadOnlyModeService {
 		if (version != null && !dataMan.getVersion(id).equals(version))
 			throw new ConcurrentUpdateEx(id);
 
-		Element result = dataMan.getThumbnails(dbms, id);
+		Element result = dataMan.getThumbnails(dbms, id, context);
 
 		if (result == null)
 			throw new OperationAbortedEx("Metadata not found", id);
@@ -126,7 +126,7 @@ public class Unset extends NotInReadOnlyModeService {
 
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 		
-		Element result = dataMan.getThumbnails(dbms, id);
+		Element result = dataMan.getThumbnails(dbms, id, context);
 		
 		if (result == null)
 			throw new OperationAbortedEx("Metadata not found", id);

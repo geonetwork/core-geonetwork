@@ -102,14 +102,6 @@ public final class Processor {
   /**
     * Detach all XLinks child of the input XML document.
     */
-	public static Element detachXLink(Element xml) {
-		return detachXLink(xml, null);
-	}
-
-	//--------------------------------------------------------------------------
-  /**
-    * Detach all XLinks child of the input XML document.
-    */
 	public static Element detachXLink(Element xml, ServiceContext srvContext) {
 		searchXLink(xml, ACTION_DETACH, srvContext);
 		searchLocalXLink(xml, ACTION_DETACH);

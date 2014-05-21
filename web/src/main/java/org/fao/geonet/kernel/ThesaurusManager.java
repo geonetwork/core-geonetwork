@@ -27,8 +27,10 @@ import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import jeeves.server.resources.ResourceManager;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.UserSession;
 import jeeves.utils.Util;
 import jeeves.xlink.Processor;
+import jeeves.guiservices.session.JeevesUser;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -155,7 +157,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 					Thread.sleep(10000); // sleep 10 seconds
 				}
 				try {
-					initThesauriTable(thesauriDir);
+					initThesauriTable(thesauriDir, context);
 				} catch (Exception e) {
 					Log.error(Geonet.THESAURUS_MAN, "Error rebuilding thesaurus table : "+e.getMessage()+"\n"+ Util.getStackTrace(e));
 				} 
@@ -170,7 +172,10 @@ public class ThesaurusManager implements ThesaurusFinder {
 	 * 
 	 * @param thesauriDirectory
 	 */
-	private void initThesauriTable(File thesauriDirectory) {
+	private void initThesauriTable(File thesauriDirectory, ServiceContext context) {
+		UserSession session = new UserSession();
+		session.loginAs(new JeevesUser(context.getProfileManager()).setUsername("admin").setId("-1").setProfile(Geonet.Profile.ADMINISTRATOR));
+		context.setUserSession(session);
 
 		thesauriMap = new ConcurrentHashMap<String,Thesaurus>();
 		Log.info(Geonet.THESAURUS_MAN,"Scanning "+thesauriDirectory);
@@ -183,7 +188,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 				File[] rdfDataDirectory = externalThesauriDirectory.listFiles();
                 for (File aRdfDataDirectory : rdfDataDirectory) {
                     if (aRdfDataDirectory.isDirectory()) {
-                        loadRepositories(aRdfDataDirectory, Geonet.CodeList.EXTERNAL);
+                        loadRepositories(aRdfDataDirectory, Geonet.CodeList.EXTERNAL, context);
                     }
                 }
 			}
@@ -195,7 +200,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 				File[] rdfDataDirectory = localThesauriDirectory.listFiles();
                 for (File aRdfDataDirectory : rdfDataDirectory) {
                     if (aRdfDataDirectory.isDirectory()) {
-                        loadRepositories(aRdfDataDirectory, Geonet.CodeList.LOCAL);
+                        loadRepositories(aRdfDataDirectory, Geonet.CodeList.LOCAL, context);
                     }
                 }
 			}
@@ -207,7 +212,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 				File[] rdfDataDirectory = registerThesauriDirectory.listFiles();
                 for (File aRdfDataDirectory : rdfDataDirectory) {
                     if (aRdfDataDirectory.isDirectory()) {
-                        loadRepositories(aRdfDataDirectory, Geonet.CodeList.REGISTER);
+                        loadRepositories(aRdfDataDirectory, Geonet.CodeList.REGISTER, context);
                     }
                 }
 			}
@@ -218,7 +223,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 	 * 
 	 * @param thesauriDirectory
 	 */
-	private void loadRepositories(File thesauriDirectory, String root) {
+	private void loadRepositories(File thesauriDirectory, String root, ServiceContext context) {
 		
 		FilenameFilter filter = new FilenameFilter() {
 			public boolean accept(File dir, String name) {
@@ -239,7 +244,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 							String uuid = StringUtils.substringBefore(aRdfDataFile,".rdf");
 							try {
 								FileOutputStream outputRdfStream = new FileOutputStream(outputRdf);
-								getRegisterMetadataAsRdf(uuid, outputRdfStream);					
+								getRegisterMetadataAsRdf(context, uuid, outputRdfStream, true);					
 								outputRdfStream.close();
 							} catch (Exception e) {
 								Log.error(Geonet.THESAURUS_MAN, "Register thesaurus "+aRdfDataFile+" could not be read/converted from ISO19135 record in catalog - skipping");
@@ -266,10 +271,13 @@ public class ThesaurusManager implements ThesaurusFinder {
 	/**	
 	 * Get ISO19135 Register Metadata from catalog and convert to rdf.   
 	 * 
+	 * @param context Service Context
 	 * @param uuid Uuid of register (ISO19135) metadata record describing thesaurus
 	 * @param os OutputStream to write rdf to from XSLT conversion
+	 * @param startUp if true then extract metadata without permissions - used
+	 * on startup of catalogue
 	 */
-	private void getRegisterMetadataAsRdf(String uuid, OutputStream os) throws Exception {
+	private void getRegisterMetadataAsRdf(ServiceContext context, String uuid, OutputStream os, boolean startUp) throws Exception {
 
 
 		Dbms dbms = null;
@@ -278,8 +286,14 @@ public class ThesaurusManager implements ThesaurusFinder {
 			dbms = (Dbms) rm.openDirect(Geonet.Res.MAIN_DB);
 
 			String id = dm.getMetadataId(dbms, uuid);
-			Element md = dm.getMetadata(dbms, id);
-			Processor.detachXLink(md);
+			Element md;
+			if (startUp) {
+				// if startup then don't worry about permissions
+				md = dm.getMetadataIgnorePermissions(dbms, id);
+			} else {
+				md = dm.getMetadata(dbms, id);
+			}
+			Processor.detachXLink(md, context);
 			MdInfo mdInfo = dm.getMetadataInfo(dbms, id);
 			Element env = Lib.prepareTransformEnv(mdInfo.uuid, mdInfo.changeDate, "", dm.getSiteURL(), "");
 	
@@ -408,7 +422,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 	 * @param type Type of thesaurus (theme, etc)
 	 * @return id of thesaurus created/updated
 	 */
-	public String createUpdateThesaurusFromRegister(String uuid, String type) throws Exception {
+	public String createUpdateThesaurusFromRegister(ServiceContext context, String uuid, String type) throws Exception {
 
 		String aRdfDataFile;
 		String root = Geonet.CodeList.REGISTER;
@@ -421,7 +435,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 
 		try {
 			FileOutputStream outputRdfStream = new FileOutputStream(outputRdf);
-			getRegisterMetadataAsRdf(uuid, outputRdfStream);
+			getRegisterMetadataAsRdf(context, uuid, outputRdfStream, false);
 			outputRdfStream.close();
 		} catch (Exception e) {
 			Log.error(Geonet.THESAURUS_MAN, "Register thesaurus "+aRdfDataFile+" could not be read/converted from ISO19135 record in catalog - skipping");

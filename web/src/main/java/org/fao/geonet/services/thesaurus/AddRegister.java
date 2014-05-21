@@ -64,7 +64,7 @@ public class AddRegister extends NotInReadOnlyModeService {
 		ThesaurusManager tm = gc.getThesaurusManager();
 		
 
-		String theKey = tm.createUpdateThesaurusFromRegister(uuid, type);
+		String theKey = tm.createUpdateThesaurusFromRegister(context, uuid, type);
 
 		Thesaurus gst = tm.getThesaurusByName(theKey);
 		String fname = gst.getFname();
