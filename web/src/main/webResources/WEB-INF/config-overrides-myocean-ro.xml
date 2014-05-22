@@ -116,7 +116,7 @@
       </service>
       <service name="csw-MYOCEAN-SPECIFIC-CORE">
         <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_cat::MYOCEAN-SPECIFIC-CORE"/>
+          <param name="filter" value="+_cat:MYOCEAN-SPECIFIC-CORE"/>
         </class>
       </service>
       <service name="csw-MYOCEAN-UPSTREAM-PRODUCTS">
