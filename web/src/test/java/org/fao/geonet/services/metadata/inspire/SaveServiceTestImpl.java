@@ -184,7 +184,7 @@ class SaveServiceTestImpl extends Save {
                 append("          <gmd:address>\n").
                 append("            <che:CHE_CI_Address ").
                 append("gco:isoType=\"gmd:CI_Address\">\n").
-                append("              <gmd:electronicMailAddress>").append(email).append("</gmd:electronicMailAddress>\n").
+                append("              <gmd:electronicMailAddress><gco:CharacterString>").append(email).append("</gco:CharacterString></gmd:electronicMailAddress>\n").
                 append("            </che:CHE_CI_Address>\n").
                 append("          </gmd:address>\n").
                 append("        </gmd:CI_Contact>\n").

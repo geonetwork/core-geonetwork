@@ -268,18 +268,21 @@ public class Save implements Service {
         }
 
         final String requiredInfoTagName;
+        final String isoType;
         final String jsonType = identificationJson.getString(JSON_IDENTIFICATION_TYPE);
         if (jsonType.equalsIgnoreCase("data")) {
             requiredInfoTagName = "CHE_MD_DataIdentification";
+            isoType = "gmd:MD_DataIdentification";
         } else {
             requiredInfoTagName = "CHE_SV_ServiceIdentification";
+            isoType = "srv:SV_ServiceIdentification";
         }
 
         Element finalInfo;
         if (!identificationInfo.getChildren().isEmpty()) {
             finalInfo = (Element) identificationInfo.getChildren().get(0);
         } else {
-            finalInfo = new Element(requiredInfoTagName, CHE_NAMESPACE);
+            finalInfo = new Element(requiredInfoTagName, CHE_NAMESPACE).setAttribute("isoType", isoType, GCO);
             identificationInfo.addContent(finalInfo);
         }
 
@@ -409,7 +412,9 @@ public class Save implements Service {
                     contactEl.addContent(resolveXlink(context, xlinkHref));
                 }
 
-                Element emailEl = new Element("electronicMailAddress", GMD).setText(contact.getString(JSON_CONTACT_EMAIL));
+                Element emailEl = new Element("electronicMailAddress", GMD).addContent(
+                        new Element("CharacterString", GCO).setText(contact.getString(JSON_CONTACT_EMAIL))
+                );
 
                 Element firstNameEl = new Element("individualFirstName", CHE_NAMESPACE).addContent(
                         new Element(EL_CHARACTER_STRING, GCO).setText(contact.getString(JSON_FIRST_NAME)));

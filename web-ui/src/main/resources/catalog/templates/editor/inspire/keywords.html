@@ -1,0 +1,62 @@
+<div data-ng-controller="InspireKeywordController">
+    <div id="editKeywordModal" tabindex="-1" class="modal fade" >
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" data-ng-translate="">descriptiveKeyword</h4>
+                </div>
+                <div class="modal-body">
+                    <input class="form-control" type="search"
+                           placeholder="{{'search' | translate}}" ng-model="keywordSearch.$"/>
+                    <div class="list-group well">
+                        <a class="list-group-item"
+                           data-ng-repeat="keyword in keywords[data.identification.type] | filter:keywordSearch:strict"
+                           data-ng-class="selectedKeyword === keyword ? 'active' : ''"
+                           data-ng-click="selectKeyword(keyword)">
+                            {{keyword.words[lang]}}
+                        </a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-ng-translate="">cancel</button>
+                    <button type="button" class="btn btn-primary" data-ng-translate=""
+                            data-ng-disabled="!selectedKeyword.uri"
+                            data-ng-click="linkToOtherKeyword()">update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-xs-3 control-label"><span data-translate="">descriptiveKeyword</span>: </label>
+        <div class="table-responsive col-xs-9">
+            <table class="table table-condensed">
+                <tr data-ng-class="$first ? '' : 'col-xs-offset-3'"
+                    data-ng-repeat="keyword in data.identification.descriptiveKeywords">
+                    <td width="98%">
+                        <div data-inspire-multilingual-text
+                             data-rows="1"
+                             data-disabled="true"
+                             data-main-lang="data.language"
+                             data-languages="data.otherLanguages"
+                             data-field="keyword.words"/>
+                    </td>
+                    <td width="24px">
+                        <a class="inspire-input-group" data-ng-click="editKeyword(keyword)">
+                            <i class="fa fa-edit fa-fw"></i>
+                        </a>
+                    </td>
+                    <td width="24px">
+                        <a class="inspire-input-group"
+                           data-ng-hide="data.identification.descriptiveKeywords.length == 1"
+                           style="color: red"
+                           data-ng-click="deleteFromArray(data.identification.descriptiveKeywords, keyword)">
+                            <i class="fa fa-times fa-fw"></i>
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

@@ -36,6 +36,7 @@ import java.util.regex.Pattern;
 import javax.servlet.ServletContext;
 
 import static org.fao.geonet.Assert.getWebappDir;
+import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
 import static org.fao.geonet.kernel.search.spatial.Pair.read;
 import static org.junit.Assert.assertEquals;
@@ -45,7 +46,7 @@ import static org.junit.Assert.fail;
 
 public class SaveTest {
     private static final List<Namespace> NS = Arrays.asList(
-            Geonet.Namespaces.GCO,
+            GCO,
             GMD,
             Geonet.Namespaces.XLINK,
             Namespace.getNamespace("che", "http://www.geocat.ch/2008/che"));
@@ -124,8 +125,8 @@ public class SaveTest {
                 "gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode[@codeListValue = 'eng']/@codeListValue", NS), "eng");
         final Element identification = Xml.selectElement(testMetadata, "gmd:identificationInfo/che:CHE_MD_DataIdentification", NS);
         assertNotNull(identification);
-        assertCorrectTranslation(identification, "gmd:citation/gmd:CI_Citation/gmd:title", "eng", "Title");
-        assertCorrectTranslation(identification, "gmd:citation/gmd:CI_Citation/gmd:title", "fre", "Titre");
+        assertEquals("gmd:MD_DataIdentification", identification.getAttributeValue("isoType", GCO));
+        assertCorrectTranslation(identification, "gmd:citation/gmd:CI_Citation/gmd:title", read("eng", "Title"), read("fre", "Titre"));
 
         assertEquals(Xml.selectString(identification,
                 "gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/gco:Date", NS), "2008-06-23");
@@ -135,7 +136,7 @@ public class SaveTest {
         assertEquals(Xml.selectString(identification,
                 "gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString", NS), "Citation Identifier");
 
-        assertCorrectTranslation(identification, "gmd:abstract", "fre", "Abstract");
+        assertCorrectTranslation(identification, "gmd:abstract", read("eng", "Abstract EN"), read("fre", "Abstract FR"));
 
 
         final List<?> pointOfContact = Xml.selectNodes(identification, "gmd:pointOfContact", NS);
@@ -228,16 +229,25 @@ public class SaveTest {
         isValidatedSharedObject(obj, validated);
     }
 
-    private void assertCorrectTranslation(Element metadata, String xpath, String lang, String expectedValue) throws JDOMException {
+    private void assertCorrectTranslation(Element metadata, String xpath, Pair<String, String>... expectedValue) throws JDOMException {
         Map<String, String> langMap = Maps.newHashMap();
         langMap.put("eng", "#EN");
         langMap.put("fre", "#FR");
         langMap.put("ger", "#DE");
         langMap.put("ita", "#IT");
 
-        assertTrue(langMap.containsKey(lang));
-        assertEquals("Wrong translation for language: " + lang, expectedValue, Xml.selectString(metadata,
-                xpath + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='" + langMap.get(lang) + "']", NS).trim());
+        int numTranslations = Xml.selectNodes(metadata, xpath + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString").size();
+        assertEquals(expectedValue.length, numTranslations);
+
+        for (Pair<String, String> pair : expectedValue) {
+            String lang = pair.one();
+            assertTrue(langMap.containsKey(lang));
+            String translation = pair.two();
+
+            assertEquals("Wrong translation for language: " + lang, translation, Xml.selectString(metadata,
+                    xpath + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='" + langMap.get(lang) + "']", NS).trim());
+
+        }
     }
 
     private void assertContact(Element contact, String name, String surname, String email, String role,
@@ -246,10 +256,10 @@ public class SaveTest {
         assertEquals(name, Xml.selectString(contact, "che:CHE_CI_ResponsibleParty/che:individualFirstName", NS).trim());
         assertEquals(surname, Xml.selectString(contact, "che:CHE_CI_ResponsibleParty/che:individualLastName", NS).trim());
         assertEquals(email, Xml.selectString(contact, "che:CHE_CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/" +
-                                                      "che:CHE_CI_Address/gmd:electronicMailAddress", NS).trim());
-        for (Pair<String, String> org : orgs) {
-            assertCorrectTranslation(contact, "che:CHE_CI_ResponsibleParty/gmd:organisationName", org.one(), org.two());
-        }
+                                                      "che:CHE_CI_Address/gmd:electronicMailAddress/gco:CharacterString", NS).trim());
+
+        assertCorrectTranslation(contact, "che:CHE_CI_ResponsibleParty/gmd:organisationName", orgs);
+
         assertEquals(role, Xml.selectString(contact, "che:CHE_CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue", NS).trim());
 
         isValidatedSharedObject(contact, validated);

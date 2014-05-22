@@ -1,0 +1,189 @@
+<div data-ng-controller="InspireConstraintsController">
+<!--  Legal Constraints --->
+    <fieldset>
+        <legend data-translate="">legalConstraints</legend>
+        <div class="form-group">
+            <div class="table-responsive col-xs-12">
+                <table class="table table-condensed">
+                    <tr data-ng-class="$first ? '' : ['col-xs-offset-3', 'indent-1em']"
+                        data-ng-repeat="legal in data.constraints.legal">
+                        <td data-ng-class="$first ? 'no-border-top' : ''">
+                            <div class="form-group">
+                                <label class="col-xs-3 control-label"><span data-translate="">accessConstraint</span>: </label>
+
+                                <div class="col-xs-9">
+                                    <select class="form-control" data-ng-model="legal.accessConstraint"
+                                            data-ng-change="addOtherConstraintIfRequired(legal)"
+                                            data-ng-options="opt for opt in data.constraintOptions">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-3 control-label"><span data-translate="">useConstraint</span>: </label>
+
+                                <div class="col-xs-9">
+                                    <select class="form-control" data-ng-model="legal.useConstraint"
+                                            data-ng-options="opt for opt in data.constraintOptions">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="table-responsive col-xs-12">
+                                <table class="table table-condensed">
+                                    <tr data-ng-repeat="other in legal.otherConstraints">
+                                        <td data-ng-class="'no-border-top'">
+                                        <div
+                                             data-ng-class="$first ? '' : ['col-xs-offset-3', 'indent-1em']">
+                                            <div data-inspire-multilingual-text
+                                                 data-title="{{$first ? 'otherConstraints' : ''}}"
+                                                 data-rows="1"
+                                                 data-main-lang="data.language"
+                                                 data-languages="data.otherLanguages"
+                                                 data-field="other"/>
+                                        </div>
+                                        </td>
+                                        <td width="24px" data-ng-class="'no-border-top'">
+                                            <a class="inspire-input-group"
+                                               data-ng-hide="legal.otherConstraints.length === 1 && legal.accessConstraint === 'otherRestrictions'"
+                                               style="color: red"
+                                               data-ng-click="deleteFromArray(legal.otherConstraints, other)">
+                                                <i class="fa fa-times fa-fw"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="table-responsive col-xs-12">
+                                <table class="table table-condensed">
+                                    <tr data-ng-repeat="limitation in legal.useLimitations">
+                                        <td data-ng-class="'no-border-top'">
+                                            <div data-ng-class="$first ? '' : ['col-xs-offset-3', 'indent-1em']">
+                                                <div data-inspire-multilingual-text
+                                                     data-title="{{ $first ? 'useLimitations': ''}}"
+                                                     data-rows="1"
+                                                     data-main-lang="data.language"
+                                                     data-languages="data.otherLanguages"
+                                                     data-field="limitation"/>
+                                            </div>
+                                        </td>
+                                        <td width="24px" data-ng-class="'no-border-top'">
+                                            <a class="inspire-input-group" style="color: red"
+                                               data-ng-click="deleteFromArray(legal.useLimitations, limitation)">
+                                                <i class="fa fa-times fa-fw"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="table-responsive col-xs-12">
+                                <table class="table table-condensed">
+                                    <tr data-ng-repeat="legislation in legal.legislationConstraints">
+                                        <td data-ng-class="'no-border-top'">
+                                            <div data-ng-class="$first ? '' : ['col-xs-offset-3', 'indent-1em']">
+                                                <div data-inspire-multilingual-text
+                                                     data-title="{{$first ? 'legislationConstraints' : ''}}"
+                                                     data-rows="1"
+                                                     data-main-lang="data.language"
+                                                     data-languages="data.otherLanguages"
+                                                     data-field="legislation"/>
+                                            </div>
+                                        </td>
+                                        <td width="24px" data-ng-class="'no-border-top'">
+                                            <a class="inspire-input-group" style="color: red"
+                                               data-ng-click="deleteFromArray(legal.legislationConstraints, legislation)">
+                                                <i class="fa fa-times fa-fw"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                        <td width="24px" data-ng-class="$first ? 'no-border-top' : ''">
+                            &NonBreakingSpace;
+                        </td>
+                        <td width="24px" data-ng-class="$first ? 'no-border-top' : ''">
+                            <a class="inspire-input-group" data-ng-hide="data.constraints.legal.length == 1" style="color: red"
+                               data-ng-click="deleteFromArray(data.constraints.legal, legal)">
+                                <i class="fa fa-times fa-fw"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </fieldset>
+    <!--  END Legal Constraints --->
+
+    <!--  Generic Constraints --->
+    <fieldset data-ng-show="data.constraints.generic.length > 0">
+        <legend data-translate="">Constraints</legend>
+        <div class="form-group">
+
+            <div class="table-responsive col-xs-12">
+                <table class="table table-condensed">
+                    <tr data-ng-repeat="generic in data.constraints.generic">
+                        <td data-ng-class="$first ? 'no-border-top' : ''">
+                            <div data-ng-repeat="limitation in generic.useLimitations"
+                                 data-ng-class="$first ? '' : ['col-xs-offset-3', 'indent-1em']">
+                                <div data-inspire-multilingual-text
+
+                                     data-title="{{ $first ? 'useLimitations': ''}}"
+                                     data-rows="1"
+                                     data-main-lang="data.language"
+                                     data-languages="data.otherLanguages"
+                                     data-disabled="true"
+                                     data-field="limitation"/>
+                                </div>
+                        </td>
+                        <td width="24px" data-ng-class="$first ? 'no-border-top' : ''">
+                            &NonBreakingSpace;
+                        </td>
+                        <td width="24px" data-ng-class="$first ? 'no-border-top' : ''">
+                            <a class="inspire-input-group" style="color: red"
+                               data-ng-click="deleteFromArray(data.constraints.generic, generic)">
+                                <i class="fa fa-times fa-fw"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </fieldset>
+    <!--  END Generic Constraints --->
+
+    <!--  Security Constraints --->
+    <fieldset data-ng-show="data.constraints.security.length > 0">
+        <legend data-translate="">securityConstraints</legend>
+        <div class="form-group">
+
+            <div class="table-responsive col-xs-12">
+                <table class="table table-condensed">
+                    <tr data-ng-repeat="security in data.constraints.security">
+                        <td data-ng-class="$first ? 'no-border-top' : ''">
+                            <div data-ng-repeat="limitation in security.useLimitations"
+                                 data-ng-class="$first ? '' : ['col-xs-offset-3', 'indent-1em']">
+                                <div data-inspire-multilingual-text
+
+                                     data-title="{{ $first ? 'useLimitations': ''}}"
+                                     data-rows="1"
+                                     data-main-lang="data.language"
+                                     data-languages="data.otherLanguages"
+                                     data-disabled="true"
+                                     data-field="limitation"/>
+                                </div>
+                        </td>
+                        <td width="24px" data-ng-class="$first ? 'no-border-top' : ''">
+                            &NonBreakingSpace;
+                        </td>
+                        <td width="24px" data-ng-class="$first ? 'no-border-top' : ''">
+                            <a class="inspire-input-group" style="color: red"
+                               data-ng-click="deleteFromArray(data.constraints.security, security)">
+                                <i class="fa fa-times fa-fw"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </fieldset>
+    <!--  END Security Constraints --->
+</div>

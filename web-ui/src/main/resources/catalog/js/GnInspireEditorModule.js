@@ -105,8 +105,8 @@
         var modal = $('#editContactModal');
         modal.modal('show');
       };
-      $scope.deleteContact = function(model, contactToRemove) {
-        var i = model.indexOf(contactToRemove);
+      $scope.deleteFromArray = function(model, elemToRemove) {
+        var i = model.indexOf(elemToRemove);
         if (i > -1) {
           model.splice(i, 1);
         }
@@ -143,13 +143,6 @@
           var categories = $scope.data.identification.topicCategory;
           var newCategory = $scope.data.topicCategoryOptions[$('#' + selectId).val()];
           categories[index] = newCategory;
-        }
-      };
-      $scope.deleteTopicCategory = function(category) {
-        var categories = $scope.data.identification.topicCategory;
-        var index = categories.indexOf(category);
-        if (index > -1) {
-          categories.splice (index, 1);
         }
       };
   }]);
@@ -207,10 +200,6 @@
         var modal = $('#editExtentModal');
         modal.modal('show');
       };
-      $scope.deleteExtent = function(extent) {
-        var extents = $scope.data.identification.extents;
-        extents.splice(extents.indexOf(extent), 1);
-      };
 
       $scope.selectExtent = function (extent) {
         $scope.selectedExtent = extent;
@@ -230,5 +219,55 @@
 
       }
     }]);
+
+  module.controller('InspireConstraintsController', [
+    '$scope','$translate', function($scope, $translate) {
+      $scope.$watch('data.constraints.legal', function(newValue) {
+        if (newValue.length == 0) {
+          newValue.push({
+            accessConstraint: 'copyright',
+            useConstraint: 'copyright',
+            otherConstraints: [],
+            legislationConstraints: []
+          });
+        }
+      });
+      $scope.addOtherConstraintIfRequired = function(legalConstraint) {
+        if (legalConstraint.accessConstraint === 'otherRestrictions' && legalConstraint.otherConstraints.length == 0) {
+          var otherConstraint = {};
+          otherConstraint[$scope.data.language] = '';
+          legalConstraint.otherConstraints.push(otherConstraint);
+        } else if (legalConstraint.accessConstraint !== 'otherRestrictions') {
+          var toRemove = [];
+          for (var i = 0; i < legalConstraint.otherConstraints.length; i++) {
+            var otherConstraint = legalConstraint.otherConstraints[i];
+            var remove = otherConstraint[$scope.data.language].trim().length == 0;
+            for (var j = 0; j < $scope.data.otherLanguages.length; j++) {
+              var lang = $scope.data[j];
+              if (otherConstraint[$scope.data.language].trim().length == 0) {
+                remove = false;
+                break;
+              }
+            }
+
+            if (remove) {
+              toRemove.push(otherConstraint);
+            }
+          }
+
+          for (var i = 0; i < toRemove.length; i++) {
+            $scope.deleteFromArray(legalConstraint.otherConstraints, toRemove[i])
+          }
+        }
+      };
+      $scope.$watchCollection('data.constraints.legal', function(newValue) {
+        for (var i = 0; i < newValue.length; i++) {
+          $scope.addOtherConstraintIfRequired(newValue[i]);
+        }
+      });
+
+
+}]);
+
 
 })();

@@ -1,0 +1,78 @@
+<div data-ng-controller="InspireExtentController">
+    <div id="editExtentModal" tabindex="-1" class="modal fade" >
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" data-ng-translate="">extent</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <input class="form-control" type="search"
+                               placeholder="{{'search' | translate}}"
+                               ng-keyup="$event.preventDefault(); ($event.keyCode == 13 && (extentSearch && extentSearch.length > 2) ? searchExtents(extentSearch) : null)"
+                               ng-model="extentSearch"/>
+
+                        <a id="extentSearchButton" class="input-group-addon"
+                           data-ng-class="(extentSearch && extentSearch.length > 2) ? 'extent-search-enabled' : 'extent-search-disabled'"
+                           data-ng-click="searchExtents(extentSearch)">
+                            <i class="fa fa-search fa-fw"></i>
+                        </a>
+                    </div>
+                    <div class="list-group well" data-ng-show="extents && extents.length > 0">
+                        <a class="list-group-item"
+                           data-ng-repeat="extent in extents"
+                           data-ng-class="selectedExtent === extent ? 'active' : ''"
+                           data-ng-click="selectExtent(extent)">
+                            <img data-ng-src="{{extentImgSrc(50, extent)}}" />
+                            {{extent.description[lang]}}
+                        </a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-ng-translate="">cancel</button>
+                    <button type="button" class="btn btn-primary" data-ng-translate=""
+                            data-ng-disabled="!selectedExtent.geom"
+                            data-ng-click="linkToOtherExtent()">update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label class="col-xs-3 control-label"><span data-translate="">extent</span>: </label>
+        <div class="table-responsive col-xs-9">
+            <table class="table table-condensed">
+                <tr style="padding-bottom: 2em"
+                    data-ng-class="$first ? '' : 'col-xs-offset-3'"
+                    data-ng-repeat="extent in data.identification.extents">
+                    <td>
+                        <div data-inspire-multilingual-text
+                             data-rows="3"
+                             data-disabled="true"
+                             data-main-lang="data.language"
+                             data-languages="data.otherLanguages"
+                             data-field="extent.description"/>
+                    </td>
+                    <td width="200px">
+                        <img data-ng-if="extent && extent.geom" data-ng-src="{{extentImgSrc(200, extent)}}">
+                    </td>
+                    <td width="24px">
+                        <a class="inspire-input-group" data-ng-click="editExtent(extent)">
+                            <i class="fa fa-edit fa-fw"></i>
+                        </a>
+                    </td>
+                    <td width="24px">
+                        <a data-ng-hide="data.identification.extents.length == 1"
+                           class="inspire-input-group"
+                           style="color: red"
+                           data-ng-click="deleteFromArray(data.identification.extents, extent)">
+                            <i class="fa fa-times fa-fw"></i>
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
