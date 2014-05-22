@@ -106,7 +106,7 @@
       </service>
       <service name="csw-MYOCEAN-INTERMEDIATE-PRODUCTS">
         <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_groupPublished:MYOCEAN-INTERMEDIATE-PRODUCTS"/>
+          <param name="filter" value="+_cat:MYOCEAN-INTERMEDIATE-PRODUCTS"/>
         </class>
       </service>
       <service name="csw-MYOCEAN-SERVICES-AND-DATASETS">
@@ -116,7 +116,7 @@
       </service>
       <service name="csw-MYOCEAN-SPECIFIC-CORE">
         <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_groupPublished:MYOCEAN-SPECIFIC-CORE"/>
+          <param name="filter" value="+_cat::MYOCEAN-SPECIFIC-CORE"/>
         </class>
       </service>
       <service name="csw-MYOCEAN-UPSTREAM-PRODUCTS">
