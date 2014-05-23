@@ -113,10 +113,12 @@
       };
 
       $scope.saveMetadata = function(editTab) {
+        var data = JSON.stringify($scope.data)
         return $http({
           method: 'POST',
-          url: $scope.url + "inspire.edit.save?id=" + mdId,
-          params: {id: mdId, data: $scope.data}
+          url: $scope.url + "inspire.edit.save",
+          data: 'id=' + mdId + '&data=' + data,
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).success(function (data, status, headers, config, statusText) {
           if (editTab) {
             allowUnload = true;
@@ -222,7 +224,38 @@
 
   module.controller('InspireConstraintsController', [
     '$scope','$translate', function($scope, $translate) {
-      $scope.$watch('data.constraints.legal', function(newValue) {
+      var countProperties = function(propertyName) {
+        var legal, i, count;
+        var legalConstraints = $scope.data.constraints.legal;
+
+        count = 0;
+        for (i = 0; i < legalConstraints.length; i++) {
+          legal = legalConstraints[i];
+          count += legal[propertyName].length;
+        }
+        return count;
+      };
+
+      $scope.propertyCount = {
+        accessConstraints: 0,
+        useConstraints: 0,
+        updateAccessConstraints: function() {
+          $scope.propertyCount.accessConstraints = countProperties('accessConstraints');
+          if ($scope.propertyCount.accessConstraints === 0) {
+            $scope.data.constraints.legal[0].accessConstraints = ['copyright'];
+            $scope.propertyCount.accessConstraints = 1;
+          }
+        },
+        updateUseConstraints: function() {
+          $scope.propertyCount.useConstraints = countProperties('useConstraints');
+          if ($scope.propertyCount.useConstraints === 0) {
+            $scope.data.constraints.legal[0].useConstraints = ['copyright'];
+            $scope.propertyCount.useConstraints = 1;
+          }
+        }
+      };
+
+      $scope.$watchCollection('data.constraints.legal', function(newValue) {
         if (newValue.length == 0) {
           newValue.push({
             accessConstraints: ['copyright'],
@@ -231,6 +264,9 @@
             legislationConstraints: []
           });
         }
+
+        $scope.propertyCount.updateAccessConstraints();
+        $scope.propertyCount.updateUseConstraints();
       });
       $scope.hasOtherRestrictions = function(legalConstraint) {
         for (var x = 0; x < legalConstraint.accessConstraints.length; x++) {
@@ -240,10 +276,9 @@
         }
         return false;
       };
+    }]);
 
-}]);
-
-  module.controller('InspireLegalConstraintController', [
+  module.controller('InspireAccessConstraintController', [
     '$scope','$translate', function($scope) {
 
       $scope.$watch('accessConstraint', function() {
@@ -276,8 +311,6 @@
           }
         }
       });
-
-
 }]);
 
 
