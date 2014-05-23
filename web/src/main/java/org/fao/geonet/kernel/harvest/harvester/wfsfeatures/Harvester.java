@@ -143,7 +143,7 @@ class Harvester
 		schemaMan = gc.getSchemamanager ();
 		SettingInfo si = new SettingInfo(context);
 		String siteUrl = si.getSiteUrl() + context.getBaseUrl();
-		metadataGetService = siteUrl + "/srv/en/xml.metadata.get";
+		metadataGetService = "local://xml.metadata.get";
 		ssParams.put("siteUrl", siteUrl);
 	}
 

@@ -52,9 +52,9 @@ public class XmlSerializerDb extends XmlSerializer {
      * @return
      * @throws Exception
      */
-	public Element select(Dbms dbms, String table, String id) throws Exception {
+	public Element select(Dbms dbms, String table, String id, ServiceContext context) throws Exception {
 		Element rec = internalSelect(dbms, table, id, false);
-		if (resolveXLinks()) Processor.detachXLink(rec);
+		if (resolveXLinks()) Processor.detachXLink(rec, context);
 		return rec;
 	}
 

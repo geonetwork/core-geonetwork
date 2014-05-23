@@ -196,7 +196,7 @@ class Harvester extends BaseAligner
 
 		SettingInfo si = new SettingInfo(context);
 		String siteUrl = si.getSiteUrl() + context.getBaseUrl();
-		metadataGetService = siteUrl + "/srv/en/xml.metadata.get";
+		metadataGetService = "local://xml.metadata.get";
 
 		
 		//--- Create fragment harvester for atomic datasets if required
