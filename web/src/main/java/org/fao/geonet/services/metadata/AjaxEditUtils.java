@@ -7,13 +7,10 @@ import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
-
 import org.fao.geonet.constants.Edit;
-import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
-import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.spatial.Pair;
@@ -289,7 +286,7 @@ public class AjaxEditUtils extends EditUtils {
      * @param id
      * @return
      */
-	protected static Element getMetadataFromSession(UserSession session, String id) {
+	public static Element getMetadataFromSession(UserSession session, String id) {
         if(Log.isDebugEnabled(Geonet.EDITOR))
             Log.debug(Geonet.EDITOR, "Retrieving metadata from session " + session.getUserId());
 		Element md = (Element) session.getProperty(Geonet.Session.METADATA_EDITING + id);

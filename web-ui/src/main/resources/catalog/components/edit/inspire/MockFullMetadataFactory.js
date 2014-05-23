@@ -108,29 +108,29 @@
           },
           constraints: {
             legal: [{
-              ref: 'ref',
+              ref: '211',
               type: 'legal',
-              accessConstraint: 'copyright',
-              useConstraint: 'intellectualPropertyRights',
+              accessConstraints: ['copyright'],
+              useConstraints: ['intellectualPropertyRights'],
               useLimitations: [{eng:'leg limitation 1'}, {eng:'leg limitation 2'}],
               otherConstraints: [{eng:'otherConstraint'}, {eng: 'other constraint 2'}],
               legislationConstraints: [{eng: 'legislation constraint title'}]
             },{
-              ref: 'ref',
+              ref: '',
               type: 'legal',
-              accessConstraint: 'otherRestrictions',
-              useConstraint: 'intellectualPropertyRights',
+              accessConstraints: ['otherRestrictions', 'copyright'],
+              useConstraints: ['intellectualPropertyRights'],
               useLimitations: [],
               otherConstraints: [],
               legislationConstraints: []
             }],
             generic: [{
-              ref: 'genRef1',
+              ref: '251',
               type: 'generic',
               useLimitations: [{eng:'limitation 1'}, {eng: 'limitation 2'}]
             }],
             security: [{
-              ref: 'secRef',
+              ref: '261',
               type: 'security',
               useLimitations: [{eng:'sec limitation 1'}, {eng:'sec limitation 2'}],
               classification: 'restricted'

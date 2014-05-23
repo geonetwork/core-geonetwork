@@ -594,8 +594,15 @@ public class EditLib {
 
     private boolean createAndAddFromXPath(Element metadataRecord, MetadataSchema metadataSchema, String xpathProperty, AddElemValue value) throws Exception {
         List<String> xpathParts = Arrays.asList(xpathProperty.split("/"));
-        Pair<Element, String> result = findLongestMatch(metadataRecord, metadataRecord, 0, metadataSchema, xpathParts.size() / 2,
-                xpathParts);
+        SelectResult rootElem = trySelectNode(metadataRecord, metadataSchema, xpathParts.get(0));
+
+        Pair<Element, String> result;
+        if (rootElem.result instanceof Element) {
+            result = findLongestMatch(metadataRecord, metadataRecord, 0, metadataSchema, xpathParts.size() / 2,
+                    xpathParts);
+        } else {
+            result = Pair.read(metadataRecord, COMMA_STRING_JOINER.join(xpathParts));
+        }
         final Element elementToAttachTo = result.one();
         final Element clonedMetadata = (Element) elementToAttachTo.clone();
 

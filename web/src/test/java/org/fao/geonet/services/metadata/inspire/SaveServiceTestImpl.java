@@ -33,9 +33,10 @@ class SaveServiceTestImpl extends Save {
             iso639_2_to_iso639_1IsoLanguagesMap.put("ita", "it");
         }
     };
-    private final Element testMetadata;
+    private Element testMetadata;
     Map<String, Element> sharedObjects = Maps.newHashMap();
     private boolean saved = false;
+    private Element savedMetadata;
 
     public SaveServiceTestImpl(Element testMetadata) throws IOException, JDOMException {
         this.testMetadata = testMetadata;
@@ -232,9 +233,18 @@ class SaveServiceTestImpl extends Save {
     @Override
     protected void saveMetadata(ServiceContext context, String id, DataManager dataManager, Element metadata) throws Exception {
         this.saved = true;
+        this.savedMetadata = metadata;
     }
 
     public boolean isSaved() {
         return saved;
+    }
+
+    public void setTestMetadata(Element metadata) {
+        this.testMetadata = metadata;
+    }
+
+    public Element getSavedMetadata() {
+        return this.savedMetadata;
     }
 }

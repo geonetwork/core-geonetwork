@@ -225,26 +225,42 @@
       $scope.$watch('data.constraints.legal', function(newValue) {
         if (newValue.length == 0) {
           newValue.push({
-            accessConstraint: 'copyright',
-            useConstraint: 'copyright',
+            accessConstraints: ['copyright'],
+            useConstraints: ['copyright'],
             otherConstraints: [],
             legislationConstraints: []
           });
         }
       });
-      $scope.addOtherConstraintIfRequired = function(legalConstraint) {
-        if (legalConstraint.accessConstraint === 'otherRestrictions' && legalConstraint.otherConstraints.length == 0) {
-          var otherConstraint = {};
+      $scope.hasOtherRestrictions = function(legalConstraint) {
+        for (var x = 0; x < legalConstraint.accessConstraints.length; x++) {
+          if (legalConstraint.accessConstraints[x] === 'otherRestrictions') {
+            return true;
+          }
+        }
+        return false;
+      };
+
+}]);
+
+  module.controller('InspireLegalConstraintController', [
+    '$scope','$translate', function($scope) {
+
+      $scope.$watch('accessConstraint', function() {
+        var i, j, k, otherConstraint, toRemove, remove, lang;
+        var hasOtherRestrictions = $scope.hasOtherRestrictions($scope.legal);
+        if (hasOtherRestrictions && $scope.legal.otherConstraints.length == 0) {
+          otherConstraint = {};
           otherConstraint[$scope.data.language] = '';
-          legalConstraint.otherConstraints.push(otherConstraint);
-        } else if (legalConstraint.accessConstraint !== 'otherRestrictions') {
-          var toRemove = [];
-          for (var i = 0; i < legalConstraint.otherConstraints.length; i++) {
-            var otherConstraint = legalConstraint.otherConstraints[i];
-            var remove = otherConstraint[$scope.data.language].trim().length == 0;
-            for (var j = 0; j < $scope.data.otherLanguages.length; j++) {
-              var lang = $scope.data[j];
-              if (otherConstraint[$scope.data.language].trim().length == 0) {
+          $scope.legal.otherConstraints.push(otherConstraint);
+        } else if (!hasOtherRestrictions) {
+          toRemove = [];
+          for (i = 0; i < $scope.legal.otherConstraints.length; i++) {
+            otherConstraint = $scope.legal.otherConstraints[i];
+            remove = otherConstraint[$scope.data.language].trim().length == 0;
+            for (j = 0; j < $scope.data.otherLanguages.length; j++) {
+              lang = $scope.data[j];
+              if (otherConstraint[$scope.data.language].trim().length > 0) {
                 remove = false;
                 break;
               }
@@ -255,14 +271,9 @@
             }
           }
 
-          for (var i = 0; i < toRemove.length; i++) {
-            $scope.deleteFromArray(legalConstraint.otherConstraints, toRemove[i])
+          for (i = 0; i < toRemove.length; i++) {
+            $scope.deleteFromArray($scope.legal.otherConstraints, toRemove[i])
           }
-        }
-      };
-      $scope.$watchCollection('data.constraints.legal', function(newValue) {
-        for (var i = 0; i < newValue.length; i++) {
-          $scope.addOtherConstraintIfRequired(newValue[i]);
         }
       });
 

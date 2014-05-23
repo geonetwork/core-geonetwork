@@ -9,22 +9,51 @@
                         data-ng-repeat="legal in data.constraints.legal">
                         <td data-ng-class="$first ? 'no-border-top' : ''">
                             <div class="form-group">
-                                <label class="col-xs-3 control-label"><span data-translate="">accessConstraint</span>: </label>
+                                <label class="col-xs-3 control-label"><span data-translate="">accessConstraints</span>: </label>
 
-                                <div class="col-xs-9">
-                                    <select class="form-control" data-ng-model="legal.accessConstraint"
-                                            data-ng-change="addOtherConstraintIfRequired(legal)"
-                                            data-ng-options="opt for opt in data.constraintOptions">
-                                    </select>
+                                <div class="table-responsive col-xs-9">
+                                    <table class="table table-condensed">
+                                        <tr data-ng-repeat="accessConstraint in legal.accessConstraints track by $index" data-ng-controller="InspireLegalConstraintController">
+                                            <td data-ng-class="'no-border-top'">
+
+                                                <select class="form-control" data-ng-model="legal.accessConstraints[$index]"
+                                                        data-ng-options="opt for opt in data.constraintOptions">
+                                                </select>
+                                            </td>
+                                            <td width="24px" data-ng-class="'no-border-top'">
+                                                <a class="inspire-input-group"
+                                                   data-ng-hide="legal.accessConstraints.length === 1"
+                                                   style="color: red"
+                                                   data-ng-click="deleteFromArray(legal.accessConstraints, accessConstraint)">
+                                                    <i class="fa fa-times fa-fw"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
+
                             </div>
                             <div class="form-group">
-                                <label class="col-xs-3 control-label"><span data-translate="">useConstraint</span>: </label>
+                                <label class="col-xs-3 control-label"><span data-translate="">useConstraints</span>: </label>
 
-                                <div class="col-xs-9">
-                                    <select class="form-control" data-ng-model="legal.useConstraint"
-                                            data-ng-options="opt for opt in data.constraintOptions">
-                                    </select>
+                                <div class="table-responsive col-xs-9">
+                                    <table class="table table-condensed">
+                                        <tr data-ng-repeat="useConstraint in legal.useConstraints track by $index">
+                                            <td data-ng-class="'no-border-top'">
+                                                <select class="form-control" data-ng-model="legal.useConstraints[$index]"
+                                                        data-ng-options="opt for opt in data.constraintOptions">
+                                                </select>
+                                            </td>
+                                            <td width="24px" data-ng-class="'no-border-top'">
+                                                <a class="inspire-input-group"
+                                                   data-ng-hide="legal.useConstraints.length === 1"
+                                                   style="color: red"
+                                                   data-ng-click="deleteFromArray(legal.useConstraints, useConstraint)">
+                                                    <i class="fa fa-times fa-fw"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
                             <div class="table-responsive col-xs-12">
@@ -43,7 +72,7 @@
                                         </td>
                                         <td width="24px" data-ng-class="'no-border-top'">
                                             <a class="inspire-input-group"
-                                               data-ng-hide="legal.otherConstraints.length === 1 && legal.accessConstraint === 'otherRestrictions'"
+                                               data-ng-hide="legal.otherConstraints.length === 1 && hasOtherRestrictions(legal)"
                                                style="color: red"
                                                data-ng-click="deleteFromArray(legal.otherConstraints, other)">
                                                 <i class="fa fa-times fa-fw"></i>

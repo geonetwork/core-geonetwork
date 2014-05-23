@@ -2,6 +2,7 @@ package org.fao.geonet.services.metadata.inspire;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.io.Closer;
 import com.google.common.io.Files;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -17,8 +18,9 @@ import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jdom.Namespace;
+import org.json.JSONObject;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -37,25 +39,25 @@ import javax.servlet.ServletContext;
 
 import static org.fao.geonet.Assert.getWebappDir;
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
+import static org.fao.geonet.constants.Geonet.Namespaces.GEONET;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
 import static org.fao.geonet.kernel.search.spatial.Pair.read;
+import static org.fao.geonet.services.metadata.inspire.Save.NS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
 public class SaveTest {
-    private static final List<Namespace> NS = Arrays.asList(
-            GCO,
-            GMD,
-            Geonet.Namespaces.XLINK,
-            Namespace.getNamespace("che", "http://www.geocat.ch/2008/che"));
 
     private final Pattern USER_XLINK_ID_PATTERN = Pattern.compile(".*id=(.+?).*");
     private final Pattern USER_XLINK_ROLE_PATTERN = Pattern.compile(".*role=(.+?).*");
 
     public static TemporaryFolder _schemaCatalogContainer = new TemporaryFolder();
     private static SchemaManager _schemaManager;
+    private Element testMetadata;
+    private SaveServiceTestImpl service;
+    private GeonetContext geonetContext;
+    private ServiceContext context;
 
     @BeforeClass
     public static void initSchemaManager() throws Exception {
@@ -84,23 +86,26 @@ public class SaveTest {
         _schemaManager = null;
     }
 
-    @Test
-    public void testSave() throws Exception {
-        final Element testMetadata = Xml.loadString("<che:CHE_MD_Metadata xmlns:che=\"http://www.geocat.ch/2008/che\" " +
-                                                    "xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" xmlns:gco=\"http://www.isotc211" +
-                                                    ".org/2005/gco\" xmlns:srv=\"http://www.isotc211.org/2005/srv\" " +
-                                                    "xmlns:gml=\"http://www.opengis.net/gml\" gco:isoType=\"gmd:MD_Metadata\"/>", false);
+    @Before
+    public void setUp() throws Exception {
+        this.testMetadata = Xml.loadString("<che:CHE_MD_Metadata xmlns:che=\"http://www.geocat.ch/2008/che\" " +
+                                           "xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" xmlns:gco=\"http://www.isotc211" +
+                                           ".org/2005/gco\" xmlns:srv=\"http://www.isotc211.org/2005/srv\" " +
+                                           "xmlns:gml=\"http://www.opengis.net/gml\" gco:isoType=\"gmd:MD_Metadata\"/>", false);
 
 
-        SaveServiceTestImpl service = new SaveServiceTestImpl(testMetadata);
+        this.service = new SaveServiceTestImpl(testMetadata);
 
-        String json = loadTestJson();
-
-        GeonetContext geonetContext = Mockito.mock(GeonetContext.class);
+        this.geonetContext = Mockito.mock(GeonetContext.class);
         Mockito.when(geonetContext.getSchemamanager()).thenReturn(this._schemaManager);
 
-        ServiceContext context = Mockito.mock(ServiceContext.class);
+        this.context = Mockito.mock(ServiceContext.class);
         Mockito.when(context.getHandlerContext(Mockito.anyString())).thenReturn(geonetContext);
+    }
+
+    @Test
+    public void testSave() throws Exception {
+        String json = loadTestJson();
 
         service.exec(new Element("request").addContent(Arrays.asList(
                 new Element("id").setText("12"),
@@ -168,7 +173,8 @@ public class SaveTest {
                 "local://xml.extent.get?id=2&amp;wfs=default&amp;typename=gn:kantoneBB&amp;format=gmd_complete&amp;extentTypeCode=true";
         assertSharedObject(identification, "gmd:extent", bernXlink, true);
         final String fribourgXlink =
-                "local://xml.extent.get?id=2196&amp;wfs=default&amp;typename=gn:gemeindenBB&amp;format=gmd_complete&amp;extentTypeCode=true";
+                "local://xml.extent.get?id=2196&amp;wfs=default&amp;typename=gn:gemeindenBB&amp;format=gmd_complete&amp;" +
+                "extentTypeCode=true";
         assertSharedObject(identification, "gmd:extent", fribourgXlink, true);
 
         List<Element> topicCategory = identification.getChildren("topicCategory", GMD);
@@ -176,13 +182,111 @@ public class SaveTest {
         assertEquals("transportation", topicCategory.get(0).getChildText("MD_TopicCategoryCode", GMD));
         assertEquals("imageryBaseMapsEarthCover_BaseMaps", topicCategory.get(1).getChildText("MD_TopicCategoryCode", GMD));
 
+        assertCorrectConstraints(identification);
+
         assertTrue(service.isSaved());
+    }
+
+    protected void assertCorrectConstraints(Element identification) throws JDOMException {
+        List<Element> constraints = (List<Element>) Xml.selectNodes(identification,
+                "gmd:resourceConstraints/che:CHE_MD_LegalConstraints");
+        assertEquals(2, constraints.size());
+        for (Element constraint : constraints) {
+            assertEquals("gmd:MD_LegalConstraints", constraint.getAttributeValue("isoType", GCO));
+        }
+
+        final Element constraint1 = constraints.get(0);
+        assertEquals("copyright", Xml.selectString(constraint1, "gmd:accessConstraints/gmd:MD_RestrictionCode/@codeListValue"));
+        assertEquals("http://www.isotc211.org/2005/resources/codeList.xml#MD_RestrictionCode",
+                Xml.selectString(constraint1, "gmd:accessConstraints/gmd:MD_RestrictionCode/@codeList"));
+        assertEquals("intellectualPropertyRights", Xml.selectString(constraint1, "gmd:useConstraints/gmd:MD_RestrictionCode" +
+                                                                                 "/@codeListValue"));
+        assertEquals("http://www.isotc211.org/2005/resources/codeList.xml#MD_RestrictionCode",
+                Xml.selectString(constraint1, "gmd:useConstraints/gmd:MD_RestrictionCode/@codeList"));
+        assertEquals(2, constraint1.getChildren("useLimitation", GMD).size());
+        assertCorrectTranslation(constraint1, "gmd:useLimitation[1]", read("eng", "leg limitation 1"));
+        assertCorrectTranslation(constraint1, "gmd:useLimitation[2]", read("eng", "leg limitation 2"));
+
+        assertEquals(2, constraint1.getChildren("otherConstraints", GMD).size());
+        assertCorrectTranslation(constraint1, "gmd:otherConstraints[1]", read("eng", "otherConstraint"));
+        assertCorrectTranslation(constraint1, "gmd:otherConstraints[2]", read("eng", "other constraint 2"));
+
+        final List<Element> legislationElems = (List<Element>) Xml.selectNodes(constraint1,
+                "che:legislationConstraints/che:CHE_MD_Legislation", NS);
+        assertEquals(1, legislationElems.size());
+
+        assertEquals("gmd:MD_Legislation", legislationElems.get(0).getAttributeValue("isoType", GCO));
+        assertCorrectTranslation(legislationElems.get(0), "che:title/gmd:CI_Citation/gmd:title", read("eng",
+                "legislation constraint title"));
+
+        final Element constraint2 = constraints.get(1);
+        assertEquals("otherRestrictions",
+                Xml.selectString(constraint2, "gmd:accessConstraints[1]/gmd:MD_RestrictionCode/@codeListValue"));
+        assertEquals("copyright",
+                Xml.selectString(constraint2, "gmd:accessConstraints[2]/gmd:MD_RestrictionCode/@codeListValue"));
+        assertEquals("intellectualPropertyRights",
+                Xml.selectString(constraint2, "gmd:useConstraints/gmd:MD_RestrictionCode/@codeListValue"));
+
+        assertEquals(0, constraint2.getChildren("otherConstraints", GMD).size());
     }
 
 
     @Test
     public void testDateTime() throws Exception {
         fail("to implement");
+
+    }
+
+    @Test
+    public void testEmptySpec() throws Exception {
+        service.exec(new Element("request").addContent(Arrays.asList(
+                new Element("id").setText("12"),
+                new Element("data").setText("{}")
+        )), context);
+        service.exec(new Element("request").addContent(Arrays.asList(
+                new Element("id").setText("12"),
+                new Element("data").setText("{identification:{}, constraints:{}}")
+        )), context);
+
+    }
+    @Test
+    public void testConstraintsAreDeletedWhenDeletedFromInspireData() throws Exception {
+        Closer closer = Closer.create();
+        try {
+            JSONObject json = new JSONObject(loadTestJson());
+            json.remove("identification");
+            json.remove("language");
+            json.remove("characterSet");
+            json.remove("hierarchyLevel");
+            json.remove("hierarchyLevelName");
+            json.remove("contact");
+            json.remove("otherLanguages");
+
+            final Element testMetadata = Xml.loadStream(closer.register(SaveTest.class.getResourceAsStream("metadataWithContraints.xml")));
+
+            service.setTestMetadata(testMetadata);
+            service.exec(new Element("request").addContent(Arrays.asList(
+                    new Element("id").setText("12"),
+                    new Element("data").setText(json.toString())
+            )), context);
+
+            final Element identification = Xml.selectElement(service.getSavedMetadata(), "gmd:identificationInfo/*", NS);
+
+            assertEquals(0, Xml.selectNodes(identification, "geonet:element", Arrays.asList(GEONET)).size());
+            assertEquals(0, Xml.selectNodes(identification, "*//geonet:element", Arrays.asList(GEONET)).size());
+            assertCorrectConstraints(identification);
+
+
+            assertEquals(1, Xml.selectNodes(identification, "gmd:resourceConstraints/che:CHE_MD_LegalConstraints[not(gmd:useLimitation)]", NS).size());
+            assertEquals(1, Xml.selectNodes(identification, "gmd:resourceConstraints/che:CHE_MD_LegalConstraints[gmd:useLimitation]", NS).size());
+            assertEquals(1, Xml.selectNodes(identification, "gmd:resourceConstraints/gmd:MD_Constraints", NS).size());
+            assertCorrectTranslation(identification, "gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation[1]", read("eng", "limitation 1"));
+            assertCorrectTranslation(identification, "gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation[2]", read("eng", "limitation 2"));
+            assertEquals(1, Xml.selectNodes(identification, "gmd:resourceConstraints/gmd:MD_SecurityConstraints", NS).size());
+            assertCorrectTranslation(identification, "gmd:resourceConstraints/gmd:MD_SecurityConstraints/gmd:useLimitation[1]", read("eng", "Sec Limitation"));
+        } finally {
+            closer.close();
+        }
 
     }
 
@@ -245,7 +349,8 @@ public class SaveTest {
             String translation = pair.two();
 
             assertEquals("Wrong translation for language: " + lang, translation, Xml.selectString(metadata,
-                    xpath + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='" + langMap.get(lang) + "']", NS).trim());
+                    xpath + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='" + langMap.get(lang) + "']",
+                    NS).trim());
 
         }
     }

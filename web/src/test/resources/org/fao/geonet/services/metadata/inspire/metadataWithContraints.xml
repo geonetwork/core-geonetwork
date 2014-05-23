@@ -1,0 +1,1518 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<che:CHE_MD_Metadata xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd"
+    xmlns:geonet="http://www.fao.org/geonetwork" gco:isoType="gmd:MD_Metadata">
+    <gmd:fileIdentifier>
+        <gco:CharacterString>
+            b40d8c51-81e8-433e-9f6e-1674c284e30e
+            <geonet:element ref="3" parent="2" uuid="gco:CharacterString_6071990c-ef34-4efd-8b1d-634d32ee0d89" min="1" max="1" />
+        </gco:CharacterString>
+        <geonet:element ref="2" parent="1" uuid="gmd:fileIdentifier_39a596d7-05e8-4c68-a901-42cdb7464c44" min="0" max="1" del="true" />
+        <geonet:attribute name="gco:nilReason" add="true">
+            <geonet:text value="inapplicable" />
+            <geonet:text value="missing" />
+            <geonet:text value="template" />
+            <geonet:text value="unknown" />
+            <geonet:text value="withheld" />
+        </geonet:attribute>
+    </gmd:fileIdentifier>
+    <gmd:language>
+        <gco:CharacterString>
+            eng
+            <geonet:element ref="5" parent="4" uuid="gco:CharacterString_160a5e8e-e1b2-4852-8e5c-c3bfe4952b7a" min="1" max="1" />
+        </gco:CharacterString>
+        <geonet:element ref="4" parent="1" uuid="gmd:language_46133c19-24b7-43c9-b81c-f1c17305d1ed" min="1" max="1" />
+        <geonet:attribute name="gco:nilReason" add="true">
+            <geonet:text value="inapplicable" />
+            <geonet:text value="missing" />
+            <geonet:text value="template" />
+            <geonet:text value="unknown" />
+            <geonet:text value="withheld" />
+        </geonet:attribute>
+    </gmd:language>
+    <gmd:dateStamp>
+        <gco:DateTime>
+            2014-05-22T12:41:01
+            <geonet:element ref="71" parent="70" uuid="gco:DateTime_312c4ce5-8f92-4851-8b46-2a0435c439d4" min="1" max="1" />
+        </gco:DateTime>
+        <geonet:element ref="70" parent="1" uuid="gmd:dateStamp_2d8ec031-a20b-40cf-bb8b-be4092db8b1d" min="1" max="1" />
+        <geonet:attribute name="gco:nilReason" add="true">
+            <geonet:text value="inapplicable" />
+            <geonet:text value="missing" />
+            <geonet:text value="template" />
+            <geonet:text value="unknown" />
+            <geonet:text value="withheld" />
+        </geonet:attribute>
+    </gmd:dateStamp>
+    <geonet:child name="metadataStandardName" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+        uuid="child_gmd:metadataStandardName_e7f8a612-7c94-4c07-a82f-2f3959e2f138" min="0" max="1" action="replace" />
+    <geonet:child name="metadataStandardVersion" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+        uuid="child_gmd:metadataStandardVersion_6652cd13-5937-4176-9cd3-1b8d211ff28c" min="0" max="1" action="replace" />
+    <geonet:child name="dataSetURI" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+        uuid="child_gmd:dataSetURI_32901a31-e869-456a-95b6-06ba57a38688" min="0" max="1" action="replace" />
+    <gmd:locale>
+        <gmd:PT_Locale id="EN">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeList="#LanguageCode" codeListValue="eng">
+                    <geonet:element ref="75" parent="74" uuid="gmd:LanguageCode_0c4c8368-33cc-483c-81b0-a49710e5ad27" min="1" max="1" />
+                    <geonet:attribute name="codeList" />
+                    <geonet:attribute name="codeListValue" />
+                    <geonet:attribute name="codeSpace" add="true" />
+                </gmd:LanguageCode>
+                <geonet:element ref="74" parent="73" uuid="gmd:languageCode_55fda1e5-cda5-4e09-b790-b8ec10b252bc" min="1" max="1" />
+                <geonet:attribute name="gco:nilReason" add="true">
+                    <geonet:text value="inapplicable" />
+                    <geonet:text value="missing" />
+                    <geonet:text value="template" />
+                    <geonet:text value="unknown" />
+                    <geonet:text value="withheld" />
+                </geonet:attribute>
+            </gmd:languageCode>
+            <geonet:child name="country" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                uuid="child_gmd:country_4feb98df-2c4b-4d4f-a328-cd9d38d7d1fa" min="0" max="1" action="replace" />
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">
+                    UTF8
+                    <geonet:element ref="77" parent="76" uuid="gmd:MD_CharacterSetCode_3e4e0994-ca37-42cc-add5-1b906d244087" min="1"
+                        max="1" />
+                    <geonet:attribute name="codeList" />
+                    <geonet:attribute name="codeListValue" />
+                    <geonet:attribute name="codeSpace" add="true" />
+                </gmd:MD_CharacterSetCode>
+                <geonet:element ref="76" parent="73" uuid="gmd:characterEncoding_77d704de-d1a8-41da-9635-27fc787743f3" min="1" max="1" />
+                <geonet:attribute name="gco:nilReason" add="true">
+                    <geonet:text value="inapplicable" />
+                    <geonet:text value="missing" />
+                    <geonet:text value="template" />
+                    <geonet:text value="unknown" />
+                    <geonet:text value="withheld" />
+                </geonet:attribute>
+            </gmd:characterEncoding>
+            <geonet:element ref="73" parent="72" uuid="gmd:PT_Locale_64ebdf8a-7855-488f-b15f-3ded10080404" min="1" max="1" />
+            <geonet:attribute name="id" del="true" />
+            <geonet:attribute name="uuid" add="true" />
+        </gmd:PT_Locale>
+        <geonet:element ref="72" parent="1" uuid="gmd:locale_213712fe-ae78-4197-b6f8-5d3baebc2c8e" min="0" max="10000" down="true"
+            del="true" add="true" />
+        <geonet:attribute name="gco:nilReason" add="true">
+            <geonet:text value="inapplicable" />
+            <geonet:text value="missing" />
+            <geonet:text value="template" />
+            <geonet:text value="unknown" />
+            <geonet:text value="withheld" />
+        </geonet:attribute>
+        <geonet:attribute name="type" add="true">
+            <geonet:default value="simple" />
+        </geonet:attribute>
+        <geonet:attribute name="xlink:href" add="true" />
+        <geonet:attribute name="xlink:role" add="true" />
+        <geonet:attribute name="xlink:arcrole" add="true" />
+        <geonet:attribute name="xlink:title" add="true" />
+        <geonet:attribute name="xlink:show" add="true">
+            <geonet:text value="new" />
+            <geonet:text value="replace" />
+            <geonet:text value="embed" />
+            <geonet:text value="other" />
+            <geonet:text value="none" />
+        </geonet:attribute>
+        <geonet:attribute name="xlink:actuate" add="true">
+            <geonet:text value="onLoad" />
+            <geonet:text value="onRequest" />
+            <geonet:text value="other" />
+            <geonet:text value="none" />
+        </geonet:attribute>
+        <geonet:attribute name="uuidref" add="true" />
+    </gmd:locale>
+    <gmd:locale>
+        <gmd:PT_Locale id="DE">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeList="#LanguageCode" codeListValue="ger">
+                    <geonet:element ref="81" parent="80" uuid="gmd:LanguageCode_dd8560ce-4707-4d42-a5d7-f752cbfe66c9" min="1" max="1" />
+                    <geonet:attribute name="codeList" />
+                    <geonet:attribute name="codeListValue" />
+                    <geonet:attribute name="codeSpace" add="true" />
+                </gmd:LanguageCode>
+                <geonet:element ref="80" parent="79" uuid="gmd:languageCode_53e6fe31-3ebc-4309-97b1-84389ed888be" min="1" max="1" />
+                <geonet:attribute name="gco:nilReason" add="true">
+                    <geonet:text value="inapplicable" />
+                    <geonet:text value="missing" />
+                    <geonet:text value="template" />
+                    <geonet:text value="unknown" />
+                    <geonet:text value="withheld" />
+                </geonet:attribute>
+            </gmd:languageCode>
+            <geonet:child name="country" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                uuid="child_gmd:country_9b4455f4-b07e-405e-a0c3-dcf55d2da309" min="0" max="1" action="replace" />
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">
+                    UTF8
+                    <geonet:element ref="83" parent="82" uuid="gmd:MD_CharacterSetCode_5a97bfd8-05b0-4c31-b3a5-15cff64fb9df" min="1"
+                        max="1" />
+                    <geonet:attribute name="codeList" />
+                    <geonet:attribute name="codeListValue" />
+                    <geonet:attribute name="codeSpace" add="true" />
+                </gmd:MD_CharacterSetCode>
+                <geonet:element ref="82" parent="79" uuid="gmd:characterEncoding_1caf0d41-12c1-4f34-bad2-7562fe2048c7" min="1" max="1" />
+                <geonet:attribute name="gco:nilReason" add="true">
+                    <geonet:text value="inapplicable" />
+                    <geonet:text value="missing" />
+                    <geonet:text value="template" />
+                    <geonet:text value="unknown" />
+                    <geonet:text value="withheld" />
+                </geonet:attribute>
+            </gmd:characterEncoding>
+            <geonet:element ref="79" parent="78" uuid="gmd:PT_Locale_27e9a2eb-50f4-4337-b511-ca4983848d92" min="1" max="1" />
+            <geonet:attribute name="id" del="true" />
+            <geonet:attribute name="uuid" add="true" />
+        </gmd:PT_Locale>
+        <geonet:element ref="78" parent="1" uuid="gmd:locale_b90dce53-ab9f-4932-90cd-c31d7d85f6e9" min="0" max="10000" up="true"
+            down="true" del="true" add="true" />
+        <geonet:attribute name="gco:nilReason" add="true">
+            <geonet:text value="inapplicable" />
+            <geonet:text value="missing" />
+            <geonet:text value="template" />
+            <geonet:text value="unknown" />
+            <geonet:text value="withheld" />
+        </geonet:attribute>
+        <geonet:attribute name="type" add="true">
+            <geonet:default value="simple" />
+        </geonet:attribute>
+        <geonet:attribute name="xlink:href" add="true" />
+        <geonet:attribute name="xlink:role" add="true" />
+        <geonet:attribute name="xlink:arcrole" add="true" />
+        <geonet:attribute name="xlink:title" add="true" />
+        <geonet:attribute name="xlink:show" add="true">
+            <geonet:text value="new" />
+            <geonet:text value="replace" />
+            <geonet:text value="embed" />
+            <geonet:text value="other" />
+            <geonet:text value="none" />
+        </geonet:attribute>
+        <geonet:attribute name="xlink:actuate" add="true">
+            <geonet:text value="onLoad" />
+            <geonet:text value="onRequest" />
+            <geonet:text value="other" />
+            <geonet:text value="none" />
+        </geonet:attribute>
+        <geonet:attribute name="uuidref" add="true" />
+    </gmd:locale>
+    <gmd:locale>
+        <gmd:PT_Locale id="FR">
+            <gmd:languageCode>
+                <gmd:LanguageCode codeList="#LanguageCode" codeListValue="fre">
+                    <geonet:element ref="87" parent="86" uuid="gmd:LanguageCode_9e30e10e-5417-462e-84e1-0f6faa8b5b14" min="1" max="1" />
+                    <geonet:attribute name="codeList" />
+                    <geonet:attribute name="codeListValue" />
+                    <geonet:attribute name="codeSpace" add="true" />
+                </gmd:LanguageCode>
+                <geonet:element ref="86" parent="85" uuid="gmd:languageCode_c60bc622-44a8-49e5-a51b-d959762ea890" min="1" max="1" />
+                <geonet:attribute name="gco:nilReason" add="true">
+                    <geonet:text value="inapplicable" />
+                    <geonet:text value="missing" />
+                    <geonet:text value="template" />
+                    <geonet:text value="unknown" />
+                    <geonet:text value="withheld" />
+                </geonet:attribute>
+            </gmd:languageCode>
+            <geonet:child name="country" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                uuid="child_gmd:country_53534191-8394-4448-b9c9-2af5fe910565" min="0" max="1" action="replace" />
+            <gmd:characterEncoding>
+                <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">
+                    UTF8
+                    <geonet:element ref="89" parent="88" uuid="gmd:MD_CharacterSetCode_bfb5baa4-2350-4dec-86de-7b8bfbcd4c65" min="1"
+                        max="1" />
+                    <geonet:attribute name="codeList" />
+                    <geonet:attribute name="codeListValue" />
+                    <geonet:attribute name="codeSpace" add="true" />
+                </gmd:MD_CharacterSetCode>
+                <geonet:element ref="88" parent="85" uuid="gmd:characterEncoding_c1732a07-2e24-443d-bb8c-3bfb6bf6171a" min="1" max="1" />
+                <geonet:attribute name="gco:nilReason" add="true">
+                    <geonet:text value="inapplicable" />
+                    <geonet:text value="missing" />
+                    <geonet:text value="template" />
+                    <geonet:text value="unknown" />
+                    <geonet:text value="withheld" />
+                </geonet:attribute>
+            </gmd:characterEncoding>
+            <geonet:element ref="85" parent="84" uuid="gmd:PT_Locale_84335897-d577-4c12-94cb-4756126a59e5" min="1" max="1" />
+            <geonet:attribute name="id" del="true" />
+            <geonet:attribute name="uuid" add="true" />
+        </gmd:PT_Locale>
+        <geonet:element ref="84" parent="1" uuid="gmd:locale_8634598c-eae1-41bd-a07e-3dc241419229" min="0" max="10000" up="true"
+            del="true" add="true" />
+        <geonet:attribute name="gco:nilReason" add="true">
+            <geonet:text value="inapplicable" />
+            <geonet:text value="missing" />
+            <geonet:text value="template" />
+            <geonet:text value="unknown" />
+            <geonet:text value="withheld" />
+        </geonet:attribute>
+        <geonet:attribute name="type" add="true">
+            <geonet:default value="simple" />
+        </geonet:attribute>
+        <geonet:attribute name="xlink:href" add="true" />
+        <geonet:attribute name="xlink:role" add="true" />
+        <geonet:attribute name="xlink:arcrole" add="true" />
+        <geonet:attribute name="xlink:title" add="true" />
+        <geonet:attribute name="xlink:show" add="true">
+            <geonet:text value="new" />
+            <geonet:text value="replace" />
+            <geonet:text value="embed" />
+            <geonet:text value="other" />
+            <geonet:text value="none" />
+        </geonet:attribute>
+        <geonet:attribute name="xlink:actuate" add="true">
+            <geonet:text value="onLoad" />
+            <geonet:text value="onRequest" />
+            <geonet:text value="other" />
+            <geonet:text value="none" />
+        </geonet:attribute>
+        <geonet:attribute name="uuidref" add="true" />
+    </gmd:locale>
+
+    <gmd:identificationInfo>
+        <che:CHE_MD_DataIdentification gco:isoType="gmd:MD_DataIdentification">
+            <gmd:resourceConstraints>
+                <che:CHE_MD_LegalConstraints gco:isoType="gmd:MD_LegalConstraints">
+                    <gmd:useLimitation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <geonet:child name="CharacterString" prefix="gco" namespace="http://www.isotc211.org/2005/gco"
+                            uuid="child_gco:CharacterString_4b98fe14-2261-4d17-93d6-3ae63504e3f5" min="1" max="1" action="replace" />
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">
+                                    leg limitation 1 before test
+                                    <geonet:element ref="215" parent="214"
+                                        uuid="gmd:LocalisedCharacterString_4fd5aed9-1ae8-43eb-b4aa-fdb60da5e4ee" min="1" max="1" />
+                                    <geonet:attribute name="id" add="true" />
+                                    <geonet:attribute name="locale" del="true" />
+                                </gmd:LocalisedCharacterString>
+                                <geonet:element ref="214" parent="213" uuid="gmd:textGroup_3b270a95-7388-4235-83be-e15e341447f4" min="1"
+                                    max="10000" add="true" />
+                                <geonet:attribute name="gco:nilReason" add="true">
+                                    <geonet:text value="inapplicable" />
+                                    <geonet:text value="missing" />
+                                    <geonet:text value="template" />
+                                    <geonet:text value="unknown" />
+                                    <geonet:text value="withheld" />
+                                </geonet:attribute>
+                                <geonet:attribute name="type" add="true">
+                                    <geonet:default value="simple" />
+                                </geonet:attribute>
+                                <geonet:attribute name="xlink:href" add="true" />
+                                <geonet:attribute name="xlink:role" add="true" />
+                                <geonet:attribute name="xlink:arcrole" add="true" />
+                                <geonet:attribute name="xlink:title" add="true" />
+                                <geonet:attribute name="xlink:show" add="true">
+                                    <geonet:text value="new" />
+                                    <geonet:text value="replace" />
+                                    <geonet:text value="embed" />
+                                    <geonet:text value="other" />
+                                    <geonet:text value="none" />
+                                </geonet:attribute>
+                                <geonet:attribute name="xlink:actuate" add="true">
+                                    <geonet:text value="onLoad" />
+                                    <geonet:text value="onRequest" />
+                                    <geonet:text value="other" />
+                                    <geonet:text value="none" />
+                                </geonet:attribute>
+                                <geonet:attribute name="uuidref" add="true" />
+                            </gmd:textGroup>
+                            <geonet:child name="textGroup" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                                uuid="child_gmd:textGroup_5a1ad3d7-bb67-4c6c-b2c9-7daa55fb5174" min="1" max="10000" action="replace" />
+                            <geonet:element ref="213" parent="212" uuid="gmd:PT_FreeText_7bfd21e9-45b6-43a2-9ac0-2af2cf9bea0d" />
+                            <geonet:attribute name="id" add="true" />
+                            <geonet:attribute name="uuid" add="true" />
+                        </gmd:PT_FreeText>
+                        <geonet:element ref="212" parent="211" uuid="gmd:useLimitation_708b4664-2c05-4e31-a79b-1cb49dd3fd41" min="0"
+                            max="10000" down="true" del="true" add="true" />
+                        <geonet:attribute name="gco:nilReason" add="true">
+                            <geonet:text value="inapplicable" />
+                            <geonet:text value="missing" />
+                            <geonet:text value="template" />
+                            <geonet:text value="unknown" />
+                            <geonet:text value="withheld" />
+                        </geonet:attribute>
+                    </gmd:useLimitation>
+                    <gmd:useLimitation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <geonet:child name="CharacterString" prefix="gco" namespace="http://www.isotc211.org/2005/gco"
+                            uuid="child_gco:CharacterString_1ba89f28-3000-4069-a900-78e0718e7971" min="1" max="1" action="replace" />
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">
+                                    leg limitation 2 before test
+                                    <geonet:element ref="219" parent="218"
+                                        uuid="gmd:LocalisedCharacterString_2e31d3d6-4401-4f9c-8e9f-9d37197c746d" min="1" max="1" />
+                                    <geonet:attribute name="id" add="true" />
+                                    <geonet:attribute name="locale" del="true" />
+                                </gmd:LocalisedCharacterString>
+                                <geonet:element ref="218" parent="217" uuid="gmd:textGroup_f9869722-a852-4451-9f85-bdbfea01d480" min="1"
+                                    max="10000" add="true" />
+                                <geonet:attribute name="gco:nilReason" add="true">
+                                    <geonet:text value="inapplicable" />
+                                    <geonet:text value="missing" />
+                                    <geonet:text value="template" />
+                                    <geonet:text value="unknown" />
+                                    <geonet:text value="withheld" />
+                                </geonet:attribute>
+                                <geonet:attribute name="type" add="true">
+                                    <geonet:default value="simple" />
+                                </geonet:attribute>
+                                <geonet:attribute name="xlink:href" add="true" />
+                                <geonet:attribute name="xlink:role" add="true" />
+                                <geonet:attribute name="xlink:arcrole" add="true" />
+                                <geonet:attribute name="xlink:title" add="true" />
+                                <geonet:attribute name="xlink:show" add="true">
+                                    <geonet:text value="new" />
+                                    <geonet:text value="replace" />
+                                    <geonet:text value="embed" />
+                                    <geonet:text value="other" />
+                                    <geonet:text value="none" />
+                                </geonet:attribute>
+                                <geonet:attribute name="xlink:actuate" add="true">
+                                    <geonet:text value="onLoad" />
+                                    <geonet:text value="onRequest" />
+                                    <geonet:text value="other" />
+                                    <geonet:text value="none" />
+                                </geonet:attribute>
+                                <geonet:attribute name="uuidref" add="true" />
+                            </gmd:textGroup>
+                            <geonet:child name="textGroup" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                                uuid="child_gmd:textGroup_79e97b0f-2f6d-4187-b969-6979fa2aacac" min="1" max="10000" action="replace" />
+                            <geonet:element ref="217" parent="216" uuid="gmd:PT_FreeText_38bf4911-db39-46f8-86aa-ece2ae3bf839" />
+                            <geonet:attribute name="id" add="true" />
+                            <geonet:attribute name="uuid" add="true" />
+                        </gmd:PT_FreeText>
+                        <geonet:element ref="216" parent="211" uuid="gmd:useLimitation_c99366e8-70bf-4d4b-b84c-528dcc117eea" min="0"
+                            max="10000" up="true" del="true" add="true" />
+                        <geonet:attribute name="gco:nilReason" add="true">
+                            <geonet:text value="inapplicable" />
+                            <geonet:text value="missing" />
+                            <geonet:text value="template" />
+                            <geonet:text value="unknown" />
+                            <geonet:text value="withheld" />
+                        </geonet:attribute>
+                    </gmd:useLimitation>
+                    <geonet:child name="useLimitation" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                        uuid="child_gmd:useLimitation_60750965-542b-4ad2-9a1b-174356565967" min="0" max="10000" action="replace" />
+                    <gmd:accessConstraints>
+                        <gmd:MD_RestrictionCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_RestrictionCode"
+                            codeListValue="otherRestrictions">
+                            <geonet:element ref="221" parent="220" uuid="gmd:MD_RestrictionCode_21a64c84-b603-41b5-b34d-db46ba4c384e"
+                                min="1" max="1" />
+                            <geonet:attribute name="codeList" />
+                            <geonet:attribute name="codeListValue" />
+                            <geonet:attribute name="codeSpace" add="true" />
+                        </gmd:MD_RestrictionCode>
+                        <geonet:element ref="220" parent="211" uuid="gmd:accessConstraints_c71b3193-492f-4d02-a921-1a6253dded02" min="0"
+                            max="10000" del="true" add="true" />
+                        <geonet:attribute name="gco:nilReason" add="true">
+                            <geonet:text value="inapplicable" />
+                            <geonet:text value="missing" />
+                            <geonet:text value="template" />
+                            <geonet:text value="unknown" />
+                            <geonet:text value="withheld" />
+                        </geonet:attribute>
+                    </gmd:accessConstraints>
+                    <geonet:child name="accessConstraints" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                        uuid="child_gmd:accessConstraints_7c2457bc-c675-44b0-9e56-a8e2f0b739cf" min="0" max="10000" action="replace" />
+                    <gmd:useConstraints>
+                        <gmd:MD_RestrictionCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_RestrictionCode"
+                            codeListValue="otherRestrictions">
+                            <geonet:element ref="223" parent="222" uuid="gmd:MD_RestrictionCode_52c37d92-9a56-459b-8e2b-80e68a5c1eb5"
+                                min="1" max="1" />
+                            <geonet:attribute name="codeList" />
+                            <geonet:attribute name="codeListValue" />
+                            <geonet:attribute name="codeSpace" add="true" />
+                        </gmd:MD_RestrictionCode>
+                        <geonet:element ref="222" parent="211" uuid="gmd:useConstraints_51828d64-de25-4365-bb6b-f1d9f7c55d2a" min="0"
+                            max="10000" del="true" add="true" />
+                        <geonet:attribute name="gco:nilReason" add="true">
+                            <geonet:text value="inapplicable" />
+                            <geonet:text value="missing" />
+                            <geonet:text value="template" />
+                            <geonet:text value="unknown" />
+                            <geonet:text value="withheld" />
+                        </geonet:attribute>
+                    </gmd:useConstraints>
+                    <geonet:child name="useConstraints" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                        uuid="child_gmd:useConstraints_2b872da5-dd2e-4144-914f-7c02ba839212" min="0" max="10000" action="replace" />
+                    <gmd:otherConstraints xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <geonet:child name="CharacterString" prefix="gco" namespace="http://www.isotc211.org/2005/gco"
+                            uuid="child_gco:CharacterString_df06f93b-4939-4748-a415-901e1a5ce867" min="1" max="1" action="replace" />
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">
+                                    otherConstraint
+                                    <geonet:element ref="227" parent="226"
+                                        uuid="gmd:LocalisedCharacterString_91dd7589-6b7c-4367-adef-9e5c1b8b2f2d" min="1" max="1" />
+                                    <geonet:attribute name="id" add="true" />
+                                    <geonet:attribute name="locale" del="true" />
+                                </gmd:LocalisedCharacterString>
+                                <geonet:element ref="226" parent="225" uuid="gmd:textGroup_22410313-d4d0-419c-8e22-488f79b71289" min="1"
+                                    max="10000" add="true" />
+                                <geonet:attribute name="gco:nilReason" add="true">
+                                    <geonet:text value="inapplicable" />
+                                    <geonet:text value="missing" />
+                                    <geonet:text value="template" />
+                                    <geonet:text value="unknown" />
+                                    <geonet:text value="withheld" />
+                                </geonet:attribute>
+                                <geonet:attribute name="type" add="true">
+                                    <geonet:default value="simple" />
+                                </geonet:attribute>
+                                <geonet:attribute name="xlink:href" add="true" />
+                                <geonet:attribute name="xlink:role" add="true" />
+                                <geonet:attribute name="xlink:arcrole" add="true" />
+                                <geonet:attribute name="xlink:title" add="true" />
+                                <geonet:attribute name="xlink:show" add="true">
+                                    <geonet:text value="new" />
+                                    <geonet:text value="replace" />
+                                    <geonet:text value="embed" />
+                                    <geonet:text value="other" />
+                                    <geonet:text value="none" />
+                                </geonet:attribute>
+                                <geonet:attribute name="xlink:actuate" add="true">
+                                    <geonet:text value="onLoad" />
+                                    <geonet:text value="onRequest" />
+                                    <geonet:text value="other" />
+                                    <geonet:text value="none" />
+                                </geonet:attribute>
+                                <geonet:attribute name="uuidref" add="true" />
+                            </gmd:textGroup>
+                            <geonet:child name="textGroup" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                                uuid="child_gmd:textGroup_1e56cc8a-2634-430d-9777-c60112857123" min="1" max="10000" action="replace" />
+                            <geonet:element ref="225" parent="224" uuid="gmd:PT_FreeText_b1bffb2c-fe28-4124-8d98-524ed1947786" />
+                            <geonet:attribute name="id" add="true" />
+                            <geonet:attribute name="uuid" add="true" />
+                        </gmd:PT_FreeText>
+                        <geonet:element ref="224" parent="211" uuid="gmd:otherConstraints_467f67bf-3255-49e4-95bb-270a4443469c" min="0"
+                            max="10000" down="true" del="true" add="true" />
+                        <geonet:attribute name="gco:nilReason" add="true">
+                            <geonet:text value="inapplicable" />
+                            <geonet:text value="missing" />
+                            <geonet:text value="template" />
+                            <geonet:text value="unknown" />
+                            <geonet:text value="withheld" />
+                        </geonet:attribute>
+                    </gmd:otherConstraints>
+                    <gmd:otherConstraints xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <geonet:child name="CharacterString" prefix="gco" namespace="http://www.isotc211.org/2005/gco"
+                            uuid="child_gco:CharacterString_43280470-8503-4921-9b60-27ae6f6370dc" min="1" max="1" action="replace" />
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">
+                                    other constraint 2
+                                    <geonet:element ref="231" parent="230"
+                                        uuid="gmd:LocalisedCharacterString_1982b340-81b6-40eb-99b6-c219ce61707a" min="1" max="1" />
+                                    <geonet:attribute name="id" add="true" />
+                                    <geonet:attribute name="locale" del="true" />
+                                </gmd:LocalisedCharacterString>
+                                <geonet:element ref="230" parent="229" uuid="gmd:textGroup_51ce6d4c-972c-4656-bfea-2d0d6d55d5d9" min="1"
+                                    max="10000" add="true" />
+                                <geonet:attribute name="gco:nilReason" add="true">
+                                    <geonet:text value="inapplicable" />
+                                    <geonet:text value="missing" />
+                                    <geonet:text value="template" />
+                                    <geonet:text value="unknown" />
+                                    <geonet:text value="withheld" />
+                                </geonet:attribute>
+                                <geonet:attribute name="type" add="true">
+                                    <geonet:default value="simple" />
+                                </geonet:attribute>
+                                <geonet:attribute name="xlink:href" add="true" />
+                                <geonet:attribute name="xlink:role" add="true" />
+                                <geonet:attribute name="xlink:arcrole" add="true" />
+                                <geonet:attribute name="xlink:title" add="true" />
+                                <geonet:attribute name="xlink:show" add="true">
+                                    <geonet:text value="new" />
+                                    <geonet:text value="replace" />
+                                    <geonet:text value="embed" />
+                                    <geonet:text value="other" />
+                                    <geonet:text value="none" />
+                                </geonet:attribute>
+                                <geonet:attribute name="xlink:actuate" add="true">
+                                    <geonet:text value="onLoad" />
+                                    <geonet:text value="onRequest" />
+                                    <geonet:text value="other" />
+                                    <geonet:text value="none" />
+                                </geonet:attribute>
+                                <geonet:attribute name="uuidref" add="true" />
+                            </gmd:textGroup>
+                            <geonet:child name="textGroup" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                                uuid="child_gmd:textGroup_af847b90-c9f5-4422-a3c8-9419e5c539ca" min="1" max="10000" action="replace" />
+                            <geonet:element ref="229" parent="228" uuid="gmd:PT_FreeText_0403fe6d-d19f-4738-a14e-ca66c44cd3dd" />
+                            <geonet:attribute name="id" add="true" />
+                            <geonet:attribute name="uuid" add="true" />
+                        </gmd:PT_FreeText>
+                        <geonet:element ref="228" parent="211" uuid="gmd:otherConstraints_5464de17-e22b-4978-93c4-946db11d331c" min="0"
+                            max="10000" up="true" del="true" add="true" />
+                        <geonet:attribute name="gco:nilReason" add="true">
+                            <geonet:text value="inapplicable" />
+                            <geonet:text value="missing" />
+                            <geonet:text value="template" />
+                            <geonet:text value="unknown" />
+                            <geonet:text value="withheld" />
+                        </geonet:attribute>
+                    </gmd:otherConstraints>
+                    <geonet:child name="otherConstraints" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                        uuid="child_gmd:otherConstraints_b10f1b13-1c95-4500-9695-212f464ba671" min="0" max="10000" action="replace" />
+                    <che:legislationConstraints>
+                        <che:CHE_MD_Legislation gco:isoType="gmd:MD_Legislation">
+                            <che:country>
+                                <gmd:Country codeList="http://www.isotc211.org/2005/resources/codeList.xml#Country" codeListValue="">
+                                    <geonet:element ref="235" parent="234" uuid="gmd:Country_ce5f9632-92b2-4380-ba86-334aa387bcbe" min="1"
+                                        max="1" />
+                                    <geonet:attribute name="codeList" />
+                                    <geonet:attribute name="codeListValue" />
+                                    <geonet:attribute name="codeSpace" add="true" />
+                                </gmd:Country>
+                                <geonet:element ref="234" parent="233" uuid="che:country_355b54e9-96aa-4213-8802-afb7c496f811" min="1"
+                                    max="10000" add="true" />
+                                <geonet:attribute name="gco:nilReason" add="true">
+                                    <geonet:text value="inapplicable" />
+                                    <geonet:text value="missing" />
+                                    <geonet:text value="template" />
+                                    <geonet:text value="unknown" />
+                                    <geonet:text value="withheld" />
+                                </geonet:attribute>
+                            </che:country>
+                            <geonet:child name="country" prefix="che" namespace="http://www.geocat.ch/2008/che"
+                                uuid="child_che:country_68c5262d-ca18-49d4-86a2-735b719bbd45" min="1" max="10000" action="replace" />
+                            <geonet:child name="language" prefix="che" namespace="http://www.geocat.ch/2008/che"
+                                uuid="child_che:language_917986cd-36df-4216-8c73-0708e5c6c648" min="0" max="10000" action="replace" />
+                            <geonet:child name="legislationType" prefix="che" namespace="http://www.geocat.ch/2008/che"
+                                uuid="child_che:legislationType_840ff8a9-5f99-45ef-90ee-2ed807f0b8a2" min="0" max="1" action="replace" />
+                            <geonet:child name="internalReference" prefix="che" namespace="http://www.geocat.ch/2008/che"
+                                uuid="child_che:internalReference_3a033126-062a-447e-82db-ab6697f336dd" min="0" max="10000"
+                                action="replace" />
+                            <che:title>
+                                <gmd:CI_Citation>
+                                    <gmd:title xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                                        xsi:type="gmd:PT_FreeText_PropertyType">
+                                        <geonet:child name="CharacterString" prefix="gco" namespace="http://www.isotc211.org/2005/gco"
+                                            uuid="child_gco:CharacterString_cf74b578-c398-44e8-9445-b5d6b23f4e5e" min="1" max="1"
+                                            action="replace" />
+                                        <gmd:PT_FreeText>
+                                            <gmd:textGroup>
+                                                <gmd:LocalisedCharacterString locale="#EN">
+                                                    legislation constraint title before test
+                                                    <geonet:element ref="241" parent="240"
+                                                        uuid="gmd:LocalisedCharacterString_e53827a1-2bc6-4dec-b1b1-7aa1594eeb0e" min="1"
+                                                        max="1" />
+                                                    <geonet:attribute name="id" add="true" />
+                                                    <geonet:attribute name="locale" del="true" />
+                                                </gmd:LocalisedCharacterString>
+                                                <geonet:element ref="240" parent="239"
+                                                    uuid="gmd:textGroup_56e0776e-da57-4135-98d6-c36e95814cd0" min="1" max="10000"
+                                                    add="true" />
+                                                <geonet:attribute name="gco:nilReason" add="true">
+                                                    <geonet:text value="inapplicable" />
+                                                    <geonet:text value="missing" />
+                                                    <geonet:text value="template" />
+                                                    <geonet:text value="unknown" />
+                                                    <geonet:text value="withheld" />
+                                                </geonet:attribute>
+                                                <geonet:attribute name="type" add="true">
+                                                    <geonet:default value="simple" />
+                                                </geonet:attribute>
+                                                <geonet:attribute name="xlink:href" add="true" />
+                                                <geonet:attribute name="xlink:role" add="true" />
+                                                <geonet:attribute name="xlink:arcrole" add="true" />
+                                                <geonet:attribute name="xlink:title" add="true" />
+                                                <geonet:attribute name="xlink:show" add="true">
+                                                    <geonet:text value="new" />
+                                                    <geonet:text value="replace" />
+                                                    <geonet:text value="embed" />
+                                                    <geonet:text value="other" />
+                                                    <geonet:text value="none" />
+                                                </geonet:attribute>
+                                                <geonet:attribute name="xlink:actuate" add="true">
+                                                    <geonet:text value="onLoad" />
+                                                    <geonet:text value="onRequest" />
+                                                    <geonet:text value="other" />
+                                                    <geonet:text value="none" />
+                                                </geonet:attribute>
+                                                <geonet:attribute name="uuidref" add="true" />
+                                            </gmd:textGroup>
+                                            <geonet:child name="textGroup" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                                                uuid="child_gmd:textGroup_d2b850ee-cebd-40a7-a740-6766030088ac" min="1" max="10000"
+                                                action="replace" />
+                                            <geonet:element ref="239" parent="238"
+                                                uuid="gmd:PT_FreeText_56d369c4-8f53-4c88-bf9a-c1e91bf0adc9" />
+                                            <geonet:attribute name="id" add="true" />
+                                            <geonet:attribute name="uuid" add="true" />
+                                        </gmd:PT_FreeText>
+                                        <geonet:element ref="238" parent="237" uuid="gmd:title_7cc7494a-54df-4e67-a3eb-ba3547653f19"
+                                            min="1" max="1" />
+                                        <geonet:attribute name="gco:nilReason" add="true">
+                                            <geonet:text value="inapplicable" />
+                                            <geonet:text value="missing" />
+                                            <geonet:text value="template" />
+                                            <geonet:text value="unknown" />
+                                            <geonet:text value="withheld" />
+                                        </geonet:attribute>
+                                    </gmd:title>
+                                    <geonet:child name="alternateTitle" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                                        uuid="child_gmd:alternateTitle_9b36f445-ac11-4762-8f3b-33b90b6d675c" min="0" max="10000"
+                                        action="replace" />
+                                    <gmd:date>
+                                        <gmd:CI_Date>
+                                            <gmd:date>
+                                                <gco:Date>
+                                                    <geonet:element ref="245" parent="244"
+                                                        uuid="gco:Date_b3ee28f7-ebbb-431e-af6d-e84ea142ff0a" min="1" max="1" />
+                                                </gco:Date>
+                                                <geonet:element ref="244" parent="243"
+                                                    uuid="gmd:date_457ca64a-8263-4244-a317-8da01f2946cc" min="1" max="1" />
+                                                <geonet:attribute name="gco:nilReason" add="true">
+                                                    <geonet:text value="inapplicable" />
+                                                    <geonet:text value="missing" />
+                                                    <geonet:text value="template" />
+                                                    <geonet:text value="unknown" />
+                                                    <geonet:text value="withheld" />
+                                                </geonet:attribute>
+                                            </gmd:date>
+                                            <gmd:dateType>
+                                                <gmd:CI_DateTypeCode
+                                                    codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode"
+                                                    codeListValue="">
+                                                    <geonet:element ref="247" parent="246"
+                                                        uuid="gmd:CI_DateTypeCode_3e2d547f-256e-4eff-bf7d-de17440988b3" min="1" max="1" />
+                                                    <geonet:attribute name="codeList" />
+                                                    <geonet:attribute name="codeListValue" />
+                                                    <geonet:attribute name="codeSpace" add="true" />
+                                                </gmd:CI_DateTypeCode>
+                                                <geonet:element ref="246" parent="243"
+                                                    uuid="gmd:dateType_95cfee5e-3d02-403f-acdd-894bbc8fdfd2" min="1" max="1" />
+                                                <geonet:attribute name="gco:nilReason" add="true">
+                                                    <geonet:text value="inapplicable" />
+                                                    <geonet:text value="missing" />
+                                                    <geonet:text value="template" />
+                                                    <geonet:text value="unknown" />
+                                                    <geonet:text value="withheld" />
+                                                </geonet:attribute>
+                                            </gmd:dateType>
+                                            <geonet:element ref="243" parent="242" uuid="gmd:CI_Date_f8cf3d50-a1ac-4bea-9aff-1430c73007ba"
+                                                min="1" max="1" />
+                                            <geonet:attribute name="id" add="true" />
+                                            <geonet:attribute name="uuid" add="true" />
+                                        </gmd:CI_Date>
+                                        <geonet:element ref="242" parent="237" uuid="gmd:date_d0266f56-3ee8-4b4a-b88b-e600014aeca3"
+                                            min="1" max="10000" add="true" />
+                                        <geonet:attribute name="gco:nilReason" add="true">
+                                            <geonet:text value="inapplicable" />
+                                            <geonet:text value="missing" />
+                                            <geonet:text value="template" />
+                                            <geonet:text value="unknown" />
+                                            <geonet:text value="withheld" />
+                                        </geonet:attribute>
+                                        <geonet:attribute name="type" add="true">
+                                            <geonet:default value="simple" />
+                                        </geonet:attribute>
+                                        <geonet:attribute name="xlink:href" add="true" />
+                                        <geonet:attribute name="xlink:role" add="true" />
+                                        <geonet:attribute name="xlink:arcrole" add="true" />
+                                        <geonet:attribute name="xlink:title" add="true" />
+                                        <geonet:attribute name="xlink:show" add="true">
+                                            <geonet:text value="new" />
+                                            <geonet:text value="replace" />
+                                            <geonet:text value="embed" />
+                                            <geonet:text value="other" />
+                                            <geonet:text value="none" />
+                                        </geonet:attribute>
+                                        <geonet:attribute name="xlink:actuate" add="true">
+                                            <geonet:text value="onLoad" />
+                                            <geonet:text value="onRequest" />
+                                            <geonet:text value="other" />
+                                            <geonet:text value="none" />
+                                        </geonet:attribute>
+                                        <geonet:attribute name="uuidref" add="true" />
+                                    </gmd:date>
+                                    <geonet:child name="date" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                                        uuid="child_gmd:date_2a2556ab-e690-4e5b-8220-875306c4f7f9" min="1" max="10000" action="replace" />
+                                    <geonet:child name="edition" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                                        uuid="child_gmd:edition_b6d88f0e-3c02-48eb-b905-b6912c8d3aff" min="0" max="1" action="replace" />
+                                    <geonet:child name="editionDate" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                                        uuid="child_gmd:editionDate_fef2e824-b389-431f-8650-01319426368c" min="0" max="1"
+                                        action="replace" />
+                                    <geonet:child name="identifier" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                                        uuid="child_gmd:identifier_c6b4c036-7138-43b1-8cdd-af8fe7188129" min="0" max="10000"
+                                        action="replace" />
+                                    <geonet:child name="citedResponsibleParty" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                                        uuid="child_gmd:citedResponsibleParty_e29e5285-7559-4d4f-8af9-c8f435de6e7a" min="0" max="10000"
+                                        action="replace" />
+                                    <geonet:child name="presentationForm" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                                        uuid="child_gmd:presentationForm_79296766-6650-47c9-9599-f61d61314dfe" min="0" max="10000"
+                                        action="replace" />
+                                    <geonet:child name="series" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                                        uuid="child_gmd:series_f1f48bff-8d46-4425-9e23-8068e559a70e" min="0" max="1" action="replace" />
+                                    <geonet:child name="otherCitationDetails" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                                        uuid="child_gmd:otherCitationDetails_f70548b0-a6de-44a6-abf9-21f28802a17e" min="0" max="1"
+                                        action="replace" />
+                                    <geonet:child name="collectiveTitle" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                                        uuid="child_gmd:collectiveTitle_03391043-d567-4806-8108-c30a33c2c24c" min="0" max="1"
+                                        action="replace" />
+                                    <geonet:child name="ISBN" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                                        uuid="child_gmd:ISBN_8117917b-6844-41dd-948e-cd76af25dfdc" min="0" max="1" action="replace" />
+                                    <geonet:child name="ISSN" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                                        uuid="child_gmd:ISSN_18e4aef4-4077-41c8-8f2d-6112d7a5763c" min="0" max="1" action="replace" />
+                                    <geonet:element ref="237" parent="236" uuid="gmd:CI_Citation_277de9e7-b99a-42d9-99f8-1378a68621bb"
+                                        min="1" max="1" />
+                                    <geonet:attribute name="id" add="true" />
+                                    <geonet:attribute name="uuid" add="true" />
+                                </gmd:CI_Citation>
+                                <geonet:element ref="236" parent="233" uuid="che:title_483fc08a-00a8-440e-a6ab-8197f2789df9" min="1"
+                                    max="1" />
+                                <geonet:attribute name="gco:nilReason" add="true">
+                                    <geonet:text value="inapplicable" />
+                                    <geonet:text value="missing" />
+                                    <geonet:text value="template" />
+                                    <geonet:text value="unknown" />
+                                    <geonet:text value="withheld" />
+                                </geonet:attribute>
+                                <geonet:attribute name="type" add="true">
+                                    <geonet:default value="simple" />
+                                </geonet:attribute>
+                                <geonet:attribute name="xlink:href" add="true" />
+                                <geonet:attribute name="xlink:role" add="true" />
+                                <geonet:attribute name="xlink:arcrole" add="true" />
+                                <geonet:attribute name="xlink:title" add="true" />
+                                <geonet:attribute name="xlink:show" add="true">
+                                    <geonet:text value="new" />
+                                    <geonet:text value="replace" />
+                                    <geonet:text value="embed" />
+                                    <geonet:text value="other" />
+                                    <geonet:text value="none" />
+                                </geonet:attribute>
+                                <geonet:attribute name="xlink:actuate" add="true">
+                                    <geonet:text value="onLoad" />
+                                    <geonet:text value="onRequest" />
+                                    <geonet:text value="other" />
+                                    <geonet:text value="none" />
+                                </geonet:attribute>
+                                <geonet:attribute name="uuidref" add="true" />
+                            </che:title>
+                            <geonet:element ref="233" parent="232" uuid="che:CHE_MD_Legislation_cb650588-7007-4de3-9af1-a3e31ad60616"
+                                min="1" max="1" />
+                            <geonet:attribute name="gco:isoType">
+                                <geonet:default value="gmd:MD_Legislation" />
+                            </geonet:attribute>
+                            <geonet:attribute name="id" add="true" />
+                            <geonet:attribute name="uuid" add="true" />
+                        </che:CHE_MD_Legislation>
+                        <geonet:element ref="232" parent="211" uuid="che:legislationConstraints_c3efed66-a0e9-459e-adb2-26c7fbf505d2"
+                            min="0" max="10000" del="true" add="true" />
+                        <geonet:attribute name="gco:nilReason" add="true">
+                            <geonet:text value="inapplicable" />
+                            <geonet:text value="missing" />
+                            <geonet:text value="template" />
+                            <geonet:text value="unknown" />
+                            <geonet:text value="withheld" />
+                        </geonet:attribute>
+                        <geonet:attribute name="type" add="true">
+                            <geonet:default value="simple" />
+                        </geonet:attribute>
+                        <geonet:attribute name="xlink:href" add="true" />
+                        <geonet:attribute name="xlink:role" add="true" />
+                        <geonet:attribute name="xlink:arcrole" add="true" />
+                        <geonet:attribute name="xlink:title" add="true" />
+                        <geonet:attribute name="xlink:show" add="true">
+                            <geonet:text value="new" />
+                            <geonet:text value="replace" />
+                            <geonet:text value="embed" />
+                            <geonet:text value="other" />
+                            <geonet:text value="none" />
+                        </geonet:attribute>
+                        <geonet:attribute name="xlink:actuate" add="true">
+                            <geonet:text value="onLoad" />
+                            <geonet:text value="onRequest" />
+                            <geonet:text value="other" />
+                            <geonet:text value="none" />
+                        </geonet:attribute>
+                        <geonet:attribute name="uuidref" add="true" />
+                    </che:legislationConstraints>
+                    <geonet:child name="legislationConstraints" prefix="che" namespace="http://www.geocat.ch/2008/che"
+                        uuid="child_che:legislationConstraints_d3691cad-bdbc-4135-915f-879300ccff6b" min="0" max="10000"
+                        action="replace" />
+                    <geonet:element ref="211" parent="210" uuid="che:CHE_MD_LegalConstraints_6dceb6ee-1702-45fe-bb10-089bea25b325" min="1"
+                        max="1" />
+                    <geonet:attribute name="id" add="true" />
+                    <geonet:attribute name="uuid" add="true" />
+                    <geonet:attribute name="gco:isoType">
+                        <geonet:default value="gmd:MD_LegalConstraints" />
+                    </geonet:attribute>
+                </che:CHE_MD_LegalConstraints>
+                <geonet:element ref="210" parent="91" uuid="gmd:resourceConstraints_080325b1-299f-47aa-96af-709d48f7e560" min="0"
+                    max="10000" down="true" del="true" add="true" />
+                <geonet:attribute name="gco:nilReason" add="true">
+                    <geonet:text value="inapplicable" />
+                    <geonet:text value="missing" />
+                    <geonet:text value="template" />
+                    <geonet:text value="unknown" />
+                    <geonet:text value="withheld" />
+                </geonet:attribute>
+                <geonet:attribute name="type" add="true">
+                    <geonet:default value="simple" />
+                </geonet:attribute>
+                <geonet:attribute name="xlink:href" add="true" />
+                <geonet:attribute name="xlink:role" add="true" />
+                <geonet:attribute name="xlink:arcrole" add="true" />
+                <geonet:attribute name="xlink:title" add="true" />
+                <geonet:attribute name="xlink:show" add="true">
+                    <geonet:text value="new" />
+                    <geonet:text value="replace" />
+                    <geonet:text value="embed" />
+                    <geonet:text value="other" />
+                    <geonet:text value="none" />
+                </geonet:attribute>
+                <geonet:attribute name="xlink:actuate" add="true">
+                    <geonet:text value="onLoad" />
+                    <geonet:text value="onRequest" />
+                    <geonet:text value="other" />
+                    <geonet:text value="none" />
+                </geonet:attribute>
+                <geonet:attribute name="uuidref" add="true" />
+            </gmd:resourceConstraints>
+            <gmd:resourceConstraints>
+                <che:CHE_MD_LegalConstraints gco:isoType="gmd:MD_LegalConstraints">
+                    <geonet:child name="useLimitation" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                        uuid="child_gmd:useLimitation_c54811f9-1ffa-489e-ae1d-f4cdb45c98fc" min="0" max="10000" action="replace" />
+                    <geonet:child name="accessConstraints" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                        uuid="child_gmd:accessConstraints_e5670ffb-4039-449f-999e-aa5485c910c4" min="0" max="10000" action="replace" />
+                    <geonet:child name="useConstraints" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                        uuid="child_gmd:useConstraints_db5ddf3f-6228-4de4-bec7-69a85eef8be8" min="0" max="10000" action="replace" />
+                    <geonet:child name="otherConstraints" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                        uuid="child_gmd:otherConstraints_c6da8934-4c8b-4a22-aadc-582f09791f19" min="0" max="10000" action="replace" />
+                    <geonet:child name="legislationConstraints" prefix="che" namespace="http://www.geocat.ch/2008/che"
+                        uuid="child_che:legislationConstraints_d0c2b735-29f6-41e4-86e0-be5176930b04" min="0" max="10000"
+                        action="replace" />
+                    <geonet:element ref="249" parent="248" uuid="che:CHE_MD_LegalConstraints_3b04d997-7f4b-4697-a9a7-65cf3e85c8b7" min="1"
+                        max="1" />
+                    <geonet:attribute name="id" add="true" />
+                    <geonet:attribute name="uuid" add="true" />
+                    <geonet:attribute name="gco:isoType">
+                        <geonet:default value="gmd:MD_LegalConstraints" />
+                    </geonet:attribute>
+                </che:CHE_MD_LegalConstraints>
+                <geonet:element ref="248" parent="91" uuid="gmd:resourceConstraints_92fa6f53-deef-435f-90f9-6f8a0f0acc01" min="0"
+                    max="10000" up="true" down="true" del="true" add="true" />
+                <geonet:attribute name="gco:nilReason" add="true">
+                    <geonet:text value="inapplicable" />
+                    <geonet:text value="missing" />
+                    <geonet:text value="template" />
+                    <geonet:text value="unknown" />
+                    <geonet:text value="withheld" />
+                </geonet:attribute>
+                <geonet:attribute name="type" add="true">
+                    <geonet:default value="simple" />
+                </geonet:attribute>
+                <geonet:attribute name="xlink:href" add="true" />
+                <geonet:attribute name="xlink:role" add="true" />
+                <geonet:attribute name="xlink:arcrole" add="true" />
+                <geonet:attribute name="xlink:title" add="true" />
+                <geonet:attribute name="xlink:show" add="true">
+                    <geonet:text value="new" />
+                    <geonet:text value="replace" />
+                    <geonet:text value="embed" />
+                    <geonet:text value="other" />
+                    <geonet:text value="none" />
+                </geonet:attribute>
+                <geonet:attribute name="xlink:actuate" add="true">
+                    <geonet:text value="onLoad" />
+                    <geonet:text value="onRequest" />
+                    <geonet:text value="other" />
+                    <geonet:text value="none" />
+                </geonet:attribute>
+                <geonet:attribute name="uuidref" add="true" />
+            </gmd:resourceConstraints>
+            <gmd:resourceConstraints>
+                <gmd:MD_Constraints>
+                    <gmd:useLimitation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <geonet:child name="CharacterString" prefix="gco" namespace="http://www.isotc211.org/2005/gco"
+                            uuid="child_gco:CharacterString_e2fe80fb-c82e-4794-8f67-c4508511e7e3" min="1" max="1" action="replace" />
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">
+                                    limitation 1
+                                    <geonet:element ref="255" parent="254"
+                                        uuid="gmd:LocalisedCharacterString_c7b5a803-defc-4253-b91c-a2830f5d8ab2" min="1" max="1" />
+                                    <geonet:attribute name="id" add="true" />
+                                    <geonet:attribute name="locale" del="true" />
+                                </gmd:LocalisedCharacterString>
+                                <geonet:element ref="254" parent="253" uuid="gmd:textGroup_16d28452-16ba-4118-b3f0-f664874461e3" min="1"
+                                    max="10000" add="true" />
+                                <geonet:attribute name="gco:nilReason" add="true">
+                                    <geonet:text value="inapplicable" />
+                                    <geonet:text value="missing" />
+                                    <geonet:text value="template" />
+                                    <geonet:text value="unknown" />
+                                    <geonet:text value="withheld" />
+                                </geonet:attribute>
+                                <geonet:attribute name="type" add="true">
+                                    <geonet:default value="simple" />
+                                </geonet:attribute>
+                                <geonet:attribute name="xlink:href" add="true" />
+                                <geonet:attribute name="xlink:role" add="true" />
+                                <geonet:attribute name="xlink:arcrole" add="true" />
+                                <geonet:attribute name="xlink:title" add="true" />
+                                <geonet:attribute name="xlink:show" add="true">
+                                    <geonet:text value="new" />
+                                    <geonet:text value="replace" />
+                                    <geonet:text value="embed" />
+                                    <geonet:text value="other" />
+                                    <geonet:text value="none" />
+                                </geonet:attribute>
+                                <geonet:attribute name="xlink:actuate" add="true">
+                                    <geonet:text value="onLoad" />
+                                    <geonet:text value="onRequest" />
+                                    <geonet:text value="other" />
+                                    <geonet:text value="none" />
+                                </geonet:attribute>
+                                <geonet:attribute name="uuidref" add="true" />
+                            </gmd:textGroup>
+                            <geonet:child name="textGroup" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                                uuid="child_gmd:textGroup_c8dc9ce6-a0d0-4e38-bdbe-a4567b8e5dfd" min="1" max="10000" action="replace" />
+                            <geonet:element ref="253" parent="252" uuid="gmd:PT_FreeText_91d70af4-4adb-4b63-9683-ef970720d8fa" />
+                            <geonet:attribute name="id" add="true" />
+                            <geonet:attribute name="uuid" add="true" />
+                        </gmd:PT_FreeText>
+                        <geonet:element ref="252" parent="251" uuid="gmd:useLimitation_ac899f9c-d7d8-4111-96b4-10f6dff2163d" min="0"
+                            max="10000" down="true" del="true" add="true" />
+                        <geonet:attribute name="gco:nilReason" add="true">
+                            <geonet:text value="inapplicable" />
+                            <geonet:text value="missing" />
+                            <geonet:text value="template" />
+                            <geonet:text value="unknown" />
+                            <geonet:text value="withheld" />
+                        </geonet:attribute>
+                    </gmd:useLimitation>
+                    <gmd:useLimitation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <geonet:child name="CharacterString" prefix="gco" namespace="http://www.isotc211.org/2005/gco"
+                            uuid="child_gco:CharacterString_46aa38d4-4a71-4d21-b730-2e6ed6aaad02" min="1" max="1" action="replace" />
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">
+                                    limitation 2
+                                    <geonet:element ref="259" parent="258"
+                                        uuid="gmd:LocalisedCharacterString_a133e2ea-42b3-4033-aada-6e7516a4c746" min="1" max="1" />
+                                    <geonet:attribute name="id" add="true" />
+                                    <geonet:attribute name="locale" del="true" />
+                                </gmd:LocalisedCharacterString>
+                                <geonet:element ref="258" parent="257" uuid="gmd:textGroup_89d784e4-580d-4e30-aade-9c0480ca081c" min="1"
+                                    max="10000" add="true" />
+                                <geonet:attribute name="gco:nilReason" add="true">
+                                    <geonet:text value="inapplicable" />
+                                    <geonet:text value="missing" />
+                                    <geonet:text value="template" />
+                                    <geonet:text value="unknown" />
+                                    <geonet:text value="withheld" />
+                                </geonet:attribute>
+                                <geonet:attribute name="type" add="true">
+                                    <geonet:default value="simple" />
+                                </geonet:attribute>
+                                <geonet:attribute name="xlink:href" add="true" />
+                                <geonet:attribute name="xlink:role" add="true" />
+                                <geonet:attribute name="xlink:arcrole" add="true" />
+                                <geonet:attribute name="xlink:title" add="true" />
+                                <geonet:attribute name="xlink:show" add="true">
+                                    <geonet:text value="new" />
+                                    <geonet:text value="replace" />
+                                    <geonet:text value="embed" />
+                                    <geonet:text value="other" />
+                                    <geonet:text value="none" />
+                                </geonet:attribute>
+                                <geonet:attribute name="xlink:actuate" add="true">
+                                    <geonet:text value="onLoad" />
+                                    <geonet:text value="onRequest" />
+                                    <geonet:text value="other" />
+                                    <geonet:text value="none" />
+                                </geonet:attribute>
+                                <geonet:attribute name="uuidref" add="true" />
+                            </gmd:textGroup>
+                            <geonet:child name="textGroup" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                                uuid="child_gmd:textGroup_93678450-93c8-4eda-aadb-2f282f626225" min="1" max="10000" action="replace" />
+                            <geonet:element ref="257" parent="256" uuid="gmd:PT_FreeText_8951c56d-42f2-45db-b3e5-f7c2f2b0d4ee" />
+                            <geonet:attribute name="id" add="true" />
+                            <geonet:attribute name="uuid" add="true" />
+                        </gmd:PT_FreeText>
+                        <geonet:element ref="256" parent="251" uuid="gmd:useLimitation_2daf1ac7-bc24-4e32-85de-47ebf5040e11" min="0"
+                            max="10000" up="true" del="true" add="true" />
+                        <geonet:attribute name="gco:nilReason" add="true">
+                            <geonet:text value="inapplicable" />
+                            <geonet:text value="missing" />
+                            <geonet:text value="template" />
+                            <geonet:text value="unknown" />
+                            <geonet:text value="withheld" />
+                        </geonet:attribute>
+                    </gmd:useLimitation>
+                    <geonet:child name="useLimitation" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                        uuid="child_gmd:useLimitation_374f3ce0-db6f-46f3-811c-4e37b6e8c446" min="0" max="10000" action="replace" />
+                    <geonet:element ref="251" parent="250" uuid="gmd:MD_Constraints_6b8a0e81-e24e-4b30-8fd2-c965bcb6418c" min="1"
+                        max="1" />
+                    <geonet:attribute name="id" add="true" />
+                    <geonet:attribute name="uuid" add="true" />
+                </gmd:MD_Constraints>
+                <geonet:element ref="250" parent="91" uuid="gmd:resourceConstraints_0fb1e9b3-fd00-4cee-a401-7fd7a69f02b0" min="0"
+                    max="10000" up="true" down="true" del="true" add="true" />
+                <geonet:attribute name="gco:nilReason" add="true">
+                    <geonet:text value="inapplicable" />
+                    <geonet:text value="missing" />
+                    <geonet:text value="template" />
+                    <geonet:text value="unknown" />
+                    <geonet:text value="withheld" />
+                </geonet:attribute>
+                <geonet:attribute name="type" add="true">
+                    <geonet:default value="simple" />
+                </geonet:attribute>
+                <geonet:attribute name="xlink:href" add="true" />
+                <geonet:attribute name="xlink:role" add="true" />
+                <geonet:attribute name="xlink:arcrole" add="true" />
+                <geonet:attribute name="xlink:title" add="true" />
+                <geonet:attribute name="xlink:show" add="true">
+                    <geonet:text value="new" />
+                    <geonet:text value="replace" />
+                    <geonet:text value="embed" />
+                    <geonet:text value="other" />
+                    <geonet:text value="none" />
+                </geonet:attribute>
+                <geonet:attribute name="xlink:actuate" add="true">
+                    <geonet:text value="onLoad" />
+                    <geonet:text value="onRequest" />
+                    <geonet:text value="other" />
+                    <geonet:text value="none" />
+                </geonet:attribute>
+                <geonet:attribute name="uuidref" add="true" />
+            </gmd:resourceConstraints>
+            <gmd:resourceConstraints>
+                <gmd:MD_SecurityConstraints>
+                    <gmd:useLimitation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <geonet:child name="CharacterString" prefix="gco" namespace="http://www.isotc211.org/2005/gco"
+                            uuid="child_gco:CharacterString_85dde338-7773-40bb-bdf5-4aa8afdaa2c2" min="1" max="1" action="replace" />
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">
+                                    Sec Limitation
+                                    <geonet:element ref="265" parent="264"
+                                        uuid="gmd:LocalisedCharacterString_53c9c5a5-c107-4689-a413-13166a0731bb" min="1" max="1" />
+                                    <geonet:attribute name="id" add="true" />
+                                    <geonet:attribute name="locale" del="true" />
+                                </gmd:LocalisedCharacterString>
+                                <geonet:element ref="264" parent="263" uuid="gmd:textGroup_09132a17-5f71-44a7-acf4-71045b966b49" min="1"
+                                    max="10000" add="true" />
+                                <geonet:attribute name="gco:nilReason" add="true">
+                                    <geonet:text value="inapplicable" />
+                                    <geonet:text value="missing" />
+                                    <geonet:text value="template" />
+                                    <geonet:text value="unknown" />
+                                    <geonet:text value="withheld" />
+                                </geonet:attribute>
+                                <geonet:attribute name="type" add="true">
+                                    <geonet:default value="simple" />
+                                </geonet:attribute>
+                                <geonet:attribute name="xlink:href" add="true" />
+                                <geonet:attribute name="xlink:role" add="true" />
+                                <geonet:attribute name="xlink:arcrole" add="true" />
+                                <geonet:attribute name="xlink:title" add="true" />
+                                <geonet:attribute name="xlink:show" add="true">
+                                    <geonet:text value="new" />
+                                    <geonet:text value="replace" />
+                                    <geonet:text value="embed" />
+                                    <geonet:text value="other" />
+                                    <geonet:text value="none" />
+                                </geonet:attribute>
+                                <geonet:attribute name="xlink:actuate" add="true">
+                                    <geonet:text value="onLoad" />
+                                    <geonet:text value="onRequest" />
+                                    <geonet:text value="other" />
+                                    <geonet:text value="none" />
+                                </geonet:attribute>
+                                <geonet:attribute name="uuidref" add="true" />
+                            </gmd:textGroup>
+                            <geonet:child name="textGroup" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                                uuid="child_gmd:textGroup_fe021814-e290-4378-83d9-35b2890771e1" min="1" max="10000" action="replace" />
+                            <geonet:element ref="263" parent="262" uuid="gmd:PT_FreeText_e089d58f-71b3-462e-bbff-12565b100de3" />
+                            <geonet:attribute name="id" add="true" />
+                            <geonet:attribute name="uuid" add="true" />
+                        </gmd:PT_FreeText>
+                        <geonet:element ref="262" parent="261" uuid="gmd:useLimitation_8cb32586-45b7-476b-8723-dde72a45a3b7" min="0"
+                            max="10000" del="true" add="true" />
+                        <geonet:attribute name="gco:nilReason" add="true">
+                            <geonet:text value="inapplicable" />
+                            <geonet:text value="missing" />
+                            <geonet:text value="template" />
+                            <geonet:text value="unknown" />
+                            <geonet:text value="withheld" />
+                        </geonet:attribute>
+                    </gmd:useLimitation>
+                    <geonet:child name="useLimitation" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                        uuid="child_gmd:useLimitation_40b117e1-936d-497c-a42b-f2fcb3c92c2c" min="0" max="10000" action="replace" />
+                    <gmd:classification>
+                        <gmd:MD_ClassificationCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ClassificationCode"
+                            codeListValue="confidential">
+                            <geonet:element ref="267" parent="266" uuid="gmd:MD_ClassificationCode_4e7fbbff-b2c4-4577-8765-9ff138f6c434"
+                                min="1" max="1" />
+                            <geonet:attribute name="codeList" />
+                            <geonet:attribute name="codeListValue" />
+                            <geonet:attribute name="codeSpace" add="true" />
+                        </gmd:MD_ClassificationCode>
+                        <geonet:element ref="266" parent="261" uuid="gmd:classification_6b89c09a-4b1a-40c4-b1b6-48b592918114" min="1"
+                            max="1" />
+                        <geonet:attribute name="gco:nilReason" add="true">
+                            <geonet:text value="inapplicable" />
+                            <geonet:text value="missing" />
+                            <geonet:text value="template" />
+                            <geonet:text value="unknown" />
+                            <geonet:text value="withheld" />
+                        </geonet:attribute>
+                    </gmd:classification>
+                    <gmd:userNote xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <geonet:child name="CharacterString" prefix="gco" namespace="http://www.isotc211.org/2005/gco"
+                            uuid="child_gco:CharacterString_d55ef89b-a3cc-4913-a917-ab1876459289" min="1" max="1" action="replace" />
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">
+                                    user note
+                                    <geonet:element ref="271" parent="270"
+                                        uuid="gmd:LocalisedCharacterString_d6e4893d-db45-454e-9b92-f9985e9013cc" min="1" max="1" />
+                                    <geonet:attribute name="id" add="true" />
+                                    <geonet:attribute name="locale" del="true" />
+                                </gmd:LocalisedCharacterString>
+                                <geonet:element ref="270" parent="269" uuid="gmd:textGroup_e5548b60-a725-4f2a-aaf5-6cea262d09ca" min="1"
+                                    max="10000" add="true" />
+                                <geonet:attribute name="gco:nilReason" add="true">
+                                    <geonet:text value="inapplicable" />
+                                    <geonet:text value="missing" />
+                                    <geonet:text value="template" />
+                                    <geonet:text value="unknown" />
+                                    <geonet:text value="withheld" />
+                                </geonet:attribute>
+                                <geonet:attribute name="type" add="true">
+                                    <geonet:default value="simple" />
+                                </geonet:attribute>
+                                <geonet:attribute name="xlink:href" add="true" />
+                                <geonet:attribute name="xlink:role" add="true" />
+                                <geonet:attribute name="xlink:arcrole" add="true" />
+                                <geonet:attribute name="xlink:title" add="true" />
+                                <geonet:attribute name="xlink:show" add="true">
+                                    <geonet:text value="new" />
+                                    <geonet:text value="replace" />
+                                    <geonet:text value="embed" />
+                                    <geonet:text value="other" />
+                                    <geonet:text value="none" />
+                                </geonet:attribute>
+                                <geonet:attribute name="xlink:actuate" add="true">
+                                    <geonet:text value="onLoad" />
+                                    <geonet:text value="onRequest" />
+                                    <geonet:text value="other" />
+                                    <geonet:text value="none" />
+                                </geonet:attribute>
+                                <geonet:attribute name="uuidref" add="true" />
+                            </gmd:textGroup>
+                            <geonet:child name="textGroup" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                                uuid="child_gmd:textGroup_a8cc7836-bd47-4a9d-9ac0-0c17f4bae9a3" min="1" max="10000" action="replace" />
+                            <geonet:element ref="269" parent="268" uuid="gmd:PT_FreeText_22ec475c-8cfb-4ef0-babb-c6acd220c2c7" />
+                            <geonet:attribute name="id" add="true" />
+                            <geonet:attribute name="uuid" add="true" />
+                        </gmd:PT_FreeText>
+                        <geonet:element ref="268" parent="261" uuid="gmd:userNote_a6e34bd5-1aa3-4383-9ccc-8d7d70e36da6" min="0" max="1"
+                            del="true" />
+                        <geonet:attribute name="gco:nilReason" add="true">
+                            <geonet:text value="inapplicable" />
+                            <geonet:text value="missing" />
+                            <geonet:text value="template" />
+                            <geonet:text value="unknown" />
+                            <geonet:text value="withheld" />
+                        </geonet:attribute>
+                    </gmd:userNote>
+                    <gmd:classificationSystem>
+                        <gco:CharacterString>
+                            class system
+                            <geonet:element ref="273" parent="272" uuid="gco:CharacterString_c07f256e-4998-48c8-9a65-2f2f7e248536" min="1"
+                                max="1" />
+                        </gco:CharacterString>
+                        <geonet:element ref="272" parent="261" uuid="gmd:classificationSystem_70eb0222-b0a8-40c0-aeae-93837f21569b"
+                            min="0" max="1" del="true" />
+                        <geonet:attribute name="gco:nilReason" add="true">
+                            <geonet:text value="inapplicable" />
+                            <geonet:text value="missing" />
+                            <geonet:text value="template" />
+                            <geonet:text value="unknown" />
+                            <geonet:text value="withheld" />
+                        </geonet:attribute>
+                    </gmd:classificationSystem>
+                    <geonet:child name="handlingDescription" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                        uuid="child_gmd:handlingDescription_94d8929c-3328-47f5-9e31-da8067072f0c" min="0" max="1" action="replace" />
+                    <geonet:element ref="261" parent="260" uuid="gmd:MD_SecurityConstraints_68cd9e92-01c7-4bd0-863d-79e99e59143a" min="1"
+                        max="1" />
+                    <geonet:attribute name="id" add="true" />
+                    <geonet:attribute name="uuid" add="true" />
+                </gmd:MD_SecurityConstraints>
+                <geonet:element ref="260" parent="91" uuid="gmd:resourceConstraints_1cbbd601-905f-47dc-adfd-a594755ad0c6" min="0"
+                    max="10000" up="true" down="true" del="true" add="true" />
+                <geonet:attribute name="gco:nilReason" add="true">
+                    <geonet:text value="inapplicable" />
+                    <geonet:text value="missing" />
+                    <geonet:text value="template" />
+                    <geonet:text value="unknown" />
+                    <geonet:text value="withheld" />
+                </geonet:attribute>
+                <geonet:attribute name="type" add="true">
+                    <geonet:default value="simple" />
+                </geonet:attribute>
+                <geonet:attribute name="xlink:href" add="true" />
+                <geonet:attribute name="xlink:role" add="true" />
+                <geonet:attribute name="xlink:arcrole" add="true" />
+                <geonet:attribute name="xlink:title" add="true" />
+                <geonet:attribute name="xlink:show" add="true">
+                    <geonet:text value="new" />
+                    <geonet:text value="replace" />
+                    <geonet:text value="embed" />
+                    <geonet:text value="other" />
+                    <geonet:text value="none" />
+                </geonet:attribute>
+                <geonet:attribute name="xlink:actuate" add="true">
+                    <geonet:text value="onLoad" />
+                    <geonet:text value="onRequest" />
+                    <geonet:text value="other" />
+                    <geonet:text value="none" />
+                </geonet:attribute>
+                <geonet:attribute name="uuidref" add="true" />
+            </gmd:resourceConstraints>
+            <gmd:resourceConstraints>
+                <gmd:MD_Constraints>
+                    <gmd:useLimitation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <geonet:child name="CharacterString" prefix="gco" namespace="http://www.isotc211.org/2005/gco"
+                            uuid="child_gco:CharacterString_1c2c00c5-334e-4ae3-ada4-07a5e31c40ba" min="1" max="1" action="replace" />
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">
+                                    Generic toRemove
+                                    <geonet:element ref="279" parent="278"
+                                        uuid="gmd:LocalisedCharacterString_baaa63f2-1c61-4229-b565-7108dce8386c" min="1" max="1" />
+                                    <geonet:attribute name="id" add="true" />
+                                    <geonet:attribute name="locale" del="true" />
+                                </gmd:LocalisedCharacterString>
+                                <geonet:element ref="278" parent="277" uuid="gmd:textGroup_9a9d184b-cadf-41e9-a2e9-1747928ccdc9" min="1"
+                                    max="10000" add="true" />
+                                <geonet:attribute name="gco:nilReason" add="true">
+                                    <geonet:text value="inapplicable" />
+                                    <geonet:text value="missing" />
+                                    <geonet:text value="template" />
+                                    <geonet:text value="unknown" />
+                                    <geonet:text value="withheld" />
+                                </geonet:attribute>
+                                <geonet:attribute name="type" add="true">
+                                    <geonet:default value="simple" />
+                                </geonet:attribute>
+                                <geonet:attribute name="xlink:href" add="true" />
+                                <geonet:attribute name="xlink:role" add="true" />
+                                <geonet:attribute name="xlink:arcrole" add="true" />
+                                <geonet:attribute name="xlink:title" add="true" />
+                                <geonet:attribute name="xlink:show" add="true">
+                                    <geonet:text value="new" />
+                                    <geonet:text value="replace" />
+                                    <geonet:text value="embed" />
+                                    <geonet:text value="other" />
+                                    <geonet:text value="none" />
+                                </geonet:attribute>
+                                <geonet:attribute name="xlink:actuate" add="true">
+                                    <geonet:text value="onLoad" />
+                                    <geonet:text value="onRequest" />
+                                    <geonet:text value="other" />
+                                    <geonet:text value="none" />
+                                </geonet:attribute>
+                                <geonet:attribute name="uuidref" add="true" />
+                            </gmd:textGroup>
+                            <geonet:child name="textGroup" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                                uuid="child_gmd:textGroup_dfe70934-1599-47df-a752-b7a06f88c1b6" min="1" max="10000" action="replace" />
+                            <geonet:element ref="277" parent="276" uuid="gmd:PT_FreeText_548b23f6-262f-4415-bfaa-4d56eccfb410" />
+                            <geonet:attribute name="id" add="true" />
+                            <geonet:attribute name="uuid" add="true" />
+                        </gmd:PT_FreeText>
+                        <geonet:element ref="276" parent="275" uuid="gmd:useLimitation_8a57c5c7-4116-4867-9644-fba6e3be1014" min="0"
+                            max="10000" del="true" add="true" />
+                        <geonet:attribute name="gco:nilReason" add="true">
+                            <geonet:text value="inapplicable" />
+                            <geonet:text value="missing" />
+                            <geonet:text value="template" />
+                            <geonet:text value="unknown" />
+                            <geonet:text value="withheld" />
+                        </geonet:attribute>
+                    </gmd:useLimitation>
+                    <geonet:child name="useLimitation" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                        uuid="child_gmd:useLimitation_895a7f66-8675-4d6f-8217-7f963405125b" min="0" max="10000" action="replace" />
+                    <geonet:element ref="275" parent="274" uuid="gmd:MD_Constraints_757cecf1-4c9a-4d34-a595-5b7eaffcebba" min="1"
+                        max="1" />
+                    <geonet:attribute name="id" add="true" />
+                    <geonet:attribute name="uuid" add="true" />
+                </gmd:MD_Constraints>
+                <geonet:element ref="274" parent="91" uuid="gmd:resourceConstraints_b6062f22-54b8-4036-80d7-bb25dfd61faa" min="0"
+                    max="10000" up="true" down="true" del="true" add="true" />
+                <geonet:attribute name="gco:nilReason" add="true">
+                    <geonet:text value="inapplicable" />
+                    <geonet:text value="missing" />
+                    <geonet:text value="template" />
+                    <geonet:text value="unknown" />
+                    <geonet:text value="withheld" />
+                </geonet:attribute>
+                <geonet:attribute name="type" add="true">
+                    <geonet:default value="simple" />
+                </geonet:attribute>
+                <geonet:attribute name="xlink:href" add="true" />
+                <geonet:attribute name="xlink:role" add="true" />
+                <geonet:attribute name="xlink:arcrole" add="true" />
+                <geonet:attribute name="xlink:title" add="true" />
+                <geonet:attribute name="xlink:show" add="true">
+                    <geonet:text value="new" />
+                    <geonet:text value="replace" />
+                    <geonet:text value="embed" />
+                    <geonet:text value="other" />
+                    <geonet:text value="none" />
+                </geonet:attribute>
+                <geonet:attribute name="xlink:actuate" add="true">
+                    <geonet:text value="onLoad" />
+                    <geonet:text value="onRequest" />
+                    <geonet:text value="other" />
+                    <geonet:text value="none" />
+                </geonet:attribute>
+                <geonet:attribute name="uuidref" add="true" />
+            </gmd:resourceConstraints>
+            <gmd:resourceConstraints>
+                <gmd:MD_SecurityConstraints>
+                    <gmd:useLimitation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="gmd:PT_FreeText_PropertyType">
+                        <geonet:child name="CharacterString" prefix="gco" namespace="http://www.isotc211.org/2005/gco"
+                            uuid="child_gco:CharacterString_1349b808-9a1b-41f0-82f5-02867c060b49" min="1" max="1" action="replace" />
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#EN">
+                                    Generic to remove
+                                    <geonet:element ref="285" parent="284"
+                                        uuid="gmd:LocalisedCharacterString_41d75f09-4140-4173-ac75-32d340f3b93f" min="1" max="1" />
+                                    <geonet:attribute name="id" add="true" />
+                                    <geonet:attribute name="locale" del="true" />
+                                </gmd:LocalisedCharacterString>
+                                <geonet:element ref="284" parent="283" uuid="gmd:textGroup_434afe13-8f16-4955-87c2-f7e4fadcbc7b" min="1"
+                                    max="10000" add="true" />
+                                <geonet:attribute name="gco:nilReason" add="true">
+                                    <geonet:text value="inapplicable" />
+                                    <geonet:text value="missing" />
+                                    <geonet:text value="template" />
+                                    <geonet:text value="unknown" />
+                                    <geonet:text value="withheld" />
+                                </geonet:attribute>
+                                <geonet:attribute name="type" add="true">
+                                    <geonet:default value="simple" />
+                                </geonet:attribute>
+                                <geonet:attribute name="xlink:href" add="true" />
+                                <geonet:attribute name="xlink:role" add="true" />
+                                <geonet:attribute name="xlink:arcrole" add="true" />
+                                <geonet:attribute name="xlink:title" add="true" />
+                                <geonet:attribute name="xlink:show" add="true">
+                                    <geonet:text value="new" />
+                                    <geonet:text value="replace" />
+                                    <geonet:text value="embed" />
+                                    <geonet:text value="other" />
+                                    <geonet:text value="none" />
+                                </geonet:attribute>
+                                <geonet:attribute name="xlink:actuate" add="true">
+                                    <geonet:text value="onLoad" />
+                                    <geonet:text value="onRequest" />
+                                    <geonet:text value="other" />
+                                    <geonet:text value="none" />
+                                </geonet:attribute>
+                                <geonet:attribute name="uuidref" add="true" />
+                            </gmd:textGroup>
+                            <geonet:child name="textGroup" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                                uuid="child_gmd:textGroup_1e38cbdd-02b1-4f62-b635-ad0b3ec0ef56" min="1" max="10000" action="replace" />
+                            <geonet:element ref="283" parent="282" uuid="gmd:PT_FreeText_1c9bb4dd-c5f0-45bc-8faf-3da54cba3e69" />
+                            <geonet:attribute name="id" add="true" />
+                            <geonet:attribute name="uuid" add="true" />
+                        </gmd:PT_FreeText>
+                        <geonet:element ref="282" parent="281" uuid="gmd:useLimitation_0bd59b7d-2304-45bd-b61b-e6e6a58da33c" min="0"
+                            max="10000" del="true" add="true" />
+                        <geonet:attribute name="gco:nilReason" add="true">
+                            <geonet:text value="inapplicable" />
+                            <geonet:text value="missing" />
+                            <geonet:text value="template" />
+                            <geonet:text value="unknown" />
+                            <geonet:text value="withheld" />
+                        </geonet:attribute>
+                    </gmd:useLimitation>
+                    <geonet:child name="useLimitation" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                        uuid="child_gmd:useLimitation_1665ddcc-63d5-4586-88a9-01e6ee896efb" min="0" max="10000" action="replace" />
+                    <gmd:classification>
+                        <gmd:MD_ClassificationCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ClassificationCode"
+                            codeListValue="topSecret">
+                            <geonet:element ref="287" parent="286" uuid="gmd:MD_ClassificationCode_25e1fb52-1910-40e1-866b-c1eb61594e3b"
+                                min="1" max="1" />
+                            <geonet:attribute name="codeList" />
+                            <geonet:attribute name="codeListValue" />
+                            <geonet:attribute name="codeSpace" add="true" />
+                        </gmd:MD_ClassificationCode>
+                        <geonet:element ref="286" parent="281" uuid="gmd:classification_d64e7b7d-c10a-4104-a95e-2b6a35eb9d84" min="1"
+                            max="1" />
+                        <geonet:attribute name="gco:nilReason" add="true">
+                            <geonet:text value="inapplicable" />
+                            <geonet:text value="missing" />
+                            <geonet:text value="template" />
+                            <geonet:text value="unknown" />
+                            <geonet:text value="withheld" />
+                        </geonet:attribute>
+                    </gmd:classification>
+                    <geonet:child name="userNote" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                        uuid="child_gmd:userNote_8aefceac-09cc-4932-8091-08644ab0328d" min="0" max="1" action="replace" />
+                    <geonet:child name="classificationSystem" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                        uuid="child_gmd:classificationSystem_9681c203-0a9b-4ce3-9bb9-16bf5a8d0fbd" min="0" max="1" action="replace" />
+                    <geonet:child name="handlingDescription" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                        uuid="child_gmd:handlingDescription_cae071f4-3f8f-4942-924f-063d11cdb6b7" min="0" max="1" action="replace" />
+                    <geonet:element ref="281" parent="280" uuid="gmd:MD_SecurityConstraints_d3dce34f-267a-4a41-84a3-457c69548d18" min="1"
+                        max="1" />
+                    <geonet:attribute name="id" add="true" />
+                    <geonet:attribute name="uuid" add="true" />
+                </gmd:MD_SecurityConstraints>
+                <geonet:element ref="280" parent="91" uuid="gmd:resourceConstraints_013c76de-1020-41ce-824e-e27313623187" min="0"
+                    max="10000" up="true" del="true" add="true" />
+                <geonet:attribute name="gco:nilReason" add="true">
+                    <geonet:text value="inapplicable" />
+                    <geonet:text value="missing" />
+                    <geonet:text value="template" />
+                    <geonet:text value="unknown" />
+                    <geonet:text value="withheld" />
+                </geonet:attribute>
+                <geonet:attribute name="type" add="true">
+                    <geonet:default value="simple" />
+                </geonet:attribute>
+                <geonet:attribute name="xlink:href" add="true" />
+                <geonet:attribute name="xlink:role" add="true" />
+                <geonet:attribute name="xlink:arcrole" add="true" />
+                <geonet:attribute name="xlink:title" add="true" />
+                <geonet:attribute name="xlink:show" add="true">
+                    <geonet:text value="new" />
+                    <geonet:text value="replace" />
+                    <geonet:text value="embed" />
+                    <geonet:text value="other" />
+                    <geonet:text value="none" />
+                </geonet:attribute>
+                <geonet:attribute name="xlink:actuate" add="true">
+                    <geonet:text value="onLoad" />
+                    <geonet:text value="onRequest" />
+                    <geonet:text value="other" />
+                    <geonet:text value="none" />
+                </geonet:attribute>
+                <geonet:attribute name="uuidref" add="true" />
+            </gmd:resourceConstraints>
+            <geonet:child name="resourceConstraints" prefix="gmd" namespace="http://www.isotc211.org/2005/gmd"
+                uuid="child_gmd:resourceConstraints_9f1b9081-ea5d-46f0-9406-18699d967920" min="0" max="10000" action="before">
+                <geonet:choose name="che:CHE_MD_LegalConstraints" />
+                <geonet:choose name="gmd:MD_SecurityConstraints" />
+                <geonet:choose name="gmd:MD_Constraints" />
+            </geonet:child>
+            <geonet:element ref="91" parent="90" uuid="che:CHE_MD_DataIdentification_f44dcb7a-c733-4f94-a0d0-ebc010929a5a" min="1"
+                max="1" />
+            <geonet:attribute name="id" add="true" />
+            <geonet:attribute name="uuid" add="true" />
+            <geonet:attribute name="gco:isoType">
+                <geonet:default value="gmd:MD_DataIdentification" />
+            </geonet:attribute>
+        </che:CHE_MD_DataIdentification>
+    </gmd:identificationInfo>
+</che:CHE_MD_Metadata>
