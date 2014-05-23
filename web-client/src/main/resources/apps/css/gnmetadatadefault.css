@@ -609,3 +609,9 @@ be use for custom styling in view mode */
 .gmlduration + * input {
     float: none !important;
 }
+
+
+/* Hide by default inline help on editor */
+span.editor-help-inline {
+	display: none;
+}
