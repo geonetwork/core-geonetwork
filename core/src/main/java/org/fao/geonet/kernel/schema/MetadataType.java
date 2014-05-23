@@ -30,7 +30,9 @@ package org.fao.geonet.kernel.schema;
 import org.fao.geonet.constants.Edit;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 //==============================================================================
 
@@ -147,7 +149,7 @@ public class MetadataType
 		{
 			attrs.append("Attribute (").append(i).append(") ").append(getAttributeAt(i).name).append(": ");
 			@SuppressWarnings("rawtypes")
-            ArrayList alAtts = getAttributeAt(i).values;
+            Set<String> alAtts = getAttributeAt(i).values;
 			if (alAtts.size() > 0) {
 				attrs.append(getAttributeAt(i).values);
 				attrs.append(" ");
