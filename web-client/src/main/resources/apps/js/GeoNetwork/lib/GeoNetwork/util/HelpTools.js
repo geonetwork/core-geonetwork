@@ -152,5 +152,35 @@ GeoNetwork.util.HelpTools = {
                 }
             }
         });
+    },    
+    /** Show advanced tooltip **/
+    showtt: function(r) {
+    	if(r == null || r.records == null || r.records.length == 0)
+    		return;
+    	
+    	var data = r.records[0].data;
+    	
+        var tipTpl = new Ext.XTemplate(GeoNetwork.util.HelpTools.Templates.COMPLETE);
+        var msg =  panel.tipTpl.apply(r.records[0].data);
+   	
+    	msg = ['<div class="msg">',
+                   '<div class="x-box-tl"><div class="x-box-tr"><div class="x-box-tc"></div></div></div>',
+                   '<div class="x-box-ml"><div class="x-box-mr"><div class="x-box-mc">', msg, '</div></div></div>',
+                   '<div class="x-box-bl"><div class="x-box-br"><div class="x-box-bc"></div></div></div>',
+                   '</div>'].join('');
+    	
+    	//TODO instead of this, look for the label container
+    	var container = Ext.get("msg-div");
+    	
+    	if(container == null) {
+        	container = Ext.DomHelper.insertFirst(document.body, {id: "msg-div", "class": "msg"}, true);
+    	}
+    	
+    	
+    	var  msgCt = Ext.DomHelper.insertFirst(container, {id: "message-container-" + data.id}, true);
+    	msgCt.alignTo(document, 't-t');
+        var m = Ext.DomHelper.append(msgCt, {html:msg}, true);
+        m.slideIn('t').pause(20).ghost("t", {remove:true});
+        m.on("click", function(){m.remove();});
     }
 };
