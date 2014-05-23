@@ -1,0 +1,106 @@
+<div id="batchForm">
+	<fieldset class="form-horizontal">
+		<div class="form-group">
+			<label data-translate="" class="col-lg-4 control-label">batchreplacer-package</label>
+			<div class="col-lg-8">
+				<select class="form-control" id="gn-batchReplacerGroup"
+					data-ng-model="replacer.group">
+					<option></option>
+          <option data-ng-repeat="(group, elements) in batchReplacerGroups" value="{{group}}"
+            >{{'batchreplacer-section-'+group | translate}}</option>
+				</select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label data-translate="" class="col-lg-4 control-label">batchreplacer-element</label>
+			<div class="col-lg-8">
+				<select class="form-control" id="gn-batchReplacerElement" ng-disabled="!replacer.elements"
+					data-ng-model="replacer.element">
+          <option data-ng-repeat="el in replacer.elements" value="{{el}}"
+            >{{'batchreplacer-el-'+ el | translate}}</option>
+				</select>
+			</div>
+		</div>
+
+
+    <div class="form-group">
+      <label data-translate="" class="col-lg-4 control-label">batchreplacer-search</label>
+      <div class="col-lg-8">
+       <input class="form-control" type="text"  data-ng-model="replacer.searchval" ng-disabled="!replacer.element" placeholder="{{'batchreplacer-search-placeholder' | translate}}" />
+      </div>
+    </div>
+
+
+    <div class="form-group">
+      <label data-translate="" class="col-lg-4 control-label">batchreplacer-replace</label>
+      <div class="col-lg-8">
+        <input class="form-control" type="text"  data-ng-model="replacer.replaceval" ng-disabled="!replacer.element" placeholder="{{'batchreplacer-replace-placeholder'| translate}}" />
+      </div>
+    </div>
+
+    <div class="btn-toolbar">
+      <button type="button" class="btn btn-primary pull-right fa-add"
+              data-ng-disabled="!replacer.searchval || !replacer.replaceval"
+              data-ng-click="addReplacement()"
+              data-translate="">batchreplacer-addReplacement
+      </button>
+    </div>
+
+
+    <div class="row col-sm-offset-2" data-ng-show="replacer.replacements.length > 0">
+        <table class="table" class="pull-right">
+          <tr>
+            <th><span data-translate="">batchreplacer-package</span></th>
+            <th><span data-translate="">batchreplacer-element</span></th>
+            <th><span data-translate="">batchreplacer-search</span></th>
+            <th><span data-translate="">batchreplacer-replace</span></th>
+            <th></th>
+          </tr>
+
+          <tr ng-repeat="replacement in replacer.replacements">
+            <td>
+              <span data-translate="">{{'batchreplacer-section-'+replacement.package | translate}}</span>
+              <input type="hidden" id="mdsection-{{$index}}" name="mdsection-{{$index}}" value="{{replacement.package}}" class="form-control" />
+            </td>
+            <td>
+              <span data-translate="">{{'batchreplacer-el-'+replacement.element | translate}}</span>
+              <input type="hidden" id="mdfield-{{$index}}" name="mdfield-{{$index}}" value="{{replacement.element}}" class="form-control" />
+            </td>
+            <td>
+              <span data-translate="">{{replacement.searchval}}</span>
+              <input type="hidden" id="searchValue-{{$index}}" name="searchValue-{{$index}}" value="{{replacement.searchval}}" class="form-control" />
+            </td>
+            <td>
+              <span data-translate="">{{replacement.replaceval}}</span>
+              <input type="hidden" id="replaceValue-{{$index}}" name="replaceValue-{{$index}}" value="{{replacement.replaceval}}" class="form-control" />
+            </td>
+            <td>
+              <button class="btn btn-danger" data-ng-click="removeReplacement(replacement)">
+                <span data-translate="">batchreplacer-remove</span>
+              </button>
+            </td>
+          </tr>
+        </table>
+
+        <input type="checkbox" id="caseinsensitive"  name="caseinsensitive" value="i" />
+        <label for="caseinsensitive" data-translate="">batchreplacer-case-insensitive</label>
+    </div>
+
+    <div class="row">&nbsp;</div>
+
+    <div class="btn-toolbar">
+      <button type="button" class="btn btn-primary pull-right fa fa-play"
+              data-ng-disabled="replacer.replacements.length == 0" data-ng-click="runProcess('#gn-batch-process', 'metadata.batch.replace.new@json', false)">
+        <span data-translate="">runProcess</span>
+      </button>
+
+      <button type="button" class="btn btn-primary pull-right fa fa-play"
+              data-ng-disabled="replacer.replacements.length == 0" data-ng-click="runProcess('#gn-batch-process', 'metadata.batch.replace.new@json', true)">
+        <span data-translate="">testProcess</span>
+      </button>
+
+
+    </div>
+
+	</fieldset>
+</div>

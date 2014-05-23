@@ -603,3 +603,51 @@ div.button {
 #layerManager * ul {
 	padding: 0 0 0 0;
 }
+
+
+#massivereplace-container {
+    clear:both;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#massivereplace-updates {
+    border-collapse:collapse;
+    border: 1px solid #cccccc;
+    table-layout: fixed;
+    margin-top:10px;
+    margin-bottom:10px;
+    width: 80%;
+}
+
+#massivereplace-updates th, #massivereplace-updates td {
+    border: 1px solid #cccccc;
+    padding:5px;
+}
+
+#massivereplace-updates th {
+    background-color: #dddddd;
+    color:black;
+    font-weight: bolder;
+}
+
+
+#massivereplace-buttons {
+    width:100%;
+    margin-top: 10px
+}
+
+#massivereplace-results-container {
+    display:none;
+    margin: 10px;"
+}
+
+#massivereplace-add-replacement-panel {
+    float:left;
+    width:60%;
+}
+
+#massivereplace-instructions-panel {
+    float:right;
+    width:40%;
+}

@@ -1,20 +1,28 @@
 {"config": [{
         "key": "url-host-relocator",
+        "type": "fixed-params",
         "params": [
              {"name": "urlPrefix", "value": "http://oldurl"},
              {"name": "newUrlPrefix", "value": "http://newurl"}
         ]
     }, {
         "key": "keywords-mapper",
+        "type": "fixed-params",
         "params": [
           {"name": "search", "value": "key1;key2"},
           {"name": "replace", "value": "newkey1;newkey2"}
         ]
     },{
         "key": "contact-updater",
+        "type": "fixed-params",
         "params": [
             {"name": "emailToSearch", "value": "", "type": "email"},
             {"name": "contactAsXML", "value": "", "type": "textarea"}
         ]
+    }, {
+        "key": "massive-content-update",
+        "type": "template",
+        "template": "../../catalog/templates/admin/tools/batch-replacer.html",
+        "reportTemplate": "../../catalog/templates/admin/tools/batch-replacer-report.html"
     }]
 }
