@@ -23,6 +23,7 @@
 
 package org.fao.geonet.component.csw;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -270,7 +271,9 @@ public class GetDomain extends AbstractOperation implements CatalogService
 	
 					// parse each document in the index
 					String[] fieldValues;
-					SortedSet<String> sortedValues = new TreeSet<String>();
+                    Collator stringCollator = Collator.getInstance();
+                    stringCollator.setStrength(Collator.PRIMARY);
+                    SortedSet<String> sortedValues = new TreeSet<String>(stringCollator);
 					ObjectKeyIntOpenHashMap duplicateValues = new ObjectKeyIntOpenHashMap();
 					for (int j = 0; j < hits.scoreDocs.length; j++) {
 					    DocumentStoredFieldVisitor selector = new DocumentStoredFieldVisitor(fields);
