@@ -1445,10 +1445,16 @@
             <xsl:variable name="value">
               <xsl:for-each select="gmd:MD_Keywords/gmd:keyword">
                 <xsl:if test="position() &gt; 1"><xsl:text>, </xsl:text></xsl:if>
-
 								<xsl:choose>
 									<xsl:when test="gmx:Anchor">
-										<a href="{gmx:Anchor/@xlink:href}"><xsl:value-of select="if (gmx:Anchor/text()) then gmx:Anchor/text() else gmx:Anchor/@xlink:href"/></a>
+										<xsl:choose>
+											<xsl:when test="normalize-space(gmx:Anchor/text())!=''">
+												<b><xsl:value-of select="gmx:Anchor/text()"/></b>
+											</xsl:when>
+											<xsl:otherwise>
+												<a href="{gmx:Anchor/@xlink:href}"><xsl:value-of select="gmx:Anchor/@xlink:href"/></a>
+											</xsl:otherwise>
+										</xsl:choose>
 									</xsl:when>
 									<xsl:otherwise>
 
