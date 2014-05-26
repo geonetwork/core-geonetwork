@@ -748,7 +748,7 @@
     "reportUsers-title": "Rapport sur les accès utilisateurs",
     "reportUsers-userLoginDateBegin": "Depuis",
     "reportUsers-userLoginDateEnd": "à",
-    "reportUsers-description": "Ce rapport permet l'extraction des dernières connexions des utilisateurs d'un ou plusieurs groupes pour une période données. Le rapport est au format CSV."
+    "reportUsers-description": "Ce rapport permet l'extraction des dernières connexions des utilisateurs d'un ou plusieurs groupes pour une période données. Le rapport est au format CSV.",
 
     "massive-content-update": "Batch replacer",
     "batchreplacer-addReplacement": "Add replacement",
