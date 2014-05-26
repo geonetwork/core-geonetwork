@@ -32,7 +32,7 @@ cat.who = function() {
 	                baseParams: {
 	                    field: 'orgName',
 	                    threshold: 1,
-                        origin: 'INDEX_TERM_VALUES'
+                        origin: 'RECORDS_FIELD_VALUES'
 	                },
                   sortInfo: {
                     field: 'value',
