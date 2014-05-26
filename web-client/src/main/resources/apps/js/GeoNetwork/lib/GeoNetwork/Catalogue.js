@@ -384,6 +384,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             searchCRS: serviceUrl + 'crs.search',
             getCRSTypes: serviceUrl + 'crs.types',
             logoAdd: serviceUrl + 'logo.add',
+            info: serviceUrl + 'info',
             updatePassword: serviceUrl + 'change.password#/',
             updateUserInfo: serviceUrl + 'admin.console#/organization/users/',
             harvestingAdmin: serviceUrl + 'admin.console#/harvest',
@@ -438,6 +439,32 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      */
     canSetInternalPrivileges: function(){
         return this.identifiedUser.role === "Administrator" || this.identifiedUser.role === "Reviewer";
+    },
+    /** api: method[canSetInternalPrivileges]
+     *  Return true if current user can set
+     *  privileges to internal groups (ie. internet, intranet)
+     *
+     *  Made in Sextant only
+     */
+    isReviewerForGroup: function(group){
+      // Load groups where current user is reviewer
+      if (!this.identifiedUser.reviewerGroup) {
+        var request = OpenLayers.Request.GET({
+          url: this.services.info + '@json?type=groups&profile=Reviewer',
+          async: false
+        });
+
+        if (request.responseText) {
+          this.identifiedUser.reviewerGroup = [];
+          var groups = Ext.util.JSON.decode(request.responseText);
+          Ext.each(groups.group, function(item, idx){
+            this.identifiedUser.reviewerGroup.push(item["@id"]);
+          }, this);
+        }
+      }
+
+      return this.identifiedUser.role === "Administrator" ||
+        this.identifiedUser.reviewerGroup.indexOf(group) !== -1;
     },
     /** api: method[isReadOnly]
      *  Return true if GN is is read-only mode

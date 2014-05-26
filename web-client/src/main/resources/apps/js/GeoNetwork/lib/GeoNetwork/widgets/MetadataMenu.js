@@ -359,8 +359,9 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
         					false,
             status = this.record.get('status'),
             // sextant v5 specific (myocean workflow)
+            // https://forge.ifremer.fr/mantis/view.php?id=19757
             statusRestriction = ((status == 4 || status == 2 || status == 3)
-                && this.catalogue.identifiedUser.role === 'Editor' ? true : false),
+                && !this.catalogue.isReviewerForGroup(this.record.get('groupOwner'))),
             isHarvested = this.record.get('isharvested') === 'y' ? true : false,
             isPublished = this.record.get('isPublishedToAll') === 'true' ? true : false,
             isAdmin = (this.catalogue.identifiedUser && this.catalogue.identifiedUser.role !== 'Administrator'),
@@ -368,7 +369,6 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
             identified = this.catalogue.isIdentified() && 
                 (this.catalogue.identifiedUser && this.catalogue.identifiedUser.role !== 'RegisteredUser'),
             isReadOnly = this.catalogue.isReadOnly();
-
 
         this.extEditorAction.hide();
         this.angularEditorAction.hide();

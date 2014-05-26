@@ -238,7 +238,14 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
             return false;
         }
     }
-    
+
+    function getGroupOwner(v, record){
+      if (record.groupOwner) {
+        return record.groupOwner[0].value;
+      } else {
+        return '';
+      }
+    }
     function getOwnerName(v, record){
         if (record.userinfo && record.userinfo[0].value) {
             var userinfo = record.userinfo[0].value.split(separator);
@@ -445,6 +452,9 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
         }, {
             name: 'ownername',
             convert: getOwnerName
+        }, {
+            name: 'groupOwner',
+            convert: getGroupOwner
         }, {
             name: 'edit',
             convert: getEdit
