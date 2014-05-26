@@ -617,7 +617,7 @@
                   layerName +
                   '    </gco:CharacterString></gmd:name>' +
                   '    <gmd:description><gco:CharacterString>' +
-                  title + '(' + protocols[p].label + ')' +
+                  title + ' (' + protocols[p].label + ')' +
                   '    </gco:CharacterString></gmd:description>' +
                   '  </gmd:CI_OnlineResource>' +
                   '</gmd:onLine>' + '&&&';
