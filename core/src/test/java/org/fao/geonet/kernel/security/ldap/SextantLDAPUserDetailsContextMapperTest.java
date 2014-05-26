@@ -117,11 +117,9 @@ public class SextantLDAPUserDetailsContextMapperTest {
 		userInfo.put("o", org);
 		
 		sxtldapMapper.setProfilesAndPrivileges(Profile.RegisteredUser,"sample", userInfo, fakeUser);
-		// o = IFREMER
-		assertTrue(fakeUser.getOrganisation().equals("IFREMER"));
+		
 		// ANOTHERGRP => Reviewer
 		assertTrue(fakeUser.getPrivileges().get("ANOTHERGRP").contains(Profile.Reviewer));
-		assertTrue(fakeUser.getPrivileges().get("IFREMER").contains(Profile.RegisteredUser));
 		
 		// The user is Reviewer
 		assertTrue(fakeUser.getProfile() == Profile.Reviewer);

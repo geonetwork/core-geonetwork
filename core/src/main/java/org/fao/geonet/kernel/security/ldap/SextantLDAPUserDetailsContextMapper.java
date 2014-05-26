@@ -123,8 +123,9 @@ public class SextantLDAPUserDetailsContextMapper extends
 
 	private void updateGroupOwnership(LDAPUser u) {
 		Multimap<String, Profile> privs = u.getPrivileges();
-		// List of known groups for the current user
-		List<UserGroup> ugroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(u.getUser().getId()));
+
+		// removes every groups mappings known for the current user
+		userGroupRepository.deleteAll(UserGroupSpecs.hasUserId(u.getUser().getId()));
 
 		for (String k : privs.keys()) {
 			// first, try to find the group
@@ -135,17 +136,14 @@ public class SextantLDAPUserDetailsContextMapper extends
 				group.setName(k);
 				groupRepository.saveAndFlush(group);
 			}
-
 			// Then add a new entry for the user / group
-
-			// We need to iterate over every children profiles
 			Profile prof = (Profile) privs.get(k).toArray()[0];
-
-			for (Profile profile : prof.getAll()) {
-				UserGroup newUg = new UserGroup().setGroup(group).setUser(u.getUser()).setProfile(profile);
-				userGroupRepository.saveAndFlush(newUg);
-				// Adds it (in case of multiple listesiteweb entries)
-				ugroups.add(newUg);
+			UserGroup newUg = new UserGroup().setGroup(group).setUser(u.getUser()).setProfile(prof);
+			userGroupRepository.saveAndFlush(newUg);
+			// if Reviewer, then the user is also considered as Editor
+			if (prof == Profile.Reviewer) {
+				UserGroup newUg2 = new UserGroup().setGroup(group).setUser(u.getUser()).setProfile(Profile.Editor);
+				userGroupRepository.saveAndFlush(newUg2);
 			}
 		}
 	}
