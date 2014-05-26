@@ -32,7 +32,6 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.ServletContext;
 
@@ -368,17 +367,9 @@ public class SaveTest {
     }
 
     private String loadTestJson() throws URISyntaxException, IOException {
-        File file = new File(SaveTest.class.getResource(SaveTest.class.getSimpleName() + ".class").toURI()).getParentFile();
-        final String pathToJsonFile = "web-ui/src/main/resources/catalog/components/edit/inspire/MockFullMetadataFactory.js";
-        while (!new File(file, pathToJsonFile).exists()) {
-            file = file.getParentFile();
-        }
-        String javascript = Files.toString(new File(file, pathToJsonFile), Charset.forName("UTF-8"));
+        File file = new File(SaveTest.class.getResource("MockFullMetadataFactory.json").toURI());
 
-        final Matcher matcher = Pattern.compile("(?s).*// START TEST DATA(.*)// END TEST DATA.*").matcher(javascript);
-        assertTrue(matcher.find());
-
-        return matcher.group(1).trim();
+        return Files.toString(file, Charset.forName("UTF-8"));
     }
 
 }

@@ -57,6 +57,7 @@ public class Save implements Service {
     static final List<Namespace> NS = Arrays.asList(
             GCO,
             GMD,
+            SRV,
             Geonet.Namespaces.XLINK,
             XslUtil.CHE_NAMESPACE);
 
@@ -95,7 +96,7 @@ public class Save implements Service {
     public static final String JSON_IDENTIFICATION_DATE_TAG_NAME = "dateTagName";
     public static final String JSON_IDENTIFICATION_KEYWORDS = "descriptiveKeywords";
     public static final String JSON_IDENTIFICATION_KEYWORD_CODE = "code";
-    public static final String JSON_IDENTIFICATION_KEYWORD_WORD = "word";
+    public static final String JSON_IDENTIFICATION_KEYWORD_WORD = "words";
     public static final String JSON_IDENTIFICATION_EXTENTS = "extents";
     public static final String JSON_CONSTRAINTS_ACCESS_CONSTRAINTS = "accessConstraints";
     public static final String JSON_CONSTRAINTS_USE_CONSTRAINTS = "useConstraints";
@@ -104,6 +105,7 @@ public class Save implements Service {
     public static final String JSON_IDENTIFICATION_EXTENT_GEOM = "geom";
     public static final String JSON_IDENTIFICATION_EXTENT_DESCRIPTION = "description";
     static final String JSON_CONSTRAINTS_LEGISLATION_CONSTRAINTS = "legislationConstraints";
+    public static final String JSON_IDENTIFICATION_SERVICETYPE = "serviceType";
 
     @Override
     public void init(String appPath, ServiceConfig params) throws Exception {
@@ -771,7 +773,7 @@ public class Save implements Service {
         {
             typenameMapping.put("kantone", "kantoneBB");
             typenameMapping.put("gemeinden", "gemeindenBB");
-            typenameMapping.put("countries", "countries");
+            typenameMapping.put("country", "countries");
         }
 
         @Override

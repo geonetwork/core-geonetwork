@@ -20,7 +20,7 @@
               words[word['@language']] = word['#text'];
             }
             keywords.push({
-              uri: raw.uri,
+              code: raw.uri,
               words: words
             })
           }

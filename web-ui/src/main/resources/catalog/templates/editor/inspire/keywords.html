@@ -13,6 +13,7 @@
                         <a class="list-group-item"
                            data-ng-repeat="keyword in keywords[data.identification.type] | filter:keywordSearch:strict"
                            data-ng-class="selectedKeyword === keyword ? 'active' : ''"
+                           data-ng-dblclick="linkToOtherKeyword()"
                            data-ng-click="selectKeyword(keyword)">
                             {{keyword.words[lang]}}
                         </a>
@@ -21,7 +22,7 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal" data-ng-translate="">cancel</button>
                     <button type="button" class="btn btn-primary" data-ng-translate=""
-                            data-ng-disabled="!selectedKeyword.uri"
+                            data-ng-disabled="!selectedKeyword.code"
                             data-ng-click="linkToOtherKeyword()">update</button>
                 </div>
             </div>
@@ -30,7 +31,8 @@
 
     <div class="form-group">
         <label class="col-xs-3 control-label"><span data-translate="">descriptiveKeyword</span>: </label>
-        <div class="table-responsive col-xs-9">
+        <div class="table-responsive col-xs-9"
+             data-ng-class="validationCls">
             <table class="table table-condensed">
                 <tr data-ng-class="$first ? '' : 'col-xs-offset-3'"
                     data-ng-repeat="keyword in data.identification.descriptiveKeywords">

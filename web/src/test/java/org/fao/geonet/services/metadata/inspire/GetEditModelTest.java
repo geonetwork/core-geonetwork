@@ -1,5 +1,6 @@
 package org.fao.geonet.services.metadata.inspire;
 
+import com.google.common.io.Files;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Params;
@@ -7,37 +8,62 @@ import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.AjaxEditUtils;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static org.fao.geonet.kernel.search.spatial.Pair.read;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class GetEditModelTest {
 
     @Test
-    public void testExec() throws Exception {
+    public void testEmpty() throws Exception {
+        final Element testMetadata = Xml.loadString("<che:CHE_MD_Metadata xmlns:che=\"http://www.geocat.ch/2008/che\" " +
+                                                    "xmlns:srv=\"http://www.isotc211.org/2005/srv\" xmlns:gco=\"http://www.isotc211" +
+                                                    ".org/2005/gco\" xmlns:gml=\"http://www.opengis.net/gml\" xmlns:gmd=\"http://www" +
+                                                    ".isotc211.org/2005/gmd\" xmlns:geonet=\"http://www.fao.org/geonetwork\" " +
+                                                    "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" " +
+                                                    "gco:isoType=\"gmd:MD_Metadata\"></che:CHE_MD_Metadata>", false);
+
+        GetEditModel service = new TestGetEditModel(testMetadata);
+
+        Element params = new Element("params").addContent(new Element("id").setText("2"));
+        ServiceContext context = Mockito.mock(ServiceContext.class);
+        Mockito.when(context.getLanguage()).thenReturn("eng");
+
+        final Element result = service.exec(params, context);
+        final String inspireModelText = result.getTextTrim();
+        final JSONObject inspireModel = new JSONObject(inspireModelText);
+
+        JSONObject expectedJson = new JSONObject(loadTestJson());
+        expectedJson.remove("roleOptions");
+        expectedJson.remove("dateTypeOptions");
+        expectedJson.remove("hierarchyLevelOptions");
+        expectedJson.remove("topicCategoryOptions");
+        expectedJson.remove("constraintOptions");
+        expectedJson.remove("serviceTypeOptions");
+
+        assertEqualJsonObjects("<root>", inspireModel, expectedJson);
+    }
+
+    @Test
+    public void testExecDataIdentification() throws Exception {
         final Element testMetadata = Xml.loadFile(GetEditModelTest.class.getResource("inspire-valid-che.xml"));
 
-        GetEditModel service = new GetEditModel() {
-            @Override
-            protected Element getMetadata(Element params, ServiceContext context, AjaxEditUtils ajaxEditUtils) throws Exception {
-                return testMetadata;
-            }
-
-            @Override
-            protected AjaxEditUtils getAjaxEditUtils(Element params, ServiceContext context) throws Exception {
-                return null;
-            }
-
-            @Override
-            protected IsoLanguagesMapper getIsoLanguagesMapper() {
-                return SaveServiceTestImpl.LANGUAGES_MAPPER;
-            }
-        };
+        GetEditModel service = new TestGetEditModel(testMetadata);
 
         Element params = new Element("params").addContent(new Element("id").setText("2"));
         ServiceContext context = Mockito.mock(ServiceContext.class);
@@ -51,7 +77,7 @@ public class GetEditModelTest {
         assertEquals("", inspireModel.getString(Save.JSON_HIERARCHY_LEVEL_NAME));
 
         assertEquals(1, inspireModel.getJSONArray(Save.JSON_CONTACT).length());
-        assertContact(inspireModel.getJSONArray(Save.JSON_CONTACT).getJSONObject(0), "8", "", "",
+        assertContact(inspireModel.getJSONArray(Save.JSON_CONTACT).getJSONObject(0), "8", false,"", "",
                 "metadata@swisstopo.ch", "pointOfContact", read("ger", "Bundesamt für Landestopografie"),
                 read("fre", "Office fédéral de topographie"), read("ita", "Ufficio federale di topografia"),
                 read("eng", "Federal Office of Topography"));
@@ -77,7 +103,7 @@ public class GetEditModelTest {
                 read("fre", "Résumé Test INSPIRE"));
 
         assertEquals(1, identification.getJSONArray(Save.JSON_IDENTIFICATION_POINT_OF_CONTACT).length());
-        assertContact(identification.getJSONArray(Save.JSON_IDENTIFICATION_POINT_OF_CONTACT).getJSONObject(0), "10", "", "",
+        assertContact(identification.getJSONArray(Save.JSON_IDENTIFICATION_POINT_OF_CONTACT).getJSONObject(0), "10", false, "", "",
                 "geodata@swisstopo.ch", "pointOfContact", read("ger", "Bundesamt für Landestopografie"),
                 read("fre", "Office fédéral de topographie"), read("ita", "Ufficio federale di topografia"),
                 read("eng", "Federal Office of Topography"));
@@ -97,7 +123,7 @@ public class GetEditModelTest {
 
         final JSONArray extents = identification.getJSONArray(Save.JSON_IDENTIFICATION_EXTENTS);
         assertEquals(1, extents.length());
-        assertEquals("countries:0", extents.getJSONObject(0).getString("geom"));
+        assertEquals("country:0", extents.getJSONObject(0).getString("geom"));
         assertTranslations(extents.getJSONObject(0), "description", read("ger", "Schweiz"), read("fre", "Schweiz"),
                 read("ita", "Schweiz"), read("eng", "Schweiz"), read("roh", "Schweiz"));
 
@@ -136,6 +162,96 @@ public class GetEditModelTest {
                 Pair.read("ger", "test security constraints for INSPIRE"));
     }
 
+    @Test
+    public void testExecServiceIdentification() throws Exception {
+        final Element testMetadata = Xml.loadFile(GetEditModelTest.class.getResource("inspire-valid-service-che.xml"));
+
+        GetEditModel service = new TestGetEditModel(testMetadata);
+
+        Element params = new Element("params").addContent(new Element("id").setText("2"));
+        ServiceContext context = Mockito.mock(ServiceContext.class);
+
+        final Element result = service.exec(params, context);
+        final JSONObject inspireModel = new JSONObject(result.getTextTrim());
+
+        assertEquals("fre", inspireModel.getString(Save.JSON_LANGUAGE));
+        assertEquals("utf8", inspireModel.getString(Save.JSON_CHARACTER_SET));
+        assertEquals("service", inspireModel.getString(Save.JSON_HIERARCHY_LEVEL));
+        assertEquals("Service", inspireModel.getString(Save.JSON_HIERARCHY_LEVEL_NAME));
+
+        assertEquals(1, inspireModel.getJSONArray(Save.JSON_CONTACT).length());
+        assertContact(inspireModel.getJSONArray(Save.JSON_CONTACT).getJSONObject(0), "15", false, "André", "Schneider",
+                "andre.schneider@swisstopo.ch", "pointOfContact", read("ger", "Bundesamt für Landestopographie"),
+                read("fre", "Office fédéral de topographie"));
+
+        assertJSONArray(inspireModel.getJSONArray(Save.JSON_OTHER_LANGUAGES), "fre", "ger", "eng", "ita");
+
+        JSONObject identification = inspireModel.getJSONObject(Save.JSON_IDENTIFICATION);
+
+        assertEquals("service", identification.getString(Save.JSON_IDENTIFICATION_TYPE));
+        assertEquals("view", identification.getString(Save.JSON_IDENTIFICATION_SERVICETYPE));
+        assertTranslations(identification, Save.JSON_IDENTIFICATION_TITLE,
+                read("ger", "Suchdienst auf www.geocat.ch (CSW 2.0.2)"),
+                read("eng", "Search Service for www.geocat.ch (CSW 2.0.2)"),
+                read("fre", "Service de recherche sur www.geocat.ch (CSW 2.0.2)"));
+        assertEquals("2009-12-01", identification.getString(Save.JSON_IDENTIFICATION_DATE));
+        assertEquals("gco:Date", identification.getString(Save.JSON_IDENTIFICATION_DATE_TAG_NAME));
+        assertEquals("creation", identification.getString(Save.JSON_IDENTIFICATION_DATE_TYPE));
+
+        assertTranslations(identification, Save.JSON_IDENTIFICATION_IDENTIFIER);
+
+        assertEquals("", identification.getString(Save.JSON_LANGUAGE));
+
+        assertTranslations(identification, Save.JSON_IDENTIFICATION_ABSTRACT,
+                read("ger", "Webdienst (M2M), für die Suche nach Metadaten auf www.geocat.ch. Der Suchdienst basiert auf dem OGC CSW 2.0.2 Standard"),
+                read("eng", "This M2M Service allows to search for metadata provided by www.geocat.ch. It is based on the OGC Standard CSW 2.0.2"),
+                read("fre", "Service de recherche (M2M) permettant de rechercher les métadonnées disponibles sur www.geocat.ch. Le service est basé sur le standard OGC CSW 2.0.2"));
+
+        assertEquals(1, identification.getJSONArray(Save.JSON_IDENTIFICATION_POINT_OF_CONTACT).length());
+        assertContact(identification.getJSONArray(Save.JSON_IDENTIFICATION_POINT_OF_CONTACT).getJSONObject(0), "10", false, "", "",
+                "geodata@swisstopo.ch", "pointOfContact", read("ger", "Bundesamt für Landestopografie"),
+                read("fre", "Office fédéral de topographie"), read("ita", "Ufficio federale di topografia"),
+                read("eng", "Federal Office of Topography"));
+
+        final JSONArray keywords = identification.getJSONArray(Save.JSON_IDENTIFICATION_KEYWORDS);
+        assertEquals(7, keywords.length());
+        assertEquals("urn:inspire:service:taxonomy:spatialFeatureMatchingService",
+                keywords.getJSONObject(6).getString(Save.JSON_IDENTIFICATION_KEYWORD_CODE));
+        assertJsonObjectHasProperties(keywords.getJSONObject(6).getJSONObject(Save.JSON_IDENTIFICATION_KEYWORD_WORD),
+                read("ger", "spatialFeatureMatchingService"), read("fre", "spatialFeatureMatchingService"),
+                read("ita", "spatialFeatureMatchingService"), read("eng", "spatialFeatureMatchingService"));
+
+
+        final JSONArray topicCategories = identification.getJSONArray(Save.JSON_IDENTIFICATION_TOPIC_CATEGORIES);
+        assertEquals(1, topicCategories.length());
+        assertEquals("", topicCategories.getString(0));
+
+        final JSONArray extents = identification.getJSONArray(Save.JSON_IDENTIFICATION_EXTENTS);
+        assertEquals(1, extents.length());
+        assertEquals("country:0", extents.getJSONObject(0).getString("geom"));
+        assertTranslations(extents.getJSONObject(0), "description", read("ger", "Schweiz"), read("fre", "Schweiz"),
+                read("ita", "Schweiz"), read("eng", "Schweiz"), read("roh", "Schweiz"));
+
+
+        JSONArray legalConstraints = inspireModel.getJSONObject(Save.JSON_CONSTRAINTS).getJSONArray(Save.JSON_CONSTRAINTS_LEGAL);
+        assertEquals(1, legalConstraints.length());
+        final JSONObject legalConstraint = legalConstraints.getJSONObject(0);
+        assertEquals(1,legalConstraint.getJSONArray(Save.JSON_CONSTRAINTS_ACCESS_CONSTRAINTS).length());
+        assertEquals("restricted", legalConstraint.getJSONArray(Save.JSON_CONSTRAINTS_ACCESS_CONSTRAINTS).getString(0));
+        assertEquals(1, legalConstraint.getJSONArray(Save.JSON_CONSTRAINTS_USE_CONSTRAINTS).length());
+        assertEquals("trademark", legalConstraint.getJSONArray(Save.JSON_CONSTRAINTS_USE_CONSTRAINTS).getString(0));
+        assertEquals("364", legalConstraint.getString(Params.REF));
+
+        assertEquals(0, legalConstraint.getJSONArray(Save.JSON_CONSTRAINTS_OTHER_CONSTRAINTS).length());
+        assertEquals(0, legalConstraint.getJSONArray(Save.JSON_CONSTRAINTS_LEGISLATION_CONSTRAINTS).length());
+
+        JSONArray genericConstraints = inspireModel.getJSONObject(Save.JSON_CONSTRAINTS).getJSONArray(Save.JSON_CONSTRAINTS_GENERIC);
+        assertEquals(0, genericConstraints.length());
+
+        JSONArray securityConstraints = inspireModel.getJSONObject(Save.JSON_CONSTRAINTS).getJSONArray(Save.JSON_CONSTRAINTS_SECURITY);
+        assertEquals(0, securityConstraints.length());
+    }
+
     private void assertJSONArray(JSONArray jsonArray, String... langs) throws JSONException {
         for (int i = 0; i < langs.length; i++) {
             String lang = langs[i];
@@ -143,10 +259,10 @@ public class GetEditModelTest {
         }
     }
 
-    private void assertContact(JSONObject contactJson, String id, String firstName, String lastName, String email, String role,
+    private void assertContact(JSONObject contactJson, String id, boolean validated, String firstName, String lastName, String email, String role,
                                Pair<String, String>... orgNames) throws JSONException {
         assertEquals(id, contactJson.getString(Save.JSON_CONTACT_ID));
-        assertEquals(firstName, contactJson.getString(Save.JSON_CONTACT_FIRST_NAME));
+        assertEquals(validated, contactJson.getBoolean(Save.JSON_VALIDATED));
         assertEquals(firstName, contactJson.getString(Save.JSON_CONTACT_FIRST_NAME));
         assertEquals(lastName, contactJson.getString(Save.JSON_CONTACT_LAST_NAME));
         assertEquals(email, contactJson.getString(Save.JSON_CONTACT_EMAIL));
@@ -169,5 +285,83 @@ public class GetEditModelTest {
         }
     }
 
+    protected void assertEqualJsonObjects(String path, JSONObject inspireModel, JSONObject expectedJson) throws JSONException {
+        final Iterator keys = expectedJson.keys();
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
+            final String newPath = path + "." + key;
 
+            assertTrue(path + " -- Missing key: '" + key + "' in\n\n" + inspireModel, inspireModel.has(key));
+            Object expectedValue = expectedJson.get(key);
+            if (expectedValue instanceof JSONObject) {
+                JSONObject value = (JSONObject) expectedValue;
+                assertEqualJsonObjects(newPath, inspireModel.getJSONObject(key), value);
+            } else if (expectedValue instanceof JSONArray) {
+                JSONArray value = (JSONArray) expectedValue;
+                assertEqualJsonArrays(newPath, inspireModel.toString(4), inspireModel.getJSONArray(key), value);
+            } else {
+                assertEquals(newPath + " -- " + inspireModel.toString(4), expectedValue, inspireModel.get(key));
+            }
+        }
+    }
+
+    private void assertEqualJsonArrays(String path, String parentModel, JSONArray inspireModel, JSONArray expectedJSON) throws JSONException {
+        for (int i = 0; i < expectedJSON.length(); i++) {
+            final String newPath = path + "[" + i + "]";
+            Object expectedValue = expectedJSON.get(i);
+            assertTrue(path + "-- Missing array element: '" + i + "' in\n\n" + parentModel, inspireModel.length() > i);
+            if (expectedValue instanceof JSONObject) {
+                JSONObject value = (JSONObject) expectedValue;
+                assertEqualJsonObjects(newPath, inspireModel.getJSONObject(i), value);
+            } else if (expectedValue instanceof JSONArray) {
+                JSONArray value = (JSONArray) expectedValue;
+                assertEqualJsonArrays(newPath, inspireModel.toString(4), inspireModel.getJSONArray(i), value);
+            } else {
+                assertEquals(newPath + " -- " + inspireModel.toString(4), expectedValue, inspireModel.get(i));
+            }
+        }
+    }
+
+    private String loadTestJson() throws URISyntaxException, IOException {
+        File file = new File(SaveTest.class.getResource(SaveTest.class.getSimpleName() + ".class").toURI()).getParentFile();
+        final String pathToJsonFile = "web-ui/src/main/resources/catalog/components/edit/inspire/EmptyMetadataFactory.js";
+        while (!new File(file, pathToJsonFile).exists()) {
+            file = file.getParentFile();
+        }
+        String javascript = Files.toString(new File(file, pathToJsonFile), Charset.forName("UTF-8"));
+
+        final Matcher matcher = Pattern.compile("(?s).*// START TEST DATA.*return (.*)// END TEST DATA.*").matcher(javascript);
+        assertTrue(matcher.find());
+
+        return matcher.group(1).trim().replaceAll("guiLanguage", "eng");
+    }
+
+    private static class TestGetEditModel extends GetEditModel {
+        private final Element testMetadata;
+
+        public TestGetEditModel(Element testMetadata) {
+            this.testMetadata = testMetadata;
+        }
+
+        @Override
+        protected Element getMetadata(Element params, ServiceContext context, AjaxEditUtils ajaxEditUtils) throws Exception {
+            return testMetadata;
+        }
+
+        @Override
+        protected AjaxEditUtils getAjaxEditUtils(Element params, ServiceContext context) throws Exception {
+            return null;
+        }
+
+        @Override
+        protected IsoLanguagesMapper getIsoLanguagesMapper() {
+            return SaveServiceTestImpl.LANGUAGES_MAPPER;
+        }
+
+        @Override
+        protected void addCodeLists(ServiceContext context, JSONObject metadataJson) throws JDOMException, IOException,
+                JSONException {
+            // do nothing
+        }
+    }
 }

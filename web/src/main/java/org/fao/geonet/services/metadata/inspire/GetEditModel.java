@@ -5,11 +5,16 @@ import com.google.common.collect.Maps;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.guiservices.XmlCacheManager;
+import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import jeeves.xlink.XLink;
+import net.sf.json.JSONArray;
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.reusable.ReusableObjManager;
+import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.metadata.AjaxEditUtils;
@@ -19,10 +24,15 @@ import org.jdom.JDOMException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,6 +44,7 @@ import static org.fao.geonet.constants.Geonet.Namespaces.XLINK;
  * @author Jesse on 5/17/2014.
  */
 public class GetEditModel implements Service {
+    private final XmlCacheManager cacheManager = new XmlCacheManager();
     @Override
     public void init(String appPath, ServiceConfig params) throws Exception {
 
@@ -41,15 +52,105 @@ public class GetEditModel implements Service {
 
     @Override
     public Element exec(Element params, ServiceContext context) throws Exception {
-
+        boolean pretty = Util.getParam(params, "pretty", false);
         Element metadataEl = getMetadata(params, context, getAjaxEditUtils(params, context));
 
         JSONObject metadataJson = new JSONObject();
+        addCodeLists(context, metadataJson);
+        metadataJson.append("metadataTypeOptions", "data");
+        metadataJson.append("metadataTypeOptions", "service");
+        final String guiLang = context.getLanguage();
         processMetadata(metadataEl, metadataJson);
         Element identificationInfo = processIdentificationInfo(metadataEl, metadataJson);
         processConstraints(identificationInfo, metadataJson);
 
-        return new Element("data").setText(metadataJson.toString());
+        final String jsonString;
+        if (pretty) {
+            jsonString = metadataJson.toString(2);
+        } else {
+            jsonString = metadataJson.toString();
+        }
+        return new Element("data").setText(jsonString);
+    }
+
+    @VisibleForTesting
+    protected void addCodeLists(ServiceContext context, JSONObject metadataJson) throws JDOMException, IOException, JSONException {
+        GeonetContext geonetContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        final MetadataSchema iso19139CHESchema = geonetContext.getSchemamanager().getSchema("iso19139.che");
+        final MetadataSchema iso19139Schema = geonetContext.getSchemamanager().getSchema("iso19139");
+        final Element codelists = cacheManager.get(context, true, iso19139Schema.getSchemaDir() + "/loc", "codelists.xml",
+                context.getLanguage(), "ger", true);
+        final Element cheCodelistExtensions = cacheManager.get(context, true, iso19139CHESchema.getSchemaDir() + "/loc", "codelists.xml",
+                context.getLanguage(), "ger", true);
+        final Element labels = cacheManager.get(context, true, iso19139Schema.getSchemaDir() + "/loc", "labels.xml",
+                context.getLanguage(), "ger", true);
+        final Element labelExtensions = cacheManager.get(context, true, iso19139CHESchema.getSchemaDir() + "/loc", "labels.xml",
+                context.getLanguage(), "ger", true);
+
+
+        addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:CI_DateTypeCode", "dateTypeOptions");
+        addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:CI_RoleCode", "roleOptions");
+        addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:MD_ScopeCode", "hierarchyLevelOptions");
+        addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:MD_TopicCategoryCode", "topicCategoryOptions");
+        addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:MD_RestrictionCode", "constraintOptions");
+        addCodeListOptionsFromLabelsHelper(metadataJson, labels, labelExtensions, "srv:serviceType", "serviceTypeOptions");
+
+    }
+
+    private void addCodeListOptions(JSONObject metadataJson, Element codelists, Element cheCodelistsExtensions,
+                                    String codelistName, String jsonKey) throws JDOMException, JSONException {
+        Set<CodeListEntry> collector = new TreeSet<CodeListEntry>();
+        final String xpath = "codelist[@name = '" + codelistName + "']/entry";
+        @SuppressWarnings("unchecked")
+        List<Element> elems = (List<Element>) Xml.selectNodes(codelists, xpath);
+        for (Element elem : elems) {
+            final CodeListEntry entry = new CodeListEntry(elem.getChildTextTrim("code"), elem.getChildTextTrim("label"),
+                    elem.getChildTextTrim("description"));
+            collector.add(entry);
+        }
+
+        @SuppressWarnings("unchecked")
+        List<Element> cheElems = (List<Element>) Xml.selectNodes(cheCodelistsExtensions, xpath);
+        for (Element elem : cheElems) {
+            final CodeListEntry entry = new CodeListEntry(elem.getChildTextTrim("code"), elem.getChildTextTrim("label"),
+                    elem.getChildTextTrim("description"));
+            collector.add(entry);
+        }
+
+        addOptions(metadataJson, jsonKey, collector);
+    }
+
+    private void addCodeListOptionsFromLabelsHelper(JSONObject metadataJson, Element codelists, Element cheCodelistsExtensions,
+                                    String codelistName, String jsonKey) throws JDOMException, JSONException {
+        Set<CodeListEntry> collector = new LinkedHashSet<CodeListEntry>();
+        final String xpath = "element[@name = '" + codelistName + "']/helper/option";
+        @SuppressWarnings("unchecked")
+        List<Element> elems = (List<Element>) Xml.selectNodes(codelists, xpath);
+        for (Element elem : elems) {
+            final String value = elem.getTextTrim();
+            final CodeListEntry entry = new CodeListEntry(elem.getAttributeValue("value"), value, value);
+            collector.add(entry);
+        }
+
+        @SuppressWarnings("unchecked")
+        List<Element> cheElems = (List<Element>) Xml.selectNodes(cheCodelistsExtensions, xpath);
+        for (Element elem : cheElems) {
+            final String value = elem.getTextTrim();
+            final CodeListEntry entry = new CodeListEntry(elem.getAttributeValue("value"), value, value);
+            collector.add(entry);
+        }
+
+        addOptions(metadataJson, jsonKey, collector);
+    }
+
+    private void addOptions(JSONObject metadataJson, String jsonKey, Set<CodeListEntry> dateTypeOptions) throws JSONException {
+        for (CodeListEntry entry : dateTypeOptions) {
+            JSONObject obj = new JSONObject();
+            obj.accumulate("name", entry.name);
+            obj.accumulate("title", entry.title);
+            obj.accumulate("desc", entry.description);
+            metadataJson.append(jsonKey, obj);
+        }
     }
 
     private void processConstraints(Element identificationInfo, JSONObject metadataJson) throws Exception {
@@ -61,6 +162,10 @@ public class GetEditModel implements Service {
                 "gmd:resourceConstraints/*[name() = 'gmd:MD_LegalConstraints' " +
                 "or @gco:isoType = 'gmd:MD_LegalConstraints']", Save.NS);
 
+        if (legalConstraints.isEmpty()) {
+            constraintsJson.accumulate(Save.JSON_CONSTRAINTS_LEGAL, new JSONArray());
+        }
+
         for (Element legalConstraint : legalConstraints) {
             JSONObject legalJson = new JSONObject();
             processLegalConstraint(legalConstraint, legalJson);
@@ -70,6 +175,9 @@ public class GetEditModel implements Service {
         List<Element> genericConstraints = (List<Element>) Xml.selectNodes(identificationInfo,
                 "gmd:resourceConstraints/gmd:MD_Constraints", Save.NS);
 
+        if (genericConstraints.isEmpty()) {
+            constraintsJson.accumulate(Save.JSON_CONSTRAINTS_GENERIC, new JSONArray());
+        }
         for (Element genericConstraint : genericConstraints) {
             JSONObject json = new JSONObject();
             addRef(genericConstraint, json);
@@ -80,6 +188,9 @@ public class GetEditModel implements Service {
         @SuppressWarnings("unchecked")
         List<Element> securityConstraints = (List<Element>) Xml.selectNodes(identificationInfo,
                 "gmd:resourceConstraints/gmd:MD_SecurityConstraints", Save.NS);
+        if (securityConstraints.isEmpty()) {
+            constraintsJson.accumulate(Save.JSON_CONSTRAINTS_SECURITY, new JSONArray());
+        }
 
         for (Element securityConstraint : securityConstraints) {
             JSONObject json = new JSONObject();
@@ -96,16 +207,16 @@ public class GetEditModel implements Service {
     private void processLegalConstraint(Element constraint, JSONObject legalJson) throws Exception {
         addRef(constraint, legalJson);
         addArray(constraint, getIsoLanguagesMapper(), legalJson, "gmd:useLimitation", Save.JSON_CONSTRAINTS_USE_LIMITATIONS,
-                translatedElemEncoder);
+                translatedElemEncoder, new JSONArray());
         addArray(constraint, getIsoLanguagesMapper(), legalJson, "gmd:accessConstraints/gmd:MD_RestrictionCode",
                 Save.JSON_CONSTRAINTS_ACCESS_CONSTRAINTS, codeListJsonEncoder);
         addArray(constraint, getIsoLanguagesMapper(), legalJson, "gmd:useConstraints/gmd:MD_RestrictionCode",
                 Save.JSON_CONSTRAINTS_USE_CONSTRAINTS, codeListJsonEncoder);
         addArray(constraint, getIsoLanguagesMapper(), legalJson, "gmd:otherConstraints", Save.JSON_CONSTRAINTS_OTHER_CONSTRAINTS,
-                translatedElemEncoder);
+                translatedElemEncoder, new JSONArray());
         addArray(constraint, getIsoLanguagesMapper(), legalJson,
                 "che:legislationConstraints/che:CHE_MD_Legislation",
-                Save.JSON_CONSTRAINTS_LEGISLATION_CONSTRAINTS, legislationConstraintsJsonEncoder);
+                Save.JSON_CONSTRAINTS_LEGISLATION_CONSTRAINTS, legislationConstraintsJsonEncoder, new JSONArray());
 
     }
 
@@ -119,9 +230,8 @@ public class GetEditModel implements Service {
                 "gmd:identificationInfo/node()[@gco:isoType = 'gmd:MD_DataIdentification' or " +
                 "@gco:isoType = 'srv:SV_ServiceIdentification']", Save.NS);
 
-
         if (identificationInfoEl == null) {
-            identificationInfoEl = new Element("CHE_MD_DataIdentification", XslUtil.CHE_NAMESPACE);
+            identificationInfoEl = new Element("CHE_MD_DataIdentification", XslUtil.CHE_NAMESPACE).setAttribute("isoType", "gmd:MD_DataIdentification", GCO);
         }
 
         JSONObject identificationJSON = new JSONObject();
@@ -149,8 +259,8 @@ public class GetEditModel implements Service {
         addTranslatedElement(identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, Save.JSON_IDENTIFICATION_ABSTRACT,
                 "gmd:abstract");
 
-
         addValue(identificationInfoEl, identificationJSON, Save.JSON_LANGUAGE, "gmd:language");
+        addValue(identificationInfoEl, identificationJSON, Save.JSON_IDENTIFICATION_SERVICETYPE, "srv:serviceType");
         addArray(identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, "gmd:topicCategory/gmd:MD_TopicCategoryCode",
                 Save.JSON_IDENTIFICATION_TOPIC_CATEGORIES, valueJsonEncoder);
 
@@ -158,7 +268,7 @@ public class GetEditModel implements Service {
                 Save.JSON_IDENTIFICATION_POINT_OF_CONTACT, contactJsonEncoder);
         addArray(identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, "gmd:descriptiveKeywords ",
                 Save.JSON_IDENTIFICATION_KEYWORDS, keywordJsonEncoder);
-        addArray(identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, "gmd:extent",
+        addArray(identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, "gmd:extent|srv:extent",
                 Save.JSON_IDENTIFICATION_EXTENTS, extentJsonEncoder);
 
         return identificationInfoEl;
@@ -166,27 +276,62 @@ public class GetEditModel implements Service {
 
     protected void processMetadata(Element metadataEl, JSONObject metadataJson) throws Exception {
         addValue(metadataEl, metadataJson, Save.JSON_LANGUAGE, "gmd:language/gco:CharacterString/text()");
-        addValue(metadataEl, metadataJson, Save.JSON_CHARACTER_SET, "gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue");
+        addValue(metadataEl, metadataJson, Save.JSON_CHARACTER_SET, "gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue", "utf-8");
         addValue(metadataEl, metadataJson, Save.JSON_HIERARCHY_LEVEL, "gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue");
         addValue(metadataEl, metadataJson, Save.JSON_HIERARCHY_LEVEL_NAME, "gmd:hierarchyLevelName/gco:CharacterString/text()");
         addArray(metadataEl, getIsoLanguagesMapper(), metadataJson, "gmd:contact", Save.JSON_CONTACT, contactJsonEncoder);
+        JSONArray def = new JSONArray();
+        def.addAll(Arrays.asList("ger", "fre", "ita", "eng", "roh"));
         addArray(metadataEl, getIsoLanguagesMapper(), metadataJson,
                 "gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode",
-                Save.JSON_OTHER_LANGUAGES, codeListValueEncoder);
+                Save.JSON_OTHER_LANGUAGES, codeListJsonEncoder, def);
     }
 
     private static void addValue(Element metadataEl, JSONObject metadataJson, String jsonKey, String xpath) throws JSONException, JDOMException {
-        metadataJson.accumulate(jsonKey, Xml.selectString(metadataEl, xpath, Save.NS).trim());
+        addValue(metadataEl, metadataJson, jsonKey, xpath, null);
+    }
+    private static void addValue(Element metadataEl, JSONObject metadataJson, String jsonKey, String xpath, String defaultVal) throws JSONException, JDOMException {
+
+        String value = Xml.selectString(metadataEl, xpath, Save.NS).trim();
+        if (value.isEmpty() && defaultVal != null) {
+            value = defaultVal;
+        }
+        metadataJson.accumulate(jsonKey, value.trim());
+    }
+
+    private static void addArray(Element metadataEl, IsoLanguagesMapper mapper, JSONObject metadataJson, String xpath, String jsonKey,
+                                 JsonEncoder encoder, Object... defaultVal)
+            throws Exception {
+        JSONArray def = new JSONArray();
+        for (Object o : defaultVal) {
+            def.add(o);
+        }
+        addArray(metadataEl, mapper, metadataJson, xpath, jsonKey, encoder, def);
     }
 
     private static void addArray(Element metadataEl, IsoLanguagesMapper mapper, JSONObject metadataJson, String xpath, String jsonKey, JsonEncoder encoder)
             throws Exception {
+        addArray(metadataEl, mapper, metadataJson, xpath, jsonKey, encoder, (JSONArray) null);
+    }
+    private static void addArray(Element metadataEl, IsoLanguagesMapper mapper, JSONObject metadataJson, String xpath, String jsonKey, JsonEncoder encoder, JSONArray defaultVal)
+            throws Exception {
 
         @SuppressWarnings("unchecked")
-        final List<Element> nodes = (List<Element>) Xml.selectNodes(metadataEl, xpath);
+        final List<Element> nodes = (List<Element>) Xml.selectNodes(metadataEl, xpath, Save.NS);
 
         for (Element node : nodes) {
             metadataJson.append(jsonKey, encoder.encode(node, mapper));
+        }
+
+        if (nodes.isEmpty()) {
+            if (defaultVal == null) {
+                Object def = encoder.getDefault();
+                if (def != null) {
+                    metadataJson.append(jsonKey, def);
+                }
+            } else {
+                metadataJson.accumulate(jsonKey, defaultVal);
+            }
         }
     }
 
@@ -237,17 +382,24 @@ public class GetEditModel implements Service {
     }
 
     interface JsonEncoder {
+        public Object getDefault() throws JSONException;
         public Object encode(Element node, IsoLanguagesMapper mapper) throws JDOMException, JSONException, UnsupportedEncodingException, Exception;
     }
 
-    private static final JsonEncoder codeListValueEncoder = new JsonEncoder() {
+    private static final JsonEncoder contactJsonEncoder = new JsonEncoder() {
 
         @Override
-        public Object encode(Element node, IsoLanguagesMapper mapper) throws JDOMException, JSONException {
-            return node.getAttributeValue("codeListValue");
+        public Object getDefault() throws JSONException {
+            JSONObject json = new JSONObject();
+            json.accumulate(Save.JSON_CONTACT_ID, "");
+            json.accumulate(Save.JSON_CONTACT_FIRST_NAME, "");
+            json.accumulate(Save.JSON_CONTACT_LAST_NAME, "");
+            json.accumulate(Save.JSON_CONTACT_ROLE, "");
+            json.accumulate(Save.JSON_CONTACT_EMAIL, "");
+            json.accumulate(Save.JSON_VALIDATED, false);
+            json.accumulate(Save.JSON_CONTACT_ORG_NAME, new JSONObject());
+            return json;
         }
-    };
-    private static final JsonEncoder contactJsonEncoder = new JsonEncoder() {
 
         @Override
         public Object encode(Element node, IsoLanguagesMapper mapper) throws JDOMException, JSONException, UnsupportedEncodingException {
@@ -263,17 +415,25 @@ public class GetEditModel implements Service {
                     "che:CHE_CI_Address/gmd:electronicMailAddress/gco:CharacterString/text()");
 
             addTranslatedElement(node, mapper, json, Save.JSON_CONTACT_ORG_NAME, "che:CHE_CI_ResponsibleParty/gmd:organisationName");
-            boolean validated = false;
+            boolean validated = true;
             if (node.getAttributeValue("role", XLINK).equals(ReusableObjManager.NON_VALID_ROLE)) {
-                validated = true;
+                validated = false;
             }
 
-            json.append(Save.JSON_VALIDATED, validated);
+            json.accumulate(Save.JSON_VALIDATED, validated);
 
             return json;
         }
     };
     private static final JsonEncoder keywordJsonEncoder = new JsonEncoder() {
+
+        @Override
+        public Object getDefault() throws JSONException {
+            JSONObject def = new JSONObject();
+            def.accumulate(Save.JSON_IDENTIFICATION_KEYWORD_CODE, "");
+            def.accumulate(Save.JSON_IDENTIFICATION_KEYWORD_WORD, new JSONObject());
+            return def;
+        }
 
         @Override
         public Object encode(Element node, IsoLanguagesMapper mapper) throws Exception {
@@ -289,6 +449,11 @@ public class GetEditModel implements Service {
     private static final JsonEncoder valueJsonEncoder = new JsonEncoder() {
 
         @Override
+        public Object getDefault() throws JSONException {
+            return "";
+        }
+
+        @Override
         public Object encode(Element node, IsoLanguagesMapper mapper) throws Exception {
             return node.getTextTrim();
         }
@@ -296,11 +461,21 @@ public class GetEditModel implements Service {
     private static final JsonEncoder codeListJsonEncoder = new JsonEncoder() {
 
         @Override
+        public Object getDefault() throws JSONException {
+            return "";
+        }
+
+        @Override
         public Object encode(Element node, IsoLanguagesMapper mapper) throws Exception {
             return node.getAttributeValue(Save.ATT_CODE_LIST_VALUE);
         }
     };
     private static final JsonEncoder translatedElemEncoder = new JsonEncoder() {
+
+        @Override
+        public Object getDefault() throws JSONException {
+            return new JSONObject();
+        }
 
         @Override
         public Object encode(Element node, IsoLanguagesMapper mapper) throws Exception {
@@ -312,6 +487,11 @@ public class GetEditModel implements Service {
     };
 
     private static final JsonEncoder legislationConstraintsJsonEncoder = new JsonEncoder() {
+
+        @Override
+        public Object getDefault() throws JSONException {
+            return null;
+        }
 
         @Override
         public Object encode(Element node, IsoLanguagesMapper mapper) throws Exception {
@@ -327,9 +507,17 @@ public class GetEditModel implements Service {
         final Pattern typenamePattern = Pattern.compile("typename=([^&]+)");
         Map<String, String> typenameMapper = Maps.newHashMap();
         {
-            typenameMapper.put("gn:countries", "countries");
+            typenameMapper.put("gn:countries", "country");
             typenameMapper.put("gn:kantoneBB", "kantone");
             typenameMapper.put("gn:gemeindenBB", "gemeinden");
+        }
+
+        @Override
+        public Object getDefault() throws JSONException {
+            JSONObject def = new JSONObject();
+            def.accumulate(Save.JSON_IDENTIFICATION_EXTENT_GEOM, "");
+            def.accumulate(Save.JSON_IDENTIFICATION_EXTENT_DESCRIPTION, new JSONObject());
+            return def;
         }
 
         @Override
@@ -349,4 +537,20 @@ public class GetEditModel implements Service {
         }
     };
 
+    private static class CodeListEntry implements Comparable<CodeListEntry> {
+        final String name;
+        final String title;
+        final String description;
+
+        private CodeListEntry(String name, String title, String description) {
+            this.name = name;
+            this.title = title;
+            this.description = description;
+        }
+
+        @Override
+        public int compareTo(CodeListEntry o) {
+            return title.compareTo(o.title);
+        }
+    }
 }

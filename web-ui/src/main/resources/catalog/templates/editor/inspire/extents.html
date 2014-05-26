@@ -42,7 +42,8 @@
 
     <div class="form-group">
         <label class="col-xs-3 control-label"><span data-translate="">extent</span>: </label>
-        <div class="table-responsive col-xs-9">
+        <div class="table-responsive col-xs-9"
+             data-ng-class="validationClassArray(data.identification.extents, 'geom')">
             <table class="table table-condensed">
                 <tr style="padding-bottom: 2em"
                     data-ng-class="$first ? '' : 'col-xs-offset-3'"

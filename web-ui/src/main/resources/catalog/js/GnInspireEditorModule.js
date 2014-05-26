@@ -41,7 +41,7 @@
           return $translate('beforeUnloadEditor');
         }
       };
-      $scope.languages = ['ger', 'fre', 'ita', 'eng'];
+      $scope.languages = ['ger', 'fre', 'ita', 'eng', 'roh'];
 
       var params = window.location.search;
       var mdId = params.substring(params.indexOf("id=") + 3);
@@ -50,22 +50,59 @@
         mdId = mdId.substring(0, indexOfAmp);
       }
       $scope.mdId = mdId;
-      inspireMetadataLoader($scope.url, mdId).then(function (data) {
-        $scope.data = data;
-      });
 
-      $scope.$watch("data.language", function (newVal, oldVal) {
-        var langs =  $scope.data.otherLanguages;
-        var i = langs.indexOf(oldVal);
-        if (i > -1) {
-          langs.splice(i, 1);
+      $scope.data = inspireMetadataLoader($scope.lang, $scope.url, mdId);
+      $scope.validationErrorClass = 'has-error';
+      $scope.validationClassString = function(model) {
+        if (model && model.length > 0) {
+          return '';
+        } else {
+          return $scope.validationErrorClass;
         }
-        if (langs.indexOf(newVal) < 0) {
-          langs.push(newVal);
+      };
+      $scope.validationClassArray = function(model, property) {
+        var cls, elem, i;
+        for (i = 0; i < model.length; i++) {
+          elem = model[i];
+          cls = $scope.validationClassString(elem[property]);
+          if (cls) {
+            return cls;
+          }
         }
-      });
+        return '';
+      };
+      $scope.validationClassDate = function() {
+        var dateClass = $scope.validationClassString($scope.data.identification.date);
+        var dateTypeClass = $scope.validationClassString($scope.data.identification.dateType);
+
+        if (dateClass) {
+          return dateClass;
+        }
+        if (dateTypeClass) {
+          return dateTypeClass;
+        }
+
+        return '';
+      };
+//      $scope.$watch("data.language", function (newVal, oldVal) {
+//        var langs =  $scope.data.otherLanguages;
+//        var i = langs.indexOf(oldVal);
+//        if (i > -1) {
+//          langs.splice(i, 1);
+//        }
+//        if (langs.indexOf(newVal) < 0) {
+//          langs.push(newVal);
+//        }
+//      });
       $scope.$watchCollection("data.otherLanguages", function() {
         var langs =  $scope.data.otherLanguages;
+        if (langs.length == 0) {
+          if ($scope.data.mainLang) {
+            langs.push($scope.data.mainLang);
+          } else {
+            langs.push($scope.languages[0]);
+          }
+        }
         langs.sort(function(a,b) {
           if (a == $scope.data.language) {
             return -1;
@@ -181,11 +218,27 @@
 
       $scope.linkToOtherKeyword = function() {
         var keyword = $scope.selectedKeyword;
-        $scope.keywordUnderEdit.uri = keyword.uri;
+        $scope.keywordUnderEdit.code = keyword.code;
         $scope.keywordUnderEdit.words = keyword.words;
         var modal = $('#editKeywordModal');
         modal.modal('hide');
-      }
+        $scope.validateKeywords();
+      };
+      $scope.validationCls = '';
+      $scope.validateKeywords = function(){
+        var i, keywords, valid = false;
+        keywords = $scope.data.identification.descriptiveKeywords;
+
+        for (i = 0; i < keywords.length; i++) {
+          if (keywords[i].code && keywords[i].code.length > 0) {
+            valid = true;
+          }
+        }
+
+        $scope.validationCls = valid ? '' : $scope.validationErrorClass;
+      };
+
+      $scope.validateKeywords();
     }]);
 
 
@@ -212,12 +265,27 @@
           $scope.extents = extents;
         });
 
+        $scope.validationCls = '';
         $scope.linkToOtherExtent = function () {
           $scope.extentUnderEdit.geom = $scope.selectedExtent.geom;
           $scope.extentUnderEdit.description = $scope.selectedExtent.description;
           var modal = $('#editExtentModal');
           modal.modal('hide');
         };
+        $scope.validateExtents = function(){
+          var i, extents, valid = false;
+          extents = $scope.data.identification.extents;
+
+          for (i = 0; i < extents.length; i++) {
+            if (extents[i].geom && extents[i].geom.length > 0) {
+              valid = true;
+            }
+          }
+
+          $scope.validationCls = valid ? '' : $scope.validationErrorClass;
+        };
+
+        $scope.validateExtents();
 
       }
     }]);
@@ -231,7 +299,9 @@
         count = 0;
         for (i = 0; i < legalConstraints.length; i++) {
           legal = legalConstraints[i];
-          count += legal[propertyName].length;
+          if (legal[propertyName]) {
+            count += legal[propertyName].length;
+          }
         }
         return count;
       };
@@ -242,14 +312,14 @@
         updateAccessConstraints: function() {
           $scope.propertyCount.accessConstraints = countProperties('accessConstraints');
           if ($scope.propertyCount.accessConstraints === 0) {
-            $scope.data.constraints.legal[0].accessConstraints = ['copyright'];
+            $scope.data.constraints.legal[0].accessConstraints = [''];
             $scope.propertyCount.accessConstraints = 1;
           }
         },
         updateUseConstraints: function() {
           $scope.propertyCount.useConstraints = countProperties('useConstraints');
           if ($scope.propertyCount.useConstraints === 0) {
-            $scope.data.constraints.legal[0].useConstraints = ['copyright'];
+            $scope.data.constraints.legal[0].useConstraints = [''];
             $scope.propertyCount.useConstraints = 1;
           }
         }

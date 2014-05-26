@@ -17,7 +17,7 @@
                                             data-ng-controller="InspireAccessConstraintController">
                                             <td data-ng-class="'no-border-top'">
                                                 <select class="form-control" data-ng-model="legal.accessConstraints[$index]"
-                                                        data-ng-options="opt for opt in data.constraintOptions">
+                                                        data-ng-options="opt.name as opt.title for opt in data.constraintOptions">
                                                 </select>
                                             </td>
                                             <td width="24px" data-ng-class="'no-border-top'">
@@ -40,7 +40,7 @@
                                         <tr data-ng-repeat="useConstraint in legal.useConstraints track by $index">
                                             <td data-ng-class="'no-border-top'">
                                                 <select class="form-control" data-ng-model="legal.useConstraints[$index]"
-                                                        data-ng-options="opt for opt in data.constraintOptions">
+                                                        data-ng-options="opt.name as opt.title for opt in data.constraintOptions">
                                                 </select>
                                             </td>
                                             <td width="24px" data-ng-class="'no-border-top'">
