@@ -1469,7 +1469,7 @@
               <xsl:variable name="type" select="gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue"/>
               <xsl:if test="$type">
                 (<xsl:value-of
-                  select="/root/gui/schemas/*[name(.)='iso19139']/codelists/codelist[@name = 'gmd:MD_KeywordTypeCode']/
+                  select="/root/gui/schemas/*[name(.)=$schema]/codelists/codelist[@name = 'gmd:MD_KeywordTypeCode']/
                   entry[code = $type]/label"/>)
               </xsl:if>
               <xsl:text>.</xsl:text>
