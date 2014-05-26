@@ -60,35 +60,50 @@ public class Save implements Service {
             Geonet.Namespaces.XLINK,
             XslUtil.CHE_NAMESPACE);
 
-    public static final String JSON_IDENTIFICATION_ABSTRACT = "abstract";
-    private static final String JSON_CONTACT_ID = "id";
     private static final String PARAM_DATA = "data";
-    private static final String JSON_CONTACT = "contact";
-    private static final String JSON_OTHER_LANGUAGES = "otherLanguages";
-    private static final String JSON_LANGUAGE = "language";
-    private static final String JSON_HIERARCHY_LEVEL = "hierarchyLevel";
-    private static final String JSON_CONTACT_VALIDATED = "validated";
-    private static final String JSON_CONTACT_ROLE = "role";
     public static final String EL_CHARACTER_STRING = "CharacterString";
-    private static final String JSON_FIRST_NAME = "name";
-    private static final String JSON_LAST_NAME = "surname";
-    private static final String JSON_CONTACT_EMAIL = "email";
-    private static final String JSON_IDENTIFICATION = "identification";
-    public static final String JSON_IDENTIFICATION_TYPE = "type";
-    public static final String JSON_CONTACT_ORG_NAME = "organization";
     public static final String ATT_CODE_LIST_VALUE = "codeListValue";
     public static final String ATT_CODE_LIST = "codeList";
-    private static final String JSON_IDENTIFICATION_DATE = "date";
-    private static final String JSON_IDENTIFICATION_DATE_TYPE = "dateType";
-    private static final String JSON_IDENTIFICATION_IDENTIFIER = "citationIdentifier";
-    public static final String JSON_IDENTIFICATION_POINT_OF_CONTACT = "pointOfContact";
-    public static final String JSON_IDENTIFICATION_TYPE_DATA_VALUE = "data";
-    private static final String JSON_TOPIC_CATEGORY = "hierarchyLevelName";
-    private static final String JSON_IDENTIFICATION_TOPIC_CATEGORIES = "topicCategory";
-    private static final String JSON_CONSTRAINTS = "constraints";
-    private static final String JSON_CONSTRAINTS_LEGAL = "legal";
-    private static final String JSON_CONSTRAINTS_GENERIC = "generic";
-    private static final String JSON_CONSTRAINTS_SECURITY = "security";
+
+    static final String JSON_IDENTIFICATION_ABSTRACT = "abstract";
+    static final String JSON_CONTACT_ID = "id";
+    static final String JSON_CONTACT = "contact";
+    static final String JSON_OTHER_LANGUAGES = "otherLanguages";
+    static final String JSON_LANGUAGE = "language";
+    static final String JSON_HIERARCHY_LEVEL = "hierarchyLevel";
+    static final String JSON_VALIDATED = "validated";
+    static final String JSON_CONTACT_ROLE = "role";
+    static final String JSON_CONTACT_FIRST_NAME = "name";
+    static final String JSON_CONTACT_LAST_NAME = "surname";
+    static final String JSON_CONTACT_EMAIL = "email";
+    static final String JSON_IDENTIFICATION = "identification";
+    static final String JSON_IDENTIFICATION_TYPE = "type";
+    static final String JSON_CONTACT_ORG_NAME = "organization";
+    static final String JSON_IDENTIFICATION_DATE = "date";
+    static final String JSON_IDENTIFICATION_DATE_TYPE = "dateType";
+    static final String JSON_IDENTIFICATION_IDENTIFIER = "citationIdentifier";
+    static final String JSON_IDENTIFICATION_POINT_OF_CONTACT = "pointOfContact";
+    static final String JSON_IDENTIFICATION_TYPE_DATA_VALUE = "data";
+    static final String JSON_HIERARCHY_LEVEL_NAME = "hierarchyLevelName";
+    static final String JSON_IDENTIFICATION_TOPIC_CATEGORIES = "topicCategory";
+    static final String JSON_CONSTRAINTS = "constraints";
+    static final String JSON_CONSTRAINTS_LEGAL = "legal";
+    static final String JSON_CONSTRAINTS_GENERIC = "generic";
+    static final String JSON_CONSTRAINTS_SECURITY = "security";
+    static final String JSON_CHARACTER_SET = "characterSet";
+    public static final String JSON_IDENTIFICATION_TITLE = "title";
+    public static final String JSON_IDENTIFICATION_DATE_TAG_NAME = "dateTagName";
+    public static final String JSON_IDENTIFICATION_KEYWORDS = "descriptiveKeywords";
+    public static final String JSON_IDENTIFICATION_KEYWORD_CODE = "code";
+    public static final String JSON_IDENTIFICATION_KEYWORD_WORD = "word";
+    public static final String JSON_IDENTIFICATION_EXTENTS = "extents";
+    public static final String JSON_CONSTRAINTS_ACCESS_CONSTRAINTS = "accessConstraints";
+    public static final String JSON_CONSTRAINTS_USE_CONSTRAINTS = "useConstraints";
+    public static final String JSON_CONSTRAINTS_OTHER_CONSTRAINTS = "otherConstraints";
+    public static final String JSON_CONSTRAINTS_USE_LIMITATIONS = "useLimitations";
+    public static final String JSON_IDENTIFICATION_EXTENT_GEOM = "geom";
+    public static final String JSON_IDENTIFICATION_EXTENT_DESCRIPTION = "description";
+    static final String JSON_CONSTRAINTS_LEGISLATION_CONSTRAINTS = "legislationConstraints";
 
     @Override
     public void init(String appPath, ServiceConfig params) throws Exception {
@@ -99,6 +114,7 @@ public class Save implements Service {
     public Element exec(Element params, ServiceContext context) throws Exception {
         final String data = Util.getParam(params, PARAM_DATA);
         final String id = params.getChildText(Params.ID);
+
         GeonetContext handlerContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         final SchemaManager schemaManager = handlerContext.getSchemamanager();
         final DataManager dataManager = handlerContext.getDataManager();
@@ -153,19 +169,6 @@ public class Save implements Service {
                 el.getParentElement().detach();
             }
         }
-
-        // update legal constraints
-//        List nodesToRemove = Lists.newArrayList();
-//        nodesToRemove.addAll(Xml.selectNodes(identificationInfo,
-//                "gmd:resourceConstraints/*/che:legislationConstraints/che:CHE_MD_Legislation/che:title/gmd:CI_Citation/gmd:title", NS));
-//        nodesToRemove.addAll(Xml.selectNodes(identificationInfo,
-//                "gmd:resourceConstraints/*/node()[name() = 'gmd:useLimitation' or name() = 'gmd:accessConstraints'" +
-//                "or name() = 'gmd:useConstraints' or name() = 'gmd:otherConstraints']", NS));
-//
-//        for (Object node : nodesToRemove) {
-//            ((Element)node).detach();
-//        }
-
         int addIndex = -1;
         Element resourceConstraints = identificationInfo.getChild("resourceConstraints", GMD);
         if (resourceConstraints != null) {
@@ -191,15 +194,19 @@ public class Save implements Service {
             }
 
 
-            updateMultipleTranslatedInstances(editLib, metadataSchema, legalConstraintEl, "gmd:useLimitation", constraint, "useLimitation", "useLimitations");
+            updateMultipleTranslatedInstances(editLib, metadataSchema, legalConstraintEl, "gmd:useLimitation", constraint,
+                    "useLimitation", JSON_CONSTRAINTS_USE_LIMITATIONS);
 
-            updateConstraintCodeList(editLib, metadataSchema, legalConstraintEl, "gmd:accessConstraints", constraint, "accessConstraints");
-            updateConstraintCodeList(editLib, metadataSchema, legalConstraintEl, "gmd:useConstraints", constraint, "useConstraints");
+            updateConstraintCodeList(editLib, metadataSchema, legalConstraintEl, "gmd:accessConstraints", constraint,
+                    JSON_CONSTRAINTS_ACCESS_CONSTRAINTS);
+            updateConstraintCodeList(editLib, metadataSchema, legalConstraintEl, "gmd:useConstraints", constraint,
+                    JSON_CONSTRAINTS_USE_CONSTRAINTS);
 
-            updateMultipleTranslatedInstances(editLib, metadataSchema, legalConstraintEl, "gmd:otherConstraints", constraint, "otherConstraints", "otherConstraints");
+            updateMultipleTranslatedInstances(editLib, metadataSchema, legalConstraintEl, "gmd:otherConstraints", constraint,
+                    JSON_CONSTRAINTS_OTHER_CONSTRAINTS, JSON_CONSTRAINTS_OTHER_CONSTRAINTS);
             updateMultipleTranslatedInstances(editLib, metadataSchema, legalConstraintEl,
                     "che:legislationConstraints/che:CHE_MD_Legislation/che:title/gmd:CI_Citation/gmd:title", constraint,
-                    "title", "legislationConstraints");
+                    "title", JSON_CONSTRAINTS_LEGISLATION_CONSTRAINTS);
 
             resourceConstraints = legalConstraintEl.getParentElement();
             if (resourceConstraints == null) {
@@ -309,7 +316,7 @@ public class Save implements Service {
     protected void updateMetadata(ServiceContext context, EditLib editLib, Element metadata, MetadataSchema metadataSchema, JSONObject
             jsonObject) throws Exception {
         updateCharString(editLib, metadata, metadataSchema, "gmd:language", jsonObject.optString(JSON_LANGUAGE));
-        updateCharString(editLib, metadata, metadataSchema, "gmd:hierarchyLevelName", jsonObject.optString(JSON_TOPIC_CATEGORY));
+        updateCharString(editLib, metadata, metadataSchema, "gmd:hierarchyLevelName", jsonObject.optString(JSON_HIERARCHY_LEVEL_NAME));
 
         updateCharset(editLib, metadata, metadataSchema, jsonObject);
         updateHierarchyLevel(editLib, metadata, metadataSchema, jsonObject);
@@ -327,12 +334,14 @@ public class Save implements Service {
         Element identification = getIdentification(editLib, metadata, metadataSchema, identificationJson);
 
         updateTranslatedInstance(editLib, metadataSchema, identification, identificationJson.optJSONObject("title"),
-                "gmd:citation/gmd:CI_Citation/gmd:title", "title", GMD);
+                "gmd:citation/gmd:CI_Citation/gmd:title", JSON_IDENTIFICATION_TITLE, GMD);
 
         updateDate(editLib, metadataSchema, identification, identificationJson);
-        final String citationIdentifier = identificationJson.optString(JSON_IDENTIFICATION_IDENTIFIER);
+        JSONObject citationIdentifier = identificationJson.optJSONObject(JSON_IDENTIFICATION_IDENTIFIER);
 
-        updateCharString(editLib, identification, metadataSchema, "gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString", citationIdentifier);
+        updateTranslatedInstance(editLib, metadataSchema, identification, citationIdentifier,
+                "gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code", JSON_IDENTIFICATION_KEYWORD_CODE, GMD);
+
         updateTranslatedInstance(editLib, metadataSchema, identification, identificationJson.optJSONObject(JSON_IDENTIFICATION_ABSTRACT),
                 "gmd:abstract", "abstract", GMD);
 
@@ -368,8 +377,8 @@ public class Save implements Service {
                                 JSONObject identificationJson) throws Exception {
         HrefBuilder hrefBuilder = new KeywordHrefBuilder();
 
-        updateSharedObject(context, editLib, metadataSchema, identification, identificationJson, "descriptiveKeywords",
-                "descriptiveKeywords", GMD, hrefBuilder);
+        updateSharedObject(context, editLib, metadataSchema, identification, identificationJson, JSON_IDENTIFICATION_KEYWORDS,
+                JSON_IDENTIFICATION_KEYWORDS, GMD, hrefBuilder);
     }
     private void updateExtent(ServiceContext context, EditLib editLib, MetadataSchema metadataSchema, Element identification,
                               JSONObject identificationJson) throws Exception {
@@ -381,7 +390,7 @@ public class Save implements Service {
         } else {
             namespace = SRV;
         }
-        updateSharedObject(context, editLib, metadataSchema, identification, identificationJson, "extents",
+        updateSharedObject(context, editLib, metadataSchema, identification, identificationJson, JSON_IDENTIFICATION_EXTENTS,
                 "extent", namespace, hrefBuilder);
     }
 
@@ -577,7 +586,7 @@ public class Save implements Service {
 
     private void updateCharset(EditLib editLib, Element metadata, MetadataSchema metadataSchema,
                                JSONObject jsonObject) throws JSONException {
-        final String charset = jsonObject.optString("characterSet");
+        final String charset = jsonObject.optString(JSON_CHARACTER_SET);
         if (!Strings.isNullOrEmpty(charset)) {
             Element codeElement = new Element("MD_CharacterSetCode", GMD).setAttribute(ATT_CODE_LIST_VALUE, charset).
                     setAttribute(ATT_CODE_LIST, "http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode");
@@ -613,7 +622,7 @@ public class Save implements Service {
         for (int i = 0; i < contacts.length(); i++) {
             JSONObject contact = contacts.getJSONObject(i);
             String contactId = contact.optString(JSON_CONTACT_ID, null);
-            boolean validated = contact.getBoolean(JSON_CONTACT_VALIDATED);
+            boolean validated = contact.getBoolean(JSON_VALIDATED);
             String role = contact.getString(JSON_CONTACT_ROLE);
 
             String xlinkHref = "local://xml.user.get?id=" + contactId + "&amp;schema=iso19139.che&amp;role=" + role;
@@ -640,9 +649,9 @@ public class Save implements Service {
                 );
 
                 Element firstNameEl = new Element("individualFirstName", CHE_NAMESPACE).addContent(
-                        new Element(EL_CHARACTER_STRING, GCO).setText(contact.getString(JSON_FIRST_NAME)));
+                        new Element(EL_CHARACTER_STRING, GCO).setText(contact.getString(JSON_CONTACT_FIRST_NAME)));
                 Element lastNameEl = new Element("individualLastName", CHE_NAMESPACE).addContent(
-                        new Element(EL_CHARACTER_STRING, GCO).setText(contact.getString(JSON_LAST_NAME)));
+                        new Element(EL_CHARACTER_STRING, GCO).setText(contact.getString(JSON_CONTACT_LAST_NAME)));
                 Element roleEl = new Element("role", GMD).addContent(
                         new Element("CI_RoleCode", GMD).
                                 setAttribute(ATT_CODE_LIST_VALUE, role).
@@ -710,7 +719,7 @@ public class Save implements Service {
 
     @VisibleForTesting
     protected Element getMetadata(ServiceContext context, String id, AjaxEditUtils ajaxEditUtils) throws Exception {
-        Element metadata = AjaxEditUtils.getMetadataFromSession(context.getUserSession(), id);
+        Element metadata = (Element) context.getUserSession().getProperty(Geonet.Session.METADATA_EDITING + id);
         if (metadata == null) {
             metadata = ajaxEditUtils.getMetadataEmbedded(context, id, true, false);
         }

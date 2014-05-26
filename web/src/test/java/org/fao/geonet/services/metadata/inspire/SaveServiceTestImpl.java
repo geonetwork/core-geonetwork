@@ -18,12 +18,13 @@ import java.util.Map;
  * @author Jesse on 5/21/2014.
  */
 class SaveServiceTestImpl extends Save {
-    final IsoLanguagesMapper languagesMapper = new IsoLanguagesMapper() {
+    final static IsoLanguagesMapper LANGUAGES_MAPPER = new IsoLanguagesMapper() {
         {
             iso639_1_to_iso639_2IsoLanguagesMap.put("en", "eng");
             iso639_1_to_iso639_2IsoLanguagesMap.put("de", "ger");
             iso639_1_to_iso639_2IsoLanguagesMap.put("fr", "fre");
             iso639_1_to_iso639_2IsoLanguagesMap.put("it", "ita");
+            iso639_1_to_iso639_2IsoLanguagesMap.put("rm", "roh");
         }
 
         {
@@ -31,6 +32,7 @@ class SaveServiceTestImpl extends Save {
             iso639_2_to_iso639_1IsoLanguagesMap.put("ger", "de");
             iso639_2_to_iso639_1IsoLanguagesMap.put("fre", "fr");
             iso639_2_to_iso639_1IsoLanguagesMap.put("ita", "it");
+            iso639_2_to_iso639_1IsoLanguagesMap.put("roh", "rm");
         }
     };
     private Element testMetadata;
@@ -227,7 +229,7 @@ class SaveServiceTestImpl extends Save {
 
     @Override
     protected IsoLanguagesMapper getIsoLanguagesMapper() {
-        return languagesMapper;
+        return LANGUAGES_MAPPER;
     }
 
     @Override

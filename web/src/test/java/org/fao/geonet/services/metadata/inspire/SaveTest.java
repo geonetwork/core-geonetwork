@@ -2,7 +2,6 @@ package org.fao.geonet.services.metadata.inspire;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.io.Closer;
 import com.google.common.io.Files;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -138,9 +137,8 @@ public class SaveTest {
         assertEquals(Xml.selectString(identification,
                 "gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue", NS), "creation");
 
-        assertEquals(Xml.selectString(identification,
-                "gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString", NS), "Citation Identifier");
-
+        assertCorrectTranslation(identification, "gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code",
+                read("eng", "Citation Identifier"));
         assertCorrectTranslation(identification, "gmd:abstract", read("eng", "Abstract EN"), read("fre", "Abstract FR"));
 
 
@@ -251,43 +249,37 @@ public class SaveTest {
     }
     @Test
     public void testConstraintsAreDeletedWhenDeletedFromInspireData() throws Exception {
-        Closer closer = Closer.create();
-        try {
-            JSONObject json = new JSONObject(loadTestJson());
-            json.remove("identification");
-            json.remove("language");
-            json.remove("characterSet");
-            json.remove("hierarchyLevel");
-            json.remove("hierarchyLevelName");
-            json.remove("contact");
-            json.remove("otherLanguages");
+        JSONObject json = new JSONObject(loadTestJson());
+        json.remove("identification");
+        json.remove("language");
+        json.remove("characterSet");
+        json.remove("hierarchyLevel");
+        json.remove("hierarchyLevelName");
+        json.remove("contact");
+        json.remove("otherLanguages");
 
-            final Element testMetadata = Xml.loadStream(closer.register(SaveTest.class.getResourceAsStream("metadataWithContraints.xml")));
+        final Element testMetadata = Xml.loadFile(SaveTest.class.getResource("metadataWithContraints.xml"));
 
-            service.setTestMetadata(testMetadata);
-            service.exec(new Element("request").addContent(Arrays.asList(
-                    new Element("id").setText("12"),
-                    new Element("data").setText(json.toString())
-            )), context);
+        service.setTestMetadata(testMetadata);
+        service.exec(new Element("request").addContent(Arrays.asList(
+                new Element("id").setText("12"),
+                new Element("data").setText(json.toString())
+        )), context);
 
-            final Element identification = Xml.selectElement(service.getSavedMetadata(), "gmd:identificationInfo/*", NS);
+        final Element identification = Xml.selectElement(service.getSavedMetadata(), "gmd:identificationInfo/*", NS);
 
-            assertEquals(0, Xml.selectNodes(identification, "geonet:element", Arrays.asList(GEONET)).size());
-            assertEquals(0, Xml.selectNodes(identification, "*//geonet:element", Arrays.asList(GEONET)).size());
-            assertCorrectConstraints(identification);
+        assertEquals(0, Xml.selectNodes(identification, "geonet:element", Arrays.asList(GEONET)).size());
+        assertEquals(0, Xml.selectNodes(identification, "*//geonet:element", Arrays.asList(GEONET)).size());
+        assertCorrectConstraints(identification);
 
 
-            assertEquals(1, Xml.selectNodes(identification, "gmd:resourceConstraints/che:CHE_MD_LegalConstraints[not(gmd:useLimitation)]", NS).size());
-            assertEquals(1, Xml.selectNodes(identification, "gmd:resourceConstraints/che:CHE_MD_LegalConstraints[gmd:useLimitation]", NS).size());
-            assertEquals(1, Xml.selectNodes(identification, "gmd:resourceConstraints/gmd:MD_Constraints", NS).size());
-            assertCorrectTranslation(identification, "gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation[1]", read("eng", "limitation 1"));
-            assertCorrectTranslation(identification, "gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation[2]", read("eng", "limitation 2"));
-            assertEquals(1, Xml.selectNodes(identification, "gmd:resourceConstraints/gmd:MD_SecurityConstraints", NS).size());
-            assertCorrectTranslation(identification, "gmd:resourceConstraints/gmd:MD_SecurityConstraints/gmd:useLimitation[1]", read("eng", "Sec Limitation"));
-        } finally {
-            closer.close();
-        }
-
+        assertEquals(1, Xml.selectNodes(identification, "gmd:resourceConstraints/che:CHE_MD_LegalConstraints[not(gmd:useLimitation)]", NS).size());
+        assertEquals(1, Xml.selectNodes(identification, "gmd:resourceConstraints/che:CHE_MD_LegalConstraints[gmd:useLimitation]", NS).size());
+        assertEquals(1, Xml.selectNodes(identification, "gmd:resourceConstraints/gmd:MD_Constraints", NS).size());
+        assertCorrectTranslation(identification, "gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation[1]", read("eng", "limitation 1"));
+        assertCorrectTranslation(identification, "gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation[2]", read("eng", "limitation 2"));
+        assertEquals(1, Xml.selectNodes(identification, "gmd:resourceConstraints/gmd:MD_SecurityConstraints", NS).size());
+        assertCorrectTranslation(identification, "gmd:resourceConstraints/gmd:MD_SecurityConstraints/gmd:useLimitation[1]", read("eng", "Sec Limitation"));
     }
 
     @Test

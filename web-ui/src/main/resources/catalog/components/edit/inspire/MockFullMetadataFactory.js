@@ -60,7 +60,7 @@
             date: '2008-06-23',
             dateTagName: 'gco:Date',
             dateType: 'creation',
-            citationIdentifier: "Citation Identifier",
+            citationIdentifier: {eng: "Citation Identifier"},
             language: "ger",
             abstract: {eng: 'Abstract EN', fre: 'Abstract FR'},
             pointOfContact:  [{
@@ -109,7 +109,6 @@
           constraints: {
             legal: [{
               ref: '211',
-              type: 'legal',
               accessConstraints: ['copyright'],
               useConstraints: ['intellectualPropertyRights'],
               useLimitations: [{eng:'leg limitation 1'}, {eng:'leg limitation 2'}],
@@ -117,7 +116,6 @@
               legislationConstraints: [{eng: 'legislation constraint title'}]
             },{
               ref: '',
-              type: 'legal',
               accessConstraints: ['otherRestrictions', 'copyright'],
               useConstraints: ['intellectualPropertyRights'],
               useLimitations: [],
@@ -126,12 +124,10 @@
             }],
             generic: [{
               ref: '251',
-              type: 'generic',
               useLimitations: [{eng:'limitation 1'}, {eng: 'limitation 2'}]
             }],
             security: [{
               ref: '261',
-              type: 'security',
               useLimitations: [{eng:'sec limitation 1'}, {eng:'sec limitation 2'}],
               classification: 'restricted'
             }]

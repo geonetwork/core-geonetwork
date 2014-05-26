@@ -9,7 +9,7 @@
   goog.require('inspire_get_extents_factory');
   goog.require('inspire_date_picker_directive');
 
-  goog.require('inspire_mock_full_metadata_factory');
+  goog.require('inspire-metadata-loader');
 
   var module = angular.module('gn_inspire_editor',
     [ 'gn', 'inspire_contact_directive', 'inspire_multilingual_text_directive', 'inspire_metadata_factory',

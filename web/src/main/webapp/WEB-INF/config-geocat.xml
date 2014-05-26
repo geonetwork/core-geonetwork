@@ -619,6 +619,7 @@
         * id or uuid
         ]]></documentation>
             <class name=".services.metadata.inspire.GetEditModel" />
+            <output sheet="../xslt/ui-metadata/edit/inspire-model.xsl" contentType="application/json" />
             <error sheet="../xslt/common/error.xsl"/>
         </service>
 

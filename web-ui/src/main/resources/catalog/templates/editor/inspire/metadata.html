@@ -175,12 +175,14 @@
                  data-main-lang="data.language"
                  data-languages="data.otherLanguages"
                  data-field="data.identification.title"/>
-            <div class="form-group">
-                <label for="citationIdentifier" class="col-xs-3 control-label"><span data-translate="">citationIdentifier</span>: </label>
-                <div class="col-xs-9">
-                    <input id="citationIdentifier" class="form-control" data-ng-model="data.identification.citationIdentifier" />
-                </div>
-            </div>
+
+            <div data-inspire-multilingual-text
+                 data-title="citationIdentifier"
+                 data-rows="1"
+                 data-main-lang="data.language"
+                 data-languages="data.otherLanguages"
+                 data-field="data.identification.citationIdentifier"/>
+
             <div data-inspire-multilingual-text
                  data-title="abstract"
                  data-rows="5"
