@@ -912,6 +912,7 @@
     <module>oaipmh</module>
     <module>sde</module>
     <module>web-client</module>
+    <module>web-ui</module>
     <module>web</module>
   </modules>
   
