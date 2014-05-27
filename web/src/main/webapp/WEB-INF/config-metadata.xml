@@ -886,6 +886,38 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
         <service name="versioning.log">
             <output sheet="versioning/log.xsl"></output>
         </service>
+
+        <!-- Massive metadata update services -->
+
+        <service name="metadata.batch.replace.form">
+          <documentation><![CDATA[
+          Service to display the metadata massive update form.
+          ]]></documentation>
+          <output sheet="metadata/replace/replace.xsl">
+            <xml name="massive-replace" file="xml/metadata-massive-replace.xml" />
+          </output>
+        </service>
+
+        <service name="metadata.batch.replace">
+          <documentation><![CDATA[
+          Service to apply the metadata massive update process configured to the selected metadata.
+          ]]></documentation>
+          <class name=".services.metadata.replace.MassiveReplaceContent">
+            <param name="fullResponse" value="true" />
+          </class>
+
+          <output sheet="metadata/replace/replace-results.xsl">
+            <xml name="massive-replace" file="xml/metadata-massive-replace.xml" />
+          </output>
+        </service>
+
+
+        <service name="metadata.batch.replace.new">
+          <documentation><![CDATA[
+            Service to apply the metadata massive update process configured to the selected metadata.
+            ]]></documentation>
+          <class name=".services.metadata.replace.MassiveReplaceContent"/>
+        </service>
     </services>
 </geonet>
 

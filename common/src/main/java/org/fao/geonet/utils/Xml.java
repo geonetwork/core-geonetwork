@@ -434,6 +434,56 @@ public final class Xml
 		transform(xml, styleSheetPath, result, null);
 	}
 
+
+    public static Element transformWithXmlParam(Element xml, String styleSheetPath, String xmlParamName, String xmlParam) throws Exception
+    {
+        JDOMResult resXml = new JDOMResult();
+
+        File styleSheet = new File(styleSheetPath);
+        Source srcSheet = new StreamSource(styleSheet);
+        transformWithXmlParam(xml, srcSheet, resXml, xmlParamName, xmlParam);
+
+        return (Element)resXml.getDocument().getRootElement().detach();
+    }
+
+    /**
+     * Transforms an xml tree putting the result to a stream. Sends xml snippet as parameter.
+     * @param xml
+     * @param xslt
+     * @param result
+     * @param xmlParamName
+     * @param xmlParam
+     * @throws Exception
+     */
+    public static void transformWithXmlParam(Element xml, Source xslt, Result result,
+                                             String xmlParamName, String xmlParam) throws Exception {
+        Source srcXml   = new JDOMSource(new Document((Element)xml.detach()));
+
+        // Dear old saxon likes to yell loudly about each and every XSLT 1.0
+        // stylesheet so switch it off but trap any exceptions because this
+        // code is run on transformers other than saxon
+        TransformerFactory transFact;
+        transFact = TransformerFactoryFactory.getTransformerFactory();
+
+        try {
+            transFact.setAttribute(FeatureKeys.VERSION_WARNING,false);
+            transFact.setAttribute(FeatureKeys.LINE_NUMBERING,true);
+            transFact.setAttribute(FeatureKeys.PRE_EVALUATE_DOC_FUNCTION,true);
+            transFact.setAttribute(FeatureKeys.RECOVERY_POLICY,Configuration.RECOVER_SILENTLY);
+            // Add the following to get timing info on xslt transformations
+            //transFact.setAttribute(FeatureKeys.TIMING,true);
+        } catch (IllegalArgumentException e) {
+            System.out.println("WARNING: transformerfactory doesnt like saxon attributes!");
+            //e.printStackTrace();
+        } finally {
+            Transformer t = transFact.newTransformer(xslt);
+            if (xmlParam != null) {
+                t.setParameter(xmlParamName, new StreamSource(new StringReader(xmlParam)));
+            }
+            t.transform(srcXml, result);
+        }
+    }
+
 	//--------------------------------------------------------------------------
 
 	private static class JeevesURIResolver implements URIResolver {

@@ -93,6 +93,7 @@
               scope.linkService = function() {
                 var snippet =
                     gnOnlinesrc.addFromGeoPublisher(scope.wmsLayerName,
+                    scope.resource.title,
                     gsNode, scope.protocols);
 
                 var snippetRef = gnEditor.buildXMLFieldName(
@@ -113,8 +114,7 @@
               scope.openStyler = function() {
                 window.open(gsNode.stylerUrl +
                     '?namespace=' + gsNode.namespacePrefix +
-                    '&layer=' + gsNode.namespacePrefix +
-                    ':' + scope.wmsLayerName);
+                    '&layer=' + scope.wmsLayerName);
               };
               /**
                * Dirty check if the node is a Mapserver REST API
@@ -126,22 +126,31 @@
               var isMRA = function(gsNode) {
                 return gsNode.adminUrl.indexOf('/mra') !== -1;
               };
+
+              /**
+               * Build WMS layername based on target map server.
+               *
+               * @param {Object} gsNode
+               */
+              var buildLayerName = function (gsNode) {
+                // Append prefix for GeoServer.
+                if (gsNode && !isMRA(gsNode)) {
+                  scope.wmsLayerName = gsNode.namespacePrefix +
+                    ':' + scope.wmsLayerName;
+                }
+              };
+
               /**
                * Add the layer of the node to the current
                * map.
                */
               var addLayerToMap = function(layer) {
                 // TODO: drop existing layer before adding new
-                var layerName = isMRA(gsNode) ?
-                    scope.wmsLayerName :
-                    gsNode.namespacePrefix +
-                    ':' + scope.wmsLayerName;
-
                 map.addLayer(new ol.layer.Tile({
                   source: new ol.source.TileWMS({
                     url: gsNode.wmsUrl,
                     params: {
-                      'LAYERS': layerName
+                      'LAYERS': scope.wmsLayerName
                     }
                   })
                 }));
@@ -200,6 +209,7 @@
               scope.selectNode = function(nodeId) {
                 gsNode = getNodeById(nodeId);
                 scope.checkNode(nodeId);
+                buildLayerName(gsNode);
                 scope.hasStyler = !angular.isArray(gsNode.stylerUrl);
               };
 
@@ -275,6 +285,7 @@
                     .replace(/.*\//, '')
                     .replace(/.zip$|.tif$|.tiff$/, '');
                 }
+                buildLayerName(gsNode);
               };
             }
           };

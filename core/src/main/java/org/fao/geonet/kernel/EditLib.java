@@ -1952,9 +1952,9 @@ public class EditLib {
 				attribute.addContent(def);
 			}
 
-			for(int j=0; j<attr.values.size(); j++) {
-				Element text = new Element(Edit.Attribute.Child.TEXT, Edit.NAMESPACE);
-				text.setAttribute(Edit.Attribute.Attr.VALUE, (String) attr.values.get(j));
+			for(String value : attr.values) {
+                Element text = new Element(Edit.Attribute.Child.TEXT, Edit.NAMESPACE);
+				text.setAttribute(Edit.Attribute.Attr.VALUE, value);
 
 				attribute.addContent(text);
 			}
