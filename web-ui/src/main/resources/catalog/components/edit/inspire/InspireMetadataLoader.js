@@ -1,4 +1,5 @@
 (function() {
+  'use strict';
   goog.provide('inspire-metadata-loader');
   goog.require('inspire_empty_metadata_factory');
 
@@ -28,5 +29,5 @@
         return templateData;
       };
   }]);
-})();
+}());
 

@@ -1,0 +1,19 @@
+<div class="form-group">
+    <label data-ng-show="title" for="title" class="col-xs-3 control-label"><span data-translate="">{{title}}</span>: </label>
+
+    <div data-ng-class="title ? [cls, 'col-xs-9'] : [cls, 'col-xs-12']">
+        <textarea data-ng-disabled="disabled" rows="{{rows}}" id="title" class="form-control col-xs-12"
+                  data-ng-repeat="lang in languages" data-ng-model="field[lang]"
+                  data-ng-show="editLang === lang || editLang === 'all'"
+                  placeholder="{{placeholder ? placeholder + ' -- ' : ''}}{{lang | translate}}"/>
+        <ul class="nav nav-pills">
+            <li data-ng-class="pillClass(lang)" data-ng-repeat="lang in languages" data-ng-hide="editLang === 'all'">
+                <a data-ng-click="setEditLang(lang)">{{lang | translate}}</a>
+            </li>
+            <li>
+                <a data-ng-click="editLang === 'all' ? setEditLang(mainLang) : setEditLang('all')">
+                    {{editLang === 'all' ? 'collapse' : 'all' | translate}}</a>
+            </li>
+        </ul>
+    </div>
+</div>

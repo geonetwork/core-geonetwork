@@ -1,4 +1,5 @@
 (function() {
+  'use strict';
   goog.provide('inspire_get_shared_users_factory');
 
   var module = angular.module('inspire_get_shared_users_factory', []);
@@ -23,10 +24,10 @@
           data = data.record;
           var user = {
             id: userId,
-            name: data.name ? data.name : '',
-            surname: data.surname ? data.surname : '',
-            email: data.email ? data.email : '',
-            organization: data.organisation ? data.organisation : '',
+            name: data.name || '',
+            surname: data.surname || '',
+            email: data.email || '',
+            organization: data.organisation || '',
             validated: data.validated === 'y'
           };
 
@@ -50,8 +51,9 @@
         var contactURL = url + 'reusable.list.js?type=contacts&validated=';
 
         var processData = function(data) {
-          if (data.indexOf("<") != 0) {
-            for (var i = 0; i < data.length; i++) {
+          var i;
+          if (data.indexOf("<") !== 0) {
+            for (i = 0; i < data.length; i++) {
               if (data[i].url) {
                 data[i].url = data[i].url.replace(/local:\/\//g, '');
               }
@@ -92,7 +94,7 @@
 
         return deferred.promise;
       }
-    }
+    };
   }]);
-})();
+}());
 

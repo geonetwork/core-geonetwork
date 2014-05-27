@@ -1,4 +1,5 @@
 (function() {
+  'use strict';
   goog.provide('inspire_get_keywords_factory');
 
   var module = angular.module('inspire_get_keywords_factory', []);
@@ -10,19 +11,19 @@
         var serviceAndParams = 'xml.search.keywords@json?pNewSearch=true&pLanguage=*&pThesauri=';
         $http.get(url + serviceAndParams + thesaurus).success(function(data) {
           data = data[0];
-          var i;
+          var i, j, raw, words, word;
           var keywords = [];
           for (i = 0; i < data.length; i++) {
-            var raw = data[i];
-            var words = {};
-            for (var j = 0; j < raw.values.length; j++) {
-              var word = raw.values[j];
+            raw = data[i];
+            words = {};
+            for (j = 0; j < raw.values.length; j ++) {
+              word = raw.values[j];
               words[word['@language']] = word['#text'];
             }
             keywords.push({
               code: raw.uri,
               words: words
-            })
+            });
           }
           deferred.resolve(keywords);
         }).error(function (data) {
@@ -31,5 +32,5 @@
         return deferred.promise;
       };
   }]);
-})();
+}());
 

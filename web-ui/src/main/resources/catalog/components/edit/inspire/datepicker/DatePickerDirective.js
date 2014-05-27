@@ -1,4 +1,5 @@
 (function() {
+  'use strict';
   goog.provide('inspire_date_picker_directive');
 
   var module = angular.module('inspire_date_picker_directive', []);
@@ -52,7 +53,7 @@
             if (!scope.value) {
               scope.value = '';
             } else if (scope.value.length === 4) {
-              scope.year = parseInt(scope.value);
+              scope.year = parseInt(scope.value, 10);
               scope.mode = 'year';
             } else if (scope.value.length === 7) {
               scope.month = scope.value;
@@ -91,17 +92,16 @@
           var buildDate = function() {
             var tag = scope.tagName !== undefined ?
               scope.tagName : 'gco:Date';
-            var namespace = tag.split(':')[0];
 
             if (scope.dateTypeSupported !== true) {
 
               if (scope.dateInput === undefined) {
                 return;
-              } else {
-                tag = scope.tagName !== undefined ? scope.tagName :
+              }
+
+              tag = scope.tagName !== undefined ? scope.tagName :
                   (scope.dateInput.indexOf('T') === -1 ?
                     'gco:Date' : 'gco:DateTime');
-              }
               scope.dateTime = scope.dateInput;
             } else if (scope.mode === 'year') {
               scope.dateTime = scope.year;
@@ -111,7 +111,6 @@
               tag = scope.tagName !== undefined ?
                 scope.tagName : 'gco:DateTime';
               var time = scope.time;
-              // TODO: Set seconds, Timezone ?
               scope.dateTime = scope.date;
 
               // Add seconds if not set
@@ -122,7 +121,7 @@
             } else {
               scope.dateTime = scope.date;
             }
-            scope.value = scope.dateTime
+            scope.value = scope.dateTime;
           };
           scope.$watch('dateObj', function(){
             processValue();

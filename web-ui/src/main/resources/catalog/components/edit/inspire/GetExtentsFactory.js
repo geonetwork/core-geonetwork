@@ -1,4 +1,5 @@
 (function() {
+  'use strict';
   goog.provide('inspire_get_extents_factory');
 
   var module = angular.module('inspire_get_extents_factory', []);
@@ -9,10 +10,10 @@
 
         var serviceAndParams = 'xml.regions.list@json?maxRecords=20&label='+query;
         $http.get(url +serviceAndParams).success(function(data) {
-          var regions = [];
+          var i, region, regions = [];
 
-          for (var i = 0; i < data.region.length; i++) {
-            var region = data.region[i];
+          for (i = 0; i < data.region.length; i++) {
+            region = data.region[i];
             regions.push({
               geom: region['@id'],
               description: region.label
@@ -25,5 +26,5 @@
         return deferred.promise;
       };
   }]);
-})();
+}());
 

@@ -1,4 +1,5 @@
 (function() {
+  'use strict';
   goog.provide('gn_inspire_editor');
 
   goog.require('gn');
@@ -8,7 +9,6 @@
   goog.require('inspire_get_keywords_factory');
   goog.require('inspire_get_extents_factory');
   goog.require('inspire_date_picker_directive');
-
   goog.require('inspire-metadata-loader');
 
   var module = angular.module('gn_inspire_editor',
@@ -33,8 +33,8 @@
     }]);
 
   module.controller('GnInspireController', [
-    '$scope', 'inspireMetadataLoader', 'inspireGetSharedUsersFactory', '$translate', '$http',
-    function($scope, inspireMetadataLoader, inspireGetSharedUsersFactory, $translate, $http) {
+    '$scope', 'inspireMetadataLoader', '$translate', '$http',
+    function($scope, inspireMetadataLoader, $translate, $http) {
       var allowUnload = false;
       window.onbeforeunload = function() {
         if (!allowUnload) {
@@ -56,9 +56,8 @@
       $scope.validationClassString = function(model) {
         if (model && model.length > 0) {
           return '';
-        } else {
-          return $scope.validationErrorClass;
         }
+        return $scope.validationErrorClass;
       };
       $scope.validationClassArray = function(model, property) {
         var cls, elem, i;
@@ -72,18 +71,18 @@
         return '';
       };
       $scope.$watchCollection("data.otherLanguages", function(langs) {
-        if (langs.length == 0) {
-          if ($scope.data.mainLang && oldLangs[0] != $scope.data.mainLang) {
+        if (langs.length === 0) {
+          if ($scope.data.mainLang) {
             langs.push($scope.data.mainLang);
           } else {
             langs.push($scope.languages[0]);
           }
         }
         langs.sort(function(a,b) {
-          if (a == $scope.data.language) {
+          if (a === $scope.data.language) {
             return -1;
           }
-          if (b == $scope.data.language) {
+          if (b === $scope.data.language) {
             return 1;
           }
           return $scope.languages.indexOf(a) - $scope.languages.indexOf(b);
@@ -146,7 +145,7 @@
           url: $scope.url + "inspire.edit.save",
           data: 'id=' + mdId + '&data=' + data,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).success(function (data, status, headers, config, statusText) {
+        }).success(function () {
           if (editTab) {
             allowUnload = true;
             window.location.href = 'metadata.edit?id=' + mdId + '&currTab=' + editTab;
@@ -212,7 +211,6 @@
         $scope.keywordUnderEdit.words = keyword.words;
         var modal = $('#editKeywordModal');
         modal.modal('hide');
-        $scope.validateKeywords();
       };
       $scope.validationCls = '';
       $scope.validateKeywords = function(){
@@ -228,7 +226,7 @@
         $scope.validationCls = valid ? '' : $scope.validationErrorClass;
       };
 
-      $scope.validateKeywords();
+      $scope.$watch('data.identification.descriptiveKeywords', $scope.validateKeywords, true);
     }]);
 
 
@@ -277,11 +275,11 @@
 
         $scope.validateExtents();
 
-      }
+      };
     }]);
 
   module.controller('InspireConstraintsController', [
-    '$scope','$translate', function($scope, $translate) {
+    '$scope', function($scope) {
       var countProperties = function(propertyName) {
         var legal, i, count;
         var legalConstraints = $scope.data.constraints.legal;
@@ -316,7 +314,7 @@
       };
 
       $scope.$watchCollection('data.constraints.legal', function(newValue) {
-        if (newValue.length == 0) {
+        if (newValue.length === 0) {
           newValue.push({
             accessConstraints: ['copyright'],
             useConstraints: ['copyright'],
@@ -329,7 +327,8 @@
         $scope.propertyCount.updateUseConstraints();
       });
       $scope.hasOtherRestrictions = function(legalConstraint) {
-        for (var x = 0; x < legalConstraint.accessConstraints.length; x++) {
+        var x;
+        for (x = 0; x < legalConstraint.accessConstraints.length; x++) {
           if (legalConstraint.accessConstraints[x] === 'otherRestrictions') {
             return true;
           }
@@ -339,12 +338,12 @@
     }]);
 
   module.controller('InspireAccessConstraintController', [
-    '$scope','$translate', function($scope) {
+    '$scope', function($scope) {
 
       $scope.$watch('accessConstraint', function() {
-        var i, j, k, otherConstraint, toRemove, remove, lang;
+        var i, j, otherConstraint, toRemove, remove;
         var hasOtherRestrictions = $scope.hasOtherRestrictions($scope.legal);
-        if (hasOtherRestrictions && $scope.legal.otherConstraints.length == 0) {
+        if (hasOtherRestrictions && $scope.legal.otherConstraints.length === 0) {
           otherConstraint = {};
           otherConstraint[$scope.data.language] = '';
           $scope.legal.otherConstraints.push(otherConstraint);
@@ -352,9 +351,8 @@
           toRemove = [];
           for (i = 0; i < $scope.legal.otherConstraints.length; i++) {
             otherConstraint = $scope.legal.otherConstraints[i];
-            remove = otherConstraint[$scope.data.language].trim().length == 0;
+            remove = otherConstraint[$scope.data.language].trim().length === 0;
             for (j = 0; j < $scope.data.otherLanguages.length; j++) {
-              lang = $scope.data[j];
               if (otherConstraint[$scope.data.language].trim().length > 0) {
                 remove = false;
                 break;
@@ -367,11 +365,11 @@
           }
 
           for (i = 0; i < toRemove.length; i++) {
-            $scope.deleteFromArray($scope.legal.otherConstraints, toRemove[i])
+            $scope.deleteFromArray($scope.legal.otherConstraints, toRemove[i]);
           }
         }
       });
 }]);
 
 
-})();
+}());

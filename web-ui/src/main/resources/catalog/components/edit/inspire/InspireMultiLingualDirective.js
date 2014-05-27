@@ -1,4 +1,5 @@
 (function() {
+  'use strict';
   goog.provide('inspire_multilingual_text_directive');
 
   var module = angular.module('inspire_multilingual_text_directive', []);
@@ -19,7 +20,7 @@
       restrict: 'A',
       replace: 'true',
       link: function($scope) {
-        $scope.$watchCollection('languages', function(newVal, oldVal){
+        $scope.$watchCollection('languages', function(newVal){
           if (newVal.indexOf($scope.editLang) < 0) {
             $scope.editLang = newVal[0];
           }
@@ -50,7 +51,7 @@
             return 'active';
           }
 
-          if (!text || text.length == 0) {
+          if (!text || text.length === 0) {
             return 'warning';
           }
         };
@@ -59,7 +60,7 @@
 
           var i, invalid;
           var isInvalid = function(model) {
-            return !model || model.length == 0
+            return !model || model.length === 0;
           };
 
           if (!$scope.validationClass) {
@@ -76,24 +77,8 @@
 
         $scope.validate();
       },
-      template: '<div class="form-group">' +
-        '<label data-ng-show="title" for="title" class="col-xs-3 control-label" ><span data-translate="">{{title}}</span>: </label>' +
-        '<div data-ng-class="title ? [cls, \'col-xs-9\'] : [cls, \'col-xs-12\']">' +
-        '<textarea data-ng-disabled="disabled" rows="{{rows}}" id="title" class="form-control col-xs-12" ' +
-        '          data-ng-repeat="lang in languages" data-ng-model="field[lang]" ' +
-        '          data-ng-show="editLang === lang || editLang === \'all\'" ' +
-        '          placeholder="{{placeholder ? placeholder + \' -- \' : \'\'}}{{lang | translate}}" />' +
-        '<ul class="nav nav-pills">' +
-        '<li data-ng-class="pillClass(lang)" data-ng-repeat="lang in languages" data-ng-hide="editLang === \'all\'"> ' +
-        '<a data-ng-click="setEditLang(lang)">{{lang | translate}}</a>' +
-        '</li>' +
-        '<li>' +
-        '<a data-ng-click="editLang === \'all\' ? setEditLang(mainLang) : setEditLang(\'all\')">' +
-        '{{editLang === \'all\' ? \'collapse\' : \'all\' | translate}}</a>' +
-        '</li>' +
-        '</ul>' +
-        '</div></div>'
+      templateUrl: '../../catalog/components/edit/inspire/partials/multilingual.html'
     };
   });
 
-})();
+}());
