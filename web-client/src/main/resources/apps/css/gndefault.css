@@ -765,3 +765,16 @@ ul.gn-relation-thumbnail {
 #login-form .gn-login {
     margin-left: 3px
 }
+
+.close-button {
+	top: 6px;
+	right: 6px;
+	position: absolute;
+}
+
+.close-button.x-btn-text-icon .x-btn-icon-small-left .x-btn-text {
+	background:none;
+	padding: 2px;
+	height: 16px;
+	width: 14px;
+}

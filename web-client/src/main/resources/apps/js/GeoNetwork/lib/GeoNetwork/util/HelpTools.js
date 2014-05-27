@@ -174,12 +174,23 @@ GeoNetwork.util.HelpTools = {
     	if(container == null) {
         	container = Ext.DomHelper.insertFirst(document.body, {id: "msg-div", "class": "msg"}, true);
     	}
-    	
-    	
+        	
     	var  msgCt = Ext.DomHelper.insertFirst(container, {id: "message-container-" + data.id}, true);
     	msgCt.alignTo(document, 't-t');
         var m = Ext.DomHelper.append(msgCt, {html:msg}, true);
         m.slideIn('t').pause(20).ghost("t", {remove:true});
-        m.on("click", function(){m.remove();});
+        
+       var action = new Ext.Action({
+    	    handler: function(){
+                m.remove();
+            },
+            cls: 'xtool',
+            text: 'x',
+            iconCls: 'xtool xtool-close',
+            renderTo: Ext.query("div[class='x-box-mc']", Ext.getDom(m))[0]
+        });
+
+        var button = new Ext.Button(action); 
+        Ext.get(button.id).addClass("close-button");
     }
 };
