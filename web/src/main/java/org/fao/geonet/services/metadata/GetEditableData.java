@@ -70,7 +70,11 @@ public class GetEditableData implements Service
         if (elCurrTab != null) {
             context.getUserSession().setProperty(Geonet.Session.METADATA_SHOW, elCurrTab.getText());
         }
-		
+
+        if ( context.getUserSession().getProperty(Geonet.Session.METADATA_SHOW).toString().equalsIgnoreCase("inspire")) {
+            context.getUserSession().setProperty(Geonet.Session.METADATA_SHOW, "complete");
+        }
+
         //-----------------------------------------------------------------------
 		//--- get metadata
 		Element elMd = new AjaxEditUtils(context).getMetadataEmbedded(context, id, true, showValidationErrors);
