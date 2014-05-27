@@ -160,7 +160,18 @@
 			function doTabAction(action, tab)
 			{
 				document.mainForm.currTab.value = tab;
-				doAction(action);
+
+              if (/.*\/metadata\.(edit)|(update).*/.test(window.location) && tab === 'inspire') {
+                var metadataId = document.mainForm.id.value;
+                doSaveAction(action, undefined, function() {
+                  disableEditForm();
+                  window.location.href = 'inspire.edit?id=' + metadataId;
+                });
+
+                return;
+              }
+
+              doAction(action);
 			}
 
 // stub to stop errors in metadata-show.xsl - real function is in 

@@ -126,7 +126,7 @@ function doTabAction(action, tab)
 {
 	disableEditForm();
 
-    if (tab === 'inspire') {
+    if (/.*\/metadata\.(edit)|(update).*/.test(window.location) && tab === 'inspire') {
       var metadataId = document.mainForm.id.value;
       doSaveAction(action, undefined, function() {
         disableEditForm();
