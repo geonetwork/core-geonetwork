@@ -71,33 +71,9 @@
         }
         return '';
       };
-      $scope.validationClassDate = function() {
-        var dateClass = $scope.validationClassString($scope.data.identification.date);
-        var dateTypeClass = $scope.validationClassString($scope.data.identification.dateType);
-
-        if (dateClass) {
-          return dateClass;
-        }
-        if (dateTypeClass) {
-          return dateTypeClass;
-        }
-
-        return '';
-      };
-//      $scope.$watch("data.language", function (newVal, oldVal) {
-//        var langs =  $scope.data.otherLanguages;
-//        var i = langs.indexOf(oldVal);
-//        if (i > -1) {
-//          langs.splice(i, 1);
-//        }
-//        if (langs.indexOf(newVal) < 0) {
-//          langs.push(newVal);
-//        }
-//      });
-      $scope.$watchCollection("data.otherLanguages", function() {
-        var langs =  $scope.data.otherLanguages;
+      $scope.$watchCollection("data.otherLanguages", function(langs) {
         if (langs.length == 0) {
-          if ($scope.data.mainLang) {
+          if ($scope.data.mainLang && oldLangs[0] != $scope.data.mainLang) {
             langs.push($scope.data.mainLang);
           } else {
             langs.push($scope.languages[0]);
@@ -150,7 +126,21 @@
       };
 
       $scope.saveMetadata = function(editTab) {
-        var data = JSON.stringify($scope.data)
+        var waitDialog = $('#pleaseWaitDialog');
+        if (waitDialog) {
+          waitDialog.find('h2').text($translate('saveInProgress'));
+          waitDialog.modal();
+        }
+        var dataClone = angular.copy($scope.data);
+        delete dataClone.roleOptions;
+        delete dataClone.dateTypeOptions;
+        delete dataClone.hierarchyLevelOptions;
+        delete dataClone.topicCategoryOptions;
+        delete dataClone.constraintOptions;
+        delete dataClone.serviceTypeOptions;
+        delete dataClone.metadataTypeOptions;
+
+        var data = JSON.stringify(dataClone);
         return $http({
           method: 'POST',
           url: $scope.url + "inspire.edit.save",
@@ -160,8 +150,15 @@
           if (editTab) {
             allowUnload = true;
             window.location.href = 'metadata.edit?id=' + mdId + '&currTab=' + editTab;
+          } else {
+            if (waitDialog) {
+              waitDialog.modal('hide');
+            }
           }
         }).error(function (data) {
+          if (waitDialog) {
+            waitDialog.modal('hide');
+          }
           alert($translate("saveError")  + data);
         });
       };
@@ -177,13 +174,6 @@
         });
       };
 
-      $scope.updateCategory = function(index, selectId) {
-        if (index > -1) {
-          var categories = $scope.data.identification.topicCategory;
-          var newCategory = $scope.data.topicCategoryOptions[$('#' + selectId).val()];
-          categories[index] = newCategory;
-        }
-      };
   }]);
 
 

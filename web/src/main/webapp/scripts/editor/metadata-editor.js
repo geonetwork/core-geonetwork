@@ -126,6 +126,16 @@ function doTabAction(action, tab)
 {
 	disableEditForm();
 
+    if (tab === 'inspire') {
+      var metadataId = document.mainForm.id.value;
+      doSaveAction(action, undefined, function() {
+        disableEditForm();
+        window.location.href = 'inspire.edit?id=' + metadataId;
+      });
+
+      return;
+    }
+
 	document.mainForm.currTab.value = tab;
 	doAction(action);
 }

@@ -1,6 +1,7 @@
 package org.fao.geonet.services.metadata.inspire;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -9,10 +10,11 @@ import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import jeeves.xlink.XLink;
-import net.sf.json.JSONArray;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.EditLib;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.languages.IsoLanguagesMapper;
@@ -21,13 +23,13 @@ import org.fao.geonet.services.metadata.AjaxEditUtils;
 import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +37,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.annotation.Nullable;
 
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GEONET;
@@ -45,6 +48,33 @@ import static org.fao.geonet.constants.Geonet.Namespaces.XLINK;
  */
 public class GetEditModel implements Service {
     private final XmlCacheManager cacheManager = new XmlCacheManager();
+    private Function<CodeListEntry, CodeListEntry> topicCategoryGrouper = new Function<CodeListEntry, CodeListEntry>() {
+        Map<String, String> topicCategoryGrouping = Maps.newHashMap();
+
+        {
+            topicCategoryGrouping.put("A", "A Base Maps, Land Cover, Aerial and Satellite Imagery");
+            topicCategoryGrouping.put("E", "E Spatial Planning, Cadastre");
+            topicCategoryGrouping.put("F", "F Geology, Soils, Natural Hazards");
+            topicCategoryGrouping.put("L", "L Environmental and Nature Protection");
+            topicCategoryGrouping.put("Q", "Q Utilities, Supply, Disposal, Communication");
+        }
+        @Nullable
+        @Override
+        public CodeListEntry apply(CodeListEntry input) {
+            if (topicCategoryGrouping.containsValue(input.title)) {
+                return null;
+            }
+            for (Map.Entry<String, String> entry : topicCategoryGrouping.entrySet()) {
+                if (input.title.startsWith(entry.getKey())) {
+                    input.group = entry.getValue();
+                    return input;
+                }
+            }
+            input.group = input.title;
+            return input;
+        }
+    };
+
     @Override
     public void init(String appPath, ServiceConfig params) throws Exception {
 
@@ -59,7 +89,6 @@ public class GetEditModel implements Service {
         addCodeLists(context, metadataJson);
         metadataJson.append("metadataTypeOptions", "data");
         metadataJson.append("metadataTypeOptions", "service");
-        final String guiLang = context.getLanguage();
         processMetadata(metadataEl, metadataJson);
         Element identificationInfo = processIdentificationInfo(metadataEl, metadataJson);
         processConstraints(identificationInfo, metadataJson);
@@ -88,33 +117,47 @@ public class GetEditModel implements Service {
                 context.getLanguage(), "ger", true);
 
 
-        addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:CI_DateTypeCode", "dateTypeOptions");
-        addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:CI_RoleCode", "roleOptions");
-        addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:MD_ScopeCode", "hierarchyLevelOptions");
-        addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:MD_TopicCategoryCode", "topicCategoryOptions");
-        addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:MD_RestrictionCode", "constraintOptions");
+        addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:CI_DateTypeCode", "dateTypeOptions", null);
+        addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:CI_RoleCode", "roleOptions", null);
+        addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:MD_ScopeCode", "hierarchyLevelOptions", null);
+
+        addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:MD_TopicCategoryCode", "topicCategoryOptions",
+                topicCategoryGrouper);
+        addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:MD_RestrictionCode", "constraintOptions", null);
         addCodeListOptionsFromLabelsHelper(metadataJson, labels, labelExtensions, "srv:serviceType", "serviceTypeOptions");
 
     }
 
     private void addCodeListOptions(JSONObject metadataJson, Element codelists, Element cheCodelistsExtensions,
-                                    String codelistName, String jsonKey) throws JDOMException, JSONException {
+                                    String codelistName, String jsonKey, Function<CodeListEntry, CodeListEntry> grouper) throws JDOMException, JSONException {
+
         Set<CodeListEntry> collector = new TreeSet<CodeListEntry>();
         final String xpath = "codelist[@name = '" + codelistName + "']/entry";
         @SuppressWarnings("unchecked")
         List<Element> elems = (List<Element>) Xml.selectNodes(codelists, xpath);
         for (Element elem : elems) {
-            final CodeListEntry entry = new CodeListEntry(elem.getChildTextTrim("code"), elem.getChildTextTrim("label"),
+            CodeListEntry entry = new CodeListEntry(elem.getChildTextTrim("code"), elem.getChildTextTrim("label"),
                     elem.getChildTextTrim("description"));
-            collector.add(entry);
+            if (grouper != null) {
+                entry = grouper.apply(entry);
+            }
+            if (entry != null) {
+                collector.add(entry);
+            }
         }
 
         @SuppressWarnings("unchecked")
         List<Element> cheElems = (List<Element>) Xml.selectNodes(cheCodelistsExtensions, xpath);
         for (Element elem : cheElems) {
-            final CodeListEntry entry = new CodeListEntry(elem.getChildTextTrim("code"), elem.getChildTextTrim("label"),
+            CodeListEntry entry = new CodeListEntry(elem.getChildTextTrim("code"), elem.getChildTextTrim("label"),
                     elem.getChildTextTrim("description"));
-            collector.add(entry);
+
+            if (grouper != null) {
+                entry = grouper.apply(entry);
+            }
+            if (entry != null) {
+                collector.add(entry);
+            }
         }
 
         addOptions(metadataJson, jsonKey, collector);
@@ -146,16 +189,19 @@ public class GetEditModel implements Service {
     private void addOptions(JSONObject metadataJson, String jsonKey, Set<CodeListEntry> dateTypeOptions) throws JSONException {
         for (CodeListEntry entry : dateTypeOptions) {
             JSONObject obj = new JSONObject();
-            obj.accumulate("name", entry.name);
-            obj.accumulate("title", entry.title);
-            obj.accumulate("desc", entry.description);
+            obj.put("name", entry.name);
+            obj.put("title", entry.title);
+            obj.put("desc", entry.description);
+            if (entry.group != null) {
+                obj.put("group", entry.group);
+            }
             metadataJson.append(jsonKey, obj);
         }
     }
 
     private void processConstraints(Element identificationInfo, JSONObject metadataJson) throws Exception {
         JSONObject constraintsJson = new JSONObject();
-        metadataJson.accumulate(Save.JSON_CONSTRAINTS, constraintsJson);
+        metadataJson.put(Save.JSON_CONSTRAINTS, constraintsJson);
 
         @SuppressWarnings("unchecked")
         List<Element> legalConstraints = (List<Element>) Xml.selectNodes(identificationInfo,
@@ -163,7 +209,7 @@ public class GetEditModel implements Service {
                 "or @gco:isoType = 'gmd:MD_LegalConstraints']", Save.NS);
 
         if (legalConstraints.isEmpty()) {
-            constraintsJson.accumulate(Save.JSON_CONSTRAINTS_LEGAL, new JSONArray());
+            constraintsJson.put(Save.JSON_CONSTRAINTS_LEGAL, new JSONArray());
         }
 
         for (Element legalConstraint : legalConstraints) {
@@ -176,7 +222,7 @@ public class GetEditModel implements Service {
                 "gmd:resourceConstraints/gmd:MD_Constraints", Save.NS);
 
         if (genericConstraints.isEmpty()) {
-            constraintsJson.accumulate(Save.JSON_CONSTRAINTS_GENERIC, new JSONArray());
+            constraintsJson.put(Save.JSON_CONSTRAINTS_GENERIC, new JSONArray());
         }
         for (Element genericConstraint : genericConstraints) {
             JSONObject json = new JSONObject();
@@ -189,7 +235,7 @@ public class GetEditModel implements Service {
         List<Element> securityConstraints = (List<Element>) Xml.selectNodes(identificationInfo,
                 "gmd:resourceConstraints/gmd:MD_SecurityConstraints", Save.NS);
         if (securityConstraints.isEmpty()) {
-            constraintsJson.accumulate(Save.JSON_CONSTRAINTS_SECURITY, new JSONArray());
+            constraintsJson.put(Save.JSON_CONSTRAINTS_SECURITY, new JSONArray());
         }
 
         for (Element securityConstraint : securityConstraints) {
@@ -222,7 +268,7 @@ public class GetEditModel implements Service {
 
     private void addRef(Element constraint, JSONObject json) throws JSONException {
         String ref = constraint.getChild("element", GEONET).getAttributeValue(Params.REF);
-        json.accumulate(Params.REF, ref);
+        json.put(Params.REF, ref);
     }
 
     private Element processIdentificationInfo(Element metadataEl, JSONObject metadataJson) throws Exception {
@@ -235,11 +281,11 @@ public class GetEditModel implements Service {
         }
 
         JSONObject identificationJSON = new JSONObject();
-        metadataJson.accumulate(Save.JSON_IDENTIFICATION, identificationJSON);
+        metadataJson.put(Save.JSON_IDENTIFICATION, identificationJSON);
         boolean isDataType = identificationInfoEl.getName().equals("gmd:MD_DataIdentification") ||
                              (identificationInfoEl.getAttributeValue("isoType", GCO)!= null &&
                               identificationInfoEl.getAttributeValue("isoType", GCO).equals("gmd:MD_DataIdentification"));
-        identificationJSON.accumulate(Save.JSON_IDENTIFICATION_TYPE, isDataType ? "data" : "service");
+        identificationJSON.put(Save.JSON_IDENTIFICATION_TYPE, isDataType ? "data" : "service");
 
         addTranslatedElement(identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, Save.JSON_IDENTIFICATION_TITLE,
                 "gmd:citation/gmd:CI_Citation/gmd:title");
@@ -247,14 +293,7 @@ public class GetEditModel implements Service {
         addTranslatedElement(identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, Save.JSON_IDENTIFICATION_IDENTIFIER,
                 "gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code");
 
-        addValue(identificationInfoEl, identificationJSON, Save.JSON_IDENTIFICATION_DATE,
-                "gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/*");
-
-        final Element dateElement = Xml.selectElement(identificationInfoEl,
-                "gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/*", Save.NS);
-        identificationJSON.accumulate(Save.JSON_IDENTIFICATION_DATE_TAG_NAME, dateElement == null ? "" : dateElement.getQualifiedName());
-        addValue(identificationInfoEl, identificationJSON, Save.JSON_IDENTIFICATION_DATE_TYPE,
-                "gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue");
+        processDate(identificationInfoEl, identificationJSON);
 
         addTranslatedElement(identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, Save.JSON_IDENTIFICATION_ABSTRACT,
                 "gmd:abstract");
@@ -274,6 +313,19 @@ public class GetEditModel implements Service {
         return identificationInfoEl;
     }
 
+    private void processDate(Element identificationInfoEl, JSONObject identificationJSON) throws JSONException, JDOMException {
+        JSONObject dateObject = new JSONObject();
+        addValue(identificationInfoEl, dateObject, Save.JSON_IDENTIFICATION_DATE,
+                "gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/*");
+
+        final Element dateElement = Xml.selectElement(identificationInfoEl,
+                "gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/*", Save.NS);
+        dateObject.put(Save.JSON_IDENTIFICATION_DATE_TAG_NAME, dateElement == null ? "" : dateElement.getQualifiedName());
+        addValue(identificationInfoEl, dateObject, Save.JSON_IDENTIFICATION_DATE_TYPE,
+                "gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue");
+        identificationJSON.put(Save.JSON_IDENTIFICATION_DATE, dateObject);
+    }
+
     protected void processMetadata(Element metadataEl, JSONObject metadataJson) throws Exception {
         addValue(metadataEl, metadataJson, Save.JSON_LANGUAGE, "gmd:language/gco:CharacterString/text()");
         addValue(metadataEl, metadataJson, Save.JSON_CHARACTER_SET, "gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue", "utf-8");
@@ -281,7 +333,7 @@ public class GetEditModel implements Service {
         addValue(metadataEl, metadataJson, Save.JSON_HIERARCHY_LEVEL_NAME, "gmd:hierarchyLevelName/gco:CharacterString/text()");
         addArray(metadataEl, getIsoLanguagesMapper(), metadataJson, "gmd:contact", Save.JSON_CONTACT, contactJsonEncoder);
         JSONArray def = new JSONArray();
-        def.addAll(Arrays.asList("ger", "fre", "ita", "eng", "roh"));
+        def.put("ger").put("fre").put("ita").put("eng").put("roh");
         addArray(metadataEl, getIsoLanguagesMapper(), metadataJson,
                 "gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode",
                 Save.JSON_OTHER_LANGUAGES, codeListJsonEncoder, def);
@@ -296,22 +348,12 @@ public class GetEditModel implements Service {
         if (value.isEmpty() && defaultVal != null) {
             value = defaultVal;
         }
-        metadataJson.accumulate(jsonKey, value.trim());
-    }
-
-    private static void addArray(Element metadataEl, IsoLanguagesMapper mapper, JSONObject metadataJson, String xpath, String jsonKey,
-                                 JsonEncoder encoder, Object... defaultVal)
-            throws Exception {
-        JSONArray def = new JSONArray();
-        for (Object o : defaultVal) {
-            def.add(o);
-        }
-        addArray(metadataEl, mapper, metadataJson, xpath, jsonKey, encoder, def);
+        metadataJson.put(jsonKey, value.trim());
     }
 
     private static void addArray(Element metadataEl, IsoLanguagesMapper mapper, JSONObject metadataJson, String xpath, String jsonKey, JsonEncoder encoder)
             throws Exception {
-        addArray(metadataEl, mapper, metadataJson, xpath, jsonKey, encoder, (JSONArray) null);
+        addArray(metadataEl, mapper, metadataJson, xpath, jsonKey, encoder, null);
     }
     private static void addArray(Element metadataEl, IsoLanguagesMapper mapper, JSONObject metadataJson, String xpath, String jsonKey, JsonEncoder encoder, JSONArray defaultVal)
             throws Exception {
@@ -330,7 +372,7 @@ public class GetEditModel implements Service {
                     metadataJson.append(jsonKey, def);
                 }
             } else {
-                metadataJson.accumulate(jsonKey, defaultVal);
+                metadataJson.put(jsonKey, defaultVal);
             }
         }
     }
@@ -343,7 +385,7 @@ public class GetEditModel implements Service {
         List<?> nodes = Xml.selectNodes(metadata, xpath + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString", Save.NS);
         addTranslationElements(mapper, obj, nodes);
 
-        json.accumulate(jsonKey, obj);
+        json.put(jsonKey, obj);
     }
 
     private static void addTranslationElements(IsoLanguagesMapper mapper, JSONObject obj, List<?>nodes)
@@ -354,7 +396,7 @@ public class GetEditModel implements Service {
             String langCode = el.getAttributeValue("locale").substring(1).toLowerCase();
             final String lang = mapper.iso639_1_to_iso639_2(langCode);
 
-            obj.accumulate(lang, el.getTextTrim());
+            obj.put(lang, el.getTextTrim());
         }
     }
 
@@ -366,6 +408,13 @@ public class GetEditModel implements Service {
         if (metadata == null) {
             metadata = ajaxEditUtils.getMetadataEmbedded(context, id, true, false);
         }
+        GeonetContext geonetContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SchemaManager schemaManager = geonetContext.getSchemamanager();
+        EditLib lib = new EditLib(schemaManager);
+
+        lib.removeEditingInfo(metadata);
+        lib.enumerateTree(metadata);
+
         return metadata;
     }
 
@@ -383,7 +432,7 @@ public class GetEditModel implements Service {
 
     interface JsonEncoder {
         public Object getDefault() throws JSONException;
-        public Object encode(Element node, IsoLanguagesMapper mapper) throws JDOMException, JSONException, UnsupportedEncodingException, Exception;
+        public Object encode(Element node, IsoLanguagesMapper mapper) throws Exception;
     }
 
     private static final JsonEncoder contactJsonEncoder = new JsonEncoder() {
@@ -391,13 +440,13 @@ public class GetEditModel implements Service {
         @Override
         public Object getDefault() throws JSONException {
             JSONObject json = new JSONObject();
-            json.accumulate(Save.JSON_CONTACT_ID, "");
-            json.accumulate(Save.JSON_CONTACT_FIRST_NAME, "");
-            json.accumulate(Save.JSON_CONTACT_LAST_NAME, "");
-            json.accumulate(Save.JSON_CONTACT_ROLE, "");
-            json.accumulate(Save.JSON_CONTACT_EMAIL, "");
-            json.accumulate(Save.JSON_VALIDATED, false);
-            json.accumulate(Save.JSON_CONTACT_ORG_NAME, new JSONObject());
+            json.put(Save.JSON_CONTACT_ID, "");
+            json.put(Save.JSON_CONTACT_FIRST_NAME, "");
+            json.put(Save.JSON_CONTACT_LAST_NAME, "");
+            json.put(Save.JSON_CONTACT_ROLE, "");
+            json.put(Save.JSON_CONTACT_EMAIL, "");
+            json.put(Save.JSON_VALIDATED, false);
+            json.put(Save.JSON_CONTACT_ORG_NAME, new JSONObject());
             return json;
         }
 
@@ -420,7 +469,7 @@ public class GetEditModel implements Service {
                 validated = false;
             }
 
-            json.accumulate(Save.JSON_VALIDATED, validated);
+            json.put(Save.JSON_VALIDATED, validated);
 
             return json;
         }
@@ -430,8 +479,8 @@ public class GetEditModel implements Service {
         @Override
         public Object getDefault() throws JSONException {
             JSONObject def = new JSONObject();
-            def.accumulate(Save.JSON_IDENTIFICATION_KEYWORD_CODE, "");
-            def.accumulate(Save.JSON_IDENTIFICATION_KEYWORD_WORD, new JSONObject());
+            def.put(Save.JSON_IDENTIFICATION_KEYWORD_CODE, "");
+            def.put(Save.JSON_IDENTIFICATION_KEYWORD_WORD, new JSONObject());
             return def;
         }
 
@@ -440,7 +489,7 @@ public class GetEditModel implements Service {
             JSONObject json = new JSONObject();
 
             String code = URLDecoder.decode(org.fao.geonet.kernel.reusable.Utils.id(XLink.getHRef(node)), "UTF-8");
-            json.accumulate(Save.JSON_IDENTIFICATION_KEYWORD_CODE, code);
+            json.put(Save.JSON_IDENTIFICATION_KEYWORD_CODE, code);
             addTranslatedElement(node, mapper, json, Save.JSON_IDENTIFICATION_KEYWORD_WORD, "gmd:MD_Keywords/gmd:keyword");
 
             return json;
@@ -515,8 +564,8 @@ public class GetEditModel implements Service {
         @Override
         public Object getDefault() throws JSONException {
             JSONObject def = new JSONObject();
-            def.accumulate(Save.JSON_IDENTIFICATION_EXTENT_GEOM, "");
-            def.accumulate(Save.JSON_IDENTIFICATION_EXTENT_DESCRIPTION, new JSONObject());
+            def.put(Save.JSON_IDENTIFICATION_EXTENT_GEOM, "");
+            def.put(Save.JSON_IDENTIFICATION_EXTENT_DESCRIPTION, new JSONObject());
             return def;
         }
 
@@ -530,7 +579,7 @@ public class GetEditModel implements Service {
                 throw new AssertionError("Unable to extract the typename in extent href: " + href);
             }
             String featureType = typenameMapper.get(matcher.group(1));
-            json.accumulate(Save.JSON_IDENTIFICATION_EXTENT_GEOM, featureType + ":" + id);
+            json.put(Save.JSON_IDENTIFICATION_EXTENT_GEOM, featureType + ":" + id);
             addTranslatedElement(node, mapper, json, Save.JSON_IDENTIFICATION_EXTENT_DESCRIPTION, "gmd:EX_Extent/gmd:description");
 
             return json;
@@ -541,6 +590,7 @@ public class GetEditModel implements Service {
         final String name;
         final String title;
         final String description;
+        public String group;
 
         private CodeListEntry(String name, String title, String description) {
             this.name = name;
@@ -553,4 +603,5 @@ public class GetEditModel implements Service {
             return title.compareTo(o.title);
         }
     }
+
 }

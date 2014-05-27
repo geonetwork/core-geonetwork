@@ -46,9 +46,11 @@
   identification: {
     type: 'data',
     title: {eng: 'Title',fre: 'Titre'},
-    date: '2008-06-23',
-    dateTagName: 'gco:Date',
-    dateType: 'creation',
+    date: {
+      date: '2008-06-23',
+      dateTagName: 'gco:Date',
+      dateType: 'creation'
+    },
     citationIdentifier: {eng: "Citation Identifier"},
     language: "ger",
     abstract: {eng: 'Abstract EN', fre: 'Abstract FR'},

@@ -19,18 +19,21 @@
       restrict: 'A',
       replace: 'true',
       link: function($scope) {
-        $scope.$watch('languages', function(){
-          if (!$scope.editLang) {
-            $scope.setEditLang($scope.languages[0]);
+        $scope.$watchCollection('languages', function(newVal, oldVal){
+          if (newVal.indexOf($scope.editLang) < 0) {
+            $scope.editLang = newVal[0];
           }
-        }); $scope.$watch('mainLang', function(newVal){
+        });
+        $scope.$watch('mainLang', function(newVal){
           if (newVal) {
             $scope.editLang = newVal;
           } else if ($scope.langsForUI && $scope.langsForUI.length > 0) {
             $scope.editLang = $scope.languages[0];
           }
         });
-
+        $scope.$watch('field', function(){
+          $scope.validate();
+        }, true);
         $scope.setEditLang = function(lang) {
           if (!lang) {
             if ($scope.languages.length > 0) {
@@ -40,6 +43,16 @@
             }
           }
           $scope.editLang = lang;
+        };
+        $scope.pillClass = function(lang) {
+          var text = $scope.field[lang];
+          if (lang === $scope.editLang) {
+            return 'active';
+          }
+
+          if (!text || text.length == 0) {
+            return 'warning';
+          }
         };
         $scope.cls = undefined;
         $scope.validate = function() {
@@ -68,11 +81,10 @@
         '<div data-ng-class="title ? [cls, \'col-xs-9\'] : [cls, \'col-xs-12\']">' +
         '<textarea data-ng-disabled="disabled" rows="{{rows}}" id="title" class="form-control col-xs-12" ' +
         '          data-ng-repeat="lang in languages" data-ng-model="field[lang]" ' +
-        '          data-ng-change="validate()" '+
         '          data-ng-show="editLang === lang || editLang === \'all\'" ' +
         '          placeholder="{{placeholder ? placeholder + \' -- \' : \'\'}}{{lang | translate}}" />' +
         '<ul class="nav nav-pills">' +
-        '<li data-ng-class="lang === editLang ? \'active\' : \'\'" data-ng-repeat="lang in languages" data-ng-hide="editLang === \'all\'"> ' +
+        '<li data-ng-class="pillClass(lang)" data-ng-repeat="lang in languages" data-ng-hide="editLang === \'all\'"> ' +
         '<a data-ng-click="setEditLang(lang)">{{lang | translate}}</a>' +
         '</li>' +
         '<li>' +

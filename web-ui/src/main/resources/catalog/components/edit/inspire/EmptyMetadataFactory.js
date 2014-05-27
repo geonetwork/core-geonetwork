@@ -34,9 +34,11 @@
           identification: {
             type: 'data',
             title: {},
-            date: '',
-            dateTagName: '',
-            dateType: '',
+            date: {
+              date:'',
+              dateTagName: '',
+              dateType: ''
+            },
             citationIdentifier: {},
             language: '',
             abstract: {},

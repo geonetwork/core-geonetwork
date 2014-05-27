@@ -5,6 +5,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.AjaxEditUtils;
@@ -218,7 +219,9 @@ class SaveServiceTestImpl extends Save {
     }
 
     @Override
-    protected Element getMetadata(ServiceContext context, String id, AjaxEditUtils ajaxEditUtils) throws Exception {
+    protected Element getMetadata(ServiceContext context, EditLib lib, String id, AjaxEditUtils ajaxEditUtils) throws Exception {
+        lib.removeEditingInfo(testMetadata);
+        lib.enumerateTree(testMetadata);
         return testMetadata;
     }
 

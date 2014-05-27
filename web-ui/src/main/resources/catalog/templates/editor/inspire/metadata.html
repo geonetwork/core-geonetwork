@@ -1,7 +1,30 @@
 <div class="row" data-ng-controller="GnInspireController">
 
+    <!-- Progress Dialog --->
+
+    <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+         id="pleaseWaitDialog" data-backdrop="static" data-keyboard="false"
+         aria-labelledby="pleaseWaitDialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h2></h2>
+                    <div class="progress progress-striped active">
+                        <div class="progress-bar"  role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
+                             style="width: 100%">
+                            <span class="sr-only">100% Complete</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- END Progress Dialog --->
 
     <!-- Contact Modal dialog -->
+
+
     <div id="editContactModal" tabindex="-1" class="modal fade" data-ng-controller="InspireContactController">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -54,7 +77,7 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-ng-translate="">inspire<b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li><a data-ng-click="" data-ng-translate="">defaultView</a></li>
+                            <li><a data-ng-click="saveMetadata('simple')" data-ng-translate="">defaultView</a></li>
                             <li class="divider"></li>
                             <li><a data-ng-click="saveMetadata('metadata')" data-ng-translate="">metadata</a></li>
                             <li><a data-ng-click="saveMetadata('identification')" data-ng-translate="">identification</a></li>
@@ -208,17 +231,17 @@
                  data-languages="data.otherLanguages"
                  data-field="data.identification.abstract"/>
 
-            <div class="form-group"
-                 data-ng-class="validationClassDate()">
+            <div class="form-group">
                 <label class="col-xs-3 control-label"><span data-translate="">date</span>: </label>
-                <div class="col-xs-9">
-                    <div data-inspire-date-picker="data.identification.date"
-                         data-tag-name="{{data.identification.dateTagName}}"></div>
+                <div class="col-xs-9"
+                     data-ng-class="validationClassString(data.identification.date.date)">
+                    <div data-inspire-date-picker data-date-obj="data.identification.date"></div>
                 </div>
-                <div class="col-xs-offset-3 col-xs-9">
+                <div class="col-xs-offset-3 col-xs-9"
+                     data-ng-class="validationClassString(data.identification.date.dateType)">
                     <select id="dateType"
                             class="form-control"
-                            data-ng-model="data.identification.dateType"
+                            data-ng-model="data.identification.date.dateType"
                             data-ng-options="opt.name as opt.title for opt in data.dateTypeOptions">
                     </select>
                 </div>
@@ -243,9 +266,9 @@
                     <table class="table table-condensed">
                         <tr data-ng-repeat="category in data.identification.topicCategory">
                             <td data-ng-class="validationClassString(category)">
-                                <select id="topicCategory{{$index}}" class="form-control" data-ng-model="category"
-                                        data-ng-change="updateCategory($index, 'topicCategory'+$index)"
-                                        data-ng-options="opt.name as opt.title for opt in data.topicCategoryOptions">
+                                <select id="topicCategory{{$index}}" class="form-control"
+                                        data-ng-model="data.identification.topicCategory[$index]"
+                                        data-ng-options="opt.name as opt.title group by opt.group for opt in data.topicCategoryOptions">
                                 </select>
                             </td>
                             <td width="24px">

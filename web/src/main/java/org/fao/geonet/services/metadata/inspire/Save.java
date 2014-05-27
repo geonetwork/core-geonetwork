@@ -124,13 +124,13 @@ public class Save implements Service {
 
         final AjaxEditUtils ajaxEditUtils = getAjaxEditUtils(params, context);
         MetadataSchema metadataSchema = schemaManager.getSchema("iso19139.che");
-        final Element metadata = getMetadata(context, id, ajaxEditUtils);
+        final Element metadata = getMetadata(context, editLib, id, ajaxEditUtils);
 
         final JSONObject jsonObject = new JSONObject(data);
 
         updateMetadata(context, editLib, metadata, metadataSchema, jsonObject);
 
-        final Element identificationInfo = updateIdentificationInfo(null, editLib, metadata, metadataSchema, jsonObject);
+        final Element identificationInfo = updateIdentificationInfo(context, editLib, metadata, metadataSchema, jsonObject);
         updateConstraints(editLib, metadataSchema, identificationInfo, jsonObject);
 
         Element metadataToSave = (Element) metadata.clone();
@@ -216,8 +216,7 @@ public class Save implements Service {
             }
 
             if (addIndex == -1) {
-                assert editLib.addElementOrFragmentFromXpath(identificationInfo, metadataSchema, "gmd:resourceConstraints",
-                        new AddElemValue(resourceConstraints), true);
+                addElementFromXPath(editLib, metadataSchema, identificationInfo, "gmd:resourceConstraints", resourceConstraints);
                 addIndex = identificationInfo.indexOf(resourceConstraints);
             } else {
                 identificationInfo.addContent(addIndex, resourceConstraints);
@@ -232,7 +231,10 @@ public class Save implements Service {
     private void updateMultipleTranslatedInstances(EditLib editLib, MetadataSchema metadataSchema, Element metadata, String xpath,
                                                    JSONObject constraint, String tagName, String jsonKey)
             throws JSONException, JDOMException {
-        final JSONArray useLimitations = constraint.getJSONArray(jsonKey);
+        final JSONArray useLimitations = constraint.optJSONArray(jsonKey);
+        if (useLimitations == null) {
+            return;
+        }
 
         Pair<Integer, Element> result = removeOldElements(metadata, xpath);
         int addIndex = result.one();
@@ -241,8 +243,7 @@ public class Save implements Service {
         for (int j = 0; j < useLimitations.length(); j++) {
             Element translation = createTranslatedInstance(useLimitations.getJSONObject(j), tagName, GMD);
             if (addIndex == -1) {
-                assert editLib.addElementOrFragmentFromXpath(metadata, metadataSchema, xpath,
-                        new AddElemValue(translation), true);
+                addElementFromXPath(editLib, metadataSchema, metadata, xpath, translation);
                 addIndex = translation.getParentElement().indexOf(translation);
                 parentElement = translation.getParentElement();
             } else {
@@ -267,14 +268,23 @@ public class Save implements Service {
                             "http://www.isotc211.org/2005/resources/codeList" +
                                                                 ".xml#MD_RestrictionCode", value));
             if (addIndex == -1) {
-                assert editLib.addElementOrFragmentFromXpath(metadata, metadataSchema, xpath,
-                        new AddElemValue(element), true);
+                addElementFromXPath(editLib, metadataSchema, metadata, xpath, element);
                 addIndex = element.getParentElement().indexOf(element);
                 parentElement = element.getParentElement();
             } else {
                 parentElement.addContent(addIndex, element);
             }
             addIndex++;
+        }
+    }
+
+    private void addElementFromXPath(EditLib editLib, MetadataSchema metadataSchema, Element metadata, String xpath, Element element) {
+        boolean addSucceeded = editLib.addElementOrFragmentFromXpath(metadata, metadataSchema, xpath,
+                new AddElemValue(element), true);
+
+        if (!addSucceeded) {
+            throw new AssertionError("Unable to add " + element.getQualifiedName() + " to " + metadata.getQualifiedName() + " at '"
+                                     + xpath + "'");
         }
     }
 
@@ -405,7 +415,7 @@ public class Save implements Service {
         }
 
         Set<String> hrefsToKeep = Sets.newHashSet();
-        Map<String, Element> hrefsToAdd = Maps.newIdentityHashMap();
+        Map<String, Element> hrefsToAdd = Maps.newLinkedHashMap();
 
         for (int i = 0; i < jsonObjects.length(); i++) {
             JSONObject jsonObject = jsonObjects.getJSONObject(i);
@@ -421,19 +431,18 @@ public class Save implements Service {
         int addIndex;
         if (elementList.isEmpty()) {
             final Element element = new Element(tagName, namespace);
-            assert editLib.addElementOrFragmentFromXpath(identification, metadataSchema, namespace.getPrefix() + ":" + tagName,
-                    new AddElemValue(element), true);
+            addElementFromXPath(editLib, metadataSchema, identification,  namespace.getPrefix() + ":" + tagName, element);
             addIndex = identification.indexOf(element);
             element.detach();
         } else {
             addIndex = identification.indexOf(elementList.get(0));
-            for (Element sharedObjectEl : elementList) {
+            Iterator<Element> iter = elementList.iterator();
+            while (iter.hasNext()) {
+                Element sharedObjectEl = iter.next();
                 String href = sharedObjectEl.getAttributeValue("href", XLINK);
 
                 if (hrefsToKeep.contains(href)) {
                     hrefsToAdd.put(href, sharedObjectEl);
-                } else {
-                    elementList.remove(sharedObjectEl);
                 }
 
                 sharedObjectEl.detach();
@@ -455,8 +464,14 @@ public class Save implements Service {
     }
 
     private void updateDate(EditLib editLib, MetadataSchema metadataSchema, Element identification, JSONObject identificationJson) throws JSONException {
-        final String jsonDate = identificationJson.optString(JSON_IDENTIFICATION_DATE);
-        final String jsonDateType = identificationJson.optString(JSON_IDENTIFICATION_DATE_TYPE, "creation");
+        final JSONObject dateJSONObj = identificationJson.optJSONObject(JSON_IDENTIFICATION_DATE);
+        if (dateJSONObj == null) {
+            return;
+        }
+
+        final String jsonDate = dateJSONObj.optString(JSON_IDENTIFICATION_DATE);
+        final String jsonDateType = dateJSONObj.optString(JSON_IDENTIFICATION_DATE_TYPE, "creation");
+
         if (jsonDate != null) {
             final Element dateEl;
             if (jsonDate.contains("T")) {
@@ -475,8 +490,7 @@ public class Save implements Service {
                             )
                     ))
             );
-            assert editLib.addElementOrFragmentFromXpath(identification, metadataSchema, "gmd:citation/gmd:CI_Citation/gmd:date",
-                    new AddElemValue(date), true);
+            addElementFromXPath(editLib, metadataSchema, identification, "gmd:citation/gmd:CI_Citation/gmd:date", date);
         }
     }
 
@@ -582,7 +596,7 @@ public class Save implements Service {
     private void updateCharString(EditLib editLib, Element metadata, MetadataSchema metadataSchema, String xpath, String newValue) {
         if (newValue != null) {
             Element langEl = new Element(EL_CHARACTER_STRING, GCO).setText(newValue);
-            assert editLib.addElementOrFragmentFromXpath(metadata, metadataSchema, xpath, new AddElemValue(langEl), true);
+            addElementFromXPath(editLib, metadataSchema, metadata, xpath, langEl);
         }
     }
 
@@ -592,7 +606,7 @@ public class Save implements Service {
         if (!Strings.isNullOrEmpty(charset)) {
             Element codeElement = new Element("MD_CharacterSetCode", GMD).setAttribute(ATT_CODE_LIST_VALUE, charset).
                     setAttribute(ATT_CODE_LIST, "http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode");
-            assert editLib.addElementOrFragmentFromXpath(metadata, metadataSchema, "gmd:characterSet", new AddElemValue(codeElement), true);
+            addElementFromXPath(editLib, metadataSchema, metadata, "gmd:characterSet", codeElement);
         }
     }
 
@@ -602,7 +616,7 @@ public class Save implements Service {
         if (!Strings.isNullOrEmpty(hierarchyLevel)) {
             Element hierarchyLevelEl = new Element("MD_ScopeCode", GMD).setAttribute(ATT_CODE_LIST_VALUE, hierarchyLevel).
                     setAttribute(ATT_CODE_LIST, "http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode");
-            assert editLib.addElementOrFragmentFromXpath(metadata, metadataSchema, "gmd:hierarchyLevel", new AddElemValue(hierarchyLevelEl), true);
+            addElementFromXPath(editLib, metadataSchema, metadata, "gmd:hierarchyLevel", hierarchyLevelEl);
 
         }
     }
@@ -662,22 +676,12 @@ public class Save implements Service {
 
                 updateTranslatedInstance(editLib, metadataSchema, contactEl, contact.getJSONObject(JSON_CONTACT_ORG_NAME),
                         "che:CHE_CI_ResponsibleParty/gmd:organisationName", "organisationName", GMD);
-                assert editLib.addElementOrFragmentFromXpath(contactEl, metadataSchema,
-                        "che:CHE_CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/che:CHE_CI_Address",
-                        new AddElemValue(emailEl),
-                        true);
-                assert editLib.addElementOrFragmentFromXpath(contactEl, metadataSchema,
-                        "che:CHE_CI_ResponsibleParty/che:individualFirstName",
-                        new AddElemValue(firstNameEl),
-                        true);
-                assert editLib.addElementOrFragmentFromXpath(contactEl, metadataSchema,
-                        "che:CHE_CI_ResponsibleParty/che:individualLastName",
-                        new AddElemValue(lastNameEl),
-                        true);
-                assert editLib.addElementOrFragmentFromXpath(contactEl, metadataSchema,
-                        "che:CHE_CI_ResponsibleParty/gmd:role",
-                        new AddElemValue(roleEl),
-                        true);
+                addElementFromXPath(editLib, metadataSchema, contactEl, "che:CHE_CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/che:CHE_CI_Address", emailEl);
+
+                addElementFromXPath(editLib, metadataSchema, contactEl, "che:CHE_CI_ResponsibleParty/che:individualFirstName", firstNameEl);
+
+                addElementFromXPath(editLib, metadataSchema, contactEl, "che:CHE_CI_ResponsibleParty/che:individualLastName", lastNameEl);
+                addElementFromXPath(editLib, metadataSchema, contactEl, "che:CHE_CI_ResponsibleParty/gmd:role", roleEl);
             }
 
             result.two().addContent(insertIndex + i, contactEl);
@@ -688,7 +692,7 @@ public class Save implements Service {
                                           String xpath, String tagName, Namespace namespace) throws JSONException {
         if (translationJson != null) {
             Element translatedEl = createTranslatedInstance(translationJson, tagName, namespace);
-            assert editLib.addElementOrFragmentFromXpath(metadata, metadataSchema, xpath, new AddElemValue(translatedEl), true);
+            addElementFromXPath(editLib, metadataSchema, metadata, xpath, translatedEl);
         }
     }
     private Element createTranslatedInstance(JSONObject translationJson,
@@ -720,11 +724,14 @@ public class Save implements Service {
     }
 
     @VisibleForTesting
-    protected Element getMetadata(ServiceContext context, String id, AjaxEditUtils ajaxEditUtils) throws Exception {
+    protected Element getMetadata(ServiceContext context, EditLib lib, String id, AjaxEditUtils ajaxEditUtils) throws Exception {
         Element metadata = (Element) context.getUserSession().getProperty(Geonet.Session.METADATA_EDITING + id);
         if (metadata == null) {
             metadata = ajaxEditUtils.getMetadataEmbedded(context, id, true, false);
         }
+
+        lib.removeEditingInfo(metadata);
+        lib.enumerateTree(metadata);
         return metadata;
     }
 

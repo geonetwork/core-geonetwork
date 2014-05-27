@@ -60,6 +60,14 @@
             return scope.validationClass;
           }
         };
+        scope.validationEmail = function() {
+          var email = scope.contact.email;
+          if (/\S+@\S+\.\S+/.test(email)) {
+            return '';
+          } else {
+            return scope.validationClass;
+          }
+        }
       },
       template: '<div class="form-group" >' +
         '<label data-ng-if="showTitle" class="col-xs-3 control-label"><span data-translate="">{{title}}</span>: </label>' +
@@ -73,7 +81,7 @@
         '</div>' +
         '</div>' +
         '<div class="form-group">' +
-        '<div class="col-xs-12" data-ng-class="validationClassString(contact.email)">' +
+        '<div class="col-xs-12" data-ng-class="validationEmail()">' +
         '<input ng-disabled="contact.validated" id="contactEmail" class="form-control" ng-model="contact.email" placeholder="{{\'email\' | translate}}"></select>' +
         '</div>' +
         '</div>' +

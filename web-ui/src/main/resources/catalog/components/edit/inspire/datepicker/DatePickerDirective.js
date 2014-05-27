@@ -18,13 +18,13 @@
       return {
         restrict: 'A',
         scope: {
-          value: '=inspireDatePicker',
+          dateObj: '=',
           id: '@',
-          tagName: '@',
           indeterminatePosition: '@'
         },
         templateUrl: '../../catalog/components/edit/inspire/datepicker/partials/datepicker.html',
         link: function(scope, element, attrs) {
+
           // Check if browser support date type or not to
           // HTML date and time input types.
           // If not datetimepicker.js is used (it will not
@@ -43,27 +43,31 @@
           scope.withIndeterminatePosition =
               attrs.indeterminatePosition !== undefined;
 
-          // Default date is empty
-          // Compute mode based on date length. The format
-          // is always ISO YYYY-MM-DDTHH:mm:ss
-          if (!scope.value) {
-            scope.value = '';
-          } else if (scope.value.length === 4) {
-            scope.year = parseInt(scope.value);
-            scope.mode = 'year';
-          } else if (scope.value.length === 7) {
-            scope.month = scope.value;
-            scope.mode = 'month';
-          } else {
-            var isDateTime = scope.value.indexOf('T') !== -1;
-            var tokens = scope.value.split('T');
-            scope.date = isDateTime ? tokens[0] : scope.value;
-            scope.time = isDateTime ? tokens[1] : '';
-          }
-          if (scope.dateTypeSupported !== true) {
-            scope.dateInput = scope.value;
-            scope.dateDropDownInput = scope.value;
-          }
+          var processValue = function() {
+            scope.value = scope.dateObj.date;
+            scope.tagName = scope.dateObj.dateType;
+            // Default date is empty
+            // Compute mode based on date length. The format
+            // is always ISO YYYY-MM-DDTHH:mm:ss
+            if (!scope.value) {
+              scope.value = '';
+            } else if (scope.value.length === 4) {
+              scope.year = parseInt(scope.value);
+              scope.mode = 'year';
+            } else if (scope.value.length === 7) {
+              scope.month = scope.value;
+              scope.mode = 'month';
+            } else {
+              var isDateTime = scope.value.indexOf('T') !== -1;
+              var tokens = scope.value.split('T');
+              scope.date = isDateTime ? tokens[0] : scope.value;
+              scope.time = isDateTime ? tokens[1] : '';
+            }
+            if (scope.dateTypeSupported !== true) {
+              scope.dateInput = scope.value;
+              scope.dateDropDownInput = scope.value;
+            }
+          };
 
           scope.setMode = function(mode) {
             scope.mode = mode;
@@ -119,7 +123,11 @@
               scope.dateTime = scope.date;
             }
             scope.value = scope.dateTime
-          }
+          };
+          scope.$watch('dateObj', function(){
+            processValue();
+            buildDate();
+          }, true);
           scope.$watch('date', buildDate);
           scope.$watch('time', buildDate);
           scope.$watch('year', buildDate);
@@ -127,8 +135,6 @@
           scope.$watch('dateInput', buildDate);
           scope.$watch('indeterminatePosition', buildDate);
           scope.$watch('indeterminatePosition', resetDateIfNeeded);
-
-          buildDate();
         }
       };
     }]);
