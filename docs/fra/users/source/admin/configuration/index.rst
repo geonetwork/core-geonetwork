@@ -349,6 +349,35 @@ ne sont pas visibles à des utilisateurs non enregistrés. Pour les rendre visib
 
 .. figure:: csw-configuration.png
 
+
+Configuration minimale
+``````````````````````
+
+Lorsqu'une application cliente appelle un service conforme au standard CSW (Catalogue Service for the Web) 
+de l'OGC, une description de ce service sera fournie au travers d'un document XML (getCapabilities). La page 
+de configuration du service CSW permet de définir les éléments de description suivants :
+
+*Activer*: Cette option permet d'activer ou désactiver le service. Si elle est désactivée, les autres catalogues
+ne pourront pas moissonner le catalogue avec le protocole CSW.
+
+*Contact*: contact principal défini dans le document getCapabilities.
+
+*Titre*: titre du service CSW.
+
+*Résumé*: résumé du service CSW.
+
+*Frais* : Frais éventuels pour utiliser le service.
+
+*Contraintes d'accès* : contraintes d'accès au service.
+
+La description du service contient également les principaux mots-clés du catalogue. La liste de ces mots-clés 
+est générée automatiquement à partir des métadonnées du catalogue.
+
+*Publier les métadonnées insérées via CSW (transaction)*: Par défaut, les métadonnées insérées à l'aide de l'opération CSW-T (Transaction)
+ne sont pas visibles à des utilisateurs non enregistrés. Pour les rendre visibles sélectionner cette option.
+
+
+
 Configuration avancée
 `````````````````````
 
@@ -368,6 +397,57 @@ Une configuration plus fine du CSW est possible via le fichier **WEB-INF/config-
 - La section GetRecord indique les correspondances entre les champs définis dans la spécification CSW (ou INSPIRE) et les champs
   de l'index Lucene. Un champ non présent dans cette liste et existant dans l'index est intérrogeable avec le nom de ce champ dans l'index.
 
+  
+.. _csw_virtuel_configuration:
+
+Configuration CSW virtuels
+--------------------------
+
+Cette fonctionnalité permet de créer un ou plusieurs services CSW donnant accès à un sous-ensemble du catalogue, contrairement au service CSW proposé par défaut lors de l’installation, qui donne accès à l’ensemble des fiches publiées au sein du catalogue (voir précédemment).
+
+Configuration
+`````````````
+
+- Le nom du service doit obligatoirement être renseigné. Celui-ci ne doit pas comporter d’espace ni de caractères spéciaux. L’adresse du service est alors de la forme (par exemple pour le getCapabilities) :
+
+http://[host]/geosource/srv/fre/[Nom du service]?service=CSW&REQUEST=GetCapabilities&version=2.0.2 Si cette information est renseignée, elle apparaîtra dans le getCapabilities dans l’élément “title”.
+
+
+- La description du service est optionnelle. Si cette information est renseignée, elle apparaîtra dans le getCapabilities dans l’élément “abstract”.
+
+Critères de recherche sur le contenu des métadonnées :
+
+*Texte libre*: filtre sur l’ensemble de la fiche de métadonnées
+
+*Titre*: filtre sur le titre
+
+*Résumé*: filtre sur le résumé
+
+*Mot-clé*: filtre sur les mots-clés
+
+*Echelle*: filtre sur l’échelle
+
+	
+Par exemple, si le filtre est défini sur le mot-clé “Géologie”, seules les fiches contenant le mot-clé “Géologie” seront retournées par le service CSW virtuel.
+
+Autres filtres :
+
+*Catalogue*: seules les fiches rattachées au catalogue spécifié seront remontées par le service
+
+*Groupe*: seules les fiches rattachées au groupe spécifié seront remontées par le service
+
+*Catégorie*: seules les fiches rattachées à la catégorie spécifiée seront remontées par le service
+
+	
+Par exemple, si la catégorie “Jeux de données” est sélectionnée, seules les fiches rattachées à cette catégorie seront retournées par le service CSW virtuel. Par exemple, il est possible de faire moissonner uniquement les fiches concernées par INSPIRE en créant dans l’administration une nouvelle catégorie “INSPIRE” (cf. chapitre sur la gestion des catégories), puis en affectant les fiches INSPIRE à cette catégorie depuis la page de résultats (Actions sur la sélection, puis Mettre à jour les catégories).
+
+A noter qu’il est possible de combiner plusieurs fitres.
+
+A noter également que tous ces filtres sont proposés dans l’interface de recherche. Il est alors possible en mode non authentifié (seules les fiches publiées sont remontées) de vérifier quelles fiches seront remontées par le CSW virtuel en lançant une recherche sur les critères qui ont été définis.
+
+En principe, il n’est pas utile de relancer le serveur ni de lancer une ré-indexation pour que le CSW virtuel créé soit opérationnel.
+  
+  
 .. _system_info:
 
 Information sur le système
