@@ -53,7 +53,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
          *  Default edit mode to open the editor. Default to 'simple'.
          *  View mode is keep in user session (on the server).
          */
-        defaultEditMode: 'simple',
+        defaultEditMode: GeoNetwork.defaultViewMode || 'simple',
         editMode: null,
         /** api: config[thesaurusButton] 
          *  Use thesaurus selector and inline keyword selection 
@@ -802,7 +802,9 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
      *  Use for XslProcessing task
      */
     process: function(action) {
-        this.loadUrl(action, undefined,  this.loadCallback, true);
+        this.loadUrl('metadata.update.new', undefined, function () {
+            this.loadUrl(action, undefined,  this.loadCallback, true);
+        });
     },
     /** api: method[init]
      * 
