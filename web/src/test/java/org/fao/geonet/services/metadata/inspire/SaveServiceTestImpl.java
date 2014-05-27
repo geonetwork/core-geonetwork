@@ -213,7 +213,11 @@ class SaveServiceTestImpl extends Save {
     @Override
     protected Element resolveXlink(ServiceContext context, String xlinkHref) throws IOException, JDOMException, CacheException {
         if (this.sharedObjects.containsKey(xlinkHref)) {
-            return (Element) this.sharedObjects.get(xlinkHref).clone();
+            final Element element = this.sharedObjects.get(xlinkHref);
+            if (element == null) {
+                throw new RuntimeException("Intended error during resolve");
+            }
+            return (Element) element.clone();
         }
         throw new IllegalArgumentException("Unexpected xlinks");
     }
@@ -251,5 +255,9 @@ class SaveServiceTestImpl extends Save {
 
     public Element getSavedMetadata() {
         return this.savedMetadata;
+    }
+
+    public void addXLink(String xlinkHref, Element element) {
+        this.sharedObjects.put(xlinkHref, element);
     }
 }

@@ -9,6 +9,7 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
 import jeeves.xlink.Processor;
@@ -58,6 +59,7 @@ public class Save implements Service {
             GCO,
             GMD,
             SRV,
+            GEONET,
             Geonet.Namespaces.XLINK,
             XslUtil.CHE_NAMESPACE);
 
@@ -363,7 +365,10 @@ public class Save implements Service {
         updateCharString(editLib, identification, metadataSchema, "gmd:language", identificationJson.optString(JSON_LANGUAGE));
 
         updateKeywords(context, editLib, metadataSchema, identification, identificationJson);
-        updateTopicCategory(editLib, metadataSchema, identification, identificationJson);
+        final String identificationType = identificationJson.optString(JSON_IDENTIFICATION_TYPE, JSON_IDENTIFICATION_TYPE_DATA_VALUE);
+        if (identificationType.equals(JSON_IDENTIFICATION_TYPE_DATA_VALUE)) {
+            updateTopicCategory(editLib, metadataSchema, identification, identificationJson);
+        }
         updateExtent(context, editLib, metadataSchema, identification, identificationJson);
         return identification;
     }
@@ -454,8 +459,13 @@ public class Save implements Service {
             final Element element;
             if (entry.getValue() == null) {
                 element = new Element(tagName, namespace).
-                        setAttribute("href", href, XLINK).
-                        addContent(resolveXlink(context, href));
+                        setAttribute("href", href, XLINK);
+                try {
+                    final Element child = resolveXlink(context, href);
+                    element.addContent(child);
+                } catch (Throwable t) {
+                    Log.error(Geonet.EDITOR, "Error resolving xlink: " + href);
+                }
                 entry.setValue(element);
             }
         }
@@ -503,8 +513,8 @@ public class Save implements Service {
 
         final String requiredInfoTagName;
         final String isoType;
-        final String jsonType = identificationJson.optString(JSON_IDENTIFICATION_TYPE, "data");
-        if (jsonType.equalsIgnoreCase("data")) {
+        final String jsonType = identificationJson.optString(JSON_IDENTIFICATION_TYPE, JSON_IDENTIFICATION_TYPE_DATA_VALUE);
+        if (jsonType.equalsIgnoreCase(JSON_IDENTIFICATION_TYPE_DATA_VALUE)) {
             requiredInfoTagName = "CHE_MD_DataIdentification";
             isoType = "gmd:MD_DataIdentification";
         } else {

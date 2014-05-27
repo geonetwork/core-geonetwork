@@ -90,9 +90,11 @@ public class GetEditModelTest {
         assertTranslations(identification, Save.JSON_IDENTIFICATION_TITLE,
                 read("ger", "Inspire Test August 2013 v8 mit Vertriebsinfo/Qualität"),
                 read("fre", "Test INSPIRE aout 2013 v8 avec Infos distribution et qualité"));
-        assertEquals("2012-08-23", identification.getString(Save.JSON_IDENTIFICATION_DATE));
-        assertEquals("gco:Date", identification.getString(Save.JSON_IDENTIFICATION_DATE_TAG_NAME));
-        assertEquals("creation", identification.getString(Save.JSON_IDENTIFICATION_DATE_TYPE));
+
+        JSONObject dateJSON = identification.getJSONObject(Save.JSON_IDENTIFICATION_DATE);
+        assertEquals("2012-08-23", dateJSON.getString(Save.JSON_IDENTIFICATION_DATE));
+        assertEquals("gco:Date", dateJSON.getString(Save.JSON_IDENTIFICATION_DATE_TAG_NAME));
+        assertEquals("creation", dateJSON.getString(Save.JSON_IDENTIFICATION_DATE_TYPE));
 
         assertTranslations(identification, Save.JSON_IDENTIFICATION_IDENTIFIER, read("ger", "INSPIRE Nr. 123"));
 
@@ -194,9 +196,10 @@ public class GetEditModelTest {
                 read("ger", "Suchdienst auf www.geocat.ch (CSW 2.0.2)"),
                 read("eng", "Search Service for www.geocat.ch (CSW 2.0.2)"),
                 read("fre", "Service de recherche sur www.geocat.ch (CSW 2.0.2)"));
-        assertEquals("2009-12-01", identification.getString(Save.JSON_IDENTIFICATION_DATE));
-        assertEquals("gco:Date", identification.getString(Save.JSON_IDENTIFICATION_DATE_TAG_NAME));
-        assertEquals("creation", identification.getString(Save.JSON_IDENTIFICATION_DATE_TYPE));
+        JSONObject dateJSON = identification.getJSONObject(Save.JSON_IDENTIFICATION_DATE);
+        assertEquals("2009-12-01", dateJSON.getString(Save.JSON_IDENTIFICATION_DATE));
+        assertEquals("gco:Date", dateJSON.getString(Save.JSON_IDENTIFICATION_DATE_TAG_NAME));
+        assertEquals("creation", dateJSON.getString(Save.JSON_IDENTIFICATION_DATE_TYPE));
 
         assertTranslations(identification, Save.JSON_IDENTIFICATION_IDENTIFIER);
 

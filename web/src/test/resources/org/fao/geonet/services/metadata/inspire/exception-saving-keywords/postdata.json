@@ -1,0 +1,120 @@
+{"characterSet": "utf8", "hierarchyLevelName": "", "constraints": {
+  "generic": [
+    {
+      "ref": "259",
+      "useLimitations": [
+        {
+          "ger": "test use limitation for INSPIRE"
+        }
+      ]
+    }
+  ],
+  "legal": [
+    {
+      "legislationConstraints": [
+        {
+          "ger": "Legislation Constraint title DE",
+          "fre": "Legislation Constraint title DE"
+        }
+      ],
+      "ref": "215",
+      "useLimitations": [
+        {
+          "ger": "uselim de"
+        }
+      ],
+      "otherConstraints": [
+        {
+          "ger": "other constraint DE",
+          "fre": "other constraint FR"
+        }
+      ],
+      "useConstraints": ["license"],
+      "accessConstraints": ["intellectualPropertyRights", "patent"]
+    }
+  ],
+  "security": [
+    {
+      "ref": "251",
+      "useLimitations": [
+        {
+          "ger": "test security constraints for INSPIRE"
+        },
+        "unclassified"
+      ]
+    }
+  ]
+}, "otherLanguages": ["ger", "fre", "ita", "eng"], "hierarchyLevel": "dataset", "contact": [
+  {
+    "id": "8",
+    "organization": {
+      "ita": "Ufficio federale di topografia",
+      "ger": "Bundesamt für Landestopografie",
+      "eng": "Federal Office of Topography",
+      "fre": "Office fédéral de topographie"
+    },
+    "email": "metadata@swisstopo.ch",
+    "name": "",
+    "role": "pointOfContact",
+    "surname": "",
+    "validated": false
+  }
+], "identification": {
+  "extents": [
+    {
+      "description": {
+        "ita": "Schweiz",
+        "ger": "Schweiz",
+        "fre": "Schweiz",
+        "eng": "Schweiz",
+        "roh": "Schweiz"
+      },
+      "geom": "country:0"
+    }
+  ],
+  "abstract": {
+    "ger": "Zusammenfassung Test INSPIRE",
+    "fre": "Résumé Test INSPIRE"
+  },
+  "title": {
+    "ger": "Inspire Test August 2013 v8 mit Vertriebsinfo/Qualität",
+    "fre": "Test INSPIRE aout 2013 v8 avec Infos distribution et qualité"
+  },
+  "pointOfContact": [
+    {
+      "id": "10",
+      "organization": {
+        "ita": "Ufficio federale di topografia",
+        "ger": "Bundesamt für Landestopografie",
+        "eng": "Federal Office of Topography",
+        "fre": "Office fédéral de topographie"
+      },
+      "email": "geodata@swisstopo.ch",
+      "name": "",
+      "role": "pointOfContact",
+      "surname": "",
+      "validated": false
+    }
+  ],
+  "citationIdentifier": {},
+  "descriptiveKeywords": [
+    {
+      "words": {
+        "ger": "Adressen",
+        "ita": "Indirizzi",
+        "fre": "Adresses",
+        "eng": "Addresses"
+      },
+      "code": "http://rdfdata.eionet.europa.eu/inspirethemes/themes/5"
+    }
+  ],
+  "topicCategory": [""],
+  "language": "fre",
+  "serviceType": "view",
+  "date": {
+    "dateTagName": "gco:Date",
+    "dateType": "creation",
+    "date": "2012-08-23"
+  },
+  "type": "service"
+}, "language": "ger"}

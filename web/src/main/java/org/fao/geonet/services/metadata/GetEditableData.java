@@ -71,7 +71,8 @@ public class GetEditableData implements Service
             context.getUserSession().setProperty(Geonet.Session.METADATA_SHOW, elCurrTab.getText());
         }
 
-        if ( context.getUserSession().getProperty(Geonet.Session.METADATA_SHOW).toString().equalsIgnoreCase("inspire")) {
+        final Object currtab = context.getUserSession().getProperty(Geonet.Session.METADATA_SHOW);
+        if ( currtab != null && currtab.toString().equalsIgnoreCase("inspire")) {
             context.getUserSession().setProperty(Geonet.Session.METADATA_SHOW, "complete");
         }
 

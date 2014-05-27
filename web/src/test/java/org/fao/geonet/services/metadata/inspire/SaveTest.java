@@ -305,6 +305,28 @@ public class SaveTest {
     }
 
     @Test
+    public void testUpdateExceptionSaving_Keywords() throws Exception {
+        final String json = loadTestJson("exception-saving-keywords/postdata.json");
+
+        final Element testMetadata = Xml.loadFile(SaveTest.class.getResource("exception-saving-keywords/testMetadata.xml"));
+
+        service.setTestMetadata(testMetadata);
+        service.addXLink("local://xml.user.get?id=8&amp;schema=iso19139.che&amp;role=pointOfContact",
+                Xml.loadFile(SaveTest.class.getResource("exception-saving-keywords/user-8.xml")));
+        service.addXLink("local://xml.user.get?id=10&amp;schema=iso19139.che&amp;role=pointOfContact",
+                Xml.loadFile(SaveTest.class.getResource("exception-saving-keywords/user-10.xml")));
+        service.addXLink("local://xml.extent.get?id=0&amp;wfs=default&amp;typename=gn:countries&amp;format=gmd_complete&amp;extentTypeCode=true",
+                Xml.loadFile(SaveTest.class.getResource("exception-saving-keywords/extent-countries-0.xml")));
+
+        service.addXLink("local://che.keyword.get?thesaurus=external.theme.inspire-service-taxonomy&amp;id=http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F5&amp;locales=fr,en,de,it",
+                null);
+        service.exec(new Element("request").addContent(Arrays.asList(
+                new Element("id").setText("12"),
+                new Element("data").setText(json.toString())
+        )), context);
+
+    }
+    @Test
     public void testUpdateExistingFullMetadata_ReplaceContacts() throws Exception {
         fail("to implement");
 
@@ -390,8 +412,11 @@ public class SaveTest {
     }
 
     private String loadTestJson() throws URISyntaxException, IOException {
-        File file = new File(SaveTest.class.getResource("MockFullMetadataFactory.json").toURI());
+        return loadTestJson("MockFullMetadataFactory.json");
+    }
 
+    private String loadTestJson(String jsonName) throws URISyntaxException, IOException {
+        File file = new File(SaveTest.class.getResource(jsonName).toURI());
         return Files.toString(file, Charset.forName("UTF-8"));
     }
 

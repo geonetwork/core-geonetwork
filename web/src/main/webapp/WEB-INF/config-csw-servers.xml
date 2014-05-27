@@ -51,7 +51,7 @@
         </service>
         <service name="csw-liechtenstein-inspire">
            <class name=".services.main.CswDiscoveryDispatcher" >
-               <param name="filter" value="+_groupOwner:13 +keyword:inspire"/>
+               <param name="filter" value="+_groupOwner:13 +keyword:INSPIRE"/>
            </class>
         </service>
     </services>
