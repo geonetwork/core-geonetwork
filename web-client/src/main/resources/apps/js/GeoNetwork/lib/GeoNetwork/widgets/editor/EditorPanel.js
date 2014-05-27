@@ -53,7 +53,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
          *  Default edit mode to open the editor. Default to 'simple'.
          *  View mode is keep in user session (on the server).
          */
-        defaultEditMode: 'simple',
+        defaultEditMode: GeoNetwork.defaultViewMode || 'simple',
         editMode: null,
         /** api: config[thesaurusButton] 
          *  Use thesaurus selector and inline keyword selection 
