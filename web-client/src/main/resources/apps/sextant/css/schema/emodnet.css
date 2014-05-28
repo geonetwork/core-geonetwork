@@ -19,7 +19,13 @@
 	color: #fff;
 	padding: 10px 0px 20px;
 }
-    
+
+.tpl-emodnet .result-photo {
+    	max-width: 400px;
+  	max-height: 180px;
+	padding: 20px 0% 20px 100%;
+}
+
 .tpl-emodnet .print_table {
 	width: 98%;
 	margin: auto;
