@@ -2,6 +2,7 @@ package org.fao.geonet.services.metadata.inspire;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
+import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -42,6 +43,7 @@ import javax.annotation.Nullable;
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GEONET;
 import static org.fao.geonet.constants.Geonet.Namespaces.XLINK;
+import static org.fao.geonet.services.metadata.inspire.Save.NS;
 
 /**
  * @author Jesse on 5/17/2014.
@@ -92,6 +94,7 @@ public class GetEditModel implements Service {
         processMetadata(metadataEl, metadataJson);
         Element identificationInfo = processIdentificationInfo(metadataEl, metadataJson);
         processConstraints(identificationInfo, metadataJson);
+        processConformity(metadataEl, metadataJson);
 
         final String jsonString;
         if (pretty) {
@@ -100,6 +103,36 @@ public class GetEditModel implements Service {
             jsonString = metadataJson.toString();
         }
         return new Element("data").setText(jsonString);
+    }
+
+    private void processConformity(Element metadataEl, JSONObject metadataJson) throws JSONException, JDOMException {
+        JSONObject conformityJson = new JSONObject();
+        String mainLanguage = metadataJson.getString(Save.JSON_LANGUAGE);
+
+        addValue(metadataEl, conformityJson, Save.JSON_CONFORMITY_SCOPE_CODE,
+                "gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue");
+        addTranslatedElement(mainLanguage, metadataEl, getIsoLanguagesMapper(), conformityJson, Save.JSON_CONFORMITY_SCOPE_CODE_DESCRIPTION,
+                "gmd:dataQualityInfo/*/gmd:scope/gmd:DQ_Scope//gmd:levelDescription//gmd:attributeInstances");
+
+        Element conformanceResult = Xml.selectElement(metadataEl, "gmd:dataQualityInfo/*/gmd:report//gmd:DQ_ConformanceResult" , NS);
+        addValue(conformanceResult, conformityJson, Save.JSON_CONFORMITY_RESULT_REF, "geonet:element/@ref");
+
+        addTranslatedElement(mainLanguage, conformanceResult, getIsoLanguagesMapper(), conformityJson, Save.JSON_TITLE,
+                "gmd:specification/gmd:CI_Citation/gmd:title");
+        addDateElement(conformanceResult, conformityJson, "gmd:specification/gmd:CI_Citation/gmd:date");
+
+        addValue(conformanceResult, conformityJson, Save.JSON_CONFORMITY_PASS, "gmd:pass/gco:Boolean");
+        addValue(conformanceResult, conformityJson, Save.JSON_CONFORMITY_EXPLANATION, "gmd:explanation/gco:CharacterString");
+
+        JSONObject lineageJson = new JSONObject();
+        conformityJson.put(Save.JSON_CONFORMITY_LINEAGE, lineageJson);
+
+        Element lineageEl = Xml.selectElement(metadataEl, "gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage", NS);
+        addTranslatedElement(mainLanguage, lineageEl, getIsoLanguagesMapper(), lineageJson, Save.JSON_CONFORMITY_LINEAGE_STATEMENT, "gmd:statement");
+        addValue(lineageEl, lineageJson, Params.REF, "geonet:element/@ref");
+
+        metadataJson.put(Save.JSON_CONFORMITY, conformityJson);
+
     }
 
     @VisibleForTesting
@@ -124,6 +157,7 @@ public class GetEditModel implements Service {
         addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:MD_TopicCategoryCode", "topicCategoryOptions",
                 topicCategoryGrouper);
         addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:MD_RestrictionCode", "constraintOptions", null);
+        addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:MD_ScopeCode", "scopeCodeOptions", null);
         addCodeListOptionsFromLabelsHelper(metadataJson, labels, labelExtensions, "srv:serviceType", "serviceTypeOptions");
 
     }
@@ -200,13 +234,15 @@ public class GetEditModel implements Service {
     }
 
     private void processConstraints(Element identificationInfo, JSONObject metadataJson) throws Exception {
+        String mainLanguage = metadataJson.getString(Save.JSON_LANGUAGE);
+
         JSONObject constraintsJson = new JSONObject();
         metadataJson.put(Save.JSON_CONSTRAINTS, constraintsJson);
 
         @SuppressWarnings("unchecked")
         List<Element> legalConstraints = (List<Element>) Xml.selectNodes(identificationInfo,
                 "gmd:resourceConstraints/*[name() = 'gmd:MD_LegalConstraints' " +
-                "or @gco:isoType = 'gmd:MD_LegalConstraints']", Save.NS);
+                "or @gco:isoType = 'gmd:MD_LegalConstraints']", NS);
 
         if (legalConstraints.isEmpty()) {
             constraintsJson.put(Save.JSON_CONSTRAINTS_LEGAL, new JSONArray());
@@ -214,12 +250,12 @@ public class GetEditModel implements Service {
 
         for (Element legalConstraint : legalConstraints) {
             JSONObject legalJson = new JSONObject();
-            processLegalConstraint(legalConstraint, legalJson);
+            processLegalConstraint(mainLanguage, legalConstraint, legalJson);
             constraintsJson.append(Save.JSON_CONSTRAINTS_LEGAL, legalJson);
         }
         @SuppressWarnings("unchecked")
         List<Element> genericConstraints = (List<Element>) Xml.selectNodes(identificationInfo,
-                "gmd:resourceConstraints/gmd:MD_Constraints", Save.NS);
+                "gmd:resourceConstraints/gmd:MD_Constraints", NS);
 
         if (genericConstraints.isEmpty()) {
             constraintsJson.put(Save.JSON_CONSTRAINTS_GENERIC, new JSONArray());
@@ -227,13 +263,13 @@ public class GetEditModel implements Service {
         for (Element genericConstraint : genericConstraints) {
             JSONObject json = new JSONObject();
             addRef(genericConstraint, json);
-            addArray(genericConstraint, getIsoLanguagesMapper(), json, "gmd:useLimitation", Save.JSON_CONSTRAINTS_USE_LIMITATIONS,
+            addArray(mainLanguage, genericConstraint, getIsoLanguagesMapper(), json, "gmd:useLimitation", Save.JSON_CONSTRAINTS_USE_LIMITATIONS,
                     translatedElemEncoder);
             constraintsJson.append(Save.JSON_CONSTRAINTS_GENERIC, json);
         }
         @SuppressWarnings("unchecked")
         List<Element> securityConstraints = (List<Element>) Xml.selectNodes(identificationInfo,
-                "gmd:resourceConstraints/gmd:MD_SecurityConstraints", Save.NS);
+                "gmd:resourceConstraints/gmd:MD_SecurityConstraints", NS);
         if (securityConstraints.isEmpty()) {
             constraintsJson.put(Save.JSON_CONSTRAINTS_SECURITY, new JSONArray());
         }
@@ -241,26 +277,26 @@ public class GetEditModel implements Service {
         for (Element securityConstraint : securityConstraints) {
             JSONObject json = new JSONObject();
             addRef(securityConstraint, json);
-            addArray(securityConstraint, getIsoLanguagesMapper(), json, "gmd:useLimitation", Save.JSON_CONSTRAINTS_USE_LIMITATIONS,
+            addArray(mainLanguage, securityConstraint, getIsoLanguagesMapper(), json, "gmd:useLimitation", Save.JSON_CONSTRAINTS_USE_LIMITATIONS,
                     translatedElemEncoder);
-            addArray(securityConstraint, getIsoLanguagesMapper(), json, "gmd:classification/gmd:MD_ClassificationCode",
+            addArray(mainLanguage, securityConstraint, getIsoLanguagesMapper(), json, "gmd:classification/gmd:MD_ClassificationCode",
                     Save.JSON_CONSTRAINTS_USE_LIMITATIONS, codeListJsonEncoder);
             constraintsJson.append(Save.JSON_CONSTRAINTS_SECURITY, json);
         }
 
     }
 
-    private void processLegalConstraint(Element constraint, JSONObject legalJson) throws Exception {
+    private void processLegalConstraint(String mainLanguage, Element constraint, JSONObject legalJson) throws Exception {
         addRef(constraint, legalJson);
-        addArray(constraint, getIsoLanguagesMapper(), legalJson, "gmd:useLimitation", Save.JSON_CONSTRAINTS_USE_LIMITATIONS,
+        addArray(mainLanguage, constraint, getIsoLanguagesMapper(), legalJson, "gmd:useLimitation", Save.JSON_CONSTRAINTS_USE_LIMITATIONS,
                 translatedElemEncoder, new JSONArray());
-        addArray(constraint, getIsoLanguagesMapper(), legalJson, "gmd:accessConstraints/gmd:MD_RestrictionCode",
+        addArray(mainLanguage, constraint, getIsoLanguagesMapper(), legalJson, "gmd:accessConstraints/gmd:MD_RestrictionCode",
                 Save.JSON_CONSTRAINTS_ACCESS_CONSTRAINTS, codeListJsonEncoder);
-        addArray(constraint, getIsoLanguagesMapper(), legalJson, "gmd:useConstraints/gmd:MD_RestrictionCode",
+        addArray(mainLanguage, constraint, getIsoLanguagesMapper(), legalJson, "gmd:useConstraints/gmd:MD_RestrictionCode",
                 Save.JSON_CONSTRAINTS_USE_CONSTRAINTS, codeListJsonEncoder);
-        addArray(constraint, getIsoLanguagesMapper(), legalJson, "gmd:otherConstraints", Save.JSON_CONSTRAINTS_OTHER_CONSTRAINTS,
+        addArray(mainLanguage, constraint, getIsoLanguagesMapper(), legalJson, "gmd:otherConstraints", Save.JSON_CONSTRAINTS_OTHER_CONSTRAINTS,
                 translatedElemEncoder, new JSONArray());
-        addArray(constraint, getIsoLanguagesMapper(), legalJson,
+        addArray(mainLanguage, constraint, getIsoLanguagesMapper(), legalJson,
                 "che:legislationConstraints/che:CHE_MD_Legislation",
                 Save.JSON_CONSTRAINTS_LEGISLATION_CONSTRAINTS, legislationConstraintsJsonEncoder, new JSONArray());
 
@@ -274,7 +310,7 @@ public class GetEditModel implements Service {
     private Element processIdentificationInfo(Element metadataEl, JSONObject metadataJson) throws Exception {
         Element identificationInfoEl = Xml.selectElement(metadataEl,
                 "gmd:identificationInfo/node()[@gco:isoType = 'gmd:MD_DataIdentification' or " +
-                "@gco:isoType = 'srv:SV_ServiceIdentification']", Save.NS);
+                "@gco:isoType = 'srv:SV_ServiceIdentification']", NS);
 
         if (identificationInfoEl == null) {
             identificationInfoEl = new Element("CHE_MD_DataIdentification", XslUtil.CHE_NAMESPACE).setAttribute("isoType", "gmd:MD_DataIdentification", GCO);
@@ -287,54 +323,58 @@ public class GetEditModel implements Service {
                               identificationInfoEl.getAttributeValue("isoType", GCO).equals("gmd:MD_DataIdentification"));
         identificationJSON.put(Save.JSON_IDENTIFICATION_TYPE, isDataType ? "data" : "service");
 
-        addTranslatedElement(identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, Save.JSON_IDENTIFICATION_TITLE,
+        String mainLanguage = metadataJson.getString(Save.JSON_LANGUAGE);
+        addTranslatedElement(mainLanguage, identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, Save.JSON_TITLE,
                 "gmd:citation/gmd:CI_Citation/gmd:title");
 
-        addTranslatedElement(identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, Save.JSON_IDENTIFICATION_IDENTIFIER,
-                "gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code");
+        addValue(identificationInfoEl, identificationJSON, Save.JSON_IDENTIFICATION_IDENTIFIER,
+                "gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/gco:CharacterString");
 
-        processDate(identificationInfoEl, identificationJSON);
+        addDateElement(identificationInfoEl, identificationJSON, "gmd:citation/gmd:CI_Citation/gmd:date");
 
-        addTranslatedElement(identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, Save.JSON_IDENTIFICATION_ABSTRACT,
+        addTranslatedElement(mainLanguage, identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, Save.JSON_IDENTIFICATION_ABSTRACT,
                 "gmd:abstract");
 
         addValue(identificationInfoEl, identificationJSON, Save.JSON_LANGUAGE, "gmd:language");
         addValue(identificationInfoEl, identificationJSON, Save.JSON_IDENTIFICATION_SERVICETYPE, "srv:serviceType");
-        addArray(identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, "gmd:topicCategory/gmd:MD_TopicCategoryCode",
+        addArray(mainLanguage, identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, "gmd:topicCategory/gmd:MD_TopicCategoryCode",
                 Save.JSON_IDENTIFICATION_TOPIC_CATEGORIES, valueJsonEncoder);
 
-        addArray(identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, "gmd:pointOfContact",
+        addArray(mainLanguage, identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, "gmd:pointOfContact",
                 Save.JSON_IDENTIFICATION_POINT_OF_CONTACT, contactJsonEncoder);
-        addArray(identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, "gmd:descriptiveKeywords ",
+        addArray(mainLanguage, identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, "gmd:descriptiveKeywords ",
                 Save.JSON_IDENTIFICATION_KEYWORDS, keywordJsonEncoder);
-        addArray(identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, "gmd:extent|srv:extent",
+        addArray(mainLanguage, identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, "gmd:extent|srv:extent",
                 Save.JSON_IDENTIFICATION_EXTENTS, extentJsonEncoder);
 
         return identificationInfoEl;
     }
 
-    private void processDate(Element identificationInfoEl, JSONObject identificationJSON) throws JSONException, JDOMException {
+    private void addDateElement(Element identificationInfoEl, JSONObject identificationJSON, String xpathToDate) throws JSONException, JDOMException {
         JSONObject dateObject = new JSONObject();
-        addValue(identificationInfoEl, dateObject, Save.JSON_IDENTIFICATION_DATE,
-                "gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/*");
+        addValue(identificationInfoEl, dateObject, Save.JSON_DATE,
+                xpathToDate + "/gmd:CI_Date/gmd:date/*");
 
         final Element dateElement = Xml.selectElement(identificationInfoEl,
-                "gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:date/*", Save.NS);
-        dateObject.put(Save.JSON_IDENTIFICATION_DATE_TAG_NAME, dateElement == null ? "" : dateElement.getQualifiedName());
-        addValue(identificationInfoEl, dateObject, Save.JSON_IDENTIFICATION_DATE_TYPE,
-                "gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue");
-        identificationJSON.put(Save.JSON_IDENTIFICATION_DATE, dateObject);
+                xpathToDate + "/gmd:CI_Date/gmd:date/*", NS);
+        dateObject.put(Save.JSON_DATE_TAG_NAME, dateElement == null ? "" : dateElement.getQualifiedName());
+        addValue(identificationInfoEl, dateObject, Save.JSON_DATE_TYPE,
+                xpathToDate + "/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue");
+        identificationJSON.put(Save.JSON_DATE, dateObject);
     }
 
     protected void processMetadata(Element metadataEl, JSONObject metadataJson) throws Exception {
         addValue(metadataEl, metadataJson, Save.JSON_LANGUAGE, "gmd:language/gco:CharacterString/text()");
+
+        String mainLanguage = metadataJson.getString(Save.JSON_LANGUAGE);
+
         addValue(metadataEl, metadataJson, Save.JSON_CHARACTER_SET, "gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue", "utf-8");
         addValue(metadataEl, metadataJson, Save.JSON_HIERARCHY_LEVEL, "gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue");
         addValue(metadataEl, metadataJson, Save.JSON_HIERARCHY_LEVEL_NAME, "gmd:hierarchyLevelName/gco:CharacterString/text()");
-        addArray(metadataEl, getIsoLanguagesMapper(), metadataJson, "gmd:contact", Save.JSON_CONTACT, contactJsonEncoder);
+        addArray(mainLanguage, metadataEl, getIsoLanguagesMapper(), metadataJson, "gmd:contact", Save.JSON_CONTACT, contactJsonEncoder);
         JSONArray def = new JSONArray();
         def.put("ger").put("fre").put("ita").put("eng").put("roh");
-        addArray(metadataEl, getIsoLanguagesMapper(), metadataJson,
+        addArray(mainLanguage, metadataEl, getIsoLanguagesMapper(), metadataJson,
                 "gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode",
                 Save.JSON_OTHER_LANGUAGES, codeListJsonEncoder, def);
     }
@@ -344,25 +384,25 @@ public class GetEditModel implements Service {
     }
     private static void addValue(Element metadataEl, JSONObject metadataJson, String jsonKey, String xpath, String defaultVal) throws JSONException, JDOMException {
 
-        String value = Xml.selectString(metadataEl, xpath, Save.NS).trim();
+        String value = Xml.selectString(metadataEl, xpath, NS).trim();
         if (value.isEmpty() && defaultVal != null) {
             value = defaultVal;
         }
         metadataJson.put(jsonKey, value.trim());
     }
 
-    private static void addArray(Element metadataEl, IsoLanguagesMapper mapper, JSONObject metadataJson, String xpath, String jsonKey, JsonEncoder encoder)
+    private static void addArray(String mainLanguage, Element metadataEl, IsoLanguagesMapper mapper, JSONObject metadataJson, String xpath, String jsonKey, JsonEncoder encoder)
             throws Exception {
-        addArray(metadataEl, mapper, metadataJson, xpath, jsonKey, encoder, null);
+        addArray(mainLanguage, metadataEl, mapper, metadataJson, xpath, jsonKey, encoder, null);
     }
-    private static void addArray(Element metadataEl, IsoLanguagesMapper mapper, JSONObject metadataJson, String xpath, String jsonKey, JsonEncoder encoder, JSONArray defaultVal)
+    private static void addArray(String mainLanguage, Element metadataEl, IsoLanguagesMapper mapper, JSONObject metadataJson, String xpath, String jsonKey, JsonEncoder encoder, JSONArray defaultVal)
             throws Exception {
 
         @SuppressWarnings("unchecked")
-        final List<Element> nodes = (List<Element>) Xml.selectNodes(metadataEl, xpath, Save.NS);
+        final List<Element> nodes = (List<Element>) Xml.selectNodes(metadataEl, xpath, NS);
 
         for (Element node : nodes) {
-            metadataJson.append(jsonKey, encoder.encode(node, mapper));
+            metadataJson.append(jsonKey, encoder.encode(mainLanguage, node, mapper));
         }
 
         if (nodes.isEmpty()) {
@@ -377,13 +417,20 @@ public class GetEditModel implements Service {
         }
     }
 
-    private static void addTranslatedElement(Element metadata, IsoLanguagesMapper mapper, JSONObject json,
+    private static void addTranslatedElement(String mainLanguage, Element metadata, IsoLanguagesMapper mapper, JSONObject json,
                                              String jsonKey, String xpath) throws JDOMException,
             JSONException {
         JSONObject obj = new JSONObject();
 
-        List<?> nodes = Xml.selectNodes(metadata, xpath + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString", Save.NS);
-        addTranslationElements(mapper, obj, nodes);
+        List<?> nodes = Xml.selectNodes(metadata, xpath + "/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString", NS);
+        if (nodes.isEmpty()) {
+            final String charString = Xml.selectString(metadata, xpath + "/gco:CharacterString", NS);
+            if (!Strings.isNullOrEmpty(charString)) {
+                obj.put(mainLanguage, charString.trim());
+            }
+        } else {
+            addTranslationElements(mapper, obj, nodes);
+        }
 
         json.put(jsonKey, obj);
     }
@@ -432,7 +479,7 @@ public class GetEditModel implements Service {
 
     interface JsonEncoder {
         public Object getDefault() throws JSONException;
-        public Object encode(Element node, IsoLanguagesMapper mapper) throws Exception;
+        public Object encode(String mainLanguage, Element node, IsoLanguagesMapper mapper) throws Exception;
     }
 
     private static final JsonEncoder contactJsonEncoder = new JsonEncoder() {
@@ -451,7 +498,7 @@ public class GetEditModel implements Service {
         }
 
         @Override
-        public Object encode(Element node, IsoLanguagesMapper mapper) throws JDOMException, JSONException, UnsupportedEncodingException {
+        public Object encode(String mainLanguage, Element node, IsoLanguagesMapper mapper) throws JDOMException, JSONException, UnsupportedEncodingException {
             JSONObject json = new JSONObject();
 
             String id = URLDecoder.decode(org.fao.geonet.kernel.reusable.Utils.id(XLink.getHRef(node)), "UTF-8");
@@ -463,7 +510,7 @@ public class GetEditModel implements Service {
                     "che:CHE_CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/" +
                     "che:CHE_CI_Address/gmd:electronicMailAddress/gco:CharacterString/text()");
 
-            addTranslatedElement(node, mapper, json, Save.JSON_CONTACT_ORG_NAME, "che:CHE_CI_ResponsibleParty/gmd:organisationName");
+            addTranslatedElement(mainLanguage, node, mapper, json, Save.JSON_CONTACT_ORG_NAME, "che:CHE_CI_ResponsibleParty/gmd:organisationName");
             boolean validated = true;
             if (node.getAttributeValue("role", XLINK).equals(ReusableObjManager.NON_VALID_ROLE)) {
                 validated = false;
@@ -485,12 +532,12 @@ public class GetEditModel implements Service {
         }
 
         @Override
-        public Object encode(Element node, IsoLanguagesMapper mapper) throws Exception {
+        public Object encode(String mainLanguage, Element node, IsoLanguagesMapper mapper) throws Exception {
             JSONObject json = new JSONObject();
 
             String code = URLDecoder.decode(org.fao.geonet.kernel.reusable.Utils.id(XLink.getHRef(node)), "UTF-8");
             json.put(Save.JSON_IDENTIFICATION_KEYWORD_CODE, code);
-            addTranslatedElement(node, mapper, json, Save.JSON_IDENTIFICATION_KEYWORD_WORD, "gmd:MD_Keywords/gmd:keyword");
+            addTranslatedElement(mainLanguage, node, mapper, json, Save.JSON_IDENTIFICATION_KEYWORD_WORD, "gmd:MD_Keywords/gmd:keyword");
 
             return json;
         }
@@ -503,7 +550,7 @@ public class GetEditModel implements Service {
         }
 
         @Override
-        public Object encode(Element node, IsoLanguagesMapper mapper) throws Exception {
+        public Object encode(String mainLanguage, Element node, IsoLanguagesMapper mapper) throws Exception {
             return node.getTextTrim();
         }
     };
@@ -515,7 +562,7 @@ public class GetEditModel implements Service {
         }
 
         @Override
-        public Object encode(Element node, IsoLanguagesMapper mapper) throws Exception {
+        public Object encode(String mainLanguage, Element node, IsoLanguagesMapper mapper) throws Exception {
             return node.getAttributeValue(Save.ATT_CODE_LIST_VALUE);
         }
     };
@@ -527,9 +574,9 @@ public class GetEditModel implements Service {
         }
 
         @Override
-        public Object encode(Element node, IsoLanguagesMapper mapper) throws Exception {
+        public Object encode(String mainLanguage, Element node, IsoLanguagesMapper mapper) throws Exception {
             JSONObject json = new JSONObject();
-            final List<?> nodes = Xml.selectNodes(node, "gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString", Save.NS);
+            final List<?> nodes = Xml.selectNodes(node, "gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString", NS);
             addTranslationElements(mapper, json, nodes);
             return json;
         }
@@ -543,10 +590,10 @@ public class GetEditModel implements Service {
         }
 
         @Override
-        public Object encode(Element node, IsoLanguagesMapper mapper) throws Exception {
+        public Object encode(String mainLanguage, Element node, IsoLanguagesMapper mapper) throws Exception {
             JSONObject json = new JSONObject();
             final List<?> nodes = Xml.selectNodes(node,
-                    "che:title/gmd:CI_Citation/gmd:title/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString", Save.NS);
+                    "che:title/gmd:CI_Citation/gmd:title/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString", NS);
             addTranslationElements(mapper, json, nodes);
             return json;
         }
@@ -570,7 +617,7 @@ public class GetEditModel implements Service {
         }
 
         @Override
-        public Object encode(Element node, IsoLanguagesMapper mapper) throws Exception {
+        public Object encode(String mainLanguage, Element node, IsoLanguagesMapper mapper) throws Exception {
             JSONObject json = new JSONObject();
             final String href = XLink.getHRef(node);
             String id = URLDecoder.decode(org.fao.geonet.kernel.reusable.Utils.id(href), "UTF-8");
@@ -580,7 +627,7 @@ public class GetEditModel implements Service {
             }
             String featureType = typenameMapper.get(matcher.group(1));
             json.put(Save.JSON_IDENTIFICATION_EXTENT_GEOM, featureType + ":" + id);
-            addTranslatedElement(node, mapper, json, Save.JSON_IDENTIFICATION_EXTENT_DESCRIPTION, "gmd:EX_Extent/gmd:description");
+            addTranslatedElement(mainLanguage, node, mapper, json, Save.JSON_IDENTIFICATION_EXTENT_DESCRIPTION, "gmd:EX_Extent/gmd:description");
 
             return json;
         }

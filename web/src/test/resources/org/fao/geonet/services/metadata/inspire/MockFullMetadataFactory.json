@@ -1,126 +1,164 @@
 {
-  roleOptions: ['pointOfContact', 'owner', 'custodian'],
-  dateTypeOptions: ['creation', 'publication', 'revision'],
-  hierarchyLevelOptions: ['attribute', 'attributeType', 'dataset'],
-  topicCategoryOptions: ['transportation', 'imageryBaseMapsEarthCover_BaseMaps', 'location'],
-  constraintOptions: ['intellectualPropertyRights', 'copyright', 'otherRestrictions'],
+  "roleOptions": ["pointOfContact", "owner", "custodian"],
+  "dateTypeOptions": ["creation", "publication", "revision"],
+  "hierarchyLevelOptions": ["attribute", "attributeType", "dataset"],
+  "topicCategoryOptions": ["transportation", "imageryBaseMapsEarthCover_BaseMaps", "location"],
+  "constraintOptions": ["intellectualPropertyRights", "copyright", "otherRestrictions"],
 
-  language: "eng",
-  characterSet: "utf8",
-  hierarchyLevel: "dataset",
-  hierarchyLevelName: "",
-  contact: [{
-    id: '1', // id indicates this is a shared object
-    name: 'Florent',
-    surname: 'Gravin',
-    email: 'florent.gravin@camptocamp.com',
-    organization: {
-      eng:"camptocamp SA"
+  "language": "eng",
+  "characterSet": "utf8",
+  "hierarchyLevel": "dataset",
+  "hierarchyLevelName": "",
+  "contact": [{
+    "id": "1", // id indicates this is a shared object
+    "name": "Florent",
+    "surname": "Gravin",
+    "email": "florent.gravin@camptocamp.com",
+    "organization": {
+      "eng":"camptocamp SA"
     },
-    role: 'owner',
-    validated: false
+    "role": "owner",
+    "validated": false
   },{
-    id: '2',
-    name: 'Jesse',
-    surname: 'Eichar',
-    email: 'jesse.eichar@camptocamp.com',
-    organization: {
-      eng: "Camptocamp SA",
-      ger: "Camptocamp AG"
+    "id": "2",
+    "name": "Jesse",
+    "surname": "Eichar",
+    "email": "jesse.eichar@camptocamp.com",
+    "organization": {
+      "eng": "Camptocamp SA",
+      "ger": "Camptocamp AG"
     },
-    role: 'pointOfContact',
-    validated: true
+    "role": "pointOfContact",
+    "validated": true
   },{
-    id: '',
-    name: 'New',
-    surname: 'User',
-    email: 'new.user@camptocamp.com',
-    organization: {
-      eng: "Camptocamp SA",
-      ger: "Camptocamp AG"
+    "id": "",
+    "name": "New",
+    "surname": "User",
+    "email": "new.user@camptocamp.com",
+    "organization": {
+      "eng": "Camptocamp SA",
+      "ger": "Camptocamp AG"
     },
-    role: 'pointOfContact',
-    validated: false
+    "role": "pointOfContact",
+    "validated": false
   }],
-  otherLanguages: ['eng', 'ger', 'fre'],
-  identification: {
-    type: 'data',
-    title: {eng: 'Title',fre: 'Titre'},
-    date: {
-      date: '2008-06-23',
-      dateTagName: 'gco:Date',
-      dateType: 'creation'
+  "otherLanguages": ["eng", "ger", "fre"],
+  "identification": {
+    "type": "data",
+    "title": {
+      "eng": "Title",
+      "fre": "Titre"},
+    "date": {
+      "date": "2008-06-23",
+      "dateTagName": "gco:Date",
+      "dateType": "creation"
     },
-    citationIdentifier: {eng: "Citation Identifier"},
-    language: "ger",
-    abstract: {eng: 'Abstract EN', fre: 'Abstract FR'},
-    pointOfContact:  [{
-      id: '2',
-      name: 'Jesse',
-      surname: 'Eichar',
-      email: 'jesse.eichar@camptocamp.com',
-      organization: {
-        eng: "Camptocamp SA",
-        ger: "Camptocamp AG"
+    "citationIdentifier": "Citation Identifier",
+    "language": "ger",
+    "abstract": {
+      "eng": "Abstract EN", "fre": "Abstract FR"},
+    "pointOfContact":  [{
+      "id": "2",
+      "name": "Jesse",
+      "surname": "Eichar",
+      "email": "jesse.eichar@camptocamp.com",
+      "organization": {
+        "eng": "Camptocamp SA",
+        "ger": "Camptocamp AG"
       },
-      role: 'pointOfContact',
-      validated: true
+      "role": "pointOfContact",
+      "validated": true
     },{
-      id: '1',
-      name: 'Florent',
-      surname: 'Gravin',
-      email: 'florent.gravin@camptocamp.com',
-      organization: {
-        eng:"camptocamp SA"
+      "id": "1",
+      "name": "Florent",
+      "surname": "Gravin",
+      "email": "florent.gravin@camptocamp.com",
+      "organization": {
+        "eng":"camptocamp SA"
       },
-      role: 'owner',
-      validated: false
+      "role": "owner",
+      "validated": false
     }],
-    descriptiveKeywords: [
-      {code: 'http://rdfdata.eionet.europa.eu/inspirethemes/themes/15', words: {eng: 'Buildings'}},
-      {code: 'http://rdfdata.eionet.europa.eu/inspirethemes/themes/9', words: {eng: 'Hydrography', ger: 'Schutzgebiete'}}],
-    topicCategory: ['transportation', 'imageryBaseMapsEarthCover_BaseMaps'],
-    extents: [
+    "descriptiveKeywords": [
       {
-        description: {
-          eng: 'Bern',
-          ger: 'Bern'
+        "code": "http://rdfdata.eionet.europa.eu/inspirethemes/themes/15", "words": {
+        "eng": "Buildings"}},
+      {
+        "code": "http://rdfdata.eionet.europa.eu/inspirethemes/themes/9", "words": {
+        "eng": "Hydrography", "ger": "Schutzgebiete"}}],
+    "topicCategory": ["transportation", "imageryBaseMapsEarthCover_BaseMaps"],
+    "extents": [
+      {
+        "description": {
+          "eng": "Bern",
+          "ger": "Bern"
         },
-        geom: "kantone:2"
+        "geom": "kantone:2"
       },
       {
-        description: {
-          eng: 'Fribourg',
-          ger: 'Fribourg'
+        "description": {
+          "eng": "Fribourg",
+          "ger": "Fribourg"
         },
-        geom: "gemeinden:2196"
+        "geom": "gemeinden:2196"
       }
     ]
   },
-  constraints: {
-    legal: [{
-      ref: '211',
-      accessConstraints: ['copyright'],
-      useConstraints: ['intellectualPropertyRights'],
-      useLimitations: [{eng:'leg limitation 1'}, {eng:'leg limitation 2'}],
-      otherConstraints: [{eng:'otherConstraint'}, {eng: 'other constraint 2'}],
-      legislationConstraints: [{eng: 'legislation constraint title'}]
+  "constraints": {
+    "legal": [{
+      "ref": "211",
+      "accessConstraints": ["copyright"],
+      "useConstraints": ["intellectualPropertyRights"],
+      "useLimitations": [{
+        "eng":"leg limitation 1"}, {
+        "eng":"leg limitation 2"}],
+      "otherConstraints": [{
+        "eng":"otherConstraint"}, {
+        "eng": "other constraint 2"}],
+      "legislationConstraints": [{
+        "eng": "legislation constraint title"}]
     },{
-      ref: '',
-      accessConstraints: ['otherRestrictions', 'copyright'],
-      useConstraints: ['intellectualPropertyRights'],
-      useLimitations: [],
-      otherConstraints: [],
-      legislationConstraints: []
+      "ref": "",
+      "accessConstraints": ["otherRestrictions", "copyright"],
+      "useConstraints": ["intellectualPropertyRights"],
+      "useLimitations": [],
+      "otherConstraints": [],
+      "legislationConstraints": []
     }],
-    generic: [{
-      ref: '251',
-      useLimitations: [{eng:'limitation 1'}, {eng: 'limitation 2'}]
+    "generic": [{
+      "ref": "251",
+      "useLimitations": [{
+        "eng":"limitation 1"}, {
+        "eng": "limitation 2"}]
     }],
-    security: [{
-      ref: '261',
-      useLimitations: [{eng:'sec limitation 1'}, {eng:'sec limitation 2'}],
-      classification: 'restricted'
+    "security": [{
+      "ref": "261",
+      "useLimitations": [{
+        "eng":"sec limitation 1"}, {
+        "eng":"sec limitation 2"}],
+      "classification": "restricted"
     }]
+  },
+  "conformity": {
+    "scopeCode": "dataset",
+    "scopeCodeDescription": {"eng":"scopeCodeDescription"},
+    "conformanceResultRef": "",
+    "title": {
+      "eng":"conformity title"
+    },
+    "date": {
+      "date": "2002-06-23T12:00",
+      "dateTagName": "gco:DateTime",
+      "dateType": "modification"
+    },
+    "pass": "true",
+    "explanation": "explanation",
+    "lineage": {
+      "ref": "",
+      "statement": {
+        "eng": "lineage EN",
+        "ger": "lineage DE"
+      }
+    }
   }
 }

@@ -8,4 +8,9 @@
     <assert.M44.conformityExpected><div><br></br>Expected Conformity Title:<br></br></div></assert.M44.conformityExpected>
     <report.M44.degree><div>Degree of conformity found:</div></report.M44.degree>
 
+    <conformity>Data Quality Conformity</conformity>
+    <dataquality>Data Quality</dataquality>
+    <assert.M44.dataQualityExpected><div><br></br>Expected Data Quality Elements<br></br></div></assert.M44.dataQualityExpected>
+    <report.M44.dataQualityExpected><div>Data Quality Elements</div></report.M44.dataQualityExpected>
+
 </strings>

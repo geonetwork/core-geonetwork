@@ -233,7 +233,7 @@
   module.controller('InspireExtentController', [
     '$scope', 'inspireGetExtentsFactory',
     function($scope, inspireGetExtentsFactory) {
-
+      $scope.loadingExtents = false;
       $scope.extentImgSrc = function (width, extent) {
         return $scope.url + 'region.getmap.png?mapsrs=EPSG:21781&background=geocat&width=' + width + '&id=' + extent.geom;
       };
@@ -249,7 +249,7 @@
       };
 
       $scope.searchExtents = function (query) {
-        inspireGetExtentsFactory($scope.url, query).then (function (extents){
+        inspireGetExtentsFactory($scope, $scope.url, query).then (function (extents){
           $scope.extents = extents;
         });
 
@@ -316,8 +316,8 @@
       $scope.$watchCollection('data.constraints.legal', function(newValue) {
         if (newValue.length === 0) {
           newValue.push({
-            accessConstraints: ['copyright'],
-            useConstraints: ['copyright'],
+            accessConstraints: [''],
+            useConstraints: [''],
             otherConstraints: [],
             legislationConstraints: []
           });
@@ -369,7 +369,59 @@
           }
         }
       });
-}]);
+  }]);
+
+  module.controller('InspireConformityController', [
+    '$scope', '$translate', function($scope, $translate) {
+
+      $scope.validationClassObject = function(model) {
+        var cls, elem, i;
+        for (i in model) {
+          if (model.hasOwnProperty(i)) {
+            elem = model[i];
+
+            if (elem.length > 0) {
+              return '';
+            }
+          }
+        }
+        return $scope.validationErrorClass;
+      };
+
+      $scope.titleOptions = [{
+        'ger': 'Verordnung (EG) Nr. 1089/2010 der Kommission vom 23. November 2010 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität von Geodatensätzen und -diensten',
+        'eng': 'COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services',
+        'fre': "Règlement (UE) n o 1089/2010 de la commission du 23 novembre 2010 portant modalités d'application de la directive 2007/2/ce du Parlement Européen et du conseil en ce qui concerne l'interopérabilité des séries et des services de données géographiques",
+        'ita': "REGOLAMENTO (UE) N. 1089/2010 DELLA COMMISSIONE del 23 novembre 2010 recante attuazione della direttiva 2007/2/CE del Parlamento europeo e del Consiglio per quanto riguarda l'interoperabilità dei set di dati territoriali e dei servizi di dati territoriali"
+      }];
+
+
+      $scope.passOptions = [{
+        val: 'true',
+        name: $translate('passConformity')
+      },{
+        val: 'false',
+        name: $translate('failConformity')
+      }];
+
+      $scope.$watch('data.conformity.title', function(newVal) {
+        var i, option, lang;
+        for (i = 0; i < $scope.titleOptions.length; i++) {
+          option = $scope.titleOptions[i];
+          if (option === newVal) {
+            return;
+          }
+
+          for(lang in newVal) {
+            if (newVal.hasOwnProperty(lang) && option[lang] === newVal[lang]) {
+              $scope.data.conformity.title = option;
+              retur;
+            }
+          }
+        }
+      });
+
+  }]);
 
 
 }());

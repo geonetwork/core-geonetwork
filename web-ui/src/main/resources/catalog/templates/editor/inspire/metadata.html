@@ -4,6 +4,7 @@
 
     <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
          id="pleaseWaitDialog" data-backdrop="static" data-keyboard="false"
+         style="z-index:99999"
          aria-labelledby="pleaseWaitDialog" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -214,14 +215,13 @@
                  data-languages="data.otherLanguages"
                  data-field="data.identification.title"/>
 
-            <div data-inspire-multilingual-text
-                 validation-class="{{validationErrorClass}}"
-                 data-ng-show="data.identification.type == 'data'"
-                 data-title="citationIdentifier"
-                 data-rows="1"
-                 data-main-lang="data.language"
-                 data-languages="data.otherLanguages"
-                 data-field="data.identification.citationIdentifier"/>
+            <div class="form-group">
+                <label for="citationIdentifier" class="col-xs-3 control-label" ><span data-translate="">citationIdentifier</span>: </label>
+                <div class="col-xs-9" data-ng-class="validationClassString(data.identification.citationIdentifier)">
+                    <input id="citationIdentifier" class="form-control" ng-model="data.identification.citationIdentifier">
+                    </input>
+                </div>
+            </div>
 
             <div data-inspire-multilingual-text
                  validation-class="{{validationErrorClass}}"
@@ -317,6 +317,7 @@
         </fieldset>
 
         <div data-ng-include="base + '/templates/editor/inspire/constraints.html'" />
+        <div data-ng-include="base + '/templates/editor/inspire/conformity.html'" />
         <!---------------------------   End Identification Section  ----------------------------------------------------------->
     </form>
 </div>

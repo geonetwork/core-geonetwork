@@ -39,7 +39,7 @@
             </sch:let>
             <sch:let name="langCode" value="normalize-space($langCodeMap//*[name() = $lang])" />
 
-            <sch:let name="specification_title" value="*/gmd:specification/*/gmd:title//text()[(string-length(.) > 0) and (../name() = 'gco:CharacterString' or ../@locale = $langCode)]" />
+            <sch:let name="specification_title" value="*/gmd:specification/*/gmd:title/gco:CharacterString/text()" />
             <sch:let name="has_specification_title" value="$specification_title" />
 
             <sch:let name="specification_date" value="*/gmd:specification/*/gmd:date/*/gmd:date/*/text()[string-length(.) > 0]"/>
@@ -100,6 +100,24 @@
             <sch:report test="$degree">
                 <sch:value-of select="$loc/strings/report.M44.degree/div"/>
                 <sch:value-of select="$degree"/>
+            </sch:report>
+        </sch:rule>
+    </sch:pattern>
+
+    <!-- Make a non blocker conformity check operation - no assertion here -->
+    <sch:pattern>
+        <sch:title>$loc/strings/dataquality</sch:title>
+        <!-- Check specification names and status -->
+        <sch:rule context="/">
+
+            <sch:let name="dataQuality" value="//gmd:dataQualityInfo/*/gmd:report/*/gmd:result"/>
+            <sch:assert test="count($dataQuality) > 0">
+                <sch:value-of select="$loc/strings/assert.M44.dataQualityExpected/div"/>
+            </sch:assert>
+
+            <sch:report test="count($dataQuality) > 0">
+                <sch:value-of select="$loc/strings/report.M44.dataQualityExpected/div"/>
+                <sch:value-of select="count($dataQuality)"/>
             </sch:report>
         </sch:rule>
     </sch:pattern>

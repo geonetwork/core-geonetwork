@@ -1,0 +1,78 @@
+{"characterSet": "utf-8", "hierarchyLevelName": "", "constraints": {
+  "generic": [],
+  "legal": [
+    {
+      "accessConstraints": [""],
+      "useConstraints": ["copyright"],
+      "otherConstraints": [],
+      "legislationConstraints": []
+    }
+  ],
+  "security": []
+}, "otherLanguages": ["ger", "fre", "ita", "eng", "roh"], "hierarchyLevel": "dataset", "contact": [
+  {
+    "id": "",
+    "organization": {
+      "ger": "asdfasf",
+      "fre": "asdfasdf",
+      "ita": "asfasdf",
+      "eng": "asdfasdf",
+      "roh": "asfsadf"
+    },
+    "email": "asdfasfasfdsa@asdfasdf.dfd",
+    "name": "dfsa",
+    "role": "editor",
+    "surname": "asdfa",
+    "validated": false
+  }
+], "identification": {
+  "extents": [
+    {
+      "description": {},
+      "geom": ""
+    }
+  ],
+  "abstract": {},
+  "title": {},
+  "pointOfContact": [
+    {
+      "id": "",
+      "organization": {},
+      "email": "",
+      "name": "",
+      "role": "",
+      "surname": "",
+      "validated": false
+    }
+  ],
+  "citationIdentifier": {},
+  "descriptiveKeywords": [
+    {
+      "words": {},
+      "code": ""
+    }
+  ],
+  "topicCategory": [""],
+  "language": "",
+  "serviceType": "",
+  "date": {
+    "dateTagName": "",
+    "dateType": "",
+    "date": ""
+  },
+  "type": "data"
+}, "language": "ger", "conformity": {
+  "title": {},
+  "lineage": {
+    "statement": {},
+    "ref": ""
+  },
+  "conformanceResultRef": "",
+  "explanation": "",
+  "date": {
+    "dateTagName": "",
+    "dateType": "",
+    "date": ""
+  },
+  "pass": ""
+}}

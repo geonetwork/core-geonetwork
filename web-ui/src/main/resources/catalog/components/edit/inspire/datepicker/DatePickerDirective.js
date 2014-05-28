@@ -122,6 +122,8 @@
               scope.dateTime = scope.date;
             }
             scope.value = scope.dateTime;
+
+            scope.dateObj.date = scope.dateTime;
           };
           scope.$watch('dateObj', function(){
             processValue();

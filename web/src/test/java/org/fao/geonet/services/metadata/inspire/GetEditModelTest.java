@@ -4,6 +4,8 @@ import com.google.common.io.Files;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.EditLib;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.AjaxEditUtils;
@@ -49,12 +51,14 @@ public class GetEditModelTest {
         final JSONObject inspireModel = new JSONObject(inspireModelText);
 
         JSONObject expectedJson = new JSONObject(loadTestJson());
+        final Iterator keys = expectedJson.keys();
         expectedJson.remove("roleOptions");
         expectedJson.remove("dateTypeOptions");
         expectedJson.remove("hierarchyLevelOptions");
         expectedJson.remove("topicCategoryOptions");
         expectedJson.remove("constraintOptions");
         expectedJson.remove("serviceTypeOptions");
+        expectedJson.remove("scopeCodeOptions");
 
         assertEqualJsonObjects("<root>", inspireModel, expectedJson);
     }
@@ -87,16 +91,16 @@ public class GetEditModelTest {
         JSONObject identification = inspireModel.getJSONObject(Save.JSON_IDENTIFICATION);
 
         assertEquals("data", identification.getString(Save.JSON_IDENTIFICATION_TYPE));
-        assertTranslations(identification, Save.JSON_IDENTIFICATION_TITLE,
+        assertTranslations(identification, Save.JSON_TITLE,
                 read("ger", "Inspire Test August 2013 v8 mit Vertriebsinfo/Qualität"),
                 read("fre", "Test INSPIRE aout 2013 v8 avec Infos distribution et qualité"));
 
-        JSONObject dateJSON = identification.getJSONObject(Save.JSON_IDENTIFICATION_DATE);
-        assertEquals("2012-08-23", dateJSON.getString(Save.JSON_IDENTIFICATION_DATE));
-        assertEquals("gco:Date", dateJSON.getString(Save.JSON_IDENTIFICATION_DATE_TAG_NAME));
-        assertEquals("creation", dateJSON.getString(Save.JSON_IDENTIFICATION_DATE_TYPE));
+        JSONObject dateJSON = identification.getJSONObject(Save.JSON_DATE);
+        assertEquals("2012-08-23", dateJSON.getString(Save.JSON_DATE));
+        assertEquals("gco:Date", dateJSON.getString(Save.JSON_DATE_TAG_NAME));
+        assertEquals("creation", dateJSON.getString(Save.JSON_DATE_TYPE));
 
-        assertTranslations(identification, Save.JSON_IDENTIFICATION_IDENTIFIER, read("ger", "INSPIRE Nr. 123"));
+        assertEquals("INSPIRE Nr. 123", identification.getString(Save.JSON_IDENTIFICATION_IDENTIFIER));
 
         assertEquals("ger", identification.getString(Save.JSON_LANGUAGE));
 
@@ -162,6 +166,27 @@ public class GetEditModelTest {
         assertEquals("258", securityConstraint.getString(Params.REF));
         assertJsonObjectHasProperties(securityConstraint.getJSONArray(Save.JSON_CONSTRAINTS_USE_LIMITATIONS).getJSONObject(0),
                 Pair.read("ger", "test security constraints for INSPIRE"));
+
+        JSONObject conformity = inspireModel.getJSONObject(Save.JSON_CONFORMITY);
+        assertTranslations(conformity, Save.JSON_TITLE,
+                read("ger", "VERORDNUNG (EG) Nr. 1089/2010 DER KOMMISSION vom 23. November 2010 zur Durchführung " +
+                            "der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität " +
+                            "von Geodatensätzen und -diensten"));
+        assertEquals("358", conformity.getString(Save.JSON_CONFORMITY_RESULT_REF));
+
+        assertEquals("dataset", conformity.getString(Save.JSON_CONFORMITY_SCOPE_CODE));
+
+        assertEquals("false", conformity.getString(Save.JSON_CONFORMITY_PASS));
+        assertEquals("INSPIRE Implementing rules", conformity.getString(Save.JSON_CONFORMITY_EXPLANATION));
+        final JSONObject dateJson = conformity.getJSONObject(Save.JSON_DATE);
+        assertEquals("2010-12-08", dateJson.getString(Save.JSON_DATE));
+        assertEquals("gco:Date", dateJson.getString(Save.JSON_DATE_TAG_NAME));
+        assertEquals("publication", dateJson.getString(Save.JSON_DATE_TYPE));
+        final JSONObject conformityJSONObject = conformity.getJSONObject(Save.JSON_CONFORMITY_LINEAGE);
+        assertEquals("376", conformityJSONObject.getString(Params.REF));
+        assertTranslations(conformityJSONObject, Save.JSON_CONFORMITY_LINEAGE_STATEMENT,
+                read("ger", "INSPIRE Testdaten"));
+
     }
 
     @Test
@@ -192,16 +217,16 @@ public class GetEditModelTest {
 
         assertEquals("service", identification.getString(Save.JSON_IDENTIFICATION_TYPE));
         assertEquals("view", identification.getString(Save.JSON_IDENTIFICATION_SERVICETYPE));
-        assertTranslations(identification, Save.JSON_IDENTIFICATION_TITLE,
+        assertTranslations(identification, Save.JSON_TITLE,
                 read("ger", "Suchdienst auf www.geocat.ch (CSW 2.0.2)"),
                 read("eng", "Search Service for www.geocat.ch (CSW 2.0.2)"),
                 read("fre", "Service de recherche sur www.geocat.ch (CSW 2.0.2)"));
-        JSONObject dateJSON = identification.getJSONObject(Save.JSON_IDENTIFICATION_DATE);
-        assertEquals("2009-12-01", dateJSON.getString(Save.JSON_IDENTIFICATION_DATE));
-        assertEquals("gco:Date", dateJSON.getString(Save.JSON_IDENTIFICATION_DATE_TAG_NAME));
-        assertEquals("creation", dateJSON.getString(Save.JSON_IDENTIFICATION_DATE_TYPE));
+        JSONObject dateJSON = identification.getJSONObject(Save.JSON_DATE);
+        assertEquals("2009-12-01", dateJSON.getString(Save.JSON_DATE));
+        assertEquals("gco:Date", dateJSON.getString(Save.JSON_DATE_TAG_NAME));
+        assertEquals("creation", dateJSON.getString(Save.JSON_DATE_TYPE));
 
-        assertTranslations(identification, Save.JSON_IDENTIFICATION_IDENTIFIER);
+        assertEquals("", identification.getString(Save.JSON_IDENTIFICATION_IDENTIFIER));
 
         assertEquals("", identification.getString(Save.JSON_LANGUAGE));
 
@@ -253,6 +278,29 @@ public class GetEditModelTest {
 
         JSONArray securityConstraints = inspireModel.getJSONObject(Save.JSON_CONSTRAINTS).getJSONArray(Save.JSON_CONSTRAINTS_SECURITY);
         assertEquals(0, securityConstraints.length());
+
+
+        JSONObject conformity = inspireModel.getJSONObject(Save.JSON_CONFORMITY);
+
+        assertEquals("collectionHardware", conformity.getString(Save.JSON_CONFORMITY_SCOPE_CODE));
+        assertTranslations(conformity, Save.JSON_CONFORMITY_SCOPE_CODE_DESCRIPTION, read("fre", "description"));
+
+        assertTranslations(conformity, Save.JSON_TITLE,
+                read("fre", "règlement (ue) n o 1089/2010 de la commission du 23 novembre 2010 portant modalités " +
+                            "d'application de la directive 2007/2/ce du parlement européen et du conseil en ce qui concerne" +
+                            " l'interopérabilité des séries et des services de données géographiques"));
+        assertEquals("529", conformity.getString(Save.JSON_CONFORMITY_RESULT_REF));
+        assertEquals("false", conformity.getString(Save.JSON_CONFORMITY_PASS));
+        assertEquals("INSPIRE Implementing rules", conformity.getString(Save.JSON_CONFORMITY_EXPLANATION));
+        final JSONObject dateJson = conformity.getJSONObject(Save.JSON_DATE);
+        assertEquals("2010-12-08", dateJson.getString(Save.JSON_DATE));
+        assertEquals("gco:Date", dateJson.getString(Save.JSON_DATE_TAG_NAME));
+        assertEquals("publication", dateJson.getString(Save.JSON_DATE_TYPE));
+        final JSONObject conformityJSONObject = conformity.getJSONObject(Save.JSON_CONFORMITY_LINEAGE);
+        assertEquals("547", conformityJSONObject.getString(Params.REF));
+        assertTranslations(conformityJSONObject, Save.JSON_CONFORMITY_LINEAGE_STATEMENT,
+                read("ger", "INSPIRE Testdaten"), read("fre", "INSPIRE Testdaten"));
+
     }
 
     private void assertJSONArray(JSONArray jsonArray, String... langs) throws JSONException {
@@ -348,6 +396,11 @@ public class GetEditModelTest {
 
         @Override
         protected Element getMetadata(Element params, ServiceContext context, AjaxEditUtils ajaxEditUtils) throws Exception {
+            EditLib lib = new EditLib(Mockito.mock(SchemaManager.class));
+
+            lib.removeEditingInfo(testMetadata);
+            lib.enumerateTree(testMetadata);
+
             return testMetadata;
         }
 

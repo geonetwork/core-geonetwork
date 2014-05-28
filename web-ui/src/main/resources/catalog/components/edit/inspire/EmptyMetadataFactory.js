@@ -16,6 +16,7 @@
           "topicCategoryOptions": [],
           "constraintOptions": [],
           "serviceTypeOptions": [],
+          "scopeCodeOptions": [],
           "metadataTypeOptions": ['data', 'service'],
 
           "language": "",
@@ -40,7 +41,7 @@
               "dateTagName": '',
               "dateType": ''
             },
-            "citationIdentifier": {},
+            "citationIdentifier": '',
             "language": '',
             "abstract": {},
             "pointOfContact":  [{
@@ -65,8 +66,22 @@
             "generic": [],
             "security": []
           },
-          "dataquality": {
-
+          "conformity": {
+            "conformanceResultRef": '',
+            scopeCode: '',
+            "scopeCodeDescription": {},
+            "title": {},
+            "date": {
+              "date": '',
+              "dateTagName": '',
+              "dateType": ''
+            },
+            "pass": "",
+            "explanation": "",
+            "lineage": {
+              "ref": "",
+              "statement" : {}
+            }
           }
         };
         // END TEST DATA

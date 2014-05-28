@@ -40,6 +40,7 @@ class SaveServiceTestImpl extends Save {
     Map<String, Element> sharedObjects = Maps.newHashMap();
     private boolean saved = false;
     private Element savedMetadata;
+    private boolean enumerateOnGetMetadata = true;
 
     public SaveServiceTestImpl(Element testMetadata) throws IOException, JDOMException {
         this.testMetadata = testMetadata;
@@ -224,8 +225,10 @@ class SaveServiceTestImpl extends Save {
 
     @Override
     protected Element getMetadata(ServiceContext context, EditLib lib, String id, AjaxEditUtils ajaxEditUtils) throws Exception {
-        lib.removeEditingInfo(testMetadata);
-        lib.enumerateTree(testMetadata);
+        if (this.enumerateOnGetMetadata) {
+            lib.removeEditingInfo(testMetadata);
+            lib.enumerateTree(testMetadata);
+        }
         return testMetadata;
     }
 
@@ -259,5 +262,13 @@ class SaveServiceTestImpl extends Save {
 
     public void addXLink(String xlinkHref, Element element) {
         this.sharedObjects.put(xlinkHref, element);
+    }
+
+    public void setEnumerateOnGetMetadata(boolean enumerateOnGetMetadata) {
+        this.enumerateOnGetMetadata = enumerateOnGetMetadata;
+    }
+
+    public boolean isEnumerateOnGetMetadata() {
+        return enumerateOnGetMetadata;
     }
 }

@@ -15,7 +15,8 @@
                                     <table class="table table-condensed">
                                         <tr data-ng-repeat="accessConstraint in legal.accessConstraints track by $index"
                                             data-ng-controller="InspireAccessConstraintController">
-                                            <td data-ng-class="'no-border-top'">
+                                            <td class="'no-border-top'"
+                                                data-ng-class="validationClassString(accessConstraint)">
                                                 <select class="form-control" data-ng-model="legal.accessConstraints[$index]"
                                                         data-ng-options="opt.name as opt.title for opt in data.constraintOptions">
                                                 </select>
@@ -38,7 +39,8 @@
                                 <div class="table-responsive col-xs-9">
                                     <table class="table table-condensed">
                                         <tr data-ng-repeat="useConstraint in legal.useConstraints track by $index">
-                                            <td data-ng-class="'no-border-top'">
+                                            <td class="'no-border-top'"
+                                                data-ng-class="validationClassString(useConstraint)">
                                                 <select class="form-control" data-ng-model="legal.useConstraints[$index]"
                                                         data-ng-options="opt.name as opt.title for opt in data.constraintOptions">
                                                 </select>

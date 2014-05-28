@@ -27,6 +27,7 @@ import org.fao.geonet.kernel.schema.MetadataType;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.AjaxEditUtils;
+import org.fao.geonet.util.ISODate;
 import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -43,6 +44,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.annotation.Nullable;
 
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GEONET;
@@ -82,8 +85,8 @@ public class Save implements Service {
     static final String JSON_IDENTIFICATION = "identification";
     static final String JSON_IDENTIFICATION_TYPE = "type";
     static final String JSON_CONTACT_ORG_NAME = "organization";
-    static final String JSON_IDENTIFICATION_DATE = "date";
-    static final String JSON_IDENTIFICATION_DATE_TYPE = "dateType";
+    static final String JSON_DATE = "date";
+    static final String JSON_DATE_TYPE = "dateType";
     static final String JSON_IDENTIFICATION_IDENTIFIER = "citationIdentifier";
     static final String JSON_IDENTIFICATION_POINT_OF_CONTACT = "pointOfContact";
     static final String JSON_IDENTIFICATION_TYPE_DATA_VALUE = "data";
@@ -94,8 +97,8 @@ public class Save implements Service {
     static final String JSON_CONSTRAINTS_GENERIC = "generic";
     static final String JSON_CONSTRAINTS_SECURITY = "security";
     static final String JSON_CHARACTER_SET = "characterSet";
-    public static final String JSON_IDENTIFICATION_TITLE = "title";
-    public static final String JSON_IDENTIFICATION_DATE_TAG_NAME = "dateTagName";
+    public static final String JSON_TITLE = "title";
+    public static final String JSON_DATE_TAG_NAME = "dateTagName";
     public static final String JSON_IDENTIFICATION_KEYWORDS = "descriptiveKeywords";
     public static final String JSON_IDENTIFICATION_KEYWORD_CODE = "code";
     public static final String JSON_IDENTIFICATION_KEYWORD_WORD = "words";
@@ -107,7 +110,15 @@ public class Save implements Service {
     public static final String JSON_IDENTIFICATION_EXTENT_GEOM = "geom";
     public static final String JSON_IDENTIFICATION_EXTENT_DESCRIPTION = "description";
     static final String JSON_CONSTRAINTS_LEGISLATION_CONSTRAINTS = "legislationConstraints";
-    public static final String JSON_IDENTIFICATION_SERVICETYPE = "serviceType";
+    static final String JSON_IDENTIFICATION_SERVICETYPE = "serviceType";
+    static final String JSON_CONFORMITY = "conformity";
+    static final String JSON_CONFORMITY_PASS = "pass";
+    static final String JSON_CONFORMITY_RESULT_REF = "conformanceResultRef";
+    public static final String JSON_CONFORMITY_EXPLANATION = "explanation";
+    public static final String JSON_CONFORMITY_LINEAGE = "lineage";
+    public static final String JSON_CONFORMITY_LINEAGE_STATEMENT = "statement";
+    public static final String JSON_CONFORMITY_SCOPE_CODE = "scopeCode";
+    public static final String JSON_CONFORMITY_SCOPE_CODE_DESCRIPTION = "scopeCodeDescription";
 
     @Override
     public void init(String appPath, ServiceConfig params) throws Exception {
@@ -130,10 +141,12 @@ public class Save implements Service {
 
         final JSONObject jsonObject = new JSONObject(data);
 
-        updateMetadata(context, editLib, metadata, metadataSchema, jsonObject);
+        String mainLang = updateMetadata(context, editLib, metadata, metadataSchema, jsonObject);
 
-        final Element identificationInfo = updateIdentificationInfo(context, editLib, metadata, metadataSchema, jsonObject);
-        updateConstraints(editLib, metadataSchema, identificationInfo, jsonObject);
+        final Element identificationInfo = updateIdentificationInfo(mainLang, context, editLib, metadata, metadataSchema, jsonObject);
+        updateConstraints(editLib, metadataSchema, identificationInfo, jsonObject, mainLang);
+
+        updateConformity(editLib, metadata, metadataSchema, jsonObject, mainLang);
 
         Element metadataToSave = (Element) metadata.clone();
         editLib.removeEditingInfo(metadataToSave);
@@ -143,7 +156,7 @@ public class Save implements Service {
     }
 
     private void updateConstraints(EditLib editLib, MetadataSchema metadataSchema, Element identificationInfo,
-                                   JSONObject jsonObject) throws JSONException, JDOMException {
+                                   JSONObject jsonObject, String mainLang) throws JSONException, JDOMException {
         JSONObject constraintsJson = jsonObject.optJSONObject(JSON_CONSTRAINTS);
         if (constraintsJson == null) {
             return;
@@ -198,7 +211,7 @@ public class Save implements Service {
             }
 
 
-            updateMultipleTranslatedInstances(editLib, metadataSchema, legalConstraintEl, "gmd:useLimitation", constraint,
+            updateMultipleTranslatedInstances(mainLang, editLib, metadataSchema, legalConstraintEl, "gmd:useLimitation", constraint,
                     "useLimitation", JSON_CONSTRAINTS_USE_LIMITATIONS);
 
             updateConstraintCodeList(editLib, metadataSchema, legalConstraintEl, "gmd:accessConstraints", constraint,
@@ -206,9 +219,9 @@ public class Save implements Service {
             updateConstraintCodeList(editLib, metadataSchema, legalConstraintEl, "gmd:useConstraints", constraint,
                     JSON_CONSTRAINTS_USE_CONSTRAINTS);
 
-            updateMultipleTranslatedInstances(editLib, metadataSchema, legalConstraintEl, "gmd:otherConstraints", constraint,
+            updateMultipleTranslatedInstances(mainLang, editLib, metadataSchema, legalConstraintEl, "gmd:otherConstraints", constraint,
                     JSON_CONSTRAINTS_OTHER_CONSTRAINTS, JSON_CONSTRAINTS_OTHER_CONSTRAINTS);
-            updateMultipleTranslatedInstances(editLib, metadataSchema, legalConstraintEl,
+            updateMultipleTranslatedInstances(mainLang, editLib, metadataSchema, legalConstraintEl,
                     "che:legislationConstraints/che:CHE_MD_Legislation/che:title/gmd:CI_Citation/gmd:title", constraint,
                     "title", JSON_CONSTRAINTS_LEGISLATION_CONSTRAINTS);
 
@@ -230,7 +243,7 @@ public class Save implements Service {
 
     }
 
-    private void updateMultipleTranslatedInstances(EditLib editLib, MetadataSchema metadataSchema, Element metadata, String xpath,
+    private void updateMultipleTranslatedInstances(String mainLang, EditLib editLib, MetadataSchema metadataSchema, Element metadata, String xpath,
                                                    JSONObject constraint, String tagName, String jsonKey)
             throws JSONException, JDOMException {
         final JSONArray useLimitations = constraint.optJSONArray(jsonKey);
@@ -243,7 +256,7 @@ public class Save implements Service {
         Element parentElement = result.two();
 
         for (int j = 0; j < useLimitations.length(); j++) {
-            Element translation = createTranslatedInstance(useLimitations.getJSONObject(j), tagName, GMD);
+            Element translation = createTranslatedInstance(mainLang, useLimitations.getJSONObject(j), tagName, GMD);
             if (addIndex == -1) {
                 addElementFromXPath(editLib, metadataSchema, metadata, xpath, translation);
                 addIndex = translation.getParentElement().indexOf(translation);
@@ -327,19 +340,98 @@ public class Save implements Service {
         }
     }
 
-    protected void updateMetadata(ServiceContext context, EditLib editLib, Element metadata, MetadataSchema metadataSchema, JSONObject
+    protected String updateMetadata(ServiceContext context, EditLib editLib, Element metadata, MetadataSchema metadataSchema, JSONObject
             jsonObject) throws Exception {
-        updateCharString(editLib, metadata, metadataSchema, "gmd:language", jsonObject.optString(JSON_LANGUAGE));
+        final String mainLang = jsonObject.optString(JSON_LANGUAGE);
+        updateCharString(editLib, metadata, metadataSchema, "gmd:language", mainLang);
         updateCharString(editLib, metadata, metadataSchema, "gmd:hierarchyLevelName", jsonObject.optString(JSON_HIERARCHY_LEVEL_NAME));
 
+        updateDateStamp(editLib, metadata, metadataSchema);
         updateCharset(editLib, metadata, metadataSchema, jsonObject);
         updateHierarchyLevel(editLib, metadata, metadataSchema, jsonObject);
-        updateContact(editLib, metadataSchema, metadata, "gmd:contact", jsonObject.optJSONArray("contact"), context);
+        updateContact(mainLang, editLib, metadataSchema, metadata, "gmd:contact", jsonObject.optJSONArray("contact"), context);
+
         assert editLib.addElementOrFragmentFromXpath(metadata, metadataSchema, "gmd:dateStamp/gco:DateTime", new AddElemValue("2014-05-20T07:35:05"), true);
         updateOtherLanguage(editLib, metadata, metadataSchema, jsonObject);
+
+        return mainLang;
     }
 
-    protected Element updateIdentificationInfo(ServiceContext context, EditLib editLib, Element metadata,
+    private void updateDateStamp(EditLib editLib, Element metadata, MetadataSchema metadataSchema) {
+        Element dateStamp = new Element("dateStamp", GMD).addContent(
+                new Element("DateTime").setText(new ISODate().toString())
+        );
+        addElementFromXPath(editLib, metadataSchema, metadata, "gmd:dateStamp", dateStamp);
+    }
+
+    private void updateConformity(EditLib editLib, Element metadata, MetadataSchema metadataSchema, JSONObject jsonObject, String mainLang) throws
+            JDOMException, JSONException {
+        JSONObject conformityJson = jsonObject.optJSONObject(JSON_CONFORMITY);
+        if (conformityJson == null) {
+            return;
+        }
+
+        String conformanceResultRef = conformityJson.optString(JSON_CONFORMITY_RESULT_REF);
+        Element conformanceResult = null;
+        if (!Strings.isNullOrEmpty(conformanceResultRef)) {
+            conformanceResult = Xml.selectElement(metadata, "gmd:report//gmd:DQ_ConformanceResult[geonet:element/@ref = '" +
+                                                            conformanceResultRef + "']");
+        }
+
+        if (conformanceResult == null) {
+            conformanceResult = new Element("DQ_ConformanceResult", GMD);
+            addElementFromXPath(editLib, metadataSchema, metadata,
+                    "gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult", conformanceResult);
+        }
+
+        final Element title = createTranslatedInstance(mainLang, conformityJson.getJSONObject(JSON_TITLE), JSON_TITLE, GMD);
+        addElementFromXPath(editLib, metadataSchema, conformanceResult,
+                "gmd:specification/gmd:CI_Citation/gmd:title", title);
+
+        Element citationEl = title.getParentElement();
+        updateDate(editLib, metadataSchema, citationEl, "gmd:date", conformityJson);
+
+        Element scopeCode = new Element("MD_ScopeCode", GMD).
+                setAttribute("codeListValue", conformityJson.optString(JSON_CONFORMITY_SCOPE_CODE)).
+                setAttribute("codeList", "http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode");
+
+        addElementFromXPath(editLib, metadataSchema, metadata,
+                "gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode", scopeCode);
+
+        updateTranslatedInstance(mainLang, editLib, metadataSchema, scopeCode.getParentElement().getParentElement(),
+                conformityJson.optJSONObject(JSON_CONFORMITY_SCOPE_CODE_DESCRIPTION),
+                "gmd:levelDescription/gmd:MD_ScopeDescription/gmd:attributeInstances", "attributeInstances", GMD);
+
+        Element pass = new Element(JSON_CONFORMITY_PASS, GMD).addContent(
+                new Element("Boolean", GCO).setText(conformityJson.optString(JSON_CONFORMITY_PASS, ""))
+        );
+        addElementFromXPath(editLib, metadataSchema, conformanceResult,
+                "gmd:pass", pass);
+
+
+        Element explanation = new Element("explanation", GMD).addContent(
+                new Element("CharacterString", GCO).setText(conformityJson.optString(JSON_CONFORMITY_EXPLANATION, ""))
+        );
+        addElementFromXPath(editLib, metadataSchema, conformanceResult,
+                "gmd:explanation", explanation);
+
+        JSONObject lineageJSON = conformityJson.getJSONObject(JSON_CONFORMITY_LINEAGE);
+        String lineageRef = lineageJSON.optString(Params.REF);
+
+        Element lineageEl = Xml.selectElement(metadata,
+                "gmd:dataQualityInfo//gmd:lineage/gmd:LI_Lineage[geonet:element/@ref = '" + lineageRef + "']", Save.NS);
+
+        if (lineageEl == null) {
+            lineageEl = new Element("LI_Lineage", GMD);
+            addElementFromXPath(editLib, metadataSchema, metadata,
+                    "gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage", lineageEl);
+        }
+
+        updateTranslatedInstance(mainLang, editLib, metadataSchema, lineageEl, lineageJSON.getJSONObject(JSON_CONFORMITY_LINEAGE_STATEMENT),
+                "gmd:statement", "statement", GMD);
+    }
+
+    protected Element updateIdentificationInfo(String mainLang, ServiceContext context, EditLib editLib, Element metadata,
                                                MetadataSchema metadataSchema, JSONObject jsonObject) throws Exception {
         JSONObject identificationJson = jsonObject.optJSONObject(JSON_IDENTIFICATION);
         if (identificationJson == null) {
@@ -347,19 +439,19 @@ public class Save implements Service {
         }
         Element identification = getIdentification(editLib, metadata, metadataSchema, identificationJson);
 
-        updateTranslatedInstance(editLib, metadataSchema, identification, identificationJson.optJSONObject("title"),
-                "gmd:citation/gmd:CI_Citation/gmd:title", JSON_IDENTIFICATION_TITLE, GMD);
+        updateTranslatedInstance(mainLang, editLib, metadataSchema, identification, identificationJson.optJSONObject("title"),
+                "gmd:citation/gmd:CI_Citation/gmd:title", JSON_TITLE, GMD);
 
-        updateDate(editLib, metadataSchema, identification, identificationJson);
-        JSONObject citationIdentifier = identificationJson.optJSONObject(JSON_IDENTIFICATION_IDENTIFIER);
+        updateDate(editLib, metadataSchema, identification, "gmd:citation/gmd:CI_Citation/gmd:date", identificationJson);
 
-        updateTranslatedInstance(editLib, metadataSchema, identification, citationIdentifier,
-                "gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code", JSON_IDENTIFICATION_KEYWORD_CODE, GMD);
+        String citationIdentifier = identificationJson.optString(JSON_IDENTIFICATION_IDENTIFIER, "");
+        updateCharString(editLib, identification, metadataSchema,
+                "gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code", citationIdentifier);
 
-        updateTranslatedInstance(editLib, metadataSchema, identification, identificationJson.optJSONObject(JSON_IDENTIFICATION_ABSTRACT),
+        updateTranslatedInstance(mainLang, editLib, metadataSchema, identification, identificationJson.optJSONObject(JSON_IDENTIFICATION_ABSTRACT),
                 "gmd:abstract", "abstract", GMD);
 
-        updateContact(editLib, metadataSchema, identification, "gmd:pointOfContact", identificationJson.optJSONArray
+        updateContact(mainLang, editLib, metadataSchema, identification, "gmd:pointOfContact", identificationJson.optJSONArray
                 (JSON_IDENTIFICATION_POINT_OF_CONTACT), context);
 
         updateCharString(editLib, identification, metadataSchema, "gmd:language", identificationJson.optString(JSON_LANGUAGE));
@@ -422,12 +514,15 @@ public class Save implements Service {
         Set<String> hrefsToKeep = Sets.newHashSet();
         Map<String, Element> hrefsToAdd = Maps.newLinkedHashMap();
 
+        final String identType = identificationJson.getString(JSON_IDENTIFICATION_TYPE);
         for (int i = 0; i < jsonObjects.length(); i++) {
             JSONObject jsonObject = jsonObjects.getJSONObject(i);
 
-            final String href = hrefBuilder.createHref(jsonObject, identification, identificationJson.getString(JSON_IDENTIFICATION_TYPE));
-            hrefsToKeep.add(href);
-            hrefsToAdd.put(href, null);
+            final String href = hrefBuilder.createHref(jsonObject, identification, identType);
+            if (href != null) {
+                hrefsToKeep.add(href);
+                hrefsToAdd.put(href, null);
+            }
         }
 
         @SuppressWarnings("unchecked")
@@ -473,14 +568,14 @@ public class Save implements Service {
         identification.addContent(addIndex, hrefsToAdd.values());
     }
 
-    private void updateDate(EditLib editLib, MetadataSchema metadataSchema, Element identification, JSONObject identificationJson) throws JSONException {
-        final JSONObject dateJSONObj = identificationJson.optJSONObject(JSON_IDENTIFICATION_DATE);
+    private void updateDate(EditLib editLib, MetadataSchema metadataSchema, Element metadata, String xpath, JSONObject identificationJson) throws JSONException {
+        final JSONObject dateJSONObj = identificationJson.optJSONObject(JSON_DATE);
         if (dateJSONObj == null) {
             return;
         }
 
-        final String jsonDate = dateJSONObj.optString(JSON_IDENTIFICATION_DATE);
-        final String jsonDateType = dateJSONObj.optString(JSON_IDENTIFICATION_DATE_TYPE, "creation");
+        final String jsonDate = dateJSONObj.optString(JSON_DATE);
+        final String jsonDateType = dateJSONObj.optString(JSON_DATE_TYPE, "creation");
 
         if (jsonDate != null) {
             final Element dateEl;
@@ -500,7 +595,7 @@ public class Save implements Service {
                             )
                     ))
             );
-            addElementFromXPath(editLib, metadataSchema, identification, "gmd:citation/gmd:CI_Citation/gmd:date", date);
+            addElementFromXPath(editLib, metadataSchema, metadata, xpath, date);
         }
     }
 
@@ -631,7 +726,7 @@ public class Save implements Service {
         }
     }
 
-    private void updateContact(EditLib editLib, MetadataSchema metadataSchema, Element metadata, String xpath,
+    private void updateContact(String mainLang, EditLib editLib, MetadataSchema metadataSchema, Element metadata, String xpath,
                                JSONArray contacts, ServiceContext context) throws Exception {
         if (contacts == null) {
             return;
@@ -684,7 +779,7 @@ public class Save implements Service {
                                 setAttribute(ATT_CODE_LIST, "http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode")
                 );
 
-                updateTranslatedInstance(editLib, metadataSchema, contactEl, contact.getJSONObject(JSON_CONTACT_ORG_NAME),
+                updateTranslatedInstance(mainLang, editLib, metadataSchema, contactEl, contact.getJSONObject(JSON_CONTACT_ORG_NAME),
                         "che:CHE_CI_ResponsibleParty/gmd:organisationName", "organisationName", GMD);
                 addElementFromXPath(editLib, metadataSchema, contactEl, "che:CHE_CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/che:CHE_CI_Address", emailEl);
 
@@ -698,32 +793,42 @@ public class Save implements Service {
         }
     }
 
-    private void updateTranslatedInstance(EditLib editLib, MetadataSchema metadataSchema, Element metadata, JSONObject translationJson,
+    private void updateTranslatedInstance(String mainLang, EditLib editLib, MetadataSchema metadataSchema, Element metadata, JSONObject translationJson,
                                           String xpath, String tagName, Namespace namespace) throws JSONException {
         if (translationJson != null) {
-            Element translatedEl = createTranslatedInstance(translationJson, tagName, namespace);
+            Element translatedEl = createTranslatedInstance(mainLang, translationJson, tagName, namespace);
             addElementFromXPath(editLib, metadataSchema, metadata, xpath, translatedEl);
         }
     }
-    private Element createTranslatedInstance(JSONObject translationJson,
+    private Element createTranslatedInstance(String mainLang, JSONObject translationJson,
                                              String tagName, Namespace namespace) throws JSONException {
         IsoLanguagesMapper instance = getIsoLanguagesMapper();
         List<Element> translations = Lists.newArrayList();
         final Iterator keys = translationJson.keys();
+        String mainTranslation = null;
         while (keys.hasNext()) {
             String threeLetterLangCode = (String) keys.next();
             String translation = translationJson.getString(threeLetterLangCode);
-
-            translations.add(new Element("textGroup", GMD).addContent(
-                    new Element("LocalisedCharacterString", GMD).
-                            setAttribute("locale", "#" + instance.iso639_2_to_iso639_1(threeLetterLangCode).toUpperCase()).
-                            setText(translation)
-            ));
+            if (threeLetterLangCode.equals(mainLang)) {
+                mainTranslation = translation;
+            }
+            translations.add(new Element("textGroup", GMD).
+                    addContent(
+                            new Element("LocalisedCharacterString", GMD).
+                                    setAttribute("locale", "#" + instance.iso639_2_to_iso639_1(threeLetterLangCode).toUpperCase()).
+                                    setText(translation)
+                    ));
 
         }
-        return new Element(tagName, namespace).addContent(
+        final Element element = new Element(tagName, namespace).addContent(
                 new Element("PT_FreeText", GMD).addContent(translations)
         );
+        if (mainLang != null) {
+            element.addContent(0,
+                    new Element("CharacterString", GCO).setText(mainTranslation)
+            );
+        }
+        return element;
     }
 
     @VisibleForTesting
@@ -763,6 +868,7 @@ public class Save implements Service {
     }
 
     private interface HrefBuilder {
+        @Nullable
         public String createHref(JSONObject jsonObject, Element elem, String identType) throws Exception;
     }
 
@@ -779,7 +885,12 @@ public class Save implements Service {
                 thesaurus = "external.theme.inspire-service-taxonomy";
             }
 
-            final String code = URLEncoder.encode(jsonObject.getString("code"), "UTF-8");
+            final String codeString = jsonObject.optString("code");
+            if (Strings.isNullOrEmpty(codeString)) {
+                return null;
+            }
+
+            final String code = URLEncoder.encode(codeString, "UTF-8");
             return String.format(hrefTemplate, thesaurus, code);
         }
     }
@@ -798,7 +909,12 @@ public class Save implements Service {
 
             String hrefTemplate = "local://xml.extent.get?id=%s&amp;wfs=default&amp;typename=gn:%s&amp;format=gmd_complete&amp;extentTypeCode=true";
 
-            final String[] geom = jsonObject.getString("geom").split(":");
+
+            final String geomString = jsonObject.optString("geom");
+            if (Strings.isNullOrEmpty(geomString)) {
+                return null;
+            }
+            final String[] geom = geomString.split(":");
             String id = geom[1];
             String typename = typenameMapping.get(geom[0]);
 
