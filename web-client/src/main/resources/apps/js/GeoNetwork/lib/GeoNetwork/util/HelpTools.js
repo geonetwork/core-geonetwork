@@ -125,14 +125,13 @@ GeoNetwork.util.HelpTools = {
      * 
      */
     get: function (helpId, schema, url, cb) {
-        var info = helpId.split('|'), 
-             requestBody = '<request><element schema="' + schema + 
+    	var info = helpId.split('|');
+    	schema = schema || info[0].split('.')[1] || 'iso19139'; // Fallback to iso19139 if schema undefined
+    	var requestBody = '<request><element schema="' + schema + 
                                 '" name="' + info[1] + 
                                 '" context="' + info[2] + 
                                 '" fullContext="' + info[3] + 
                                 '" isoType="' + info[4] + '" /></request>';
-        schema = schema || info[0].split('.')[1] || 'iso19139'; // Fallback to iso19139 if schema undefined
-
         OpenLayers.Request.POST({
             url: url,
             data: requestBody,
@@ -152,5 +151,46 @@ GeoNetwork.util.HelpTools = {
                 }
             }
         });
+    },    
+    /** Show advanced tooltip **/
+    showtt: function(r) {
+    	if(r == null || r.records == null || r.records.length == 0)
+    		return;
+    	
+    	var data = r.records[0].data;
+    	
+        var tipTpl = new Ext.XTemplate(GeoNetwork.util.HelpTools.Templates.COMPLETE);
+        var msg =  panel.tipTpl.apply(r.records[0].data);
+   	
+    	msg = ['<div class="msg">',
+                   '<div class="x-box-tl"><div class="x-box-tr"><div class="x-box-tc"></div></div></div>',
+                   '<div class="x-box-ml"><div class="x-box-mr"><div class="x-box-mc">', msg, '</div></div></div>',
+                   '<div class="x-box-bl"><div class="x-box-br"><div class="x-box-bc"></div></div></div>',
+                   '</div>'].join('');
+    	
+    	//TODO instead of this, look for the label container
+    	var container = Ext.get("msg-div");
+    	
+    	if(container == null) {
+        	container = Ext.DomHelper.insertFirst(document.body, {id: "msg-div", "class": "msg"}, true);
+    	}
+        	
+    	var  msgCt = Ext.DomHelper.insertFirst(container, {id: "message-container-" + data.id}, true);
+    	msgCt.alignTo(document, 't-t');
+        var m = Ext.DomHelper.append(msgCt, {html:msg}, true);
+        m.slideIn('t').pause(20).ghost("t", {remove:true});
+        
+       var action = new Ext.Action({
+    	    handler: function(){
+                m.remove();
+            },
+            cls: 'xtool',
+            text: 'x',
+            iconCls: 'xtool xtool-close',
+            renderTo: Ext.query("div[class='x-box-mc']", Ext.getDom(m))[0]
+        });
+
+        var button = new Ext.Button(action); 
+        Ext.get(button.id).addClass("close-button");
     }
 };

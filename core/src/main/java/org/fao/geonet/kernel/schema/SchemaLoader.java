@@ -1143,10 +1143,9 @@ public class SchemaLoader
 			List<String> values = hmTypeRestr.get(ae.type);
 			if (values != null){
 				for (String v : values) {
-					ae.alValues.add(v);
+                    ae.alValues.add(v);
 				}
 			}
-			
 			// Load member types entry values
 			List<String> memberTypes = hmMemberTypeRestr.get(ae.type);
 			if (memberTypes != null) {
@@ -1161,9 +1160,10 @@ public class SchemaLoader
 			}
 		}
 
-		
-		for(int k=0; k<ae.alValues.size(); k++)
+
+		for(int k=0; k<ae.alValues.size(); k++) {
 			ma.values.add(ae.alValues.get(k));
+        }
 
 		return ma;
 	}

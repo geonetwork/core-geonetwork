@@ -126,13 +126,11 @@ class AttributeEntry
 	private void handleChildren(ElementInfo ei)
 	{
 		List<?> children = ei.element.getChildren();
-
         for (Object aChildren : children) {
             Element elChild = (Element) aChildren;
             String elName = elChild.getName();
             if (elName.equals("simpleType")) {
                 SimpleTypeEntry ste = new SimpleTypeEntry(elChild, ei.file, ei.targetNS, ei.targetNSPrefix);
-                
                 for (int j = 0; j < ste.alEnum.size(); j++) {
                     alValues.add(ste.alEnum.get(j));
                 }

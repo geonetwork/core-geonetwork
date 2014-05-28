@@ -256,3 +256,188 @@ function buildDuration(ref) {
     $('S' + ref).value + "S";
 }
 
+
+/**********************************************************************
+ * Massive metadata replacemnets
+ **********************************************************************/
+
+function massiveMetadataReplace_test(action) {
+  massiveMetadataReplace_action(action, true);
+}
+
+function massiveMetadataReplace_execute(action) {
+  massiveMetadataReplace_action(action, false);
+}
+
+function massiveMetadataReplace_action(action, test) {
+
+  // Validate that has been defined at least 1 replacement
+  var massiveUpdatesTable = $('massivereplace-updates');
+  if (massiveUpdatesTable.rows.length == 1) {
+    Ext.Msg.show({
+      title: OpenLayers.i18n('massivereplace-title'),
+      msg: OpenLayers.i18n('massivereplace-noreplacements'),
+      buttons: Ext.Msg.OK
+    });
+
+    return false;
+  }
+
+  // Set form to non test mode
+  $('test').value = test;
+
+  // Clean results report
+  $('massivereplace-results-container').innerHTML = "";
+
+  Ext.Msg.show({
+    title: OpenLayers.i18n('massivereplace-title'),
+    msg: (test?OpenLayers.i18n('massivereplace-test'):OpenLayers.i18n('massivereplace-execute')),
+    buttons: Ext.Msg.YESNO,
+    fn: function (id, value) {
+      if (id === 'yes') {
+        Ext.get("MB_loading").show();
+
+        OpenLayers.Request.GET({
+          url: catalogue.services.rootUrl + action + "?" + Ext.Ajax.serializeForm(Ext.getDom('massiveupdateform')),
+          success: function(response){
+            Ext.get('MB_loading').hide();
+            Ext.get('massivereplace-results-container').show();
+            $('massivereplace-results-container').innerHTML = response.responseText;
+          },
+          failure: function(response){
+            Ext.get('MB_loading').hide();
+            Ext.Msg.alert('', response.responseText);
+          }
+        });
+      }
+    }
+  });
+}
+
+
+function massiveMetadataReplace_setDropDown(field, data, method, index) {
+  field.options.length = index == null ? 1 : index;
+
+  Ext.each(data, function(e) {
+      field.options.add(method(e));
+  });
+
+}
+
+function massiveMetadataReplace_updateFields(section) {
+  var mdfieldsSelectBox = $("mdfield");
+
+  var sectionValues;
+
+  if (section == "metadata"){
+    sectionValues = sectionMetadataFields;
+  } else if (section == "dataIdentification"){
+    sectionValues = sectionDataIdentificationFields;
+  } else if (section == "serviceIdentification"){
+    sectionValues = sectionServiceIdentificationFields;
+  } else if (section == "maintenanceInformation"){
+    sectionValues = sectionMaintenanceInformationFields;
+  } else if(section == "contentInformation"){
+    sectionValues = sectionContentInformationFields;
+  } else if(section == "distributionInformation"){
+    sectionValues = sectionDistributionInformationFields;
+  }
+
+  // Empty mdfields list
+  massiveMetadataReplace_setDropDown(mdfieldsSelectBox ,[]);
+
+
+  // Fill mdfields list depending on section selection
+  massiveMetadataReplace_setDropDown(
+    mdfieldsSelectBox,
+    sectionValues.FIELDS,
+    function(e) {
+      var opt =  new Option( e.NAME, e.KEY );
+      if (e.KEY == '---') opt.disabled = 'disabled';
+      return opt;
+    },
+    null
+  );
+}
+
+function massiveMetadataReplace_addRow() {
+
+  if (($('mdsection').value === '') ||
+      ($('mdfield').value === '') ||
+      ($('searchValue').value === '') ||
+      ($('replaceValue').value === '')) {
+
+    Ext.Msg.show({
+      title: OpenLayers.i18n('massivereplace-add-title'),
+      msg: OpenLayers.i18n('massivereplace-add-msg'),
+      buttons: Ext.Msg.OK
+    });
+
+    return;
+  }
+
+  var massiveUpdatesTable = $('massivereplace-updates');
+
+  // Show replacements table
+  Ext.get('massivereplace-updates').show();
+  Ext.get('noReplacements').setVisibilityMode(Ext.Element.DISPLAY);
+  Ext.get('noReplacements').hide();
+
+  // Clean results report
+  $('massivereplace-results-container').innerHTML = "";
+
+  var newDate = new Date;
+  var tmpID = newDate.getTime();
+
+  // insert at second row: first row has column headers
+  var newRow = massiveUpdatesTable.insertRow(massiveUpdatesTable.rows.length);
+
+
+  newRow.setAttribute("id", tmpID+"-row");
+  var nameCell = newRow.insertCell(0);
+  var el = $('mdsection');
+  var text = el.options[el.selectedIndex].innerHTML;
+  var sel= text + "<input type='hidden' name='mdsection-" + tmpID + "' value='" + el.value + "' />";
+
+  nameCell.innerHTML = sel;
+
+  var elementCell = newRow.insertCell(1);
+  var el = $('mdfield');
+  var text = el.options[el.selectedIndex].innerHTML;
+  sel= text + "<input type='hidden' name='mdfield-" + tmpID + "' value='" + el.value + "' />";
+  elementCell.innerHTML=sel;
+
+  var searchCell = newRow.insertCell(2);
+  sel= $('searchValue').value + "<input type='hidden' name='searchValue-" + tmpID + "' value='" + $('searchValue').value + "' />";
+  searchCell.innerHTML=sel;
+
+  var replaceCell = newRow.insertCell(3);
+  sel=$('replaceValue').value + "<input type='hidden' name='replaceValue-" + tmpID + "' value='" + $('replaceValue').value + "' />";
+  replaceCell.innerHTML=sel;
+
+  var removeCell = newRow.insertCell(4);
+  removeCell.style.padding = "5px 0px 0px 0px";
+  var deleteText = "delete";
+  removeCell.innerHTML = "<center><img id='imgdel-" + tmpID + "' src='../../images/map/delete_layer.png' alt='"+deleteText+"' title='"+deleteText+"' onclick='massiveMetadataReplace_removeRow("+tmpID+");' onmouseover='this.style.cursor=\"pointer\";'/></center>";
+
+  // Clear values
+  $('mdfield').value = '';
+  $('searchValue').value = '';
+  $('replaceValue').value = '';
+}
+
+function massiveMetadataReplace_removeRow(id) {
+  var massiveUpdatesTableRow = $(id+"-row");
+  massiveUpdatesTableRow.parentNode.removeChild(massiveUpdatesTableRow);
+
+  // Hide replacements table if no replacements defined
+  var massiveUpdatesTable = $('massivereplace-updates');
+  if (massiveUpdatesTable.rows.length == 1) {
+    Ext.get('noReplacements').show();
+    Ext.get('massivereplace-updates').setVisibilityMode(Ext.Element.DISPLAY);
+    Ext.get('massivereplace-updates').hide();
+  }
+
+  // Clean results report
+  $('massivereplace-results-container').innerHTML = "";
+}
