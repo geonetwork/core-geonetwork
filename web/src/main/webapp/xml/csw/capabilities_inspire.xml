@@ -229,7 +229,7 @@
             <inspire_com:SpatialDataServiceType>discovery</inspire_com:SpatialDataServiceType>
 
             <inspire_com:MandatoryKeyword xsi:type="inspire_com:classificationOfSpatialDataService">
-                <inspire_com:KeywordValue>humanCatalogueViewer</inspire_com:KeywordValue>
+                <inspire_com:KeywordValue>infoCatalogueService</inspire_com:KeywordValue>
             </inspire_com:MandatoryKeyword>
 
             <inspire_com:Keyword xsi:type="inspire_com:inspireTheme_eng">
