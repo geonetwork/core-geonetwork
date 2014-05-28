@@ -1145,7 +1145,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                 var disabledEl = Ext.getDom(id + '_disabled', this.editorMainPanel.dom);
                 
                 if (showTime) {
-                    var dtCal = new Ext.ux.form.DateTime({
+                    var dtCal = new Ext.ux.form.ISODateTime({
                         renderTo: cal.id,
                         name: id,
                         id: id,
@@ -1153,19 +1153,19 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                         width: 250, 
                         disabled: disabledEl.value === 'true',
                         dateFormat: 'Y-m-d',
-                        timeFormat: 'H:i',
-                        hiddenFormat: 'Y-m-d\\TH:i:s',
-                        dtSeparator: 'T'
+												dateAltFormats: 'd/m/Y|d-m-Y|d/m|d-m|Y-m-d|Y|Y-m|Y-m\\TH:i:s|Y\\TH:i:s',
+                        timeFormat: 'H:i'
                     });
                 } else {
-                    var dCal = new Ext.form.DateField({
+                    var dCal = new Ext.ux.form.DateFieldFormats({
                         renderTo: cal,
                         name: id,
                         id: id,
                         width: 160,
                         value: value,
                         disabled: disabledEl.value === 'true',
-                        format: 'Y-m-d'
+                        format: 'Y-m-d',
+												altFormats: 'd/m/Y|d-m-Y|d/m|d-m|Y-m-d|Y|Y-m'
                     });
                 }
                 
