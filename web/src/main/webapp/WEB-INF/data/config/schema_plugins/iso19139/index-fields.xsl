@@ -28,7 +28,7 @@
 
   <xsl:param name="thesauriDir"/>
   <xsl:param name="inspire">false</xsl:param>
-  
+
   <xsl:variable name="inspire-thesaurus" select="if ($inspire!='false') then document(concat('file:///', $thesauriDir, '/external/thesauri/theme/inspire-theme.rdf')) else ''"/>
   <xsl:variable name="inspire-theme" select="if ($inspire!='false') then $inspire-thesaurus//skos:Concept else ''"/>
   
@@ -38,7 +38,16 @@
     of the description of the temporal extent). -->
 	<xsl:variable name="useDateAsTemporalExtent" select="false()"/>
 
-        <!-- ========================================================================================= -->
+  <!-- Define the way keyword and thesaurus are indexed. If false
+  only keyword, thesaurusName and thesaurusType field are created.
+  If true, advanced field are created to make more details query
+  on keyword type and search by thesaurus. Index size is bigger
+  but more detailed facet can be configured based on each thesaurus.
+  -->
+  <xsl:variable name="indexAllKeywordDetails" select="true()"/>
+
+
+  <!-- ========================================================================================= -->
 
 	<xsl:template match="/">
 	    <xsl:variable name="isoLangId">
@@ -220,10 +229,17 @@
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
       <xsl:for-each select="//gmd:MD_Keywords">
-
+        <!-- Index all keywords as text, multilingual text or anchor -->
+        <xsl:variable name="listOfKeywords"
+                      select="gmd:keyword/gco:CharacterString|
+                    gmd:keyword/gmx:Anchor|
+                    gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString"/>
         <xsl:for-each
-            select="gmd:keyword/gco:CharacterString|gmd:keyword/gmx:Anchor|gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
+            select="$listOfKeywords">
           <Field name="keyword" string="{string(.)}" store="true" index="true"/>
+
+          <!-- If INSPIRE is enabled, check if the keyword is one of the 34 themes
+          and index annex, theme and theme in english. -->
           <xsl:if test="$inspire='true'">
             <xsl:if test="string-length(.) &gt; 0">
 
@@ -251,11 +267,17 @@
             </xsl:if>
           </xsl:if>
         </xsl:for-each>
+
+        <!-- Index thesaurus name to easily search for records
+        using keyword from a thesaurus. -->
         <xsl:for-each select="gmd:thesaurusName/gmd:CI_Citation">
-          <xsl:if test="gmd:identifier/gmd:MD_Identifier/gmd:code/gmx:Anchor/text() != ''">
+          <xsl:variable name="thesaurusIdentifier"
+                        select="gmd:identifier/gmd:MD_Identifier/gmd:code/gmx:Anchor/text()"/>
+
+          <xsl:if test="$thesaurusIdentifier != ''">
             <Field name="thesaurusIdentifier"
                    string="{substring-after(
-                              gmd:identifier/gmd:MD_Identifier/gmd:code/gmx:Anchor/text(),
+                              $thesaurusIdentifier,
                               'geonetwork.thesaurus.')}"
                    store="true" index="true"/>
           </xsl:if>
@@ -264,9 +286,38 @@
                    string="{gmd:title/gco:CharacterString/text()}"
                    store="true" index="true"/>
           </xsl:if>
+
+
+          <xsl:if test="$indexAllKeywordDetails and $thesaurusIdentifier != ''">
+            <!-- field thesaurus-{{thesaurusIdentifier}}={{keyword}} allows
+            to group all keywords of same thesaurus in a field -->
+            <xsl:variable name="currentType" select="string(.)"/>
+            <xsl:for-each
+                select="$listOfKeywords">
+              <Field name="thesaurus-{substring-after(
+                              $thesaurusIdentifier,
+                              'geonetwork.thesaurus.')}"
+                     string="{string(.)}"
+                     store="true" index="true"/>
+
+            </xsl:for-each>
+          </xsl:if>
         </xsl:for-each>
+
+        <!-- Index thesaurus type -->
         <xsl:for-each select="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue">
           <Field name="keywordType" string="{string(.)}" store="true" index="true"/>
+          <xsl:if test="$indexAllKeywordDetails">
+            <!-- field thesaurusType{{type}}={{keyword}} allows
+            to group all keywords of same type in a field -->
+            <xsl:variable name="currentType" select="string(.)"/>
+            <xsl:for-each
+                select="$listOfKeywords">
+              <Field name="keywordType-{$currentType}"
+                     string="{string(.)}"
+                     store="true" index="true"/>
+            </xsl:for-each>
+          </xsl:if>
         </xsl:for-each>
       </xsl:for-each>
 
