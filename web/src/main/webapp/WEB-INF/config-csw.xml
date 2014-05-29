@@ -16,7 +16,7 @@
 				<!-- - - - - - - - - - - - - - -->
 				<!-- Core queryable properties -->
 				<!-- - - - - - - - - - - - - - -->
-                <parameter name="Subject" field="keyword" type="SupportedISOQueryables">
+                <parameter name="Subject" field="keywordAndTopicCategory" type="SupportedISOQueryables">
                     <xpath schema="iso19139" path="*/gmd:MD_Keywords/gmd:keyword/gco:CharacterString" />
                 </parameter>
 
