@@ -58,7 +58,7 @@ cat.list = function() {
 			'&nbsp;<tpl for="credit">{value}{[xindex==xcount?"":", "]}</tpl>',
 			'</span>',
 			'</tpl>',
-      '<tpl if="publishInGroup!=\'\'">',
+      '<tpl if="catalogue.isIdentified() && publishInGroup!=\'\'">',
       '<br/><span>',
       OpenLayers.i18n('result-list-groups'),
       '&nbsp;<tpl for="publishInGroup">{.}{[xindex==xcount?"":", "]}</tpl>',
