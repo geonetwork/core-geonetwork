@@ -9,6 +9,7 @@ cat.lang.es = {
     "search-header-facet": "Facet",
     "search-view-form": "Ver",
     "result-list-view": "Ver",
+    "result-list-groups": "Catalogue :",
     "result-list-download": "Descagar",
     "essentielle": "metadatos esenciales",
     "complete": "metadatos completos",

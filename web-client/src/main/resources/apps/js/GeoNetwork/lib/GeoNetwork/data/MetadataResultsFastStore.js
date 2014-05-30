@@ -178,7 +178,34 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
         }
         return links;
     }
-    
+
+  /**
+   * Populate an array of groups where the record is
+   * published. Place the internet group at first position
+   * and sort the other group by alphabetical order.
+   *
+   * TODO: Translate based on group names ?
+   *
+   * @param v
+   * @param record
+   * @returns {Array}
+   */
+  function getPublishInGroup(v, record){
+    var groups = [], temp = [];
+    if (record.publishInGroup) {
+      for (i = 0; i < record.publishInGroup.length; i++) {
+        var group = record.publishInGroup[i].value;
+        if (group === 'INTERNET') {
+          groups.unshift(group);
+        } else {
+          temp.push(group);
+        }
+      }
+    }
+    temp.sort();
+    groups.push(temp);
+    return groups;
+  }
     /**
      * Some convert function to face empty geonet_info parameters
      * BUG in GeoNetwork when retrieving iso19115 record through CSW
@@ -455,6 +482,9 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
         }, {
             name: 'groupOwner',
             convert: getGroupOwner
+        }, {
+            name: 'publishInGroup',
+            convert: getPublishInGroup
         }, {
             name: 'edit',
             convert: getEdit

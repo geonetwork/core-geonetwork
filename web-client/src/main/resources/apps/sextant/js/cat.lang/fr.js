@@ -10,6 +10,7 @@ cat.lang.fr = {
     "search-view-form": "Recherche",
     "result-list-view": "Visualiser",
     "result-list-download": "Télécharger",
+    "result-list-groups": "Catalogue :",
     "essentielle": "Métadonnées essentielles",
     "complete": "Métadonnées complètes",
     "fullTextSearch": "Recherche libre",

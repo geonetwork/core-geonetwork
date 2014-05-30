@@ -10,6 +10,7 @@ cat.lang.en = {
     "search-view-form": "View",
     "result-list-view": "View",
     "result-list-download": "Download",
+    "result-list-groups": "Catalogue:",
     "essentielle": "Essential metadata",
     "complete": "Full metadata",
     "fullTextSearch": "Full text search",
