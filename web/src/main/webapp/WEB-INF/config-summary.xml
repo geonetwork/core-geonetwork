@@ -78,6 +78,7 @@
 				sortOrder="asc"/>
       <item name="inspiretheme_en" plural="inspirethemes_en" indexKey="inspiretheme_en" max="35"/>
       <item name="sextantTheme" plural="sextantThemes" indexKey="sextantTheme" max="200"/>
+      <item name="keywordType-parameter" plural="keywordType-parameter" indexKey="keywordType-parameter" max="200"/>
       <item name="_groupPublished" plural="_groupPublished" indexKey="_groupPublished" max="300"/>
 		</suggestions>
 	</def>

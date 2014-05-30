@@ -826,14 +826,36 @@ cat.app = function() {
                     columns:1
                 }
             });
-            
-            facetsPanel = new GeoNetwork.FacetsPanel({
+
+
+          var facetConfigInput = Ext.query('input[id=configlistFacet]');
+          var facetConfigJSON = facetConfigInput &&
+            facetConfigInput[0] &&
+            facetConfigInput[0].value;
+          var facetConfig = [];
+          if (facetConfigJSON != '') {
+            try {
+              facetConfig = Ext.decode(facetConfigJSON);
+            } catch (e) {
+              if (console.log) {
+                console.log('Failed to parse list of facets JSON configuration: ' +
+                  listOfThesaurus);
+                console.log(e);
+                console.log('Using default configuration.');
+              }
+              facetConfig = GeoNetwork.Settings.facetListConfig;
+            }
+          } else {
+            facetConfig = GeoNetwork.Settings.facetListConfig;
+          }
+
+          facetsPanel = new GeoNetwork.FacetsPanel({
                 searchForm: searchForm,
                 breadcrumb: breadcrumb,
                 bodyCssClass: 'west-panel-body',
                 bodyStyle: 'padding:5px',
                 maxDisplayedItems: GeoNetwork.Settings.facetMaxItems || 7,
-                facetListConfig: GeoNetwork.Settings.facetListConfig || []
+                facetListConfig: facetConfig
             });
             
             var viewport = new Ext.Panel({
