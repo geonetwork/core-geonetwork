@@ -12,12 +12,14 @@
         $http.get(url +serviceAndParams).success(function(data) {
           var i, region, regions = [];
 
-          for (i = 0; i < data.region.length; i++) {
-            region = data.region[i];
-            regions.push({
-              geom: region['@id'],
-              description: region.label
-            });
+          if (data.region) {
+            for (i = 0; i < data.region.length; i++) {
+              region = data.region[i];
+              regions.push({
+                geom: region['@id'],
+                description: region.label
+              });
+            }
           }
           $scope.loadingExtents = false;
           deferred.resolve(regions);

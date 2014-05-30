@@ -219,20 +219,14 @@ public class SaveTest {
         assertEquals(1, conformityCitations.size());
         Element conformityCitation = (Element) conformityCitations.get(0);
 
-        final String scopeCode = Xml.selectString(testMetadata,
-                "gmd:dataQualityInfo/*/gmd:scope/gmd:DQ_Scope//gmd:MD_ScopeCode/@codeListValue", NS);
-        assertEquals("dataset",scopeCode);
-
-        assertCorrectTranslation(metadataMainLang, testMetadata,
-                "gmd:dataQualityInfo/*/gmd:scope/gmd:DQ_Scope//gmd:levelDescription//gmd:attributeInstances",
-                read("eng", "scopeCodeDescription"));
+        assertNotNull(Xml.selectElement(testMetadata, "gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:scope", NS));
+        assertEquals(0, Xml.selectNodes(testMetadata, "gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:scope/*", NS).size());
 
         final String title = Xml.selectString(conformityCitation, "gmd:title/gco:CharacterString", NS);
         assertEquals("conformity title",title);
 
         final String date = Xml.selectString(conformityCitation, "gmd:date/gmd:CI_Date/gmd:date/gco:DateTime", NS);
         assertEquals("2002-06-23T12:00", date);
-
 
         final String dateType = Xml.selectString(conformityCitation, "gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue", NS);
         assertEquals("modification", dateType);
@@ -368,6 +362,22 @@ public class SaveTest {
         )), context);
 
     }
+
+    @Test
+    public void testUpdateExistingNonValidatedContact() throws Exception {
+
+        final String json = loadTestJson("updateExistingNonValidatedContact/postdata.json");
+
+        service.addXLink("local://xml.user.get?id=updateExistingNonValidatedContact&amp;schema=iso19139.che&amp;role=editor",
+                Xml.loadFile(SaveTest.class.getResource("updateExistingNonValidatedContact/shared-contact.xml")));
+        service.exec(new Element("request").addContent(Arrays.asList(
+                new Element("id").setText("12"),
+                new Element("data").setText(json)
+        )), context);
+
+
+    }
+
     @Test
     public void testNewContact() throws Exception {
 

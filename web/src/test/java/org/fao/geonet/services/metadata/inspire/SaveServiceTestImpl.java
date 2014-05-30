@@ -220,7 +220,7 @@ class SaveServiceTestImpl extends Save {
             }
             return (Element) element.clone();
         }
-        throw new IllegalArgumentException("Unexpected xlinks");
+        throw new IllegalArgumentException("Unexpected xlink: "+xlinkHref);
     }
 
     @Override

@@ -145,7 +145,22 @@
           url: $scope.url + "inspire.edit.save",
           data: 'id=' + mdId + '&data=' + data,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-        }).success(function () {
+        }).success(function (data) {
+          if (!/.*<ok\s*\/\s*>.*/ig.test(data)) {
+
+            if (waitDialog) {
+              waitDialog.modal('hide');
+            }
+
+            if (/.*<body\s*.*/ig.test(data)) {
+              data = '<div>' + $translate("unexpectedSaveError") + '</div>';
+            }
+
+            var dialogContentEl = $('#errorDialogContent');
+            dialogContentEl.text('');
+            dialogContentEl.append(data);
+            $('#errorDialog').modal();
+          }
           if (editTab) {
             allowUnload = true;
             window.location.href = 'metadata.edit?id=' + mdId + '&currTab=' + editTab;
@@ -415,7 +430,7 @@
           for(lang in newVal) {
             if (newVal.hasOwnProperty(lang) && option[lang] === newVal[lang]) {
               $scope.data.conformity.title = option;
-              retur;
+              return;
             }
           }
         }

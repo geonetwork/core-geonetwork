@@ -11,20 +11,14 @@
     function($scope, inspireGetSharedUsersFactory, $translate) {
       $scope.linkToOtherContact = function() {
         var userId = $scope.selectedSharedUser.id;
-        inspireGetSharedUsersFactory.loadDetails($scope.url, userId).then($scope.updateContact);
+        inspireGetSharedUsersFactory.loadDetails($scope.url, userId).then(function(newContact){
+          $scope.updateContact(newContact, true)
+        });
       };
 
-      $scope.updateContact = function(newContact) {
-        if (confirm($translate('overwriteContactConfirmation'))) {
-          $scope.$parent.contactUnderEdit.id = newContact ? newContact.id : '';
-          $scope.$parent.contactUnderEdit.name = newContact ? newContact.name : '';
-          $scope.$parent.contactUnderEdit.surname = newContact ? newContact.surname : '';
-          $scope.$parent.contactUnderEdit.email = newContact ? newContact.email : '';
-
-          var role = newContact ? newContact.role : $scope.$parent.contactUnderEdit.role;
-          $scope.$parent.contactUnderEdit.role = role || $scope.data.roleOptions[0];
-          $scope.$parent.contactUnderEdit.organization = newContact ? newContact.organization : '';
-          $scope.$parent.contactUnderEdit.validated = newContact ? newContact.validated : false;
+      $scope.updateContact = function(newContact, skipConfirm) {
+        if (skipConfirm || confirm($translate('overwriteContactConfirmation'))) {
+          angular.copy(newContact, $scope.$parent.contactUnderEdit);
 
           var modal = $('#editContactModal');
           modal.modal('hide');

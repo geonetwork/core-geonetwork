@@ -2,12 +2,12 @@
     <label data-ng-if="showTitle" class="col-xs-3 control-label"><span data-translate="">{{title}}</span>: </label>
 
     <div data-ng-class="showTitle ? '' : 'col-xs-offset-3'" class="col-xs-9">
-        <div class="form-group" data-ng-class="validationClassString(contact.name)">
+        <div class="form-group">
             <div class="col-xs-6">
                 <input ng-disabled="contact.validated" id="contactName" class="form-control" ng-model="contact.name"
                        placeholder="{{'name' | translate}}"></select>
             </div>
-            <div class="col-xs-6" data-ng-class="validationClassString(contact.surname)">
+            <div class="col-xs-6">
                 <input ng-disabled="contact.validated" id="contactSurname" class="form-control" ng-model="contact.surname"
                        placeholder="{{'surname' | translate}}"></select>
             </div>

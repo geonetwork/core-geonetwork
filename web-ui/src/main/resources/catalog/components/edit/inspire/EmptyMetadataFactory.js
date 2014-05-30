@@ -68,8 +68,6 @@
           },
           "conformity": {
             "conformanceResultRef": '',
-            scopeCode: '',
-            "scopeCodeDescription": {},
             "title": {},
             "date": {
               "date": '',

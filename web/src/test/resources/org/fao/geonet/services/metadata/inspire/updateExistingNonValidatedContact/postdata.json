@@ -1,0 +1,19 @@
+{
+  "contact": [
+    {
+      "id": "updateExistingNonValidatedContact",
+      "name": "sfaffff",
+      "surname": "dfdasdfas",
+      "email": "asdfasdfa@ok.com",
+      "organization": {
+        "undefined": "asdfasfsafsaf",
+        "ger": "asdfasf",
+        "fre": "asfasdf",
+        "ita": "asfdasfasdfasf",
+        "eng": "asfasdfasfsadf"
+      },
+      "validated": false,
+      "role": "editor"
+    }
+  ]
+}

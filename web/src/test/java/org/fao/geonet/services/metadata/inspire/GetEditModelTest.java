@@ -30,6 +30,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class GetEditModelTest {
+    @Test
+    public void testConformityLeavesOtherConformity() throws Exception {
+
+
+    }
 
     @Test
     public void testEmpty() throws Exception {
@@ -174,8 +179,6 @@ public class GetEditModelTest {
                             "von Geodatensätzen und -diensten"));
         assertEquals("358", conformity.getString(Save.JSON_CONFORMITY_RESULT_REF));
 
-        assertEquals("dataset", conformity.getString(Save.JSON_CONFORMITY_SCOPE_CODE));
-
         assertEquals("false", conformity.getString(Save.JSON_CONFORMITY_PASS));
         assertEquals("INSPIRE Implementing rules", conformity.getString(Save.JSON_CONFORMITY_EXPLANATION));
         final JSONObject dateJson = conformity.getJSONObject(Save.JSON_DATE);
@@ -281,9 +284,6 @@ public class GetEditModelTest {
 
 
         JSONObject conformity = inspireModel.getJSONObject(Save.JSON_CONFORMITY);
-
-        assertEquals("collectionHardware", conformity.getString(Save.JSON_CONFORMITY_SCOPE_CODE));
-        assertTranslations(conformity, Save.JSON_CONFORMITY_SCOPE_CODE_DESCRIPTION, read("fre", "description"));
 
         assertTranslations(conformity, Save.JSON_TITLE,
                 read("fre", "règlement (ue) n o 1089/2010 de la commission du 23 novembre 2010 portant modalités " +

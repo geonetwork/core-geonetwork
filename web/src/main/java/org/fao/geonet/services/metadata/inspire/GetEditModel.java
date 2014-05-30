@@ -3,6 +3,7 @@ package org.fao.geonet.services.metadata.inspire;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -76,6 +77,17 @@ public class GetEditModel implements Service {
             return input;
         }
     };
+    private Function<CodeListEntry, CodeListEntry> hierarchyLevelGrouper = new Function<CodeListEntry, CodeListEntry>() {
+        final List<String> legalOptions = Lists.newArrayList("dataset", "series", "service");
+        @Nullable
+        @Override
+        public CodeListEntry apply(@Nullable CodeListEntry input) {
+            if (input != null && legalOptions.contains(input.name)) {
+                return input;
+            }
+            return null;
+        }
+    };
 
     @Override
     public void init(String appPath, ServiceConfig params) throws Exception {
@@ -106,20 +118,21 @@ public class GetEditModel implements Service {
     }
 
     private void processConformity(Element metadataEl, JSONObject metadataJson) throws JSONException, JDOMException {
+
         JSONObject conformityJson = new JSONObject();
         String mainLanguage = metadataJson.getString(Save.JSON_LANGUAGE);
-
-        addValue(metadataEl, conformityJson, Save.JSON_CONFORMITY_SCOPE_CODE,
-                "gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue");
-        addTranslatedElement(mainLanguage, metadataEl, getIsoLanguagesMapper(), conformityJson, Save.JSON_CONFORMITY_SCOPE_CODE_DESCRIPTION,
-                "gmd:dataQualityInfo/*/gmd:scope/gmd:DQ_Scope//gmd:levelDescription//gmd:attributeInstances");
 
         Element conformanceResult = Xml.selectElement(metadataEl, "gmd:dataQualityInfo/*/gmd:report//gmd:DQ_ConformanceResult" , NS);
         addValue(conformanceResult, conformityJson, Save.JSON_CONFORMITY_RESULT_REF, "geonet:element/@ref");
 
         addTranslatedElement(mainLanguage, conformanceResult, getIsoLanguagesMapper(), conformityJson, Save.JSON_TITLE,
                 "gmd:specification/gmd:CI_Citation/gmd:title");
-        addDateElement(conformanceResult, conformityJson, "gmd:specification/gmd:CI_Citation/gmd:date");
+
+        JSONObject date = new JSONObject();
+        date.put(Save.JSON_DATE, "2010-12-08");
+        date.put(Save.JSON_DATE_TYPE, "publication");
+        date.put(Save.JSON_DATE_TAG_NAME, "gco:Date");
+        conformityJson.put(Save.JSON_DATE, date);
 
         addValue(conformanceResult, conformityJson, Save.JSON_CONFORMITY_PASS, "gmd:pass/gco:Boolean");
         addValue(conformanceResult, conformityJson, Save.JSON_CONFORMITY_EXPLANATION, "gmd:explanation/gco:CharacterString");
@@ -152,7 +165,8 @@ public class GetEditModel implements Service {
 
         addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:CI_DateTypeCode", "dateTypeOptions", null);
         addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:CI_RoleCode", "roleOptions", null);
-        addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:MD_ScopeCode", "hierarchyLevelOptions", null);
+        addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:MD_ScopeCode", "hierarchyLevelOptions",
+                hierarchyLevelGrouper);
 
         addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:MD_TopicCategoryCode", "topicCategoryOptions",
                 topicCategoryGrouper);

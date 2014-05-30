@@ -57,22 +57,8 @@
         };
         $scope.cls = undefined;
         $scope.validate = function() {
-
-          var i, invalid;
-          var isInvalid = function(model) {
-            return !model || model.length === 0;
-          };
-
-          if (!$scope.validationClass) {
-            return '';
-          }
-
-          invalid = true;
-          for (i = 0; i < $scope.languages.length; i++) {
-            invalid = invalid && isInvalid($scope.field[$scope.languages[i]]);
-          }
-
-          $scope.cls = invalid ? $scope.validationClass : '' ;
+          var valid = $scope.field[$scope.mainLang] && $scope.field[$scope.mainLang].length > 0;
+          $scope.cls = valid ? '' : $scope.validationClass;
         };
 
         $scope.validate();

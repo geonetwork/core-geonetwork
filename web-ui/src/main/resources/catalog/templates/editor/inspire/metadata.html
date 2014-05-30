@@ -2,7 +2,7 @@
 
     <!-- Progress Dialog --->
 
-    <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog"
+    <div class="modal fade" tabindex="-1" role="dialog"
          id="pleaseWaitDialog" data-backdrop="static" data-keyboard="false"
          style="z-index:99999"
          aria-labelledby="pleaseWaitDialog" aria-hidden="true">
@@ -22,6 +22,24 @@
     </div>
 
     <!-- END Progress Dialog --->
+
+    <!-- Error Dialog --->
+
+    <div id="errorDialog" tabindex="-1" class="modal fade" data-ng-controller="InspireContactController">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" data-ng-translate="">saveError</h4>
+                </div>
+                <div id="errorDialogContent" class="modal-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- END Error Dialog --->
 
     <!-- Contact Modal dialog -->
 
@@ -199,7 +217,7 @@
                     </select>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" data-ng-show="data.identification.type == 'data'">
                 <label for="identificationMetadataLanguage" class="col-xs-3 control-label" ><span data-translate="">metadataLanguage</span>: </label>
                 <div class="col-xs-9" data-ng-class="validationClassString(data.identification.language)">
                     <select id="identificationMetadataLanguage" class="form-control" ng-model="data.identification.language" data-ng-options="lang | translate for lang in languages">
@@ -215,7 +233,7 @@
                  data-languages="data.otherLanguages"
                  data-field="data.identification.title"/>
 
-            <div class="form-group">
+            <div class="form-group" data-ng-show="data.identification.type == 'data'">
                 <label for="citationIdentifier" class="col-xs-3 control-label" ><span data-translate="">citationIdentifier</span>: </label>
                 <div class="col-xs-9" data-ng-class="validationClassString(data.identification.citationIdentifier)">
                     <input id="citationIdentifier" class="form-control" ng-model="data.identification.citationIdentifier">
@@ -258,9 +276,7 @@
             </div>
 
             <div class="form-group"
-                 data-ng-show="data.identification.type == 'data' &&
-                               (!data.hierarchyLevel || data.hierarchyLevel.indexOf('dataset') != -1 ||
-                                data.hierarchyLevel.indexOf('series') != -1)">
+                 data-ng-show="data.identification.type == 'data'">
                 <label class="col-xs-3 control-label" ><span data-translate="">topicCategory</span>: </label>
                 <div class="table-responsive col-xs-9">
                     <table class="table table-condensed">

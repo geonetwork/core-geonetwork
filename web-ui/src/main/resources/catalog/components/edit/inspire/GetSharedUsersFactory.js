@@ -22,15 +22,29 @@
 
         $http.get(url + 'plain.xml.user.get@json?id=' + userId).success(function(data) {
           data = data.record;
+          var lang, threeLetterCode;
+          var langMap = {
+            'DE': 'ger',
+            'EN': 'eng',
+            'FR': 'fre',
+            'IT': 'ita',
+            'RM': 'roh'
+          };
           var user = {
             id: userId,
             name: data.name || '',
             surname: data.surname || '',
             email: data.email || '',
-            organization: data.organisation || '',
+            organization: {},
             validated: data.validated === 'y'
           };
 
+          for (lang in data.organisation) {
+            if (data.organisation.hasOwnProperty(lang)) {
+              threeLetterCode = langMap[lang];
+              user.organization[threeLetterCode] = data.organisation[lang];
+            }
+          }
 
           deferred.resolve(user);
         }).error(function (data) {

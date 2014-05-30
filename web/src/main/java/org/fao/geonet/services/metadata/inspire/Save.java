@@ -5,6 +5,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import jeeves.exceptions.JeevesException;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -117,8 +118,6 @@ public class Save implements Service {
     public static final String JSON_CONFORMITY_EXPLANATION = "explanation";
     public static final String JSON_CONFORMITY_LINEAGE = "lineage";
     public static final String JSON_CONFORMITY_LINEAGE_STATEMENT = "statement";
-    public static final String JSON_CONFORMITY_SCOPE_CODE = "scopeCode";
-    public static final String JSON_CONFORMITY_SCOPE_CODE_DESCRIPTION = "scopeCodeDescription";
 
     @Override
     public void init(String appPath, ServiceConfig params) throws Exception {
@@ -127,32 +126,38 @@ public class Save implements Service {
 
     @Override
     public Element exec(Element params, ServiceContext context) throws Exception {
-        final String data = Util.getParam(params, PARAM_DATA);
-        final String id = params.getChildText(Params.ID);
+        try {
+            final String data = Util.getParam(params, PARAM_DATA);
+            final String id = params.getChildText(Params.ID);
 
-        GeonetContext handlerContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        final SchemaManager schemaManager = handlerContext.getSchemamanager();
-        final DataManager dataManager = handlerContext.getDataManager();
-        final EditLib editLib = new EditLib(schemaManager);
+            GeonetContext handlerContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+            final SchemaManager schemaManager = handlerContext.getSchemamanager();
+            final DataManager dataManager = handlerContext.getDataManager();
+            final EditLib editLib = new EditLib(schemaManager);
 
-        final AjaxEditUtils ajaxEditUtils = getAjaxEditUtils(params, context);
-        MetadataSchema metadataSchema = schemaManager.getSchema("iso19139.che");
-        final Element metadata = getMetadata(context, editLib, id, ajaxEditUtils);
+            final AjaxEditUtils ajaxEditUtils = getAjaxEditUtils(params, context);
+            MetadataSchema metadataSchema = schemaManager.getSchema("iso19139.che");
+            final Element metadata = getMetadata(context, editLib, id, ajaxEditUtils);
 
-        final JSONObject jsonObject = new JSONObject(data);
+            final JSONObject jsonObject = new JSONObject(data);
 
-        String mainLang = updateMetadata(context, editLib, metadata, metadataSchema, jsonObject);
+            String mainLang = updateMetadata(context, editLib, metadata, metadataSchema, jsonObject);
 
-        final Element identificationInfo = updateIdentificationInfo(mainLang, context, editLib, metadata, metadataSchema, jsonObject);
-        updateConstraints(editLib, metadataSchema, identificationInfo, jsonObject, mainLang);
+            final Element identificationInfo = updateIdentificationInfo(mainLang, context, editLib, metadata, metadataSchema, jsonObject);
+            updateConstraints(editLib, metadataSchema, identificationInfo, jsonObject, mainLang);
 
-        updateConformity(editLib, metadata, metadataSchema, jsonObject, mainLang);
+            updateConformity(editLib, metadata, metadataSchema, jsonObject, mainLang);
 
-        Element metadataToSave = (Element) metadata.clone();
-        editLib.removeEditingInfo(metadataToSave);
-        saveMetadata(context, id, dataManager, metadataToSave);
+            Element metadataToSave = (Element) metadata.clone();
+            editLib.removeEditingInfo(metadataToSave);
+            saveMetadata(context, id, dataManager, metadataToSave);
 
-        return new Element("ok");
+            return new Element("ok");
+        } catch (Throwable t) {
+            return new Element("pre").addContent(
+                    new Element("code").addContent(
+                            JeevesException.toElement(t)));
+        }
     }
 
     private void updateConstraints(EditLib editLib, MetadataSchema metadataSchema, Element identificationInfo,
@@ -382,6 +387,14 @@ public class Save implements Service {
             conformanceResult = new Element("DQ_ConformanceResult", GMD);
             addElementFromXPath(editLib, metadataSchema, metadata,
                     "gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult", conformanceResult);
+
+
+
+            List<Element> element = Lists.newArrayList((List<Element>)
+                    Xml.selectNodes(metadata, "gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:scope/*", NS));
+            for (Element e : element) {
+                e.detach();
+            }
         }
 
         final Element title = createTranslatedInstance(mainLang, conformityJson.getJSONObject(JSON_TITLE), JSON_TITLE, GMD);
@@ -390,17 +403,6 @@ public class Save implements Service {
 
         Element citationEl = title.getParentElement();
         updateDate(editLib, metadataSchema, citationEl, "gmd:date", conformityJson);
-
-        Element scopeCode = new Element("MD_ScopeCode", GMD).
-                setAttribute("codeListValue", conformityJson.optString(JSON_CONFORMITY_SCOPE_CODE)).
-                setAttribute("codeList", "http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode");
-
-        addElementFromXPath(editLib, metadataSchema, metadata,
-                "gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode", scopeCode);
-
-        updateTranslatedInstance(mainLang, editLib, metadataSchema, scopeCode.getParentElement().getParentElement(),
-                conformityJson.optJSONObject(JSON_CONFORMITY_SCOPE_CODE_DESCRIPTION),
-                "gmd:levelDescription/gmd:MD_ScopeDescription/gmd:attributeInstances", "attributeInstances", GMD);
 
         Element pass = new Element(JSON_CONFORMITY_PASS, GMD).addContent(
                 new Element("Boolean", GCO).setText(conformityJson.optString(JSON_CONFORMITY_PASS, ""))
@@ -467,10 +469,21 @@ public class Save implements Service {
 
     private void updateTopicCategory(EditLib editLib, MetadataSchema metadataSchema, Element identification, JSONObject identificationJson) throws Exception {
 
+        boolean addTopicCategory = false;
+        JSONArray categories = identificationJson.optJSONArray(JSON_IDENTIFICATION_TOPIC_CATEGORIES);
+        for (int i = 0; !addTopicCategory && i < categories.length(); i++) {
+            String category = categories.getString(i);
+            if (!category.trim().isEmpty()) {
+                addTopicCategory = true;
+            }
+        }
+
+        if (!addTopicCategory) {
+            return;
+        }
 
         int insertIndex = findIndexToAddElements(editLib, identification, metadataSchema, "gmd:topicCategory").one();
 
-        JSONArray categories = identificationJson.optJSONArray(JSON_IDENTIFICATION_TOPIC_CATEGORIES);
         if (categories != null) {
             for (int i = 0; i < categories.length(); i++) {
                 String category = categories.getString(i);
@@ -808,6 +821,10 @@ public class Save implements Service {
         String mainTranslation = null;
         while (keys.hasNext()) {
             String threeLetterLangCode = (String) keys.next();
+            if (threeLetterLangCode.equals("undefined")) {
+                // the language was deleted
+                continue;
+            }
             String translation = translationJson.getString(threeLetterLangCode);
             if (threeLetterLangCode.equals(mainLang)) {
                 mainTranslation = translation;
