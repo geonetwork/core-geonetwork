@@ -581,38 +581,6 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
             </output>
         </service>
 
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-        <!-- Metadata Schema services                                      -->
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <service name="metadata.schema.add">
-            <class name=".services.schema.Add" />
-            <error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
-        </service>
-
-        <service name="metadata.schema.add.form">
-            <output sheet="metadata-schema-ops.xsl" />
-        </service>
-
-        <service name="metadata.schema.delete">
-            <class name=".services.schema.Delete" />
-            <error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
-        </service>
-
-        <service name="metadata.schema.delete.form">
-            <output sheet="metadata-schema-ops.xsl" />
-        </service>
-
-        <service name="metadata.schema.update">
-            <class name=".services.schema.Update" />
-            <error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
-        </service>
-
-        <service name="metadata.schema.update.form">
-            <output sheet="metadata-schema-ops.xsl" />
-        </service>
-
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
         <!-- Thumbnail services                                            -->
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

@@ -119,32 +119,6 @@
                                                 select="/root/gui/strings/transferOwnershipDes"/>
                             </xsl:call-template>
                         </xsl:if>
-
-                        <tr>
-                            <td class="spacer"/>
-                        </tr>
-
-                        <xsl:if test="not($readonly)">
-                            <xsl:call-template name="addrow">
-                                <xsl:with-param name="service" select="'metadata.schema.add.form'"/>
-                                <xsl:with-param name="title" select="/root/gui/strings/addSchema"/>
-                                <xsl:with-param name="desc" select="/root/gui/strings/addSchemaDes"/>
-                                <xsl:with-param name="icon">folder_add.png</xsl:with-param>
-                            </xsl:call-template>
-                            <xsl:if test="count(/root/gui/schemalist/name[@plugin='true'])>0">
-                                <xsl:call-template name="addrow">
-                                    <xsl:with-param name="service" select="'metadata.schema.update.form'"/>
-                                    <xsl:with-param name="title" select="/root/gui/strings/updateSchema"/>
-                                    <xsl:with-param name="desc" select="/root/gui/strings/updateSchemaDes"/>
-                                </xsl:call-template>
-
-                                <xsl:call-template name="addrow">
-                                    <xsl:with-param name="service" select="'metadata.schema.delete.form'"/>
-                                    <xsl:with-param name="title" select="/root/gui/strings/deleteSchema"/>
-                                    <xsl:with-param name="desc" select="/root/gui/strings/deleteSchemaDes"/>
-                                </xsl:call-template>
-                            </xsl:if>
-                        </xsl:if>
                     </xsl:variable>
 
 
