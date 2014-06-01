@@ -137,64 +137,6 @@
                                         select="concat(/root/gui/strings/metadata, '&#160;&amp;&#160;', /root/gui/strings/template)"/>
                         <xsl:with-param name="content">
                             <xsl:copy-of select="$mdServices"/>
-                            <tr>
-                                <td class="spacer"/>
-                            </tr>
-                            <xsl:if test="not($readonly)">
-                                <xsl:copy-of select="$mdTemplate"/>
-                            </xsl:if>
-
-                            <xsl:if test="not($readonly)">
-                                <tr>
-                                    <td class="spacer"/>
-                                </tr>
-                                <xsl:call-template name="addrow">
-                                    <xsl:with-param name="service" select="'metadata.templates.add.default'"/>
-                                    <xsl:with-param name="displayLink" select="false()"/>
-                                    <xsl:with-param name="title" select="/root/gui/strings/metadata-templates-samples-add"/>
-                                    <xsl:with-param name="icon">add.png</xsl:with-param>
-                                    <xsl:with-param name="content">
-                                        <table>
-                                            <tr>
-                                                <td width="30%">
-                                                    <xsl:value-of
-                                                            select="/root/gui/strings/selectTemplate"
-                                                            /> : <br/>
-                                                    <select class="content"
-                                                            id="metadata.schemas.select" size="8"
-                                                            multiple="true">
-                                                        <xsl:for-each select="/root/gui/schemalist/name">
-                                                            <xsl:sort select="."/>
-                                                            <option value="{string(.)}">
-                                                                <xsl:value-of select="string(.)"/>
-                                                            </option>
-                                                        </xsl:for-each>
-                                                    </select>
-                                                </td>
-                                                <td style="align:center;width:20%;vertical-align:bottom;">
-                                                    <div id="addTemplatesSamplesButtons">
-                                                        <button class="content"
-                                                                onclick="addTemplate('{/root/gui/strings/metadata-schema-select}', '{/root/gui/strings/metadata-template-add-success}');"
-                                                                id="tplBtn">
-                                                            <xsl:value-of
-                                                                    select="/root/gui/strings/metadata-template-add-default"
-                                                                    />
-                                                        </button>
-                                                        <button class="content"
-                                                                onclick="addSampleData('{/root/gui/strings/metadata-schema-select}', '{/root/gui/strings/metadata-samples-add-failed}', '{/root/gui/strings/metadata-samples-add-success}');"
-                                                                id="tplSamples">
-                                                            <xsl:value-of
-                                                                    select="/root/gui/strings/metadata-samples-add"/>
-                                                        </button>
-                                                    </div>
-                                                    <img src="{/root/gui/url}/images/loading.gif"
-                                                         id="waitLoadingTemplatesSamples" style="display:none;"/>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </xsl:with-param>
-                                </xsl:call-template>
-                            </xsl:if>
 							<xsl:copy-of select="$mdVersionLog"/>
                         </xsl:with-param>
                     </xsl:call-template>

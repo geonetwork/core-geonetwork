@@ -658,17 +658,6 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
         </service>
 
 
-        <service name="metadata.templates.add.default">
-            <class name=".guiservices.templates.AddDefault" />
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-        <!-- Metadata samples											   -->
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-        <service name="metadata.samples.add">
-            <class name=".guiservices.sampledata.Add" />
-        </service>
-
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
         <!-- Metadata latest updated (ajax)        						   -->
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
