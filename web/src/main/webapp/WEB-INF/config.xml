@@ -465,16 +465,6 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	    <service name="password.change.submit" deprecated="true">
-			<class name=".services.password.Change" />
-
-			<output sheet="info.xsl">
-				<xml name="info" file="xml/password-changed.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
 	    <service name="xml.password.emaillink" deprecated="true">
 			<class name=".services.password.SendLink" />
 			<error sheet="error-xml.xsl"/>
@@ -547,44 +537,6 @@
 			<output forward="user.list" />
 		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="user.pwedit">
-			<class name=".services.user.Get" />
-
-			<output sheet="user-pwupdate.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="user.pwupdate">
-			<class name=".services.user.PwUpdate" />
-
-			<output sheet="info.xsl">
-				<xml name="info" file="xml/password-changed.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="user.infoedit" deprecated="true">
-			<class name=".services.user.Get" />
-
-			<output sheet="user-infoupdate.xsl">
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="profiles" class="jeeves.guiservices.profiles.Get" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="user.infoupdate" deprecated="true">
-			<class name=".services.user.InfoUpdate" />
-
-			<output sheet="info.xsl">
-				<xml name="info" file="xml/info-changed.xml" />
-			</output>
-		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- User self-registration services                               -->

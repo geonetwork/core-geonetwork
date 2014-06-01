@@ -389,25 +389,6 @@
 
                     <!-- user and group services -->
                     <xsl:variable name="persInfoServices">
-                        <xsl:call-template name="addrow">
-                            <xsl:with-param name="service" select="'user.pwedit'"/>
-                            <xsl:with-param name="args"
-                                            select="concat('id=',/root/gui/session/userId)"/>
-                            <xsl:with-param name="title" select="/root/gui/strings/userPw"/>
-                            <xsl:with-param name="desc" select="/root/gui/strings/userPwDes"/>
-                        </xsl:call-template>
-
-                        <xsl:call-template name="addrow">
-                            <xsl:with-param name="service" select="'user.infoedit'"/>
-                            <xsl:with-param name="args"
-                                            select="concat('id=',/root/gui/session/userId)"/>
-                            <xsl:with-param name="title" select="/root/gui/strings/userInfo"/>
-                            <xsl:with-param name="desc" select="/root/gui/strings/userInfoDes"/>
-                        </xsl:call-template>
-
-                        <tr>
-                            <td class="spacer"/>
-                        </tr>
 
                         <xsl:call-template name="addrow">
                             <xsl:with-param name="service" select="'user.list'"/>
