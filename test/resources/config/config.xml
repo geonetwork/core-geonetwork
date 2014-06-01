@@ -1041,12 +1041,10 @@
     <!-- For now include from web dir, but these could be local files only for services tested and
     without e.g. XSL-transformed output-->
     <include>../../../web/geonetwork/WEB-INF/config-csw.xml</include>
-    <include>../../../web/geonetwork/WEB-INF/config-harvesting.xml</include>
 
 	<!-- ======================================================================
 
 	<include>config-metadata.xml</include>
-	<include>config-harvesting.xml</include>
 	<include>config-portal.xml</include>
 	<include>config-export.xml</include>
 	<include>config-test.xml</include>

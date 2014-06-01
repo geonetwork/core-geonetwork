@@ -104,23 +104,6 @@
 				<call name="sources"  class=".guiservices.util.Sources"/>
 			</output>
 		</service>
-	  
-		<service name="logo">
-			<output sheet="admin-logo.xsl"/>
-		</service>
-		
-		<service name="logo.add">
-			<class name=".services.logo.Add"/>
-			<output sheet="admin-logo-add.xsl" contentType="text/html; charset=UTF-8"/>
-		</service>
-
-		<service name="logo.delete">
-			<class name=".services.logo.Delete"/>
-		</service>
-		
-		<service name="logo.set">
-			<class name=".services.logo.Set"/>
-		</service>
 
 		<service name="get.conversions.xsl">
 			<class name=".guiservices.util.GetImportXSLs" />
