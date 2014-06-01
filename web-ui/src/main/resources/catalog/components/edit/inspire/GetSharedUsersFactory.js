@@ -78,6 +78,16 @@
               }
             }
 
+            data.sort(function(u1, u2) {
+              var startsWithCharacter = /^[0-9a-zA-Z]/;
+              if (startsWithCharacter.test(u1.desc) && !startsWithCharacter.test(u2.desc)) {
+                return -1;
+              } else if (!startsWithCharacter.test(u1.desc) && startsWithCharacter.test(u2.desc)) {
+                return 1;
+              }
+              return u1.desc.localeCompare(u2.desc);
+            });
+
             return data;
           }
           return undefined;

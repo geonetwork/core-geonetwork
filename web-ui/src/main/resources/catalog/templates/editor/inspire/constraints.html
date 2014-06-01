@@ -59,6 +59,31 @@
                             </div>
                             <div class="table-responsive col-xs-12">
                                 <table class="table table-condensed">
+                                    <tr data-ng-repeat="limitation in legal.useLimitations">
+                                        <td data-ng-class="'no-border-top'">
+                                            <div data-ng-class="$first ? '' : ['col-xs-offset-3', 'indent-1em']">
+                                                <div data-inspire-multilingual-text
+                                                     data-title="{{ $first ? 'useLimitations': ''}}"
+                                                     validation-class="{{validationErrorClass}}"
+                                                     data-rows="1"
+                                                     data-main-lang="data.language"
+                                                     data-languages="data.otherLanguages"
+                                                     data-field="limitation"/>
+                                            </div>
+                                        </td>
+                                        <td width="24px" data-ng-class="'no-border-top'">
+                                            <a class="inspire-input-group" style="color: red"
+                                               data-ng-hide="propertyCount.useLimitations === 1"
+                                               data-ng-click="deleteFromArray(legal.useLimitations, limitation)">
+                                                <i class="fa fa-times fa-fw"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="table-responsive col-xs-12"
+                                 data-ng-if="legal.otherConstraints && legal.otherConstraints.length > 0">
+                                <table class="table table-condensed">
                                     <tr data-ng-repeat="other in legal.otherConstraints">
                                         <td data-ng-class="'no-border-top'">
                                         <div
@@ -82,30 +107,8 @@
                                     </tr>
                                 </table>
                             </div>
-                            <div class="table-responsive col-xs-12">
-                                <table class="table table-condensed">
-                                    <tr data-ng-repeat="limitation in legal.useLimitations">
-                                        <td data-ng-class="'no-border-top'">
-                                            <div data-ng-class="$first ? '' : ['col-xs-offset-3', 'indent-1em']">
-                                                <div data-inspire-multilingual-text
-                                                     data-title="{{ $first ? 'useLimitations': ''}}"
-                                                     data-rows="1"
-                                                     data-main-lang="data.language"
-                                                     data-languages="data.otherLanguages"
-                                                     data-field="limitation"/>
-                                            </div>
-                                        </td>
-                                        <td width="24px" data-ng-class="'no-border-top'">
-                                            <a class="inspire-input-group" style="color: red"
-                                               data-ng-hide="propertyCount.useLimitations === 1"
-                                               data-ng-click="deleteFromArray(legal.useLimitations, limitation)">
-                                                <i class="fa fa-times fa-fw"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class="table-responsive col-xs-12">
+                            <div class="table-responsive col-xs-12"
+                                 data-ng-if="legal.legislationConstraints && legal.legislationConstraints.length > 0">
                                 <table class="table table-condensed">
                                     <tr data-ng-repeat="legislation in legal.legislationConstraints">
                                         <td data-ng-class="'no-border-top'">
