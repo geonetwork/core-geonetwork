@@ -610,34 +610,6 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
         </service>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-        <!-- Transfer ownership                                            -->
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <service name="transfer.ownership" deprecated="true">
-            <output sheet="ownership/transfer-ownership.xsl">
-                <xml name="ownership" file="xml/transfer-ownership.xml" />
-            </output>
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <service name="xml.ownership.editors" deprecated="true">
-            <class name=".services.ownership.Editors" />
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <service name="xml.ownership.groups" deprecated="true">
-            <class name=".services.ownership.Groups" />
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <service name="xml.ownership.transfer" deprecated="true">
-            <class name=".services.ownership.Transfer" />
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
         <!-- Status                                                        -->
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 

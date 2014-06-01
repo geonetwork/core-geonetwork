@@ -106,22 +106,6 @@
                 <xsl:variable name="readonly" select="/root/gui/env/readonly = 'true'"/>
 
                 <table width="100%" class="text-aligned-left">
-
-                    <!-- metadata services -->
-                    <xsl:variable name="mdServices">
-
-                        <xsl:if test="not($readonly)">
-                            <xsl:call-template name="addrow">
-                                <xsl:with-param name="service" select="'transfer.ownership'"/>
-                                <xsl:with-param name="title"
-                                                select="/root/gui/strings/transferOwnership"/>
-                                <xsl:with-param name="desc"
-                                                select="/root/gui/strings/transferOwnershipDes"/>
-                            </xsl:call-template>
-                        </xsl:if>
-                    </xsl:variable>
-
-
                     <!-- Metadata versioning log-->
                     <xsl:variable name="mdVersionLog">
                         <xsl:call-template name="addrow">
@@ -136,7 +120,6 @@
                         <xsl:with-param name="title"
                                         select="concat(/root/gui/strings/metadata, '&#160;&amp;&#160;', /root/gui/strings/template)"/>
                         <xsl:with-param name="content">
-                            <xsl:copy-of select="$mdServices"/>
 							<xsl:copy-of select="$mdVersionLog"/>
                         </xsl:with-param>
                     </xsl:call-template>
