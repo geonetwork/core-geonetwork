@@ -496,20 +496,6 @@
 				<xml name="error" file="xml/registration-error.xml" />
 			</error>
 		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Notifications services                                        -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	    <service name="notifications.list" deprecated="true">
-			<class name=".services.notifications.List" />
-			<output sheet="notifications-list.xsl" />
-		</service>
-
-	    <service name="notifications.save" deprecated="true">
-			<class name=".services.notifications.Save" />
-			<output forward="admin" />
-		</service>
-
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!--                   Login services                              -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

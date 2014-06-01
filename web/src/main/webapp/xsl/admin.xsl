@@ -124,24 +124,6 @@
                         </xsl:with-param>
                     </xsl:call-template>
 
-                    <xsl:variable name="io">
-                        <xsl:call-template name="addrow">
-                            <xsl:with-param name="service" select="'notifications.list'"/>
-                            <xsl:with-param name="title" select="/root/gui/strings/notifications"/>
-                            <xsl:with-param name="desc" select="/root/gui/strings/notificationsDes"
-                                    />
-                            <xsl:with-param name="icon">bell.png</xsl:with-param>
-                        </xsl:call-template>
-                    </xsl:variable>
-
-                    <xsl:if test="not($readonly)">
-                        <xsl:call-template name="addTitle">
-                            <xsl:with-param name="icon">connect.png</xsl:with-param>
-                            <xsl:with-param name="title" select="/root/gui/strings/io"/>
-                            <xsl:with-param name="content" select="$io"/>
-                        </xsl:call-template>
-                    </xsl:if>
-
                     <xsl:variable name="catalogueConfiguration">
                         <xsl:if test="not($readonly)">
                             <xsl:call-template name="addrow">
