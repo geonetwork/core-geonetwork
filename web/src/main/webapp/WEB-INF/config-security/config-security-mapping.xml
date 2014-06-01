@@ -66,36 +66,9 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/config.info!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/xml.config.set!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/xml.config.doActions!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/lucene.config.reload!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/stat.main!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/stat.numberOfSearchByMonth!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/stat.searchesNoHit!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/stat.uniqueIP!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/stat.graphByDate!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/stat.lastMonthSummary!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/stat.mostSearchedKeyword!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/stat.mostSearchedCategory!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/stat.simpleAdvancedSearch!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/stat.mdPopularity!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/stat.requests.csv!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/stat.params.csv!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/stat.tagCloud!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/stat.groupPopularity!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/stat.categoryPopularity!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/stat.catalogPopularity!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/stat.deleteTmpGraphics!?.*" access="hasRole('Administrator')"></sec:intercept-url>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/stat.tableExport!?.*" access="hasRole('Administrator')"></sec:intercept-url>
 
 
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search-ip?.*" access="hasRole('Administrator')"/>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search-by-service-type?.*" access="hasRole('Administrator')"/>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search-by-date?.*" access="hasRole('Administrator')"/>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search-fields?.*" access="hasRole('Administrator')"/>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search-terms?.*" access="hasRole('Administrator')"/>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search?.*" access="hasRole('Administrator')"/>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-content?.*" access="hasRole('Editor')"/>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-content-metadata?.*" access="hasRole('Editor')"/>
+
 
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/csw.config.get!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/csw.config.set!?.*" access="hasRole('Administrator')"></sec:intercept-url>
@@ -446,7 +419,15 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.languages.get!?.*" access="permitAll"/>
                 
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.console!?.*" access="hasRole('RegisteredUser')"/>
-                
+
+                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search-ip?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search-by-service-type?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search-by-date?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search-fields?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search-terms?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-search?.*" access="hasRole('Administrator')"/>
+                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-content?.*" access="hasRole('Editor')"/>
+                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/statistics-content-metadata?.*" access="hasRole('Editor')"/>
                 
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/keywords!?.*" access="permitAll"/>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/thesaurus!?.*" access="permitAll"/>
