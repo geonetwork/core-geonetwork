@@ -361,13 +361,6 @@
                                 <xsl:with-param name="title" select="/root/gui/strings/cswServer"/>
                                 <xsl:with-param name="desc" select="/root/gui/strings/cswServerDes"/>
                             </xsl:call-template>
-
-                            <xsl:call-template name="addrow">
-                                <xsl:with-param name="service" select="'virtualcsw.config'"/>
-                                <xsl:with-param name="title" select="/root/gui/strings/virtualcswServer"/>
-                                <xsl:with-param name="desc" select="/root/gui/strings/virtualcswServerDes"/>
-                            </xsl:call-template>
-
                         </xsl:if>
 
 
