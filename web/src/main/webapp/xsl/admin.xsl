@@ -361,20 +361,15 @@
                                 <xsl:with-param name="title" select="/root/gui/strings/cswServer"/>
                                 <xsl:with-param name="desc" select="/root/gui/strings/cswServerDes"/>
                             </xsl:call-template>
-                            
+
                             <xsl:call-template name="addrow">
                                 <xsl:with-param name="service" select="'virtualcsw.config'"/>
                                 <xsl:with-param name="title" select="/root/gui/strings/virtualcswServer"/>
                                 <xsl:with-param name="desc" select="/root/gui/strings/virtualcswServerDes"/>
                             </xsl:call-template>
-                            
+
                         </xsl:if>
 
-                        <xsl:call-template name="addrow">
-                            <xsl:with-param name="service" select="'metadata.formatter.admin'"/>
-                            <xsl:with-param name="title" select="/root/gui/strings/formatter.admin"/>
-                            <xsl:with-param name="desc" select="/root/gui/strings/formatter.admin.des"/>
-                        </xsl:call-template>
 
                     </xsl:variable>
 
@@ -405,12 +400,6 @@
                     -->
 
                     <xsl:variable name="i18n">
-                        <xsl:call-template name="addrow">
-                            <xsl:with-param name="service" select="'localization'"/>
-                            <xsl:with-param name="title" select="/root/gui/strings/localiz"/>
-                            <xsl:with-param name="desc" select="/root/gui/strings/localizDes"/>
-                        </xsl:call-template>
-
                         <xsl:call-template name="addrow">
                             <xsl:with-param name="service" select="'test.i18n'"/>
                             <xsl:with-param name="title" select="/root/gui/strings/i18n"/>
