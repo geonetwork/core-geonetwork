@@ -364,65 +364,6 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- User services                                                 -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="user.list">
-			<class name=".services.user.List" />
-
-			<output sheet="user-list.xsl">
-				<xml name="strings" file="xml/confirm.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="user.get">
-			<class name=".services.user.Get" />
-
-			<output sheet="user-new.xsl">
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="profiles" class="jeeves.guiservices.profiles.Get" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="user.edit">
-			<class name=".services.user.Get" />
-
-			<output sheet="user-update.xsl">
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="profiles" class="jeeves.guiservices.profiles.Get" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="user.resetpw">
-			<class name=".services.user.Get" />
-
-			<output sheet="user-resetpw.xsl">
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="profiles" class="jeeves.guiservices.profiles.Get" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="user.update">
-			<class name=".services.user.Update" />
-			<output forward="user.list" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="user.remove">
-			<class name=".services.user.Remove" />
-			<output forward="user.list" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- User self-registration services                               -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -440,44 +381,6 @@
 			<error sheet="registration-error.xsl">
 				<xml name="error" file="xml/registration-error.xml" />
 			</error>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Group services                                                -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="group.list">
-			<class name=".services.group.List" />
-
-			<output sheet="group-list.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="group.get">
-			<class name=".services.group.Get" />
-
-			<output sheet="group-update.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="group.update">
-			<class name=".services.group.Update" />
-			<output forward="group.list" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="group.remove">
-			<class name=".services.group.Remove" />
-			<output forward="group.list" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.group.update">
-			<class name=".services.group.XmlUpdate" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->

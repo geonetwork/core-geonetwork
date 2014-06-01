@@ -478,67 +478,6 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- User services                                                 -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="user.list" deprecated="true">
-			<class name=".services.user.List" />
-
-			<output sheet="user-list.xsl">
-				<xml name="strings" file="xml/confirm.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="user.get" deprecated="true">
-			<class name=".services.user.Get" />
-
-			<output sheet="user-new.xsl">
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="profiles" class="jeeves.guiservices.profiles.Get" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="user.edit" deprecated="true">
-			<class name=".services.user.Get" />
-
-			<output sheet="user-update.xsl">
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="groupsAndProfiles" class=".guiservices.groups.GetMineWithProfiles" />
-				<call name="profiles" class="jeeves.guiservices.profiles.Get" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="user.resetpw" deprecated="true">
-			<class name=".services.user.Get" />
-
-			<output sheet="user-resetpw.xsl">
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="profiles" class="jeeves.guiservices.profiles.Get" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="user.update" deprecated="true">
-			<class name=".services.user.Update" />
-			<output forward="user.list" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="user.remove" deprecated="true">
-			<class name=".services.user.Remove" />
-			<output forward="user.list" />
-		</service>
-
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- User self-registration services                               -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -557,45 +496,6 @@
 				<xml name="error" file="xml/registration-error.xml" />
 			</error>
 		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Group services                                                -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="group.list" deprecated="true">
-			<class name=".services.group.List" />
-
-			<output sheet="group-list.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="group.get" deprecated="true">
-			<class name=".services.group.Get" />
-
-			<output sheet="group-update.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="group.update" deprecated="true">
-			<class name=".services.group.Update" />
-			<output forward="group.list" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="group.remove" deprecated="true">
-			<class name=".services.group.Remove" />
-			<output forward="group.list" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="xml.group.update" deprecated="true">
-			<class name=".services.group.XmlUpdate" />
-		</service>
-
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Notifications services                                        -->

@@ -387,35 +387,6 @@
                     </xsl:call-template>
 
 
-                    <!-- user and group services -->
-                    <xsl:variable name="persInfoServices">
-
-                        <xsl:call-template name="addrow">
-                            <xsl:with-param name="service" select="'user.list'"/>
-                            <xsl:with-param name="title" select="/root/gui/strings/userManagement"/>
-                            <xsl:with-param name="desc" select="/root/gui/strings/userManagementDes"
-                                    />
-                            <xsl:with-param name="icon">user.png</xsl:with-param>
-                        </xsl:call-template>
-
-                        <xsl:if test="java:isAccessibleService('group.update')">
-                            <xsl:call-template name="addrow">
-                                <xsl:with-param name="service" select="'group.list'"/>
-                                <xsl:with-param name="title" select="/root/gui/strings/groupManagement"/>
-                                <xsl:with-param name="desc" select="/root/gui/strings/groupManDes"/>
-                                <xsl:with-param name="icon">group.png</xsl:with-param>
-                            </xsl:call-template>
-                        </xsl:if>
-                    </xsl:variable>
-
-                    <xsl:if test="not($readonly)">
-                        <xsl:call-template name="addTitle">
-                            <xsl:with-param name="icon">group.png</xsl:with-param>
-                            <xsl:with-param name="title" select="/root/gui/strings/usersAndGroups"/>
-                            <xsl:with-param name="content" select="$persInfoServices"/>
-                        </xsl:call-template>
-                    </xsl:if>
-
                     <!-- samples and tests services
                     <xsl:variable name="adminServices">
                         <xsl:call-template name="addrow">
