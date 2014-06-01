@@ -523,38 +523,6 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
             <output forward="metadata.edit" />
         </service>
 
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <service name="metadata.admin.index.rebuild" deprecated="true">
-            <documentation>
-                <para>Service to force a complete rebuild of Lucene index</para>
-            </documentation>
-            <class name=".services.metadata.IndexRebuild" />
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <service name="metadata.admin.index.rebuildxlinks" deprecated="true">
-            <documentation>
-                <para>Service to clear all cached xlinks and rebuild index for metadata records with xlinks</para>
-            </documentation>
-            <class name=".services.metadata.IndexRebuild">
-                <param name="rebuildxlinkindex" value="yes" />
-            </class>
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-
-        <service name="metadata.admin.index.optimize" deprecated="true">
-            <documentation>
-                <para>Service to force optimization of Lucene index</para>
-            </documentation>
-            <class name=".services.metadata.IndexOptimize" />
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
         <service name="metadata.admin.form" deprecated="true">
             <class name=".services.metadata.GetAdminOper" />
 

@@ -455,19 +455,6 @@
                         </xsl:call-template>
                     </xsl:if>
 
-                    <xsl:variable name="indexConfiguration">
-                        <xsl:if
-                                test="java:isAccessibleService('metadata.admin.index.rebuild') and java:isAccessibleService('metadata.admin.index.optimize')">
-                            <xsl:call-template name="admin-index"/>
-                        </xsl:if>
-                    </xsl:variable>
-
-                    <xsl:call-template name="addTitle">
-                        <xsl:with-param name="icon">find.png</xsl:with-param>
-                        <xsl:with-param name="title" select="/root/gui/strings/indexConfiguration"/>
-                        <xsl:with-param name="content" select="$indexConfiguration"/>
-                    </xsl:call-template>
-
                     <!-- samples and tests services
                     <xsl:variable name="adminServices">
                         <xsl:call-template name="addrow">
@@ -511,76 +498,6 @@
                 <p/>
             </xsl:with-param>
         </xsl:call-template>
-    </xsl:template>
-
-
-
-    <!-- ================================================================================= -->
-
-    <xsl:template name="admin-index">
-        <tr>
-            <td/>
-            <td class="padded">
-                <xsl:value-of select="/root/gui/strings/metadata.admin.index.desc"/>
-            </td>
-            <td>
-                <button class="content"
-                        onclick="idxOperation('metadata.admin.index.rebuild?reset=yes','waitIdx', this.name, true)"
-                        id="btIdx" name="btIdx">
-                    <xsl:value-of select="/root/gui/strings/rebuild"/>
-                </button>
-                <img src="{/root/gui/url}/images/loading.gif" id="waitIdx" style="display:none;"/>
-            </td>
-        </tr>
-        <tr>
-            <td/>
-            <td class="padded">
-                <xsl:value-of select="/root/gui/strings/metadata.admin.index.optimize.desc"/>
-            </td>
-            <td>
-                <button class="content"
-                        onclick="idxOperation('metadata.admin.index.optimize', 'waitIdxOpt', this.name, true)"
-                        id="btOptIdx" name="btOptIdx">
-                    <xsl:value-of select="/root/gui/strings/optimize"/>
-                </button>
-                <img src="{/root/gui/url}/images/loading.gif" id="waitIdxOpt" style="display:none;"
-                        />
-            </td>
-        </tr>
-        <tr>
-            <td/>
-            <td class="padded">
-                <xsl:value-of select="/root/gui/strings/lucene.config.reload"/>
-            </td>
-            <td>
-                <button class="content"
-                        onclick="idxOperation('lucene.config.reload', 'waitIdxReload', this.name, false)"
-                        id="btReloadIdx" name="btReloadIdx">
-                    <xsl:value-of select="/root/gui/strings/reload"/>
-                </button>
-                <img src="{/root/gui/url}/images/loading.gif" id="waitIdxReload"
-                     style="display:none;"/>
-            </td>
-        </tr>
-        <xsl:if test="string(/root/gui/env/xlinkResolver/enable)='true'">
-            <tr>
-                <td/>
-                <td class="padded">
-                    <xsl:value-of select="/root/gui/strings/metadata.admin.index.rebuildxlinks.desc"
-                            />
-                </td>
-                <td>
-                    <button class="content"
-                            onclick="idxOperation('metadata.admin.index.rebuildxlinks', 'waitIdxXLnks', this.name)"
-                            id="btIdxXLnks" name="btIdxXLnks">
-                        <xsl:value-of select="/root/gui/strings/rebuildxlinks"/>
-                    </button>
-                    <img src="{/root/gui/url}/images/loading.gif" id="waitIdxXLnks"
-                         style="display:none;"/>
-                </td>
-            </tr>
-        </xsl:if>
-
     </xsl:template>
 
 </xsl:stylesheet>
