@@ -453,23 +453,6 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Localization                                                  -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="localization">
-			<output sheet="localization/localization.xsl">
-				<call name="languages" class=".guiservices.languages.Get" />
-				<xml name="localiz" file="xml/localization.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.operation.update">
-			<class name=".services.operation.Update" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.region.update">
 			<class name=".services.region.Update" />
