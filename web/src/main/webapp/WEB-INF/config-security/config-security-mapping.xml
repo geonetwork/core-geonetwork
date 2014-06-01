@@ -119,7 +119,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/metadata.batch.extract.subtemplates.form!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/metadata.batch.extract.subtemplates!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/xml.user.metadata!?.*" access="hasRole('Editor')"></sec:intercept-url>
-                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/metadata.xmlinsert.form!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/metadata.insert!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/metadata.insert.paste!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/xml.metadata.insert.paste!?.*" access="hasRole('Editor')"></sec:intercept-url>

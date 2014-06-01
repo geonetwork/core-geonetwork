@@ -125,13 +125,6 @@
                     </xsl:call-template>
 
                     <xsl:variable name="io">
-
-                        <xsl:call-template name="addrow">
-                            <xsl:with-param name="service" select="'metadata.xmlinsert.form'"/>
-                            <xsl:with-param name="title" select="/root/gui/strings/xmlInsertTitle"/>
-                            <xsl:with-param name="desc" select="/root/gui/strings/xmlInsert"/>
-                        </xsl:call-template>
-
                         <xsl:call-template name="addrow">
                             <xsl:with-param name="service" select="'metadata.batchimport.form'"/>
                             <xsl:with-param name="title" select="/root/gui/strings/batchImportTitle"/>
