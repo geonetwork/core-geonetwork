@@ -97,38 +97,6 @@
 					localized="false" />
 				<xml name="config.nor" file="loc/nor/xml/config.xml"
 					localized="false" />
-				<!-- harvesting.xml -->
-				<xml name="harvesting.eng"
-					file="loc/eng/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.fre"
-					file="loc/fre/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.spa"
-					file="loc/spa/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.chi"
-					file="loc/chi/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.ara"
-					file="loc/ara/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.ger"
-					file="loc/ger/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.ita"
-					file="loc/ita/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.rus"
-					file="loc/rus/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.dut"
-					file="loc/dut/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.por"
-					file="loc/por/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.pol"
-					file="loc/pol/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.tur"
-					file="loc/tur/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.cat"
-					file="loc/cat/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.fin"
-					file="loc/fin/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.nor"
-					file="loc/nor/xml/harvesting.xml" localized="false" />
-			<!-- TODO : add other loc files -->
 			</output>
 		</service>
 
@@ -229,38 +197,6 @@
 					localized="false" />
 				<xml name="config.nor" file="loc/nor/xml/config.xml"
 					localized="false" />
-				<!-- harvesting.xml -->
-				<xml name="harvesting.eng"
-					file="loc/eng/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.fre"
-					file="loc/fre/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.spa"
-					file="loc/spa/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.chi"
-					file="loc/chi/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.ara"
-					file="loc/ara/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.ger"
-					file="loc/ger/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.ita"
-					file="loc/ita/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.rus"
-					file="loc/rus/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.dut"
-					file="loc/dut/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.por"
-					file="loc/por/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.pol"
-					file="loc/pol/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.tur"
-					file="loc/tur/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.cat"
-					file="loc/cat/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.fin"
-					file="loc/fin/xml/harvesting.xml" localized="false" />
-				<xml name="harvesting.nor"
-					file="loc/nor/xml/harvesting.xml" localized="false" />
-			<!-- TODO : add other loc files -->
 			</output>
 		</service>
 		<service name="test.csw">

@@ -86,24 +86,6 @@
                     </xsl:element>
                 </xsl:for-each>
     			</config>
-			<harvesting file="harvesting.xml">
-                <xsl:variable name="master" select="//harvesting.eng"/>
-    
-                <xsl:for-each select="exslt:node-set($langs)/langs/*">
-                            
-                    <xsl:variable name="l" select="name(.)"/>
-                    
-                    <xsl:element name="{$l}">
-                        <xsl:for-each select="$master/*">
-                           <xsl:call-template name="checki18n-lang">
-                                <xsl:with-param name="elem" select="." />
-                                <xsl:with-param name="lang" select="$l" />
-                                <xsl:with-param name="file">harvesting</xsl:with-param>
-                            </xsl:call-template>
-                        </xsl:for-each>
-                    </xsl:element>
-                </xsl:for-each>
-    			</harvesting>
 		</root>
 	</xsl:template>
 

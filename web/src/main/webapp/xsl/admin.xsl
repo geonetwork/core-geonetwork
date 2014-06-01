@@ -323,15 +323,6 @@
                         </xsl:call-template>
 
                         <xsl:call-template name="addrow">
-                            <xsl:with-param name="service" select="'harvesting'"/>
-                            <xsl:with-param name="title"
-                                            select="/root/gui/strings/harvestingManagement"/>
-                            <xsl:with-param name="desc" select="/root/gui/strings/harvestingManDes"
-                                    />
-                            <xsl:with-param name="icon">connect.png</xsl:with-param>
-                        </xsl:call-template>
-
-                        <xsl:call-template name="addrow">
                             <xsl:with-param name="service" select="'notifications.list'"/>
                             <xsl:with-param name="title" select="/root/gui/strings/notifications"/>
                             <xsl:with-param name="desc" select="/root/gui/strings/notificationsDes"

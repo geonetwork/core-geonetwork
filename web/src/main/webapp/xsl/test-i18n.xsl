@@ -104,19 +104,6 @@
 						</xsl:call-template>
 					</tr>
 				</xsl:for-each>
-				<tr>
-					<td colspan="4">
-						<h1>harvesting.xml</h1>
-					</td>
-				</tr>
-				<xsl:for-each select="//harvesting.eng/*">
-					<tr>
-						<xsl:call-template name="checki18n">
-							<xsl:with-param name="elem" select="." />
-							<xsl:with-param name="file">harvesting</xsl:with-param>
-						</xsl:call-template>
-					</tr>
-				</xsl:for-each>
 
 
 		</table>
