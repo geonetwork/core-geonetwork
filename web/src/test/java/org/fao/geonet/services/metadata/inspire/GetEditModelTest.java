@@ -32,7 +32,21 @@ import static org.junit.Assert.assertTrue;
 public class GetEditModelTest {
     @Test
     public void testConformityLeavesOtherConformity() throws Exception {
+        final Element testMetadata = Xml.loadFile(GetEditModelTest.class.getResource("conformity/metadata.xml"));
 
+
+        GetEditModel service = new TestGetEditModel(testMetadata);
+
+        Element params = new Element("params").addContent(new Element("id").setText("2"));
+        ServiceContext context = Mockito.mock(ServiceContext.class);
+        Mockito.when(context.getLanguage()).thenReturn("eng");
+
+        final Element result = service.exec(params, context);
+
+        final String inspireModelText = result.getTextTrim();
+        final JSONObject inspireModel = new JSONObject(inspireModelText);
+        assertEquals(0, inspireModel.getJSONObject(Save.JSON_CONFORMITY).getJSONObject(Save.JSON_TITLE).length());
+        assertEquals(0, inspireModel.getJSONObject(Save.JSON_CONFORMITY).getString(Save.JSON_CONFORMITY_RESULT_REF).length());
 
     }
 
@@ -56,7 +70,6 @@ public class GetEditModelTest {
         final JSONObject inspireModel = new JSONObject(inspireModelText);
 
         JSONObject expectedJson = new JSONObject(loadTestJson());
-        final Iterator keys = expectedJson.keys();
         expectedJson.remove("roleOptions");
         expectedJson.remove("dateTypeOptions");
         expectedJson.remove("hierarchyLevelOptions");

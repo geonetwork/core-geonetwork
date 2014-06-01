@@ -32,6 +32,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,27 @@ import static org.fao.geonet.services.metadata.inspire.Save.NS;
  */
 public class GetEditModel implements Service {
     private final XmlCacheManager cacheManager = new XmlCacheManager();
+    private static final JSONArray conformityTitleOptions = new JSONArray();
+    static {
+        try {
+            final JSONObject option = new JSONObject();
+            option.put("ger", "VERORDNUNG (EG) NR. 1089/2010 DER KOMMISSION VOM 23. NOVEMBER 2010 ZUR DURCHFÜHRUNG DER RICHTLINIE " +
+                              "2007/2/EG DES EUROPÄISCHEN PARLAMENTS UND DES RATES HINSICHTLICH DER INTEROPERABILITÄT VON " +
+                              "GEODATENSÄTZEN UND -DIENSTEN");
+            option.put("eng", "COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing " +
+                              "Directive 2007/2/EC of the European Parliament and of the Council as regards " +
+                              "interoperability of spatial data sets and services");
+            option.put("fre", "Règlement (UE) n o 1089/2010 de la commission du 23 novembre 2010 portant modalités d'application " +
+                              "de la directive 2007/2/ce du Parlement Européen et du conseil en ce qui concerne l'interopérabilité " +
+                              "des séries et des services de données géographiques");
+            option.put("ita", "REGOLAMENTO (UE) N. 1089/2010 DELLA COMMISSIONE del 23 novembre 2010 recante " +
+                              "attuazione della direttiva 2007/2/CE del Parlamento europeo e del Consiglio per quanto riguarda " +
+                              "l'interoperabilità dei set di dati territoriali e dei servizi di dati territoriali");
+            conformityTitleOptions.put(option);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
     private Function<CodeListEntry, CodeListEntry> topicCategoryGrouper = new Function<CodeListEntry, CodeListEntry>() {
         Map<String, String> topicCategoryGrouping = Maps.newHashMap();
 
@@ -103,6 +125,9 @@ public class GetEditModel implements Service {
         addCodeLists(context, metadataJson);
         metadataJson.append("metadataTypeOptions", "data");
         metadataJson.append("metadataTypeOptions", "service");
+
+        metadataJson.put("conformityTitleOptions", this.conformityTitleOptions);
+
         processMetadata(metadataEl, metadataJson);
         Element identificationInfo = processIdentificationInfo(metadataEl, metadataJson);
         processConstraints(identificationInfo, metadataJson);
@@ -117,12 +142,37 @@ public class GetEditModel implements Service {
         return new Element("data").setText(jsonString);
     }
 
+    @SuppressWarnings("unchecked")
     private void processConformity(Element metadataEl, JSONObject metadataJson) throws JSONException, JDOMException {
+        List<Element> conformityElements = (List<Element>) Xml.selectNodes(metadataEl,
+                "gmd:dataQualityInfo/*/gmd:report//gmd:DQ_ConformanceResult", NS);
+
+        Element conformanceResult = null;
+
+        for (Element conformityElement : conformityElements) {
+            List<Element> titles = (List<Element>) Xml.selectNodes(conformityElement,
+                    "gmd:specification//gmd:title//gmd:LocalisedCharacterString", NS);
+
+            for (Element title : titles) {
+
+                if (isConformityTitle(title)) {
+                    conformanceResult = conformityElement;
+                    break;
+                }
+
+                if (conformanceResult != null) {
+                    break;
+                }
+            }
+        }
+
+        if (conformanceResult == null) {
+            conformanceResult = new Element("DQ_ConformanceResult", Geonet.Namespaces.GMD);
+        }
 
         JSONObject conformityJson = new JSONObject();
         String mainLanguage = metadataJson.getString(Save.JSON_LANGUAGE);
 
-        Element conformanceResult = Xml.selectElement(metadataEl, "gmd:dataQualityInfo/*/gmd:report//gmd:DQ_ConformanceResult" , NS);
         addValue(conformanceResult, conformityJson, Save.JSON_CONFORMITY_RESULT_REF, "geonet:element/@ref");
 
         addTranslatedElement(mainLanguage, conformanceResult, getIsoLanguagesMapper(), conformityJson, Save.JSON_TITLE,
@@ -146,6 +196,21 @@ public class GetEditModel implements Service {
 
         metadataJson.put(Save.JSON_CONFORMITY, conformityJson);
 
+    }
+
+    private static boolean isConformityTitle(Element titleElement) throws JSONException {
+        final String title = titleElement.getTextTrim().toLowerCase();
+        for (int i = 0; i < conformityTitleOptions.length(); i++) {
+            JSONObject option = conformityTitleOptions.getJSONObject(i);
+            final Iterator keys = option.keys();
+            while (keys.hasNext()) {
+                String next = (String) keys.next();
+                if (option.getString(next).toLowerCase().equals(title)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     @VisibleForTesting
@@ -324,7 +389,8 @@ public class GetEditModel implements Service {
     private Element processIdentificationInfo(Element metadataEl, JSONObject metadataJson) throws Exception {
         Element identificationInfoEl = Xml.selectElement(metadataEl,
                 "gmd:identificationInfo/node()[@gco:isoType = 'gmd:MD_DataIdentification' or " +
-                "@gco:isoType = 'srv:SV_ServiceIdentification']", NS);
+                "@gco:isoType = 'srv:SV_ServiceIdentification']", NS
+        );
 
         if (identificationInfoEl == null) {
             identificationInfoEl = new Element("CHE_MD_DataIdentification", XslUtil.CHE_NAMESPACE).setAttribute("isoType", "gmd:MD_DataIdentification", GCO);
@@ -364,7 +430,8 @@ public class GetEditModel implements Service {
         return identificationInfoEl;
     }
 
-    private void addDateElement(Element identificationInfoEl, JSONObject identificationJSON, String xpathToDate) throws JSONException, JDOMException {
+    private void addDateElement(Element identificationInfoEl, JSONObject identificationJSON, String xpathToDate) throws JSONException,
+            JDOMException {
         JSONObject dateObject = new JSONObject();
         addValue(identificationInfoEl, dateObject, Save.JSON_DATE,
                 xpathToDate + "/gmd:CI_Date/gmd:date/*");

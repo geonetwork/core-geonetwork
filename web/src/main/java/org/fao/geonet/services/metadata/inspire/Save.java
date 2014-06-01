@@ -154,6 +154,8 @@ public class Save implements Service {
 
             return new Element("ok");
         } catch (Throwable t) {
+
+            Log.error(Geonet.EDITOR, "Error in Save", t);
             return new Element("pre").addContent(
                     new Element("code").addContent(
                             JeevesException.toElement(t)));
@@ -379,14 +381,15 @@ public class Save implements Service {
         String conformanceResultRef = conformityJson.optString(JSON_CONFORMITY_RESULT_REF);
         Element conformanceResult = null;
         if (!Strings.isNullOrEmpty(conformanceResultRef)) {
-            conformanceResult = Xml.selectElement(metadata, "gmd:report//gmd:DQ_ConformanceResult[geonet:element/@ref = '" +
-                                                            conformanceResultRef + "']");
+            conformanceResult = Xml.selectElement(metadata, "gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report//gmd:DQ_ConformanceResult[geonet:element/@ref = '" +
+                                                            conformanceResultRef + "']", NS);
         }
 
         if (conformanceResult == null) {
             conformanceResult = new Element("DQ_ConformanceResult", GMD);
             addElementFromXPath(editLib, metadataSchema, metadata,
-                    "gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_ConformanceResult", conformanceResult);
+                    "gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result",
+                    new Element(EditLib.SpecialUpdateTags.ADD, GEONET).addContent(conformanceResult));
 
 
 
@@ -471,6 +474,9 @@ public class Save implements Service {
 
         boolean addTopicCategory = false;
         JSONArray categories = identificationJson.optJSONArray(JSON_IDENTIFICATION_TOPIC_CATEGORIES);
+        if (categories == null) {
+            categories = new JSONArray();
+        }
         for (int i = 0; !addTopicCategory && i < categories.length(); i++) {
             String category = categories.getString(i);
             if (!category.trim().isEmpty()) {

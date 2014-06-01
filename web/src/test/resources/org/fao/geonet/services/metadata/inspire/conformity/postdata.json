@@ -1,0 +1,87 @@
+{"characterSet": "utf-8", "hierarchyLevelName": "", "constraints": {
+  "generic": [],
+  "legal": [
+    {
+      "legislationConstraints": [],
+      "ref": "",
+      "useLimitations": [],
+      "otherConstraints": [],
+      "useConstraints": [""],
+      "accessConstraints": [""]
+    }
+  ],
+  "security": []
+}, "otherLanguages": ["ger", "fre", "ita", "eng", "roh"], "contact": [
+  {
+    "id": "",
+    "organization": {},
+    "email": "",
+    "name": "",
+    "role": "",
+    "surname": "",
+    "validated": false
+  }
+], "hierarchyLevel": "", "identification": {
+  "extents": [
+    {
+      "description": {},
+      "geom": ""
+    }
+  ],
+  "abstract": {
+    "eng": ""
+  },
+  "title": {
+    "eng": ""
+  },
+  "pointOfContact": [
+    {
+      "id": "",
+      "organization": {},
+      "email": "",
+      "name": "",
+      "role": "",
+      "surname": "",
+      "validated": false
+    }
+  ],
+  "citationIdentifier": "",
+  "descriptiveKeywords": [
+    {
+      "words": {},
+      "code": ""
+    }
+  ],
+  "topicCategory": [""],
+  "language": "",
+  "serviceType": "",
+  "date": {
+    "dateTagName": "gco:Date",
+    "dateType": "",
+    "date": ""
+  },
+  "type": "data"
+}, "language": "eng", "conformity": {
+  "title": {
+    "ita": "REGOLAMENTO (UE) N. 1089/2010 DELLA COMMISSIONE del 23 novembre 2010 recante attuazione della direttiva 2007/2/CE del Parlamento europeo e del Consiglio per quanto riguarda l'interoperabilità dei set di dati territoriali e dei servizi di dati territoriali",
+    "ger": "VERORDNUNG (EG) NR. 1089/2010 DER KOMMISSION VOM 23. NOVEMBER 2010 ZUR DURCHFÜHRUNG DER RICHTLINIE 2007/2/EG DES EUROPÄISCHEN PARLAMENTS UND DES RATES HINSICHTLICH DER INTEROPERABILITÄT VON GEODATENSÄTZEN UND -DIENSTEN",
+    "fre": "Règlement (UE) n o 1089/2010 de la commission du 23 novembre 2010 portant modalités d'application de la directive 2007/2/ce du Parlement Européen et du conseil en ce qui concerne l'interopérabilité des séries et des services de données géographiques",
+    "eng": "COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services"
+  },
+  "lineage": {
+    "statement": {
+      "fre": "asfasdfsadf",
+      "eng": "asdf"
+    },
+    "ref": "114"
+  },
+  "conformanceResultRef": "",
+  "explanation": "asdf",
+  "date": {
+    "dateTagName": "gco:Date",
+    "dateType": "publication",
+    "date": "2010-12-08"
+  },
+  "pass": "true"
+}
+}

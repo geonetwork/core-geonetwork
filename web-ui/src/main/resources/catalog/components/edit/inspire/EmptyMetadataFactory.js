@@ -18,6 +18,7 @@
           "serviceTypeOptions": [],
           "scopeCodeOptions": [],
           "metadataTypeOptions": ['data', 'service'],
+          "conformityTitleOptions": [],
 
           "language": "",
           "characterSet": "utf-8",
@@ -70,10 +71,10 @@
             "conformanceResultRef": '',
             "title": {},
             "date": {
-              "date": '',
-              "dateTagName": '',
-              "dateType": ''
-            },
+              "date": "2010-12-08",
+              "dateTagName": "gco:Date",
+              "dateType": "publication"
+            } ,
             "pass": "",
             "explanation": "",
             "lineage": {

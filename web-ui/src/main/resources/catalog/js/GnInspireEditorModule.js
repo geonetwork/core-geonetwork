@@ -138,6 +138,8 @@
         delete dataClone.constraintOptions;
         delete dataClone.serviceTypeOptions;
         delete dataClone.metadataTypeOptions;
+        delete dataClone.scopeCodeOptions;
+        delete dataClone.conformityTitleOptions;
 
         var data = JSON.stringify(dataClone);
         return $http({
@@ -312,6 +314,7 @@
       $scope.propertyCount = {
         accessConstraints: 0,
         useConstraints: 0,
+        useLimitations: 0,
         updateAccessConstraints: function() {
           $scope.propertyCount.accessConstraints = countProperties('accessConstraints');
           if ($scope.propertyCount.accessConstraints === 0) {
@@ -325,6 +328,13 @@
             $scope.data.constraints.legal[0].useConstraints = [''];
             $scope.propertyCount.useConstraints = 1;
           }
+        },
+        updateUseLimitations: function() {
+          $scope.propertyCount.useLimitations = countProperties('useLimitations');
+          if ($scope.propertyCount.useLimitations === 0) {
+            $scope.data.constraints.legal[0].useLimitations = [{}];
+            $scope.propertyCount.useLimitations = 1;
+          }
         }
       };
 
@@ -333,6 +343,7 @@
           newValue.push({
             accessConstraints: [''],
             useConstraints: [''],
+            useLimitations: [{}],
             otherConstraints: [],
             legislationConstraints: []
           });
@@ -340,6 +351,7 @@
 
         $scope.propertyCount.updateAccessConstraints();
         $scope.propertyCount.updateUseConstraints();
+        $scope.propertyCount.updateUseLimitations();
       });
       $scope.hasOtherRestrictions = function(legalConstraint) {
         var x;
@@ -403,14 +415,6 @@
         return $scope.validationErrorClass;
       };
 
-      $scope.titleOptions = [{
-        'ger': 'Verordnung (EG) Nr. 1089/2010 der Kommission vom 23. November 2010 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität von Geodatensätzen und -diensten',
-        'eng': 'COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services',
-        'fre': "Règlement (UE) n o 1089/2010 de la commission du 23 novembre 2010 portant modalités d'application de la directive 2007/2/ce du Parlement Européen et du conseil en ce qui concerne l'interopérabilité des séries et des services de données géographiques",
-        'ita': "REGOLAMENTO (UE) N. 1089/2010 DELLA COMMISSIONE del 23 novembre 2010 recante attuazione della direttiva 2007/2/CE del Parlamento europeo e del Consiglio per quanto riguarda l'interoperabilità dei set di dati territoriali e dei servizi di dati territoriali"
-      }];
-
-
       $scope.passOptions = [{
         val: 'true',
         name: $translate('passConformity')
@@ -421,8 +425,8 @@
 
       $scope.$watch('data.conformity.title', function(newVal) {
         var i, option, lang;
-        for (i = 0; i < $scope.titleOptions.length; i++) {
-          option = $scope.titleOptions[i];
+        for (i = 0; i < $scope.data.conformityTitleOptions.length; i++) {
+          option = $scope.data.conformityTitleOptions[i];
           if (option === newVal) {
             return;
           }

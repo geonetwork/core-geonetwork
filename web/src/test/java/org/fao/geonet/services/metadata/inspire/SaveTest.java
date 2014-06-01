@@ -98,6 +98,42 @@ public class SaveTest {
     }
 
     @Test
+    public void testConformityAddsNewConformityWhenRefIsMissing() throws Exception {
+        testMetadata = Xml.loadFile(SaveTest.class.getResource("conformity/metadata.xml"));
+        service.setTestMetadata(testMetadata);
+        final String testJson = loadTestJson("conformity/postdata.json");
+
+        assertEquals(1, Xml.selectNodes(testMetadata,
+                "gmd:dataQualityInfo/*/gmd:report//gmd:DQ_ConformanceResult", NS).size());
+
+        Element result = service.exec(new Element("request").addContent(Arrays.asList(
+                new Element("id").setText("12"),
+                new Element("data").setText(testJson)
+        )), context);
+
+        assertEquals(Xml.getString(result), "ok", result.getName());
+        assertEquals(2, Xml.selectNodes(testMetadata,
+                "gmd:dataQualityInfo/*/gmd:report//gmd:DQ_ConformanceResult", NS).size());
+    }
+
+    @Test
+    public void testConformityReplacesOldWhenRefExists() throws Exception {
+        testMetadata = Xml.loadFile(SaveTest.class.getResource("conformity/metadata.xml"));
+        service.setTestMetadata(testMetadata);
+        JSONObject json = new JSONObject(loadTestJson("conformity/postdata.json"));
+
+        json.getJSONObject(Save.JSON_CONFORMITY).put(Save.JSON_CONFORMITY_RESULT_REF, "90");
+
+        service.exec(new Element("request").addContent(Arrays.asList(
+                new Element("id").setText("12"),
+                new Element("data").setText(json.toString())
+        )), context);
+
+        assertEquals(1, Xml.selectNodes(testMetadata,
+                "gmd:dataQualityInfo/*/gmd:report//gmd:DQ_ConformanceResult", NS).size());
+    }
+
+    @Test
     public void testSave() throws Exception {
         String json = loadTestJson();
 
@@ -129,11 +165,12 @@ public class SaveTest {
     }
 
     protected void assertCorrectlySavedFromEmptyMd() throws JDOMException {
-        assertEquals(Xml.selectString(testMetadata, "gmd:language/gco:CharacterString", NS), "eng");
-        assertEquals(Xml.selectString(testMetadata, "gmd:hierarchyLevelName/gco:CharacterString", NS), "");
-        assertEquals(Xml.selectString(testMetadata, "gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue", NS), "utf8");
-        assertEquals(Xml.selectString(testMetadata, "gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue", NS), "dataset");
-        final List<?> contact = Xml.selectNodes(testMetadata, "gmd:contact", NS);
+        final Element savedMetadata = service.getSavedMetadata();
+        assertEquals(Xml.selectString(savedMetadata, "gmd:language/gco:CharacterString", NS), "eng");
+        assertEquals(Xml.selectString(savedMetadata, "gmd:hierarchyLevelName/gco:CharacterString", NS), "");
+        assertEquals(Xml.selectString(savedMetadata, "gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue", NS), "utf8");
+        assertEquals(Xml.selectString(savedMetadata, "gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue", NS), "dataset");
+        final List<?> contact = Xml.selectNodes(savedMetadata, "gmd:contact", NS);
         assertEquals(3, contact.size());
         String metadataMainLang = "eng";
         assertContact(metadataMainLang, (Element) contact.get(0), "Florent", "Gravin", "florent.gravin@camptocamp.com", "owner", false,
@@ -143,14 +180,14 @@ public class SaveTest {
         assertContact(metadataMainLang, (Element) contact.get(2), "New", "User", "new.user@camptocamp.com", "pointOfContact", true,
                 read("eng", "Camptocamp SA"), read("ger", "Camptocamp AG"));
 
-        assertNotNull(Xml.selectElement(testMetadata, "gmd:dateStamp/gco:DateTime", NS));
-        assertEquals(19, Xml.selectString(testMetadata, "gmd:dateStamp/gco:DateTime", NS).length());
+        assertNotNull(Xml.selectElement(savedMetadata, "gmd:dateStamp/gco:DateTime", NS));
+        assertEquals(19, Xml.selectString(savedMetadata, "gmd:dateStamp/gco:DateTime", NS).length());
 
-        assertEquals(Xml.selectString(testMetadata,
+        assertEquals(Xml.selectString(savedMetadata,
                 "gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode[@codeListValue = 'ger']/@codeListValue", NS), "ger");
-        assertEquals(Xml.selectString(testMetadata,
+        assertEquals(Xml.selectString(savedMetadata,
                 "gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode[@codeListValue = 'eng']/@codeListValue", NS), "eng");
-        final Element identification = Xml.selectElement(testMetadata, "gmd:identificationInfo/che:CHE_MD_DataIdentification", NS);
+        final Element identification = Xml.selectElement(savedMetadata, "gmd:identificationInfo/che:CHE_MD_DataIdentification", NS);
         assertNotNull(identification);
         assertEquals("gmd:MD_DataIdentification", identification.getAttributeValue("isoType", GCO));
         assertCorrectTranslation(metadataMainLang, identification, "gmd:citation/gmd:CI_Citation/gmd:title", read("eng", "Title"), read("fre", "Titre"));
@@ -205,9 +242,9 @@ public class SaveTest {
         assertEquals("transportation", topicCategory.get(0).getChildText("MD_TopicCategoryCode", GMD));
         assertEquals("imageryBaseMapsEarthCover_BaseMaps", topicCategory.get(1).getChildText("MD_TopicCategoryCode", GMD));
 
-        assertCorrectConstraints(identification, metadataMainLang);
+        assertCorrectConstraints(identification);
 
-        assertConformity(testMetadata, metadataMainLang);
+        assertConformity(savedMetadata, metadataMainLang);
 
         assertTrue(service.isSaved());
     }
@@ -242,9 +279,9 @@ public class SaveTest {
 
     }
 
-    protected void assertCorrectConstraints(Element identification, String metadataMainLang) throws JDOMException {
+    protected void assertCorrectConstraints(Element identification) throws JDOMException {
         List<Element> constraints = (List<Element>) Xml.selectNodes(identification,
-                "gmd:resourceConstraints/che:CHE_MD_LegalConstraints");
+                "gmd:resourceConstraints/che:CHE_MD_LegalConstraints", NS);
         assertEquals(2, constraints.size());
         for (Element constraint : constraints) {
             assertEquals("gmd:MD_LegalConstraints", constraint.getAttributeValue("isoType", GCO));
@@ -314,16 +351,18 @@ public class SaveTest {
 
         service.setTestMetadata(testMetadata);
         service.setEnumerateOnGetMetadata(false);
-        service.exec(new Element("request").addContent(Arrays.asList(
+        final Element result = service.exec(new Element("request").addContent(Arrays.asList(
                 new Element("id").setText("12"),
                 new Element("data").setText(json.toString())
         )), context);
+
+        assertEquals("ok", result.getName());
 
         final Element identification = Xml.selectElement(service.getSavedMetadata(), "gmd:identificationInfo/*", NS);
 
         assertEquals(0, Xml.selectNodes(identification, "geonet:element", Arrays.asList(GEONET)).size());
         assertEquals(0, Xml.selectNodes(identification, "*//geonet:element", Arrays.asList(GEONET)).size());
-        assertCorrectConstraints(identification, metadataMainLang);
+        assertCorrectConstraints(identification);
 
 
         assertEquals(1, Xml.selectNodes(identification, "gmd:resourceConstraints/che:CHE_MD_LegalConstraints[not(gmd:useLimitation)]",

@@ -48,7 +48,7 @@
                 <titles>
                     <ger>verordnung (eg) nr. 1089/2010 der kommission vom 23. november 2010 zur durchführung der richtlinie 2007/2/eg des europäischen parlaments und des rates hinsichtlich der interoperabilität von geodatensätzen und -diensten</ger>
                     <eng>commission regulation (eu) no 1089/2010 of 23 november 2010 implementing directive 2007/2/ec of the european parliament and of the council as regards interoperability of spatial data sets and services</eng>
-                    <fre>Règlement (UE) n o 1089/2010 de la commission du 23 novembre 2010 portant modalités d'application de la directive 2007/2/ce du Parlement Européen et du conseil en ce qui concerne l'interopérabilité des séries et des services de données géographiques</fre>
+                    <fre>règlement (ue) n o 1089/2010 de la commission du 23 novembre 2010 portant modalités d'application de la directive 2007/2/ce du parlement européen et du conseil en ce qui concerne l'interopérabilité des séries et des services de données géographiques</fre>
                     <ita>regolamento (ue) n. 1089/2010 della commissione del 23 novembre 2010 recante attuazione della direttiva 2007/2/ce del parlamento europeo e del consiglio per quanto riguarda l'interoperabilità dei set di dati territoriali e dei servizi di dati territoriali</ita>
                     <spa>reglamento (ue) n o 1089/2010 de la comisión de 23 de noviembre de 2010 por el que se aplica la directiva 2007/2/ce del parlamento europeo y del consejo en lo que se refiere a la interoperabilidad de los conjuntos y los servicios de datos espaciales</spa>
                     <fin>komission asetus (eu) n:o 1089/2010, annettu 23 päivänä marraskuuta 2010 , euroopan parlamentin ja neuvoston direktiivin 2007/2/ey täytäntöönpanosta paikkatietoaineistojen ja -palvelujen yhteentoimivuuden osalta</fin>
@@ -56,25 +56,25 @@
                 </titles>
             </sch:let>
             <sch:let name="isDeMetadata" value="$lang = 'ger'"/>
-            <sch:let name="hasDeTitle" value="$isDeMetadata and $specification_title[normalize-space(.) = $allTitles//ger/text()]"/>
+            <sch:let name="hasDeTitle" value="$isDeMetadata and $specification_title[lower-case(normalize-space(.)) = $allTitles//ger/text()]"/>
 
             <sch:let name="isEnMetadata" value="$lang = 'eng'"/>
-            <sch:let name="hasEnTitle" value="$isEnMetadata and $specification_title[normalize-space(.) = $allTitles//eng/text()]"/>
+            <sch:let name="hasEnTitle" value="$isEnMetadata and $specification_title[lower-case(normalize-space(.)) = $allTitles//eng/text()]"/>
 
             <sch:let name="isFrMetadata" value="$lang = 'fre'"/>
-            <sch:let name="hasFrTitle" value="$isFrMetadata and $specification_title[normalize-space(.) = $allTitles//fre/text()]"/>
+            <sch:let name="hasFrTitle" value="$isFrMetadata and $specification_title[lower-case(normalize-space(.)) = $allTitles//fre/text()]"/>
 
             <sch:let name="isItMetadata" value="$lang = 'ita'"/>
-            <sch:let name="hasItTitle" value="$isItMetadata and $specification_title[normalize-space(.) = $allTitles//ita/text()]"/>
+            <sch:let name="hasItTitle" value="$isItMetadata and $specification_title[lower-case(normalize-space(.)) = $allTitles//ita/text()]"/>
 
             <sch:let name="isEsMetadata" value="$lang = 'spa'"/>
-            <sch:let name="hasEsTitle" value="$isEsMetadata and $specification_title[normalize-space(.) = $allTitles//spa/text()]"/>
+            <sch:let name="hasEsTitle" value="$isEsMetadata and $specification_title[lower-case(normalize-space(.)) = $allTitles//spa/text()]"/>
 
             <sch:let name="isFiMetadata" value="$lang = 'fin'"/>
-            <sch:let name="hasFiTitle" value="$isFiMetadata and $specification_title[normalize-space(.) = $allTitles//fin/text()]"/>
+            <sch:let name="hasFiTitle" value="$isFiMetadata and $specification_title[lower-case(normalize-space(.)) = $allTitles//fin/text()]"/>
 
             <sch:let name="isNlMetadata" value="$lang = 'dut'"/>
-            <sch:let name="hasNlTitle" value="$isNlMetadata and $specification_title[normalize-space(.) = $allTitles//dut/text()]"/>
+            <sch:let name="hasNlTitle" value="$isNlMetadata and $specification_title[lower-case(normalize-space(.)) = $allTitles//dut/text()]"/>
 
             <sch:let name="correctTitle" value="$allTitles//*[name() = $lang]/text()"/>
             <sch:assert test="$hasDeTitle or $hasEnTitle or $hasFrTitle or $hasItTitle or
@@ -82,6 +82,7 @@
                 <sch:value-of select="$loc/strings/assert.M44.conformityActual/div"/>
 
                 <sch:value-of select="concat('''', normalize-space($specification_title[1]), '''')"/>
+                <sch:value-of select="<br/>"/>
 
                 <sch:value-of select="$loc/strings/assert.M44.conformityExpected/div"/>
 
