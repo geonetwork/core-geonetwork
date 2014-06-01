@@ -125,13 +125,6 @@
                             </xsl:call-template>
                         </xsl:if>
 
-                        <xsl:call-template name="addrow">
-                            <xsl:with-param name="service" select="'metadata.searchunused.form'"/>
-                            <xsl:with-param name="title"
-                                            select="/root/gui/strings/searchUnusedTitle"/>
-                            <xsl:with-param name="desc" select="/root/gui/strings/searchUnused"/>
-                        </xsl:call-template>
-
                         <xsl:choose>
                             <xsl:when test="/root/gui/config/client/@widget='true' and /root/gui/config/client/@stateId!=''">
 

@@ -591,21 +591,6 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
             </output>
         </service>
 
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <service name="metadata.searchunused.form">
-            <output sheet="metadata-searchunused.xsl">
-                <xml name="unused" file="xml/metadata-searchunused.xml" />
-            </output>
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <service name="metadata.searchunused">
-            <class name=".services.metadata.SearchUnused" />
-
-            <output forward="main.present" />
-        </service>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
         <!-- Metadata Schema services                                      -->
