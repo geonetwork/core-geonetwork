@@ -560,16 +560,6 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
         </service>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <service name="metadata.batchimport.form">
-            <output sheet="metadata-batchimport.xsl">
-                <call name="groups" class=".guiservices.groups.GetMine" />
-                <call name="categories" class=".services.category.List" />
-                <call name="importStyleSheets" class=".guiservices.util.GetImportXSLs" />
-            </output>
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
         <!-- Thumbnail services                                            -->
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
