@@ -489,16 +489,6 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.create.form">
-            <output sheet="metadata-create.xsl">
-                <call name="groups" class=".guiservices.groups.GetMine" />
-                <call name="templates" class=".guiservices.templates.Get" />
-                <xml name="create" file="xml/metadata-create.xml" />
-            </output>
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
         <service name="metadata.create.thesaurus.form">
             <output sheet="metadata-create-thesaurus.xsl">
                 <call name="thesaurusTypes" class=".services.thesaurus.GetList" />
