@@ -438,13 +438,6 @@
                     <xsl:variable name="classification">
 
                         <xsl:call-template name="addrow">
-                            <xsl:with-param name="service" select="'category.list'"/>
-                            <xsl:with-param name="title"
-                                            select="/root/gui/strings/categoryManagement"/>
-                            <xsl:with-param name="desc" select="/root/gui/strings/categoryManDes"/>
-                        </xsl:call-template>
-
-                        <xsl:call-template name="addrow">
                             <xsl:with-param name="service" select="'thesaurus.admin'"/>
                             <xsl:with-param name="title"
                                             select="/root/gui/strings/thesaurus/management"/>

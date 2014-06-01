@@ -644,44 +644,6 @@
 			<class name=".services.group.XmlUpdate" />
 		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Category services                                             -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="category.list" deprecated="true">
-			<class name=".services.category.List" />
-
-			<output sheet="category-list.xsl" >
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="category.get" deprecated="true">
-			<class name=".services.category.Get" />
-
-			<output sheet="category-update.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="category.update" deprecated="true">
-			<class name=".services.category.Update" />
-			<output forward="category.list" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="category.remove" deprecated="true">
-			<class name=".services.category.Remove" />
-			<output forward="category.list" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.category.update" deprecated="true">
-			<class name=".services.category.XmlUpdate" />
-		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Notifications services                                        -->
