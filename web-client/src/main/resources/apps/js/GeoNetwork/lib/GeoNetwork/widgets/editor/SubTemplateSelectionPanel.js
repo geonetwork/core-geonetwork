@@ -437,9 +437,7 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
         var getRecordsFormat = new OpenLayers.Format.GeoNetworkRecords();
         var r = getRecordsFormat.read(response.responseText);
         var values = r.records;
-        if (values.length > 0) {
-            this.subTemplateStore.loadData(r);
-        }
+        this.subTemplateStore.loadData(r);
     }
 });
 
