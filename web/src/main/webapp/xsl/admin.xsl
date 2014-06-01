@@ -106,22 +106,13 @@
                 <xsl:variable name="readonly" select="/root/gui/env/readonly = 'true'"/>
 
                 <table width="100%" class="text-aligned-left">
-                    <!-- Metadata versioning log-->
-                    <xsl:variable name="mdVersionLog">
-                        <xsl:call-template name="addrow">
-                            <xsl:with-param name="service" select="'versioning.log'"/>
-                            <xsl:with-param name="title"
-                                            select="/root/gui/strings/metadata-versioning-log"/>
-                        </xsl:call-template>
-                    </xsl:variable>
 
                     <xsl:call-template name="addTitle">
                         <xsl:with-param name="icon">xml.png</xsl:with-param>
                         <xsl:with-param name="title"
                                         select="concat(/root/gui/strings/metadata, '&#160;&amp;&#160;', /root/gui/strings/template)"/>
                         <xsl:with-param name="content">
-							<xsl:copy-of select="$mdVersionLog"/>
-                        </xsl:with-param>
+							          </xsl:with-param>
                     </xsl:call-template>
 
                     <xsl:variable name="catalogueConfiguration">

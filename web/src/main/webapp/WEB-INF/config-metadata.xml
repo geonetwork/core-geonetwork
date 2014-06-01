@@ -652,13 +652,6 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
             <output file="true" />
             <error id="illegal-params" sheet="metadata-error.xsl" />
         </service>
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-        <!-- Versioning log                                                -->
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <service name="versioning.log">
-            <output sheet="versioning/log.xsl"></output>
-        </service>
 
         <!-- Massive metadata update services -->
 
