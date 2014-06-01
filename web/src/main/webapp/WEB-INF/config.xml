@@ -1115,51 +1115,6 @@
 	    <class name=".guiservices.csw.customelementset.Set"/>
 	    <output sheet="admin.xsl"> </output>
 	  </service>
-	  
-	  
-	  <service name="csw.config.set" deprecated="true">
-	    <class name=".guiservices.csw.Set" />
-	    
-	    <output sheet="admin.xsl">
-	    </output>
-	  </service>
-	  
-	  
-	  <service name="virtualcsw.config" deprecated="true">
-	    <output sheet="csw/config-virtualcsw.xsl">
-	      <call name="services" class=".guiservices.csw.virtual.List"/>
-	    </output>
-	  </service>
-	  
-	  <service name="virtualcsw.config.get" deprecated="true">
-	    <output sheet="csw/virtualcsw-new.xsl">
-	      <call name="services" class=".guiservices.csw.virtual.Get"/>
-	      <call name="groups" class=".guiservices.groups.GetMine"/>
-	      <call name="categories" class=".services.category.List"/>
-	      <call name="sources" class=".guiservices.util.Sources"/>
-	    </output>
-	  </service>
-	  
-	  <service name="virtualcsw.config.update" deprecated="true">
-	    <class name=".guiservices.csw.virtual.Update"/>
-	    <output forward="virtualcsw.config"/>
-	  </service>
-	  
-	  
-	  <service name="virtualcsw.config.edit" deprecated="true">
-	    <output sheet="csw/virtualcsw-update.xsl">
-	      <call name="services" class=".guiservices.csw.virtual.Get"/>
-	      <call name="groups" class=".guiservices.groups.GetMine"/>
-	      <call name="categories" class=".services.category.List"/>
-	      <call name="sources" class=".guiservices.util.Sources"/>
-	    </output>
-	  </service>
-	  
-	  <service name="virtualcsw.config.delete" deprecated="true">
-	    <class name=".guiservices.csw.virtual.Delete"/>
-	    <output forward="virtualcsw.config"/>
-	  </service>
-
 	</services>
 
 	<!-- ====================================================================== -->
