@@ -598,15 +598,6 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="config.info" deprecated="true">
-			<class name=".services.config.GetInfo" />
-			<output sheet="config/info.xsl">
-				<xml name="config" file="xml/config.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Help services                                                 -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
