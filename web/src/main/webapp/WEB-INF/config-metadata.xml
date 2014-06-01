@@ -657,18 +657,6 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
             <class name=".services.metadata.Rate" />
         </service>
 
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-        <!-- Order templates											   -->
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-        <service name="metadata.templates.list">
-            <output sheet="metadata-templates-list.xsl">
-                <call name="templates" class=".guiservices.templates.Get" />
-            </output>
-        </service>
-
-        <service name="metadata.templates.displayorder.save">
-            <class name=".guiservices.templates.SaveDisplayOrder" />
-        </service>
 
         <service name="metadata.templates.add.default">
             <class name=".guiservices.templates.AddDefault" />

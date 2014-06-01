@@ -122,18 +122,6 @@
                     </xsl:variable>
 
 
-
-                    <!-- Template administration -->
-                    <xsl:variable name="mdTemplate">
-                        <xsl:call-template name="addrow">
-                            <xsl:with-param name="service" select="'metadata.templates.list'"/>
-                            <xsl:with-param name="title"
-                                            select="/root/gui/strings/metadata-template-order"/>
-                            <xsl:with-param name="desc"
-                                            select="/root/gui/strings/metadata-template-order-desc"/>
-                        </xsl:call-template>
-                    </xsl:variable>
-
                     <!-- Metadata versioning log-->
                     <xsl:variable name="mdVersionLog">
                         <xsl:call-template name="addrow">
