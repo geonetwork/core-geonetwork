@@ -1125,8 +1125,7 @@
 	<include>config-harvesting.xml</include>
 	<include>config-portal.xml</include>
 	<include>config-export.xml</include>
-	<include>config-statistics.xml</include>
-  <include>config-test.xml</include>
+	<include>config-test.xml</include>
 
 	<!-- ====================================================================== -->
 
@@ -1162,7 +1161,7 @@
     <include>config/config-service-admin-formatter.xml</include>
 
   <include>config/config-service-statistics.xml</include>
-  
+
   <include>config/config-service-admin-csw.xml</include>
   <include>config/config-service-csw.xml</include>
   <include>config/config-service-csw-virtual.xml</include>
