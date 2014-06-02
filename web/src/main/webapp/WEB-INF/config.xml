@@ -126,40 +126,7 @@
 	<!-- ====================================================================== -->
 
 	<services package="org.fao.geonet">
-		<service name="main.home" remove="true">
-			<output sheet="main-page.xsl">
-				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
-				<call name="keywords" class=".guiservices.keywords.Get" />
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="categories" class=".services.category.List" />
-				<call name="status" class=".services.main.Info">
-					<param name="type" value="status" />
-				</call>
-				<call name="regions" class=".guiservices.regions.Get" />
-				<call name="sources" class=".guiservices.util.Sources" />
-				<call name="repositories" class=".services.main.Info">
-					<param name="type" value="z3950repositories" />
-				</call>
 
-				<call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
-					<param name="maxItems" value="10" />
-					<param name="timeBetweenUpdates" value="10" />
-				</call>
-
-				<call name="featured" class=".guiservices.metadata.GetRandom">
-					<param name="maxItems" value="1" />
-					<param name="timeBetweenUpdates" value="10" />
-					<!-- Restrict to a geographic area. Default is global overlap -->
-					<param name="relation" value="overlaps" />
-					<param name="northBL" value="90" />
-					<param name="southBL" value="-90" />
-					<param name="eastBL" value="180" />
-					<param name="westBL" value="-180" />
-				</call>
-
-				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
-			</output>
-		</service>
 		<service name="service-not-allowed" migrate="true">
       <!-- TODO: move to XSLT folder -->
 			<output sheet="service-not-allowed.xsl">
@@ -167,144 +134,10 @@
 			</output>
 		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
 		<service name="main.error" migrate="true">
 			<output sheet="main-error.xsl">
 				<call name="startupError" class=".guiservices.util.GetStartupError" />
 			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.main.error" remove="true">
-			<output sheet="main-error-xml.xsl" contentType="text/xml; charset=UTF-8">
-				<call name="startupError" class=".guiservices.util.GetStartupError" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="main.search" remove="true">
-			<class name=".services.main.Search">
-				<param name="maxSummaryKeys" value="10" />
-				<param name="maxHitsInSummary" value="1000" />
-			</class>
-
-			<output forward="main.present" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- ETj: this service provides a page similar to main.search, made simpler to be embedded elsewhere-->
-
-		<service name="main.search.embedded" remove="true">
-			<class name=".services.main.Search">
-				<param name="maxSummaryKeys" value="10" />
-				<param name="maxHitsInSummary" value="1000" />
-			</class>
-
-			<output forward="main.present.embedded" />
-
-			<error id="unauthorized" sheet="xml-error.xsl" statusCode="403">
-				<xml name="error" file="xml/unauthorized.xml" />
-			</error>
-		</service>
-
-		<service name="main.search.suggest" remove="true">
-			<class name=".services.main.SearchSuggestion">
-				<!-- Minimum frequency for a term value to be proposed in suggestion. -->
-				<param name="threshold" value="1" />
-				<!--
-					Max number of term's values to look in the index. For large catalogue
-					this value should be increased in order to get better results. If this
-					value is too high, then looking for terms could take more times. The use
-					of good analyzer should allow to reduce the number of useless values like
-					(a, the, ...).
-				-->
-				<param name="max_number_of_terms" value="100000" />
-				<!-- Default field to search in. any is full-text search field. -->
-				<param name="default_search_field" value="any" />
-			</class>
-
-			<output sheet="search-suggestions.xsl" contentType="application/json; charset=UTF-8" />
-		</service>
-
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="main.present.embedded"  remove="true">
-			<class name=".services.main.Result">
-				<param name="maxRecords" value="10" />
-				<param name="syntax" value="f" />
-			</class>
-
-			<output sheet="search-results-xhtml.xsl" contentType="text/xml; charset=UTF-8">
-				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="sources" class=".guiservices.util.Sources" />
-				<call name="config" class=".services.config.Get" />
-				<call name="repositories" class=".services.main.Info">
-					<param name="type" value="z3950repositories" />
-				</call>
-			</output>
-
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="main.searchform.advanced.embedded" remove="true">
-			<output sheet="searchform_advanced.xsl">
-				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
-				<call name="keywords" class=".guiservices.keywords.Get" />
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="categories" class=".services.category.List" />
-				<call name="regions" class=".guiservices.regions.Get" />
-				<call name="sources" class=".guiservices.util.Sources" />
-				<call name="repositories" class=".services.main.Info">
-					<param name="type" value="z3950repositories" />
-				</call>
-				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="main.searchform.remote.embedded" remove="true">
-			<output sheet="searchform_advanced.xsl">
-				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
-				<call name="keywords" class=".guiservices.keywords.Get" />
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="categories" class=".services.category.List" />
-				<call name="regions" class=".guiservices.regions.Get" />
-				<call name="sources" class=".guiservices.util.Sources" />
-				<call name="repositories" class=".services.main.Info">
-					<param name="type" value="z3950repositories" />
-				</call>
-				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="main.searchform.simple.embedded" remove="true">
-			<output sheet="searchform_simple.xsl">
-				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
-				<call name="keywords" class=".guiservices.keywords.Get" />
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="categories" class=".services.category.List" />
-				<call name="regions" class=".guiservices.regions.Get" />
-				<call name="sources" class=".guiservices.util.Sources" />
-				<call name="repositories" class=".services.main.Info">
-					<param name="type" value="z3950repositories" />
-				</call>
-				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="rating.popup" remove="true">
-			<output sheet="rating-popup.xsl" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
