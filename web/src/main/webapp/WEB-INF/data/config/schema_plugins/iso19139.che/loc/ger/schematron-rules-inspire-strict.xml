@@ -13,5 +13,10 @@
 
     <assert.M44.dataQualityExpected><div><br></br>Expected Data Quality Elements<br></br></div></assert.M44.dataQualityExpected>
     <report.M44.dataQualityExpected><div>Data Quality Elements</div></report.M44.dataQualityExpected>
+    <assert.M44.dataQualityScopeNotAllowed><div>No children of data quality scope allowed for Inspire compatibility</div></assert.M44.dataQualityScopeNotAllowed>
+
+    <uselimitation>UseLimitation</uselimitation>
+    <assert.useLimitation><div>Identification / resourceConstraints // useLimitation is required</div></assert.useLimitation>
+    <report.useLimitation><div>Use Limitation Elements</div></report.useLimitation>
 
 </strings>

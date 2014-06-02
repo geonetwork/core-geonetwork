@@ -5,7 +5,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import jeeves.exceptions.JeevesException;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -37,7 +36,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,7 +46,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.annotation.Nullable;
 
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
@@ -156,9 +156,11 @@ public class Save implements Service {
         } catch (Throwable t) {
 
             Log.error(Geonet.EDITOR, "Error in Save", t);
+            final ByteArrayOutputStream out = new ByteArrayOutputStream();
+            PrintStream s = new PrintStream(out);
+            t.printStackTrace(s);
             return new Element("pre").addContent(
-                    new Element("code").addContent(
-                            JeevesException.toElement(t)));
+                    new Element("code").addContent(out.toString()));
         }
     }
 
@@ -618,7 +620,8 @@ public class Save implements Service {
         }
     }
 
-    private Element getIdentification(EditLib editLib, Element metadata, MetadataSchema metadataSchema,
+    @VisibleForTesting
+    Element getIdentification(EditLib editLib, Element metadata, MetadataSchema metadataSchema,
                                       JSONObject identificationJson) throws Exception {
         Element identificationInfo = metadata.getChild("identificationInfo", Geonet.Namespaces.GMD);
         if (identificationInfo == null) {
@@ -646,16 +649,31 @@ public class Save implements Service {
 
         if (!finalInfo.getName().equals(requiredInfoTagName)) {
             finalInfo.detach();
+            Element oldInfo = finalInfo;
+            finalInfo = new Element(requiredInfoTagName, CHE_NAMESPACE);
+            identificationInfo.addContent(finalInfo);
 
-            Element newInfo = new Element(requiredInfoTagName, CHE_NAMESPACE);
-            identificationInfo.addContent(newInfo);
-
-            final MetadataType elementType = metadataSchema.getTypeInfo("che:" + requiredInfoTagName);
+            final MetadataType elementType = metadataSchema.getTypeInfo("che:" + requiredInfoTagName + "_Type");
             final List<String> elementList = elementType.getElementList();
-            for (Object o : finalInfo.getChildren()) {
+
+            if (elementList.isEmpty()) {
+                throw new Error("A bug was found when looking up the identification info type");
+            }
+            final List elementsToCopy = Lists.newArrayList(oldInfo.getChildren());
+
+            for (Object o : elementsToCopy) {
                 Element child = (Element) o;
-                String name = child.getNamespacePrefix() + ":" + child.getName();
-                if (elementList.contains(name)) {
+
+                if (child.getName().equals("extent")) {
+                    if (jsonType.equals(JSON_IDENTIFICATION_TYPE_DATA_VALUE)) {
+                        child.setNamespace(GMD);
+                    } else {
+                        child.setNamespace(SRV);
+                    }
+                }
+
+                if (elementList.contains(child.getQualifiedName())) {
+                    child.detach();
                     finalInfo.addContent(child);
                 }
             }

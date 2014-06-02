@@ -110,6 +110,16 @@ public class GetEditModel implements Service {
             return null;
         }
     };
+    private Function<CodeListEntry, CodeListEntry> serviceTypeInspire = new Function<CodeListEntry, CodeListEntry>() {
+        @Nullable
+        @Override
+        public CodeListEntry apply(@Nullable CodeListEntry input) {
+            if (input != null && input.name.toLowerCase().contains("inspire")) {
+                return input;
+            }
+            return null;
+        }
+    };
 
     @Override
     public void init(String appPath, ServiceConfig params) throws Exception {
@@ -237,7 +247,7 @@ public class GetEditModel implements Service {
                 topicCategoryGrouper);
         addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:MD_RestrictionCode", "constraintOptions", null);
         addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:MD_ScopeCode", "scopeCodeOptions", null);
-        addCodeListOptionsFromLabelsHelper(metadataJson, labels, labelExtensions, "srv:serviceType", "serviceTypeOptions");
+        addCodeListOptionsFromLabelsHelper(metadataJson, labels, labelExtensions, "srv:serviceType", "serviceTypeOptions", serviceTypeInspire);
 
     }
 
@@ -277,7 +287,8 @@ public class GetEditModel implements Service {
     }
 
     private void addCodeListOptionsFromLabelsHelper(JSONObject metadataJson, Element codelists, Element cheCodelistsExtensions,
-                                    String codelistName, String jsonKey) throws JDOMException, JSONException {
+                                                    String codelistName, String jsonKey, Function<CodeListEntry, CodeListEntry>
+            grouperFilter) throws JDOMException, JSONException {
         Set<CodeListEntry> collector = new LinkedHashSet<CodeListEntry>();
         final String xpath = "element[@name = '" + codelistName + "']/helper/option";
         @SuppressWarnings("unchecked")
@@ -292,8 +303,13 @@ public class GetEditModel implements Service {
         List<Element> cheElems = (List<Element>) Xml.selectNodes(cheCodelistsExtensions, xpath);
         for (Element elem : cheElems) {
             final String value = elem.getTextTrim();
-            final CodeListEntry entry = new CodeListEntry(elem.getAttributeValue("value"), value, value);
-            collector.add(entry);
+            CodeListEntry entry = new CodeListEntry(elem.getAttributeValue("value"), value, value);
+            if (grouperFilter != null) {
+                entry = grouperFilter.apply(entry);
+            }
+            if (entry != null) {
+                collector.add(entry);
+            }
         }
 
         addOptions(metadataJson, jsonKey, collector);

@@ -20,11 +20,8 @@
     <sch:ns prefix="skos" uri="http://www.w3.org/2004/02/skos/core#"/>
     <sch:ns prefix="xlink" uri="http://www.w3.org/1999/xlink"/>
 
-
-    <!-- Make a non blocker conformity check operation - no assertion here -->
     <sch:pattern>
         <sch:title>$loc/strings/conformity</sch:title>
-        <!-- Check specification names and status -->
         <sch:rule context="//gmd:dataQualityInfo/*/gmd:report/*/gmd:result">
             <sch:let name="degree" value="*/gmd:pass/*/text()"/>
             <sch:let name="lang" value="normalize-space(/*/gmd:language)" />
@@ -39,8 +36,9 @@
             </sch:let>
             <sch:let name="langCode" value="normalize-space($langCodeMap//*[name() = $lang])" />
 
-            <sch:let name="specification_title" value="*/gmd:specification/*/gmd:title/gco:CharacterString/text()" />
-            <sch:let name="has_specification_title" value="$specification_title" />
+            <sch:let name="specification_title_charstring" value="*/gmd:specification/*/gmd:title/gco:CharacterString/text()[string-length(.) > 0]" />
+            <sch:let name="specification_title_locale" value="*/gmd:specification/*/gmd:title//gmd:LocalisedCharacterString[@locale = $langCode]/text()[string-length(.) > 0]" />
+            <sch:let name="has_specification_title" value="$specification_title_charstring or $specification_title_locale" />
 
             <sch:let name="specification_date" value="*/gmd:specification/*/gmd:date/*/gmd:date/*/text()[string-length(.) > 0]"/>
             <sch:let name="specification_dateType" value="normalize-space(*/gmd:specification/*/gmd:date/*/gmd:dateType/*/@codeListValue)"/>
@@ -55,34 +53,13 @@
                     <dut>verordening (eu) n r. 1089/2010 van de commissie van 23 november 2010 ter uitvoering van richtlijn 2007/2/eg van het europees parlement en de raad betreffende de interoperabiliteit van verzamelingen ruimtelijke gegevens en van diensten met betrekking tot ruimtelijke gegevens</dut>
                 </titles>
             </sch:let>
-            <sch:let name="isDeMetadata" value="$lang = 'ger'"/>
-            <sch:let name="hasDeTitle" value="$isDeMetadata and $specification_title[lower-case(normalize-space(.)) = $allTitles//ger/text()]"/>
-
-            <sch:let name="isEnMetadata" value="$lang = 'eng'"/>
-            <sch:let name="hasEnTitle" value="$isEnMetadata and $specification_title[lower-case(normalize-space(.)) = $allTitles//eng/text()]"/>
-
-            <sch:let name="isFrMetadata" value="$lang = 'fre'"/>
-            <sch:let name="hasFrTitle" value="$isFrMetadata and $specification_title[lower-case(normalize-space(.)) = $allTitles//fre/text()]"/>
-
-            <sch:let name="isItMetadata" value="$lang = 'ita'"/>
-            <sch:let name="hasItTitle" value="$isItMetadata and $specification_title[lower-case(normalize-space(.)) = $allTitles//ita/text()]"/>
-
-            <sch:let name="isEsMetadata" value="$lang = 'spa'"/>
-            <sch:let name="hasEsTitle" value="$isEsMetadata and $specification_title[lower-case(normalize-space(.)) = $allTitles//spa/text()]"/>
-
-            <sch:let name="isFiMetadata" value="$lang = 'fin'"/>
-            <sch:let name="hasFiTitle" value="$isFiMetadata and $specification_title[lower-case(normalize-space(.)) = $allTitles//fin/text()]"/>
-
-            <sch:let name="isNlMetadata" value="$lang = 'dut'"/>
-            <sch:let name="hasNlTitle" value="$isNlMetadata and $specification_title[lower-case(normalize-space(.)) = $allTitles//dut/text()]"/>
-
             <sch:let name="correctTitle" value="$allTitles//*[name() = $lang]/text()"/>
-            <sch:assert test="$hasDeTitle or $hasEnTitle or $hasFrTitle or $hasItTitle or
-                              $hasEsTitle or $hasFiTitle or $hasNlTitle">
+            <sch:let name="hasCorrectTitle" value="$correctTitle = normalize-space(lower-case($specification_title_charstring)) or $correctTitle = normalize-space(lower-case($specification_title_locale))"/>
+            <sch:assert test="$hasCorrectTitle">
                 <sch:value-of select="$loc/strings/assert.M44.conformityActual/div"/>
 
-                <sch:value-of select="concat('''', normalize-space($specification_title[1]), '''')"/>
-                <sch:value-of select="<br/>"/>
+                <sch:value-of select="concat('''', normalize-space($specification_title_charstring), '''')"/>
+                <sch:value-of select="concat('''', normalize-space($specification_title_locale), '''')"/>
 
                 <sch:value-of select="$loc/strings/assert.M44.conformityExpected/div"/>
 
@@ -105,7 +82,6 @@
         </sch:rule>
     </sch:pattern>
 
-    <!-- Make a non blocker conformity check operation - no assertion here -->
     <sch:pattern>
         <sch:title>$loc/strings/dataquality</sch:title>
         <!-- Check specification names and status -->
@@ -120,6 +96,44 @@
                 <sch:value-of select="$loc/strings/report.M44.dataQualityExpected/div"/>
                 <sch:value-of select="count($dataQuality)"/>
             </sch:report>
+
+            <sch:let name="dataQualityScope" value="//gmd:dataQualityInfo/*/gmd:scope/*"/>
+            <sch:assert test="count(dataQualityScope) = 0">
+                <sch:value-of select="$loc/strings/assert.M44.dataQualityScopeNotAllowed/div"/>
+            </sch:assert>
+
+        </sch:rule>
+    </sch:pattern>
+
+    <sch:pattern>
+        <sch:title>$loc/strings/uselimitation</sch:title>
+        <!-- Check specification names and status -->
+        <sch:rule context="//gmd:identificationInfo/*/gmd:resourceConstraints">
+            <sch:let name="lang" value="normalize-space(/*/gmd:language)" />
+            <sch:let name="langCodeMap">
+                <ger>#DE</ger>
+                <eng>#EN</eng>
+                <fre>#FR</fre>
+                <ita>#IT</ita>
+                <spa>#ES</spa>
+                <fin>#FI</fin>
+                <dut>#NL</dut>
+            </sch:let>
+            <sch:let name="langCode" value="normalize-space($langCodeMap//*[name() = $lang])" />
+
+            <sch:let name="useLimitation" value="//gmd:identificationInfo/*/gmd:resourceConstraints//gmd:useLimitation"/>
+            <sch:let name="useLimitation_charstring" value="$useLimitation/gco:CharacterString/text()[string-length(.) > 0]"/>
+            <sch:let name="useLimitation_locale" value="$useLimitation//gmd:LocalisedCharacterString[@locale=$langCode]/text()[string-length(.) > 0]"/>
+            <sch:assert test="count($useLimitation_charstring) > 0 or count($useLimitation_locale) > 0">
+                <sch:value-of select="$loc/strings/assert.useLimitation/div"/>
+            </sch:assert>
+            <sch:report test="count($useLimitation_charstring) > 0 or count($useLimitation_locale) > 0">
+                <sch:value-of select="$loc/strings/report.useLimitation/div"/>
+                <sch:value-of select="$useLimitation_charstring"/>
+                <sch:value-of select="$useLimitation_locale"/>
+            </sch:report>
+
+
         </sch:rule>
     </sch:pattern>
 

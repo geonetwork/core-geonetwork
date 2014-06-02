@@ -14,6 +14,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.EditLibTest;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
@@ -43,7 +44,6 @@ import static org.fao.geonet.services.metadata.inspire.Save.NS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class SaveTest {
 
@@ -438,40 +438,114 @@ public class SaveTest {
         assertEquals("asdfa",
                 Xml.selectString(testMetadata, "gmd:contact/che:CHE_CI_ResponsibleParty//che:individualLastName/gco:CharacterString"));
     }
-@Test
-    public void testUpdateExistingFullMetadata_ReplaceContacts() throws Exception {
-        fail("to implement");
 
+    @Test
+    public void testChangeIdentificationInfoType_DataToService() throws Exception {
+        testMetadata = Xml.loadFile(SaveTest.class.getResource("inspire-valid-che.xml"));
+        service.setTestMetadata(testMetadata);
+
+
+        final String jsonString = loadTestJson();
+        JSONObject json = new JSONObject(jsonString);
+        json.getJSONObject(Save.JSON_IDENTIFICATION).put(Save.JSON_IDENTIFICATION_TYPE, "service");
+
+        service.addXLink("local://che.keyword.get?thesaurus=external.theme.inspire-service-taxonomy&amp;id=http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F15&amp;locales=fr,en,de,it",
+                service.createKeyword("eng", "someword", "external.theme.inspire-service-taxonomy"));
+        final Element result = service.exec(new Element("request").addContent(Arrays.asList(
+                new Element("id").setText("12"),
+                new Element("data").setText(json.toString())
+        )), context);
+
+        assertEquals(Xml.getString(result), "ok", result.getName());
+
+        final Element savedMetadata = service.getSavedMetadata();
+        final Element identificationInfo = Xml.selectElement(savedMetadata, "gmd:identificationInfo/*", Save.NS);
+        assertEquals("CHE_SV_ServiceIdentification", identificationInfo.getName());
+
+        assertEquals(2, Xml.selectNodes(identificationInfo, "srv:extent", Save.NS).size());
+        assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:citation//gmd:title", Save.NS).size());
+        assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:citation//gmd:date//gmd:date", Save.NS).size());
+        assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:citation//gmd:dateType", Save.NS).size());
+        assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:abstract", Save.NS).size());
+        assertEquals(2, Xml.selectNodes(identificationInfo, "gmd:descriptiveKeywords", Save.NS).size());
     }
 
     @Test
-    public void testExcludeExtentThatHasNotChangedIsNotModified() throws Exception {
-        fail("to implement");
+    public void testGetIdentificationInfo_DataToService() throws Exception {
+        testMetadata = Xml.loadFile(SaveTest.class.getResource("inspire-valid-che.xml"));
+
+        final String jsonString = loadTestJson();
+        JSONObject json = new JSONObject(jsonString);
+        final JSONObject identificationJson = json.getJSONObject(Save.JSON_IDENTIFICATION);
+        identificationJson.put(Save.JSON_IDENTIFICATION_TYPE, "service");
+
+        MetadataSchema schema = this._schemaManager.getSchema("iso19139.che");
+        EditLib editLib = new EditLib(this._schemaManager);
+
+        final Element identificationInfo = service.getIdentification(editLib, testMetadata, schema, identificationJson);
+        assertEquals("CHE_SV_ServiceIdentification", identificationInfo.getName());
+
+        assertEquals(0, Xml.selectNodes(identificationInfo, "gmd:extent", Save.NS).size());
+        assertEquals(1, Xml.selectNodes(identificationInfo, "srv:extent", Save.NS).size());
+        assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:citation//gmd:title", Save.NS).size());
+        assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:citation//gmd:date//gmd:date", Save.NS).size());
+        assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:citation//gmd:dateType", Save.NS).size());
+        assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:abstract", Save.NS).size());
+        assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:descriptiveKeywords", Save.NS).size());
     }
 
     @Test
-    public void testNonValidatedExtent() throws Exception {
-        fail("to implement");
-    }
+    public void testGetIdentificationInfo_ServiceToData() throws Exception {
+        testMetadata = Xml.loadFile(SaveTest.class.getResource("inspire-valid-service-che.xml"));
 
-    @Test
-    public void testNonValidatedKeyword() throws Exception {
-        fail("to implement");
-    }
+        final String jsonString = loadTestJson();
+        JSONObject json = new JSONObject(jsonString);
+        final JSONObject identificationJson = json.getJSONObject(Save.JSON_IDENTIFICATION);
 
-    @Test
-    public void testNonDataSetHeirarchyName() throws Exception {
-        fail("to implement");
+        MetadataSchema schema = this._schemaManager.getSchema("iso19139.che");
+        EditLib editLib = new EditLib(this._schemaManager);
+
+        final Element identificationInfo = service.getIdentification(editLib, testMetadata, schema, identificationJson);
+        assertEquals("CHE_MD_DataIdentification", identificationInfo.getName());
+
+        assertEquals(0, Xml.selectNodes(identificationInfo, "srv:extent", Save.NS).size());
+        assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:extent", Save.NS).size());
+        assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:citation//gmd:title", Save.NS).size());
+        assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:citation//gmd:date//gmd:date", Save.NS).size());
+        assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:citation//gmd:dateType", Save.NS).size());
+        assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:abstract", Save.NS).size());
+        assertEquals(7, Xml.selectNodes(identificationInfo, "gmd:descriptiveKeywords", Save.NS).size());
     }
 
     /**
      * Make sure that children of serviceInfo are copied to data (only ones that are part of dataInfo of course).
      */
     @Test
-    public void testChangeIdentificationInfoType() throws Exception {
+    public void testChangeIdentificationInfoType_ServiceToDate() throws Exception {
+        testMetadata = Xml.loadFile(SaveTest.class.getResource("inspire-valid-service-che.xml"));
+        service.setTestMetadata(testMetadata);
 
-        fail("to implement");
 
+        final String jsonString = loadTestJson();
+        JSONObject json = new JSONObject(jsonString);
+
+        final Element result = service.exec(new Element("request").addContent(Arrays.asList(
+                new Element("id").setText("12"),
+                new Element("data").setText(json.toString())
+        )), context);
+
+        assertEquals(Xml.getString(result), "ok", result.getName());
+
+        final Element savedMetadata = service.getSavedMetadata();
+        final Element identificationInfo = Xml.selectElement(savedMetadata, "gmd:identificationInfo/*", Save.NS);
+        assertEquals("CHE_MD_DataIdentification", identificationInfo.getName());
+
+        assertEquals(2, Xml.selectNodes(identificationInfo, "gmd:extent", Save.NS).size());
+        assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:citation//gmd:title", Save.NS).size());
+        assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:citation//gmd:date//gmd:date", Save.NS).size());
+        assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:citation//gmd:dateType", Save.NS).size());
+        assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:abstract", Save.NS).size());
+        assertEquals(2, Xml.selectNodes(identificationInfo, "gmd:descriptiveKeywords", Save.NS).size());
     }
 
     private void assertSharedObject(Element identification, String elemName, String xlink, boolean validated) throws JDOMException {

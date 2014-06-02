@@ -264,9 +264,11 @@
                     </select>
                 </div>
             </div>
-            <div class="form-group" data-ng-show="data.identification.type == 'service'">
+            <div class="form-group"
+                 data-ng-show="data.identification.type == 'service'">
                 <label for="serviceType" class="col-xs-3 control-label" ><span data-translate="">serviceType</span>: </label>
-                <div class="col-xs-9">
+                <div class="col-xs-9"
+                     data-ng-class="validationClassString(data.identification.serviceType)">
                     <select id="serviceType"
                             class="form-control"
                             data-ng-model="data.identification.serviceType"
@@ -274,7 +276,6 @@
                     </select>
                 </div>
             </div>
-
             <div class="form-group"
                  data-ng-show="data.identification.type == 'data'">
                 <label class="col-xs-3 control-label" ><span data-translate="">topicCategory</span>: </label>
