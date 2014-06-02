@@ -175,7 +175,7 @@
           if (waitDialog) {
             waitDialog.modal('hide');
           }
-          alert($translate("saveError")  + data);
+          alert($translate("unexpectedSaveError")  + data);
         });
       };
 
