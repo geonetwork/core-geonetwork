@@ -416,15 +416,6 @@
 			<output forward="main.home" />
 		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Administration services                                       -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="admin">
-			<output sheet="admin.xsl">
-				<call name="services" class="jeeves.guiservices.services.Get" />
-			</output>
-		</service>
 
 		<service name="xml.region.update">
 			<class name=".services.region.Update" />
