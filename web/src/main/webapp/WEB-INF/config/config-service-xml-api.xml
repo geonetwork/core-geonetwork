@@ -6,6 +6,14 @@
       by AngularUI returning XML or JSON response.
     </documentation>
 
+    <service name="xml.config.info" deprecated="true" xmlapi="true">
+      <class name=".services.config.GetInfo" />
+    </service>
+
+    <service name="xml.schema.info" xmlapi="true">
+      <class name=".services.schema.Info" />
+    </service>
+
 
 
   </services>

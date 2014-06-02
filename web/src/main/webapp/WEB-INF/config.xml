@@ -284,30 +284,6 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="shib.user.login">
-      <!-- TODO : move to config-shib.xml ... -->
-			<class name=".services.login.ShibLogin" />
-
-			<output forward="home" />
-
-			<error id="user-login" sheet="error.xsl" statusCode="401">
-				<xml name="error" file="xml/login-error.xml" />
-			</error>
-		</service>
-
-    <service name="xml.config.doActions" deprecated="true" remove="true">
-			<class name=".services.config.DoActions" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="xml.config.info" deprecated="true" xmlapi="true">
-			<class name=".services.config.GetInfo" />
-		</service>
-
-		<service name="xml.schema.info" xmlapi="true">
-			<class name=".services.schema.Info" />
-		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Resources management services                                 -->
@@ -598,6 +574,7 @@
   <include>config/config-service-search.xml</include>
   <include>config/config-service-sru.xml</include>
   <include>config/config-service-oai.xml</include>
+  <include>config/config-service-shibboleth.xml</include>
   <include>config/config-service-rss.xml</include>
   <include>config/config-service-csv.xml</include>
   <include>config/config-service-dcat-rdf.xml</include>
