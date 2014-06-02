@@ -159,13 +159,6 @@
 			<output sheet="file-download-disclaimer.xsl" />
 		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.file.disclaimer" xmlapi="true">
-			<class name=".services.feedback.AddLimitations" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="file.download">
 			<class name=".services.feedback.Insert" />
@@ -173,27 +166,10 @@
 			<output sheet="file-download.xsl" />
 		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.file.download" xmlapi="true">
-			<class name=".services.feedback.Insert" />
-			<output forward="resources.get.archive" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
 		<service name="prepare.file.download">
 			<class name=".services.metadata.PrepareFileDownload" />
 			<output sheet="file-download-list.xsl" />
 		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="graphover.show" remove="true">
-			<output sheet="graphover-show.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="resources.get.archive">
 			<class name=".services.resources.DownloadArchive" />
@@ -217,101 +193,10 @@
 			<output file="true" />
 		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="resources.upload" remove="true">
-			<class name=".services.resources.Upload" />
-			<output sheet="file-upload-results.xsl" />
-
-			<error sheet="error-modal.xsl">
-				<xml name="error" file="xml/file-upload-unsuccessful.xml" />
-			</error>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="resources.prepare.upload" remove="true">
-			<output sheet="file-upload.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="resources.del" remove="true">
-			<class name=".services.resources.Remove" />
-
-			<error id="file-not-found" sheet="error.xsl" statusCode="404">
-				<xml name="error" file="xml/file-not-found-error.xml" />
-			</error>
-
-			<output forward="metadata.edit" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.search" xmlapi="true">
-			<class name=".services.main.XmlSearch" />
-
-			<output sheet="portal-present.xsl" contentType="application/xml; charset=UTF-8" />
-
-			<error id="search-error" sheet="error-xml.xsl" statusCode="500"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.metadata.get" xmlapi="true">
-			<class name=".services.metadata.Show">
-				<param name="skipPopularity" value="y" />
-				<param name="skipInfo" value="y" />
-			</class>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.info" xmlapi="true">
-			<class name=".services.main.Info" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.forward" remove="true">
-			<class name=".services.main.Forward" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- GeoNetwork Mapping Application XML services  -->
-
-		<service name="xml.user.list" deprecated="true" xmlapi="true">
-			<class name=".services.user.List" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	  <service name="xml.usergroups.list" deprecated="true" xmlapi="true">
-			<class name=".services.user.UserGroups" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	  <service name="xml.group.list" deprecated="true" xmlapi="true">
-			<class name=".services.group.List" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.metadata.insert" deprecated="true" xmlapi="true">
-			<class name=".services.metadata.Insert" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.metadata.delete" deprecated="true" xmlapi="true">
-			<class name=".services.metadata.Delete" />
-		</service>
 
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- KML services -->
-
 		<!-- Show WMS service in GE -->
 		<service name="google.kml">
 			<class name=".services.metadata.Show" />
@@ -344,26 +229,6 @@
 			<class name=".services.mef.Export" />
 			<output file="true" />
 			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
-		</service>
-
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- relation services -->
-
-		<service name="xml.relation.get" xmlapi="true">
-			<class name=".services.relations.Get" />
-
-			<output sheet="portal-present.xsl" contentType="text/xml; charset=UTF-8">
-				<call name="sources" class=".guiservices.util.Sources" />
-			</output>
-		</service>
-
-		<service name="xml.relation.insert" xmlapi="true">
-			<class name=".services.relations.Insert" />
-		</service>
-
-		<service name="xml.relation.delete" xmlapi="true">
-			<class name=".services.relations.Remove" />
 		</service>
 
 
