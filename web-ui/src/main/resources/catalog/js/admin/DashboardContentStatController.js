@@ -73,6 +73,13 @@
         $scope.statistics.md.rating = {
           sortBy: 'rating'
         };
+
+        $scope.paginationInfo = {
+          pages: -1,
+          currentPage: 1,
+          hitsPerPage: 10
+        };
+
         $http.get('statistics-content@json')
         .success(function(data) {
               $scope.statistics.md.mainStatistics = data;

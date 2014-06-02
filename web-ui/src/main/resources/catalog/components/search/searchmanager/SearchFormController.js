@@ -34,7 +34,7 @@
         records: [],
         count: 0
       };
-      $scope.paginationInfo = {
+      $scope.paginationInfo = $scope.paginationInfo || {
         pages: -1,
         currentPage: 1,
         hitsPerPage: 20
