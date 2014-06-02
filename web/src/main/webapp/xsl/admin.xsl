@@ -125,15 +125,6 @@
                             </xsl:call-template>
                         </xsl:if>
                         
-                        <xsl:if test="not($readonly)">
-                            <xsl:call-template name="addrow">
-                                <xsl:with-param name="service" select="'csw.config.get'"/>
-                                <xsl:with-param name="title" select="/root/gui/strings/cswServer"/>
-                                <xsl:with-param name="desc" select="/root/gui/strings/cswServerDes"/>
-                            </xsl:call-template>
-                        </xsl:if>
-
-
                     </xsl:variable>
 
 

@@ -865,30 +865,7 @@
 		<service name="tabsearch">
 			<output sheet="search-tab.xsl"/>
 		</service>
-		
-	  <service name="csw.config.get" deprecated="true">
-	    <class name=".guiservices.csw.Get"/>
-	    
-	    <output sheet="csw/config.xsl">
-	      <call name="languages" class=".guiservices.languages.Get"/>
-	      
-	      <call name="users" class="jeeves.services.db.Select">
-	        <param name="db" value="main-db"/>
-	        <param name="query" value="SELECT * FROM Users ORDER BY name"/>
-	      </call>
-	    </output>
-	  </service>
-	  
-	  <service name="csw.customelementset.get">
-	    <output sheet="csw/customize-elementset.xsl">
-	      <call name="customelementsets" class=".guiservices.csw.customelementset.Get"/>
-	    </output>
-	  </service>
-	  
-	  <service name="csw.customelementset.set">
-	    <class name=".guiservices.csw.customelementset.Set"/>
-	    <output sheet="admin.xsl"> </output>
-	  </service>
+
 	</services>
 
 	<!-- ====================================================================== -->
