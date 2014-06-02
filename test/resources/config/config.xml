@@ -828,7 +828,6 @@
 	<include>config-metadata.xml</include>
 	<include>config-portal.xml</include>
 	<include>config-export.xml</include>
-	<include>config-test.xml</include>
 	<include>config-csw.xml</include>         -->
 
 	<!-- ====================================================================== -->

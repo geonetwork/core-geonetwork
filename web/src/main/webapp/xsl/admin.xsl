@@ -107,21 +107,6 @@
 
                 <table width="100%" class="text-aligned-left">
 
-                    <xsl:variable name="i18n">
-                        <xsl:call-template name="addrow">
-                            <xsl:with-param name="service" select="'test.i18n'"/>
-                            <xsl:with-param name="title" select="/root/gui/strings/i18n"/>
-                            <xsl:with-param name="desc" select="/root/gui/strings/i18nDesc"/>
-                        </xsl:call-template>
-                    </xsl:variable>
-
-                    <xsl:if test="not($readonly)">
-                        <xsl:call-template name="addTitle">
-                            <xsl:with-param name="icon">comment.png</xsl:with-param>
-                            <xsl:with-param name="title" select="/root/gui/strings/localiz"/>
-                            <xsl:with-param name="content" select="$i18n"/>
-                        </xsl:call-template>
-                    </xsl:if>
 
                 </table>
                 <p/>

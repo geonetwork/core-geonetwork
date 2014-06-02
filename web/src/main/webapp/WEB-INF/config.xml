@@ -829,7 +829,6 @@
 	<include>config-thesaurus.xml</include>
 	<include>config-portal.xml</include>
 	<include>config-export.xml</include>
-	<include>config-test.xml</include>
 
 	<!-- ====================================================================== -->
 
