@@ -7,7 +7,7 @@
         <!-- Metadata services                                             -->
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.insert.paste">
+        <service name="metadata.insert.paste" remove="true">
             <class name=".services.metadata.Insert" />
 
             <output sheet="metadata-insert-results.xsl" />
@@ -18,14 +18,14 @@
             </error>
         </service>
 
-        <service name="xml.metadata.insert.paste">
+        <service name="xml.metadata.insert.paste" xmlapi="true">
             <class name=".services.metadata.Insert" />
             <error sheet="error-xml.xsl" />
         </service>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.insert">
+        <service name="metadata.insert" remove="true">
             <class name=".services.metadata.Insert" />
 
             <output forward="metadata.edit" />
@@ -33,7 +33,7 @@
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.show">
+        <service name="metadata.show" remove="true">
             <class name=".services.metadata.Show">
                 <param name="addRefs" value="y" />
                 <param name="cache" value="y" />
@@ -55,7 +55,7 @@
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.show.embedded">
+        <service name="metadata.show.embedded" remove="true">
             <class name=".services.metadata.Show">
                 <param name="addRefs" value="y" />
                 <param name="cache" value="y" />
@@ -88,7 +88,7 @@
         </service>
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.edit" deprecated="true">
+        <service name="metadata.edit" deprecated="true" remove="true">
             <class name=".services.metadata.GetEditableData" />
 
             <output sheet="metadata-edit.xsl">
@@ -108,7 +108,7 @@
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.elem.add" deprecated="true">
+        <service name="metadata.elem.add" deprecated="true" remove="true">
             <class name=".services.metadata.AddElement" />
 
             <output sheet="metadata-edit-embedded.xsl">
@@ -128,7 +128,7 @@
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.elem.delete" deprecated="true">
+        <service name="metadata.elem.delete" deprecated="true" remove="true">
             <class name=".services.metadata.DeleteElement" />
 
             <output sheet="metadata-edit-embedded.xsl">
@@ -149,7 +149,7 @@
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
         <!-- saves edits -->
 
-        <service name="metadata.update" deprecated="true">
+        <service name="metadata.update" deprecated="true" remove="true">
             <class name=".services.metadata.Update" />
 
             <output forward="metadata.edit" />
@@ -196,7 +196,7 @@
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
         <!-- validates metadata in session -->
 
-        <service name="metadata.validate" deprecated="true">
+        <service name="metadata.validate" deprecated="true" remove="true">
             <class name=".services.metadata.Validate" />
 
             <output sheet="metadata-validate.xsl">
@@ -209,7 +209,7 @@
             </error>
         </service>
 
-        <service name="xml.metadata.validate" deprecated="true">
+        <service name="xml.metadata.validate" deprecated="true" xmlapi="true">
             <class name=".services.metadata.Validate" />
             <output sheet="metadata/validate.xsl" contentType="text/xml; charset=UTF-8">
                 <xml name="validation" file="xml/metadata-validate.xml" />
@@ -220,7 +220,7 @@
             <class name=".guiservices.metadata.GetRelated" />
         </service>
 
-        <service name="xml.relation" deprecated="true">
+        <service name="xml.relation" deprecated="true" xmlapi="true">
             <class name=".guiservices.metadata.GetRelated" />
             <output sheet="metadata/relation.xsl" contentType="text/xml; charset=UTF-8" />
         </service>
@@ -232,7 +232,6 @@
             <class name=".services.metadata.MoveElement">
                 <param name="dir" value="down" />
             </class>
-
         </service>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -273,6 +272,7 @@
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <service name="metadata.batch.extract.subtemplates.form">
+          <!-- TODO: migrate to widget/angular app -->
             <!-- use same service for category update -->
             <class name=".services.metadata.PrepareBatchUpdateCategories" />
 
@@ -284,7 +284,8 @@
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <service name="metadata.batch.extract.subtemplates">
-            <class name=".services.metadata.BatchExtractSubtemplates" />
+          <!-- TODO: migrate to widget/angular app -->
+          <class name=".services.metadata.BatchExtractSubtemplates" />
 
             <output sheet="metadata-batch-extract-subtemplates-results.xsl">
                 <xml name="info" file="xml/metadata-batchExtractSubtemplates.xml" />
@@ -307,7 +308,7 @@
             </output>
         </service>
 
-        <service name="metadata.quiet.delete">
+        <service name="metadata.quiet.delete" remove="true">
             <class name=".services.metadata.Delete" />
             <output forward="admin" />
         </service>
@@ -380,19 +381,19 @@
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.batch.admin.form" deprecated="true">
+        <service name="metadata.batch.admin.form" deprecated="true" remove="true">
             <class name=".services.metadata.PrepareBatchUpdatePrivileges" />
 
             <output sheet="metadata-admin.xsl" />
         </service>
 
-        <service name="xml.metadata.batch.admin.form" deprecated="true">
+        <service name="xml.metadata.batch.admin.form" deprecated="true" xmlapi="true">
             <class name=".services.metadata.PrepareBatchUpdatePrivileges" />
         </service>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.batch.update.privileges" deprecated="true">
+        <service name="metadata.batch.update.privileges" deprecated="true" remove="true">
             <class name=".services.metadata.BatchUpdatePrivileges" />
 
             <output sheet="metadata-batch-results.xsl">
@@ -400,7 +401,7 @@
             </output>
         </service>
 
-        <service name="xml.metadata.batch.update.privileges" deprecated="true">
+        <service name="xml.metadata.batch.update.privileges" deprecated="true" xmlapi="true">
             <class name=".services.metadata.BatchUpdatePrivileges" />
         </service>
 
@@ -408,15 +409,17 @@
         <!-- Update child -->
 
         <service name="metadata.batch.children.form">
+          <!-- TODO: migrate to widget/Angular -->
             <output sheet="metadata-children.xsl" />
         </service>
 
         <service name="metadata.batch.update.children">
-            <class name=".services.metadata.UpdateChildren" />
+          <!-- TODO: migrate to widget/Angular -->
+          <class name=".services.metadata.UpdateChildren" />
         </service>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-        <service name="metadata.batch.processing.report" deprecated="true">
+        <service name="metadata.batch.processing.report" deprecated="true" remove="true">
             <documentation><![CDATA[
 Return the current or last batch process report in the user session.
 
@@ -461,7 +464,7 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
             <class name=".services.metadata.XslProcessingReportGet" />
         </service>
 
-        <service name="metadata.batch.processing" deprecated="true">
+        <service name="metadata.batch.processing" deprecated="true" remove="true">
             <class name=".services.metadata.BatchXslProcessing" />
 
             <output sheet="metadata-batch-results.xsl">
@@ -469,12 +472,12 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
             </output>
         </service>
 
-        <service name="metadata.processing">
+        <service name="metadata.processing" remove="true">
             <class name=".services.metadata.XslProcessing" />
             <output forward="metadata.edit" />
         </service>
 
-        <service name="xml.metadata.processing">
+        <service name="xml.metadata.processing" xmlapi="true">
             <class name=".services.metadata.XslProcessing" />
             <error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
         </service>
@@ -490,6 +493,7 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <service name="metadata.create.thesaurus.form">
+          <documentation>Convert an ISO19135 record into SKOS format.</documentation>
             <output sheet="metadata-create-thesaurus.xsl">
                 <call name="thesaurusTypes" class=".services.thesaurus.GetList" />
             </output>
@@ -497,7 +501,7 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.duplicate.form">
+        <service name="metadata.duplicate.form" remove="true">
             <output sheet="metadata-duplicate.xsl">
                 <call name="groups" class=".guiservices.groups.GetMine" />
                 <xml name="create" file="xml/metadata-create.xml" />
@@ -507,13 +511,13 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.create">
+        <service name="metadata.create" remove="true">
             <class name=".services.metadata.Create" />
 
             <output forward="metadata.edit" />
         </service>
 
-        <service name="metadata.admin.form" deprecated="true">
+        <service name="metadata.admin.form" deprecated="true" remove="true">
             <class name=".services.metadata.GetAdminOper" />
 
             <output sheet="metadata-admin.xsl" />
@@ -563,7 +567,7 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
         <!-- Thumbnail services                                            -->
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.thumbnail.form">
+        <service name="metadata.thumbnail.form" remove="true">
             <class name=".services.thumbnail.Get" />
 
             <output sheet="metadata-thumbnail.xsl">
@@ -573,7 +577,7 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.thumbnail.set">
+        <service name="metadata.thumbnail.set" remove="true">
             <class name=".services.thumbnail.Set" />
 
             <output forward="metadata.thumbnail.form" />
@@ -581,7 +585,7 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.thumbnail.unset">
+        <service name="metadata.thumbnail.unset" remove="true">
             <class name=".services.thumbnail.Unset" />
 
             <output forward="metadata.thumbnail.form" />
@@ -591,11 +595,11 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
         <!-- Status                                                        -->
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="xml.metadata.status.set">
+        <service name="xml.metadata.status.set" xmlapi="true">
             <class name=".services.metadata.UpdateStatus" />
         </service>
 
-        <service name="xml.metadata.status.get">
+        <service name="xml.metadata.status.get" xmlapi="true">
             <class name=".services.status.Get" />
         </service>
 
@@ -603,7 +607,7 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
         <!-- Rating                                                        -->
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="xml.metadata.rate">
+        <service name="xml.metadata.rate" xmlapi="true">
             <class name=".services.metadata.Rate" />
         </service>
 
@@ -611,7 +615,7 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
         <!-- Metadata latest updated (ajax)        						   -->
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-        <service name="metadata.latest.updated">
+        <service name="metadata.latest.updated" remove="true">
             <output sheet="metadata-latest-updated.xsl">
                 <call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
                     <param name="maxItems" value="5" />
@@ -624,7 +628,7 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
         <!-- Metadata owned by user                                        -->
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="xml.user.metadata">
+        <service name="xml.user.metadata" xmlapi="true">
             <class name=".guiservices.metadata.GetByOwner" />
         </service>
 
@@ -678,12 +682,6 @@ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesh
         </service>
 
 
-        <service name="metadata.batch.replace.new">
-          <documentation><![CDATA[
-            Service to apply the metadata massive update process configured to the selected metadata.
-            ]]></documentation>
-          <class name=".services.metadata.replace.MassiveReplaceContent"/>
-        </service>
     </services>
 </geonet>
 

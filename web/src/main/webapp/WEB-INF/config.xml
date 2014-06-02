@@ -126,7 +126,7 @@
 	<!-- ====================================================================== -->
 
 	<services package="org.fao.geonet">
-		<service name="main.home">
+		<service name="main.home" remove="true">
 			<output sheet="main-page.xsl">
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
 				<call name="keywords" class=".guiservices.keywords.Get" />
@@ -160,7 +160,8 @@
 				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
 			</output>
 		</service>
-		<service name="service-not-allowed">
+		<service name="service-not-allowed" migrate="true">
+      <!-- TODO: move to XSLT folder -->
 			<output sheet="service-not-allowed.xsl">
 				
 			</output>
@@ -168,7 +169,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="main.error">
+		<service name="main.error" migrate="true">
 			<output sheet="main-error.xsl">
 				<call name="startupError" class=".guiservices.util.GetStartupError" />
 			</output>
@@ -176,7 +177,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.main.error">
+		<service name="xml.main.error" remove="true">
 			<output sheet="main-error-xml.xsl" contentType="text/xml; charset=UTF-8">
 				<call name="startupError" class=".guiservices.util.GetStartupError" />
 			</output>
@@ -184,7 +185,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="main.search">
+		<service name="main.search" remove="true">
 			<class name=".services.main.Search">
 				<param name="maxSummaryKeys" value="10" />
 				<param name="maxHitsInSummary" value="1000" />
@@ -196,7 +197,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- ETj: this service provides a page similar to main.search, made simpler to be embedded elsewhere-->
 
-		<service name="main.search.embedded">
+		<service name="main.search.embedded" remove="true">
 			<class name=".services.main.Search">
 				<param name="maxSummaryKeys" value="10" />
 				<param name="maxHitsInSummary" value="1000" />
@@ -209,7 +210,7 @@
 			</error>
 		</service>
 
-		<service name="main.search.suggest">
+		<service name="main.search.suggest" remove="true">
 			<class name=".services.main.SearchSuggestion">
 				<!-- Minimum frequency for a term value to be proposed in suggestion. -->
 				<param name="threshold" value="1" />
@@ -231,7 +232,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="main.present.embedded">
+		<service name="main.present.embedded"  remove="true">
 			<class name=".services.main.Result">
 				<param name="maxRecords" value="10" />
 				<param name="syntax" value="f" />
@@ -251,7 +252,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="main.searchform.advanced.embedded">
+		<service name="main.searchform.advanced.embedded" remove="true">
 			<output sheet="searchform_advanced.xsl">
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
 				<call name="keywords" class=".guiservices.keywords.Get" />
@@ -268,7 +269,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="main.searchform.remote.embedded">
+		<service name="main.searchform.remote.embedded" remove="true">
 			<output sheet="searchform_advanced.xsl">
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
 				<call name="keywords" class=".guiservices.keywords.Get" />
@@ -285,7 +286,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="main.searchform.simple.embedded">
+		<service name="main.searchform.simple.embedded" remove="true">
 			<output sheet="searchform_simple.xsl">
 				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
 				<call name="keywords" class=".guiservices.keywords.Get" />
@@ -302,13 +303,13 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="rating.popup">
+		<service name="rating.popup" remove="true">
 			<output sheet="rating-popup.xsl" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="main.present">
+		<service name="main.present" remove="true">
 			<class name=".services.main.Result">
 				<param name="maxRecords" value="10" />
 				<param name="syntax" value="f" />
@@ -326,7 +327,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="remote.show">
+		<service name="remote.show" remove="true">
 			<class name=".services.main.RemoteShow">
 				<param name="syntax" value="f" />
 			</class>
@@ -342,7 +343,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <!-- classic GUI -->
-		<service name="feedback" deprecated="true">
+		<service name="feedback" deprecated="true" remove="true">
 			<output sheet="feedback.xsl" />
 		</service>
 
@@ -353,7 +354,7 @@
         </service>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="links">
+		<service name="links" remove="true">
 			<output sheet="page.xsl">
 				<xml name="page" file="xml/links.xml" />
 			</output>
@@ -361,7 +362,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="about">
+		<service name="about" remove="true">
 			<output sheet="page.xsl">
 				<xml name="page" file="xml/about.xml" />
 			</output>
@@ -369,7 +370,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.region.get" deprecated="true">
+		<service name="xml.region.get" deprecated="true" xmlapi="true">
 			<class name=".services.region.Get" />
 			
 			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
@@ -377,11 +378,11 @@
 			</error>
 		</service>
 
-		<service name="xml.regions.list" deprecated="true">
+		<service name="xml.regions.list" deprecated="true" xmlapi="true">
 			<class name=".services.region.List" />
 		</service>
 
-		<service name="xml.regions.category.list" deprecated="true">
+		<service name="xml.regions.category.list" deprecated="true" xmlapi="true">
 			<class name=".services.region.ListCategories" />
 		</service>
 
@@ -389,7 +390,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Selection search services for filtering -->
 
-		<service name="selection.search">
+		<service name="selection.search" remove="true">
 			<class name=".services.main.SelectionSearch" />
 			<output forward="main.present.embedded" />
 		</service>
@@ -398,7 +399,7 @@
 		<!-- Feedback services                                             -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="feedback.insert" deprecated="true">
+		<service name="feedback.insert" deprecated="true" remove="true">
 			<class name=".services.feedback.Insert" />
 
 			<output sheet="info.xsl">
@@ -411,12 +412,12 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="util.ping">
-			<class name="jeeves.services.Ping" />
+      <class name="jeeves.services.Ping" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="util.import" deprecated="true">
+		<service name="util.import" deprecated="true" remove="true">
 			<class name=".services.metadata.ImportFromDir" />
 
 			<output sheet="metadata-insert-results.xsl" />
@@ -433,13 +434,13 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	    <service name="password.forgotten.form" deprecated="true">
+	    <service name="password.forgotten.form" deprecated="true" remove="true">
 			<output sheet="password-forgotten.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	    <service name="password.forgotten.submit" deprecated="true">
+	    <service name="password.forgotten.submit" deprecated="true" remove="true">
 			<class name=".services.password.SendLink" />
 
 			<error id="user-not-found" sheet="error-modal.xsl">
@@ -459,20 +460,20 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	    <service name="password.change.form" deprecated="true">
+	    <service name="password.change.form" deprecated="true" remove="true">
 			<output sheet="password-change.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	    <service name="xml.password.emaillink" deprecated="true">
+	    <service name="xml.password.emaillink" deprecated="true" remove="true">
 			<class name=".services.password.SendLink" />
 			<error sheet="error-xml.xsl"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	    <service name="xml.password.change" deprecated="true">
+	    <service name="xml.password.change" deprecated="true" xmlapi="true">
 			<class name=".services.password.Change" />
 			<error sheet="error-xml.xsl"/>
 		</service>
@@ -481,13 +482,13 @@
 		<!-- User self-registration services                               -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	    <service name="user.register.get" deprecated="true">
+	    <service name="user.register.get" deprecated="true" remove="true">
 			<output sheet="user-selfregistration.xsl" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	    <service name="user.register.submit" deprecated="true">
+	    <service name="user.register.submit" deprecated="true" remove="true">
 			<class name=".services.register.SelfRegister" />
 			<output sheet="registration-info.xsl">
 				<xml name="info" file="xml/registration-sent.xml" />
@@ -500,13 +501,14 @@
 		<!--                   Login services                              -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	    <service name="login.form" deprecated="true">
+	    <service name="login.form" deprecated="true" remove="true">
 			<output sheet="login-form.xsl" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="shib.user.login">
+      <!-- TODO : move to config-shib.xml ... -->
 			<class name=".services.login.ShibLogin" />
 
 			<output forward="home" />
@@ -516,13 +518,13 @@
 			</error>
 		</service>
 
-    <service name="xml.config.doActions" deprecated="true">
+    <service name="xml.config.doActions" deprecated="true" remove="true">
 			<class name=".services.config.DoActions" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	    <service name="xml.config.info" deprecated="true">
+	    <service name="xml.config.info" deprecated="true" xmlapi="true">
 			<class name=".services.config.GetInfo" />
 		</service>
 
@@ -530,7 +532,7 @@
 		<!-- Help services                                                 -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="help">
+		<service name="help" remove="true">
 			<output sheet="page.xsl">
 				<xml name="page" file="xml/help.xml" />
 			</output>
@@ -538,7 +540,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.schema.info">
+		<service name="xml.schema.info" xmlapi="true">
 			<class name=".services.schema.Info" />
 		</service>
 
@@ -553,7 +555,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.file.disclaimer">
+		<service name="xml.file.disclaimer" xmlapi="true">
 			<class name=".services.feedback.AddLimitations" />
 		</service>
 
@@ -567,7 +569,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.file.download">
+		<service name="xml.file.download" xmlapi="true">
 			<class name=".services.feedback.Insert" />
 			<output forward="resources.get.archive" />
 		</service>
@@ -581,7 +583,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="graphover.show">
+		<service name="graphover.show" remove="true">
 			<output sheet="graphover-show.xsl" />
 		</service>
 
@@ -611,7 +613,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="resources.upload">
+		<service name="resources.upload" remove="true">
 			<class name=".services.resources.Upload" />
 			<output sheet="file-upload-results.xsl" />
 
@@ -622,13 +624,13 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="resources.prepare.upload">
+		<service name="resources.prepare.upload" remove="true">
 			<output sheet="file-upload.xsl" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="resources.del">
+		<service name="resources.del" remove="true">
 			<class name=".services.resources.Remove" />
 
 			<error id="file-not-found" sheet="error.xsl" statusCode="404">
@@ -640,7 +642,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.search">
+		<service name="xml.search" xmlapi="true">
 			<class name=".services.main.XmlSearch" />
 
 			<output sheet="portal-present.xsl" contentType="application/xml; charset=UTF-8" />
@@ -650,7 +652,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.metadata.get">
+		<service name="xml.metadata.get" xmlapi="true">
 			<class name=".services.metadata.Show">
 				<param name="skipPopularity" value="y" />
 				<param name="skipInfo" value="y" />
@@ -659,44 +661,44 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.info">
+		<service name="xml.info" xmlapi="true">
 			<class name=".services.main.Info" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.forward">
+		<service name="xml.forward" remove="true">
 			<class name=".services.main.Forward" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- GeoNetwork Mapping Application XML services  -->
 
-		<service name="xml.user.list" deprecated="true">
+		<service name="xml.user.list" deprecated="true" xmlapi="true">
 			<class name=".services.user.List" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	  <service name="xml.usergroups.list" deprecated="true">
+	  <service name="xml.usergroups.list" deprecated="true" xmlapi="true">
 			<class name=".services.user.UserGroups" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-	  <service name="xml.group.list" deprecated="true">
+	  <service name="xml.group.list" deprecated="true" xmlapi="true">
 			<class name=".services.group.List" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.metadata.insert" deprecated="true">
+		<service name="xml.metadata.insert" deprecated="true" xmlapi="true">
 			<class name=".services.metadata.Insert" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.metadata.delete" deprecated="true">
+		<service name="xml.metadata.delete" deprecated="true" xmlapi="true">
 			<class name=".services.metadata.Delete" />
 		</service>
 
@@ -705,6 +707,7 @@
 		<!-- Open Archive Initiative, Protocol for Metadata Harvesting -->
 
 		<service name="oaipmh">
+      <!-- Move to config-oai.xml -->
 			<class name=".services.main.OaiPmhDispatcher" />
 		</service>
 
@@ -731,7 +734,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 	
-		<service name="mef.import.ui">
+		<service name="mef.import.ui" remove="true">
 			<class name=".services.mef.Import" />
 	
 	
@@ -744,6 +747,7 @@
 		</service>
 	
 		<service name="xml.mef.import.ui">
+      <!-- TODO rename Catalogue.js -->
 			<class name=".services.mef.Import" />
 			<output sheet="metadata/md-insert-results.xsl"/>
 			
@@ -762,7 +766,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- relation services -->
 
-		<service name="xml.relation.get">
+		<service name="xml.relation.get" xmlapi="true">
 			<class name=".services.relations.Get" />
 
 			<output sheet="portal-present.xsl" contentType="text/xml; charset=UTF-8">
@@ -770,25 +774,28 @@
 			</output>
 		</service>
 
-		<service name="xml.relation.insert">
+		<service name="xml.relation.insert" xmlapi="true">
 			<class name=".services.relations.Insert" />
 		</service>
 
-		<service name="xml.relation.delete">
+		<service name="xml.relation.delete" xmlapi="true">
 			<class name=".services.relations.Remove" />
 		</service>
 
 
 		<service name="crs.types" deprecated="true">
+      <!-- Still used by ExtJS editor -->
 			<class name=".services.crs.GetCRSTypes" />
 		</service>
 		<service name="crs.get" deprecated="true">
-			<class name=".services.crs.GetCRS" />
+      <!-- Still used by ExtJS editor -->
+      <class name=".services.crs.GetCRS" />
 			<output sheet="crs.xsl" contentType="text/xml; charset=UTF-8" />
 		</service>
 		
 		
 		<service name="isolanguages" deprecated="true">
+      <!-- Still used by ExtJS search form criteria on language -->
 			<class name="org.fao.geonet.guiservices.isolanguages.Get" />
 		</service>
 		
@@ -805,9 +812,14 @@
 		<service name="find">
 			<output sheet="search-cat.xsl"/>
 		</service>
+
+
+<!--
+    tabsearch is turned off by default (no maintainer).
 		<service name="tabsearch">
 			<output sheet="search-tab.xsl"/>
 		</service>
+-->
 
 	</services>
 
@@ -839,6 +851,7 @@
 
     <include>config/config-service-admin-schema.xml</include>
     <include>config/config-service-admin-schematron.xml</include>
+    <include>config/config-service-batch-replace.xml</include>
     <include>config/config-service-admin-category.xml</include>
 
     <include>config/config-service-admin-batchprocess.xml</include>
