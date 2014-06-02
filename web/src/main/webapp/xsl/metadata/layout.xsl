@@ -1382,21 +1382,31 @@
           <xsl:choose>
             <xsl:when test="$helpLink!=''">
               <xsl:value-of select="$title"/>
-              <span class="editor-help-inline">
-              	<xsl:attribute name="onclick">
-              		<xsl:text>GeoNetwork.util.HelpTools.get(&quot;</xsl:text>
-              		<xsl:value-of select="$helpLink"/>
-              		<xsl:text>&quot;,&quot;</xsl:text>
-              		<xsl:value-of select="$schema"/>
-              		<xsl:text>&quot;,catalogue.services.schemaInfo, GeoNetwork.util.HelpTools.showtt)</xsl:text>
-              	</xsl:attribute>
-                <img class="x-panel-inline-icon">
-                	<xsl:attribute name="src">
-                		<xsl:value-of select="/root/gui/url"/>
-                		<xsl:text>/apps/images/default/help.png</xsl:text>
-                	</xsl:attribute>
-                </img>
-              </span>
+							<xsl:if test="$edit">
+              	<span class="editor-help-inline">
+              		<xsl:attribute name="onclick">
+              			<xsl:text>GeoNetwork.util.HelpTools.get(&quot;</xsl:text>
+              			<xsl:value-of select="$helpLink"/>
+              			<xsl:text>&quot;,&quot;</xsl:text>
+              			<xsl:value-of select="$schema"/>
+              			<xsl:text>&quot;,catalogue.services.schemaInfo, GeoNetwork.util.HelpTools.showtt)</xsl:text>
+              		</xsl:attribute>
+									<xsl:choose>
+										<xsl:when test="/root/gui/config/client/@url='search'">
+											&#160;
+											<i class="fa fa-1x fa-question-circle"></i>
+										</xsl:when>
+										<xsl:otherwise>
+											<img class="x-panel-inline-icon">
+											  <xsl:attribute name="src">
+													<xsl:value-of select="/root/gui/url"/>
+													<xsl:text>/apps/images/default/help.png</xsl:text>
+												</xsl:attribute>
+											</img>
+										</xsl:otherwise>
+									</xsl:choose>
+              	</span>
+							</xsl:if>
             </xsl:when>
             <xsl:otherwise>
               <xsl:call-template name="showTitleWithTag">
