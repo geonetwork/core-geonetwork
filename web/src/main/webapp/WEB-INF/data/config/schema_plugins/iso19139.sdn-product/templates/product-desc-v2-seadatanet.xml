@@ -223,6 +223,37 @@
 			<gmd:descriptiveKeywords>
 				<gmd:MD_Keywords>
 					<gmd:keyword>
+						<!-- MANDATORY : ocean variables processed in the current dataset   -->
+						<!-- http://vocab.nerc.ac.uk/collection/P35/current/                -->
+						<!-- use rdf:about attribute for href                                   -->
+						<!-- use prefLabel text value for text                                  -->
+						<gmx:Anchor xlink:href="http://vocab.nerc.ac.uk/collection/P35/current/EPC00085/">Suspended particulate material arsenic content</gmx:Anchor>
+					</gmd:keyword>
+					<gmd:type>
+						<gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode" codeListValue="parameter"/>
+					</gmd:type>
+					<gmd:thesaurusName>
+						<gmd:CI_Citation>
+							<gmd:title>
+								<gco:CharacterString>Ocean chemistry variable</gco:CharacterString>
+							</gmd:title>
+							<gmd:date>
+								<gmd:CI_Date>
+									<gmd:date>
+										<gco:DateTime>2012-07-18T00:00:00</gco:DateTime>
+									</gmd:date>
+									<gmd:dateType>
+										<gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+									</gmd:dateType>
+								</gmd:CI_Date>
+							</gmd:date>
+						</gmd:CI_Citation>
+					</gmd:thesaurusName>
+				</gmd:MD_Keywords>
+			</gmd:descriptiveKeywords>
+			<gmd:descriptiveKeywords>
+				<gmd:MD_Keywords>
+					<gmd:keyword>
 						<!-- MANDATORY : sea areas covered by the current dataset  -->
 						<!-- http://vocab.nerc.ac.uk/collection/C16/current/                    -->
 						<!-- use rdf:about attribute for href                                   -->
