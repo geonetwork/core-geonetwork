@@ -128,5 +128,6 @@
       <output file="true"/>
       <error id="illegal-params" sheet="metadata-error.xsl"/>
     </service>
+
   </services>
 </geonet>

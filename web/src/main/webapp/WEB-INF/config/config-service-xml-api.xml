@@ -94,6 +94,10 @@
       <class name=".services.metadata.Delete" />
     </service>
 
+    <service name="xml.relation" deprecated="true" xmlapi="true">
+      <class name=".guiservices.metadata.GetRelated" />
+      <output sheet="metadata/relation.xsl" contentType="text/xml; charset=UTF-8" />
+    </service>
 
     <service name="xml.relation.get" xmlapi="true">
       <class name=".services.relations.Get" />
@@ -112,6 +116,75 @@
     </service>
 
 
+    <service name="xml.metadata.insert.paste" xmlapi="true">
+      <class name=".services.metadata.Insert" />
+      <error sheet="error-xml.xsl" />
+    </service>
+
+    <service name="xml.metadata.validate" deprecated="true" xmlapi="true">
+      <class name=".services.metadata.Validate" />
+      <output sheet="metadata/validate.xsl" contentType="text/xml; charset=UTF-8">
+        <xml name="validation" file="xml/metadata-validate.xml" />
+      </output>
+    </service>
+
+    <service name="xml.metadata.batch.admin.form" deprecated="true" xmlapi="true">
+      <class name=".services.metadata.PrepareBatchUpdatePrivileges" />
+    </service>
+
+    <service name="xml.metadata.batch.update.privileges" deprecated="true" xmlapi="true">
+      <class name=".services.metadata.BatchUpdatePrivileges" />
+    </service>
+
+    <service name="xml.metadata.processing" xmlapi="true">
+      <class name=".services.metadata.XslProcessing" />
+      <error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
+    </service>
+
+    <service name="xml.metadata.status.set" xmlapi="true">
+      <class name=".services.metadata.UpdateStatus" />
+    </service>
+
+    <service name="xml.metadata.status.get" xmlapi="true">
+      <class name=".services.status.Get" />
+    </service>
+
+    <service name="xml.metadata.rate" xmlapi="true">
+      <class name=".services.metadata.Rate" />
+    </service>
+
+
+    <service name="xml.user.metadata" xmlapi="true">
+      <class name=".guiservices.metadata.GetByOwner" />
+    </service>
+
+
+    <service name="xml.search.keywords" type="xml" deprecated="true" xmlapi="true">
+      <class name=".services.thesaurus.GetKeywords"/>
+    </service>
+
+    <service name="xml.search.keywordlink" type="xml" deprecated="true" xmlapi="true">
+      <class name=".services.thesaurus.GetNarrowerBroader"/>
+      <output sheet="thesaurus/thesaurus-autosearchlist.xsl"/>
+    </service>
+
+    <service name="xml.keyword.get" type="xml" deprecated="true" xmlapi="true">
+      <documentation>
+        transformation: Name of the template to use to return the keyword (eg. to-iso19139-with-anchor).
+        keywordOnly: Skip thesaurus citation section if defined (default no).
+
+      </documentation>
+      <class name=".services.thesaurus.GetKeywordById"/>
+      <output sheet="thesaurus/convert.xsl">
+        <call name="thesaurus" class=".services.thesaurus.GetList" />
+      </output>
+    </service>
+    <service name="xml.thesaurus.getList" type="xml" deprecated="true" xmlapi="true">
+      <documentation xml:lang="en">
+        Get list of available thesaurus
+      </documentation>
+      <class name=".services.thesaurus.GetList"/>
+    </service>
 
   </services>
 </geonet>
