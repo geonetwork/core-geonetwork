@@ -25,6 +25,7 @@
        */
       $scope.$watch('currentIndicator', function() {
         // No data
+
         if ($scope.currentIndicator === null) {
           return;
         }
@@ -61,31 +62,20 @@
                      .call(chart);
 
           return chart;
-
         });
-
       });
 
       function getMainStat() {
+
+        $scope.statistics.md.popularity = {
+          sortBy: 'popularity'
+        };
+        $scope.statistics.md.rating = {
+          sortBy: 'rating'
+        };
         $http.get('statistics-content@json')
         .success(function(data) {
               $scope.statistics.md.mainStatistics = data;
-            }).error(function(data) {
-              // TODO
-            });
-
-        $http.get('qi@json?fast=index&' +
-                'sortBy=popularity&from=1&to=' + $scope.hits)
-                .success(function(data) {
-              $scope.statistics.md.popularity = data.metadata;
-            }).error(function(data) {
-              // TODO
-            });
-
-        $http.get('qi@json?fast=index&' +
-                'sortBy=rating&from=1&to=' + $scope.hits)
-        .success(function(data) {
-              $scope.statistics.md.rating = data.metadata;
             }).error(function(data) {
               // TODO
             });

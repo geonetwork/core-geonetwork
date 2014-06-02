@@ -10,12 +10,13 @@
         restrict: 'A',
         replace: true,
         transclude: true,
+        require: '^ngSearchForm',
         scope: {
           config: '=gnPagination'
         },
         templateUrl: '../../catalog/components/search/pagination/partials/' +
             'pagination.html',
-        link: function(scope, element, attrs) {
+        link: function(scope, element, attrs, controller) {
           scope.previous = function() {
             if (scope.config.currentPage > 1) {
               scope.config.currentPage -= 1;
