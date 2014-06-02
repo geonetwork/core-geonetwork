@@ -516,18 +516,7 @@
 			</error>
 		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Administration services                                       -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="admin" deprecated="true">
-			<output sheet="admin.xsl">
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="xml.config.doActions" deprecated="true">
+    <service name="xml.config.doActions" deprecated="true">
 			<class name=".services.config.DoActions" />
 		</service>
 
