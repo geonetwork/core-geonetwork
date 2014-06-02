@@ -107,52 +107,6 @@
 
                 <table width="100%" class="text-aligned-left">
 
-                    <xsl:call-template name="addTitle">
-                        <xsl:with-param name="icon">xml.png</xsl:with-param>
-                        <xsl:with-param name="title"
-                                        select="concat(/root/gui/strings/metadata, '&#160;&amp;&#160;', /root/gui/strings/template)"/>
-                        <xsl:with-param name="content">
-							          </xsl:with-param>
-                    </xsl:call-template>
-
-                    <xsl:variable name="catalogueConfiguration">
-                        <xsl:if test="not($readonly)">
-                            <xsl:call-template name="addrow">
-                                <xsl:with-param name="service" select="'config'"/>
-                                <xsl:with-param name="title" select="/root/gui/strings/systemConfig"/>
-                                <xsl:with-param name="desc" select="/root/gui/strings/systemConfigDes"/>
-                                <xsl:with-param name="icon">exec.png</xsl:with-param>
-                            </xsl:call-template>
-                        </xsl:if>
-                        
-                    </xsl:variable>
-
-
-                    <xsl:call-template name="addTitle">
-                        <xsl:with-param name="icon">exec.png</xsl:with-param>
-                        <xsl:with-param name="title"
-                                        select="/root/gui/strings/catalogueConfiguration"/>
-                        <xsl:with-param name="content" select="$catalogueConfiguration"/>
-                    </xsl:call-template>
-
-
-                    <!-- samples and tests services
-                    <xsl:variable name="adminServices">
-                        <xsl:call-template name="addrow">
-                            <xsl:with-param name="service" select="'test.csw'"/>
-                            <xsl:with-param name="title" select="/root/gui/strings/cswTest"/>
-                            <xsl:with-param name="desc" select="/root/gui/strings/cswTestDesc"/>
-                        </xsl:call-template>
-                    </xsl:variable>
-
-                    <xsl:call-template name="addTitle">
-                        <xsl:with-param name="icon">folder_page.png</xsl:with-param>
-                        <xsl:with-param name="title" select="/root/gui/strings/samplesAndTests"/>
-                        <xsl:with-param name="content" select="$adminServices"/>
-                    </xsl:call-template>
-                    </xsl:variable>
-                    -->
-
                     <xsl:variable name="i18n">
                         <xsl:call-template name="addrow">
                             <xsl:with-param name="service" select="'test.i18n'"/>

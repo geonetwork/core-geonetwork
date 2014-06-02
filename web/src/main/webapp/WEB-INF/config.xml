@@ -526,52 +526,6 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- System configuration                                          -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="config" deprecated="true">
-			<class name=".services.config.Get" />
-			<output sheet="config/config.xsl">
-				<xml name="config" file="xml/config.xml" />
-				<call name="users" class="jeeves.services.db.Select">
-					<param name="db" value="main-db" />
-					<param name="query" value="SELECT * FROM Users ORDER BY name" />
-				</call>
-
-				<call name="groups" class="jeeves.services.db.Select">
-					<param name="db" value="main-db" />
-					<param name="query" value="SELECT * FROM Groups WHERE ID > 1 ORDER BY name" />
-				</call>
-			</output>
-		</service>
-		
-	    <service name="config.set" deprecated="true">
-			<class name=".services.config.Set">
-				<param name="reloadServices" value="y"/>
-			</class>
-			<output forward="admin" />
-		</service>
-		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="xml.config.get" deprecated="true">
-			<class name=".services.config.Get" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="lucene.config.reload" deprecated="true">
-			<class name=".services.config.Reload" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="xml.config.set" deprecated="true">
-			<class name=".services.config.Set" />
-			<output forward="xml.config.doActions" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 	    <service name="xml.config.doActions" deprecated="true">
 			<class name=".services.config.DoActions" />

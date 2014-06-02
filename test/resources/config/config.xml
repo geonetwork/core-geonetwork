@@ -426,34 +426,6 @@
 			</output>
 		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- System configuration                                          -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="config">
-			<output sheet="config/config.xsl">
-				<xml name="config" file="xml/config.xml" />
-				<call name="users" class="jeeves.services.db.Select">
-					<param name="db" value="main-db" />
-					<param name="query" value="SELECT * FROM Users ORDER BY name" />
-				</call>
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.config.get">
-			<class name=".services.config.Get" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.config.set">
-			<class name=".services.config.Set" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
 		<service name="xml.region.update">
 			<class name=".services.region.Update" />
 		</service>
