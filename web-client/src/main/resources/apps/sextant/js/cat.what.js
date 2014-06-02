@@ -123,12 +123,6 @@ cat.what = function() {
 //	            groupFieldStore.load();
 //	        }
 
-      // Radio box
-      var catCookie = cookie.get('cat.searchform.cat');
-      if(catCookie == undefined) {
-          catCookie = 1;
-      }
-
 
 
       // Build thesaurus list or tree view based
@@ -162,10 +156,15 @@ cat.what = function() {
         listOfThesaurus = defaultListOfThesaurus;
       }
 
+      var catCookie = cookie.get('cat.searchform.cat');
+      if(catCookie == undefined) {
+        catCookie = 'E_' + listOfThesaurus[0].field;
+      }
       var radios = [];
       var thesaurusFields = [];
       var radioChange = function(radio, checked) {
         var id = radio.inputValue;
+        radio.setVisible(true);
         Ext.each(thesaurusFields, function(field) {
           if (field.getId() == id) {
             field.setVisible(checked);
@@ -285,14 +284,15 @@ cat.what = function() {
         thesaurusFields.push(thesaurusField);
 
       });
-
-      var radios = new Ext.form.RadioGroup({
+      if(catCookie == undefined) {
+        cookie.set('cat.searchform.cat', radios.items[0].id);
+      }
+      var radioGroup = new Ext.form.RadioGroup({
           columns: radios.length,
           fieldLabel: OpenLayers.i18n('Themes'),
           items: radios,
           reset: Ext.emptyFn
       });
-
 
       var sep1 = createSep();
       var sep2 = createSep();
@@ -340,12 +340,15 @@ cat.what = function() {
         id: 'E_type',
         value: 'dataset or series or publication or nonGeographicDataset or feature or featureCatalog'
       });
-
-      advancedFields.push(radios,  catalogueField);
-      advancedFields.concat(thesaurusFields);
+      advancedFields.push(radioGroup, catalogueField);
+      Ext.each(radios, function (item) {
+        advancedFields.push(item);
+      });
+      Ext.each(thesaurusFields, function (item) {
+        advancedFields.push(item);
+      });
       advancedFields.push(resourceTypeHiddenField);
-
-      var items = [searchField, sep1, catalogueField, sep2, radios];
+      var items = [searchField, sep1, catalogueField, sep2, radioGroup];
       Ext.each(thesaurusFields, function(f) {
         items.push(f);
       });
