@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+    <documentation>XML API service are Jeeves services returning XML response.
+    At some point they may be deprecated and replaced by services used
+      by AngularUI returning XML or JSON response.
+    </documentation>
+
+
+
+  </services>
+</geonet>

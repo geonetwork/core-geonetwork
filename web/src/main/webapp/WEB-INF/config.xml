@@ -704,14 +704,6 @@
 
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Open Archive Initiative, Protocol for Metadata Harvesting -->
-
-		<service name="oaipmh">
-      <!-- Move to config-oai.xml -->
-			<class name=".services.main.OaiPmhDispatcher" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- KML services -->
 
 		<!-- Show WMS service in GE -->
@@ -835,9 +827,12 @@
 
 	<!-- New section of services based on refactoring
 	guideline https://github.com/geonetwork/core-geonetwork/wiki/RefactoringXSLTAndUserInterface -->
-  
+
+  <include>config/config-service-xml-api.xml</include>
+
   <include>config/config-service-search.xml</include>
   <include>config/config-service-sru.xml</include>
+  <include>config/config-service-oai.xml</include>
   <include>config/config-service-rss.xml</include>
   <include>config/config-service-csv.xml</include>
   <include>config/config-service-dcat-rdf.xml</include>
