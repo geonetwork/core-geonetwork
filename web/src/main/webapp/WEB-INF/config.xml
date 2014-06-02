@@ -140,67 +140,11 @@
 			</output>
 		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="main.present" remove="true">
-			<class name=".services.main.Result">
-				<param name="maxRecords" value="10" />
-				<param name="syntax" value="f" />
-			</class>
-
-			<output sheet="search-results.xsl">
-				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="sources" class=".guiservices.util.Sources" />
-				<call name="repositories" class=".services.main.Info">
-					<param name="type" value="z3950repositories" />
-				</call>
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="remote.show" remove="true">
-			<class name=".services.main.RemoteShow">
-				<param name="syntax" value="f" />
-			</class>
-
-			<output sheet="remote-show.xsl">
-				<call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
-				<call name="repositories" class=".services.main.Info">
-					<param name="type" value="z3950repositories" />
-				</call>
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <!-- classic GUI -->
-		<service name="feedback" deprecated="true" remove="true">
-			<output sheet="feedback.xsl" />
-		</service>
-
         <!-- Ext GUIs -->
         <service name="feedback.send">
             <class name=".services.feedback.Receptor" />
             <output sheet="extjs-feedback-response.xsl" contentType="application/json; charset=UTF-8" />
         </service>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="links" remove="true">
-			<output sheet="page.xsl">
-				<xml name="page" file="xml/links.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="about" remove="true">
-			<output sheet="page.xsl">
-				<xml name="page" file="xml/about.xml" />
-			</output>
-		</service>
-
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.region.get" deprecated="true" xmlapi="true">
@@ -360,18 +304,6 @@
 	    <service name="xml.config.info" deprecated="true" xmlapi="true">
 			<class name=".services.config.GetInfo" />
 		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Help services                                                 -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="help" remove="true">
-			<output sheet="page.xsl">
-				<xml name="page" file="xml/help.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.schema.info" xmlapi="true">
 			<class name=".services.schema.Info" />
