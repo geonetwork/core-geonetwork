@@ -184,31 +184,6 @@
 		</service>
 
 
-		<service name="user.register.submit">
-			<class name=".services.register.SelfRegister" />
-			<output sheet="registration-info.xsl">
-				<xml name="info" file="xml/registration-sent.xml" />
-			</output>
-			<error sheet="registration-error.xsl">
-				<xml name="error" file="xml/registration-error.xml" />
-			</error>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!--                   Login services                              -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="user.login">
-			<class name=".services.login.Login" />
-
-			<output forward="main.home" />
-
-			<error id="user-login" sheet="error.xsl">
-				<xml name="error" file="xml/login-error.xml" />
-			</error>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="shib.user.login">
 			<class name=".services.login.ShibLogin" />
@@ -218,13 +193,6 @@
 			<error id="user-login" sheet="error.xsl">
 				<xml name="error" file="xml/login-error.xml" />
 			</error>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="user.logout">
-			<class name=".services.login.Logout" />
-			<output forward="main.home" />
 		</service>
 
 
