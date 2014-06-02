@@ -1,0 +1,2044 @@
+<?xml version="1.0" encoding="UTF-8"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="http://www.isotc211.org/schemas/grg/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#">
+<skos:Collection rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/">
+<skos:prefLabel>EMODNET chemistry lot aggregated parameter names</skos:prefLabel>
+<dc:title>EMODNET chemistry lot aggregated parameter names</dc:title>
+<skos:altLabel>EMODNET chemistry aggregations</skos:altLabel>
+<dc:alternative>EMODNET chemistry aggregations</dc:alternative>
+<dc:description>Labels used for aggregated parameters in the EMODNET chemistry lot</dc:description>
+<dc:date>2014-03-13 02:00:02.0</dc:date>
+<owl:versionInfo>4</owl:versionInfo>
+<grg:RE_RegisterManager>British Oceanographic Data Centre</grg:RE_RegisterManager>
+<dc:publisher>Natural Environment Research Council</dc:publisher>
+<dc:creator>EMODNet Chemistry Lot</dc:creator>
+<grg:RE_RegisterOwner>EMODNet Chemistry Lot</grg:RE_RegisterOwner>
+<rdfs:comment>A European project consortium aimed at the creation of data products using chemical data amassed through SeaDataNet. The governance is loosely defined as the scientific expertise within the consortium with no formal processes defined.</rdfs:comment>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/WATERTEMP/">
+<dc:identifier>SDN:P35::WATERTEMP</dc:identifier>
+<skos:notation>SDN:P35::WATERTEMP</skos:notation>
+<skos:prefLabel xml:lang="en">ITS-90 water temperature</skos:prefLabel>
+<skos:altLabel>ITS-90 temperature</skos:altLabel>
+<skos:definition xml:lang="en">All measures of the temperature of any water body by any method. Includes P01 codes that are either explicitly labelled ITS-90 or have no explicit temperature scale label. Additional filters such as collection date will be required to be certain IPTS-68 data are excluded from the aggregation.</skos:definition>
+<owl:versionInfo>2</owl:versionInfo>
+<dc:date>2013-10-08 12:36:20.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPTC12/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPZZXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TMCLCCI1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TMCLCCL1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSSTBK01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSSTTS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSSTZZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PTMATS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PTMATS02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PTMATS03/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PTMATS04/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PTMATS05/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PTMATS06/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PTMATS07/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PTMATS08/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PTMATS09/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PTMATS10/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PTMATS11/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PTMATS12/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PTMATS13/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PTMATS14/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PTMATS15/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PTMAZZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPAPRT/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPBT01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPCC01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPCC02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPCU01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPCU02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPDTNX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPET01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPHG01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPHGNX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPHU01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPMC01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPMT01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPMV01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPP901/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPPH01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPPP01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPPP02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPPR01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPPR02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPPR03/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPR901/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPRTNX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPS901/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPS902/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPSB35/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPSG01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPST01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPST02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPSU01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPSZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPTB01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPTC01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPTC02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPTC03/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPTC04/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPTC05/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPTC06/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPTC07/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPTC08/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPTC09/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPTC10/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TEMPTC11/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPAA/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00084/">
+<dc:identifier>SDN:P35::EPC00084</dc:identifier>
+<skos:notation>SDN:P35::EPC00084</skos:notation>
+<skos:prefLabel xml:lang="en">Suspended particulate material aluminium content</skos:prefLabel>
+<skos:altLabel>SPM Al</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) from a sample of a river, estuary, sea or ocean water or trapped in situ expressed per unit dry weight of the particles  by any method.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MALPP012/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ALCNAAPC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ALCNICP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ALCNPEXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ALCNAAP2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00085/">
+<dc:identifier>SDN:P35::EPC00085</dc:identifier>
+<skos:notation>SDN:P35::EPC00085</skos:notation>
+<skos:prefLabel xml:lang="en">Suspended particulate material arsenic content</skos:prefLabel>
+<skos:altLabel>SPM As</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) from a sample of a river, estuary, sea or ocean water or trapped in situ expressed per unit dry weight of the particles  by any method.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MSPMM003/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MSPMM024/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00086/">
+<dc:identifier>SDN:P35::EPC00086</dc:identifier>
+<skos:notation>SDN:P35::EPC00086</skos:notation>
+<skos:prefLabel xml:lang="en">Suspended particulate material barium content</skos:prefLabel>
+<skos:altLabel>SPM Ba</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) from a sample of a river, estuary, sea or ocean water or trapped in situ expressed per unit dry weight of the particles  by any method.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/BACNICXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MBAPP012/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/BACNAAP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/BACNPEXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/BACNICP2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00087/">
+<dc:identifier>SDN:P35::EPC00087</dc:identifier>
+<skos:notation>SDN:P35::EPC00087</skos:notation>
+<skos:prefLabel xml:lang="en">Suspended particulate material cadmium content</skos:prefLabel>
+<skos:altLabel>SPM Cd</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) from a sample of a river, estuary, sea or ocean water or trapped in situ expressed per unit dry weight of the particles  by any method.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MSPMM005/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDCNAAPC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDCNICP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDCNAAP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MSPMM017/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00088/">
+<dc:identifier>SDN:P35::EPC00088</dc:identifier>
+<skos:notation>SDN:P35::EPC00088</skos:notation>
+<skos:prefLabel xml:lang="en">Suspended particulate material chromium content</skos:prefLabel>
+<skos:altLabel>SPM Cr</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) from a sample of a river, estuary, sea or ocean water or trapped in situ expressed per unit dry weight of the particles  by any method.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CRCNAAPC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MSPMM018/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CRCNAAP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MSPMM006/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00089/">
+<dc:identifier>SDN:P35::EPC00089</dc:identifier>
+<skos:notation>SDN:P35::EPC00089</skos:notation>
+<skos:prefLabel xml:lang="en">Suspended particulate material cobalt content</skos:prefLabel>
+<skos:altLabel>SPM Co</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) from a sample of a river, estuary, sea or ocean water or trapped in situ expressed per unit dry weight of the particles  by any method.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/COCNAAPC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/COCNAAP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/COCNICP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/COCNXXP2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00090/">
+<dc:identifier>SDN:P35::EPC00090</dc:identifier>
+<skos:notation>SDN:P35::EPC00090</skos:notation>
+<skos:prefLabel xml:lang="en">Suspended particulate material copper content</skos:prefLabel>
+<skos:altLabel>SPM Cu</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) from a sample of a river, estuary, sea or ocean water or trapped in situ expressed per unit dry weight of the particles  by any method.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MSPMM019/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MSPMM007/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUCNAAPC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUCNICP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUCNAAP2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00091/">
+<dc:identifier>SDN:P35::EPC00091</dc:identifier>
+<skos:notation>SDN:P35::EPC00091</skos:notation>
+<skos:prefLabel xml:lang="en">Suspended particulate material iron (total chemical species) content</skos:prefLabel>
+<skos:altLabel>SPM total Fe</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) from a sample of a river, estuary, sea or ocean water or trapped in situ expressed per unit dry weight of the particles  by any method. Total means the element in all possible states of valency and chemical combination.</skos:definition>
+<owl:versionInfo>2</owl:versionInfo>
+<dc:date>2014-03-12 08:31:23.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FECNAAP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FECNXXP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FECNPEXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MFEPP012/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FECNAAPC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FECNICP2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00092/">
+<dc:identifier>SDN:P35::EPC00092</dc:identifier>
+<skos:notation>SDN:P35::EPC00092</skos:notation>
+<skos:prefLabel xml:lang="en">Suspended particulate material lead content</skos:prefLabel>
+<skos:altLabel>SPM Pb</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) from a sample of a river, estuary, sea or ocean water or trapped in situ expressed per unit dry weight of the particles  by any method.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBCNICXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MSPMM008/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MSPMM020/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBCNAAP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBCNAAPC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBCNICP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBCNXXP2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00093/">
+<dc:identifier>SDN:P35::EPC00093</dc:identifier>
+<skos:notation>SDN:P35::EPC00093</skos:notation>
+<skos:prefLabel xml:lang="en">Suspended particulate material lithium content</skos:prefLabel>
+<skos:altLabel>SPM Li</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) from a sample of a river, estuary, sea or ocean water or trapped in situ expressed per unit dry weight of the particles  by any method.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/LICNAAP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/LICNAAPC/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00094/">
+<dc:identifier>SDN:P35::EPC00094</dc:identifier>
+<skos:notation>SDN:P35::EPC00094</skos:notation>
+<skos:prefLabel xml:lang="en">Suspended particulate material manganese (total chemical species) content</skos:prefLabel>
+<skos:altLabel>SPM total Mn</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) from a sample of a river, estuary, sea or ocean water or trapped in situ expressed per unit dry weight of the particles  by any method. Total means the element in all possible states of valency and chemical combination.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MMNPP012/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNCNAAP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNCNPEXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNCNAAPC/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00095/">
+<dc:identifier>SDN:P35::EPC00095</dc:identifier>
+<skos:notation>SDN:P35::EPC00095</skos:notation>
+<skos:prefLabel xml:lang="en">Suspended particulate material mercury (total chemical species) content</skos:prefLabel>
+<skos:altLabel>SPM total Hg</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) from a sample of a river, estuary, sea or ocean water or trapped in situ expressed per unit dry weight of the particles  by any method. Total means the element in all possible states of valency and chemical combination.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MSPMM021/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CHEMM005/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MSPMM001/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00096/">
+<dc:identifier>SDN:P35::EPC00096</dc:identifier>
+<skos:notation>SDN:P35::EPC00096</skos:notation>
+<skos:prefLabel xml:lang="en">Suspended particulate material molybdenum content</skos:prefLabel>
+<skos:altLabel>SPM Mo</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) from a sample of a river, estuary, sea or ocean water or trapped in situ expressed per unit dry weight of the particles  by any method.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MOCNXXP2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00097/">
+<dc:identifier>SDN:P35::EPC00097</dc:identifier>
+<skos:notation>SDN:P35::EPC00097</skos:notation>
+<skos:prefLabel xml:lang="en">Suspended particulate material nickel content</skos:prefLabel>
+<skos:altLabel>SPM Ni</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) from a sample of a river, estuary, sea or ocean water or trapped in situ expressed per unit dry weight of the particles  by any method.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NICNAAP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NICNXXP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NICNAAPC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NICNICP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MSPMM009/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MSPMM022/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00098/">
+<dc:identifier>SDN:P35::EPC00098</dc:identifier>
+<skos:notation>SDN:P35::EPC00098</skos:notation>
+<skos:prefLabel xml:lang="en">Suspended particulate material rubidium content</skos:prefLabel>
+<skos:altLabel>SPM Rb</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) from a sample of a river, estuary, sea or ocean water or trapped in situ expressed per unit dry weight of the particles  by any method.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RBCNICXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00099/">
+<dc:identifier>SDN:P35::EPC00099</dc:identifier>
+<skos:notation>SDN:P35::EPC00099</skos:notation>
+<skos:prefLabel xml:lang="en">Suspended particulate material silver content</skos:prefLabel>
+<skos:altLabel>SPM Ag</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) from a sample of a river, estuary, sea or ocean water or trapped in situ expressed per unit dry weight of the particles  by any method.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AGCNAAP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AGCNICP2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00100/">
+<dc:identifier>SDN:P35::EPC00100</dc:identifier>
+<skos:notation>SDN:P35::EPC00100</skos:notation>
+<skos:prefLabel xml:lang="en">Suspended particulate material strontium content</skos:prefLabel>
+<skos:altLabel>SPM Sr</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) from a sample of a river, estuary, sea or ocean water or trapped in situ expressed per unit dry weight of the particles  by any method.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SRCNICP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SRCNICXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SRCNAAP2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00101/">
+<dc:identifier>SDN:P35::EPC00101</dc:identifier>
+<skos:notation>SDN:P35::EPC00101</skos:notation>
+<skos:prefLabel xml:lang="en">Suspended particulate material titanium content</skos:prefLabel>
+<skos:altLabel>SPM Ti</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) from a sample of a river, estuary, sea or ocean water or trapped in situ expressed per unit dry weight of the particles  by any method.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MTIPP012/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TICNPEXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00102/">
+<dc:identifier>SDN:P35::EPC00102</dc:identifier>
+<skos:notation>SDN:P35::EPC00102</skos:notation>
+<skos:prefLabel xml:lang="en">Suspended particulate material uranium content</skos:prefLabel>
+<skos:altLabel>SPM U</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) from a sample of a river, estuary, sea or ocean water or trapped in situ expressed per unit dry weight of the particles  by any method.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/UXCNICXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00103/">
+<dc:identifier>SDN:P35::EPC00103</dc:identifier>
+<skos:notation>SDN:P35::EPC00103</skos:notation>
+<skos:prefLabel xml:lang="en">Suspended particulate material vanadium content</skos:prefLabel>
+<skos:altLabel>SPM V</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) from a sample of a river, estuary, sea or ocean water or trapped in situ expressed per unit dry weight of the particles  by any method.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/VXCNXXP2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00104/">
+<dc:identifier>SDN:P35::EPC00104</dc:identifier>
+<skos:notation>SDN:P35::EPC00104</skos:notation>
+<skos:prefLabel xml:lang="en">Suspended particulate material zinc content</skos:prefLabel>
+<skos:altLabel>SPM Zn</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) from a sample of a river, estuary, sea or ocean water or trapped in situ expressed per unit dry weight of the particles  by any method.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNCNXXP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNCNAAPC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNCNAAP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MSPMM023/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MSPMM010/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNCNICP2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00009/">
+<dc:identifier>SDN:P35::EPC00009</dc:identifier>
+<skos:notation>SDN:P35::EPC00009</skos:notation>
+<skos:prefLabel xml:lang="en">Water body ammonium</skos:prefLabel>
+<skos:altLabel>NH4</skos:altLabel>
+<skos:definition xml:lang="en">The amount of ammonium per unit volume of a river, estuary, sea or ocean by any method in filtered or unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONZZXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONAATX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONAADZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONFSG1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONMPD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONAAD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONMAD3/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONAAD3/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONAAD4/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONFID2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONAAD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONAAD5/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONHOTX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONMP12/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONMATX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AMONAAZX/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00011/">
+<dc:identifier>SDN:P35::EPC00011</dc:identifier>
+<skos:notation>SDN:P35::EPC00011</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved aluminium</skos:prefLabel>
+<skos:altLabel>Dissolved Al</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ALXXFIP5/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ALXXLGD4/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ALXXLGD3/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ALXXLGD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DALFICHL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00012/">
+<dc:identifier>SDN:P35::EPC00012</dc:identifier>
+<skos:notation>SDN:P35::EPC00012</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved antimony</skos:prefLabel>
+<skos:altLabel>Dissolved Sb</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00143/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00013/">
+<dc:identifier>SDN:P35::EPC00013</dc:identifier>
+<skos:notation>SDN:P35::EPC00013</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved arsenic</skos:prefLabel>
+<skos:altLabel>Dissolved As</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00141/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AS35ASV1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MDWD0010/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ASXXAAD2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00014/">
+<dc:identifier>SDN:P35::EPC00014</dc:identifier>
+<skos:notation>SDN:P35::EPC00014</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved barium</skos:prefLabel>
+<skos:altLabel>Dissolved Ba</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/BAICPMS1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00147/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00015/">
+<dc:identifier>SDN:P35::EPC00015</dc:identifier>
+<skos:notation>SDN:P35::EPC00015</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved beryllium</skos:prefLabel>
+<skos:altLabel>Dissolved Be</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00148/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00016/">
+<dc:identifier>SDN:P35::EPC00016</dc:identifier>
+<skos:notation>SDN:P35::EPC00016</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved boron</skos:prefLabel>
+<skos:altLabel>Dissolved B</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MDWD0054/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00144/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00017/">
+<dc:identifier>SDN:P35::EPC00017</dc:identifier>
+<skos:notation>SDN:P35::EPC00017</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved cadmium</skos:prefLabel>
+<skos:altLabel>Dissolved Cd</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ODSDM009/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDXXAADZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDAFWC01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MTWD0009/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDXXICD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDCDICP1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDVOLDMS/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDXXFXD2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00018/">
+<dc:identifier>SDN:P35::EPC00018</dc:identifier>
+<skos:notation>SDN:P35::EPC00018</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved chromium</skos:prefLabel>
+<skos:altLabel>Dissolved Cr</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MTWD0055/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CRAFWC01/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00019/">
+<dc:identifier>SDN:P35::EPC00019</dc:identifier>
+<skos:notation>SDN:P35::EPC00019</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved cobalt</skos:prefLabel>
+<skos:altLabel>Dissolved Co</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDCOICP1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/COFICLD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDCOICP5/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00156/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/COXXFXD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/COFICLD5/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00020/">
+<dc:identifier>SDN:P35::EPC00020</dc:identifier>
+<skos:notation>SDN:P35::EPC00020</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved copper</skos:prefLabel>
+<skos:altLabel>Dissolved Cu</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUXXAADZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUXXASV1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUVOLDMS/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MTWD0044/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUAFWC01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUXXFXD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDCUICP1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUXXICD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ODSDM008/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00021/">
+<dc:identifier>SDN:P35::EPC00021</dc:identifier>
+<skos:notation>SDN:P35::EPC00021</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved iron (total chemical species)</skos:prefLabel>
+<skos:altLabel>Dissolved total Fe</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type). Total means the element in all possible states of valency and chemical combination.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MTWD0021/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00151/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FEFICLDA/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FEXXICD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FETOTAAD/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDFEICP1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FEXXFXD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DFEFICHL/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00022/">
+<dc:identifier>SDN:P35::EPC00022</dc:identifier>
+<skos:notation>SDN:P35::EPC00022</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved lead</skos:prefLabel>
+<skos:altLabel>Dissolved Pb</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MTWD0046/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ODSDM011/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBXXAADZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDPBICP1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBAFWC01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBXXICD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBVOLDMS/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBXXFXD2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00023/">
+<dc:identifier>SDN:P35::EPC00023</dc:identifier>
+<skos:notation>SDN:P35::EPC00023</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved lithium</skos:prefLabel>
+<skos:altLabel>Dissolved Li</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00149/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00024/">
+<dc:identifier>SDN:P35::EPC00024</dc:identifier>
+<skos:notation>SDN:P35::EPC00024</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved manganese (total chemical species)</skos:prefLabel>
+<skos:altLabel>Dissolved total Mn</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type). Total means the element in all possible states of valency and chemical combination.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNXXAADZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNXXAAD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNVOLDMS/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNFICD01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00150/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNXXFXD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNXXICD2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00025/">
+<dc:identifier>SDN:P35::EPC00025</dc:identifier>
+<skos:notation>SDN:P35::EPC00025</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved mercury (total chemical species)</skos:prefLabel>
+<skos:altLabel>Dissolved total Hg</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type). Total means the element in all possible states of valency and chemical combination.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HGAFWC01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MTWD0008/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HGTXAAD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HGXXCFD2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00026/">
+<dc:identifier>SDN:P35::EPC00026</dc:identifier>
+<skos:notation>SDN:P35::EPC00026</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved molybdenum</skos:prefLabel>
+<skos:altLabel>Dissolved Mo</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00157/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MTWD00MO/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MBICPMS1/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00027/">
+<dc:identifier>SDN:P35::EPC00027</dc:identifier>
+<skos:notation>SDN:P35::EPC00027</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved nickel</skos:prefLabel>
+<skos:altLabel>Dissolved Ni</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ODSDM012/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDNIICP1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDNIICP5/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NIXXFXD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MTWD0051/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NIXXZZZZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NIXXICD2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00002/">
+<dc:identifier>SDN:P35::EPC00002</dc:identifier>
+<skos:notation>SDN:P35::EPC00002</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved oxygen concentration</skos:prefLabel>
+<skos:altLabel>Oxygen</skos:altLabel>
+<skos:definition xml:lang="en">Dissolved oxygen per unit volume of a river, estuary, sea or ocean by any method.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXYSE02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXYZZXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXYSE01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXYAAOP/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXYPR01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXYCZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXYOP01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXYPE01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXYPR02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXYSC01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXYSU01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXYSU02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXYUZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXYWITX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXYZZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DOXYUZ02/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPCT/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00003/">
+<dc:identifier>SDN:P35::EPC00003</dc:identifier>
+<skos:notation>SDN:P35::EPC00003</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved oxygen saturation</skos:prefLabel>
+<skos:altLabel>Oxygen Saturation</skos:altLabel>
+<skos:definition xml:lang="en">The measured oxygen concentration expressed as a percentage of its theoretical value in a river, estaury, sea or ocean.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/OXYSBB01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/OXYSBW01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/OXYSSU01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/OXYSWE01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/OXYSZW01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/OXYSBB02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/OXYSZZ02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/OXYSOP01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/OXYSSC01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/OXYSSE01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/OXYSWB01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/OXYSWW01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/OXYSZZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/OXYSBE01/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00028/">
+<dc:identifier>SDN:P35::EPC00028</dc:identifier>
+<skos:notation>SDN:P35::EPC00028</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved rubidium</skos:prefLabel>
+<skos:altLabel>Dissolved Rb</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00152/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00029/">
+<dc:identifier>SDN:P35::EPC00029</dc:identifier>
+<skos:notation>SDN:P35::EPC00029</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved selenium</skos:prefLabel>
+<skos:altLabel>Dissolved Se</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00142/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00030/">
+<dc:identifier>SDN:P35::EPC00030</dc:identifier>
+<skos:notation>SDN:P35::EPC00030</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved silver</skos:prefLabel>
+<skos:altLabel>Dissolved Ag</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AGVOLDMS/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MTWD00AG/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00154/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00031/">
+<dc:identifier>SDN:P35::EPC00031</dc:identifier>
+<skos:notation>SDN:P35::EPC00031</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved strontium</skos:prefLabel>
+<skos:altLabel>Dissolved Sr</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00161/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00032/">
+<dc:identifier>SDN:P35::EPC00032</dc:identifier>
+<skos:notation>SDN:P35::EPC00032</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved tellurium</skos:prefLabel>
+<skos:altLabel>Dissolved Te</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00145/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00033/">
+<dc:identifier>SDN:P35::EPC00033</dc:identifier>
+<skos:notation>SDN:P35::EPC00033</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved thallium</skos:prefLabel>
+<skos:altLabel>Dissolved Tl</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00160/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00034/">
+<dc:identifier>SDN:P35::EPC00034</dc:identifier>
+<skos:notation>SDN:P35::EPC00034</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved tin</skos:prefLabel>
+<skos:altLabel>Dissolved Sn</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00158/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00035/">
+<dc:identifier>SDN:P35::EPC00035</dc:identifier>
+<skos:notation>SDN:P35::EPC00035</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved titanium</skos:prefLabel>
+<skos:altLabel>Dissolved Ti</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00155/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00036/">
+<dc:identifier>SDN:P35::EPC00036</dc:identifier>
+<skos:notation>SDN:P35::EPC00036</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved uranium</skos:prefLabel>
+<skos:altLabel>Dissolved U</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/URICPMS1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00153/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00037/">
+<dc:identifier>SDN:P35::EPC00037</dc:identifier>
+<skos:notation>SDN:P35::EPC00037</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved vanadium</skos:prefLabel>
+<skos:altLabel>Dissolved V</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00159/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MTWD0001/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00038/">
+<dc:identifier>SDN:P35::EPC00038</dc:identifier>
+<skos:notation>SDN:P35::EPC00038</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved zinc</skos:prefLabel>
+<skos:altLabel>Dissolved Zn</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in filtered water (any filter type).</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MTWD0057/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNXXFXD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNVGFAAS/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNCOICP5/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZN04ICP6/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZN02FIF1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ODSDM010/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDZNICP1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00146/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNXXAADZ/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00039/">
+<dc:identifier>SDN:P35::EPC00039</dc:identifier>
+<skos:notation>SDN:P35::EPC00039</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate aluminium</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate Al</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ALVOLLGF/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DGTLALXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ALXXLGTX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00040/">
+<dc:identifier>SDN:P35::EPC00040</dc:identifier>
+<skos:notation>SDN:P35::EPC00040</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate antimony</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate Sb</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00031/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00041/">
+<dc:identifier>SDN:P35::EPC00041</dc:identifier>
+<skos:notation>SDN:P35::EPC00041</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate arsenic</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate As</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00025/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00042/">
+<dc:identifier>SDN:P35::EPC00042</dc:identifier>
+<skos:notation>SDN:P35::EPC00042</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate barium</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate Ba</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/BAXXXXMS/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00029/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/BAXXICP3/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00043/">
+<dc:identifier>SDN:P35::EPC00043</dc:identifier>
+<skos:notation>SDN:P35::EPC00043</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate beryllium</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate Be</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00030/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00044/">
+<dc:identifier>SDN:P35::EPC00044</dc:identifier>
+<skos:notation>SDN:P35::EPC00044</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate boron</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate B</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00034/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00045/">
+<dc:identifier>SDN:P35::EPC00045</dc:identifier>
+<skos:notation>SDN:P35::EPC00045</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate cadmium</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate Cd</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDXXCVDX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDUFICXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDUFWC02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DGTLCDXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00046/">
+<dc:identifier>SDN:P35::EPC00046</dc:identifier>
+<skos:notation>SDN:P35::EPC00046</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate chromium</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate Cr</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CRXXCVDX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CRUFWC02/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00047/">
+<dc:identifier>SDN:P35::EPC00047</dc:identifier>
+<skos:notation>SDN:P35::EPC00047</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate cobalt</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate Co</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/COXXCVDX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DGTLCOXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00039/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00048/">
+<dc:identifier>SDN:P35::EPC00048</dc:identifier>
+<skos:notation>SDN:P35::EPC00048</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate copper</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate Cu</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUXXZZZZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUTDICP5/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUXXCVDX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DGTLCUXX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00049/">
+<dc:identifier>SDN:P35::EPC00049</dc:identifier>
+<skos:notation>SDN:P35::EPC00049</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate iron (total chemical species)</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate total Fe</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water. Total means the element in all possible states of valency and chemical combination.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FEXXCVDX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FEXXCLDX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DGTLFEXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00033/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00050/">
+<dc:identifier>SDN:P35::EPC00050</dc:identifier>
+<skos:notation>SDN:P35::EPC00050</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate lead</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate Pb</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBUFICXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DGTLPBXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBUFWC02/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00051/">
+<dc:identifier>SDN:P35::EPC00051</dc:identifier>
+<skos:notation>SDN:P35::EPC00051</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate lithium</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate Li</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00045/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00052/">
+<dc:identifier>SDN:P35::EPC00052</dc:identifier>
+<skos:notation>SDN:P35::EPC00052</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate manganese (total chemical species)</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate total Mn</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water. Total means the element in all possible states of valency and chemical combination. Total means the element in all possible states of valency and chemical combination.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DGTLMNXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00032/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00053/">
+<dc:identifier>SDN:P35::EPC00053</dc:identifier>
+<skos:notation>SDN:P35::EPC00053</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate mercury (total chemical species)</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate total Hg</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water. Total means the element in all possible states of valency and chemical combination.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HGTXAATX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HGUFCFXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/HGUFWC02/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00054/">
+<dc:identifier>SDN:P35::EPC00054</dc:identifier>
+<skos:notation>SDN:P35::EPC00054</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate molybdenum</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate Mo</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00040/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00055/">
+<dc:identifier>SDN:P35::EPC00055</dc:identifier>
+<skos:notation>SDN:P35::EPC00055</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate nickel</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate Ni</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/DGTLNIXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NIXXCVDX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00027/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00056/">
+<dc:identifier>SDN:P35::EPC00056</dc:identifier>
+<skos:notation>SDN:P35::EPC00056</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate rubidium</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate Rb</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00046/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00057/">
+<dc:identifier>SDN:P35::EPC00057</dc:identifier>
+<skos:notation>SDN:P35::EPC00057</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate selenium</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate Se</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00026/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00058/">
+<dc:identifier>SDN:P35::EPC00058</dc:identifier>
+<skos:notation>SDN:P35::EPC00058</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate silver</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate Ag</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00037/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00059/">
+<dc:identifier>SDN:P35::EPC00059</dc:identifier>
+<skos:notation>SDN:P35::EPC00059</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate strontium</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate Sr</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00044/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00060/">
+<dc:identifier>SDN:P35::EPC00060</dc:identifier>
+<skos:notation>SDN:P35::EPC00060</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate tellurium</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate Te</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00036/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00061/">
+<dc:identifier>SDN:P35::EPC00061</dc:identifier>
+<skos:notation>SDN:P35::EPC00061</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate thallium</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate Tl</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00043/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00062/">
+<dc:identifier>SDN:P35::EPC00062</dc:identifier>
+<skos:notation>SDN:P35::EPC00062</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate tin</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate Sn</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00041/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00063/">
+<dc:identifier>SDN:P35::EPC00063</dc:identifier>
+<skos:notation>SDN:P35::EPC00063</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate titanium</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate Ti</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00038/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00064/">
+<dc:identifier>SDN:P35::EPC00064</dc:identifier>
+<skos:notation>SDN:P35::EPC00064</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate uranium</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate U</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00035/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00065/">
+<dc:identifier>SDN:P35::EPC00065</dc:identifier>
+<skos:notation>SDN:P35::EPC00065</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate vanadium</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate V</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00042/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00066/">
+<dc:identifier>SDN:P35::EPC00066</dc:identifier>
+<skos:notation>SDN:P35::EPC00066</skos:notation>
+<skos:prefLabel xml:lang="en">Water body dissolved+particulate zinc</skos:prefLabel>
+<skos:altLabel>Dissolved+particulate Zn</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal per unit volume of a river, estuary, sea or ocean by any method in unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/RWS00028/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNXXCVDX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNINCVDX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00004/">
+<dc:identifier>SDN:P35::EPC00004</dc:identifier>
+<skos:notation>SDN:P35::EPC00004</skos:notation>
+<skos:prefLabel xml:lang="en">Water body nitrate</skos:prefLabel>
+<skos:altLabel>NO3</skos:altLabel>
+<skos:definition xml:lang="en">The amount of nitrate per unit volume of a river, estuary, sea or ocean by any method in filtered or unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRAAA04/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRAAAD4/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRAMADZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRZMC01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NO3UFLIC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRA04LW/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRAAAD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRZMS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ODSDM2UM/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ODSDM1UM/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRTFSG1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ODSDM014/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NO3FLTIC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRAYYDZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CHEMM012/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRAZZXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRAXXDZ/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00005/">
+<dc:identifier>SDN:P35::EPC00005</dc:identifier>
+<skos:notation>SDN:P35::EPC00005</skos:notation>
+<skos:prefLabel xml:lang="en">Water body nitrate plus nitrite</skos:prefLabel>
+<skos:altLabel>NO3+NO2</skos:altLabel>
+<skos:definition xml:lang="en">The amount of nitrate plus nitrate per unit volume of a river, estuary, sea or ocean by any method in filtered or unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRZAA01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRZMAZX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRZAAD5/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRZAAD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRZAAD3/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRZMAD3/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRZAAD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRAFSG1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRZXXDZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRZAADZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRZMADZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRZYYDZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRZAATX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRZNS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRZMATX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRZZZXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRZAAZX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRZNNTX/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00006/">
+<dc:identifier>SDN:P35::EPC00006</dc:identifier>
+<skos:notation>SDN:P35::EPC00006</skos:notation>
+<skos:prefLabel xml:lang="en">Water body nitrite</skos:prefLabel>
+<skos:altLabel>NO2</skos:altLabel>
+<skos:definition xml:lang="en">The amount of nitrite per unit volume of a river, estuary, sea or ocean by any method in filtered or unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRIAAD4/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRIZZXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRIXXDZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NO2FLTIC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NO2UFLIC/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRIAAZX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRI04LW/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRIAAD5/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRIAAD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRIMA12/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRIAAD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRFSG01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRIAADZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRIMADZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRIYYDZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRIAATX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRIMATX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NTRIAAD3/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00067/">
+<dc:identifier>SDN:P35::EPC00067</dc:identifier>
+<skos:notation>SDN:P35::EPC00067</skos:notation>
+<skos:prefLabel xml:lang="en">Water body particulate aluminium</skos:prefLabel>
+<skos:altLabel>Particulate Al</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) in the water of a river, estuary, sea or ocean by any method and expressed per unit of water volume.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ALXXXFP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ALXXAAP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ALPTLMS1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ALPSUS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ALPSIN01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ALPICP01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ALXXICP2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00068/">
+<dc:identifier>SDN:P35::EPC00068</dc:identifier>
+<skos:notation>SDN:P35::EPC00068</skos:notation>
+<skos:prefLabel xml:lang="en">Water body particulate barium</skos:prefLabel>
+<skos:altLabel>Particulate Ba</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) in the water of a river, estuary, sea or ocean by any method and expressed per unit of water volume.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/BAPSUS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/BAXSPTMS/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/BAXXAAP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/BAXXICP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/BAXXXFP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/BAPSIN01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/BAPICP01/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00069/">
+<dc:identifier>SDN:P35::EPC00069</dc:identifier>
+<skos:notation>SDN:P35::EPC00069</skos:notation>
+<skos:prefLabel xml:lang="en">Water body particulate cadmium</skos:prefLabel>
+<skos:altLabel>Particulate Cd</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) in the water of a river, estuary, sea or ocean by any method and expressed per unit of water volume.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDPICP01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDPSIN01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDPSUS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDXXAAP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CDXXICP2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00070/">
+<dc:identifier>SDN:P35::EPC00070</dc:identifier>
+<skos:notation>SDN:P35::EPC00070</skos:notation>
+<skos:prefLabel xml:lang="en">Water body particulate chromium</skos:prefLabel>
+<skos:altLabel>Particulate Cr</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) in the water of a river, estuary, sea or ocean by any method and expressed per unit of water volume.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CRXXAAP2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00071/">
+<dc:identifier>SDN:P35::EPC00071</dc:identifier>
+<skos:notation>SDN:P35::EPC00071</skos:notation>
+<skos:prefLabel xml:lang="en">Water body particulate cobalt</skos:prefLabel>
+<skos:altLabel>Particulate Co</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) in the water of a river, estuary, sea or ocean by any method and expressed per unit of water volume.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/COPSIN01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/COPSUS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/COXXAAP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/COXXICP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/COPICP01/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00072/">
+<dc:identifier>SDN:P35::EPC00072</dc:identifier>
+<skos:notation>SDN:P35::EPC00072</skos:notation>
+<skos:prefLabel xml:lang="en">Water body particulate copper</skos:prefLabel>
+<skos:altLabel>Particulate Cu</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) in the water of a river, estuary, sea or ocean by any method and expressed per unit of water volume.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUXXICP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUXXAAP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUPSUS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUPICP01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/CUPSIN01/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00073/">
+<dc:identifier>SDN:P35::EPC00073</dc:identifier>
+<skos:notation>SDN:P35::EPC00073</skos:notation>
+<skos:prefLabel xml:lang="en">Water body particulate iron (total chemical species)</skos:prefLabel>
+<skos:altLabel>Particulate total Fe</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) in the water of a river, estuary, sea or ocean by any method and expressed per unit of water volume. Total means the element in all possible states of valency and chemical combination.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FEXXAAP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FEPICP01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FEPSUS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FEXXXFP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FEXXICP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FEPSIN01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/FEPTLMS1/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00074/">
+<dc:identifier>SDN:P35::EPC00074</dc:identifier>
+<skos:notation>SDN:P35::EPC00074</skos:notation>
+<skos:prefLabel xml:lang="en">Water body particulate lead</skos:prefLabel>
+<skos:altLabel>Particulate Pb</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) in the water of a river, estuary, sea or ocean by any method and expressed per unit of water volume.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBPSUS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBXXICP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBXXAAP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBPSIN01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PBPICP01/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00075/">
+<dc:identifier>SDN:P35::EPC00075</dc:identifier>
+<skos:notation>SDN:P35::EPC00075</skos:notation>
+<skos:prefLabel xml:lang="en">Water body particulate manganese (total chemical species)</skos:prefLabel>
+<skos:altLabel>Particulate total Mn</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) in the water of a river, estuary, sea or ocean by any method and expressed per unit of water volume. Total means the element in all possible states of valency and chemical combination.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNXXICP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNPICP01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNXXAAP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNPSIN01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNXXXFP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MNPSUS01/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00076/">
+<dc:identifier>SDN:P35::EPC00076</dc:identifier>
+<skos:notation>SDN:P35::EPC00076</skos:notation>
+<skos:prefLabel xml:lang="en">Water body particulate molybdenum</skos:prefLabel>
+<skos:altLabel>Particulate Mo</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) in the water of a river, estuary, sea or ocean by any method and expressed per unit of water volume.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MOXXXXP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/MOPICP01/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00077/">
+<dc:identifier>SDN:P35::EPC00077</dc:identifier>
+<skos:notation>SDN:P35::EPC00077</skos:notation>
+<skos:prefLabel xml:lang="en">Water body particulate nickel</skos:prefLabel>
+<skos:altLabel>Particulate Ni</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) in the water of a river, estuary, sea or ocean by any method and expressed per unit of water volume.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NIXXICP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NIPSIN01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NIPICP01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NIPSUS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/NIXXAAP2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00078/">
+<dc:identifier>SDN:P35::EPC00078</dc:identifier>
+<skos:notation>SDN:P35::EPC00078</skos:notation>
+<skos:prefLabel xml:lang="en">Water body particulate silver</skos:prefLabel>
+<skos:altLabel>Particulate Ag</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) in the water of a river, estuary, sea or ocean by any method and expressed per unit of water volume.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AGPSIN01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AGPICP01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AGPSUS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AGXXAAP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/AGXXICP2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00079/">
+<dc:identifier>SDN:P35::EPC00079</dc:identifier>
+<skos:notation>SDN:P35::EPC00079</skos:notation>
+<skos:prefLabel xml:lang="en">Water body particulate strontium</skos:prefLabel>
+<skos:altLabel>Particulate Sr</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) in the water of a river, estuary, sea or ocean by any method and expressed per unit of water volume.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SRXXAAP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SRXXICP2/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00080/">
+<dc:identifier>SDN:P35::EPC00080</dc:identifier>
+<skos:notation>SDN:P35::EPC00080</skos:notation>
+<skos:prefLabel xml:lang="en">Water body particulate titanium</skos:prefLabel>
+<skos:altLabel>Particulate Ti</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) in the water of a river, estuary, sea or ocean by any method and expressed per unit of water volume.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TIXXXFP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TIPSUS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TIPSIN01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/TIPICP01/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00081/">
+<dc:identifier>SDN:P35::EPC00081</dc:identifier>
+<skos:notation>SDN:P35::EPC00081</skos:notation>
+<skos:prefLabel xml:lang="en">Water body particulate uranium</skos:prefLabel>
+<skos:altLabel>Particulate U</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) in the water of a river, estuary, sea or ocean by any method and expressed per unit of water volume.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/URPICP01/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00082/">
+<dc:identifier>SDN:P35::EPC00082</dc:identifier>
+<skos:notation>SDN:P35::EPC00082</skos:notation>
+<skos:prefLabel xml:lang="en">Water body particulate vanadium</skos:prefLabel>
+<skos:altLabel>Particulate V</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) in the water of a river, estuary, sea or ocean by any method and expressed per unit of water volume.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/VAPSUS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/VAPSIN01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/VAPICP01/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00083/">
+<dc:identifier>SDN:P35::EPC00083</dc:identifier>
+<skos:notation>SDN:P35::EPC00083</skos:notation>
+<skos:prefLabel xml:lang="en">Water body particulate zinc</skos:prefLabel>
+<skos:altLabel>Particulate Zn</skos:altLabel>
+<skos:definition xml:lang="en">The amount of the metal in particles extracted by filtration (any type of filter) in the water of a river, estuary, sea or ocean by any method and expressed per unit of water volume.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNPSUS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNXXICP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNXXAAP2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNPICP01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ZNPSIN01/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00007/">
+<dc:identifier>SDN:P35::EPC00007</dc:identifier>
+<skos:notation>SDN:P35::EPC00007</skos:notation>
+<skos:prefLabel xml:lang="en">Water body phosphate</skos:prefLabel>
+<skos:altLabel>PO4</skos:altLabel>
+<skos:definition xml:lang="en">The amount of phosphate per unit volume of a river, estuary, sea or ocean by any method in filtered or unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSAAD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSAADZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSAATX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSAAZX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSMA12/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSMAZX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSAAD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOS04LW/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSAAD5/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSMAD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSAA01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSAAD3/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSMAD3/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSMAD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSXXDZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSMADZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSYYDZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSMATX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PHOSZZXX/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00001/">
+<dc:identifier>SDN:P35::EPC00001</dc:identifier>
+<skos:notation>SDN:P35::EPC00001</skos:notation>
+<skos:prefLabel xml:lang="en">Water body salinity</skos:prefLabel>
+<skos:altLabel>Salinity</skos:altLabel>
+<skos:definition xml:lang="en">Salinity of a river, estuary, sea or ocean by any method and on any measurement scale.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSLTZZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SSALAGT1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ODSDM021/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SSALST01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SSALPR01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/ASLTZZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALTC05/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALTC04/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALST02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALCU02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALCC02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALPR02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALTC02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALSG02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALTC06/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALTC03/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALST01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALCU01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALCC01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALBRBR/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALBSTX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALZZXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALPR01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALTC01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSCLCCI1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALMV01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALMC01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALSZ01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALSU01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALSG01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSSDCU02/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSSDCU01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSALSD01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSSDBSTX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SSALSL01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SSALBSTX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SSALSG01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/PSCLCCL1/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00008/">
+<dc:identifier>SDN:P35::EPC00008</dc:identifier>
+<skos:notation>SDN:P35::EPC00008</skos:notation>
+<skos:prefLabel xml:lang="en">Water body silicate</skos:prefLabel>
+<skos:altLabel>SiO4</skos:altLabel>
+<skos:definition xml:lang="en">The amount of silicate per unit volume of a river, estuary, sea or ocean by any method in filtered or unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAAAZX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAZZXX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCANS01/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAAATX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAAAD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAMAD3/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAMATX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAMA12/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAAAD5/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAAADZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAAAD3/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAAAD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAMAZX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/SLCAAA01/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+<skos:member>
+<skos:Concept rdf:about="http://vocab.nerc.ac.uk/collection/P35/current/EPC00010/">
+<dc:identifier>SDN:P35::EPC00010</dc:identifier>
+<skos:notation>SDN:P35::EPC00010</skos:notation>
+<skos:prefLabel xml:lang="en">Water body urea</skos:prefLabel>
+<skos:altLabel>Urea</skos:altLabel>
+<skos:definition xml:lang="en">The amount of urea per unit volume of a river, estuary, sea or ocean by any method in filtered or unfiltered water.</skos:definition>
+<owl:versionInfo>1</owl:versionInfo>
+<dc:date>2014-03-12 08:23:35.0</dc:date>
+<skos:note xml:lang="en">accepted</skos:note>
+<owl:deprecated>false</owl:deprecated>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/UREAAAD1/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/UREAAATX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/UREAAAD3/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/UREAAADZ/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/UREAAAD2/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/UREAAAZX/"/>
+<skos:narrower rdf:resource="http://vocab.nerc.ac.uk/collection/P01/current/UREAZZZZ/"/>
+<skos:related rdf:resource="http://vocab.nerc.ac.uk/collection/P06/current/UPOX/"/>
+<void:inDataset rdf:resource="http://vocab.nerc.ac.uk/.well-known/void"/>
+</skos:Concept>
+</skos:member>
+</skos:Collection>
+</rdf:RDF>
