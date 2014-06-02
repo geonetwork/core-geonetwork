@@ -155,169 +155,6 @@
 
 	<services package="org.fao.geonet">
 
-		<service name="main.home">
-			<output sheet="main-page.xsl">
-				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
-				<call name="keywords" class=".guiservices.keywords.Get" />
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="services" class="jeeves.guiservices.services.Get" />
-				<call name="categories" class=".services.category.List" />
-				<call name="regions" class=".guiservices.regions.Get" />
-				<call name="sources" class=".guiservices.util.Sources" />
-
-				<call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
-					<param name="maxItems" value="10" />
-					<param name="timeBetweenUpdates" value="10" />
-				</call>
-
-				<call name="featured" class=".guiservices.metadata.GetRandom">
-					<param name="maxItems" value="1" />
-					<param name="timeBetweenUpdates" value="10" />
-					<!-- Restrict to a geographic area. Default is global overlap -->
-					<param name="relation" value="overlaps" />
-					<param name="northBL" value="90" />
-					<param name="southBL" value="-90" />
-					<param name="eastBL" value="180" />
-					<param name="westBL" value="-180" />
-				</call>
-
-				<xml name="repositories" file="xml/repositories.xml" localized="false" />
-				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="main.search">
-			<class name=".services.main.Search">
-				<param name="maxSummaryKeys" value="10" />
-			</class>
-
-			<output forward="main.present" />
-		</service>
-
- 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
- 		<!-- ETj: this service provides a page similar to main.search, made simpler to be embedded elsewhere-->
-
- 		<service name="main.search.embedded">
- 			<class name=".services.main.Search">
- 				<param name="maxSummaryKeys" value="10" />
- 			</class>
-
- 			<output forward="main.present.embedded" />
- 		</service>
-
-		<service name="main.present.embedded">
- 			<class name=".services.main.Result">
- 				<param name="maxRecords" value="10" />
- 				<param name="syntax" value="f" />
- 			</class>
-
- 			<output sheet="search-results-xhtml.xsl" contentType="text/xml; charset=UTF-8">
-				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
- 				<call name="groups" class=".guiservices.groups.GetMine" />
- 				<call name="sources" class=".guiservices.util.Sources" />
- 				<call name="services" class="jeeves.guiservices.services.Get" />
- 				<xml name="repositories" file="xml/repositories.xml" localized="false" />
- 			</output>
-
- 		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="main.searchform.advanced.embedded">
-			<output sheet="searchform_advanced.xsl">
-				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
-				<call name="keywords" class=".guiservices.keywords.Get" />
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="services" class="jeeves.guiservices.services.Get" />
-				<call name="categories" class=".services.category.List" />
-				<call name="regions" class=".guiservices.regions.Get" />
-				<call name="sources" class=".guiservices.util.Sources" />
-
-				<xml name="repositories" file="xml/repositories.xml" localized="false" />
-				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="main.searchform.simple.embedded">
-			<output sheet="searchform_simple.xsl">
-				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
-				<call name="keywords" class=".guiservices.keywords.Get" />
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="services" class="jeeves.guiservices.services.Get" />
-				<call name="categories" class=".services.category.List" />
-				<call name="regions" class=".guiservices.regions.Get" />
-				<call name="sources" class=".guiservices.util.Sources" />
-
-				<xml name="repositories" file="xml/repositories.xml" localized="false" />
-				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="rating.popup">
-			<output sheet="rating-popup.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="main.present">
-			<class name=".services.main.Result">
-				<param name="maxRecords" value="10" />
-				<param name="syntax" value="f" />
-			</class>
-
-			<output sheet="search-results.xsl">
-				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="sources" class=".guiservices.util.Sources" />
-				<call name="services" class="jeeves.guiservices.services.Get" />
-				<xml name="repositories" file="xml/repositories.xml" localized="false" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="remote.show">
-			<class name=".services.main.RemoteShow">
-				<param name="syntax" value="f" />
-			</class>
-
-			<output sheet="remote-show.xsl">
-				<call name="services" class="jeeves.guiservices.services.Get" />
-				<call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
-				<xml name="repositories" file="xml/repositories.xml" localized="false" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="feedback">
-			<output sheet="feedback.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="links">
-			<output sheet="page.xsl">
-				<xml name="page" file="xml/links.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="about">
-			<output sheet="page.xsl">
-				<xml name="page" file="xml/about.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
 		<service name="xml.region.get">
 			<class name=".services.region.Get" />
 		</service>
@@ -342,36 +179,10 @@
 			</output>
 		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Utility services                                              -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
 		<service name="util.ping">
 			<class name="jeeves.services.Ping" />
 		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="util.import">
-			<class name=".services.metadata.ImportFromDir" />
-
-			<output sheet="metadata-insert-results.xsl" />
-
-			<error sheet="error.xsl">
-				<xml name="error" file="xml/validation-error.xml" />
-				<xml name="validation" file="xml/metadata-validate.xml" />
-			</error>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- User self-registration services                               -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="user.register.get">
-			<output sheet="user-selfregistration.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="user.register.submit">
 			<class name=".services.register.SelfRegister" />
@@ -422,16 +233,6 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Help services                                                 -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="help">
-			<output sheet="page.xsl">
-				<xml name="page" file="xml/help.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="xml.schema.info">
 			<class name=".services.schema.Info" />
@@ -460,14 +261,6 @@
 			<output sheet="file-download-list.xsl" />
 		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="graphover.show">
-			<output sheet="graphover-show.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
 		<service name="resources.get.archive">
 			<class name=".services.resources.DownloadArchive" />
 
@@ -478,7 +271,6 @@
 			<output file="true" />
 		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="resources.get">
 			<class name=".services.resources.Download" />
@@ -489,25 +281,6 @@
 
 			<output file="true" />
 		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="resources.upload">
-			<class name=".services.resources.Upload" />
-			<output sheet="file-upload-results.xsl" />
-
-			<error sheet="error-modal.xsl">
-				<xml name="error" file="xml/file-upload-unsuccessful.xml" />
-			</error>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="resources.prepare.upload">
-			<output sheet="file-upload.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="resources.del">
 			<class name=".services.resources.Remove" />
