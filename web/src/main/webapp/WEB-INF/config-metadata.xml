@@ -7,17 +7,6 @@
         <!-- Metadata services                                             -->
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-        <service name="metadata.insert.paste" remove="true">
-            <class name=".services.metadata.Insert" />
-
-            <output sheet="metadata-insert-results.xsl" />
-
-            <error sheet="error.xsl">
-                <xml name="error" file="xml/validation-error.xml" />
-                <xml name="validation" file="xml/metadata-validate.xml" />
-            </error>
-        </service>
-
         <service name="xml.metadata.insert.paste" xmlapi="true">
             <class name=".services.metadata.Insert" />
             <error sheet="error-xml.xsl" />

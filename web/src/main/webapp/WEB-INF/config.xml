@@ -145,145 +145,10 @@
             <class name=".services.feedback.Receptor" />
             <output sheet="extjs-feedback-response.xsl" contentType="application/json; charset=UTF-8" />
         </service>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.region.get" deprecated="true" xmlapi="true">
-			<class name=".services.region.Get" />
-			
-			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
-				<xml name="error" file="xml/file-not-found-error.xml" />
-			</error>
-		</service>
-
-		<service name="xml.regions.list" deprecated="true" xmlapi="true">
-			<class name=".services.region.List" />
-		</service>
-
-		<service name="xml.regions.category.list" deprecated="true" xmlapi="true">
-			<class name=".services.region.ListCategories" />
-		</service>
-
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Selection search services for filtering -->
-
-		<service name="selection.search" remove="true">
-			<class name=".services.main.SelectionSearch" />
-			<output forward="main.present.embedded" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Feedback services                                             -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="feedback.insert" deprecated="true" remove="true">
-			<class name=".services.feedback.Insert" />
-
-			<output sheet="info.xsl">
-				<xml name="info" file="xml/feedback-sent.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Utility services                                              -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="util.ping">
       <class name="jeeves.services.Ping" />
 		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="util.import" deprecated="true" remove="true">
-			<class name=".services.metadata.ImportFromDir" />
-
-			<output sheet="metadata-insert-results.xsl" />
-
-			<error sheet="error.xsl">
-				<xml name="error" file="xml/validation-error.xml" />
-				<xml name="validation" file="xml/metadata-validate.xml" />
-			</error>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Forgotten password services -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="password.forgotten.form" deprecated="true" remove="true">
-			<output sheet="password-forgotten.xsl"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="password.forgotten.submit" deprecated="true" remove="true">
-			<class name=".services.password.SendLink" />
-
-			<error id="user-not-found" sheet="error-modal.xsl">
-				<xml name="error" file="xml/user-not-found-error.xml" />
-			</error>
-
-			<error id="operation-not-allowed" sheet="error-modal.xsl">
-				<xml name="error" file="xml/registered-users-only.xml" />
-			</error>
-
-			<error sheet="error-modal.xsl"/>
-
-			<output sheet="infomodal.xsl">
-				<xml name="info" file="xml/password-link-sent.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="password.change.form" deprecated="true" remove="true">
-			<output sheet="password-change.xsl"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="xml.password.emaillink" deprecated="true" remove="true">
-			<class name=".services.password.SendLink" />
-			<error sheet="error-xml.xsl"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="xml.password.change" deprecated="true" xmlapi="true">
-			<class name=".services.password.Change" />
-			<error sheet="error-xml.xsl"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- User self-registration services                               -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="user.register.get" deprecated="true" remove="true">
-			<output sheet="user-selfregistration.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="user.register.submit" deprecated="true" remove="true">
-			<class name=".services.register.SelfRegister" />
-			<output sheet="registration-info.xsl">
-				<xml name="info" file="xml/registration-sent.xml" />
-			</output>
-	        <error sheet="registration-error.xsl" deprecated="true">
-				<xml name="error" file="xml/registration-error.xml" />
-			</error>
-		</service>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!--                   Login services                              -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="login.form" deprecated="true" remove="true">
-			<output sheet="login-form.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Resources management services                                 -->
@@ -465,20 +330,6 @@
 			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-		<service name="mef.import.ui" remove="true">
-			<class name=".services.mef.Import" />
-	
-	
-			<output sheet="metadata-insert-results.xsl" />
-	
-			<error sheet="error.xsl">
-				<xml name="error" file="xml/validation-error.xml" />
-				<xml name="validation" file="xml/metadata-validate.xml" />
-			</error>
-		</service>
-	
 		<service name="xml.mef.import.ui">
       <!-- TODO rename Catalogue.js -->
 			<class name=".services.mef.Import" />

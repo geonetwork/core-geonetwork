@@ -14,7 +14,27 @@
       <class name=".services.schema.Info" />
     </service>
 
+    <service name="xml.password.change" deprecated="true" xmlapi="true">
+      <class name=".services.password.Change" />
+      <error sheet="error-xml.xsl"/>
+    </service>
 
+
+    <service name="xml.region.get" deprecated="true" xmlapi="true">
+      <class name=".services.region.Get" />
+
+      <error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
+        <xml name="error" file="xml/file-not-found-error.xml" />
+      </error>
+    </service>
+
+    <service name="xml.regions.list" deprecated="true" xmlapi="true">
+      <class name=".services.region.List" />
+    </service>
+
+    <service name="xml.regions.category.list" deprecated="true" xmlapi="true">
+      <class name=".services.region.ListCategories" />
+    </service>
 
   </services>
 </geonet>
