@@ -255,10 +255,10 @@
 				<gmd:MD_Keywords>
 					<gmd:keyword>
 						<!-- MANDATORY : sea areas covered by the current dataset  -->
-						<!-- http://vocab.nerc.ac.uk/collection/C16/current/                    -->
+						<!-- http://vocab.nerc.ac.uk/collection/C19/current/                    -->
 						<!-- use rdf:about attribute for href                                   -->
 						<!-- use prefLabel text value for text                                  -->
-						<gmx:Anchor xlink:href="http://vocab.nerc.ac.uk/collection/C16/current/28/">Mediterranean Sea</gmx:Anchor>
+						<gmx:Anchor xlink:href="http://vocab.nerc.ac.uk/collection/C19/current/3_1_2_1/">Adriatic Sea</gmx:Anchor>
 					</gmd:keyword>
 					<!-- n keyword may be used -->
 					<gmd:type>
