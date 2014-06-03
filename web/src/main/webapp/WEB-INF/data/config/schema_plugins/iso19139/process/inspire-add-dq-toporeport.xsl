@@ -21,7 +21,7 @@
   </xsl:variable>
 
   <xsl:variable name="inspire-thesaurus-dq-topo"
-    select="document(concat(system-property(concat(substring-after($baseUrl, '/'), '.codeList.dir')), '/external/thesauri/theme/inspire-theme.rdf'))"/>
+    select="document(concat('file:///', replace(system-property(concat(substring-after($baseUrl, '/'), '.codeList.dir')), '\\', '/'), '/external/thesauri/theme/inspire-theme.rdf'))"/>
 
   <xsl:template name="list-inspire-add-dq-toporeport">
     <suggestion process="inspire-add-dq-toporeport"/>
@@ -41,6 +41,7 @@
                     @rdf:about = 'http://rdfdata.eionet.europa.eu/inspirethemes/themes/7' or
                     @rdf:about = 'http://rdfdata.eionet.europa.eu/inspirethemes/themes/19'
                     )])"/>
+    <xsl:message><xsl:value-of select="$inspire-th" /> </xsl:message>
 
     <!-- Check no topological consistency section -->
     <xsl:if test="$inspire-theme-found and count($root//gmd:DQ_TopologicalConsistency)=0">
