@@ -741,35 +741,58 @@ Ext.onReady(function() {
             // Register events where the search should be triggered
             var events = [ 'afterDelete', 'afterRating', 'afterLogin' ];
             Ext.each(events, function(e) {
+
+							// for all events - do the following
               catalogue.on(e, function() {
                 if (Ext.get(resultsPanel).isVisible()) {
                   var e = Ext.getCmp('advanced-search-options-content-form');
                   e.getEl().fadeIn();
                   e.fireEvent('search');
-                }
-								var metadataPanel = Ext.getCmp('metadata-panel');
-								if (metadataPanel && metadataPanel.isVisible()) {
-									var theUuid = metadataPanel.metadataUuid;
-									// Refresh metadata record in view, otherwise destroy
-									// the viewer and display an error as metadata record
-									// may no longer be available
-        					if (!metadataPanel.refreshView()) {
+                } 
+							});
+							
+							// if after login then refresh metadata record in view and
+							// action menu
+							if (e === 'afterLogin') {
+              	catalogue.on(e, function() {
+									var metadataPanel = Ext.getCmp('metadata-panel');
+									if (metadataPanel && metadataPanel.isVisible()) {
+										var theUuid = metadataPanel.metadataUuid;
+										// Refresh metadata record in view, otherwise destroy
+										// the viewer and display an error as metadata record
+										// may no longer be available
+        						if (!metadataPanel.refreshView()) {
+											metadataPanel.destroy();
+											var e = Ext.getCmp('advanced-search-options-content-form');
+											e.getEl().fadeIn();
+											e.fireEvent('search');
+											GeoNetwork.Message().msg({
+                   			title: OpenLayers.i18n('error'), 
+                   			msg: OpenLayers.i18n('metadata-not-found'), 
+                   			tokens: {
+                       			uuid: theUuid
+                   			}, 
+                   			status: 'warning',
+                   			target: document.body
+											});
+										}
+									}
+								});
+							}
+
+							// if after delete event called then destroy metadataPanel as view
+							// is no longer valid/available
+							if (e === 'afterDelete') {
+              	catalogue.on(e, function() {
+									var metadataPanel = Ext.getCmp('metadata-panel');
+									if (metadataPanel && metadataPanel.isVisible()) {
 										metadataPanel.destroy();
 										var e = Ext.getCmp('advanced-search-options-content-form');
 										e.getEl().fadeIn();
 										e.fireEvent('search');
-										GeoNetwork.Message().msg({
-                    	title: OpenLayers.i18n('error'), 
-                    	msg: OpenLayers.i18n('metadata-not-found'), 
-                    	tokens: {
-                        	uuid: theUuid
-                    	}, 
-                    	status: 'warning',
-                    	target: document.body
-										});
 									}
-								}
-              });
+								});
+							}
             });
 
             if (!cookie.get("alreadyShowMessage")) {
