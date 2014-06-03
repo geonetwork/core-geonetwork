@@ -108,7 +108,7 @@ public class BatchUpdateCategories extends NotInReadOnlyModeService {
 					String name = el.getName();
 
 					if (name.startsWith("_"))  {
-                        final MetadataCategory category = categoryRepository.findOneByName(name.substring(1));
+                        final MetadataCategory category = categoryRepository.findOne(Integer.valueOf(name.substring(1)));
                         if (category != null) {
                             info.getCategories().add(category);
                         } else {
