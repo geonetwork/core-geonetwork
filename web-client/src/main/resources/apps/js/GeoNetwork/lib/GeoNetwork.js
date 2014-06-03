@@ -133,6 +133,7 @@
             "GeoNetwork/widgets/admin/AdminTools.js",
             "GeoNetwork/widgets/admin/MetadataInsertPanel.js",
             "GeoNetwork/widgets/admin/HarvesterPanel.js",
+            "GeoNetwork/widgets/admin/PrivilegesPanel.js",
             "GeoNetwork/widgets/admin/ThesaurusManagerPanel.js",
             "GeoNetwork/widgets/view/ViewWindow.js",
             "GeoNetwork/widgets/view/ViewPanel.js",
