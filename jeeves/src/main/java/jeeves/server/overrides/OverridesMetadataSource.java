@@ -1,6 +1,7 @@
 package jeeves.server.overrides;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -20,7 +21,7 @@ import org.springframework.security.web.util.RegexRequestMatcher;
 import org.springframework.security.web.util.RequestMatcher;
 
 public class OverridesMetadataSource implements FilterInvocationSecurityMetadataSource {
-    private final Map<RequestMatcher, Collection<ConfigAttribute>> requestMap = new HashMap<RequestMatcher, Collection<ConfigAttribute>>();
+    private final Map<RequestMatcher, Collection<ConfigAttribute>> requestMap = Collections.synchronizedMap(new HashMap<RequestMatcher, Collection<ConfigAttribute>>());
     private FilterInvocationSecurityMetadataSource baseSource;
 
     public OverridesMetadataSource(FilterInvocationSecurityMetadataSource metadataSource) {
@@ -32,10 +33,14 @@ public class OverridesMetadataSource implements FilterInvocationSecurityMetadata
     @Override
     public Collection<ConfigAttribute> getAllConfigAttributes() {
         Set<ConfigAttribute> allAttributes = new HashSet<ConfigAttribute>(baseSource.getAllConfigAttributes());
+				
+				synchronized( requestMap ) {
 
         for (Map.Entry<RequestMatcher, Collection<ConfigAttribute>> entry : requestMap.entrySet()) {
             allAttributes.addAll(entry.getValue());
         }
+
+				}
 
         return allAttributes;
     }
@@ -45,6 +50,9 @@ public class OverridesMetadataSource implements FilterInvocationSecurityMetadata
         Collection<ConfigAttribute> attributes = baseSource.getAttributes(object);
 
         if(attributes == null) {
+
+					synchronized( requestMap ) {
+
             final HttpServletRequest request = ((FilterInvocation) object).getRequest();
             for (Map.Entry<RequestMatcher, Collection<ConfigAttribute>> entry : requestMap.entrySet()) {
                 if (entry.getKey().matches(request)) {
@@ -52,6 +60,8 @@ public class OverridesMetadataSource implements FilterInvocationSecurityMetadata
                     break;
                 }
             }
+
+					}
         }
         return attributes;
     }
@@ -69,6 +79,8 @@ public class OverridesMetadataSource implements FilterInvocationSecurityMetadata
         map.put(pattern, atts );
         
         atts.add(new SecurityConfig(access));
+
+				synchronized( requestMap ) {
         
         ExpressionBasedFilterInvocationSecurityMetadataSource ms = new ExpressionBasedFilterInvocationSecurityMetadataSource(map, new DefaultWebSecurityExpressionHandler());
         Collection<ConfigAttribute> allAttributes = requestMap.get(pattern);
@@ -78,5 +90,7 @@ public class OverridesMetadataSource implements FilterInvocationSecurityMetadata
         }
         
         allAttributes.addAll(ms.getAllConfigAttributes());
+
+				}
     }
 }
