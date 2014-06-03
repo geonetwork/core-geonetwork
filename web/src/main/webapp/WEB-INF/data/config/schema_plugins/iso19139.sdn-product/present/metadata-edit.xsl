@@ -567,11 +567,12 @@
 								<xsl:with-param name="elementRef" select="$refGeoAreaKeywords/../geonet:element/@ref"/>
 								<xsl:with-param name="thesaurusId" select="'local.reference-geographical-area.seadatanet.reference-geographical-area'"/>
 								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join($refGeoAreaKeywords/gmd:keyword/*[1], '!,!'), '''', '\\'''), '!', '''')"/>
-								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-feature-type'''"/>
-								<xsl:with-param name="transformation" select="'to-iso19139.myocean-feature-type'"/>
+								<xsl:with-param name="listOfTransformations" select="'''to-iso19139-keyword'''"/>
+								<xsl:with-param name="transformation" select="'to-iso19139-keyword'"/>
 							</xsl:call-template>
 						</xsl:with-param>
 					</xsl:apply-templates>
+					
 				</xsl:for-each>
 
 			<!-- ocean discovery parameters -->
@@ -580,6 +581,7 @@
 					[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='parameter']/gmd:MD_Keywords">
 					<xsl:variable name="oceanDP" select="."/>
 
+					<xsl:if test="position()=1">
 
 					<xsl:apply-templates mode="simpleElement" select=".">
 						<xsl:with-param name="schema"  select="$schema"/>
@@ -590,13 +592,39 @@
 								<xsl:with-param name="elementRef" select="$oceanDP/../geonet:element/@ref"/>
 								<xsl:with-param name="thesaurusId" select="'local.parameter.seadatanet-ocean-discovery-parameter'"/>
 								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join($oceanDP/gmd:keyword/*[1], '!,!'), '''', '\\'''), '!', '''')"/>
-								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-feature-type'''"/>
-								<xsl:with-param name="transformation" select="'to-iso19139.myocean-feature-type'"/>
+								<xsl:with-param name="listOfTransformations" select="'''to-iso19139-keyword'''"/>
+								<xsl:with-param name="transformation" select="'to-iso19139-keyword'"/>
 								<xsl:with-param name="identificationMode" select="''"/>
 							</xsl:call-template>
 						</xsl:with-param>
 					</xsl:apply-templates>
+
+					</xsl:if>
+					<xsl:if test="position()=last()">
+					<xsl:apply-templates mode="simpleElement" select=".">
+						<xsl:with-param name="schema"  select="$schema"/>
+						<xsl:with-param name="edit"   select="$edit"/>
+						<xsl:with-param name="title" select="''"/>
+						<xsl:with-param name="text">
+							<xsl:call-template name="snippet-editor">
+								<xsl:with-param name="elementRef" select="$oceanDP/../geonet:element/@ref"/>
+								<xsl:with-param name="thesaurusId" select="'local.parameter.seadatanet-ocean-chemistry-variable'"/>
+								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join($oceanDP/gmd:keyword/*[1], '!,!'), '''', '\\'''), '!', '''')"/>
+								<xsl:with-param name="listOfTransformations" select="'''to-iso19139-keyword'''"/>
+								<xsl:with-param name="transformation" select="'to-iso19139-keyword'"/>
+								<xsl:with-param name="identificationMode" select="''"/>
+							</xsl:call-template>
+						</xsl:with-param>
+					</xsl:apply-templates>
+
+
+					</xsl:if>
+
+
 				</xsl:for-each>
+
+
+
 
 			<!-- Usage license -->
 			

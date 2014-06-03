@@ -5,8 +5,8 @@
 		<gco:CharacterString>ff518971-490c-4f55-9960-cfcb98d7bfa6</gco:CharacterString>
 	</gmd:fileIdentifier>
 	<gmd:language>
-        	<gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng"/>
-        </gmd:language> 
+		<gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng"/>
+	</gmd:language>
 	<gmd:characterSet>
 		<gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_CharacterSetCode"/>
 	</gmd:characterSet>
@@ -17,21 +17,21 @@
 		<!-- MANDATORY : define the project which has the governance over the current metadata (e.g. SEADATANET, EMODNET, ...) -->
 		<gmd:CI_ResponsibleParty>
 			<gmd:organisationName>
-			<gco:CharacterString>SEADATANET</gco:CharacterString>
+				<gco:CharacterString>EMODNET CHEMISTRY</gco:CharacterString>
 			</gmd:organisationName>
 			<gmd:contactInfo>
 				<gmd:CI_Contact>
 					<gmd:address>
 						<gmd:CI_Address>
 							<gmd:electronicMailAddress>
-								<gco:CharacterString>sdn-userdesk@seadatanet.org</gco:CharacterString>
+								<gco:CharacterString>mail@mail.com</gco:CharacterString>
 							</gmd:electronicMailAddress>
 						</gmd:CI_Address>
 					</gmd:address>
 					<gmd:onlineResource>
 						<gmd:CI_OnlineResource>
 							<gmd:linkage>
-								<gmd:URL>http://www.seadatanet.org/</gmd:URL>
+								<gmd:URL>http://www.emodnet.eu/chemistry</gmd:URL>
 							</gmd:linkage>
 						</gmd:CI_OnlineResource>
 					</gmd:onlineResource>
@@ -47,10 +47,10 @@
 		<gco:DateTime>2011-10-11T00:00:00+02:00</gco:DateTime>
 	</gmd:dateStamp>
 	<gmd:metadataStandardName>
-		<gco:CharacterString>ISO 19115:2003/19139, SeadataNet product profile</gco:CharacterString>
+		<gco:CharacterString>ISO 19115:2003/19139 - EMODNET - CHEMISTRY</gco:CharacterString>
 	</gmd:metadataStandardName>
 	<gmd:metadataStandardVersion>
-		<gco:CharacterString>0.1</gco:CharacterString>
+		<gco:CharacterString>1.0</gco:CharacterString>
 	</gmd:metadataStandardVersion>
 	<!-- applicable for gridded datasets, used to describe time and vertical axis -->
 	<gmd:spatialRepresentationInfo>
@@ -78,7 +78,7 @@
 					<gmd:dimensionSize/>
 					<!-- OPTIONAL: temporal resolution (mean period between each time steps) -->
 					<gmd:resolution>
-						<gco:Measure uom="month">1</gco:Measure>
+						<gco:Measure uom="season">1</gco:Measure>
 					</gmd:resolution>
 				</gmd:MD_Dimension>
 			</gmd:axisDimensionProperties>
@@ -118,11 +118,11 @@
 				<gmd:CI_Citation>
 					<gmd:title>
 						<!-- MANDATORY: title in readable english, for example "chimistry climatology in Baltic Sea" -->
-						<gco:CharacterString>Template for Seadatanet product description</gco:CharacterString>
+						<gco:CharacterString>Template for Emodnet chemistry product description</gco:CharacterString>
 					</gmd:title>
 					<gmd:alternateTitle>
 						<!-- MANDATORY: code used for external references, product code for users -->
-						<gco:CharacterString>SEADATANET_PRODUCT_NAME_AA</gco:CharacterString>
+						<gco:CharacterString>EMODNET_PRODUCT_NAME_AA</gco:CharacterString>
 					</gmd:alternateTitle>
 					<gmd:date>
 						<gmd:CI_Date>
@@ -155,12 +155,147 @@
 			</gmd:citation>
 			<gmd:abstract>
 				<!-- MANDATORY: wikipedia-like syntax may be used for bold, italic underlined, bullets and hyperlinks -->
-				<gco:CharacterString>Template elaborated based on seadatanet product description requirements</gco:CharacterString>
+				<gco:CharacterString>Template elaborated based on emodnet chemistry product description requirements</gco:CharacterString>
 			</gmd:abstract>
 			<!-- OPTIONAL: credit defining the project of the product  -->
 			<gmd:credit>
-				<gco:CharacterString>Seadatanet</gco:CharacterString>
+				<gco:CharacterString>Emodnet chemistry</gco:CharacterString>
 			</gmd:credit>
+			<!-- EMODNET CONTACT -->
+			<!-- custodian of the product (responsible for the data management for the product).  From EDMO directory -->
+			<gmd:pointOfContact xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gss="http://www.isotc211.org/2005/gss" xmlns:gsr="http://www.isotc211.org/2005/gsr">
+				<gmd:CI_ResponsibleParty xmlns:xslt="http://xml.apache.org/xslt" uuid="http://seadatanet.maris2.nl/v_edmo/print.asp?n_code=4">
+					<gmd:organisationName>
+						<gco:CharacterString>Dove Marine Laboratory, University of Newcastle upon Tyne</gco:CharacterString>
+					</gmd:organisationName>
+					<gmd:contactInfo>
+						<gmd:CI_Contact>
+							<gmd:phone>
+								<gmd:CI_Telephone>
+									<gmd:voice>
+										<gco:CharacterString/>
+									</gmd:voice>
+									<gmd:facsimile>
+										<gco:CharacterString/>
+									</gmd:facsimile>
+								</gmd:CI_Telephone>
+							</gmd:phone>
+							<gmd:address>
+								<gmd:CI_Address>
+									<gmd:deliveryPoint>
+										<gco:CharacterString>Cullercoats</gco:CharacterString>
+									</gmd:deliveryPoint>
+									<gmd:city>
+										<gco:CharacterString>North Shields</gco:CharacterString>
+									</gmd:city>
+									<gmd:administrativeArea>
+										<gco:CharacterString/>
+									</gmd:administrativeArea>
+									<gmd:postalCode>
+										<gco:CharacterString>NE30 4PZ</gco:CharacterString>
+									</gmd:postalCode>
+									<gmd:country>
+										<gco:CharacterString>United Kingdom</gco:CharacterString>
+									</gmd:country>
+									<gmd:electronicMailAddress>
+										<gco:CharacterString>mail@mail.com</gco:CharacterString>
+									</gmd:electronicMailAddress>
+								</gmd:CI_Address>
+							</gmd:address>
+							<gmd:onlineResource>
+								<gmd:CI_OnlineResource>
+									<gmd:linkage>
+										<gmd:URL/>
+									</gmd:linkage>
+									<gmd:name>
+										<gco:CharacterString>web site</gco:CharacterString>
+									</gmd:name>
+									<gmd:function>
+										<gmd:CI_OnLineFunctionCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode" codeListValue="information"/>
+									</gmd:function>
+								</gmd:CI_OnlineResource>
+							</gmd:onlineResource>
+						</gmd:CI_Contact>
+					</gmd:contactInfo>
+					<gmd:role>
+						<gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode" codeListValue="custodian"/>
+					</gmd:role>
+				</gmd:CI_ResponsibleParty>
+			</gmd:pointOfContact>
+			<!-- originator of the product (responsible for processing and results) . From EDMO directory -->
+			<gmd:pointOfContact xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gss="http://www.isotc211.org/2005/gss" xmlns:gsr="http://www.isotc211.org/2005/gsr">
+				<gmd:CI_ResponsibleParty xmlns:xslt="http://xml.apache.org/xslt" uuid="http://seadatanet.maris2.nl/v_edmo/print.asp?n_code=3">
+					<gmd:organisationName>
+						<gco:CharacterString>Culterty Field Station, University of Aberdeen</gco:CharacterString>
+					</gmd:organisationName>
+					<gmd:contactInfo>
+						<gmd:CI_Contact>
+							<gmd:phone>
+								<gmd:CI_Telephone>
+									<gmd:voice>
+										<gco:CharacterString/>
+									</gmd:voice>
+									<gmd:facsimile>
+										<gco:CharacterString/>
+									</gmd:facsimile>
+								</gmd:CI_Telephone>
+							</gmd:phone>
+							<gmd:address>
+								<gmd:CI_Address>
+									<gmd:deliveryPoint>
+										<gco:CharacterString>Newburgh</gco:CharacterString>
+									</gmd:deliveryPoint>
+									<gmd:city>
+										<gco:CharacterString>Aberdeen</gco:CharacterString>
+									</gmd:city>
+									<gmd:administrativeArea>
+										<gco:CharacterString/>
+									</gmd:administrativeArea>
+									<gmd:postalCode>
+										<gco:CharacterString>AB25 3AA</gco:CharacterString>
+									</gmd:postalCode>
+									<gmd:country>
+										<gco:CharacterString>United Kingdom</gco:CharacterString>
+									</gmd:country>
+									<gmd:electronicMailAddress>
+										<gco:CharacterString>mail@mail.com</gco:CharacterString>
+									</gmd:electronicMailAddress>
+								</gmd:CI_Address>
+							</gmd:address>
+							<gmd:onlineResource>
+								<gmd:CI_OnlineResource>
+									<gmd:linkage>
+										<gmd:URL>http://www.abdn.ac.uk/zoology/cfs.htm</gmd:URL>
+									</gmd:linkage>
+									<gmd:name>
+										<gco:CharacterString>web site</gco:CharacterString>
+									</gmd:name>
+									<gmd:function>
+										<gmd:CI_OnLineFunctionCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_OnLineFunctionCode" codeListValue="information"/>
+									</gmd:function>
+								</gmd:CI_OnlineResource>
+							</gmd:onlineResource>
+						</gmd:CI_Contact>
+					</gmd:contactInfo>
+					<gmd:role>
+						<gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode" codeListValue="originator"/>
+					</gmd:role>
+				</gmd:CI_ResponsibleParty>
+			</gmd:pointOfContact>
+			<!-- Quickview -->
+			<gmd:graphicOverview>
+				<gmd:MD_BrowseGraphic>
+					<gmd:fileName>
+						<gco:CharacterString>Picture address</gco:CharacterString>
+					</gmd:fileName>
+					<gmd:fileDescription>
+						<gco:CharacterString>product QuickLook</gco:CharacterString>
+					</gmd:fileDescription>
+					<gmd:fileType>
+						<gco:CharacterString>JPG</gco:CharacterString>
+					</gmd:fileType>
+				</gmd:MD_BrowseGraphic>
+			</gmd:graphicOverview>
 			<gmd:descriptiveKeywords>
 				<gmd:MD_Keywords>
 					<gmd:keyword>
@@ -192,10 +327,8 @@
 			<gmd:descriptiveKeywords>
 				<gmd:MD_Keywords>
 					<gmd:keyword>
-						<!-- MANDATORY : ocean variables processed in the current dataset   -->
+						<!-- MANDATORY : ocean parameters processed in the current dataset (P02)   -->
 						<!-- http://vocab.nerc.ac.uk/collection/P02/current/                -->
-						<!-- use rdf:about attribute for href                                   -->
-						<!-- use prefLabel text value for text                                  -->
 						<gmx:Anchor xlink:href="http://vocab.nerc.ac.uk/collection/P02/current/PSAL/"> Salinity of the water column </gmx:Anchor>
 					</gmd:keyword>
 					<gmd:type>
@@ -204,7 +337,7 @@
 					<gmd:thesaurusName>
 						<gmd:CI_Citation>
 							<gmd:title>
-								<gco:CharacterString>SeaDataNet Parameter Discovery Vocabulary</gco:CharacterString>
+								<gco:CharacterString>Emodnet Parameter Discovery Vocabulary</gco:CharacterString>
 							</gmd:title>
 							<gmd:date>
 								<gmd:CI_Date>
@@ -223,14 +356,17 @@
 			<gmd:descriptiveKeywords>
 				<gmd:MD_Keywords>
 					<gmd:keyword>
-						<!-- MANDATORY : ocean variables processed in the current dataset   -->
-						<!-- http://vocab.nerc.ac.uk/collection/P35/current/                -->
+						<!-- MANDATORY : Ocean chemistry variable  -->
+						<!-- EMODNET chemistry lot aggregated parameter names    (NVS/P035)  	-->
+						<!-- http://vocab.nerc.ac.uk/collection/P35/current/EPC00099/    -->
 						<!-- use rdf:about attribute for href                                   -->
 						<!-- use prefLabel text value for text                                  -->
-						<gmx:Anchor xlink:href="http://vocab.nerc.ac.uk/collection/P35/current/EPC00085/">Suspended particulate material arsenic content</gmx:Anchor>
+
+						<gmx:Anchor xlink:href="http://vocab.nerc.ac.uk/collection/P35/current/EPC00099/">Suspended particulate material silver content</gmx:Anchor>
 					</gmd:keyword>
+					<!-- n keyword may be used -->
 					<gmd:type>
-						<gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode" codeListValue="parameter"/>
+						<gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="reference-geographical-area"/>
 					</gmd:type>
 					<gmd:thesaurusName>
 						<gmd:CI_Citation>
@@ -240,7 +376,7 @@
 							<gmd:date>
 								<gmd:CI_Date>
 									<gmd:date>
-										<gco:DateTime>2012-07-18T00:00:00</gco:DateTime>
+										<gco:DateTime>2012-11-07T02:00:00</gco:DateTime>
 									</gmd:date>
 									<gmd:dateType>
 										<gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
@@ -255,7 +391,7 @@
 				<gmd:MD_Keywords>
 					<gmd:keyword>
 						<!-- MANDATORY : sea areas covered by the current dataset  -->
-						<!-- http://vocab.nerc.ac.uk/collection/C19/current/                    -->
+						<!-- http://vocab.nerc.ac.uk/collection/C19/current/                   -->
 						<!-- use rdf:about attribute for href                                   -->
 						<!-- use prefLabel text value for text                                  -->
 						<gmx:Anchor xlink:href="http://vocab.nerc.ac.uk/collection/C19/current/3_1_2_1/">Adriatic Sea</gmx:Anchor>
@@ -267,7 +403,7 @@
 					<gmd:thesaurusName>
 						<gmd:CI_Citation>
 							<gmd:title>
-								<gco:CharacterString>SeaDataNet sea areas</gco:CharacterString>
+								<gco:CharacterString>Emodnet sea areas</gco:CharacterString>
 							</gmd:title>
 							<gmd:date>
 								<gmd:CI_Date>
@@ -294,6 +430,7 @@
 					</gmd:useLimitation>
 				</gmd:MD_Constraints>
 			</gmd:resourceConstraints>
+
 			<!-- MANDATORY: constant, for INSPIRE compliance -->
 			<gmd:resourceConstraints>
 				<gmd:MD_LegalConstraints>
@@ -384,6 +521,126 @@
 			<gmd:featureCatalogueCitation/>
 		</gmd:MD_FeatureCatalogueDescription>
 	</gmd:contentInfo>
+
+	<gmd:distributionInfo xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:date="http://exslt.org/dates-and-times" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<gmd:MD_Distribution>
+			<!-- DOI part -->
+			<gmd:distributor>
+				<gmd:MD_Distributor>
+					<gmd:distributorContact/>
+					<gmd:distributorFormat/>
+					<gmd:distributorTransferOptions>
+						<gmd:MD_DigitalTransferOptions>
+							<gmd:onLine>
+								<gmd:CI_OnlineResource>
+									<gmd:linkage>
+										<gmd:URL>http://data.datacite.org/10.12770/94D96454-757F-45F3-B496-68319F7692A1</gmd:URL>
+									</gmd:linkage>
+									<gmd:protocol>
+										<gco:CharacterString>WWW:LINK-1.0-http--metadata-URL</gco:CharacterString>
+									</gmd:protocol>
+									<gmd:description>
+										<gco:CharacterString>Point of truth URL of this metadata record</gco:CharacterString>
+									</gmd:description>
+									<gmd:function>
+										<gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_OnL                                                                 ineFunctionCode" codeListValue=""/>
+									</gmd:function>
+								</gmd:CI_OnlineResource>
+							</gmd:onLine>
+						</gmd:MD_DigitalTransferOptions>
+					</gmd:distributorTransferOptions>
+				</gmd:MD_Distributor>
+			</gmd:distributor>
+			<!-- Online resources part (dépos GHER) -->
+			<gmd:distributor>
+				<gmd:MD_Distributor>
+					<gmd:distributorContact/>
+					<gmd:distributorFormat/>
+					<gmd:distributorTransferOptions>
+						<gmd:MD_DigitalTransferOptions>
+							<gmd:onLine>
+								<gmd:CI_OnlineResource>
+									<gmd:linkage>
+										<gmd:URL>http://gher-diva.phys.ulg.ac.be/data/emodnet-domains/Black Sea/Seasonal distribution/NO3.19202011.4Danl.nc</gmd:URL>
+									</gmd:linkage>
+									<gmd:protocol>
+										<gco:CharacterString>WWW:DOWNLOAD-1.0-link--download</gco:CharacterString>
+									</gmd:protocol>
+									<gmd:name>
+										<gco:CharacterString>EMODNET Data Access http Black Sea - Nitrate</gco:CharacterString>
+									</gmd:name>
+									<gmd:description>
+										<gco:CharacterString>Netcdf</gco:CharacterString>
+									</gmd:description>
+									<gmd:function>
+										<gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_OnL                                                                 ineFunctionCode" codeListValue=""/>
+									</gmd:function>
+								</gmd:CI_OnlineResource>
+							</gmd:onLine>
+						</gmd:MD_DigitalTransferOptions>
+					</gmd:distributorTransferOptions>
+				</gmd:MD_Distributor>
+			</gmd:distributor>
+			<gmd:distributor>
+				<gmd:MD_Distributor>
+					<gmd:distributorContact/>
+					<gmd:distributorFormat/>
+					<gmd:distributorTransferOptions>
+						<gmd:MD_DigitalTransferOptions>
+							<gmd:onLine>
+								<gmd:CI_OnlineResource>
+									<gmd:linkage>
+										<gmd:URL>http://gher-diva.phys.ulg.ac.be:8080/emodnet-domains/Black Sea/Seasonal distribution/NO3.19202011.4Danl.nc.html</gmd:URL>
+									</gmd:linkage>
+									<gmd:protocol>
+										<gco:CharacterString>WWW:DOWNLOAD-1.0-link--download</gco:CharacterString>
+									</gmd:protocol>
+									<gmd:name>
+										<gco:CharacterString>EMODNET Data Access OPENDAP Black Sea - Nitrate</gco:CharacterString>
+									</gmd:name>
+									<gmd:description>
+										<gco:CharacterString>OpenDAP</gco:CharacterString>
+									</gmd:description>
+									<gmd:function>
+										<gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_OnL                                                                 ineFunctionCode" codeListValue=""/>
+									</gmd:function>
+								</gmd:CI_OnlineResource>
+							</gmd:onLine>
+						</gmd:MD_DigitalTransferOptions>
+					</gmd:distributorTransferOptions>
+				</gmd:MD_Distributor>
+			</gmd:distributor>
+			<gmd:distributor>
+				<gmd:MD_Distributor>
+					<gmd:distributorContact/>
+					<gmd:distributorFormat/>
+					<gmd:distributorTransferOptions>
+						<gmd:MD_DigitalTransferOptions>
+							<gmd:onLine>
+								<gmd:CI_OnlineResource>
+									<gmd:linkage>
+										<gmd:URL>http://gher-diva.phys.ulg.ac.be/emodnet/Python/web/wms?</gmd:URL>
+									</gmd:linkage>
+									<gmd:protocol>
+										<gco:CharacterString>OGC:WMS:getCapabilities</gco:CharacterString>
+									</gmd:protocol>
+									<gmd:name>
+										<gco:CharacterString>Black Sea/Seasonal distribution/NO3.19202011.4Danl.nc*NO3_L1</gco:CharacterString>
+									</gmd:name>
+									<gmd:description>
+										<gco:CharacterString>OGC Compliant Web Map Service</gco:CharacterString>
+									</gmd:description>
+									<gmd:function>
+										<gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_OnL                                                                 ineFunctionCode" codeListValue=""/>
+									</gmd:function>
+								</gmd:CI_OnlineResource>
+							</gmd:onLine>
+						</gmd:MD_DigitalTransferOptions>
+					</gmd:distributorTransferOptions>
+				</gmd:MD_Distributor>
+			</gmd:distributor>
+		</gmd:MD_Distribution>
+	</gmd:distributionInfo>
 	<!-- MANDATORY: constant, for INSPIRE compliance -->
 	<gmd:dataQualityInfo>
 		<gmd:DQ_DataQuality>
@@ -426,7 +683,7 @@
 			<gmd:lineage>
 				<gmd:LI_Lineage>
 					<gmd:statement>
-						<gco:CharacterString>The data used as input for this product have been extracted from the SeadataNet Download Service: http://www.seadatanet.org/Data-Access/Common-Data-Index-CDI</gco:CharacterString>
+						<gco:CharacterString>The data used as input for this product have been extracted from the Emodnet Download Service: http://www.seadatanet.org/Data-Access/Common-Data-Index-CDI</gco:CharacterString>
 					</gmd:statement>
 				</gmd:LI_Lineage>
 			</gmd:lineage>
