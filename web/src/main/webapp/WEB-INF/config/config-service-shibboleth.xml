@@ -7,7 +7,7 @@
 
       <output forward="home" />
 
-      <error id="user-login" sheet="error.xsl" statusCode="401">
+      <error id="user-login" sheet="../xslt/common/error.xsl" statusCode="401">
         <xml name="error" file="xml/login-error.xml" />
       </error>
     </service>

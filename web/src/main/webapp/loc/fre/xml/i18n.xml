@@ -10,4 +10,7 @@
   <nodeChangeInfo>Attention : Vous n'êtes plus dans le catalogue auquel vous étiez connecté.</nodeChangeInfo>
   <nodeChangeBack>Si vous souhaitez revenir à ce catalogue cliquer ici :</nodeChangeBack>
   <nodeChangeForward>Sinon, pour vous déconnectez et poursuivre vers le nouveau catalogue, cliquer là :</nodeChangeForward>
+  <serviceNotAllowedTitle>Service non disponible</serviceNotAllowedTitle>
+  <serviceNotAllowed>Le service {1} n'existe pas ou vous n'avez pas les droits pour y accéder.</serviceNotAllowed>
+  <linkToHome><span>Retourner à la <a href="../..">page de recherche</a>.</span></linkToHome>
 </i18n>

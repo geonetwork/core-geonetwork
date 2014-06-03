@@ -10,4 +10,7 @@
   <nodeChangeInfo>Warning: You are no longer in the same node that you logged into.</nodeChangeInfo>
   <nodeChangeBack>If you would like to return to the node you logged into click:</nodeChangeBack>
   <nodeChangeForward>If you would like to logout and return to the previous url click:</nodeChangeForward>
+  <serviceNotAllowedTitle>Service not available</serviceNotAllowedTitle>
+  <serviceNotAllowed>The service {1} does not exist or you don't have privileges to access it.</serviceNotAllowed>
+  <linkToHome><span>Return to the <a href="../..">search page</a>.</span></linkToHome>
 </i18n>

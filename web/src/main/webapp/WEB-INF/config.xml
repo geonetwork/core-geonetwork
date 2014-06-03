@@ -43,19 +43,19 @@
 
 		<!-- no privileges to access the service -->
 
-		<error id="service-not-allowed" sheet="error.xsl" statusCode="403">
+		<error id="service-not-allowed" sheet="../xslt/common/error.xsl" statusCode="403">
 			<xml name="error" file="xml/privileges-error.xml" />
 		</error>
 
 		<!-- data in upload too big -->
 
-		<error id="file-upload-too-big" sheet="error.xsl">
+		<error id="file-upload-too-big" sheet="../xslt/common/error.xsl">
 			<xml name="error" file="xml/file-too-big-error.xml" />
 		</error>
 
 		<!-- general error -->
 
-		<error sheet="error.xsl">
+		<error sheet="../xslt/common/error.xsl">
 			<xml name="error" file="xml/error.xml" />
 		</error>
 
@@ -126,14 +126,6 @@
 	<!-- ====================================================================== -->
 
 	<services package="org.fao.geonet">
-
-		<service name="service-not-allowed" migrate="true">
-      <!-- TODO: move to XSLT folder -->
-			<output sheet="service-not-allowed.xsl">
-				
-			</output>
-		</service>
-
 		<service name="main.error" migrate="true">
 			<output sheet="main-error.xsl">
 				<call name="startupError" class=".guiservices.util.GetStartupError" />
@@ -202,7 +194,7 @@
 			<class name=".services.metadata.Show" />
 			<output sheet="kml.xsl" contentType="application/kml; charset=UTF-8">
 			</output>
-			<error id="operation-not-allowed" sheet="error.xsl" statusCode="403">
+			<error id="operation-not-allowed" sheet="../xslt/common/error.xsl" statusCode="403">
 				<xml name="error" file="xml/privileges-error.xml" />
 			</error>
 		</service>
