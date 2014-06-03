@@ -23,7 +23,7 @@
                 <param name="finished" value="yes" />
             </class>
 
-            <error id="client" sheet="metadata-error.xsl" />
+            <error id="client" sheet="../xslt/error/error-xml.xsl" />
         </service>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -36,7 +36,7 @@
 
             <output forward="metadata.edit" />
 
-            <error id="client" sheet="metadata-error.xsl" />
+            <error id="client" sheet="../xslt/error/error-xml.xsl" />
         </service>
 
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -48,7 +48,7 @@
                 <param name="finished" value="yes" />
             </class>
 
-            <error id="client" sheet="metadata-error.xsl" />
+            <error id="client" sheet="../xslt/error/error-xml.xsl" />
         </service>
 
         <service name="metadata.relation">
@@ -260,14 +260,14 @@
                 <param name="user_xsl_dir" value="user_xsl" />
             </class>
             <output sheet="metadata-formatter/identity.xsl" />
-            <error id="illegal-params" sheet="metadata-error.xsl" />
+            <error id="illegal-params" sheet="../xslt/error/error-xml.xsl" />
         </service>
 
         <service name="metadata.formatter.xml" deprecated="true">
             <class name=".services.metadata.format.Format">
                 <param name="user_xsl_dir" value="user_xsl" />
             </class>
-            <error id="illegal-params" sheet="metadata-error.xsl" />
+            <error id="illegal-params" sheet="../xslt/error/error-xml.xsl" />
         </service>
 
         <service name="metadata.formatter.pdf" deprecated="true">
@@ -276,7 +276,7 @@
             </class>
             <class name=".services.metadata.format.PDF" />
             <output file="true" />
-            <error id="illegal-params" sheet="metadata-error.xsl" />
+            <error id="illegal-params" sheet="../xslt/error/error-xml.xsl" />
         </service>
 
         <!-- Massive metadata update services -->
