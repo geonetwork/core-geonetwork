@@ -24,7 +24,7 @@
   </div>
 
   <div class="col-lg-8" data-ng-hide="userSelected.id == null">
-    <div class="panel panel-default" data-ng-controller="GnSearchFormController">
+    <div class="panel panel-default" data-ng-search-form="">
       <div class="panel-heading"
         title="{{userHasRecords() ? ('cantDeleteUserHavingRecords' | translate) : ''}}">
         <span data-ng-hide="userSelected.id == ''" data-translate="">updateUser</span>

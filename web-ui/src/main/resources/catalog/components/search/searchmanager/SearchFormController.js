@@ -34,7 +34,7 @@
         records: [],
         count: 0
       };
-      $scope.paginationInfo = {
+      $scope.paginationInfo = $scope.paginationInfo || {
         pages: -1,
         currentPage: 1,
         hitsPerPage: 20
@@ -135,7 +135,21 @@
           $scope.triggerSearch();
         }
       });
-
     }
-  ]);
+  ])
+      .directive('ngSearchForm', [
+          '$parse',
+        function($parse) {
+          return {
+            restrict: 'A',
+            scope: true,
+            controller: 'GnSearchFormController',
+            link: function (scope, element, attrs) {
+              scope.params = $parse(attrs.gnParams)(scope) || {};
+              if(attrs.runsearch) {
+                scope.triggerSearch();
+              }
+            }
+          };
+        }]);
 })();

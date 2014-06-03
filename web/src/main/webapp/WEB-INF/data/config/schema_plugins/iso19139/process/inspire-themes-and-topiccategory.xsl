@@ -25,8 +25,8 @@
     <xsl:import href="process-utility.xsl"/>
     
     <xsl:variable name="inspire-th"
-        select="document(concat(system-property(concat(substring-after($baseUrl, '/'), '.codeList.dir')), '/external/thesauri/theme/inspire-theme.rdf'))"/>
-    
+        select="document(concat('file:///', replace(system-property(concat(substring-after($baseUrl, '/'), '.codeList.dir')), '\\', '/'), '/external/thesauri/theme/inspire-theme.rdf'))"/>
+
     <xsl:variable name="itheme-topiccat-map">
         <!-- <entry>
             <itheme>http://rdfdata.eionet.europa.eu/inspirethemes/themes/1</itheme>
