@@ -349,9 +349,20 @@
         <url-pattern>/srv/*</url-pattern>
     </servlet-mapping>
 
+
     <servlet-mapping>
         <servlet-name>spring</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>spring</servlet-name>
+        <url-pattern>/login.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>spring</servlet-name>
+        <url-pattern>/accessDenied.jsp</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
