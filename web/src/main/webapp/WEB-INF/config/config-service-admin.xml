@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <geonet>
   <services package="org.fao.geonet">
-    
+
     <service name="info">
       <class name=".services.main.Info" />
       <error sheet="../xslt/error/error-json.xsl"/>
