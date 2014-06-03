@@ -21,17 +21,32 @@
 		<property name="suffix" value=".xsl" />
 	</bean>
 
-	<bean id="localeChangeInterceptor"
-		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-		<property name="paramName" value="language" />
-	</bean>
-	<bean id="urlLocaleChangeInterceptor" class="org.fao.geonet.i18n.UrlLocaleChangeInterceptor">
-		<property name="urlPosition" value="1" />
-	</bean>
+	<bean id="localeResolver"
+ 		class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+ 		<property name="defaultLocale" value="eng" />
+ 	</bean>
+ 
+ 	<bean id="localeChangeInterceptor"
+ 		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+ 		<property name="paramName" value="language" />
+ 	</bean>
+ 	<bean id="urlLocaleChangeInterceptor" class="org.fao.geonet.i18n.UrlLocaleChangeInterceptor">
+ 		<property name="urlPosition" value="0" />
+ 	</bean>
+ 
+ 	<mvc:interceptors>
+ 		<ref bean="localeChangeInterceptor" />
+ 		<ref bean="urlLocaleChangeInterceptor" />
+ 	</mvc:interceptors>
 
-	<mvc:interceptors>
-		<ref bean="localeChangeInterceptor" />
-		<ref bean="urlLocaleChangeInterceptor" />
-	</mvc:interceptors>
-
+    <bean
+ 		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+ 		<property name="mediaTypes">
+ 			<map>
+ 				<entry key="html" value="text/html" />
+ 				<entry key="json" value="application/json" />
+ 				<entry key="xml" value="application/xml" />
+ 			</map>
+ 		</property>
+ 	</bean>
 </beans>
