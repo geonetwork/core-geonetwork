@@ -126,11 +126,6 @@
 	<!-- ====================================================================== -->
 
 	<services package="org.fao.geonet">
-		<service name="main.error" migrate="true">
-			<output sheet="main-error.xsl">
-				<call name="startupError" class=".guiservices.util.GetStartupError" />
-			</output>
-		</service>
 
         <!-- Ext GUIs -->
         <service name="feedback.send">

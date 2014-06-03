@@ -29,16 +29,6 @@
 			</head>
 			<body>
 				<table width="100%">
-						<!-- banner -->
-						<tr><td>
-							<xsl:call-template name="banner"/>
-						</td></tr>
-						<!--
-						<tr><td align="center">
-							<a class="content" href="{$baseurl}" target="_blank"  alt="Opens new window">Go to the catalog that holds this metadata record</a>
-						</td></tr>
-						-->
-
 						<!-- content -->
 						<tr><td>
 								<xsl:call-template name="content"/>
@@ -98,23 +88,6 @@
 		<script type="text/javascript" src="{$baseurl}/scripts/editor/simpletooltip.js">
 			// This is a comment - otherwise nothing works
 		</script>
-	</xsl:template>
-
-	<xsl:template name="banner">
-		<table width="100%">
-			<tr class="banner">
-				<td class="banner">
-					<a href="{$baseurl}" target="_blank">
-						<img src="{$baseurl}/images/header-left.jpg" alt="Catalog Home" align="top" />
-					</a>
-				</td>
-				<td align="right" class="banner">
-					<a href="{$baseurl}" target="_blank">
-						<img src="{$baseurl}/images/header-right.gif" alt="Catalog Home" align="top" />
-					</a>
-				</td>
-			</tr>
-		</table>
 	</xsl:template>
 
 	<!--

@@ -37,55 +37,6 @@
 
 			window.javascriptsLocation = "<xsl:value-of select="/root/gui/url"/>/scripts/";
 
-			<xsl:if test="/root/gui/reqService = 'main.home'">
-			document.onkeyup = alertkey;
-
-            function getCookie(c_name) {
-                var c_value = document.cookie;
-                var c_start = c_value.indexOf(" " + c_name + "=");
-                if (c_start == -1) {
-                    c_start = c_value.indexOf(c_name + "=");
-                }
-                if (c_start == -1) {
-                    c_value = null;
-                } else {
-                    c_start = c_value.indexOf("=", c_start) + 1;
-                    var c_end = c_value.indexOf(";", c_start);
-                    if (c_end == -1) {
-                        c_end = c_value.length;
-                    }
-                c_value = unescape(c_value.substring(c_start,c_end));
-                }
-                return c_value;
-            }
-
-			function alertkey(e) {
-				if (!e) {
-					if (window.event) {
-						e = window.event;
-					} else {
-						return;
-					}
-				}
-
-				if (e.keyCode == 13) {
-					<xsl:if test="string(/root/gui/session/userId)=''">
-					if ($('username').value != '') { // login action
-						goSubmit('login');
-						return;
-						}
-					</xsl:if>
-				    var searchCookie = getCookie("search");
-                    var doAdvancedSearch = (searchCookie == "o:searchTab=s%3Aadvanced");
-                    var doSimpleSearch = (searchCookie == "o:searchTab=s%3Adefault");
-                    if (doAdvancedSearch) {
-                        runAdvancedSearch();
-                    } else if (doSimpleSearch) {
-						runSimpleSearch();
-					}
-                }
-				};
-			</xsl:if>
 		</script><xsl:text>&#10;</xsl:text>
 
 		<!-- stylesheet -->

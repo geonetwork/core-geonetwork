@@ -30,11 +30,6 @@
 			</head>
 			<body>
 				<table width="100%">
-						<!-- banner -->
-						<tr><td>
-							<xsl:call-template name="mybanner"/>
-						</td></tr>
-
 						<!-- content -->
 						<tr><td>
 								<xsl:call-template name="content"/>
@@ -53,18 +48,6 @@
 		<link rel="stylesheet" type="text/css" href="{$baseurl}/modalbox.css"/>
 	</xsl:template>
 
-	<xsl:template name="mybanner">
-		<table width="100%">
-			<tr class="banner">
-				<td class="banner">
-					<img src="{$baseurl}/images/header-left.jpg" alt="World picture" align="top" />
-				</td>
-				<td align="right" class="banner">
-					<img src="{$baseurl}/images/header-right.gif" alt="GeoNetwork opensource logo" align="top" />
-				</td>
-			</tr>
-		</table>
-	</xsl:template>
 
 	<!-- page content -->
   <xsl:template name="content">
