@@ -23,15 +23,21 @@
 
 package org.fao.geonet.services.group;
 
+import static org.springframework.data.jpa.domain.Specifications.not;
+
+import java.util.LinkedList;
+
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.specification.GroupSpecs;
 import org.jdom.Element;
-
-import static org.springframework.data.jpa.domain.Specifications.not;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 //=============================================================================
 
@@ -39,27 +45,43 @@ import static org.springframework.data.jpa.domain.Specifications.not;
  * Retrieves all groups in the system
  */
 
+@Controller
 public class List implements Service {
-    public void init(String appPath, ServiceConfig params) throws Exception {
-    }
+	public void init(String appPath, ServiceConfig params) throws Exception {
+	}
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Service
-    //---
-    //--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
+	// ---
+	// --- Service
+	// ---
+	// --------------------------------------------------------------------------
 
-    public Element exec(Element params, ServiceContext context) throws Exception {
-        Element elRes = context.getBean(GroupRepository.class).findAllAsXml(not(GroupSpecs.isReserved()));
+	public Element exec(Element params, ServiceContext context)
+			throws Exception {
+		Element elRes = context.getBean(GroupRepository.class).findAllAsXml(
+				not(GroupSpecs.isReserved()));
 
-        Element elOper = params.getChild(Jeeves.Elem.OPERATION);
+		Element elOper = params.getChild(Jeeves.Elem.OPERATION);
 
-        if (elOper != null)
-            elRes.addContent(elOper.detach());
+		if (elOper != null)
+			elRes.addContent(elOper.detach());
 
-        return elRes.setName(Jeeves.Elem.RESPONSE);
+		return elRes.setName(Jeeves.Elem.RESPONSE);
+	}
+
+	@RequestMapping(value = "/{lang}/xml.info")
+	@ResponseBody
+    public java.util.List<String> mvc() {
+    	
+    	LinkedList<String> dummy = new LinkedList<String>();
+    	dummy.add("dummy1");
+    	dummy.add("dummy2");
+    	dummy.add("dummy3");
+    	dummy.add("dummy4");
+    	return dummy;
+    	
     }
 }
 
-//=============================================================================
+// =============================================================================
 

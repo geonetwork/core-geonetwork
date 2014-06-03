@@ -1,0 +1,58 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd 
+	    http://www.springframework.org/schema/mvc 
+	    http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd 
+        http://www.springframework.org/schema/tx 
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+        http://www.springframework.org/schema/data/jpa 
+        http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+        
+    <bean id="xmlSerializer" name="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerSvn"/>
+    <!-- <bean id="xmlSerializer" name="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerDb"/> -->
+
+    <bean id="svnManager" class="org.fao.geonet.kernel.SvnManager"/>
+    
+    <aop:aspectj-autoproxy />
+
+        
+	<import resource="classpath:/config-spring-geonetwork.xml"/>
+	<import resource="classpath:/config-spring-geonetwork-parent.xml" />
+	<import resource="classpath*:/config-spring-geonetwork.xml" />
+	<import resource="config-security/config-security.xml" />
+	<import resource="classpath:JZkitApplicationContext.xml" />
+
+	<import resource="config-db/initial_data.xml" />
+	<import resource="config-node/srv.xml" />
+
+	<import resource="config-db/defaultJdbcDataSource.xml" />
+	<context:component-scan base-package="org.fao.geonet" />
+
+	<bean class="org.springframework.web.servlet.view.xslt.XsltViewResolver">
+		<property name="prefix" value="/xsl" />
+		<property name="suffix" value=".xsl" />
+	</bean>
+
+	<bean id="localeChangeInterceptor"
+		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+		<property name="paramName" value="language" />
+	</bean>
+	<bean id="urlLocaleChangeInterceptor" class="org.fao.geonet.i18n.UrlLocaleChangeInterceptor">
+		<property name="urlPosition" value="1" />
+	</bean>
+
+	<mvc:interceptors>
+		<ref bean="localeChangeInterceptor" />
+		<ref bean="urlLocaleChangeInterceptor" />
+	</mvc:interceptors>
+
+</beans>
