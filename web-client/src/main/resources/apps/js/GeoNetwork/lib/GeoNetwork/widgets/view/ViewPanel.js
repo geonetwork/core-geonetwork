@@ -93,6 +93,26 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
     buttonHeight : undefined,
 		viewPanelButtonCSS : undefined,
 
+    /** api: method[refreshView]
+     *  Retrieve record and refresh the action menu. Meant to be
+		 *  called if user logs in during viewm for example.
+     */
+		refreshView : function() {
+      // Retrieve information in synchronous mode
+      var store = GeoNetwork.data.MetadataResultsFastStore();
+      this.catalogue.kvpSearch("fast=index&_uuid=" + this.metadataUuid, null, null, null, true, store, null, false);
+      this.record = store.getAt(store.find('uuid', this.metadataUuid));
+			// If metadata record has been deleted or no longer available then 
+			// return false (failed) otherwise update the actionMenu eg. to allow 
+			// editing and return true (success)
+			if (this.record) { 
+				this.actionMenu.updateMenu(this.record);
+				return true;
+			} else {
+				return false;
+			}
+		},
+
     /** api: method[displayLinks]
      *  Display metadata links.
      */

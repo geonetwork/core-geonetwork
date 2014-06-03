@@ -306,7 +306,9 @@ GeoNetwork.MetadataMenu = Ext.extend(Ext.menu.Menu, {
      *  Update menu privileges according to information defined in current record.
      *  
      */
-    updateMenu: function(){
+    updateMenu: function(record){
+				if (record) this.record = record; // update as may have changed
+
         if (!this.record) {
             return; // TODO : improve. It happens when ViewWindow is opened without searching first.
         }

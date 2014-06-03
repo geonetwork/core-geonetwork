@@ -690,8 +690,8 @@ GeoNetwork.app = function() {
     };
 };
 
-Ext
-        .onReady(function() {
+Ext.onReady(function() {
+
 
             hideAdvancedSearch();
 
@@ -740,50 +740,58 @@ Ext
 
             // Register events where the search should be triggered
             var events = [ 'afterDelete', 'afterRating', 'afterLogin' ];
-            Ext
-                    .each(
-                            events,
-                            function(e) {
-                                catalogue
-                                        .on(
-                                                e,
-                                                function() {
-                                                    if (Ext.get(resultsPanel)
-                                                            .isVisible()) {
-                                                        var e = Ext
-                                                                .getCmp('advanced-search-options-content-form');
-                                                        e.getEl().fadeIn();
-                                                        e.fireEvent('search');
-                                                    }
-                                                });
-                            });
+            Ext.each(events, function(e) {
+              catalogue.on(e, function() {
+                if (Ext.get(resultsPanel).isVisible()) {
+                  var e = Ext.getCmp('advanced-search-options-content-form');
+                  e.getEl().fadeIn();
+                  e.fireEvent('search');
+                }
+								var metadataPanel = Ext.getCmp('metadata-panel');
+								if (metadataPanel && metadataPanel.isVisible()) {
+									var theUuid = metadataPanel.metadataUuid;
+									// Refresh metadata record in view, otherwise destroy
+									// the viewer and display an error as metadata record
+									// may no longer be available
+        					if (!metadataPanel.refreshView()) {
+										metadataPanel.destroy();
+										var e = Ext.getCmp('advanced-search-options-content-form');
+										e.getEl().fadeIn();
+										e.fireEvent('search');
+										GeoNetwork.Message().msg({
+                    	title: OpenLayers.i18n('error'), 
+                    	msg: OpenLayers.i18n('metadata-not-found'), 
+                    	tokens: {
+                        	uuid: theUuid
+                    	}, 
+                    	status: 'warning',
+                    	target: document.body
+										});
+									}
+								}
+              });
+            });
 
             if (!cookie.get("alreadyShowMessage")) {
-                GeoNetwork
-                        .Message()
-                        .msg(
-                                {
-                                    title : OpenLayers.i18n('cookies'),
-                                    msg : OpenLayers.i18n('cookies.warning')
-                                            + "<p><input type='button' value='"
-                                            + OpenLayers
-                                                    .i18n('disclaimer.buttonClose')
-                                            + "' onclick=\"Ext.get('cookie-warning').remove();\"/></p>",
-                                    status : 'information',
-                                    target : document.body,
-                                    id : 'cookie-warning',
-                                    pause : 40
-                                });
-                cookie.set('alreadyShowMessage', true);
+              GeoNetwork.Message().msg({
+                title : OpenLayers.i18n('cookies'),
+                msg : OpenLayers.i18n('cookies.warning')
+                	+ "<p><input type='button' value='"
+                  + OpenLayers.i18n('disclaimer.buttonClose')
+                  + "' onclick=\"Ext.get('cookie-warning').remove();\"/></p>",
+                status : 'information',
+                target : document.body,
+                id : 'cookie-warning',
+                pause : 40
+              });
+              cookie.set('alreadyShowMessage', true);
             }
 
             Ext.getCmp("fullTextField").keyNav.enter = function(e) {
                 Ext.getCmp('advanced-search-options-content-form').fireEvent(
                         'search');
-
             };
-
-        });
+});
 
 /**
  * Resize maps and panels on window resize to acomodate content
