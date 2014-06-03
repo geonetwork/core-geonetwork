@@ -167,17 +167,6 @@
 			<output forward="main.present.embedded" />
 		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Feedback services                                             -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="feedback.insert">
-			<class name=".services.feedback.Insert" />
-
-			<output sheet="info.xsl">
-				<xml name="info" file="xml/feedback-sent.xml" />
-			</output>
-		</service>
 
 		<service name="util.ping">
 			<class name="jeeves.services.Ping" />
@@ -188,7 +177,7 @@
 		<service name="shib.user.login">
 			<class name=".services.login.ShibLogin" />
 
-			<output forward="main.home" />
+			<output forward="home" />
 
 			<error id="user-login" sheet="error.xsl">
 				<xml name="error" file="xml/login-error.xml" />
@@ -248,16 +237,6 @@
 			</error>
 
 			<output file="true" />
-		</service>
-
-		<service name="resources.del">
-			<class name=".services.resources.Remove" />
-
-			<error id="file-not-found" sheet="error.xsl">
-				<xml name="error" file="xml/file-not-found-error.xml" />
-			</error>
-
-			<output forward="metadata.edit" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
