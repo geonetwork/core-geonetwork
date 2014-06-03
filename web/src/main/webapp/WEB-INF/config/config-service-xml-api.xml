@@ -19,6 +19,10 @@
       <error sheet="error-xml.xsl"/>
     </service>
 
+    <service name="xml.metadata.admin.form">
+      <class name=".services.metadata.GetAdminOper" />
+    </service>
+
 
     <service name="xml.region.get" deprecated="true" xmlapi="true">
       <class name=".services.region.Get" />

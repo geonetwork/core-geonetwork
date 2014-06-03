@@ -5,7 +5,7 @@
 
   <xsl:variable name="profile" select="/root/gui/session/profile"/>
 
-  <xsl:template mode="script" match="/" priority="10">
+  <xsl:template name="replace-script">
 
     <script>
 
@@ -74,10 +74,12 @@
   <!-- ================================================================================= -->
 
   <xsl:template name="content">
+
     <xsl:call-template name="formLayout">
       <xsl:with-param name="title" select="/root/gui/massive-replace/massiveUpdateForm/title"/>
       <xsl:with-param name="content">
 
+        <xsl:call-template name="replace-script"/>
         <form id="massiveupdateform" name="massiveupdateform" accept-charset="UTF-8" method="POST"
               action="{/root/gui/locService}/metadata.massive.update.content">
 
@@ -193,6 +195,7 @@
             </label>
           </div>
         </form>
+
 
 
         <script>
