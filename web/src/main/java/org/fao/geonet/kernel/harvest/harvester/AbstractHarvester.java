@@ -406,36 +406,41 @@ public abstract class AbstractHarvester extends BaseAligner
      * is created or updated according to user session.
      */
     private void login() throws Exception {
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        JeevesUser user = new JeevesUser(this.context.getProfileManager());
-
-        String ownerId = getParams().ownerId;
-        if(log.isDebugEnabled()) {
-            log.debug("AbstractHarvester login: ownerId = " + ownerId);
-        }
-
-        // for harvesters created before owner was added to the harvester code, or harvesters belonging to a user that no longer exists
-        if(StringUtils.isEmpty(ownerId) || !this.dataMan.existsUser(dbms, Integer.parseInt(ownerId))) {
-            // just pick any Administrator (they can all see all harvesters and groups anyway)
-            ownerId = this.dataMan.pickAnyAdministrator(dbms);
-            getParams().ownerId = ownerId;
-            if(log.isDebugEnabled()) {
-                log.debug("AbstractHarvester login: picked Adminstrator  " + ownerId + " to run this job");
-            }
-        }
-
-        user.setId(ownerId);
-
-        // lookup owner profile (it may have changed since harvester was created)
-        String profile = this.dataMan.getUserProfile(dbms, Integer.parseInt(ownerId));
-        user.setProfile(profile);
-        // todo reject if < useradmin ?
-
-        UserSession session = new UserSession();
-        session.loginAs(user);
-        this.context.setUserSession(session);
-
-        this.context.setIpAddress(null);
+				Dbms dbms = null;
+				try {
+        	dbms = (Dbms) context.getResourceManager().openDirect(Geonet.Res.MAIN_DB);
+        	JeevesUser user = new JeevesUser(this.context.getProfileManager());
+	
+        	String ownerId = getParams().ownerId;
+        	if(log.isDebugEnabled()) {
+            	log.debug("AbstractHarvester login: ownerId = " + ownerId);
+        	}
+	
+        	// for harvesters created before owner was added to the harvester code, or harvesters belonging to a user that no longer exists
+        	if(StringUtils.isEmpty(ownerId) || !this.dataMan.existsUser(dbms, Integer.parseInt(ownerId))) {
+            	// just pick any Administrator (they can all see all harvesters and groups anyway)
+            	ownerId = this.dataMan.pickAnyAdministrator(dbms);
+            	getParams().ownerId = ownerId;
+            	if(log.isDebugEnabled()) {
+                	log.debug("AbstractHarvester login: picked Adminstrator  " + ownerId + " to run this job");
+            	}
+        	}
+	
+        	user.setId(ownerId);
+	
+        	// lookup owner profile (it may have changed since harvester was created)
+        	String profile = this.dataMan.getUserProfile(dbms, Integer.parseInt(ownerId));
+        	user.setProfile(profile);
+        	// todo reject if < useradmin ?
+	
+        	UserSession session = new UserSession();
+        	session.loginAs(user);
+        	this.context.setUserSession(session);
+	
+        	this.context.setIpAddress(null);
+				} finally {
+					if (dbms != null) context.getResourceManager().close(Geonet.Res.MAIN_DB, dbms);
+				}
     }
 
 	void harvest()
