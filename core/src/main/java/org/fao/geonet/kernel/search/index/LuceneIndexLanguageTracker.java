@@ -63,7 +63,7 @@ public class LuceneIndexLanguageTracker {
 
 	@Autowired
 	public LuceneIndexLanguageTracker(
-			@Qualifier("directoryFactory") DirectoryFactory directoryFactory,
+			DirectoryFactory directoryFactory,
 			LuceneConfig luceneConfig) throws Exception {
 		this.luceneConfig = luceneConfig;
 		this._directoryFactory = directoryFactory;

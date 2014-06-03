@@ -1,4 +1,4 @@
-<beans xmlns="http://www.springframework.org/schema/beans"
+<beans default-lazy-init="true" xmlns="http://www.springframework.org/schema/beans"
 	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
     xmlns:aop="http://www.springframework.org/schema/aop"
@@ -17,26 +17,6 @@
         http://www.springframework.org/schema/data/jpa 
         http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
         
-    <bean id="xmlSerializer" name="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerSvn"/>
-    <!-- <bean id="xmlSerializer" name="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerDb"/> -->
-
-    <bean id="svnManager" class="org.fao.geonet.kernel.SvnManager"/>
-    
-    <aop:aspectj-autoproxy />
-
-        
-	<import resource="classpath:/config-spring-geonetwork.xml"/>
-	<import resource="classpath:/config-spring-geonetwork-parent.xml" />
-	<import resource="classpath*:/config-spring-geonetwork.xml" />
-	<import resource="config-security/config-security.xml" />
-	<import resource="classpath:JZkitApplicationContext.xml" />
-
-	<import resource="config-db/initial_data.xml" />
-	<import resource="config-node/srv.xml" />
-
-	<import resource="config-db/defaultJdbcDataSource.xml" />
-	<context:component-scan base-package="org.fao.geonet" />
-
 	<bean class="org.springframework.web.servlet.view.xslt.XsltViewResolver">
 		<property name="prefix" value="/xsl" />
 		<property name="suffix" value=".xsl" />
