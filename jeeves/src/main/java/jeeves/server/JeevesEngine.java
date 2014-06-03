@@ -94,8 +94,8 @@ public class JeevesEngine
 	private String  appPath;
 	private boolean defaultLocal;
 	private boolean debugFlag;
-	
-    private Dbms dbms;
+
+		private String dbResourceProviderName = "main-db";
     private boolean dbLoaded;
     
 	/** true if the 'general' part has been loaded */
@@ -347,7 +347,7 @@ public class JeevesEngine
 			initServices(srvList.get(i));
 
 		if (!dbLoaded) {
-			setDBServicesElement(dbms);
+			setDBServicesElement(dbResourceProviderName);
 			for(int i=0; i<dbservices.size(); i++){
 				initServices(dbservices.get(i));
 			}
@@ -527,8 +527,13 @@ public class JeevesEngine
 					// Try and open a resource from the provider
 					providerMan.getProvider(name).open();
 					
-					if (name.equals("main-db")){
-						dbms = (Dbms) providerMan.getProvider(name).open();
+					if (name.equals(dbResourceProviderName)){
+						Dbms dbms = null;
+						try {
+							dbms = (Dbms) providerMan.getProvider(name).open();
+						} finally {
+							if (dbms != null) providerMan.getProvider(name).close(dbms);
+						}
 					}
 				}
 				catch(Exception e)
@@ -826,14 +831,16 @@ public class JeevesEngine
     /**
      * Create Jeeves services from a configuration stored in the Services table
      * of the DBMS resource.
-     * 
-     * @param _dbms
+		 *
+		 * @param name resource provider name to open dbms from (usually main-db)
      */
-    private void setDBServicesElement(Dbms _dbms) {
+    private void setDBServicesElement(String name) {
+				Dbms dbms = null;
         try {
+						dbms = (Dbms) providerMan.getProvider(name).open();
             Element eltServices = new Element("services");
             eltServices.setAttribute("package", "org.fao.geonet");
-            java.util.List serviceList = _dbms.select("SELECT * FROM Services")
+            java.util.List serviceList = dbms.select("SELECT * FROM Services")
                     .getChildren();
 
             if (!dbLoaded) {
@@ -842,7 +849,7 @@ public class JeevesEngine
                     Element eltService = (Element) serviceList.get(j);
                     Element srv = new Element("service");
                     Element cls = new Element("class");
-                    java.util.List paramList = _dbms
+                    java.util.List paramList = dbms
                             .select("SELECT name, value FROM ServiceParameters WHERE service =?",
                                     Integer.valueOf(eltService
                                             .getChildText("id"))).getChildren();
@@ -872,7 +879,14 @@ public class JeevesEngine
         } catch (Exception e) {
             warning("Jeeves DBMS service configuration lookup failed (database may not be available yet). Message is: "
                     + e.getMessage());
-        }
+        } finally {
+					try {
+						if (dbms != null) providerMan.getProvider(name).close(dbms);
+					} catch (Exception e) {
+						warning("Unable to close jeeves dbms - may not matter?");
+						e.printStackTrace();
+					}
+				}
 
     }
 }
