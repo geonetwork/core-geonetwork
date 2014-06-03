@@ -104,6 +104,18 @@
          <version>${spring.version}</version>
       </dependency>
  
+ 	<!-- This is to avoid 406 error with spring -->
+	<dependency>
+	    <groupId>com.fasterxml.jackson.core</groupId>
+	    <artifactId>jackson-core</artifactId>
+	    <version>2.1.2</version>
+	</dependency>
+	<dependency>
+	    <groupId>com.fasterxml.jackson.core</groupId>
+	    <artifactId>jackson-databind</artifactId>
+	   <version>2.1.2</version>
+	</dependency>
+ 
       <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
     <dependency>
       <groupId>org.dspace</groupId>
