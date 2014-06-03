@@ -24,7 +24,6 @@
 
 		<gui>
 			<xml name="strings" file="xml/strings.xml" />
-			<xml name="countries" file="xml/countries.xml" />
 
 			<call name="isolanguages" class="org.fao.geonet.guiservices.isolanguages.Get"/>
 

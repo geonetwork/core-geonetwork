@@ -19,7 +19,6 @@
 
 		<gui>
 			<xml name="strings" file="xml/strings.xml" />
-			<xml name="countries" file="xml/countries.xml" />
 
 			<xml name="iso19115" base="xml/schemas/iso19115/loc" file="labels.xml" />
 			<xml name="iso19115" base="xml/schemas/iso19115/loc" file="codelists.xml" />
