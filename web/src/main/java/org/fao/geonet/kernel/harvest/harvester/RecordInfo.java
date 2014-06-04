@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester;
 
 import org.fao.geonet.util.ISODate;
+import org.fao.geonet.util.JODAISODate;
 import org.jdom.Element;
 
 //=============================================================================
@@ -84,12 +85,24 @@ public class RecordInfo
 		if (dateWasNull)
 			return true;
 
-		ISODate remoteDate = new ISODate(changeDate);
-		ISODate localDate  = new ISODate(localChangeDate);
+        try {
+            // JODAISODate manages better gYear and gYearMonth, allowed in xs:date.
+            // Dates a parsed with JODAISODate first to get an ISODate and used in ISODate
+            String remoteDateParsed = JODAISODate.parseISODateTime(changeDate);
+            String localDateParsed = JODAISODate.parseISODateTime(localChangeDate);
 
-        //--- modified:  we accept metadata modified from 24 hours before
-        //--- to harvest several changes during a day (if short date format used) or date local differences
-        return (remoteDate.sub(localDate) > (-1) * SECONDS_PER_DAY);
+            ISODate remoteDate = new ISODate(remoteDateParsed);
+            ISODate localDate  = new ISODate(localDateParsed);
+
+            //--- modified:  we accept metadata modified from 24 hours before
+            //--- to harvest several changes during a day (if short date format used) or date local differences
+            return (remoteDate.sub(localDate) > (-1) * SECONDS_PER_DAY);
+
+        } catch (Exception ex) {
+            // If can't parse any of the dates then assume that is more recent the remote copy, to update it locally
+            // and avoid failing the harvester due to a parse exception.
+            return true;
+        }
 	}
 
 	//-----------------------------------------------------------------------------
@@ -98,12 +111,23 @@ public class RecordInfo
 		if (dateWasNull)
 			return true;
 
-		ISODate remoteDate = new ISODate(remoteChangeDate);
-		ISODate localDate  = new ISODate(changeDate);
+        try {
+            // JODAISODate manages gYear and gYearMonth, allowed in xs:date
+            // Dates a parsed with JODAISODate first to get an ISODate and used in ISODate
+            String remoteDateParsed = JODAISODate.parseISODateTime(remoteChangeDate);
+            String localDateParsed = JODAISODate.parseISODateTime(changeDate);
 
-        //--- modified:  we accept metadata modified from 24 hours before
-        //--- to harvest several changes during a day (if short date format used) or date local differences
-        return (remoteDate.sub(localDate) > (-1) * SECONDS_PER_DAY);
+            ISODate remoteDate = new ISODate(remoteDateParsed);
+            ISODate localDate  = new ISODate(localDateParsed);
+
+            //--- modified:  we accept metadata modified from 24 hours before
+            //--- to harvest several changes during a day (if short date format used) or date local differences
+            return (remoteDate.sub(localDate) > (-1) * SECONDS_PER_DAY);
+        } catch (Exception ex) {
+            // If can't parse any of the dates then assume that is older the remote copy, to update it locally
+            // and avoid failing the harvester due to a parse exception.
+            return true;
+        }
     }
 	//---------------------------------------------------------------------------
 
