@@ -182,6 +182,12 @@
         <to type="permanent-redirect" last="true">%{context-path}$1/rss.search?sortBy=changeDate</to>
     </rule>
     
+    <!-- Rule to redirect old deprecated @json requests -->
+    <rule>
+        <from>^/srv/(.*)/(.*)@json</from>
+        <to type="permanent-redirect" last="true">%{context-path}/srv/$1/$2?format=json</to>
+    </rule>
+    
     <!-- hide jsession id from google bot -->
     <outbound-rule encodefirst="true">
         <condition name="user-agent">googlebot.*</condition>
