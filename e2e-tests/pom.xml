@@ -83,6 +83,7 @@
         <sslAppPort>8443</sslAppPort>
         <jetty.stop.port>8012</jetty.stop.port>
         <geonetworkWar>${project.build.directory}/geonetworkWar</geonetworkWar>
+        <rootProjectDir>${basedir}/..</rootProjectDir>
     </properties>
     <build>
         <plugins>
@@ -490,4 +491,10 @@
             </properties>
         </profile>
     </profiles>
+    <distributionManagement>
+      <site>
+        <id>Maven generated site and reports</id>
+        <url>file:${rootProjectDir}/target/site/${artifactId}</url>
+      </site>
+    </distributionManagement>
 </project>

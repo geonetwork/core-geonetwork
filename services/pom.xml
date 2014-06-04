@@ -78,26 +78,31 @@
             </plugin>
         </plugins>
     </build>
-
     <profiles>
-		<profile>
-			<id>run-static-analysis</id>
-			<activation>
-				<property>
-					<name>!skipTests</name>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>findbugs-maven-plugin</artifactId>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-	<properties>
-		<rootProjectDir>${basedir}/..</rootProjectDir>
-	</properties>
-</project>
+      <profile>
+        <id>run-static-analysis</id>
+        <activation>
+          <property>
+            <name>!skipTests</name>
+          </property>
+        </activation>
+        <build>
+          <plugins>
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>findbugs-maven-plugin</artifactId>
+            </plugin>
+          </plugins>
+        </build>
+      </profile>
+    </profiles>
+    <distributionManagement>
+      <site>
+        <id>Maven generated site and reports</id>
+        <url>file:${rootProjectDir}/target/site/${artifactId}</url>
+      </site>
+    </distributionManagement>
+    <properties>
+      <rootProjectDir>${basedir}/..</rootProjectDir>
+    </properties>
+  </project>
