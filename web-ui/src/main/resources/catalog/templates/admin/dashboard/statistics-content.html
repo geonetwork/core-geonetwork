@@ -36,8 +36,7 @@
         <form class="form-horizontal" role="form"
               data-ng-search-form="" runSearch="true" gn-params="statistics.md.rating">
           <table class="table table-striped">
-            <tr data-ng-repeat="md in searchResults.records"
-                data-ng-show="md.rating != 0">
+            <tr data-ng-repeat="md in searchResults.records | mdRated">
               <td>{{md.title || md.defaultTitle}}</td>
               <td class="text-right">{{md.rating}}</td>
             </tr>
