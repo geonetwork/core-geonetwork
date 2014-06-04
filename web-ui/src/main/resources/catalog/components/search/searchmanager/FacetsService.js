@@ -22,39 +22,31 @@
 
       var remove = function(facets, facet) {
         var index = -1;
-        for(var i=0;i<facets.length;++i){
-          if(facets[i].field == facet.field &&
+        for (var i = 0; i < facets.length; ++i) {
+          if (facets[i].field == facet.field &&
               facets[i].value == facet.value) {
-            index=i;
+            index = i;
           }
         }
-        if(index>=0) {
-          facets.splice(index,1);
+        if (index >= 0) {
+          facets.splice(index, 1);
         }
       };
 
       /**
        * Get search parameters from facets object.
        * Facet object is usually stored in the searchFrom controller
-       * <code>
-       *   {
-       *    keyword: [
-       *      {value:'europe',label:'europe'},
-       *      {value:'spain',label:'spain'
-       *    ],
-       *    userGroup: {value:'geonetwork',label:'geonetwork'}
-       *   }
-       * </code>
-       * @param facets
-       * @returns search parameters object
+       *
+       * @param {Array} facets
+       * @return {Object} search parameters object
        */
       var getParamsFromFacets = function(facets) {
         var params = {};
         angular.forEach(facets, function(facet) {
-          if(angular.isArray(facets[facet.field])) {
+          if (angular.isArray(facets[facet.field])) {
             params[facet.field].push(facet.value);
           }
-          else if(angular.isDefined(facets[facet.field])) {
+          else if (angular.isDefined(facets[facet.field])) {
             params[facet.field] = [facet.value];
           }
           else {

@@ -135,7 +135,7 @@
           };
 
           scope.$on('resetSelection', function(evt) {
-            if(scope.selection) {
+            if (scope.selection) {
               scope.selection = [];
             }
           });

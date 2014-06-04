@@ -22,6 +22,6 @@
       };
       $scope.paginationInfo = {
         hitsPerPage: 15
-      }
+      };
     }]);
 })();

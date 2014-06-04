@@ -19,7 +19,8 @@
   /**
    * Controller to create new metadata record.
    */
-  var searchFormController = function($scope, gnSearchManagerService, gnFacetService) {
+  var searchFormController = function($scope,
+                                      gnSearchManagerService, gnFacetService) {
     var defaultServiceUrl = 'qi@json';
     var defaultParams = {
       fast: 'index'
@@ -70,8 +71,9 @@
       // Don't add facet extra params to $scope.params but
       // compute them each time on a search.
       var params = angular.copy($scope.params);
-      if($scope.currentFacets.length > 0) {
-        angular.extend(params,gnFacetService.getParamsFromFacets($scope.currentFacets));
+      if ($scope.currentFacets.length > 0) {
+        angular.extend(params,
+            gnFacetService.getParamsFromFacets($scope.currentFacets));
       }
 
       gnSearchManagerService.gnSearch(params).then(
@@ -84,7 +86,7 @@
             if ($scope.searchResults.records.length > 0 &&
                 $scope.hasPagination) {
               $scope.paginationInfo.pages = Math.ceil(
-                      $scope.searchResults.count /
+                  $scope.searchResults.count /
                       $scope.paginationInfo.hitsPerPage, 0);
             }
           });
@@ -92,7 +94,7 @@
 
     /**
      * update $scope.params by merging it with given params
-     * @param params
+     * @param {!Object} params
      */
     this.updateSearchParams = function(params) {
       angular.extend($scope.params, params);
@@ -133,15 +135,15 @@
         restrict: 'A',
         scope: true,
         controller: searchFormController,
-        link: function (scope, element, attrs) {
+        link: function(scope, element, attrs) {
 
           // Get search params from parent scope
           scope.params = $parse(attrs.gnParams)(scope) || {};
 
-          if(attrs.runsearch) {
-            if(element.find('[data-gn-pagination]').length > 0) {
+          if (attrs.runsearch) {
+            if (element.find('[data-gn-pagination]').length > 0) {
               var unregisterFn = scope.$watch('hasPagination', function() {
-                if(scope.hasPagination) {
+                if (scope.hasPagination) {
                   scope.triggerSearch();
                   unregisterFn();
                 }

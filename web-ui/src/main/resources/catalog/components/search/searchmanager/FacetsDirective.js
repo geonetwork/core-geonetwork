@@ -25,7 +25,8 @@
         link: function(scope, element, attrs, controller) {
 
           scope.add = function(f, reset) {
-            gnFacetService.add(scope.currentFacets, scope.indexKey, f['@name'], f['@label']);
+            gnFacetService.add(scope.currentFacets, scope.indexKey,
+                f['@name'], f['@label']);
             controller.resetPagination();
             controller.triggerSearch();
           };

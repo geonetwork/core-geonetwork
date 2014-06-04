@@ -44,7 +44,7 @@
           var updateSearch = function() {
             controller.updateSearchParams(getPaginationParams());
             controller.triggerSearch();
-          }
+          };
 
           scope.previous = function() {
             if (scope.config.currentPage > 1) {
