@@ -3,11 +3,11 @@
     xmlns:context="http://www.springframework.org/schema/context"
     xsi:schemaLocation="
 		http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
         http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd
 	    http://www.springframework.org/schema/mvc 
-	    http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+	    http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
 
 
     <context:component-scan base-package="org.fao.geonet" />
@@ -39,22 +39,21 @@
  		<ref bean="urlLocaleChangeInterceptor" />
  	</mvc:interceptors>
 
-    <bean
- 		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
- 		<property name="mediaTypes">
- 			<map>
- 				<entry key="html" value="text/html" />
- 				<entry key="json" value="application/json" />
- 				<entry key="xml" value="application/xml" />
- 			</map>
- 		</property>
- 	</bean>
- 	
- 	<mvc:annotation-driven content-negotiation-manager="contentNegotiationManager"/>
-
-	<bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
-	    <!-- Turn off working out content type based on URL file extension, should fall back to looking at the Accept headers -->
-	    <property name="favorPathExtension" value="false" />
-	</bean>
- 	
+	  <bean id="cnManager"  
+	    class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">  
+		  <property name="favorPathExtension" value="true"/>  
+		  <property name="ignoreAcceptHeader" value="true" />  
+		  <property name="defaultContentType" value="application/json" />  
+		  <property name="useJaf" value="false"/>  
+		  
+		  <property name="mediaTypes">  
+		    <map>  
+			   <entry key="html" value="text/html" />  
+			   <entry key="json" value="application/json" />  
+			   <entry key="xml" value="application/xml" />  
+		    </map>  
+		  </property>  
+	 </bean>  
+	  
+	 <mvc:annotation-driven content-negotiation-manager="cnManager"/>  
 </beans>
