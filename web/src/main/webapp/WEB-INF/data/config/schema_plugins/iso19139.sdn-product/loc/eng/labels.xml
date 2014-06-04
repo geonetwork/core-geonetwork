@@ -19,7 +19,7 @@
 		<help />
 		<condition />
 	</element>
-  
+
   	<element name="gmd:alternateTitle">
 		<label>External shortname</label>
 		<description></description>

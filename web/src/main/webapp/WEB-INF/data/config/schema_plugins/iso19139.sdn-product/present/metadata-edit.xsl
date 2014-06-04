@@ -492,6 +492,17 @@
 					<xsl:with-param name="edit" select="$edit" />
 				</xsl:apply-templates>
 
+				<!-- DOI -->
+				<xsl:apply-templates mode="simpleElement" select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorTransferOptions/
+					gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString='WWW:LINK-1.0-http--metadata-URL']/gmd:linkage/gmd:URL">
+					<xsl:with-param name="schema"  select="$schema"/>
+					<xsl:with-param name="edit"   select="$edit"/>
+					<xsl:with-param name="title" select="'DOI'"/>
+				</xsl:apply-templates>
+
+
+
+
 				<!-- Overview -->
 				<xsl:apply-templates mode="elementEP"
 					select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract">
@@ -604,7 +615,7 @@
 					<xsl:apply-templates mode="simpleElement" select=".">
 						<xsl:with-param name="schema"  select="$schema"/>
 						<xsl:with-param name="edit"   select="$edit"/>
-						<xsl:with-param name="title" select="''"/>
+						<xsl:with-param name="title" select="'Ocean chemistry variable'"/>
 						<xsl:with-param name="text">
 							<xsl:call-template name="snippet-editor">
 								<xsl:with-param name="elementRef" select="$oceanDP/../geonet:element/@ref"/>
