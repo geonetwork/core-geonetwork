@@ -34,6 +34,7 @@
              elementRef: '@',
              domId: '@',
              tagName: '@',
+             paramName: '@',
              templateAddAction: '@'
            },
            templateUrl: '../../catalog/components/edit/' +
@@ -103,9 +104,11 @@
                  var id = c['geonet:info'].id,
                  uuid = c['geonet:info'].uuid;
                  var params = {uuid: uuid};
+
+                 // Role parameter only works for contact subtemplates
                  if (role) {
                    params.process =
-                   'gmd:role/gmd:CI_RoleCode/@codeListValue~' + role;
+                   scope.paramName + '~' + role;
                  }
                  gnHttp.callService(
                      'subtemplate', params).success(function(xml) {
