@@ -439,7 +439,11 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Return true if current user can set privileges to internal groups (ie. internet, intranet)
      */
     canSetInternalPrivileges: function(){
+      if (this.identifiedUser) {
         return this.identifiedUser.role === "Administrator" || this.identifiedUser.role === "Reviewer";
+      } else {
+        return false;
+      }
     },
     /** api: method[canSetInternalPrivileges]
      *  Return true if current user can set
