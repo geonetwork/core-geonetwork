@@ -2,11 +2,12 @@
 
 <geonet>
 	<services package="org.fao.geonet">
+  <!-- TODO: Review all - old services probably duplicated with other services in xml api -->
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Portal XML services -->
 
-		<service name="portal.search">
+		<service name="portal.search" xmlapi="true">
 			<class name=".services.main.Search">
 				<param name="maxSummaryKeys" value="10" />
 				<param name="maxHitsInSummary" value="1000" />
@@ -16,14 +17,14 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="portal.opensearch">
+		<service name="portal.opensearch" xmlapi="true">
 			<class name=".services.config.Get"/>
 			<output sheet="opensearch.xsl" contentType="text/xml; charset=UTF-8"/>
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="portal.search.keywords">
+		<service name="portal.search.keywords" xmlapi="true">
 			<class name=".services.main.Search">
 				<param name="maxSummaryKeys" value="1000" />
 				<param name="maxHitsInSummary" value="10000" />
@@ -33,7 +34,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="portal.present">
+		<service name="portal.present" xmlapi="true">
 			<class name=".services.main.Result"/>
 
 			<output sheet="portal-present.xsl" contentType="text/xml; charset=UTF-8"/>
@@ -41,7 +42,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="portal.search.present">
+		<service name="portal.search.present" xmlapi="true">
 			<class name=".services.main.SearchResult">
 				<param name="maxSummaryKeys" value="10" />
 				<param name="maxHitsInSummary" value="1000" />
@@ -53,7 +54,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="portal.get">
+		<service name="portal.get" xmlapi="true">
 			<class name=".services.metadata.Show"/>
 
 			<output sheet="portal-get.xsl" contentType="text/xml; charset=UTF-8"/>
@@ -61,7 +62,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="portal.full">
+		<service name="portal.full" xmlapi="true">
 			<class name=".services.main.Result"/>
 
 			<output sheet="portal-full.xsl" contentType="text/xml; charset=UTF-8"/>
@@ -69,7 +70,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="portal.latest.updated">
+		<service name="portal.latest.updated" xmlapi="true">
 			<output sheet="portal-latest-updated.xsl" contentType="text/xml; charset=UTF-8">
 				<call name="latestUpdated"  class=".guiservices.metadata.GetLatestUpdated">
 					<param name="maxItems"           value="5" />
@@ -80,7 +81,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="portal.featured">
+		<service name="portal.featured" xmlapi="true">
 			<class name=".guiservices.metadata.GetRandom">
 				<param name="maxItems"           value="1" />
 				<param name="timeBetweenUpdates" value="10" />
@@ -91,7 +92,7 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="portal.categories">
+		<service name="portal.categories" xmlapi="true">
 			<class name=".services.category.List"/>
 
 			<output sheet="portal-categories.xsl" contentType="text/xml; charset=UTF-8"/>
@@ -99,30 +100,14 @@
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="portal.sources">
+		<service name="portal.sources" xmlapi="true">
 			<output sheet="portal-sources.xsl" contentType="text/xml; charset=UTF-8">
 				<call name="sources"  class=".guiservices.util.Sources"/>
 			</output>
 		</service>
-	  
-		<service name="logo">
-			<output sheet="admin-logo.xsl"/>
-		</service>
-		
-		<service name="logo.add">
-			<class name=".services.logo.Add"/>
-			<output sheet="admin-logo-add.xsl" contentType="text/html; charset=UTF-8"/>
-		</service>
-
-		<service name="logo.delete">
-			<class name=".services.logo.Delete"/>
-		</service>
-		
-		<service name="logo.set">
-			<class name=".services.logo.Set"/>
-		</service>
 
 		<service name="get.conversions.xsl">
+      <!-- TODO : Rename and uupdate Catalogue.js -->
 			<class name=".guiservices.util.GetImportXSLs" />
 		</service>
 		

@@ -9,11 +9,6 @@
 	-->
 	<xsl:template match="/">
 		<html>
-			<head>
-				<xsl:call-template name="header"/>
-				<xsl:apply-templates mode="script" select="/"/>
-			</head>
-			<!-- <body onload="init()"> -->
 			<body>
 				<xsl:call-template name="content"/>
 			</body>

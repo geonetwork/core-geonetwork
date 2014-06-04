@@ -561,7 +561,7 @@
         removeFeatureCatalog: function(onlinesrc) {
           var params = {
             uuid: gnCurrentEdit.uuid,
-            uuidref: onlinesrc.uuid
+            uuidref: onlinesrc['geonet:info'].uuid
           };
           runProcess(this,
               setParams('fcats-remove', params));

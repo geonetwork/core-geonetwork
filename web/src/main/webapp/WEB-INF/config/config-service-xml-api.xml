@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+    <documentation>XML API service are Jeeves services returning XML response.
+    At some point they may be deprecated and replaced by services used
+      by AngularUI returning XML or JSON response.
+    </documentation>
+
+    <service name="xml.config.info" deprecated="true" xmlapi="true">
+      <class name=".services.config.GetInfo" />
+    </service>
+
+    <service name="xml.schema.info" xmlapi="true">
+      <class name=".services.schema.Info" />
+    </service>
+
+    <service name="xml.password.change" deprecated="true" xmlapi="true">
+      <class name=".services.password.Change" />
+      <error sheet="error-xml.xsl"/>
+    </service>
+
+    <service name="xml.metadata.admin.form">
+      <class name=".services.metadata.GetAdminOper" />
+    </service>
+
+
+    <service name="xml.region.get" deprecated="true" xmlapi="true">
+      <class name=".services.region.Get" />
+
+      <error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
+        <xml name="error" file="xml/file-not-found-error.xml" />
+      </error>
+    </service>
+
+    <service name="xml.regions.list" deprecated="true" xmlapi="true">
+      <class name=".services.region.List" />
+    </service>
+
+    <service name="xml.regions.category.list" deprecated="true" xmlapi="true">
+      <class name=".services.region.ListCategories" />
+    </service>
+
+    <service name="xml.file.disclaimer" xmlapi="true">
+      <class name=".services.feedback.AddLimitations" />
+    </service>
+
+    <service name="xml.file.download" xmlapi="true">
+      <class name=".services.feedback.Insert" />
+      <output forward="resources.get.archive" />
+    </service>
+
+
+    <service name="xml.search" xmlapi="true">
+      <class name=".services.main.XmlSearch" />
+
+      <output sheet="portal-present.xsl" contentType="application/xml; charset=UTF-8" />
+
+      <error id="search-error" sheet="error-xml.xsl" statusCode="500"/>
+    </service>
+
+    <service name="xml.metadata.get" xmlapi="true">
+      <class name=".services.metadata.Show">
+        <param name="skipPopularity" value="y" />
+        <param name="skipInfo" value="y" />
+      </class>
+    </service>
+
+    <service name="xml.info" xmlapi="true">
+      <class name=".services.main.Info" />
+    </service>
+
+
+    <service name="xml.user.list" deprecated="true" xmlapi="true">
+      <class name=".services.user.List" />
+    </service>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <service name="xml.usergroups.list" deprecated="true" xmlapi="true">
+      <class name=".services.user.UserGroups" />
+    </service>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <service name="xml.group.list" deprecated="true" xmlapi="true">
+      <class name=".services.group.List" />
+    </service>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <service name="xml.metadata.insert" deprecated="true" xmlapi="true">
+      <class name=".services.metadata.Insert" />
+    </service>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <service name="xml.metadata.delete" deprecated="true" xmlapi="true">
+      <class name=".services.metadata.Delete" />
+    </service>
+
+    <service name="xml.relation" deprecated="true" xmlapi="true">
+      <class name=".guiservices.metadata.GetRelated" />
+      <output sheet="metadata/relation.xsl" contentType="text/xml; charset=UTF-8" />
+    </service>
+
+    <service name="xml.relation.get" xmlapi="true">
+      <class name=".services.relations.Get" />
+
+      <output sheet="portal-present.xsl" contentType="text/xml; charset=UTF-8">
+        <call name="sources" class=".guiservices.util.Sources" />
+      </output>
+    </service>
+
+    <service name="xml.relation.insert" xmlapi="true">
+      <class name=".services.relations.Insert" />
+    </service>
+
+    <service name="xml.relation.delete" xmlapi="true">
+      <class name=".services.relations.Remove" />
+    </service>
+
+
+    <service name="xml.metadata.insert.paste" xmlapi="true">
+      <class name=".services.metadata.Insert" />
+      <error sheet="error-xml.xsl" />
+    </service>
+
+    <service name="xml.metadata.validate" deprecated="true" xmlapi="true">
+      <class name=".services.metadata.Validate" />
+      <output sheet="metadata/validate.xsl" contentType="text/xml; charset=UTF-8">
+        <xml name="validation" file="xml/metadata-validate.xml" />
+      </output>
+    </service>
+
+    <service name="xml.metadata.batch.admin.form" deprecated="true" xmlapi="true">
+      <class name=".services.metadata.PrepareBatchUpdatePrivileges" />
+    </service>
+
+    <service name="xml.metadata.batch.update.privileges" deprecated="true" xmlapi="true">
+      <class name=".services.metadata.BatchUpdatePrivileges" />
+    </service>
+
+    <service name="xml.metadata.processing" xmlapi="true">
+      <class name=".services.metadata.XslProcessing" />
+      <error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
+    </service>
+
+    <service name="xml.metadata.status.set" xmlapi="true">
+      <class name=".services.metadata.UpdateStatus" />
+    </service>
+
+    <service name="xml.metadata.status.get" xmlapi="true">
+      <class name=".services.status.Get" />
+    </service>
+
+    <service name="xml.metadata.rate" xmlapi="true">
+      <class name=".services.metadata.Rate" />
+    </service>
+
+
+    <service name="xml.user.metadata" xmlapi="true">
+      <class name=".guiservices.metadata.GetByOwner" />
+    </service>
+
+
+    <service name="xml.search.keywords" type="xml" deprecated="true" xmlapi="true">
+      <class name=".services.thesaurus.GetKeywords"/>
+    </service>
+
+    <service name="xml.search.keywordlink" type="xml" deprecated="true" xmlapi="true">
+      <class name=".services.thesaurus.GetNarrowerBroader"/>
+      <output sheet="thesaurus/thesaurus-autosearchlist.xsl"/>
+    </service>
+
+    <service name="xml.keyword.get" type="xml" deprecated="true" xmlapi="true">
+      <documentation>
+        transformation: Name of the template to use to return the keyword (eg. to-iso19139-with-anchor).
+        keywordOnly: Skip thesaurus citation section if defined (default no).
+
+      </documentation>
+      <class name=".services.thesaurus.GetKeywordById"/>
+      <output sheet="thesaurus/convert.xsl">
+        <call name="thesaurus" class=".services.thesaurus.GetList" />
+      </output>
+    </service>
+    <service name="xml.thesaurus.getList" type="xml" deprecated="true" xmlapi="true">
+      <documentation xml:lang="en">
+        Get list of available thesaurus
+      </documentation>
+      <class name=".services.thesaurus.GetList"/>
+    </service>
+
+  </services>
+</geonet>

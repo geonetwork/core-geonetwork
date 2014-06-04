@@ -5,7 +5,7 @@
     
     <!--  Note CSV export to a file for statistics tables, through a Jeeves service => 
           all tables data are loaded into memory before their processing -->
-    <service name="stat.tableExport">
+    <service name="statistics-search-export">
       <documentation>CSV export for statistics tables</documentation>
       <output sheet="../xslt/services/statistics/to-csv_from_java.xsl"
         contentType="text/plain; charset=UTF-8">

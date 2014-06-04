@@ -128,7 +128,7 @@
     <service name="resources.del.new">
       <class name=".services.resources.Remove"/>
 
-      <error id="file-not-found" sheet="error.xsl" statusCode="404">
+      <error id="file-not-found" sheet="../xslt/common/error.xsl" statusCode="404">
         <xml name="error" file="xml/file-not-found-error.xml"/>
       </error>
 
@@ -140,7 +140,7 @@
 
       <output forward="edit"/>
 
-      <error id="client" sheet="metadata-error.xsl"/>
+      <error id="client" sheet="../xslt/error/error-xml.xsl"/>
     </service>
 
     <service name="resources.upload.new">
@@ -163,7 +163,7 @@
 
       <output forward="edit"/>
 
-      <error id="client" sheet="metadata-error.xsl"/>
+      <error id="client" sheet="../xslt/error/error-xml.xsl"/>
     </service>
 
 

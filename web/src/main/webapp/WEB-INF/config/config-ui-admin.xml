@@ -42,6 +42,15 @@
             </output>
         </service>
 
+        <service name="service-not-allowed">
+            <documentation><![CDATA[
+            When a user try to request a service which does not exist.
+            ]]></documentation>
+            <output sheet="../xslt/ui/service-not-allowed.xsl">
+                <xml name="i18n" file="xml/i18n.xml"/>
+            </output>
+        </service>
+
         <service name="new.password">
             <documentation><![CDATA[
                 Change user password page.
