@@ -1,20 +1,31 @@
 package org.fao.geonet.services.user;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.xml.bind.JAXBElement;
+
 import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
-import org.fao.geonet.domain.*;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.domain.Address;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.responses.UserList;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.GroupRepositoryTest;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.UserRepositoryTest;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Test listing a user service.
@@ -55,18 +66,17 @@ public class UserListIntegrationTest extends AbstractServiceIntegrationTest {
         UserSession userSession = new UserSession();
         userSession.loginAs(editor);
         serviceContext.setUserSession(userSession);
-        Element params = createParams();
-        final Element response = listService.exec(params, serviceContext);
+        final UserList response = listService.exec();
 
-        java.util.List<?> records = Xml.selectNodes(response, "record");
-        assertEquals("Expected to find a record in: "+Xml.getString(response), 1, records.size());
-        assertEquals(Jeeves.Elem.RESPONSE, response.getName());
+        java.util.List<JAXBElement<? extends User>> records = response.getUsers();
+        assertEquals("Expected to find a record.", 1, records.size());
+        
+        User user = records.get(0).getValue();
 
-        assertEqualsText(editor.getUsername(), response, "record/username");
-        assertEqualsText(editor.getPrimaryAddress().getAddress(), response, "record/addresses/address/address");
-        assertEqualsText(editor.getPrimaryAddress().getAddress(), response, "record/primaryaddress/address");
-        assertEqualsText(editor.getProfile().name(), response, "record/profile");
-        assertEqualsText(editor.getEmailAddresses().iterator().next(), response, "record/emailaddresses/emailaddress");
+        assertEquals(editor.getUsername(), user.getUsername(), "record/username");
+        assertEquals(editor.getPrimaryAddress().getAddress(), user.getPrimaryAddress().getAddress(), "record/primaryaddress/address");
+        assertEquals(editor.getProfile().name(), user.getProfile().name(), "record/profile");
+        assertEquals(editor.getEmailAddresses().iterator().next(), user.getEmailAddresses().iterator().next(), "record/emailaddresses/emailaddress");
     }
 
 
@@ -85,12 +95,10 @@ public class UserListIntegrationTest extends AbstractServiceIntegrationTest {
 
         userSession.loginAs(administrator);
         serviceContext.setUserSession(userSession);
-        Element params = createParams();
-        final Element response = listService.exec(params, serviceContext);
-        assertEquals(Jeeves.Elem.RESPONSE, response.getName());
+        final UserList response = listService.exec();
 
-        java.util.List<?> records = Xml.selectNodes(response, "record");
-        assertEquals("Expected to find a record in: "+Xml.getString(response), 3, records.size());
+        java.util.List<?> records = response.getUsers();
+        assertEquals("Expected to find 3 records", 3, records.size());
     }
 
     @Test
@@ -114,12 +122,10 @@ public class UserListIntegrationTest extends AbstractServiceIntegrationTest {
         userSession.loginAs(user1);
 
         serviceContext.setUserSession(userSession);
-        Element params = createParams();
-        final Element response = listService.exec(params, serviceContext);
-        assertEquals(Jeeves.Elem.RESPONSE, response.getName());
+        final UserList response = listService.exec();
 
-        java.util.List<?> records = Xml.selectNodes(response, "record");
-        assertEquals("Expected to find a record in: "+Xml.getString(response), 2, records.size());
+        java.util.List<?> records = response.getUsers();
+        assertEquals("Expected to find 2 records. ", 2, records.size());
     }
 
 }
