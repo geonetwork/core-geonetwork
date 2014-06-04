@@ -653,8 +653,24 @@ cat.app = function() {
             }
             
         });
-        
-        return searchForm;
+      app.userGroupStore = GeoNetwork.data.GroupStore(catalogue.services.getGroups);
+      app.userGroupStore.load();
+      app.getGroupLabel = function (groupId) {
+        var idx = app.userGroupStore.find('id', groupId);
+        if (idx) {
+          var record = app.userGroupStore.getAt(idx);
+          if (record) {
+            return app.userGroupStore.getAt(idx).get('labelInLang');
+          } else {
+            // The current user may not have privileges to access that group
+            // FIXME ?
+            return idx;
+          }
+
+        }
+      };
+
+      return searchForm;
     }
     
     function modalActionFn(title, urlOrPanel, cb){

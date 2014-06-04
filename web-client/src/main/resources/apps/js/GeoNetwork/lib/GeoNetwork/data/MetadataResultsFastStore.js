@@ -192,9 +192,13 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
    */
   function getPublishInGroup(v, record){
     var groups = [], temp = [];
-    if (record.publishInGroup) {
-      for (i = 0; i < record.publishInGroup.length; i++) {
-        var group = record.publishInGroup[i].value;
+    if (record.editableForGroup) {
+      for (i = 0; i < record.editableForGroup.length; i++) {
+        var group = record.editableForGroup[i].value;
+        // Sextant specific
+        if (app.getGroupLabel) {
+          group = app.getGroupLabel(group);
+        }
         if (group === 'INTERNET') {
           groups.unshift(group);
         } else {
@@ -483,7 +487,7 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
             name: 'groupOwner',
             convert: getGroupOwner
         }, {
-            name: 'publishInGroup',
+            name: 'editableForGroup',
             convert: getPublishInGroup
         }, {
             name: 'edit',
