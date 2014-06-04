@@ -52,8 +52,34 @@
             }]
           };
         }])
-  .directive('schemaInfoCombo', ['$http', 'gnSchemaManagerService',
-        function($http, gnSchemaManagerService) {
+
+  /**
+   * @ngdoc directive
+   * @name gn_form_fields_directive.directive:schemaInfoCombo
+   * @restrict A
+   * @requires gnSchemaManagerService
+   * @requires $http
+   * @requires gnCurrentEdit
+   *
+   * @description
+   * The `schemaInfoCombo` directive provides a combo box based on
+   * a codelist (<schema>/loc/<lang>/codelist.xml) or an
+   * element helper (<schema>/loc/<lang>/helper.xml) from a
+   * schema plugins.
+   *
+   * The combo initialization is made on mouseover in order to not
+   * link all combos (including hidden one) on load.
+   *
+   * The gn-schema-info-combo attribute can contains one of the
+   * registered element (which are profile dependant ie. protocol,
+   * associationType, initiativeType) or any element name with
+   * namespace prefix eg. 'gmd:protocol'.
+   *
+   * The schema used to retrieve the element info is based on
+   * the gnCurrentEdit object or 'iso19139' if not defined.
+   */
+  .directive('schemaInfoCombo', ['$http', 'gnSchemaManagerService', 'gnCurrentEdit',
+        function($http, gnSchemaManagerService, gnCurrentEdit) {
           return {
             restrict: 'A',
             replace: true,
@@ -65,8 +91,24 @@
               allowBlank: '@'
             },
             link: function(scope, element, attrs) {
-              var config = 'iso19139|' + attrs['gnSchemaInfo'] + '|||';
+              var initialized = false;
               var defaultValue;
+
+              // Define codelist element according to schema
+              var elementsMap = {
+                protocol: {
+                  'iso19139': 'gmd:protocol',
+                  'iso19115-3': 'cit:protocol'
+                },
+                associationType: {
+                  'iso19139': 'gmd:DS_AssociationTypeCode',
+                  'iso19115-3': 'mri:DS_AssociationTypeCode'
+                },
+                initiativeType: {
+                  'iso19139': 'gmd:DS_InitiativeTypeCode',
+                  'iso19115-3': 'mri:DS_InitiativeTypeCode'
+                }
+              };
               var addBlankValueAndSetDefault = function() {
                 var blank = {label: '', code: ''};
                 if (scope.infos != null && scope.allowBlank !== undefined) {
@@ -88,9 +130,16 @@
                 // on top of the list.
               };
 
-              scope.type = attrs['schemaInfoCombo'];
-              if (scope.type == 'codelist') {
-                gnSchemaManagerService.getCodelist(config).then(
+
+              var init = function () {
+                var schema = gnCurrentEdit.schema || 'iso19139';
+                var element = (elementsMap[attrs['gnSchemaInfo']] && elementsMap[attrs['gnSchemaInfo']][schema]) ||
+                  attrs['gnSchemaInfo'];
+                var config = schema + '|' + element + '|||';
+
+                scope.type = attrs['schemaInfoCombo'];
+                if (scope.type == 'codelist') {
+                  gnSchemaManagerService.getCodelist(config).then(
                     function(data) {
                       if (data !== 'null') {
                         scope.infos = [];
@@ -101,30 +150,37 @@
 
                       addBlankValueAndSetDefault();
                     });
-              }
-              else if (scope.type == 'element') {
-                gnSchemaManagerService.getElementInfo(config).then(
+                }
+                else if (scope.type == 'element') {
+                  gnSchemaManagerService.getElementInfo(config).then(
                     function(data) {
                       if (data !== 'null') {
                         scope.infos = [];
                         // Helper element may be embbeded in an option
                         // property when attributes are defined
                         angular.forEach(data[0].helper.option || data[0].helper,
-                            function(h) {
-                              scope.infos.push({
-                                code: h['@value'],
-                                label: h['#text'],
-                                description: h['@title'] || '',
-                                'default': h['@default'] == '' ?
-                                    'true' : 'false'
-                              });
+                          function(h) {
+                            scope.infos.push({
+                              code: h['@value'],
+                              label: h['#text'],
+                              description: h['@title'] || '',
+                              'default': h['@default'] == '' ?
+                                'true' : 'false'
                             });
+                          });
                       } else {
                         scope.infos = null;
                       }
                       addBlankValueAndSetDefault();
                     });
-              }
+                }
+                initialized = true;
+              };
+              element.bind('mouseover', function() {
+                if (!initialized) {
+                  init();
+                }
+              });
             }
           };
         }]);

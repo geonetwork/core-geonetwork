@@ -617,7 +617,6 @@
             templateUrl: '../../catalog/components/edit/onlinesrc/' +
                 'partials/linktosibling.html',
             link: function(scope, element, attrs) {
-
               scope.popupid = attrs['gnLinkToSibling'];
 
               /**
@@ -626,6 +625,7 @@
                */
               gnOnlinesrc.register('sibling', function() {
                 $(scope.popupid).modal('show');
+
                 scope.$broadcast('resetSearch');
                 scope.selection = [];
               });
