@@ -41,9 +41,11 @@
 
 	  <bean id="cnManager"  
 	    class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">  
-		  <property name="favorPathExtension" value="true"/>  
-		  <property name="ignoreAcceptHeader" value="true" />  
-		  <property name="defaultContentType" value="application/json" />  
+		  <property name="favorPathExtension" value="false"/>  
+		  <property name="ignoreAcceptHeader" value="true" /> 
+		  <property name="favorParameter" value="true"/>
+		  <property name="parameterName" value="format"/>
+		  <property name="defaultContentType" value="xml" />  
 		  <property name="useJaf" value="false"/>  
 		  
 		  <property name="mediaTypes">  
