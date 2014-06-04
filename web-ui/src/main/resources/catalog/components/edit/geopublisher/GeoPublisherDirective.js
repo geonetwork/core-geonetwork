@@ -132,11 +132,11 @@
                *
                * @param {Object} gsNode
                */
-              var buildLayerName = function (gsNode) {
+              var buildLayerName = function(gsNode) {
                 // Append prefix for GeoServer.
                 if (gsNode && !isMRA(gsNode)) {
                   scope.wmsLayerName = gsNode.namespacePrefix +
-                    ':' + scope.wmsLayerName;
+                      ':' + scope.wmsLayerName;
                 }
               };
 
