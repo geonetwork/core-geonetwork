@@ -614,6 +614,9 @@ cat.app = function() {
                     item.setVisible(!item.disabled);
                     if(!Ext.isIE) // temp
                         whatForm.body && whatForm.body.removeClass('hidden');
+
+
+                    Ext.getCmp('radiogroup').doLayout()
                 });
                 cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced') && cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced').hide();
                 cpt.ownerCt.header.child('#searchFormHeaderLinksimple') && cpt.ownerCt.header.child('#searchFormHeaderLinksimple').show();

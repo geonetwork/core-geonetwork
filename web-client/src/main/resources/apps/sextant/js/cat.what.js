@@ -289,6 +289,7 @@ cat.what = function() {
       }
       var radioGroup = new Ext.form.RadioGroup({
           columns: radios.length,
+          id: 'radiogroup',
           fieldLabel: OpenLayers.i18n('Themes'),
           items: radios,
           reset: Ext.emptyFn
@@ -341,9 +342,6 @@ cat.what = function() {
         value: 'dataset or series or publication or nonGeographicDataset or feature or featureCatalog'
       });
       advancedFields.push(radioGroup, catalogueField);
-      Ext.each(radios, function (item) {
-        advancedFields.push(item);
-      });
       Ext.each(thesaurusFields, function (item) {
         advancedFields.push(item);
       });
