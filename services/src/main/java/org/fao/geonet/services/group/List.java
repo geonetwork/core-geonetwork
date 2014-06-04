@@ -24,9 +24,6 @@
 package org.fao.geonet.services.group;
 
 import static org.springframework.data.jpa.domain.Specifications.not;
-
-import java.util.LinkedList;
-
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -36,8 +33,6 @@ import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.specification.GroupSpecs;
 import org.jdom.Element;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 //=============================================================================
 
@@ -45,7 +40,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Retrieves all groups in the system
  */
 
-@Controller
 public class List implements Service {
 	public void init(String appPath, ServiceConfig params) throws Exception {
 	}
@@ -68,19 +62,6 @@ public class List implements Service {
 
 		return elRes.setName(Jeeves.Elem.RESPONSE);
 	}
-
-	@RequestMapping(value = "/{lang}/xml.info")
-	@ResponseBody
-    public java.util.List<String> mvc() {
-    	
-    	LinkedList<String> dummy = new LinkedList<String>();
-    	dummy.add("dummy1");
-    	dummy.add("dummy2");
-    	dummy.add("dummy3");
-    	dummy.add("dummy4");
-    	return dummy;
-    	
-    }
 }
 
 // =============================================================================
