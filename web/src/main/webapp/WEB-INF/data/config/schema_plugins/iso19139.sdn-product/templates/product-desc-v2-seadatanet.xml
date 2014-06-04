@@ -384,6 +384,37 @@
 			<gmd:featureCatalogueCitation/>
 		</gmd:MD_FeatureCatalogueDescription>
 	</gmd:contentInfo>
+	<gmd:distributionInfo xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:date="http://exslt.org/dates-and-times" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<gmd:MD_Distribution>
+			<!-- DOI part -->
+			<gmd:distributor>
+				<gmd:MD_Distributor>
+					<gmd:distributorContact/>
+					<gmd:distributorFormat/>
+					<gmd:distributorTransferOptions>
+						<gmd:MD_DigitalTransferOptions>
+							<gmd:onLine>
+								<gmd:CI_OnlineResource>
+									<gmd:linkage>
+										<gmd:URL>DOI URL</gmd:URL>
+									</gmd:linkage>
+									<gmd:protocol>
+										<gco:CharacterString>WWW:LINK-1.0-http--metadata-URL</gco:CharacterString>
+									</gmd:protocol>
+									<gmd:description>
+										<gco:CharacterString>Point of truth URL of this metadata record</gco:CharacterString>
+									</gmd:description>
+									<gmd:function>
+										<gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_OnL                                                                 ineFunctionCode" codeListValue=""/>
+									</gmd:function>
+								</gmd:CI_OnlineResource>
+							</gmd:onLine>
+						</gmd:MD_DigitalTransferOptions>
+					</gmd:distributorTransferOptions>
+				</gmd:MD_Distributor>
+			</gmd:distributor>
+		</gmd:MD_Distribution>
+	</gmd:distributionInfo>
 	<!-- MANDATORY: constant, for INSPIRE compliance -->
 	<gmd:dataQualityInfo>
 		<gmd:DQ_DataQuality>
