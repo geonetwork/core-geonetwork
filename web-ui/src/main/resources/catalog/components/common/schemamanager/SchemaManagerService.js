@@ -13,7 +13,8 @@
     gss: 'http://www.isotc211.org/2005/gss',
     gts: 'http://www.isotc211.org/2005/gts',
     srv: 'http://www.isotc211.org/2005/srv',
-    xlink: 'http://www.w3.org/1999/xlink'
+    xlink: 'http://www.w3.org/1999/xlink',
+    mri: 'http://www.isotc211.org/2005/mri/1.0/2013-06-24'
   });
 
   /**
