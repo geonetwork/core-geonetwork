@@ -16,6 +16,28 @@
     xlink: 'http://www.w3.org/1999/xlink'
   });
 
+  /**
+   * Map of elements used when retrieving codelist
+   * according to the metadata schema.
+   */
+  module.value('gnElementsMap', {
+    protocol: {
+      'iso19139': 'gmd:protocol',
+      'iso19115-3': 'cit:protocol'
+    },
+    roleCode: {
+      'iso19139': 'gmd:CI_RoleCode',
+      'iso19115-3': 'cit:CI_RoleCode'
+    },
+    associationType: {
+      'iso19139': 'gmd:DS_AssociationTypeCode',
+      'iso19115-3': 'mri:DS_AssociationTypeCode'
+    },
+    initiativeType: {
+      'iso19139': 'gmd:DS_InitiativeTypeCode',
+      'iso19115-3': 'mri:DS_InitiativeTypeCode'
+    }
+  });
 
   module.factory('gnSchemaManagerService',
       ['$q', '$http', '$cacheFactory',

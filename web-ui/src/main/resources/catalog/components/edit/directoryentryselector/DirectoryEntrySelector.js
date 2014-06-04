@@ -19,11 +19,11 @@
       ['$rootScope', '$timeout', '$q', '$http',
         'gnEditor', 'gnSchemaManagerService',
         'gnEditorXMLService', 'gnHttp', 'gnConfig',
-        'gnCurrentEdit', 'gnConfigService',
+        'gnCurrentEdit', 'gnConfigService', 'gnElementsMap',
         function($rootScope, $timeout, $q, $http, 
             gnEditor, gnSchemaManagerService, 
             gnEditorXMLService, gnHttp, gnConfig, 
-            gnCurrentEdit, gnConfigService) {
+            gnCurrentEdit, gnConfigService, gnElementsMap) {
 
          return {
            restrict: 'A',
@@ -33,6 +33,7 @@
              elementName: '@',
              elementRef: '@',
              domId: '@',
+             tagName: '@',
              templateAddAction: '@'
            },
            templateUrl: '../../catalog/components/edit/' +
@@ -50,7 +51,9 @@
 
              // Search only for contact subtemplate
              scope.params = {
-               _root: 'gmd:CI_ResponsibleParty',
+               // TODO : sThis could use gnElementsMap to get the
+               // element name and if not available default to tagName.
+               _root: scope.tagName || 'gmd:CI_ResponsibleParty',
                _isTemplate: 's',
                fast: 'false'
              };
@@ -121,9 +124,9 @@
                return false;
              };
 
-             // TODO: Schema should be a parameter
              gnSchemaManagerService
-             .getCodelist('iso19139|gmd:CI_RoleCode')
+             .getCodelist(gnCurrentEdit.schema + '|' +
+                 gnElementsMap['roleCode'][gnCurrentEdit.schema])
              .then(function(data) {
                scope.roles = data[0].entry;
              });
