@@ -45,7 +45,7 @@
 		  <property name="ignoreAcceptHeader" value="true" /> 
 		  <property name="favorParameter" value="true"/>
 		  <property name="parameterName" value="format"/>
-		  <property name="defaultContentType" value="xml" />  
+		  <property name="defaultContentType" value="application/xml" />  
 		  <property name="useJaf" value="false"/>  
 		  
 		  <property name="mediaTypes">  
