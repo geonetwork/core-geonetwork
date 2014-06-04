@@ -33,10 +33,13 @@
  	<bean id="urlLocaleChangeInterceptor" class="org.fao.geonet.i18n.UrlLocaleChangeInterceptor">
  		<property name="urlPosition" value="0" />
  	</bean>
- 
+
+    <bean id="readWriteMvcInterceptor" class="jeeves.config.springutil.ReadOnlyMvcInterceptor" />
+
  	<mvc:interceptors>
  		<ref bean="localeChangeInterceptor" />
  		<ref bean="urlLocaleChangeInterceptor" />
+ 		<ref bean="readWriteMvcInterceptor" />
  	</mvc:interceptors>
 
 	  <bean id="cnManager"  
