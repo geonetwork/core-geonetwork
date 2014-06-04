@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<geonet>
+  <services package="org.fao.geonet">
+
+    <service name="shib.user.login">
+      <class name=".services.login.ShibLogin" />
+
+      <output forward="home" />
+
+      <error id="user-login" sheet="../xslt/common/error.xsl" statusCode="401">
+        <xml name="error" file="xml/login-error.xml" />
+      </error>
+    </service>
+  </services>
+</geonet>

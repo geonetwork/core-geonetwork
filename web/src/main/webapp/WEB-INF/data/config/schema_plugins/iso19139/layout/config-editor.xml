@@ -54,11 +54,21 @@
 
     <for name="gmd:referenceSystemInfo" addDirective="data-gn-crs-selector"/>
 
-    <for name="gmd:contact" addDirective="data-gn-directory-entry-selector"/>
-    <for name="gmd:pointOfContact" addDirective="data-gn-directory-entry-selector"/>
-    <for name="gmd:distributor" addDirective="data-gn-directory-entry-selector"/>
-    <for name="gmd:processor" addDirective="data-gn-directory-entry-selector"/>
-    <for name="gmd:citedResponsibleParty" addDirective="data-gn-directory-entry-selector"/>
+    <for name="gmd:contact" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes data-tag-name="gmd:CI_ResponsibleParty"/>
+    </for>
+    <for name="gmd:pointOfContact" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes data-tag-name="gmd:CI_ResponsibleParty"/>
+    </for>
+    <for name="gmd:distributor" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes data-tag-name="gmd:CI_ResponsibleParty"/>
+    </for>
+    <for name="gmd:processor" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes data-tag-name="gmd:CI_ResponsibleParty"/>
+    </for>
+    <for name="gmd:citedResponsibleParty" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes data-tag-name="gmd:CI_ResponsibleParty"/>
+    </for>
     
     <for name="gmd:descriptiveKeywords" addDirective="data-gn-thesaurus-selector"/>
   </fields>

@@ -295,6 +295,13 @@ public class SettingManager {
        setValue(SYSTEM_SITE_SITE_ID_PATH, siteUuid);
     }
 
+    /**
+     * Return complete site URL including language
+     * eg. http://localhost:8080/geonetwork/srv/eng
+     *
+     * @param context
+     * @return
+     */
     public @Nonnull String getSiteURL(@Nonnull ServiceContext context) {
         String lang = context.getLanguage();
         if(lang == null) {

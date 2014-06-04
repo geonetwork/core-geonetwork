@@ -37,7 +37,7 @@
   
   <!-- TODO : retrieve local copy -->
   <xsl:variable name="inspire-thesaurus"
-    select="document(concat(system-property(concat(substring-after($baseUrl, '/'), '.codeList.dir')), '/external/thesauri/theme/inspire-theme.rdf'))"/>
+    select="document(concat('file:///', replace(system-property(concat(substring-after($baseUrl, '/'), '.codeList.dir')), '\\', '/'), '/external/thesauri/theme/inspire-theme.rdf'))"/>
   <!--<xsl:variable name="inspire-thesaurus"
     select="document('http://geonetwork.svn.sourceforge.net/svnroot/geonetwork/utilities/gemet/thesauri/inspire-theme.rdf')"/>-->
   
@@ -51,7 +51,7 @@
     for that process -->
   <xsl:template name="analyze-inspire-add-conformity">
     <xsl:param name="root"/>
-    
+
     <!-- TODO : PT_FreeText ? -->
     <xsl:variable name="inspire-theme-found"
       select="count($inspire-thesaurus//skos:Concept[skos:prefLabel = $root//gmd:keyword/gco:CharacterString])"/>

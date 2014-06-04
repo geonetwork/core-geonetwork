@@ -20,7 +20,7 @@
       <class name=".services.metadata.format.ListFormatters">
         <param name="user_xsl_dir" value="user_xsl" />
       </class>
-      <error id="illegal-params" sheet="metadata-error.xsl"/>
+      <error id="illegal-params" sheet="../xslt/error/error-xml.xsl"/>
     </service>
     
     <service name="md.formatter.remove">
@@ -30,7 +30,7 @@
       <class name=".services.metadata.format.Remove">
         <param name="user_xsl_dir" value="user_xsl" />
       </class>
-      <error id="illegal-params" sheet="metadata-error.xsl"/>
+      <error id="illegal-params" sheet="../xslt/error/error-xml.xsl"/>
     </service>
     
     <service name="md.formatter.download">
@@ -41,7 +41,7 @@
         <param name="user_xsl_dir" value="user_xsl" />
       </class>
       <output file="true" />
-      <error id="illegal-params" sheet="metadata-error.xsl"/>
+      <error id="illegal-params" sheet="../xslt/error/error-xml.xsl"/>
     </service>
     
     
@@ -52,7 +52,7 @@
       <class name=".services.metadata.format.ListBundleFiles">
         <param name="user_xsl_dir" value="user_xsl" />
       </class>
-      <error id="illegal-params" sheet="metadata-error.xsl"/>
+      <error id="illegal-params" sheet="../xslt/error/error-xml.xsl"/>
     </service>
     
     <service name="md.formatter.edit">
@@ -62,7 +62,7 @@
       <class name=".services.metadata.format.EditFile">
         <param name="user_xsl_dir" value="user_xsl" />
       </class>
-      <error id="illegal-params" sheet="metadata-error.xsl"/>
+      <error id="illegal-params" sheet="../xslt/error/error-xml.xsl"/>
     </service>
     
     <service name="md.formatter.update">
@@ -78,7 +78,7 @@
       <class name=".services.metadata.format.UpdateFile">
         <param name="user_xsl_dir" value="user_xsl" />
       </class>
-      <error id="illegal-params" sheet="metadata-error.xsl"/>
+      <error id="illegal-params" sheet="../xslt/error/error-xml.xsl"/>
     </service>
     
     <service name="md.formatter.resource">
@@ -89,7 +89,7 @@
         <param name="user_xsl_dir" value="user_xsl" />
       </class>
       <output file="true" />
-      <error id="illegal-params" sheet="metadata-error.xsl"/>
+      <error id="illegal-params" sheet="../xslt/error/error-xml.xsl"/>
     </service>
     
     <service name="md.formatter.html">
@@ -104,7 +104,7 @@
         <param name="user_xsl_dir" value="user_xsl" />
       </class>
       <output sheet="../xslt/ui-metadata/formatter/identity.xsl"/>
-      <error id="illegal-params" sheet="metadata-error.xsl"/>
+      <error id="illegal-params" sheet="../xslt/error/error-xml.xsl"/>
     </service>
     
     <service name="md.formatter.xml">
@@ -114,7 +114,7 @@
       <class name=".services.metadata.format.Format">
         <param name="user_xsl_dir" value="user_xsl" />
       </class>
-      <error id="illegal-params" sheet="metadata-error.xsl"/>
+      <error id="illegal-params" sheet="../xslt/error/error-xml.xsl"/>
     </service>
     
     <service name="md.formatter.pdf">
@@ -126,7 +126,8 @@
       </class>
       <class name=".services.metadata.format.PDF"/>
       <output file="true"/>
-      <error id="illegal-params" sheet="metadata-error.xsl"/>
+      <error id="illegal-params" sheet="../xslt/error/error-xml.xsl"/>
     </service>
+
   </services>
 </geonet>
