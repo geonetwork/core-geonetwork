@@ -93,7 +93,7 @@
 							value="{gco:Measure}"/>
 
 
-            <xsl:variable name="options" as="xs:string*" select="'day', 'month', 'year'"/>
+            <xsl:variable name="options" as="xs:string*" select="'day', 'month', 'season', 'year'"/>
             <xsl:variable name="uom" select="gco:Measure/@uom"/>
 
 						<select  class="md" name="_{$ref}_uom" id="_{$ref}_uom" style="width: inherit; margin-top: 0;">
