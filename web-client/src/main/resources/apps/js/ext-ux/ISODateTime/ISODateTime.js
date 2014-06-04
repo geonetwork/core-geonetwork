@@ -33,6 +33,7 @@ Ext.ux.form.ISODateTime = Ext.extend(Ext.form.Field, {
 		 * http://momentjs.com/docs/#/parsing/string-format/
      */
      hiddenFormat: 'YYYY-MM-DDTHH:mm:ss'
+		 ,hiddenTimeFormats: "HH:mm|HH:mm:ss|HH:mm:ss.S|HH:mm:ss.SS|HH:mm:ss.SSS|hh:mm|hh:mm:ss|hh:mm:ss.S|hh:mm:ss.SS|hh:mm:ss.SSS"
     /**
      * @cfg {Function} dateValidator A custom validation function to be called during date field
      * validation (defaults to null)
@@ -239,7 +240,7 @@ Ext.ux.form.ISODateTime = Ext.extend(Ext.form.Field, {
      * @private initializes internal dateValue
      */
     ,initDateValue:function() {
-        this.dateValue = new moment('9999-99-99'); // make it invalid
+        this.dateValue = moment.utc('9999-99-99'); // make it invalid
     }
     // }}}
     // {{{
@@ -342,8 +343,7 @@ Ext.ux.form.ISODateTime = Ext.extend(Ext.form.Field, {
      * @return {Date/String} Returns value of this field
      */
     ,getValue:function() {
-				// probably should return Javascript Date object
-        return this.dateValue.isValid() ? this.dateValue.format(this.hiddenFormat) : '';
+        return (this.dateValue && this.dateValue.isValid()) ? this.dateValue.format(this.hiddenFormat) : '';
     } // eo function getValue
     // }}}
     // {{{
@@ -465,7 +465,9 @@ Ext.ux.form.ISODateTime = Ext.extend(Ext.form.Field, {
      */
     ,setDate:function(date) {
 				if (date === '') this.df.setValue(date);
-				else this.df.setValue(date.toDate());
+				else {
+					this.df.setValue(date.format('YYYY-MM-DD'));
+				}
     } // eo function setDate
     // }}}
     // {{{
@@ -475,7 +477,7 @@ Ext.ux.form.ISODateTime = Ext.extend(Ext.form.Field, {
     ,setTime:function(date) {
 				if (date === '') this.tf.setValue(date);
 				else {
-        	this.tf.setValue(date.toDate());
+        	this.tf.setValue(date.format('HH:mm'));
 				}
     } // eo function setTime
     // }}}
@@ -516,25 +518,25 @@ Ext.ux.form.ISODateTime = Ext.extend(Ext.form.Field, {
     ,setValue:function(val) {
 
         if(!val && true === this.emptyToNow) {
-            this.setValue(new Date());
+            this.dateValue = moment.utc();
             return;
         }
-        else if(!val) {
+        else if (!val) {
             this.setDate('');
             this.setTime('');
-            this.updateValue();
+            this.updateHidden();
             return;
-        }
+        } else {
+						// parse the date using moment - expect all valid ISO forms - moment
+						// will parse any ISO 8601 format without a format string
+						this.dateValue = moment.utc(val);
+				}
 
-				// parse the date using moment - expect all valid ISO forms - moment
-				// will parse any ISO 8601 format without a format string
-				var strict = true;
-				this.dateVal = moment(val);
 
-        if (this.dateVal.isValid()) {
-        	this.setDate(this.dateVal);
-        	this.setTime(this.dateVal);
-        	this.updateValue();
+        if (this.dateValue.isValid()) {
+        	this.setDate(this.dateValue);
+        	this.setTime(this.dateValue);
+        	this.updateHidden();
 				} else {
            // This is a freeform date so lets null the value.
            this.setDate('');
@@ -575,34 +577,27 @@ Ext.ux.form.ISODateTime = Ext.extend(Ext.form.Field, {
      */
     ,updateDate:function() {
 
-        var d = this.df.getValue();
+        var d = this.df.getRawValue();
         if(d) {
-            // If we parse the date and it does equal the raw value then it is 
-            // most likely a freeform value so we will use it instead
-            // If there is a time then this does not apply.
-            if (this.df.formatDate(this.df.parseDate(d))!==this.df.getRawValue()) {
-                this.dateValue = moment(this.df.getRawValue());
-            } else {
-								this.dateValue = moment(d);
-						}
+          this.dateValue = moment.utc(this.df.getRawValue());
 
-            // If we have an instance of t then this should be a valid date
-            var t = this.tf.getValue();
-            if (t) {
-								if(!(t instanceof Date)) {
-								  t = Date.parseDate(t, this.tf.format);
-								}
-                this.dateValue.hour(t.getHours());
-                this.dateValue.minute(t.getMinutes());
-                this.dateValue.second(t.getSeconds());
-            }
-            // Now update the fields.
-            this.setDate(this.dateValue);
-            this.setTime(this.dateValue);
-        }
-        else {
-            this.dateValue = moment('9999-99-99'); // make it invalid
-            this.setTime('');
+          // If the dateValue doesn't have a time (hours == 0) and we have an 
+					// instance of t then set that value of t into the dateValue
+					if (this.dateValue.hour() === 0) {
+           	var t = this.tf.getRawValue();
+           	if (t) {
+								t = moment.utc(t, this.hiddenTimeFormats.split('|'));	
+               	this.dateValue.hour(t.hour());
+               	this.dateValue.minute(t.minute());
+               	this.dateValue.second(t.second());
+           	}
+					}
+          // Now update the fields.
+          this.setDate(this.dateValue);
+          this.setTime(this.dateValue);
+        } else {
+          this.dateValue = moment.utc('9999-99-99'); // make it invalid
+          this.setTime('');
         }
     } // eo function updateDate
     // }}}
@@ -612,30 +607,31 @@ Ext.ux.form.ISODateTime = Ext.extend(Ext.form.Field, {
      * Updates the time part
      */
     ,updateTime:function() {
-        var t = this.tf.getValue();
+        var t = this.tf.getRawValue();
 
-        // Need to call updateDate as this will make sure that the date is in the correct format.
-        if(t && t!== null && t.trim() != '' && !(this.dateValue.isValid()) && t) {
+        // Need to call updateDate as this will make sure that dateValue is in 
+				// ready to accept the time we parse here
+        if(t && t!== null && (t.trim() != '') && !(this.dateValue.isValid())) {
            this.updateDate();
         }
-        if(t && !(t instanceof Date)) {
-            t = Date.parseDate(t, this.tf.format);
-        }
-        if(t && !this.df.getValue()) {
+        if(t && !this.df.getRawValue()) {
             this.initDateValue();
             this.setDate(this.dateValue);
         }
         if(this.dateValue.isValid()) {
-            if(t) {
-                this.dateValue.hour(t.getHours());
-                this.dateValue.minute(t.getMinutes());
-                this.dateValue.second(t.getSeconds());
+            if (t) {
+								t = moment.utc(t, this.hiddenTimeFormats.split('|'));	
+                this.dateValue.hour(t.hour());
+                this.dateValue.minute(t.minute());
+                this.dateValue.second(t.second());
             }
             else {
                 this.dateValue.hour(0);
                 this.dateValue.minute(0);
                 this.dateValue.second(0);
             }
+          	// Now update the field.
+          	this.setTime(this.dateValue);
         }
     } // eo function updateTime
     // }}}
