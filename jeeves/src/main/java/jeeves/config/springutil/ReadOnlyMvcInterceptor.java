@@ -1,9 +1,11 @@
 package jeeves.config.springutil;
 
 import jeeves.services.ReadWriteController;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,11 +18,21 @@ import javax.servlet.http.HttpServletResponse;
  * @author Jesse on 6/4/2014.
  */
 public class ReadOnlyMvcInterceptor extends HandlerInterceptorAdapter {
+    public static final String SERVLET_CONTEXT_ATTR_KEY = "readOnlyMode";
+
+    @Autowired
+    ServletContext servletContext;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
-            if (handlerMethod.getBean() != null &&
+            Boolean isReadOnly = (Boolean) servletContext.getAttribute(SERVLET_CONTEXT_ATTR_KEY);
+            if (isReadOnly == null) {
+                isReadOnly = false;
+            }
+            if (isReadOnly &&
+                handlerMethod.getBean() != null &&
                 handlerMethod.getBean().getClass().getAnnotation(ReadWriteController.class) != null) {
                 throw new InReadOnlyModeException(request.getPathInfo());
             }
