@@ -299,9 +299,10 @@
         <!-- Index thesaurus name to easily search for records
         using keyword from a thesaurus. -->
         <xsl:for-each select="gmd:thesaurusName/gmd:CI_Citation">
+          <xsl:variable name="thesaurusTitle"
+                        select="replace(gmd:title/gco:CharacterString/text(), ' ', '')"/>
           <xsl:variable name="thesaurusIdentifier"
                         select="gmd:identifier/gmd:MD_Identifier/gmd:code/gmx:Anchor/text()"/>
-
           <xsl:if test="$thesaurusIdentifier != ''">
             <Field name="thesaurusIdentifier"
                    string="{substring-after(
@@ -315,16 +316,17 @@
                    store="true" index="true"/>
           </xsl:if>
 
-
-          <xsl:if test="$indexAllKeywordDetails and $thesaurusIdentifier != ''">
+          <xsl:variable name="fieldName" select="if ($thesaurusIdentifier != '') then $thesaurusIdentifier else $thesaurusTitle"/>
+          <xsl:variable name="fieldNameTemp" select="if (starts-with($fieldName, 'geonetwork.thesaurus')) then substring-after(
+                              $fieldName,
+                              'geonetwork.thesaurus.') else $fieldName"/>
+          <xsl:if test="$indexAllKeywordDetails and $fieldNameTemp != ''">
             <!-- field thesaurus-{{thesaurusIdentifier}}={{keyword}} allows
             to group all keywords of same thesaurus in a field -->
             <xsl:variable name="currentType" select="string(.)"/>
             <xsl:for-each
                 select="$listOfKeywords">
-              <Field name="thesaurus-{substring-after(
-                              $thesaurusIdentifier,
-                              'geonetwork.thesaurus.')}"
+              <Field name="thesaurus-{$fieldNameTemp}"
                      string="{string(.)}"
                      store="true" index="true"/>
 
