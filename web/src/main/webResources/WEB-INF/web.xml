@@ -95,7 +95,7 @@
             /rewrite-status). Note: must start with / -->
         <init-param>
             <param-name>statusPath</param-name>
-            <param-value>/status</param-value>
+            <param-value>/rewritestatus</param-value>
         </init-param>
     </filter>
     <filter-mapping>

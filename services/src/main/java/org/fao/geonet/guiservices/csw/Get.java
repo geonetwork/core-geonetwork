@@ -22,45 +22,53 @@
 //==============================================================================
 package org.fao.geonet.guiservices.csw;
 
-import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import org.fao.geonet.domain.CswCapabilitiesInfoField;
+import org.fao.geonet.domain.responses.CswConfiguration;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepository;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-public class Get implements Service {
-
+@Controller("admin.config.csw")
+public class Get {
+    @Autowired
+    private ConfigurableApplicationContext jeevesApplicationContext;
+    @Autowired
+    private CswCapabilitiesInfoFieldRepository infoFieldRepository;
+    /*+	@Autowired
+    +	private UserGroupRepository userGroupRepo;
+    +	@Autowired
+    +	private UserRepository userRepository;
+    +
+    */
 	public void init(String appPath, ServiceConfig params) throws Exception {}
 
-	public Element exec(Element params, ServiceContext context) throws Exception {
-        SettingManager sm = context.getBean(SettingManager.class);
+    @RequestMapping(value = "/{lang}/admin.config.csw", produces = {
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody
+    CswConfiguration exec() throws Exception {
+        SettingManager sm = jeevesApplicationContext.getBean(SettingManager.class);
 
-        boolean cswEnabled = sm.getValueAsBool("system/csw/enable");
-        boolean cswMetadataPublic = sm.getValueAsBool("system/csw/metadataPublic");
+        CswConfiguration cswConfiguration = new CswConfiguration();
+
         String cswContactIdValue = sm.getValue("system/csw/contactId");
         if (cswContactIdValue == null) {
             cswContactIdValue = "-1";
         }
 
-        final CswCapabilitiesInfoFieldRepository infoFieldRepository = context.getBean(CswCapabilitiesInfoFieldRepository.class);
-        Element cswCapabilitiesConfig = infoFieldRepository.findAllAsXml();
+        java.util.List<CswCapabilitiesInfoField> capabilitiesInfoFields = infoFieldRepository.findAll(); //AsXml();
 
-        // Build response
-        Element cswEnable = new Element("cswEnable");
-        cswEnable.setText(String.valueOf(cswEnabled));
+        cswConfiguration.setCswEnabled(sm.getValueAsBool("system/csw/enable"));
+        cswConfiguration.setCswMetadataPublic(sm.getValueAsBool("system/csw/metadataPublic"));
+        cswConfiguration.setCswContactId(Integer.parseInt(cswContactIdValue));
+        cswConfiguration.setCapabilitiesInfoFields(capabilitiesInfoFields);
 
-        Element cswPublic = new Element("cswMetadataPublic");
-        cswPublic.setText(String.valueOf(cswMetadataPublic));
-
-        Element cswContactId = new Element("cswContactId");
-        cswContactId.setText(cswContactIdValue);
-
-        cswCapabilitiesConfig.addContent(cswEnable);
-        cswCapabilitiesConfig.addContent(cswPublic);
-        cswCapabilitiesConfig.addContent(cswContactId);
-        
-        return cswCapabilitiesConfig;
-	}
-
+        return cswConfiguration;
+    }
 }

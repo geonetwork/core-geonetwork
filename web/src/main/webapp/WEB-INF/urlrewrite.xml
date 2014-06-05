@@ -17,7 +17,16 @@
     
 -->
 <urlrewrite use-query-string="true" use-context="false">
-    
+
+    <!-- Rule to redirect old deprecated @json requests -->
+    <rule>
+        <from>^(.+)@json$</from>
+        <to type="permanent-redirect">%{context-path}$1?format=json</to>
+    </rule>
+    <rule>
+        <from>^(.+)@json(\?.*)$</from>
+        <to type="permanent-redirect">%{context-path}$1$2&amp;format=json</to>
+    </rule>
     <rule>
         <from>^(.*)/ar/(.*)$</from>
         <to type="permanent-redirect" last="true">%{context-path}$1/ara/$2</to>
@@ -181,12 +190,7 @@
         <from>^(.*)/rss.latest(\.*)</from>
         <to type="permanent-redirect" last="true">%{context-path}$1/rss.search?sortBy=changeDate</to>
     </rule>
-    
-    <!-- Rule to redirect old deprecated @json requests -->
-    <rule>
-        <from>^/srv/(.*)/(.*)@json</from>
-        <to type="permanent-redirect" last="true">%{context-path}/srv/$1/$2?format=json</to>
-    </rule>
+
     
     <!-- hide jsession id from google bot -->
     <outbound-rule encodefirst="true">
