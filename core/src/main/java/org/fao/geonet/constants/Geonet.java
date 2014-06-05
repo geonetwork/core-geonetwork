@@ -36,6 +36,10 @@ import java.util.List;
  * TODO javadoc.
  */
 public final class Geonet {
+	
+	//FIXME When we migrate everything and get rid of Jeeves, just use this one
+	public static final String USER_SESSION_ATTRIBUTE_KEY = Jeeves.Elem.SESSION;
+	
 	public static final String CONTEXT_NAME = "contextName";
     // TODO make this configurable
 	public static final String DEFAULT_LANGUAGE = "eng";

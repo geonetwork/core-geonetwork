@@ -24,27 +24,27 @@
 package org.fao.geonet.kernel.setting;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 import javax.annotation.Nonnull;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
 
-import org.fao.geonet.repository.LanguageRepository;
-import org.fao.geonet.repository.SortUtils;
-import org.fao.geonet.utils.Log;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.domain.Setting_;
+import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.SettingRepository;
+import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Component;
 
 /**
  * A convenience class for updating and accessing settings.  One of the primary needs of this
