@@ -625,7 +625,6 @@
                 like for projection.
                 The directive is in charge of displaying the default add button if needed.
               -->
-              <xsl:message>##= <xsl:copy-of select="$directive"/></xsl:message>
               <xsl:choose>
                 <xsl:when test="$directive/@addDirective != ''">
                   <div>
