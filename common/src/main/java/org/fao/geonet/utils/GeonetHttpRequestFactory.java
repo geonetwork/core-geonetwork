@@ -9,6 +9,7 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.config.SocketConfig;
 import org.apache.http.conn.ConnectionRequest;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.routing.HttpRoute;
@@ -22,13 +23,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.client.AbstractClientHttpResponse;
 import org.springframework.http.client.ClientHttpResponse;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.PreDestroy;
 
 /**
  * Factory interface for making different kinds of requests.  This is an interface so that tests can mock their own implementations.
@@ -205,6 +206,7 @@ public class GeonetHttpRequestFactory {
                     }
                 };
             }
+            connectionManager.setDefaultSocketConfig(SocketConfig.custom().setSoTimeout((int) TimeUnit.MINUTES.toMillis(3)).build());
             builder.setConnectionManager(nonShutdownableConnectionManager);
         }
 
