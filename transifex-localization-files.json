@@ -1,0 +1,24 @@
+{
+	"KEYVALUEJSON":[{
+		"dir" : "web-ui/src/main/resources/catalog/locales/",
+		"filename" : "core",
+		"name" : "Angular UI Common Strings",
+		"slug" : "core",
+		"priority" : "0",
+		"categories" : ["Angular_UI"]
+	},{
+		"dir" : "web-ui/src/main/resources/catalog/locales/",
+		"filename" : "admin",
+		"name" : "Angular UI Admin Strings",
+		"slug" : "admin",
+		"priority" : "0",
+		"categories" : ["Angular_UI", "admin"]
+	},{
+		"dir" : "web-ui/src/main/resources/catalog/locales/",
+		"filename" : "editor",
+		"name" : "Angular UI Editor Strings",
+		"slug" : "editor",
+		"priority" : "0",
+		"categories" : ["Angular_UI", "editor"]
+	}]
+}
