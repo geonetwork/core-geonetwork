@@ -129,7 +129,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
      * @throws Exception hmm
      */
 	private Element transformSort(Element nodes, String sortField) throws Exception {
-		Map<String,String> params = new HashMap<String,String>();
+		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("sortField", sortField);
 
 		return Xml.transform(nodes, xslPath + Geonet.File.SORT_HARVESTERS, params);

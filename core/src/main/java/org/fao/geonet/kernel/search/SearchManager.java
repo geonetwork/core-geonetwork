@@ -1134,7 +1134,7 @@ public class SearchManager {
         try {
             String defaultStyleSheet = new File(schemaDir, "index-fields.xsl").getAbsolutePath();
             String otherLocalesStyleSheet = new File(schemaDir, "language-index-fields.xsl").getAbsolutePath();
-            Map<String, String> params = new HashMap<String, String>();
+            Map<String, Object> params = new HashMap<String, Object>();
             params.put("inspire", Boolean.toString(isInspireEnabled()));
             params.put("thesauriDir", _geonetworkDataDirectory.getThesauriDir().getAbsolutePath());
             Element defaultLang = Xml.transform(xml, defaultStyleSheet, params);

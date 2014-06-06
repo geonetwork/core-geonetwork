@@ -137,7 +137,7 @@ public class Aligner extends BaseAligner
 
         dataMan.flush();
 
-        Pair<String, Map<String, String>> filter =
+        Pair<String, Map<String, Object>> filter =
                 HarvesterUtil.parseXSLFilter(params.xslfilter, log);
         processName = filter.one();
         processParams = filter.two();
@@ -483,5 +483,5 @@ public class Aligner extends BaseAligner
     private GetRecordByIdRequest request;
 
     private String processName;
-    private Map<String, String> processParams = new HashMap<String, String>();
+    private Map<String, Object> processParams = new HashMap<String, Object>();
 }
