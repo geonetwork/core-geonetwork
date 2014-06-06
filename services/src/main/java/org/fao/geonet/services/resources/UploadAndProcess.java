@@ -63,7 +63,7 @@ public class UploadAndProcess {
     @Autowired
     private DataManager dm;
 
-	@RequestMapping(value = "/{lang}/resource.upload.and.link", produces = {
+	@RequestMapping(value = {"/{lang}/resource.upload.and.link", "/{lang}/resource-onlinesrc-upload"}, produces = {
 			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody IdResponse exec(HttpServletRequest request, 
     		@RequestParam("file") MultipartFile file,

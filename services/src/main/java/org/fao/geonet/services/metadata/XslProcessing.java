@@ -93,7 +93,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  *
  * @author fxprunayre
  */
-@Controller("metadata.processing")
+@Controller("md.processing")
 @ReadWriteController
 public class XslProcessing { //extends NotInReadOnlyModeService {
     private String _appPath;
@@ -124,7 +124,7 @@ public class XslProcessing { //extends NotInReadOnlyModeService {
      * @return
      * @throws Exception
      */
-	@RequestMapping(value = "/{lang}/metadata.processing", produces = {
+	@RequestMapping(value = "/{lang}/md.processing", produces = {
 			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody Response serviceSpecificExec(@RequestParam(defaultValue= Params.PROCESS) String process, 
     		@RequestParam(defaultValue=Params.SAVE) Boolean save, 

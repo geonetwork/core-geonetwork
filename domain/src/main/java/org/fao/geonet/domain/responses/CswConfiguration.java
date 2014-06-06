@@ -10,7 +10,15 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CswConfiguration {
 
-    private boolean cswEnabled;
+    public boolean isCswEnabled() {
+		return cswEnabled;
+	}
+
+	public boolean isCswMetadataPublic() {
+		return cswMetadataPublic;
+	}
+
+	private boolean cswEnabled;
     private boolean cswMetadataPublic;
     private int cswContactId;
 
