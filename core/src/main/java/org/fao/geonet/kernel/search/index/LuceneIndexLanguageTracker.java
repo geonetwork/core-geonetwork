@@ -1,23 +1,5 @@
 package org.fao.geonet.kernel.search.index;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import javax.annotation.Resource;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.facet.taxonomy.CategoryPath;
@@ -38,8 +20,22 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkNRTManager.AcquireResult;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Keeps track of the lucene indexes that currently exist so that we don't have
@@ -47,13 +43,14 @@ import org.springframework.stereotype.Service;
  * 
  * @author jeichar
  */
-@Service
 public class LuceneIndexLanguageTracker {
 	private final Map<String, Directory> dirs = new HashMap<String, Directory>();
 	private final Map<String, TrackingIndexWriter> trackingWriters = new HashMap<String, TrackingIndexWriter>();
 	private final Map<String, GeonetworkNRTManager> searchManagers = new HashMap<String, GeonetworkNRTManager>();
+    @Autowired
 	private LuceneConfig luceneConfig;
-	private DirectoryFactory _directoryFactory;
+    @Autowired
+    private DirectoryFactory _directoryFactory;
 	private Timer commitTimer = null;
 	private TaxonomyIndexTracker taxonomyIndexTracker;
 	private final SearcherVersionTracker versionTracker = new SearcherVersionTracker();
@@ -61,15 +58,15 @@ public class LuceneIndexLanguageTracker {
 	private Lock lock = new ReentrantLock();
 	private AtomicInteger _openReaderCounter = new AtomicInteger(0);
 
-	@Autowired
-	public LuceneIndexLanguageTracker(
-			DirectoryFactory directoryFactory,
-			LuceneConfig luceneConfig) throws Exception {
-		this.luceneConfig = luceneConfig;
-		this._directoryFactory = directoryFactory;
-	}
+    public LuceneIndexLanguageTracker() {
+        // used by spring
+    }
+    public LuceneIndexLanguageTracker(FSDirectoryFactory directoryFactory, LuceneConfig luceneConfig) {
+        this._directoryFactory = directoryFactory;
+        this.luceneConfig = luceneConfig;
+    }
 
-	private void lazyInit() {
+    private void lazyInit() {
 		if (!initialized.get()) {
 			lock.lock();
 			try {

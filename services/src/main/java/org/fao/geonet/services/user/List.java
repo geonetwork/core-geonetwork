@@ -23,19 +23,7 @@
 
 package org.fao.geonet.services.user;
 
-import static org.fao.geonet.repository.specification.UserGroupSpecs.hasProfile;
-import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import jeeves.server.ServiceConfig;
-
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.User_;
@@ -53,6 +41,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasProfile;
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
 
 //=============================================================================
 

@@ -25,56 +25,56 @@ package org.fao.geonet.services.category;
 
 import com.google.common.base.Functions;
 import com.google.common.collect.Lists;
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
+import jeeves.services.ReadWriteController;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
-import org.fao.geonet.services.NotInReadOnlyModeService;
-import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
 /**
  * Removes a category from the system.
  */
-public class Remove extends NotInReadOnlyModeService {
-	public void init(String appPath, ServiceConfig params) throws Exception {
-        super.init(appPath, params);
-    }
+@Controller("admin.category.remove")
+@ReadWriteController
+public class Remove  {
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+    @Autowired
+    private MetadataCategoryRepository categoryRepository;
+    @Autowired
+    private MetadataRepository metadataRepository;
+    @Autowired
+    private DataManager dataManager;
 
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-		String id = Util.getParam(params, Params.ID);
 
-		int iId = Integer.valueOf(id);
+    @RequestMapping(value = "/{lang}/admin.category.remove", produces = {
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    @ResponseBody
+    public CategoryUpdateResponse exec(
+            @RequestParam Integer id
+    ) throws Exception {
+        if (id == null) {
+            throw new IllegalArgumentException("parameter id is required");
+        }
 
-        final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
-        final MetadataCategory category = categoryRepository.findOne(iId);
-        final List<Integer> affectedMd = context.getBean(MetadataRepository.class).findAllIdsBy(MetadataSpecs.hasCategory(category));
+        final MetadataCategory category = this.categoryRepository.findOne(id);
+        final List<Integer> affectedMd = metadataRepository.findAllIdsBy(MetadataSpecs.hasCategory(category));
 
-        categoryRepository.deleteCategoryAndMetadataReferences(iId);
+        categoryRepository.deleteCategoryAndMetadataReferences(id);
 		//--- reindex affected metadata
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dm = gc.getBean(DataManager.class);
+        dataManager.indexMetadata(Lists.transform(affectedMd, Functions.toStringFunction()));
 
-        dm.indexMetadata(Lists.transform(affectedMd, Functions.toStringFunction()));
-
-        return new Element(Jeeves.Elem.RESPONSE)
-							.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.REMOVED));
+        CategoryUpdateResponse response = new CategoryUpdateResponse();
+        response.addOperation(CategoryUpdateResponse.Operation.removed);
+        return response;
 	}
 }

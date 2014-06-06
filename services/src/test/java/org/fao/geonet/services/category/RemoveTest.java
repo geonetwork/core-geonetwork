@@ -3,13 +3,10 @@ package org.fao.geonet.services.category;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
-import org.fao.geonet.domain.Pair;
 import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.MetadataCategoryRepositoryTest;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataRepositoryTest;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
-import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -44,8 +41,7 @@ public class RemoveTest extends AbstractServiceIntegrationTest {
 
         ServiceContext context = createServiceContext();
         loginAsAdmin(context);
-        Element params = createParams(Pair.read("id", category.getId()));
-        new Remove().exec(params, context);
+        new Remove().exec(category.getId());
 
         assertEquals(beforeCount - 1, _categoryRepository.count());
         assertEquals(1, _MetadataRepository.count());
