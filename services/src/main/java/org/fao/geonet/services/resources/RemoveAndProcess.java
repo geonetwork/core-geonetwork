@@ -56,7 +56,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * reference in the metadata record.
  */
 @ReadWriteController
-@Controller
+@Controller("resource.del.and.detach")
 public class RemoveAndProcess  {
     public void init(String appPath, ServiceConfig params) throws Exception {
     }
@@ -66,7 +66,7 @@ public class RemoveAndProcess  {
     @Autowired
     private DataManager dm;
     
-	@RequestMapping(value = "/{lang}/md.processing.batch", produces = {
+	@RequestMapping(value = "/{lang}/resource.del.and.detach", produces = {
 			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody IdResponse serviceSpecificExec(HttpServletRequest request, @RequestParam(value=Params.URL) String url, 
     		@RequestParam(defaultValue="") String id, @RequestParam(defaultValue="") String uuid)

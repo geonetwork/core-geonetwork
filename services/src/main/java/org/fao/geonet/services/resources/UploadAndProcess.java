@@ -53,7 +53,7 @@ import org.springframework.web.multipart.MultipartFile;
  * 
  * Return a simple JSON response in case of success.
  */
-@Controller
+@Controller("resource.upload.and.link")
 public class UploadAndProcess {
     public void init(String appPath, ServiceConfig params) throws Exception {
     }
@@ -63,7 +63,7 @@ public class UploadAndProcess {
     @Autowired
     private DataManager dm;
 
-	@RequestMapping(value = "/{lang}/md.processing.batch", produces = {
+	@RequestMapping(value = "/{lang}/resource.upload.and.link", produces = {
 			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody IdResponse exec(HttpServletRequest request, 
     		@RequestParam("file") MultipartFile file,
