@@ -50,7 +50,7 @@ public class XmlUpdate{
     @Autowired
     private MetadataCategoryRepository categoryRepository;
 
-    @RequestMapping(value = "/{lang}/admin.category.update", produces = {
+    @RequestMapping(value = "/{lang}/admin.category.update.labels", produces = {
             MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
     public OkResponse serviceSpecificExec(@RequestBody String request) throws Exception {

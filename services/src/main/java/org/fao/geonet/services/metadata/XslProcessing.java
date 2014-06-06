@@ -39,6 +39,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.responses.IdResponse;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
@@ -50,9 +51,9 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Process a metadata with an XSL transformation declared for the metadata
@@ -119,7 +120,7 @@ public class XslProcessing { //extends NotInReadOnlyModeService {
      * @return
      * @throws Exception
      */
-    public Element serviceSpecificExec(@RequestParam(defaultValue= Params.PROCESS) String process, 
+    public @ResponseBody Response serviceSpecificExec(@RequestParam(defaultValue= Params.PROCESS) String process, 
     		@RequestParam(defaultValue=Params.SAVE) Boolean save, 
     		@RequestParam(defaultValue="") String id, 
     		@RequestParam(defaultValue="") String uuid,
@@ -144,13 +145,13 @@ public class XslProcessing { //extends NotInReadOnlyModeService {
             throw e;
         }
         // -- return the processed metadata id
-        Element response = new Element(Jeeves.Elem.RESPONSE)
-                .addContent(new Element(Geonet.Elem.ID).setText(id));
+        Response res = new Response(id);
         // and the processed metadata if not saved.
         if (!save) {
             response.addContent(new Element("record").addContent(processedMetadata));
         }
-        return response;
+        
+        return res;
 
     }
 
@@ -283,4 +284,9 @@ public class XslProcessing { //extends NotInReadOnlyModeService {
     private MetadataRepository metadataRepository;
     @Autowired
     private ServiceContext context;
+}
+
+class Response  extends IdResponse{
+	
+	
 }
