@@ -94,8 +94,8 @@
 		<help>Protocole de connexion utilisé, par exemple FTP.</help>
 		<condition />
 	<helper>
-		<option value="OGC:WMS">OGC-WMS Web Map Service</option>
-		<option value="WWW:DOWNLOAD-1.0-http--download">Fichier à télécharger</option>
+    <option value="WWW:DOWNLOAD-1.0-link--download">Télécharger (lien)</option>
+		<option value="OGC:WMS">Web Map Service (WMS)</option>
 	</helper>
   </element>
 </labels>

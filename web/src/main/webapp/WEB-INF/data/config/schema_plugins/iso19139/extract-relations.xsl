@@ -26,7 +26,7 @@
     </xsl:for-each>
 
     <xsl:choose>
-      <xsl:when test="gmd:MD_Metadata[geonet:info/schema = 'iso19139.myocean']">
+      <xsl:when test="gmd:MD_Metadata[geonet:info/schema = 'iso19139.myocean' or geonet:info/schema = 'iso19139.sdn-product']">
 
         <xsl:for-each select="*/descendant::*[name(.) = 'gmd:distributor']">
           <xsl:choose>
