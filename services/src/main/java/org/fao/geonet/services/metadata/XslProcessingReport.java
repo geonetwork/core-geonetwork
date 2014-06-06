@@ -43,6 +43,7 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
 
 import jeeves.constants.Jeeves;
+import jeeves.services.ReadWriteController;
 
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.ISODate;

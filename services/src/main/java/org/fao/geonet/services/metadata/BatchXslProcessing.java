@@ -62,7 +62,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author fxprunayre
  */
 @Controller("md.processing.batch")
-//@ReadWriteController
+@ReadWriteController
 public class BatchXslProcessing { // extends NotInReadOnlyModeService {
 	private String _appPath;
 

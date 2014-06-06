@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.services.ReadWriteController;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -50,6 +51,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -86,6 +88,8 @@ import org.springframework.web.bind.annotation.RequestParam;
  *
  * @author fxprunayre
  */
+@Controller("metadata.processing")
+@ReadWriteController
 public class XslProcessing { //extends NotInReadOnlyModeService {
     private String _appPath;
     private static XslProcessing instance;
