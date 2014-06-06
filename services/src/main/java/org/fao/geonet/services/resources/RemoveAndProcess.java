@@ -34,6 +34,7 @@ import jeeves.services.ReadWriteController;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.responses.IdResponse;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
@@ -48,6 +49,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Delete an uploaded file from the data directory and remote its
@@ -66,7 +68,7 @@ public class RemoveAndProcess  {
     
 	@RequestMapping(value = "/{lang}/md.processing.batch", produces = {
 			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public Element serviceSpecificExec(HttpServletRequest request, @RequestParam(value=Params.URL) String url, 
+    public @ResponseBody IdResponse serviceSpecificExec(HttpServletRequest request, @RequestParam(value=Params.URL) String url, 
     		@RequestParam(defaultValue="") String id, @RequestParam(defaultValue="") String uuid)
             throws Exception {
         if(id.trim().isEmpty()){
@@ -116,8 +118,6 @@ public class RemoveAndProcess  {
             throw e;
         }
 
-        Element response = new Element(Jeeves.Elem.RESPONSE)
-                .addContent(new Element(Geonet.Elem.ID).setText(id));
-        return response;
+        return new IdResponse(id);
     }
 }

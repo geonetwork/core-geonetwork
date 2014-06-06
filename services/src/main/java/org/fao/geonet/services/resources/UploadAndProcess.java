@@ -25,20 +25,16 @@ package org.fao.geonet.services.resources;
 
 import javax.servlet.http.HttpServletRequest;
 
-import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
-import org.fao.geonet.Util;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.responses.IdResponse;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.metadata.XslProcessing;
 import org.fao.geonet.services.metadata.XslProcessingReport;
 import org.fao.geonet.services.resources.handlers.IResourceUploadHandler;
@@ -48,6 +44,8 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Handles the file upload and attach the uploaded service to the metadata record
@@ -56,7 +54,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * Return a simple JSON response in case of success.
  */
 @Controller
-public class UploadAndProcess implements Service {
+public class UploadAndProcess {
     public void init(String appPath, ServiceConfig params) throws Exception {
     }
     
@@ -67,10 +65,11 @@ public class UploadAndProcess implements Service {
 
 	@RequestMapping(value = "/{lang}/md.processing.batch", produces = {
 			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public Element exec(HttpServletRequest request, @RequestParam(value=Params.FILENAME) String filename,
+    public @ResponseBody IdResponse exec(HttpServletRequest request, 
+    		@RequestParam("file") MultipartFile file,
     		@RequestParam(value=Params.TITLE,defaultValue="") String description,
     		@RequestParam(defaultValue="") String id, @RequestParam(defaultValue="") String uuid,
-    		@RequestParam(defaultValue="private", value=Params.ACCESS) String acess, 
+    		@RequestParam(defaultValue="private", value=Params.ACCESS) String access, 
     		@RequestParam(value=Params.OVERWRITE, defaultValue="no") String overwrite)
             throws Exception {
 		
@@ -87,8 +86,8 @@ public class UploadAndProcess implements Service {
         if (username == null)
             username = "unknown (this shouldn't happen?)";
 
-        String fname = filename;
-        String fsize = 0 ;// fnameElem.getAttributeValue("size");
+        String fname = file.getName();
+        String fsize = Long.toString(file.getSize());
         if (fsize == null)
             fsize = "0";
 
@@ -100,8 +99,8 @@ public class UploadAndProcess implements Service {
                 + context.getIpAddress() + "," + username);
 
         // Set parameter and process metadata to reference the uploaded file
-        request.getParameterMap().put("url", new String[]{filename});
-        request.getParameterMap().put("name", new String[]{filename});
+        request.getParameterMap().put("url", new String[]{file.getName()});
+        request.getParameterMap().put("name", new String[]{file.getName()});
         request.getParameterMap().put("desc", new String[]{description});
         request.getParameterMap().put("protocol", new String[]{"WWW:DOWNLOAD-1.0-http--download"});
 
@@ -122,9 +121,7 @@ public class UploadAndProcess implements Service {
             throw e;
         }
         // -- return the processed metadata id
-        Element response = new Element(Jeeves.Elem.RESPONSE)
-                .addContent(new Element(Geonet.Elem.ID).setText(id));
 
-        return response;
+        return new IdResponse(id);
     }
 }
