@@ -26,6 +26,7 @@ package org.fao.geonet.services.category;
 import jeeves.services.ReadWriteController;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.exceptions.MissingParameterEx;
 import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.Updater;
@@ -58,7 +59,7 @@ public class Update {
             @RequestParam final String name
     ) throws Exception {
         if (name == null) {
-            throw new IllegalArgumentException("param 'name' is required");
+            throw new MissingParameterEx("name");
         }
 
         CategoryUpdateResponse response = new CategoryUpdateResponse();

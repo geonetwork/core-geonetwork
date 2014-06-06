@@ -56,7 +56,7 @@ public class UpdateTest extends AbstractServiceIntegrationTest {
     		updateCategoryController.exec(42, null);
     	} catch (Throwable e) {
     		// Should complain of a missing parameter "name"
-    		assertTrue (e instanceof MissingParameterEx);
+    		assertTrue (e.getClass().toString(), e instanceof MissingParameterEx);
     	}
     	
     }
