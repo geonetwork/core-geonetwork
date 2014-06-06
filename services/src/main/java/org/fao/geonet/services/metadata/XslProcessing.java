@@ -29,6 +29,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
@@ -51,7 +53,9 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -120,6 +124,8 @@ public class XslProcessing { //extends NotInReadOnlyModeService {
      * @return
      * @throws Exception
      */
+	@RequestMapping(value = "/{lang}/metadata.processing", produces = {
+			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public @ResponseBody Response serviceSpecificExec(@RequestParam(defaultValue= Params.PROCESS) String process, 
     		@RequestParam(defaultValue=Params.SAVE) Boolean save, 
     		@RequestParam(defaultValue="") String id, 
@@ -148,7 +154,7 @@ public class XslProcessing { //extends NotInReadOnlyModeService {
         Response res = new Response(id);
         // and the processed metadata if not saved.
         if (!save) {
-            response.addContent(new Element("record").addContent(processedMetadata));
+            res.setRecord(processedMetadata.toString());
         }
         
         return res;
@@ -286,7 +292,21 @@ public class XslProcessing { //extends NotInReadOnlyModeService {
     private ServiceContext context;
 }
 
+@XmlRootElement
+@XmlSeeAlso(IdResponse.class)
 class Response  extends IdResponse{
-	
+	private String record;
+
+	public Response(String id) {
+		super(id);
+	}
+
+	public String getRecord() {
+		return record;
+	}
+
+	public void setRecord(String record) {
+		this.record = record;
+	}
 	
 }
