@@ -185,7 +185,7 @@ GeoNetwork.util.LinkTools = {
                              handler: function () {
                                  // FIXME : this call require the catalogue to be named catalogue
                                  view.catalogue.metadataPrepareDownload(id);
-                             },
+                             }
                          }], OpenLayers.i18n('prepareDownload'), 'downloadAllIcon', el);
                      }
                  }

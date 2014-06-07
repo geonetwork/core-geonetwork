@@ -832,7 +832,7 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
 
 				cmp.push(new Ext.form.FormPanel({ 
 					anchor: '100%',
-					items: formCmp,
+					items: formCmp
 				}));
         cmp.push(grid);
 
