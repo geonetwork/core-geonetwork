@@ -35,52 +35,8 @@
 						<table class="print_table" border="0" cellpadding="0"
 							cellspacing="0">
 							<tbody>
-								<tr valign="top">
-									<td class="print_ttl">
-										<xsl:value-of select="/root/loc/strings/mdinfo" />
-									</td>
-									<td class="print_data">
-									</td>
-								</tr>
 
-
-								<xsl:apply-templates mode="iso19139"
-									select="/root/gmd:MD_Metadata/gmd:fileIdentifier | /root/gmd:MD_Metadata/gmd:hierarchyLevelName/gmx:Anchor" />
-
-								<tr valign="top">
-									<td class="print_desc">
-										<xsl:value-of select="/root/schemas/iso19139.emodnet.chemistry/strings/projectName" />
-									</td>
-									<td class="print_data">
-										<xsl:value-of select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword[../gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='theme' and ../gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString='http://www.seadatanet.org/urnurl/']" />
-									</td>
-								</tr>
-
-								<tr valign="top">
-									<td class="print_desc">
-										<xsl:value-of select="/root/schemas/iso19139.emodnet.chemistry/strings/DisseminationLevelTitle" />
-									</td>
-									<td class="print_data">
-										<xsl:value-of select="/root/gmd:MD_Metadata/gmd:metadataConstraints//gmd:useLimitation" />
-									</td>
-								</tr>
-
-								<!--CG : 10/04/2014 - Consider several cases about language tag -->
-								<xsl:if test="/root/gmd:MD_Metadata/gmd:language/gco:CharacterString">
-									<xsl:apply-templates mode="iso19139"
-									select="/root/gmd:MD_Metadata/gmd:language" />
-								</xsl:if>
-
-								<xsl:if test="/root/gmd:MD_Metadata/gmd:language/gmd:LanguageCode">
-									<xsl:apply-templates mode="iso19139"
-									select="/root/gmd:MD_Metadata/gmd:language/gmd:LanguageCode" />
-								</xsl:if>
-
-
-								<xsl:apply-templates mode="iso19139"
-									select="/root/gmd:MD_Metadata/gmd:dateStamp" />	
-
-
+								<!-- **************************************** IDENTIFICATION **************************************** -->
 								<tr valign="top">
 									<td class="print_ttl">
 										<xsl:value-of select="/root/loc/strings/identification" />
@@ -93,18 +49,67 @@
 									select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title|
 											/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code" />
 
-								<td>
-									<img class="result-photo">
-										<xsl:attribute name="src">
-											<xsl:value-of select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview[position()=1]/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString" />
-										</xsl:attribute>
-									</img>
-								</td>			
-
+								<!--
 								<xsl:apply-templates mode="iso19139"
 									select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName[1]" />
+-->
+							</tbody>
+						</table>
+
+						<table class="print_table2" border="0" cellpadding="0" cellspacing="0">
+							<tbody>
+								<tr>
+								<td/>
+									<td class="print_bounding">
+										<xsl:value-of select="//gmd:northBoundLatitude/gco:Decimal" />
+									</td>
+									<td/>
+								</tr>
+								<tr>
+									<td class="print_bounding">
+										<xsl:value-of select="//gmd:westBoundLongitude/gco:Decimal" />
+									</td>
+									<td class="print_bounding">
+										<img class="result-photo">
+											<xsl:attribute name="src">
+												<xsl:value-of select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview[position()=1]/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString" />
+											</xsl:attribute>
+										</img>
+									</td>	
+									<td class="print_bounding">
+										<xsl:value-of select="//gmd:eastBoundLongitude/gco:Decimal" />
+									</td>									
+								</tr>
+								<tr>
+																<td/>
+									<td class="print_bounding">
+										<xsl:value-of select="//gmd:southBoundLatitude/gco:Decimal" />
+									</td>
+									<td/>
+								</tr>
+
+							</tbody>
+						</table>
+
+						<table class="print_table" border="0" cellpadding="0"
+							cellspacing="0">
+							<tbody>
+								<!-- **************************************** ABSTRACT **************************************** -->
+								<tr valign="top">
+									<td class="print_ttl">
+										<xsl:value-of
+											select="/root/schemas/iso19139.emodnet.chemistry/strings/abstractTitle" />
+									</td>
+									<td class="print_data">
+									</td>
+								</tr>
+								<xsl:apply-templates mode="iso19139"
+									select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract" />
 
 
+
+
+								<!-- **************************************** WHAT **************************************** -->
 								<tr valign="top">
 									<td class="print_ttl">
 										<xsl:value-of select="/root/loc/strings/what" />
@@ -138,6 +143,7 @@
 										</td>
 										<td class="print_data"/>
 									</tr>
+									
 									<tr valign="top">
 										<td class="print_desc">
 											<xsl:value-of select="/root/schemas/iso19139.emodnet.chemistry/strings/nbLinesTitle" />
@@ -157,17 +163,8 @@
 								</xsl:if>
 
 
-								<tr valign="top">
-									<td class="print_ttl">
-										<xsl:value-of
-											select="/root/schemas/iso19139.emodnet.chemistry/strings/abstractTitle" />
-									</td>
-									<td class="print_data">
-									</td>
-								</tr>
-								<xsl:apply-templates mode="iso19139"
-									select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract" />
 
+								<!-- **************************************** DETAILED DESCRIPTION **************************************** -->
 								<tr valign="top">
 									<td class="print_ttl">
 										<xsl:value-of
@@ -367,6 +364,7 @@
 									</td>
 								</tr>
 
+								<!-- **************************************** WHERE **************************************** -->
 								<tr valign="top">
 									<td class="print_ttl">
 										<xsl:value-of select="/root/loc/strings/where" />
@@ -385,10 +383,10 @@
 								<xsl:apply-templates mode="iso19139"
 									select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialResolution/gmd:MD_Resolution/gmd:distance/gco:Distance" />
 
-
+<!--
 								<xsl:apply-templates mode="iso19139"
 									select="/root/gmd:MD_Metadata//gmd:EX_GeographicBoundingBox" />
-
+-->
 								<tr valign="top">
 									<td class="print_desc">
 										<xsl:value-of select="/root/schemas/iso19139.emodnet.chemistry/strings/geoAreaNameTitle" />
@@ -463,6 +461,7 @@
 								<xsl:apply-templates mode="iso19139"
 									select="/root/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:scope/gmd:DQ_Scope/gmd:extent/gmd:EX_Extent/gmd:verticalElement/gmd:EX_VerticalExtent//gml:VerticalDatum/gml:identifier" />
 
+								<!-- **************************************** WHHEN **************************************** -->
 								<tr valign="top">
 									<td class="print_ttl">
 										<xsl:value-of select="/root/loc/strings/when" />
@@ -493,6 +492,7 @@
 									select="/root/gmd:MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_Georectified/gmd:axisDimensionProperties/gmd:MD_Dimension[gmd:dimensionName/gmd:MD_DimensionNameTypeCode/@codeListValue='time']/gmd:resolution/gco:Measure"/>
 								</xsl:if>
 
+								<!-- **************************************** WHO **************************************** -->
 								<tr valign="top">
 									<td class="print_ttl">
 										<xsl:value-of select="/root/loc/strings/who" />
@@ -524,6 +524,7 @@
 									/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty[gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress" />
 
 
+								<!-- **************************************** WHERE TO FIND **************************************** -->
 								<tr valign="top">
 									<td class="print_ttl">
 										<xsl:value-of select="/root/loc/strings/whereToFind" />
@@ -574,6 +575,53 @@
 								<xsl:apply-templates mode="iso19139"
 									select="/root/gmd:MD_Metadata//gmd:contact/gmd:CI_ResponsibleParty/gmd:organisationName|
 											 /root/gmd:MD_Metadata//gmd:contact/gmd:CI_ResponsibleParty/gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress" />
+							
+															<!-- ******************************************* METADATA INFO ************************************* -->
+								<tr valign="top">
+									<td class="print_ttl">
+										<xsl:value-of select="/root/loc/strings/mdinfo" />
+									</td>
+									<td class="print_data">
+									</td>
+								</tr>
+
+
+								<xsl:apply-templates mode="iso19139"
+									select="/root/gmd:MD_Metadata/gmd:fileIdentifier | /root/gmd:MD_Metadata/gmd:hierarchyLevelName/gmx:Anchor" />
+
+								<tr valign="top">
+									<td class="print_desc">
+										<xsl:value-of select="/root/schemas/iso19139.emodnet.chemistry/strings/projectName" />
+									</td>
+									<td class="print_data">
+										<xsl:value-of select="/root/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword[../gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='theme' and ../gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString='http://www.seadatanet.org/urnurl/']" />
+									</td>
+								</tr>
+
+								<tr valign="top">
+									<td class="print_desc">
+										<xsl:value-of select="/root/schemas/iso19139.emodnet.chemistry/strings/DisseminationLevelTitle" />
+									</td>
+									<td class="print_data">
+										<xsl:value-of select="/root/gmd:MD_Metadata/gmd:metadataConstraints//gmd:useLimitation" />
+									</td>
+								</tr>
+
+								<!--CG : 10/04/2014 - Consider several cases about language tag -->
+								<xsl:if test="/root/gmd:MD_Metadata/gmd:language/gco:CharacterString">
+									<xsl:apply-templates mode="iso19139"
+									select="/root/gmd:MD_Metadata/gmd:language" />
+								</xsl:if>
+
+								<xsl:if test="/root/gmd:MD_Metadata/gmd:language/gmd:LanguageCode">
+									<xsl:apply-templates mode="iso19139"
+									select="/root/gmd:MD_Metadata/gmd:language/gmd:LanguageCode" />
+								</xsl:if>
+
+
+								<xsl:apply-templates mode="iso19139"
+									select="/root/gmd:MD_Metadata/gmd:dateStamp" />	
+							
 							</tbody>
 						</table>
 					</div>
