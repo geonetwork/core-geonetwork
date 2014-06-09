@@ -87,9 +87,9 @@ this.setDataCommon = function(node)
     for (day in cron.days) {
     	checkbox = $(prefix+"."+(day.toUpperCase()));
     	if(cron.days[day]) {
-        	checkbox.setAttribute('checked', 'true');
+            checkbox.checked = true;
     	} else {
-            checkbox.removeAttribute('checked');
+            checkbox.checked = false;
     	}
     }
 
