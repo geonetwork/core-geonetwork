@@ -154,8 +154,10 @@ function getData()
 		for(var j=0; j<capList.length; j++){
 			
 				var capName = capList[j].getAttribute('name');
-				obj[capName]= xml.getElementById(divElem, capList[j].textContent).value;
-				
+                var el = xml.getElementById(divElem, capList[j].textContent);
+                if (el != null) {
+                    obj[capName]= el.value;
+                }
 		}
 		
 		searchData.push(obj);

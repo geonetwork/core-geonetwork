@@ -20,6 +20,9 @@
 	<!-- ============================================================================================= -->
 
 	<xsl:template match="*" mode="data">
+
+    <!-- If no search filters are defined, don't render the element -->
+    <xsl:if test="count(/root/search/*) > 0">
 		<table>
 			<tr>
 				<td>
@@ -64,6 +67,7 @@
 
 
 		</table>
+    </xsl:if>
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
