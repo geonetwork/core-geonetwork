@@ -500,9 +500,6 @@
 					<xsl:with-param name="title" select="'DOI'"/>
 				</xsl:apply-templates>
 
-
-
-
 				<!-- Overview -->
 				<xsl:apply-templates mode="elementEP"
 					select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract">
@@ -593,7 +590,6 @@
 					<xsl:variable name="oceanDP" select="."/>
 
 					<xsl:if test="position()=1">
-
 					<xsl:apply-templates mode="simpleElement" select=".">
 						<xsl:with-param name="schema"  select="$schema"/>
 						<xsl:with-param name="edit"   select="$edit"/>
@@ -603,8 +599,8 @@
 								<xsl:with-param name="elementRef" select="$oceanDP/../geonet:element/@ref"/>
 								<xsl:with-param name="thesaurusId" select="'local.parameter.seadatanet-ocean-discovery-parameter'"/>
 								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join($oceanDP/gmd:keyword/*[1], '!,!'), '''', '\\'''), '!', '''')"/>
-								<xsl:with-param name="listOfTransformations" select="'''to-iso19139-keyword'''"/>
-								<xsl:with-param name="transformation" select="'to-iso19139-keyword'"/>
+								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-keyword-with-anchor'''"/>
+								<xsl:with-param name="transformation" select="'to-iso19139.myocean-keyword-with-anchor'"/>
 								<xsl:with-param name="identificationMode" select="''"/>
 							</xsl:call-template>
 						</xsl:with-param>
@@ -621,8 +617,8 @@
 								<xsl:with-param name="elementRef" select="$oceanDP/../geonet:element/@ref"/>
 								<xsl:with-param name="thesaurusId" select="'local.parameter.seadatanet-ocean-chemistry-variable'"/>
 								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join($oceanDP/gmd:keyword/*[1], '!,!'), '''', '\\'''), '!', '''')"/>
-								<xsl:with-param name="listOfTransformations" select="'''to-iso19139-keyword'''"/>
-								<xsl:with-param name="transformation" select="'to-iso19139-keyword'"/>
+								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-keyword-with-anchor'''"/>
+								<xsl:with-param name="transformation" select="'to-iso19139.myocean-keyword-with-anchor'"/>
 								<xsl:with-param name="identificationMode" select="''"/>
 							</xsl:call-template>
 						</xsl:with-param>
