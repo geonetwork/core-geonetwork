@@ -751,12 +751,13 @@
 												<xsl:with-param name="format" select="$format"/>
 												<xsl:with-param name="disabled" select="@indeterminatePosition = 'unknown'"/>
 											</xsl:call-template>
+
 											<xsl:variable name="indeterminatePositionId" select="concat('_', $ref ,'_indeterminatePosition')"/>
 											<div style="margin-left: 168px;">
 												<!-- When form field is disabled, they are not posted. Add an empty field 
 													to enable when the calendar field is disabled. -->
 												<input type="hidden" id="_{$ref}_disabled_field" name="_{$ref}" value="">
-													<xsl:if test="@indeterminatePosition != 'unknown'">
+													<xsl:if test="string(@indeterminatePosition) != 'unknown'">
 														<xsl:attribute name="disabled">disabled</xsl:attribute>
 													</xsl:if>
 												</input>
