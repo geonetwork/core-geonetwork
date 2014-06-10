@@ -71,6 +71,10 @@
     </for>
     
     <for name="gmd:descriptiveKeywords" addDirective="data-gn-thesaurus-selector"/>
+    <!-- Example of configuration to disable free text keywords in the thesaurus selector -->
+    <!--for name="gmd:descriptiveKeywords" addDirective="data-gn-thesaurus-selector">
+      <directiveAttributes data-allow-free-text-keywords="false" />
+    </for-->
   </fields>
 
 
