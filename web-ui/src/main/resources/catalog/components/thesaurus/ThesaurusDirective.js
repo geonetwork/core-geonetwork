@@ -27,8 +27,7 @@
              elementName: '@',
              elementRef: '@',
              domId: '@',
-             tagName: '@',
-             paramName: '@'
+             allowFreeTextKeywords: '='
            },
            templateUrl: '../../catalog/components/thesaurus/' +
            'partials/thesaurusselector.html',
@@ -36,7 +35,11 @@
              scope.thesaurus = null;
              scope.snippet = null;
              scope.snippetRef = null;
-             scope.allowFreeTextKeywords = (scope.paramName === undefined) || (scope.paramName === 'true');
+
+             scope.areAllowedFreeTextKeywords = function() {
+               return ((scope.allowFreeTextKeywords === undefined) ||
+                 (scope.allowFreeTextKeywords));
+             }
 
              // TODO: Remove from list existing thesaurus
              // in the record ?
