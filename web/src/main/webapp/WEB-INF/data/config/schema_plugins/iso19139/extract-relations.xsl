@@ -30,8 +30,12 @@
 
         <xsl:for-each select="*/descendant::*[name(.) = 'gmd:distributor']">
           <xsl:choose>
+            <!-- List all online resource excluding DOI
+            identified by WWW:LINK-1.0-http-metadata-URL -->
             <xsl:when test="count(.//gmd:onLine[normalize-space(gmd:CI_OnlineResource/gmd:protocol/gco:CharacterString) = 'OGC:WMS:getCapabilities']) = 0">
-              <xsl:for-each select="*/descendant::*[name(.) = 'gmd:onLine']/*[gmd:linkage/gmd:URL!='']">
+              <xsl:for-each select="*/descendant::*[name(.) = 'gmd:onLine']/*[
+              normalize-space(gmd:protocol/gco:CharacterString) != 'WWW:LINK-1.0-http--metadata-URL' and
+              gmd:linkage/gmd:URL!='']">
                 <relation type="onlinesrc">
 
                   <!-- Compute title based on online source info-->
@@ -57,7 +61,9 @@
               </xsl:for-each>
             </xsl:when>
             <xsl:otherwise>
-              <xsl:for-each select="*/descendant::*[name(.) = 'gmd:onLine']/*[gmd:linkage/gmd:URL!='']">
+              <xsl:for-each select="*/descendant::*[name(.) = 'gmd:onLine']/*[
+                normalize-space(gmd:protocol/gco:CharacterString) != 'WWW:LINK-1.0-http--metadata-URL' and
+                gmd:linkage/gmd:URL!='']">
                 <relation type="onlinesrc">
 
                   <!-- Compute title based on online source info-->
