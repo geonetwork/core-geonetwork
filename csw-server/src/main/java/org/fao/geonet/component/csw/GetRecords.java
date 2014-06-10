@@ -331,8 +331,8 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
         //--- handle constraint
 
-        ConstraintLanguage language = ConstraintLanguage.parse(constrLang);
         if (constraint != null) {
+            ConstraintLanguage language = ConstraintLanguage.parse(constrLang);
             Element constr = new Element("Constraint", Csw.NAMESPACE_CSW);
             query.addContent(constr);
 
