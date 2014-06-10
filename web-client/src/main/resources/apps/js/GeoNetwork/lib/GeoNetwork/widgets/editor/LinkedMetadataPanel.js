@@ -274,7 +274,8 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
         } else if (type === 'onlinesrc') {
             parameters += "&url=" + encodeURIComponent(id);
 
-          if(this.metadataSchema.indexOf('iso19139.myocean')==-1) {
+          if(this.metadataSchema.indexOf('iso19139.myocean')==-1 &&
+              this.metadataSchema.indexOf('iso19139.sdn-product')==-1) {
             parameters += "&name=" + encodeURIComponent(uuid.trim().split(' ')[0]);
           }
           else {
@@ -444,7 +445,8 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
             return protocol.indexOf('WWW:DOWNLOAD-1.0-http--download') >= 0;
           },
           isMyocean: function(protocol){
-            return that.metadataSchema.indexOf('iso19139.myocean') >= 0;
+            return (that.metadataSchema.indexOf('iso19139.myocean') >= 0 ||
+                that.metadataSchema.indexOf('iso19139.sdn-product') >= 0);
           },
           getTitle: function(title) {
             if(title.indexOf('||') < 0) return title;
@@ -491,8 +493,8 @@ GeoNetwork.editor.LinkedMetadataPanel = Ext.extend(Ext.Panel, {
                 var id = 'add' + this.sep + type;
                 var mds = store.query('type', type);
 
-
-              if(this.metadataSchema.indexOf('iso19139.myocean') >= 0) {
+              if(this.metadataSchema.indexOf('iso19139.myocean') >= 0 ||
+                  this.metadataSchema.indexOf('iso19139.sdn-product') >= 0) {
                 // Specific MyOcean
                 if(type == 'onlinesrc') {
                   var datasets = [];
