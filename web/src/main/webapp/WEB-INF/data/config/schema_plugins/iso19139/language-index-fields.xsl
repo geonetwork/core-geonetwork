@@ -82,6 +82,7 @@
 		
 				<xsl:apply-templates select="/*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']" mode="metadata">
 					<xsl:with-param name="langId" select="$poundLangId"/>
+          <xsl:with-param name="isoLangId" select="$isoLangId"/>
 				</xsl:apply-templates>
 
 				<xsl:apply-templates mode="index" select="*[name(.)='gmd:MD_Metadata' or @gco:isoType='gmd:MD_Metadata']">
@@ -102,6 +103,8 @@
 
 	<xsl:template match="*" mode="metadata">
 		<xsl:param name="langId" />
+    <xsl:param name="isoLangId"/>
+
 		<!-- === Data or Service Identification === -->
 
 		<!-- the double // here seems needed to index MD_DataIdentification when
@@ -236,7 +239,10 @@
 
 			<xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode">
 				<Field name="topicCat" string="{string(.)}" store="true" index="true"/>
-				<Field name="subject" string="{string(.)}" store="true" index="true"/>
+				<Field name="keyword"
+               string="{java:getCodelistTranslation('gmd:MD_TopicCategoryCode', string(.), string($isoLangId))}"
+               store="true"
+               index="true"/>
 			</xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
