@@ -208,7 +208,7 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
     }
     temp.sort();
     groups.push(temp);
-    return groups;
+    return groups[0];
   }
     /**
      * Some convert function to face empty geonet_info parameters
