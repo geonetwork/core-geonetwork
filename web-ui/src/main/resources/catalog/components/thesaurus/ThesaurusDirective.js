@@ -26,7 +26,9 @@
              mode: '@gnThesaurusSelector',
              elementName: '@',
              elementRef: '@',
-             domId: '@'
+             domId: '@',
+             tagName: '@',
+             paramName: '@'
            },
            templateUrl: '../../catalog/components/thesaurus/' +
            'partials/thesaurusselector.html',
@@ -34,6 +36,7 @@
              scope.thesaurus = null;
              scope.snippet = null;
              scope.snippetRef = null;
+             scope.allowFreeTextKeywords = (scope.paramName === undefined) || (scope.paramName === 'true');
 
              // TODO: Remove from list existing thesaurus
              // in the record ?
