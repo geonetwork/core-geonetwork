@@ -22,7 +22,9 @@
             gnSearchManagerService, gnConfigService, gnMap) {
       $scope.version = '0.0.1';
       // TODO : add language
-      $scope.lang = location.href.split('/')[5];
+      var tokens = location.href.split('/');
+      $scope.lang = tokens[5];
+      $scope.nodeId = tokens[4];
       // TODO : get list from server side
       $scope.langs = {'fre': 'fr', 'eng': 'en', 'spa': 'sp'};
       $scope.url = '';
