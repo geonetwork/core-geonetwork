@@ -596,9 +596,6 @@
         addFromGeoPublisher: function(layerName, title, node, protocols) {
 
           var xml = '';
-          layerName =
-              (node.id.indexOf('mapserver') === -1 ?
-                  node.namespacePrefix + ':' : '') + layerName;
 
           for (var p in protocols) {
             if (protocols.hasOwnProperty(p) && protocols[p].checked === true) {

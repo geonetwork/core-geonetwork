@@ -135,10 +135,7 @@ public class Do implements Service {
     	GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         MapServerRepository repo = context.getBean(MapServerRepository.class);
         SettingManager settingsManager = gc.getBean(SettingManager.class);
-    	String baseUrl = settingsManager.getValue(Geonet.Settings.SERVER_PROTOCOL)
-    			+ "://" + settingsManager.getValue(Geonet.Settings.SERVER_HOST)
-    			+ ":" + settingsManager.getValue("system/server/port")
-    			+ context.getBaseUrl();
+    	String baseUrl = settingsManager.getSiteURL(context);
     	
     	
     	ACTION action = ACTION.valueOf(Util.getParam(params, "action"));

@@ -276,14 +276,14 @@
 
                 // Build layer name based on file name
                 scope.layerName = r.name
-                  .replace(/.zip$|.tif$|.tiff$/, '');
+                  .replace(/.zip$|.tif$|.tiff$|.ecw$/, '');
                 scope.wmsLayerName = scope.layerName;
                 if (scope.layerName.match('^jdbc')) {
                   scope.wmsLayerName = scope.layerName.split('#')[1];
                 } else if (scope.layerName.match('^file')) {
                   scope.wmsLayerName = scope.layerName
                     .replace(/.*\//, '')
-                    .replace(/.zip$|.tif$|.tiff$/, '');
+                    .replace(/.zip$|.tif$|.tiff$|.ecw$/, '');
                 }
                 buildLayerName(gsNode);
               };

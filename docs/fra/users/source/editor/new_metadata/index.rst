@@ -23,7 +23,6 @@ Pour la création d'une métadonnée utilisant l'éditeur en ligne, 2 options so
 Les modèles de saisie
 ---------------------
 
-
 Le catalogue fournit un
 certain nombre de modèle de métadonnées basés sur les différents standards supportés (cf. :ref:`supported_format`). Ces modèles
 permettent de décrire divers types de ressources (eg. données vecteur ou raster, services
@@ -37,39 +36,55 @@ Si aucun modèle n'est disponible, il est possible de les ajouter à partir de l
 Créer une nouvelle métadonnée
 -----------------------------
 
-Une fois l'utilisateur authentifié (cf. :ref:`how_to_login`), **dans la barre d'outil de présentation des résultats** 
-ou bien dans la page d'accueil, cliquer sur **Administration** puis :
+Une fois authentifié (cf. :ref:`how_to_login`), **dans la barre d'outil de présentation des résultats** 
+ou bien dans la page d'accueil, survoler avec la souris la zone d'authentification, puis cliquer sur cliquer sur **"nouvelle métadonnée"**, ou cliquer sur **Administration** puis cliquer sur l'icône située en haut à droite (**Ajouter des données, des services ou des cartes**) :
 
-#. Selectionner **"nouvelle métadonnée"**.
-#. Selectionner le modèle de métadonnée sachant que d'autres modèles peuvent être créés.
+.. figure:: quick_admin_tools.png
+
+  *Outils d'administration rapides*
+
+Ensuite :
+
+#. Selectionner le type de modèle de métadonnée à utiliser entre données, carte et service.
+#. Selectionner le modèle de métadonnée, sachant que d'autres modèles peuvent être créés.
 #. Selectionner le **Groupe** auquel sera rattaché la métadonnée. Les groupes proposés sont ceux autorisés par l'administrateur pour l'utilisateur en cours d'édition.
 #. Cliquez sur **"créer"**.
 
+  .. figure:: create.png
 
-.. figure: create.png
+   *Formulaire de création d'une métadonnée*
 
-   Formulaire de création d'une métadonnée
-
-Le formulaire permet de trier les métadonnées par schéma, par titre en cliquant sur les en-têtes des colonnes.
-
-Une nouvelle métadonnée basée sur le modèle sélectionné est ensuite créée. Un identifiant unique lui est attribué. Par défaut, 
+Une nouvelle métadonnée basée sur le modèle sélectionné est ensuite créée. Un identifiant unique lui est attribué (élément fileIdentifier). Par défaut, 
 elle n'est visible que pour les utilisateurs du groupe.
 
 
-
-Basculer entre les vues
-```````````````````````
+Panneau de sélection des vues
+`````````````````````````````
 
 Les vues ont été présentées précédemment (cf. :ref:`metadata_edit_mode`).
 
 Lorsque vous créez un nouvel enregistrement, vous pouvez choisir entre
-les différentes vues du standard. Pour charger la vue, cliquez simplement sur la vue correspondante dans le menu **Affichage**.
+les différentes vues du standard. Pour charger la vue, cliquez simplement sur l'icône représentant un oeil (voir ci-dessous).
+
 La vue désactivée dans le menu correspond à la vue courante.
+
+.. figure:: view.png
+
+   *Panneau de sélection des vues*
+
+Le panneau permet également deux actions supplémentaires :
+   
+- Plus de détails : permet d'afficher ou masquer les attributs de substitution, par exemple la raison de l'absence d'information pour un élément de métadonnées (attribut "nilReason").
+
+.. figure:: nilreason.png
+
+
+- Aide : permet d'activer ou non les tooltips contenant l'aide à la saisie
 
 
 Les champs obligatoires et conditionnels
-``````````````````````````````````````````
-Les champs obligatoires sont en gras avec un cadre gris ou rouge si ils ont une valeur invalide.
+````````````````````````````````````````
+Les champs obligatoires sont en gras avec un cadre gris ou rouge s'ils ont une valeur invalide.
 
 .. figure: invalidField.png
 
@@ -91,7 +106,7 @@ Par exemple, pour les contacts,
   doit être renseigné pour le standard ISO 19139.
 - un des champs organisation ou email doit être renseigné pour les règles d'implémentation d'INSPIRE 
 
-  .. figure:: PoC_Maint.png
+  .. figure: PoC_Maint.png
 
   *Point de contact*
 
@@ -102,19 +117,28 @@ de validation (cf. :ref:`metadata_validation`).
 L'aide
 ``````
 
-La définition de chacun des champs est visible dans la section **Aide** du panneau de droite.
+La définition de chacun des champs est disponible en cliquant sur le libellé ou sur la zone de saisie correspondants.
+
 Cette aide indique :
 
-- le nom de l'élément
-- la définition de l'élément
-- l'identifiant du standard (eg. iso19139.fra)
+Dans la vue INSPIRE, les références au guide de recommandations du CNIG :
+
+- le nom du champ
+- la définition
+- des recommandations
+- des exemples/contre-exemples
+
+Dans les autres vues, les informations relatives à la norme ISO 19115 :
+
+- le nom du champ
+- la définition
+- l'identifiant du standard
 - le nom de la balise de l'élément (eg. gmd:title)
+- la description de l'élément parent est également présentée.
 
-La description de l'élément parent est également présentée.
+.. figure:: tooltip.png
 
-.. figure:: helpPanel.png
-
-   Aide contextuel sur l'élément titre court contenu dans la section identification
+   *Tooltip contenant l'aide à la saisie*
 
 
 .. _editor_control:
