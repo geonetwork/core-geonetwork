@@ -238,20 +238,26 @@ public final class XslUtil
      * @param codelist The codelist name (eg. gmd:MD_TopicCategoryCode)
      * @param value The value to search for in the translation file
      * @param langCode  The language
-     * @return  The translation or the code list value if not found.
+     * @return  The translation, the code list value if not found or an empty string
+     * if no codelist value provided.
      */
     public static String getCodelistTranslation(Object codelist, Object value, Object langCode) {
-        String translation;
         String codeListValue = (String) value;
-        try {
-            final GeonetContext gc = (GeonetContext) ServiceContext.get().getHandlerContext(Geonet.CONTEXT_NAME);
-            Translator t = new CodeListTranslator(gc.getBean(SchemaManager.class), (String) langCode, (String) codelist);
-            translation = t.translate(codeListValue);
-        } catch (Exception e) {
-            Log.error(Geonet.GEONETWORK, "Failed to translate codelist " + e.getMessage());
-            translation = codeListValue;
+        if (codeListValue != null && codelist != null && langCode != null) {
+            String translation = codeListValue;
+            try {
+                final GeonetContext gc = (GeonetContext) ServiceContext.get().getHandlerContext(Geonet.CONTEXT_NAME);
+                Translator t = new CodeListTranslator(gc.getBean(SchemaManager.class),
+                        (String) langCode,
+                        (String) codelist);
+                translation = t.translate(codeListValue);
+            } catch (Exception e) {
+                Log.error(Geonet.GEONETWORK, "Failed to translate codelist " + e.getMessage());
+            }
+            return translation;
+        } else {
+            return "";
         }
-        return translation;
     }
 
     /**
