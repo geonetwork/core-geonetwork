@@ -2219,10 +2219,12 @@ public class DataManager {
         env.addContent(new Element("file").setText(file));
         env.addContent(new Element("ext").setText(ext));
 
+        String protocol    = settingMan.getValue(Geonet.Settings.SERVER_PROTOCOL);
         String host    = settingMan.getValue(Geonet.Settings.SERVER_HOST);
         String port    = settingMan.getValue(Geonet.Settings.SERVER_PORT);
         String baseUrl = context.getBaseUrl();
 
+        env.addContent(new Element("protocol").setText(protocol));
         env.addContent(new Element("host").setText(host));
         env.addContent(new Element("port").setText(port));
         env.addContent(new Element("baseUrl").setText(baseUrl));
