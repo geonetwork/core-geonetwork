@@ -48,6 +48,10 @@
           <field xpath="/gfc:FC_FeatureCatalogue/gmx:functionalLanguage" or="functionalLanguage"
             in="/gfc:FC_FeatureCatalogue"/>
           <field
+              xpath="/gfc:FC_FeatureCatalogue/gfc:featureType/gfc:FC_FeatureType/gfc:typeName"
+              or="typeName"
+              in="/gfc:FC_FeatureCatalogue/gfc:featureType/gfc:FC_FeatureType"/>
+          <field
             xpath="/gfc:FC_FeatureCatalogue/gfc:featureType/gfc:FC_FeatureType/gfc:carrierOfCharacteristics"
             or="carrierOfCharacteristics"
             in="/gfc:FC_FeatureCatalogue/gfc:featureType/gfc:FC_FeatureType"/>
