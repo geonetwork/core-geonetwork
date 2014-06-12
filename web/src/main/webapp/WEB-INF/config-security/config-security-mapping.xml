@@ -10,6 +10,8 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
         <property name="accessDecisionManager" ref="accessDecisionManager"></property>
         <property name="securityMetadataSource">
             <sec:filter-security-metadata-source use-expressions="true" request-matcher="regex">
+                <sec:intercept-url pattern="/metadata/.*" access="permitAll"/>
+                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/metadata/.*" access="permitAll"/>
                 <sec:intercept-url pattern="/static/.*" access="permitAll"/>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/xml.thesaurus.getList!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/monitor/.*" access="hasRole('Monitor')"></sec:intercept-url>
