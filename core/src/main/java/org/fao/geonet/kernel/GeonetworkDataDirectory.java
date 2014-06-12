@@ -389,7 +389,7 @@ public class GeonetworkDataDirectory {
 		if(handlerKey != null) {
 		    handlerConfig.setValue(handlerKey, dir);
 		}
-
+        System.setProperty(envKey, dir);
 		// Create directory if it does not exist
 		File file = new File(dir);
 		if (!file.exists() && !file.mkdirs()) {
