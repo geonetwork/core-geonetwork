@@ -1,13 +1,11 @@
 ﻿.. include:: ../../substitutions.txt
 
-.. _lucene_index:
+.. _outils:
+Outils
+======
 
-Paramètres de l'index
-=====================
-
-
-Gestion de l'index
-~~~~~~~~~~~~~~~~~~
+Administration de l'index
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A partir de la page d'administration, il est possible de réaliser les actions suivantes :
 
@@ -20,12 +18,6 @@ A partir de la page d'administration, il est possible de réaliser les actions s
 
 .. figure:: index.png
 
-
-
-.. _lucene_index_adv:
-
-Configuration avancée
-~~~~~~~~~~~~~~~~~~~~~
 
 Le fichier WEB-INF/config-lucene.xsl permet une configuration fine de l'index du catalogue.
 
@@ -63,3 +55,31 @@ Il est possible de modifier à chaud (catalogue opérationnel sans redémarrage)
 puis de la recharger avec le bouton dans l'administration. En général après toute modification de ce fichier,
 il est recommandé de regénerer l'index.
 
+Processus en batch
+~~~~~~~~~~~~~~~~~~
+
+Le nombre de métadonnées augmentant, il est de plus en plus fréquent de devoir apporter des corrections ou améliorations aux fiches. Ce module permet de lancer sur une sélection de métadonnées des traitements pour apporter des modifications en masse (eg. corriger des URL, modifier des mots clés, remplacer des contacts).
+
+Les différentes étapes sont les suivantes :
+
+1. Rechercher
+2. Sélectionner
+3. Choisir et configurer le traitement
+4. Rapport
+
+.. figure:: batch.png
+
+  *Page de configuration des processus en batch*
+  
+  
+
+Transfert de privilèges
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Il est possible de transférer les droits associés aux certaines fiches d'un utilisateurs à un autre. Pour cela, il suffit de :
+
+1. Sélectionner le groupe et l'utilisateur dont les fiches seront transférées
+2. Sélectionner le groupe et l'utilisateur cible
+3. Cliquer sur *Transférer*
+
+.. figure:: transfert_privileges.png

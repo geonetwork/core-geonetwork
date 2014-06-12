@@ -7,8 +7,9 @@
 										xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 										xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 										xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                                        xmlns:java="java:org.fao.geonet.util.XslUtil"
-                                        xmlns:skos="http://www.w3.org/2004/02/skos/core#">
+                    xmlns:util="java:org.fao.geonet.util.XslUtil"
+                    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    exclude-result-prefixes="#all">
 
 	<xsl:include href="convert/functions.xsl"/>
 	<xsl:include href="../../../xsl/utils-fn.xsl"/>
@@ -55,13 +56,13 @@
   <xsl:variable name="indexAllKeywordDetails" select="true()"/>
 
 
+  <!-- The main metadata language -->
+  <xsl:variable name="isoLangId">
+    <xsl:call-template name="langId19139"/>
+  </xsl:variable>
+
   <!-- ========================================================================================= -->
-
-	<xsl:template match="/">
-	    <xsl:variable name="isoLangId">
-	  	    <xsl:call-template name="langId19139"/>
-        </xsl:variable>
-
+  <xsl:template match="/">
 		<Document locale="{$isoLangId}">
 			<Field name="_locale" string="{$isoLangId}" store="true" index="true"/>
 
@@ -379,7 +380,10 @@
 	
 			<xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode">
 				<Field name="topicCat" string="{string(.)}" store="true" index="true"/>
-				<Field name="keyword" string="{string(.)}" store="true" index="true"/>
+        <Field name="keyword"
+               string="{util:getCodelistTranslation('gmd:MD_TopicCategoryCode', string(.), string($isoLangId))}"
+               store="true"
+               index="true"/>
 			</xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		

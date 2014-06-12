@@ -7,6 +7,11 @@ import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.om.SingletonIterator;
 import org.eclipse.mylyn.wikitext.core.parser.MarkupParser;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.search.CodeListTranslator;
+import org.fao.geonet.kernel.search.Translator;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -310,6 +315,36 @@ public final class XslUtil
             return "";
         }
     }
+
+
+    /**
+     * Return a translation for a codelist or enumeration element.
+     *
+     * @param codelist The codelist name (eg. gmd:MD_TopicCategoryCode)
+     * @param value The value to search for in the translation file
+     * @param langCode  The language
+     * @return  The translation, the code list value if not found or an empty string
+     * if no codelist value provided.
+     */
+    public static String getCodelistTranslation(Object codelist, Object value, Object langCode) {
+        String codeListValue = (String) value;
+        if (codeListValue != null && codelist != null && langCode != null) {
+            String translation = codeListValue;
+            try {
+                final GeonetContext gc = (GeonetContext) ServiceContext.get().getHandlerContext(Geonet.CONTEXT_NAME);
+                Translator t = new CodeListTranslator(gc.getBean(SchemaManager.class),
+                        (String) langCode,
+                        (String) codelist);
+                translation = t.translate(codeListValue);
+            } catch (Exception e) {
+                Log.error(Geonet.GEONETWORK, "Failed to translate codelist " + e.getMessage());
+            }
+            return translation;
+        } else {
+            return "";
+        }
+    }
+
     /**
      * Return 2 iso lang code from a 3 iso lang code. If any error occurs return "".
      *

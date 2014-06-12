@@ -22,22 +22,28 @@
       <div class="panel-heading" data-translate="">mostPopularRecords</div>
       <div class="panel-body">
         <h2 data-translate="">mostPopular</h2>
-        <table class="table table-striped">
-          <tr data-ng-repeat="md in statistics.md.popularity">
-            <td>{{md.title || md.defaultTitle}}</td>
-            <td class="text-right">{{md.popularity}}</td>
-          </tr>
-        </table>
+        <form class="form-horizontal" role="form"
+              data-ng-search-form="" runSearch="true" gn-params="statistics.md.popularity">
+          <table class="table table-striped">
+            <tr data-ng-repeat="md in searchResults.records">
+              <td>{{md.title || md.defaultTitle}}</td>
+              <td class="text-right">{{md.popularity}}</td>
+            </tr>
+          </table>
+          <div data-gn-pagination="paginationInfo"/>
+        </form>
         <h2 data-translate="">bestRated</h2>
-        <table class="table table-striped">
-          <tr data-ng-repeat="md in statistics.md.rating"
-              data-ng-show="md.rating != 0">
-            <td>{{md.title || md.defaultTitle}}</td>
-            <td class="text-right">{{md.rating}}</td>
-          </tr>
-        </table>
-
-
+        <form class="form-horizontal" role="form"
+              data-ng-search-form="" runSearch="true" gn-params="statistics.md.rating">
+          <table class="table table-striped">
+            <tr data-ng-repeat="md in searchResults.records"
+                data-ng-show="md.rating != 0">
+              <td>{{md.title || md.defaultTitle}}</td>
+              <td class="text-right">{{md.rating}}</td>
+            </tr>
+          </table>
+          <div data-gn-pagination="paginationInfo"/>
+        </form>
         <h2>
           <span data-translate="">recordsBy</span>
           <select class="form-control" data-ng-model="currentIndicator"

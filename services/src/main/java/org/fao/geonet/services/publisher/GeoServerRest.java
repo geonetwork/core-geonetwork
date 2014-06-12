@@ -240,7 +240,7 @@ public class GeoServerRest {
 					+ "<metadataType>ISO19115:2003</metadataType>"
 					+ "<content>"
 						+ this.baseCatalogueUrl
-						+ "csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById"
+						+ "/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById"
 						+ "&amp;outputSchema=http://www.isotc211.org/2005/gmd"
 						+ "&amp;ID=" + metadataUuid
 					+ "</content>"
@@ -250,7 +250,7 @@ public class GeoServerRest {
 					+ "<metadataType>TC211</metadataType>"
 					+ "<content>"
 						+ this.baseCatalogueUrl
-						+ "csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById"
+						+ "/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById"
 						+ "&amp;outputSchema=http://www.isotc211.org/2005/gmd"
 						+ "&amp;ID=" + metadataUuid
 					+ "</content>"
@@ -259,7 +259,7 @@ public class GeoServerRest {
 					+ "<type>text/html</type>"
 					+ "<metadataType>TC211</metadataType>"
 					+ "<content>"
-						+ this.baseCatalogueUrl + "home?uuid=" + metadataUuid
+						+ this.baseCatalogueUrl + "/home?uuid=" + metadataUuid
 					+ "</content>"
 				+ "</metadataLink>"
 			+ "</metadataLinks>"
@@ -591,7 +591,7 @@ public class GeoServerRest {
 						+ "<metadataType>ISO19115:2003</metadataType>"
 						+ "<content>"
 							+ this.baseCatalogueUrl
-							+ "csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById"
+							+ "/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById"
 							+ "&amp;outputSchema=http://www.isotc211.org/2005/gmd"
 							+ "&amp;ID=" + metadataUuid
 						+ "</content>"
@@ -601,7 +601,7 @@ public class GeoServerRest {
 						+ "<metadataType>TC211</metadataType>"
 						+ "<content>"
 							+ this.baseCatalogueUrl
-							+ "csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById"
+							+ "/csw?SERVICE=CSW&amp;VERSION=2.0.2&amp;REQUEST=GetRecordById"
 							+ "&amp;outputSchema=http://www.isotc211.org/2005/gmd"
 							+ "&amp;ID=" + metadataUuid
 						+ "</content>"
@@ -610,7 +610,7 @@ public class GeoServerRest {
 						+ "<type>text/html</type>"
 						+ "<metadataType>TC211</metadataType>"
 						+ "<content>"
-							+ this.baseCatalogueUrl + "home?uuid=" + metadataUuid
+							+ this.baseCatalogueUrl + "/home?uuid=" + metadataUuid
 						+ "</content>"
 					+ "</metadataLink>"
 				+ "</metadataLinks>"

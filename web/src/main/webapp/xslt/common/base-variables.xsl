@@ -20,7 +20,8 @@
   
   <xsl:variable name="i18n" select="/root/gui/i18n"/>
   <xsl:variable name="lang" select="/root/gui/language"/>
-  
+  <xsl:variable name="requestParameters" select="/root/request"/>
+
   <!-- XSL using this variable should be refactored to not rely on the
   old i18n files. FIXME eg. metadata-fop.xsl -->
   <xsl:variable name="oldGuiStrings" select="/root/gui/strings"/>

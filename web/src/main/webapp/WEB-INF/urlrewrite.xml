@@ -154,17 +154,24 @@
     </rule>
 
     <rule>
-        <note>
-            Retrieves html format for a metadata.
-            Example URL: http://localhost:8080/geonetwork/metadata/eng/da165110-88fd-11da-a88f-000d939bc5d8
-
-            Using type="forward" seem not fine with the redirect done in the home service to classic/widgets UI
-        </note>
-        <from>^/metadata/(.*)/(.*)$</from>
-        <to type="permanent-redirect">%{context-path}/srv/$1/home?uuid=$2</to>
+      <note>
+        Retrieves html format for a metadata (one node mode only).
+        Example URL: http://localhost:8080/geonetwork/metadata/da165110-88fd-11da-a88f-000d939bc5d8
+      </note>
+      <from>^/metadata/(.*)$</from>
+      <to type="permanent-redirect">%{context-path}/?uuid=$1</to>
     </rule>
-    
-    
+    <rule>
+      <note>
+        Retrieves html format for a metadata (multinode mode).
+        Example URL: http://localhost:8080/geonetwork/{{nodeid}}/metadata/da165110-88fd-11da-a88f-000d939bc5d8
+        redirect to
+        http://localhost:8080/geonetwork/?node={{nodeid}}&amp;uuid=ca5e22d6-5bd3-4b6a-bcfb-11462f76cd10
+      </note>
+      <from>^/(.*)/metadata/(.*)$</from>
+      <to type="permanent-redirect">%{context-path}/?uuid=$2&amp;node=$1</to>
+    </rule>
+
     <rule>
         <note>
             map the old xml.user.login to the new login url
