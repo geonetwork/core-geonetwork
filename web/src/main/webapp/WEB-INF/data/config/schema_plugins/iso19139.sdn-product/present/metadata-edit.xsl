@@ -575,8 +575,8 @@
 								<xsl:with-param name="elementRef" select="$refGeoAreaKeywords/../geonet:element/@ref"/>
 								<xsl:with-param name="thesaurusId" select="'local.reference-geographical-area.seadatanet.reference-geographical-area'"/>
 								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join($refGeoAreaKeywords/gmd:keyword/*[1], '!,!'), '''', '\\'''), '!', '''')"/>
-								<xsl:with-param name="listOfTransformations" select="'''to-iso19139-keyword'''"/>
-								<xsl:with-param name="transformation" select="'to-iso19139-keyword'"/>
+								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-keyword-with-anchor'''"/>
+								<xsl:with-param name="transformation" select="'to-iso19139.myocean-keyword-with-anchor'"/>
 							</xsl:call-template>
 						</xsl:with-param>
 					</xsl:apply-templates>
