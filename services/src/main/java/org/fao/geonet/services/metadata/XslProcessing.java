@@ -212,7 +212,8 @@ public class XslProcessing { //extends NotInReadOnlyModeService {
                 boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
 	            Element md = dataMan.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 	
-	            Map<String, String> xslParameter = new HashMap<String, String>();
+	            Map<String, Object> xslParameter = new HashMap<String, Object>();
+
 	            xslParameter.put("guiLang", context.getLanguage());
 	            xslParameter.put("baseUrl", context.getBaseUrl());
                 xslParameter.put("catalogUrl", settingsMan.getSiteURL(context));

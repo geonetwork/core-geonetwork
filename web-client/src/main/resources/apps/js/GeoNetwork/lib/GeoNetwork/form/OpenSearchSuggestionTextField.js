@@ -82,6 +82,14 @@ GeoNetwork.form.OpenSearchSuggestionTextField = Ext.extend(Ext.form.ComboBox, {
          *  Default any (ie. full text search).
          */
         field: 'any',
+        /** api: config[suggestionField]
+         *  ``String`` Optional, GeoNetwork Lucene field to use for suggestion.
+         *  If undefined, field is used. That could be useful to restrict the suggestion
+         *  to a subset of values for this field. For example any match any text
+         *  in a metadata record, but suggestion could be limited to title, abstract, keywords
+         *  stored in the anylight field.
+         */
+        suggestionField: '',
         /** api: config[fieldName] 
          *  ``String`` Optional, Field name.
          */
@@ -155,7 +163,7 @@ GeoNetwork.form.OpenSearchSuggestionTextField = Ext.extend(Ext.form.ComboBox, {
             url: this.url,
             rootId: 1,
             baseParams: {
-                field: this.field,
+                field: this.suggestionField || this.field,
 //                withFrequency: true, // To display frequency info
                 sortBy: this.sortBy
             }

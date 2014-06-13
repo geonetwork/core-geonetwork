@@ -149,4 +149,17 @@
 
     }]);
 
+  module.filter('mdRated', function() {
+    return function(input) {
+      var ret = [];
+      if (angular.isArray(input)) {
+        for (var i = 0; i < input.length; ++i) {
+          if (input[i].rating > 0) {
+            ret.push(input[i]);
+          }
+        }
+      }
+      return ret;
+    }
+  });
 })();

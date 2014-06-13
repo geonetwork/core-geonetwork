@@ -6,7 +6,9 @@
 										xmlns:geonet="http://www.fao.org/geonetwork"
 										xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 										xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                                        xmlns:skos="http://www.w3.org/2004/02/skos/core#">
+                    xmlns:util="java:org.fao.geonet.util.XslUtil"
+                    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    exclude-result-prefixes="#all">
 
 	<xsl:include href="convert/functions.xsl"/>
 	<xsl:include href="../../../xsl/utils-fn.xsl"/>
@@ -47,13 +49,13 @@
   <xsl:variable name="indexAllKeywordDetails" select="true()"/>
 
 
+  <!-- The main metadata language -->
+  <xsl:variable name="isoLangId">
+    <xsl:call-template name="langId19139"/>
+  </xsl:variable>
+
   <!-- ========================================================================================= -->
-
-	<xsl:template match="/">
-	    <xsl:variable name="isoLangId">
-	  	    <xsl:call-template name="langId19139"/>
-        </xsl:variable>
-
+  <xsl:template match="/">
 		<Document locale="{$isoLangId}">
 			<Field name="_locale" string="{$isoLangId}" store="true" index="true"/>
 
@@ -139,7 +141,6 @@
                     <!-- not tokenized title for sorting -->
                     <Field name="_title" string="{string(.)}" store="false" index="true"/>
 				</xsl:for-each>
-	
 				<xsl:for-each select="gmd:alternateTitle/gco:CharacterString">
 					<Field name="altTitle" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
@@ -189,7 +190,7 @@
             <xsl:for-each select="gmd:pointOfContact[1]/*/gmd:role/*/@codeListValue">
             	<Field name="responsiblePartyRole" string="{string(.)}" store="true" index="true"/>
             </xsl:for-each>
-            
+
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 	
 			<xsl:for-each select="gmd:abstract/gco:CharacterString">
@@ -349,7 +350,10 @@
 	
 			<xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode">
 				<Field name="topicCat" string="{string(.)}" store="true" index="true"/>
-				<Field name="keyword" string="{string(.)}" store="true" index="true"/>
+        <Field name="keyword"
+               string="{util:getCodelistTranslation('gmd:MD_TopicCategoryCode', string(.), string($isoLangId))}"
+               store="true"
+               index="true"/>
 			</xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
@@ -750,7 +754,27 @@
 				</xsl:for-each>
 			</xsl:attribute>
 		</Field>
-				
+
+    <xsl:variable name="identification" select="gmd:identificationInfo//gmd:MD_DataIdentification|
+			gmd:identificationInfo//*[contains(@gco:isoType, 'MD_DataIdentification')]|
+			gmd:identificationInfo/srv:SV_ServiceIdentification"/>
+
+
+    <Field name="anylight" store="false" index="true">
+      <xsl:attribute name="string">
+        <xsl:for-each
+            select="$identification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString|
+                    $identification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString|
+                    $identification/gmd:abstract/gco:CharacterString|
+                    $identification/gmd:credit/gco:CharacterString|
+                    $identification//gmd:organisationName/gco:CharacterString|
+                    $identification/gmd:supplementalInformation/gco:CharacterString|
+                    $identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString|
+                    $identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmx:Anchor">
+          <xsl:value-of select="concat(., ' ')"/>
+        </xsl:for-each>
+      </xsl:attribute>
+    </Field>
 		<!--<xsl:apply-templates select="." mode="codeList"/>-->
 		
 	</xsl:template>

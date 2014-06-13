@@ -135,7 +135,6 @@
           }
         }
       };
-
       // Controller initialization
       var init = function() {
         gnConfigService.load().then(function(c) {
@@ -198,10 +197,9 @@
               });
 
               $scope.gnCurrentEdit = gnCurrentEdit;
-
+              $scope.tocIndex = null;
               $scope.editorFormUrl = gnEditor
                 .buildEditUrlPrefix('md.edit') + '&starteditingsession=yes';
-
 
               window.onbeforeunload = function() {
                 // TODO: could be better to provide
@@ -221,6 +219,13 @@
        */
       $scope.onFormLoad = function() {
         gnEditor.onFormLoad();
+        $scope.$watch('tocIndex', function(newValue, oldValue) {
+          $timeout(function () {
+            if (angular.isDefined($scope.tocIndex) && $scope.tocIndex != '') {
+              $scope.switchToTab(gnCurrentEdit.tab);
+            }
+          });
+        });
       };
 
       /**

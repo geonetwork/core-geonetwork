@@ -390,7 +390,7 @@ class Harvester implements IHarvester<HarvestResult>
 	private UUIDMapper     localUuids;
 	private String	 		metadataGetService;
 	private String	 		 stylesheetDirectory;
-	private Map<String,String> ssParams = new HashMap<String,String>();
+	private Map<String,Object> ssParams = new HashMap<String,Object>();
     /**
      * Contains a list of accumulated errors during the executing of this harvest.
      */

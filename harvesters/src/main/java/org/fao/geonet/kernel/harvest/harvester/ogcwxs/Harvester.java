@@ -282,7 +282,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
          if(log.isDebugEnabled()) log.debug ("  - XSLT transformation using " + styleSheet);
 		
-		Map<String, String> param = new HashMap<String, String>();
+		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("lang", params.lang);
 		param.put("topic", params.topic);
 		param.put("uuid", uuid);
@@ -629,7 +629,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		if (!loaded && params.useLayer){
 			try {
 				//--- set XSL param to filter on layer and set uuid
-				Map<String, String> param = new HashMap<String, String>();
+				Map<String, Object> param = new HashMap<String, Object>();
 				param.put("uuid", reg.uuid);
 				param.put("Name", reg.name);
 				param.put("lang", params.lang);

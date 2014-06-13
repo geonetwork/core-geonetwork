@@ -10,19 +10,18 @@
    * GnsearchController provides administration tools
    */
   module.controller('GnSearchController', [
-    '$scope', '$routeParams', '$http', '$rootScope', '$translate', '$compile',
-    'gnSearchManagerService',
-    'gnUtilityService',
-    function($scope, $routeParams, $http, $rootScope, $translate, $compile,
-            gnSearchManagerService, 
-            gnUtilityService) {
+    '$scope',
+    function($scope) {
 
-      // The pagination config
+      $scope.facetsConfig = {
+        keyword: 'keywords',
+        orgName: 'orgNames',
+        denominator: 'denominator',
+        format: 'formats',
+        createDateYear: 'createDateYears'
+      };
       $scope.paginationInfo = {
-        pages: -1,
-        currentPage: 1,
-        hitsPerPage: 10
+        hitsPerPage: 15
       };
     }]);
-
 })();

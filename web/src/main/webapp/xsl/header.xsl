@@ -42,8 +42,6 @@
 		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/modalbox.css"/>
 		<xsl:apply-templates mode="css" select="/"/>
 
-		<!-- JS -->
-		<xsl:call-template name="jsHeader"/>
 		
 	</xsl:template>
 	

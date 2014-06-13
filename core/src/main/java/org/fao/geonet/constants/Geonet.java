@@ -119,6 +119,7 @@ public final class Geonet {
 		public static final String OPERATIONS = "operations";
 		public static final String OPER       = "oper";
 		public static final String SHOWVALIDATIONERRORS   = "showvalidationerrors";
+        public static final String TOC_INDEX = "tocIndex";
 		public static final String SUMMARY    = "summary";
 		public static final String SITE_URL   = "siteURL";
 		public static final String APP_PATH   = "path";

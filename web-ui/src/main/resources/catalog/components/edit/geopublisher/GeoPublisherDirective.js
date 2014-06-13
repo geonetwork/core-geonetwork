@@ -132,11 +132,11 @@
                *
                * @param {Object} gsNode
                */
-              var buildLayerName = function (gsNode) {
+              var buildLayerName = function(gsNode) {
                 // Append prefix for GeoServer.
                 if (gsNode && !isMRA(gsNode)) {
                   scope.wmsLayerName = gsNode.namespacePrefix +
-                    ':' + scope.wmsLayerName;
+                      ':' + scope.wmsLayerName;
                 }
               };
 
@@ -276,14 +276,14 @@
 
                 // Build layer name based on file name
                 scope.layerName = r.name
-                  .replace(/.zip$|.tif$|.tiff$/, '');
+                  .replace(/.zip$|.tif$|.tiff$|.ecw$/, '');
                 scope.wmsLayerName = scope.layerName;
                 if (scope.layerName.match('^jdbc')) {
                   scope.wmsLayerName = scope.layerName.split('#')[1];
                 } else if (scope.layerName.match('^file')) {
                   scope.wmsLayerName = scope.layerName
                     .replace(/.*\//, '')
-                    .replace(/.zip$|.tif$|.tiff$/, '');
+                    .replace(/.zip$|.tif$|.tiff$|.ecw$/, '');
                 }
                 buildLayerName(gsNode);
               };

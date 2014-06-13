@@ -19,6 +19,11 @@
         $translate, $compile, $location,
             gnSearchManagerService) {
 
+      $scope.searchParams = {
+        template: 'y or n',
+        sortBy: 'title'
+      };
+
       $scope.pageMenu = {
         folder: 'usergroup/',
         defaultTab: 'groups',

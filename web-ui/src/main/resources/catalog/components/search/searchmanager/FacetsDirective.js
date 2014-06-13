@@ -12,19 +12,23 @@
 
       return {
         restrict: 'A',
+        require: '^ngSearchForm',
         replace: true,
         templateUrl: '../../catalog/components/search/searchmanager/partials/' +
             'facet-item.html',
         scope: {
-          facets: '=gnFacet',
+          facetResults: '=gnFacet',
           facet: '@',
-          indexKey: '@'
+          indexKey: '@',
+          currentFacets: '='
         },
-        link: function(scope, element, attrs) {
-          scope.indexKey = scope.indexKey || scope.facet;
+        link: function(scope, element, attrs, controller) {
+
           scope.add = function(f, reset) {
-            gnFacetService.add(scope.indexKey, f['@name'], f['@label']);
-            return false;
+            gnFacetService.add(scope.currentFacets, scope.indexKey,
+                f['@name'], f['@label']);
+            controller.resetPagination();
+            controller.triggerSearch();
           };
         }
       };
@@ -37,27 +41,29 @@
         templateUrl: '../../catalog/components/search/searchmanager/partials/' +
             'facet-list.html',
         scope: {
-          facets: '=gnFacetList'
-        },
-        link: function(scope, element, attrs) {
-
+          facets: '=gnFacetList',
+          facetConfig: '=',
+          currentFacets: '='
         }
       };
     }]);
+
   module.directive('gnFacetBreadcrumb', [
-    'gnFacetService', 'gnCurrentFacet',
-    function(gnFacetService, gnCurrentFacet) {
+    'gnFacetService',
+    function(gnFacetService) {
 
       return {
         restrict: 'A',
         replace: true,
+        scope: true,
+        require: '^ngSearchForm',
         templateUrl: '../../catalog/components/search/searchmanager/partials/' +
             'facet-breadcrumb.html',
-        link: function(scope, element, attrs) {
-          scope.currentFacet = gnCurrentFacet.facets;
+        link: function(scope, element, attrs, controller) {
           scope.remove = function(f) {
-            gnFacetService.remove(f);
-            return false;
+            gnFacetService.remove(scope.currentFacets, f);
+            controller.resetPagination();
+            controller.triggerSearch();
           };
         }
       };
