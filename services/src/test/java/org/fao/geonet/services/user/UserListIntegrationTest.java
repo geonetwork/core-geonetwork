@@ -6,7 +6,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.xml.bind.JAXBElement;
 
-import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
@@ -22,10 +21,10 @@ import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.UserRepositoryTest;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * Test listing a user service.
@@ -34,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Date: 10/12/13
  * Time: 8:30 PM
  */
+@RunWith(SpringJUnit4ClassRunner.class)
 public class UserListIntegrationTest extends AbstractServiceIntegrationTest {
     private AtomicInteger inc = new AtomicInteger();
     @Autowired
@@ -42,6 +42,10 @@ public class UserListIntegrationTest extends AbstractServiceIntegrationTest {
     UserGroupRepository _userGroupRepo;
     @Autowired
     GroupRepository _groupRepo;
+
+    @Autowired
+    List listService;
+
 
     @Test
     public void testExecAsUserNoGroups() throws Exception {
@@ -59,8 +63,6 @@ public class UserListIntegrationTest extends AbstractServiceIntegrationTest {
         final User editor = _userRepo.save(entity);
 
         _userRepo.save(UserRepositoryTest.newUser(inc));
-
-        final List listService = new List();
 
         final ServiceContext serviceContext = createServiceContext();
         UserSession userSession = new UserSession();
@@ -87,8 +89,6 @@ public class UserListIntegrationTest extends AbstractServiceIntegrationTest {
 
         _userRepo.save(UserRepositoryTest.newUser(inc));
 
-        final List listService = new List();
-
         final ServiceContext serviceContext = createServiceContext();
         UserSession userSession = new UserSession();
         User administrator = new User().setProfile(Profile.Administrator).setName("admin").setOrganisation("org").setSurname("admin");
@@ -114,8 +114,6 @@ public class UserListIntegrationTest extends AbstractServiceIntegrationTest {
 
         _userGroupRepo.save(new UserGroup().setGroup(group).setUser(user1).setProfile(Profile.Editor));
         _userGroupRepo.save(new UserGroup().setGroup(group).setUser(user2).setProfile(Profile.RegisteredUser));
-
-        final List listService = new List();
 
         final ServiceContext serviceContext = createServiceContext();
         UserSession userSession = new UserSession();
