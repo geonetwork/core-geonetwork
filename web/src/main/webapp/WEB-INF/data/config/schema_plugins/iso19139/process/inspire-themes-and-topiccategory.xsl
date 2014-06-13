@@ -8,6 +8,7 @@
     xmlns:gco="http://www.isotc211.org/2005/gco" 
     xmlns:gmd="http://www.isotc211.org/2005/gmd"
     xmlns:srv="http://www.isotc211.org/2005/srv"
+    xmlns:util="java:org.fao.geonet.util.XslUtil"
     version="2.0" exclude-result-prefixes="#all">
     <!-- 
         Analyze topic categories and INSPIRE themes in the metadata record and suggest to add matching :
@@ -25,7 +26,7 @@
     <xsl:import href="process-utility.xsl"/>
     
     <xsl:variable name="inspire-th"
-        select="document(concat('file:///', replace(system-property(concat(substring-after($baseUrl, '/'), '.codeList.dir')), '\\', '/'), '/external/thesauri/theme/inspire-theme.rdf'))"/>
+        select="document(concat('file:///', replace(util:getConfigValue('codeListDir'), '\\', '/'), '/external/thesauri/theme/inspire-theme.rdf'))"/>
 
     <xsl:variable name="itheme-topiccat-map">
         <!-- <entry>
