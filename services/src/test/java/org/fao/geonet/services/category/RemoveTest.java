@@ -26,6 +26,8 @@ public class RemoveTest extends AbstractServiceIntegrationTest {
     MetadataRepository _MetadataRepository;
     @Autowired
     MetadataCategoryRepository _categoryRepository;
+    @Autowired
+    Remove remove;
 
     AtomicInteger inc = new AtomicInteger();
 
@@ -41,7 +43,7 @@ public class RemoveTest extends AbstractServiceIntegrationTest {
 
         ServiceContext context = createServiceContext();
         loginAsAdmin(context);
-        new Remove().exec(category.getId());
+        remove.exec(category.getId());
 
         assertEquals(beforeCount - 1, _categoryRepository.count());
         assertEquals(1, _MetadataRepository.count());
