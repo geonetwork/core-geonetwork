@@ -80,5 +80,13 @@ public class XmlUpdate{
     static class OkResponse {
         @XmlValue
         private String value = "ok";
+
+		public String getValue() {
+			return value;
+		}
+
+		public void setValue(String value) {
+			this.value = value;
+		}
     }
 }

@@ -100,7 +100,7 @@ public class List {
 
 		java.util.Set<Integer> usersToRemove = new HashSet<Integer>();
 
-		if (!profileSet.contains(Profile.Administrator)) {
+		if (!profileSet.contains(Profile.Administrator.name())) {
 
 			for (User user : all) {
 				int userId = user.getId();
