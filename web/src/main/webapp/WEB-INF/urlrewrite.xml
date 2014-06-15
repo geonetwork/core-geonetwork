@@ -168,7 +168,7 @@
         redirect to
         http://localhost:8080/geonetwork/?node={{nodeid}}&amp;uuid=ca5e22d6-5bd3-4b6a-bcfb-11462f76cd10
       </note>
-      <from>^/(.*)/metadata/(.*)$</from>
+      <from>^/([a-zA-Z0-9_\-]+)/metadata/(.*)$</from>
       <to type="permanent-redirect">%{context-path}/?uuid=$2&amp;node=$1</to>
     </rule>
 
