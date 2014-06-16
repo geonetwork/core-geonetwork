@@ -20,7 +20,7 @@
         </div>
         <div class="form-group">
             <div class="col-xs-12" data-ng-class="validationClassString(contact.role)">
-                <select ng-disabled="contact.validated" id="contactRole" class="form-control" ng-model="contact.role"
+                <select id="contactRole" class="form-control" ng-model="contact.role"
                         data-ng-options="opt.name as opt.title for opt in roleOptions"></select>
             </div>
         </div>

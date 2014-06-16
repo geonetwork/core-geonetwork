@@ -23,6 +23,7 @@ class SaveServiceTestImpl extends Save {
         {
             iso639_1_to_iso639_2IsoLanguagesMap.put("en", "eng");
             iso639_1_to_iso639_2IsoLanguagesMap.put("de", "ger");
+            iso639_1_to_iso639_2IsoLanguagesMap.put("ge", "ger");
             iso639_1_to_iso639_2IsoLanguagesMap.put("fr", "fre");
             iso639_1_to_iso639_2IsoLanguagesMap.put("it", "ita");
             iso639_1_to_iso639_2IsoLanguagesMap.put("rm", "roh");

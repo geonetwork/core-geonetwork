@@ -82,6 +82,21 @@ public class GetEditModelTest {
     }
 
     @Test
+    public void testExecBugs() throws Exception {
+
+        Element params = new Element("params").addContent(new Element("id").setText("2"));
+        ServiceContext context = Mockito.mock(ServiceContext.class);
+
+        File baseFile = new File(GetEditModelTest.class.getResource("inspire-valid-che.xml").toURI()).getParentFile();
+        final Iterable<File> bugs = Files.fileTreeTraverser().children(new File(baseFile, "examples"));
+        for (File bug : bugs) {
+            final Element testMetadata = Xml.loadFile(bug);
+            GetEditModel service = new TestGetEditModel(testMetadata);
+            service.exec(params, context);
+            // no error... good
+        }
+    }
+    @Test
     public void testExecDataIdentification() throws Exception {
         final Element testMetadata = Xml.loadFile(GetEditModelTest.class.getResource("inspire-valid-che.xml"));
 

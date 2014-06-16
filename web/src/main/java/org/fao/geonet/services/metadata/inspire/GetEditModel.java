@@ -538,7 +538,10 @@ public class GetEditModel implements Service {
             Element el = (Element) node;
 
             String langCode = el.getAttributeValue("locale").substring(1).toLowerCase();
-            final String lang = mapper.iso639_1_to_iso639_2(langCode);
+            String lang = mapper.iso639_1_to_iso639_2(langCode);
+            if(lang == null) {
+                lang = langCode;
+            }
 
             obj.put(lang, el.getTextTrim());
         }

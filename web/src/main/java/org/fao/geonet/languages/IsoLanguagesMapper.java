@@ -89,6 +89,8 @@ public class IsoLanguagesMapper {
     	        if(!iso639_1_to_iso639_2IsoLanguagesMap.containsKey(shortcode))
         	        iso639_1_to_iso639_2IsoLanguagesMap.put(shortcode, code);
         }
+
+        iso639_1_to_iso639_2IsoLanguagesMap.put("ge", "ger");
         } catch (SQLException e) {
             e.printStackTrace();
         }
