@@ -210,12 +210,13 @@
         <xsl:for-each select="int:topicCategory/int:GM03_2_1Core.Core.MD_TopicCategoryCode_">
             <gmd:topicCategory>
                 <gmd:MD_TopicCategoryCode>
+                    <xsl:variable name="cat" select="int:value"/>
                     <xsl:choose>
-                        <xsl:when test="contains(value, '.')">
-                            <xsl:value-of select="substring-after(normalize-space(value), '.')"/>
+                        <xsl:when test="contains($cat, '.')">
+                            <xsl:value-of select="substring-after($cat, '.')"/>
                         </xsl:when>
                         <xsl:otherwise>
-                            <xsl:value-of select="int:value"/>
+                            <xsl:value-of select="$cat"/>
                         </xsl:otherwise>
                     </xsl:choose>
                 </gmd:MD_TopicCategoryCode>
