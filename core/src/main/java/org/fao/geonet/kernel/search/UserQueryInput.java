@@ -90,6 +90,8 @@ public class UserQueryInput {
         searchParamToLuceneField.put(SearchParameter.THEMEKEY, LuceneIndexField.KEYWORD);
         searchParamToLuceneField.put(SearchParameter.TOPICCATEGORY, LuceneIndexField.TOPIC_CATEGORY);
         searchParamToLuceneField.put(SearchParameter.CATEGORY, LuceneIndexField.CAT);
+        searchParamToLuceneField.put(SearchParameter.OP_DOWNLOAD, LuceneIndexField._OP1);
+        searchParamToLuceneField.put(SearchParameter.OP_DYNAMIC, LuceneIndexField._OP5);
     }
     private Map<String, Set<String>> searchCriteria = new HashMap<String, Set<String>>();
     private Map<String, Set<String>> searchPrivilegeCriteria = new HashMap<String, Set<String>>();
@@ -309,5 +311,6 @@ public class UserQueryInput {
     public String getEditable() {
         return editable;
     }
+
 
 }
