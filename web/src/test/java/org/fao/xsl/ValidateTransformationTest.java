@@ -1,18 +1,22 @@
 package org.fao.xsl;
 
-import static org.fao.geonet.services.extent.ExtentHelper.ExtentTypeCode.EXCLUDE;
-import static org.fao.geonet.services.extent.ExtentHelper.ExtentTypeCode.INCLUDE;
-import static org.fao.geonet.services.extent.ExtentHelper.ExtentTypeCode.NA;
-import static org.junit.Assert.*;
-
-import java.io.File;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map.Entry;
-
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import jeeves.utils.Xml;
-
-import org.fao.xsl.support.*;
+import org.fao.xsl.support.And;
+import org.fao.xsl.support.Attribute;
+import org.fao.xsl.support.ContainsText;
+import org.fao.xsl.support.Count;
+import org.fao.xsl.support.DoesNotExist;
+import org.fao.xsl.support.EqualText;
+import org.fao.xsl.support.EqualTrimText;
+import org.fao.xsl.support.Exists;
+import org.fao.xsl.support.Finder;
+import org.fao.xsl.support.Not;
+import org.fao.xsl.support.PolygonValidator;
+import org.fao.xsl.support.Prefix;
+import org.fao.xsl.support.Requirement;
+import org.fao.xsl.support.StartsWithText;
 import org.jdom.Element;
 import org.jdom.filter.Filter;
 import org.junit.AfterClass;
@@ -21,8 +25,16 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
+import java.io.File;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map.Entry;
+
+import static org.fao.geonet.services.extent.ExtentHelper.ExtentTypeCode.EXCLUDE;
+import static org.fao.geonet.services.extent.ExtentHelper.ExtentTypeCode.INCLUDE;
+import static org.fao.geonet.services.extent.ExtentHelper.ExtentTypeCode.NA;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class ValidateTransformationTest
 {
@@ -188,7 +200,13 @@ public class ValidateTransformationTest
         file = testFile(file, Control.ISO_GM03, rules, false);
         
         rules.clear();
-        
+        rules.put("che:CHE_MD_DataIdentification/gmd:topicCategory", new Exists(new Finder("MD_TopicCategoryCode", new EqualText("planningCadastre_Planning"))));
+        rules.put("che:CHE_MD_DataIdentification/gmd:topicCategory", new Exists(new Finder("MD_TopicCategoryCode", new EqualText("imageryBaseMapsEarthCover_BaseMaps"))));
+        rules.put("che:CHE_MD_DataIdentification/gmd:topicCategory", new Exists(new Finder("MD_TopicCategoryCode", new EqualText("planningCadastre_Planning"))));
+        rules.put("che:CHE_MD_DataIdentification/gmd:topicCategory", new Exists(new Finder("MD_TopicCategoryCode", new EqualText("geoscientificInformation_Geology"))));
+        rules.put("che:CHE_MD_DataIdentification/gmd:topicCategory", new Exists(new Finder("MD_TopicCategoryCode", new EqualText("environment_EnvironmentalProtection"))));
+        rules.put("che:CHE_MD_DataIdentification/gmd:topicCategory", new Exists(new Finder("MD_TopicCategoryCode", new EqualText("utilitiesCommunication_Energy"))));
+
         testFile(file, Control.GM03_2_ISO, rules, false);
         
     }
