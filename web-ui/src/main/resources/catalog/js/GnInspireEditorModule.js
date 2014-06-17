@@ -451,5 +451,13 @@
       };
   }]);
 
+  module.controller('InspireLinkController', [
+    '$scope', '$translate', function($scope, $translate) {
+
+      $scope.$watchCollection('localizedURL', function(newVal) {
+        console.log(newVal);
+      });
+  }]);
+
 
 }());

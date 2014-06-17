@@ -83,21 +83,6 @@ public class GetEditModelTest {
     }
 
     @Test
-    public void testExecBugs() throws Exception {
-
-        Element params = new Element("params").addContent(new Element("id").setText("2"));
-        ServiceContext context = Mockito.mock(ServiceContext.class);
-
-        File baseFile = new File(GetEditModelTest.class.getResource("inspire-valid-che.xml").toURI()).getParentFile();
-        final Iterable<File> bugs = Files.fileTreeTraverser().children(new File(baseFile, "examples"));
-        for (File bug : bugs) {
-            final Element testMetadata = Xml.loadFile(bug);
-            GetEditModel service = new TestGetEditModel(testMetadata);
-            service.exec(params, context);
-            // no error... good
-        }
-    }
-    @Test
     public void testExecDataIdentification() throws Exception {
         final Element testMetadata = Xml.loadFile(GetEditModelTest.class.getResource("inspire-valid-che.xml"));
 
@@ -220,6 +205,16 @@ public class GetEditModelTest {
         assertTranslations(conformityJSONObject, Save.JSON_CONFORMITY_LINEAGE_STATEMENT,
                 read("ger", "INSPIRE Testdaten"));
 
+
+        JSONArray links = inspireModel.getJSONArray(Save.JSON_LINKS);
+        assertEquals(1, links.length());
+
+        for (int i = 0; i < links.length(); i++) {
+            final JSONObject link = links.getJSONObject(i);
+
+            assertTrue(!link.optString(Save.JSON_LINKS_LOCALIZED_URL, "").isEmpty());
+            assertTrue(!link.optString(Params.REF, "").isEmpty());
+        }
     }
 
     @Test

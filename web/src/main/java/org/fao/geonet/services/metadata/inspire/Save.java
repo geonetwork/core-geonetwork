@@ -121,6 +121,8 @@ public class Save implements Service {
     public static final String JSON_CONFORMITY_ALL_CONFORMANCE_REPORTS = "allConformanceReports";
     public static final String JSON_VALID_METADATA = "metadataIsXsdValid";
     public static final String JSON_CONFORMITY_UPDATE_ELEMENT_REF = "updateResultRef";
+    public static final String JSON_LINKS = "links";
+    public static final String JSON_LINKS_LOCALIZED_URL = "localizedURL";
 
     @Override
     public void init(String appPath, ServiceConfig params) throws Exception {
@@ -151,6 +153,8 @@ public class Save implements Service {
 
             updateConformity(editLib, metadata, metadataSchema, jsonObject, mainLang);
 
+            updateLinks(metadata, jsonObject);
+
             editLib.removeEditingInfo(metadata);
             Element metadataToSave = (Element) metadata.clone();
             final boolean valid = saveMetadata(context, id, dataManager, metadataToSave);
@@ -167,6 +171,36 @@ public class Save implements Service {
             return new Element("pre").addContent(
                     new Element("code").addContent(out.toString()));
         }
+    }
+
+    private void updateLinks(Element metadata, JSONObject jsonObject)
+            throws JSONException, JDOMException {
+        final JSONArray jsonArray = jsonObject.getJSONArray(Save.JSON_LINKS);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            final JSONObject linkJson = jsonArray.getJSONObject(i);
+            String ref = linkJson.getString(Params.REF);
+            final Element element = Xml.selectElement(metadata, "*//*[geonet:element/@ref = '" + ref + "']", NS);
+            final JSONObject localizedURL = linkJson.optJSONObject(JSON_LINKS_LOCALIZED_URL);
+            if (localizedURL != null) {
+                element.setContent(buildLocalizedElem(localizedURL));
+            }
+        }
+    }
+
+    private Element buildLocalizedElem(JSONObject localizedURL) throws JSONException {
+        final Iterator keys = localizedURL.keys();
+        final Element freeUrl = new Element("PT_FreeURL", CHE_NAMESPACE);
+        ArrayList<Element> translations = Lists.newArrayList();
+        while (keys.hasNext()) {
+            String lang = (String) keys.next();
+            final String url = localizedURL.getString(lang);
+            String code = "#" + getIsoLanguagesMapper().iso639_2_to_iso639_1(lang.toLowerCase()).toUpperCase();
+            translations.add(new Element("URLGroup", CHE_NAMESPACE).addContent(
+                    new Element("LocalisedURL", CHE_NAMESPACE).setAttribute("locale", code).setText(url)
+            ));
+        }
+        freeUrl.addContent(translations);
+        return freeUrl;
     }
 
     private void updateConstraints(EditLib editLib, MetadataSchema metadataSchema, Element identificationInfo,

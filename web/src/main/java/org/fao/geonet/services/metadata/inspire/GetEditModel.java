@@ -151,6 +151,7 @@ public class GetEditModel implements Service {
         Element identificationInfo = processIdentificationInfo(metadataEl, metadataJson);
         processConstraints(identificationInfo, metadataJson);
         processConformity(metadataEl, metadataJson);
+        processLinks(metadataEl, metadataJson);
 
         final String jsonString;
         if (pretty) {
@@ -159,6 +160,28 @@ public class GetEditModel implements Service {
             jsonString = metadataJson.toString();
         }
         return new Element("data").setText(jsonString);
+    }
+
+    private void processLinks(Element metadataEl, JSONObject metadataJson) throws JDOMException, JSONException {
+        JSONArray linksJson = new JSONArray();
+        metadataJson.put(Save.JSON_LINKS, linksJson);
+
+        @SuppressWarnings("unchecked")
+        final List<Element> linkages = (List<Element>) Xml.selectNodes(metadataEl,
+                "gmd:distributionInfo//gmd:transferOptions//gmd:linkage", NS);
+
+        for (Element linkage : linkages) {
+            List<?> localisedUrls = Xml.selectNodes(linkage, "*//che:LocalisedURL", NS);
+            JSONObject linkJson = new JSONObject();
+            addRef(linkage, linkJson);
+
+            JSONObject urls = new JSONObject();
+            addTranslationElements(getIsoLanguagesMapper(), urls, localisedUrls);
+
+            linkJson.put(Save.JSON_LINKS_LOCALIZED_URL, urls);
+
+            linksJson.put(linkJson);
+        }
     }
 
     @SuppressWarnings("unchecked")

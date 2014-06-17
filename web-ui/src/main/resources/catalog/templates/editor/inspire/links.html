@@ -1,0 +1,17 @@
+<div>
+    <fieldset>
+        <legend data-translate="">links</legend>
+        <div class="form-group">
+            <div class="table-responsive col-xs-offset-3 col-xs-9">
+                <div data-ng-repeat="link in data.links"
+                     data-ng-controller="InspireLinkController"
+                     data-ng-class="link.isValidURL"
+                     data-inspire-multilingual-text
+                     data-rows="1"
+                     data-main-lang="data.language"
+                     data-languages="data.otherLanguages"
+                     data-field="link.localizedURL"/>
+            </div>
+        </div>
+    </fieldset>
+</div>

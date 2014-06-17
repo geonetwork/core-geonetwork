@@ -169,6 +169,32 @@ public class SaveTest {
 
     }
 
+    @Test
+    public void testUpdateLinks() throws Exception {
+        testMetadata = Xml.loadFile(SaveTest.class.getResource("links/linkages.xml"));
+        service.setTestMetadata(testMetadata);
+
+        String fre = "fre translation";
+        String eng = "eng translation";
+        String json = "{"+Save.JSON_LINKS+":[{ref:\"10\", "+Save.JSON_LINKS_LOCALIZED_URL+": {eng:\""+eng+"\", fre:\""+fre+"\"}}]}";
+
+        service.exec(new Element("request").addContent(Arrays.asList(
+                new Element("id").setText("12"),
+                new Element("data").setText(json)
+        )), context);
+
+        Element eng1 = Xml.selectElement(service.getSavedMetadata(), "*//gmd:transferOptions[1]//che:LocalisedURL[@locale = '#EN']", NS);
+        Element fre1 = Xml.selectElement(service.getSavedMetadata(), "*//gmd:transferOptions[1]//che:LocalisedURL[@locale = '#FR']", NS);
+        Element ger = Xml.selectElement(service.getSavedMetadata(), "*//gmd:transferOptions[2]//che:LocalisedURL[@locale = '#DE']", NS);
+        Element fre2 = Xml.selectElement(service.getSavedMetadata(), "*//gmd:transferOptions[2]//che:LocalisedURL[@locale = '#FR']", NS);
+
+        assertEquals(eng, eng1.getText());
+        assertEquals(fre, fre1.getText());
+        assertEquals("de url2", ger.getText());
+        assertEquals("fr url2", fre2.getText());
+
+    }
+
     protected void assertCorrectlySavedFromEmptyMd() throws JDOMException {
         final Element savedMetadata = service.getSavedMetadata();
 
