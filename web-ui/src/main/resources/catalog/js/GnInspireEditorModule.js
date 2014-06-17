@@ -438,7 +438,17 @@
           }
         }
       });
-
+      $scope.updateConformanceResultTitle = function(desc, mainLang) {
+        if (desc.title[mainLang]) {
+          return desc.title[mainLang];
+        } else if (desc.title[$scope.data.language]) {
+          return desc.title[$scope.data.language];
+        } else if (desc.title.length > 0) {
+          return desc.title[0];
+        } else {
+          return desc.ref;
+        }
+      };
   }]);
 
 

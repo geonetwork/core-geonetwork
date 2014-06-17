@@ -194,11 +194,15 @@ public class GetEditModel implements Service {
             }
         }
 
+        allConformanceResults.put(new JSONObject("{\"ref\": \"\", title: {\"eng\": \"New\", \"ger\": \"Neu\"," +
+                                                 " \"fre\": \"Nouveau\", \"ita\": \"Nuovo\"}}"));
+
         if (conformanceResult == null) {
             conformanceResult = new Element("DQ_ConformanceResult", Geonet.Namespaces.GMD);
         }
 
         JSONObject conformityJson = new JSONObject();
+        conformityJson.put(Save.JSON_CONFORMITY_UPDATE_ELEMENT_REF, "");
         conformityJson.put(Save.JSON_CONFORMITY_ALL_CONFORMANCE_REPORTS, allConformanceResults);
         String mainLanguage = metadataJson.getString(Save.JSON_LANGUAGE);
 

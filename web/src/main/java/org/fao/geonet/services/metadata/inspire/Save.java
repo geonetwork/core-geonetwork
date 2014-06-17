@@ -120,6 +120,7 @@ public class Save implements Service {
     public static final String JSON_CONFORMITY_LINEAGE_STATEMENT = "statement";
     public static final String JSON_CONFORMITY_ALL_CONFORMANCE_REPORTS = "allConformanceReports";
     public static final String JSON_VALID_METADATA = "metadataIsXsdValid";
+    public static final String JSON_CONFORMITY_UPDATE_ELEMENT_REF = "updateResultRef";
 
     @Override
     public void init(String appPath, ServiceConfig params) throws Exception {
@@ -385,6 +386,10 @@ public class Save implements Service {
         }
 
         String conformanceResultRef = conformityJson.optString(JSON_CONFORMITY_RESULT_REF);
+        if (Strings.isNullOrEmpty(conformanceResultRef)) {
+            conformanceResultRef = conformityJson.optString(JSON_CONFORMITY_UPDATE_ELEMENT_REF);
+        }
+
         Element conformanceResult = null;
         if (!Strings.isNullOrEmpty(conformanceResultRef)) {
             conformanceResult = Xml.selectElement(metadata, "gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report//gmd:DQ_ConformanceResult[geonet:element/@ref = '" +

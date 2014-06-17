@@ -69,6 +69,7 @@
             "security": []
           },
           "conformity": {
+            "updateResultRef": "",
             "allConformanceReports": [],
             "conformanceResultRef": '',
             "title": {},

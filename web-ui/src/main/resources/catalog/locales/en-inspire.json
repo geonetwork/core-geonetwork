@@ -47,5 +47,6 @@
   "loadingMetadata": "Loading Metadata.  Please Wait...",
   "update": "Update",
   "createNew": "Create",
+  "updateElement": "Conformance Report to Update",
   "xsdInvalidWarning": "The record is not valid according to the XML Schema.  Use the normal editor to fix XML Schema errors"
 }
