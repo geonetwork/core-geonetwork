@@ -11,6 +11,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
+import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -19,6 +20,7 @@ import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.metadata.AjaxEditUtils;
@@ -129,9 +131,16 @@ public class GetEditModel implements Service {
     @Override
     public Element exec(Element params, ServiceContext context) throws Exception {
         boolean pretty = Util.getParam(params, "pretty", false);
-        Element metadataEl = getMetadata(params, context, getAjaxEditUtils(params, context));
+        final Pair<Element, Boolean> pair = getMetadata(params, context, getAjaxEditUtils(params, context));
+        Element metadataEl = pair.one();
 
+
+        return createModel(context, pretty, metadataEl, pair.two());
+    }
+
+    protected Element createModel(ServiceContext context, boolean pretty, Element metadataEl, Boolean valid) throws Exception {
         JSONObject metadataJson = new JSONObject();
+        metadataJson.put(Save.JSON_VALID_METADATA, valid);
         addCodeLists(context, metadataJson);
         metadataJson.append("metadataTypeOptions", "data");
         metadataJson.append("metadataTypeOptions", "service");
@@ -158,10 +167,19 @@ public class GetEditModel implements Service {
                 "gmd:dataQualityInfo/*/gmd:report//gmd:DQ_ConformanceResult", NS);
 
         Element conformanceResult = null;
-
+        JSONArray allConformanceResults = new JSONArray();
         for (Element conformityElement : conformityElements) {
             List<Element> titles = (List<Element>) Xml.selectNodes(conformityElement,
                     "gmd:specification//gmd:title//gmd:LocalisedCharacterString", NS);
+
+
+            JSONObject conformanceJSON = new JSONObject();
+            JSONObject titleJson = new JSONObject();
+            addTranslationElements(getIsoLanguagesMapper(), titleJson, titles);
+            conformanceJSON.put(Save.JSON_TITLE, titleJson);
+            addRef(conformityElement, conformanceJSON);
+            allConformanceResults.put(conformanceJSON);
+
 
             for (Element title : titles) {
 
@@ -181,6 +199,7 @@ public class GetEditModel implements Service {
         }
 
         JSONObject conformityJson = new JSONObject();
+        conformityJson.put(Save.JSON_CONFORMITY_ALL_CONFORMANCE_REPORTS, allConformanceResults);
         String mainLanguage = metadataJson.getString(Save.JSON_LANGUAGE);
 
         addValue(conformanceResult, conformityJson, Save.JSON_CONFORMITY_RESULT_REF, "geonet:element/@ref");
@@ -398,8 +417,11 @@ public class GetEditModel implements Service {
     }
 
     private void addRef(Element constraint, JSONObject json) throws JSONException {
-        String ref = constraint.getChild("element", GEONET).getAttributeValue(Params.REF);
-        json.put(Params.REF, ref);
+        final Element element = constraint.getChild("element", GEONET);
+        if (element != null) {
+            String ref = element.getAttributeValue(Params.REF);
+            json.put(Params.REF, ref);
+        }
     }
 
     private Element processIdentificationInfo(Element metadataEl, JSONObject metadataJson) throws Exception {
@@ -548,21 +570,25 @@ public class GetEditModel implements Service {
     }
 
     @VisibleForTesting
-    protected Element getMetadata(Element params, ServiceContext context, AjaxEditUtils ajaxEditUtils) throws Exception {
+    protected Pair<Element, Boolean> getMetadata(Element params, ServiceContext context, AjaxEditUtils ajaxEditUtils) throws Exception {
         String id = Utils.getIdentifierFromParameters(params, context);
 
         Element metadata = (Element) context.getUserSession().getProperty(Geonet.Session.METADATA_EDITING + id);
         if (metadata == null) {
             metadata = ajaxEditUtils.getMetadataEmbedded(context, id, true, false);
+            context.getUserSession().setProperty(Geonet.Session.METADATA_EDITING + id, metadata);
         }
         GeonetContext geonetContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SchemaManager schemaManager = geonetContext.getSchemamanager();
         EditLib lib = new EditLib(schemaManager);
 
         lib.removeEditingInfo(metadata);
+        Processor.processXLink(metadata, context);
+        final boolean valid = geonetContext.getDataManager().validate(metadata);
         lib.enumerateTree(metadata);
 
-        return metadata;
+
+        return Pair.read(metadata, valid);
     }
 
     @VisibleForTesting
@@ -601,8 +627,11 @@ public class GetEditModel implements Service {
         public Object encode(String mainLanguage, Element node, IsoLanguagesMapper mapper) throws JDOMException, JSONException, UnsupportedEncodingException {
             JSONObject json = new JSONObject();
 
-            String id = URLDecoder.decode(org.fao.geonet.kernel.reusable.Utils.id(XLink.getHRef(node)), "UTF-8");
-            addValue(node, json, Save.JSON_CONTACT_ID, id);
+            final String hRef = XLink.getHRef(node);
+            if (hRef != null) {
+                String id = URLDecoder.decode(org.fao.geonet.kernel.reusable.Utils.id(hRef), "UTF-8");
+                addValue(node, json, Save.JSON_CONTACT_ID, id);
+            }
             addValue(node, json, Save.JSON_CONTACT_FIRST_NAME, "che:CHE_CI_ResponsibleParty/che:individualFirstName");
             addValue(node, json, Save.JSON_CONTACT_LAST_NAME, "che:CHE_CI_ResponsibleParty/che:individualLastName");
             addValue(node, json, Save.JSON_CONTACT_ROLE, "che:CHE_CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue");
@@ -612,7 +641,7 @@ public class GetEditModel implements Service {
 
             addTranslatedElement(mainLanguage, node, mapper, json, Save.JSON_CONTACT_ORG_NAME, "che:CHE_CI_ResponsibleParty/gmd:organisationName");
             boolean validated = true;
-            if (node.getAttributeValue("role", XLINK).equals(ReusableObjManager.NON_VALID_ROLE)) {
+            if (ReusableObjManager.NON_VALID_ROLE.equals(node.getAttributeValue("role", XLINK))) {
                 validated = false;
             }
 
@@ -635,8 +664,11 @@ public class GetEditModel implements Service {
         public Object encode(String mainLanguage, Element node, IsoLanguagesMapper mapper) throws Exception {
             JSONObject json = new JSONObject();
 
-            String code = URLDecoder.decode(org.fao.geonet.kernel.reusable.Utils.id(XLink.getHRef(node)), "UTF-8");
-            json.put(Save.JSON_IDENTIFICATION_KEYWORD_CODE, code);
+            final String hRef = XLink.getHRef(node);
+            if (hRef != null) {
+                String code = URLDecoder.decode(org.fao.geonet.kernel.reusable.Utils.id(hRef), "UTF-8");
+                json.put(Save.JSON_IDENTIFICATION_KEYWORD_CODE, code);
+            }
             addTranslatedElement(mainLanguage, node, mapper, json, Save.JSON_IDENTIFICATION_KEYWORD_WORD, "gmd:MD_Keywords/gmd:keyword");
 
             return json;
@@ -720,13 +752,15 @@ public class GetEditModel implements Service {
         public Object encode(String mainLanguage, Element node, IsoLanguagesMapper mapper) throws Exception {
             JSONObject json = new JSONObject();
             final String href = XLink.getHRef(node);
-            String id = URLDecoder.decode(org.fao.geonet.kernel.reusable.Utils.id(href), "UTF-8");
-            final Matcher matcher = typenamePattern.matcher(href);
-            if (!matcher.find()) {
-                throw new AssertionError("Unable to extract the typename in extent href: " + href);
+            if (href != null) {
+                String id = URLDecoder.decode(org.fao.geonet.kernel.reusable.Utils.id(href), "UTF-8");
+                final Matcher matcher = typenamePattern.matcher(href);
+                if (!matcher.find()) {
+                    throw new AssertionError("Unable to extract the typename in extent href: " + href);
+                }
+                String featureType = typenameMapper.get(matcher.group(1));
+                json.put(Save.JSON_IDENTIFICATION_EXTENT_GEOM, featureType + ":" + id);
             }
-            String featureType = typenameMapper.get(matcher.group(1));
-            json.put(Save.JSON_IDENTIFICATION_EXTENT_GEOM, featureType + ":" + id);
             addTranslatedElement(mainLanguage, node, mapper, json, Save.JSON_IDENTIFICATION_EXTENT_DESCRIPTION, "gmd:EX_Extent/gmd:description");
 
             return json;

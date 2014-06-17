@@ -1,0 +1,104 @@
+{"characterSet": "utf8", "hierarchyLevelName": "", "constraints": {
+  "generic": [],
+  "legal": [
+    {
+      "legislationConstraints": [],
+      "ref": "252",
+      "useLimitations": [
+        {
+          "ger": "asdfasfsaf"
+        }
+      ],
+      "otherConstraints": [],
+      "useConstraints": ["license"],
+      "accessConstraints": ["intellectualPropertyRights"]
+    }
+  ],
+  "security": []
+}, "otherLanguages": ["ger", "fre", "ita", "eng"], "contact": [
+  {
+    "id": "1",
+    "organization": {
+      "ita": "Ufficio federale di topografia",
+      "ger": "Bundesamt für Landestopografie",
+      "fre": "Office fédéral de topographie",
+      "eng": "Federal Office of Topography"
+    },
+    "email": "metadata@swisstopo.ch",
+    "name": "",
+    "role": "owner",
+    "surname": "metadata",
+    "validated": false
+  }
+], "hierarchyLevel": "dataset", "identification": {
+  "extents": [
+    {
+      "description": {
+        "eng": "Bern",
+        "ger": "Bern"
+      },
+      "geom": "kantone:2"
+    }
+  ],
+  "abstract": {
+    "ger": "Zusammenfassung Test INSPIRE",
+    "fre": "Résumé Test INSPIRE"
+  },
+  "title": {
+    "ger": "Inspire Test mit Vertriebsinfo/Qualität",
+    "fre": "Test INSPIRE avec Infos distribution et qualité"
+  },
+  "pointOfContact": [
+    {
+      "id": "1",
+      "organization": {
+        "ita": "Ufficio federale di topografia",
+        "ger": "Bundesamt für Landestopografie",
+        "fre": "Office fédéral de topographie",
+        "eng": "Federal Office of Topography"
+      },
+      "email": "geodata@swisstopo.ch",
+      "name": "",
+      "role": "owner",
+      "surname": "geodata",
+      "validated": false
+    }
+  ],
+  "citationIdentifier": "INSPIRE Nr. 123",
+  "descriptiveKeywords": [
+    {
+      "code": "http://rdfdata.eionet.europa.eu/inspirethemes/themes/15", "words": {
+      "eng": "Buildings"}},
+    {
+      "code": "http://rdfdata.eionet.europa.eu/inspirethemes/themes/9", "words": {
+      "eng": "Hydrography", "ger": "Schutzgebiete"}}],
+  "topicCategory": ["structure"],
+  "language": "ger",
+  "serviceType": "",
+  "date": {
+    "dateTagName": "gco:Date",
+    "dateType": "creation",
+    "date": "2012-08-23"
+  },
+  "type": "data"
+}, "language": "ger", "conformity": {
+  "title": {
+    "ita": "REGOLAMENTO (UE) N. 1089/2010 DELLA COMMISSIONE del 23 novembre 2010 recante attuazione della direttiva 2007/2/CE del Parlamento europeo e del Consiglio per quanto riguarda l'interoperabilità dei set di dati territoriali e dei servizi di dati territoriali",
+    "ger": "VERORDNUNG (EG) NR. 1089/2010 DER KOMMISSION VOM 23. NOVEMBER 2010 ZUR DURCHFÜHRUNG DER RICHTLINIE 2007/2/EG DES EUROPÄISCHEN PARLAMENTS UND DES RATES HINSICHTLICH DER INTEROPERABILITÄT VON GEODATENSÄTZEN UND -DIENSTEN",
+    "fre": "Règlement (UE) n o 1089/2010 de la commission du 23 novembre 2010 portant modalités d'application de la directive 2007/2/ce du Parlement Européen et du conseil en ce qui concerne l'interopérabilité des séries et des services de données géographiques",
+    "eng": "COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services"
+  },
+  "lineage": {
+    "statement": {
+      "ger": "INSPIRE Testdaten"
+    },
+    "ref": "398"
+  },
+  "explanation": "asdfasfsaf",
+  "date": {
+    "dateTagName": "gco:Date",
+    "dateType": "publication",
+    "date": "2010-12-08"
+  },
+  "pass": "true"
+}}

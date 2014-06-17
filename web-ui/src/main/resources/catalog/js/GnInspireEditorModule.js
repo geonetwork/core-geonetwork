@@ -140,22 +140,19 @@
         delete dataClone.metadataTypeOptions;
         delete dataClone.scopeCodeOptions;
         delete dataClone.conformityTitleOptions;
+        delete dataClone.allConformanceReports;
 
         var data = JSON.stringify(dataClone);
         return $http({
           method: 'POST',
-          url: $scope.url + "inspire.edit.save",
+          url: $scope.url + "inspire.edit.save@json",
           data: 'id=' + mdId + '&data=' + data,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).success(function (data) {
-          if (!/.*<ok\s*\/\s*>.*/ig.test(data)) {
+          if (typeof data[0] == 'string') {
 
             if (waitDialog) {
               waitDialog.modal('hide');
-            }
-
-            if (/.*<body\s*.*/ig.test(data)) {
-              data = '<div>' + $translate("unexpectedSaveError") + '</div>';
             }
 
             var dialogContentEl = $('#errorDialogContent');
@@ -163,10 +160,12 @@
             dialogContentEl.append(data);
             $('#errorDialog').modal();
           }
+
           if (editTab) {
             allowUnload = true;
             window.location.href = 'metadata.edit?id=' + mdId + '&currTab=' + editTab;
           } else {
+            angular.copy(data[0], $scope.data);
             if (waitDialog) {
               waitDialog.modal('hide');
             }

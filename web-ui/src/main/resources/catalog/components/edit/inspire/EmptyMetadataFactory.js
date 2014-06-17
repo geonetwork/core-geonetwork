@@ -10,6 +10,7 @@
         // This data is used as test data for SaveTest so run SaveTest when editing this file
         // START TEST DATA
         return {
+          "metadataIsXsdValid": true,
           "roleOptions": [],
           "dateTypeOptions": [],
           "hierarchyLevelOptions": [],
@@ -68,6 +69,7 @@
             "security": []
           },
           "conformity": {
+            "allConformanceReports": [],
             "conformanceResultRef": '',
             "title": {},
             "date": {

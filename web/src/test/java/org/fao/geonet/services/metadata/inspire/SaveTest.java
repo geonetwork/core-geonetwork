@@ -11,6 +11,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.GeonetworkDataDirectory;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.EditLibTest;
 import org.fao.geonet.kernel.SchemaManager;
@@ -53,6 +54,7 @@ public class SaveTest {
     private SaveServiceTestImpl service;
     private GeonetContext geonetContext;
     private ServiceContext context;
+    private DataManager _dataManager;
 
     @BeforeClass
     public static void initSchemaManager() throws Exception {
@@ -89,9 +91,12 @@ public class SaveTest {
 
 
         this.service = new SaveServiceTestImpl(testMetadata);
+        this._dataManager = Mockito.mock(DataManager.class);
+        Mockito.when(_dataManager.validate(Mockito.any(Element.class))).thenReturn(true);
 
         this.geonetContext = Mockito.mock(GeonetContext.class);
         Mockito.when(geonetContext.getSchemamanager()).thenReturn(this._schemaManager);
+        Mockito.when(geonetContext.getDataManager()).thenReturn(this._dataManager);
 
         this.context = Mockito.mock(ServiceContext.class);
         Mockito.when(context.getHandlerContext(Mockito.anyString())).thenReturn(geonetContext);
@@ -111,7 +116,7 @@ public class SaveTest {
                 new Element("data").setText(testJson)
         )), context);
 
-        assertEquals(Xml.getString(result), "ok", result.getName());
+        assertEquals(Xml.getString(result), "data", result.getName());
         assertEquals(2, Xml.selectNodes(testMetadata,
                 "gmd:dataQualityInfo/*/gmd:report//gmd:DQ_ConformanceResult", NS).size());
     }
@@ -166,6 +171,7 @@ public class SaveTest {
 
     protected void assertCorrectlySavedFromEmptyMd() throws JDOMException {
         final Element savedMetadata = service.getSavedMetadata();
+
         assertEquals(Xml.selectString(savedMetadata, "gmd:language/gco:CharacterString", NS), "eng");
         assertEquals(Xml.selectString(savedMetadata, "gmd:hierarchyLevelName/gco:CharacterString", NS), "");
         assertEquals(Xml.selectString(savedMetadata, "gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue", NS), "utf8");
@@ -257,7 +263,6 @@ public class SaveTest {
         Element conformityCitation = (Element) conformityCitations.get(0);
 
         assertNotNull(Xml.selectElement(testMetadata, "gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:scope", NS));
-        assertEquals(0, Xml.selectNodes(testMetadata, "gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:scope/*", NS).size());
 
         final String title = Xml.selectString(conformityCitation, "gmd:title/gco:CharacterString", NS);
         assertEquals("conformity title",title);
@@ -337,7 +342,6 @@ public class SaveTest {
 
     @Test
     public void testConstraintsAreDeletedWhenDeletedFromInspireData() throws Exception {
-        String metadataMainLang = "eng";
         JSONObject json = new JSONObject(loadTestJson());
         json.remove("identification");
         json.remove("language");
@@ -356,7 +360,7 @@ public class SaveTest {
                 new Element("data").setText(json.toString())
         )), context);
 
-        assertEquals("ok", result.getName());
+        assertEquals("data", result.getName());
 
         final Element identification = Xml.selectElement(service.getSavedMetadata(), "gmd:identificationInfo/*", NS);
 
@@ -456,7 +460,7 @@ public class SaveTest {
                 new Element("data").setText(json.toString())
         )), context);
 
-        assertEquals(Xml.getString(result), "ok", result.getName());
+        assertEquals(Xml.getString(result), "data", result.getName());
 
         final Element savedMetadata = service.getSavedMetadata();
         final Element identificationInfo = Xml.selectElement(savedMetadata, "gmd:identificationInfo/*", Save.NS);
@@ -534,7 +538,7 @@ public class SaveTest {
                 new Element("data").setText(json.toString())
         )), context);
 
-        assertEquals(Xml.getString(result), "ok", result.getName());
+        assertEquals(Xml.getString(result), "data", result.getName());
 
         final Element savedMetadata = service.getSavedMetadata();
         final Element identificationInfo = Xml.selectElement(savedMetadata, "gmd:identificationInfo/*", Save.NS);
@@ -546,6 +550,35 @@ public class SaveTest {
         assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:citation//gmd:dateType", Save.NS).size());
         assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:abstract", Save.NS).size());
         assertEquals(2, Xml.selectNodes(identificationInfo, "gmd:descriptiveKeywords", Save.NS).size());
+    }
+
+    @Test
+    public void testUpdate_Conformity_Bug_Causes_Invalid_XML() throws Exception {
+        testMetadata = Xml.loadFile(SaveTest.class.getResource("updateConformityMultipleResultInResultElem/metadata.xml"));
+        service.setTestMetadata(testMetadata);
+
+        final String jsonString = loadTestJson("updateConformityMultipleResultInResultElem/request.json");
+        JSONObject json = new JSONObject(jsonString);
+
+        final Element result = service.exec(new Element("request").addContent(Arrays.asList(
+                new Element("id").setText("12"),
+                new Element("data").setText(json.toString())
+        )), context);
+
+        assertEquals("data", result.getName());
+        final Element savedMetadata = service.getSavedMetadata();
+        List<Element> conformanceResults = (List<Element>) Xml.selectNodes(savedMetadata, "gmd:dataQualityInfo//gmd:result", NS);
+
+        assertEquals(2, conformanceResults.size());
+
+        for (Element conformanceResult : conformanceResults) {
+            assertTrue(conformanceResult.getChildren("DQ_ConformanceResult", GMD).size() < 2);
+        }
+
+        final Element scope = Xml.selectElement(savedMetadata, "gmd:dataQualityInfo//gmd:scope[" +
+                                                                              ".//gmd:MD_ScopeCode/@codeListValue = 'dataset']", NS);
+
+        assertNotNull(scope);
     }
 
     private void assertSharedObject(Element identification, String elemName, String xlink, boolean validated) throws JDOMException {

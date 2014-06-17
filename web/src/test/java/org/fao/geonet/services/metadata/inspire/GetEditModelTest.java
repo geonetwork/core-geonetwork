@@ -27,6 +27,7 @@ import java.util.regex.Pattern;
 
 import static org.fao.geonet.kernel.search.spatial.Pair.read;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class GetEditModelTest {
@@ -108,6 +109,7 @@ public class GetEditModelTest {
         final Element result = service.exec(params, context);
         final JSONObject inspireModel = new JSONObject(result.getTextTrim());
 
+        assertEquals(true, inspireModel.getBoolean(Save.JSON_VALID_METADATA));
         assertEquals("ger", inspireModel.getString(Save.JSON_LANGUAGE));
         assertEquals("utf8", inspireModel.getString(Save.JSON_CHARACTER_SET));
         assertEquals("dataset", inspireModel.getString(Save.JSON_HIERARCHY_LEVEL));
@@ -331,6 +333,30 @@ public class GetEditModelTest {
 
     }
 
+    @Test
+    public void testConformity_Existing_NonInspire() throws Exception {
+        final Element testMetadata = Xml.loadFile(GetEditModelTest.class.getResource("updateConformityMultipleResultInResultElem/metadata.xml"));
+
+        GetEditModel service = new TestGetEditModel(testMetadata);
+
+        Element params = new Element("params").addContent(new Element("id").setText("2"));
+        ServiceContext context = Mockito.mock(ServiceContext.class);
+
+        final Element result = service.exec(params, context);
+        final JSONObject inspireModel = new JSONObject(result.getTextTrim());
+
+
+        JSONObject conformity = inspireModel.getJSONObject(Save.JSON_CONFORMITY);
+
+        final JSONArray otherReports = conformity.getJSONArray(Save.JSON_CONFORMITY_ALL_CONFORMANCE_REPORTS);
+
+        assertEquals(1, otherReports.length());
+        assertFalse(otherReports.getJSONObject(0).getString(Params.REF).isEmpty());
+        final JSONObject titleObject = otherReports.getJSONObject(0).getJSONObject(Save.JSON_TITLE);
+        assertEquals(1, titleObject.length());
+        assertEquals(titleObject.toString(), "INSPIRE Implementing rules", titleObject.getString("ger"));
+    }
+
     private void assertJSONArray(JSONArray jsonArray, String... langs) throws JSONException {
         for (int i = 0; i < langs.length; i++) {
             String lang = langs[i];
@@ -423,13 +449,13 @@ public class GetEditModelTest {
         }
 
         @Override
-        protected Element getMetadata(Element params, ServiceContext context, AjaxEditUtils ajaxEditUtils) throws Exception {
+        protected Pair<Element, Boolean> getMetadata(Element params, ServiceContext context, AjaxEditUtils ajaxEditUtils) throws Exception {
             EditLib lib = new EditLib(Mockito.mock(SchemaManager.class));
 
             lib.removeEditingInfo(testMetadata);
             lib.enumerateTree(testMetadata);
 
-            return testMetadata;
+            return Pair.read(testMetadata, true);
         }
 
         @Override

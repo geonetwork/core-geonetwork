@@ -118,6 +118,8 @@ public class Save implements Service {
     public static final String JSON_CONFORMITY_EXPLANATION = "explanation";
     public static final String JSON_CONFORMITY_LINEAGE = "lineage";
     public static final String JSON_CONFORMITY_LINEAGE_STATEMENT = "statement";
+    public static final String JSON_CONFORMITY_ALL_CONFORMANCE_REPORTS = "allConformanceReports";
+    public static final String JSON_VALID_METADATA = "metadataIsXsdValid";
 
     @Override
     public void init(String appPath, ServiceConfig params) throws Exception {
@@ -148,11 +150,13 @@ public class Save implements Service {
 
             updateConformity(editLib, metadata, metadataSchema, jsonObject, mainLang);
 
+            editLib.removeEditingInfo(metadata);
             Element metadataToSave = (Element) metadata.clone();
-            editLib.removeEditingInfo(metadataToSave);
-            saveMetadata(context, id, dataManager, metadataToSave);
+            final boolean valid = saveMetadata(context, id, dataManager, metadataToSave);
 
-            return new Element("ok");
+
+            editLib.enumerateTree(metadata);
+            return new GetEditModel().createModel(context, false, metadata, valid);
         } catch (Throwable t) {
 
             Log.error(Geonet.EDITOR, "Error in Save", t);
@@ -373,8 +377,8 @@ public class Save implements Service {
         addElementFromXPath(editLib, metadataSchema, metadata, "gmd:dateStamp", dateStamp);
     }
 
-    private void updateConformity(EditLib editLib, Element metadata, MetadataSchema metadataSchema, JSONObject jsonObject, String mainLang) throws
-            JDOMException, JSONException {
+    private void updateConformity(EditLib editLib, Element metadata, MetadataSchema metadataSchema, JSONObject jsonObject,
+                                  String mainLang) throws Exception {
         JSONObject conformityJson = jsonObject.optJSONObject(JSON_CONFORMITY);
         if (conformityJson == null) {
             return;
@@ -389,16 +393,28 @@ public class Save implements Service {
 
         if (conformanceResult == null) {
             conformanceResult = new Element("DQ_ConformanceResult", GMD);
-            addElementFromXPath(editLib, metadataSchema, metadata,
-                    "gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result",
-                    new Element(EditLib.SpecialUpdateTags.ADD, GEONET).addContent(conformanceResult));
 
+            // iso19139 allows multiple gmd:results but inspire doesn't so check that we don't add an extra unintentionally
+            final String xpathToResult = "gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result";
+            final Element resultEl = Xml.selectElement(metadata, xpathToResult, NS);
+            if (resultEl == null) {
+                addElementFromXPath(editLib, metadataSchema, metadata, xpathToResult,
+                        new Element(EditLib.SpecialUpdateTags.ADD, GEONET).addContent(conformanceResult));
+            } else {
+                final Element gmdDQ_DataQuality = resultEl.getParentElement().getParentElement().getParentElement();
+                final Element gmdReport = editLib.addElement(metadataSchema.getName(), gmdDQ_DataQuality, "gmd:report");
+                addElementFromXPath(editLib, metadataSchema, gmdReport, "gmd:DQ_DomainConsistency/gmd:result",
+                        new Element(EditLib.SpecialUpdateTags.ADD, GEONET).addContent(conformanceResult));
+            }
 
+            final Element gmdDQ_DataQuality = conformanceResult.getParentElement().getParentElement().getParentElement().getParentElement();
 
-            List<Element> element = Lists.newArrayList((List<Element>)
-                    Xml.selectNodes(metadata, "gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:scope/*", NS));
-            for (Element e : element) {
-                e.detach();
+            @SuppressWarnings("unchecked")
+            final List<Element> dqScopes = new ArrayList<Element>((java.util.Collection<? extends Element>) Xml.selectNodes(gmdDQ_DataQuality, "gmd:scope/gmd:DQ_Scope"));
+            for (Element scope : dqScopes) {
+                if (scope.getChildren().isEmpty()) {
+                    scope.detach();
+                }
             }
         }
 
@@ -873,10 +889,17 @@ public class Save implements Service {
     }
 
     @VisibleForTesting
-    protected void saveMetadata(ServiceContext context, String id, DataManager dataManager, Element metadata) throws Exception {
+    protected boolean saveMetadata(ServiceContext context, String id, DataManager dataManager, Element metadata) throws Exception {
         Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        dataManager.updateMetadata(context, dbms, id, metadata, false, true, true, context.getLanguage(), null,
-                true, true);
+        dataManager.updateMetadata(context, dbms, id, metadata, false, true, true, context.getLanguage(), null, true, true);
+        context.getUserSession().setProperty(Geonet.Session.METADATA_EDITING + id, metadata);
+
+        Element mdForValidation = dataManager.getMetadata(dbms, id);
+        GeonetContext geonetContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SchemaManager scm = geonetContext.getSchemamanager();
+
+        new EditLib(scm).removeEditingInfo(mdForValidation);
+        return dataManager.validate(mdForValidation);
     }
 
     @VisibleForTesting

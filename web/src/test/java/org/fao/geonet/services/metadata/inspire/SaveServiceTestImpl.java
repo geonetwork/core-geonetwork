@@ -244,9 +244,10 @@ class SaveServiceTestImpl extends Save {
     }
 
     @Override
-    protected void saveMetadata(ServiceContext context, String id, DataManager dataManager, Element metadata) throws Exception {
+    protected boolean saveMetadata(ServiceContext context, String id, DataManager dataManager, Element metadata) throws Exception {
         this.saved = true;
         this.savedMetadata = metadata;
+        return true;
     }
 
     public boolean isSaved() {
