@@ -213,7 +213,9 @@ public class GetEditModelTest {
             final JSONObject link = links.getJSONObject(i);
 
             assertTrue(!link.optString(Save.JSON_LINKS_LOCALIZED_URL, "").isEmpty());
-            assertTrue(!link.optString(Params.REF, "").isEmpty());
+            assertTrue(!link.optString(Save.JSON_LINKS_LOCALIZED_URL, "").isEmpty());
+            assertTrue(!link.optString(Save.JSON_LINKS_DESCRIPTION, "").isEmpty());
+            assertTrue(!link.optString(Save.JSON_LINKS_PROTOCOL, "").isEmpty());
         }
     }
 
@@ -345,7 +347,7 @@ public class GetEditModelTest {
 
         final JSONArray otherReports = conformity.getJSONArray(Save.JSON_CONFORMITY_ALL_CONFORMANCE_REPORTS);
 
-        assertEquals(1, otherReports.length());
+        assertEquals(2, otherReports.length());
         assertFalse(otherReports.getJSONObject(0).getString(Params.REF).isEmpty());
         final JSONObject titleObject = otherReports.getJSONObject(0).getJSONObject(Save.JSON_TITLE);
         assertEquals(1, titleObject.length());

@@ -176,7 +176,7 @@ public class SaveTest {
 
         String fre = "fre translation";
         String eng = "eng translation";
-        String json = "{"+Save.JSON_LINKS+":[{ref:\"10\", "+Save.JSON_LINKS_LOCALIZED_URL+": {eng:\""+eng+"\", fre:\""+fre+"\"}}]}";
+        String json = loadTestJson("links/request.json");
 
         service.exec(new Element("request").addContent(Arrays.asList(
                 new Element("id").setText("12"),
@@ -187,12 +187,45 @@ public class SaveTest {
         Element fre1 = Xml.selectElement(service.getSavedMetadata(), "*//gmd:transferOptions[1]//che:LocalisedURL[@locale = '#FR']", NS);
         Element ger = Xml.selectElement(service.getSavedMetadata(), "*//gmd:transferOptions[2]//che:LocalisedURL[@locale = '#DE']", NS);
         Element fre2 = Xml.selectElement(service.getSavedMetadata(), "*//gmd:transferOptions[2]//che:LocalisedURL[@locale = '#FR']", NS);
+        assertEquals(2, Xml.selectNodes(service.getSavedMetadata(), "*//gmd:transferOptions//gmd:CI_OnlineResource", NS).size());
 
         assertEquals(eng, eng1.getText());
         assertEquals(fre, fre1.getText());
         assertEquals("de url2", ger.getText());
         assertEquals("fr url2", fre2.getText());
 
+    }
+
+    @Test
+    public void testSaveServiceType() throws Exception {
+        testMetadata = Xml.loadFile(SaveTest.class.getResource("serviceType/metadata.xml"));
+        service.setTestMetadata(testMetadata);
+
+        String json = "{\"identification\": {\"type\": \"service\", \"serviceType\": \"view\"}}";
+        service.exec(new Element("request").addContent(Arrays.asList(
+                new Element("id").setText("12"),
+                new Element("data").setText(json)
+        )), context);
+
+        Element savedMd = service.getSavedMetadata();
+        List<?> serviceTypeNodes = Xml.selectNodes(savedMd, "gmd:identificationInfo//srv:serviceType/gco:LocalName", NS);
+        assertEquals(1, serviceTypeNodes.size());
+        assertEquals("view", ((Element)serviceTypeNodes.get(0)).getText());
+
+        service.setTestMetadata(savedMd);
+
+        String json2 = "{\"identification\": {\"type\": \"service\", \"serviceType\": \"discovery\"}}";
+        service.exec(new Element("request").addContent(Arrays.asList(
+                new Element("id").setText("12"),
+                new Element("data").setText(json2)
+        )), context);
+
+        savedMd = service.getSavedMetadata();
+        serviceTypeNodes = Xml.selectNodes(savedMd, "gmd:identificationInfo//srv:serviceType/gco:LocalName", NS);
+        assertEquals(1, serviceTypeNodes.size());
+        assertEquals("discovery", ((Element)serviceTypeNodes.get(0)).getText());
+
+        service.setTestMetadata(savedMd);
     }
 
     protected void assertCorrectlySavedFromEmptyMd() throws JDOMException {

@@ -15,6 +15,17 @@
         }
         var templateData = inspireEmptyMetadataLoader(lang);
         $http.get(url + 'inspire.edit.model?id=' + mdId).success(function(data){
+          var i, resetServiceType = true;
+          for (i = 0; i < data.serviceTypeOptions.length; i++) {
+            var o = data.serviceTypeOptions[i];
+            if (o.name === data.identification.serviceType) {
+              resetServiceType = false;
+              break;
+            }
+          }
+          if (resetServiceType) {
+            data.identification.serviceType = "";
+          }
           angular.copy(data, templateData);
           if (waitDialog) {
             waitDialog.modal('hide');

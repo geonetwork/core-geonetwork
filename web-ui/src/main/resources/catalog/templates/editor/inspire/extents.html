@@ -23,7 +23,8 @@
                         <a class="list-group-item"
                            data-ng-repeat="extent in extents"
                            data-ng-class="selectedExtent === extent ? 'active' : ''"
-                           data-ng-click="selectExtent(extent)">
+                           data-ng-click="selectExtent(extent)"
+                           data-ng-dblclick="selectExtent(extent);linkToOtherExtent()">
                             <img data-ng-src="{{extentImgSrc(50, extent)}}" />
                             {{extent.description[lang]}}
                         </a>

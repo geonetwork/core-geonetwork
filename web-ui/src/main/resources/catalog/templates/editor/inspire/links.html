@@ -1,17 +1,30 @@
 <div>
-    <fieldset>
+    <fieldset data-ng-if="data.links.length > 0">
         <legend data-translate="">links</legend>
         <div class="form-group">
-            <div class="table-responsive col-xs-offset-3 col-xs-9">
-                <div data-ng-repeat="link in data.links"
-                     data-ng-controller="InspireLinkController"
-                     data-ng-class="link.isValidURL"
-                     data-inspire-multilingual-text
-                     data-rows="1"
-                     data-main-lang="data.language"
-                     data-languages="data.otherLanguages"
-                     data-field="link.localizedURL"/>
-            </div>
+            <table class="table table-condensed">
+                <tr class="col-xs-offset-3 col-xs-9"
+                    data-ng-repeat="link in data.links"
+                    data-ng-controller="InspireLinkController"
+                    data-ng-if="link.localizedURL">
+                    <td width="98%">
+                        <div
+                             data-ng-class="isValidURL ? '' : validationErrorClass"
+                             data-inspire-multilingual-text
+                             data-rows="1"
+                             data-main-lang="data.language"
+                             data-languages="data.otherLanguages"
+                             data-field="link.localizedURL"/>
+                    </td>
+                    <td width="24px">
+                        <a class="inspire-input-group"
+                           style="color: red"
+                           data-ng-click="deleteLink(link)">
+                            <i class="fa fa-times fa-fw"></i>
+                        </a>
+                    </td>
+                </tr>
+            </table>
         </div>
     </fieldset>
 </div>

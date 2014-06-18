@@ -1,0 +1,12 @@
+{"links": [
+  {
+    "ref": "9",
+    "xpath": "gmd:linkage",
+    "localizedURL": {
+      "eng": "eng translation",
+      "fre": "fre translation"
+    }
+  },  {
+    "ref": "45"
+  }
+]}

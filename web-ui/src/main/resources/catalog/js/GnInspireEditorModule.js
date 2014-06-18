@@ -124,7 +124,7 @@
         }
       };
 
-      $scope.saveMetadata = function(editTab) {
+      $scope.saveMetadata = function(editTab, finish) {
         var waitDialog = $('#pleaseWaitDialog');
         if (waitDialog) {
           waitDialog.find('h2').text($translate('saveInProgress'));
@@ -142,11 +142,18 @@
         delete dataClone.conformityTitleOptions;
         delete dataClone.allConformanceReports;
 
-        var data = JSON.stringify(dataClone);
+        var data = encodeURIComponent(JSON.stringify(dataClone));
+        var finalData = 'id=' + mdId + '&data=' + data;
+        if (editTab) {
+          finalData = 'validate=false&'+finalData;
+        }
+        if (finish) {
+          finalData = 'finish=false&'+finalData;
+        }
         return $http({
           method: 'POST',
           url: $scope.url + "inspire.edit.save@json",
-          data: 'id=' + mdId + '&data=' + data,
+          data: finalData,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).success(function (data) {
           if (typeof data[0] == 'string') {
@@ -155,10 +162,13 @@
               waitDialog.modal('hide');
             }
 
-            var dialogContentEl = $('#errorDialogContent');
-            dialogContentEl.text('');
-            dialogContentEl.append(data);
-            $('#errorDialog').modal();
+            if (data[0] !== 'ok') {
+              var dialogContentEl = $('#errorDialogContent');
+              dialogContentEl.text('');
+              dialogContentEl.append(data);
+              $('#errorDialog').modal();
+              return;
+            }
           }
 
           if (editTab) {
@@ -184,7 +194,7 @@
       };
 
       $scope.saveMetadataAndExit = function (){
-        $scope.saveMetadata().success(function(){
+        $scope.saveMetadata(undefined, true).success(function(){
           $scope.stopEditing();
         });
       };
@@ -210,10 +220,13 @@
         data: {},
         service: {}
       };
-      inspireGetKeywordsFactory($scope.url, 'external.theme.inspire-theme').then (function (keywords) {
+      var dataThesaurus = 'external.theme.inspire-theme';
+      var serviceThesaurus = 'external.theme.inspire-service-taxonomy';
+
+      inspireGetKeywordsFactory($scope.url, dataThesaurus).then (function (keywords) {
         $scope.keywords.data = keywords;
       });
-      inspireGetKeywordsFactory($scope.url, 'external.theme.inspire-service-taxonomy').then (function (keywords) {
+      inspireGetKeywordsFactory($scope.url, serviceThesaurus).then (function (keywords) {
         $scope.keywords.service = keywords;
       });
 
@@ -222,19 +235,26 @@
       };
 
       $scope.linkToOtherKeyword = function() {
+        var thesaurus = $scope.data.identification.type == 'data' ? dataThesaurus : serviceThesaurus;
+
         var keyword = $scope.selectedKeyword;
         $scope.keywordUnderEdit.code = keyword.code;
         $scope.keywordUnderEdit.words = keyword.words;
+        $scope.keywordUnderEdit.thesaurus = thesaurus;
         var modal = $('#editKeywordModal');
         modal.modal('hide');
       };
       $scope.validationCls = '';
       $scope.validateKeywords = function(){
-        var i, keywords, valid = false;
+        var keyword, i, keywords, thesaurus, valid = false;
         keywords = $scope.data.identification.descriptiveKeywords;
 
+        thesaurus = $scope.data.identification.type == 'data' ? dataThesaurus : serviceThesaurus;
+
         for (i = 0; i < keywords.length; i++) {
-          if (keywords[i].code && keywords[i].code.length > 0) {
+          keyword = keywords[i];
+
+          if (keyword.code && keyword.code.length > 0 && keyword.thesaurus === thesaurus) {
             valid = true;
           }
         }
@@ -452,11 +472,32 @@
   }]);
 
   module.controller('InspireLinkController', [
-    '$scope', '$translate', function($scope, $translate) {
+    '$scope', '$http', function($scope, $http) {
 
-      $scope.$watchCollection('localizedURL', function(newVal) {
-        console.log(newVal);
-      });
+      $scope.$watch('link', function(newVal) {
+        var lang, url;
+
+        $scope.isValidURL = true;
+
+        for (lang in newVal.localizedURL) {
+          if (newVal.localizedURL.hasOwnProperty(lang) &&
+              $scope.data.otherLanguages.indexOf(lang) > -1) {
+            url = newVal.localizedURL[lang]
+            if (!/\S+/.test(url)) {
+              $scope.isValidURL = false;
+            } else {
+              $http.head("../../proxy?url=" + encodeURIComponent(url)).error(function () {
+                $scope.isValidURL = false;
+              });
+            }
+          } else {
+            delete newVal.localizedURL[lang]
+          }
+        }
+      }, true);
+      $scope.deleteLink = function(link) {
+        delete link.localizedURL;
+      }
   }]);
 
 

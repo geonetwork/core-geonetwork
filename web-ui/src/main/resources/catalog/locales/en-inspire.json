@@ -48,5 +48,6 @@
   "update": "Update",
   "createNew": "Create",
   "updateElement": "Conformance Report to Update",
-  "xsdInvalidWarning": "The record is not valid according to the XML Schema.  Use the normal editor to fix XML Schema errors"
+  "xsdInvalidWarning": "Potential validation errors have been detected.  Switch to the default editor and check validation errors there.",
+  "saveAndExit": "Save and Exit"
 }

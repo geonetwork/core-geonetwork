@@ -3,7 +3,7 @@
     <fieldset>
         <legend data-translate="">conformity</legend>
 
-        <div class="form-group" data-ng-if="!data.conformity.conformanceResultRef">
+        <div class="form-group" data-ng-if="!data.conformity.conformanceResultRef && data.conformity.allConformanceReports.length > 1">
             <label for="replaceConformance" class="col-xs-3 control-label"><span data-translate="">updateElement</span>: </label>
 
             <div class="col-xs-9">

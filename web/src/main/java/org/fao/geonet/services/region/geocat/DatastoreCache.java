@@ -1,9 +1,6 @@
 package org.fao.geonet.services.region.geocat;
 
-import java.io.IOException;
-
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.constants.Geonet;
 import org.geotools.data.DataStore;
 import org.geotools.data.Query;
@@ -14,8 +11,9 @@ import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.simple.SimpleFeatureStore;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.opengis.feature.type.AttributeDescriptor;
-import org.opengis.feature.type.GeometryDescriptor;
 import org.opengis.filter.Filter;
+
+import java.io.IOException;
 
 public class DatastoreCache {
 	private MemoryDataStore cache = new MemoryDataStore(); 
@@ -42,7 +40,7 @@ public class DatastoreCache {
 		return featureStore;
 	}
 
-	public SimpleFeatureSource getCached(ServiceContext context, DatastoreMapper mapper, boolean simplified, boolean inLatLong) throws IOException {
+	public synchronized SimpleFeatureSource getCached(ServiceContext context, DatastoreMapper mapper, boolean simplified, boolean inLatLong) throws IOException {
 		SimpleFeatureSource featureSource;
 		String cacheTypeName = mapper.getBackingDatastoreName(simplified, inLatLong);
 		try {

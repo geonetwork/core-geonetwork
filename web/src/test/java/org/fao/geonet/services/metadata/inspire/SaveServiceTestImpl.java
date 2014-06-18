@@ -239,15 +239,19 @@ class SaveServiceTestImpl extends Save {
     }
 
     @Override
+    protected Element getResponse(Element params, ServiceContext context, String id, EditLib editLib, Element metadata) throws Exception {
+        return new Element("data").setText("{jsondata}");
+    }
+
+    @Override
     protected IsoLanguagesMapper getIsoLanguagesMapper() {
         return LANGUAGES_MAPPER;
     }
 
     @Override
-    protected boolean saveMetadata(ServiceContext context, String id, DataManager dataManager, Element metadata) throws Exception {
+    protected void saveMetadata(ServiceContext context, String id, DataManager dataManager, Element metadata) throws Exception {
         this.saved = true;
         this.savedMetadata = metadata;
-        return true;
     }
 
     public boolean isSaved() {
