@@ -1,0 +1,40 @@
+<div class="panel panel-default">
+  <div class="panel-body">
+    <form class="form-horizontal" role="form">
+
+      <button class="btn btn-default" type="submit">
+        <span class="fa fa-history"></span>
+      </button>
+      <button class="btn btn-default" type="submit">
+        <span class="fa fa-crop"></span>
+      </button>
+      <button class="btn btn-default" type="submit">
+        <span class="fa fa-image"></span>
+      </button>
+
+      <div class="form-group">
+        <label for="ncwmsscales">Echelles</label>
+        <select class="form-control" data-ng-model="params.LOGSCALE" data-ng-change="updateLayerParams()">
+          <option value="false" translate="linear"></option>
+          <option value="true" translate="logarithmic"></option>
+        </select>
+        <button type="button" class="btn btn-link" data-ng-click="onColorscaleChange('auto')" translate="Auto"></button>
+
+        <div>
+          <span class="pull-left">{{colorscalerange[0]}}</span>
+          <span class="pull-right">{{colorscalerange[1]}}</span>
+        </div>
+        <div ui-slider="{range: true}" min="{{constants.colorscale.min}}" max="{{constants.colorscale.max}}" id="ncwmsscales"
+             step="{{constants.colorscale.step}}" use-decimals ng-model="colorscalerange" data-ng-change="onColorscaleChange(colorscalerange)"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="ncwmselevation">Elévation</label>
+        <select class="form-control" id="ncwmselevation" data-ng-model="params.ELEVATION" data-ng-change="updateLayerParams()">
+          <option data-ng-repeat="el in constants.elevation">{{-el | number:1}}</option>
+        </select>
+      </div>
+    </form>
+    Basic panel example
+  </div>
+</div>
