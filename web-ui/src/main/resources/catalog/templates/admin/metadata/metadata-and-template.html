@@ -57,7 +57,7 @@
       <div class="progress-bar" style="width: 100%"/>
     </div>
 
-    <div class="panel panel-default" data-ng-hide="!loadReport && !loadTplReport"
+    <div class="panel panel-default" id="reportStatus" data-ng-hide="!loadReport && !loadTplReport"
       data-ng-class="loadReport['@status'] == 'true' || loadTplReport['@status'] == 'true' ? 
                         'panel-success' : 'panel-danger'">
       <div class="panel-heading" data-translate="">loadReport</div>

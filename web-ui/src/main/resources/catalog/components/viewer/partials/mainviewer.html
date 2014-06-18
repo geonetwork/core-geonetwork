@@ -1,6 +1,6 @@
-<div class="wrapper">
+<div class="wrapper" data-ng-controller="gnViewerController">
 
-  <div id="map"></div>
+  <div id="map" class="map" gn-map="" gn-map-map="map"></div>
 
   <div class="search-container">
     <input type="search" class="form-control" placeholder="Recherche">
@@ -86,46 +86,7 @@
         <button type="button" class="btn btn-default">Fichier KML</button>
       </div>
 
-      <div class="layerTree collapsed">
-        <form role="form">
-          <div class="form-group">
-            <div class="input-group">
-                  <span class="input-group-addon">
-                    <span class="fa fa-globe"></span>
-                  </span>
-              <input type="text" class="form-control" placeholder="Service URL">
-            </div>
-          </div>
-        </form>
-
-        <ul class="list-group">
-          <li class="list-group-item">
-            <label><input type="checkbox"> ainta nret auie</label></li>
-          <li class="list-group-item">
-            <label><input type="checkbox"> ainta nret auie</label></li>
-          <li class="list-group-item">
-            <label><input type="checkbox"> ainta nret auie</label></li>
-          <li class="list-group-item">
-            <label><input type="checkbox"> ainta nret auie</label>
-            <ul class="list-group">
-              <li class="list-group-item">
-                <label><input type="checkbox"> ainta nret auie</label></li>
-              <li class="list-group-item">
-                <label><input type="checkbox"> ainta nret auie</label></li>
-              <li class="list-group-item">
-                <label><input type="checkbox"> ainta nret auie</label></li>
-              <li class="list-group-item">
-                <label><input type="checkbox"> ainta nret auie</label></li>
-            </ul>
-          </li>
-          <li class="list-group-item">
-            <label><input type="checkbox"> ainta nret auie</label></li>
-          <li class="list-group-item">
-            <label><input type="checkbox"> ainta nret auie</label></li>
-        </ul>
-
-      </div>
-
+      <div gn-wms-import="" gn-wms-import-map="map"></div>
     </div>
 
 
@@ -193,18 +154,6 @@
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <script>
-  var map = new ol.Map({
-    layers: [
-      new ol.layer.Tile({
-        source: new ol.source.OSM()
-      })
-    ],
-    target: 'map',
-    view: new ol.View2D({
-      center: [1, 0],
-      zoom: 2
-    })
-  });
   $('.tools:not(.control-tools) .btn').click(function() {
     if ($(this).hasClass('active')) {
       $(this).removeClass('active');
