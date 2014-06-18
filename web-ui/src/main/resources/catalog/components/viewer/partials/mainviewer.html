@@ -1,80 +1,237 @@
-<div data-ng-controller="gnViewerController">
-  <div id="header" class="navbar navbar-fixed-top"></div>
-  <div id="map" class="map" gn-map="" gn-map-map="map"></div>
-  <div id="pulldown">
-    <div id="pulldown-content" class="panel-group content in">
+<div class="wrapper">
 
-      <!--Tools-->
-      <div class="panel">
-        <a id="toolsHeading" class="panel-heading accordion-toggle collapsed" data-toggle="collapse"
-           data-parent="#pulldown-content" href="#tools">
-          <i class="visible-collapsed fa fa-caret-right spacer"></i>
-          <i class="hidden-collapsed fa fa-caret-down"></i>
-          <i class="fa fa-asterisk"></i>
-          <span translate="" class="ng-scope">Tools</span>
-        </a>
+  <div id="map"></div>
 
-        <div id="tools" class="collapse">
-          <div class="panel-body panel-body-wide panel-cursor">
-            <ul>
-              <a href="" data-toggle="modal" data-target="#wmsModal">Import WMS</a>
-              <li><!-- Measure -->
-                <a href=""  ng-click="isMeasureActive = !isMeasureActive">
-                  <span  ng-class="{'selected': isMeasureActive}" translate>measure</span>
-                </a>
-              </li>
-              <li><!-- Draw -->
-                <a href=""  ng-click="isDrawActive = !isDrawActive">
-                  <span  ng-class="{'selected': isDrawActive}" translate>draw</span>
-                </a>
-              </li>
-             </ul>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Layer Manager -->
-      <div class="panel">
-        <a id="selectionHeading" class="panel-heading accordion-toggle light"
-           data-toggle="collapse" href="#selection">
-          <i class="visible-collapsed fa fa-caret-right"></i>
-          <i class="hidden-collapsed fa fa-caret-down"></i>
-          <span translate="" class="ng-scope">layer_manager</span>
-        </a>
-
-        <div id="selection" class="">
-          <div class="panel-body panel-body-wide gn-layermanager" gn-layermanager gn-layermanager-map="map">
-          </div>
-        </div>
-      </div>
-
+  <div class="search-container">
+    <input type="search" class="form-control" placeholder="Recherche">
   </div>
-    <div tpye="button" data-toggle="collapse" data-target="#pulldown-content" class="toggle btn btn-default">
-      Fermer
+
+  <div class="tools">
+    <button class="btn btn-default" type="submit" rel="#layers">
+      <span class="fa fa-tasks"></span>
+      <span role="tooltip">Couches</span>
+    </button>
+    <button class="btn btn-default" type="submit" rel="#measures">
+      <span class="fa fa-pencil"></span>
+      <span role="tooltip">Mesures</span>
+    </button>
+    <button class="btn btn-default" type="submit" rel="#contexts">
+      <span class="fa fa-book"></span>
+      <span role="tooltip">Contextes</span>
+    </button>
+    <button class="btn btn-default" type="submit" rel="#print">
+      <span class="fa fa-print"></span>
+      <span role="tooltip">Impression</span>
+    </button>
+  </div>
+
+  <div class="tools control-tools">
+    <button class="btn btn-default" type="submit">
+      <span class="fa fa-plus"></span>
+      <span role="tooltip">Zoomer</span>
+    </button>
+    <button class="btn btn-default" type="submit">
+      <span class="fa fa-minus"></span>
+      <span role="tooltip">Dézoomer</span>
+    </button>
+    <button class="btn btn-default" type="submit">
+      <span class="fa fa-map-marker"></span>
+      <span role="tooltip">Localisation</span>
+    </button>
+  </div>
+
+  <div class="panel panel-default force-hide panel-tools" id="layers">
+
+    <div class="layers">
+      <div class="panel-body">
+        <button type="button" class="btn btn-default close">
+          &times;
+        </button>
+        <h5>Couches thématiques</h5>
+      </div>
+
+      <ul class="list-group">
+        <li class="list-group-item">
+          <span class="badge fa fa-cog"></span>
+          Cras justo odio
+        </li>
+        <li class="list-group-item">
+          <span class="badge fa fa-cog"></span>
+          Cras justo odio
+        </li>
+        <li class="list-group-item">
+          <span class="badge fa fa-cog"></span>
+          Cras justo odio
+        </li>
+        <li class="list-group-item">
+          <span class="badge fa fa-cog"></span>
+          Cras justo odio
+        </li>
+        <li class="list-group-item">
+          <span class="badge fa fa-cog"></span>
+          Cras justo odio
+        </li>
+      </ul>
     </div>
-  </div>
-  <div class="modal fade" id="wmsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div gn-wms-import="" gn-wms-import-map="map"></div>
+
+    <div class="panel-body">
+      <button type="button" class="btn btn-default unfold">
+        <span class="fa fa-chevron-down"></span>
+      </button>
+      <h5>Ajouter une couche</h5>
+
+      <div class="btn-group">
+        <button type="button" class="btn btn-default">Flux WMS</button>
+        <button type="button" class="btn btn-default">Flux WMTS</button>
+        <button type="button" class="btn btn-default">Fichier KML</button>
+      </div>
+
+      <div class="layerTree collapsed">
+        <form role="form">
+          <div class="form-group">
+            <div class="input-group">
+                  <span class="input-group-addon">
+                    <span class="fa fa-globe"></span>
+                  </span>
+              <input type="text" class="form-control" placeholder="Service URL">
+            </div>
+          </div>
+        </form>
+
+        <ul class="list-group">
+          <li class="list-group-item">
+            <label><input type="checkbox"> ainta nret auie</label></li>
+          <li class="list-group-item">
+            <label><input type="checkbox"> ainta nret auie</label></li>
+          <li class="list-group-item">
+            <label><input type="checkbox"> ainta nret auie</label></li>
+          <li class="list-group-item">
+            <label><input type="checkbox"> ainta nret auie</label>
+            <ul class="list-group">
+              <li class="list-group-item">
+                <label><input type="checkbox"> ainta nret auie</label></li>
+              <li class="list-group-item">
+                <label><input type="checkbox"> ainta nret auie</label></li>
+              <li class="list-group-item">
+                <label><input type="checkbox"> ainta nret auie</label></li>
+              <li class="list-group-item">
+                <label><input type="checkbox"> ainta nret auie</label></li>
+            </ul>
+          </li>
+          <li class="list-group-item">
+            <label><input type="checkbox"> ainta nret auie</label></li>
+          <li class="list-group-item">
+            <label><input type="checkbox"> ainta nret auie</label></li>
+        </ul>
+
+      </div>
+
+    </div>
+
+
   </div>
 
-  <!-- Popup: Measure -->
-  <div gn-popup="isMeasureActive"
-       gn-popup-options="{title:'measure',showPrint:true}"
-       gn-draggable=".gn-popup-title"
-       id="measure-popup" >
-      <div gn-measure
-           gn-measure-map="map"
-           gn-measure-options="options"
-           gn-measure-active="isMeasureActive"></div>
-  </div><!-- end Measure -->
+  <div class="panel panel-default force-hide panel-tools" id="contexts">
 
-  <!-- Popup: Draw -->
-  <div gn-popup="isDrawActive"
-       gn-popup-options="{title:'draw'}"
-       gn-draggable=".ga-popup-title"
-       id="draw-popup" >
-    <div gn-draw gn-draw-map="map" gn-draw-options="options" gn-draw-active="isDrawActive"></div>
-  </div><!-- end Draw -->
+    <div class="panel-body">
+      <button type="button" class="btn btn-default close">
+        &times;
+      </button>
+      <h5>Contextes de carte</h5>
+
+      <div class="btn-group">
+        <button type="button" class="btn btn-default">
+          <span class="fa fa-save"></span>
+          Sauvegarder
+        </button>
+        <button type="button" class="btn btn-default">
+          <span class="fa fa-open"></span>
+          Restaurer
+        </button>
+      </div>
+      <p>
+        ou <a href="truite">exporter au Format KML</a>
+      </p>
+    </div>
+
+  </div>
+
+  <div class="panel panel-default force-hide panel-tools" id="measures">
+
+    <div class="panel-body">
+      <button type="button" class="btn btn-default close">
+        &times;
+      </button>
+      <h5>Mesures</h5>
+    </div>
+
+  </div>
+
+  <div class="panel panel-default force-hide panel-tools" id="print">
+
+    <div class="panel-body">
+      <button type="button" class="btn btn-default close">
+        &times;
+      </button>
+      <h5>Impression</h5>
+    </div>
+
+  </div>
+
+  <!-- <div class="panel panel-default" id="results"> -->
+
+  <!--   <div class="panel-body"> -->
+  <!--   </div> -->
+
+  <!-- </div> -->
+
+
 
 </div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script>
+  var map = new ol.Map({
+    layers: [
+      new ol.layer.Tile({
+        source: new ol.source.OSM()
+      })
+    ],
+    target: 'map',
+    view: new ol.View2D({
+      center: [1, 0],
+      zoom: 2
+    })
+  });
+  $('.tools:not(.control-tools) .btn').click(function() {
+    if ($(this).hasClass('active')) {
+      $(this).removeClass('active');
+      $($(this).attr('rel')).addClass('force-hide')
+    } else {
+      $('.btn').removeClass('active');
+      $(this).addClass('active');
+      $('.panel-tools').addClass('force-hide');
+      $($(this).attr('rel')).removeClass('force-hide')
+    }
+  });
+  $('#layers .btn-group button').click(function(){
+    $('#layers .btn-group button').removeClass('active');
+    $(this).addClass('active');
+    $('.layers').addClass('collapsed');
+    $('.layerTree').removeClass('collapsed');
+    $('.unfold').css('opacity',1);
+  });
+  $('.unfold').click(function(){
+    $('#layers .btn-group button').removeClass('active');
+    $('.layers').removeClass('collapsed');
+    $('.layerTree').addClass('collapsed');
+    $('.unfold').css('opacity',0);
+  });
+  $('.close').click(function(){
+    var t = $(this).parents('.panel-tools');
+    t.addClass('force-hide');
+    $('[rel=#'+t.attr('id')+']').removeClass('active');
+  });
+</script>
