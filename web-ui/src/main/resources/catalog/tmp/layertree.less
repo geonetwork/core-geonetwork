@@ -1,0 +1,18 @@
+.layerTree {
+  label {
+    font-weight: normal;
+  }
+  & > .group-list > .group-list-item {
+    border: 0;
+  }
+  ul ul {
+    margin: 0;
+    .group-list-item {
+      border-width: 0 0 0 1px;
+    }
+  }
+}
+.layers, .layerTree {
+  max-height: 50em;
+  transition: max-height .25s ease;
+}

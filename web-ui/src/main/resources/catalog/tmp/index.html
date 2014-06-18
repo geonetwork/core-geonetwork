@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../bootstrap/assets/ico/favicon.ico">
+
+    <title>GN</title>
+
+    <!-- Bootstrap core CSS -->
+    <!-- <link href="../../bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+
+
+    <!-- <link href="//ol3js.org/en/master/build/ol.css" rel="stylesheet"> -->
+
+    <!-- Custom styles for this template -->
+    <link href="app.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <div class="wrapper">
+
+      <div id="map"></div>
+
+      <div class="search-container">
+        <input type="search" class="form-control" placeholder="Recherche">
+      </div>
+
+      <div class="tools">
+        <button class="btn btn-default" type="submit" rel="#layers">
+          <span class="glyphicon glyphicon-tasks"></span>
+          <span role="tooltip">Couches</span>
+        </button>
+        <button class="btn btn-default" type="submit" rel="#measures">
+          <span class="glyphicon glyphicon-pencil"></span>
+          <span role="tooltip">Mesures</span>
+        </button>
+        <button class="btn btn-default" type="submit" rel="#contexts">
+          <span class="glyphicon glyphicon-book"></span>
+          <span role="tooltip">Contextes</span>
+        </button>
+        <button class="btn btn-default" type="submit" rel="#print">
+          <span class="glyphicon glyphicon-print"></span>
+          <span role="tooltip">Impression</span>
+        </button>
+      </div>
+
+      <div class="tools control-tools">
+        <button class="btn btn-default" type="submit">
+          <span class="glyphicon glyphicon-plus"></span>
+          <span role="tooltip">Zoomer</span>
+        </button>
+        <button class="btn btn-default" type="submit">
+          <span class="glyphicon glyphicon-minus"></span>
+          <span role="tooltip">Dézoomer</span>
+        </button>
+        <button class="btn btn-default" type="submit">
+          <span class="glyphicon glyphicon-map-marker"></span>
+          <span role="tooltip">Localisation</span>
+        </button>
+      </div>
+
+      <div class="panel panel-default force-hide panel-tools" id="layers">
+
+        <div class="layers">
+          <div class="panel-body">
+            <button type="button" class="btn btn-default close">
+              &times;
+            </button>
+            <h5>Couches thématiques</h5>
+          </div>
+
+          <ul class="list-group">
+            <li class="list-group-item">
+            <span class="badge glyphicon glyphicon-cog"></span>
+            Cras justo odio
+            </li>
+            <li class="list-group-item">
+            <span class="badge glyphicon glyphicon-cog"></span>
+            Cras justo odio
+            </li>
+            <li class="list-group-item">
+            <span class="badge glyphicon glyphicon-cog"></span>
+            Cras justo odio
+            </li>
+            <li class="list-group-item">
+            <span class="badge glyphicon glyphicon-cog"></span>
+            Cras justo odio
+            </li>
+            <li class="list-group-item">
+            <span class="badge glyphicon glyphicon-cog"></span>
+            Cras justo odio
+            </li>
+          </ul>
+      </div>
+
+        <div class="panel-body">
+            <button type="button" class="btn btn-default unfold">
+                <span class="glyphicon glyphicon-chevron-down"></span>
+            </button>
+          <h5>Ajouter une couche</h5>
+
+          <div class="btn-group">
+            <button type="button" class="btn btn-default">Flux WMS</button>
+            <button type="button" class="btn btn-default">Flux WMTS</button>
+            <button type="button" class="btn btn-default">Fichier KML</button>
+          </div>
+
+          <div class="layerTree collapsed">
+            <form role="form">
+              <div class="form-group">
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-globe"></span>
+                  </span>
+                  <input type="text" class="form-control" placeholder="Service URL">
+                </div>
+              </div>
+            </form>
+
+            <ul class="list-group">
+              <li class="list-group-item">
+              <label><input type="checkbox"> ainta nret auie</label></li>
+              <li class="list-group-item">
+              <label><input type="checkbox"> ainta nret auie</label></li>
+              <li class="list-group-item">
+              <label><input type="checkbox"> ainta nret auie</label></li>
+              <li class="list-group-item">
+              <label><input type="checkbox"> ainta nret auie</label>
+              <ul class="list-group">
+                <li class="list-group-item">
+                  <label><input type="checkbox"> ainta nret auie</label></li>
+                <li class="list-group-item">
+                  <label><input type="checkbox"> ainta nret auie</label></li>
+                <li class="list-group-item">
+                  <label><input type="checkbox"> ainta nret auie</label></li>
+                <li class="list-group-item">
+                <label><input type="checkbox"> ainta nret auie</label></li>
+              </ul>
+              </li>
+              <li class="list-group-item">
+              <label><input type="checkbox"> ainta nret auie</label></li>
+              <li class="list-group-item">
+              <label><input type="checkbox"> ainta nret auie</label></li>
+            </ul>
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+      <div class="panel panel-default force-hide panel-tools" id="contexts">
+
+        <div class="panel-body">
+          <button type="button" class="btn btn-default close">
+            &times;
+          </button>
+          <h5>Contextes de carte</h5>
+
+          <div class="btn-group">
+            <button type="button" class="btn btn-default">
+              <span class="glyphicon glyphicon-save"></span>
+              Sauvegarder
+            </button>
+            <button type="button" class="btn btn-default">
+              <span class="glyphicon glyphicon-open"></span>
+              Restaurer
+            </button>
+          </div>
+          <p>
+            ou <a href="truite">exporter au Format KML</a>
+          </p>
+        </div>
+
+      </div>
+
+      <div class="panel panel-default force-hide panel-tools" id="measures">
+
+        <div class="panel-body">
+          <button type="button" class="btn btn-default close">
+            &times;
+          </button>
+          <h5>Mesures</h5>
+        </div>
+
+      </div>
+
+      <div class="panel panel-default force-hide panel-tools" id="print">
+
+        <div class="panel-body">
+          <button type="button" class="btn btn-default close">
+            &times;
+          </button>
+          <h5>Impression</h5>
+        </div>
+
+      </div>
+
+      <!-- <div class="panel panel-default" id="results"> -->
+
+      <!--   <div class="panel-body"> -->
+      <!--   </div> -->
+
+      <!-- </div> -->
+
+
+
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="../../bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="//ol3js.org/en/master/build/ol.js"></script>
+    <script>
+      var map = new ol.Map({
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.OSM()
+          })
+        ],
+        target: 'map',
+        view: new ol.View2D({
+          center: [1, 0],
+          zoom: 2
+        })
+      });
+      $('.tools:not(.control-tools) .btn').click(function() {
+        if ($(this).hasClass('active')) {
+          $(this).removeClass('active');
+          $($(this).attr('rel')).addClass('force-hide')
+        } else {
+          $('.btn').removeClass('active');
+          $(this).addClass('active');
+          $('.panel-tools').addClass('force-hide');
+          $($(this).attr('rel')).removeClass('force-hide')
+        }
+      });
+      $('#layers .btn-group button').click(function(){
+        $('#layers .btn-group button').removeClass('active');
+        $(this).addClass('active');
+        $('.layers').addClass('collapsed');
+        $('.layerTree').removeClass('collapsed');
+        $('.unfold').css('opacity',1);
+      });
+      $('.unfold').click(function(){
+        $('#layers .btn-group button').removeClass('active');
+        $('.layers').removeClass('collapsed');
+        $('.layerTree').addClass('collapsed');
+        $('.unfold').css('opacity',0);
+      });
+      $('.close').click(function(){
+        var t = $(this).parents('.panel-tools');
+        t.addClass('force-hide');
+        $('[rel=#'+t.attr('id')+']').removeClass('active');
+      });
+    </script>
+  </body>
+</html>
