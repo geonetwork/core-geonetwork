@@ -30,7 +30,7 @@
                 layers.push(layer);
               }
             }
-            return layers;
+            return result.capability;
           } catch (e) {
             console.log('error parsing WMSCapabilities');
           }
