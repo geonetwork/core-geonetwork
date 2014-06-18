@@ -68,11 +68,7 @@
                 {
                   url: scope.params.url,
                   label: layer.title,
-                  extent: gnOwsCapabilities.getLayerExtentFromGetCap(scope.map, layer),
-/*
-                  attribution: gaUrlUtils.getHostname($scope.fileUrl),
-*/
-                  preview: isPreview
+                  extent: gnOwsCapabilities.getLayerExtentFromGetCap(scope.map, layer)
                 }
               );
 
@@ -93,4 +89,60 @@
     };
   }]);
 
+  /**
+   * @ngdoc directive
+   * @name gn_wmsimport_directive.directive:gnCapTreeCol
+   *
+   * @description
+   * Directive to manage a collection of nested layers from
+   * the capabilities document.
+   */
+  module.directive('gnCapTreeCol', [
+    function () {
+      return {
+        restrict: "E",
+        replace: true,
+        scope: {
+          collection: '=',
+          selection: '='
+        },
+        template: "<ul><gn-cap-tree-elt ng-repeat='member in collection' member='member' selection='selection'></gn-cap-tree-elt></ul>"
+      }
+    }]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_wmsimport_directive.directive:gnCapTreeElt
+   *
+   * @description
+   * Directive to manage recursively nested layers from a capabilities
+   * document. Will call its own template to display the layer but also
+   * call back the gnCapTreeCol for all its children.
+   */
+  module.directive('gnCapTreeElt', [
+    '$compile',
+    function ($compile) {
+    return {
+      restrict: "E",
+      replace: true,
+      scope: {
+        member: '='
+      },
+      template: "<li data-ng-click='select(member)'>{{member.title}}</li>",
+      link: function (scope, element, attrs, controller) {
+        if (angular.isArray(scope.member.nestedLayers)) {
+          element.append("<gn-cap-tree-col collection='member.nestedLayers' selection='selection'></gn-cap-tree-col>");
+          $compile(element.contents())(scope)
+        }
+        scope.select = function (layer) {
+          if (scope.selection.indexOf(layer) < 0) {
+            scope.selection.push(layer);
+          }
+          else {
+            scope.selection.splice(scope.selection.indexOf(layer), 1);
+          }
+        };
+      }
+    }
+  }]);
 })();

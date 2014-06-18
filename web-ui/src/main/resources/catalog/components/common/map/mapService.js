@@ -67,6 +67,32 @@
             ];
           },
 
+          /**
+           * Convert coordinates object into text
+           *
+           * @param coord must be an array of points (array with
+           * dimension 2);
+           * @returns coordinates as text with format : 'x1 y1,x2 y2,x3 y3'
+           */
+          getTextFromCoordinates: function(coord) {
+            var text;
+            if(angular.isArray(coord)) {
+              for(var i=0;i<coord.length;++i) {
+                var point = coord[i];
+                if(angular.isArray(point) && point.length == 2) {
+                  if(text) {
+                    text += ',';
+                  }
+                  else {
+                    text = '';
+                  }
+                  text += point[0] + ' ' + point[1];
+                }
+              }
+            }
+            return text;
+          },
+
           getMapConfig: function() {
             if (gnConfig['map.config'] &&
                 angular.isObject(gnConfig['map.config'])) {

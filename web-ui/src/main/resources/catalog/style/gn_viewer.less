@@ -1,8 +1,42 @@
-@import "gn.less";
-@import "../lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.less";
+@import "../lib/style/bootstrap-3.0.1/bootstrap.less";
+@import "../lib/style/font-awesome-4.0.3/less/font-awesome.less";
 @import "../lib/style/ol.css";
 @import "../lib/style/datetimepicker.css";
-@import "../lib/jquery.ext/jquery.fileupload-ui.css";
+
+.ui-slider {
+  position: relative;
+  text-align: left;
+  border: 1px solid #ddd;
+  height: .7em;
+  margin: 0.8em 0;
+
+  .ui-slider-range {
+    position: absolute;
+    z-index: 1;
+    font-size: .7em;
+    display: block;
+    border: 0;
+    background-position: 0 0;
+    background-color: dimgrey;
+    top: 0;
+    height: 100%;
+  }
+  .ui-slider-handle {
+    top: -.3em;
+    margin-left: -.6em;
+    position: absolute;
+    z-index: 2;
+    width: 0.8em;
+    height: 1.2em;
+    cursor: default;
+  }
+  .ui-state-default {
+    border: 1px solid #d3d3d3;
+    background: #e6e6e6 none 50% 50% repeat-x;
+    font-weight: normal;
+    color: #555555;
+  }
+}
 
 /* app css stylesheet */
 
