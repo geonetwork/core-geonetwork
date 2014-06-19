@@ -476,10 +476,12 @@
 
       $scope.$watch('link', function(newVal) {
         var lang, url;
-
-        $scope.isValidURL = true;
+        $scope.isValidURL = undefined;
 
         for (lang in newVal.localizedURL) {
+          if ($scope.isValidURL === undefined) {
+              $scope.isValidURL = true;
+          }
           if (newVal.localizedURL.hasOwnProperty(lang) &&
               $scope.data.otherLanguages.indexOf(lang) > -1) {
             url = newVal.localizedURL[lang]

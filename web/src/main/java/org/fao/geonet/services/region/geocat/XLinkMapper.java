@@ -38,7 +38,7 @@ public class XLinkMapper extends DatastoreMapper {
 	}
 	
 	@Override
-	public String[] propNames(boolean simplified, boolean includeGeom) {
+	public String[] propNames(boolean simplified, boolean includeGeom, boolean inLatLong) {
 		if(simplified) {
 			if(includeGeom) {
 				return new String[]{ID_COLUMN, NAME_COLUMN, DESC_COLUMN, THE_GEOM};

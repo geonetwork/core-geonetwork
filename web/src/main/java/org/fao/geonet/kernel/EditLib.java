@@ -27,6 +27,7 @@
 
 package org.fao.geonet.kernel;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -598,8 +599,7 @@ public class EditLib {
 
         Pair<Element, String> result;
         if (rootElem.result instanceof Element) {
-            result = findLongestMatch(metadataRecord, metadataRecord, 0, metadataSchema, xpathParts.size() / 2,
-                    xpathParts);
+            result = findLongestMatch(metadataRecord, metadataSchema, xpathParts);
         } else {
             result = Pair.read(metadataRecord, COMMA_STRING_JOINER.join(xpathParts));
         }
@@ -739,8 +739,23 @@ public class EditLib {
     }
 
     private static final Joiner COMMA_STRING_JOINER = Joiner.on('/');
+    @VisibleForTesting
+    protected Pair<Element, String> findLongestMatch(final Element metadataRecord,
+                                                     final MetadataSchema metadataSchema,
+                                                     final List<String> xpathPropertyParts) {
+        BitSet bitSet = new BitSet(xpathPropertyParts.size());
+        return findLongestMatch(metadataRecord, metadataRecord, 0, metadataSchema,
+                xpathPropertyParts.size() / 2, xpathPropertyParts, bitSet);
+    }
+
     private Pair<Element, String> findLongestMatch(final Element metadataRecord, final Element bestMatch, final int indexOfBestMatch,
-                                     final MetadataSchema metadataSchema,  final int nextIndex, final List<String> xpathPropertyParts) {
+                                     final MetadataSchema metadataSchema,  final int nextIndex, final List<String> xpathPropertyParts,
+                                     BitSet visited) {
+
+        if (visited.get(nextIndex)) {
+            return Pair.read(bestMatch, COMMA_STRING_JOINER.join(xpathPropertyParts.subList(indexOfBestMatch, xpathPropertyParts.size())));
+        }
+        visited.set(nextIndex);
 
         // do linear search when for last couple elements of xpath
         if (xpathPropertyParts.size() - nextIndex < 3) {
@@ -758,13 +773,15 @@ public class EditLib {
             if (found.result instanceof Element) {
                 Element newBest = (Element) found.result;
                 int newIndex = nextIndex + ((xpathPropertyParts.size() - nextIndex) / 2);
-                return findLongestMatch(metadataRecord, newBest, nextIndex, metadataSchema, newIndex, xpathPropertyParts);
+                return findLongestMatch(metadataRecord, newBest, nextIndex, metadataSchema, newIndex, xpathPropertyParts, visited);
             } else if(!found.error) {
                 int newNextIndex = indexOfBestMatch + ((nextIndex - indexOfBestMatch) / 2);
-                return findLongestMatch(metadataRecord, bestMatch, indexOfBestMatch, metadataSchema, newNextIndex, xpathPropertyParts);
+                return findLongestMatch(metadataRecord, bestMatch, indexOfBestMatch, metadataSchema,
+                        newNextIndex, xpathPropertyParts, visited);
             } else {
                 int newNextIndex = nextIndex + 1;
-                return findLongestMatch(metadataRecord, bestMatch, indexOfBestMatch, metadataSchema, newNextIndex, xpathPropertyParts);
+                return findLongestMatch(metadataRecord, bestMatch, indexOfBestMatch, metadataSchema,
+                        newNextIndex, xpathPropertyParts, visited);
             }
         }
     }

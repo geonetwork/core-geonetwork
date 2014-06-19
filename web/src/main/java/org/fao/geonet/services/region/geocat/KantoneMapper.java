@@ -34,7 +34,7 @@ public class KantoneMapper extends DatastoreMapper {
 	}
 
 	@Override
-	public String[] propNames(boolean simplified, boolean includeGeom) {
+	public String[] propNames(boolean simplified, boolean includeGeom, boolean inLatLong) {
 		if (includeGeom) {
 			return PROPS_WITH_GEOM;
 		} else {

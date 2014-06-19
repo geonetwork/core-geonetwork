@@ -99,7 +99,8 @@ public class HttpProxyServlet extends HttpServlet {
             // Checks if allowed host
             if (!isAllowedHost(host)) {
                 //throw new ServletException("This proxy does not allow you to access that location.");
-                returnExceptionMessage(response, "This proxy does not allow you to access that location.");
+                response.sendError(org.springframework.http.HttpStatus.BAD_REQUEST.value(), "This proxy does not allow you to access " +
+                                                                                            "that location.");
                 return;
             }
 
@@ -113,6 +114,7 @@ public class HttpProxyServlet extends HttpServlet {
 
                 method = new HeadMethod(url);
                 method.setParams(urlParams);
+                client.getHttpConnectionManager().getParams().setConnectionTimeout(1000);
                 client.executeMethod(method);
 
                 if (method.getStatusCode() == HttpStatus.SC_OK) {
@@ -128,13 +130,16 @@ public class HttpProxyServlet extends HttpServlet {
                     // Sets response contentType
                     response.setContentType(getResponseContentType(contentTypesReturned));
 
-                    String responseBody = method.getResponseBodyAsString().trim();
+                    final String bodyAsString = method.getResponseBodyAsString();
+                    if (bodyAsString != null) {
+                        String responseBody = bodyAsString.trim();
 
-                    PrintWriter out = response.getWriter();
-                    out.print(responseBody);
+                        PrintWriter out = response.getWriter();
+                        out.print(responseBody);
 
-                    out.flush();
-                    out.close();
+                        out.flush();
+                        out.close();
+                    }
 
                 } else {
                     response.sendError(method.getStatusCode(), method.getStatusText());
@@ -144,12 +149,11 @@ public class HttpProxyServlet extends HttpServlet {
 
             } else {
                 //throw new ServletException("only HTTP(S) protocol supported");
-                returnExceptionMessage(response, "only HTTP(S) protocol supported");
+                response.sendError(org.springframework.http.HttpStatus.BAD_REQUEST.value(), "only HTTP(S) protocol supported");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            //throw new ServletException("Some unexpected error occurred. Error text was: " + e.getMessage());
-            returnExceptionMessage(response, "Some unexpected error occurred. Error text was: " + e.getMessage());
+            response.sendError(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR.value(), "Some unexpected error occurred. Error text was: " + e.getMessage());
         } finally {
             if (method != null) method.releaseConnection();
         }

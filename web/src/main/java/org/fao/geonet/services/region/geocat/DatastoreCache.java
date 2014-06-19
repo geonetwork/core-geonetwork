@@ -20,7 +20,7 @@ public class DatastoreCache {
 
 	private SimpleFeatureSource loadIntoMemory(ServiceContext context, DatastoreMapper mapper, boolean simplified, boolean inLatLong)
 			throws IOException {
-		String[] propNames = mapper.propNames(simplified, true);
+		String[] propNames = mapper.propNames(simplified, true, inLatLong);
 		String sourceTypeName = mapper.getBackingDatastoreName(simplified, inLatLong);
 		String cacheTypeName = mapper.getBackingDatastoreName(simplified, inLatLong);
 

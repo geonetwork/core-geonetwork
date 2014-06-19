@@ -40,10 +40,11 @@
 					<gco:CharacterString />
 				</xsl:otherwise>
 			</xsl:choose>
-			<xsl:copy-of select="gmd:PT_FreeText"></xsl:copy-of>
+			<xsl:copy-of select="gmd:PT_FreeText"/>
 		</xsl:copy>
 	</xsl:template>
-	
+
+
 	<xsl:template name="langId19139">
         <xsl:variable name="tmp">
             <xsl:choose>

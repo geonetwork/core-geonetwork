@@ -34,7 +34,7 @@ public class GemeindenMapper extends DatastoreMapper {
 	}
 
 	@Override
-	public String[] propNames(boolean simplified, boolean includeGeom) {
+	public String[] propNames(boolean simplified, boolean includeGeom, boolean inLatLong) {
 		if(simplified) {
 			if(includeGeom) {
 				return new String[]{GEMEINDEN_ID, GEMEINDEN_NAME, GEMEINDEN_DESC, THE_GEOM};

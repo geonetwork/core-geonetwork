@@ -1,10 +1,6 @@
 package org.fao.geonet.services.region.geocat;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.vividsolutions.jts.geom.Geometry;
 import org.fao.geonet.services.region.Region;
 import org.fao.geonet.util.LangUtils;
 import org.geotools.data.Query;
@@ -17,7 +13,10 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.filter.Filter;
 import org.opengis.filter.expression.Expression;
 
-import com.vividsolutions.jts.geom.Geometry;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class DatastoreMapper {
 
@@ -34,7 +33,7 @@ public abstract class DatastoreMapper {
 	
 	protected abstract SimpleFeatureSource getFeatureSource(MapperState state, boolean simplified, boolean inLatLong) throws IOException;
 
-	public abstract  String[] propNames(boolean simplified, boolean includeGeom);
+	public abstract  String[] propNames(boolean simplified, boolean includeGeom, boolean inLatLong);
 
 	public abstract Region constructRegion(MapperState state, SimpleFeature next) throws JDOMException, IOException;
 
@@ -66,7 +65,7 @@ public abstract class DatastoreMapper {
 	private Query createQuery(MapperState state, boolean simplified, int maxRegions, Filter filter, boolean inLatLong) {
 		Query query = new Query(getBackingDatastoreName(simplified, inLatLong), filter);
 		query.setMaxFeatures(maxRegions);
-		query.setPropertyNames(propNames(simplified, true));
+		query.setPropertyNames(propNames(simplified, true, inLatLong));
 		return query;
 	}
 

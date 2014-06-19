@@ -53,6 +53,7 @@ import static org.fao.geonet.constants.Geonet.Namespaces.GEONET;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
 import static org.fao.geonet.constants.Geonet.Namespaces.SRV;
 import static org.fao.geonet.constants.Geonet.Namespaces.XLINK;
+import static org.fao.geonet.constants.Geonet.Namespaces.XSI;
 import static org.fao.geonet.util.XslUtil.CHE_NAMESPACE;
 
 /**
@@ -131,6 +132,11 @@ public class Save implements Service {
     public static final String JSON_LINKS_PROTOCOL = "protocol";
     public static final String JSON_LINKS_XPATH = "xpath";
     public static final String JSON_IDENTIFICATION_KEYWORD_THESAURUS = "thesaurus";
+    public static final String JSON_IDENTIFICATION_COUPLING_TYPE = "couplingType";
+    public static final String JSON_IDENTIFICATION_CONTAINS_OPERATIONS = "containsOperations";
+    public static final String JSON_IDENTIFICATION_OPERATION_NAME = "operationName";
+    public static final String JSON_IDENTIFICATION_DCP_LIST = "DCPList";
+    public static final String JSON_IDENTIFICATION_CONNECT_POINT = "connectPoint";
 
     @Override
     public void init(String appPath, ServiceConfig params) throws Exception {
@@ -186,21 +192,35 @@ public class Save implements Service {
         if (jsonArray != null) {
             for (int i = 0; i < jsonArray.length(); i++) {
                 final JSONObject linkJson = jsonArray.getJSONObject(i);
-                String ref = linkJson.getString(Params.REF);
-                boolean delete = !linkJson.has(Save.JSON_LINKS_LOCALIZED_URL);
-                final Element element = Xml.selectElement(metadata, "*//*[geonet:element/@ref = '" + ref + "']", NS);
-                if (delete) {
-                    element.detach();
+                String ref = linkJson.optString(Params.REF);
+                if (Strings.isNullOrEmpty(ref)) {
+                    if (linkJson.has(Save.JSON_LINKS_LOCALIZED_URL)) {
+                        addXLink(editLib, metadataSchema, linkJson, metadata, false);
+                    }
                 } else {
-                    final JSONObject localizedURL = linkJson.optJSONObject(JSON_LINKS_LOCALIZED_URL);
-                    if (localizedURL != null) {
-                        final String xpath = linkJson.getString(JSON_LINKS_XPATH);
-                        AddElemValue value = new AddElemValue(new Element(EditLib.SpecialUpdateTags.REPLACE).addContent(buildLocalizedElem(localizedURL)));
-
-                        editLib.addElementOrFragmentFromXpath(element, metadataSchema, xpath, value, true);
+                    boolean delete = !linkJson.has(Save.JSON_LINKS_LOCALIZED_URL);
+                    final Element element = Xml.selectElement(metadata, "*//*[geonet:element/@ref = '" + ref + "']", NS);
+                    if (delete) {
+                        element.detach();
+                    } else {
+                        addXLink(editLib, metadataSchema, linkJson, element, true);
                     }
                 }
             }
+        }
+    }
+
+    private void addXLink(EditLib editLib, MetadataSchema metadataSchema, JSONObject linkJson, Element element, boolean replace) throws JSONException {
+        final JSONObject localizedURL = linkJson.optJSONObject(JSON_LINKS_LOCALIZED_URL);
+        if (localizedURL != null) {
+            final String xpath = linkJson.getString(JSON_LINKS_XPATH);
+            final String specialTag = replace ? EditLib.SpecialUpdateTags.REPLACE : EditLib.SpecialUpdateTags.ADD;
+            final Element buildLocalizedElem = buildLocalizedElem(localizedURL);
+            AddElemValue value = new AddElemValue(new Element(specialTag).addContent(buildLocalizedElem));
+
+            final boolean result = editLib.addElementOrFragmentFromXpath(element, metadataSchema, xpath, value, true);
+            buildLocalizedElem.getParentElement().setAttribute("type", "che:PT_FreeURL_PropertyType", XSI);
+            assert result;
         }
     }
 
@@ -449,8 +469,14 @@ public class Save implements Service {
 
             if (conformanceResult == null) {
                 Element elem = Xml.selectElement(metadata, "*//*[geonet:element/@ref = '" + conformanceResultRef + "']", NS);
-                throw new IllegalArgumentException("Reference ID: '" + conformanceResultRef + "' does not identify a " +
-                                                   "gmd:DQ_ConformanceResult element.  Instead it identifies: \n" + Xml.getString(elem));
+                if (elem != null) {
+                    throw new IllegalArgumentException("Reference ID: '" + conformanceResultRef + "' does not identify a " +
+                                                       "gmd:DQ_ConformanceResult element.  Instead it identifies: \n" + Xml.getString(elem));
+
+                } else {
+                    throw new IllegalArgumentException("Reference ID: '" + conformanceResultRef + "' does not identify a " +
+                                                       "gmd:DQ_ConformanceResult element.");
+                }
             }
         }
 
@@ -882,7 +908,7 @@ public class Save implements Service {
             JSONObject contact = contacts.getJSONObject(i);
             String contactId = contact.optString(JSON_CONTACT_ID, null);
             boolean validated = contact.getBoolean(JSON_VALIDATED);
-            String role = contact.getString(JSON_CONTACT_ROLE);
+            String role = contact.optString(JSON_CONTACT_ROLE, "pointOfContact");
 
             String xlinkHref = "local://xml.user.get?id=" + contactId + "&amp;schema=iso19139.che&amp;role=" + role;
 
@@ -1029,7 +1055,6 @@ public class Save implements Service {
             }
             return new Element("ok").setText("ok");
         } else {
-            editLib.enumerateTree(metadata);
             return new GetEditModel().exec(params, context);
         }
     }

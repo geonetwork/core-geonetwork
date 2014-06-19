@@ -40,6 +40,7 @@ import static org.fao.geonet.Assert.getWebappDir;
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GEONET;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
+import static org.fao.geonet.constants.Geonet.Namespaces.XSI;
 import static org.fao.geonet.kernel.search.spatial.Pair.read;
 import static org.fao.geonet.services.metadata.inspire.Save.NS;
 import static org.junit.Assert.assertEquals;
@@ -183,17 +184,53 @@ public class SaveTest {
                 new Element("data").setText(json)
         )), context);
 
-        Element eng1 = Xml.selectElement(service.getSavedMetadata(), "*//gmd:transferOptions[1]//che:LocalisedURL[@locale = '#EN']", NS);
-        Element fre1 = Xml.selectElement(service.getSavedMetadata(), "*//gmd:transferOptions[1]//che:LocalisedURL[@locale = '#FR']", NS);
-        Element ger = Xml.selectElement(service.getSavedMetadata(), "*//gmd:transferOptions[2]//che:LocalisedURL[@locale = '#DE']", NS);
-        Element fre2 = Xml.selectElement(service.getSavedMetadata(), "*//gmd:transferOptions[2]//che:LocalisedURL[@locale = '#FR']", NS);
-        assertEquals(2, Xml.selectNodes(service.getSavedMetadata(), "*//gmd:transferOptions//gmd:CI_OnlineResource", NS).size());
+        final Element savedMetadata = service.getSavedMetadata();
+        Element eng1 = Xml.selectElement(savedMetadata, "*//gmd:transferOptions[1]//che:LocalisedURL[@locale = '#EN']", NS);
+        Element fre1 = Xml.selectElement(savedMetadata, "*//gmd:transferOptions[1]//che:LocalisedURL[@locale = '#FR']", NS);
+        Element ger = Xml.selectElement(savedMetadata, "*//gmd:transferOptions[2]//che:LocalisedURL[@locale = '#DE']", NS);
+        Element fre2 = Xml.selectElement(savedMetadata, "*//gmd:transferOptions[2]//che:LocalisedURL[@locale = '#FR']", NS);
+        assertEquals(2, Xml.selectNodes(savedMetadata, "*//gmd:transferOptions//gmd:CI_OnlineResource", NS).size());
 
         assertEquals(eng, eng1.getText());
         assertEquals(fre, fre1.getText());
         assertEquals("de url2", ger.getText());
         assertEquals("fr url2", fre2.getText());
 
+        List<Element> linkages = (List<Element>) Xml.selectNodes(savedMetadata, "gmd:distributionInfo//gmd:linkage", NS);
+        assertEquals(2, linkages.size());
+        for (Element linkage : linkages) {
+            assertEquals("che:PT_FreeURL_PropertyType", linkage .getAttributeValue("type", XSI));
+        }
+    }
+
+    @Test
+    public void testAddLink() throws Exception {
+        testMetadata = Xml.loadFile(SaveTest.class.getResource("serviceType/metadata.xml"));
+        service.setTestMetadata(testMetadata);
+
+        String json = ("{\"links\": [{\"xpath\": \"@@xpath@@\",\"localizedURL\": {\"eng\": \"eng translation\"," +
+                       "\"fre\": \"fre translation\"}}]}");
+        json = json.replace("@@xpath@@", GetEditModel.TRANSFER_OPTION_XPATH);
+        service.exec(new Element("request").addContent(Arrays.asList(
+                new Element("id").setText("12"),
+                new Element("data").setText(json)
+        )), context);
+
+        final Element savedMetadata = service.getSavedMetadata();
+        final List<?> urls = Xml.selectNodes(savedMetadata, "gmd:distributionInfo//gmd:linkage//che:LocalisedURL", NS);
+        assertEquals(2, urls.size());
+        Element engUrl = Xml.selectElement(savedMetadata, "gmd:distributionInfo//gmd:linkage//che:LocalisedURL[@locale = '#EN']", NS);
+        assertNotNull(engUrl);
+        assertEquals("eng translation", engUrl.getText());
+        Element freUrl = Xml.selectElement(savedMetadata, "gmd:distributionInfo//gmd:linkage//che:LocalisedURL[@locale = '#FR']", NS);
+        assertNotNull(freUrl);
+        assertEquals("fre translation", freUrl.getText());
+
+        List<Element> linkages = (List<Element>) Xml.selectNodes(savedMetadata, "gmd:distributionInfo//gmd:linkage", NS);
+        assertEquals(1, linkages.size());
+        for (Element linkage : linkages) {
+            assertEquals("che:PT_FreeURL_PropertyType", linkage .getAttributeValue("type", XSI));
+        }
     }
 
     @Test
@@ -226,6 +263,22 @@ public class SaveTest {
         assertEquals("discovery", ((Element)serviceTypeNodes.get(0)).getText());
 
         service.setTestMetadata(savedMd);
+    }
+
+    @Test
+    public void testStackOverFlowBug() throws Exception {
+        testMetadata = Xml.loadFile(SaveTest.class.getResource("stackoverflow/metadata.xml"));
+        service.setTestMetadata(testMetadata);
+
+        String json = loadTestJson("stackoverflow/request.json");
+        Element response = service.exec(new Element("request").addContent(Arrays.asList(
+                new Element("id").setText("12"),
+                new Element("data").setText(json)
+        )), context);
+
+        assertEquals("data", response.getName());
+
+
     }
 
     protected void assertCorrectlySavedFromEmptyMd() throws JDOMException {

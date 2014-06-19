@@ -1,0 +1,153 @@
+{"characterSet": "utf8", "hierarchyLevelName": "ViewService", "constraints": {
+  "generic": [
+    {
+      "ref": "211",
+      "useLimitations": [
+        {
+          "ger": "gebührenpflichtig"
+        }
+      ]
+    }
+  ],
+  "legal": [
+    {
+      "legislationConstraints": [
+        {
+          "ger": "Verordnung  vom 30. August 2011  über die Gebühren für die Nutzung der Geodateninfrastruktur Liechtenstein"
+        }
+      ],
+      "ref": "170",
+      "useLimitations": [
+        {
+          "ger": "asdfsadfsadf"
+        }
+      ],
+      "otherConstraints": [],
+      "useConstraints": ["license"],
+      "accessConstraints": []
+    },
+    {
+      "legislationConstraints": [],
+      "ref": "202",
+      "useLimitations": [],
+      "otherConstraints": [
+        {
+          "ger": "keine Einschränkung"
+        }
+      ],
+      "useConstraints": [],
+      "accessConstraints": ["otherRestrictions"]
+    }
+  ],
+  "security": []
+}, "links": [
+  {
+    "localizedURL": {
+      "ger": "http://www.geocat.ch/geoserver/ows?service=wfs"
+    },
+    "description": "",
+    "xpath": "gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage"
+  }
+], "otherLanguages": ["ger", "fre", "ita", "eng"], "contact": [
+  {
+    "organization": {
+      "ger": "Amt für Bau und Infrastruktur"
+    },
+    "email": "vermessung@llv.li",
+    "name": "",
+    "role": "pointOfContact",
+    "surname": "FB Vermessung und Geoinformation",
+    "validated": true
+  }
+], "hierarchyLevel": "service", "identification": {
+  "extents": [
+    {
+      "description": {
+        "ita": "Liechtenstein",
+        "ger": "Liechtenstein",
+        "fre": "Liechtenstein",
+        "eng": "Liechtenstein",
+        "roh": "Liechtenstein"
+      },
+      "geom": "country:1"
+    }
+  ],
+  "abstract": {
+    "ger": "INSPIRE konformer WMS-Dienst"
+  },
+  "title": {
+    "ger": "INSPIRE View Service test sca"
+  },
+  "pointOfContact": [
+    {
+      "organization": {
+        "ger": "Amt für Bau und Infrastruktur"
+      },
+      "email": "vermessung@llv.li",
+      "name": "",
+      "surname": "FB Vermessung und Geoinformation",
+      "validated": true
+    }
+  ],
+  "citationIdentifier": "abi_INSPIRE_VIEW_SERVICE",
+  "descriptiveKeywords": [
+    {
+      "thesaurus": "external.theme.inspire-service-taxonomy",
+      "words": {
+        "ita": "comMessagingService",
+        "ger": "comMessagingService",
+        "fre": "comMessagingService",
+        "eng": "comMessagingService"
+      },
+      "code": "urn:inspire:service:taxonomy:comMessagingService"
+    }
+  ],
+  "topicCategory": [""],
+  "language": "",
+  "serviceType": "view",
+  "date": {
+    "dateTagName": "gco:Date",
+    "dateType": "publication",
+    "date": "2013-09-02"
+  },
+  "type": "service"
+}, "metadataIsXsdValid": true, "language": "ger", "conformity": {
+  "updateResultRef": "",
+  "title": {
+    "ita": "REGOLAMENTO (UE) N. 1089/2010 DELLA COMMISSIONE del 23 novembre 2010 recante attuazione della direttiva 2007/2/CE del Parlamento europeo e del Consiglio per quanto riguarda l'interoperabilità dei set di dati territoriali e dei servizi di dati territoriali",
+    "ger": "VERORDNUNG (EG) NR. 1089/2010 DER KOMMISSION VOM 23. NOVEMBER 2010 ZUR DURCHFÜHRUNG DER RICHTLINIE 2007/2/EG DES EUROPÄISCHEN PARLAMENTS UND DES RATES HINSICHTLICH DER INTEROPERABILITÄT VON GEODATENSÄTZEN UND -DIENSTEN",
+    "fre": "Règlement (UE) n o 1089/2010 de la commission du 23 novembre 2010 portant modalités d'application de la directive 2007/2/ce du Parlement Européen et du conseil en ce qui concerne l'interopérabilité des séries et des services de données géographiques",
+    "eng": "COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services"
+  },
+  "lineage": {
+    "statement": {
+      "ger": "asdfsfd"
+    },
+    "ref": ""
+  },
+  "conformanceResultRef": "478",
+  "allConformanceReports": [
+    {
+      "ref": "478",
+      "title": {
+        "ger": "VERORDNUNG (EG) Nr. 1089/2010 DER KOMMISSION vom 23. November 2010 zur Durchführung der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität von Geodatensätzen und -diensten"
+      }
+    },
+    {
+      "ref": "",
+      "title": {
+        "ita": "Nuovo",
+        "ger": "Neu",
+        "fre": "Nouveau",
+        "eng": "New"
+      }
+    }
+  ],
+  "explanation": "nicht geprüft",
+  "date": {
+    "dateTagName": "gco:Date",
+    "dateType": "publication",
+    "date": "2010-12-08"
+  },
+  "pass": "false"
+}}

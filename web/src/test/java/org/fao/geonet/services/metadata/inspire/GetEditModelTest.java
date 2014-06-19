@@ -1,8 +1,10 @@
 package org.fao.geonet.services.metadata.inspire;
 
+import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
+import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.SchemaManager;
@@ -22,6 +24,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,7 +51,6 @@ public class GetEditModelTest {
         final JSONObject inspireModel = new JSONObject(inspireModelText);
         assertEquals(0, inspireModel.getJSONObject(Save.JSON_CONFORMITY).getJSONObject(Save.JSON_TITLE).length());
         assertEquals(0, inspireModel.getJSONObject(Save.JSON_CONFORMITY).getString(Save.JSON_CONFORMITY_RESULT_REF).length());
-
     }
 
     @Test
@@ -83,11 +85,32 @@ public class GetEditModelTest {
     }
 
     @Test
+    public void testAddConstraintWhenRequired() throws Exception {
+        final Element testMetadata = Xml.loadFile(GetEditModelTest.class.getResource("stackoverflow/metadata.xml"));
+
+        GetEditModel service = new TestGetEditModel(testMetadata);
+        Element params = new Element("params").addContent(new Element("id").setText("2"));
+        ServiceContext context = Mockito.mock(ServiceContext.class);
+
+        final Element result = service.exec(params, context);
+        final JSONObject inspireModel = new JSONObject(result.getTextTrim());
+
+        final JSONObject constraintsJSON = inspireModel.getJSONObject(Save.JSON_CONSTRAINTS);
+        final JSONArray legalConstraints = constraintsJSON.getJSONArray(Save.JSON_CONSTRAINTS_LEGAL);
+        assertEquals(1, legalConstraints.getJSONObject(0).getJSONArray(Save.JSON_CONSTRAINTS_USE_CONSTRAINTS).length());
+        assertEquals(0, legalConstraints.getJSONObject(0).getJSONArray(Save.JSON_CONSTRAINTS_ACCESS_CONSTRAINTS).length());
+
+        assertEquals(1, legalConstraints.getJSONObject(1).getJSONArray(Save.JSON_CONSTRAINTS_ACCESS_CONSTRAINTS).length());
+        assertEquals(0, legalConstraints.getJSONObject(1).getJSONArray(Save.JSON_CONSTRAINTS_USE_CONSTRAINTS).length());
+    }
+
+    @Test
     public void testExecDataIdentification() throws Exception {
         final Element testMetadata = Xml.loadFile(GetEditModelTest.class.getResource("inspire-valid-che.xml"));
 
-        GetEditModel service = new TestGetEditModel(testMetadata);
-
+        TestGetEditModel service = new TestGetEditModel(testMetadata);
+        service.addSharedObject("local://che.keyword.get?thesaurus=external.theme.inspire-theme&id=http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F5&locales=en,it,de,fr", new Element("keyword"));
+        service.addSharedObject("local://xml.extent.get?id=0&wfs=default&typename=gn:countries&format=GMD_BBOX&extentTypeCode=true", new Element("extent"));
         Element params = new Element("params").addContent(new Element("id").setText("2"));
         ServiceContext context = Mockito.mock(ServiceContext.class);
 
@@ -223,8 +246,15 @@ public class GetEditModelTest {
     public void testExecServiceIdentification() throws Exception {
         final Element testMetadata = Xml.loadFile(GetEditModelTest.class.getResource("inspire-valid-service-che.xml"));
 
-        GetEditModel service = new TestGetEditModel(testMetadata);
-
+        TestGetEditModel service = new TestGetEditModel(testMetadata);
+        service.addSharedObject("local://che.keyword.get?thesaurus=external._none_.gemet&id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F14891&locales=en,it,de,fr", new Element("keyword"));
+        service.addSharedObject("local://che.keyword.get?thesaurus=external._none_.gemet&id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F5167&locales=en,it,de,fr", new Element("keyword"));
+        service.addSharedObject("local://che.keyword.get?thesaurus=local._none_.geocat.ch&id=http%3A%2F%2Fgeocat.ch%2Fconcept%2344&locales=en,it,de,fr", new Element("keyword"));
+        service.addSharedObject("local://che.keyword.get?thesaurus=external._none_.gemet&id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F1984&locales=en,it,de,fr", new Element("keyword"));
+        service.addSharedObject("local://che.keyword.get?thesaurus=external._none_.gemet&id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F4398&locales=en,it,de,fr", new Element("keyword"));
+        service.addSharedObject("local://che.keyword.get?thesaurus=external._none_.gemet&id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F14940&locales=en,it,de,fr", new Element("keyword"));
+        service.addSharedObject("local://che.keyword.get?thesaurus=external.theme.inspire-service-taxonomy&id=urn%3Ainspire%3Aservice%3Ataxonomy%3AspatialFeatureMatchingService&locales=fr,en,de,it", new Element("keyword"));
+        service.addSharedObject("local://xml.extent.get?id=0&wfs=default&typename=gn:countries&format=GMD_COMPLETE&extentTypeCode=true", new Element("extent"));
         Element params = new Element("params").addContent(new Element("id").setText("2"));
         ServiceContext context = Mockito.mock(ServiceContext.class);
 
@@ -291,6 +321,20 @@ public class GetEditModelTest {
                 read("ita", "Schweiz"), read("eng", "Schweiz"), read("roh", "Schweiz"));
 
 
+        assertEquals("loose", identification.getString(Save.JSON_IDENTIFICATION_COUPLING_TYPE));
+
+        final JSONArray jsonArray = identification.getJSONArray(Save.JSON_IDENTIFICATION_CONTAINS_OPERATIONS);
+        assertEquals(3, jsonArray.length());
+
+
+        assertContainsOperations(jsonArray.getJSONObject(0), "GetCapabilities", "WebServices", 1, read("fre",
+                "http://www.geocat.ch/geonetwork/srv/fre/csw?SERVICE=CSW&VERSION=2.0.2&REQUEST=GetCapabilities"));
+        assertContainsOperations(jsonArray.getJSONObject(1), "GetRecords", "WebServices", 1, read("fre",
+                "http://www.geocat.ch/geonetwork/srv/fre/csw?"));
+        assertContainsOperations(jsonArray.getJSONObject(2), "GetRecordById", "WebServices", 1, read("fre",
+                "http://www.geocat.ch/geonetwork/srv/fre/csw?"));
+
+
         JSONArray legalConstraints = inspireModel.getJSONObject(Save.JSON_CONSTRAINTS).getJSONArray(Save.JSON_CONSTRAINTS_LEGAL);
         assertEquals(1, legalConstraints.length());
         final JSONObject legalConstraint = legalConstraints.getJSONObject(0);
@@ -328,6 +372,16 @@ public class GetEditModelTest {
         assertTranslations(conformityJSONObject, Save.JSON_CONFORMITY_LINEAGE_STATEMENT,
                 read("ger", "INSPIRE Testdaten"), read("fre", "INSPIRE Testdaten"));
 
+    }
+
+    protected void assertContainsOperations(JSONObject containsOperations1, String operationName, String dcpList, int connectPointCount, Pair<String, String> translation) throws JSONException {
+        assertEquals(operationName, containsOperations1.getString(Save.JSON_IDENTIFICATION_OPERATION_NAME));
+        assertEquals(dcpList, containsOperations1.getString(Save.JSON_IDENTIFICATION_DCP_LIST));
+
+        assertEquals(connectPointCount, containsOperations1.getJSONArray(Save.JSON_IDENTIFICATION_CONNECT_POINT).length());
+        JSONObject connectPoint1 = containsOperations1.getJSONArray(Save.JSON_IDENTIFICATION_CONNECT_POINT).getJSONObject(0);
+        assertEquals(translation.two(),
+                connectPoint1.getJSONObject(Save.JSON_LINKS_LOCALIZED_URL).getString(translation.one()));
     }
 
     @Test
@@ -440,9 +494,14 @@ public class GetEditModelTest {
 
     private static class TestGetEditModel extends GetEditModel {
         private final Element testMetadata;
+        private final Map<String, Element> sharedObjects = Maps.newHashMap();
 
         public TestGetEditModel(Element testMetadata) {
             this.testMetadata = testMetadata;
+        }
+
+        void addSharedObject(String href, Element obj) {
+            sharedObjects.put(href, obj);
         }
 
         @Override
@@ -469,6 +528,11 @@ public class GetEditModelTest {
         protected void addCodeLists(ServiceContext context, JSONObject metadataJson) throws JDOMException, IOException,
                 JSONException {
             // do nothing
+        }
+
+        @Override
+        protected Element resolveXLink(String hRef, ServiceContext context) throws JDOMException, CacheException, IOException {
+            return this.sharedObjects.get(hRef);
         }
     }
 }
