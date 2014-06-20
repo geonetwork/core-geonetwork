@@ -140,46 +140,6 @@
         </configuration>
       </plugin>
 
-      <!-- This plugin Allows to deploy several webapps into a specific container (ie. jetty) -->
-      <plugin>
-        <groupId>org.codehaus.cargo</groupId>
-        <artifactId>cargo-maven2-plugin</artifactId>
-        <configuration>
-          <container>
-            <containerId>jetty7x</containerId>
-            <type>embedded</type>
-            <log>${project.build.directory}/server-logs</log>
-            <output>${project.build.directory}/server-output</output>
-            <systemProperties>
-              <GEOSERVER_DATA_DIR>release/data/geoserver_data</GEOSERVER_DATA_DIR>
-	      <mime-mappings>web/target/geonetwork/WEB-INF/mime-types.properties</mime-mappings>
-            </systemProperties>
-          </container>
-          <configuration>
-            <home>${project.build.directory}/test-server</home>
-            <properties>
-              <!-- Cargo VMARGS are not working. FIXME -->
-              <cargo.jvmargs>-Xms48m -Xmx512m -Xss2M -XX:MaxPermSize=128m</cargo.jvmargs>
-              <cargo.servlet.port>8080</cargo.servlet.port>
-            </properties>
-            <deployables>
-              <deployable>
-                <location>${project.build.directory}/../web/target/geonetwork.war</location>
-                <type>war</type>
-              </deployable>
-<!--              <deployable>
-                <location>${project.build.directory}/../intermap/target/intermap.war</location>
-                <type>war</type>
-              </deployable> -->
-              <deployable>
-                <location>${project.build.directory}/../geoserver/target/geoserver.war</location>
-                <type>war</type>
-              </deployable>
-            </deployables>
-          </configuration>
-        </configuration>
-      </plugin>
-
       <!-- artifact assembly -->
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
