@@ -80,6 +80,8 @@ public class GetEditModelTest {
         expectedJson.remove("constraintOptions");
         expectedJson.remove("serviceTypeOptions");
         expectedJson.remove("scopeCodeOptions");
+        expectedJson.remove("couplingTypeOptions");
+        expectedJson.remove("dcpListOptions");
 
         assertEqualJsonObjects("<root>", inspireModel, expectedJson);
     }
@@ -378,8 +380,8 @@ public class GetEditModelTest {
         assertEquals(operationName, containsOperations1.getString(Save.JSON_IDENTIFICATION_OPERATION_NAME));
         assertEquals(dcpList, containsOperations1.getString(Save.JSON_IDENTIFICATION_DCP_LIST));
 
-        assertEquals(connectPointCount, containsOperations1.getJSONArray(Save.JSON_IDENTIFICATION_CONNECT_POINT).length());
-        JSONObject connectPoint1 = containsOperations1.getJSONArray(Save.JSON_IDENTIFICATION_CONNECT_POINT).getJSONObject(0);
+        assertEquals(connectPointCount, containsOperations1.getJSONArray(Save.JSON_LINKS).length());
+        JSONObject connectPoint1 = containsOperations1.getJSONArray(Save.JSON_LINKS).getJSONObject(0);
         assertEquals(translation.two(),
                 connectPoint1.getJSONObject(Save.JSON_LINKS_LOCALIZED_URL).getString(translation.one()));
     }

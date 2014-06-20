@@ -332,6 +332,13 @@ public class GetEditModel implements Service {
                 topicCategoryGrouper);
         addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:MD_RestrictionCode", "constraintOptions", null);
         addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:MD_ScopeCode", "scopeCodeOptions", null);
+        Set<CodeListEntry> couplingTypeOptions = Sets.newHashSet(
+                new CodeListEntry("loose", "loose", "loose"),
+                new CodeListEntry("tight", "tight", "tight"),
+                new CodeListEntry("mixed", "mixed", "mixed")
+        );
+        addOptions(metadataJson, "couplingTypeOptions", couplingTypeOptions);
+        addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "srv:DCPList", "dcpListOptions", null);
         addCodeListOptionsFromLabelsHelper(metadataJson, labels, labelExtensions, "srv:serviceType", "serviceTypeOptions", serviceTypeInspire);
 
     }
@@ -564,7 +571,7 @@ public class GetEditModel implements Service {
 
         addValue(identificationInfoEl, identificationJSON, Save.JSON_IDENTIFICATION_COUPLING_TYPE, "srv:couplingType/srv:SV_CouplingType/@codeListValue");
         addArray(mainLanguage, identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, "srv:containsOperations/srv:SV_OperationMetadata",
-                Save.JSON_IDENTIFICATION_CONTAINS_OPERATIONS, containsOperationsEncoder, new JSONArray());
+                Save.JSON_IDENTIFICATION_CONTAINS_OPERATIONS, containsOperationsEncoder);
 
         return identificationInfoEl;
     }
@@ -884,10 +891,27 @@ public class GetEditModel implements Service {
     };
 
     private final JsonEncoder containsOperationsEncoder = new JsonEncoder() {
-
+        private final String LINKAGE_XPATH = "srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage";
+        private JSONObject defaultLinkage() throws JSONException {
+            final JSONObject jsonObject = new JSONObject();
+            jsonObject.put(Save.JSON_LINKS_XPATH, LINKAGE_XPATH);
+            jsonObject.put(Save.JSON_LINKS_LOCALIZED_URL, new JSONObject());
+            jsonObject.put(Save.JSON_LINKS_PROTOCOL, "");
+            jsonObject.put(Save.JSON_LINKS_DESCRIPTION, new JSONObject());
+            jsonObject.put(Params.REF, "");
+            return jsonObject;
+        }
         @Override
         public Object getDefault() throws JSONException {
-            return null;
+            JSONObject json = new JSONObject();
+            json.put(Params.REF, "");
+            json.put(Save.JSON_IDENTIFICATION_OPERATION_NAME, "");
+            json.put(Save.JSON_IDENTIFICATION_OPERATION_NAME, "");
+            json.put(Save.JSON_IDENTIFICATION_DCP_LIST, "");
+            JSONArray linkages = new JSONArray();
+            linkages.put(defaultLinkage());
+            json.put(Save.JSON_LINKS, linkages);
+            return json;
         }
 
         @Override
@@ -898,8 +922,11 @@ public class GetEditModel implements Service {
             addValue(node, json, Save.JSON_IDENTIFICATION_OPERATION_NAME, "srv:operationName/gco:CharacterString");
             addValue(node, json, Save.JSON_IDENTIFICATION_DCP_LIST, "srv:DCP/srv:DCPList/@codeListValue");
             JSONArray linkages = new JSONArray();
-            processLinkages(node, linkages, "srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage");
-            json.put(Save.JSON_IDENTIFICATION_CONNECT_POINT, linkages);
+            processLinkages(node, linkages, LINKAGE_XPATH);
+            if (linkages.length() == 0) {
+                linkages.put(defaultLinkage());
+            }
+            json.put(Save.JSON_LINKS, linkages);
 
             return json;
         }

@@ -18,6 +18,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.util.XslUtil;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.json.JSONObject;
@@ -277,9 +278,8 @@ public class SaveTest {
         )), context);
 
         assertEquals("data", response.getName());
-
-
     }
+
 
     protected void assertCorrectlySavedFromEmptyMd() throws JDOMException {
         final Element savedMetadata = service.getSavedMetadata();
@@ -543,8 +543,8 @@ public class SaveTest {
                 new Element("data").setText(json)
         )), context);
 
-        assertCorrectTranslation("ger", testMetadata,"gmd:contact/che:CHE_CI_ResponsibleParty/gmd:organisationName",
-                read("ger", "asdfasf"),read("fre", "asdfasdf"),read("ita", "asfasdf"),read("eng", "asdfasdf"),read("roh", "asfsadf"));
+        assertCorrectTranslation("ger", testMetadata, "gmd:contact/che:CHE_CI_ResponsibleParty/gmd:organisationName",
+                read("ger", "asdfasf"), read("fre", "asdfasdf"), read("ita", "asfasdf"), read("eng", "asdfasdf"), read("roh", "asfsadf"));
         assertEquals("asdfasfasfdsa@asdfasdf.dfd",
                 Xml.selectString(testMetadata, "gmd:contact/che:CHE_CI_ResponsibleParty//gmd:electronicMailAddress/gco:CharacterString"));
         assertEquals("editor",
@@ -631,6 +631,84 @@ public class SaveTest {
         assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:citation//gmd:dateType", Save.NS).size());
         assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:abstract", Save.NS).size());
         assertEquals(7, Xml.selectNodes(identificationInfo, "gmd:descriptiveKeywords", Save.NS).size());
+    }
+
+    @Test
+    public void testService_SetCouplingInformation() throws Exception {
+        service.addXLink("local://xml.user.get?id=15&amp;amp;schema=iso19139.che&amp;amp;role=pointOfContact&#xD",
+                new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
+        service.addXLink("local://xml.user.get?id=15&amp;schema=iso19139.che&amp;role=pointOfContact",
+                new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
+        service.addXLink("local://xml.user.get?id=10&amp;schema=iso19139.che&amp;role=pointOfContact",
+                new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
+        final String jsonString = loadTestJson("updateServiceCouplingInformation.json");
+        JSONObject json = new JSONObject(jsonString);
+
+        final Element result = service.exec(new Element("request").addContent(Arrays.asList(
+                new Element("id").setText("12"),
+                new Element("data").setText(json.toString())
+        )), context);
+
+        assertEquals(Xml.getString(result), "data", result.getName());
+
+        final Element savedMetadata = service.getSavedMetadata();
+        final Element identificationInfo = Xml.selectElement(savedMetadata, "gmd:identificationInfo/*", Save.NS);
+
+        assertEquals("loose", Xml.selectString(identificationInfo, "srv:couplingType/srv:SV_CouplingType/@codeListValue", NS));
+        final List<?> operations = Xml.selectNodes(identificationInfo, "srv:containsOperations/srv:SV_OperationMetadata", NS);
+        assertEquals(3, operations.size());
+
+        assertContainsOperation((Element) operations.get(0), "GetCapabilities", "WebServices", 1, read("fre",
+                "http://www.geocat.ch/geonetwork/srv/fre/csw?SERVICE=CSW&VERSION=2.0.2&REQUEST=GetCapabilities"));
+        assertContainsOperation((Element) operations.get(1), "GetRecords", "WebServices", 1, read("fre",
+                "http://www.geocat.ch/geonetwork/srv/fre/csw?"));
+        assertContainsOperation((Element) operations.get(2), "GetRecordById", "WebServices", 1, read("fre",
+                "http://www.geocat.ch/geonetwork/srv/fre/csw?"));
+    }
+
+    @Test
+    public void testService_UpdateCouplingInformation() throws Exception {
+        testMetadata = Xml.loadFile(SaveTest.class.getResource("updateContainsOperation/metadata.xml"));
+
+        service.setTestMetadata(testMetadata);
+
+        service.addXLink("local://xml.user.get?id=15&amp;amp;schema=iso19139.che&amp;amp;role=pointOfContact&#xD",
+                new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
+        service.addXLink("local://xml.user.get?id=15&amp;schema=iso19139.che&amp;role=pointOfContact",
+                new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
+        service.addXLink("local://xml.user.get?id=10&amp;schema=iso19139.che&amp;role=pointOfContact",
+                new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
+        final String jsonString = loadTestJson("updateContainsOperation/request.json");
+        JSONObject json = new JSONObject(jsonString);
+
+        final Element result = service.exec(new Element("request").addContent(Arrays.asList(
+                new Element("id").setText("12"),
+                new Element("data").setText(json.toString())
+        )), context);
+
+        assertEquals(Xml.getString(result), "data", result.getName());
+
+        final Element savedMetadata = service.getSavedMetadata();
+        final Element identificationInfo = Xml.selectElement(savedMetadata, "gmd:identificationInfo/*", Save.NS);
+
+        assertEquals("updated", Xml.selectString(identificationInfo, "srv:couplingType/srv:SV_CouplingType/@codeListValue", NS));
+        final List<?> operations = Xml.selectNodes(identificationInfo, "srv:containsOperations/srv:SV_OperationMetadata", NS);
+        assertEquals(1, operations.size());
+
+        assertContainsOperation((Element) operations.get(0), "UpdatedOp", "UpdatedDCP", 1,
+                read("fre", "http://updated.fre"));
+    }
+
+    private void assertContainsOperation(Element containsOperations1, String operationName, String dcpList, int connectPointCount, Pair<String, String> translation) throws JDOMException {
+        assertEquals(operationName, Xml.selectString(containsOperations1, "srv:operationName/gco:CharacterString", NS));
+        assertEquals(dcpList, Xml.selectString(containsOperations1, "srv:DCP/srv:DCPList/@codeListValue", NS));
+
+        assertEquals(connectPointCount, Xml.selectNodes(containsOperations1, "srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage", NS).size());
+
+
+        String langCode = "#"+SaveServiceTestImpl.LANGUAGES_MAPPER.iso639_2_to_iso639_1(translation.one()).toUpperCase();
+        assertEquals(translation.two(), Xml.selectString(containsOperations1, "srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage//node" +
+                                                                              "()[@locale = '" + langCode + "']", NS));
     }
 
     /**

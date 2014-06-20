@@ -141,6 +141,8 @@
         delete dataClone.scopeCodeOptions;
         delete dataClone.conformityTitleOptions;
         delete dataClone.allConformanceReports;
+        delete dataClone.couplingTypeOptions;
+        delete dataClone.dcpListOptions;
 
         var data = encodeURIComponent(JSON.stringify(dataClone));
         var finalData = 'id=' + mdId + '&data=' + data;

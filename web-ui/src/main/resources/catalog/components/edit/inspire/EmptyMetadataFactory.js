@@ -20,6 +20,8 @@
           "scopeCodeOptions": [],
           "metadataTypeOptions": ['data', 'service'],
           "conformityTitleOptions": [],
+          "dcpListOptions": [],
+          "couplingTypeOptions": [],
 
           "language": "",
           "characterSet": "utf-8",
@@ -61,7 +63,24 @@
             "extents": [{
               "description": {},
               "geom": ""
-            }]
+            }],
+            "containsOperations": [
+              {
+                "ref": "",
+                "operationName": "",
+                "DCPList": "",
+                "links": [
+                  {
+                    "ref": "",
+                    "protocol": "",
+                    "localizedURL": {},
+                    "description": {},
+                    "xpath": ""
+                  }
+                ]
+              }
+            ],
+            "couplingType": "updated"
           },
           "constraints": {
             "legal": [],

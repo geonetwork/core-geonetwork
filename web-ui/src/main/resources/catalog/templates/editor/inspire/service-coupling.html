@@ -1,0 +1,82 @@
+<div data-ng-controller="InspireKeywordController">
+    <div class="form-group">
+        <label for="couplingType" class="col-xs-3 control-label" ><span data-translate="">couplingType</span>: </label>
+        <div class="col-xs-9"
+             data-ng-class="validationClassString(data.identification.couplingType)">
+            <select id="couplingType"
+                    class="form-control"
+                    data-ng-model="data.identification.couplingType"
+                    data-ng-options="opt.name as opt.title | translate for opt in data.couplingTypeOptions"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-xs-12 pull-left"><span data-translate="">containsOperations</span>: </label>
+        <div class="table-responsive col-xs-12">
+            <table class="table table-condensed">
+                <tr data-ng-class="$first ? '' : 'col-xs-offset-3'"
+                    data-ng-repeat="operation in data.identification.containsOperations">
+                    <td width="98%">
+                        <div class="form-group">
+                            <label for="operationName" class="col-xs-3 control-label" ><span data-translate="">operationName</span>: </label>
+                            <div class="col-xs-9"
+                                 data-ng-class="validationClassString(operation.operationName)">
+                                <input id="operationName"
+                                        class="form-control"
+                                        data-ng-model="operation.operationName"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="dcpList" class="col-xs-3 control-label" ><span data-translate="">dcpList</span>: </label>
+                            <div class="col-xs-9"
+                                 data-ng-class="validationClassString(operation.dcpList)">
+                                <select id="dcpList"
+                                        class="form-control"
+                                        data-ng-model="operation.dcpList"
+                                        data-ng-options="opt.name as opt.title | translate for opt in data.dcpListOptions"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-3 control-label" ><span data-translate="">links</span>: </label>
+                            <div class="table-responsive col-xs-9">
+                            <table class="table table-condensed">
+                                <tr class="col-xs-12"
+                                    data-ng-repeat="link in operation.links"
+                                    data-ng-controller="InspireLinkController"
+                                    data-ng-if="link.localizedURL">
+                                    <td width="98%">
+                                        <div
+                                                data-ng-class="isValidURL ? '' : validationErrorClass"
+                                                data-inspire-multilingual-text
+                                                data-rows="1"
+                                                data-main-lang="data.language"
+                                                data-languages="data.otherLanguages"
+                                                data-field="link.localizedURL"/>
+                                    </td>
+                                    <td width="24px">
+                                        <a class="inspire-input-group"
+                                           style="color: red"
+                                           data-ng-hide="operation.links.length == 1"
+                                           data-ng-click="deleteLink(link)">
+                                            <i class="fa fa-times fa-fw"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                            </div>
+                        </div>
+                    </td>
+                    <td width="24px"/>
+                    <td width="24px">
+                        <a class="inspire-input-group"
+                           data-ng-hide="data.identification.containsOperations.length == 1"
+                           style="color: red"
+                           data-ng-click="deleteFromArray(data.identification.containsOperations, operation)">
+                            <i class="fa fa-times fa-fw"></i>
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

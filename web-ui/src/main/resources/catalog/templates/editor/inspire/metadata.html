@@ -332,6 +332,7 @@
 
             <div data-ng-include="base + '/templates/editor/inspire/keywords.html'" />
             <div data-ng-include="base + '/templates/editor/inspire/extents.html'" />
+            <div data-ng-if="data.identification.type == 'service'" data-ng-include="base + '/templates/editor/inspire/service-coupling.html'" />
         </fieldset>
 
         <div data-ng-include="base + '/templates/editor/inspire/constraints.html'" />

@@ -42,6 +42,7 @@ import java.io.PrintStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -136,7 +137,6 @@ public class Save implements Service {
     public static final String JSON_IDENTIFICATION_CONTAINS_OPERATIONS = "containsOperations";
     public static final String JSON_IDENTIFICATION_OPERATION_NAME = "operationName";
     public static final String JSON_IDENTIFICATION_DCP_LIST = "DCPList";
-    public static final String JSON_IDENTIFICATION_CONNECT_POINT = "connectPoint";
 
     @Override
     public void init(String appPath, ServiceConfig params) throws Exception {
@@ -379,12 +379,14 @@ public class Save implements Service {
     }
 
     private void addElementFromXPath(EditLib editLib, MetadataSchema metadataSchema, Element metadata, String xpath, Element element) {
-        boolean addSucceeded = editLib.addElementOrFragmentFromXpath(metadata, metadataSchema, xpath,
-                new AddElemValue(element), true);
+        if (element != null) {
+            boolean addSucceeded = editLib.addElementOrFragmentFromXpath(metadata, metadataSchema, xpath,
+                    new AddElemValue(element), true);
 
-        if (!addSucceeded) {
-            throw new AssertionError("Unable to add " + element.getQualifiedName() + " to " + metadata.getQualifiedName() + " at '"
-                                     + xpath + "'");
+            if (!addSucceeded) {
+                throw new AssertionError("Unable to add " + element.getQualifiedName() + " to " + metadata.getQualifiedName() + " at '"
+                                         + xpath + "'");
+            }
         }
     }
 
@@ -507,7 +509,7 @@ public class Save implements Service {
             }
         }
 
-        final Element title = createTranslatedInstance(mainLang, conformityJson.getJSONObject(JSON_TITLE), JSON_TITLE, GMD);
+        final Element title = createTranslatedInstance(mainLang, conformityJson.optJSONObject(JSON_TITLE), JSON_TITLE, GMD);
         addElementFromXPath(editLib, metadataSchema, conformanceResult,
                 "gmd:specification/gmd:CI_Citation/gmd:title", title);
 
@@ -576,8 +578,70 @@ public class Save implements Service {
         updateExtent(context, editLib, metadataSchema, identification, identificationJson);
         if (!identificationType.equals(JSON_IDENTIFICATION_TYPE_DATA_VALUE)) {
             updateServiceType(editLib, metadataSchema, identification, identificationJson);
+            updateCodeList(editLib,
+                    identification,
+                    metadataSchema,
+                    new Element("SV_CouplingType", SRV),
+                    identificationJson.optString(Save.JSON_IDENTIFICATION_COUPLING_TYPE),
+                    "srv:couplingType",
+                    "http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#SV_CouplingType",
+                    true);
+            updateContainsOperation(editLib, identification, metadataSchema, identificationJson);
         }
         return identification;
+    }
+
+    private void updateCodeList(EditLib editLib, Element metadata, MetadataSchema metadataSchema, Element template,
+                                String value, String xpath, String codelist, boolean replace) {
+        if (value != null) {
+           template.setAttribute(ATT_CODE_LIST_VALUE, value).
+                    setAttribute(ATT_CODE_LIST, codelist);
+            final String tag = replace ? EditLib.SpecialUpdateTags.REPLACE : EditLib.SpecialUpdateTags.ADD;
+            addElementFromXPath(editLib, metadataSchema, metadata, xpath, new Element(tag).addContent(template));
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void updateContainsOperation(EditLib editLib, Element identification, MetadataSchema metadataSchema, JSONObject
+            identificationJson) throws JSONException, JDOMException {
+        final List<Element> allOperations = Lists.newArrayList((
+                Iterable<? extends Element>) Xml.selectNodes(identification, "srv:containsOperations/srv:SV_OperationMetadata", NS));
+
+        HashSet<Object> refsToKeep = Sets.newHashSet();
+        final JSONArray jsonArray = identificationJson.getJSONArray(Save.JSON_IDENTIFICATION_CONTAINS_OPERATIONS);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            String ref = jsonArray.getJSONObject(i).getString(Params.REF);
+            if (!Strings.isNullOrEmpty(ref)) {
+                refsToKeep.add(ref);
+            }
+        }
+
+        for (Element allOperation : allOperations) {
+            String ref = allOperation.getChild("element", GEONET).getAttributeValue(Params.REF);
+            if (!refsToKeep.contains(ref)) {
+                allOperation.detach();
+            }
+        }
+
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            final JSONObject op = jsonArray.getJSONObject(i);
+            Element opEl = new Element("SV_OperationMetadata", SRV);
+            updateCharString(editLib, opEl, metadataSchema, "srv:operationName",
+                    op.optString(Save.JSON_IDENTIFICATION_OPERATION_NAME));
+            updateCodeList(editLib,
+                    opEl,
+                    metadataSchema,
+                    new Element("DCPList", SRV),
+                    op.optString(Save.JSON_IDENTIFICATION_DCP_LIST),
+                    "srv:DCP",
+                    "http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#DCPList", true);
+            updateLinks(editLib, metadataSchema, opEl, op);
+
+            addElementFromXPath(editLib, metadataSchema, identification, "",
+                    new Element(EditLib.SpecialUpdateTags.ADD).
+                            addContent(new Element("containsOperations", SRV).addContent(opEl)));
+        }
     }
 
     private void updateServiceType(EditLib editLib, MetadataSchema metadataSchema, Element identification, JSONObject identificationJson) {
@@ -593,7 +657,7 @@ public class Save implements Service {
                 name.setText(serviceType);
             } else {
                 final Element element = new Element(SERVICE_TYPE_TAG_NAME, SRV).addContent(new Element("LocalName", GCO).setText(serviceType));
-                AddElemValue value = new AddElemValue(new Element(EditLib.SpecialUpdateTags.ADD).addContent(element));
+                AddElemValue value = new AddElemValue(new Element(EditLib.SpecialUpdateTags.REPLACE).addContent(element));
                 editLib.addElementOrFragmentFromXpath(identification.getParentElement(), metadataSchema, identification.getQualifiedName(), value, true);
             }
         }

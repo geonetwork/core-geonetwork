@@ -1,0 +1,63 @@
+{"identification": {
+  "containsOperations": [
+    {
+      "ref": "",
+      "operationName": "GetCapabilities",
+      "DCPList": "WebServices",
+      "links": [
+        {
+          "ref": "",
+          "protocol": "",
+          "localizedURL": {
+            "ger": "http://www.geocat.ch/geonetwork/srv/ger/csw?SERVICE=CSW&VERSION=2.0.2&REQUEST=GetCapabilities",
+            "ita": "http://www.geocat.ch/geonetwork/srv/ita/csw?SERVICE=CSW&VERSION=2.0.2&REQUEST=GetCapabilities",
+            "fre": "http://www.geocat.ch/geonetwork/srv/fre/csw?SERVICE=CSW&VERSION=2.0.2&REQUEST=GetCapabilities",
+            "eng": "http://www.geocat.ch/geonetwork/srv/eng/csw?SERVICE=CSW&VERSION=2.0.2&REQUEST=GetCapabilities"
+          },
+          "description": {},
+          "xpath": "srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage"
+        }
+      ]
+    },
+    {
+      "ref": "",
+      "operationName": "GetRecords",
+      "DCPList": "WebServices",
+      "links": [
+        {
+          "ref": "",
+          "protocol": "",
+          "localizedURL": {
+            "ger": "http://www.geocat.ch/geonetwork/srv/ger/csw?",
+            "ita": "http://www.geocat.ch/geonetwork/srv/ita/csw?",
+            "fre": "http://www.geocat.ch/geonetwork/srv/fre/csw?",
+            "eng": "http://www.geocat.ch/geonetwork/srv/eng/csw?"
+          },
+          "description": {},
+          "xpath": "srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage"
+        }
+      ]
+    },
+    {
+      "ref": "",
+      "operationName": "GetRecordById",
+      "DCPList": "WebServices",
+      "links": [
+        {
+          "ref": "",
+          "protocol": "",
+          "localizedURL": {
+            "ger": "http://www.geocat.ch/geonetwork/srv/ger/csw?",
+            "ita": "http://www.geocat.ch/geonetwork/srv/ita/csw?",
+            "fre": "http://www.geocat.ch/geonetwork/srv/fre/csw?",
+            "eng": "http://www.geocat.ch/geonetwork/srv/eng/csw?"
+          },
+          "description": {},
+          "xpath": "srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage"
+        }
+      ]
+    }
+  ],
+  "type":"service",
+  "couplingType": "loose"
+}}
