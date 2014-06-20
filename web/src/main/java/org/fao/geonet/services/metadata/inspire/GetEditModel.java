@@ -184,7 +184,7 @@ public class GetEditModel implements Service {
         metadataJson.put(Save.JSON_LINKS, linksJson);
 
         final String xpath = "gmd:distributionInfo//gmd:transferOptions//gmd:linkage";
-        processLinkages(metadataEl, linksJson, xpath);
+        processLinkages(metadataEl, linksJson, xpath, "gmd:CI_OnlineResource/gmd:linkage");
 
         String identificationType = metadataJson.getJSONObject(Save.JSON_IDENTIFICATION).getString(Save.JSON_IDENTIFICATION_TYPE);
 
@@ -197,14 +197,19 @@ public class GetEditModel implements Service {
         }
     }
 
-    private void processLinkages(Element metadataEl, JSONArray linksJson, String xpath) throws JDOMException, JSONException {
+    private void processLinkages(Element metadataEl, JSONArray linksJson, String xpath, String jsonXLink) throws JDOMException, JSONException {
         @SuppressWarnings("unchecked")
         final List<Element> linkages = (List<Element>) Xml.selectNodes(metadataEl,
                 xpath, NS);
 
         for (Element linkage : linkages) {
             JSONObject linkJson = new JSONObject();
-            final Element refElem = linkage.getParentElement().getParentElement();
+            Element refElem = linkage;
+            int segments = jsonXLink.split("/").length;
+            for (int i = 0; i < segments; i++) {
+                 refElem = refElem.getParentElement();
+            }
+
             addRef(refElem, linkJson);
 
             List<?> localisedUrls = Xml.selectNodes(linkage, "*//che:LocalisedURL", NS);
@@ -216,7 +221,7 @@ public class GetEditModel implements Service {
             JSONObject descriptionJson = new JSONObject();
             addTranslationElements(getIsoLanguagesMapper(), descriptionJson, description);
             linkJson.put(Save.JSON_LINKS_DESCRIPTION, descriptionJson);
-            linkJson.put(Save.JSON_LINKS_XPATH, "gmd:CI_OnlineResource/gmd:linkage");
+            linkJson.put(Save.JSON_LINKS_XPATH, jsonXLink);
             addValue(linkage.getParentElement(), linkJson, Save.JSON_LINKS_PROTOCOL, "gmd:description");
 
             linksJson.put(linkJson);
@@ -891,10 +896,9 @@ public class GetEditModel implements Service {
     };
 
     private final JsonEncoder containsOperationsEncoder = new JsonEncoder() {
-        private final String LINKAGE_XPATH = "srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage";
         private JSONObject defaultLinkage() throws JSONException {
             final JSONObject jsonObject = new JSONObject();
-            jsonObject.put(Save.JSON_LINKS_XPATH, LINKAGE_XPATH);
+            jsonObject.put(Save.JSON_LINKS_XPATH, "gmd:linkage");
             jsonObject.put(Save.JSON_LINKS_LOCALIZED_URL, new JSONObject());
             jsonObject.put(Save.JSON_LINKS_PROTOCOL, "");
             jsonObject.put(Save.JSON_LINKS_DESCRIPTION, new JSONObject());
@@ -922,7 +926,7 @@ public class GetEditModel implements Service {
             addValue(node, json, Save.JSON_IDENTIFICATION_OPERATION_NAME, "srv:operationName/gco:CharacterString");
             addValue(node, json, Save.JSON_IDENTIFICATION_DCP_LIST, "srv:DCP/srv:DCPList/@codeListValue");
             JSONArray linkages = new JSONArray();
-            processLinkages(node, linkages, LINKAGE_XPATH);
+            processLinkages(node, linkages, "srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage", "gmd:linkage");
             if (linkages.length() == 0) {
                 linkages.put(defaultLinkage());
             }

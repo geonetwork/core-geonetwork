@@ -51,6 +51,7 @@
                     data-ng-repeat="extent in data.identification.extents">
                     <td>
                         <div data-inspire-multilingual-text
+                             data-ng-dblclick="editExtent(extent)"
                              data-rows="3"
                              data-disabled="true"
                              data-main-lang="data.language"

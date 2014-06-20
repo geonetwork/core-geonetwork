@@ -3,7 +3,7 @@
     {
       "ref": "",
       "operationName": "GetCapabilities",
-      "DCPList": "WebServices",
+      "dcpList": "WebServices",
       "links": [
         {
           "ref": "",
@@ -22,7 +22,7 @@
     {
       "ref": "",
       "operationName": "GetRecords",
-      "DCPList": "WebServices",
+      "dcpList": "WebServices",
       "links": [
         {
           "ref": "",
@@ -41,7 +41,7 @@
     {
       "ref": "",
       "operationName": "GetRecordById",
-      "DCPList": "WebServices",
+      "dcpList": "WebServices",
       "links": [
         {
           "ref": "",

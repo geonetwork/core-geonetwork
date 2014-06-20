@@ -123,6 +123,12 @@
                     <srv:DCP>
                         <srv:DCPList codeListValue="WebServices" codeList="http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#DCPList" />
                     </srv:DCP>
+                    <srv:operationDescription>
+                        <gco:CharacterString>opdesc</gco:CharacterString>
+                    </srv:operationDescription>
+                    <srv:invocationName>
+                        <gco:CharacterString>invocationName</gco:CharacterString>
+                    </srv:invocationName>
                     <srv:connectPoint>
                         <gmd:CI_OnlineResource>
                             <gmd:linkage xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="che:PT_FreeURL_PropertyType">

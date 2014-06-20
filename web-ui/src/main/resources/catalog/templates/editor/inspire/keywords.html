@@ -38,6 +38,7 @@
                     data-ng-repeat="keyword in data.identification.descriptiveKeywords">
                     <td width="98%">
                         <div data-inspire-multilingual-text
+                             data-ng-dblclick="editKeyword(keyword)"
                              data-rows="1"
                              data-disabled="true"
                              data-main-lang="data.language"

@@ -41,6 +41,7 @@ import static org.fao.geonet.Assert.getWebappDir;
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GEONET;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
+import static org.fao.geonet.constants.Geonet.Namespaces.SRV;
 import static org.fao.geonet.constants.Geonet.Namespaces.XSI;
 import static org.fao.geonet.kernel.search.spatial.Pair.read;
 import static org.fao.geonet.services.metadata.inspire.Save.NS;
@@ -667,6 +668,43 @@ public class SaveTest {
     }
 
     @Test
+    public void testService_UpdateCouplingInformation2() throws Exception {
+        testMetadata = Xml.loadFile(SaveTest.class.getResource("updateContainsOperation/metadata2.xml"));
+
+        service.setTestMetadata(testMetadata);
+        service.addXLink("local://xml.user.get?id=7&amp;amp;schema=iso19139.che&amp;amp;role=pointOfContact&#xD;",
+                new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
+        service.addXLink("local://xml.user.get?id=7&amp;schema=iso19139.che&amp;role=pointOfContact",
+                new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
+        service.addXLink("local://xml.user.get?id=5&amp;amp;schema=iso19139.che&amp;amp;role=pointOfContact&#xD;",
+                new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
+        service.addXLink("local://xml.user.get?id=5&amp;schema=iso19139.che&amp;role=pointOfContact",
+                new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
+        service.addXLink("local://che.keyword.get?thesaurus=external.theme.inspire-service-taxonomy&amp;id=urn%3Ainspire%3Aservice%3Ataxonomy%3AcomGeographicCompressionService&amp;locales=fr,en,de,it",
+                new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
+        service.addXLink("local://xml.extent.get?id=0&amp;wfs=default&amp;typename=gn:countries&amp;format=gmd_complete&amp;extentTypeCode=true",
+                new Element("extent", SRV));
+        final String jsonString = loadTestJson("updateContainsOperation/request2.json");
+        JSONObject json = new JSONObject(jsonString);
+
+        final Element result = service.exec(new Element("request").addContent(Arrays.asList(
+                new Element("id").setText("12"),
+                new Element("data").setText(json.toString())
+        )), context);
+
+        assertEquals(Xml.getString(result), "data", result.getName());
+
+        final Element savedMetadata = service.getSavedMetadata();
+        final Element identificationInfo = Xml.selectElement(savedMetadata, "gmd:identificationInfo/*", Save.NS);
+
+        assertEquals(1, Xml.selectNodes(identificationInfo, "srv:containsOperations", NS).size());
+        final List<?> operations = Xml.selectNodes(identificationInfo, "srv:containsOperations/srv:SV_OperationMetadata", NS);
+
+        assertContainsOperation((Element) operations.get(0), "asdfasdf", "WebServices", 1,
+                read("ger", "http://www.geocat.ch"));
+    }
+
+    @Test
     public void testService_UpdateCouplingInformation() throws Exception {
         testMetadata = Xml.loadFile(SaveTest.class.getResource("updateContainsOperation/metadata.xml"));
 
@@ -695,8 +733,10 @@ public class SaveTest {
         final List<?> operations = Xml.selectNodes(identificationInfo, "srv:containsOperations/srv:SV_OperationMetadata", NS);
         assertEquals(1, operations.size());
 
-        assertContainsOperation((Element) operations.get(0), "UpdatedOp", "UpdatedDCP", 1,
-                read("fre", "http://updated.fre"));
+        final Element containsOperations1 = (Element) operations.get(0);
+        assertContainsOperation(containsOperations1, "UpdatedOp", "UpdatedDCP", 1, read("fre", "http://updated.fre"));
+        assertEquals("opdesc", containsOperations1.getChild("operationDescription", SRV).getChildText("CharacterString", GCO));
+        assertEquals("invocationName", containsOperations1.getChild("invocationName", SRV).getChildText("CharacterString", GCO));
     }
 
     private void assertContainsOperation(Element containsOperations1, String operationName, String dcpList, int connectPointCount, Pair<String, String> translation) throws JDOMException {

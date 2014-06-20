@@ -68,19 +68,19 @@
               {
                 "ref": "",
                 "operationName": "",
-                "DCPList": "",
+                "dcpList": "",
                 "links": [
                   {
                     "ref": "",
                     "protocol": "",
                     "localizedURL": {},
                     "description": {},
-                    "xpath": ""
+                    "xpath": "gmd:linkage"
                   }
                 ]
               }
             ],
-            "couplingType": "updated"
+            "couplingType": ""
           },
           "constraints": {
             "legal": [],

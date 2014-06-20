@@ -136,7 +136,7 @@ public class Save implements Service {
     public static final String JSON_IDENTIFICATION_COUPLING_TYPE = "couplingType";
     public static final String JSON_IDENTIFICATION_CONTAINS_OPERATIONS = "containsOperations";
     public static final String JSON_IDENTIFICATION_OPERATION_NAME = "operationName";
-    public static final String JSON_IDENTIFICATION_DCP_LIST = "DCPList";
+    public static final String JSON_IDENTIFICATION_DCP_LIST = "dcpList";
 
     @Override
     public void init(String appPath, ServiceConfig params) throws Exception {
@@ -604,11 +604,14 @@ public class Save implements Service {
     @SuppressWarnings("unchecked")
     private void updateContainsOperation(EditLib editLib, Element identification, MetadataSchema metadataSchema, JSONObject
             identificationJson) throws JSONException, JDOMException {
+        final JSONArray jsonArray = identificationJson.optJSONArray(Save.JSON_IDENTIFICATION_CONTAINS_OPERATIONS);
+        if (jsonArray == null) {
+            return;
+        }
         final List<Element> allOperations = Lists.newArrayList((
-                Iterable<? extends Element>) Xml.selectNodes(identification, "srv:containsOperations/srv:SV_OperationMetadata", NS));
+                Iterable<? extends Element>) Xml.selectNodes(identification, "srv:containsOperations", NS));
 
         HashSet<Object> refsToKeep = Sets.newHashSet();
-        final JSONArray jsonArray = identificationJson.getJSONArray(Save.JSON_IDENTIFICATION_CONTAINS_OPERATIONS);
         for (int i = 0; i < jsonArray.length(); i++) {
             String ref = jsonArray.getJSONObject(i).getString(Params.REF);
             if (!Strings.isNullOrEmpty(ref)) {
@@ -616,17 +619,31 @@ public class Save implements Service {
             }
         }
 
-        for (Element allOperation : allOperations) {
-            String ref = allOperation.getChild("element", GEONET).getAttributeValue(Params.REF);
-            if (!refsToKeep.contains(ref)) {
-                allOperation.detach();
+        for (Element operationEl : allOperations) {
+            final Element opMetadataEl = operationEl.getChild("SV_OperationMetadata", SRV);
+            if (opMetadataEl == null) {
+                operationEl.detach();
+            } else {
+                String ref = opMetadataEl.getChild("element", GEONET).getAttributeValue(Params.REF);
+                if (!refsToKeep.contains(ref)) {
+                    operationEl.detach();
+                }
             }
         }
 
 
         for (int i = 0; i < jsonArray.length(); i++) {
             final JSONObject op = jsonArray.getJSONObject(i);
-            Element opEl = new Element("SV_OperationMetadata", SRV);
+            Element opEl = null;
+
+            String ref = op.getString(Params.REF);
+            if (!Strings.isNullOrEmpty(ref)) {
+                opEl = Xml.selectElement(identification, "*//srv:SV_OperationMetadata[geonet:element/@ref = '" + ref + "']", NS);
+            }
+
+            if (opEl == null) {
+                opEl = new Element("SV_OperationMetadata", SRV);
+            }
             updateCharString(editLib, opEl, metadataSchema, "srv:operationName",
                     op.optString(Save.JSON_IDENTIFICATION_OPERATION_NAME));
             updateCodeList(editLib,
@@ -638,9 +655,11 @@ public class Save implements Service {
                     "http://www.isotc211.org/2005/iso19119/resources/Codelist/gmxCodelists.xml#DCPList", true);
             updateLinks(editLib, metadataSchema, opEl, op);
 
-            addElementFromXPath(editLib, metadataSchema, identification, "",
-                    new Element(EditLib.SpecialUpdateTags.ADD).
-                            addContent(new Element("containsOperations", SRV).addContent(opEl)));
+            if (opEl.getParentElement() == null) {
+                addElementFromXPath(editLib, metadataSchema, identification, "",
+                        new Element(EditLib.SpecialUpdateTags.ADD).
+                                addContent(new Element("containsOperations", SRV).addContent(opEl)));
+            }
         }
     }
 

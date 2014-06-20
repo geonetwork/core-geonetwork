@@ -1,12 +1,12 @@
 {"identification": {
   "containsOperations": [
     {
-      "ref": "",
+      "ref": "75",
       "operationName": "UpdatedOp",
-      "DCPList": "UpdatedDCP",
+      "dcpList": "UpdatedDCP",
       "links": [
         {
-          "ref": "",
+          "ref": "85",
           "protocol": "",
           "localizedURL": {
             "ger": "http://updated.ger",
@@ -15,7 +15,7 @@
             "eng": "http://updated.eng"
           },
           "description": {},
-          "xpath": "srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage"
+          "xpath": "gmd:linkage"
         }
       ]
     }

@@ -190,7 +190,8 @@
                             <div data-inspire-contact data-contact="contact" data-title="contact"  data-show-title="{{$first ? 'true' : ''}}"
                                  data-role-options="data.roleOptions" data-edit-contact="editContact('contact', contact)"
                                  data-main-lang="data.language" data-languages="data.otherLanguages"
-                                 validation-class="{{validationErrorClass}}"></div>
+                                 validation-class="{{validationErrorClass}}"
+                                 data-ng-dblclick="editContact('contact', contact)"></div>
                         </td>
                         <td width="24px">
                             <a class="inspire-input-group" data-ng-click="editContact('contact', contact)">
@@ -314,7 +315,8 @@
                             <div data-inspire-contact data-contact="contact" data-title="pointOfContact" data-show-title="{{$first ? 'true' : ''}}"
                                  data-role-options="data.roleOptions" data-edit-contact="editContact('pointOfContact', contact)"
                                  data-main-lang="data.language" data-languages="data.otherLanguages"
-                                 validation-class="{{validationErrorClass}}"></div>
+                                 validation-class="{{validationErrorClass}}"
+                                 data-ng-dblclick="editContact('pointOfContact', contact)"></div>
                         </td>
                         <td width="24px">
                             <a class="inspire-input-group" data-ng-click="editContact('pointOfContact', contact)">

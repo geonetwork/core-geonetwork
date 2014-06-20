@@ -1,0 +1,22 @@
+{"identification": {
+  "type":"service",
+  "containsOperations": [
+    {
+      "ref": "422",
+      "operationName": "asdfasdf",
+      "links": [
+        {
+          "ref": "428",
+          "protocol": "",
+          "localizedURL": {
+            "ger": "http://www.geocat.ch"
+          },
+          "description": {
+            "ger": ""
+          },
+          "xpath": "gmd:linkage"
+        }
+      ],
+      "dcpList": "WebServices"
+    }
+  ]}}

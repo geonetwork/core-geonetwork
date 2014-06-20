@@ -123,7 +123,8 @@ public class HttpProxyServlet extends HttpServlet {
                     if (!isValidContentType(contentTypesReturned[0])) {
                         contentTypesReturned = contentType.getValue().split(" ");
                         if (!isValidContentType(contentTypesReturned[0])) {
-                            throw new ServletException("Status: 415 Unsupported media type");
+                            response.sendError(HttpStatus.SC_UNSUPPORTED_MEDIA_TYPE, "Status: 415 Unsupported media type");
+                            return;
                         }
                     }
 
@@ -145,14 +146,11 @@ public class HttpProxyServlet extends HttpServlet {
                     response.sendError(method.getStatusCode(), method.getStatusText());
                 }
 
-                method.releaseConnection();
-
             } else {
                 //throw new ServletException("only HTTP(S) protocol supported");
                 response.sendError(org.springframework.http.HttpStatus.BAD_REQUEST.value(), "only HTTP(S) protocol supported");
             }
         } catch (Exception e) {
-            e.printStackTrace();
             response.sendError(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR.value(), "Some unexpected error occurred. Error text was: " + e.getMessage());
         } finally {
             if (method != null) method.releaseConnection();
