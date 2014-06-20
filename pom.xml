@@ -848,13 +848,13 @@
 
   </repositories>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <name>oss.sonatype.org - github-releases</name>
-      <id>oss.sonatype.org-github-releases</id>
-      <url>http://oss.sonatype.org/content/repositories/github-releases</url>
-    </pluginRepository>
-  </pluginRepositories>
+  <!--<pluginRepositories>-->
+    <!--<pluginRepository>-->
+      <!--<name>oss.sonatype.org - github-releases</name>-->
+      <!--<id>oss.sonatype.org-github-releases</id>-->
+      <!--<url>http://oss.sonatype.org/content/repositories/github-releases</url>-->
+    <!--</pluginRepository>-->
+  <!--</pluginRepositories>-->
 
   <!-- =========================================================== -->
   <!--     Modules for the build in approximate dependency order   -->
