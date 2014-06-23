@@ -488,7 +488,9 @@
               $scope.data.otherLanguages.indexOf(lang) > -1) {
             url = newVal.localizedURL[lang]
             if (!/\S+/.test(url)) {
-              $scope.isValidURL = false;
+              if (lang === $scope.language) {
+                $scope.isValidURL = false;
+              }
             } else {
               $http.head("../../proxy?url=" + encodeURIComponent(url)).error(function () {
                 $scope.isValidURL = false;
