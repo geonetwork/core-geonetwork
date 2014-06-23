@@ -53,9 +53,9 @@
   module.directive('gnMeasure', [
     '$document',
     '$rootScope',
-    'gnDefinePropertiesForLayer',
+    'goDecorateLayer',
     'gaLayerFilters',
-    function($document, $rootScope, gnDefinePropertiesForLayer, gaLayerFilters) {
+    function($document, $rootScope, goDecorateLayer, gaLayerFilters) {
       return {
         restrict: 'A',
         replace: true,
@@ -144,7 +144,7 @@
             source: new ol.source.Vector(),
             style: scope.options.styleFunction
           });
-          gnDefinePropertiesForLayer(layer);
+          goDecorateLayer(layer);
           layer.displayInLayerManager = false;
           scope.layers = scope.map.getLayers().getArray();
           scope.layerFilter = gaLayerFilters.selected;

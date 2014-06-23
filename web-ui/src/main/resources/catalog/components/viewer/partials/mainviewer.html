@@ -1,7 +1,6 @@
 <div class="wrapper" data-ng-controller="gnViewerController">
 
-  <div id="map" class="map" gn-map="" gn-map-map="map"></div>
-
+  <div id="map" go-map="" class="map"></div>
   <div class="search-container">
     <input type="search" class="form-control" placeholder="Recherche">
   </div>
@@ -50,28 +49,7 @@
         <h5>Couches thématiques</h5>
       </div>
 
-      <ul class="list-group">
-        <li class="list-group-item">
-          <span class="badge fa fa-cog"></span>
-          Cras justo odio
-        </li>
-        <li class="list-group-item">
-          <span class="badge fa fa-cog"></span>
-          Cras justo odio
-        </li>
-        <li class="list-group-item">
-          <span class="badge fa fa-cog"></span>
-          Cras justo odio
-        </li>
-        <li class="list-group-item">
-          <span class="badge fa fa-cog"></span>
-          Cras justo odio
-        </li>
-        <li class="list-group-item">
-          <span class="badge fa fa-cog"></span>
-          Cras justo odio
-        </li>
-      </ul>
+      <div gn-layermanager="" gn-layermanager-map="map"></div>
     </div>
 
     <div class="panel-body">

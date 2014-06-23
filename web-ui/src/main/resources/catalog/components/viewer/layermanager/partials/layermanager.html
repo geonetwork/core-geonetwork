@@ -1,7 +1,18 @@
-<ul>
-  <li ng-if="!(filteredLayers = (layers | filter:layerFilter)).length" translate>no_layers_info</li>
-  <li ng-repeat="layer in filteredLayers" class="ga-layer-folded {{layer.time ? 'ga-layer-time-enabled' : ''}}">
-    <button type="button" ng-click="toggleVisibility(layer)" class="btn btn-primary btn-xs">&times;</button>
+<ul class="list-group">
+  <li ng-repeat="layer in (map.getLayers().getArray() | filter:layerFilterFn)" class="list-group-item">
+    <span class="badge fa fa-cog"></span>
+
+      <label for="checkbox">{{layer.label}}</label>
+      <input id="checkbox" type="checkbox" ng-model="layer.visible"  />
+      <input id="range" type="range" min="0" max="1" step="0.05" ng-model="layer.opacity" />
+  </li>
+</ul>
+
+<!--
+    <ul>
+      <li ng-if="!(filteredLayers = (layers | filter:layerFilter)).length" translate>no_layers_info</li>
+      <li ng-repeat="layer in filteredLayers" class="ga-layer-folded {{layer.time ? 'ga-layer-time-enabled' : ''}}">
+        <button type="button" ng-click="toggleVisibility(layer)" class="btn btn-primary btn-xs">&times;</button>
     <label class="ga-checkbox">
       <input type="checkbox" data-ng-model="layer.visible"/>
       <span></span>
@@ -23,4 +34,4 @@
     </span>
     <i class="icon-gear"></i>
   </li>
-</ul>
+</ul>-->

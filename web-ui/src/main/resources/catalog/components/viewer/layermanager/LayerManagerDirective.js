@@ -13,13 +13,10 @@
    * The server list is given in global properties.
    */
   module.directive('gnLayermanager', [
-    'gnOwsCapabilities',
-    'gaLayerFilters',
-    '$translate',
-    function (gnOwsCapabilities, gaLayerFilters, $translate) {
+    'gnLayerFilters',
+    function (gnLayerFilters) {
     return {
       restrict: 'A',
-      replace: true,
       templateUrl: '../../catalog/components/viewer/layermanager/' +
         'partials/layermanager.html',
       scope: {
@@ -27,9 +24,7 @@
       },
       link: function (scope, element, attrs) {
 
-        scope.layers = scope.map.getLayers().getArray();
-
-        scope.layerFilter = gaLayerFilters.selected;
+        scope.layerFilterFn = gnLayerFilters.selected;
 
         scope.removeLayerFromMap = function(layer) {
           scope.map.removeLayer(layer);

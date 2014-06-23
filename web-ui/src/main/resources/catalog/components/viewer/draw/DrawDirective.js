@@ -16,9 +16,9 @@
     '$rootScope',
     '$timeout',
     '$translate',
-    'gnDefinePropertiesForLayer',
+    'goDecorateLayer',
     'gaLayerFilters',
-    function($rootScope, $timeout, $translate, gnDefinePropertiesForLayer, gaLayerFilters) {
+    function($rootScope, $timeout, $translate, goDecorateLayer, gaLayerFilters) {
       return {
         restrict: 'A',
         replace: true,
@@ -414,7 +414,7 @@
             visible: true,
             style: scope.options.styleFunction
           });
-          gnDefinePropertiesForLayer(layer);
+          goDecorateLayer(layer);
           layer.displayInLayerManager = false;
           scope.layers = scope.map.getLayers().getArray();
           scope.layerFilter = gaLayerFilters.selected;
