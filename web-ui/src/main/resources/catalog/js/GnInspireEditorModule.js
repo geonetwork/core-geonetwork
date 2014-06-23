@@ -486,9 +486,9 @@
           }
           if (newVal.localizedURL.hasOwnProperty(lang) &&
               $scope.data.otherLanguages.indexOf(lang) > -1) {
-            url = newVal.localizedURL[lang]
+            url = newVal.localizedURL[lang];
             if (!/\S+/.test(url)) {
-              if (lang === $scope.language) {
+              if (lang === $scope.data.language) {
                 $scope.isValidURL = false;
               }
             } else {

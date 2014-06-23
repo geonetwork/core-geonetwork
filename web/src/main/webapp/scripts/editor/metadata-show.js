@@ -156,12 +156,12 @@
 				document.mainForm.action = action;
 				goSubmit('mainForm');
 			}
-			
+
 			function doTabAction(action, tab)
 			{
 				document.mainForm.currTab.value = tab;
 
-              if (/.*\/metadata\.(edit)|(update).*/.test(window.location) && tab === 'inspire') {
+              if (/.*\/metadata\.(edit)|(update)|(create).*/.test(window.location) && tab === 'inspire') {
                 var metadataId = document.mainForm.id.value;
                 doSaveAction(action, undefined, function() {
                   disableEditForm();

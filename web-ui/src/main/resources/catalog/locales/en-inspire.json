@@ -53,5 +53,7 @@
   "transferOptions": "Transfer Options",
   "tight": "Tight",
   "loose": "Loose",
-  "mixed": "Mixed"
+  "mixed": "Mixed",
+  "securityConstraints" : "Security Constraints",
+  "notEditableInInspireView": "Element is not editable in Inspire view.  To edit use the standard editor."
 }

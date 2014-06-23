@@ -1,5 +1,21 @@
 package org.fao.geonet.util;
 
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.guiservices.XmlCacheManager;
+import jeeves.utils.Log;
+import jeeves.utils.Util;
+import jeeves.utils.Xml;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.util.AttributeImpl;
+import org.fao.geonet.constants.Geocat;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.search.GeoNetworkAnalyzer;
+import org.jdom.Content;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.filter.Filter;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
@@ -14,23 +30,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.guiservices.XmlCacheManager;
-import jeeves.utils.Log;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
-
-import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.util.AttributeImpl;
-import org.fao.geonet.constants.Geocat;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.GeoNetworkAnalyzer;
-import org.jdom.Content;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.filter.Filter;
 
 /**
  * Used to get translations and strings from the strings xml files
@@ -367,6 +366,11 @@ public final class LangUtils
         for (Element elem : toResolve) {
             String text = elem.getText();
             elem.setText(null);
+            // GEOCAT HACK.
+            if (text != null) {
+                text = text.replace("<GE>", "<DE>").replace("</GE>", "</DE>");
+            }
+            // GEOCAT END HACK
             List<Content> translationsAsSimpleXML = loadInternalMultiLingualElemCollection(text);
             if(removeTranslation) elem.setText(getSingleTranslation(translationsAsSimpleXML));
             else elem.addContent(translationsAsSimpleXML);

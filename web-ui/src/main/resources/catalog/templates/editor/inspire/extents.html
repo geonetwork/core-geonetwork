@@ -13,7 +13,7 @@
                                ng-keyup="$event.preventDefault(); ($event.keyCode == 13 && (extentSearch && extentSearch.length > 2) ? searchExtents(extentSearch) : null)"
                                ng-model="extentSearch"/>
                         <a id="extentSearchButton" class="input-group-addon"
-                           data-ng-class="(extentSearch && extentSearch.length > 2) ? 'extent-search-enabled' : 'extent-search-disabled'"
+                           data-ng-class="(extentSearch && extentSearch.length > 1) ? 'extent-search-enabled' : 'extent-search-disabled'"
                            data-ng-click="searchExtents(extentSearch)">
                             <i data-ng-hide="loadingExtents" class="fa fa-search fa-fw"></i>
                             <i data-ng-show="loadingExtents" class="fa fa-spinner fa-spin"></i>

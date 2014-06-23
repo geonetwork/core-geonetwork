@@ -111,7 +111,12 @@ public class LocaleRedirects {
                 }
             }
         }
-        return request.getContextPath() + "/srv/" + lang + "/" + service + "?" + headers;
+        final String path = request.getContextPath() + "/srv/" + lang + "/" + service;
+        if (headers.length() > 0) {
+            return path + "?" + headers;
+        } else {
+            return path;
+        }
     }
 
     private String lang(String langParam, String langCookie, String langHeader) {

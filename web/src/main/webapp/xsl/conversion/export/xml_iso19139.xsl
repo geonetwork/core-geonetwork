@@ -22,8 +22,13 @@
 
 	<xsl:param name="includeInfo"/>
 
-	<xsl:variable name="langId" select="concat('#',upper-case(java:twoCharLangCode(/*/gmd:language/gco:CharacterString)))" />
-	
+	<xsl:variable name="langId">
+        <xsl:choose>
+            <xsl:when test="/root/*/gmd:language"><xsl:value-of select="concat('#',upper-case(java:twoCharLangCode(/root/*/gmd:language/gco:CharacterString)))"/></xsl:when>
+            <xsl:otherwise><xsl:value-of select="concat('#',upper-case(java:twoCharLangCode(/*/gmd:language/gco:CharacterString)))"/></xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+
 	<xsl:template match="/root">
 		<xsl:choose>
 			<!-- Export 19139 XML and related profil (just a copy)-->
@@ -64,7 +69,7 @@
                 <gmd:URL><xsl:value-of select=".//che:LocalisedURL[string(@locale) = $langId]"/></gmd:URL>
             </xsl:when>
             <xsl:when test="not(./gmd:URL)">
-                <gmd:URL><xsl:value-of select=".//che:LocalisedURL[1]"/></gmd:URL>
+               <gmd:URL><xsl:value-of select=".//che:LocalisedURL[1]"/></gmd:URL>
             </xsl:when>
             <xsl:otherwise><!--if character string then don't use url--></xsl:otherwise>
         </xsl:choose>
