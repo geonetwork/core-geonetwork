@@ -12,20 +12,20 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-
-import javax.annotation.PostConstruct;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
-
-import static org.fao.geonet.constants.Geonet.DEFAULT_LANGUAGE;
+import javax.annotation.PostConstruct;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Handles requests where there is no locale and a redirect to a correct (and localized) service is needed.  For example
@@ -111,7 +111,7 @@ public class LocaleRedirects {
                 }
             }
         }
-        return request.getContextPath() + "/srv/" + lang + "/" + service + headers;
+        return request.getContextPath() + "/srv/" + lang + "/" + service + "?" + headers;
     }
 
     private String lang(String langParam, String langCookie, String langHeader) {
