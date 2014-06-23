@@ -74,9 +74,15 @@ public abstract class DatastoreMapper {
 
 		String id = prefix+feature.getAttribute(this.idPropertyName());
 		Map<String, String> labels = new HashMap<String, String>();
-		String label = feature.getAttribute(labelAttName).toString();
-		Element translations = LangUtils.loadInternalMultiLingualElem(label);
-		if(translations.getText()!=null) {
+        final Object labelAtt = feature.getAttribute(labelAttName);
+        Element translations;
+        if (labelAtt != null) {
+            String label = labelAtt.toString();
+            translations = LangUtils.loadInternalMultiLingualElem(label);
+        } else {
+            translations = new Element("EmptyTranslations").setText("---- " + id + " ----");
+        }
+        if(translations.getText()!=null) {
 			labels.put("eng", translations.getText());
 			labels.put("ger", translations.getText());
 			labels.put("fre", translations.getText());
