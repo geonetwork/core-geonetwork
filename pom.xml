@@ -13,14 +13,14 @@
   <url>http://geonetwork-opensource.org</url>
   <scm>
     <connection>
-      scm:svn:https://geonetwork.svn.sourceforge.net/svnroot/geonetwork/trunk
+      scm:git:https://github.com/geonetwork/core-geonetwork
     </connection>
-    <url>https://geonetwork.svn.sourceforge.net/svnroot/geonetwork/trunk</url>
+    <url>https://github.com/geonetwork/core-geonetwork</url>
   </scm>
   <inceptionYear>2003</inceptionYear>
   <issueManagement>
-    <system>trac</system>
-    <url>http://trac.osgeo.org/geonetwork/report</url>
+    <system>GitHub Issues</system>
+    <url>https://github.com/geonetwork/core-geonetwork/issues</url>
   </issueManagement>
   <mailingLists>
     <mailingList>
