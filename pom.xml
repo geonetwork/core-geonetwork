@@ -1069,7 +1069,7 @@
       </releases>
     	<id>github.com/geonetwork/core-maven-repo</id>
     	<name>github.com/geonetwork/core-maven-repo</name>
-    	<url>https://github.com/geonetwork/core-maven-repo/tree/master</url>
+    	<url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
     </repository>
 
     <repository>
