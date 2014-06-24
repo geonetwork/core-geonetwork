@@ -400,7 +400,7 @@
     <distributionManagement>
       <site>
         <id>Maven generated site and reports</id>
-        <url>file:${rootProjectDir}/target/site/${artifactId}</url>
+        <url>file://${rootProjectDir}/target/site/${artifactId}</url>
       </site>
     </distributionManagement>
     <properties>
