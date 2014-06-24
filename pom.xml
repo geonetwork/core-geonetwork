@@ -1036,6 +1036,7 @@
 
     <!-- Local repository which allow to handle temporarly local dependencies
      // FIXME : Should be a remote repository -->
+    <!--
     <repository>
       <snapshots>
         <enabled>true</enabled>
@@ -1046,6 +1047,19 @@
       <id>localGeoNetwork</id>
       <name>GeoNetwork local repository</name>
       <url>file://maven_repo</url>
+    </repository>
+    -->
+    
+    <repository>
+    	<snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    	<id>github.com/geonetwork/core-maven-repo</id>
+    	<name>github.com/geonetwork/core-maven-repo</name>
+    	<url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
     </repository>
 
     <repository>
