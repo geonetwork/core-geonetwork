@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans default-lazy-init="true"
-       xmlns="http://www.springframework.org/schema/beans"
+<beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="
@@ -14,9 +13,9 @@
         If the XmlSerializer is the SvnSerializer then subversion versioning will be enabled
         otherwiser it will be disabled
     -->
-    <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerSvn" lazy-init="true" />
-    <!-- <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerDb"  lazy-init="true" /> -->
+    <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerSvn"/>
+    <!-- <bean id="xmlSerializer" class="org.fao.geonet.kernel.XmlSerializerDb"/> -->
 
-    <bean id="svnManager" class="org.fao.geonet.kernel.SvnManager" lazy-init="true"/>
+    <bean id="svnManager" class="org.fao.geonet.kernel.SvnManager"/>
 
 </beans>

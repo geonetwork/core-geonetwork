@@ -27,6 +27,27 @@
 
 package org.fao.geonet.domain;
 
+import static java.util.Calendar.DAY_OF_MONTH;
+import static java.util.Calendar.HOUR_OF_DAY;
+import static java.util.Calendar.MINUTE;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.SECOND;
+import static java.util.Calendar.YEAR;
+
+import java.io.Serializable;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.annotation.Nonnull;
+import javax.persistence.Embeddable;
+import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlValue;
+
 import org.jdom.Element;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -36,18 +57,6 @@ import org.joda.time.format.ISODateTimeFormat;
 import org.joda.time.format.ISOPeriodFormat;
 import org.joda.time.format.PeriodFormatter;
 
-import javax.annotation.Nonnull;
-import javax.persistence.Embeddable;
-import javax.persistence.Transient;
-import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import static java.util.Calendar.*;
-
 /**
  * Represents a date at a given time.  Provides methods for representing the date as a string and parsing from string.
  * <p>
@@ -55,17 +64,22 @@ import static java.util.Calendar.*;
  * </p>
  */
 @Embeddable
+@XmlRootElement
 public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, XmlEmbeddable {
     private static final String DEFAULT_DATE_TIME = "3000-01-01T00:00:00.000Z"; // JUNK Value
 
     // Pattern to check dates
+    @XmlTransient
     private static Pattern gsYear = Pattern
             .compile("([0-9]{4})(-([0-2][0-9]):([0-5][0-9])([A-Z]))?");
+    @XmlTransient
     private static Pattern gsYearMonth = Pattern
             .compile("([0-9]{4})-([0-1][0-9])(-([0-2][0-9]):([0-5][0-9])([A-Z]))?");
 
+    @XmlTransient
     private boolean _shortDate; // --- 'true' if the format is yyyy-mm-dd
 
+    @XmlTransient
     private Calendar _calendar = Calendar.getInstance();
 
     // ---------------------------------------------------------------------------
@@ -306,6 +320,8 @@ public class ISODate implements Cloneable, Comparable<ISODate>, Serializable, Xm
     /**
      * Get the Time and Date encoded as a String.
      */
+
+	@XmlValue
     public String getDateAndTime() {
         if (_shortDate) {
             return getDateAsString();
