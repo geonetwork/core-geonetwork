@@ -48,6 +48,8 @@
           'http://ids.pigma.org/geoserver/ign/wms',
           'http://www.ifremer.fr/services/wms/oceanographie_physique'
         ];
+        scope.url = 'http://www.ifremer.fr/services/wms/oceanographie_physique';
+
         scope.load = function (url) {
           gnOwsCapabilities.getCapabilities(url)
             .then(function (layers) {
