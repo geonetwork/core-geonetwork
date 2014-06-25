@@ -317,14 +317,14 @@
 	</xsl:template>
 
 
-        <!-- MyOcean specific : update supp info according to the first dimension descriptor-->
+        <!-- MyOcean specific : update supp info according to the first dimension descriptor
         <xsl:template match="gmd:supplementalInformation" priority="2">
                 <xsl:copy>
                         <gco:CharacterString><xsl:value-of select="//gmd:contentInfo/gmd:MD_CoverageDescription/
                                 gmd:dimension[1]/gmd:MD_RangeDimension/gmd:descriptor/gco:CharacterString"/></gco:CharacterString>
                 </xsl:copy>
         </xsl:template>
-
+	-->
         <!-- Set local identifier to the first 3 letters of iso code. Locale ids
 		are used for multilingual charcterString using #iso2code for referencing.
 	-->
