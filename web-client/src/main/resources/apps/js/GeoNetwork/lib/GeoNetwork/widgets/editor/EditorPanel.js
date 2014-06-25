@@ -410,7 +410,7 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
         this.subTemplateSelectionWindow.items.get(0).setAddAsXLink(
           // https://forge.ifremer.fr/mantis/view.php?id=21020
           // Could be more elegant to have a customizable function
-             this.metadataSchema == 'iso19139.sdn-product' ?
+             this.metadataSchema == 'iso19139.sdn-product' || 'iso19139.myocean' ?
                 false : this.xlinkOptions.CONTACT);
         this.subTemplateSelectionWindow.show();
     },
