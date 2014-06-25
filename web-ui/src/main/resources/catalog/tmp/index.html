@@ -77,24 +77,63 @@
 
           <ul class="list-group">
             <li class="list-group-item">
-            <span class="badge glyphicon glyphicon-cog"></span>
-            Cras justo odio
+              <button class="btn btn-cog">
+                <span class="ge glyphicon glyphicon-cog"></span>
+              </button>
+              <label><input type="checkbox">
+                Cartes mensuelles moyennes de Chlorophylle-a réalisées sur la période 2003-2010 - Février
+              </label>
+              <div class="details">
+                <div class="btn-group">
+                <div class="btn btn-default">
+                  <label>Transparence <input type="range"></label>
+                </div>
+                <button class="btn btn-default btn-xs">
+                  <span class="glyphicon glyphicon-trash"></span>
+                  Supprimer
+                </button></div>
+                <h6>Légende</h6>
+                <p>
+                  <img src="https://www.ifremer.fr/sextant_doc/atlas_satellite/legende/legende_chla.png"/>
+                </p>
+                <h6>Source</h6>
+                <p><em>CEFREM, Université de Perpignan Via Domitia, 1986</em></p>
+              </div>
             </li>
             <li class="list-group-item">
-            <span class="badge glyphicon glyphicon-cog"></span>
-            Cras justo odio
+              <button class="btn btn-cog">
+                <span class="ge glyphicon glyphicon-cog"></span>
+              </button>
+              <label><input type="checkbox">
+                Percentile 90 de la Chlorophylle (MODIS)
+              </label>
+              <div class="details">
+                <p>Source : CEFREM, Université de Perpignan Via Domitia, 1986</p>
+              </div>
             </li>
             <li class="list-group-item">
-            <span class="badge glyphicon glyphicon-cog"></span>
-            Cras justo odio
+              <button class="btn btn-cog">
+                <span class="ge glyphicon glyphicon-cog"></span>
+              </button>
+              <label><input type="checkbox">
+                REPHY Phytoplancton et Physico-Chimie - Area
+              </label>
             </li>
             <li class="list-group-item">
-            <span class="badge glyphicon glyphicon-cog"></span>
-            Cras justo odio
+              <button class="btn btn-cog">
+                <span class="ge glyphicon glyphicon-cog"></span>
+              </button>
+              <label><input type="checkbox">
+                REPHY Phytoplancton et Physico-Chimie - Area (lieux historiques)
+              </label>
             </li>
             <li class="list-group-item">
-            <span class="badge glyphicon glyphicon-cog"></span>
-            Cras justo odio
+              <button class="btn btn-cog">
+                <span class="ge glyphicon glyphicon-cog"></span>
+              </button>
+              <label><input type="checkbox">
+                SRN Suivi Régional des Nutriments (lieux historiques)
+              </label>
             </li>
           </ul>
       </div>
@@ -261,6 +300,16 @@
         var t = $(this).parents('.panel-tools');
         t.addClass('force-hide');
         $('[rel=#'+t.attr('id')+']').removeClass('active');
+      });
+      $('.list-group-item .btn-cog').click(function() {
+        var current = $(this).parents('.list-group-item');
+        current.toggleClass('active');
+        //current.removeClass('collapsed');
+        $(this).parents('.list-group').find('.list-group-item').each(function(i, item) {
+          if (item == current[0]) return;
+          //$(item).toggleClass('collapsed', current.hasClass('active'));
+          $(item).removeClass('active');
+        });
       });
     </script>
   </body>

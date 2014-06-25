@@ -1,9 +1,9 @@
 // GN Styles
-@import "../lib/style/font-awesome/less/font-awesome.less";
+@import "../lib/style/font-awesome-4.0.3/less/font-awesome.less";
 @import "gn_bootstrap.less";
 
 @viewport-padding: 1em;
-@transition-params: .25s ease;
+@transition-params: .3s ease;
 
 html, body {
   height: 100%;
@@ -81,13 +81,41 @@ html, body {
   max-height: ~"calc(100% - 2em)";
   max-width: ~"calc(100% - 4em)";
   overflow-y: auto;
-  transition: opacity .25s ease;
+  transition: opacity @transition-params;
   .list-group-item {
     background: inherit;
-    .badge {
-      padding: 3px;
-      &:empty {
-        display: inline-block;
+    transition: max-height @transition-params;
+    .btn-cog {
+      float: right;
+      margin-right: -.6em;
+      margin-top: -.5em;
+      background: inherit;
+    }
+    label {
+      font-weight: normal;
+      font-size: 90%;
+      display: inline;
+      margin: 0;
+    }
+    &.active {
+      background: #fff;
+      & > label {
+        font-weight: bold;
+      }
+      .glyphicon-cog:before {
+        content: "";
+      }
+      .details {
+        display: block;
+      }
+      .btn-group {
+        margin-top: 1em;
+        .btn:first-child {
+          flex: 2;
+          &:hover {
+            background: inherit;
+          }
+        }
       }
     }
   }
@@ -111,6 +139,11 @@ html, body {
     margin-top: .25em;
     margin-right: .2em;
   }
+  .details {
+    font-size: 90%;
+    margin: 0 0 .5em 0;
+    display: none;
+  }
 }
 
 @import "./layertree.less";
@@ -118,8 +151,10 @@ html, body {
 .collapsed {
   max-height: 0;
   min-height: 0;
-  overflow: hidden;
+  overflow-y: hidden;
   border: 0;
+  margin: 0;
+  padding: 0;
 }
 .force-hide {
   opacity: 0;
