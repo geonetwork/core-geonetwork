@@ -43,15 +43,20 @@
               //merge URL parameters with default ones
               var parts = url.split('?');
               var urlParams = angular.isDefined(parts[1]) ?
-                gnUrlUtils.parseKeyValue(parts[1].toLowerCase()) :
-                {};
+                gnUrlUtils.parseKeyValue(parts[1]) : {};
 
               var defaultParams = {
                 service: 'WMS',
-                request: 'getCapabilities',
-                version: '1.3.0' //FIXME to remove it's not mandatory
+                request: 'getCapabilities'
               };
-              angular.extend(defaultParams, urlParams);
+
+              for(var p in urlParams){
+                defaultParams[p] = urlParams[p];
+                if(defaultParams.hasOwnProperty(p.toLowerCase()) &&
+                    p != p.toLowerCase()){
+                      delete defaultParams.toLowerCase();
+                }
+              }
 
               url = gnUrlUtils.append(parts[0],
                 gnUrlUtils.toKeyValue(defaultParams));
@@ -82,6 +87,15 @@
               }
             }
             return extent;
+          },
+
+          getLayerInfoFromCap: function(name, capObj) {
+            for (var i = 0, len = capObj.layers.length - 1;
+                 i < len; i++) {
+              if(name == capObj.layers[i].name) {
+                return capObj.layers[i];
+              }
+            }
           }
         }
       }];

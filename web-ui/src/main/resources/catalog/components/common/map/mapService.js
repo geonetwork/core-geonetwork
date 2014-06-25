@@ -72,23 +72,32 @@
            * Convert coordinates object into text
            *
            * @param coord must be an array of points (array with
-           * dimension 2);
+           * dimension 2) or a point
            * @returns coordinates as text with format : 'x1 y1,x2 y2,x3 y3'
            */
           getTextFromCoordinates: function(coord) {
             var text;
-            if(angular.isArray(coord)) {
-              for(var i=0;i<coord.length;++i) {
-                var point = coord[i];
-                if(angular.isArray(point) && point.length == 2) {
-                  if(text) {
-                    text += ',';
+
+            var addPointToText = function(point) {
+              if(text) {
+                text += ',';
+              }
+              else {
+                text = '';
+              }
+              text += point[0] + ' ' + point[1];
+            };
+
+            if(angular.isArray(coord) && coord.length > 0) {
+              if(angular.isArray(coord[0])) {
+                for(var i=0;i<coord.length;++i) {
+                  var point = coord[i];
+                  if(angular.isArray(point) && point.length == 2) {
+                    addPointToText(point);
                   }
-                  else {
-                    text = '';
-                  }
-                  text += point[0] + ' ' + point[1];
                 }
+              } else if(coord.length == 2) {
+                addPointToText(coord);
               }
             }
             return text;

@@ -29,44 +29,75 @@
           goog.asserts.assertInstanceof(scope.layer, ol.layer.Layer);
           goog.asserts.assertInstanceof(scope.map, ol.Map);
 
+          var drawInteraction, featureOverlay;
           scope.constants = gnNcWmsConst;
 
-          var source = new ol.source.Vector();
-          var vector = new ol.layer.Vector({
-            source: source,
-            style: new ol.style.Style({
-              fill: new ol.style.Fill({
-                color: 'rgba(255, 255, 255, 0.2)'
-              }),
-              stroke: new ol.style.Stroke({
-                color: '#ffcc33',
-                width: 2
-              }),
-              image: new ol.style.Circle({
-                radius: 7,
-                fill: new ol.style.Fill({
-                  color: '#ffcc33'
-                })
-              })
-            })
-          });
+          // 2010-12-06T12:00:00.000Z/2010-12-31T12:00:00.000Z
+          var parseTimeSeries = function(s) {
+            s = s.trim();
+            var as = s.split('/');
+            scope.tsfromD = moment(new Date(as[0])).format('YYYY-MM-DD');
+            scope.tstoD = moment(new Date(as[1])).format('YYYY-MM-DD');
+          };
+          parseTimeSeries(scope.layer.ncInfo.dimensions.time.values[0]);
 
-          var draw = new ol.interaction.Draw({
-            source: source,
-            type: 'LineString'
-          });
-          draw.on('drawend',
-              function(evt) {
-                window.open(gnNcWms.getNcwmsServiceUrl(
-                        scope.layer,
-                        scope.map.getView().getProjection(),
-                        evt.feature.getGeometry().getCoordinates()),
-                    '_blank',
-                    'menubar=no, status=no, scrollbars=no, menubar=no, width=600, height=400');
-              }, this);
+          /**
+           * Just manage active button in ui.
+           * Values of activeTool can be 'time', 'profile', 'transect'
+           * @param activeTool
+           */
+          scope.setActiveTool = function(activeTool) {
+            if(scope.activeTool == activeTool) {
+              scope.activeTool = undefined;
+            } else {
+              scope.activeTool = activeTool;
+            }
+            activateInteraction(scope.activeTool);
+          };
 
-          scope.map.addInteraction(draw);
-          scope.map.addLayer(vector);
+
+          var activateInteraction = function(activeTool) {
+            if(!activeTool) {
+              featureOverlay.setMap(null);
+              delete featureOverlay;
+              scope.map.removeInteraction(drawInteraction);
+              delete drawInteraction;
+            }
+
+            else {
+              var type = 'Point';
+              if(activeTool == 'transect') {
+                type = 'LineString';
+              }
+
+              if(!featureOverlay) {
+                featureOverlay = new ol.FeatureOverlay();
+                featureOverlay.setMap(scope.map);
+              }
+
+              if(drawInteraction) {
+                scope.map.removeInteraction(drawInteraction);
+              }
+
+              drawInteraction = new ol.interaction.Draw({
+                features: featureOverlay.getFeatures(),
+                type: type
+              });
+
+              drawInteraction.on('drawend',
+                  function(evt) {
+                    window.open(gnNcWms.getNcwmsServiceUrl(
+                            scope.layer,
+                            scope.map.getView().getProjection(),
+                            evt.feature.getGeometry().getCoordinates(),
+                            activeTool),
+                        '_blank',
+                        'menubar=no, status=no, scrollbars=no, menubar=no, width=600, height=400');
+                  }, this);
+
+              scope.map.addInteraction(drawInteraction);
+            }
+          };
 
           /**
            * init source layer params object
@@ -99,7 +130,7 @@
 
           scope.updateLayerParams = function() {
             scope.layer.getSource().updateParams(scope.params);
-          }
+          };
 
           initNcwmsParams();
         }

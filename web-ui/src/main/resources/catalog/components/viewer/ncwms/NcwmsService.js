@@ -17,7 +17,8 @@
   module.service('gnNcWms', [
       'gnMap',
       'gnUrlUtils',
-          function(gnMap, gnUrlUtils) {
+      'gnOwsCapabilities',
+          function(gnMap, gnUrlUtils, gnOwsCapabilities) {
 
             this.createNcWmsLayer = function(capLayer) {
               var source = new ol.source.TileWMS({
@@ -33,21 +34,35 @@
                 type: 'WMS',
                 source: source
               });
+
+              gnOwsCapabilities.getCapabilities('http://behemoth.nerc-essc.ac.uk/ncWMS/wms?service=WMS&request=GetCapabilities')
+                  .then(function (capObj) {
+                    layer.ncInfo = gnOwsCapabilities.getLayerInfoFromCap(layer.getSource().getParams().LAYERS, capObj);
+                  });
+
               return layer;
             };
 
             this.getNcwmsServiceUrl = function(layer, proj, geom, service) {
               var p = {
-                  REQUEST: 'GetTransect',
                   FORMAT: 'image/png',
                   CRS: proj.getCode(),
-                  LINESTRING: gnMap.getTextFromCoordinates(geom),
                   LAYER: layer.getSource().getParams().LAYERS
               };
+              if(service == 'time') {
+
+              } else if (service == 'profile') {
+                p.REQUEST = 'GetVerticalProfile';
+                p.POINT = gnMap.getTextFromCoordinates(geom);
+
+              } else if (service == 'transect') {
+                p.REQUEST = 'GetTransect';
+                p.LINESTRING = gnMap.getTextFromCoordinates(geom);
+              }
 
               return url = gnUrlUtils.append(layer.getSource().getUrls(),
                   gnUrlUtils.toKeyValue(p));
-            }
+            };
           }
   ]);
 })();
