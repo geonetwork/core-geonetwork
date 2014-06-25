@@ -138,15 +138,15 @@
     }
   ])
       .directive('ngSearchForm', [
-          '$parse',
+        '$parse',
         function($parse) {
           return {
             restrict: 'A',
             scope: true,
             controller: 'GnSearchFormController',
-            link: function (scope, element, attrs) {
+            link: function(scope, element, attrs) {
               scope.params = $parse(attrs.gnParams)(scope) || {};
-              if(attrs.runsearch) {
+              if (attrs.runsearch) {
                 scope.triggerSearch();
               }
             }
