@@ -1,4 +1,31 @@
 <ul class="list-group">
+  <li ng-repeat="layer in (layers | gnReverse | filter:layerFilterFn)" class="list-group-item" data-ng-class="{'active': layer.showInfo}">
+    <button class="btn btn-cog" data-ng-click="showInfo(layer)">
+      <span class="fa fa-cog"></span>
+    </button>
+    <label><input type="checkbox" ng-model="layer.visible" />
+      {{layer.label}}
+    </label>
+    <div class="details">
+      <div class="btn-group">
+        <div class="btn btn-default">
+          <label>Transparence <input type="range" min="0" max="1" step="0.05" ng-model="layer.opacity" /></label>
+        </div>
+        <button class="btn btn-default btn-xs" ng-click="removeLayerFromMap(layer)">
+          <span class="fa fa-trash"></span>
+          Supprimer
+        </button></div>
+      <h6>Légende</h6>
+      <p>
+        <img src="{{layer.legend}}"/>
+      </p>
+      <h6>Source</h6>
+      <p><em>{{layer.attribution}}</em></p>
+    </div>
+  </li>
+</ul>
+<!--
+<ul class="list-group">
   <li ng-repeat="layer in (layers | gnReverse | filter:layerFilterFn)" class="list-group-item">
     <span class="badge fa fa-cog"></span>
 
@@ -16,3 +43,4 @@
     <button type="button" ng-click="removeLayerFromMap(layer)" class="btn btn-primary btn-xs">&times;</button>
   </li>
 </ul>
+-->

@@ -166,21 +166,11 @@
           addWmsToMap : function(map, layerParams, layerOptions, index) {
             var createWmsLayer = function(params, options, index) {
               options = options || {};
-              var attributions;
-
-/*
-              if (options.attribution) {
-                attributions = [
-                  gnMapUtils.getAttribution(options.attribution)
-                ];
-              }
-*/
 
               var source = new ol.source.TileWMS({
                 params: params,
                 url: options.url,
                 extent: options.extent,
-                attributions: attributions,
                 ratio: options.ratio || 1
               });
 
@@ -189,13 +179,14 @@
                 type: 'WMS',
                 opacity: options.opacity,
                 visible: options.visible,
-                attribution: options.attribution,
                 source: source
               });
               goDecorateLayer(layer);
               layer.preview = options.preview;
               layer.label = options.label;
               layer.displayInLayerManager = true;
+              layer.legend = options.legend;
+              layer.attribution = options.attribution;
               return layer;
             };
 

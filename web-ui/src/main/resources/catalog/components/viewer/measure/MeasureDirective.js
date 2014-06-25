@@ -2,6 +2,8 @@
   goog.provide('gn_measure_directive');
 
   var module = angular.module('gn_measure_directive', [
+      'go',
+      'ui.bootstrap.buttons'
   ]);
 
   module.filter('measure', function() {

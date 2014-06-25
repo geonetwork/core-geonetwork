@@ -52,6 +52,15 @@
           layersCollection.removeAt(index);
           layersCollection.insertAt(index + delta, layer);
         };
+
+        scope.showInfo = function(layer) {
+          angular.forEach(scope.layers, function(l) {
+            if(l != layer){
+              l.showInfo = false;
+            }
+          });
+          layer.showInfo = !layer.showInfo;
+        }
       }
     };
   }]);

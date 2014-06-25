@@ -34,6 +34,8 @@
                   }, {
                     url: $scope.url,
                     label: layer.title,
+                    attribution: layer.attribution.title,
+                    legend: layer.styles[1].legend.href,
                     extent: gnOwsCapabilities.getLayerExtentFromGetCap($scope.map, layer)
                   }
               );
