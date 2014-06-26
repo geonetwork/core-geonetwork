@@ -22,30 +22,22 @@
 //==============================================================================
 package org.fao.geonet.guiservices.csw.virtual;
 
-import org.fao.geonet.domain.responses.CswVirtualServiceListResponse;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.repository.ServiceRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.jdom.Element;
 
 /**
  * Get the list of service define in DB configuration
  */
-@Controller("admin.config.virtualcsw.list")
-public class List {
+public class List implements Service {
+    public void init(String appPath, ServiceConfig params) throws Exception {
+    }
 
-    @Autowired
-    private ServiceRepository serviceRepository;
-
-    @RequestMapping(value = "/{lang}/admin.config.virtualcsw.list", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody
-    CswVirtualServiceListResponse exec() throws Exception {
-        CswVirtualServiceListResponse cswVirtualList =
-                new CswVirtualServiceListResponse(serviceRepository.findAll());
-
-        return cswVirtualList;
+    public Element exec(Element params, ServiceContext context)
+            throws Exception {
+        return context.getBean(ServiceRepository.class).findAllAsXml();
     }
 }

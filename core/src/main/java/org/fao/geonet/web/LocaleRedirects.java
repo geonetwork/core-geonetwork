@@ -3,6 +3,7 @@ package org.fao.geonet.web;
 import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.constants.Jeeves;
 import jeeves.server.overrides.ConfigurationOverrides;
+
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Xml;
@@ -15,20 +16,20 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+
+import javax.annotation.PostConstruct;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
-import javax.annotation.PostConstruct;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
+
+import static org.fao.geonet.constants.Geonet.DEFAULT_LANGUAGE;
 
 /**
  * Handles requests where there is no locale and a redirect to a correct (and localized) service is needed.  For example
@@ -37,7 +38,7 @@ import javax.servlet.http.HttpServletRequest;
  * Created by Jesse on 12/4/13.
  */
 @Controller
-@Lazy(value = true)
+@Lazy(value = false)
 public class LocaleRedirects {
 
 

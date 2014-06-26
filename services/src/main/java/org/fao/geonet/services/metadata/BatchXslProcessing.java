@@ -25,57 +25,45 @@ package org.fao.geonet.services.metadata;
 
 import java.util.Iterator;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import jeeves.server.ServiceConfig;
-import jeeves.services.ReadWriteController;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.Util;
 
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.utils.Log;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.fao.geonet.services.NotInReadOnlyModeService;
+import org.jdom.Element;
 
 /**
  * Process a metadata with an XSL transformation declared for the metadata
  * schema. Parameters sent to the service are forwaded to XSL process.
  * 
  * In each xml/schemas/schemaId directory, a process could be added in a
- * directory called process. Then the process could be called using the
+ * directory called process. Then the process could be called using the 
  * following URL :
- * http://localhost:8080/geonetwork/srv/en/metadata.batch.processing
- * ?process=keywords-comma-exploder&url=http://xyz
+ * http://localhost:8080/geonetwork/srv/en/metadata.batch.processing?process=keywords-comma-exploder&url=http://xyz
  * 
  * In that example the process has to be named keywords-comma-exploder.xsl.
  * 
- * To retrieve parameters in XSL process use the following: <code>
+ * To retrieve parameters in XSL process use the following:
+ * <code>
  *     <xsl:param name="url">http://localhost:8080/</xsl:param>
  * </code>
  * 
  * @author fxprunayre
  */
-@Controller("md.processing.batch")
-@ReadWriteController
-public class BatchXslProcessing { // extends NotInReadOnlyModeService {
+public class BatchXslProcessing extends NotInReadOnlyModeService {
 	private String _appPath;
-
-	@Autowired
-	private DataManager dataMan;
-	@Autowired
-	private SettingManager settingManager;
-	@Autowired
-	private SelectionManager selectionManager;
 
 	public void init(String appPath, ServiceConfig params) throws Exception {
 		_appPath = appPath;
-
+		
 		// TODO : here we could register process on startup
 		// in order to not to check process each time.
 	}
@@ -86,37 +74,36 @@ public class BatchXslProcessing { // extends NotInReadOnlyModeService {
 	// ---
 	// --------------------------------------------------------------------------
 
-	/**
-	 * 
-	 * @param params
-	 * @param context
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/{lang}/md.processing.batch", produces = {
-			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-	public @ResponseBody
-	XslProcessingReport serviceSpecificExec(@RequestParam String process,
-			HttpSession session, HttpServletRequest request) throws Exception {
+    /**
+     *
+     * @param params
+     * @param context
+     * @return
+     * @throws Exception
+     */
+	public Element serviceSpecificExec(Element params, ServiceContext context)
+			throws Exception {
+		String process = Util.getParam(params, Params.PROCESS);
 
-		XslProcessingReport xslProcessingReport = new XslProcessingReport(
-				process);
+		GeonetContext gc = (GeonetContext) context
+				.getHandlerContext(Geonet.CONTEXT_NAME);
+		DataManager dataMan = gc.getBean(DataManager.class);
+		UserSession session = context.getUserSession();
 
-		final String siteURL = request.getRequestURL().toString() + "?"
-				+ request.getQueryString();
-		Log.info("org.fao.geonet.services.metadata", "Get selected metadata");
+        XslProcessingReport xslProcessingReport = new XslProcessingReport(process);
+        
 
-		synchronized (selectionManager.getSelection("metadata")) {
-			xslProcessingReport.setTotalRecords(selectionManager.getSelection(
-					"metadata").size());
-			BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(
-					dataMan, selectionManager.getSelection("metadata")
-							.iterator(), process, _appPath, session, siteURL,
-					xslProcessingReport, request);
+		context.info("Get selected metadata");
+		SelectionManager sm = SelectionManager.getManager(session);
+		
+		synchronized(sm.getSelection("metadata")) {
+			xslProcessingReport.setTotalRecords(sm.getSelection("metadata").size());
+			BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(dataMan, sm.getSelection("metadata").iterator(),
+					process, _appPath, params, context, xslProcessingReport);
 			m.process();
 		}
-
-		return xslProcessingReport;
+		
+		return xslProcessingReport.toXml();
 	}
 
 	// --------------------------------------------------------------------------
@@ -125,46 +112,41 @@ public class BatchXslProcessing { // extends NotInReadOnlyModeService {
 	// ---
 	// --------------------------------------------------------------------------
 
-	static final class BatchXslMetadataReindexer extends
-			MetadataIndexerProcessor {
+	static final class BatchXslMetadataReindexer extends MetadataIndexerProcessor {
 		Iterator<String> iter;
 		String process;
-		String siteURL;
 		String appPath;
-		HttpSession session;
-		XslProcessingReport xslProcessingReport;
-		HttpServletRequest request;
+		Element params;
+		ServiceContext context;
+        XslProcessingReport xslProcessingReport;
 
-		public BatchXslMetadataReindexer(DataManager dm, Iterator<String> iter,
-				String process, String appPath, HttpSession session,
-				String siteURL, XslProcessingReport xslProcessingReport,
-				HttpServletRequest request) {
-			super(dm);
-			this.iter = iter;
-			this.process = process;
-			this.session = session;
-			this.siteURL = siteURL;
-			this.request = request;
-			this.appPath = appPath;
-			this.xslProcessingReport = xslProcessingReport;
-		}
+        public BatchXslMetadataReindexer(DataManager dm, Iterator<String> iter, String process,
+        		String appPath, Element params, ServiceContext context, 
+        		XslProcessingReport xslProcessingReport) {
+            super(dm);
+            this.iter = iter;
+            this.process = process;
+            this.appPath = appPath;
+            this.params = params;
+            this.context = context;
+            this.xslProcessingReport = xslProcessingReport;
+        }
 
-		@Override
-		public void process() throws Exception {
+        @Override
+        public void process() throws Exception {
 
-			while (iter.hasNext()) {
-				String uuid = iter.next();
-				String id = getDataManager().getMetadataId(uuid);
-				Log.info("org.fao.geonet.services.metadata",
-						"Processing metadata with id:" + id);
+            while (iter.hasNext()) {
+                String uuid = iter.next();
+                String id = getDataManager().getMetadataId(uuid);
+                context.info("Processing metadata with id:" + id);
 
-				XslProcessing.get().process(id, process, true, appPath,
-						xslProcessingReport, true, siteURL, request);
-
-				this.session.setAttribute("BATCH_PROCESSING_REPORT",
-						xslProcessingReport);
-
-			}
-		}
+                final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
+                XslProcessing.process(id, process, true, appPath, params, context, xslProcessingReport, true, siteURL);
+                
+                UserSession  session = context.getUserSession();
+                session.setProperty("BATCH_PROCESSING_REPORT", xslProcessingReport);
+                
+            }
+        }
 	}
 }
