@@ -66,6 +66,77 @@
         $scope.map.addLayer($scope.ncwmsLayer);
       }]);
 
+  module.controller('toolsController',
+      ['$scope', 'gnMeasure',
+        function($scope, gnMeasure) {
+          $scope.measureObj = {};
+          $scope.mInteraction = gnMeasure.create($scope.map, $scope.measureObj, $scope);
+
+          $scope.$watch('mInteraction.active', function(value) {
+/*
+            if(value) {
+              activate();
+            } else {
+              deactivate();
+            }
+*/
+          });
+
+        }
+      ]);
+
+          module.directive('goBtnGroup', function() {
+        return {
+          restrict: 'A',
+          controller: function($scope) {
+            var buttonScopes = [];
+
+            this.activate = function(btnScope) {
+              angular.forEach(buttonScopes, function(b) {
+                if (b != btnScope) {
+                  b.ngModelSet(b, false);
+                }
+              });
+            };
+
+            this.addButton = function(btnScope) {
+              buttonScopes.push(btnScope);
+            };
+          }
+        };
+      })
+      .directive('goBtn', function($parse) {
+        return {
+          require: ['^goBtnGroup','ngModel'],
+          restrict: 'A',
+          //replace: true,
+          scope: true,
+          link: function (scope, element, attrs, ctrls) {
+            var buttonsCtrl = ctrls[0], ngModelCtrl = ctrls[1];
+            var ngModelGet = $parse(attrs['ngModel']);
+            scope.ngModelSet = ngModelGet.assign;
+
+            buttonsCtrl.addButton(scope);
+
+            //ui->model
+            element.bind('click', function () {
+              scope.$apply(function () {
+                ngModelCtrl.$setViewValue(!ngModelCtrl.$viewValue);
+                ngModelCtrl.$render();
+              });
+            });
+
+            //model -> UI
+            ngModelCtrl.$render = function () {
+              if (ngModelCtrl.$viewValue) {
+                buttonsCtrl.activate(scope);
+              }
+              element.toggleClass('active', ngModelCtrl.$viewValue);
+            };
+          }
+        };
+      });
+
   // Define the translation files to load
   module.constant('$LOCALES', ['core', 'editor']);
 

@@ -10,7 +10,6 @@
       <span class="fa fa-tasks"></span>
       <span role="tooltip">Couches</span>
     </button>
-    <div gn-measure="" gn-measure-map="map"></div>
     <button class="btn btn-default" type="submit" rel="#contexts">
       <span class="fa fa-book"></span>
       <span role="tooltip">Contextes</span>
@@ -20,6 +19,21 @@
       <span role="tooltip">Impression</span>
     </button>
   </div>
+
+  <div data-ng-controller="toolsController">
+    <div go-btn-group>
+      <button go-btn class="btn btn-success" ng-model="mInteraction.active" gn-measure="" gn-measure-map="map">
+        <span class="fa fa-pencil"></span>
+      </button>
+    </div>
+
+    <div class="gn-measure-text">
+      <div class="hidden-print" translate>measure_instruction</div>
+      <div>{{'distance_label' | translate}}: {{measureObj.distance | measure}}</div>
+      <div>{{'surface_label' | translate}}: {{measureObj.surface | measure:'area':['km&sup2', ' m&sup2']}}</div>
+    </div>
+  </div>
+
 
   <div class="tools control-tools">
     <button class="btn btn-default" type="submit">
