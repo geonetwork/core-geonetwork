@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
-	xsi:schemaLocation="
-        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
-		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd
-">
+<beans default-lazy-init="true"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+" >
 
     <import resource="config-security/config-security.xml"/>
     <import resource="classpath:JZkitApplicationContext.xml"/>
@@ -27,10 +29,7 @@
           class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="applicationContextSchedulerContextKey" value="applicationContext"/>
     </bean>
-	<bean class="org.fao.geonet.kernel.search.index.FSDirectoryFactory">
-	<!-- 	<qualifier value="directoryFactory" type="org.springframework.beans.factory.annotation.Qualifier"/> -->
-	</bean>
-
+    <bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory" lazy-init="true"/>
     <bean id="httpRequestFactor" class="org.fao.geonet.utils.GeonetHttpRequestFactory">
         <property name="numberOfConcurrentRequests" value="30" />
     </bean>

@@ -38,6 +38,8 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -45,15 +47,13 @@ import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 //=============================================================================
 
 public final class ServiceRequestFactory
 {
 
-    private static final String JSON_URL_FLAG = "format=json";
+    private static String JSON_URL_FLAG = "@json";
     private static String DEBUG_URL_FLAG = "!";
 
 	/**
@@ -96,7 +96,7 @@ public final class ServiceRequestFactory
 		srvReq.setDebug       (extractDebug(url));
 		srvReq.setLanguage    (extractLanguage(url));
 		srvReq.setService     (extractService(url));
-        srvReq.setJSONOutput  (extractJSONFlag(req.getQueryString()));
+        srvReq.setJSONOutput  (extractJSONFlag(url));
 		String ip = req.getRemoteAddr();
 		String forwardedFor = req.getHeader("x-forwarded-for");
 		if (forwardedFor != null) ip = forwardedFor;
