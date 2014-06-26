@@ -216,4 +216,7 @@
   <xsl:template name="get-iso19110-other-languages-as-json"/>
   
   <xsl:template name="get-iso19110-online-source-config"/>
+
+  <xsl:template name="get-iso19110-extents-as-json">[]</xsl:template>
+
 </xsl:stylesheet>

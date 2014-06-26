@@ -12,7 +12,7 @@
         'gnCurrentEdit',
         '$timeout',
         '$translate',
-        function(gnMap, gnOnlinesrc, 
+        function(gnMap, gnOnlinesrc,
             gnGeoPublisher, gnEditor, gnCurrentEdit,
             $timeout, $translate) {
           return {
@@ -22,7 +22,6 @@
                 'partials/geopublisher.html',
             scope: {
               config: '@'
-              // TODO: Add initial bbox
             },
             link: function(scope, element, attrs) {
               scope.resources = angular.fromJson(scope.config);
@@ -55,6 +54,14 @@
                   // we need to wait the scope.hidden binding is done
                   // before rendering the map.
                   map.setTarget(scope.mapId);
+
+                  // TODO : Zoom to all extent if more than one defined
+                  if (angular.isArray(gnCurrentEdit.extent)) {
+                    map.getView().fitExtent(
+                      gnMap.reprojExtent(gnCurrentEdit.extent[0],
+                      'EPSG:4326', gnMap.getMapConfig().projection),
+                      map.getSize());
+                  }
                 });
 
                 /**
@@ -124,7 +131,7 @@
                * @return {boolean}
                */
               var isMRA = function(gsNode) {
-                return gsNode.adminUrl.indexOf('/mra') !== -1;
+                return gsNode.adminUrl && gsNode.adminUrl.indexOf('/mra') !== -1;
               };
 
               /**
