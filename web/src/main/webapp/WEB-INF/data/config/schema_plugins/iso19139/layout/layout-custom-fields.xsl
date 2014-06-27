@@ -51,6 +51,7 @@
       <xsl:with-param name="label"
         select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
       <xsl:with-param name="value" select="gmd:*/text()"/>
+      <xsl:with-param name="name" select="*/gn:element/@ref"/>
       <!-- should only match on child -->
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="$xpath"/>

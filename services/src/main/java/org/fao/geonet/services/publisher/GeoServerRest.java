@@ -265,7 +265,7 @@ public class GeoServerRest {
 			+ "</metadataLinks>"
 		+ "</coverage>";
 
-		int statusCoverage = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
+		int statusCoverage = sendREST(GeoServerRest.METHOD_POST, "/workspaces/" + ws
 				+ "/coveragestores/" + cs + "/coverages.xml", xml,
 				null, "text/xml", false);
 

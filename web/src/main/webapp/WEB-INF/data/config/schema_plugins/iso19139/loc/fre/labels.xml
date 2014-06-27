@@ -278,7 +278,7 @@
     
   </element>
   <element name="gmd:DQ_Scope" id="138.0">
-    <label>Domaine d'appliquabilité</label>
+    <label>Domaine d'applicabilité</label>
     <description>Description de l'étendue des charactéristiques des données pour lesquelles des informations de qualité sont rapportées</description>
     <help>Description du domaine du jeu de données pour lequel des informations de qualité ont été saisies. d'autres indications peuvent être trouvées sous DQ_Dataquality.</help>
     <condition>Obligatoire</condition>
