@@ -217,8 +217,17 @@ GeoNetwork.admin.PrivilegesPanel = Ext.extend(Ext.grid.GridPanel, {
                      name: 'all',
                      type: 'bool',
                      defaultValue: false
-                 }
-                 
+                 }, {
+                  name: 'profile',
+                  convert: function(v, n) {
+                    var p = Ext.DomQuery.selectNode('userProfile', n);
+                    if (p) {
+                      return OpenLayers.i18n(catalogue.getNodeText(p));
+                    } else {
+                      return '';
+                    }
+                  }
+              }
              ]
         });
         
@@ -283,7 +292,12 @@ GeoNetwork.admin.PrivilegesPanel = Ext.extend(Ext.grid.GridPanel, {
                     width: 80,
                     align: 'center'
                 });
-                
+                columns.push({
+                  header: OpenLayers.i18n('Profile'),
+                  dataIndex: 'profile',
+                  width: 80,
+                  hidden: catalogue.isAdmin()
+                });
                 var cm = new Ext.grid.ColumnModel({
                     defaults: {
                         sortable: true,

@@ -19,6 +19,7 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
 GeoNetwork.Lang.fr = {
+  'Profile': 'Profil',
     'unsupportedBrowser': 'Navigateur non supporté',
     'editorBrowserRestriction': "La version du navigateur Internet Explorer que vous utilisez n'est plus compatible avec certaines fonctionnalités les plus récentes (édition, administration). Le catalogue risque de ne pas fonctionner correctement, vous devez installer <a href='http://www.whatbrowser.org/'>un navigateur récent</a>.",
     'metadataRecordPublishedTitle': 'Publication',
