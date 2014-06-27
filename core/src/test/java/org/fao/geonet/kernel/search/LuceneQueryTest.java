@@ -2257,8 +2257,8 @@ public class LuceneQueryTest {
     public void testDownloadDynamicParameter() {
         JDOMFactory factory = new DefaultJDOMFactory();
         Element request = factory.element("request");
-        Element download = factory.element("operation_download").addContent("1 or 2 or 3");
-        Element dynamic  = factory.element("operation_dynamic").addContent("1 or 2 or 3");
+        Element download = factory.element("_operation5").addContent("1 or 2 or 3");
+        Element dynamic  = factory.element("_operation1").addContent("1 or 2 or 3");
         request.addContent(download).addContent(dynamic);
         LuceneQueryInput lQI = new LuceneQueryInput(request);
         Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
@@ -2271,7 +2271,7 @@ public class LuceneQueryTest {
     public void testDownloadParameter() {
         JDOMFactory factory = new DefaultJDOMFactory();
         Element request = factory.element("request");
-        Element download = factory.element("operation_download").addContent("1 or 2 or 3");
+        Element download = factory.element("_operation1").addContent("1 or 2 or 3");
         request.addContent(download);
         LuceneQueryInput lQI = new LuceneQueryInput(request);
         Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
@@ -2284,12 +2284,26 @@ public class LuceneQueryTest {
     public void testDynamicParameter() {
         JDOMFactory factory = new DefaultJDOMFactory();
         Element request = factory.element("request");
-        Element dynamic = factory.element("operation_dynamic").addContent("1 or 2 or 3");
+        Element dynamic = factory.element("_operation5").addContent("1 or 2 or 3");
         request.addContent(dynamic);
         LuceneQueryInput lQI = new LuceneQueryInput(request);
         Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
         assertTrue(query.toString().contains("+(_op5:1 _op5:2 _op5:3)"));
     }
+    /**
+     * Only editing operation parameter.
+     */
+    @Test
+    public void testEditingParameter() {
+        JDOMFactory factory = new DefaultJDOMFactory();
+        Element request = factory.element("request");
+        Element editing = factory.element("_operation2").addContent("1 or 2 or 3");
+        request.addContent(editing);
+        LuceneQueryInput lQI = new LuceneQueryInput(request);
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
+        assertTrue(query.toString().contains("+(_op2:1 _op2:2 _op2:3)"));
+    }    
+    
     /**
      * No operation parameter.
      */

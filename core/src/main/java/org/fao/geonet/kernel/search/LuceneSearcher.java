@@ -725,10 +725,18 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 				}
 				String grps = grpList.toString();
 				for (Content elem : operations) {
-					if (elem.getValue().equalsIgnoreCase("download")) {
-						request.addContent(new Element("operation_download").addContent(grps));
+					if (elem.getValue().equalsIgnoreCase("view")) {
+						request.addContent(new Element("_operation0").addContent(grps));
+					} else if (elem.getValue().equalsIgnoreCase("download")) {
+						request.addContent(new Element("_operation1").addContent(grps));
+					} else if (elem.getValue().equalsIgnoreCase("editing")) {
+						request.addContent(new Element("_operation2").addContent(grps));
+					} else if (elem.getValue().equalsIgnoreCase("notify")) {
+						request.addContent(new Element("_operation3").addContent(grps));
 					} else if (elem.getValue().equalsIgnoreCase("dynamic")) {
-						request.addContent(new Element("operation_dynamic").addContent(grps));
+						request.addContent(new Element("_operation5").addContent(grps));
+					} else if (elem.getValue().equalsIgnoreCase("featured")) {
+						request.addContent(new Element("_operation6").addContent(grps));
 					}
 				}
 			}
