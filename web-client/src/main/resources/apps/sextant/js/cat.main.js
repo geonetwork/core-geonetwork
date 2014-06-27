@@ -172,7 +172,7 @@ cat.app = function() {
     
     function edit(metadataId, create, group, child, isTemplate, schema) {
         var record = catalogue.metadataStore.getAt(catalogue.metadataStore.find('id', metadataId));
-        
+
         if (!this.editorWindow) {
             this.editorPanel = new GeoNetwork.editor.EditorPanel({
                 defaultEditMode : GeoNetwork.Settings.editor.defaultViewMode,
@@ -656,7 +656,7 @@ cat.app = function() {
       app.userGroupStore = GeoNetwork.data.GroupStore(catalogue.services.getGroups);
       app.userGroupStore.load();
       app.getGroupLabel = function (groupId) {
-        var idx = app.userGroupStore.find('id', groupId);
+        var idx = app.userGroupStore.findExact('id', groupId);
         if (idx) {
           var record = app.userGroupStore.getAt(idx);
           if (record) {
