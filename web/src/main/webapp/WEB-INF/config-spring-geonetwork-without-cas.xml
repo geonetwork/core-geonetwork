@@ -12,7 +12,7 @@
 
     <context:component-scan base-package="org.fao.geonet.kernel,org.fao.geonet.component"/>
 
-	<import resource="config-security-without-cas.xml"/>
+	<import resource="config-security/config-security-without-cas.xml"/>
     <import resource="classpath:JZkitApplicationContext.xml"/>
 
 	<util:set id="languages">

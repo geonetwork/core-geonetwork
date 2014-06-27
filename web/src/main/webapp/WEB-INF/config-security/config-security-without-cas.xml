@@ -12,6 +12,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
     <!-- <sec:debug/> -->
     <import resource="config-security-core.xml"/>
     <import resource="config-security-mapping.xml"/>
-    <ctx:property-placeholder location="WEB-INF/config-security.properties"/>
+    <ctx:property-placeholder location="WEB-INF/config-security/config-security.properties"/>
 
 </beans>
