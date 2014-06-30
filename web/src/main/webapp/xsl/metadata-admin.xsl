@@ -15,8 +15,6 @@
 			<xsl:with-param name="content">
 			
 				<xsl:variable name="lang" select="/root/gui/language"/>
-				<xsl:variable name="groupOwner" select="/root/response/groupOwner"/>
-				<xsl:variable name="isNotReviewer" select="not(/root/response/groups/group[id=$groupOwner and userProfile='Reviewer'])"/>
 				<xsl:variable name="disabled" select="(/root/response/owner='false')"/>
 				
 				
@@ -46,17 +44,17 @@
 						-->
 						<xsl:apply-templates select="/root/response/groups/group[id='1']" mode="group">
 							<xsl:with-param name="lang" select="$lang"/>
-							<xsl:with-param name="disabled" select="($profile != 'Administrator') and $isNotReviewer"/>
+							<xsl:with-param name="disabled" select="($profile != 'Administrator' and $profile != 'Reviewer')"/>
 						</xsl:apply-templates>
 
 						<xsl:apply-templates select="/root/response/groups/group[id='0']" mode="group">
 							<xsl:with-param name="lang" select="$lang"/>
-							<xsl:with-param name="disabled" select="($profile != 'Administrator') and $isNotReviewer"/>
+							<xsl:with-param name="disabled" select="($profile != 'Administrator' and $profile != 'Reviewer')"/>
 						</xsl:apply-templates>
 
 						<xsl:apply-templates select="/root/response/groups/group[id='-1']" mode="group">
 							<xsl:with-param name="lang" select="$lang"/>
-							<xsl:with-param name="disabled" select="($profile != 'Administrator') and $isNotReviewer"/>
+							<xsl:with-param name="disabled" select="($profile != 'Administrator' and $profile != 'Reviewer')"/>
 						</xsl:apply-templates>
 
 						<tr>
