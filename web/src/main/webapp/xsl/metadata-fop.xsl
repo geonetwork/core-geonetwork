@@ -5,6 +5,12 @@
   xmlns:fo="http://www.w3.org/1999/XSL/Format">
 
 
+		<!-- Catalog settings -->
+	  <xsl:variable name="env" select="/root/gui/systemConfig"/>
+
+		<!-- Full URL with protocol, host and port -->
+		<xsl:variable name="fullURL" select="concat($env/system/server/protocol, '://', $env/system/server/host, ':', $env/system/server/port)"/>
+
   <!-- Some colors -->
   <xsl:variable name="background-color">#d6e2f7</xsl:variable>
   <xsl:variable name="background-color-banner">#ffffff</xsl:variable>
@@ -399,7 +405,7 @@
               padding-left="4pt">
               <fo:external-graphic padding-right="4pt">
                 <xsl:attribute name="src"> url('<xsl:value-of
-                    select="concat( //server/protocol, '://', //server/host,':', //server/port, /root/gui/url,'/images/logos/', /root/gui/env/site/siteId,'.gif')"
+                    select="concat( $fullURL, '/geonetwork/images/logos/', /root/gui/env/site/siteId,'.gif')"
                   />')" </xsl:attribute>
               </fo:external-graphic>
               <xsl:value-of select="upper-case(/root/gui/env/site/name)"/> (<xsl:value-of
