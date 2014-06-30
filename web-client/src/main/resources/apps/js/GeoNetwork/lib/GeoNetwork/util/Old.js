@@ -104,7 +104,7 @@ function radioModalUpdate(div, service, modalbox, title) {
 
 
 function addGroups(xmlRes){
-    var list = xmlRes.getElementsByTagName('group'), i;
+    var list = xmlRes.getElementsByTagName('groups'), i;
     Ext.getDom('group').options.length = 0;
     for (i = 0; i < list.length; i++) {
         var id = list[i].getElementsByTagName('id')[0].firstChild.nodeValue;
