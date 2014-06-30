@@ -44,7 +44,7 @@
 												</xsl:if>
 
 												<!-- some status values are not available to Editors -->
-												<xsl:if test="/root/response/hasEditPermission = 'true' and not($isReviewer)">
+												<xsl:if test="not($isReviewer)">
 													<xsl:if test="name='approved' or name='retired' or name='rejected'">
 														<xsl:attribute name="disabled"/>
 													</xsl:if>

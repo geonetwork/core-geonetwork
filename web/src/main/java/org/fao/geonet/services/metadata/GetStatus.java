@@ -135,7 +135,6 @@ public class GetStatus implements Service
 
 		Element elRes = new Element(Jeeves.Elem.RESPONSE)
 										.addContent(new Element(Geonet.Elem.ID).setText(id))
-										.addContent(new Element("hasEditPermission").setText(am.hasEditPermission(context, id) ? "true" : "false"))
 										.addContent(elStatus)
 										.addContent(cRevs);
 
