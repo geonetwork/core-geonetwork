@@ -54,6 +54,7 @@ public class DefaultStatusActions implements StatusActions {
 	private String siteUrl;
 	private UserSession session;
 	private boolean emailNotes = true;
+	private boolean html5ui = true;
 
 	private String allGroup = "1";
 
@@ -304,7 +305,12 @@ public class DefaultStatusActions implements StatusActions {
 		* @return string Search link to metadata
 		*/
 	private String buildMetadataSearchLink(String status, String changeDate) {
-		// FIXME : hard coded link to main.search 
-		return siteUrl+"/main.search?_status="+status+"&_statusChangeDate="+changeDate;
+		String suffix = "&_status="+status+"&_statusChangeDate="+changeDate;
+		// FIXME : hard coded link to search URLs
+		if (html5ui) {
+			return siteUrl+"/search#fast=index&from=1&to=50"+suffix;
+		} else {
+			return siteUrl+"/main.search?"+suffix;
+		}
 	}
 }
