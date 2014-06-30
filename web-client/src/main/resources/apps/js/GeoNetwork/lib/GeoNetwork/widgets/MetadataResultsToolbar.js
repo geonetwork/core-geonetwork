@@ -395,6 +395,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             text: OpenLayers.i18n('newMetadata'),
             ctCls: 'gn-bt-main',
             iconCls: 'addIcon',
+            id: 'createMetadataAction',
             handler: function(){
               // FIXME : could be improved. Here we clean the window
               // A simple template reload could be enough probably

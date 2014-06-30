@@ -1120,6 +1120,14 @@ Ext.onReady(function() {
     /* Focus on full text search field */
     Ext.getDom('E_any').focus(true);
     Ext.get('E_any').setHeight(28);
-    
+
+  if (urlParameters.insert !== undefined) {
+    if (catalogue.isIdentified()) {
+      setTimeout(function () {
+        var actionCtn = Ext.getCmp('createMetadataAction');
+        actionCtn.handler.apply(catalogue.resultsView);
+      }, 500);
+    }
+  }
     initShortcut();
 });
