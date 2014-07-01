@@ -32,22 +32,23 @@
 											<xsl:variable name="userId" select="/root/gui/session/userId"/>
 											<xsl:variable name="isReviewer" select="count(/root/response/contentReviewers/record[userid=$userId]) > 0"/>
 
+											<!-- status value submitted is disabled for reviewers  -->
+											<xsl:if test="$isReviewer">
+												<xsl:if test="name='submitted'">
+													<xsl:attribute name="style">display:none;</xsl:attribute>
+												</xsl:if>
+											</xsl:if>
+
+											<!-- some status values are not available to Editors -->
+											<xsl:if test="not($isReviewer) and not(contains($profile,'Admin'))">
+												<xsl:if test="name='approved' or name='retired' or name='rejected'">
+													<xsl:attribute name="style">display:none;</xsl:attribute>
+												</xsl:if>
+											</xsl:if>
+
 											<input type="radio" name="status" value="{id}" id="st{id}">
 												<xsl:if test="on">
 													<xsl:attribute name="checked"/>
-												</xsl:if>
-												<!-- status value submitted is disabled for reviewers  -->
-												<xsl:if test="$isReviewer or contains($profile,'Admin')">
-													<xsl:if test="name='submitted'">
-														<xsl:attribute name="disabled"/>
-													</xsl:if>
-												</xsl:if>
-
-												<!-- some status values are not available to Editors -->
-												<xsl:if test="not($isReviewer)">
-													<xsl:if test="name='approved' or name='retired' or name='rejected'">
-														<xsl:attribute name="disabled"/>
-													</xsl:if>
 												</xsl:if>
 												<label for="st{id}">
 													<xsl:value-of select="label/child::*[name() = $lang]"/>
