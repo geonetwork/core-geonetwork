@@ -58,9 +58,9 @@
                   // TODO : Zoom to all extent if more than one defined
                   if (angular.isArray(gnCurrentEdit.extent)) {
                     map.getView().fitExtent(
-                      gnMap.reprojExtent(gnCurrentEdit.extent[0],
-                      'EPSG:4326', gnMap.getMapConfig().projection),
-                      map.getSize());
+                        gnMap.reprojExtent(gnCurrentEdit.extent[0],
+                        'EPSG:4326', gnMap.getMapConfig().projection),
+                        map.getSize());
                   }
                 });
 
@@ -131,7 +131,8 @@
                * @return {boolean}
                */
               var isMRA = function(gsNode) {
-                return gsNode.adminUrl && gsNode.adminUrl.indexOf('/mra') !== -1;
+                return gsNode.adminUrl &&
+                    gsNode.adminUrl.indexOf('/mra') !== -1;
               };
 
               /**

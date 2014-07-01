@@ -173,19 +173,19 @@
 			<description>Organisme qui est propriétaire de la ressource / Acteur qui détient les droits patrimoniaux de la ressource</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry hideInEditMode="true">
+		<entry>
 			<code>user</code>
 			<label>Utilisateur</label>
 			<description>Organisme qui utilise ou a utilisé la ressource</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry hideInEditMode="true">
+		<entry>
 			<code>distributor</code>
 			<label>Distributeur</label>
 			<description>Organisme qui distribue la ressource. Diffuseur de second niveau de la ressource</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry hideInEditMode="true">
+		<entry>
 			<code>originator</code>
 			<label>A l’origine de</label>
 			<description>Organisme qui  a commandé la ressource. Acteur qui a été habilité à créer la ressource et qui a mis en place les moyens pour la constituer</description>
@@ -197,19 +197,19 @@
 			<description>Organisme que l’on peut contacter pour avoir des renseignements détaillés sur la ressource. Acteur à contacter en premier lieu pour obtenir des informations relatives à la ressource</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry hideInEditMode="true">
+		<entry>
 			<code>principalInvestigator</code>
 			<label>Point de recherche</label>
 			<description>Personne clé pour obtenir des informations sur la ressource et les recherches conduites autour de la ressource&#xA;Acteur qui a assuré la réalisation de la ressource,éventuellement en faisant appel à des co-traitants ou des sous traitants</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry hideInEditMode="true">
+		<entry>
 			<code>processor</code>
 			<label>Exécutant</label>
 			<description>Organisme qui a réalisé des traitements sur la ressource. Acteur qui est intervenu lors de la réalisation de la ressource</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<entry hideInEditMode="true">
+		<entry>
 			<code>publisher</code>
 			<label>Editeur (publication)</label>
 			<description>Organisme qui assure la publication de la ressource.</description>
@@ -1443,17 +1443,17 @@
 		
 		
 		<!-- Used for facet translation only and not displayed in editor -->
-		<entry hideInEditMode="true">
+		<entry>
 			<code>map</code>
 			<label>Carte</label>
 			<description></description>
 		</entry>
-		<entry hideInEditMode="true">
+		<entry>
 			<code>staticMap</code>
 			<label>Carte statique</label>
 			<description></description>
 		</entry>
-		<entry hideInEditMode="true">
+		<entry>
 			<code>interactiveMap</code>
 			<label>Carte interactive</label>
 			<description></description>
