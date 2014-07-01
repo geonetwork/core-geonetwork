@@ -773,3 +773,28 @@ INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1338, 1336, 'p
 INSERT INTO Users (id, username, password, name, surname, profile, kind, organisation, security, authtype) VALUES  (1,'myocean-ro','4a7d295bdee4f2b8a0df38963197f9c7bb5b3515f760ead95e40064e174be380191a6320af253578','admin','admin',0,'','','','');
 INSERT INTO Address (id, address, city, country, state, zip) VALUES  (1, '', '', '', '', '');
 INSERT INTO UserAddress (userid, addressid) VALUES  (1, 1);
+
+
+delete from serviceparameters;
+delete from services;
+
+INSERT INTO services (id, name, class, description) VALUES (1, 'csw-MYOCEAN-ALL-PRODUCTS', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (1, '_cat', 'MYOCEAN-ALL-PRODUCTS');
+
+INSERT INTO services (id, name, class, description) VALUES (2, 'csw-MYOCEAN-CORE-PRODUCTS', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (2, '_cat', 'MYOCEAN-CORE-PRODUCTS');
+
+INSERT INTO services (id, name, class, description) VALUES (3, 'csw-MYOCEAN-DOCUMENTS', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (3, '_cat', 'MYOCEAN-DOCUMENTS');
+
+INSERT INTO services (id, name, class, description) VALUES (4, 'csw-MYOCEAN-INTERMEDIATE-PRODUCTS', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (4, '_cat', 'MYOCEAN-INTERMEDIATE-PRODUCTS');
+
+INSERT INTO services (id, name, class, description) VALUES (5, 'csw-MYOCEAN-SERVICES-AND-DATASETS', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (5, '_cat', 'MYOCEAN-SERVICES-AND-DATASETS');
+
+INSERT INTO services (id, name, class, description) VALUES (6, 'csw-MYOCEAN-SPECIFIC-CORE', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (6, '_cat', 'MYOCEAN-SPECIFIC-CORE');
+
+INSERT INTO services (id, name, class, description) VALUES (7, 'csw-MYOCEAN-UPSTREAM-PRODUCTS', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (7, '_cat', 'MYOCEAN-UPSTREAM-PRODUCTS');

@@ -84,49 +84,6 @@
       <file path="WEB-INF/classes/setup/sql-myocean-ro/data" filePrefix="loc-fre-"/>
     </replaceXML>
   </file>
-  
-  <!-- Add custom CSW service -->
-  <file name=".*/WEB-INF/config-csw-servers.xml">
-    <addXML xpath="services">
-      
-      <service name="csw-MYOCEAN-ALL-PRODUCTS">
-        <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_cat:MYOCEAN-ALL-PRODUCTS"/>
-        </class>
-      </service>
-      <service name="csw-MYOCEAN-CORE-PRODUCTS">
-        <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_cat:MYOCEAN-CORE-PRODUCTS"/>
-        </class>
-      </service>
-      <service name="csw-MYOCEAN-DOCUMENTS">
-        <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_cat:MYOCEAN-DOCUMENTS"/>
-        </class>
-      </service>
-      <service name="csw-MYOCEAN-INTERMEDIATE-PRODUCTS">
-        <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_cat:MYOCEAN-INTERMEDIATE-PRODUCTS"/>
-        </class>
-      </service>
-      <service name="csw-MYOCEAN-SERVICES-AND-DATASETS">
-        <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_cat:MYOCEAN-SERVICES-AND-DATASETS"/>
-        </class>
-      </service>
-      <service name="csw-MYOCEAN-SPECIFIC-CORE">
-        <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_cat:MYOCEAN-SPECIFIC-CORE"/>
-        </class>
-      </service>
-      <service name="csw-MYOCEAN-UPSTREAM-PRODUCTS">
-        <class name=".services.main.CswDiscoveryDispatcher">
-          <param name="filter" value="+_cat:MYOCEAN-UPSTREAM-PRODUCTS"/>
-        </class>
-      </service>
-      
-    </addXML>
-  </file>
 
   <!-- Configure CSW Capabilities -->
   <!-- TODO : to be checked by ifremer for keywords mainly -->
