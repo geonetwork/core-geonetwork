@@ -390,6 +390,9 @@ INSERT INTO serviceparameters (service, name, value) VALUES (15, '_groupPublishe
 INSERT INTO services (id, name, class, description) VALUES (16, 'csw-MIMEL', '.services.main.CswDiscoveryDispatcher', '');
 INSERT INTO serviceparameters (service, name, value) VALUES (16, '_groupPublished', 'MIMEL');
 
+INSERT INTO services (id, name, class, description) VALUES (17, 'csw-MYOCEAN-ALL-PRODUCTS', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (17, '_groupPublished', 'MYOCEAN-ALL-PRODUCTS');
+
 INSERT INTO services (id, name, class, description) VALUES (18, 'csw-MYOCEAN-CORE-PRODUCTS', '.services.main.CswDiscoveryDispatcher', '');
 INSERT INTO serviceparameters (service, name, value) VALUES (18, '_groupPublished', 'MYOCEAN-CORE-PRODUCTS');
 
@@ -401,6 +404,9 @@ INSERT INTO serviceparameters (service, name, value) VALUES (20, '_groupPublishe
 
 INSERT INTO services (id, name, class, description) VALUES (21, 'csw-MYOCEAN-SERVICES-AND-DATASETS', '.services.main.CswDiscoveryDispatcher', '');
 INSERT INTO serviceparameters (service, name, value) VALUES (21, '_groupPublished', 'MYOCEAN-SERVICES-AND-DATASETS');
+
+INSERT INTO services (id, name, class, description) VALUES (22, 'csw-MYOCEAN-SPECIFIC-CORE', '.services.main.CswDiscoveryDispatcher', '');
+INSERT INTO serviceparameters (service, name, value) VALUES (22, '_groupPublished', 'MYOCEAN-SPECIFIC-CORE');
 
 INSERT INTO services (id, name, class, description) VALUES (23, 'csw-MYOCEAN-UPSTREAM-PRODUCTS', '.services.main.CswDiscoveryDispatcher', '');
 INSERT INTO serviceparameters (service, name, value) VALUES (23, '_groupPublished', 'MYOCEAN-UPSTREAM-PRODUCTS');
