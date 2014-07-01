@@ -109,6 +109,7 @@
       <field name="_docLocale" tagName="docLocale"/>
       <field name="_locale" tagName="_locale"/>
       <field name="_defaultTitle" tagName="defaultTitle"/>
+      <field name="_status" tagName="status"/>
       <field name="abstract" tagName="abstract"/>
       <field name="keyword" tagName="keyword"/>
       <field name="parentUuid" tagName="parentId"/>
