@@ -6,11 +6,13 @@ INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (22
 INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (23, 'fre', 'fees', '');
 INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (24, 'fre', 'accessConstraints', '');
 
-
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'fre','MYOCEAN-CORE-PRODUCTS');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'fre','MYOCEAN-DOCUMENTS');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'fre','MYOCEAN-SERVICES-AND-DATASETS');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (4,'fre','MYOCEAN-UPSTREAM-PRODUCTS');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'fre','MYOCEAN-ALL-PRODUCTS');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'fre','MYOCEAN-CORE-PRODUCTS');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'fre','MYOCEAN-DOCUMENTS');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (4,'fre','MYOCEAN-INTERMEDIATE-PRODUCTS');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (5,'fre','MYOCEAN-SERVICES-AND-DATASETS');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (6,'fre','MYOCEAN-SPECIFIC-CORE');
+INSERT INTO CategoriesDes (iddes, langid, label) VALUES (7,'fre','MYOCEAN-UPSTREAM-PRODUCTS');
 
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (-1,'fre','Invité');
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (0,'fre','Intranet');
