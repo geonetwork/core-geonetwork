@@ -52,7 +52,7 @@ cat.what = function() {
                             configlistThesaurus[0] &&
                             configlistThesaurus[0].value;
 
-			// optionnaly configwhat define some elements to remove using -GROUPNAME flag for non identified users
+			// optionnally configwhat defines some elements to remove using -GROUPNAME flag for non identified users
 			if(configwhatInput && configwhatInput[0] && configwhatInput[0].value) {
 			    configwhat = configwhatInput[0].value;
 			    var data = configwhat.split(',');
@@ -297,6 +297,7 @@ cat.what = function() {
 
       var sep1 = createSep();
       var sep2 = createSep();
+      var sep3 = createSep();
 
       // reload each categoryTree store
       // depending on selected catalogs
@@ -341,12 +342,61 @@ cat.what = function() {
         id: 'E_type',
         value: 'dataset or series or publication or nonGeographicDataset or feature or featureCatalog'
       });
+      
+      var downloadHiddenField = new Ext.form.Hidden({ name: 'E_operation' });
+      var dldlHiddenField = new Ext.form.Hidden({ name: 'E_download' });
+      var dynamicHiddenField = new Ext.form.Hidden({ name: 'E_operation' });
+      var dydyHiddenField = new Ext.form.Hidden({ name: 'E_dynamic' });
+      
+      var downloadCb = new Ext.form.Checkbox({
+          name: 'download',
+          id: 'download',
+          fieldLabel: OpenLayers.i18n('result-list-download'),
+          value: false,
+          listeners: {
+        	  check: function(that, checked) {
+        		  if (checked) {
+        			  downloadHiddenField.setValue("download");
+        			  dldlHiddenField.setValue("true");
+        		  } else {
+        			  downloadHiddenField.setValue("");
+        			  dldlHiddenField.setValue("");
+        		  }
+        	  }
+          }
+        });
+      
+      var dynamicCb = new Ext.form.Checkbox({
+          name: 'dynamic',
+          id: 'dynamic',
+          fieldLabel: OpenLayers.i18n('result-list-view'),
+          value: false,
+          listeners: {
+        	  check: function(that, checked) {
+        		  if (checked) {
+        			  dynamicHiddenField.setValue("dynamic");
+        			  dydyHiddenField.setValue("true");
+        		  } else {
+        			  dynamicHiddenField.setValue("");
+        			  dydyHiddenField.setValue("");
+        		  }
+        	  }
+          }
+        });
+      
+   
+      
       advancedFields.push(radioGroup, catalogueField);
       Ext.each(thesaurusFields, function (item) {
         advancedFields.push(item);
       });
+
       advancedFields.push(resourceTypeHiddenField);
-      var items = [searchField, sep1, catalogueField, sep2, radioGroup];
+      var items = [ searchField, sep1, catalogueField, sep2, radioGroup, sep3,
+                   downloadCb, dynamicCb, downloadHiddenField, dynamicHiddenField, dldlHiddenField, dydyHiddenField, sep3 ];
+      
+      
+      
       Ext.each(thesaurusFields, function(f) {
         items.push(f);
       });
