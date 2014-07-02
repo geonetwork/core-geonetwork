@@ -469,7 +469,7 @@ GeoNetwork.HTML5UI.Templates.FULL = new Ext.XTemplate(
                 </p>',    // FIXME : 250 as parameters
                 GeoNetwork.HTML5UI.Templates.SUBJECT,
 								'<p class="abstract">\
-								<tpl if="this.isIdentified()">\
+								<tpl if="this.isIdentified() && !(this.statusUnknown(values.status))">\
 									<b>Status:</b> {[this.getStatusText(values.status)]} <i class="status {[this.getStatusText(values.status)]} {[this.getStatusStyle(values.status)]}"></i>\
 								</tpl>\
 								</p>',
@@ -523,6 +523,9 @@ GeoNetwork.HTML5UI.Templates.FULL = new Ext.XTemplate(
 				},
 				isIdentified: function() {
 						return catalogue.isIdentified();
+				},
+				statusUnknown: function(value) {
+						return (this.getStatusText(value) === 'Unknown');
 				},
 				getStatusText: function(value) {
 						if (!(value instanceof Array)) return this.StatusValues[0].text;
