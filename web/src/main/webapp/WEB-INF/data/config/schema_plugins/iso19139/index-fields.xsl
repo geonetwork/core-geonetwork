@@ -572,11 +572,13 @@
 					<Field name="mimetype" string="{$mimetype}" store="true" index="true"/>
 				</xsl:if>
 			  
-				<xsl:if test="contains($protocol, 'WWW:DOWNLOAD')">
+				<xsl:if test="contains($protocol, 'WWW:DOWNLOAD') or contains($protocol, 'DB') 
+				 or contains($protocol, 'FILE')  or contains($protocol, 'WFS')  or contains($protocol, 'WCS')  or contains($protocol, 'COPYFILE')">
 			    	<Field name="download" string="true" store="false" index="true"/>
 			  	</xsl:if>
 			  
-                <xsl:if test="contains($protocol, 'OGC:WMS') or $wmsLinkNoProtocol">
+                <xsl:if test="contains($protocol, 'OGC:WMS') or contains($protocol, 'OGC:WMC') or contains($protocol, 'OGC:OWS')
+                	or contains($protocol, 'OGC:OWS-C') or $wmsLinkNoProtocol">
 			   	 	<Field name="dynamic" string="true" store="false" index="true"/>
 			  	</xsl:if>
 
