@@ -826,7 +826,11 @@ public class DataManager {
         MetadataSchema metadataSchema = getSchema(schema);
 
         Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);;
-        int metadataId = Integer.parseInt(getMetadataId(dbms, extractUUID(metadataSchema.getName(), md)));
+        final String mdIdString = getMetadataId(dbms, extractUUID(metadataSchema.getName(), md));
+        int metadataId = -1;
+        if (mdIdString != null) {
+            metadataId = Integer.parseInt(mdIdString);
+        }
 
         // Schematron report is composed of one or more report(s)
         // for each set of rules.
