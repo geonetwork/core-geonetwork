@@ -51,17 +51,22 @@
              scope.templateAddAction = scope.templateAddAction === 'true';
 
              // Search only for contact subtemplate
-             scope.params = {
-               // TODO : sThis could use gnElementsMap to get the
-               // element name and if not available default to tagName.
-               _root: scope.tagName || 'gmd:CI_ResponsibleParty',
+             scope.subtemplateFilter = {
                _isTemplate: 's',
-               fast: 'false'
+               any: '',
+               _root: 'gmd:CI_ResponsibleParty',
+               sortBy: 'title',
+               sortOrder: 'reverse',
+               resultType: 'subtemplates'
              };
 
              scope.snippet = null;
              scope.snippetRef = gnEditor.
              buildXMLFieldName(scope.elementRef, scope.elementName);
+
+             scope.getEntries = function() {
+               scope.$broadcast('resetSearch', scope.subtemplateFilter);
+             };
 
              scope.add = function() {
                gnEditor.add(gnCurrentEdit.id,

@@ -10,7 +10,9 @@
           <a href="" class="list-group-item"
             data-ng-repeat="u in users | filter:userSearch | orderBy:'name'"
             data-ng-class="u.id === userSelected.id ? 'active' : ''" data-ng-click="selectUser(u)">
-            <img class="img-circle" ng-src="http://gravatar.com/avatar/{{u.email | md5}}?s=18"/> {{u.name}} {{u.surname}} </a>
+            <img class="img-circle" ng-src="http://gravatar.com/avatar/{{u.email | md5}}?s=18"/>
+            {{u.name}} {{u.surname}} ({{u.profile | translate}})
+          </a>
         </div>
 
 
@@ -30,19 +32,23 @@
         <span data-ng-hide="userSelected.id == ''" data-translate="">updateUser</span>
         <span data-ng-hide="userSelected.id != ''" data-translate="">newUser</span>
         <strong>{{userSelected.name}} {{userSelected.surname}}</strong>
+        ({{userSelected.profile | translate}})
         <div class="btn-toolbar">
-          <button type="button" class="btn btn-default pull-right"
+          <button type="button" class="btn btn-default pull-right fa fa-lock"
             data-ng-hide="user.profile != 'Administrator'"
-            data-ng-click="resetPassword(userSelected.id)"><i class="fa fa-lock"></i>&nbsp;<span data-translate=""
-            >resetPassword</button>
-          <button type="button" class="btn btn-primary pull-right"
+            data-ng-click="resetPassword(userSelected.id)">
+            <span data-translate=""
+            >resetPassword</span></button>
+          <button type="button" class="btn btn-primary pull-right fa fa-save"
             data-ng-disabled="!gnUserEdit.$valid && !gnUserEdit.dirty"
-            data-ng-click="saveUser('#gn-user-edit')" id="gn-btn-user-save"><i class="fa fa-save"></i>&nbsp;<span data-translate=""
-            >saveUser</button>
-          <button type="button" class="btn btn-primary pull-right btn-danger"
+            data-ng-click="saveUser('#gn-user-edit')" id="gn-btn-user-save">
+            <span data-translate=""
+            >saveUser</span></button>
+          <button type="button" class="btn pull-right btn-danger fa fa-trash-o"
             data-ng-disabled="searchResults.count > 0" data-ng-hide="userSelected.id == ''"
-            data-ng-click="deleteUser(userSelected.id)" id="gn-btn-user-delete"><i class="fa fa-trash-o"></i>&nbsp;<span data-translate=""
-            >deleteUser</button>
+            data-ng-click="deleteUser(userSelected.id)" id="gn-btn-user-delete">
+            <span data-translate=""
+            >deleteUser</span></button>
         </div>
       </div>
       <div class="panel-body">
@@ -177,12 +183,13 @@
               <input type="hidden" name="profile" data-ng-model="userSelected.profile"
                 value="{{userSelected.profile}}"/>
               <label>
-                <input type="checkbox" data-ng-model="userIsAdmin"
-                  data-ng-click="setUserProfile(true)"/>
+                <input type="checkbox"
+                       data-ng-checked="userSelected.profile == 'Administrator'"
+                       data-ng-click="setUserProfile(true)"/>
                 <span data-translate="">isAdministrator</span>
               </label>
 
-              <div data-ng-hide="userIsAdmin || groups === null">
+              <div data-ng-hide="userSelected.profile == 'Administrator'">
                 <h3 data-translate="">RegisteredUser</h3>
                 <select multiple="multiple" id="groups_RegisteredUser" name="groups_RegisteredUser"
                   class="form-control" data-ng-click="setUserProfile()">
