@@ -6,16 +6,6 @@ INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (2,
 INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (3, 'eng', 'fees', '');
 INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (4, 'eng', 'accessConstraints', '');
 
-/*
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'eng','MYOCEAN-ALL-PRODUCTS');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'eng','MYOCEAN-CORE-PRODUCTS');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'eng','MYOCEAN-DOCUMENTS');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (4,'eng','MYOCEAN-INTERMEDIATE-PRODUCTS');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (5,'eng','MYOCEAN-SERVICES-AND-DATASETS');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (6,'eng','MYOCEAN-SPECIFIC-CORE');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (7,'eng','MYOCEAN-UPSTREAM-PRODUCTS');
-*/
-
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (-1,'eng','Guest');
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (0,'eng','Intranet');
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (1,'eng','All');

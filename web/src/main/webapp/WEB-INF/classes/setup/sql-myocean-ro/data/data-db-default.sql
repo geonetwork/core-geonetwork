@@ -1,16 +1,4 @@
 -- ======================================================================
--- === Table: Categories
--- ======================================================================
-/*
-INSERT INTO Categories (id, name) VALUES (1,'MYOCEAN-ALL-PRODUCTS');
-INSERT INTO Categories (id, name) VALUES (2,'MYOCEAN-CORE-PRODUCTS');
-INSERT INTO Categories (id, name) VALUES (3,'MYOCEAN-DOCUMENTS');
-INSERT INTO Categories (id, name) VALUES (4,'MYOCEAN-INTERMEDIATE-PRODUCTS');
-INSERT INTO Categories (id, name) VALUES (5,'MYOCEAN-SERVICES-AND-DATASETS');
-INSERT INTO Categories (id, name) VALUES (6,'MYOCEAN-SPECIFIC-CORE');
-INSERT INTO Categories (id, name) VALUES (7,'MYOCEAN-UPSTREAM-PRODUCTS');
-*/
--- ======================================================================
 -- === Table: Groups
 -- ======================================================================
 
@@ -689,11 +677,6 @@ INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3002, 3000, 'o
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3003, 1244, 'group', '101');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3004, 3003, 'operation', '0');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3005, 3003, 'operation', '5');
-/*
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1245, 966, 'categories', '');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1246, 1245, 'category', '1');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1247, 1245, 'category', '2');
-*/
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1248, 1228, 'host', 'http://sextant.ifremer.fr/geonetwork/');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1249, 1228, 'createRemoteCategory', 'false');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1250, 1228, 'mefFormatFull', 'false');
@@ -732,10 +715,6 @@ INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2005, 2003, 'o
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3020, 1263, 'group', '102');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3021, 3020, 'operation', '0');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3022, 3020, 'operation', '5');
-/*
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1283, 1041, 'categories', '');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1284, 1283, 'category', '3');
-*/
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1285, 1266, 'host', 'http://sextant.ifremer.fr/geonetwork/');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1286, 1266, 'createRemoteCategory', 'false');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1287, 1266, 'mefFormatFull', 'false');
@@ -777,11 +756,6 @@ INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3042, 3040, 'o
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3043, 1319, 'group', '103');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3044, 3043, 'operation', '0');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3045, 3043, 'operation', '5');
-/*
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1320, 1116, 'categories', '');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1321, 1320, 'category', '1');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1322, 1320, 'category', '4');
-*/
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1323, 1303, 'host', 'http://sextant.ifremer.fr/geonetwork/');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1324, 1303, 'createRemoteCategory', 'false');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1325, 1303, 'mefFormatFull', 'false');
@@ -823,11 +797,6 @@ INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3062, 3060, 'o
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3063, 1357, 'group', '106');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3064, 3063, 'operation', '0');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3065, 3063, 'operation', '5');
-/*
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1358, 1117, 'categories', '');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1359, 1358, 'category', '1');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1360, 1358, 'category', '7');
-*/
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1361, 1341, 'host', 'http://sextant.ifremer.fr/geonetwork/');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1362, 1341, 'createRemoteCategory', 'false');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1363, 1341, 'mefFormatFull', 'false');
