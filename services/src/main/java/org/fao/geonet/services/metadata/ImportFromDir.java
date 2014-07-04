@@ -98,7 +98,9 @@ public class ImportFromDir extends NotInReadOnlyModeService {
         private boolean checkFile(String name) {
             if (name.equals(CONFIG_FILE))
                 return false;
-            if (name.toLowerCase().endsWith(".xml") || name.toLowerCase().endsWith(".mef"))
+            if (name.toLowerCase().endsWith(".xml") ||
+                    name.toLowerCase().endsWith(".mef") ||
+                    name.toLowerCase().endsWith(".zip"))
                 return true;
             else
                 return false;

@@ -45,7 +45,12 @@
             <documentation>Get the list of users in the catalog.</documentation>
             <class name=".services.user.List" />
         </service>
-        
+
+        <service name="admin.user">
+          <documentation>Get the user information.</documentation>
+          <class name=".services.user.Get" />
+        </service>
+
         <service name="admin.usergroups.list">
             <documentation>The service can be used to
                 retrieve the list of groups for a user.</documentation>
