@@ -225,8 +225,19 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         boolean ufo = false;
         boolean index = false;
         String language = context.getLanguage();
-        final Metadata metadata = dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, new ISODate().toString(),
-                false);
+
+        String changeDate = null;
+        try {
+            String schema = dataMan.autodetectSchema(xml);
+            changeDate = dataMan.extractDateModified(schema, xml);
+        } catch (Exception ex) {
+            log.error("ArcSDEHarverter - updateMetadata - can't get metadata modified date for metadata id= " + id +
+                    ", using current date for modified date");
+            changeDate = new ISODate().toString();
+        }
+
+        final Metadata metadata = dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate,
+                true);
 
         OperationAllowedRepository operationAllowedRepository = context.getBean(OperationAllowedRepository.class);
         operationAllowedRepository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
@@ -255,9 +266,19 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         // insert metadata
         //
         String source = params.uuid;
-        String createDate = new ISODate().toString();
+        String createDate = null;
+        try {
+            createDate = dataMan.extractDateModified(schema, xml);
+        } catch (Exception ex) {
+            log.error("ArcSDEHarverter - addMetadata - can't get metadata modified date for metadata with uuid= " +
+                    uuid + ", using current date for modified date");
+            createDate = new ISODate().toString();
+        }
+
         String docType = null, title = null, isTemplate = null, group = null, category = null;
         boolean ufo = false, indexImmediate = false;
+
+
         String id = dataMan.insertMetadata(context, schema, xml, uuid, Integer.parseInt(params.ownerId), group, source,
                          isTemplate, docType, category, createDate, createDate, ufo, indexImmediate);
 
