@@ -59,7 +59,14 @@ GeoNetwork.data.GroupStore = function(url){
         var i;
         var label = record.getElementsByTagName('label');
         if (label.length === 1) {
-            var children = label[0].childNodes;
+          var children = label[0].childNodes;
+          if (children.length === 0) {
+            label = catalogue.getNodeText(record.getElementsByTagName('name')[0]);
+            if (console.log) {
+              console.log('No translation defined for group with name ' + label);
+              console.log(record);
+            }
+          } else {
             var child;
             for (i = 0, len = children.length; i < len; ++i) {
                 child = children[i];
@@ -67,6 +74,7 @@ GeoNetwork.data.GroupStore = function(url){
                     label = child.firstChild.nodeValue;
                 }
             }
+          }
         }
         return label;
     }

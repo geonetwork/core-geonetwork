@@ -657,7 +657,7 @@ cat.app = function() {
       app.userGroupStore.load();
       app.getGroupLabel = function (groupId) {
         var idx = app.userGroupStore.findExact('id', groupId);
-        if (idx) {
+        if (idx !== -1) {
           var record = app.userGroupStore.getAt(idx);
           if (record) {
             return app.userGroupStore.getAt(idx).get('labelInLang');
