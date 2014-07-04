@@ -1,16 +1,3 @@
-
--- ======================================================================
--- === Table: Categories
--- ======================================================================
-
-INSERT INTO Categories (id, name) VALUES (1,'MYOCEAN-ALL-PRODUCTS');
-INSERT INTO Categories (id, name) VALUES (2,'MYOCEAN-CORE-PRODUCTS');
-INSERT INTO Categories (id, name) VALUES (3,'MYOCEAN-DOCUMENTS');
-INSERT INTO Categories (id, name) VALUES (4,'MYOCEAN-INTERMEDIATE-PRODUCTS');
-INSERT INTO Categories (id, name) VALUES (5,'MYOCEAN-SERVICES-AND-DATASETS');
-INSERT INTO Categories (id, name) VALUES (6,'MYOCEAN-SPECIFIC-CORE');
-INSERT INTO Categories (id, name) VALUES (7,'MYOCEAN-UPSTREAM-PRODUCTS');
-
 -- ======================================================================
 -- === Table: Groups
 -- ======================================================================
@@ -19,6 +6,15 @@ INSERT INTO Groups (id, name, description, email, referrer) VALUES (-1,'GUEST','
 INSERT INTO Groups (id, name, description, email, referrer) VALUES (0,'intranet',NULL,NULL,NULL);
 INSERT INTO Groups (id, name, description, email, referrer) VALUES (1,'all',NULL,NULL,NULL);
 INSERT INTO Groups (id, name, description, email, referrer) VALUES (2,'sample',NULL,NULL,NULL);
+
+INSERT INTO Groups (id, name, description, email, referrer) VALUES (100,'MYOCEAN-ALL-PRODUCTS',NULL,NULL,NULL);
+INSERT INTO Groups (id, name, description, email, referrer) VALUES (101,'MYOCEAN-CORE-PRODUCTS',NULL,NULL,NULL);
+INSERT INTO Groups (id, name, description, email, referrer) VALUES (102,'MYOCEAN-DOCUMENTS',NULL,NULL,NULL);
+INSERT INTO Groups (id, name, description, email, referrer) VALUES (103,'MYOCEAN-INTERMEDIATE-PRODUCTS',NULL,NULL,NULL);
+INSERT INTO Groups (id, name, description, email, referrer) VALUES (104,'MYOCEAN-SERVICES-AND-DATASETS',NULL,NULL,NULL);
+INSERT INTO Groups (id, name, description, email, referrer) VALUES (105,'MYOCEAN-SPECIFIC-CORE',NULL,NULL,NULL);
+INSERT INTO Groups (id, name, description, email, referrer) VALUES (106,'MYOCEAN-UPSTREAM-PRODUCTS',NULL,NULL,NULL);
+
 
 -- ======================================================================
 -- === Table: IsoLanguages
@@ -675,9 +671,12 @@ INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1244, 966, 'pr
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2000, 1244, 'group', '1');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2001, 2000, 'operation', '0');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2002, 2000, 'operation', '5');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1245, 966, 'categories', '');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1246, 1245, 'category', '1');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1247, 1245, 'category', '2');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3000, 1244, 'group', '100');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3001, 3000, 'operation', '0');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3002, 3000, 'operation', '5');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3003, 1244, 'group', '101');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3004, 3003, 'operation', '0');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3005, 3003, 'operation', '5');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1248, 1228, 'host', 'http://sextant.ifremer.fr/geonetwork/');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1249, 1228, 'createRemoteCategory', 'false');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1250, 1228, 'mefFormatFull', 'false');
@@ -713,8 +712,9 @@ INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1263, 1041, 'p
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2003, 1263, 'group', '1');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2004, 2003, 'operation', '0');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2005, 2003, 'operation', '5');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1283, 1041, 'categories', '');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1284, 1283, 'category', '3');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3020, 1263, 'group', '102');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3021, 3020, 'operation', '0');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3022, 3020, 'operation', '5');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1285, 1266, 'host', 'http://sextant.ifremer.fr/geonetwork/');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1286, 1266, 'createRemoteCategory', 'false');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1287, 1266, 'mefFormatFull', 'false');
@@ -747,9 +747,15 @@ INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1316, 1306, 'v
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1317, 1305, 'lastRun', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1318, 1303, 'owner', '1');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1319, 1116, 'privileges', '');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1320, 1116, 'categories', '');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1321, 1320, 'category', '1');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1322, 1320, 'category', '4');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2006, 1319, 'group', '1');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2007, 2006, 'operation', '0');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2008, 2006, 'operation', '5');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3040, 1319, 'group', '100');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3041, 3040, 'operation', '0');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3042, 3040, 'operation', '5');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3043, 1319, 'group', '103');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3044, 3043, 'operation', '0');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3045, 3043, 'operation', '5');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1323, 1303, 'host', 'http://sextant.ifremer.fr/geonetwork/');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1324, 1303, 'createRemoteCategory', 'false');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1325, 1303, 'mefFormatFull', 'false');
@@ -765,10 +771,6 @@ INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1334, 1327, 's
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1335, 1327, 'sourceName', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1336, 1327, 'anyField', '_groupPublished');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1337, 1327, 'anyValue', 'MYOCEAN-INTERMEDIATE-PRODUCTS');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1338, 1116, 'privileges', '');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2006, 1338, 'group', '1');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2007, 2006, 'operation', '0');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2008, 2006, 'operation', '5');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1341, 1117, 'site', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1342, 1117, 'options', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1343, 1117, 'info', '');
@@ -786,9 +788,15 @@ INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1354, 1344, 'v
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1355, 1303, 'lastRun', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1356, 1341, 'owner', '1');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1357, 1117, 'privileges', '');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1358, 1117, 'categories', '');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1359, 1358, 'category', '1');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1360, 1358, 'category', '7');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2009, 1357, 'group', '1');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2010, 2009, 'operation', '0');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2011, 2009, 'operation', '5');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3060, 1357, 'group', '100');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3061, 3060, 'operation', '0');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3062, 3060, 'operation', '5');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3063, 1357, 'group', '106');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3064, 3063, 'operation', '0');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (3065, 3063, 'operation', '5');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1361, 1341, 'host', 'http://sextant.ifremer.fr/geonetwork/');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1362, 1341, 'createRemoteCategory', 'false');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1363, 1341, 'mefFormatFull', 'false');
@@ -804,10 +812,7 @@ INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1372, 1365, 's
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1373, 1365, 'sourceName', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1374, 1365, 'anyField', '_groupPublished');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1375, 1365, 'anyValue', 'MYOCEAN-UPSTREAM-PRODUCTS');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1376, 1117, 'privileges', '');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2009, 1376, 'group', '1');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2010, 2009, 'operation', '0');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2011, 2009, 'operation', '5');
+
 
 -- ======================================================================
 -- === Table: Users
@@ -826,22 +831,22 @@ delete from serviceparameters;
 delete from services;
 
 INSERT INTO services (id, name, class, description) VALUES (1, 'csw-MYOCEAN-ALL-PRODUCTS', '.services.main.CswDiscoveryDispatcher', '');
-INSERT INTO serviceparameters (service, name, value) VALUES (1, '_cat', 'MYOCEAN-ALL-PRODUCTS');
+INSERT INTO serviceparameters (service, name, value) VALUES (1, '_groupPublished', 'MYOCEAN-ALL-PRODUCTS');
 
 INSERT INTO services (id, name, class, description) VALUES (2, 'csw-MYOCEAN-CORE-PRODUCTS', '.services.main.CswDiscoveryDispatcher', '');
-INSERT INTO serviceparameters (service, name, value) VALUES (2, '_cat', 'MYOCEAN-CORE-PRODUCTS');
+INSERT INTO serviceparameters (service, name, value) VALUES (2, '_groupPublished', 'MYOCEAN-CORE-PRODUCTS');
 
 INSERT INTO services (id, name, class, description) VALUES (3, 'csw-MYOCEAN-DOCUMENTS', '.services.main.CswDiscoveryDispatcher', '');
-INSERT INTO serviceparameters (service, name, value) VALUES (3, '_cat', 'MYOCEAN-DOCUMENTS');
+INSERT INTO serviceparameters (service, name, value) VALUES (3, '_groupPublished', 'MYOCEAN-DOCUMENTS');
 
 INSERT INTO services (id, name, class, description) VALUES (4, 'csw-MYOCEAN-INTERMEDIATE-PRODUCTS', '.services.main.CswDiscoveryDispatcher', '');
-INSERT INTO serviceparameters (service, name, value) VALUES (4, '_cat', 'MYOCEAN-INTERMEDIATE-PRODUCTS');
+INSERT INTO serviceparameters (service, name, value) VALUES (4, '_groupPublished', 'MYOCEAN-INTERMEDIATE-PRODUCTS');
 
 INSERT INTO services (id, name, class, description) VALUES (5, 'csw-MYOCEAN-SERVICES-AND-DATASETS', '.services.main.CswDiscoveryDispatcher', '');
-INSERT INTO serviceparameters (service, name, value) VALUES (5, '_cat', 'MYOCEAN-SERVICES-AND-DATASETS');
+INSERT INTO serviceparameters (service, name, value) VALUES (5, '_groupPublished', 'MYOCEAN-SERVICES-AND-DATASETS');
 
 INSERT INTO services (id, name, class, description) VALUES (6, 'csw-MYOCEAN-SPECIFIC-CORE', '.services.main.CswDiscoveryDispatcher', '');
-INSERT INTO serviceparameters (service, name, value) VALUES (6, '_cat', 'MYOCEAN-SPECIFIC-CORE');
+INSERT INTO serviceparameters (service, name, value) VALUES (6, '_groupPublished', 'MYOCEAN-SPECIFIC-CORE');
 
 INSERT INTO services (id, name, class, description) VALUES (7, 'csw-MYOCEAN-UPSTREAM-PRODUCTS', '.services.main.CswDiscoveryDispatcher', '');
-INSERT INTO serviceparameters (service, name, value) VALUES (7, '_cat', 'MYOCEAN-UPSTREAM-PRODUCTS');
+INSERT INTO serviceparameters (service, name, value) VALUES (7, '_groupPublished', 'MYOCEAN-UPSTREAM-PRODUCTS');
