@@ -5,7 +5,7 @@ INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (21
 INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (22, 'fre', 'abstract', '');
 INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (23, 'fre', 'fees', '');
 INSERT INTO CswServerCapabilitiesInfo (idfield, langid, field, label) VALUES (24, 'fre', 'accessConstraints', '');
-
+/*
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'fre','MYOCEAN-ALL-PRODUCTS');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'fre','MYOCEAN-CORE-PRODUCTS');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'fre','MYOCEAN-DOCUMENTS');
@@ -13,11 +13,18 @@ INSERT INTO CategoriesDes (iddes, langid, label) VALUES (4,'fre','MYOCEAN-INTERM
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (5,'fre','MYOCEAN-SERVICES-AND-DATASETS');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (6,'fre','MYOCEAN-SPECIFIC-CORE');
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (7,'fre','MYOCEAN-UPSTREAM-PRODUCTS');
-
+*/
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (-1,'fre','Invité');
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (0,'fre','Intranet');
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (1,'fre','Tous');
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (2,'fre','Groupe exemple');
+INSERT INTO Groupsdes (iddes, langid, label) VALUES (100,'fre','MYOCEAN-ALL-PRODUCTS');
+INSERT INTO Groupsdes (iddes, langid, label) VALUES (101,'fre','MYOCEAN-CORE-PRODUCTS');
+INSERT INTO Groupsdes (iddes, langid, label) VALUES (102,'fre','MYOCEAN-DOCUMENTS');
+INSERT INTO Groupsdes (iddes, langid, label) VALUES (103,'fre','MYOCEAN-INTERMEDIATE-PRODUCTS');
+INSERT INTO Groupsdes (iddes, langid, label) VALUES (104,'fre','MYOCEAN-SERVICES-AND-DATASETS');
+INSERT INTO Groupsdes (iddes, langid, label) VALUES (105,'fre','MYOCEAN-SPECIFIC-CORE');
+INSERT INTO Groupsdes (iddes, langid, label) VALUES (106,'fre','MYOCEAN-UPSTREAM-PRODUCTS');
 
 INSERT INTO IsoLanguagesDes (iddes, langid, label) VALUES (1,'fre','Afar');
 INSERT INTO IsoLanguagesDes (iddes, langid, label) VALUES (2,'fre','Abkhaze');
