@@ -230,6 +230,10 @@ function updateIcon()
 //=== Search methods
 //=====================================================================================
 
+/**
+ * Old fixed fixed search criteria filters. Not used, now the search criteria fields
+ * are retrieved from the remote server queryables. See https://trac.osgeo.org/geonetwork/ticket/1259
+ */
 function addEmptySearchOld()
 {
 		var doc    = Sarissa.getDomDocument();	
@@ -312,15 +316,18 @@ function addSearchCap(search)
 	
 	//--- add the new search in list
 	new Insertion.Bottom('csw.searches', html);
-	
 
-	
+  // Only 1 search section is supported
+  Element.hide("csw.addSearch");
 }
 
 //=====================================================================================
 
 function addEditCap(search)
 {
+  // Settings return an empty search element if no searches defined, ignore in this case
+  if (search.childElementCount == 0) return;
+
 	var id = ''+ currSearchId++;
 	search.setAttribute('id', id);
 	
@@ -330,9 +337,9 @@ function addEditCap(search)
 	
 	//--- add the new search in list
 	new Insertion.Bottom('csw.searches', html);
-	
 
-	
+  // Only 1 search section is supported
+  Element.hide("csw.addSearch");
 }
 
 //=====================================================================================
@@ -346,6 +353,11 @@ function addSearchTemp(searchtmp)
 
 //=====================================================================================
 
+
+/**
+ * Old fixed fixed search criteria filters. Not used, now the search criteria fields
+ * are retrieved from the remote server queryables. See https://trac.osgeo.org/geonetwork/ticket/1259
+ */
 function addSearch(search)
 {
 	var id = ''+ currSearchId++;
@@ -376,6 +388,9 @@ function removeSearch(id)
 {
 	valid.removeByParent(id);
 	Element.remove(id);
+
+  // Only 1 search section is supported, if no search panel, show the Add button
+  Element.show("csw.addSearch");
 }
 
 //=====================================================================================
@@ -383,7 +398,10 @@ function removeSearch(id)
 function removeAllSearch()
 {
 	$('csw.searches').innerHTML = '';
-	valid.removeByParent();	
+	valid.removeByParent();
+
+  // Only 1 search section is supported, if no search panel, show the Add button
+  Element.show("csw.addSearch");
 }
 
 //=====================================================================================
