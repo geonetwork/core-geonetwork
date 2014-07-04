@@ -61,7 +61,7 @@ cat.list = function() {
       '<tpl if="catalogue.canSetInternalPrivileges() && editableForGroup != \'\'">',
       '<br/><span class="gn-group-list">',
       OpenLayers.i18n('result-list-groups'),
-      '&nbsp;<tpl for="editableForGroup">{.}{[xindex==xcount?"":","]}</tpl>',
+      '&nbsp;<tpl for="editableForGroup">{.}{[xindex==xcount?"":", "]}</tpl>',
       '</span>',
       '</tpl>',
 			'</div>',
