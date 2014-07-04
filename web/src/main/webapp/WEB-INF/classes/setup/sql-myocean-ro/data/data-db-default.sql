@@ -672,6 +672,9 @@ INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1241, 1231, 'v
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1242, 1230, 'lastRun', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1243, 1228, 'owner', '1');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1244, 966, 'privileges', '');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2000, 1244, 'group', '1');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2001, 2000, 'operation', '0');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2002, 2000, 'operation', '5');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1245, 966, 'categories', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1246, 1245, 'category', '1');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1247, 1245, 'category', '2');
@@ -690,9 +693,6 @@ INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1259, 1252, 's
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1260, 1252, 'sourceName', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1261, 1252, 'anyField', '_groupPublished');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1262, 1252, 'anyValue', 'MYOCEAN-CORE-PRODUCTS');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1263, 966, 'groupCopyPolicy', '');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1264, 1263, 'name', 'INTERNET');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1265, 1263, 'policy', 'copy');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1266, 1041, 'site', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1267, 1041, 'options', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1268, 1041, 'info', '');
@@ -709,7 +709,10 @@ INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1278, 1269, 'i
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1279, 1269, 'validate', 'false');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1280, 1268, 'lastRun', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1281, 1266, 'owner', '1');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1282, 1041, 'privileges', '');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1263, 1041, 'privileges', '');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2003, 1263, 'group', '1');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2004, 2003, 'operation', '0');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2005, 2003, 'operation', '5');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1283, 1041, 'categories', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1284, 1283, 'category', '3');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1285, 1266, 'host', 'http://sextant.ifremer.fr/geonetwork/');
@@ -727,9 +730,6 @@ INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1296, 1289, 's
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1297, 1289, 'sourceName', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1298, 1289, 'anyField', '_groupPublished');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1299, 1289, 'anyValue', 'MYOCEAN-DOCUMENTS');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1300, 1041, 'groupCopyPolicy', '');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1301, 1300, 'name', 'INTERNET');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1302, 1300, 'policy', 'copy');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1303, 1116, 'site', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1304, 1116, 'options', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1305, 1116, 'info', '');
@@ -765,9 +765,10 @@ INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1334, 1327, 's
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1335, 1327, 'sourceName', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1336, 1327, 'anyField', '_groupPublished');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1337, 1327, 'anyValue', 'MYOCEAN-INTERMEDIATE-PRODUCTS');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1338, 1116, 'groupCopyPolicy', '');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1339, 1338, 'name', 'INTERNET');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1340, 1338, 'policy', 'copy');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1338, 1116, 'privileges', '');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2006, 1338, 'group', '1');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2007, 2006, 'operation', '0');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2008, 2006, 'operation', '5');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1341, 1117, 'site', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1342, 1117, 'options', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1343, 1117, 'info', '');
@@ -803,10 +804,10 @@ INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1372, 1365, 's
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1373, 1365, 'sourceName', '');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1374, 1365, 'anyField', '_groupPublished');
 INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1375, 1365, 'anyValue', 'MYOCEAN-UPSTREAM-PRODUCTS');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1376, 1117, 'groupCopyPolicy', '');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1377, 1376, 'name', 'INTERNET');
-INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1378, 1376, 'policy', 'copy');
-
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (1376, 1117, 'privileges', '');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2009, 1376, 'group', '1');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2010, 2009, 'operation', '0');
+INSERT INTO HarvesterSettings (id, parentid, name, value) VALUES (2011, 2009, 'operation', '5');
 
 -- ======================================================================
 -- === Table: Users
