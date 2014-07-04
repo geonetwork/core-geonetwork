@@ -109,22 +109,6 @@ class Harvester implements IHarvester<HarvestResult>
             errors.add(new HarvestError(t, log));
         }
 
-		if (params.isSearchEmpty()) {
-		    try {
-		        log.debug("Doing an empty search");
-		        records.addAll(search(server, Search.createEmptySearch()));
-            } catch(Exception t) {
-                log.error("Unknown error trying to harvest");
-                log.error(t.getMessage());
-                log.error(t);
-                errors.add(new HarvestError(t, log));
-		    } catch(Throwable t) {
-                log.fatal("Something unknown and terrible happened while harvesting");
-                log.fatal(t.getMessage());
-                errors.add(new HarvestError(t, log));
-            }
-	    }
-
 		log.info("Total records processed in all searches :"+ records.size());
 
 		//--- align local node
