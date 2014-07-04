@@ -27,24 +27,6 @@ INSERT INTO Groups (id, name, description, email, referrer) VALUES (104,'MYOCEAN
 INSERT INTO Groups (id, name, description, email, referrer) VALUES (105,'MYOCEAN-SPECIFIC-CORE',NULL,NULL,NULL);
 INSERT INTO Groups (id, name, description, email, referrer) VALUES (106,'MYOCEAN-UPSTREAM-PRODUCTS',NULL,NULL,NULL);
 
--- ======================================================================
--- === Table: Groupsdes
--- ======================================================================
-
-INSERT INTO Groupsdes (iddes, label, langid) VALUES (100,'MYOCEAN-ALL-PRODUCTS','fre');
-INSERT INTO Groupsdes (iddes, label, langid) VALUES (100,'MYOCEAN-ALL-PRODUCTS','eng');
-INSERT INTO Groupsdes (iddes, label, langid) VALUES (101,'MYOCEAN-CORE-PRODUCTS','fre');
-INSERT INTO Groupsdes (iddes, label, langid) VALUES (101,'MYOCEAN-CORE-PRODUCTS','eng');
-INSERT INTO Groupsdes (iddes, label, langid) VALUES (102,'MYOCEAN-DOCUMENTS','fre');
-INSERT INTO Groupsdes (iddes, label, langid) VALUES (102,'MYOCEAN-DOCUMENTS','eng');
-INSERT INTO Groupsdes (iddes, label, langid) VALUES (103,'MYOCEAN-INTERMEDIATE-PRODUCTS','fre');
-INSERT INTO Groupsdes (iddes, label, langid) VALUES (103,'MYOCEAN-INTERMEDIATE-PRODUCTS','eng');
-INSERT INTO Groupsdes (iddes, label, langid) VALUES (104,'MYOCEAN-SERVICES-AND-DATASETS','fre');
-INSERT INTO Groupsdes (iddes, label, langid) VALUES (104,'MYOCEAN-SERVICES-AND-DATASETS','eng');
-INSERT INTO Groupsdes (iddes, label, langid) VALUES (105,'MYOCEAN-SPECIFIC-CORE','fre');
-INSERT INTO Groupsdes (iddes, label, langid) VALUES (105,'MYOCEAN-SPECIFIC-CORE','eng');
-INSERT INTO Groupsdes (iddes, label, langid) VALUES (106,'MYOCEAN-UPSTREAM-PRODUCTS','fre');
-INSERT INTO Groupsdes (iddes, label, langid) VALUES (106,'MYOCEAN-UPSTREAM-PRODUCTS','eng');
 
 -- ======================================================================
 -- === Table: IsoLanguages
