@@ -449,6 +449,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         this.mdImportAction = new Ext.menu.Item({
             text: OpenLayers.i18n('importMetadata'),
             iconCls: 'importmd',
+            id: 'mdImportAction',
             handler: function(){
                 if (this.insertMetadataWindow) {
                     this.insertMetadataWindow.close();
