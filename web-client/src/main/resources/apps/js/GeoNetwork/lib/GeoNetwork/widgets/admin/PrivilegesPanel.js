@@ -224,7 +224,7 @@ GeoNetwork.admin.PrivilegesPanel = Ext.extend(Ext.grid.GridPanel, {
                     if (p) {
                       return OpenLayers.i18n(catalogue.getNodeText(p));
                     } else {
-                      return '';
+                      return catalogue.isAdmin() ? OpenLayers.i18n('Administrator') : '';
                     }
                   }
               }
@@ -295,8 +295,7 @@ GeoNetwork.admin.PrivilegesPanel = Ext.extend(Ext.grid.GridPanel, {
                 columns.push({
                   header: OpenLayers.i18n('Profile'),
                   dataIndex: 'profile',
-                  width: 80,
-                  hidden: catalogue.isAdmin()
+                  width: 80
                 });
                 var cm = new Ext.grid.ColumnModel({
                     defaults: {
