@@ -347,11 +347,11 @@ cat.what = function() {
       var dldlHiddenField = new Ext.form.Hidden({ name: 'E_download' });
       var dynamicHiddenField = new Ext.form.Hidden({ name: 'E_operation' });
       var dydyHiddenField = new Ext.form.Hidden({ name: 'E_dynamic' });
-      
+
       var downloadCb = new Ext.form.Checkbox({
           name: 'download',
           id: 'download',
-          fieldLabel: OpenLayers.i18n('result-list-download'),
+          boxLabel: OpenLayers.i18n('search-dowload'),
           value: false,
           listeners: {
         	  check: function(that, checked) {
@@ -369,7 +369,7 @@ cat.what = function() {
       var dynamicCb = new Ext.form.Checkbox({
           name: 'dynamic',
           id: 'dynamic',
-          fieldLabel: OpenLayers.i18n('result-list-view'),
+          boxLabel: OpenLayers.i18n('search-view'),
           value: false,
           listeners: {
         	  check: function(that, checked) {
@@ -383,7 +383,14 @@ cat.what = function() {
         	  }
           }
         });
-      
+
+      var downloadOrViewGroup = {
+        xtype: 'checkboxgroup',
+        fieldLabel: OpenLayers.i18n('search-data'),
+        columns: 3,
+        items: [
+          dynamicCb, downloadCb
+        ]};
    
       
       advancedFields.push(radioGroup, catalogueField);
@@ -393,7 +400,8 @@ cat.what = function() {
 
       advancedFields.push(resourceTypeHiddenField);
       var items = [ searchField, sep1, catalogueField, sep2, radioGroup, sep3,
-                   downloadCb, dynamicCb, downloadHiddenField, dynamicHiddenField, dldlHiddenField, dydyHiddenField, sep3 ];
+                    downloadOrViewGroup,
+                    downloadHiddenField, dynamicHiddenField, dldlHiddenField, dydyHiddenField, sep3 ];
       
       
       
