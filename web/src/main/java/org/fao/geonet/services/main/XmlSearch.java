@@ -103,11 +103,14 @@ public class XmlSearch implements Service
 			} else {
 				
 				elData.addContent(new Element(Geonet.SearchResult.FAST).setText("true"));
-				elData.addContent(new Element("from").setText("1"));
-				// FIXME ? from and to parameter could be used but if not
-				// set, the service return the whole range of results
-				// which could be huge in non fast mode ? 
-				elData.addContent(new Element("to").setText(searcher.getSize() +""));
+				// never return more than 1000 hits - too many otherwise will blow
+				// the memory on the server for large catalogs if the searcher
+				// doesn't specify a from-to
+				if (Util.getParamText(params, "to") == null) {
+					elData.addContent(new Element("from").setText("1"));
+					String maxHits = Math.min(searcher.getSize(),1000) +"";
+					elData.addContent(new Element("to").setText(maxHits));
+				}
 		
 				Element result = searcher.present(context, elData, _config);
 				
