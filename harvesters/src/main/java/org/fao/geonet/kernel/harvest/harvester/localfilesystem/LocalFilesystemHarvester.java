@@ -177,14 +177,21 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 				else {
 					String id = dataMan.getMetadataId( uuid);
 					if (id == null)	{
-					    // For new record change date will be the time
-					    // the record was harvested
-                        String createDate = new ISODate().toString();
+					    // For new record change date will be the time of metadata xml date change or the date when
+					    // the record was harvested (if can't be obtained the metadata xml date change)
+                        String createDate = null;
                         // or the last modified date of the file
                         if (params.checkFileLastModifiedForUpdate) {
                             createDate = new ISODate(file.lastModified(), false).getDateAndTime();
-					    }
-                        
+					    } else {
+                            try {
+                                createDate = dataMan.extractDateModified(schema, xml);
+                            } catch (Exception ex) {
+                                log.error("LocalFilesystemHarvester - addMetadata - can't get metadata modified date for metadata uuid= " +
+                                        uuid + ", using current date for modified date");
+                                createDate = new ISODate().toString();
+                            }
+                        }
                         
 						log.debug("adding new metadata");
 						id = addMetadata(xml, uuid, schema, localGroups, localCateg, createDate);
@@ -198,11 +205,13 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
                             final Metadata metadata = context.getBean(MetadataRepository.class).findOne(id);
                             final ISODate modified = metadata.getDataInfo().getChangeDate();
                             Date recordDate = modified.toDate();
-                            
+
+                            String changeDate = new ISODate(file.lastModified(), false).getDateAndTime();
+
     					    log.debug(" File date is: " + fileDate.toString() + " / record date is: " + modified);
     					    if (recordDate.before(fileDate)) {
     					        log.debug("  Db record is older than file. Updating record with id: " + id);
-    					        updateMetadata(xml, id, localGroups, localCateg);
+    					        updateMetadata(xml, id, localGroups, localCateg, changeDate);
                                 result.updatedMetadata ++;
     					    } else {
     					        log.debug("  Db record is not older than last modified date of file. No need for update.");
@@ -210,7 +219,18 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
     					    }
 					    } else {
     					    log.debug("  updating existing metadata, id is: " + id);
-    						updateMetadata(xml, id, localGroups, localCateg);
+
+                            String changeDate;
+
+                            try {
+                                changeDate = dataMan.extractDateModified(schema, xml);
+                            } catch (Exception ex) {
+                                log.error("LocalFilesystemHarvester - updateMetadata - can't get metadata modified date for metadata id= " +
+                                        id + ", using current date for modified date");
+                                changeDate = new ISODate().toString();
+                            }
+
+    						updateMetadata(xml, id, localGroups, localCateg, changeDate);
     						result.updatedMetadata++;
 					    }
 					}
@@ -238,7 +258,8 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 		return result;
 	}
 
-	private void updateMetadata(Element xml, final String id, GroupMapper localGroups, final CategoryMapper localCateg) throws Exception {
+	private void updateMetadata(Element xml, final String id, GroupMapper localGroups,
+                                final CategoryMapper localCateg, String changeDate) throws Exception {
 		log.debug("  - Updating metadata with id: "+ id);
 
         //
@@ -248,8 +269,9 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         boolean ufo = false;
         boolean index = false;
         String language = context.getLanguage();
-        final Metadata metadata = dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, new ISODate().toString(),
-                false);
+
+        final Metadata metadata = dataMan.updateMetadata(context, id, xml, validate, ufo, index, language, changeDate,
+                true);
 
         OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
         repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));
