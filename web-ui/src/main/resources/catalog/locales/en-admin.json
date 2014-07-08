@@ -728,6 +728,8 @@
     "system/proxy/port": "Proxy port",
     "system/proxy/use": "Use proxy",
     "system/proxy/username": "Proxy username",
+    "system/proxy/ignorehostlist": "Ignore host list",
+    "system/proxy/ignorehostlist-help": "To bypass specific hosts enter a specific IP address or host name such as www.mydomain.com or an address range using wildcards, such as 192.168.2.*. Use | to separate the different host values.",
     "system/removedMetadata": "Removed metadata",
     "system/removedMetadata/dir": "Directory",
     "system/removedMetadata/dir-help": "Directory used to store metadata (in MEF format) when they are deleted.",

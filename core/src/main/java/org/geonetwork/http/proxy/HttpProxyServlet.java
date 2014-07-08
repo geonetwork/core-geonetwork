@@ -3,6 +3,7 @@ package org.geonetwork.http.proxy;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -14,26 +15,27 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.fao.geonet.Constants;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Log;
 
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.geonetwork.http.proxy.util.RequestUtil;
 import org.geonetwork.http.proxy.util.ServletConfigUtil;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * Http proxy for ajax calls
@@ -41,6 +43,8 @@ import org.geonetwork.http.proxy.util.ServletConfigUtil;
  * @author Jose Garcia
  */
 public class HttpProxyServlet extends HttpServlet {
+    protected AutowireCapableBeanFactory ctx;
+
     private static final long serialVersionUID = 1L;
 
     // Url to proxy
@@ -63,7 +67,6 @@ public class HttpProxyServlet extends HttpServlet {
     // List of valid content types for request
     private String[] validContentTypes;
 
-
     /**
      * Initializes servlet Content Types allowed and the host to use in the proxy
      *
@@ -72,7 +75,7 @@ public class HttpProxyServlet extends HttpServlet {
      */
     @Override
     public void init(ServletConfig servletConfig) throws ServletException {
-        super.init(servletConfig);
+       super.init(servletConfig);
 
         String allowedHostsValues = ServletConfigUtil.getInitParamValue(servletConfig, INIT_PARAM_ALLOWED_HOSTS);
         String validContentTypesValues = ServletConfigUtil.getInitParamValue(servletConfig, INIT_PARAM_ALLOWED_CONTENT_TYPES);
@@ -109,12 +112,6 @@ public class HttpProxyServlet extends HttpServlet {
         HttpGet httpGet = null;
 
         try {
-
-            // Get the proxy parameters
-            //TODO: Add dependency injection to set proxy config from GeoNetwork settings, using also the credentials configured
-            String proxyHost = System.getProperty("http.proxyHost");
-            String proxyPort = System.getProperty("http.proxyPort");
-
             String url = RequestUtil.getParameter(request, PARAM_URL, defaultProxyUrl);
             String host = url.split("/")[2];
             final String uri = createURI(request, url);
@@ -128,11 +125,19 @@ public class HttpProxyServlet extends HttpServlet {
             }
 
             if (url.startsWith("http://") || url.startsWith("https://")) {
-                HttpClient client = HttpClients.createDefault();
-                httpGet = new HttpGet(uri);
+                ConfigurableApplicationContext applicationContext = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext
+                        (getServletContext());
+
+                SettingManager sm = applicationContext.getBean(SettingManager.class);
+
+                final HttpClientBuilder clientBuilder = applicationContext.getBean(GeonetHttpRequestFactory.class).getDefaultHttpClientBuilder();
 
                 // Added support for proxy
-                configureProxy(httpGet, proxyHost, proxyPort);
+                Lib.net.setupProxy(sm, clientBuilder, new URL(url).getHost());
+
+                HttpClient client = clientBuilder.build();
+
+                httpGet = new HttpGet(uri);
 
                 final HttpResponse httpResponse = client.execute(httpGet);
 
@@ -206,14 +211,6 @@ public class HttpProxyServlet extends HttpServlet {
         return url;
     }
 
-    private void configureProxy(HttpRequestBase httpGet, String proxyHost, String proxyPort) {
-        if (proxyHost != null && proxyPort != null) {
-            final RequestConfig.Builder copy = RequestConfig.custom();
-            copy.setProxy(new HttpHost(proxyHost, Integer.valueOf(proxyPort)));
-            httpGet.setConfig(copy.build());
-        }
-    }
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpPost httpPost = null;
@@ -221,11 +218,6 @@ public class HttpProxyServlet extends HttpServlet {
         try {
             String url = RequestUtil.getParameter(request, PARAM_URL, defaultProxyUrl);
             String host = url.split("/")[2];
-
-            // Get the proxy parameters
-            //TODO: Add dependency injection to set proxy config from GeoNetwork settings, using also the credentials configured
-            String proxyHost = System.getProperty("http.proxyHost");
-            String proxyPort = System.getProperty("http.proxyPort");
 
             String uri = createURI(request, url);
 
@@ -239,17 +231,29 @@ public class HttpProxyServlet extends HttpServlet {
             if (url.startsWith("http://") || url.startsWith("https://")) {
                 httpPost = new HttpPost(uri );
 
+                ConfigurableApplicationContext applicationContext = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext
+                        (getServletContext());
+
+                SettingManager sm = applicationContext.getBean(SettingManager.class);
+
+                final HttpClientBuilder clientBuilder = applicationContext.getBean(GeonetHttpRequestFactory.class).getDefaultHttpClientBuilder();
+
+                // Added support for proxy
+                Lib.net.setupProxy(sm, clientBuilder, new URL(url).getHost());
+
+                HttpClient client = clientBuilder.build();
+
                 // Transfer bytes from in to out
                 PrintWriter out = response.getWriter();
                 String body = RequestUtil.inputStreamAsString(request);
 
-                configureProxy(httpPost, proxyHost, proxyPort);
+
                 final ContentType contentType1 = ContentType.create(request.getContentType(),
                         request.getCharacterEncoding());
                 StringEntity entity = new StringEntity(body, contentType1);
                 httpPost.setEntity(entity);
 
-                final CloseableHttpResponse httpResponse = HttpClients.createDefault().execute(httpPost);
+                final HttpResponse httpResponse = client.execute(httpPost);
 
                 if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                     Header contentType = httpResponse.getLastHeader(HEADER_CONTENT_TYPE);
