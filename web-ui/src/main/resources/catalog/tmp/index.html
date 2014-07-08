@@ -161,18 +161,28 @@
               <li class="list-group-item">
               <label><input type="checkbox"> ainta nret auie</label></li>
               <li class="list-group-item">
-              <label><input type="checkbox"> ainta nret auie</label></li>
+              <label><input type="checkbox"> trop long bien trop long bien trop long bien trop long ainta nret auie</label></li>
               <li class="list-group-item">
               <label><input type="checkbox"> ainta nret auie</label></li>
-              <li class="list-group-item">
-              <label><input type="checkbox"> ainta nret auie</label>
+              <li class="list-group-item group">
+              <label><span class="fa fa-plus-square-o"></span> ainta nret auie</label>
               <ul class="list-group">
                 <li class="list-group-item">
                   <label><input type="checkbox"> ainta nret auie</label></li>
                 <li class="list-group-item">
                   <label><input type="checkbox"> ainta nret auie</label></li>
-                <li class="list-group-item">
-                  <label><input type="checkbox"> ainta nret auie</label></li>
+                <li class="list-group-item group">
+                  <label><span class="fa fa-plus-square-o"></span> ainta nret auie</label>
+                  <ul class="list-group">
+                    <li class="list-group-item">
+                      <label><input type="checkbox"> ainta nret auie</label></li>
+                    <li class="list-group-item">
+                      <label><input type="checkbox"> ainta nret auie</label></li>
+                    <li class="list-group-item">
+                      <label><input type="checkbox"> ainta nret auie</label></li>
+                    <li class="list-group-item">
+                    <label><input type="checkbox"> ainta nret auie</label></li>
+                  </ul></li>
                 <li class="list-group-item">
                 <label><input type="checkbox"> ainta nret auie</label></li>
               </ul>
@@ -252,7 +262,7 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="../../bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../lib/style/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="//ol3js.org/en/master/build/ol.js"></script>
     <script>
       var map = new ol.Map({
@@ -305,6 +315,11 @@
           //$(item).toggleClass('collapsed', current.hasClass('active'));
           $(item).removeClass('active');
         });
+      });
+      $('.layerTree .list-group-item:has(label .fa)').click(function(){
+        $(this).find('.fa').first().toggleClass('fa-plus-square-o').toggleClass('fa-minus-square-o');
+        $(this).children('ul').toggle();
+        return false;
       });
     </script>
   </body>

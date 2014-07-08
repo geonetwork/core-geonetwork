@@ -1,15 +1,27 @@
 .layerTree {
-  label {
-    font-weight: normal;
-  }
-  & > .group-list > .group-list-item {
-    border: 0;
-  }
   ul ul {
     margin: 0;
-    .group-list-item {
-      border-width: 0 0 0 1px;
+    .list-group-item {
+      border-width: 1px 0 0 0;
     }
+    display: none;
+  }
+  label {
+    font-weight: normal;
+    & + ul {
+      margin-top: .8em;
+    }
+    &:hover {
+      background: #fff;
+    }
+    .fa {
+      margin-right: .1em;
+      font-size: 1.15em;
+      vertical-align: middle;
+    }
+  }
+  .list-group-item {
+    padding-right: 0;
   }
 }
 .layers, .layerTree {

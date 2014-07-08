@@ -5107,17 +5107,29 @@ body {
   margin: 0 0 .5em 0;
   display: none;
 }
+.layerTree ul ul {
+  margin: 0;
+  display: none;
+}
+.layerTree ul ul .list-group-item {
+  border-width: 1px 0 0 0;
+}
 .layerTree label {
   font-weight: normal;
 }
-.layerTree > .group-list > .group-list-item {
-  border: 0;
+.layerTree label + ul {
+  margin-top: .8em;
 }
-.layerTree ul ul {
-  margin: 0;
+.layerTree label:hover {
+  background: #fff;
 }
-.layerTree ul ul .group-list-item {
-  border-width: 0 0 0 1px;
+.layerTree label .fa {
+  margin-right: .1em;
+  font-size: 1.15em;
+  vertical-align: middle;
+}
+.layerTree .list-group-item {
+  padding-right: 0;
 }
 .layers,
 .layerTree {
@@ -5174,3 +5186,4 @@ body {
   font-weight: normal;
   color: #555555;
 }
+/*# sourceMappingURL=app.css.map */
