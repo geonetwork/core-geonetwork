@@ -5012,6 +5012,7 @@ body {
 .tools [role=tooltip] {
   position: absolute;
   clip: rect(1px, 1px, 1px, 1px);
+  right: 0;
 }
 .tools button:focus [role=tooltip],
 .tools button:hover [role=tooltip] {
