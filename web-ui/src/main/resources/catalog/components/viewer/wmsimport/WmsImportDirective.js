@@ -108,14 +108,27 @@
       scope: {
         member: '='
       },
-      template: "<li class='list-group-item'><label><input type='checkbox' data-ng-model='inmap' data-ng-change='select()'>{{member.title}}</label></li>",
+      template: "<li class='list-group-item' ng-click='toggleNode($event)'><label>" +
+            "<span class='fa fa-plus-square-o'  ng-if='isParentNode()'></span>" +
+            "<input type='checkbox' ng-if='!isParentNode()' data-ng-model='inmap' data-ng-change='select()'>" +
+          " {{member.title}}</label></li>",
       link: function (scope, element, attrs, controller) {
+        var el = element;
         if (angular.isArray(scope.member.nestedLayers)) {
           element.append("<gn-cap-tree-col class='list-group' collection='member.nestedLayers'></gn-cap-tree-col>");
           $compile(element.contents())(scope);
         }
         scope.select = function() {
           controller.addLayer(scope.member);
+        };
+        scope.toggleNode = function(evt) {
+          el.find('.fa').first().toggleClass('fa-plus-square-o').toggleClass('fa-minus-square-o');
+          el.children('ul').toggle();
+          evt.stopPropagation();
+          return false;
+        };
+        scope.isParentNode = function() {
+          return angular.isArray(scope.member.nestedLayers) && scope.member.nestedLayers.length > 0;
         }
       }
     }

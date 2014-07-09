@@ -1,11 +1,8 @@
 <div class="layerTree collapsed">
   <form role="form">
     <div class="form-group">
-      <div class="input-group dropdown">
-              <span class="input-group-addon">
-                 <i class="fa fa-globe"/>
-              </span>
-        <input class="form-control" type="text" data-toggle="dropdown" data-ng-model="url"
+      <div class="dropdown">
+        <input class="form-control input-sm" type="text" data-toggle="dropdown" data-ng-model="url"
                data-ng-change="load(url)" placeholder="{{'serviceUrl' | translate}}"/>
         <ul class="dropdown-menu" role="menu">
           <li data-ng-repeat="srv in servicesList">
