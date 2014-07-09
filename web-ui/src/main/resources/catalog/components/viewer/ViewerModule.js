@@ -28,6 +28,7 @@
   module.controller('gnViewerController',
     ['$scope', 'gnConfig', 'gnNcWms',
       function($scope, gnConfig, gnNcWms) {
+        $scope.measureObj = {};
         $scope.gnConfig = gnConfig;
         var bgLayer = new ol.layer.Tile({
           source: new ol.source.OSM()
@@ -69,7 +70,6 @@
   module.controller('toolsController',
       ['$scope', 'gnMeasure',
         function($scope, gnMeasure) {
-          $scope.measureObj = {};
           $scope.mInteraction = gnMeasure.create($scope.map, $scope.measureObj, $scope);
 
           $scope.$watch('mInteraction.active', function(value) {
@@ -107,7 +107,7 @@
       })
       .directive('goBtn', function($parse) {
         return {
-          require: ['^goBtnGroup','ngModel'],
+          require: ['?^goBtnGroup','ngModel'],
           restrict: 'A',
           //replace: true,
           scope: true,
@@ -116,7 +116,7 @@
             var ngModelGet = $parse(attrs['ngModel']);
             scope.ngModelSet = ngModelGet.assign;
 
-            buttonsCtrl.addButton(scope);
+            if(buttonsCtrl) buttonsCtrl.addButton(scope);
 
             //ui->model
             element.bind('click', function () {
@@ -128,7 +128,7 @@
 
             //model -> UI
             ngModelCtrl.$render = function () {
-              if (ngModelCtrl.$viewValue) {
+              if (buttonsCtrl && ngModelCtrl.$viewValue) {
                 buttonsCtrl.activate(scope);
               }
               element.toggleClass('active', ngModelCtrl.$viewValue);

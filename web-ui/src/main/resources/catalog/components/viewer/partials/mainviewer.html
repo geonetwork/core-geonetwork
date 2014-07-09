@@ -5,7 +5,8 @@
     <input type="search" class="form-control" placeholder="Recherche">
   </div>
 
-  <div class="tools">
+  <!--Top right buttons - Tools-->
+  <div class="tools" data-ng-controller="toolsController">
     <button class="btn btn-default" type="submit" rel="#layers">
       <span class="fa fa-tasks"></span>
       <span role="tooltip">Couches</span>
@@ -18,23 +19,13 @@
       <span class="fa fa-print"></span>
       <span role="tooltip">Impression</span>
     </button>
+    <button go-btn class="btn btn-default" type="submit" ng-model="mInteraction.active" rel="#measures">
+      <span class="fa fa-pencil"></span>
+      <span role="tooltip">Mesure</span>
+    </button>
   </div>
 
-  <div data-ng-controller="toolsController">
-    <div go-btn-group>
-      <button go-btn class="btn btn-success" ng-model="mInteraction.active" gn-measure="" gn-measure-map="map">
-        <span class="fa fa-pencil"></span>
-      </button>
-    </div>
-
-    <div class="gn-measure-text">
-      <div class="hidden-print" translate>measure_instruction</div>
-      <div>{{'distance_label' | translate}}: {{measureObj.distance | measure}}</div>
-      <div>{{'surface_label' | translate}}: {{measureObj.surface | measure:'area':['km&sup2', ' m&sup2']}}</div>
-    </div>
-  </div>
-
-
+  <!--Bottom right buttons - Navigation-->
   <div class="tools control-tools">
     <button class="btn btn-default" type="submit">
       <span class="fa fa-plus"></span>
@@ -88,7 +79,6 @@
         &times;
       </button>
       <h5>Contextes de carte</h5>
-
       <div class="btn-group">
         <button type="button" class="btn btn-default">
           <span class="fa fa-save"></span>
@@ -103,18 +93,21 @@
         ou <a href="truite">exporter au Format KML</a>
       </p>
     </div>
-
   </div>
 
+  <!--Measure Info Panel-->
   <div class="panel panel-default force-hide panel-tools" id="measures">
-
     <div class="panel-body">
       <button type="button" class="btn btn-default close">
         &times;
       </button>
       <h5>Mesures</h5>
+      <div class="gn-measure-text">
+        <div class="hidden-print" translate>measure_instruction</div>
+        <div>{{'distance_label' | translate}}: {{measureObj.distance | measure}}</div>
+        <div>{{'surface_label' | translate}}: {{measureObj.surface | measure:'area':['km&sup2', ' m&sup2']}}</div>
+      </div>
     </div>
-
   </div>
 
   <div class="panel panel-default force-hide panel-tools" id="print">
