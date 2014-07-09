@@ -6,27 +6,27 @@
   </div>
 
   <!--Top right buttons - Tools-->
-  <div class="tools" data-ng-controller="toolsController">
-    <button class="btn btn-default" type="submit" rel="#layers">
-      <span class="fa fa-tasks"></span>
-      <span role="tooltip">Couches</span>
-    </button>
-    <button class="btn btn-default" type="submit" rel="#contexts">
-      <span class="fa fa-book"></span>
-      <span role="tooltip">Contextes</span>
-    </button>
-    <button class="btn btn-default" type="submit" rel="#print">
-      <span class="fa fa-print"></span>
-      <span role="tooltip">Impression</span>
-    </button>
-    <button go-btn class="btn btn-default" type="submit" ng-model="mInteraction.active" rel="#measures">
-      <span class="fa fa-spoon"></span>
-      <span role="tooltip">Mesure</span>
-    </button>
-    <button go-btn class="btn btn-default" type="submit" rel="#draw" ng-model="drawVector.inmap">
-      <span class="fa fa-pencil"></span>
-      <span role="tooltip">Annotations</span>
-    </button>
+  <div class="tools" go-btn-group data-ng-controller="toolsController">
+      <button class="btn btn-default" ng-model="activeTools.layers" type="submit" rel="#layers" go-btn gn-viewer-toolbutton>
+        <span class="fa fa-tasks"></span>
+        <span role="tooltip">Couches</span>
+      </button>
+      <button class="btn btn-default" ng-model="activeTools.contexts" type="submit" rel="#contexts" go-btn gn-viewer-toolbutton>
+        <span class="fa fa-book"></span>
+        <span role="tooltip">Contextes</span>
+      </button>
+      <button class="btn btn-default" ng-model="activeTools.print" type="submit" rel="#print" go-btn gn-viewer-toolbutton>
+        <span class="fa fa-print"></span>
+        <span role="tooltip">Impression</span>
+      </button>
+      <button go-btn class="btn btn-default" type="submit" ng-model="mInteraction.active" rel="#measures" gn-viewer-toolbutton>
+        <span class="fa fa-spoon"></span>
+        <span role="tooltip">Mesure</span>
+      </button>
+      <button go-btn class="btn btn-default" type="submit" rel="#draw" ng-model="drawVector.inmap" gn-viewer-toolbutton>
+        <span class="fa fa-pencil"></span>
+        <span role="tooltip">Annotations</span>
+      </button>
   </div>
 
   <!--Bottom right buttons - Navigation-->
@@ -147,17 +147,6 @@
   ================================================== -->
   <!-- Placed at the end of the document so the pages load faster -->
   <script>
-    $('.tools:not(.control-tools) .btn').click(function() {
-      if ($(this).hasClass('active')) {
-        $(this).removeClass('active');
-        $($(this).attr('rel')).addClass('force-hide')
-      } else {
-        $('.btn').removeClass('active');
-        $(this).addClass('active');
-        $('.panel-tools').addClass('force-hide');
-        $($(this).attr('rel')).removeClass('force-hide')
-      }
-    });
     $('#layers .btn-group button').click(function(){
       $('#layers .btn-group button').removeClass('active');
       $(this).addClass('active');
