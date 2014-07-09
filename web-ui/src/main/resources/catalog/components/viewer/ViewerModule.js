@@ -28,7 +28,13 @@
   module.controller('gnViewerController',
     ['$scope', 'gnConfig', 'gnNcWms',
       function($scope, gnConfig, gnNcWms) {
+
+        /** Define object to receive measure info */
         $scope.measureObj = {};
+
+        /** Define vector layer used for drawing */
+        $scope.drawVector;
+
         $scope.gnConfig = gnConfig;
         var bgLayer = new ol.layer.Tile({
           source: new ol.source.OSM()

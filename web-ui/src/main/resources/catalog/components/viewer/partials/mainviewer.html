@@ -23,6 +23,10 @@
       <span class="fa fa-pencil"></span>
       <span role="tooltip">Mesure</span>
     </button>
+    <button go-btn class="btn btn-default" type="submit" rel="#draw" ng-model="drawVector.inmap">
+      <span class="fa fa-pencil"></span>
+      <span role="tooltip">Annotations</span>
+    </button>
   </div>
 
   <!--Bottom right buttons - Navigation-->
@@ -50,7 +54,6 @@
         </button>
         <h5>Couches thématiques</h5>
       </div>
-
       <div gn-layermanager="" gn-layermanager-map="map"></div>
     </div>
 
@@ -106,6 +109,18 @@
         <div class="hidden-print" translate>measure_instruction</div>
         <div>{{'distance_label' | translate}}: {{measureObj.distance | measure}}</div>
         <div>{{'surface_label' | translate}}: {{measureObj.surface | measure:'area':['km&sup2', ' m&sup2']}}</div>
+      </div>
+    </div>
+  </div>
+
+  <!--Draw Panel-->
+  <div class="panel panel-default force-hide panel-tools" id="draw">
+    <div class="panel-body">
+      <button type="button" class="btn btn-default close">
+        &times;
+      </button>
+      <h5>Annotations</h5>
+      <div class="gn-draw-text" gn-draw="" map="map" vector="drawVector">
       </div>
     </div>
   </div>
