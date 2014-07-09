@@ -384,13 +384,12 @@ cat.what = function() {
           }
         });
 
-      var downloadOrViewGroup = {
-        xtype: 'checkboxgroup',
+      var downloadOrViewGroup = new Ext.form.CheckboxGroup({
         fieldLabel: OpenLayers.i18n('search-data'),
-        columns: 3,
+        columns: 2,
         items: [
           dynamicCb, downloadCb
-        ]};
+        ]});
    
       
       advancedFields.push(radioGroup, catalogueField);
@@ -399,9 +398,7 @@ cat.what = function() {
       });
 
       advancedFields.push(resourceTypeHiddenField);
-      var items = [ searchField, sep1, catalogueField, sep2, radioGroup, sep3,
-                    downloadOrViewGroup,
-                    downloadHiddenField, dynamicHiddenField, dldlHiddenField, dydyHiddenField, sep3 ];
+      var items = [ searchField, sep1, catalogueField, sep2, radioGroup, sep3 ];
       
       
       
@@ -409,6 +406,10 @@ cat.what = function() {
         items.push(f);
       });
       items.push(resourceTypeHiddenField);
+
+      items.push(sep3, downloadHiddenField, dynamicHiddenField, dldlHiddenField, dydyHiddenField, downloadOrViewGroup, dynamicCb, downloadCb);
+      advancedFields.push(downloadHiddenField, dynamicHiddenField, dldlHiddenField, dydyHiddenField, downloadOrViewGroup, dynamicCb, downloadCb);
+      
       panel = new Ext.Panel({
         title: OpenLayers.i18n('What'),
         autoHeight: true,
