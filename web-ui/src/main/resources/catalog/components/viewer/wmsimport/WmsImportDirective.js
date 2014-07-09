@@ -27,15 +27,21 @@
       controller: function($scope){
         this.addLayer = function(getCapLayer) {
 
+          var legend;
           if (getCapLayer) {
-              var layer = getCapLayer;
-              return gnMap.addWmsToMap($scope.map, {
+            var layer = getCapLayer;
+
+            if(angular.isArray(layer.styles) && layer.styles.length > 0) {
+              legend = layer.styles[layer.styles.length-1].legend.href;
+            }
+
+            return gnMap.addWmsToMap($scope.map, {
                     LAYERS: layer.name
                   }, {
                     url: $scope.url,
                     label: layer.title,
                     attribution: layer.attribution.title,
-                    legend: layer.styles[1].legend.href,
+                    legend: legend,
                     extent: gnOwsCapabilities.getLayerExtentFromGetCap($scope.map, layer)
                   }
               );

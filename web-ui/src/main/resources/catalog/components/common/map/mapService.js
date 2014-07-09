@@ -190,6 +190,7 @@
                 visible: options.visible,
                 source: source
               });
+              // TODO : move this into layer definition (maybe into an object)
               goDecorateLayer(layer);
               layer.preview = options.preview;
               layer.label = options.label;
