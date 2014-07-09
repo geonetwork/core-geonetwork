@@ -52,12 +52,10 @@
    * Panel to load WMS capabilities service and pick layers.
    * The server list is given in global properties.
    */
-
   module.service('gnMeasure', [
     'goDecorateLayer',
     'goDecorateInteraction',
-    'gnLayerFilters',
-    function(goDecorateLayer, goDecorateInteraction, gnLayerFilters) {
+    function(goDecorateLayer, goDecorateInteraction) {
 
       var mInteraction, updateMeasuresFn, distFeature, areaFeature;
       var options = {
@@ -136,29 +134,22 @@
 
       var initInteraction = function(map) {
 
-        var deregister, deregisterFeature;
+        var deregisterFeature;
 
-        // Define the vector layer that will be displayed after
-        // the draw ends.
-        var source = new ol.source.Vector();
-        var layer = new ol.layer.Vector({
-          source: source,
-          style: options.drawStyleFunction
-        });
-        goDecorateLayer(layer);
-        layer.displayInLayerManager = false;
+        var featureOverlay = new ol.FeatureOverlay();
+        featureOverlay.setMap(map);
 
         // define the draw interaction used for measure
         mInteraction = new ol.interaction.Draw({
           type: 'Polygon',
-          source: source,
+          features: featureOverlay.getFeatures(),
           style: options.drawStyleFunction
         });
         goDecorateInteraction(mInteraction, map);
 
         mInteraction.on('drawstart',
             function(evt) {
-              layer.getSource().clear();
+              featureOverlay.getFeatures().clear();
 
               areaFeature = evt.feature;
               var firstPoint = areaFeature.getGeometry().getCoordinates()[0][0];
@@ -182,18 +173,8 @@
               distFeature.getGeometry().setCoordinates(lineCoords);
 
               updateMeasuresFn();
-              updateLayer();
-
               areaFeature.unByKey(deregisterFeature);
             }, this);
-
-
-        // Add linestring feature to vector layer
-        var updateLayer = function (isFinishOnFirstPoint) {
-          if (areaFeature) {
-            layer.getSource().addFeature(distFeature);
-          }
-        };
       }
 
       this.create = function(map, measureObj, scope) {

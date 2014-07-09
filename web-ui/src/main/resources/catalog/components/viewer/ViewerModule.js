@@ -77,21 +77,10 @@
       ['$scope', 'gnMeasure',
         function($scope, gnMeasure) {
           $scope.mInteraction = gnMeasure.create($scope.map, $scope.measureObj, $scope);
-
-          $scope.$watch('mInteraction.active', function(value) {
-/*
-            if(value) {
-              activate();
-            } else {
-              deactivate();
-            }
-*/
-          });
-
         }
       ]);
 
-          module.directive('goBtnGroup', function() {
+  module.directive('goBtnGroup', function() {
         return {
           restrict: 'A',
           controller: function($scope) {
