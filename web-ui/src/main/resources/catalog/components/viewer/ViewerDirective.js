@@ -77,14 +77,13 @@
         };
       });
 
-  module.directive('gnViewerToolbutton', [
+  module.directive('gnvToolsBtn', [
     function () {
       return {
         restrict: 'A',
         link: function (scope, element, attrs) {
           element.bind('click', function() {
             if (element.hasClass('active')) {
-              console.log('toolbutton inactive');
               element.removeClass('active');
               $(element.attr('rel')).addClass('force-hide')
             } else {
