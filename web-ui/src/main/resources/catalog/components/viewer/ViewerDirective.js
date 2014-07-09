@@ -77,8 +77,8 @@
         };
       });
 
-  module.directive('gnViewerToolbutton', ['gnHttp',
-    function (gnHttp) {
+  module.directive('gnViewerToolbutton', [
+    function () {
       return {
         restrict: 'A',
         link: function (scope, element, attrs) {
@@ -93,12 +93,30 @@
               $('.panel-tools').addClass('force-hide');
               $(element.attr('rel')).removeClass('force-hide')
             }
-
-            scope.$apply(function() {
-            });
           });
-
         }
       };
-    }])
+    }]);
+  module.directive('gnvLayermanagerBtn', ['gnHttp',
+    function (gnHttp) {
+      return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+          element.find('.btn-group button').bind('click', function() {
+            element.find('.btn-group button').removeClass('active');
+            element.addClass('active');
+            element.find('.layers').addClass('collapsed');
+            element.find('.layerTree').removeClass('collapsed');
+            element.find('.unfold').css('opacity',1);
+          });
+
+          element.find('.unfold').click(function(){
+            element.find('.btn-group button').removeClass('active');
+            element.find('.layers').removeClass('collapsed');
+            element.find('.layerTree').addClass('collapsed');
+            element.find('.unfold').css('opacity',0);
+          });
+        }
+      };
+    }]);
 })();
