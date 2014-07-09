@@ -143,41 +143,41 @@
 
   <!-- </div> -->
 
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script>
+    $('.tools:not(.control-tools) .btn').click(function() {
+      if ($(this).hasClass('active')) {
+        $(this).removeClass('active');
+        $($(this).attr('rel')).addClass('force-hide')
+      } else {
+        $('.btn').removeClass('active');
+        $(this).addClass('active');
+        $('.panel-tools').addClass('force-hide');
+        $($(this).attr('rel')).removeClass('force-hide')
+      }
+    });
+    $('#layers .btn-group button').click(function(){
+      $('#layers .btn-group button').removeClass('active');
+      $(this).addClass('active');
+      $('.layers').addClass('collapsed');
+      $('.layerTree').removeClass('collapsed');
+      $('.unfold').css('opacity',1);
+    });
+    $('.unfold').click(function(){
+      $('#layers .btn-group button').removeClass('active');
+      $('.layers').removeClass('collapsed');
+      $('.layerTree').addClass('collapsed');
+      $('.unfold').css('opacity',0);
+    });
+    $('.close').click(function(){
+      var t = $(this).parents('.panel-tools');
+      t.addClass('force-hide');
+      $('[rel=#'+t.attr('id')+']').removeClass('active');
+    });
+  </script>
 
 
 </div>
 
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script>
-  $('.tools:not(.control-tools) .btn').click(function() {
-    if ($(this).hasClass('active')) {
-      $(this).removeClass('active');
-      $($(this).attr('rel')).addClass('force-hide')
-    } else {
-      $('.btn').removeClass('active');
-      $(this).addClass('active');
-      $('.panel-tools').addClass('force-hide');
-      $($(this).attr('rel')).removeClass('force-hide')
-    }
-  });
-  $('#layers .btn-group button').click(function(){
-    $('#layers .btn-group button').removeClass('active');
-    $(this).addClass('active');
-    $('.layers').addClass('collapsed');
-    $('.layerTree').removeClass('collapsed');
-    $('.unfold').css('opacity',1);
-  });
-  $('.unfold').click(function(){
-    $('#layers .btn-group button').removeClass('active');
-    $('.layers').removeClass('collapsed');
-    $('.layerTree').addClass('collapsed');
-    $('.unfold').css('opacity',0);
-  });
-  $('.close').click(function(){
-    var t = $(this).parents('.panel-tools');
-    t.addClass('force-hide');
-    $('[rel=#'+t.attr('id')+']').removeClass('active');
-  });
-</script>

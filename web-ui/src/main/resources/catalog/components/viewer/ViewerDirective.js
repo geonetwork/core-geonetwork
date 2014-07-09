@@ -15,6 +15,7 @@
     function (gnHttp) {
       return {
         restrict: 'A',
+        replace: true,
         templateUrl: '../../catalog/components/viewer/' +
           'partials/mainviewer.html',
         link: function (scope, element, attrs) {
