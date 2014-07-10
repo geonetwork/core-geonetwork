@@ -616,7 +616,8 @@ cat.app = function() {
                         whatForm.body && whatForm.body.removeClass('hidden');
 
 
-                    Ext.getCmp('radiogroup').doLayout()
+                  Ext.getCmp('radiogroup').doLayout();
+                  Ext.getCmp('downloadOrViewGroup').doLayout();
                 });
                 cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced') && cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced').hide();
                 cpt.ownerCt.header.child('#searchFormHeaderLinksimple') && cpt.ownerCt.header.child('#searchFormHeaderLinksimple').show();

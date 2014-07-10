@@ -342,9 +342,9 @@ cat.what = function() {
         id: 'E_type',
         value: 'dataset or series or publication or nonGeographicDataset or feature or featureCatalog'
       });
-      
+
       var downloadHiddenField = new Ext.form.Hidden({ name: 'E_operation' });
-      var dldlHiddenField = new Ext.form.Hidden({ name: 'E_download' });
+      var dldlHiddenField = new Ext.form.Hidden({ name: 'E_download'});
       var dynamicHiddenField = new Ext.form.Hidden({ name: 'E_operation' });
       var dydyHiddenField = new Ext.form.Hidden({ name: 'E_dynamic' });
 
@@ -352,9 +352,16 @@ cat.what = function() {
           name: 'download',
           id: 'download',
           boxLabel: OpenLayers.i18n('search-dowload'),
-          value: false,
+          checked: cookie.get('cat.searchform.download'),
           listeners: {
+            afterrender: function(cpt) {
+              if(cpt.getValue()) {
+                downloadHiddenField.setValue("download");
+                dldlHiddenField.setValue("true");
+              }
+            },
         	  check: function(that, checked) {
+              cookie.set('cat.searchform.download', checked);
         		  if (checked) {
         			  downloadHiddenField.setValue("download");
         			  dldlHiddenField.setValue("true");
@@ -370,9 +377,16 @@ cat.what = function() {
           name: 'dynamic',
           id: 'dynamic',
           boxLabel: OpenLayers.i18n('search-view'),
-          value: false,
+          checked: cookie.get('cat.searchform.dynamic'),
           listeners: {
+            afterrender: function(cpt) {
+              if(cpt.getValue()) {
+                dynamicHiddenField.setValue("dynamic");
+                dydyHiddenField.setValue("true");
+              }
+            },
         	  check: function(that, checked) {
+              cookie.set('cat.searchform.dynamic', checked);
         		  if (checked) {
         			  dynamicHiddenField.setValue("dynamic");
         			  dydyHiddenField.setValue("true");
@@ -386,7 +400,12 @@ cat.what = function() {
 
       var downloadOrViewGroup = new Ext.form.CheckboxGroup({
         fieldLabel: OpenLayers.i18n('search-data'),
+        id: 'downloadOrViewGroup',
         columns: 2,
+        reset: function() {
+          dynamicCb.setValue(false);
+          downloadCb.setValue(false);
+        },
         items: [
           dynamicCb, downloadCb
         ]});
@@ -398,7 +417,7 @@ cat.what = function() {
       });
 
       advancedFields.push(resourceTypeHiddenField);
-      var items = [ searchField, sep1, catalogueField, sep2, radioGroup, sep3 ];
+      var items = [ searchField, sep1, catalogueField, sep2, radioGroup];
       
       
       
@@ -407,8 +426,8 @@ cat.what = function() {
       });
       items.push(resourceTypeHiddenField);
 
-      items.push(sep3, downloadHiddenField, dynamicHiddenField, dldlHiddenField, dydyHiddenField, downloadOrViewGroup, dynamicCb, downloadCb);
-      advancedFields.push(downloadHiddenField, dynamicHiddenField, dldlHiddenField, dydyHiddenField, downloadOrViewGroup, dynamicCb, downloadCb);
+      items.push(sep3, downloadHiddenField, dynamicHiddenField, dldlHiddenField, dydyHiddenField, downloadOrViewGroup);
+      advancedFields.push(downloadHiddenField, dynamicHiddenField, dldlHiddenField, dydyHiddenField, downloadOrViewGroup);
       
       panel = new Ext.Panel({
         title: OpenLayers.i18n('What'),
