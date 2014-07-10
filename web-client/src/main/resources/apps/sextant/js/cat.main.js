@@ -175,7 +175,7 @@ cat.app = function() {
     
     function edit(metadataId, create, group, child, isTemplate, schema) {
         var record = catalogue.metadataStore.getAt(catalogue.metadataStore.find('id', metadataId));
-        
+
         if (!this.editorWindow) {
             this.editorPanel = new GeoNetwork.editor.EditorPanel({
                 defaultEditMode : GeoNetwork.Settings.editor.defaultViewMode,
@@ -617,6 +617,9 @@ cat.app = function() {
                     item.setVisible(!item.disabled);
                     if(!Ext.isIE) // temp
                         whatForm.body && whatForm.body.removeClass('hidden');
+
+
+                    Ext.getCmp('radiogroup').doLayout()
                 });
                 cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced') && cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced').hide();
                 cpt.ownerCt.header.child('#searchFormHeaderLinksimple') && cpt.ownerCt.header.child('#searchFormHeaderLinksimple').show();
@@ -653,8 +656,24 @@ cat.app = function() {
             }
             
         });
-        
-        return searchForm;
+      app.userGroupStore = GeoNetwork.data.GroupStore(catalogue.services.getGroups);
+      app.userGroupStore.load();
+      app.getGroupLabel = function (groupId) {
+        var idx = app.userGroupStore.findExact('id', groupId);
+        if (idx !== -1) {
+          var record = app.userGroupStore.getAt(idx);
+          if (record) {
+            return app.userGroupStore.getAt(idx).get('labelInLang');
+          } else {
+            // The current user may not have privileges to access that group
+            // FIXME ?
+            return idx;
+          }
+
+        }
+      };
+
+      return searchForm;
     }
     
     function modalActionFn(title, urlOrPanel, cb){
@@ -829,14 +848,36 @@ cat.app = function() {
                     columns:1
                 }
             });
-            
-            facetsPanel = new GeoNetwork.FacetsPanel({
+
+
+          var facetConfigInput = Ext.query('input[id=configlistFacet]');
+          var facetConfigJSON = facetConfigInput &&
+            facetConfigInput[0] &&
+            facetConfigInput[0].value;
+          var facetConfig = [];
+          if (facetConfigJSON != '') {
+            try {
+              facetConfig = Ext.decode(facetConfigJSON);
+            } catch (e) {
+              if (console.log) {
+                console.log('Failed to parse list of facets JSON configuration: ' +
+                  listOfThesaurus);
+                console.log(e);
+                console.log('Using default configuration.');
+              }
+              facetConfig = GeoNetwork.Settings.facetListConfig;
+            }
+          } else {
+            facetConfig = GeoNetwork.Settings.facetListConfig;
+          }
+
+          facetsPanel = new GeoNetwork.FacetsPanel({
                 searchForm: searchForm,
                 breadcrumb: breadcrumb,
                 bodyCssClass: 'west-panel-body',
                 bodyStyle: 'padding:5px',
                 maxDisplayedItems: GeoNetwork.Settings.facetMaxItems || 7,
-                facetListConfig: GeoNetwork.Settings.facetListConfig || []
+                facetListConfig: facetConfig
             });
             
             var viewport = new Ext.Panel({
@@ -1084,6 +1125,22 @@ Ext.onReady(function() {
     /* Focus on full text search field */
     Ext.getDom('E_any').focus(true);
     Ext.get('E_any').setHeight(28);
-    
+
+    if (urlParameters.insert !== undefined) {
+      if (catalogue.isIdentified()) {
+        setTimeout(function () {
+          var actionCtn = Ext.getCmp('mdImportAction');
+          actionCtn.handler.apply(catalogue.resultsView);
+        }, 500);
+      }
+    }
+    if (urlParameters.create !== undefined) {
+      if (catalogue.isIdentified()) {
+        setTimeout(function () {
+          var actionCtn = Ext.getCmp('createMetadataAction');
+          actionCtn.handler.apply(catalogue.resultsView);
+        }, 500);
+      }
+    }
     initShortcut();
 });

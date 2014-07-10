@@ -20,4 +20,7 @@
         <whereToFind>Where to find?</whereToFind>
         <datadistribCenter>Data distributor center</datadistribCenter>
         <collatingCenter>Collating center</collatingCenter>
+		<measureDescription>Measure description</measureDescription>
+		<quantitativeValue>Quantitative value</quantitativeValue>
+		<accessing>Accessing/ordering Website</accessing>
 </strings>

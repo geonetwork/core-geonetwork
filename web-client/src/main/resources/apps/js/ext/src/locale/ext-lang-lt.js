@@ -1,14 +1,27 @@
 /*
- * Ext JS Library 2.3.0
- * Copyright(c) 2006-2009, Ext JS, LLC.
- * licensing@extjs.com
- * 
- * http://extjs.com/license
- */
+This file is part of Ext JS 3.4
 
+Copyright (c) 2011-2013 Sencha Inc
+
+Contact:  http://www.sencha.com/contact
+
+GNU General Public License Usage
+This file may be used under the terms of the GNU General Public License version 3.0 as
+published by the Free Software Foundation and appearing in the file LICENSE included in the
+packaging of this file.
+
+Please review the following information to ensure the GNU General Public License version 3.0
+requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+
+If you are unsure which license is appropriate for your use, please contact the sales department
+at http://www.sencha.com/contact.
+
+Build date: 2013-04-03 15:07:25
+*/
 /**
  * Lithuanian Translations (UTF-8)
- * By Vladas Saulis, October 18, 2007
+ * Vladas Saulis (vladas at prodata dot lt),  03-29-2009
+ * Vladas Saulis (vladas at prodata dot lt),  10-18-2007
  */
 
 Ext.UpdateManager.defaults.indicatorText = '<div class="loading-indicator">Kraunasi...</div>';
@@ -17,8 +30,11 @@ if(Ext.View){
   Ext.View.prototype.emptyText = "";
 }
 
+if(Ext.DataView){
+  Ext.DataView.prototype.emptyText = "";
+}
 if(Ext.grid.GridPanel){
-  Ext.grid.GridPanel.prototype.ddText = "{0} pažymėta";
+  Ext.grid.GridPanel.prototype.ddText = "{0} pažymėtų eilučių";
 }
 
 if(Ext.TabPanelItem){
@@ -34,7 +50,7 @@ if(Ext.LoadMask){
 }
 
 Date.monthNames = [
-  "Saulis",
+  "Sausis",
   "Vasaris",
   "Kovas",
   "Balandis",
@@ -49,50 +65,48 @@ Date.monthNames = [
 ];
 
 Date.getShortMonthName = function(month) {
-  return [
-    "Sau",
-    "Vas",
-    "Kov",
-    "Bal",
-    "Geg",
-    "Bir",
-    "Lie",
-    "Rgp",
-    "Rgs",
-    "Spa",
-    "Lap",
-    "Grd"
-    ];
+    // Uncommons
+    if (month == 7) return "Rgp";
+    if (month == 8) return "Rgs";
+    if (month == 11) return "Grd";
+  return Date.monthNames[month].substring(0, 3);
 };
 
 Date.monthNumbers = {
-  Jan : 0,
-  Feb : 1,
-  Mar : 2,
-  Apr : 3,
-  May : 4,
-  Jun : 5,
-  Jul : 6,
-  Aug : 7,
-  Sep : 8,
-  Oct : 9,
-  Nov : 10,
-  Dec : 11
+  Sau : 0,
+  Vas : 1,
+  Kov : 2,
+  Bal : 3,
+  Geg : 4,
+  Bir : 5,
+  Lie : 6,
+  Rgp : 7,
+  Rgs : 8,
+  Spa : 9,
+  Lap : 10,
+  Grd : 11
 };
 
 Date.getMonthNumber = function(name) {
+
+    // Some uncommons
+    if (name == "Rugpjūtis") return 7;
+    if (name == "Rugsėjis") return 8;
+    if (name == "Gruodis") return 11;
   return Date.monthNumbers[name.substring(0, 1).toUpperCase() + name.substring(1, 3).toLowerCase()];
 };
 
 Date.dayNames = [
+  "Sekmadienis",
   "Pirmadienis",
   "Antradienis",
   "Trečiadienis",
   "Ketvirtadienis",
   "Penktadienis",
-  "Šeštadienis",
-  "Sekmadienis"
+  "Šeštadienis"
 ];
+
+Date.parseCodes.S.s = "(?:as|as|as|as)";
 
 Date.getShortDayName = function(day) {
   return Date.dayNames[day].substring(0, 3);
@@ -124,10 +138,10 @@ if(Ext.DatePicker){
     disabledDatesText : "",
     monthNames        : Date.monthNames,
     dayNames          : Date.dayNames,
-    nextText          : 'Next Month (Control+Right)',
-    prevText          : 'Previous Month (Control+Left)',
-    monthYearText     : 'Choose a month (Control+Up/Down perėjimui tarp metų)',
-    todayTip          : "{0} (Spacebar)",
+    nextText          : 'Kitas mėnuo (Control+Right)',
+    prevText          : 'Ankstesnis mėnuo (Control+Left)',
+    monthYearText     : 'Pasirinkti mėnesį (Control+Up/Down perėjimui tarp metų)',
+    todayTip          : "{0} (Tarpas)",
     format            : "y-m-d",
     okText            : "&#160;Gerai&#160;",
     cancelText        : "Atsisaktyi",
@@ -153,7 +167,7 @@ if(Ext.form.TextField){
   Ext.apply(Ext.form.TextField.prototype, {
     minLengthText : "Minimalus šio lauko ilgis yra {0}",
     maxLengthText : "Maksimalus šio lauko ilgis yra {0}",
-    blankText     : "Šis laukas yra reikalingas",
+    blankText     : "Šis laukas yra privalomas",
     regexText     : "",
     emptyText     : null
   });
@@ -175,7 +189,8 @@ if(Ext.form.DateField){
     maxText           : "Šiame lauke data turi būti mažesnėė už {0}",
     invalidText       : "{0} yra neteisinga data - ji turi būti įvesta formatu {1}",
     format            : "y-m-d",
-    altFormats        : "y-m-d|y/m/d|Y-m-d|m/d|m-d|md|ymd|Ymd|d|Y-m-d"
+    altFormats        : "y-m-d|y/m/d|Y-m-d|m/d|m-d|md|ymd|Ymd|d|Y-m-d",
+    startDay          : 1
   });
 }
 
@@ -188,8 +203,8 @@ if(Ext.form.ComboBox){
 
 if(Ext.form.VTypes){
   Ext.apply(Ext.form.VTypes, {
-    emailText    : 'Šiame lauke turi būti el.pašto adresas formatu "user@domain.com"',
-    urlText      : 'Šiame lauke turi būti nuoroda (URL) formatu "http:/'+'/www.domain.com"',
+    emailText    : 'Šiame lauke turi būti el.pašto adresas formatu "user@example.com"',
+    urlText      : 'Šiame lauke turi būti nuoroda (URL) formatu "http:/'+'/www.example.com"',
     alphaText    : 'Šiame lauke gali būti tik raidės ir ženklas "_"',
     alphanumText : 'Šiame lauke gali būti tik raidės, skaičiai ir ženklas "_"'
   });
@@ -273,6 +288,10 @@ if(Ext.form.HtmlEditor){
   });
 }
 
+if(Ext.form.BasicForm){
+  Ext.form.BasicForm.prototype.waitTitle = "Palaukite...";
+}
+  
 if(Ext.grid.GridView){
   Ext.apply(Ext.grid.GridView.prototype, {
     sortAscText  : "Rūšiuoti didėjančia tvarka",
@@ -303,5 +322,27 @@ if(Ext.layout.BorderLayout && Ext.layout.BorderLayout.SplitRegion){
   Ext.apply(Ext.layout.BorderLayout.SplitRegion.prototype, {
     splitTip            : "Patraukite juostelę.",
     collapsibleSplitTip : "Patraukite juostelę arba Paspauskite dvigubai kad paslėpti."
+  });
+}
+
+if(Ext.form.TimeField){
+  Ext.apply(Ext.form.TimeField.prototype, {
+    minText : "Laikas turi buti lygus arba vėlesnis už {0}",
+    maxText : "Laikas turi būti lygus arba ankstesnis už {0}",
+    invalidText : "{0} yra neteisingas laikas",
+    format : "H:i",
+    altFormats : "g:ia|g:iA|g:i a|g:i A|h:i|g:i|H:i|ga|ha|gA|h a|g a|g A|gi|hi|gia|hia|g|H"
+  });
+}
+			
+if(Ext.form.CheckboxGroup){
+  Ext.apply(Ext.form.CheckboxGroup.prototype, {
+    blankText : "Jūs turite padaryti bent vieną pasirinkimą šioje grupėje"
+  });
+}
+	
+if(Ext.form.RadioGroup){
+  Ext.apply(Ext.form.RadioGroup.prototype, {
+      blankText : "Jūs turite padaryti bent vieną pasirinkimą šioje grupėje"
   });
 }

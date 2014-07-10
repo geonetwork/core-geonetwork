@@ -31,7 +31,8 @@ cat.who = function() {
 	                rootId: 1,
 	                baseParams: {
 	                    field: 'orgName',
-	                    threshold: 1
+	                    threshold: 1,
+                        origin: 'RECORDS_FIELD_VALUES'
 	                },
                   sortInfo: {
                     field: 'value',
@@ -48,8 +49,9 @@ cat.who = function() {
 						what.getCatalogueField().getValue() : what.getConfigWhat();
 			};
 			what.getCatalogueField().on('additem', updateOrgList);
-			what.getCatalogueField().on('removeitem', updateOrgList);
-			
+            what.getCatalogueField().on('removeitem', updateOrgList);
+            what.getCatalogueField().on('reset', updateOrgList);
+
 	        var groupField = new Ext.ux.form.SuperBoxSelect({
 	            hideLabel: false,
 	            width: 230,

@@ -2,6 +2,7 @@
   goog.provide('gn_admintools_controller');
 
 
+
   var module = angular.module('gn_admintools_controller',
       []);
 
@@ -222,10 +223,27 @@
       }
 
       $scope.runProcess = function(formId) {
+        $scope.runProcess(formId, undefined, undefined);
+      };
+
+      $scope.runProcess = function(formId, process, testMode) {
+
+        var formParams = $(formId).serialize();
+        if (testMode != undefined) {
+          formParams += '&test=' + testMode;
+        }
+
+        var service = '';
+        if (process != undefined) {
+          service = process;
+        } else {
+          service = 'md.processing.batch@json';
+        }
+
         $scope.processing = true;
         $scope.processReport = null;
-        $http.get('md.processing.batch@json?' +
-                $(formId).serialize())
+        $http.get(service + '?' +
+            formParams)
           .success(function(data) {
               $scope.processReport = data;
               $scope.processReportWarning = data.notFound != 0 ||
@@ -404,6 +422,235 @@
                 type: 'danger'});
             });
       };
+
+
+
+
+
+      // Dependent groups batch replace
+      $scope.batchReplacerGroups = {
+        'metadata': {
+          'elements': [
+            'id.contact.individualName',
+            'id.contact.organisationName',
+            'id.contact.voicePhone',
+            'id.contact.faxPhone',
+            'id.contact.address',
+            'id.contact.city',
+            'id.contact.province',
+            'id.contact.postalCode',
+            'id.contact.country',
+            'id.contact.email',
+            'id.contact.or.url',
+            'id.contact.or.ap',
+            'id.contact.or.name',
+            'id.contact.or.description',
+            'id.contact.hoursOfService',
+            'id.contact.contactInstructions'
+          ]
+        },
+        'data-identification': {
+          'elements': [
+            'id.dataid.abstract',
+            'id.dataid.purpose',
+            'id.dataid.keyword',
+            'id.dataid.citation.individualName',
+            'id.dataid.citation.organisationName',
+            'id.dataid.citation.voicePhone',
+            'id.dataid.citation.faxPhone',
+            'id.dataid.citation.address',
+            'id.dataid.citation.city',
+            'id.dataid.citation.province',
+            'id.dataid.citationt.postalCode',
+            'id.dataid.citation.country',
+            'id.dataid.citation.email',
+            'id.dataid.citation.or.url',
+            'id.dataid.citation.or.ap',
+            'id.dataid.citation.or.name',
+            'id.dataid.citation.or.description',
+            'id.dataid.citation.hoursOfService',
+            'id.dataid.citation.contactInstructions',
+            'id.dataid.poc.individualName',
+            'id.dataid.poc.organisationName',
+            'id.dataid.poc.voicePhone',
+            'id.dataid.poc.faxPhone',
+            'id.dataid.poc.address',
+            'id.dataid.poc.city',
+            'id.dataid.poc.province',
+            'id.dataid.poc.postalCode',
+            'id.dataid.poc.country',
+            'id.dataid.poc.email',
+            'id.dataid.poc.or.url',
+            'id.dataid.poc.or.ap',
+            'id.dataid.poc.or.name',
+            'id.dataid.poc.or.description',
+            'id.dataid.poc.hoursOfService',
+            'id.dataid.poc.contactInstructions',
+
+            'id.dataid.resc.gc.useLimitation',
+            'id.dataid.resc.lc.useLimitation',
+            'id.dataid.resc.lc.otherConstraints',
+            'id.dataid.resc.sc.useLimitation',
+            'id.dataid.resc.otherConstraints'
+          ]
+        },
+        'service-identification': {
+          'elements': [
+            'id.serviceid.abstract',
+            'id.serviceid.purpose',
+            'id.serviceid.citation.individualName',
+            'id.serviceid.citation.organisationName',
+            'id.serviceid.citation.voicePhone',
+            'id.serviceid.citation.faxPhone',
+            'id.serviceid.citation.address',
+            'id.serviceid.citation.city',
+            'id.serviceid.citation.province',
+            'id.serviceid.citationt.postalCode',
+            'id.serviceid.citation.country',
+            'id.serviceid.citation.email',
+            'id.serviceid.citation.or.url',
+            'id.serviceid.citation.or.ap',
+            'id.serviceid.citation.or.name',
+            'id.serviceid.citation.or.description',
+            'id.serviceid.citation.hoursOfService',
+            'id.serviceid.citation.contactInstructions',
+            'id.serviceid.poc.individualName',
+            'id.serviceid.poc.organisationName',
+            'id.serviceid.poc.voicePhone',
+            'id.serviceid.poc.faxPhone',
+            'id.serviceid.poc.address',
+            'id.serviceid.poc.city',
+            'id.serviceid.poc.province',
+            'id.serviceid.poc.postalCode',
+            'id.serviceid.poc.country',
+            'id.serviceid.poc.email',
+            'id.serviceid.poc.or.url',
+            'id.serviceid.poc.or.ap',
+            'id.serviceid.poc.or.name',
+            'id.serviceid.poc.or.description',
+            'id.serviceid.poc.hoursOfService',
+            'id.serviceid.poc.contactInstructions',
+            'id.serviceid.connectpoint.url',
+            'id.serviceid.connectpoint.ap',
+            'id.serviceid.connectpoint.name',
+            'id.serviceid.connectpoint.description'
+          ]
+
+        },
+        'maintenance-information': {
+          'elements': [
+            'mi.contact.individualName',
+            'mi.contact.organisationName',
+            'mi.contact.voicePhone',
+            'mi.contact.faxPhone',
+            'mi.contact.address',
+            'mi.contact.city',
+            'mi.contact.province',
+            'mi.contact.postalCode',
+            'mi.contact.country',
+            'mi.contact.email',
+            'mi.contact.or.url',
+            'mi.contact.or.ap',
+            'mi.contact.or.name',
+            'mi.contact.or.description',
+            'mi.contact.hoursOfService',
+            'mi.contact.contactInstructions'
+          ]
+        },
+        'content-information': {
+          'elements': [
+            'ci.citation.individualName',
+            'ci.citation.organisationName',
+            'ci.citation.voicePhone',
+            'ci.citation.faxPhone',
+            'ci.citation.address',
+            'ci.citation.city',
+            'ci.citation.province',
+            'ci.citation.postalCode',
+            'ci.citation.country',
+            'ci.citation.email',
+            'ci.citation.or.url',
+            'ci.citation.or.ap',
+            'ci.citation.or.name',
+            'ci.citation.or.description',
+            'ci.citation.hoursOfService',
+            'ci.citation.contactInstructions'
+          ]
+
+        },
+        'distribution-information': {
+          'elements': [
+            'di.contact.individualName',
+            'di.contact.organisationName',
+            'di.contact.voicePhone',
+            'di.contact.faxPhone',
+            'di.contact.address',
+            'di.contact.city',
+            'di.contact.province',
+            'di.contact.postalCode',
+            'di.contact.country',
+            'di.contact.email',
+            'di.contact.hoursOfService',
+            'di.contact.contactInstructions',
+            'di.fees',
+            'di.transferOptions.url',
+            'di.transferOptions.ap',
+            'di.transferOptions.name',
+            'di.transferOptions.description'
+          ]
+        }
+
+      };
+
+
+      $scope.replacer = {};
+      $scope.replacer.group = '';
+      $scope.replacer.element = '';
+      $scope.replacer.elements = [];
+      $scope.replacer.replacements = [];
+
+      $scope.addReplacement = function() {
+        $scope.replacer.replacements.push({
+          'package': $scope.replacer.group,
+          'element': $scope.replacer.element,
+          'searchval': $scope.replacer.searchval,
+          'replaceval': $scope.replacer.replaceval
+        });
+
+        $scope.replacer.group = '';
+        $scope.replacer.element = '';
+        $scope.replacer.searchval = '';
+        $scope.replacer.replaceval = '';
+      };
+
+      $scope.removeReplacement = function(replacement) {
+        $scope.replacer.replacements.splice(
+            $scope.replacer.replacements.indexOf(replacement), 1);
+      };
+
+      $scope.$watch('replacer.group', function(newValue, oldValue) {
+
+        // Ignore empty value: in initial setup and
+        // if form already mirrors new value.
+        if ((newValue === '') || (newValue === oldValue)) {
+          return;
+        }
+
+        $scope.replacer.elements =
+            $scope.batchReplacerGroups[newValue].elements;
+      });
+
+
+      $scope.$watch('selectedProcess', function(newValue, oldValue) {
+
+        // Ignore empty value: in initial setup and
+        // if form already mirrors new value.
+        if ((newValue === '') || (newValue === oldValue)) {
+          return;
+        }
+
+        $scope.processReport = null;
+      });
 
     }]);
 

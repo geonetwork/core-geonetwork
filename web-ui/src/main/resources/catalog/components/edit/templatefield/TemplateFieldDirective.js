@@ -114,8 +114,13 @@
               }
             });
 
+            // If template element is not existing in the metadata
             var unsetCheckbox = $('#gn-template-unset-' + scope.notSetCheck);
             if (unsetCheckbox[0] !== undefined) {
+              // Reset the template
+              element[0].innerHTML = '';
+              // When checkbox is checked generate default
+              // snippet.
               unsetCheckbox.change(function() {
                 $('#' + scope.notSetCheck).toggleClass('hidden');
                 if (unsetCheckbox[0].checked) {
@@ -124,9 +129,9 @@
                   generateSnippet();
                 }
               });
+            } else {
+              generateSnippet();
             }
-
-            generateSnippet();
           };
 
           init();

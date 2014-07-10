@@ -59,10 +59,10 @@ GeoNetwork.Settings.privileges = {
         topGroups: ['82'] // GEOCATALOGUE group on top
 };
 
-GeoNetwork.Settings.facetListConfig = [{name: 'orgNames'}, 
-                                       {name: 'inspirethemes'},  
-                                       {name: 'categories'}, 
-                                       {name: 'keywords'},  
+GeoNetwork.Settings.facetListConfig = [{name: 'orgNames'},
+                                       {name: 'keywords'},
+//                                       {name: 'inspireThemes'},
+                                       {name: 'denominators'},
                                        {name: 'createDateYears'}];
 GeoNetwork.Settings.facetMaxItems = 5;
 

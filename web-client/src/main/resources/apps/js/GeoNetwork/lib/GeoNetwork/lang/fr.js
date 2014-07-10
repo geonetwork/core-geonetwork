@@ -19,6 +19,7 @@
 Ext.namespace('GeoNetwork', 'GeoNetwork.Lang');
 
 GeoNetwork.Lang.fr = {
+  'Profile': 'Profil',
     'unsupportedBrowser': 'Navigateur non supporté',
     'editorBrowserRestriction': "La version du navigateur Internet Explorer que vous utilisez n'est plus compatible avec certaines fonctionnalités les plus récentes (édition, administration). Le catalogue risque de ne pas fonctionner correctement, vous devez installer <a href='http://www.whatbrowser.org/'>un navigateur récent</a>.",
     'metadataRecordPublishedTitle': 'Publication',
@@ -652,6 +653,8 @@ GeoNetwork.Lang.fr = {
     'orgNames': 'Contact pour la ressource',
     'serviceTypes': 'Type de service',
     'types': 'Type de ressource',
+    'format': 'Format',
+    'formats': 'Formats',
     'facetMore': '+ Voir tous les filtres',
     'facetLess': '- Voir moins de filtres',
 	'List': "Liste",
@@ -745,6 +748,12 @@ GeoNetwork.Lang.fr = {
     'mdInsertFailure': 'Erreur lors de l\'insertion de la métadonnée : ',
     'mdRecordsProcessed': 'Nombre total de métadonnées traitées',
     'mdRecordsAdded': 'Nombre total de métadonnées ajoutées',
-    'chooseCategory': 'Choisissez une catégorie'
+    'chooseCategory': 'Choisissez une catégorie',
+    'massivereplace-title': 'Metadata massive replacements',
+    'massivereplace-add-title': 'Add replacement',
+    'massivereplace-add-msg': 'Fill all the replacement information',
+    'massivereplace-noreplacements': 'No replacements defined',
+    'massivereplace-test': 'The process is going to test the replacements to the selected metadata. Do you want to proceed?',
+    'massivereplace-execute': 'The process is going to apply the replacements to the selected metadata. Do you want to proceed?'
 };
 OpenLayers.Util.extend(OpenLayers.Lang.fr, GeoNetwork.Lang.fr);

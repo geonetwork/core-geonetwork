@@ -101,7 +101,7 @@ public class ResourceLib {
 		String group = pad(Integer.parseInt(id) / 100, 3);
 		String groupDir = group + "00-" + group + "99";
 
-        String dataDir = context.getBean(GeonetworkDataDirectory.class).getSystemDataDir();
+        String dataDir = context.getBean(GeonetworkDataDirectory.class).getMetadataDataDir().getPath(); 
         return dataDir + "/" + groupDir + "/" + id + "/";
 	}
 

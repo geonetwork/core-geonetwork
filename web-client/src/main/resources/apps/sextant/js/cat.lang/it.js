@@ -10,6 +10,7 @@ cat.lang.it = {
     "search-view-form": "Visualizza",
     "result-list-view": "Visualizza",
     "result-list-download": "Scarica",
+    "result-list-groups": "Administrator:",
     "essentielle": "Metadati essenziali",
     "complete": "Metadati completi",
     "fullTextSearch": "Ricerca testuale",

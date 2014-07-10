@@ -1,16 +1,29 @@
 /*
- * Ext JS Library 2.3.0
- * Copyright(c) 2006-2009, Ext JS, LLC.
- * licensing@extjs.com
- * 
- * http://extjs.com/license
- */
+This file is part of Ext JS 3.4
 
+Copyright (c) 2011-2013 Sencha Inc
+
+Contact:  http://www.sencha.com/contact
+
+GNU General Public License Usage
+This file may be used under the terms of the GNU General Public License version 3.0 as
+published by the Free Software Foundation and appearing in the file LICENSE included in the
+packaging of this file.
+
+Please review the following information to ensure the GNU General Public License version 3.0
+requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+
+If you are unsure which license is appropriate for your use, please contact the sales department
+at http://www.sencha.com/contact.
+
+Build date: 2013-04-03 15:07:25
+*/
 /*
  * German translation
- * By schmidetzki and humpdi
- * 04-07-2007
- * Updated by wm003 10-31-2007
+ * 2007-Apr-07 update by schmidetzki and humpdi
+ * 2007-Oct-31 update by wm003
+ * 2009-Jul-10 update by Patrick Matsumura and Rupert Quaderer
+ * 2010-Mar-10 update by Volker Grabsch
  */
 
 Ext.UpdateManager.defaults.indicatorText = '<div class="loading-indicator">Übertrage Daten ...</div>';
@@ -101,7 +114,12 @@ if(Ext.MessageBox){
 }
 
 if(Ext.util.Format){
-   Ext.util.Format.date = function(v, format){
+    Ext.util.Format.__number = Ext.util.Format.number;
+    Ext.util.Format.number = function(v, format) {
+        return Ext.util.Format.__number(v, format || "0.000,00/i");
+    };
+
+   Ext.util.Format.date = function(v, format) {
       if(!v) return "";
       if(!(v instanceof Date)) v = new Date(Date.parse(v));
       return v.dateFormat(format || "d.m.Y");
@@ -115,8 +133,8 @@ if(Ext.DatePicker){
       maxText           : "Dieses Datum liegt nach dem letztmöglichen Datum",
       disabledDaysText  : "",
       disabledDatesText : "",
-      monthNames	    : Date.monthNames,
-      dayNames		    : Date.dayNames,
+      monthNames        : Date.monthNames,
+      dayNames          : Date.dayNames,
       nextText          : "Nächster Monat (Strg/Control + Rechts)",
       prevText          : "Vorheriger Monat (Strg/Control + Links)",
       monthYearText     : "Monat auswählen (Strg/Control + Hoch/Runter, um ein Jahr auszuwählen)",
@@ -156,7 +174,8 @@ if(Ext.form.NumberField){
    Ext.apply(Ext.form.NumberField.prototype, {
       minText : "Der Mindestwert für dieses Feld ist {0}",
       maxText : "Der Maximalwert für dieses Feld ist {0}",
-      nanText : "{0} ist keine Zahl"
+      nanText : "{0} ist keine Zahl",
+      decimalSeparator : ","
    });
 }
 
@@ -164,11 +183,12 @@ if(Ext.form.DateField){
    Ext.apply(Ext.form.DateField.prototype, {
       disabledDaysText  : "nicht erlaubt",
       disabledDatesText : "nicht erlaubt",
-      minText           : "Das Datum in diesem Feld muß nach dem {0} liegen",
-      maxText           : "Das Datum in diesem Feld muß vor dem {0} liegen",
-      invalidText       : "{0} ist kein valides Datum - es muß im Format {1} eingegeben werden",
+      minText           : "Das Datum in diesem Feld muss nach dem {0} liegen",
+      maxText           : "Das Datum in diesem Feld muss vor dem {0} liegen",
+      invalidText       : "{0} ist kein gültiges Datum - es muss im Format {1} eingegeben werden",
       format            : "d.m.Y",
-      altFormats        : "d.m.Y|d/m/Y|d-m-y|d-m-Y|d/m|d-m|dm|dmy|dmY|d|Y-m-d"
+      altFormats        : "j.n.Y|j.n.y|j.n.|j.|j/n/Y|j/n/y|j-n-y|j-n-Y|j/n|j-n|dm|dmy|dmY|j|Y-n-j",
+      startDay          : 1
    });
 }
 
@@ -181,8 +201,8 @@ if(Ext.form.ComboBox){
 
 if(Ext.form.VTypes){
    Ext.apply(Ext.form.VTypes, {
-      emailText    : 'Dieses Feld sollte eine E-Mail-Adresse enthalten. Format: "user@domain.com"',
-      urlText      : 'Dieses Feld sollte eine URL enthalten. Format: "http:/'+'/www.domain.com"',
+      emailText    : 'Dieses Feld sollte eine E-Mail-Adresse enthalten. Format: "user@example.com"',
+      urlText      : 'Dieses Feld sollte eine URL enthalten. Format: "http:/'+'/www.example.com"',
       alphaText    : 'Dieses Feld darf nur Buchstaben enthalten und _',
       alphanumText : 'Dieses Feld darf nur Buchstaben und Zahlen enthalten und _'
    });
@@ -292,6 +312,25 @@ if(Ext.grid.PropertyColumnModel){
   });
 }
 
+if(Ext.grid.BooleanColumn){
+   Ext.apply(Ext.grid.BooleanColumn.prototype, {
+      trueText  : "wahr",
+      falseText : "falsch"
+   });
+}
+
+if(Ext.grid.NumberColumn){
+    Ext.apply(Ext.grid.NumberColumn.prototype, {
+        format : '0.000,00/i'
+    });
+}
+
+if(Ext.grid.DateColumn){
+    Ext.apply(Ext.grid.DateColumn.prototype, {
+        format : 'd.m.Y'
+    });
+}
+
 if(Ext.layout.BorderLayout && Ext.layout.BorderLayout.SplitRegion){
   Ext.apply(Ext.layout.BorderLayout.SplitRegion.prototype, {
     splitTip            : "Ziehen, um Größe zu ändern.",
@@ -306,4 +345,16 @@ if(Ext.form.TimeField){
     invalidText : "{0} ist keine gültige Zeit",
     format : "H:i"
    });
+}
+
+if(Ext.form.CheckboxGroup){
+  Ext.apply(Ext.form.CheckboxGroup.prototype, {
+    blankText : "Du mußt mehr als einen Eintrag aus der Gruppe auswählen"
+  });
+}
+
+if(Ext.form.RadioGroup){
+  Ext.apply(Ext.form.RadioGroup.prototype, {
+    blankText : "Du mußt einen Eintrag aus der Gruppe auswählen"
+  });
 }

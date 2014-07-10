@@ -356,7 +356,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 Delete: serviceUrl + 'metadata.batch.delete',
                 Privileges: serviceUrl + 'metadata.batch.admin.form',
                 Versioning: serviceUrl + 'metadata.batch.version',
-                Status: serviceUrl + 'metadata.batch.status.form'
+                Status: serviceUrl + 'metadata.batch.status.form',
+                Replace: serviceUrl + 'metadata.batch.replace.form'
             },
             metadataMassiveUpdatePrivilege: serviceUrl + 'metadata.batch.update.privileges',
             metadataMassiveUpdateCategories: serviceUrl + 'metadata.batch.update.categories',
@@ -385,6 +386,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             searchCRS: serviceUrl + 'crs.search',
             getCRSTypes: serviceUrl + 'crs.types',
             logoAdd: serviceUrl + 'logo.add',
+            info: serviceUrl + 'info',
             updatePassword: serviceUrl + 'change.password#/',
             updateUserInfo: serviceUrl + 'admin.console#/organization/users/',
             harvestingAdmin: serviceUrl + 'admin.console#/harvest',
@@ -438,7 +440,37 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  Return true if current user can set privileges to internal groups (ie. internet, intranet)
      */
     canSetInternalPrivileges: function(){
+      if (this.identifiedUser) {
         return this.identifiedUser.role === "Administrator" || this.identifiedUser.role === "Reviewer";
+      } else {
+        return false;
+      }
+    },
+    /** api: method[canSetInternalPrivileges]
+     *  Return true if current user can set
+     *  privileges to internal groups (ie. internet, intranet)
+     *
+     *  Made in Sextant only
+     */
+    isReviewerForGroup: function(group){
+      // Load groups where current user is reviewer
+      if (!this.identifiedUser.reviewerGroup) {
+        var request = OpenLayers.Request.GET({
+          url: this.services.info + '@json?type=groups&profile=Reviewer',
+          async: false
+        });
+
+        if (request.responseText) {
+          this.identifiedUser.reviewerGroup = [];
+          var groups = Ext.util.JSON.decode(request.responseText);
+          Ext.each(groups.group, function(item, idx){
+            this.identifiedUser.reviewerGroup.push(item["@id"]);
+          }, this);
+        }
+      }
+
+      return this.identifiedUser.role === "Administrator" ||
+        this.identifiedUser.reviewerGroup.indexOf(group) !== -1;
     },
     /** api: method[isReadOnly]
      *  Return true if GN is is read-only mode
@@ -602,7 +634,6 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
           var parser = new DOMParser();
           request.responseXML = parser.parseFromString(request.responseText, "application/xml");
         }
-
         if (request.responseXML) {
             var xml = request.responseXML.documentElement;
             Ext.each(properties, function(item, idx){
@@ -1197,11 +1228,12 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             url: this.services.getMyInfo,
             async: false
         }), exception, authenticated, me;
-       
+
         if(!response.responseXML) {
             var parser = new DOMParser();
             response.responseXML = parser.parseFromString(response.responseText, "application/xml");
         }
+
        me = response.responseXML.getElementsByTagName('me')[0];
        authenticated = me.getAttribute('authenticated') == 'true';
        
@@ -1347,10 +1379,11 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 }, 200);
             };
             
-            var casLoginFrame = document.createElement('frame');
+            var casLoginFrame = document.createElement('iframe');
             casLoginFrame.id = 'casLoginFrame';
             casLoginFrame.onload = onCasCheck;
             casLoginFrame.setAttribute('src',this.URL+'/srv/'+this.LANG+'/login.form?casLogin');
+            casLoginFrame.setAttribute('style','display:none');
             document.body.appendChild(casLoginFrame);
             
         } else {
@@ -1503,6 +1536,9 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 onlyUserGroup: this.info.userGroupOnly.toLowerCase() === 'true' || false
             });
             this.modalAction(OpenLayers.i18n('setBatchPrivileges'), privilegesPanel, cb);
+        } else  if (type === 'Replace') {
+          var url = this.services.massiveOp[type];
+          this.modalAction(OpenLayers.i18n('massiveOp') + " - " + type, url, cb, true);
         } else {
             var url = this.services.massiveOp[type];
             this.modalAction(OpenLayers.i18n('massiveOp') + " - " + type, url, cb);
@@ -1518,7 +1554,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  TODO : retrieve error message on error (currently HTML services are
      *  called with HTML response not easy to parse)
      */
-    modalAction: function(title, urlOrPanel, cb){
+    modalAction: function(title, urlOrPanel, cb, scripts){
         if (urlOrPanel) {
             var app = this, win, defaultCb = function(el, success, response, options) {
                 if (!success){
@@ -1526,13 +1562,19 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                     win.close();
                 }
             };
-            
+
+
+            if(typeof(scripts) == 'undefined') {
+              scripts = false;
+            }
+
             var item;
             if(typeof(urlOrPanel) == 'string') {
                 item = new Ext.Panel({
                     autoLoad: {
                         url: urlOrPanel,
                         callback: cb || defaultCb,
+                        scripts: scripts,
                         scope: win
                     },
                     border: false,
@@ -1543,6 +1585,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             else {
                 item =urlOrPanel;
             }
+
+
             win = new Ext.Window({
                 id: 'modalWindow',
                 layout: 'fit',

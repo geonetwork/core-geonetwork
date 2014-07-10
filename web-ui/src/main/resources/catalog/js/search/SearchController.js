@@ -20,7 +20,7 @@
       // The pagination config
       $scope.paginationInfo = {
         pages: -1,
-        currentPage: 0,
+        currentPage: 1,
         hitsPerPage: 10
       };
     }]);

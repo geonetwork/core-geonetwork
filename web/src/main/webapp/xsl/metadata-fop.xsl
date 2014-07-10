@@ -423,7 +423,7 @@
               <fo:external-graphic content-width="20cm">
                    <xsl:attribute name="src">
                     url('<xsl:value-of
-                       select="concat('http://', //server/host,':', //server/port, /root/gui/url,'/images/sextant-pdf-header.png')" />')"
+                       select="concat(/root/gui/env/server/protocol, '://', /root/gui/env/server/host,':', /root/gui/env/server/port, /root/gui/url,'/images/sextant-pdf-header.png')" />')"
                         </xsl:attribute>
                </fo:external-graphic>
             </fo:block>

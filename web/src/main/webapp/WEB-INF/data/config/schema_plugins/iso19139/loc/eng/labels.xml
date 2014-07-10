@@ -2303,6 +2303,16 @@
 		<label>Use limitation</label>
 		<description>Limitation affecting the fitness for use of the resource. Example, _not to be
             used for navigation_</description>
+    <helper>
+      <option value="No condition applies">No condition applies</option>
+      <option value="Data under Licence ouverte / Open licence : http://www.etalab.gouv.fr/pages/licence-ouverte-open-licence-5899923.html">Data under Licence ouverte / Open licence : http://www.etalab.gouv.fr/pages/licence-ouverte-open-licence-5899923.html</option>
+      <option value="Creative Commons license to apply : Attribution (BY) : http://creativecommons.org/licenses/?lang=en">Creative Commons license to apply : Attribution (BY) : http://creativecommons.org/licenses/?lang=en</option>
+      <option value="Creative Commons license to apply : Attribution + No Derivs (BY-ND) : http://creativecommons.org/licenses/?lang=en">Creative Commons license to apply : Attribution + No Derivs (BY-ND) : http://creativecommons.org/licenses/?lang=en</option>
+      <option value="Creative Commons license to apply : Attribution + Non Commercial + No Derivs (BY-NC-ND) : http://creativecommons.org/licenses/?lang=en">Creative Commons license to apply : Attribution + Non Commercial + No Derivs (BY-NC-ND) : http://creativecommons.org/licenses/?lang=en</option>
+      <option value="Creative Commons license to apply : Attribution + Non Commercial (BY-NC) : http://creativecommons.org/licenses/?lang=en">Creative Commons license to apply : Attribution + Non Commercial (BY-NC) : http://creativecommons.org/licenses/?lang=en</option>
+      <option value="Creative Commons license to apply : Attribution + Non Commercial + Share Alike (BY-NC-SA) : http://creativecommons.org/licenses/?lang=en">Creative Commons license to apply : Attribution + Non Commercial + Share Alike (BY-NC-SA) : http://creativecommons.org/licenses/?lang=en</option>
+      <option value="Creative Commons license to apply : Attribution + Share Alike (BY-SA) : http://creativecommons.org/licenses/?lang=en">Creative Commons license to apply : Attribution + Share Alike (BY-SA) : http://creativecommons.org/licenses/?lang=en</option>
+    </helper>
 	</element>
 	<element name="gmd:userContactInfo" id="66.0">
 		<label>User contact info</label>

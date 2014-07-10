@@ -1,9 +1,23 @@
-/*!
- * Ext JS Library 3.4.0
- * Copyright(c) 2006-2011 Sencha Inc.
- * licensing@sencha.com
- * http://www.sencha.com/license
- */
+/*
+This file is part of Ext JS 3.4
+
+Copyright (c) 2011-2013 Sencha Inc
+
+Contact:  http://www.sencha.com/contact
+
+GNU General Public License Usage
+This file may be used under the terms of the GNU General Public License version 3.0 as
+published by the Free Software Foundation and appearing in the file LICENSE included in the
+packaging of this file.
+
+Please review the following information to ensure the GNU General Public License version 3.0
+requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+
+If you are unsure which license is appropriate for your use, please contact the sales department
+at http://www.sencha.com/contact.
+
+Build date: 2013-04-03 15:07:25
+*/
 /**
  * @class Ext
  */
@@ -210,9 +224,7 @@ ImageComponent = Ext.extend(Ext.BoxComponent, {
          * intended for arguments of type {@link Ext.Element} and {@link Ext.Component}, but any subclass of
          * {@link Ext.util.Observable} can be passed in.  Any number of elements and/or components can be
          * passed into this function in a single call as separate arguments.
-         * @param {Mixed} arg1 An {@link Ext.Element}, {@link Ext.Component}, or an Array of either of these to destroy
-         * @param {Mixed} arg2 (optional)
-         * @param {Mixed} etc... (optional)
+         * @param {Mixed...} args An {@link Ext.Element}, {@link Ext.Component}, or an Array of either of these to destroy
          */
         destroy : function(){
             Ext.each(arguments, function(arg){
@@ -1255,7 +1267,7 @@ Ext.defer = Ext.util.Functions.defer;
  * <b>If omitted, defaults to the scope in which the original function is called or the browser window.</b>
  * @return {Function} The new function
  * @member Ext
- * @method defer
+ * @method createInterceptor
  */
 
 Ext.createInterceptor = Ext.util.Functions.createInterceptor;
@@ -1268,7 +1280,7 @@ Ext.createInterceptor = Ext.util.Functions.createInterceptor;
  * If omitted, defaults to the scope in which the original function is called or the browser window.
  * @return {Function} The new function
  * @member Ext
- * @method defer
+ * @method createSequence
  */
 
 Ext.createSequence = Ext.util.Functions.createSequence;
@@ -1283,7 +1295,7 @@ Ext.createSequence = Ext.util.Functions.createSequence;
  * if a number the args are inserted at the specified position
  * @return {Function} The new function
  * @member Ext
- * @method defer
+ * @method createDelegate
  */
 Ext.createDelegate = Ext.util.Functions.createDelegate;
 /**
@@ -2088,7 +2100,7 @@ Ext.Element.addMethods({
      * @param {Boolean/Object} animate (optional) True for the default animation or a standard Element animation config object
      * @param {Boolean/Number} monitorScroll (optional) True to monitor body scroll and reposition. If this parameter
      * is a number, it is used as the buffer delay (defaults to 50ms).
-     * @param {Function} callback The function to call after the animation finishes
+     * @param {Function} callback (optional) The function to call after the animation finishes
      * @return {Ext.Element} this
      */
     anchorTo : function(el, alignment, offsets, animate, monitorScroll, callback){        
@@ -2835,7 +2847,6 @@ Ext.Element.addMethods(function(){
         unselectable : function(){
             this.dom.unselectable = "on";
             return this.swallowEvent("selectstart", true).
-                        applyStyles("-moz-user-select:none;-khtml-user-select:none;").
                         addClass("x-unselectable");
         },
 
@@ -3433,18 +3444,18 @@ els.setWidth(100).hide(true);
 </code></pre>
  */
 Ext.CompositeElement = Ext.extend(Ext.CompositeElementLite, {
-    
+
     constructor : function(els, root){
         this.elements = [];
         this.add(els, root);
     },
-    
+
     // private
     getElement : function(el){
         // In this case just return it, since we already have a reference to it
         return el;
     },
-    
+
     // private
     transformElement : function(el){
         return Ext.get(el);
@@ -3454,12 +3465,14 @@ Ext.CompositeElement = Ext.extend(Ext.CompositeElementLite, {
     * Adds elements to this composite.
     * @param {String/Array} els A string CSS selector, an array of elements or an element
     * @return {CompositeElement} this
+    * @ignore
     */
 
     /**
      * Returns the Element object at the specified index
      * @param {Number} index
      * @return {Ext.Element}
+     * @ignore
      */
 
     /**
@@ -3478,6 +3491,7 @@ Ext.CompositeElement = Ext.extend(Ext.CompositeElementLite, {
      * Defaults to the <code>element</code> at the current <code>index</code>
      * within the composite.
      * @return {CompositeElement} this
+     * @ignore
      */
 });
 
@@ -3491,6 +3505,7 @@ Ext.CompositeElement = Ext.extend(Ext.CompositeElementLite, {
  * @return {CompositeElementLite/CompositeElement}
  * @member Ext.Element
  * @method select
+ * @static
  */
 Ext.Element.select = function(selector, unique, root){
     var els;
@@ -6204,10 +6219,13 @@ Ext.util.Format = function() {
         /**
          * Checks a reference and converts it to the default value if it's empty
          * @param {Mixed} value Reference to check
-         * @param {String} defaultValue The value to insert of it's undefined (defaults to "")
+         * @param {String} defaultValue The value to insert if it's undefined (defaults to "")
          * @return {String}
          */
         defaultValue : function(value, defaultValue) {
+            if (!defaultValue && defaultValue !== 0) {
+                defaultValue = '';
+            }
             return value !== undefined && value !== '' ? value : defaultValue;
         },
 
@@ -7972,6 +7990,7 @@ Ext.util.Cookies = {
  * custom exception-handling.  Framework errors will often extend from the base
  * Ext.Error class.
  * @param {Object/Error} e The thrown exception object.
+ * @member Ext
  */
 Ext.handleError = function(e) {
     throw e;

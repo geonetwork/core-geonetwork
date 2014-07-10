@@ -191,13 +191,16 @@
 			</gmd:descriptiveKeywords>
 			<gmd:descriptiveKeywords>
 				<gmd:MD_Keywords>
-					<gmd:keyword>
+					<gmd:keyword/>
 						<!-- MANDATORY : ocean variables processed in the current dataset   -->
 						<!-- http://vocab.nerc.ac.uk/collection/P02/current/                -->
 						<!-- use rdf:about attribute for href                                   -->
 						<!-- use prefLabel text value for text                                  -->
+					<!--
+					<gmd:keyword>
 						<gmx:Anchor xlink:href="http://vocab.nerc.ac.uk/collection/P02/current/PSAL/"> Salinity of the water column </gmx:Anchor>
 					</gmd:keyword>
+					-->
 					<gmd:type>
 						<gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode" codeListValue="parameter"/>
 					</gmd:type>
@@ -222,13 +225,50 @@
 			</gmd:descriptiveKeywords>
 			<gmd:descriptiveKeywords>
 				<gmd:MD_Keywords>
-					<gmd:keyword>
-						<!-- MANDATORY : sea areas covered by the current dataset  -->
-						<!-- http://vocab.nerc.ac.uk/collection/C16/current/                    -->
+					<gmd:keyword/>
+						<!-- MANDATORY : ocean variables processed in the current dataset   -->
+						<!-- http://vocab.nerc.ac.uk/collection/P35/current/                -->
 						<!-- use rdf:about attribute for href                                   -->
 						<!-- use prefLabel text value for text                                  -->
-						<gmx:Anchor xlink:href="http://vocab.nerc.ac.uk/collection/C16/current/28/">Mediterranean Sea</gmx:Anchor>
+					<!--
+					<gmd:keyword>
+						<gmx:Anchor xlink:href="http://vocab.nerc.ac.uk/collection/P35/current/EPC00085/">Suspended particulate material arsenic content</gmx:Anchor>
 					</gmd:keyword>
+					-->
+					<gmd:type>
+						<gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_KeywordTypeCode" codeListValue="parameter"/>
+					</gmd:type>
+					<gmd:thesaurusName>
+						<gmd:CI_Citation>
+							<gmd:title>
+								<gco:CharacterString>Ocean chemistry variable</gco:CharacterString>
+							</gmd:title>
+							<gmd:date>
+								<gmd:CI_Date>
+									<gmd:date>
+										<gco:DateTime>2012-07-18T00:00:00</gco:DateTime>
+									</gmd:date>
+									<gmd:dateType>
+										<gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+									</gmd:dateType>
+								</gmd:CI_Date>
+							</gmd:date>
+						</gmd:CI_Citation>
+					</gmd:thesaurusName>
+				</gmd:MD_Keywords>
+			</gmd:descriptiveKeywords>
+			<gmd:descriptiveKeywords>
+				<gmd:MD_Keywords>
+					<gmd:keyword/>
+						<!-- MANDATORY : sea areas covered by the current dataset  -->
+						<!-- http://vocab.nerc.ac.uk/collection/C19/current/                    -->
+						<!-- use rdf:about attribute for href                                   -->
+						<!-- use prefLabel text value for text                                  -->
+					<!--
+					<gmd:keyword>
+						<gmx:Anchor xlink:href="http://vocab.nerc.ac.uk/collection/C19/current/3_1_2_1/">Adriatic Sea</gmx:Anchor>
+					</gmd:keyword>
+					-->
 					<!-- n keyword may be used -->
 					<gmd:type>
 						<gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="reference-geographical-area"/>
@@ -353,6 +393,37 @@
 			<gmd:featureCatalogueCitation/>
 		</gmd:MD_FeatureCatalogueDescription>
 	</gmd:contentInfo>
+	<gmd:distributionInfo xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:date="http://exslt.org/dates-and-times" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+		<gmd:MD_Distribution>
+			<!-- DOI part -->
+			<gmd:distributor>
+				<gmd:MD_Distributor>
+					<gmd:distributorContact/>
+					<gmd:distributorFormat/>
+					<gmd:distributorTransferOptions>
+						<gmd:MD_DigitalTransferOptions>
+							<gmd:onLine>
+								<gmd:CI_OnlineResource>
+									<gmd:linkage>
+										<gmd:URL>DOI URL</gmd:URL>
+									</gmd:linkage>
+									<gmd:protocol>
+										<gco:CharacterString>WWW:LINK-1.0-http--metadata-URL</gco:CharacterString>
+									</gmd:protocol>
+									<gmd:description>
+										<gco:CharacterString>Point of truth URL of this metadata record</gco:CharacterString>
+									</gmd:description>
+									<gmd:function>
+										<gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue=""/>
+									</gmd:function>
+								</gmd:CI_OnlineResource>
+							</gmd:onLine>
+						</gmd:MD_DigitalTransferOptions>
+					</gmd:distributorTransferOptions>
+				</gmd:MD_Distributor>
+			</gmd:distributor>
+		</gmd:MD_Distribution>
+	</gmd:distributionInfo>
 	<!-- MANDATORY: constant, for INSPIRE compliance -->
 	<gmd:dataQualityInfo>
 		<gmd:DQ_DataQuality>

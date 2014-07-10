@@ -151,7 +151,17 @@
                  scope.groups = data !== 'null' ? data.group : null;
                });
              }
+
+             var initHarvesterPrivileges = function() {
+
+               angular.forEach(scope.harvester.privileges, function(g) {
+                 scope.selectedPrivileges[g['@id']] = true;
+               });
+             };
+
              var init = function() {
+               scope.selectedPrivileges = {};
+
                loadGroups();
 
                // If only one privilege config
@@ -161,9 +171,8 @@
                scope.harvester.privileges[0]['@id'] == '1') {
                  $('#gn-harvester-visible-all').button('toggle');
                }
-               angular.forEach(scope.harvester.privileges, function(g) {
-                 scope.selectedPrivileges[g['@id']] = true;
-               });
+
+               initHarvesterPrivileges();
 
                scope.$watchCollection('selectedPrivileges', function() {
                  scope.harvester.privileges = [];
@@ -178,8 +187,8 @@
                });
              };
 
-             init();
 
+             scope.$watch('harvester', init);
            }
          };
        }]);

@@ -34,6 +34,7 @@ public class CatalogueController implements Serializable {
     private String panierurl;
     private String typeSearch;
     private String listThesaurus;
+    private String listFacet;
     
     public void sendLayerToGeoviewer() {
         CATALOGUESERVICE.sendLayerToGeoviewer(FacesContext.getCurrentInstance(), wmsurl, wmsversion, layername, layergroup);        
@@ -66,6 +67,7 @@ public class CatalogueController implements Serializable {
             panierurl = sextantConfig.getPanierUrl();
             typeSearch= sextantConfig.getCatalogueTypeSearch();
             listThesaurus = sextantConfig.getCatalogueListThesaurus();
+            listFacet = sextantConfig.getCatalogueListFacet();
         } else {
             maxextent = null;
             geonetworkurl = null;
@@ -76,6 +78,7 @@ public class CatalogueController implements Serializable {
             panierurl = null;
 	        typeSearch = null;
             listThesaurus = null;
+            listFacet= null;
         }
     	
     }
@@ -107,6 +110,14 @@ public class CatalogueController implements Serializable {
 
     public void setListThesaurus(String listThesaurus) {
         this.listThesaurus = listThesaurus;
+    }
+
+    public String getListFacet() {
+        return listFacet;
+    }
+
+    public void setListFacet(String listFacet) {
+        this.listFacet = listFacet;
     }
 
     public String getLayername() {

@@ -1,6 +1,15 @@
 package org.fao.geonet.kernel.search;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import jeeves.server.ServiceConfig;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
@@ -13,13 +22,6 @@ import org.jdom.JDOMFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Unit test for building Lucene queries.
@@ -2245,5 +2247,72 @@ public class LuceneQueryTest {
         query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQIa);
         // verify query
         assertEquals("unexpected Lucene query", "+paper:true +_isTemplate:n", query.toString());
+    }
+
+    /**
+     * Tests passing operations (download and/or dynamic for instance) parameters criterias.
+     *
+     */
+    @Test
+    public void testDownloadDynamicParameter() {
+        JDOMFactory factory = new DefaultJDOMFactory();
+        Element request = factory.element("request");
+        Element download = factory.element("_operation5").addContent("1 or 2 or 3");
+        Element dynamic  = factory.element("_operation1").addContent("1 or 2 or 3");
+        request.addContent(download).addContent(dynamic);
+        LuceneQueryInput lQI = new LuceneQueryInput(request);
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
+        assertTrue(query.toString().contains("+(_op5:1 _op5:2 _op5:3) +(_op1:1 _op1:2 _op1:3)"));
+    }
+    /**
+     * Same test as above, but only download.
+     */
+    @Test
+    public void testDownloadParameter() {
+        JDOMFactory factory = new DefaultJDOMFactory();
+        Element request = factory.element("request");
+        Element download = factory.element("_operation1").addContent("1 or 2 or 3");
+        request.addContent(download);
+        LuceneQueryInput lQI = new LuceneQueryInput(request);
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
+        assertTrue(query.toString().contains("+(_op1:1 _op1:2 _op1:3)"));
+    }
+    /**
+     * Only dynamic operation parameter.
+     */
+    @Test
+    public void testDynamicParameter() {
+        JDOMFactory factory = new DefaultJDOMFactory();
+        Element request = factory.element("request");
+        Element dynamic = factory.element("_operation5").addContent("1 or 2 or 3");
+        request.addContent(dynamic);
+        LuceneQueryInput lQI = new LuceneQueryInput(request);
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
+        assertTrue(query.toString().contains("+(_op5:1 _op5:2 _op5:3)"));
+    }
+    /**
+     * Only editing operation parameter.
+     */
+    @Test
+    public void testEditingParameter() {
+        JDOMFactory factory = new DefaultJDOMFactory();
+        Element request = factory.element("request");
+        Element editing = factory.element("_operation2").addContent("1 or 2 or 3");
+        request.addContent(editing);
+        LuceneQueryInput lQI = new LuceneQueryInput(request);
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
+        assertTrue(query.toString().contains("+(_op2:1 _op2:2 _op2:3)"));
+    }    
+    
+    /**
+     * No operation parameter.
+     */
+    @Test
+    public void testWithoutOperationParameter() {
+        JDOMFactory factory = new DefaultJDOMFactory();
+        Element request = factory.element("request");
+        LuceneQueryInput lQI = new LuceneQueryInput(request);
+        Query query = new LuceneQueryBuilder(_tokenizedFieldSet, _numericFieldSet, _analyzer, null).build(lQI);
+        assertTrue(query.toString().equals("+_isTemplate:n"));
     }
 }

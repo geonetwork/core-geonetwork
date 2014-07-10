@@ -301,6 +301,7 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
     actionMenuInit: function(idx, node){
         this.acMenu = Ext.get(Ext.DomQuery.selectNode('div.md-action-menu', node));
         if (this.acMenu) {
+          this.acMenu.removeAllListeners();
 	        this.acMenu.on('click', function(){
 	            this.createMenu(idx, this);
 	            this.contextMenu.showAt([this.acMenu.getX(), this.acMenu.getY() + this.acMenu.getHeight()]);
@@ -790,6 +791,8 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                     var polygons = [];
                     for (j = 0; j < bboxes.length; j++) {
                         var bbox = bboxes[j].value;
+                      if (!isNaN(bbox[0]) && !isNaN(bbox[1]) &&
+                          !isNaN(bbox[2]) && !isNaN(bbox[3])) {
                         var p1 = new OpenLayers.Geometry.Point(bbox[2], bbox[1]);
                         var p2 = new OpenLayers.Geometry.Point(bbox[2], bbox[3]);
                         var p3 = new OpenLayers.Geometry.Point(bbox[0], bbox[3]);
@@ -808,8 +811,9 @@ GeoNetwork.MetadataResultsView = Ext.extend(Ext.DataView, {
                         var pointList = [p1, p2, p3, p4, p1];
                         var linearRing = new OpenLayers.Geometry.LinearRing(pointList);
                         var polygon = new OpenLayers.Geometry.Polygon([linearRing]);
-                        
+
                         polygons.push(polygon.clone());
+                      }
                     }
                     var multipolygon = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.MultiPolygon(polygons), {
                         id: r.get('uuid'),

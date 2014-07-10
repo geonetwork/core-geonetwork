@@ -178,7 +178,38 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
         }
         return links;
     }
-    
+
+  /**
+   * Populate an array of groups where the record is
+   * published. Place the internet group at first position
+   * and sort the other group by alphabetical order.
+   *
+   * TODO: Translate based on group names ?
+   *
+   * @param v
+   * @param record
+   * @returns {Array}
+   */
+  function getPublishInGroup(v, record){
+    var groups = [], temp = [];
+    if (record.editableForGroup) {
+      for (i = 0; i < record.editableForGroup.length; i++) {
+        var group = record.editableForGroup[i].value;
+        // Sextant specific
+        if (app.getGroupLabel) {
+          group = app.getGroupLabel(group);
+        }
+        if (group === 'INTERNET') {
+          groups.unshift(group);
+        } else {
+          temp.push(group);
+        }
+      }
+    }
+    temp.sort();
+    groups.push(temp);
+    return groups[0];
+  }
     /**
      * Some convert function to face empty geonet_info parameters
      * BUG in GeoNetwork when retrieving iso19115 record through CSW
@@ -238,7 +269,14 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
             return false;
         }
     }
-    
+
+    function getGroupOwner(v, record){
+      if (record.groupOwner) {
+        return record.groupOwner[0].value;
+      } else {
+        return '';
+      }
+    }
     function getOwnerName(v, record){
         if (record.userinfo && record.userinfo[0].value) {
             var userinfo = record.userinfo[0].value.split(separator);
@@ -445,6 +483,12 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
         }, {
             name: 'ownername',
             convert: getOwnerName
+        }, {
+            name: 'groupOwner',
+            convert: getGroupOwner
+        }, {
+            name: 'editableForGroup',
+            convert: getPublishInGroup
         }, {
             name: 'edit',
             convert: getEdit

@@ -115,8 +115,8 @@
                         data-ng-model="virtualCSWSelected.serviceParameters._cat"
                         class="form-control" name="_cat">
                   <option value=""/>
-                  <option data-ng-repeat="c in categories" value="{{c['@id']}}"
-                          ng-selected="c['@id'] == virtualCSWSelected.serviceParameters._cat"
+                  <option data-ng-repeat="c in categories" value="{{c.name}}"
+                          ng-selected="c.name == virtualCSWSelected.serviceParameters._cat"
                       >{{c.label[lang]}}</option>
                 </select>
               </div>

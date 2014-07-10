@@ -54,6 +54,7 @@
             <option value="weekly mean, monthly mean">Weekly mean, monthly mean</option>
             <option value="monthly mean">Monthly mean</option>
             <option value="monthly mean, daily mean">Monthly mean, daily mean</option>
+            <option value="monthly mean, daily mean, hourly mean">Monthly mean, daily mean, hourly mean</option>
             <option value="Pluri-annual mean">Pluri-annual mean</option>
         </helper>
     </element>

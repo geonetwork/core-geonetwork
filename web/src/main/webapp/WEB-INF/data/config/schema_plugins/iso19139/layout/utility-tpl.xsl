@@ -5,8 +5,29 @@
   xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all">
 
   <xsl:include href="utility-tpl-multilingual.xsl"/>
-  
-  
+
+
+  <xsl:template name="get-iso19139-extents-as-json">[
+    <xsl:for-each select="//gmd:geographicElement/gmd:EX_GeographicBoundingBox">
+      <xsl:variable name="format" select="'##.0000'"></xsl:variable>
+
+      <xsl:if test="number(gmd:westBoundLongitude/gco:Decimal)
+            and number(gmd:southBoundLatitude/gco:Decimal)
+            and number(gmd:eastBoundLongitude/gco:Decimal)
+            and number(gmd:northBoundLatitude/gco:Decimal)
+            ">
+        [
+          <xsl:value-of select="format-number(gmd:westBoundLongitude/gco:Decimal, $format)"/>,
+          <xsl:value-of select="format-number(gmd:southBoundLatitude/gco:Decimal, $format)"/>,
+          <xsl:value-of select="format-number(gmd:eastBoundLongitude/gco:Decimal, $format)"/>,
+          <xsl:value-of select="format-number(gmd:northBoundLatitude/gco:Decimal, $format)"/>
+        ]
+        <xsl:if test="position() != last()">,</xsl:if>
+      </xsl:if>
+    </xsl:for-each>
+    ]
+  </xsl:template>
+
   <xsl:template name="get-iso19139-online-source-config">
     <xsl:param name="pattern"/>
     <config>

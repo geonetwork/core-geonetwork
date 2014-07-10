@@ -33,7 +33,7 @@ Metadatas concerned by this change are the following:
 Records are available from the following URL:
 %s/../../?s_E__status=%s&amp;s_E__statusChangeDate=%s&amp;s_search
 	</statusSendEmail>
-	<statusMetadataDetails>* {{index:title}} - {{index:altTitle}} ({{serverurl}}/../../?uuid={{index:_uuid}})</statusMetadataDetails>
+	<statusMetadataDetails>* {{index:title}} - {{index:altTitle}}</statusMetadataDetails>
 	<metadata-versioning-log>Metadata versioning log</metadata-versioning-log>
 	<otherValue>Other:</otherValue>
 	<warning>Warning</warning>

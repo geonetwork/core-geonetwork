@@ -76,6 +76,12 @@
 	</codelist>
 	<codelist name="projectName">
 		<entry>
+			<code>SDN:EDMERP::12055 = EMODNet Bathymetry</code>
+			<label>SDN:EDMERP::12055 = EMODNet Bathymetry</label>
+			<description>European Marine Observation and Data Network - Bathymetry</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
 			<code>SDN:EDMERP::11805 = EMODNet Chemistry</code>
 			<label>SDN:EDMERP::11805 = EMODNet Chemistry</label>
 			<description>Preparatory action for European Marine Observation and Data Network - Lot 3
@@ -389,6 +395,12 @@
 			<description>The elevation of the zero metres contour on an unspecified marine
 				navigation chart. These are generally based on LAT which represents the safest
 				option for navigation.</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<label>SDN:L111:7:D32 = Portuguese Chart Datum</label>
+			<code>SDN:L111:7:D32 = Portuguese Chart Datum</code>
+			<description>The elevation of the zero metres contour on Portuguese navigation charts for Portuguese coastal waters. It has been set near the theoretical level reached by the lowest astronomical tide (LAT) calculated from tide gauge data.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -1189,6 +1201,18 @@
 			<description>&lt;notes&gt;Directional radio receivers that determine the location of a
 				mobile radio transmitter (such as a bird or animal tag) by
 				triangulation.&lt;/notes&gt;</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<label>SDN:L056:3:POS25 = Kinematic Global Positioning System receivers</label>
+			<code>SDN:L056:3:POS25 = Kinematic Global Positioning System receivers</code>
+			<description>&lt;accuracy&gt;Horizontal Accuracy: Fixed RTK mode: 1-5cm, Float RTK mode: 20cm-1m. Vertical accuracy : twice the horizontal accuracy&lt;/accuracy&gt;&lt;operating&gt;Since the mid-1990s&lt;/operating&gt;&lt;notes&gt;Real Time Kinematic (RTK) satellite navigation technique based on the use of carrier phase measurements of the GPS signals where a single reference station or a network of reference stations provides the real-time corrections.&lt;/notes&gt;</description>
+		</entry>
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<entry>
+			<label>SDN:L056:3:POS26 = Ultra Short Baseline Positioning Systems</label>
+			<code>SDN:L056:3:POS26 = Ultra Short Baseline Positioning Systems</code>
+			<description>Systems dedicated to the positioning of subsea vehicles such as ROV and AUV. They are based on acoustic transmitted signals between one or several transponders and one acoustic antenna installed on a surface vessel. The transponders are mounted on the underwater vehicle or are fixed on the seafloor. These underwater acoustic positioning systems are coupled with inertial navigation systems.</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>

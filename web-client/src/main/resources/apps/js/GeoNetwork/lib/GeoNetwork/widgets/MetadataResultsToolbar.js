@@ -128,7 +128,9 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
     adminAction: undefined,
     
     addLayerAction: undefined,
-    
+
+    massiveReplaceAction: undefined,
+
     permalinkProvider: undefined,
     
     actionMenu: undefined,
@@ -323,9 +325,20 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             hidden: hide
         });
         
-        this.selectionActions.push(this.deleteAction, this.ownerAction, this.updateCategoriesAction, 
-                this.updatePrivilegesAction, this.updateStatusAction, this.updateVersionAction);
-        
+        this.massiveReplaceAction = new Ext.menu.Item({
+          text: 'Massive Replacements', //OpenLayers.i18n('massiveReplace'),
+          id: 'massiveReplaceAction',
+          iconCls : '',
+          handler: function(){
+            this.catalogue.massiveOp('Replace');
+          },
+          scope: this,
+          hidden: hide
+        });
+
+      this.selectionActions.push(this.deleteAction, this.ownerAction, this.updateCategoriesAction,
+                this.updatePrivilegesAction, this.updateStatusAction, this.updateVersionAction, this.massiveReplaceAction);
+
         if(!this.catalogue.isReadOnly()) {
         this.actionMenu.addItem(this.ownerAction);
         this.actionMenu.addItem(this.updateCategoriesAction);
@@ -333,6 +346,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         this.actionMenu.addItem(this.updateStatusAction);
         this.actionMenu.addItem(this.updateVersionAction);
             this.actionMenu.addItem(this.deleteAction);
+            this.actionMenu.addItem(this.massiveReplaceAction);
         }
 
     },
@@ -381,6 +395,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             text: OpenLayers.i18n('newMetadata'),
             ctCls: 'gn-bt-main',
             iconCls: 'addIcon',
+            id: 'createMetadataAction',
             handler: function(){
               // FIXME : could be improved. Here we clean the window
               // A simple template reload could be enough probably
@@ -401,6 +416,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
                   width: 600,
                   height: 420,
                   layout: 'fit',
+                  y:70,
                   modal: true,
                   items: newMetadataPanel,
                   closeAction: 'hide',
@@ -433,6 +449,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
         this.mdImportAction = new Ext.menu.Item({
             text: OpenLayers.i18n('importMetadata'),
             iconCls: 'importmd',
+            id: 'mdImportAction',
             handler: function(){
                 if (this.insertMetadataWindow) {
                     this.insertMetadataWindow.close();
@@ -692,7 +709,6 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
      *  Update privileges after user login
      */
     updatePrivileges: function(catalogue, user){
-    	
     	var nbVisible=0;
     	var editingActions = [], adminActions = [], actions =[];
     	if(this.deleteAction) editingActions.push(this.deleteAction);
@@ -704,7 +720,13 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
     	if(this.ownerAction) adminActions.push(this.ownerAction);
     	if(this.adminAction) actions.push(this.adminAction);
     	//if(this.otherItem) actions.push(this.otherItem);
-        
+/*
+        var editingActions = [this.deleteAction, this.updateCategoriesAction, 
+                        this.updatePrivilegesAction, this.createMetadataAction,
+                        this.mdImportAction],
+            adminActions = [this.ownerAction, this.massiveReplaceAction],
+            actions = [this.adminAction, this.otherItem];
+       */ 
         Ext.each(actions, function(){
             this.setVisible(user);
             if(user)nbVisible++;

@@ -19,7 +19,7 @@
 		<help />
 		<condition />
 	</element>
-  
+
   	<element name="gmd:alternateTitle">
 		<label>External shortname</label>
 		<description></description>
@@ -100,8 +100,8 @@
 		<label>Protocol</label>
 		<description>Connection protocol to be used</description>
 		<helper sort="true">
-			<option show="-" value="OGC:WMS">OGC-WMS Web Map Service</option>
-			<option show="-" value="WWW:DOWNLOAD-1.0-http--download">File for download</option>
+			<option show="-" value="OGC:WMS">Web Map Service (WMS)</option>
+			<option show="-" value="WWW:DOWNLOAD-1.0-link--download">Download (link)</option>
 		</helper>
 	</element>
 </labels>

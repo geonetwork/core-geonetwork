@@ -55,6 +55,7 @@ Ext.ux.grid.CheckColumn = Ext.extend(Ext.grid.Column, {
             if(this.dataIndex == 'all') {
                 var checked = !record.data[this.dataIndex];
                 for(var i=1; i<grid.getColumnModel().config.length; i++) {
+                  if (grid.getColumnModel().config[i].xtype == 'checkcolumn')
                     record.set(grid.getColumnModel().config[i].dataIndex, checked);
                 }
             }

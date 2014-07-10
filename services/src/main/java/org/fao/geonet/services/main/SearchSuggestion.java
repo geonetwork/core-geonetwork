@@ -199,8 +199,18 @@ public class SearchSuggestion implements Service {
         SearchManager sm = gc.getBean(SearchManager.class);
         // The response element
         Element suggestionsResponse = new Element(ELEM_ITEMS);
-        
-        List<SearchManager.TermFrequency> listOfSuggestions = new ArrayList<SearchManager.TermFrequency>();
+
+        TreeSet<SearchManager.TermFrequency> listOfSuggestions;
+
+        // Starts with element first
+        if (sortBy.equalsIgnoreCase(SORT_BY_OPTION.STARTSWITHFIRST.toString())) {
+            listOfSuggestions = new TreeSet<SearchManager.TermFrequency>(new StartsWithComparator(searchValueWithoutWildcard));
+        } else if (sortBy.equalsIgnoreCase(SORT_BY_OPTION.ALPHA.toString())) {
+            // Sort by alpha and frequency
+            listOfSuggestions = new TreeSet<SearchManager.TermFrequency>();
+        } else {
+            listOfSuggestions = new TreeSet<SearchManager.TermFrequency>(new FrequencyComparator());
+        }
         
         // If a field is stored, field values could be retrieved from the index
         // The main advantage is that only values from records visible to the
@@ -208,7 +218,12 @@ public class SearchSuggestion implements Service {
         if (origin.equals("") || origin.equals(RECORDS_FIELD_VALUES)) {
             LuceneSearcher searcher = (LuceneSearcher) sm.newSearcher(SearchManager.LUCENE, Geonet.File.SEARCH_LUCENE);
 
-            searcher.getSuggestionForFields(context, fieldName, searchValue, _config, maxNumberOfTerms, threshold, listOfSuggestions);
+            // Begin Sepecific SextantV5
+            // Send _groupPublished to suggestion in order to filter on catalogue if configwhat is set
+            String groupPublished = Util.getParam(params, "groupPublished", "");
+            searcher.getSuggestionForFields(context, fieldName, searchValue, _config, maxNumberOfTerms, threshold, groupPublished, listOfSuggestions);
+            // End Sepecific SextantV5
+
         }
         // No values found from the index records field value ...
         if (origin.equals(INDEX_TERM_VALUES)
@@ -226,16 +241,6 @@ public class SearchSuggestion implements Service {
         }
         
         suggestionsResponse.setAttribute(new Attribute(PARAM_ORIGIN, origin));
-        
-        // Starts with element first
-        if (sortBy.equalsIgnoreCase(SORT_BY_OPTION.STARTSWITHFIRST.toString())) {
-            Collections.sort(listOfSuggestions, new StartsWithComparator(searchValueWithoutWildcard));
-        } else if (sortBy.equalsIgnoreCase(SORT_BY_OPTION.ALPHA.toString())) {
-            // Sort by alpha and frequency
-            Collections.sort(listOfSuggestions);
-        } else {
-            Collections.sort(listOfSuggestions, new FrequencyComparator());
-        }
 
         for (TermFrequency suggestion : listOfSuggestions) {
             Element md = new Element(ELEM_ITEM);

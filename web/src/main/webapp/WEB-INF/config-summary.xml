@@ -37,7 +37,8 @@
 			<item name="createDateYear" plural="createDateYears" indexKey="createDateYear"
 				sortBy="value" sortOrder="desc" max="40"/>
       <item name="category" plural="categories" indexKey="category" max="40"/>
-    </hits>
+      <item name="format"  plural="formats" indexKey="format" max="15" sortBy="value"/>
+		</hits>
     <subtemplates>
       <item name="subTemplateType" plural="subTemplateTypes"
             indexKey="_root"/>
@@ -69,7 +70,7 @@
 			<item name="inspireTheme" plural="inspireThemes" indexKey="inspiretheme" sortBy="value" sortOrder="asc"/>
 			<item name="denominator" plural="denominators" indexKey="denominator" sortBy="value" sortOrder="asc"/>
 			<item name="spatialRepresentationType" plural="spatialRepresentationTypes" indexKey="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
-			<item name="orgName" plural="orgNames" indexKey="orgName" max="100"/>
+			<item name="orgName" plural="orgNames" indexKey="orgName" max="1000"/>
 			<item name="metadataPOC" plural="metadataPOCs" indexKey="metadataPOC"/>
 			<item name="serviceType" plural="serviceTypes" indexKey="serviceType"/>
 			<item name="type" plural="types" indexKey="type" translator="codelist:gmd:MD_ScopeCode"/>
@@ -77,6 +78,7 @@
 				sortOrder="asc"/>
       <item name="inspiretheme_en" plural="inspirethemes_en" indexKey="inspiretheme_en" max="35"/>
       <item name="sextantTheme" plural="sextantThemes" indexKey="sextantTheme" max="200"/>
+      <item name="keywordType-parameter" plural="keywordType-parameter" indexKey="keywordType-parameter" max="200"/>
       <item name="_groupPublished" plural="_groupPublished" indexKey="_groupPublished" max="300"/>
 		</suggestions>
 	</def>

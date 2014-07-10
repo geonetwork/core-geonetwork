@@ -1,11 +1,23 @@
 /*
- * Ext JS Library 2.3.0
- * Copyright(c) 2006-2009, Ext JS, LLC.
- * licensing@extjs.com
- * 
- * http://extjs.com/license
- */
+This file is part of Ext JS 3.4
 
+Copyright (c) 2011-2013 Sencha Inc
+
+Contact:  http://www.sencha.com/contact
+
+GNU General Public License Usage
+This file may be used under the terms of the GNU General Public License version 3.0 as
+published by the Free Software Foundation and appearing in the file LICENSE included in the
+packaging of this file.
+
+Please review the following information to ensure the GNU General Public License version 3.0
+requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+
+If you are unsure which license is appropriate for your use, please contact the sales department
+at http://www.sencha.com/contact.
+
+Build date: 2013-04-03 15:07:25
+*/
 /**
  * Bulgarian Translation
  *
@@ -156,7 +168,8 @@ if(Ext.form.DateField){
     maxText           : "Датата в това поле трябва да е преди {0}",
     invalidText       : "{0} не е валидна дата - трябва да бъде във формат {1}",
     format            : "d.m.y",
-    altFormats        : "d.m.y|d/m/Y|d-m-y|d-m-Y|d/m|d-m|dm|dmy|dmY|d|Y-m-d"
+    altFormats        : "d.m.y|d/m/Y|d-m-y|d-m-Y|d/m|d-m|dm|dmy|dmY|d|Y-m-d",
+    startDay          : 1
   });
 }
 
@@ -169,8 +182,8 @@ if(Ext.form.ComboBox){
 
 if(Ext.form.VTypes){
   Ext.apply(Ext.form.VTypes, {
-    emailText    : 'Това поле трябва да бъде емейл във формат "user@domain.com"',
-    urlText      : 'Това поле трябва да бъде URL във формат "http:/'+'/www.domain.com"',
+    emailText    : 'Това поле трябва да бъде емейл във формат "user@example.com"',
+    urlText      : 'Това поле трябва да бъде URL във формат "http:/'+'/www.example.com"',
     alphaText    : 'Това поле трябва да съдържа само букви и _',
     alphanumText : 'Това поле трябва да съдържа само букви, цифри и _'
   });

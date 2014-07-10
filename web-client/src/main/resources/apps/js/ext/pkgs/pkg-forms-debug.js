@@ -1,9 +1,23 @@
-/*!
- * Ext JS Library 3.4.0
- * Copyright(c) 2006-2011 Sencha Inc.
- * licensing@sencha.com
- * http://www.sencha.com/license
- */
+/*
+This file is part of Ext JS 3.4
+
+Copyright (c) 2011-2013 Sencha Inc
+
+Contact:  http://www.sencha.com/contact
+
+GNU General Public License Usage
+This file may be used under the terms of the GNU General Public License version 3.0 as
+published by the Free Software Foundation and appearing in the file LICENSE included in the
+packaging of this file.
+
+Please review the following information to ensure the GNU General Public License version 3.0
+requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+
+If you are unsure which license is appropriate for your use, please contact the sales department
+at http://www.sencha.com/contact.
+
+Build date: 2013-04-03 15:07:25
+*/
 /**
  * @class Ext.form.Field
  * @extends Ext.BoxComponent
@@ -1691,7 +1705,7 @@ Ext.form.TwinTriggerField = Ext.extend(Ext.form.TriggerField, {
     onTrigger2Click : Ext.emptyFn
 });
 Ext.reg('trigger', Ext.form.TriggerField);
-/**
+Ext.reg('twintrigger', Ext.form.TwinTriggerField);/**
  * @class Ext.form.TextArea
  * @extends Ext.form.TextField
  * Multiline text field.  Can be used as a direct replacement for traditional textarea fields, plus adds
@@ -2642,7 +2656,7 @@ Ext.form.ComboBox = Ext.extend(Ext.form.TriggerField, {
     defaultAutoCreate : {tag: "input", type: "text", size: "24", autocomplete: "off"},
     /**
      * @cfg {Number} listWidth The width (used as a parameter to {@link Ext.Element#setWidth}) of the dropdown
-     * list (defaults to the width of the ComboBox field).  See also <tt>{@link #minListWidth}
+     * list (defaults to the width of the ComboBox field).  See also <tt>{@link #minListWidth}</tt>
      */
     /**
      * @cfg {String} displayField The underlying {@link Ext.data.Field#name data field name} to bind to this
@@ -2669,7 +2683,7 @@ Ext.form.ComboBox = Ext.extend(Ext.form.TriggerField, {
      */
     /**
      * @cfg {String} hiddenId If <tt>{@link #hiddenName}</tt> is specified, <tt>hiddenId</tt> can also be provided
-     * to give the hidden field a unique id.  The <tt>hiddenId</tt> and combo {@link Ext.Component#id id} should be 
+     * to give the hidden field a unique id.  The <tt>hiddenId</tt> and combo {@link Ext.Component#id id} should be
      * different, since no two DOM nodes should share the same id.
      */
     /**
@@ -3039,7 +3053,7 @@ var combo = new Ext.form.ComboBox({
         }
         return zindex;
     },
-    
+
     getZIndex : function(listParent){
         listParent = listParent || Ext.getDom(this.getListParent() || Ext.getBody());
         var zindex = parseInt(Ext.fly(listParent).getStyle('z-index'), 10);
@@ -3317,7 +3331,7 @@ myCombo.keyNav.tab = function() {   // Override TAB handling function
                 if(hname == 'down' || this.scope.isExpanded()){
                     // this MUST be called before ComboBox#fireKey()
                     var relay = Ext.KeyNav.prototype.doRelay.apply(this, arguments);
-                    if(!Ext.isIE && Ext.EventManager.useKeydown){
+                    if((((Ext.isIE9 && Ext.isStrict) || Ext.isIE10p) || !Ext.isIE) && Ext.EventManager.useKeydown){
                         // call Combo#fireKey() for browsers which use keydown event (except IE)
                         this.scope.fireKey(e);
                     }
@@ -3987,7 +4001,7 @@ Ext.form.Checkbox = Ext.extend(Ext.form.Field,  {
             this.checked = this.el.dom.checked;
         }
         // Need to repaint for IE, otherwise positioning is broken
-        if (Ext.isIE && !Ext.isStrict) {
+        if (Ext.isIEQuirks) {
             this.wrap.repaint();
         }
         this.resizeEl = this.positionEl = this.wrap;
@@ -4675,8 +4689,8 @@ Ext.form.CompositeField = Ext.extend(Ext.form.Field, {
             defaultMargins: '0 3 0 0',
             ownerCt: this
         });
-        this.innerCt.ownerCt = undefined;
-        
+        delete this.innerCt.ownerCt;
+
         var fields = this.innerCt.findBy(function(c) {
             return c.isFormField;
         }, this);
@@ -4704,6 +4718,7 @@ Ext.form.CompositeField = Ext.extend(Ext.form.Field, {
              */
             var innerCt = this.innerCt;
             innerCt.render(ct);
+            this.innerCt.ownerCt = this;
 
             this.el = innerCt.getEl();
 
@@ -7125,11 +7140,11 @@ Ext.form.HtmlEditor = Ext.extend(Ext.form.Field, {
         doc.write(this.getDocMarkup());
         doc.close();
 
-        var task = { // must defer to wait for browser to be ready
+        this.readyTask = { // must defer to wait for browser to be ready
             run : function(){
                 var doc = this.getDoc();
                 if(doc.body || doc.readyState == 'complete'){
-                    Ext.TaskMgr.stop(task);
+                    Ext.TaskMgr.stop(this.readyTask);
                     this.setDesignMode(true);
                     this.initEditor.defer(10, this);
                 }
@@ -7138,7 +7153,7 @@ Ext.form.HtmlEditor = Ext.extend(Ext.form.Field, {
             duration:10000,
             scope: this
         };
-        Ext.TaskMgr.start(task);
+        Ext.TaskMgr.start(this.readyTask);
     },
 
 
@@ -7438,9 +7453,13 @@ Ext.form.HtmlEditor = Ext.extend(Ext.form.Field, {
         if(this.monitorTask){
             Ext.TaskMgr.stop(this.monitorTask);
         }
+        if(this.readyTask){
+            Ext.TaskMgr.stop(this.readyTask);
+        }
         if(this.rendered){
             Ext.destroy(this.tb);
             var doc = this.getDoc();
+            Ext.EventManager.removeFromSpecialCache(doc);
             if(doc){
                 try{
                     Ext.EventManager.removeAll(doc);

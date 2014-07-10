@@ -24,6 +24,7 @@
 package org.fao.geonet;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
+import jeeves.server.JeevesEngine;
 import jeeves.server.JeevesProxyInfo;
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.interfaces.ApplicationHandler;
@@ -415,6 +416,10 @@ public class Geonetwork implements ApplicationHandler {
                     }
                 String siteUuid = UUID.randomUUID().toString();
                 context.getBean(SettingManager.class).setSiteUuid(siteUuid);
+
+                // Reload services which may be defined in
+                // database creation scripts in Services table.
+                context.getBean(JeevesEngine.class).loadConfigDB(context.getApplicationContext(), -1);
             } catch (Throwable t) {
                 Log.error(Geonet.DB, "Error occurred while trying to execute SQL", t);
                 throw new RuntimeException(t);

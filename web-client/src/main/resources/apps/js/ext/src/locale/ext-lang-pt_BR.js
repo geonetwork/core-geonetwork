@@ -1,11 +1,23 @@
 /*
- * Ext JS Library 2.3.0
- * Copyright(c) 2006-2009, Ext JS, LLC.
- * licensing@extjs.com
- * 
- * http://extjs.com/license
- */
+This file is part of Ext JS 3.4
 
+Copyright (c) 2011-2013 Sencha Inc
+
+Contact:  http://www.sencha.com/contact
+
+GNU General Public License Usage
+This file may be used under the terms of the GNU General Public License version 3.0 as
+published by the Free Software Foundation and appearing in the file LICENSE included in the
+packaging of this file.
+
+Please review the following information to ensure the GNU General Public License version 3.0
+requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+
+If you are unsure which license is appropriate for your use, please contact the sales department
+at http://www.sencha.com/contact.
+
+Build date: 2013-04-03 15:07:25
+*/
 /**
  * Portuguese/Brazil Translation by Weber Souza
  * 08 April 2007
@@ -180,7 +192,8 @@ if(Ext.form.DateField){
       minText           : "A data deste campo deve ser posterior a {0}",
       maxText           : "A data deste campo deve ser anterior a {0}",
       invalidText       : "{0} n&atilde;o &eacute; uma data v&aacute;lida - deve ser informado no formato {1}",
-      format            : "d/m/Y"
+      format            : "d/m/Y",
+      startDay          : 0
    });
 }
 
@@ -193,7 +206,7 @@ if(Ext.form.ComboBox){
 
 if(Ext.form.VTypes){
    Ext.apply(Ext.form.VTypes, {
-      emailText    : 'Este campo deve ser um endere&ccedil;o de e-mail v&aacute;lido, no formado "usuario@dominio.com.br"',
+      emailText    : 'Este campo deve ser um endere&ccedil;o de e-mail v&aacute;lido, no formato "usuario@dominio.com.br"',
       urlText      : 'Este campo deve ser uma URL no formato "http:/'+'/www.dominio.com.br"',
       alphaText    : 'Este campo deve conter apenas letras e _',
       alphanumText : 'Este campo deve conter apenas letras, n&uacute;meros e _'
@@ -202,7 +215,7 @@ if(Ext.form.VTypes){
 
 if(Ext.form.HtmlEditor){
    Ext.apply(Ext.form.HtmlEditor.prototype, {
-        createLinkText : 'Porfavor, entre com a URL do link:',
+        createLinkText : 'Por favor, entre com a URL do link:',
         buttonTips : {
             bold : {
                title: 'Negrito (Ctrl+B)',
@@ -210,8 +223,8 @@ if(Ext.form.HtmlEditor){
                cls: 'x-html-editor-tip'
             },
             italic : {
-               title: 'Italico (Ctrl+I)',
-               text: 'Deixa o texto selecionado em italico.',
+               title: 'It&aacute;lico (Ctrl+I)',
+               text: 'Deixa o texto selecionado em it&aacute;lico.',
                cls: 'x-html-editor-tip'
             },
             underline : {
@@ -265,8 +278,8 @@ if(Ext.form.HtmlEditor){
                cls: 'x-html-editor-tip'
            },
            createlink : {
-               title: 'Hyperliga&ccedil;&atilde;o',
-               text: 'Transforma o texto selecionado em um hyperlink.',
+               title: 'Link',
+               text: 'Transforma o texto selecionado em um link.',
                cls: 'x-html-editor-tip'
            },
            sourceedit : {

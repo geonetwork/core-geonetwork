@@ -344,7 +344,8 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 id: 'capabilitiesStore',
                 proxy: new Ext.data.HttpProxy({
                     url: catalogue.services.proxy,
-                    method: 'GET'
+                    method: 'GET',
+                    disableCaching: false
                 }),
                 listeners: {
                     exception: function (proxy, type, action, options, res, arg) {
@@ -751,25 +752,37 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
         var reloadCapabilitiesStore = function(stringUrl, protocol, callback) {
             
             if(this.isGetMap(protocol)) {
-                var params = {};
+                var params = {}, paramsUpper = {}, requestProp = [];
                 this.layerNames = [];
                 if(stringUrl.split('?').length == 2) {
                     params = Ext.urlDecode(stringUrl.split('?')[1]);
                 }
-                var paramsUpper = {};
                 for(var p in params){
+                    requestProp.push(p);
                     paramsUpper[p.toUpperCase()] = params[p];
                 }
                 params = Ext.applyIf(paramsUpper, {
                     REQUEST: 'GetCapabilities',
                     SERVICE: 'WMS'
                 });
-                
-                if(protocol && protocol.indexOf('1.3.0') >= 0 ) {
-                    params.version = '1.3.0';
-                } else if(protocol && protocol.indexOf('1.1.1') >= 0 ) {
-                    params.version = '1.1.1';
+
+                if(!params.VERSION) {
+                  if (protocol && protocol.indexOf('1.3.0') >= 0) {
+                    params.VERSION = '1.3.0';
+                  } else if (protocol && protocol.indexOf('1.1.1') >= 0) {
+                    params.VERSION = '1.1.1';
+                  }
                 }
+
+                for (var i=0; i<requestProp.length; i++) {
+                  if(requestProp[i] != requestProp[i].toUpperCase()) {
+                    params[requestProp[i]] = params[requestProp[i].toUpperCase()];
+                    delete params[requestProp[i].toUpperCase()];
+                  }
+                }
+
+                console.log(params);
+
                 var url = Ext.urlAppend(stringUrl.split('?')[0], Ext.urlEncode(params));
                 
                 this.capabilitiesStore.baseParams.url = url;
@@ -901,28 +914,30 @@ GeoNetwork.editor.LinkResourcesWindow = Ext.extend(Ext.Window, {
                 return false;
             }
 
-            for(i=0;i<this.xmlRelations.getCount();i++) {
+            if(this.xmlRelations) {
+              for (i = 0; i < this.xmlRelations.getCount(); i++) {
                 var relation = this.xmlRelations.get(i);
                 var url = relation.get('id').split('||')[0];
                 var info = relation.get('title').split('||')[0].trim().split(' ');
                 var protocol = info.pop();
                 var name = info.join(' ');
-                
-                protocol = protocol.substring(1, protocol.length -1);
+
+                protocol = protocol.substring(1, protocol.length - 1);
                 protocol = (protocol == 'OGC:WMS:getCapabilities') ? 'OGC:WMS' : protocol;
-                
+
                 // The triple key already exists
-                if(url == formValues.href && 
-                        protocol == formValues.protocol && 
-                        name == formValues.name ) {
-                     Ext.Msg.show({
-                        title:OpenLayers.i18n('onlineResExits'),
-                        msg: OpenLayers.i18n('onlineResExitsMsg'),
-                        buttons: Ext.Msg.OK,
-                        icon: Ext.MessageBox.ERROR
-                     });
-                     return true;
+                if (url == formValues.href &&
+                  protocol == formValues.protocol &&
+                  name == formValues.name) {
+                  Ext.Msg.show({
+                    title: OpenLayers.i18n('onlineResExits'),
+                    msg: OpenLayers.i18n('onlineResExitsMsg'),
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.MessageBox.ERROR
+                  });
+                  return true;
                 }
+              }
             }
             return false;
         };

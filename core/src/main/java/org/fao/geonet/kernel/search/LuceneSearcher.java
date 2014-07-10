@@ -365,7 +365,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
      */
     public void getSuggestionForFields(ServiceContext srvContext,
                                        final String searchField, final String searchValue, ServiceConfig config, int maxNumberOfTerms,
-                                       int threshold, Collection<SearchManager.TermFrequency> suggestions) throws Exception {
+                                       int threshold, String groupPublished, Collection<SearchManager.TermFrequency> suggestions) throws Exception {
         if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
             Log.debug(Geonet.SEARCH_ENGINE, "Get suggestion on field: '"
                     + searchField + "'" + "\tsearching: '" + searchValue + "'"
@@ -392,6 +392,11 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         if (!searchValue.equals("")) {
             elData.addContent(new Element(searchField).setText(searchValue));
         }
+        //Begin Specific Sextant V5
+        // If configwhat is set, filter search by catalog to reduce suggestion scope
+        elData.addContent(new Element("_groupPublished").addContent(groupPublished.replace(","," or ")));
+        // End Specific Sextant V5
+
         elData.addContent(new Element("from").setText("1"));
         elData.addContent(new Element("to").setText(Integer.MAX_VALUE + ""));
         elData.addContent(new Element(Geonet.SearchResult.RESULT_TYPE).setText(Geonet.SearchResult.ResultType.SUGGESTIONS));
@@ -708,6 +713,37 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             if(Log.isDebugEnabled(Geonet.LUCENE))
                 Log.debug(Geonet.LUCENE, "requestedLanguageOnly: " + requestedLanguageOnly);
 
+			// --- operation parameter
+			List<Content> operations = new ArrayList<Content>(request.getChildren("operation"));
+			// removes the parameter from the request
+			request.removeChildren("operation");
+
+			// Handles operation (filter by download / dynamic visible to the
+			// current user)
+			if (operations.size() > 0) {
+				StringBuilder grpList = new StringBuilder();
+				for (Integer g : userGroups) {
+					if (grpList.length() > 0)
+						grpList.append(" or ");
+					grpList.append(g);
+				}
+				String grps = grpList.toString();
+				for (Content elem : operations) {
+					if (elem.getValue().equalsIgnoreCase("view")) {
+						request.addContent(new Element("_operation0").addContent(grps));
+					} else if (elem.getValue().equalsIgnoreCase("download")) {
+						request.addContent(new Element("_operation1").addContent(grps));
+					} else if (elem.getValue().equalsIgnoreCase("editing")) {
+						request.addContent(new Element("_operation2").addContent(grps));
+					} else if (elem.getValue().equalsIgnoreCase("notify")) {
+						request.addContent(new Element("_operation3").addContent(grps));
+					} else if (elem.getValue().equalsIgnoreCase("dynamic")) {
+						request.addContent(new Element("_operation5").addContent(grps));
+					} else if (elem.getValue().equalsIgnoreCase("featured")) {
+						request.addContent(new Element("_operation6").addContent(grps));
+					}
+				}
+			}
 
             if (_styleSheetName.equals(Geonet.File.SEARCH_Z3950_SERVER)) {
                 // Construct Lucene query by XSLT, not Java, for Z3950 anyway :-)
@@ -737,11 +773,11 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                     Log.warning(Geonet.SEARCH_ENGINE,"Error rewriting Lucene query: " + _query);
                     //System.out.println("** error rewriting query: "+x.getMessage());
                 }
-            }
+			}
 
-            // Boosting query
-            if (_boostQueryClass != null) {
-                try {
+			// Boosting query
+			if (_boostQueryClass != null) {
+				try {
                     if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
                         Log.debug(Geonet.SEARCH_ENGINE, "Create boosting query:" + _boostQueryClass);
                     }

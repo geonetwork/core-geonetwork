@@ -74,8 +74,8 @@ public class SextantStatusActions extends DefaultStatusActions {
 		* @param changeDate The date the status was changed.
 		* @param changeMessage The message explaining why the status has changed.
 		*/
-	public Set<Integer> statusChange(String status, Set<Integer> metadataIds,
-                                     String changeDate, String changeMessage) throws Exception {
+        public Set<Integer> statusChange(String status, Set<Integer> metadataIds,
+                ISODate changeDate, String changeMessage) throws Exception {
 		Set<Integer> unchanged = new HashSet<Integer>();
 
         // -- process the metadata records to set status
@@ -96,15 +96,15 @@ public class SextantStatusActions extends DefaultStatusActions {
 
             // --- set status, indexing is assumed to take place later
             dm.setStatusExt(context, mid, Integer.valueOf(status),
-                    new ISODate(changeDate), changeMessage);
+                    changeDate, changeMessage);
         }
 
         // --- inform content reviewers if the status is submitted
         if (status.equals(Params.Status.SUBMITTED)) {
-            informContentReviewers(metadataIds, changeDate, changeMessage);
+            informContentReviewers(metadataIds, changeDate.toString(), changeMessage);
             // --- inform owners if status is approved
         } else if (status.equals(Params.Status.APPROVED) || status.equals(Params.Status.REJECTED) || status.equals(Params.Status.RETIRED) || status.equals(Params.Status.UNKNOWN)) {
-            informOwners(metadataIds, changeDate, changeMessage, status);
+            informOwners(metadataIds, changeDate.toString(), changeMessage, status);
         }
 
         return unchanged;

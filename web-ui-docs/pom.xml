@@ -10,7 +10,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>web-ui-docs</artifactId>
-  <name>JS API &amp; Service documentation</name>
+  <name>JS API and Service documentation</name>
   <build>
     <plugins>
       <plugin>

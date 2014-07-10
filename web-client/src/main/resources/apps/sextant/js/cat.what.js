@@ -32,8 +32,9 @@ cat.what = function() {
 			var lang = GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode());
 			
 			// if configwhat is set, the groupFieldStore is loaded from data in configwhat
-			var mode = 'remote', configwhatInput = Ext.query('input[id*=configwhat]');
-			
+			var mode = 'remote',
+        configwhatInput = Ext.query('input[id*=configwhat]'),
+        configlistThesaurus = Ext.query('input[id=configlistThesaurus]');
 
 			groupFieldStore = new GeoNetwork.data.OpenSearchSuggestionStore({
 					url : services.opensearchSuggest,
@@ -47,8 +48,11 @@ cat.what = function() {
 			var filtered = false;
 			var groupToRemove = [];
 			var groupToDisplay = [];
-            
-			// optionnaly configwhat define some elements to remove using -GROUPNAME flag for non identified users
+      var listOfThesaurus = configlistThesaurus &&
+                            configlistThesaurus[0] &&
+                            configlistThesaurus[0].value;
+
+			// optionnally configwhat defines some elements to remove using -GROUPNAME flag for non identified users
 			if(configwhatInput && configwhatInput[0] && configwhatInput[0].value) {
 			    configwhat = configwhatInput[0].value;
 			    var data = configwhat.split(',');
@@ -92,24 +96,24 @@ cat.what = function() {
                     catalogue.fireEvent('afterReset');
 			    });
 			}
-	        catalogueField = new Ext.ux.form.SuperBoxSelect({
-	            hideLabel: false,
-	            width: 230,
-	            minChars: 0,
-	            queryParam: 'q',
-	            hideTrigger: false,
-	            id: 'E__groupPublished',
-	            name: 'E__groupPublished',
-	            mode: mode,
-	            store: groupFieldStore,
-	            configwhat: groupToDisplay.length !== 0,
-	            configwhatRemoveOnly: groupToRemove.length !== 0 && groupToDisplay.length === 0,
-	            valueField: 'value',
-	            displayField: 'value',
-	            valueDelimiter: ' or ',
-	            fieldLabel: OpenLayers.i18n('Catalogue')
-	        });
-	        
+      catalogueField = new Ext.ux.form.SuperBoxSelect({
+          hideLabel: false,
+          width: 230,
+          minChars: 0,
+          queryParam: 'q',
+          hideTrigger: false,
+          id: 'E__groupPublished',
+          name: 'E__groupPublished',
+          mode: mode,
+          store: groupFieldStore,
+          configwhat: groupToDisplay.length !== 0,
+          configwhatRemoveOnly: groupToRemove.length !== 0 && groupToDisplay.length === 0,
+          valueField: 'value',
+          displayField: 'value',
+          valueDelimiter: ' or ',
+          fieldLabel: OpenLayers.i18n('Catalogue')
+      });
+
 //	        User groups and group field will be updated on load when trying to log in
 //	        if (userGroupStore) {
 //    	        userGroupStore.load({callback: function () {
@@ -118,223 +122,320 @@ cat.what = function() {
 //	        } else {
 //	            groupFieldStore.load();
 //	        }
-	        
-            // Radio box
-            var catCookie = cookie.get('cat.searchform.cat');
-            if(catCookie == undefined) {
-                catCookie = 1;
+
+
+
+      // Build thesaurus list or tree view based
+      // on thesaurus configuration
+      // Default configuration
+      var defaultListOfThesaurus = [{
+        id: 'local.theme.sextant-theme',
+        labelFromThesaurus: true,
+        field: 'sextantTheme',
+        tree: true,
+        label: {eng: 'Sextant', fre:'Sextant'}},
+        {
+          id: 'external.theme.inspire-theme',
+          field: 'inspiretheme_en',
+          tree: false,
+          label: {eng: 'INSPIRE', fre:'INSPIRE'}}];
+
+      if (listOfThesaurus != '') {
+        try {
+          listOfThesaurus = Ext.decode(listOfThesaurus);
+        } catch (e) {
+          if (console.log) {
+            console.log('Failed to parse list of thesaurus JSON configuration: ' +
+              listOfThesaurus);
+            console.log(e);
+            console.log('Using default configuration with Sextant and INSPIRE.');
+          }
+          listOfThesaurus = defaultListOfThesaurus;
+        }
+      } else {
+        listOfThesaurus = defaultListOfThesaurus;
+      }
+
+      var catCookie = cookie.get('cat.searchform.cat');
+      if(catCookie == undefined) {
+        catCookie = 'E_' + listOfThesaurus[0].field;
+      }
+      var radios = [];
+      var thesaurusFields = [];
+      var radioChange = function(radio, checked) {
+        var id = radio.inputValue;
+        radio.setVisible(true);
+        Ext.each(thesaurusFields, function(field) {
+          if (field.getId() == id) {
+            field.setVisible(checked);
+            field.setDisabled(!checked);
+            if (checked) {
+              cookie.set('cat.searchform.cat', id);
             }
-            
-            var radioChange = function(radio, checked) {
-                if(radio.boxLabel == 'Sextant') {
-                    categoryTree.setVisible(checked);
-                    categoryTree.setDisabled(!checked);
-                    if(checked) {
-                        cookie.set('cat.searchform.cat', 1);
-                    }
-                }
-                else if(radio.boxLabel == 'INSPIRE') {
-                    themeINSPIREField.setVisible(checked);
-                    themeINSPIREField.setDisabled(!checked);
-                    if(checked){
-                        cookie.set('cat.searchform.cat', 2);
-                    }
-                }
-            };
-            var radioSextant = new Ext.form.Radio({
-                boxLabel: 'Sextant', 
-                name: 'themes', 
-                inputValue: 1,
-                checked: catCookie==1?true:false,
-                listeners: {
-                    check: radioChange
-                }
-            });
-            
-            var radioINSPIRE = new Ext.form.Radio({
-                  boxLabel: 'INSPIRE', 
-                  name: 'themes',
-                  checked: catCookie==2?true:false,
-                  inputValue: 2,
-                  listeners: {
-                      check: radioChange
-                  }
-            });
-            
-	        var radios = new Ext.form.RadioGroup({
-	            columns: 2,
-	            fieldLabel: OpenLayers.i18n('Themes'),
-	            items: [radioSextant,radioINSPIRE],
-	            reset: Ext.emptyFn
-	        });
-			
+          }
+        });
+      };
 
-            
-	        // INSPIRE theme
-            var params = {
-                    field : 'inspiretheme_en',
-                    threshold: 1,
-                    origin: 'RECORDS_FIELD_VALUES'
-                };
-            
-            //if configwhat then send _groupPublished to the suggestion service to filter INSPIRE theme
-            if (groupToDisplay.length > 0) {
-                params.groupPublished = groupToDisplay.join(' or ');
+
+      Ext.each(listOfThesaurus, function(thesaurus) {
+        // Label is the one defined in GUI language or
+        // the one in french or the thesaurus id.
+        var label = thesaurus.label[catalogue.lang] ||
+          thesaurus.label['fre'] ||
+          thesaurus.id,
+          isSavedInCookie = catCookie == ('E_' + thesaurus.field) ? true : false;
+
+        // Create radio selector first
+        var radio = new Ext.form.Radio({
+          boxLabel: label,
+          name: 'themes',
+          inputValue: 'E_' + thesaurus.field,
+          checked: isSavedInCookie,
+          listeners: {
+            check: radioChange
+          }
+        });
+        radios.push(radio);
+
+        var labelStore = null;
+        if (thesaurus.labelFromThesaurus) {
+          // Retrieve label from thesaurus
+          labelStore = new Ext.data.Store({
+            proxy : new Ext.data.HttpProxy({
+              method: 'GET',
+              url: services.searchKeyword
+            }),
+            baseParams: {
+                pNewSearch: true,
+                pTypeSearch: 1,
+                pThesauri: thesaurus.id,
+                pMode: 'searchBox',
+                maxResults: 200
+            },
+            reader: new Ext.data.XmlReader({
+                record: 'keyword',
+                id: 'name'
+            }, Ext.data.Record.create([{
+                name: 'label',
+                mapping: 'value'
+            }, {
+                name: 'name',
+                mapping: 'uri'
+            }])),
+            fields: ["name", "label"],
+            listeners: {
             }
-            
-            var themeINSPIREStore = new GeoNetwork.data.OpenSearchSuggestionStore({
-                url : services.opensearchSuggest,
-                rootId : 1,
-                baseParams : params
-            });
-            
-            var themeINSPIREField = new GeoNetwork.CategoryTree({
-                store : themeINSPIREStore,
-                lang: cat.language,
-                storeLabel: themeINSPIREStore,
-                separator: '',
-                rootVisible: false,
-                autoWidth: true,
-                id : 'E_inspiretheme',
-                name : 'E_inspiretheme_en',
-                root: new Ext.tree.TreeNode({
-                    expanded: true,
-                    text: 'inspire'
-                }),
-                prefixPattern: '',
-                hidden: catCookie==2?false:true,
-                disabled: catCookie==2?false:true
-            });
-            new Ext.tree.TreeSorter(themeINSPIREField, {
-                folderSort: true,
-                dir: "asc"
-            });
+        });
+          labelStore.load();
+        }
 
-            var sextantThemeThesaurusStore = new Ext.data.Store({
-              proxy : new Ext.data.HttpProxy({
-                method: 'GET',
-                url: services.searchKeyword
-              }),
-              baseParams: {
-                  pNewSearch: true,
-                  pTypeSearch: 1,
-                  pThesauri: 'local.theme.sextant-theme',
-                  pMode: 'searchBox',
-                  maxResults: 200
-              },
-              reader: new Ext.data.XmlReader({
-                    record: 'keyword',
-                    id: 'name'
-                }, Ext.data.Record.create([{
-                    name: 'label',
-                    mapping: 'value'
-                }, {
-                    name: 'name',
-                    mapping: 'uri'
-              }])),
-              fields: ["name", "label"],
-              listeners: {
-              }
+        // Create tree or list
+        var suggestionParameters = {
+          field : thesaurus.field,
+          threshold: 1,
+          origin: 'RECORDS_FIELD_VALUES'
+        };
+
+        //if configwhat then send _groupPublished to the
+        // suggestion service to filter
+        if (groupToDisplay.length > 0) {
+          suggestionParameters.groupPublished = groupToDisplay.join(' or ');
+        }
+
+        var suggestionStore = new GeoNetwork.data.OpenSearchSuggestionStore({
+          url : services.opensearchSuggest,
+          rootId : 1,
+          baseParams : suggestionParameters
+        });
+
+        var thesaurusField;
+        if (thesaurus.tree) {
+          thesaurusField = new GeoNetwork.CategoryTree({
+            store : suggestionStore,
+            lang: cat.language,
+            storeLabel: labelStore || suggestionStore,
+            rootVisible: false,
+            autoWidth: true,
+            id : 'E_' + thesaurus.field,
+            name : 'E_' + thesaurus.field,
+            hidden: !isSavedInCookie,
+            disabled: !isSavedInCookie
+          });
+        } else {
+          thesaurusField = new GeoNetwork.CategoryTree({
+            store : suggestionStore,
+            lang: cat.language,
+            storeLabel: labelStore || suggestionStore,
+            separator: '',
+            rootVisible: false,
+            autoWidth: true,
+            id : 'E_' + thesaurus.field,
+            name : 'E_' + thesaurus.field,
+            root: new Ext.tree.TreeNode({
+              expanded: true,
+              text: label
+            }),
+            prefixPattern: '',
+            hidden: !isSavedInCookie,
+            disabled: !isSavedInCookie
+          });
+        }
+        new Ext.tree.TreeSorter(thesaurusField, {
+          folderSort: true,
+          dir: "asc"
+        });
+        thesaurusFields.push(thesaurusField);
+
+      });
+      if(catCookie == undefined) {
+        cookie.set('cat.searchform.cat', radios.items[0].id);
+      }
+      var radioGroup = new Ext.form.RadioGroup({
+          columns: radios.length,
+          id: 'radiogroup',
+          fieldLabel: OpenLayers.i18n('Themes'),
+          items: radios,
+          reset: Ext.emptyFn
+      });
+
+      var sep1 = createSep();
+      var sep2 = createSep();
+      var sep3 = createSep();
+
+      // reload each categoryTree store
+      // depending on selected catalogs
+      var updateCatTree = function(cb) {
+        Ext.each(thesaurusFields, function(f) {
+          var store = f.store;
+          store.baseParams.groupPublished =
+            cb.getValue() ? cb.getValue() : groupToDisplay.join(' or ');
+          f.loadStore();
+        });
+      };
+
+      // Attach event to the first
+      var isEventAttached = false;
+      Ext.each(thesaurusFields, function(f) {
+        if (!isEventAttached) {
+          f.store.on('load', function() {
+            if(catalogueField.getValue()) {
+                updateCatTree(catalogueField);
+            }
+            catalogueField.on('additem', updateCatTree);
+            catalogueField.on('removeitem', updateCatTree);
+            catalogueField.on('reset', updateCatTree);
+          }, this, {single:true});
+          isEventAttached = true;
+        }
+      });
+
+      var searchField = new GeoNetwork.form.OpenSearchSuggestionTextField({
+        width: 230,
+        minChars: 2,
+        loadingText: '...',
+        fieldLabel: OpenLayers.i18n('fullTextSearch'),
+        hideLabel: false,
+        hideTrigger: true,
+        startwith:true,
+        url: services.opensearchSuggest
+      });
+
+      var resourceTypeHiddenField = new Ext.form.Hidden({
+        name: 'E_type',
+        id: 'E_type',
+        value: 'dataset or series or publication or nonGeographicDataset or feature or featureCatalog'
+      });
+      
+      var downloadHiddenField = new Ext.form.Hidden({ name: 'E_operation' });
+      var dldlHiddenField = new Ext.form.Hidden({ name: 'E_download' });
+      var dynamicHiddenField = new Ext.form.Hidden({ name: 'E_operation' });
+      var dydyHiddenField = new Ext.form.Hidden({ name: 'E_dynamic' });
+
+      var downloadCb = new Ext.form.Checkbox({
+          name: 'download',
+          id: 'download',
+          boxLabel: OpenLayers.i18n('search-dowload'),
+          value: false,
+          listeners: {
+        	  check: function(that, checked) {
+        		  if (checked) {
+        			  downloadHiddenField.setValue("download");
+        			  dldlHiddenField.setValue("true");
+        		  } else {
+        			  downloadHiddenField.setValue("");
+        			  dldlHiddenField.setValue("");
+        		  }
+        	  }
+          }
+        });
+      
+      var dynamicCb = new Ext.form.Checkbox({
+          name: 'dynamic',
+          id: 'dynamic',
+          boxLabel: OpenLayers.i18n('search-view'),
+          value: false,
+          listeners: {
+        	  check: function(that, checked) {
+        		  if (checked) {
+        			  dynamicHiddenField.setValue("dynamic");
+        			  dydyHiddenField.setValue("true");
+        		  } else {
+        			  dynamicHiddenField.setValue("");
+        			  dydyHiddenField.setValue("");
+        		  }
+        	  }
+          }
+        });
+
+      var downloadOrViewGroup = new Ext.form.CheckboxGroup({
+        fieldLabel: OpenLayers.i18n('search-data'),
+        columns: 2,
+        items: [
+          dynamicCb, downloadCb
+        ]});
+   
+      
+      advancedFields.push(radioGroup, catalogueField);
+      Ext.each(thesaurusFields, function (item) {
+        advancedFields.push(item);
+      });
+
+      advancedFields.push(resourceTypeHiddenField);
+      var items = [ searchField, sep1, catalogueField, sep2, radioGroup, sep3 ];
+      
+      
+      
+      Ext.each(thesaurusFields, function(f) {
+        items.push(f);
+      });
+      items.push(resourceTypeHiddenField);
+
+      items.push(sep3, downloadHiddenField, dynamicHiddenField, dldlHiddenField, dydyHiddenField, downloadOrViewGroup, dynamicCb, downloadCb);
+      advancedFields.push(downloadHiddenField, dynamicHiddenField, dldlHiddenField, dydyHiddenField, downloadOrViewGroup, dynamicCb, downloadCb);
+      
+      panel = new Ext.Panel({
+        title: OpenLayers.i18n('What'),
+        autoHeight: true,
+        autoWidth: true,
+        collapsible: true,
+        collapsed: false,
+        layout: 'form',
+        defaultType: 'checkbox',
+        bodyCssClass: 'hidden',
+        defaults: {
+          itemCls: 'search_label'
+        },
+        listeners: {
+          'afterrender': function(o) {
+            o.header.on('click', function() {
+              if(o.collapsed) o.expand();
+              else o.collapse();
             });
-
-            
-	        // Use searchSuggestion to load categories (that way they can be filtered)
-	        var baseParams = {
-				field : 'sextantTheme',
-				threshold: 1,
-				origin: 'RECORDS_FIELD_VALUES'
-			};
-	        
-	        //if configwhat then send _groupPublished to the suggestion service to filter cat
-	        if(groupToDisplay.length > 0) {
-	        	baseParams.groupPublished = groupToDisplay.join(' or ');
-	        }
-	        var categoryStore = new GeoNetwork.data.OpenSearchSuggestionStore({
-                url : services.opensearchSuggest,
-                rootId : 1,
-                baseParams : baseParams
-            });
-	        
-			var categoryTree = new GeoNetwork.CategoryTree({
-				store : categoryStore,
-				lang: cat.language,
-                id : 'E_sextantTheme',
-                name : 'E_sextantTheme',
-				storeLabel: sextantThemeThesaurusStore,
-				rootVisible: false,
-				autoWidth: true,
-				hidden: catCookie==1?false:true,
-				disabled: catCookie==1?false:true
-			});
-			new Ext.tree.TreeSorter(categoryTree, {
-                folderSort: true,
-                dir: "asc"
-            });
-
-			var sep1 = createSep();
-			var sep2 = createSep();
-			
-			// reload categoryTree depending on selected catalogs
-			var updateCatTree = function(cb, value, record) {
-				categoryStore.baseParams.groupPublished = cb.getValue() ? cb.getValue() : groupToDisplay.join(' or ');
-				categoryTree.loadStore();
-				
-				themeINSPIREStore.baseParams.groupPublished = cb.getValue() ? cb.getValue() : groupToDisplay.join(' or ');
-				themeINSPIREField.loadStore();
-			};
-			categoryStore.on('load', function() {
-			
-			    if(catalogueField.getValue()) {
-			        updateCatTree(catalogueField);
-			    }
-				catalogueField.on('additem', updateCatTree);
-				catalogueField.on('removeitem', updateCatTree);
-				catalogueField.on('reset', updateCatTree);
-			}, this, {single:true});
-			
-			
-			var searchField = new GeoNetwork.form.OpenSearchSuggestionTextField({
-				width: 230,
-				minChars: 2,
-				loadingText: '...',
-				fieldLabel: OpenLayers.i18n('fullTextSearch'),
-				hideLabel: false,
-				hideTrigger: true,
-				startwith:true,
-				url: services.opensearchSuggest
-			});
-
-			var resourceTypeHiddenField = new Ext.form.Hidden({
-				name: 'E_type',
-				id: 'E_type',
-				value: 'dataset or series or publication or nonGeographicDataset or feature or featureCatalog'
-			});
-
-			advancedFields.push(radios,  catalogueField, themeINSPIREField, categoryTree, resourceTypeHiddenField);
-
-			panel = new Ext.Panel({
-				title: OpenLayers.i18n('What'),
-				autoHeight: true,
-				autoWidth: true,
-				collapsible: true,
-				collapsed: false,
-				layout: 'form',
-				defaultType: 'checkbox',
-				bodyCssClass: 'hidden',
-				defaults: {
-					itemCls: 'search_label'
-				},
-				listeners: {
-					'afterrender': function(o) {
-						o.header.on('click', function() {
-							if(o.collapsed) o.expand();
-							else o.collapse();
-						});
-					}
-				},
-				items: [searchField, sep1, catalogueField, sep2, radios, themeINSPIREField, categoryTree, resourceTypeHiddenField]
-			});
-		},
+          }
+        },
+        items: items
+      });
+    },
 		
 		getAdvancedFields : function() {
 			return advancedFields;

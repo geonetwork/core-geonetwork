@@ -101,7 +101,7 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
      * Loads categories from CategoryStore then create the Tree
      */
     loadCategories : function(records,o,s) {
-    	var r, pseudotree = {};
+    	var r;
     	this.root.removeAll();
     	for (var i=0; i<records.length; i++) {
     	    var label = this.getLabel(records[i].get('value'));

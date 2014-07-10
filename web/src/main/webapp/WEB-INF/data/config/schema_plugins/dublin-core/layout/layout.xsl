@@ -22,6 +22,8 @@
 
   <xsl:template name="get-dublin-core-online-source-config"/>
 
+  <xsl:template name="get-dublin-core-extents-as-json">[]</xsl:template>
+
   <!-- Visit all tree -->
   <xsl:template mode="mode-dublin-core" match="dc:*|dct:*">
     <xsl:apply-templates mode="mode-dublin-core" select="*|@*"/>

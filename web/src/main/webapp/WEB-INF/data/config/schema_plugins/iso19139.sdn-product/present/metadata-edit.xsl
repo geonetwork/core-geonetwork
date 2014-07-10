@@ -93,7 +93,7 @@
 							value="{gco:Measure}"/>
 
 
-            <xsl:variable name="options" as="xs:string*" select="'day', 'month', 'year'"/>
+            <xsl:variable name="options" as="xs:string*" select="'day', 'month', 'season', 'year'"/>
             <xsl:variable name="uom" select="gco:Measure/@uom"/>
 
 						<select  class="md" name="_{$ref}_uom" id="_{$ref}_uom" style="width: inherit; margin-top: 0;">
@@ -492,6 +492,14 @@
 					<xsl:with-param name="edit" select="$edit" />
 				</xsl:apply-templates>
 
+				<!-- DOI -->
+				<xsl:apply-templates mode="simpleElement" select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorTransferOptions/
+					gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[gmd:protocol/gco:CharacterString='WWW:LINK-1.0-http--metadata-URL']/gmd:linkage/gmd:URL">
+					<xsl:with-param name="schema"  select="$schema"/>
+					<xsl:with-param name="edit"   select="$edit"/>
+					<xsl:with-param name="title" select="'DOI'"/>
+				</xsl:apply-templates>
+
 				<!-- Overview -->
 				<xsl:apply-templates mode="elementEP"
 					select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract">
@@ -567,11 +575,12 @@
 								<xsl:with-param name="elementRef" select="$refGeoAreaKeywords/../geonet:element/@ref"/>
 								<xsl:with-param name="thesaurusId" select="'local.reference-geographical-area.seadatanet.reference-geographical-area'"/>
 								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join($refGeoAreaKeywords/gmd:keyword/*[1], '!,!'), '''', '\\'''), '!', '''')"/>
-								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-feature-type'''"/>
-								<xsl:with-param name="transformation" select="'to-iso19139.myocean-feature-type'"/>
+								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-keyword-with-anchor'''"/>
+								<xsl:with-param name="transformation" select="'to-iso19139.myocean-keyword-with-anchor'"/>
 							</xsl:call-template>
 						</xsl:with-param>
 					</xsl:apply-templates>
+					
 				</xsl:for-each>
 
 			<!-- ocean discovery parameters -->
@@ -580,7 +589,7 @@
 					[gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode/@codeListValue='parameter']/gmd:MD_Keywords">
 					<xsl:variable name="oceanDP" select="."/>
 
-
+					<xsl:if test="position()=1">
 					<xsl:apply-templates mode="simpleElement" select=".">
 						<xsl:with-param name="schema"  select="$schema"/>
 						<xsl:with-param name="edit"   select="$edit"/>
@@ -590,13 +599,39 @@
 								<xsl:with-param name="elementRef" select="$oceanDP/../geonet:element/@ref"/>
 								<xsl:with-param name="thesaurusId" select="'local.parameter.seadatanet-ocean-discovery-parameter'"/>
 								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join($oceanDP/gmd:keyword/*[1], '!,!'), '''', '\\'''), '!', '''')"/>
-								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-feature-type'''"/>
-								<xsl:with-param name="transformation" select="'to-iso19139.myocean-feature-type'"/>
+								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-keyword-with-anchor'''"/>
+								<xsl:with-param name="transformation" select="'to-iso19139.myocean-keyword-with-anchor'"/>
 								<xsl:with-param name="identificationMode" select="''"/>
 							</xsl:call-template>
 						</xsl:with-param>
 					</xsl:apply-templates>
+
+					</xsl:if>
+					<xsl:if test="position()=last()">
+					<xsl:apply-templates mode="simpleElement" select=".">
+						<xsl:with-param name="schema"  select="$schema"/>
+						<xsl:with-param name="edit"   select="$edit"/>
+						<xsl:with-param name="title" select="'Ocean chemistry variable'"/>
+						<xsl:with-param name="text">
+							<xsl:call-template name="snippet-editor">
+								<xsl:with-param name="elementRef" select="$oceanDP/../geonet:element/@ref"/>
+								<xsl:with-param name="thesaurusId" select="'local.parameter.seadatanet-ocean-chemistry-variable'"/>
+								<xsl:with-param name="listOfKeywords" select="replace(replace(string-join($oceanDP/gmd:keyword/*[1], '!,!'), '''', '\\'''), '!', '''')"/>
+								<xsl:with-param name="listOfTransformations" select="'''to-iso19139.myocean-keyword-with-anchor'''"/>
+								<xsl:with-param name="transformation" select="'to-iso19139.myocean-keyword-with-anchor'"/>
+								<xsl:with-param name="identificationMode" select="''"/>
+							</xsl:call-template>
+						</xsl:with-param>
+					</xsl:apply-templates>
+
+
+					</xsl:if>
+
+
 				</xsl:for-each>
+
+
+
 
 			<!-- Usage license -->
 			
@@ -712,12 +747,13 @@
 												<xsl:with-param name="format" select="$format"/>
 												<xsl:with-param name="disabled" select="@indeterminatePosition = 'unknown'"/>
 											</xsl:call-template>
+
 											<xsl:variable name="indeterminatePositionId" select="concat('_', $ref ,'_indeterminatePosition')"/>
 											<div style="margin-left: 168px;">
 												<!-- When form field is disabled, they are not posted. Add an empty field 
 													to enable when the calendar field is disabled. -->
 												<input type="hidden" id="_{$ref}_disabled_field" name="_{$ref}" value="">
-													<xsl:if test="@indeterminatePosition != 'unknown'">
+													<xsl:if test="string(@indeterminatePosition) != 'unknown'">
 														<xsl:attribute name="disabled">disabled</xsl:attribute>
 													</xsl:if>
 												</input>

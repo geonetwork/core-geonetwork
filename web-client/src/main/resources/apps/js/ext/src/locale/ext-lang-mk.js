@@ -1,11 +1,23 @@
 /*
- * Ext JS Library 2.3.0
- * Copyright(c) 2006-2009, Ext JS, LLC.
- * licensing@extjs.com
- * 
- * http://extjs.com/license
- */
+This file is part of Ext JS 3.4
 
+Copyright (c) 2011-2013 Sencha Inc
+
+Contact:  http://www.sencha.com/contact
+
+GNU General Public License Usage
+This file may be used under the terms of the GNU General Public License version 3.0 as
+published by the Free Software Foundation and appearing in the file LICENSE included in the
+packaging of this file.
+
+Please review the following information to ensure the GNU General Public License version 3.0
+requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+
+If you are unsure which license is appropriate for your use, please contact the sales department
+at http://www.sencha.com/contact.
+
+Build date: 2013-04-03 15:07:25
+*/
 /*
  * Macedonia translation
  * By PetarD petar.dimitrijevic@vorteksed.com.mk (utf8 encoding)
@@ -145,8 +157,8 @@ if(Ext.form.ComboBox){
 
 if(Ext.form.VTypes){
    Ext.apply(Ext.form.VTypes, {
-      emailText    : 'Ова поле треба да биде e-mail адреса во формат "user@domain.com"',
-      urlText      : 'Ова поле треба да биде URL во формат "http:/'+'/www.domain.com"',
+      emailText    : 'Ова поле треба да биде e-mail адреса во формат "user@example.com"',
+      urlText      : 'Ова поле треба да биде URL во формат "http:/'+'/www.example.com"',
       alphaText    : 'Ова поле треба да содржи само букви и _',
       alphanumText : 'Ова поле треба да содржи само букви, бројки и _'
    });
