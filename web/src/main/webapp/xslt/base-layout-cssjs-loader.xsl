@@ -23,7 +23,7 @@
     
     <link rel="shortcut icon" type="image/x-icon" href="../../images/logos/favicon.ico" />
     
-    <link href="{/root/gui/url}/static/{$angularApp}.css{$minimizedParam}" rel="stylesheet" media="screen" />
+    <link href="{/root/gui/url}/catalog/tmp/app.css" rel="stylesheet" media="screen" />
     <link href="{/root/gui/url}/static/{/root/gui/nodeId}_custom_style.css{$minimizedParam}" rel="stylesheet" media="screen" />
   </xsl:template>
   
@@ -48,10 +48,13 @@
         <script src="{$uiResourcesPath}lib/angular-translate.js"></script>
         <script src="{$uiResourcesPath}lib/angular-md5.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/datetimepicker.js"></script>
-        
+        <script src="{$uiResourcesPath}lib/angular.ext/bootstrap/buttons.js"></script>
+
         <script src="{$uiResourcesPath}lib/bootstrap-3.0.1.js"></script>
+        <script src="{$uiResourcesPath}lib/jquery.ext/jquery-ui-slider.min.js"></script>
         <script src="{$uiResourcesPath}lib/proj4js-compressed.js"></script>
         <script src="{$uiResourcesPath}lib/ol-whitespace.js"></script>
+        <script src="{$uiResourcesPath}lib/ngeo.js"></script>
         <xsl:if test="$withD3">
           <script src="{$uiResourcesPath}lib/d3.v3.js"></script>
           <script src="{$uiResourcesPath}lib/nv.d3.js"></script>

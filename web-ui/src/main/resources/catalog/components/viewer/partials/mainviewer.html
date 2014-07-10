@@ -1,0 +1,183 @@
+<div class="wrapper" data-ng-controller="gnViewerController">
+
+  <div id="map" go-map="" class="map"></div>
+  <div class="search-container">
+    <input type="search" class="form-control" placeholder="Recherche">
+  </div>
+
+  <!--Top right buttons - Tools-->
+  <div class="tools" data-ng-controller="toolsController">
+    <button class="btn btn-default" type="submit" rel="#layers">
+      <span class="fa fa-tasks"></span>
+      <span role="tooltip">Couches</span>
+    </button>
+    <button class="btn btn-default" type="submit" rel="#contexts">
+      <span class="fa fa-book"></span>
+      <span role="tooltip">Contextes</span>
+    </button>
+    <button class="btn btn-default" type="submit" rel="#print">
+      <span class="fa fa-print"></span>
+      <span role="tooltip">Impression</span>
+    </button>
+    <button go-btn class="btn btn-default" type="submit" ng-model="mInteraction.active" rel="#measures">
+      <span class="fa fa-spoon"></span>
+      <span role="tooltip">Mesure</span>
+    </button>
+    <button go-btn class="btn btn-default" type="submit" rel="#draw" ng-model="drawVector.inmap">
+      <span class="fa fa-pencil"></span>
+      <span role="tooltip">Annotations</span>
+    </button>
+  </div>
+
+  <!--Bottom right buttons - Navigation-->
+  <div class="tools control-tools">
+    <button class="btn btn-default" type="submit">
+      <span class="fa fa-plus"></span>
+      <span role="tooltip">Zoomer</span>
+    </button>
+    <button class="btn btn-default" type="submit">
+      <span class="fa fa-minus"></span>
+      <span role="tooltip">Dézoomer</span>
+    </button>
+    <button class="btn btn-default" type="submit">
+      <span class="fa fa-map-marker"></span>
+      <span role="tooltip">Localisation</span>
+    </button>
+  </div>
+
+  <div class="panel panel-default force-hide panel-tools" id="layers">
+
+    <div class="layers">
+      <div class="panel-body">
+        <button type="button" class="btn btn-default close">
+          &times;
+        </button>
+        <h5>Couches thématiques</h5>
+      </div>
+      <div gn-layermanager="" gn-layermanager-map="map"></div>
+    </div>
+
+    <div class="panel-body">
+      <button type="button" class="btn btn-default unfold">
+        <span class="fa fa-chevron-down"></span>
+      </button>
+      <h5>Ajouter une couche</h5>
+
+      <div class="btn-group">
+        <button type="button" class="btn btn-default">Flux WMS</button>
+        <button type="button" class="btn btn-default">Flux WMTS</button>
+        <button type="button" class="btn btn-default">Fichier KML</button>
+      </div>
+
+      <div gn-wms-import="" gn-wms-import-map="map"></div>
+    </div>
+
+
+  </div>
+
+  <div class="panel panel-default force-hide panel-tools" id="contexts">
+
+    <div class="panel-body">
+      <button type="button" class="btn btn-default close">
+        &times;
+      </button>
+      <h5>Contextes de carte</h5>
+      <div class="btn-group">
+        <button type="button" class="btn btn-default">
+          <span class="fa fa-save"></span>
+          Sauvegarder
+        </button>
+        <button type="button" class="btn btn-default">
+          <span class="fa fa-open"></span>
+          Restaurer
+        </button>
+      </div>
+      <p>
+        ou <a href="truite">exporter au Format KML</a>
+      </p>
+    </div>
+  </div>
+
+  <!--Measure Info Panel-->
+  <div class="panel panel-default force-hide panel-tools" id="measures">
+    <div class="panel-body">
+      <button type="button" class="btn btn-default close">
+        &times;
+      </button>
+      <h5>Mesures</h5>
+      <div class="gn-measure-text">
+        <div class="hidden-print" translate>measure_instruction</div>
+        <div>{{'distance_label' | translate}}: {{measureObj.distance | measure}}</div>
+        <div>{{'surface_label' | translate}}: {{measureObj.surface | measure:'area':['km&sup2', ' m&sup2']}}</div>
+      </div>
+    </div>
+  </div>
+
+  <!--Draw Panel-->
+  <div class="panel panel-default force-hide panel-tools" id="draw">
+    <div class="panel-body">
+      <button type="button" class="btn btn-default close">
+        &times;
+      </button>
+      <h5>Annotations</h5>
+      <div class="gn-draw-text" gn-draw="" map="map" vector="drawVector">
+      </div>
+    </div>
+  </div>
+
+  <div class="panel panel-default force-hide panel-tools" id="print">
+
+    <div class="panel-body">
+      <button type="button" class="btn btn-default close">
+        &times;
+      </button>
+      <h5>Impression</h5>
+    </div>
+
+  </div>
+
+  <!-- <div class="panel panel-default" id="results"> -->
+
+  <!--   <div class="panel-body"> -->
+  <!--   </div> -->
+
+  <!-- </div> -->
+
+
+
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script>
+  $('.tools:not(.control-tools) .btn').click(function() {
+    if ($(this).hasClass('active')) {
+      $(this).removeClass('active');
+      $($(this).attr('rel')).addClass('force-hide')
+    } else {
+      $('.btn').removeClass('active');
+      $(this).addClass('active');
+      $('.panel-tools').addClass('force-hide');
+      $($(this).attr('rel')).removeClass('force-hide')
+    }
+  });
+  $('#layers .btn-group button').click(function(){
+    $('#layers .btn-group button').removeClass('active');
+    $(this).addClass('active');
+    $('.layers').addClass('collapsed');
+    $('.layerTree').removeClass('collapsed');
+    $('.unfold').css('opacity',1);
+  });
+  $('.unfold').click(function(){
+    $('#layers .btn-group button').removeClass('active');
+    $('.layers').removeClass('collapsed');
+    $('.layerTree').addClass('collapsed');
+    $('.unfold').css('opacity',0);
+  });
+  $('.close').click(function(){
+    var t = $(this).parents('.panel-tools');
+    t.addClass('force-hide');
+    $('[rel=#'+t.attr('id')+']').removeClass('active');
+  });
+</script>

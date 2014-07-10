@@ -1,0 +1,30 @@
+.layerTree {
+  ul ul {
+    margin: 0;
+    .list-group-item {
+      border-width: 1px 0 0 0;
+    }
+    display: none;
+  }
+  label {
+    font-weight: normal;
+    & + ul {
+      margin-top: .8em;
+    }
+    &:hover {
+      background: #fff;
+    }
+    .fa {
+      margin-right: .1em;
+      font-size: 1.15em;
+      vertical-align: middle;
+    }
+  }
+  .list-group-item {
+    padding-right: 0;
+  }
+}
+.layers, .layerTree {
+  max-height: 50em;
+  transition: max-height .25s ease;
+}

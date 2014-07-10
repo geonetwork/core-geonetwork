@@ -3,12 +3,14 @@
 
 
   var module = angular.module('gn_map_service', [
+    'go'
   ]);
 
   module.provider('gnMap', function() {
     this.$get = [
+      'goDecorateLayer',
       'gnConfig',
-      function(gnConfig) {
+      function(goDecorateLayer, gnConfig) {
 
         var defaultMapConfig = {
           'useOSM': 'true',
@@ -66,6 +68,41 @@
             ];
           },
 
+          /**
+           * Convert coordinates object into text
+           *
+           * @param coord must be an array of points (array with
+           * dimension 2) or a point
+           * @returns coordinates as text with format : 'x1 y1,x2 y2,x3 y3'
+           */
+          getTextFromCoordinates: function(coord) {
+            var text;
+
+            var addPointToText = function(point) {
+              if(text) {
+                text += ',';
+              }
+              else {
+                text = '';
+              }
+              text += point[0] + ' ' + point[1];
+            };
+
+            if(angular.isArray(coord) && coord.length > 0) {
+              if(angular.isArray(coord[0])) {
+                for(var i=0;i<coord.length;++i) {
+                  var point = coord[i];
+                  if(angular.isArray(point) && point.length == 2) {
+                    addPointToText(point);
+                  }
+                }
+              } else if(coord.length == 2) {
+                addPointToText(coord);
+              }
+            }
+            return text;
+          },
+
           getMapConfig: function() {
             if (gnConfig['map.config'] &&
                 angular.isObject(gnConfig['map.config'])) {
@@ -120,7 +157,7 @@
            * or
            * North 90, South -90, East 180, West -180. Global
            */
-          getDcExtent: function(extent, location) {
+          getDcExtent: function(extent) {
             if (angular.isArray(extent)) {
               var dc = 'North ' + extent[3] + ', ' +
                   'South ' + extent[1] + ', ' +
@@ -133,8 +170,64 @@
             } else {
               return '';
             }
+          },
+
+          addWmsToMap : function(map, layerParams, layerOptions, index) {
+            var createWmsLayer = function(params, options, index) {
+              options = options || {};
+
+              var source = new ol.source.TileWMS({
+                params: params,
+                url: options.url,
+                extent: options.extent,
+                ratio: options.ratio || 1
+              });
+
+              var layer = new ol.layer.Tile({
+                url: options.url,
+                type: 'WMS',
+                opacity: options.opacity,
+                visible: options.visible,
+                source: source
+              });
+              // TODO : move this into layer definition (maybe into an object)
+              goDecorateLayer(layer);
+              layer.preview = options.preview;
+              layer.label = options.label;
+              layer.displayInLayerManager = true;
+              layer.legend = options.legend;
+              layer.attribution = options.attribution;
+              return layer;
+            };
+
+            var olLayer = createWmsLayer(layerParams, layerOptions);
+            if (index) {
+              map.getLayers().insertAt(index, olLayer);
+            } else {
+              map.addLayer(olLayer);
+            }
+            return olLayer;
           }
         };
       }];
   });
+
+  module.provider('gnLayerFilters', function() {
+    this.$get = function() {
+      return {
+        /**
+         * Filters out background layers, preview
+         * layers, draw, measure.
+         * In other words, all layers that
+         * were actively added by the user and that
+         * appear in the layer manager
+         */
+        selected: function(layer) {
+          return layer.displayInLayerManager;
+        }
+      };
+    };
+  });
+
+
 })();

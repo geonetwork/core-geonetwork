@@ -35721,6 +35721,9 @@ ol.source.TileWMS.prototype.getKeyZXY = function(z, x, y) {
 ol.source.TileWMS.prototype.getParams = function() {
   return this.params_
 };
+ol.source.TileWMS.prototype.getUrls = function() {
+  return this.urls_;
+};
 ol.source.TileWMS.prototype.getRequestUrl_ = function(tileCoord, tileSize, tileExtent, pixelRatio, projection, params) {
   var urls = this.urls_;
   if(!goog.isDef(urls) || goog.array.isEmpty(urls)) {

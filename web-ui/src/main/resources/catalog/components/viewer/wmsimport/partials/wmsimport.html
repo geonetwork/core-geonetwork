@@ -1,0 +1,18 @@
+<div class="layerTree collapsed">
+  <form role="form">
+    <div class="form-group">
+      <div class="dropdown">
+        <input class="form-control input-sm" type="text" data-toggle="dropdown" data-ng-model="url"
+               data-ng-change="load(url)" placeholder="{{'serviceUrl' | translate}}"/>
+        <ul class="dropdown-menu" role="menu">
+          <li data-ng-repeat="srv in servicesList">
+            <a href="" data-ng-click="params.url = srv;load(srv)">
+              {{srv}}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </form>
+  <gn-cap-tree-col collection='layers.nestedLayers' selection="selection"></gn-cap-tree-col>
+</div>

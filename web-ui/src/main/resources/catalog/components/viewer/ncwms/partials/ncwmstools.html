@@ -1,0 +1,62 @@
+<div class="panel panel-default">
+  <div class="panel-body">
+    <form class="form-horizontal" role="form">
+
+      <!--Tools buttons for time series, vertical profile and transect-->
+      <button class="btn btn-default" data-ng-click="setActiveTool('time')" type="submit" data-ng-class="{'active':activeTool=='time'}">
+        <span class="fa fa-history"></span>
+      </button>
+      <button class="btn btn-default" data-ng-click="setActiveTool('profile')" type="submit" data-ng-class="{'active':activeTool=='profile'}">
+        <span class="fa fa-crop"></span>
+      </button>
+      <button class="btn btn-default" data-ng-click="setActiveTool('transect')" type="submit" data-ng-class="{'active':activeTool=='transect'}">
+        <span class="fa fa-image"></span>
+      </button>
+
+      <!--Times input only visible if time series button is enabled-->
+      <div class="form-group" data-ng-show="activeTool=='time'">
+        <input type="date" class="form-control input-sm" datetimepicker="" data-ng-model="tsfromD"/>{{tsfromD}}
+        à
+        <input type="date" class="form-control input-sm" data-ng-model="tstoD"/>
+      </div>
+
+      <!--Scales-->
+      <div class="form-group">
+        <label for="ncwmsscales">Echelles</label>
+        <select class="form-control input-sm" data-ng-model="params.LOGSCALE" data-ng-change="updateLayerParams()">
+          <option value="false" translate="linear"></option>
+          <option value="true" translate="logarithmic"></option>
+        </select>
+      </div>
+
+      <!--Color ranges auto compute-->
+      <button type="button" class="btn btn-link" data-ng-click="onColorscaleChange('auto')" translate="Auto"></button>
+
+      <!--Color ranges double slider-->
+      <div class="form-group">
+        <label>
+          <span class="pull-left">{{colorscalerange[0]}}</span>
+          <span class="pull-right">{{colorscalerange[1]}}</span>
+        </label>
+        <div ui-slider="{range: true}" min="{{constants.colorscale.min}}" max="{{constants.colorscale.max}}" id="ncwmsscales"
+             step="{{constants.colorscale.step}}" use-decimals ng-model="colorscalerange" data-ng-change="onColorscaleChange(colorscalerange)"></div>
+      </div>
+
+      <!--Elevations combo-->
+      <div class="form-group">
+        <label for="ncwmselevation">Elévation</label>
+        <select class="form-control input-sm" id="ncwmselevation" data-ng-model="params.ELEVATION" data-ng-change="updateLayerParams()">
+          <option data-ng-repeat="el in layer.ncInfo.dimensions.elevation.values">{{el}}</option>
+        </select>
+      </div>
+
+      <!--Styles combo-->
+      <div class="form-group">
+        <label for="ncwmsstyles">Styles</label>
+        <select class="form-control input-sm" id="ncwmsstyles" data-ng-model="params.STYLES" data-ng-change="updateLayerParams()">
+          <option data-ng-repeat="style in layer.ncInfo.styles" value="{{style.name}}">{{style.title}}</option>
+        </select>
+      </div>
+    </form>
+  </div>
+</div>

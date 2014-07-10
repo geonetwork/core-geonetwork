@@ -1,0 +1,56 @@
+<div go-btn-group>
+  <button go-btn class="btn btn-success" ng-model="drawPoint.active">Point</button>
+  <button go-btn class="btn btn-success" ng-model="drawLine.active">Linestring</button>
+  <button go-btn class="btn btn-success" ng-model="drawPolygon.active">Polygon</button>
+</div>
+
+<!--
+<div>
+  <div class="gn-draw-buttons">
+    <button ng-repeat="tool in options.tools"
+            ng-click="toggleTool(tool)"
+            title="{{tool.description | translate}}"
+            class="{{tool.cssClass}} {{options[tool.activeKey] ? 'active' : ''}}">
+      <i class="fa {{tool.iconClass}}"></i>
+      <div translate>{{tool.title}}</div>
+    </button>
+  </div>
+  <div class="gn-draw-instructions" ng-if="aToolIsActive()">
+    {{options.instructions | translate}}
+  </div>
+
+  <div class="gn-draw-modify" ng-if="aToolIsActive()">
+    <div ng-if="options.isTextActive || useTextStyle">
+      <label translate>modify_text_label</label>:
+      <input ng-model="options.text" type="text"
+             placeholder="{{'draw_text_placeholder' | translate}}"/>
+    </div>
+    <div ng-if="options.isTextActive || options.isLineActive || options.isPolygonActive || useColorStyle">
+      <label translate>modify_color_label</label>:
+      <select ng-model="options.color" ng-options="options.translate(c.name) for c in options.colors">
+      </select>
+    </div>
+    <div class="gn-icons" ng-if="options.isPointActive || useIconStyle">
+      <div>
+        <label translate>modify_icon_size_label</label>:
+        <select ng-model="options.iconSize" ng-options="s.label for s in options.iconSizes">
+        </select>
+      </div>
+      <div>
+        <label translate>modify_icon_label</label>:
+        <div class="gn-choose-icon ga-icon-size-{{options.iconSize.value[0]}}">
+          <img class="{{(options.icon == i) ? 'gn-selected' : ''}}"
+               draggable="false"
+               ng-click="options.icon = i"
+               ng-repeat="i in options.icons"
+               ng-src="{{i.url}}" />
+        </div>
+      </div>
+    </div>
+
+    <div ng-if="options.isModifyActive">
+      <button class="btn btn-default" ng-click="deleteFeatures()" translate>draw_delete_selected_features</button>
+    </div>
+  </div>
+</div>
+-->
