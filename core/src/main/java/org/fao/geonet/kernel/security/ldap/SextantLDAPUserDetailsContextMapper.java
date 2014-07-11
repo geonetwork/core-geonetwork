@@ -57,10 +57,10 @@ public class SextantLDAPUserDetailsContextMapper extends
 	}
 
 	// This does basically the same as
-	// AbstractLDAPUserDetailsContextMapper.mapUserFromContext(),
-	// but avoids to update the LDAP directory (no saveUser()),
-	// and ensures that the group ownership from the LDAP directory
-	// is correctly imported.
+	// AbstractLDAPUserDetailsContextMapper.mapUserFromContext(), but avoids to
+	// update the LDAP directory (no saveUser()), and ensures that the group
+	// ownership from the LDAP directory is correctly imported.	
+	
 	@Override
 	public UserDetails mapUserFromContext(DirContextOperations userCtx,
 			String username, Collection<? extends GrantedAuthority> authorities) {
@@ -130,11 +130,9 @@ public class SextantLDAPUserDetailsContextMapper extends
 		for (String k : privs.keys()) {
 			// first, try to find the group
 			Group group = groupRepository.findByName(k);
-			// Group not found, creating it ...
+			// Group not found, skipping (Mantis issue #21571)
 			if (group == null) {
-				group = new Group();
-				group.setName(k);
-				groupRepository.saveAndFlush(group);
+				continue ;
 			}
 			// Then add a new entry for the user / group
 			Profile prof = (Profile) privs.get(k).toArray()[0];
@@ -149,188 +147,105 @@ public class SextantLDAPUserDetailsContextMapper extends
 	}
 
 	@Override
-	protected void setProfilesAndPrivileges(Profile defaultProfile,
-			String defaultGroup, Map<String, ArrayList<String>> userInfo,
-			LDAPUser userDetails) {
-		// Set privileges for the user. If not, privileges are handled
-		// in local database
-		if (importPrivilegesFromLdap) {
-			if ("".equals(privilegePattern)) {
-				// 1. no privilegePattern defined. In that case the user
-				// has the same profile for all groups. The list of groups
-				// is retrieved from the privilegeAttribute content
-				// getUserInfo(userInfo, mapping.get("profile")[0]));
+	protected void setProfilesAndPrivileges(Profile defaultProfile, String defaultGroup, Map<String, ArrayList<String>> userInfo, LDAPUser userDetails) {
+		// Set privileges for the user. If not, privileges are handled in local
+		// database
 
-				// Usually only one profile is defined in the profile attribute
-				List<String> ldapProfiles = userInfo
-						.get(mapping.get("profile")[0]);
-				if (ldapProfiles != null) {
-					Collections.sort(ldapProfiles);
-					for (String profile : ldapProfiles) {
-						if (Log.isDebugEnabled(Geonet.LDAP)) {
-							Log.debug(
-									Geonet.LDAP,
-									"  User profile " + profile
-											+ " found in attribute "
-											+ mapping.get("profile")[0]);
-						}
-						// Check if profile exist in profile mapping table
-						String mappedProfile = profileMapping.get(profile)
-								.name();
-						if (mappedProfile != null) {
-							profile = mappedProfile;
-						}
+		// SXT issue #18395
+		// We need this info earlier in the code, to avoid filling the usergroups table
+		// in case of super admin.
+		boolean isSuperAdmin = false;
 
-						if (Log.isDebugEnabled(Geonet.LDAP)) {
-							Log.debug(Geonet.LDAP, "  Assigning profile "
-									+ profile);
-						}
-						if (Profile.exists(profile)) {
-							userDetails.setProfile(Profile.valueOf(profile));
-						} else {
-							Log.error(Geonet.LDAP, "  Profile " + profile
-									+ " does not exist.");
-						}
-					}
-				}
+		// 2. a privilegePattern is defined which define a
+		// combination of group and profile pair.
+		ArrayList<String> privileges = userInfo.get(mapping.get("privilege")[0]);
 
-				// If no profile defined, use default profile
-				if (userDetails.getProfile() == null) {
-					if (Log.isDebugEnabled(Geonet.LDAP)) {
-						Log.debug(Geonet.LDAP,
-								"  No profile defined in LDAP, using default profile "
-										+ defaultProfile);
-					}
-					userDetails.setProfile(defaultProfile);
-				}
+		if (privileges == null) {
+			privileges = new ArrayList<String>();
+		}
 
-				if (userDetails.getProfile() != Profile.Administrator) {
-					List<String> ldapGroups = userInfo.get(mapping
-							.get("privilege")[0]);
-					if (ldapGroups != null) {
-						for (String group : ldapGroups) {
-							if (Log.isDebugEnabled(Geonet.LDAP)) {
-								Log.debug(
-										Geonet.LDAP,
-										"  Define group privilege for group "
-												+ group + " as "
-												+ userDetails.getProfile());
-							}
-							userDetails.addPrivilege(group,
-									userDetails.getProfile());
-						}
-					}
+		// First pass: if the user is super admin, no need to populate the
+		// usergroups table.
+		for (String p : privileges) {
+			if (p.toUpperCase().equals("SXT5_ALL_ADMINISTRATOR")) {
+				isSuperAdmin = true;
+				userDetails.setProfile(Profile.Administrator);
+			}
+			if (isSuperAdmin) {
+				break;
+			}
+		}
 
-					// Set default privileges
-					if (userDetails.getPrivileges().size() == 0
-							&& defaultGroup != null) {
-						if (Log.isDebugEnabled(Geonet.LDAP)) {
-							Log.debug(Geonet.LDAP,
-									"  No privilege defined, setting privilege for group "
-											+ defaultGroup + " as "
-											+ userDetails.getProfile());
-						}
-						userDetails.addPrivilege(defaultGroup,
-								userDetails.getProfile());
-					}
-				}
-			} else {
-				// 2. a privilegePattern is defined which define a
-				// combination of group and profile pair.
-				ArrayList<String> privileges = userInfo.get(mapping.get("privilege")[0]);
-				if(userDetails.getOrganisation().equals("IFREMER")) {
-
-					if (privileges == null) {
-						privileges = new ArrayList<String>();
-					}
+		if (! isSuperAdmin) {
+			if (userDetails.getOrganisation().equals("IFREMER")) {
+				// If the user is admin, no need to add the following privilege
+				// (SXT issue #18395)
+				if (!isSuperAdmin) {
 					privileges.add("SXT5_IFREMER_RegisteredUser");
 				}
-				if (privileges != null) {
-					// fixing Mantis issue #18255
-					// removing leading / trailing whitespaces on the group
-					// names
-					for (int i = 0; i < privileges.size(); i++) {
-						privileges.set(i, privileges.get(i).trim());
-					}
+			}
+			// fixing Mantis issue #18255
+			// removing leading / trailing whitespaces on the group names
+			for (int i = 0; i < privileges.size(); i++) {
+				privileges.set(i, privileges.get(i).trim());
+			}
 
-					Set<String> profileList = new HashSet<String>();
+			Set<String> profileList = new HashSet<String>();
 
-					for (String privilegeDefinition : privileges) {
+			for (String privilegeDefinition : privileges) {
 
-						Matcher m = pattern.matcher(privilegeDefinition);
-						boolean b = m.matches();
-						if (b) {
-							String group = m.group(groupIndexInPattern);
-							String profile = m.group(profilIndexInPattern);
+				Matcher m = pattern.matcher(privilegeDefinition);
+				boolean b = m.matches();
+				if (b) {
+					String group = m.group(groupIndexInPattern);
+					String profile = m.group(profilIndexInPattern);
 
-							if (group != null && profile != null
-									&& Profile.exists(profile)) {
-								if (!group
-										.equals(LDAPConstants.ALL_GROUP_INDICATOR)) {
-									if (Log.isDebugEnabled(Geonet.LDAP)) {
-										Log.debug(Geonet.LDAP,
-												"  Adding profile " + profile
-														+ " for group " + group);
-									}
-									userDetails.addPrivilege(group,
-											Profile.valueOf(profile));
-									profileList.add(profile);
-								} else {
-									profileList.add(profile);
-								}
-							} else {
-								Log.info(Geonet.LDAP, "LDAP privilege info '"
-										+ privilegeDefinition
-										+ "' does not match search pattern '"
-										+ privilegePattern
-										+ "'. Information ignored.");
+					if (group != null && profile != null && Profile.exists(profile)) {
+						if (!group.equals(LDAPConstants.ALL_GROUP_INDICATOR)) {
+							if (Log.isDebugEnabled(Geonet.LDAP)) {
+								Log.debug(Geonet.LDAP, "  Adding profile " + profile + " for group " + group);
 							}
+							userDetails.addPrivilege(group, Profile.valueOf(profile));
+							profileList.add(profile);
+						} else {
+							profileList.add(profile);
 						}
-					}
-					String highestUserProfile = getHighestProfile(profileList
-							.toArray(new String[0]));
-					if (highestUserProfile != null) {
-						if (Log.isDebugEnabled(Geonet.LDAP)) {
-							Log.debug(Geonet.LDAP, "  Highest user profile is "
-									+ highestUserProfile);
-						}
-						userDetails.setProfile(Profile
-								.valueOf(highestUserProfile));
+					} else {
+						Log.info(Geonet.LDAP, "LDAP privilege info '" + privilegeDefinition
+								+ "' does not match search pattern '" + privilegePattern + "'. Information ignored.");
 					}
 				}
 			}
+			String highestUserProfile = getHighestProfile(profileList.toArray(new String[0]));
+			if (highestUserProfile != null) {
+				if (Log.isDebugEnabled(Geonet.LDAP)) {
+					Log.debug(Geonet.LDAP, "  Highest user profile is " + highestUserProfile);
+				}
+				userDetails.setProfile(Profile.valueOf(highestUserProfile));
+			}
 
-			// Note: in Sextant, this code should never be triggered, because
-			// importPrivilegesFromLdap should be true in every configurations.
-			// if (! importPrivilegesFromLdap)
-		} else {
-			// TODO: port the legacy code ?
+			// Assign default profile if not set by LDAP info or local database
+			if (userDetails.getProfile() == null) {
+				userDetails.setProfile(defaultProfile);
+			}
+			// Check that user profile is defined and fallback to registered
+			// user
+			// in order to avoid inconsistent JeevesUser creation
+			String checkProfile = Profile.valueOf(userDetails.getProfile().name()).name();
+
+			if (checkProfile == null) {
+				Log.error(Geonet.LDAP, "  User profile " + userDetails.getProfile()
+						+ " is not set in Jeeves registered profiles." + " Assigning registered user profile.");
+				userDetails.setProfile(Profile.RegisteredUser);
+			}
 		}
-
-		// Assign default profile if not set by LDAP info or local database
-		if (userDetails.getProfile() == null) {
-			userDetails.setProfile(defaultProfile);
-		}
-		// Check that user profile is defined and fallback to registered user
-		// in order to avoid inconsistent JeevesUser creation
-		String checkProfile = Profile.valueOf(userDetails.getProfile().name())
-				.name();
-
-		if (checkProfile == null) {
-			Log.error(Geonet.LDAP, "  User profile " + userDetails.getProfile()
-					+ " is not set in Jeeves registered profiles."
-					+ " Assigning registered user profile.");
-			userDetails.setProfile(Profile.RegisteredUser);
-		}
-
 	}
 
 	private String getHighestProfile(String[] array) {
 		int highestProfile = 0;
 
 		Map<String, Integer> profiles = new HashMap<String, Integer>();
-		String[] revProfiles = { "RegisteredUser", "Editor", "Reviewer",
-				"UserAdmin", "Administrator" };
+		String[] revProfiles = { "RegisteredUser", "Editor", "Reviewer", "UserAdmin", "Administrator" };
 
 		// We hard-code the profile list to avoid introducing too much
 		// complexity in the current code
