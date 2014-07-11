@@ -129,7 +129,7 @@ cat.view.ViewPanel = Ext.extend(GeoNetwork.view.ViewPanel, {
 				border : false,
 				frame : false,
 				autoScroll : true,
-				deferredRender: false,
+				deferredRender: true,
 				id: 'gn-sxt-viewertabpanel',
 				title: 'titre',
 				cls : 'mdshow-tabpanel',
