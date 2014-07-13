@@ -11,6 +11,9 @@ import org.fao.geonet.domain.Profile;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.common.collect.Multimap;
+import com.itextpdf.text.List;
+
 public class SextantLDAPUserDetailsContextMapperTest {
 
 	private SextantLDAPUserDetailsContextMapper sxtldapMapper;
@@ -91,6 +94,7 @@ public class SextantLDAPUserDetailsContextMapperTest {
 		
 		return userInfo;
 	}
+
 	@Test
 	public void testSextantLdapUserDetailsAsUserAdmin() {
 		LDAPUser fakeUser = new LDAPUser("useradmin");
@@ -105,6 +109,29 @@ public class SextantLDAPUserDetailsContextMapperTest {
 		assertTrue(fakeUser.getProfile() == Profile.UserAdmin);
 	}
 
+	@Test
+	public void testSextantLdapUserDetailsAsAllAdmin() {
+		LDAPUser fakeUser = new LDAPUser("administrator");
+		Map<String, ArrayList<String>> userInfo;
+		ArrayList<String> listesiteweb = new ArrayList<String>();
+		listesiteweb.add("SXT5_All_administrator");
+		listesiteweb.add("SXT5_ANOTHERgrp_RegisteredUser");
+		userInfo = getUserInfo("useradmin", "useradmin@sextant.org", "useradmin", "useradmin", "useradmin", null);
+		userInfo.put("listesiteweb", listesiteweb);
+		ArrayList<String> org = new ArrayList<String>();
+		org.add("IFREMER");
+		userInfo.put("o", org);
+
+		
+		sxtldapMapper.setProfilesAndPrivileges(Profile.RegisteredUser,"sample", userInfo, fakeUser);
+
+		// if All_administrator, no group membership should be present
+		assertTrue(fakeUser.getPrivileges().isEmpty());
+		// The user is of profile  Administrator
+		assertTrue(fakeUser.getProfile() == Profile.Administrator);
+	}
+	
+	
 	@Test
 	public void testSextantLdapUserDetailsAsReviewer() {
 		LDAPUser fakeUser = new LDAPUser("reviewer");
