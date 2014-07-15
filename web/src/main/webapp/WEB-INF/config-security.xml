@@ -19,4 +19,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
     <!-- <import resource="config-security-cas-database.xml"/> -->
     <ctx:property-placeholder location="WEB-INF/config-security.properties"/>
 
+    <!-- <import resource="config-security-shibboleth.xml"/> -->
+
 </beans>
