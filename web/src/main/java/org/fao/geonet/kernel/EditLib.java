@@ -523,7 +523,7 @@ public class EditLib {
             if (propNode != null) {
                 // Update element content with node
                 if (propNode instanceof Element && value.isXml()) {
-                    doAddFragmentFromXpath(value.getNodeValue(), (Element) propNode);
+                    doAddFragmentFromXpath(metadataSchema, value.getNodeValue(), (Element) propNode);
                 } else if (propNode instanceof Element && !value.isXml()) {
                     // Update element text with value
                     ((Element) propNode).setText(value.getStringValue());
@@ -570,7 +570,7 @@ public class EditLib {
     /**
      * Performs the updating of the element selected from the metadata by the xpath.
      */
-    private void doAddFragmentFromXpath(Element newValue, Element propEl) {
+    private void doAddFragmentFromXpath(MetadataSchema metadataSchema, Element newValue, Element propEl) throws Exception {
 
         if (newValue.getName().equals(SpecialUpdateTags.REPLACE) || newValue.getName().equals(SpecialUpdateTags.ADD)) {
             if (newValue.getName().equals(SpecialUpdateTags.REPLACE)) {
@@ -583,7 +583,11 @@ public class EditLib {
                 if (Log.isDebugEnabled(Geonet.EDITORADDELEMENT)) {
                     Log.debug(Geonet.EDITORADDELEMENT, " > add " + Xml.getString(child));
                 }
-                propEl.addContent(child.detach());
+                child.detach();
+                final Element newElement = addElement(metadataSchema.getName(), propEl, child.getQualifiedName());
+                if (newElement.getParent() != null) {
+                    propEl.setContent(propEl.indexOf(newElement), child);
+                }
             }
         } else  if (newValue.getName().equals(propEl.getName()) && newValue.getNamespace().equals(propEl.getNamespace())) {
             int idx = propEl.getParentElement().indexOf(propEl);
@@ -720,7 +724,7 @@ public class EditLib {
             // when adding the fragment child nodes or suggestion may also be added.
             // In this case, the snippet only has to be inserted
             currentNode.removeContent();
-            doAddFragmentFromXpath(value.getNodeValue(), currentNode);
+            doAddFragmentFromXpath(metadataSchema, value.getNodeValue(), currentNode);
         } else {
             if (isAttribute) {
                 currentNode.setAttribute(previousToken.image, value.getStringValue());
