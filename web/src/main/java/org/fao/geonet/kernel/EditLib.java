@@ -572,7 +572,8 @@ public class EditLib {
     private void doAddFragmentFromXpath(MetadataSchema metadataSchema, Element newValue, Element propEl) throws Exception {
 
         if (newValue.getName().equals(SpecialUpdateTags.REPLACE) || newValue.getName().equals(SpecialUpdateTags.ADD)) {
-            if (newValue.getName().equals(SpecialUpdateTags.REPLACE)) {
+            final boolean isReplace = newValue.getName().equals(SpecialUpdateTags.REPLACE);
+            if (isReplace) {
                 propEl.removeContent();
             }
 
@@ -583,9 +584,13 @@ public class EditLib {
                     Log.debug(Geonet.EDITORADDELEMENT, " > add " + Xml.getString(child));
                 }
                 child.detach();
-                final Element newElement = addElement(metadataSchema.getName(), propEl, child.getQualifiedName());
-                if (newElement.getParent() != null) {
-                    propEl.setContent(propEl.indexOf(newElement), child);
+                if (isReplace) {
+                    propEl.addContent(child);
+                } else {
+                    final Element newElement = addElement(metadataSchema.getName(), propEl, child.getQualifiedName());
+                    if (newElement.getParent() != null) {
+                        propEl.setContent(propEl.indexOf(newElement), child);
+                    }
                 }
             }
         } else  if (newValue.getName().equals(propEl.getName()) && newValue.getNamespace().equals(propEl.getNamespace())) {
