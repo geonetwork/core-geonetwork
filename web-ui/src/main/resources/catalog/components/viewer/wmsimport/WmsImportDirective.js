@@ -31,16 +31,17 @@
           if (getCapLayer) {
             var layer = getCapLayer;
 
-            if(angular.isArray(layer.styles) && layer.styles.length > 0) {
-              legend = layer.styles[layer.styles.length-1].legend.href;
+            // TODO: parse better legend
+            if(angular.isArray(layer.Style) && layer.Style.length > 0) {
+              legend = layer.Style[layer.Style.length-1].LegendURL[0].OnlineResource;
             }
 
             return gnMap.addWmsToMap($scope.map, {
-                    LAYERS: layer.name
+                    LAYERS: layer.Name
                   }, {
                     url: $scope.url,
-                    label: layer.title,
-                    attribution: layer.attribution.title,
+                    label: layer.Title,
+                    attribution: layer.Attribution.Title,
                     legend: legend,
                     extent: gnOwsCapabilities.getLayerExtentFromGetCap($scope.map, layer)
                   }

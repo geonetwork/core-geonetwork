@@ -43,6 +43,15 @@
               return layer;
             };
 
+            /**
+             * Compute ncWMS specific services url from parameters.
+             * Could be `GetVerticalProfile` `GetTransect`.
+             * @param layer
+             * @param proj
+             * @param geom
+             * @param service
+             * @returns {*}
+             */
             this.getNcwmsServiceUrl = function(layer, proj, geom, service) {
               var p = {
                   FORMAT: 'image/png',
