@@ -64,7 +64,7 @@
             bgLayer
           ],
           target: 'map',
-          view: new ol.View2D({
+          view: new ol.View({
             center: ol.proj.transform(
               [-1.99667, 49.0], 'EPSG:4326', 'EPSG:3857'),
             zoom: 6
