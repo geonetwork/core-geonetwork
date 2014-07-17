@@ -5088,7 +5088,8 @@ body {
 .panel-tools .btn-group button {
   flex: 1;
 }
-.panel-tools .flux {
+.panel-tools .flux,
+.panel-tools .context {
   margin: 2em 0 1em;
 }
 .panel-tools .baselayer {
