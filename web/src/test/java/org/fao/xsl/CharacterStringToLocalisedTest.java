@@ -1,19 +1,8 @@
 package org.fao.xsl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.lang.reflect.Field;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.collect.Lists;
 import jeeves.utils.Xml;
 import jeeves.xlink.XLink;
-
 import org.fao.geonet.kernel.AbstractThesaurusBasedTest;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.util.XslUtil;
@@ -27,8 +16,21 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
 import scala.actors.threadpool.Arrays;
+
+import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
+import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class CharacterStringToLocalisedTest {
 
@@ -339,6 +341,68 @@ public class CharacterStringToLocalisedTest {
                 .getChild("title", XslUtil.GMD_NAMESPACE).getChild("PT_FreeText", XslUtil.GMD_NAMESPACE)
                 .getChildren("textGroup", XslUtil.GMD_NAMESPACE);
         assertEquals(1, titleTextGroups.size());
+    }
+
+    @Test
+    public void testRefSysCode() throws Exception {
+        Element data = Xml.loadString("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                      + "<che:CHE_MD_Metadata xmlns:che=\"http://www.geocat.ch/2008/che\" xmlns:srv=\"http://www.isotc211.org/2005/srv\" xmlns:gco=\"http://www.isotc211.org/2005/gco\" xmlns:gml=\"http://www.opengis.net/gml\" xmlns:gmd=\"http://www.isotc211.org/2005/gmd\" xmlns:geonet=\"http://www.fao.org/geonetwork\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" gco:isoType=\"gmd:MD_Metadata\" xsi:schemaLocation=\"http://www.geocat.ch/2008/che http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd http://www.isotc211.org/2005/srv http://schemas.opengis.net/iso/19139/20060504/srv/srv.xsd\">\n"
+                      + "  <gmd:language xmlns:comp=\"http://www.geocat.ch/2003/05/gateway/GM03Comprehensive\" xmlns:xalan=\"http://xml" +
+                      ".apache.org/xalan\">\n"
+                      + "    <gco:CharacterString>ger</gco:CharacterString>\n"
+                      + "  </gmd:language>\n"
+                      + "  <gmd:locale xmlns:comp=\"http://www.geocat.ch/2003/05/gateway/GM03Comprehensive\" xmlns:xalan=\"http://xml" +
+                      ".apache.org/xalan\">\n"
+                      + "    <gmd:PT_Locale id=\"DE\">\n"
+                      + "      <gmd:languageCode>\n"
+                      + "        <gmd:LanguageCode codeList=\"#LanguageCode\" codeListValue=\"ger\" />\n"
+                      + "      </gmd:languageCode>\n"
+                      + "      <gmd:characterEncoding>\n"
+                      + "        <gmd:MD_CharacterSetCode codeList=\"#MD_CharacterSetCode\" " +
+                      "codeListValue=\"utf8\">UTF8</gmd:MD_CharacterSetCode>\n"
+                      + "      </gmd:characterEncoding>\n"
+                      + "    </gmd:PT_Locale>\n"
+                      + "  </gmd:locale>\n"
+                      + "  <gmd:locale xmlns:comp=\"http://www.geocat.ch/2003/05/gateway/GM03Comprehensive\" xmlns:xalan=\"http://xml" +
+                      ".apache.org/xalan\">\n"
+                      + "    <gmd:PT_Locale id=\"FR\">\n"
+                      + "      <gmd:languageCode>\n"
+                      + "        <gmd:LanguageCode codeList=\"#LanguageCode\" codeListValue=\"fre\" />\n"
+                      + "      </gmd:languageCode>\n"
+                      + "      <gmd:characterEncoding>\n"
+                      + "        <gmd:MD_CharacterSetCode codeList=\"#MD_CharacterSetCode\" " +
+                      "codeListValue=\"utf8\">UTF8</gmd:MD_CharacterSetCode>\n"
+                      + "      </gmd:characterEncoding>\n"
+                      + "    </gmd:PT_Locale>\n"
+                      + "  </gmd:locale>\n"
+                      + "  <gmd:referenceSystemInfo>\n"
+                      + "    <gmd:MD_ReferenceSystem>\n"
+                      + "      <gmd:referenceSystemIdentifier>\n"
+                      + "        <gmd:RS_Identifier>\n"
+                      + "          <gmd:code xsi:type=\"gmd:PT_FreeText_PropertyType\">\n"
+                      + "            <gco:CharacterString>EPSG:21781</gco:CharacterString>\n"
+                      + "            <gmd:PT_FreeText>\n"
+                      + "              <gmd:textGroup>\n"
+                      + "                <gmd:LocalisedCharacterString locale=\"#FR\">EPSG:21781</gmd:LocalisedCharacterString>\n"
+                      + "              </gmd:textGroup>\n"
+                      + "              <gmd:textGroup>\n"
+                      + "                <gmd:LocalisedCharacterString locale=\"#DE\">EPSG:21781</gmd:LocalisedCharacterString>\n"
+                      + "              </gmd:textGroup>\n"
+                      + "            </gmd:PT_FreeText>\n"
+                      + "          </gmd:code>\n"
+                      + "        </gmd:RS_Identifier>\n"
+                      + "      </gmd:referenceSystemIdentifier>\n"
+                      + "    </gmd:MD_ReferenceSystem>\n"
+                      + "  </gmd:referenceSystemInfo>\n"
+                      + "</che:CHE_MD_Metadata>\n", false);
+
+        String pathToXsl = TransformationTestSupport.geonetworkWebapp
+                           + "/xsl/characterstring-to-localisedcharacterstring.xsl";
+
+        final Element afterTransform = Xml.transform(data, pathToXsl);
+
+        assertNull(Xml.selectElement(afterTransform, "gmd:referenceSystemInfo//gmd:code/gco:CharacterString",
+                Lists.newArrayList(GMD, GCO)));
     }
 
     private void assertNoLocalisationString(Element data, String baseXPath) throws Exception {

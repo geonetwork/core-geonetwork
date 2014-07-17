@@ -57,7 +57,8 @@
 	gmd:userNote[gco:CharacterString] | 
 	gmd:handlingDescription[gco:CharacterString] | 
 	gmd:operationDescription[gco:CharacterString] | 
-	gmd:maintenanceNote[gco:CharacterString]">
+	gmd:maintenanceNote[gco:CharacterString] |
+	gmd:code[gco:CharacterString and ../../name() = 'gmd:referenceSystemIdentifier']">
 	    <xsl:variable name="mainLang">
 	       <xsl:call-template name="langId19139"/>
 	    </xsl:variable>
@@ -272,7 +273,7 @@
     <!-- The following are NOT multilingual text -->
     <xsl:template priority="100" match="gmd:identifier|
         gmd:fileIdentifier|
-        gmd:code|
+        gmd:code[../../name() != 'gmd:referenceSystemIdentifier']|
         gmd:metadataStandardName|
         gmd:metadataStandardVersion|
         gmd:hierarchyLevelName|

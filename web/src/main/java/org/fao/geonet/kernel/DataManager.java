@@ -1691,8 +1691,9 @@ public class DataManager {
 		if (forEditing) { // copy in xlink'd fragments but leave xlink atts to editor
 			if (doXLinks) Processor.processXLink(md, srvContext);
 			String schema = getMetadataSchema(dbms, id);
-			
-			if (withEditorValidationErrors) {
+            md = Xml.transform(md, stylePath+"characterstring-to-localisedcharacterstring.xsl");
+
+            if (withEditorValidationErrors) {
 			    version = doValidate(srvContext, dbms, schema, id, md, srvContext.getLanguage(), forEditing).two();
 			}
             else {
