@@ -34,6 +34,7 @@
                 type: 'WMS',
                 source: source
               });
+              layer.label = "Super NCWMS";
 
               gnOwsCapabilities.getCapabilities('http://behemoth.nerc-essc.ac.uk/ncWMS/wms?service=WMS&request=GetCapabilities')
                   .then(function (capObj) {

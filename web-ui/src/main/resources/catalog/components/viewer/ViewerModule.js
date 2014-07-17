@@ -28,8 +28,8 @@
   ]);
 
   module.controller('gnViewerController',
-    ['$scope', 'gnNcWms',
-      function($scope, gnNcWms) {
+    ['$scope', 'gnNcWms', 'goDecorateLayer',
+      function($scope, gnNcWms, goDecorateLayer) {
 
         /** Define object to receive measure info */
         $scope.measureObj = {};
@@ -43,6 +43,7 @@
         // TODO : Move on layer load
         $scope.ncwmsLayer = gnNcWms.createNcWmsLayer();
         $scope.ncwmsLayer.displayInLayerManager = true;
+        goDecorateLayer($scope.ncwmsLayer);
 
         $scope.map = new ol.Map({
           renderer: 'canvas',
