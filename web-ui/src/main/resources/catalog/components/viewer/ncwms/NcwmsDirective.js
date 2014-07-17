@@ -39,7 +39,26 @@
             scope.tsfromD = moment(new Date(as[0])).format('YYYY-MM-DD');
             scope.tstoD = moment(new Date(as[1])).format('YYYY-MM-DD');
           };
-          parseTimeSeries(scope.layer.ncInfo.dimensions.time.values[0]);
+
+          var getDimensionValue = function(ncInfo, name) {
+            var value;
+            if (angular.isArray(ncInfo.Dimension)) {
+              for (var i = 0; i < ncInfo.Dimension.length; i++) {
+                if (ncInfo.Dimension[i].name == name) {
+                  value = ncInfo.Dimension[i].values[0] ||
+                      ncInfo.Dimension[i].values;
+                  break;
+                }
+              }
+            }
+            else if (angular.isObject(ncInfo.Dimension) &&
+                ncInfo.Dimension.name == name) {
+              value = ncInfo.Dimension.values[0] ||
+                  ncInfo.Dimension.values;
+            }
+            return value;
+          }
+          parseTimeSeries(getDimensionValue(scope.layer.ncInfo, 'time'));
 
           /**
            * Just manage active button in ui.
