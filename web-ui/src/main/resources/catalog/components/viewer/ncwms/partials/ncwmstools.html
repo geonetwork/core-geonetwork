@@ -46,7 +46,7 @@
       <div class="form-group">
         <label for="ncwmselevation">Elévation</label>
         <select class="form-control input-sm" id="ncwmselevation" data-ng-model="params.ELEVATION" data-ng-change="updateLayerParams()">
-          <option data-ng-repeat="el in layer.ncInfo.dimensions.elevation.values">{{el}}</option>
+          <option data-ng-repeat="el in elevations">{{el}}</option>
         </select>
       </div>
 
@@ -54,7 +54,7 @@
       <div class="form-group">
         <label for="ncwmsstyles">Styles</label>
         <select class="form-control input-sm" id="ncwmsstyles" data-ng-model="params.STYLES" data-ng-change="updateLayerParams()">
-          <option data-ng-repeat="style in layer.ncInfo.styles" value="{{style.name}}">{{style.title}}</option>
+          <option data-ng-repeat="style in layer.ncInfo.Style" value="{{style.Name}}">{{style.Title}}</option>
         </select>
       </div>
     </form>

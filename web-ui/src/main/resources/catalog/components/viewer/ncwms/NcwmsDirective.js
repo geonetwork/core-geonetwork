@@ -26,9 +26,6 @@
           'partials/ncwmstools.html',
         link: function (scope, element, attrs) {
 
-          goog.asserts.assertInstanceof(scope.layer, ol.layer.Layer);
-          goog.asserts.assertInstanceof(scope.map, ol.Map);
-
           var drawInteraction, featureOverlay;
           scope.constants = gnNcWmsConst;
 
@@ -45,8 +42,7 @@
             if (angular.isArray(ncInfo.Dimension)) {
               for (var i = 0; i < ncInfo.Dimension.length; i++) {
                 if (ncInfo.Dimension[i].name == name) {
-                  value = ncInfo.Dimension[i].values[0] ||
-                      ncInfo.Dimension[i].values;
+                  value = ncInfo.Dimension[i].values;
                   break;
                 }
               }
@@ -57,8 +53,10 @@
                   ncInfo.Dimension.values;
             }
             return value;
-          }
+          };
           parseTimeSeries(getDimensionValue(scope.layer.ncInfo, 'time'));
+
+          scope.elevations = getDimensionValue(scope.layer.ncInfo, 'elevation').split(',');
 
           /**
            * Just manage active button in ui.
