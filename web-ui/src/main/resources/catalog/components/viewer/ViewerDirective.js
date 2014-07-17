@@ -22,10 +22,12 @@
         }
       };
     }]);
-  module.directive('goBtnGroup', function() {
+
+  // TODO : to remove those directives when ngeo allow null class
+  module.directive('giBtnGroup', function() {
     return {
       restrict: 'A',
-      controller: function($scope) {
+      controller: ['$scope', function($scope) {
         var buttonScopes = [];
 
         this.activate = function(btnScope) {
@@ -39,19 +41,19 @@
         this.addButton = function(btnScope) {
           buttonScopes.push(btnScope);
         };
-      }
+      }]
     };
   })
-      .directive('goBtn', function($parse) {
+      .directive('giBtn', ['$parse', function($parse) {
         return {
-          require: ['?^goBtnGroup','ngModel'],
+          require: ['?^giBtnGroup','ngModel'],
           restrict: 'A',
           //replace: true,
           scope: true,
           link: function (scope, element, attrs, ctrls) {
             var buttonsCtrl = ctrls[0], ngModelCtrl = ctrls[1];
             var ngModelGet = $parse(attrs['ngModel']);
-            var cls = attrs['goBtn'];
+            var cls = attrs['giBtn'];
             scope.ngModelSet = ngModelGet.assign;
 
             if(buttonsCtrl) buttonsCtrl.addButton(scope);
@@ -75,7 +77,7 @@
             };
           }
         };
-      });
+      }]);
 
   module.directive('gnvToolsBtn', [
     function () {
