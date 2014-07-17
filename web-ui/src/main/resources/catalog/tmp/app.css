@@ -5083,11 +5083,19 @@ body {
   background: inherit;
 }
 .panel-tools .btn-group {
-  margin: 2em 0 1em;
   display: flex;
 }
 .panel-tools .btn-group button {
   flex: 1;
+}
+.panel-tools .flux {
+  margin: 2em 0 1em;
+}
+.panel-tools .baselayer {
+  margin: 0 15px;
+}
+.panel-tools .baselayer .dropdown-menu {
+  width: 100%;
 }
 .panel-tools .unfold {
   opacity: 0;
@@ -5099,13 +5107,16 @@ body {
 }
 .panel-tools .unfold,
 .panel-tools .close {
-  margin-top: .25em;
+  margin-top: -0.1em;
   margin-right: .2em;
 }
 .panel-tools .details {
   font-size: 90%;
   margin: 0 0 .5em 0;
   display: none;
+}
+.panel-tools h5 {
+  margin: .2em 0;
 }
 .layerTree ul ul {
   margin: 0;
@@ -5186,4 +5197,3 @@ body {
   font-weight: normal;
   color: #555555;
 }
-/*# sourceMappingURL=app.css.map */
