@@ -52,7 +52,7 @@
 
         <script src="{$uiResourcesPath}lib/bootstrap-3.0.1.js"></script>
         <script src="{$uiResourcesPath}lib/proj4js-compressed.js"></script>
-        <script src="{$uiResourcesPath}lib/ol-whitespace.js"></script>
+        <script src="{$uiResourcesPath}lib/ngeo/ngeo-whitespace.js"></script>
         <xsl:if test="$withD3">
           <script src="{$uiResourcesPath}lib/d3.v3.js"></script>
           <script src="{$uiResourcesPath}lib/nv.d3.js"></script>
