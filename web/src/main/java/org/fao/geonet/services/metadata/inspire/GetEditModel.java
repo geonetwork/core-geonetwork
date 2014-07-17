@@ -621,7 +621,6 @@ public class GetEditModel implements Service {
 
     protected void processMetadata(Element metadataEl, JSONObject metadataJson) throws Exception {
         addValue(metadataEl, metadataJson, Save.JSON_LANGUAGE, "gmd:language/gco:CharacterString/text()");
-
         String mainLanguage = metadataJson.getString(Save.JSON_LANGUAGE);
 
         addValue(metadataEl, metadataJson, Save.JSON_CHARACTER_SET, "gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue", "utf-8");
@@ -633,6 +632,20 @@ public class GetEditModel implements Service {
         addArray(mainLanguage, metadataEl, getIsoLanguagesMapper(), metadataJson,
                 "gmd:locale/gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode",
                 Save.JSON_OTHER_LANGUAGES, codeListJsonEncoder, def);
+
+        final JSONArray otherLanguages = metadataJson.getJSONArray(Save.JSON_OTHER_LANGUAGES);
+        Set<String> langs = Sets.newHashSet();
+        JSONArray noDupsLanguages = new JSONArray();
+        for (int i = 0; i < otherLanguages.length(); i++) {
+            final String lang = otherLanguages.getString(i);
+            if (!langs.contains(lang)) {
+                 langs.add(lang);
+                 noDupsLanguages.put(lang);
+            }
+        }
+
+        metadataJson.put(Save.JSON_OTHER_LANGUAGES, noDupsLanguages);
+
     }
 
     private static void addValue(Element metadataEl, JSONObject metadataJson, String jsonKey, String xpath) throws JSONException, JDOMException {

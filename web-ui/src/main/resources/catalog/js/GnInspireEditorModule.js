@@ -89,6 +89,11 @@
         });
 
       });
+      $scope.$watch("data.language", function(lang) {
+        if ($scope.data.otherLanguages.indexOf(lang) < 0) {
+          $scope.data.otherLanguages.push(lang);
+        }
+      });
       $scope.isOtherLanguage = function (lang) {
         var langs =  $scope.data.otherLanguages;
         var i = 0;
@@ -109,7 +114,6 @@
           }
         }
       };
-
       $scope.editContact = function(title, contact) {
         $scope.contactUnderEdit = contact;
         $scope.contactUnderEdit.title = title;
