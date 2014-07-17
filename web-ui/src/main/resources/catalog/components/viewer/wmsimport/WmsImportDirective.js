@@ -27,13 +27,20 @@
       controller: function($scope){
         this.addLayer = function(getCapLayer) {
 
-          var legend;
+          var legend, attribution;
           if (getCapLayer) {
             var layer = getCapLayer;
 
-            // TODO: parse better legend
+            // TODO: parse better legend & attribution
             if(angular.isArray(layer.Style) && layer.Style.length > 0) {
               legend = layer.Style[layer.Style.length-1].LegendURL[0].OnlineResource;
+            }
+            if(angular.isDefined(layer.Attribution) ) {
+              if(angular.isArray(layer.Attribution)){
+
+              } else {
+                attribution = layer.Attribution.Title;
+              }
             }
 
             return gnMap.addWmsToMap($scope.map, {
@@ -41,7 +48,7 @@
                   }, {
                     url: $scope.url,
                     label: layer.Title,
-                    attribution: layer.Attribution.Title,
+                    attribution: attribution,
                     legend: legend,
                     extent: gnOwsCapabilities.getLayerExtentFromGetCap($scope.map, layer)
                   }
