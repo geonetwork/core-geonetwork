@@ -113,7 +113,12 @@ public abstract class AbstractRequest
 			throw new Exception("Response is not in OAI-PMH format");
 
 		//--- validate the result
-		Xml.validate(response);
+		try {
+			Xml.validate(response);
+		} catch (Exception e) {
+			System.out.println("Response didn't validate! Continuing. Here's the validation error: "+e.getMessage());
+			e.printStackTrace();
+		}
 
 		//--- raises an exception if the case
 		OaiPmhException.unmarshal(response);
