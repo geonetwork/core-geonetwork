@@ -40,26 +40,6 @@
         /** print definition */
         $scope.printactive = true;
 
-        var bgLayer = new ol.layer.Tile({
-          source: new ol.source.OSM(),
-          title: 'OpenStreetMap'
-        });
-        bgLayer.displayInLayerManager = false;
-        bgLayer.background = true;
-
-        var bingSatellite = new ol.layer.Tile({
-          preload: Infinity,
-          source: new ol.source.BingMaps({
-            key: 'Ak-dzM4wZjSqTlzveKz5u0d4IQ4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
-            imagerySet: 'Aerial'
-          }),
-          title: 'Bing Aerial'
-        });
-        bingSatellite.displayInLayerManager = false;
-        bingSatellite.background = true;
-
-        $scope.bgLayers = [ bgLayer, bingSatellite ];
-
         // TODO : Move on layer load
         $scope.ncwmsLayer = gnNcWms.createNcWmsLayer();
         $scope.ncwmsLayer.displayInLayerManager = true;
@@ -75,6 +55,27 @@
         });
         $scope.map.addLayer($scope.ncwmsLayer);
       }]);
+
+
+  var bgLayer = new ol.layer.Tile({
+    source: new ol.source.OSM(),
+    title: 'OpenStreetMap'
+  });
+  bgLayer.displayInLayerManager = false;
+  bgLayer.background = true;
+
+  var bingSatellite = new ol.layer.Tile({
+    preload: Infinity,
+    source: new ol.source.BingMaps({
+      key: 'Ak-dzM4wZjSqTlzveKz5u0d4IQ4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
+      imagerySet: 'Aerial'
+    }),
+    title: 'Bing Aerial'
+  });
+  bingSatellite.displayInLayerManager = false;
+  bingSatellite.background = true;
+
+  module.constant('gnBackgroundLayers', [bgLayer, bingSatellite]);
 
   module.controller('toolsController',
       ['$scope', 'gnMeasure',

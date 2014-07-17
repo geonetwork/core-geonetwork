@@ -13,16 +13,17 @@
    * The server list is given in global properties.
    */
   module.directive('gnBaselayerswitcher', [
-    function () {
+    'gnBackgroundLayers',
+    function (gnBackgroundLayers) {
     return {
       restrict: 'A',
       templateUrl: '../../catalog/components/viewer/baselayerswitcher/' +
         'partials/baselayerswitcher.html',
       scope: {
-        map: '=gnBaselayerswitcherMap',
-        layers: '=gnBaselayerswitcherLayers'
+        map: '=gnBaselayerswitcherMap'
       },
       link: function (scope, element, attrs) {
+        scope.layers = gnBackgroundLayers;
         scope.map.getLayers().insertAt(0, scope.layers[0]);
         scope.setBgLayer = function(layer) {
           var layers = scope.map.getLayers();
