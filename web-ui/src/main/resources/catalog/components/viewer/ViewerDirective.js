@@ -11,8 +11,8 @@
    *
    * @description
    */
-  module.directive('gnMainViewer', ['gnHttp',
-    function (gnHttp) {
+  module.directive('gnMainViewer', [
+    function () {
       return {
         restrict: 'A',
         replace: true,

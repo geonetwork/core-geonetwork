@@ -14,26 +14,41 @@
           var layerSelected = null; // the layer selected on user click
           var layerHovered = null; // the layer when mouse is over it
 
-          try {
-            var parser = new ol.parser.ogc.WMSCapabilities();
+            var parser = new ol.format.WMSCapabilities();
             var result = parser.read(data);
 
-            // We don't add the root layer node in the list
-            for (var i = 0, len = result.capability.layers.length - 1;
-                 i < len; i++) {
-              var layer = result.capability.layers[i];
+            var layers = [];
 
-              // If the  WMS layer has no name or if it can't be
-              // displayed in the current SRS, we don't add it
-              // to the list
-              if (layer.name) {
+            // Push all leaves into a flat array of Layers.
+            var getFlatLayers = function(layer) {
+              if(angular.isArray(layer)) {
+                for (var i = 0, len = layer.length - 1; i < len; i++) {
+                  getFlatLayers(layer[i]);
+                }
+              } else if(angular.isDefined(layer)) {
                 layers.push(layer);
+                getFlatLayers(layer.Layer);
               }
-            }
-            return result.capability;
-          } catch (e) {
-            console.log('error parsing WMSCapabilities');
-          }
+            };
+
+            // Make sur Layer property is an array even if
+            // there is only one element.
+            var setLayerAsArray = function(node) {
+              if(node) {
+                if(angular.isDefined(node.Layer) && !angular.isArray(node.Layer)) {
+                  node.Layer = [node.Layer];
+                }
+                if(angular.isDefined(node.Layer)) {
+                  for(var i =0;i<node.Layer.length;i++) {
+                    setLayerAsArray(node.Layer[i]);
+                  }
+                }
+              }
+            };
+            getFlatLayers(result.Capability.Layer);
+            setLayerAsArray(result.Capability);
+            result.Capability.layers = layers;
+            return result.Capability;
 
         };
         return {
@@ -54,7 +69,7 @@
                 defaultParams[p] = urlParams[p];
                 if(defaultParams.hasOwnProperty(p.toLowerCase()) &&
                     p != p.toLowerCase()){
-                      delete defaultParams.toLowerCase();
+                      delete defaultParams[ptoLowerCase()];
                 }
               }
 
@@ -92,7 +107,7 @@
           getLayerInfoFromCap: function(name, capObj) {
             for (var i = 0, len = capObj.layers.length - 1;
                  i < len; i++) {
-              if(name == capObj.layers[i].name) {
+              if(name == capObj.layers[i].Name) {
                 return capObj.layers[i];
               }
             }

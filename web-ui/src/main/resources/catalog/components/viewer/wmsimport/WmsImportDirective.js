@@ -60,8 +60,8 @@
 
         scope.load = function (url) {
           gnOwsCapabilities.getCapabilities(url)
-            .then(function (layers) {
-              scope.layers = layers;
+            .then(function (capability) {
+              scope.capability = capability;
             });
         };
       }
@@ -111,11 +111,11 @@
       template: "<li class='list-group-item' ng-click='toggleNode($event)'><label>" +
             "<span class='fa fa-plus-square-o'  ng-if='isParentNode()'></span>" +
             "<input type='checkbox' ng-if='!isParentNode()' data-ng-model='inmap' data-ng-change='select()'>" +
-          " {{member.title}}</label></li>",
+          " {{member.Title}}</label></li>",
       link: function (scope, element, attrs, controller) {
         var el = element;
-        if (angular.isArray(scope.member.nestedLayers)) {
-          element.append("<gn-cap-tree-col class='list-group' collection='member.nestedLayers'></gn-cap-tree-col>");
+        if (angular.isArray(scope.member.Layer)) {
+          element.append("<gn-cap-tree-col class='list-group' collection='member.Layer'></gn-cap-tree-col>");
           $compile(element.contents())(scope);
         }
         scope.select = function() {
@@ -128,7 +128,7 @@
           return false;
         };
         scope.isParentNode = function() {
-          return angular.isArray(scope.member.nestedLayers) && scope.member.nestedLayers.length > 0;
+          return angular.isDefined(scope.member.Layer);
         }
       }
     }
