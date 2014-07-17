@@ -759,3 +759,17 @@ ul.msgbox {
     padding-left: 50px;
     padding-top: 8px;
 }
+
+.file-link {
+    margin-left: 10px;
+    background-image:url("../images/default/link-over.png");
+    background-repeat: no-repeat;
+    border: medium none;
+    height: 16px;
+    width: 16px;
+    z-index: 99;
+    cursor:pointer;
+}
+.file-link:hover {
+    background-position:-16px 0;
+}
