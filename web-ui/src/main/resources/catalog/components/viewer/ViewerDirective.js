@@ -98,8 +98,8 @@
         }
       };
     }]);
-  module.directive('gnvLayermanagerBtn', ['gnHttp',
-    function (gnHttp) {
+  module.directive('gnvLayermanagerBtn', [
+    function () {
       return {
         restrict: 'A',
         link: function (scope, element, attrs) {
@@ -116,6 +116,22 @@
             element.find('.layers').removeClass('collapsed');
             element.find('.layerTree').addClass('collapsed');
             element.find('.unfold').css('opacity',0);
+          });
+        }
+      };
+    }]);
+
+  module.directive('gnvClosePanel', [
+    function () {
+      return {
+        restrict: 'A',
+        require: 'giBtnGroup',
+        link: function (scope, element, attrs, btngroupCtrl) {
+          $('.close').click(function(){
+            var t = $(this).parents('.panel-tools');
+            t.addClass('force-hide');
+            $('[rel=#'+t.attr('id')+']').removeClass('active');
+            btngroupCtrl.activate();
           });
         }
       };

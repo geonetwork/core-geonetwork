@@ -6,7 +6,7 @@
   </div>
 
   <!--Top right buttons - Tools-->
-  <div class="tools" gi-btn-group data-ng-controller="toolsController">
+  <div class="tools" gi-btn-group gnv-close-panel data-ng-controller="toolsController">
       <button class="btn btn-default" ng-model="activeTools.layers" type="submit" rel="#layers" gi-btn gnv-tools-btn>
         <span class="fa fa-tasks"></span>
         <span role="tooltip">Couches</span>
@@ -134,25 +134,7 @@
         &times;
       </button>
       <h5>Impression</h5>
+      <!--<div data-ga-print="" data-layout="Thumbnail"></div>-->
     </div>
-
   </div>
-
-  <!-- <div class="panel panel-default" id="results"> -->
-
-  <!--   <div class="panel-body"> -->
-  <!--   </div> -->
-
-  <!-- </div> -->
-
-  <!-- Bootstrap core JavaScript
-  ================================================== -->
-  <!-- Placed at the end of the document so the pages load faster -->
-  <script>
-    $('.close').click(function(){
-      var t = $(this).parents('.panel-tools');
-      t.addClass('force-hide');
-      $('[rel=#'+t.attr('id')+']').removeClass('active');
-    });
-  </script>
 </div>
