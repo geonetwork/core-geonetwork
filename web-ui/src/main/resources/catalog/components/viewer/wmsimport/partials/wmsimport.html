@@ -6,7 +6,7 @@
                data-ng-change="load(url)" placeholder="{{'serviceUrl' | translate}}"/>
         <ul class="dropdown-menu" role="menu">
           <li data-ng-repeat="srv in servicesList">
-            <a href="" data-ng-click="params.url = srv;load(srv)">
+          <a href="" data-ng-click="params.url = srv;load(srv)" title="{{srv}}">
               {{srv}}
             </a>
           </li>
