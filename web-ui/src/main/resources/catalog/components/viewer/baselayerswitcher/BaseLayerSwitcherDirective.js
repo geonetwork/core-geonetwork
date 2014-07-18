@@ -6,11 +6,11 @@
 
   /**
    * @ngdoc directive
-   * @name gn_wmsimport_directive.directive:gnWmsImport
+   * @name gn_baselayerswitcher_directive.directive:gnBaselayerswitcher
    *
    * @description
-   * Panel to load WMS capabilities service and pick layers.
-   * The server list is given in global properties.
+   * Provides a button and a dropdown menu to switch background layer of the
+   * given map
    */
   module.directive('gnBaselayerswitcher', [
     'gnBackgroundLayers',
