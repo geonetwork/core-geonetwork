@@ -66,9 +66,13 @@
         ];
         scope.url = 'http://www.ifremer.fr/services/wms/oceanographie_physique';
 
+        scope.loading = false;
+
         scope.load = function (url) {
+          scope.loading = true;
           gnOwsCapabilities.getCapabilities(url)
             .then(function (capability) {
+              scope.loading = false;
               scope.capability = capability;
             });
         };
