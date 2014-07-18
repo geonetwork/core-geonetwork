@@ -1,9 +1,7 @@
 <div class="wrapper" data-ng-controller="gnViewerController">
 
   <div id="map" go-map="" class="map"></div>
-  <div class="search-container">
-    <input type="search" class="form-control" placeholder="Recherche">
-  </div>
+  <div gn-localisation-input map="map"></div>
 
   <!--Top right buttons - Tools-->
   <div class="tools" gi-btn-group gnv-close-panel data-ng-controller="toolsController">
