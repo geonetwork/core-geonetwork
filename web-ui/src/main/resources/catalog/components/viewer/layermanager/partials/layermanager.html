@@ -4,7 +4,7 @@
       <span class="fa fa-cog"></span>
     </button>
     <label><input type="checkbox" ng-model="layer.visible" />
-      {{layer.label}}
+      {{layer.get('label')}}
     </label>
     <div class="details">
       <div class="btn-group">
@@ -17,10 +17,10 @@
         </button></div>
       <h6>Légende</h6>
       <p>
-        <img src="{{layer.legend}}"/>
+        <img src="{{layer.get('legend')}}"/>
       </p>
       <h6>Source</h6>
-      <p><em>{{layer.attribution}}</em></p>
+      <p><em>{{layer.get('attribution')}}</em></p>
       <div gn-ncwms-transect="" map="map" layer="layer" data-ng-if="layer.ncInfo"/>
     </div>
   </li>

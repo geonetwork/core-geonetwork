@@ -46,7 +46,7 @@
             return gnMap.addWmsToMap($scope.map, {
                     LAYERS: layer.Name
                   }, {
-                    url: $scope.url,
+                    url: layer.url,
                     label: layer.Title,
                     attribution: attribution,
                     legend: legend,

@@ -32,9 +32,9 @@
               var layer = new ol.layer.Tile({
                 url: 'http://behemoth.nerc-essc.ac.uk/ncWMS/wms',
                 type: 'WMS',
-                source: source
+                source: source,
+                label: 'Super NCWMS'
               });
-              layer.label = "Super NCWMS";
 
               gnOwsCapabilities.getCapabilities('http://behemoth.nerc-essc.ac.uk/ncWMS/wms?service=WMS&request=GetCapabilities')
                   .then(function (capObj) {

@@ -173,34 +173,30 @@
           },
 
           addWmsToMap : function(map, layerParams, layerOptions, index) {
-            var createWmsLayer = function(params, options, index) {
-              options = options || {};
 
-              var source = new ol.source.TileWMS({
-                params: params,
-                url: options.url,
-                extent: options.extent,
-                ratio: options.ratio || 1
-              });
+            var options = layerOptions || {};
 
-              var layer = new ol.layer.Tile({
-                url: options.url,
-                type: 'WMS',
-                opacity: options.opacity,
-                visible: options.visible,
-                source: source
-              });
-              // TODO : move this into layer definition (maybe into an object)
-              goDecorateLayer(layer);
-              layer.preview = options.preview;
-              layer.label = options.label;
-              layer.displayInLayerManager = true;
-              layer.legend = options.legend;
-              layer.attribution = options.attribution;
-              return layer;
-            };
+            var source = new ol.source.TileWMS({
+              params: layerParams,
+              url: options.url,
+              extent: options.extent,
+              ratio: options.ratio || 1
+            });
 
-            var olLayer = createWmsLayer(layerParams, layerOptions);
+            var olLayer = new ol.layer.Tile({
+              url: options.url,
+              type: 'WMS',
+              opacity: options.opacity,
+              visible: options.visible,
+              source: source,
+              legend: options.legend,
+              attribution: options.attribution,
+              label: options.label
+            });
+            // TODO : move this into layer definition (maybe into an object)
+            goDecorateLayer(olLayer);
+            olLayer.displayInLayerManager = true;
+
             if (index) {
               map.getLayers().insertAt(index, olLayer);
             } else {
