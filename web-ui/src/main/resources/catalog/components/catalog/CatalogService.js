@@ -482,7 +482,22 @@
           }
         }
         return ret;
+      },
+      getContacts: function() {
+        if(angular.isArray(this.responsibleParty)) {
+          var ret = {};
+          for(var i=0;i<this.responsibleParty.length;i++) {
+            var s = this.responsibleParty[i].split('|');
+            if(s[1] === 'resource') {
+              ret.resource = s[2];
+            } else if(s[1] === 'metadata') {
+              ret.metadata = s[2];
+            }
+          }
+        }
+        return ret;
       }
+
     };
     return Metadata;
   });
