@@ -18,11 +18,11 @@
           scope.tpls = [{
             tplUrl: '../../catalog/components/search/resultsview/partials/viewtemplates/title.html',
             tooltip: 'Simple',
-            icon: 'fa-spoon'
+            icon: 'fa-list'
           }, {
             tplUrl: '../../catalog/components/search/resultsview/partials/viewtemplates/thumb.html',
             tooltip: 'Thumbnails',
-            icon: 'fa-archive'
+            icon: 'fa-th-list'
           }]
         }
       };

@@ -1,10 +1,10 @@
-<div class="container gn-search-page" data-ng-controller="GnSearchController">
+<div class="container-fluid gn-search-page" data-ng-controller="GnSearchController">
 
   <form data-ng-search-form="" runsearch="true">
 
     <!--Main search 'any' input-->
     <div class="row">
-      <div class="col-lg-12">
+      <div class="col-md-12">
         <div class="input-group">
             <span class="input-group-addon"><i
                     class="fa fa-search" /></span>
@@ -16,14 +16,29 @@
         <div data-gn-facet-breadcrumb="currentFacets"></div>
       </div>
     </div>
+
+
     <div class="row top-buffer">
       <div class="col-md-3">
-        <div data-gn-facet-list="searchResults.facet"
-             data-facet-config="facetsConfig"
-             data-current-facets="currentFacets">
-        </div>
+        <div data-ng-include="'../../catalog/templates/search/searchForm.html'"></div>
       </div>
-      <div class="col-md-9">
+
+      <div class="col-md-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <div gn-results-tpl-switcher template-url="resultTemplate"></div>
+            <ng-pluralize count="searchResults.count"
+               when="{'0 ': ('noRecordFound' | translate),
+                      'one': '1 ' +  ('record' | translate),
+                      'other': '{} ' +  ('records' | translate)}">
+            </ng-pluralize>
+            <div data-gn-pagination="paginationInfo"/>
+            <div sortby-combo params="params"></div>
+            <div hitsperpage-combo pagination-cfg="paginationInfo"></div>
+          </div>
+          <div gn-results-container class="panel-body" search-results="searchResults" template-url="resultTemplate"></div>
+        </div>
+<!--
         <div>
           <ng-pluralize count="searchResults.count"
                         when="{'0 ': ('noRecordFound' | translate),
@@ -34,11 +49,19 @@
         <div class="list-group">
           <li class="list-group-item"
               data-ng-repeat="e in searchResults.records">
-            <a href="../../?uuid={{e['geonet:info'].uuid}}">{{e.title}}</a>
+            <a href="../../?uuid={{e['geonet:info'].uuid}}">{{e.title || e.defaultTitle}}</a>
           </li>
         </div>
         <div data-gn-pagination="paginationInfo"/>
+-->
       </div>
+      <div class="col-md-3">
+        <div data-gn-facet-list="searchResults.facet"
+             data-facet-config="facetsConfig"
+             data-current-facets="currentFacets">
+        </div>
+      </div>
+
     </div>
   </form>
 </div>
