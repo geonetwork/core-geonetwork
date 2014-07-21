@@ -234,6 +234,7 @@
     regionsList: 'regions.category.list@json',
     region: 'regions.list@json',
 
+    suggest: 'suggest',
 
     edit: 'md.edit',
     search: 'qi@json',
