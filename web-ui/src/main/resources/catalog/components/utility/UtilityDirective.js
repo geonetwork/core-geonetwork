@@ -67,11 +67,11 @@
           * Load list on init to fill the dropdown
           */
           gnRegionService.loadList().then(function(data) {
-            scope.region = data[0];
+            scope.regionType = data[0];
           });
 
-          scope.setRegion = function(region) {
-            scope.region = region;
+          scope.setRegion = function(regionType) {
+            scope.regionType = regionType;
           };
         }
       };
@@ -94,18 +94,18 @@
         restrict: 'A',
         link: function(scope, element, attrs) {
 
-          if (attrs['gnRegion']) {
+          if (attrs['gnRegionType']) {
             gnRegionService.loadList().then(function(data) {
               for (i = 0; i < data.length; ++i) {
-                if (attrs['gnRegion'] == data[i].name) {
-                  scope.region = data[i];
+                if (attrs['gnRegionType'] == data[i].name) {
+                  scope.regionType = data[i];
                 }
               }
             });
           }
-          scope.$watch('region', function(val) {
-            if (scope.region) {
-              gnRegionService.loadRegion(scope.region, scope.lang).then(
+          scope.$watch('regionType', function(val) {
+            if (scope.regionType) {
+              gnRegionService.loadRegion(scope.regionType, scope.lang).then(
                   function(data) {
                     $(element).typeahead('destroy');
                     $(element).typeahead({
