@@ -72,15 +72,21 @@
             activateInteraction(scope.activeTool);
           };
 
+          var resetInteraction = function() {
+            if(featureOverlay) {
+              featureOverlay.setMap(null);
+              delete featureOverlay;
+            }
+            if(drawInteraction) {
+              scope.map.removeInteraction(drawInteraction);
+              delete drawInteraction;
+            };
+          };
 
           var activateInteraction = function(activeTool) {
             if(!activeTool) {
-              featureOverlay.setMap(null);
-              delete featureOverlay;
-              scope.map.removeInteraction(drawInteraction);
-              delete drawInteraction;
+              resetInteraction();
             }
-
             else {
               var type = 'Point';
               if(activeTool == 'transect') {
@@ -91,7 +97,6 @@
                 featureOverlay = new ol.FeatureOverlay();
                 featureOverlay.setMap(scope.map);
               }
-
               if(drawInteraction) {
                 scope.map.removeInteraction(drawInteraction);
               }
@@ -110,11 +115,25 @@
                             activeTool),
                         '_blank',
                         'menubar=no, status=no, scrollbars=no, menubar=no, width=600, height=400');
+
+                    resetInteraction();
+                    scope.$apply(function() {
+                      scope.activeTool = undefined;
+                    });
                   }, this);
 
               scope.map.addInteraction(drawInteraction);
             }
           };
+          var disableInteractionWatchFn = function(nv, ov) {
+            if(!nv) {
+              resetInteraction();
+              scope.activeTool = undefined;
+            }
+          };
+          scope.$watch('layer.showInfo', disableInteractionWatchFn);
+          scope.$watch('layer.visible', disableInteractionWatchFn);
+          scope.$watch('layer', disableInteractionWatchFn);
 
           /**
            * init source layer params object
