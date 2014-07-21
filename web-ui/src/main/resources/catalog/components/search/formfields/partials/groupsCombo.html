@@ -1,6 +1,6 @@
 <div class="dynamic-list" >
-<select class="form-control " data-ng-model="ownerGroup">
-  <option data-ng-repeat="g in groups | orderBy:'name'" value="{{g['@id']}}"
-    data-ng-selected="g['@id'] == ownerGroup">{{g.label[lang]}}</option>
-</select>
-<div>
+  <select class="form-control " data-ng-model="ownerGroup">
+    <option data-ng-repeat="g in groups | orderBy:'name'" value="{{g['@id']}}"
+      data-ng-selected="g['@id'] == ownerGroup">{{g.label[lang]}}</option>
+  </select>
+</div>
