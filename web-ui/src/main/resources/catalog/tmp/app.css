@@ -5057,6 +5057,8 @@ body {
 }
 .panel-tools .list-group-item label {
   font-weight: normal;
+}
+.panel-tools .list-group-item > label {
   font-size: 90%;
 }
 .panel-tools .list-group-item.active {
@@ -5113,6 +5115,16 @@ body {
   font-size: 90%;
   margin: 0 0 .5em 0;
   display: none;
+}
+.panel-tools .details .delete {
+  padding: 1px 5px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+  float: right;
+  float: right !important;
+  clear: both;
+  margin-top: 1.3em;
 }
 .panel-tools h5 {
   margin: .2em 0;
