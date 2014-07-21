@@ -68,6 +68,7 @@
       
         <script src="{$uiResourcesPath}lib/bootstrap.ext/typeahead.js/typeahead.js"></script>
         <script src="{$uiResourcesPath}lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.js"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap.ext/tagsinput/bootstrap-tagsinput-angular.js"></script>
         <!--</xsl:if>-->
         
       </xsl:when>
