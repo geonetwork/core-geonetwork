@@ -14,8 +14,8 @@
             <jsSource webappPath="catalog/lib/angular/angular-route.min.js"/>
             <jsSource webappPath="catalog/lib/angular-translate.min.js"/>
             <jsSource webappPath="catalog/lib/angular-md5.min.js"/>
-      <jsSource webappPath="catalog/lib/angular.ext/datetimepicker.js"/>
-      <jsSource webappPath="catalog/lib/angular.ext/buttons.js"/>
+            <jsSource webappPath="catalog/lib/angular.ext/datetimepicker.js"/>
+            <jsSource webappPath="catalog/lib/angular.ext/buttons.js"/>
             <jsSource webappPath="catalog/lib/bootstrap-3.0.1.min.js"/>
             <jsSource webappPath="catalog/lib/proj4js-compressed.js" minimize="false"/>
             <jsSource webappPath="catalog/lib/ol.js"/>
@@ -28,6 +28,7 @@
             <jsSource webappPath="catalog/lib/jquery.ext/jquery.fileupload-angular.js"/>
             <jsSource webappPath="catalog/lib/bootstrap.ext/typeahead.js/typeahead.min.js"/>
             <jsSource webappPath="catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.min.js"/>
+            <jsSource webappPath="catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput-angular.js"/>
     </declarative>
     
 </sources>
