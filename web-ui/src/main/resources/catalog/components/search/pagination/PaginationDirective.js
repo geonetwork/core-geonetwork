@@ -58,6 +58,14 @@
               updateSearch();
             }
           };
+          scope.first = function() {
+            scope.config.currentPage = 1;
+            updateSearch();
+          };
+          scope.last = function() {
+            scope.config.currentPage = scope.config.pages;
+            updateSearch();
+          };
           controller.updateSearchParams(getPaginationParams());
           controller.activatePagination();
         }
