@@ -53,7 +53,44 @@
           };
         }])
 
-      /**
+      .directive('sortbyCombo', ['$http', 'gnSchemaManagerService',
+        function($http, gnSchemaManagerService) {
+          return {
+            restrict: 'A',
+            templateUrl: '../../catalog/components/search/formfields/' +
+                'partials/sortByCombo.html',
+            scope: {
+              params: '='
+            },
+            link: function(scope, element, attrs) {
+              scope.values = ['relevance', 'title', 'rating'];
+              scope.params.sortBy = scope.values[0];
+            }
+          };
+        }])
+
+      .directive('hitsperpageCombo', ['$http', 'gnSchemaManagerService',
+        function($http, gnSchemaManagerService) {
+          return {
+            restrict: 'A',
+            require: '^ngSearchForm',
+            templateUrl: '../../catalog/components/search/formfields/' +
+                'partials/hitsperpageCombo.html',
+            scope: {
+              pagination: '=paginationCfg'
+            },
+            link: function(scope, element, attrs, searchFormCtrl) {
+              scope.values = [3,10,20,50,100];
+              scope.updatePagination = function() {
+                searchFormCtrl.resetPagination();
+                searchFormCtrl.triggerSearch();
+              }
+            }
+          };
+        }])
+
+
+  /**
    * @ngdoc directive
    * @name gn_form_fields_directive.directive:schemaInfoCombo
    * @restrict A
