@@ -20,7 +20,7 @@
    * Controller to create new metadata record.
    */
   var searchFormController = function($scope,
-                                      gnSearchManagerService, gnFacetService) {
+                                      gnSearchManagerService, gnFacetService, Metadata) {
     var defaultServiceUrl = 'qi@json';
     var defaultParams = {
       fast: 'index'
@@ -78,7 +78,10 @@
 
       gnSearchManagerService.gnSearch(params).then(
           function(data) {
-            $scope.searchResults.records = data.metadata;
+            $scope.searchResults.records = [];
+            for(var i=0;i<data.metadata.length;i++) {
+              $scope.searchResults.records.push(new Metadata(data.metadata[i]));
+            }
             $scope.searchResults.count = data.count;
             $scope.searchResults.facet = data.facet;
 
@@ -125,7 +128,8 @@
   searchFormController['$inject'] = [
     '$scope',
     'gnSearchManagerService',
-    'gnFacetService'
+    'gnFacetService',
+    'Metadata'
   ];
 
   module.directive('ngSearchForm', [
