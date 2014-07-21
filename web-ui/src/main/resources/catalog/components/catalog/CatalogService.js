@@ -435,7 +435,7 @@
    */
   module.factory('Metadata', function() {
     function Metadata(k) {
-      this.props = $.extend(true, {}, k);
+      $.extend(true, this, k);
     };
 
     function formatLink(sLink) {
@@ -454,19 +454,33 @@
 
     Metadata.prototype = {
       getUuid: function() {
-        return this.props['geonet:info'].uuid;
+        return this['geonet:info'].uuid;
       },
       getLinks: function() {
-        return this.props.link;
+        return this.link;
       },
       getLinksByType: function(type) {
         var ret = [];
-        angular.forEach(this.props.link, function(link) {
+        angular.forEach(this.link, function(link) {
           var linkInfo = formatLink(link);
           if (linkInfo.protocol.indexOf(type) >= 0) {
             ret.push(linkInfo);
           }
         });
+        return ret;
+      },
+      getThumbnails: function() {
+        if(angular.isArray(this.image)) {
+          var ret = {};
+          for(var i=0;i<this.image.length;i++) {
+            var s = this.image[i].split('|');
+            if(s[0] === 'thumbnail') {
+              ret.small = s[1];
+            } else if(s[0] === 'overview') {
+              ret.big = s[1];
+            }
+          }
+        }
         return ret;
       }
     };
