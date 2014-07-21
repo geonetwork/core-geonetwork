@@ -53,8 +53,11 @@
           <xsl:otherwise>
             <!-- AngularJS application -->
             <div data-ng-cloak="" class="ng-cloak">
-              <div class="navbar navbar-default"
-                data-ng-include="'{$uiResourcesPath}templates/top-toolbar.html'"> </div>
+
+              <xsl:if test="$angularApp != 'gn_search'">
+                <div class="navbar navbar-default"
+                     data-ng-include="'{$uiResourcesPath}templates/top-toolbar.html'"> </div>
+              </xsl:if>
 
               <xsl:apply-templates mode="content" select="."/>
 
