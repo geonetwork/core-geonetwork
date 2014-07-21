@@ -2,9 +2,12 @@
   goog.provide('gn_search');
 
   goog.require('gn');
+  goog.require('gn_resultsview');
 
   var module = angular.module('gn_search', [
-    'gn'
+    'gn',
+    'gn_resultsview',
+    'ui.bootstrap.buttons'
   ]);
 
   //Define the translation files to load
