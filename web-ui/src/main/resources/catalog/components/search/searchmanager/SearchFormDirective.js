@@ -36,6 +36,8 @@
       count: 0
     };
 
+    $scope.searching = 0;
+
     /**
      * Tells if there is a pagination directive nested to this one.
      * Mainly activated by pagination directive link function.
@@ -66,6 +68,9 @@
      */
     this.triggerSearch = function() {
 
+
+      $scope.searching++;
+
       angular.extend($scope.params, defaultParams);
 
       // Don't add facet extra params to $scope.params but
@@ -78,6 +83,7 @@
 
       gnSearchManagerService.gnSearch(params).then(
           function(data) {
+            $scope.searching--;
             $scope.searchResults.records = [];
             for(var i=0;i<data.metadata.length;i++) {
               $scope.searchResults.records.push(new Metadata(data.metadata[i]));
