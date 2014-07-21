@@ -1,0 +1,66 @@
+<div data-ng-controller="gocatSearchFormCtrl">
+
+  <form class="form-horizontal" role="form">
+
+    <!--Text search -- Any field-->
+    <div class="form-group">
+      <label for="fullF" class="col-md-3 control-label">Text search</label>
+      <div class="col-sm-9">
+        <input class="form-control" type="text" id="fullF"
+               placeholder="{{'anyPlaceHolder' | translate}}" data-ng-model="params.any">
+      </div>
+    </div>
+
+    <!--Types Combo (from a local scope array) -->
+    <div class="form-group">
+      <label for="typeF" class="col-md-3 control-label">Type</label>
+      <div class="col-sm-9" id="typeF">
+        <select class="form-control" data-ng-model="params.type">
+          <option data-ng-repeat="t in types">{{t}}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="cantonF" class="col-md-3 control-label">Cantons</label>
+      <div class="col-sm-9">
+        <input type="text" id="cantonF" value="" class="form-control" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="keywordsF" class="col-md-3 control-label">Keywords</label>
+      <div class="col-sm-9">
+        <input type="text" id="keywordsF" value="" class="form-control" data-ng-model="params.keyword" gn-search-suggest="keyword"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="orgNameF" class="col-md-3 control-label">Organisation</label>
+      <div class="col-sm-9">
+        <input type="text" id="orgNameF" value="" class="form-control" data-ng-model="orgName" gn-search-suggest="orgName"/>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="datefromF" class="col-md-3 control-label">From</label>
+      <div class="col-sm-9">
+        <input type="date" id="datefromF" value="" class="form-control" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="categoriesF" class="col-md-3 control-label">Categories</label>
+      <div class="col-sm-9">
+        <input type="text" id="categoriesF" value="" class="form-control" />
+      </div>
+    </div>
+
+
+    <button type="button" data-ng-click="triggerSearch()" class="btn btn-primary">Primary</button>
+<!--
+    <input type="text" name="region-picker-input" class="form-control bootstrap-tagsinput"
+           data-gn-region-picker-input=""
+           gn-region-type="country" data-role="tagsinput" />
+-->
+  </form>
+</div>
