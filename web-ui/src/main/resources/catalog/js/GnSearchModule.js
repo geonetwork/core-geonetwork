@@ -3,11 +3,14 @@
 
   goog.require('gn');
   goog.require('gn_resultsview');
+  goog.require('gn_map_field_directive');
 
   var module = angular.module('gn_search', [
     'gn',
     'gn_resultsview',
-    'ui.bootstrap.buttons'
+    'gn_map_field_directive',
+    'ui.bootstrap.buttons',
+    'go'
   ]);
 
   //Define the translation files to load

@@ -1,0 +1,19 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <button class="btn btn-default" data-ng-click="maxExtent()">
+      <i class="fa fa-globe"></i>
+    </button>
+    <button class="btn btn-default"  data-ng-click="zoom(-1)">
+      <i class="fa fa-minus"></i>
+    </button>
+    <button class="btn btn-default" data-ng-click="zoom(1)">
+      <i class="fa fa-plus"></i>
+    </button>
+    <button class="btn btn-default" gn-draw-bbox-btn="params.geometry" go-btn data-ng-model="interaction.active">
+      <i class="fa fa-pencil"></i>
+    </button>
+  </div>
+  <div class="panel-body">
+    <div go-map style="width:100%;height: 200px"></div>
+  </div>
+</div>
