@@ -1,5 +1,6 @@
 <div class="dynamic-list" >
   <select class="form-control " data-ng-model="params.sortBy">
-    <option data-ng-repeat="v in values" value="{{v}}">{{v}}</option>
+    <option data-ng-repeat="v in values" value="{{v}}">
+      <span data-translate>sort by </span>{{v}}</option>
   </select>
 </div>

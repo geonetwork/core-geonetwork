@@ -1,4 +1,4 @@
-<ul class="pager" data-ng-show="config.pages > 1">
+<ul class="pager">
   <li data-ng-class="config.currentPage == 1 ? 'disabled' : ''"
     data-ng-show="config.pages > 0">
     <a href="" data-ng-click="first()"
@@ -7,7 +7,16 @@
       data-ng-show="config.pages > 0">
     <a href="" data-ng-click="previous()"
        data-translate>&lsaquo;</a></li>
-  <li>{{config.currentPage}} / {{config.pages}}</li>
+  <li>
+    {{(config.currentPage-1)*config.hitsPerPage+1}} /
+    {{config.numbers}}
+    <em data-translate>on</em>
+    <ng-pluralize count="config.resultsCount"
+      when="{'0 ': ('noRecordFound' | translate),
+      'one': '1 ' +  ('record' | translate),
+      'other': '{} ' +  ('records' | translate)}">
+    </ng-pluralize>
+  </li>
   <li data-ng-class="config.currentPage == config.pages ? 'disabled' : ''"
       data-ng-show="config.pages > 0">
     <a href="" data-ng-click="next()"

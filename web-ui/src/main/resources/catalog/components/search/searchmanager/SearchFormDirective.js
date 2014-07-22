@@ -94,6 +94,10 @@
             // compute page number for pagination
             if ($scope.searchResults.records.length > 0 &&
                 $scope.hasPagination) {
+              $scope.paginationInfo.resultsCount = $scope.searchResults.count;
+              $scope.paginationInfo.numbers = Math.min(
+                $scope.searchResults.count,
+                $scope.paginationInfo.currentPage * $scope.paginationInfo.hitsPerPage);
               $scope.paginationInfo.pages = Math.ceil(
                   $scope.searchResults.count /
                       $scope.paginationInfo.hitsPerPage, 0);

@@ -6,12 +6,11 @@
     <div class="row">
       <div class="col-md-12">
         <div class="input-group">
-            <span class="input-group-addon"><i
-                    class="fa fa-search" /></span>
+          <span class="input-group-addon"><i class="fa fa-search" /></span>
           <input class="form-control input-lg" type="text"
-                 data-ng-change="triggerSearch()"
-                 placeholder="{{'anyPlaceHolder' | translate}}" autofocus=""
-                 data-ng-model="params.any"/>
+            data-ng-change="triggerSearch()"
+            placeholder="{{'anyPlaceHolder' | translate}}" autofocus=""
+            data-ng-model="params.any"/>
         </div>
         <div data-gn-facet-breadcrumb="currentFacets"></div>
       </div>
@@ -26,39 +25,35 @@
       <div class="col-md-6">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <div gn-results-tpl-switcher template-url="resultTemplate"></div>
-            <ng-pluralize count="searchResults.count"
-               when="{'0 ': ('noRecordFound' | translate),
-                      'one': '1 ' +  ('record' | translate),
-                      'other': '{} ' +  ('records' | translate)}">
-            </ng-pluralize>
-            <div data-gn-pagination="paginationInfo"/>
-            <div sortby-combo params="params"></div>
+            <div gn-results-tpl-switcher template-url="resultTemplate" class="pull-right"></div>
+            <div data-gn-pagination="paginationInfo"></div>
             <div hitsperpage-combo pagination-cfg="paginationInfo"></div>
+            <div sortby-combo params="params"></div>
           </div>
           <div gn-results-container class="panel-body" data-ng-class="{'bg-success' : searching}" search-results="searchResults" template-url="resultTemplate"></div>
         </div>
-<!--
+        <!--
         <div>
           <ng-pluralize count="searchResults.count"
-                        when="{'0 ': ('noRecordFound' | translate),
-              'one': '1 ' +  ('record' | translate),
-              'other': '{} ' +  ('records' | translate)}"
-                  ></ng-pluralize>
+          when="{'0 ': ('noRecordFound' | translate),
+          'one': '1 ' +  ('record' | translate),
+          'other': '{} ' +  ('records' | translate)}"
+          ></ng-pluralize>
         </div>
         <div class="list-group">
           <li class="list-group-item"
-              data-ng-repeat="e in searchResults.records">
-            <a href="../../?uuid={{e['geonet:info'].uuid}}">{{e.title || e.defaultTitle}}</a>
+          data-ng-repeat="e in searchResults.records">
+          <a href="../../?uuid={{e['geonet:info'].uuid}}">{{e.title || e.defaultTitle}}</a>
           </li>
         </div>
         <div data-gn-pagination="paginationInfo"/>
--->
+        -->
       </div>
+
       <div class="col-md-3">
         <div data-gn-facet-list="searchResults.facet"
-             data-facet-config="facetsConfig"
-             data-current-facets="currentFacets">
+          data-facet-config="facetsConfig"
+          data-current-facets="currentFacets">
         </div>
       </div>
 
