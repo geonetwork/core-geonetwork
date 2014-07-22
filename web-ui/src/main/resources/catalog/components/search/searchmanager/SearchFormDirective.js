@@ -65,13 +65,18 @@
      * merged with the params from facets state.
      * Update the paginationInfo object with the total
      * count of metadata found.
+     *
+     * @param {boolean} resetPagination If true, then
+     * don't reset pagination info.
      */
-    this.triggerSearch = function() {
-
+    this.triggerSearch = function(keepPagination) {
 
       $scope.searching++;
-
       angular.extend($scope.params, defaultParams);
+
+      if(!keepPagination) {
+        self.resetPagination();
+      }
 
       // Don't add facet extra params to $scope.params but
       // compute them each time on a search.
@@ -92,15 +97,19 @@
             $scope.searchResults.facet = data.facet;
 
             // compute page number for pagination
-            if ($scope.searchResults.records.length > 0 &&
-                $scope.hasPagination) {
-              $scope.paginationInfo.resultsCount = $scope.searchResults.count;
-              $scope.paginationInfo.numbers = Math.min(
-                $scope.searchResults.count,
-                $scope.paginationInfo.currentPage * $scope.paginationInfo.hitsPerPage);
-              $scope.paginationInfo.pages = Math.ceil(
+            if ($scope.searchResults.records.length > 0 && $scope.hasPagination) {
+
+              var paging = $scope.paginationInfo;
+              paging.resultsCount = $scope.searchResults.count;
+              paging.to = Math.min(
+                  data.count,
+                  paging.currentPage * paging.hitsPerPage
+              );
+              paging.pages = Math.ceil(
                   $scope.searchResults.count /
-                      $scope.paginationInfo.hitsPerPage, 0);
+                  paging.hitsPerPage, 0
+              );
+              paging.from = (paging.currentPage-1)*paging.hitsPerPage+1;
             }
           });
     };

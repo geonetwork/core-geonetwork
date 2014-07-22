@@ -43,7 +43,7 @@
 
           var updateSearch = function() {
             controller.updateSearchParams(getPaginationParams());
-            controller.triggerSearch();
+            controller.triggerSearch(true);
           };
 
           scope.previous = function() {

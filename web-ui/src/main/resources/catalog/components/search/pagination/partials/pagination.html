@@ -8,8 +8,7 @@
     <a href="" data-ng-click="previous()"
        data-translate>&lsaquo;</a></li>
   <li>
-    {{(config.currentPage-1)*config.hitsPerPage+1}} /
-    {{config.numbers}}
+    {{config.from}} / {{config.to}}
     <em data-translate>on</em>
     <ng-pluralize count="config.resultsCount"
       when="{'0 ': ('noRecordFound' | translate),
