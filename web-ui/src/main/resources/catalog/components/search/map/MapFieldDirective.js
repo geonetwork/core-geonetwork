@@ -9,20 +9,21 @@
             restrict: 'A',
             templateUrl: '../../catalog/components/search/map/' +
                 'partials/mapfield.html',
-            controller: function($scope, goDecorateInteraction) {
-              var map = new ol.Map({
-                layers: [
-                  new ol.layer.Tile({
-                    source: new ol.source.OSM()
+            controller: ['$scope', 'goDecorateInteraction',
+              function($scope, goDecorateInteraction) {
+                var map = new ol.Map({
+                  layers: [
+                    new ol.layer.Tile({
+                      source: new ol.source.OSM()
+                    })
+                  ],
+                  view: new ol.View({
+                    center: [-10997148, 4569099],
+                    zoom: 1
                   })
-                ],
-                view: new ol.View({
-                  center: [-10997148, 4569099],
-                  zoom: 1
-                })
-              });
-              $scope.map = map;
-            },
+                });
+                $scope.map = map;
+            }],
             link: function(scope, element, attrs) {
 
               scope.zoom = function(delta) {
@@ -43,18 +44,18 @@
         'goDecorateInteraction',
         '$parse',
         'gnOlStyles',
-          'gnMap',
+        'gnMap',
         function(goDecorateInteraction, $parse, gnOlStyles, gnMap) {
           return {
             restrict: 'A',
             scope: true,
-            controller: function($scope) {
+            controller: ['$scope', function($scope) {
               var dragbox = new ol.interaction.DragBox({
                 style: gnOlStyles.bbox
               });
               goDecorateInteraction(dragbox, $scope.map);
               $scope.interaction = dragbox;
-            },
+            }],
             link: function(scope, element, attrs) {
 
               // Assign drawn extent to given scope property
