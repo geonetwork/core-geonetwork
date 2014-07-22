@@ -8,6 +8,7 @@
   <xsl:variable name="minimizedParam">
       <xsl:choose>
           <xsl:when test="/root/request/debug">?minimize=false</xsl:when>
+          <xsl:when test="/root/request/noMin">?minimize=false</xsl:when>
           <xsl:otherwise></xsl:otherwise>
       </xsl:choose>
   </xsl:variable>

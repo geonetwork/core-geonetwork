@@ -1,7 +1,6 @@
 package org.fao.geonet.wro4j;
 
 import org.apache.commons.io.IOUtils;
-import ro.isdc.wro.model.group.processor.Minimize;
 import ro.isdc.wro.model.resource.Resource;
 import ro.isdc.wro.model.resource.ResourceType;
 import ro.isdc.wro.model.resource.SupportedResourceType;
@@ -24,13 +23,12 @@ import static org.fao.geonet.wro4j.ClosureRequireDependencyManager.Node.REQUIRE_
  * Time: 3:29 PM
  */
 @SupportedResourceType(ResourceType.JS)
-@Minimize
 public class StripGoogProcessor
         implements ResourcePreProcessor {
 
     public static final String ALIAS = "stripGoog";
-    private static final Pattern pattern = Pattern.compile("(" + PROVIDES_PATTERN_STRING + "\\s*;*)|(" + REQUIRE_PATTERN_STRING +
-                                                           "\\s*;*)");
+    private static final Pattern pattern = Pattern.compile("(" + PROVIDES_PATTERN_STRING + "\\s*;*)|" +
+                                                           "(" + REQUIRE_PATTERN_STRING + "\\s*;*)");
 
     @Override
     public void process(Resource resource, Reader reader, Writer writer) throws IOException {

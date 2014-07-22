@@ -60,7 +60,7 @@
                                     data-ng-click="selectGroup(group)"
                                     data-ng-repeat="group in schematronGroups">
                                     <a data-ng-click="startGroupEditing(group)">
-                                        <span data-ng-hide="editGroup.group === group">{{group.id.name}}&NonBreakingSpace;</span>
+                                        <span data-ng-hide="editGroup.group === group">{{group.id.name}}&nbsp;</span>
                                         <input data-ng-show="editGroup.group === group"
                                                data-ng-blur="cancelGroupEdit()"
                                                data-ng-model="editGroup.updatedGroup.id.name"

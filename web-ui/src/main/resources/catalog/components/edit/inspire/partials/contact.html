@@ -4,24 +4,26 @@
     <div data-ng-class="showTitle ? '' : 'col-xs-offset-3'" class="col-xs-9">
         <div class="form-group">
             <div class="col-xs-6">
-                <input ng-disabled="contact.validated" id="contactName" class="form-control" ng-model="contact.name"
-                       placeholder="{{'name' | translate}}"></select>
+                <input data-ng-disabled="contact.validated" id="contactName" class="form-control" data-ng-model="contact.name"
+                       placeholder="{{'name' | translate}}" />
             </div>
             <div class="col-xs-6">
-                <input ng-disabled="contact.validated" id="contactSurname" class="form-control" ng-model="contact.surname"
-                       placeholder="{{'surname' | translate}}"></select>
+                <input data-ng-disabled="contact.validated" id="contactSurname" class="form-control" data-ng-model="contact.surname"
+                       placeholder="{{'surname' | translate}}" />
             </div>
         </div>
         <div class="form-group">
             <div class="col-xs-12" data-ng-class="validationEmail()">
-                <input ng-disabled="contact.validated" id="contactEmail" class="form-control" ng-model="contact.email"
-                       placeholder="{{'email' | translate}}"></select>
+                <input data-ng-disabled="contact.validated" id="contactEmail" class="form-control" data-ng-model="contact.email"
+                       placeholder="{{'email' | translate}}" />
             </div>
         </div>
         <div class="form-group">
             <div class="col-xs-12" data-ng-class="validationClassString(contact.role)">
-                <select id="contactRole" class="form-control" ng-model="contact.role"
-                        data-ng-options="opt.name as opt.title for opt in roleOptions"></select>
+                <select id="contactRole"
+                        class="form-control"
+                        data-ng-model="contact.role"
+                        data-ng-options="opt.name as opt.title for opt in roleOptions" />
             </div>
         </div>
         <div class="form-group">

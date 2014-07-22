@@ -10,11 +10,18 @@
   goog.require('inspire_get_extents_factory');
   goog.require('inspire_date_picker_directive');
   goog.require('inspire-metadata-loader');
+  goog.require('placeholder_polyfill_directive');
 
-  var module = angular.module('gn_inspire_editor',
-    [ 'gn', 'inspire_contact_directive', 'inspire_multilingual_text_directive', 'inspire_metadata_factory',
-      'inspire_get_shared_users_factory', 'inspire_get_keywords_factory', 'inspire_get_extents_factory',
-      'inspire_date_picker_directive']);
+  var deps = [ 'gn', 'inspire_contact_directive', 'inspire_multilingual_text_directive', 'inspire_metadata_factory',
+    'inspire_get_shared_users_factory', 'inspire_get_keywords_factory', 'inspire_get_extents_factory',
+    'inspire_date_picker_directive'];
+
+  var placeholderPolyfillRequired = document.createElement("input").placeholder === undefined;
+  if (placeholderPolyfillRequired) {
+    deps.push('placeholder_polyfill_directive');
+  }
+  var module = angular.module('gn_inspire_editor', deps);
+
 
   // Define the translation files to load
   module.constant('$LOCALES', ['core', 'editor', 'inspire']);
@@ -52,6 +59,8 @@
       $scope.mdId = mdId;
 
       $scope.data = inspireMetadataLoader($scope.lang, $scope.url, mdId);
+      $scope.emptyContact = $scope.data.contact[0];
+
       $scope.validationErrorClass = 'has-error';
       $scope.validationClassString = function(model) {
         if (model && model.length > 0) {
