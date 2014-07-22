@@ -2,21 +2,6 @@
 
   <form data-ng-search-form="" runsearch="true">
 
-    <!--Main search 'any' input-->
-    <div class="row">
-      <div class="col-md-12">
-        <div class="input-group">
-          <span class="input-group-addon"><i class="fa fa-search" /></span>
-          <input class="form-control input-lg" type="text"
-            data-ng-change="triggerSearch()"
-            placeholder="{{'anyPlaceHolder' | translate}}" autofocus=""
-            data-ng-model="params.any"/>
-        </div>
-        <div data-gn-facet-breadcrumb="currentFacets"></div>
-      </div>
-    </div>
-
-
     <div class="row top-buffer">
       <div class="col-md-3">
         <div data-ng-include="'../../catalog/templates/search/searchForm.html'"></div>
