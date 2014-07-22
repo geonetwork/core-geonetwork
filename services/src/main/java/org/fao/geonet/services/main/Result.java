@@ -88,8 +88,10 @@ public class Result implements Service
 
 		Element result = searcher.present(context, params, _config);
 
-		// Update result elements to present
-		SelectionManager.updateMDResult(context.getUserSession(), result);
+        // Update result elements to present
+        if (!fast.equals("indexpdf")) {
+    		SelectionManager.updateMDResult(context.getUserSession(), result);
+        }
 
 		// Restore last search if set
 		String restoreLastSearch = params.getChildText(Geonet.SearchResult.RESTORELASTSEARCH);
