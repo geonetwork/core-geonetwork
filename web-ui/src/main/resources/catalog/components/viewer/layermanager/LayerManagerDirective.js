@@ -37,32 +37,43 @@
       scope: {
         map: '=gnLayermanagerMap'
       },
-      link: function (scope, element, attrs) {
+      controllerAs: 'gnLayermanagerCtrl',
+      controller: [ '$scope', function($scope) {
 
-        scope.layers = scope.map.getLayers().getArray();
-        scope.layerFilterFn = gnLayerFilters.selected;
-
-        scope.removeLayerFromMap = function(layer) {
-          scope.map.removeLayer(layer);
-        };
-
-        scope.moveLayer = function(layer, delta) {
-          var index = scope.layers.indexOf(layer);
-          var layersCollection = scope.map.getLayers();
+        /**
+         * Change layer index in the map.
+         *
+         * @param layer
+         * @param delta
+         */
+        this.moveLayer = function(layer, delta) {
+          var index = $scope.layers.indexOf(layer);
+          var layersCollection = $scope.map.getLayers();
           layersCollection.removeAt(index);
           layersCollection.insertAt(index + delta, layer);
         };
 
-        scope.showInfo = function(layer) {
-          angular.forEach(scope.layers, function(l) {
+        /**
+         * Set a property to the layer 'showInfo' to true and
+         * false to all other layers. Used to display layer information
+         * in the layer manager.
+         *
+         * @param layer
+         */
+        this.showInfo = function(layer) {
+          angular.forEach($scope.layers, function(l) {
             if(l != layer){
               l.showInfo = false;
             }
           });
           layer.showInfo = !layer.showInfo;
         }
+      }],
+      link: function (scope, element, attrs) {
+
+        scope.layers = scope.map.getLayers().getArray();
+        scope.layerFilterFn = gnLayerFilters.selected;
       }
     };
   }]);
-
 })();

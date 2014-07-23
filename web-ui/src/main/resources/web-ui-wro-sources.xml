@@ -18,8 +18,7 @@
     <jsSource webappPath="catalog/lib/angular.ext/bootstrap/buttons.js"/>
     <jsSource webappPath="catalog/lib/bootstrap-3.0.1.min.js"/>
     <jsSource webappPath="catalog/lib/proj4js-compressed.js" minimize="false"/>
-    <jsSource webappPath="catalog/lib/ol.js"/>
-    <jsSource webappPath="catalog/lib/ngeo.js"/>
+    <jsSource webappPath="catalog/lib/ngeo/ngeo.js"/>
     <jsSource webappPath="catalog/lib/d3.v3.min.js"/>
     <jsSource webappPath="catalog/lib/nv.d3.min.js"/>
     <jsSource webappPath="catalog/lib/jquery.ext/jquery.ui.widget.js"/>

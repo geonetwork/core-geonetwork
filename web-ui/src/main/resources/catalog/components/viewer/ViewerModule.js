@@ -6,6 +6,7 @@
   goog.require('gn_viewer_service');
   goog.require('gn_wmsimport_directive');
   goog.require('gn_layermanager_directive');
+  goog.require('gn_baselayerswitcher_directive');
   goog.require('gn_measure_directive');
   goog.require('gn_draw_directive');
   goog.require('gn_ows');
@@ -18,6 +19,7 @@
     'gn_viewer_directive',
     'gn_wmsimport_directive',
     'gn_layermanager_directive',
+    'gn_baselayerswitcher_directive',
     'gn_measure_directive',
     'gn_draw_directive',
     'gn_ows',
@@ -26,8 +28,8 @@
   ]);
 
   module.controller('gnViewerController',
-    ['$scope', 'gnConfig', 'gnNcWms',
-      function($scope, gnConfig, gnNcWms) {
+    ['$scope', 'gnNcWms', 'goDecorateLayer',
+      function($scope, gnNcWms, goDecorateLayer) {
 
         /** Define object to receive measure info */
         $scope.measureObj = {};
@@ -35,119 +37,53 @@
         /** Define vector layer used for drawing */
         $scope.drawVector;
 
-        $scope.gnConfig = gnConfig;
-        var bgLayer = new ol.layer.Tile({
-          source: new ol.source.OSM()
-        });
-        bgLayer.displayInLayerManager = false;
-        bgLayer.background = true;
+        /** print definition */
+        $scope.printactive = true;
 
         // TODO : Move on layer load
         $scope.ncwmsLayer = gnNcWms.createNcWmsLayer();
         $scope.ncwmsLayer.displayInLayerManager = true;
+        goDecorateLayer($scope.ncwmsLayer);
 
         $scope.map = new ol.Map({
           renderer: 'canvas',
-          layers: [
-/*
-            new ol.layer.Tile({
-              source: new ol.source.Stamen({
-                layer: 'watercolor'
-              })
-            }),
-            new ol.layer.Tile({
-              source: new ol.source.Stamen({
-                layer: 'terrain-labels'
-              })
-            }),
-*/
-            bgLayer
-          ],
           target: 'map',
-          view: new ol.View2D({
+          view: new ol.View({
             center: ol.proj.transform(
               [-1.99667, 49.0], 'EPSG:4326', 'EPSG:3857'),
-            zoom: 8
+            zoom: 6
           })
         });
         $scope.map.addLayer($scope.ncwmsLayer);
       }]);
 
+
+  var bgLayer = new ol.layer.Tile({
+    source: new ol.source.OSM(),
+    title: 'OpenStreetMap'
+  });
+  bgLayer.displayInLayerManager = false;
+  bgLayer.background = true;
+
+  var bingSatellite = new ol.layer.Tile({
+    preload: Infinity,
+    source: new ol.source.BingMaps({
+      key: 'Ak-dzM4wZjSqTlzveKz5u0d4IQ4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
+      imagerySet: 'Aerial'
+    }),
+    title: 'Bing Aerial'
+  });
+  bingSatellite.displayInLayerManager = false;
+  bingSatellite.background = true;
+
+  module.constant('gnBackgroundLayers', [bgLayer, bingSatellite]);
+
   module.controller('toolsController',
       ['$scope', 'gnMeasure',
         function($scope, gnMeasure) {
           $scope.mInteraction = gnMeasure.create($scope.map, $scope.measureObj, $scope);
+          $scope.activeTools = {};
         }
       ]);
-
-  module.directive('goBtnGroup', function() {
-        return {
-          restrict: 'A',
-          controller: function($scope) {
-            var buttonScopes = [];
-
-            this.activate = function(btnScope) {
-              angular.forEach(buttonScopes, function(b) {
-                if (b != btnScope) {
-                  b.ngModelSet(b, false);
-                }
-              });
-            };
-
-            this.addButton = function(btnScope) {
-              buttonScopes.push(btnScope);
-            };
-          }
-        };
-      })
-      .directive('goBtn', function($parse) {
-        return {
-          require: ['?^goBtnGroup','ngModel'],
-          restrict: 'A',
-          //replace: true,
-          scope: true,
-          link: function (scope, element, attrs, ctrls) {
-            var buttonsCtrl = ctrls[0], ngModelCtrl = ctrls[1];
-            var ngModelGet = $parse(attrs['ngModel']);
-            scope.ngModelSet = ngModelGet.assign;
-
-            if(buttonsCtrl) buttonsCtrl.addButton(scope);
-
-            //ui->model
-            element.bind('click', function () {
-              scope.$apply(function () {
-                ngModelCtrl.$setViewValue(!ngModelCtrl.$viewValue);
-                ngModelCtrl.$render();
-              });
-            });
-
-            //model -> UI
-            ngModelCtrl.$render = function () {
-              if (buttonsCtrl && ngModelCtrl.$viewValue) {
-                buttonsCtrl.activate(scope);
-              }
-              element.toggleClass('active', ngModelCtrl.$viewValue);
-            };
-          }
-        };
-      });
-
-  // Define the translation files to load
-  module.constant('$LOCALES', ['core', 'editor']);
-
-  module.config(['$translateProvider', '$LOCALES',
-    function ($translateProvider, $LOCALES) {
-/*
-      $translateProvider.useLoader('localeLoader', {
-        locales: $LOCALES,
-        prefix: '../../catalog/locales/',
-        suffix: '.json'
-      });
-
-      var lang = location.href.split('/')[5].substring(0, 2) || 'en';
-      $translateProvider.preferredLanguage(lang);
-      moment.lang(lang);
-*/
-    }]);
 
 })();

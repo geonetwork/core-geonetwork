@@ -82,7 +82,7 @@ html, body {
   right: 3em;
   width: 26em;
   background: rgba(255,255,255,.8);
-  min-height: 10.3em;
+  min-height: 12.8em;
   max-height: ~"calc(100% - 2em)";
   max-width: ~"calc(100% - 4em)";
   overflow-y: auto;
@@ -98,9 +98,9 @@ html, body {
     }
     label {
       font-weight: normal;
+    }
+    & > label {
       font-size: 90%;
-      display: inline;
-      margin: 0;
     }
     &.active {
       background: #fff;
@@ -125,10 +125,18 @@ html, body {
     }
   }
   .btn-group {
-    margin: 2em 0 1em;
     display: flex;
     button {
       flex: 1;
+    }
+  }
+  .flux, .context {
+    margin: 2em 0 1em;
+  }
+  .baselayer {
+    margin: 0 15px;
+    .dropdown-menu {
+      width: 100%;
     }
   }
   .unfold {
@@ -141,13 +149,22 @@ html, body {
   }
   .unfold,
   .close {
-    margin-top: .25em;
+    margin-top: -.1em;
     margin-right: .2em;
   }
   .details {
     font-size: 90%;
     margin: 0 0 .5em 0;
     display: none;
+    .delete {
+      .btn-xs;
+      .pull-right;
+      clear: both;
+      margin-top: 1.3em;
+    }
+  }
+  h5 {
+    margin: .2em 0;
   }
 }
 

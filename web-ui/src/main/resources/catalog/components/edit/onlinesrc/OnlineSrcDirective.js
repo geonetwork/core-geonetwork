@@ -164,7 +164,7 @@
                     scope.map = new ol.Map({
                       layers: [],
                       renderer: 'canvas',
-                      view: new ol.View2D({
+                      view: new ol.View({
                         center: [0, 0],
                         projection: gnMap.getMapConfig().projection,
                         zoom: 2

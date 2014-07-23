@@ -136,15 +136,27 @@
               </label>
             </li>
           </ul>
+
+          <div class="btn-group baselayer">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              Fond de plan : Sextant <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="#">Sextant</a></li>
+              <li><a href="#">OpenStreetMap</a></li>
+              <li><a href="#">Bing Satellite</a></li>
+            </ul>
+          </div>
+
       </div>
 
         <div class="panel-body">
-            <button type="button" class="btn btn-default unfold">
-                <span class="fa fa-chevron-down"></span>
-            </button>
-          <h5>Ajouter une couche</h5>
+          <button type="button" class="btn btn-default unfold">
+            <span class="fa fa-chevron-down"></span>
+          </button>
 
-          <div class="btn-group">
+          <h5>Ajouter une couche</h5>
+          <div class="btn-group flux">
             <button type="button" class="btn btn-default">Flux WMS</button>
             <button type="button" class="btn btn-default">Flux WMTS</button>
             <button type="button" class="btn btn-default">Fichier KML</button>
@@ -288,15 +300,15 @@
           $($(this).attr('rel')).removeClass('force-hide')
         }
       });
-      $('#layers .btn-group button').click(function(){
-        $('#layers .btn-group button').removeClass('active');
+      $('#layers .flux button').click(function(){
+        $('#layers .flux button').removeClass('active');
         $(this).addClass('active');
         $('.layers').addClass('collapsed');
         $('.layerTree').removeClass('collapsed');
         $('.unfold').css('opacity',1);
       });
       $('.unfold').click(function(){
-        $('#layers .btn-group button').removeClass('active');
+        $('#layers .flux button').removeClass('active');
         $('.layers').removeClass('collapsed');
         $('.layerTree').addClass('collapsed');
         $('.unfold').css('opacity',0);

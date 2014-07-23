@@ -136,7 +136,9 @@
 
         var deregisterFeature;
 
-        var featureOverlay = new ol.FeatureOverlay();
+        var featureOverlay = new ol.FeatureOverlay({
+          style: options.drawStyleFunction
+        });
         featureOverlay.setMap(map);
 
         // define the draw interaction used for measure
@@ -145,7 +147,20 @@
           features: featureOverlay.getFeatures(),
           style: options.drawStyleFunction
         });
-        goDecorateInteraction(mInteraction, map);
+
+        Object.defineProperty(mInteraction, 'active', {
+          get: function() {
+            return map.getInteractions().getArray().indexOf(mInteraction) >= 0;
+          },
+          set: function(val) {
+            if (val) {
+              map.addInteraction(mInteraction);
+            } else {
+              map.removeInteraction(mInteraction);
+              featureOverlay.getFeatures().clear();
+            }
+          }
+        });
 
         mInteraction.on('drawstart',
             function(evt) {
@@ -173,6 +188,7 @@
               distFeature.getGeometry().setCoordinates(lineCoords);
 
               updateMeasuresFn();
+              featureOverlay.addFeature(distFeature);
               areaFeature.unByKey(deregisterFeature);
             }, this);
       }

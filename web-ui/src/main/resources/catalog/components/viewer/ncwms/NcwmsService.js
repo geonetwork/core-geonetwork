@@ -34,6 +34,7 @@
                 type: 'WMS',
                 source: source
               });
+              layer.label = "Super NCWMS";
 
               gnOwsCapabilities.getCapabilities('http://behemoth.nerc-essc.ac.uk/ncWMS/wms?service=WMS&request=GetCapabilities')
                   .then(function (capObj) {
@@ -43,6 +44,15 @@
               return layer;
             };
 
+            /**
+             * Compute ncWMS specific services url from parameters.
+             * Could be `GetVerticalProfile` `GetTransect`.
+             * @param layer
+             * @param proj
+             * @param geom
+             * @param service
+             * @returns {*}
+             */
             this.getNcwmsServiceUrl = function(layer, proj, geom, service) {
               var p = {
                   FORMAT: 'image/png',
