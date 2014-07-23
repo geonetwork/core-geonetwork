@@ -557,7 +557,13 @@
 							<xsl:value-of select="string(/root/gui/schemas/*[name()=$schema]/strings/accessUseConstraints)"/>
 						</xsl:with-param>
 						<xsl:with-param name="content">
-							
+
+              <xsl:apply-templates mode="elementEP" select="./gmd:useLimitation">
+                <xsl:with-param name="schema" select="$schema"/>
+                <xsl:with-param name="edit"   select="$edit"/>
+                <xsl:with-param name="flat"   select="$flat"/>
+              </xsl:apply-templates>
+
 							<xsl:apply-templates mode="elementEP" select="./gmd:accessConstraints">
 								<xsl:with-param name="schema" select="$schema"/>
 								<xsl:with-param name="edit"   select="$edit"/>
@@ -574,7 +580,7 @@
 					</xsl:apply-templates>
 				</xsl:for-each>
 				
-				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_Constraints"> 
+				<!--<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/gmd:MD_Constraints">
 					<xsl:apply-templates mode="complexElement" select=".">
 						<xsl:with-param name="schema" select="$schema"/>
 						<xsl:with-param name="edit"   select="$edit"/>
@@ -589,7 +595,7 @@
 							</xsl:apply-templates>
 						</xsl:with-param>
 					</xsl:apply-templates>
-				</xsl:for-each>
+				</xsl:for-each>-->
 				
 			</xsl:with-param>
 		</xsl:call-template>
