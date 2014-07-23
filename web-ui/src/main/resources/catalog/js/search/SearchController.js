@@ -57,6 +57,87 @@
             }
           }
   }]);
+
+  module.directive('gnRegionMultiselect',
+      ['gnRegionService',
+        function(gnRegionService) {
+          return {
+            restrict: 'A',
+            scope: {
+              field: '@gnRegionMultiselect',
+              callback: '=gnCallback'
+            },
+            link: function(scope, element, attrs) {
+              var type = {
+                id: 'http://geonetwork-opensource.org/regions#'+scope.field
+              };
+              gnRegionService.loadRegion(type, 'fre').then(
+                  function(data) {
+
+                    $(element).tagsinput({
+                      itemValue:'id',
+                      itemText: 'name'
+                    });
+                    var field = $(element).tagsinput('input');
+                    field.typeahead({
+                      valueKey: 'name',
+                      local: data,
+                      minLength: 0,
+                      limit: 5
+                    }).on('typeahead:selected', function(event, datum) {
+                      $(element).tagsinput('add', datum);
+                      field.typeahead('setQuery', '');
+                    });
+
+                    $('input.tt-query')
+                        .on('click', function() {
+                          var $input = $(this);
+
+                          // these are all expected to be objects
+                          // so falsey check is fine
+                          if (!$input.data() || !$input.data().ttView ||
+                              !$input.data().ttView.datasets ||
+                              !$input.data().ttView.dropdownView ||
+                              !$input.data().ttView.inputView) {
+                            return;
+                          }
+
+                          var ttView = $input.data().ttView;
+
+                          var toggleAttribute = $input.attr('data-toggled');
+
+                          if (!toggleAttribute || toggleAttribute === 'off') {
+                            $input.attr('data-toggled', 'on');
+
+                            $input.typeahead('setQuery', '');
+
+                            if ($.isArray(ttView.datasets) &&
+                                ttView.datasets.length > 0) {
+                              // only pulling the first dataset for this hack
+                              var fullSuggestionList = [];
+                              // renderSuggestions expects a
+                              // suggestions array not an object
+                              $.each(ttView.datasets[0].itemHash, function(i, item) {
+                                fullSuggestionList.push(item);
+                              });
+
+                              ttView.dropdownView.renderSuggestions(
+                                  ttView.datasets[0], fullSuggestionList);
+                              ttView.inputView.setHintValue('');
+                              ttView.dropdownView.open();
+                            }
+                          }
+                          else if (toggleAttribute === 'on') {
+                            $input.attr('data-toggled', 'off');
+                            ttView.dropdownView.close();
+                          }
+                        });
+
+                  });
+            }
+          }
+        }]);
+
   module.constant('gnOlStyles',{
     bbox: new ol.style.Style({
       stroke: new ol.style.Stroke({
@@ -100,6 +181,51 @@
         'service-OGC:WFS'
       ];
 
+      /** Manage cantons selection (add feature to the map) */
+      var cantonSource = new ol.source.Vector();
+      var nbCantons = 0;
+      var cantonVector = new ol.layer.Vector({
+        source: cantonSource,
+        style: gnOlStyles.bbox
+      });
+      var addCantonFeature = function(id) {
+        var url = 'http://www.geocat.ch/geonetwork/srv/eng/region.geom.wkt?id=kantone:'+id+'&srs=EPSG:3857';
+        var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
+        nbCantons++;
+
+        return $http.get(proxyUrl).success(function(wkt) {
+          var parser = new ol.format.WKT();
+          var feature = parser.readFeature(wkt);
+          cantonSource.addFeature(feature);
+        });
+      };
+
+      // Add canton vector layer to the map when map is created
+      var unregisterMap = $scope.$watch('map', function() {
+        if($scope.map) {
+          $scope.map.addLayer(cantonVector);
+          unregisterMap();
+          delete unregisterMap;
+        }
+      });
+
+      // Request cantons geometry and zoom to extent when
+      // all requests respond.
+      $scope.$watch('params.cantons', function(v){
+        cantonSource.clear();
+        if(angular.isDefined(v) && v != '') {
+          var cs = v.split(',');
+          for(var i=0; i<cs.length;i++) {
+            var id = cs[i].split('#')[1];
+            addCantonFeature(Math.floor((Math.random() * 10) + 1)).then(function(){
+              if(--nbCantons == 0) {
+                $scope.map.getView().fitExtent(cantonSource.getExtent(), $scope.map.getSize());
+              }
+            });
+          }
+        }
+      });
+
 
       $('#categoriesF').tagsinput({
         itemValue: 'id',
@@ -125,70 +251,6 @@
         this.tagsinput('input').typeahead('setQuery', '');
       }, $('#categoriesF')));
 
-
-
-      gnRegionService.loadRegion('country', 'fre').then(
-          function(data) {
-
-            $('#cantonF').tagsinput({
-              itemValue:'name'
-            });
-            var field = $('#cantonF').tagsinput('input');
-            field.typeahead({
-              valueKey: 'name',
-              local: data,
-              minLength: 0,
-              limit: 5
-            }).on('typeahead:selected', function(event, datum) {
-              $('#cantonF').tagsinput('add', datum);
-              field.typeahead('setQuery', '');
-            });
-
-            $('input.tt-query')
-                .on('click', function() {
-                  var $input = $(this);
-
-                  // these are all expected to be objects
-                  // so falsey check is fine
-                  if (!$input.data() || !$input.data().ttView ||
-                      !$input.data().ttView.datasets ||
-                      !$input.data().ttView.dropdownView ||
-                      !$input.data().ttView.inputView) {
-                    return;
-                  }
-
-                  var ttView = $input.data().ttView;
-
-                  var toggleAttribute = $input.attr('data-toggled');
-
-                  if (!toggleAttribute || toggleAttribute === 'off') {
-                    $input.attr('data-toggled', 'on');
-
-                    $input.typeahead('setQuery', '');
-
-                    if ($.isArray(ttView.datasets) &&
-                        ttView.datasets.length > 0) {
-                      // only pulling the first dataset for this hack
-                      var fullSuggestionList = [];
-                      // renderSuggestions expects a
-                      // suggestions array not an object
-                      $.each(ttView.datasets[0].itemHash, function(i, item) {
-                        fullSuggestionList.push(item);
-                      });
-
-                      ttView.dropdownView.renderSuggestions(
-                          ttView.datasets[0], fullSuggestionList);
-                      ttView.inputView.setHintValue('');
-                      ttView.dropdownView.open();
-                    }
-                  }
-                  else if (toggleAttribute === 'on') {
-                    $input.attr('data-toggled', 'off');
-                    ttView.dropdownView.close();
-                  }
-                });
-
-          });
 
       // Keywords input list
 /*
