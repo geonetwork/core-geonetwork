@@ -117,6 +117,6 @@ GeoNetwork.AnnuaireGroupMapping = {
       "OR MYOCEAN-SERVICES-AND-DATASETS " +
       "OR MYOCEAN-SPECIFIC-CORE " +
       "OR MYOCEAN-UPSTREAM-PRODUCTS",
-  "iso19139.sdn-product" : "EMODNET_Chemistry" +
+  "iso19139.sdn-product" : "EMODNET_Chemistry " +
       "OR SEADATANET" +
 };
