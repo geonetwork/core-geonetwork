@@ -17,22 +17,6 @@
           <div data-gn-facet-breadcrumb="currentFacets"></div>
           <div gn-results-container class="panel-body" data-ng-class="{'bg-success' : searching}" search-results="searchResults" template-url="resultTemplate"></div>
         </div>
-        <!--
-        <div>
-          <ng-pluralize count="searchResults.count"
-          when="{'0 ': ('noRecordFound' | translate),
-          'one': '1 ' +  ('record' | translate),
-          'other': '{} ' +  ('records' | translate)}"
-          ></ng-pluralize>
-        </div>
-        <div class="list-group">
-          <li class="list-group-item"
-          data-ng-repeat="e in searchResults.records">
-          <a href="../../?uuid={{e['geonet:info'].uuid}}">{{e.title || e.defaultTitle}}</a>
-          </li>
-        </div>
-        <div data-gn-pagination="paginationInfo"/>
-        -->
       </div>
       <div class="col-md-3">
         <div class="panel panel-default">
@@ -44,7 +28,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </form>
 </div>
