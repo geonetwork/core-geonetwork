@@ -361,7 +361,7 @@ cat.what = function() {
           name: 'download',
           id: 'download',
           boxLabel: OpenLayers.i18n('search-dowload'),
-          checked: cookie.get('cat.searchform.download'),
+          checked: cookie.get('cat.searchform.download') || (cookie.state.s && cookie.state.s.cat_searchform_download == 'true'),
           listeners: {
             afterrender: function(cpt) {
               if(cpt.getValue()) {
@@ -386,7 +386,7 @@ cat.what = function() {
           name: 'dynamic',
           id: 'dynamic',
           boxLabel: OpenLayers.i18n('search-view'),
-          checked: cookie.get('cat.searchform.dynamic'),
+          checked: cookie.get('cat.searchform.dynamic') || (cookie.state.s && cookie.state.s.cat_searchform_dynamic == 'true'),
           listeners: {
             afterrender: function(cpt) {
               if(cpt.getValue()) {

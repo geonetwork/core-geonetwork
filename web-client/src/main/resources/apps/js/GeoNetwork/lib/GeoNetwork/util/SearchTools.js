@@ -331,7 +331,9 @@ GeoNetwork.util.SearchTools = {
             if (value) {
                 filters.push(name + "=" + 'on');
             }
-        } else {
+        } else if(type === 'cat') {
+        }
+      else {
             alert("Cannot parse " + type);
         }
     },

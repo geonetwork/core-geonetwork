@@ -820,6 +820,10 @@ cat.app = function() {
                         unescape(this.encodeValue(state[id][k])) : state[id][k];
                   }
                 }
+                else if(id == 'cat.searchform.download' || id == 'cat.searchform.dynamic') {
+                  params['s_'+id.replace(/\./g,'_')] = this.encodeType ?
+                      unescape(this.encodeValue(state[id])) : state[id];
+                }
               }
 
               // merge params in the URL into the state params
