@@ -112,13 +112,11 @@ GeoNetwork.AnnuaireGroupMapping = {
   "iso19139.sextant": undefined,
   "iso19139.myocean": "MYOCEAN-ALL-PRODUCTS " +
       "OR MYOCEAN-CORE-PRODUCTS " +
-      "OR MYOCEAN-CORE-PRODUCTS-WORK " +
       "OR MYOCEAN-DOCUMENTS " +
       "OR MYOCEAN-INTERMEDIATE-PRODUCTS " +
       "OR MYOCEAN-SERVICES-AND-DATASETS " +
       "OR MYOCEAN-SPECIFIC-CORE " +
       "OR MYOCEAN-UPSTREAM-PRODUCTS",
-  "iso19139.sdn-product" : "EMODNET_Chemistry " +
-      "OR EMODNET_HYDROGRAPHY_CPRD " +
-      "OR EMODNET_HYDROGRAPHY_PRODUCT"
+  "iso19139.sdn-product" : "EMODNET_Chemistry" +
+      "OR SEADATANET" +
 };
