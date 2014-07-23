@@ -235,6 +235,9 @@ GeoNetwork.CategoryTree = Ext.extend(Ext.tree.TreePanel, {
     	this.getRootNode().collapse(true, false);
     	
     	var c = cookie.get('cat.searchform.' + this.name);
+      if(!c) {
+        c = cookie.state.s[this.name];
+      }
     	var checkedCat = c ? c.split(' or ') : [];
     	Ext.each(checkedCat, function(label) {
     	    if(this.separator != '' && 
