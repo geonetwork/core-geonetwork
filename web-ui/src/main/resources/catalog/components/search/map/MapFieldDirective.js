@@ -9,6 +9,9 @@
             restrict: 'A',
             templateUrl: '../../catalog/components/search/map/' +
                 'partials/mapfield.html',
+            scope: {
+              map: '=gnMapField'
+            },
             controller: ['$scope', 'goDecorateInteraction',
               function($scope, goDecorateInteraction) {
                 var map = new ol.Map({
@@ -23,18 +26,13 @@
                   })
                 });
                 $scope.map = map;
-            }],
+              }],
             link: function(scope, element, attrs) {
 
               scope.zoom = function(delta) {
                 scope.map.getView().setZoom(scope.map.getView().getZoom()+ delta);
               };
               scope.maxExtent = function() {
-/*
-                scope.map.getView().fitExtent(new ol.proj.Projection({
-                  code : 'EPSG:3857'
-                }).getExtent());
-*/
                 scope.map.getView().setZoom(0);
               }
             }

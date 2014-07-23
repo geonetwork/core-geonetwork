@@ -82,7 +82,12 @@
       'gnRegionService',
       '$timeout',
       'suggestService',
-    function($scope, gnHttp, gnHttpServices, gnRegionService, $timeout, suggestService) {
+      '$http',
+      'gnOlStyles',
+    function($scope, gnHttp, gnHttpServices, gnRegionService, $timeout, suggestService,$http, gnOlStyles) {
+
+      /** Define in the controller scope a reference to the map */
+      $scope.map = null;
 
       $scope.types = ['any',
         'dataset',
