@@ -6,6 +6,9 @@ cat.what = function() {
 	
 	/** Restricted list of catalogues passed to the portlet **/
 	var configwhat= "";
+  var listOfGroups = [];
+  var groupToRemove = [];
+  var groupToDisplay = [];
 	
 	/** List of catalogs form Field **/
 	var catalogueField = undefined;
@@ -46,8 +49,6 @@ cat.what = function() {
 				});
 			
 			var filtered = false;
-			var groupToRemove = [];
-			var groupToDisplay = [];
       var listOfThesaurus = configlistThesaurus &&
                             configlistThesaurus[0] &&
                             configlistThesaurus[0].value;
@@ -92,6 +93,14 @@ cat.what = function() {
 			            }
 	                    return true;
 			        });
+            // Empty the list of active groups
+            while(listOfGroups.length > 0) {
+              listOfGroups.pop();
+            }
+            // Populate it
+            s.each(function (r) {
+              listOfGroups.push(r.get('value'));
+            });
                     catalogue.reseting = false;
                     catalogue.fireEvent('afterReset');
 			    });
@@ -460,10 +469,30 @@ cat.what = function() {
 		getPanel : function() {
 			return panel;
 		},
-		
+    /**
+     * Return the config what parameter.
+     * Configwhat could be a list of comma separated groups
+     * to display or groups to exclude (starting with '-').
+     *
+     * @returns {string}
+     */
 		getConfigWhat: function() {
-			return configwhat;
+      return configwhat;
 		},
+    /**
+     * Get the list of groups enabled in the store.
+     * When the groups are loaded, the configwhat parameter
+     * applies as filter to the store.
+     *
+     * If the catalog field does not select any element,
+     * this method should be used to retrieve the list of
+     * active groups.
+     *
+     * @returns {string}
+     */
+    getGroups: function() {
+      return listOfGroups;
+    },
 		
 		getCatalogueField : function() {
 			return catalogueField;

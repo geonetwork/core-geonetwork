@@ -41,16 +41,18 @@ cat.who = function() {
 	            });
 				mode='remote';
 			}
-			if(what.getConfigWhat) {
-				groupFieldStore.baseParams.groupPublished = what.getConfigWhat();
+			if(what.getGroups) {
+				groupFieldStore.baseParams.groupPublished = what.getGroups().join(' or ');
 			}
 			var updateOrgList = function(cb, value, record) {
 				groupFieldStore.baseParams.groupPublished = what.getCatalogueField().getValue() ? 
-						what.getCatalogueField().getValue() : what.getConfigWhat();
+						what.getCatalogueField().getValue() : what.getGroups().join(' or ');
 			};
 			what.getCatalogueField().on('additem', updateOrgList);
             what.getCatalogueField().on('removeitem', updateOrgList);
             what.getCatalogueField().on('reset', updateOrgList);
+
+      what.getCatalogueField().getStore().on('load', updateOrgList);
 
 	        var groupField = new Ext.ux.form.SuperBoxSelect({
 	            hideLabel: false,
