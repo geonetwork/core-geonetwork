@@ -807,6 +807,9 @@ cat.app = function() {
             cookie.getLink = function(base) {
               base = base || document.location.href;
 
+              if(base.charAt(base.length -1) === '#') {
+                base = base.substring(0,base.length-1);
+              }
               var params = {};
 
               var id, k, state = this.state;
