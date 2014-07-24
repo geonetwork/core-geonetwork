@@ -33,7 +33,7 @@
 			
 			<script type="text/javascript" src="{root/url}/apps/js/ext/adapter/ext/ext-base.js"></script>
 			<script type="text/javascript" src="{root/url}/apps/js/ext/ext-all.js"></script>
-        <script type="text/javascript" src="{root/url}/apps/js/GeoNetwork-mini-nomap.js"></script>
+      <script type="text/javascript" src="{root/url}/static/geonetwork-client-mini-nomap.js"></script>
 
 			<script type="text/javascript" src="{root/url}/apps/sextant/js/cat.lang/fr.js"></script>
 			<script type="text/javascript" src="{root/url}/apps/sextant/js/cat.lang/en.js"></script>
