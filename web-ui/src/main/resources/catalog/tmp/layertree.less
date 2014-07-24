@@ -1,6 +1,11 @@
 .layerTree {
+  min-height: 10em;
+  li {
+    padding: 0;
+  }
   ul ul {
     margin: 0;
+    padding-left: 10px;
     .list-group-item {
       border-width: 1px 0 0 0;
     }
@@ -8,9 +13,9 @@
   }
   label {
     font-weight: normal;
-    & + ul {
-      margin-top: .8em;
-    }
+    display: block;
+    padding: 10px 0 10px 15px;
+    margin-bottom: 0;
     &:hover {
       background: #fff;
     }
@@ -22,6 +27,15 @@
   }
   .list-group-item {
     padding-right: 0;
+  }
+  .dropdown-menu {
+    width: 100%;
+    font-size: 12px;
+    a {
+      padding: 3px 0 3px .5em;
+      margin-right: .5em;
+      overflow-x: hidden;
+    }
   }
 }
 .layers, .layerTree {

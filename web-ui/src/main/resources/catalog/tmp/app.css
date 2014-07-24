@@ -5039,7 +5039,7 @@ body {
   right: 3em;
   width: 26em;
   background: rgba(255, 255, 255, 0.8);
-  min-height: 10.3em;
+  min-height: 12.8em;
   max-height: calc(100% - 2em);
   max-width: calc(100% - 4em);
   overflow-y: auto;
@@ -5057,9 +5057,9 @@ body {
 }
 .panel-tools .list-group-item label {
   font-weight: normal;
+}
+.panel-tools .list-group-item > label {
   font-size: 90%;
-  display: inline;
-  margin: 0;
 }
 .panel-tools .list-group-item.active {
   background: #fff;
@@ -5116,11 +5116,28 @@ body {
   margin: 0 0 .5em 0;
   display: none;
 }
+.panel-tools .details .delete {
+  padding: 1px 5px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+  float: right;
+  float: right !important;
+  clear: both;
+  margin-top: 1.3em;
+}
 .panel-tools h5 {
   margin: .2em 0;
 }
+.layerTree {
+  min-height: 10em;
+}
+.layerTree li {
+  padding: 0;
+}
 .layerTree ul ul {
   margin: 0;
+  padding-left: 10px;
   display: none;
 }
 .layerTree ul ul .list-group-item {
@@ -5128,9 +5145,9 @@ body {
 }
 .layerTree label {
   font-weight: normal;
-}
-.layerTree label + ul {
-  margin-top: .8em;
+  display: block;
+  padding: 10px 0 10px 15px;
+  margin-bottom: 0;
 }
 .layerTree label:hover {
   background: #fff;
@@ -5142,6 +5159,15 @@ body {
 }
 .layerTree .list-group-item {
   padding-right: 0;
+}
+.layerTree .dropdown-menu {
+  width: 100%;
+  font-size: 12px;
+}
+.layerTree .dropdown-menu a {
+  padding: 3px 0 3px .5em;
+  margin-right: .5em;
+  overflow-x: hidden;
 }
 .layers,
 .layerTree {
@@ -5198,3 +5224,4 @@ body {
   font-weight: normal;
   color: #555555;
 }
+/*# sourceMappingURL=app.css.map */

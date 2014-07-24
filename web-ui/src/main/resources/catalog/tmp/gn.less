@@ -98,9 +98,9 @@ html, body {
     }
     label {
       font-weight: normal;
+    }
+    & > label {
       font-size: 90%;
-      display: inline;
-      margin: 0;
     }
     &.active {
       background: #fff;
@@ -156,6 +156,12 @@ html, body {
     font-size: 90%;
     margin: 0 0 .5em 0;
     display: none;
+    .delete {
+      .btn-xs;
+      .pull-right;
+      clear: both;
+      margin-top: 1.3em;
+    }
   }
   h5 {
     margin: .2em 0;
