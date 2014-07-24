@@ -3,9 +3,12 @@
     <i class="fa fa-cogs"/>&nbsp;
     <span data-translate="">suggestions</span>
     <button type="button" class="btn btn-default"
-      data-ng-click="load()"><i class="fa fa-refresh"></i></button>
+      data-ng-click="load()">
+      <i data-ng-hide="loading" class="fa fa-refresh"/>
+      <i data-ng-show="loading" class="fa fa-spinner fa-spin"/>
+    </button>
   </div>
-  <div class="panel-body">
+  <div class="panel-body" data-ng-show="suggestions.length !== 0">
     <div class="list-group">
       <a href="" class="list-group-item" data-ng-repeat="sugg in suggestions | orderBy:'name'"
         data-ng-click="gnSuggestion.onSuggestionClick(sugg)"> {{sugg.name['#text'] || sugg.name}} </a>

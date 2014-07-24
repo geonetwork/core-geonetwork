@@ -8,11 +8,65 @@ Installation
 Nouvelle version - nouvelles fonctionnalités
 --------------------------------------------
 
+Version 2.11.0
+``````````````
 
 .. figure:: Home_page_s.png
 
-    *Page d'accueil standard de |project_name|*
+    *Page d'accueil*
 
+- Intégration de nouvelles technologies pour l'interface d'édition et d'administration (Bootstrap 3, AngularJS, ...)
+
+- Nouvelle interface d'édition
+
+Un nouveau formulaire de saisie simplifié remplace la vue INSPIRE actuelle. Elle a pour objectif de permettre la saisie des métadonnées conformes à INSPIRE et aux recommandations nationales du CNIG.
+
+Au-delà du formulaire simplifié, les fonctions suivantes ont été mises en oeuvre dans l’interface d’édition :
+
+	- Ajout de tooltips contenant l’aide pour la saisie des champs (définitions, exemples, …)
+
+	- Saisie par autocomplétion (thésaurus, contacts, système de coordonnées)
+
+	- Sauvegarde automatique du formulaire lors de la saisie
+
+	- Navigation simplifiée entre les différentes catégories de métadonnées
+	
+	- etc.
+	
+.. figure:: edition.png
+
+    *Nouvelle interface d'édition*
+
+	
+- Nouvelle interface d'administration
+
+.. figure:: administration.png
+
+    *Nouvelle interface d'administration*
+
+En complément de la reprise de l’ensemble des fonctionnalités existantes dans la section administration, les fonctionnalités suivantes ont été ajoutées :
+
+- La section statistique a été revue afin de présenter des informations complètes aussi bien sur les statistiques de recherche que sur le contenu du catalogue
+
+- Ajout d'un module permettant de lancer sur une sélection de métadonnées des traitements pour apporter des modifications en masse (eg. corriger des URL, modifier des mots clés, remplacer des contacts)
+
+- Une simplification et clarification des interfaces :
+
+	- amélioration de la cliquabilité (logos, icônes, barres de navigation)
+
+	- simplification de l’interface (eg. si aucune catégorie définie, aucune liste ou menu ne propose une liste vide)
+
+	- ajout de mécanisme de filtrage
+
+	- mise en place de barre de progression (eg. indexation, import, upload, mise à jour en batch)
+
+	- rapport d’erreurs
+
+	- glisser/déposer pour les opérations d’upload simple/multiple
+
+- etc.
+
+	
 
 Version 2.9.x
 `````````````

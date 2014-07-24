@@ -123,7 +123,7 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
     adminAction: undefined,
     
     addLayerAction: undefined,
-    
+
     permalinkProvider: undefined,
     
     actionMenu: undefined,
@@ -283,8 +283,8 @@ GeoNetwork.MetadataResultsToolbar = Ext.extend(Ext.Toolbar, {
             scope: this,
             hidden: hide
         });
-        
-        this.selectionActions.push(this.deleteAction, this.ownerAction, this.updateCategoriesAction, 
+
+      this.selectionActions.push(this.deleteAction, this.ownerAction, this.updateCategoriesAction,
                 this.updatePrivilegesAction, this.updateStatusAction, this.updateVersionAction);
 
         if(!this.catalogue.isReadOnly()) {

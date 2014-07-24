@@ -220,11 +220,6 @@
     <description>An established standard to which the described resource conforms.</description>
   </element>
   <!-- ==================================================== -->
-  <element name="dct:created">
-    <label>Date Created</label>
-    <description>Date of creation of the resource.</description>
-  </element>
-  <!-- ==================================================== -->
   <element name="dct:dateAccepted">
     <label>Date Accepted</label>
     <description>Date of acceptance of the resource.</description>
@@ -233,11 +228,6 @@
   <element name="dct:dateCopyrighted">
     <label>Date Copyrighted</label>
     <description>Date of copyright.</description>
-  </element>
-  <!-- ==================================================== -->
-  <element name="dct:dateSubmitted">
-    <label>Date Submitted</label>
-    <description>Date of submission of the resource.</description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:educationLevel">

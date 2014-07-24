@@ -126,4 +126,4 @@ address of the user confirming that a change of password has taken place:
 
 	The Greenhouse GeoNetwork Site team
 
-If you want to change the content of this email, you should modify INSTALL_DIR/web/geonetwork/xsl/password-changed-email.xsl.
+If you want to change the content of this email, you should modify INSTALL_DIR/web/geonetwork/xslt/services/account/password-changed-email.xsl.

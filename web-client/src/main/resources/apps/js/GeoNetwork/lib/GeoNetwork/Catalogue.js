@@ -295,7 +295,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             mdProcessing: serviceUrl + 'metadata.processing.new',
             mdMassiveChildrenForm: serviceUrl + 'metadata.batch.children.form',
             mdAdmin: serviceUrl + 'metadata.admin.form',
-            mdAdminSave: serviceUrl + 'metadata.admin',
+            mdAdminSave: serviceUrl + 'md.privileges.update',
             mdAdminXml: serviceUrl + 'xml.metadata.admin.form',
             mdBatchAdminXml: serviceUrl + 'xml.metadata.batch.admin.form',
             mdBatchSaveXml: serviceUrl + 'xml.metadata.batch.update.privileges',
@@ -341,14 +341,15 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             thesaurusConceptUpdate: serviceUrl + 'thesaurus.updateelement',
             thesaurusConceptDelete: serviceUrl + 'thesaurus.deleteelement',
             getIcons: serviceUrl + 'xml.harvesting.info?type=icons',
-            opensearchSuggest: serviceUrl + 'main.search.suggest',
+            opensearchSuggest: serviceUrl + 'suggest',
             massiveOp: {
                 NewOwner: serviceUrl + 'metadata.batch.newowner.form',
                 Categories: serviceUrl + 'metadata.batch.category.form',
                 Delete: serviceUrl + 'metadata.batch.delete',
                 Privileges: serviceUrl + 'metadata.batch.admin.form',
                 Versioning: serviceUrl + 'metadata.batch.version',
-                Status: serviceUrl + 'metadata.batch.status.form'
+                Status: serviceUrl + 'metadata.batch.status.form',
+                Replace: serviceUrl + 'metadata.batch.replace.form'
             },
             metadataMassiveUpdatePrivilege: serviceUrl + 'metadata.batch.update.privileges',
             metadataMassiveUpdateCategories: serviceUrl + 'metadata.batch.update.categories',
@@ -556,7 +557,13 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 url: this.services.getSiteInfo,
                 async: false
             });
-            
+
+            //IE10 issue
+            if(!request.responseXML) {
+              var parser = new DOMParser();
+              request.responseXML = parser.parseFromString(request.responseText, "application/xml");
+            }
+
             if (request.responseXML) {
                 var xml = request.responseXML.documentElement;
                 Ext.each(properties, function(item, idx){
@@ -582,6 +589,11 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             async: false
         });
 
+        //IE10 issue
+        if(!request.responseXML) {
+          var parser = new DOMParser();
+          request.responseXML = parser.parseFromString(request.responseText, "application/xml");
+        }
         if (request.responseXML) {
             var xml = request.responseXML.documentElement;
             Ext.each(properties, function(item, idx){
@@ -1176,7 +1188,11 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             url: this.services.getMyInfo,
             async: false
         }), exception, authenticated, me;
-       
+
+      if(!response.responseXML) {
+        var parser = new DOMParser();
+        response.responseXML = parser.parseFromString(response.responseText, "application/xml");
+      }
        me = response.responseXML.getElementsByTagName('me')[0];
        authenticated = me.getAttribute('authenticated') == 'true';
        
@@ -1413,6 +1429,9 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 onlyUserGroup: this.info.userGroupOnly.toLowerCase() === 'true' || false
             });
             this.modalAction(OpenLayers.i18n('setBatchPrivileges'), privilegesPanel, cb);
+        } else  if (type === 'Replace') {
+          var url = this.services.massiveOp[type];
+          this.modalAction(OpenLayers.i18n('massiveOp') + " - " + type, url, cb, true);
         } else {
             var url = this.services.massiveOp[type];
             this.modalAction(OpenLayers.i18n('massiveOp') + " - " + type, url, cb);
@@ -1428,7 +1447,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
      *  TODO : retrieve error message on error (currently HTML services are
      *  called with HTML response not easy to parse)
      */
-    modalAction: function(title, urlOrPanel, cb){
+    modalAction: function(title, urlOrPanel, cb, scripts){
         if (urlOrPanel) {
             var app = this, win, defaultCb = function(el, success, response, options) {
                 if (!success){
@@ -1436,13 +1455,19 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                     win.close();
                 }
             };
-            
+
+
+            if(typeof(scripts) == 'undefined') {
+              scripts = false;
+            }
+
             var item;
             if(typeof(urlOrPanel) == 'string') {
                 item = new Ext.Panel({
                     autoLoad: {
                         url: urlOrPanel,
                         callback: cb || defaultCb,
+                        scripts: scripts,
                         scope: win
                     },
                     border: false,
@@ -1453,6 +1478,8 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             else {
                 item =urlOrPanel;
             }
+
+
             win = new Ext.Window({
                 id: 'modalWindow',
                 layout: 'fit',

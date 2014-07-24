@@ -25,7 +25,7 @@
 
 
   <div class="col-lg-8" data-ng-hide="groupSelected.id == null">
-    <div class="panel panel-default" data-ng-controller="GnSearchFormController">
+    <div class="panel panel-default" data-ng-search-form="">
       <div class="panel-heading"
         title="{{groupHasRecords() ? ('cantDeleteGroupHavingRecords' | translate) : ''}}">
         <span data-ng-hide="groupSelected.id == ''" data-translate="">updateGroup</span>
@@ -34,12 +34,14 @@
         <div class="btn-toolbar">
           <button type="button" class="btn btn-primary pull-right fa fa-save"
             data-ng-disabled="!gnGroupEdit.$valid && !gnGroupEdit.dirty"
-            data-ng-click="saveGroup('#gn-group-edit')" data-translate="" id="gn-btn-group-save"
-            >saveGroup</button>
-          <button type="button" class="btn btn-primary pull-right btn-danger fa fa-trash-o"
+            data-ng-click="saveGroup('#gn-group-edit')" id="gn-btn-group-save">
+            <span data-translate="">saveGroup</span>
+          </button>
+          <button type="button" class="btn pull-right btn-danger fa fa-trash-o"
             data-ng-disabled="searchResults.count > 0" data-ng-hide="groupSelected.id == ''"
-            data-ng-click="deleteGroup(groupSelected.id)" data-translate="" id="gn-btn-group-delete"
-            >deleteGroup</button>
+            data-ng-click="deleteGroup(groupSelected.id)" id="gn-btn-group-delete">
+            <span data-translate="">deleteGroup</span>
+          </button>
         </div>
       </div>
 

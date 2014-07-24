@@ -336,6 +336,7 @@ GeoNetwork.app = function () {
                 new GeoNetwork.form.OpenSearchSuggestionTextField({
                     hideLabel: true,
                     minChars: 2,
+                    suggestionField: 'anylight',
                     loadingText: '...',
                     hideTrigger: true,
                     url: catalogue.services.opensearchSuggest

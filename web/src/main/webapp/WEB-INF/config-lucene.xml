@@ -276,6 +276,7 @@
    -->
   <tokenized>
     <Field name="any"/>
+    <Field name="anylight"/>
     <Field name="abstract"/>
     <Field name="title"/>
     <Field name="altTitle"/>

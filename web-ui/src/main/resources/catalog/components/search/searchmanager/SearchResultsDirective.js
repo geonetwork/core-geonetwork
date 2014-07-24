@@ -134,11 +134,11 @@
             return selected;
           };
 
-
           scope.$on('resetSelection', function(evt) {
-            scope.selection = [];
+            if (scope.selection) {
+              scope.selection = [];
+            }
           });
-
 
           // Default settings for pagination
           // TODO: put parameters in directive

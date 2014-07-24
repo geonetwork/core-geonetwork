@@ -24,7 +24,6 @@
 
 		<gui>
 			<xml name="strings" file="xml/strings.xml" />
-			<xml name="countries" file="xml/countries.xml" />
 
 			<call name="isolanguages" class="org.fao.geonet.guiservices.isolanguages.Get"/>
 
@@ -43,19 +42,19 @@
 
 		<!-- no privileges to access the service -->
 
-		<error id="service-not-allowed" sheet="error.xsl" statusCode="403">
+		<error id="service-not-allowed" sheet="../xslt/common/error.xsl" statusCode="403">
 			<xml name="error" file="xml/privileges-error.xml" />
 		</error>
 
 		<!-- data in upload too big -->
 
-		<error id="file-upload-too-big" sheet="error.xsl">
+		<error id="file-upload-too-big" sheet="../xslt/common/error.xsl">
 			<xml name="error" file="xml/file-too-big-error.xml" />
 		</error>
 
 		<!-- general error -->
 
-		<error sheet="error.xsl">
+		<error sheet="../xslt/common/error.xsl">
 			<xml name="error" file="xml/error.xml" />
 		</error>
 
@@ -126,703 +125,15 @@
 	<!-- ====================================================================== -->
 
 	<services package="org.fao.geonet">
-		<service name="main.home">
-			<output sheet="main-page.xsl">
-				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
-				<call name="keywords" class=".guiservices.keywords.Get" />
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="categories" class=".services.category.List" />
-				<call name="status" class=".services.main.Info">
-					<param name="type" value="status" />
-				</call>
-				<call name="regions" class=".guiservices.regions.Get" />
-				<call name="sources" class=".guiservices.util.Sources" />
-				<call name="repositories" class=".services.main.Info">
-					<param name="type" value="z3950repositories" />
-				</call>
-
-				<call name="latestUpdated" class=".guiservices.metadata.GetLatestUpdated">
-					<param name="maxItems" value="10" />
-					<param name="timeBetweenUpdates" value="10" />
-				</call>
-
-				<call name="featured" class=".guiservices.metadata.GetRandom">
-					<param name="maxItems" value="1" />
-					<param name="timeBetweenUpdates" value="10" />
-					<!-- Restrict to a geographic area. Default is global overlap -->
-					<param name="relation" value="overlaps" />
-					<param name="northBL" value="90" />
-					<param name="southBL" value="-90" />
-					<param name="eastBL" value="180" />
-					<param name="westBL" value="-180" />
-				</call>
-
-				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
-			</output>
-		</service>
-		<service name="service-not-allowed">
-			<output sheet="service-not-allowed.xsl">
-				
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="main.error">
-			<output sheet="main-error.xsl">
-				<call name="startupError" class=".guiservices.util.GetStartupError" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.main.error">
-			<output sheet="main-error-xml.xsl" contentType="text/xml; charset=UTF-8">
-				<call name="startupError" class=".guiservices.util.GetStartupError" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="main.search">
-			<class name=".services.main.Search">
-				<param name="maxSummaryKeys" value="10" />
-				<param name="maxHitsInSummary" value="1000" />
-			</class>
-
-			<output forward="main.present" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- ETj: this service provides a page similar to main.search, made simpler to be embedded elsewhere-->
-
-		<service name="main.search.embedded">
-			<class name=".services.main.Search">
-				<param name="maxSummaryKeys" value="10" />
-				<param name="maxHitsInSummary" value="1000" />
-			</class>
-
-			<output forward="main.present.embedded" />
-
-			<error id="unauthorized" sheet="xml-error.xsl" statusCode="403">
-				<xml name="error" file="xml/unauthorized.xml" />
-			</error>
-		</service>
-
-		<service name="main.search.suggest">
-			<class name=".services.main.SearchSuggestion">
-				<!-- Minimum frequency for a term value to be proposed in suggestion. -->
-				<param name="threshold" value="1" />
-				<!--
-					Max number of term's values to look in the index. For large catalogue
-					this value should be increased in order to get better results. If this
-					value is too high, then looking for terms could take more times. The use
-					of good analyzer should allow to reduce the number of useless values like
-					(a, the, ...).
-				-->
-				<param name="max_number_of_terms" value="100000" />
-				<!-- Default field to search in. any is full-text search field. -->
-				<param name="default_search_field" value="any" />
-			</class>
-
-			<output sheet="search-suggestions.xsl" contentType="application/json; charset=UTF-8" />
-		</service>
-
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="main.present.embedded">
-			<class name=".services.main.Result">
-				<param name="maxRecords" value="10" />
-				<param name="syntax" value="f" />
-			</class>
-
-			<output sheet="search-results-xhtml.xsl" contentType="text/xml; charset=UTF-8">
-				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="sources" class=".guiservices.util.Sources" />
-				<call name="config" class=".services.config.Get" />
-				<call name="repositories" class=".services.main.Info">
-					<param name="type" value="z3950repositories" />
-				</call>
-			</output>
-
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="main.searchform.advanced.embedded">
-			<output sheet="searchform_advanced.xsl">
-				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
-				<call name="keywords" class=".guiservices.keywords.Get" />
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="categories" class=".services.category.List" />
-				<call name="regions" class=".guiservices.regions.Get" />
-				<call name="sources" class=".guiservices.util.Sources" />
-				<call name="repositories" class=".services.main.Info">
-					<param name="type" value="z3950repositories" />
-				</call>
-				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="main.searchform.remote.embedded">
-			<output sheet="searchform_advanced.xsl">
-				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
-				<call name="keywords" class=".guiservices.keywords.Get" />
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="categories" class=".services.category.List" />
-				<call name="regions" class=".guiservices.regions.Get" />
-				<call name="sources" class=".guiservices.util.Sources" />
-				<call name="repositories" class=".services.main.Info">
-					<param name="type" value="z3950repositories" />
-				</call>
-				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="main.searchform.simple.embedded">
-			<output sheet="searchform_simple.xsl">
-				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
-				<call name="keywords" class=".guiservices.keywords.Get" />
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="categories" class=".services.category.List" />
-				<call name="regions" class=".guiservices.regions.Get" />
-				<call name="sources" class=".guiservices.util.Sources" />
-				<call name="repositories" class=".services.main.Info">
-					<param name="type" value="z3950repositories" />
-				</call>
-				<xml name="searchProfiles" file="xml/search-profiles.xml" localized="false" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="rating.popup">
-			<output sheet="rating-popup.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="main.present">
-			<class name=".services.main.Result">
-				<param name="maxRecords" value="10" />
-				<param name="syntax" value="f" />
-			</class>
-
-			<output sheet="search-results.xsl">
-				<call name="searchDefaults" class=".guiservices.search.GetDefaults" />
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="sources" class=".guiservices.util.Sources" />
-				<call name="repositories" class=".services.main.Info">
-					<param name="type" value="z3950repositories" />
-				</call>
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="remote.show">
-			<class name=".services.main.RemoteShow">
-				<param name="syntax" value="f" />
-			</class>
-
-			<output sheet="remote-show.xsl">
-				<call name="currTab" class=".guiservices.util.GetCurrentMDTab" />
-				<call name="repositories" class=".services.main.Info">
-					<param name="type" value="z3950repositories" />
-				</call>
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <!-- classic GUI -->
-		<service name="feedback" deprecated="true">
-			<output sheet="feedback.xsl" />
-		</service>
 
         <!-- Ext GUIs -->
         <service name="feedback.send">
             <class name=".services.feedback.Receptor" />
             <output sheet="extjs-feedback-response.xsl" contentType="application/json; charset=UTF-8" />
         </service>
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="links">
-			<output sheet="page.xsl">
-				<xml name="page" file="xml/links.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="about">
-			<output sheet="page.xsl">
-				<xml name="page" file="xml/about.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.region.get" deprecated="true">
-			<class name=".services.region.Get" />
-			
-			<error id="region-not-found" sheet="error-embedded.xsl" statusCode="404">
-				<xml name="error" file="xml/file-not-found-error.xml" />
-			</error>
-		</service>
-
-		<service name="xml.regions.list" deprecated="true">
-			<class name=".services.region.List" />
-		</service>
-
-		<service name="xml.regions.category.list" deprecated="true">
-			<class name=".services.region.ListCategories" />
-		</service>
-
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Selection search services for filtering -->
-
-		<service name="selection.search">
-			<class name=".services.main.SelectionSearch" />
-			<output forward="main.present.embedded" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Feedback services                                             -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="feedback.insert" deprecated="true">
-			<class name=".services.feedback.Insert" />
-
-			<output sheet="info.xsl">
-				<xml name="info" file="xml/feedback-sent.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Utility services                                              -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="util.ping">
-			<class name="jeeves.services.Ping" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="util.import" deprecated="true">
-			<class name=".services.metadata.ImportFromDir" />
-
-			<output sheet="metadata-insert-results.xsl" />
-
-			<error sheet="error.xsl">
-				<xml name="error" file="xml/validation-error.xml" />
-				<xml name="validation" file="xml/metadata-validate.xml" />
-			</error>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Forgotten password services -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="password.forgotten.form" deprecated="true">
-			<output sheet="password-forgotten.xsl"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="password.forgotten.submit" deprecated="true">
-			<class name=".services.password.SendLink" />
-
-			<error id="user-not-found" sheet="error-modal.xsl">
-				<xml name="error" file="xml/user-not-found-error.xml" />
-			</error>
-
-			<error id="operation-not-allowed" sheet="error-modal.xsl">
-				<xml name="error" file="xml/registered-users-only.xml" />
-			</error>
-
-			<error sheet="error-modal.xsl"/>
-
-			<output sheet="infomodal.xsl">
-				<xml name="info" file="xml/password-link-sent.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="password.change.form" deprecated="true">
-			<output sheet="password-change.xsl"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="password.change.submit" deprecated="true">
-			<class name=".services.password.Change" />
-
-			<output sheet="info.xsl">
-				<xml name="info" file="xml/password-changed.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="xml.password.emaillink" deprecated="true">
-			<class name=".services.password.SendLink" />
-			<error sheet="error-xml.xsl"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="xml.password.change" deprecated="true">
-			<class name=".services.password.Change" />
-			<error sheet="error-xml.xsl"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- User services                                                 -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="user.list" deprecated="true">
-			<class name=".services.user.List" />
-
-			<output sheet="user-list.xsl">
-				<xml name="strings" file="xml/confirm.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="user.get" deprecated="true">
-			<class name=".services.user.Get" />
-
-			<output sheet="user-new.xsl">
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="profiles" class="jeeves.guiservices.profiles.Get" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="user.edit" deprecated="true">
-			<class name=".services.user.Get" />
-
-			<output sheet="user-update.xsl">
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="groupsAndProfiles" class=".guiservices.groups.GetMineWithProfiles" />
-				<call name="profiles" class="jeeves.guiservices.profiles.Get" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="user.resetpw" deprecated="true">
-			<class name=".services.user.Get" />
-
-			<output sheet="user-resetpw.xsl">
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="profiles" class="jeeves.guiservices.profiles.Get" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="user.update" deprecated="true">
-			<class name=".services.user.Update" />
-			<output forward="user.list" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="user.remove" deprecated="true">
-			<class name=".services.user.Remove" />
-			<output forward="user.list" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="user.pwedit">
-			<class name=".services.user.Get" />
-
-			<output sheet="user-pwupdate.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="user.pwupdate">
-			<class name=".services.user.PwUpdate" />
-
-			<output sheet="info.xsl">
-				<xml name="info" file="xml/password-changed.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="user.infoedit" deprecated="true">
-			<class name=".services.user.Get" />
-
-			<output sheet="user-infoupdate.xsl">
-				<call name="groups" class=".guiservices.groups.GetMine" />
-				<call name="profiles" class="jeeves.guiservices.profiles.Get" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="user.infoupdate" deprecated="true">
-			<class name=".services.user.InfoUpdate" />
-
-			<output sheet="info.xsl">
-				<xml name="info" file="xml/info-changed.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- User self-registration services                               -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="user.register.get" deprecated="true">
-			<output sheet="user-selfregistration.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="user.register.submit" deprecated="true">
-			<class name=".services.register.SelfRegister" />
-			<output sheet="registration-info.xsl">
-				<xml name="info" file="xml/registration-sent.xml" />
-			</output>
-	        <error sheet="registration-error.xsl" deprecated="true">
-				<xml name="error" file="xml/registration-error.xml" />
-			</error>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Group services                                                -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="group.list" deprecated="true">
-			<class name=".services.group.List" />
-
-			<output sheet="group-list.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="group.get" deprecated="true">
-			<class name=".services.group.Get" />
-
-			<output sheet="group-update.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="group.update" deprecated="true">
-			<class name=".services.group.Update" />
-			<output forward="group.list" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="group.remove" deprecated="true">
-			<class name=".services.group.Remove" />
-			<output forward="group.list" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="xml.group.update" deprecated="true">
-			<class name=".services.group.XmlUpdate" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Category services                                             -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="category.list" deprecated="true">
-			<class name=".services.category.List" />
-
-			<output sheet="category-list.xsl" >
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="category.get" deprecated="true">
-			<class name=".services.category.Get" />
-
-			<output sheet="category-update.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="category.update" deprecated="true">
-			<class name=".services.category.Update" />
-			<output forward="category.list" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="category.remove" deprecated="true">
-			<class name=".services.category.Remove" />
-			<output forward="category.list" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.category.update" deprecated="true">
-			<class name=".services.category.XmlUpdate" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Notifications services                                        -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	    <service name="notifications.list" deprecated="true">
-			<class name=".services.notifications.List" />
-			<output sheet="notifications-list.xsl" />
-		</service>
-
-	    <service name="notifications.save" deprecated="true">
-			<class name=".services.notifications.Save" />
-			<output forward="admin" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!--                   Login services                              -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="login.form" deprecated="true">
-			<output sheet="login-form.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="shib.user.login">
-			<class name=".services.login.ShibLogin" />
-
-			<output forward="home" />
-
-			<error id="user-login" sheet="error.xsl" statusCode="401">
-				<xml name="error" file="xml/login-error.xml" />
-			</error>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Administration services                                       -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="admin" deprecated="true">
-			<output sheet="admin.xsl">
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- System configuration                                          -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="config" deprecated="true">
-			<class name=".services.config.Get" />
-			<output sheet="config/config.xsl">
-				<xml name="config" file="xml/config.xml" />
-				<call name="users" class="jeeves.services.db.Select">
-					<param name="db" value="main-db" />
-					<param name="query" value="SELECT * FROM Users ORDER BY name" />
-				</call>
-
-				<call name="groups" class="jeeves.services.db.Select">
-					<param name="db" value="main-db" />
-					<param name="query" value="SELECT * FROM Groups WHERE ID > 1 ORDER BY name" />
-				</call>
-			</output>
-		</service>
-		
-	    <service name="config.set" deprecated="true">
-			<class name=".services.config.Set">
-				<param name="reloadServices" value="y"/>
-			</class>
-			<output forward="admin" />
-		</service>
-		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="xml.config.get" deprecated="true">
-			<class name=".services.config.Get" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="lucene.config.reload" deprecated="true">
-			<class name=".services.config.Reload" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="xml.config.set" deprecated="true">
-			<class name=".services.config.Set" />
-			<output forward="xml.config.doActions" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="xml.config.doActions" deprecated="true">
-			<class name=".services.config.DoActions" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="xml.config.info" deprecated="true">
-			<class name=".services.config.GetInfo" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="config.info" deprecated="true">
-			<class name=".services.config.GetInfo" />
-			<output sheet="config/info.xsl">
-				<xml name="config" file="xml/config.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Localization                                                  -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	    <service name="localization" deprecated="true">
-			<output sheet="localization/localization.xsl">
-				<call name="languages" class=".guiservices.languages.Get" />
-				<xml name="localiz" file="xml/localization.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.operation.update">
-			<class name=".services.operation.Update" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Help services                                                 -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="help">
-			<output sheet="page.xsl">
-				<xml name="page" file="xml/help.xml" />
-			</output>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.schema.info">
-			<class name=".services.schema.Info" />
+      <class name="jeeves.services.Ping" />
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -834,13 +145,6 @@
 			<output sheet="file-download-disclaimer.xsl" />
 		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.file.disclaimer">
-			<class name=".services.feedback.AddLimitations" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="file.download">
 			<class name=".services.feedback.Insert" />
@@ -848,27 +152,10 @@
 			<output sheet="file-download.xsl" />
 		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.file.download">
-			<class name=".services.feedback.Insert" />
-			<output forward="resources.get.archive" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
 		<service name="prepare.file.download">
 			<class name=".services.metadata.PrepareFileDownload" />
 			<output sheet="file-download-list.xsl" />
 		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="graphover.show">
-			<output sheet="graphover-show.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="resources.get.archive">
 			<class name=".services.resources.DownloadArchive" />
@@ -892,114 +179,16 @@
 			<output file="true" />
 		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="resources.upload">
-			<class name=".services.resources.Upload" />
-			<output sheet="file-upload-results.xsl" />
-
-			<error sheet="error-modal.xsl">
-				<xml name="error" file="xml/file-upload-unsuccessful.xml" />
-			</error>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="resources.prepare.upload">
-			<output sheet="file-upload.xsl" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="resources.del">
-			<class name=".services.resources.Remove" />
-
-			<error id="file-not-found" sheet="error.xsl" statusCode="404">
-				<xml name="error" file="xml/file-not-found-error.xml" />
-			</error>
-
-			<output forward="metadata.edit" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.search">
-			<class name=".services.main.XmlSearch" />
-
-			<output sheet="portal-present.xsl" contentType="application/xml; charset=UTF-8" />
-
-			<error id="search-error" sheet="error-xml.xsl" statusCode="500"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.metadata.get">
-			<class name=".services.metadata.Show">
-				<param name="skipPopularity" value="y" />
-				<param name="skipInfo" value="y" />
-			</class>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.info">
-			<class name=".services.main.Info" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.forward">
-			<class name=".services.main.Forward" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- GeoNetwork Mapping Application XML services  -->
-
-		<service name="xml.user.list" deprecated="true">
-			<class name=".services.user.List" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	  <service name="xml.usergroups.list" deprecated="true">
-			<class name=".services.user.UserGroups" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-	  <service name="xml.group.list" deprecated="true">
-			<class name=".services.group.List" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.metadata.insert" deprecated="true">
-			<class name=".services.metadata.Insert" />
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.metadata.delete" deprecated="true">
-			<class name=".services.metadata.Delete" />
-		</service>
-
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Open Archive Initiative, Protocol for Metadata Harvesting -->
-
-		<service name="oaipmh">
-			<class name=".services.main.OaiPmhDispatcher" />
-		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- KML services -->
-
 		<!-- Show WMS service in GE -->
 		<service name="google.kml">
 			<class name=".services.metadata.Show" />
 			<output sheet="kml.xsl" contentType="application/kml; charset=UTF-8">
 			</output>
-			<error id="operation-not-allowed" sheet="error.xsl" statusCode="403">
+			<error id="operation-not-allowed" sheet="../xslt/common/error.xsl" statusCode="403">
 				<xml name="error" file="xml/privileges-error.xml" />
 			</error>
 		</service>
@@ -1012,21 +201,8 @@
 			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-	
-		<service name="mef.import.ui">
-			<class name=".services.mef.Import" />
-	
-	
-			<output sheet="metadata-insert-results.xsl" />
-	
-			<error sheet="error.xsl">
-				<xml name="error" file="xml/validation-error.xml" />
-				<xml name="validation" file="xml/metadata-validate.xml" />
-			</error>
-		</service>
-	
 		<service name="xml.mef.import.ui">
+      <!-- TODO rename Catalogue.js -->
 			<class name=".services.mef.Import" />
 			<output sheet="metadata/md-insert-results.xsl"/>
 			
@@ -1042,36 +218,19 @@
 		</service>
 
 
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- relation services -->
-
-		<service name="xml.relation.get">
-			<class name=".services.relations.Get" />
-
-			<output sheet="portal-present.xsl" contentType="text/xml; charset=UTF-8">
-				<call name="sources" class=".guiservices.util.Sources" />
-			</output>
-		</service>
-
-		<service name="xml.relation.insert">
-			<class name=".services.relations.Insert" />
-		</service>
-
-		<service name="xml.relation.delete">
-			<class name=".services.relations.Remove" />
-		</service>
-
-
 		<service name="crs.types" deprecated="true">
+      <!-- Still used by ExtJS editor -->
 			<class name=".services.crs.GetCRSTypes" />
 		</service>
 		<service name="crs.get" deprecated="true">
-			<class name=".services.crs.GetCRS" />
+      <!-- Still used by ExtJS editor -->
+      <class name=".services.crs.GetCRS" />
 			<output sheet="crs.xsl" contentType="text/xml; charset=UTF-8" />
 		</service>
 		
 		
 		<service name="isolanguages" deprecated="true">
+      <!-- Still used by ExtJS search form criteria on language -->
 			<class name="org.fao.geonet.guiservices.isolanguages.Get" />
 		</service>
 		
@@ -1088,77 +247,15 @@
 		<service name="find">
 			<output sheet="search-cat.xsl"/>
 		</service>
+
+
+
+<!--
+    tabsearch is turned off by default (no maintainer).
 		<service name="tabsearch">
 			<output sheet="search-tab.xsl"/>
 		</service>
-		
-	  <service name="csw.config.get" deprecated="true">
-	    <class name=".guiservices.csw.Get"/>
-	    
-	    <output sheet="csw/config.xsl">
-	      <call name="languages" class=".guiservices.languages.Get"/>
-	      
-	      <call name="users" class="jeeves.services.db.Select">
-	        <param name="db" value="main-db"/>
-	        <param name="query" value="SELECT * FROM Users ORDER BY name"/>
-	      </call>
-	    </output>
-	  </service>
-	  
-	  <service name="csw.customelementset.get">
-	    <output sheet="csw/customize-elementset.xsl">
-	      <call name="customelementsets" class=".guiservices.csw.customelementset.Get"/>
-	    </output>
-	  </service>
-	  
-	  <service name="csw.customelementset.set">
-	    <class name=".guiservices.csw.customelementset.Set"/>
-	    <output sheet="admin.xsl"> </output>
-	  </service>
-	  
-	  
-	  <service name="csw.config.set" deprecated="true">
-	    <class name=".guiservices.csw.Set" />
-	    
-	    <output sheet="admin.xsl">
-	    </output>
-	  </service>
-	  
-	  
-	  <service name="virtualcsw.config" deprecated="true">
-	    <output sheet="csw/config-virtualcsw.xsl">
-	      <call name="services" class=".guiservices.csw.virtual.List"/>
-	    </output>
-	  </service>
-	  
-	  <service name="virtualcsw.config.get" deprecated="true">
-	    <output sheet="csw/virtualcsw-new.xsl">
-	      <call name="services" class=".guiservices.csw.virtual.Get"/>
-	      <call name="groups" class=".guiservices.groups.GetMine"/>
-	      <call name="categories" class=".services.category.List"/>
-	      <call name="sources" class=".guiservices.util.Sources"/>
-	    </output>
-	  </service>
-	  
-	  <service name="virtualcsw.config.update" deprecated="true">
-	    <class name=".guiservices.csw.virtual.Update"/>
-	    <output forward="virtualcsw.config"/>
-	  </service>
-	  
-	  
-	  <service name="virtualcsw.config.edit" deprecated="true">
-	    <output sheet="csw/virtualcsw-update.xsl">
-	      <call name="services" class=".guiservices.csw.virtual.Get"/>
-	      <call name="groups" class=".guiservices.groups.GetMine"/>
-	      <call name="categories" class=".services.category.List"/>
-	      <call name="sources" class=".guiservices.util.Sources"/>
-	    </output>
-	  </service>
-	  
-	  <service name="virtualcsw.config.delete" deprecated="true">
-	    <class name=".guiservices.csw.virtual.Delete"/>
-	    <output forward="virtualcsw.config"/>
-	  </service>
+-->
 
 	</services>
 
@@ -1166,20 +263,20 @@
 
 	<include>config-metadata.xml</include>
 	<include>config-metadata-experimental.xml</include>
-	<include>config-thesaurus.xml</include>
-	<include>config-harvesting.xml</include>
 	<include>config-portal.xml</include>
 	<include>config-export.xml</include>
-	<include>config-statistics.xml</include>
-  <include>config-test.xml</include>
 
 	<!-- ====================================================================== -->
 
 	<!-- New section of services based on refactoring
 	guideline https://github.com/geonetwork/core-geonetwork/wiki/RefactoringXSLTAndUserInterface -->
-  
+
+  <include>config/config-service-xml-api.xml</include>
+
   <include>config/config-service-search.xml</include>
   <include>config/config-service-sru.xml</include>
+  <include>config/config-service-oai.xml</include>
+  <include>config/config-service-shibboleth.xml</include>
   <include>config/config-service-rss.xml</include>
   <include>config/config-service-csv.xml</include>
   <include>config/config-service-dcat-rdf.xml</include>
@@ -1193,6 +290,7 @@
 
     <include>config/config-service-admin-schema.xml</include>
     <include>config/config-service-admin-schematron.xml</include>
+    <include>config/config-service-batch-replace.xml</include>
     <include>config/config-service-admin-category.xml</include>
 
     <include>config/config-service-admin-batchprocess.xml</include>
@@ -1207,7 +305,7 @@
     <include>config/config-service-admin-formatter.xml</include>
 
   <include>config/config-service-statistics.xml</include>
-  
+
   <include>config/config-service-admin-csw.xml</include>
   <include>config/config-service-csw.xml</include>
   <include>config/config-service-csw-virtual.xml</include>

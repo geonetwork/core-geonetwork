@@ -19,11 +19,11 @@
       ['$rootScope', '$timeout', '$q', '$http',
         'gnEditor', 'gnSchemaManagerService',
         'gnEditorXMLService', 'gnHttp', 'gnConfig',
-        'gnCurrentEdit', 'gnConfigService',
+        'gnCurrentEdit', 'gnConfigService', 'gnElementsMap',
         function($rootScope, $timeout, $q, $http, 
             gnEditor, gnSchemaManagerService, 
             gnEditorXMLService, gnHttp, gnConfig, 
-            gnCurrentEdit, gnConfigService) {
+            gnCurrentEdit, gnConfigService, gnElementsMap) {
 
          return {
            restrict: 'A',
@@ -33,6 +33,8 @@
              elementName: '@',
              elementRef: '@',
              domId: '@',
+             tagName: '@',
+             paramName: '@',
              templateAddAction: '@'
            },
            templateUrl: '../../catalog/components/edit/' +
@@ -49,15 +51,22 @@
              scope.templateAddAction = scope.templateAddAction === 'true';
 
              // Search only for contact subtemplate
-             scope.params = {
-               _root: 'gmd:CI_ResponsibleParty',
+             scope.subtemplateFilter = {
                _isTemplate: 's',
-               fast: 'false'
+               any: '',
+               _root: 'gmd:CI_ResponsibleParty',
+               sortBy: 'title',
+               sortOrder: 'reverse',
+               resultType: 'subtemplates'
              };
 
              scope.snippet = null;
              scope.snippetRef = gnEditor.
              buildXMLFieldName(scope.elementRef, scope.elementName);
+
+             scope.getEntries = function() {
+               scope.$broadcast('resetSearch', scope.subtemplateFilter);
+             };
 
              scope.add = function() {
                gnEditor.add(gnCurrentEdit.id,
@@ -100,9 +109,11 @@
                  var id = c['geonet:info'].id,
                  uuid = c['geonet:info'].uuid;
                  var params = {uuid: uuid};
+
+                 // Role parameter only works for contact subtemplates
                  if (role) {
                    params.process =
-                   'gmd:role/gmd:CI_RoleCode/@codeListValue~' + role;
+                   scope.paramName + '~' + role;
                  }
                  gnHttp.callService(
                      'subtemplate', params).success(function(xml) {
@@ -121,9 +132,9 @@
                return false;
              };
 
-             // TODO: Schema should be a parameter
              gnSchemaManagerService
-             .getCodelist('iso19139|gmd:CI_RoleCode')
+             .getCodelist(gnCurrentEdit.schema + '|' +
+                 gnElementsMap['roleCode'][gnCurrentEdit.schema])
              .then(function(data) {
                scope.roles = data[0].entry;
              });

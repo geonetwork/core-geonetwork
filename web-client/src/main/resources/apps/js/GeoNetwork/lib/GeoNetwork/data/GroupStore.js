@@ -78,7 +78,7 @@ GeoNetwork.data.GroupStore = function(url){
             url: url,
             disableCaching: false
         }),
-        record: 'group',
+        record: 'group/group',
         idPath: 'id',
         fields: [{
             name: 'id',

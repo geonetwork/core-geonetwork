@@ -34,14 +34,6 @@
             <artifactId>saxon-dom</artifactId>
         </dependency>
         <dependency>
-            <groupId>jfree</groupId>
-            <artifactId>jfreechart</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>jfree</groupId>
-            <artifactId>jcommon</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.openrdf</groupId>
             <artifactId>openrdf-model</artifactId>
         </dependency>
@@ -375,6 +367,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>2.5</version>
                 <executions>
                     <execution>
                         <id>test-jar</id>

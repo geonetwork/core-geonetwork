@@ -3,30 +3,30 @@
     <schematron.title>ISO Validation Rules</schematron.title>
     <M6>Une chaîne de caractère ne doit pas être vide ou son parent doit avoir un attribut nilReason</M6>
     <M7>Contraintes sur les attributs CRS</M7>
-    <M8>[ISOFTDS19139:2005-TableA1-Row24] - Au moins le nom du contact, le nom de l'organisation ou la fonction du contact doivent être renseignés</M8>
-    <M9>[ISOFTDS19139:2005-TableA1-Row07] - Les autres contraintes doivent être renseignées si les contraintes d'accès ou d'utilisation ont la valeur 'autres restrictions'</M9>
-    <M10>[ISOFTDS19139:2005-TableA1-Row16] - L'unité est obligatoire si la valeur min ou la valeur max d'une longueur d'onde est renseignée</M10>
-    <M11>[ISOFTDS19139:2005-TableA1-Row13] - La description du référentiel est obligatoire si l'étendue des données sources n'est pas renseignée</M11>
-    <M12>[ISOFTDS19139:2005-TableA1-Row14] - Une étendue des données sources est obligatoire si la description du référentiel n'est pas renseignée</M12>
-    <M13>[ISOFTDS19139:2005-TableA1-Row10] - La généalogie de la donnée est obligatoire pour un jeu de données si le référentiel ou l'évènement dans le processus ne sont pas renseignés</M13>
-    <M14>[ISOFTDS19139:2005-TableA1-Row11] - La description du référentiel est obligatoire si la généalogie de la donnée ou la description de l'évènement dans le processus ne sont pas renseignés</M14>
-    <M15>[ISOFTDS19139:2005-TableA1-Row12] - La description de l'evenement dans le processus est obligatoire si la généalogie de la donnée ou la description du référentiel</M15>
-    <M16>[ISOFTDS19139:2005-TableA1-Row08] - Au moins le rapport sur la qualité ou la généalogie de la donnée doit être renseigné</M16>
-    <M17>[ISOFTDS19139:2005-TableA1-Row09] - La description du niveau de hiérarchie est obligatoire s'il ne s'agit pas d'un jeu ou d'une collection de données</M17>
-    <M18>[ISOFTDS19139:2005-TableA1-Row17] - L'unité de densité d'enregistrement est obligatoire si la densité est renseignée</M18>
-    <M19>[ISOFTDS19139:2005-TableA1-Row18] - Au moins le format de distribution ou de diffusion doit être renseignés</M19>
-    <M20>[ISOFTDS19139:2005-TableA1-Row23] - Au moins la description de l'étendue, l'élément géographique, temporel ou vertical doit être renseignés</M20>
-    <M21>[ISOFTDS19139:2005-TableA1-Row04] - Au moins la description ou l'étendue spatiale doit être renseignées pour un jeu de données</M21>
-    <M22>[ISOFTDS19139:2005-TableA1-Row05] - Le thème doit être renseigné pour un jeu ou une collection de données</M22>
-    <M23>[ISOFTDS19139:2005-TableA1-Row06] - Au moins le nom ou l'identifiant du jeu de données aggregé doit être renseigné</M23>
-    <M24>[ISOFTDS19139:2005-TableA1-Row01] - La langue est obligatoire</M24>
-    <M25>[ISOFTDS19139:2005-TableA1-Row02] - Le jeu de caractère est obligatoire</M25>
-    <M26>[ISOFTDS19139:2005-TableA1-Row19] - L'obligation, le maximum d'occurence et les valeurs valides sont obligatoires si le type valeur n'est pas 'liste de code', 'énumeration', 'élément de liste de code'</M26>
-    <M27>[ISOFTDS19139:2005-TableA1-Row20] - La condition est obligatoire si l'obligation a la valeur 'conditionnelle'</M27>
-    <M28>[ISOFTDS19139:2005-TableA1-Row21] - Le code est obligatoire si le type de valeur a la valeur 'liste de code'</M28>
-    <M29>[ISOFTDS19139:2005-TableA1-Row22] - Si le type de valeur n'est pas 'liste de code', alors le nom court est obligatoire</M29>
-    <M30>[ISOFTDS19139:2005-TableA1-Row15] - La description des points de calage est obligatoire si elle est disponible</M30>
-    <M61>[ISOFTDS19139:2005-TableA1] - Le nom du niveau de hiérarchie doit être renseigné si le niveau hierarchique ne content pas 'jeu de données'</M61>
+    <M8>Au moins le nom du contact, le nom de l'organisation ou la fonction du contact doivent être renseignés</M8>
+    <M9>Les autres contraintes doivent être renseignées si les contraintes d'accès ou d'utilisation ont la valeur 'autres restrictions'</M9>
+    <M10>L'unité est obligatoire si la valeur min ou la valeur max d'une longueur d'onde est renseignée</M10>
+    <M11>La description du référentiel est obligatoire si l'étendue des données sources n'est pas renseignée</M11>
+    <M12>Une étendue des données sources est obligatoire si la description du référentiel n'est pas renseignée</M12>
+    <M13>La généalogie de la donnée est obligatoire pour un jeu de données si le référentiel ou l'évènement dans le processus ne sont pas renseignés</M13>
+    <M14>La description du référentiel est obligatoire si la généalogie de la donnée ou la description de l'évènement dans le processus ne sont pas renseignés</M14>
+    <M15>La description de l'evenement dans le processus est obligatoire si la généalogie de la donnée ou la description du référentiel</M15>
+    <M16>Au moins le rapport sur la qualité ou la généalogie de la donnée doit être renseigné</M16>
+    <M17>La description du niveau de hiérarchie est obligatoire s'il ne s'agit pas d'un jeu ou d'une collection de données</M17>
+    <M18>L'unité de densité d'enregistrement est obligatoire si la densité est renseignée</M18>
+    <M19>Au moins le format de distribution ou de diffusion doit être renseignés</M19>
+    <M20>Au moins la description de l'étendue, l'élément géographique, temporel ou vertical doit être renseignés</M20>
+    <M21>Au moins la description ou l'étendue spatiale doit être renseignées pour un jeu de données</M21>
+    <M22>Le thème doit être renseigné pour un jeu ou une collection de données</M22>
+    <M23>Au moins le nom ou l'identifiant du jeu de données aggregé doit être renseigné</M23>
+    <M24>La langue est obligatoire</M24>
+    <M25>Le jeu de caractère est obligatoire</M25>
+    <M26>L'obligation, le maximum d'occurence et les valeurs valides sont obligatoires si le type valeur n'est pas 'liste de code', 'énumeration', 'élément de liste de code'</M26>
+    <M27>La condition est obligatoire si l'obligation a la valeur 'conditionnelle'</M27>
+    <M28>Le code est obligatoire si le type de valeur a la valeur 'liste de code'</M28>
+    <M29>Si le type de valeur n'est pas 'liste de code', alors le nom court est obligatoire</M29>
+    <M30>La description des points de calage est obligatoire si elle est disponible</M30>
+    <M61>Le nom du niveau de hiérarchie doit être renseigné si le niveau hierarchique ne content pas 'jeu de données'</M61>
     <alert.M6><div>Le thème doit être renseigné pour un jeu ou une collection de données.</div></alert.M6>
     <report.M6>La thématique est :</report.M6>
     <alert.M6.characterString><div>Une chaîne de caractère ne doit pas être vide ou son parent doit avoir un attribut nilReason</div></alert.M6.characterString>

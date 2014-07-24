@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-	<xsl:include href="geo/utils.xsl"/>
-
 	<!--
 	main html header
 	-->
@@ -37,55 +35,6 @@
 
 			window.javascriptsLocation = "<xsl:value-of select="/root/gui/url"/>/scripts/";
 
-			<xsl:if test="/root/gui/reqService = 'main.home'">
-			document.onkeyup = alertkey;
-
-            function getCookie(c_name) {
-                var c_value = document.cookie;
-                var c_start = c_value.indexOf(" " + c_name + "=");
-                if (c_start == -1) {
-                    c_start = c_value.indexOf(c_name + "=");
-                }
-                if (c_start == -1) {
-                    c_value = null;
-                } else {
-                    c_start = c_value.indexOf("=", c_start) + 1;
-                    var c_end = c_value.indexOf(";", c_start);
-                    if (c_end == -1) {
-                        c_end = c_value.length;
-                    }
-                c_value = unescape(c_value.substring(c_start,c_end));
-                }
-                return c_value;
-            }
-
-			function alertkey(e) {
-				if (!e) {
-					if (window.event) {
-						e = window.event;
-					} else {
-						return;
-					}
-				}
-
-				if (e.keyCode == 13) {
-					<xsl:if test="string(/root/gui/session/userId)=''">
-					if ($('username').value != '') { // login action
-						goSubmit('login');
-						return;
-						}
-					</xsl:if>
-				    var searchCookie = getCookie("search");
-                    var doAdvancedSearch = (searchCookie == "o:searchTab=s%3Aadvanced");
-                    var doSimpleSearch = (searchCookie == "o:searchTab=s%3Adefault");
-                    if (doAdvancedSearch) {
-                        runAdvancedSearch();
-                    } else if (doSimpleSearch) {
-						runSimpleSearch();
-					}
-                }
-				};
-			</xsl:if>
 		</script><xsl:text>&#10;</xsl:text>
 
 		<!-- stylesheet -->
@@ -93,8 +42,6 @@
 		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/modalbox.css"/>
 		<xsl:apply-templates mode="css" select="/"/>
 
-		<!-- JS -->
-		<xsl:call-template name="jsHeader"/>
 		
 	</xsl:template>
 	

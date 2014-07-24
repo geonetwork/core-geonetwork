@@ -60,7 +60,7 @@ import java.util.Map;
  *   </suggestions>
  * }
  * </pre>
- * 
+ * A
  * The process attribute contains the process identifier.
  * </li>
  * <li>
@@ -94,7 +94,7 @@ public class GetSuggestion implements Service {
         String action = Util.getParam(params, "action", "list");
         @SuppressWarnings("unchecked")
         List<Element> children = params.getChildren();
-        Map<String, String> xslParameter = new HashMap<String, String>();
+        Map<String, Object> xslParameter = new HashMap<String, Object>();
         xslParameter.put("guiLang", context.getLanguage());
         xslParameter.put("siteUrl", sm.getSiteURL(context));
         xslParameter.put("baseUrl", context.getBaseUrl());

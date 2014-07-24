@@ -248,20 +248,20 @@ public class Transaction extends AbstractOperation implements CatalogService {
         String id = dataMan.insertMetadata(context, schema, xml, uuid, userId, group, source,
                 isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
 
+        // Privileges for the first group of the user that inserts the metadata
+        // (same permissions as when inserting xml file from UI)
+        if (group != null) {
+            for (ReservedOperation op : ReservedOperation.values()) {
+                dataMan.unsetOperation(context, id, group, op);
+            }
+        }
+
         // Set metadata as public if setting enabled
         SettingManager sm = gc.getBean(SettingManager.class);
         boolean metadataPublic = sm.getValueAsBool("system/csw/metadataPublic", false);
 
         if (metadataPublic) {
             dataMan.setOperation(context, id, "" + ReservedGroup.all.getId(), ReservedOperation.view);
-        }
-
-
-        // Privileges for the user group that inserts the metadata (same permissions as when inserting xml file from UI)
-        if (group != null) {
-            for (ReservedOperation op : ReservedOperation.values()) {
-                dataMan.unsetOperation(context, id, group, op);
-            }
         }
 
         dataMan.indexMetadata(id, false);

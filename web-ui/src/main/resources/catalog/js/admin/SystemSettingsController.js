@@ -121,8 +121,11 @@
          */
       $scope.saveSettings = function(formId) {
 
-        $http.get($scope.url + 'admin.config.save?' +
-                gnUtilityService.serialize(formId))
+        $http.post($scope.url + 'admin.config.save',
+            gnUtilityService.serialize(formId), {
+              headers: {'Content-Type':
+                    'application/x-www-form-urlencoded'}
+            })
             .success(function(data) {
               $rootScope.$broadcast('StatusUpdated', {
                 msg: $translate('settingsUpdated'),

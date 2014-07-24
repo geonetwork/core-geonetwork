@@ -15,7 +15,7 @@ Administration
     administration/index.rst
     classifications/index.rst
     contacts/index.rst
-    index/index.rst
+    outils/index.rst
     localization/index.rst
     advanced/index.rst
     monitoring/index.rst

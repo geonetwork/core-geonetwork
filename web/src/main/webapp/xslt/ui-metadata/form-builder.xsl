@@ -338,8 +338,14 @@
         <!-- Create a title indicating that the element is missing in the current
         record. A checkbox display the template field to be populated. -->
         <xsl:if test="$isMissingLabel != ''">
-          <div data-gn-template-field-toggle="{$tagId}"
-              data-label="{$isMissingLabel}"/>
+          <div class="checkbox">
+            <label>
+              <input type="checkbox"
+                     id="gn-template-unset-{$tagId}"
+                      checked="checked"/>
+              <xsl:value-of select="$isMissingLabel"/>
+            </label>
+          </div>
         </xsl:if>
         <div id="{$tagId}">
           <xsl:if test="$isMissingLabel != ''">
@@ -500,6 +506,9 @@
                         data-keys="{string-join($template/values/key/@label, '$$$')}"
                         data-values="{if ($keyValues and count($keyValues/*) > 0)
                           then string-join($keyValues/field/value, '$$$') else ''}">
+                <xsl:if test="$isMissingLabel != ''">
+                  <xsl:attribute name="data-not-set-check" select="$tagId"/>
+                </xsl:if>
                 <xsl:copy-of select="$template/snippet/*"/>
               </textarea>
             </div>
@@ -546,7 +555,7 @@
   -->
   <xsl:template name="render-element-to-add">
     <xsl:param name="label" as="xs:string?"/>
-    <xsl:param name="directive" as="xs:string?"/>
+    <xsl:param name="directive" as="node()?"/>
     <xsl:param name="childEditInfo"/>
     <xsl:param name="parentEditInfo"/>
     <!-- Hide add element if child of an XLink section. -->
@@ -617,9 +626,10 @@
                 The directive is in charge of displaying the default add button if needed.
               -->
               <xsl:choose>
-                <xsl:when test="$directive != ''">
+                <xsl:when test="$directive/@addDirective != ''">
                   <div>
-                    <xsl:attribute name="{$directive}"/>
+                    <xsl:attribute name="{$directive/@addDirective}"/>
+                    <xsl:copy-of select="$directive/directiveAttributes/@*"/>
                     <xsl:attribute name="data-dom-id" select="$id"/>
                     <xsl:attribute name="data-element-name" select="$qualifiedName"/>
                     <xsl:attribute name="data-element-ref" select="$parentEditInfo/@ref"/>

@@ -146,9 +146,14 @@
         <description/>
 
         <!-- Enable schematron rules -->
-        <singlefile src="../web/target/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire.sch.disabled"
+         <!-- Enable schematron rules -->
+        <singlefile src="../web/target/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire.disabled.sch"
                     target="$INSTALL_PATH/web/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire.sch"
                     override="true"/>
+
+        <singlefile src="../web/target/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire-strict.disabled.sch"
+                  target="$INSTALL_PATH/web/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/schematron/schematron-rules-inspire-strict.sch"
+                  override="true"/>
 
         <!-- Inspire thesaurus files -->
         <singlefile src="../web/target/thesauri/gemet.rdf"

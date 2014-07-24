@@ -306,7 +306,7 @@ GeoNetwork.searchApp = function() {
 
             var orderBy = new Ext.form.TextField({
                 name : 'E_sortOrder',
-                id : 'E_orderBy',
+                id : 'sortOrder',
                 inputType : 'hidden'
             });
 

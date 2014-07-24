@@ -22,7 +22,6 @@
 //==============================================================================
 package org.fao.geonet.services.statistics;
 
-import static org.fao.geonet.services.statistics.RequestsByDateParams.*;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -51,6 +50,10 @@ public class RequestsByDateStatistics extends NotInReadOnlyModeService {
     /** the custom part of the date query; according to user choice for graphic */
     public Hashtable<String, DateInterval> queryFragments;
 
+    static final String BY_YEAR = "YEAR";
+    static final String BY_MONTH = "MONTH";
+    static final String BY_DAY = "DAY";
+    static final String BY_HOUR = "HOUR";
 
     public void init(String appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);

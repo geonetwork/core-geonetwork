@@ -216,12 +216,15 @@
                isTemplate: getInputValue('template'),
                mdLanguage: getInputValue('language'),
                mdOtherLanguages: getInputValue('otherLanguages'),
-               showValidationErrors: getInputValue('showvalidationerrors'),
+               showValidationErrors:
+               getInputValue('showvalidationerrors') == 'true',
                uuid: getInputValue('uuid'),
                schema: getInputValue('schema'),
                version: getInputValue('version'),
                geoPublisherConfig:
                angular.fromJson(getInputValue('geoPublisherConfig')),
+               extent:
+               angular.fromJson(getInputValue('extent')),
                layerConfig:
                angular.fromJson(getInputValue('layerConfig')),
                saving: false

@@ -24,18 +24,22 @@
   <xsl:template mode="mode-iso19139" match="gn:child" priority="2000">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
+    
+    
+    <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
+    <xsl:variable name="flatModeException" select="gn-fn-metadata:getFieldFlatModeException($viewConfig, $name)"/>
+
     <!-- TODO: this should be common to all schemas -->
-    <xsl:if test="$isEditing and 
-      not($isFlatMode)">
+	<xsl:if test="$isEditing and
+      (not($isFlatMode) or $flatModeException)">
       
-      <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
       <xsl:variable name="directive" select="gn-fn-metadata:getFieldAddDirective($editorConfig, $name)"/>
 
       <xsl:call-template name="render-element-to-add">
         <!-- TODO: add xpath and isoType to get label ? -->
         <xsl:with-param name="label"
           select="gn-fn-metadata:getLabel($schema, $name, $labels, name(..), '', '')/label"/>
-        <xsl:with-param name="directive" select="if($directive != 'text') then $directive else ''"/>
+        <xsl:with-param name="directive" select="$directive"/>
         <xsl:with-param name="childEditInfo" select="."/>
         <xsl:with-param name="parentEditInfo" select="../gn:element"/>
         <xsl:with-param name="isFirst" select="count(preceding-sibling::*[name() = $name]) = 0"/>

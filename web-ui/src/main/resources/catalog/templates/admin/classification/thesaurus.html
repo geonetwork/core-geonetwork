@@ -84,10 +84,11 @@
 
             <div>
               <label class="control-label" data-translate="">thesaurusClass</label>
-              <select name="dname" class="form-control" data-ng-disabled="!isNew()"
-                data-ng-model="thesaurusSelected.dname">
-                <option data-ng-repeat="t in thesaurusClass" data-translate="">{{t}}</option>
-              </select>
+              <div data-ng-disabled="!isNew()"
+                  data-schema-info-combo="codelist"
+                  data-selected-info="thesaurusSelected.dname"
+                  data-gn-schema-info="gmd:MD_KeywordTypeCode"
+                  lang="lang"></div>
             </div>
 
             <label>
@@ -133,7 +134,9 @@
         </form>
         <ul>
           <li data-ng-repeat="k in keywords">
-            <a href=""  data-ng-click="editKeyword(k)">{{k.value['#text']}}
+            <a href=""  data-ng-click="editKeyword(k)"
+                data-ng-class="k.value['#text'] ? '' : 'text-warning'">
+              {{k.value['#text'] || ('keywordNotAvailableInThisLanguage' | translate)}}
               <i class="fa fa-edit pull-right" data-ng-class="isExternal() ? 'fa-info' : 'fa-edit'"/>
             </a>
             <a href=""
@@ -187,12 +190,13 @@
               <input type="url" name="url" data-ng-model="thesaurusUrl" id="gn-thesaurus-url"
                 class="form-control" placeholder="http://"/>
             </div>
-
-
-            <div data-gn-thesaurus-type=""
-                 data-fieldname="dir"
-                 data-gn-model="thesaurusImportType"/>
-
+            <br/>
+            <div
+                data-schema-info-combo="codelist"
+                data-selected-info="thesaurusImportType"
+                data-gn-schema-info="gmd:MD_KeywordTypeCode"
+                lang="lang"></div>
+            <input type="text" class="hidden" name="dir" data-ng-model="thesaurusImportType"/>
             <ul>
               <li data-ng-repeat="file in queue">{{file.name}} ({{file.type}} / {{file.size}} KB) <i
                   class="fa fa-trash-o" data-ng-click="clear(file)"/>
@@ -224,9 +228,14 @@
               <input type="text" name="filename" class="form-control" data-ng-disabled="!isNew()"
                 data-ng-keyup="computeThesaurusNs()" data-ng-model="thesaurusSelected.filename"/>
             </div>
-
-            <div data-gn-thesaurus-type="" data-gn-model="thesaurusSelected.dname"
-              data-gn-disabled="!isNew()"/>
+            <div>
+              <label class="control-label" data-translate="">thesaurusClass</label>
+              <div
+                  data-schema-info-combo="codelist"
+                  data-selected-info="thesaurusSelected.dname"
+                  data-gn-schema-info="gmd:MD_KeywordTypeCode"
+                  lang="lang"></div>
+             </div>
 
             <div>
               <label class="control-label" data-translate="">thesaurusNamespace</label>

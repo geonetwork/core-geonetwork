@@ -266,7 +266,6 @@
             <jsSource webappPath="apps/js/GeoNetwork/lib/GeoNetwork/data/StatusStore.js"/>
             <jsSource webappPath="apps/js/GeoNetwork/lib/GeoNetwork/data/SubTemplateTypeStore.js"/>
             <jsSource webappPath="apps/js/GeoNetwork/lib/GeoNetwork/data/SuggestionStore.js"/>
-            <jsSource webappPath="apps/js/GeoNetwork/lib/GeoNetwork/data/ThesaurusFeedStore.js"/>
             <jsSource webappPath="apps/js/GeoNetwork/lib/GeoNetwork/data/ThesaurusStore.js"/>
             <jsSource webappPath="apps/js/GeoNetwork/lib/GeoNetwork/data/UserStore.js"/>
             <jsSource webappPath="apps/js/GeoNetwork/lib/GeoNetwork/data/ValidationRuleStore.js"/>
@@ -314,7 +313,6 @@
             <jsSource webappPath="apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/AdminTools.js"/>
             <jsSource webappPath="apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/HarvesterPanel.js"/>
             <jsSource webappPath="apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/MetadataInsertPanel.js"/>
-            <jsSource webappPath="apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/ThesaurusManagerPanel.js"/>
             <jsSource webappPath="apps/js/GeoNetwork/lib/GeoNetwork/widgets/admin/PrivilegesPanel.js"/>
 
             <jsSource webappPath="apps/js/GeoNetwork/lib/GeoNetwork/widgets/OGCServiceQuickRegister.js"/>

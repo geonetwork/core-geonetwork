@@ -6,7 +6,9 @@
 										xmlns:geonet="http://www.fao.org/geonetwork"
 										xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 										xmlns:gmx="http://www.isotc211.org/2005/gmx"
-                                        xmlns:skos="http://www.w3.org/2004/02/skos/core#">
+                    xmlns:util="java:org.fao.geonet.util.XslUtil"
+                    xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                    exclude-result-prefixes="#all">
 
 	<xsl:include href="convert/functions.xsl"/>
 	<xsl:include href="../../../xsl/utils-fn.xsl"/>
@@ -28,7 +30,7 @@
 
   <xsl:param name="thesauriDir"/>
   <xsl:param name="inspire">false</xsl:param>
-  
+
   <xsl:variable name="inspire-thesaurus" select="if ($inspire!='false') then document(concat('file:///', $thesauriDir, '/external/thesauri/theme/inspire-theme.rdf')) else ''"/>
   <xsl:variable name="inspire-theme" select="if ($inspire!='false') then $inspire-thesaurus//skos:Concept else ''"/>
   
@@ -38,13 +40,22 @@
     of the description of the temporal extent). -->
 	<xsl:variable name="useDateAsTemporalExtent" select="false()"/>
 
-        <!-- ========================================================================================= -->
+  <!-- Define the way keyword and thesaurus are indexed. If false
+  only keyword, thesaurusName and thesaurusType field are created.
+  If true, advanced field are created to make more details query
+  on keyword type and search by thesaurus. Index size is bigger
+  but more detailed facet can be configured based on each thesaurus.
+  -->
+  <xsl:variable name="indexAllKeywordDetails" select="true()"/>
 
-	<xsl:template match="/">
-	    <xsl:variable name="isoLangId">
-	  	    <xsl:call-template name="langId19139"/>
-        </xsl:variable>
 
+  <!-- The main metadata language -->
+  <xsl:variable name="isoLangId">
+    <xsl:call-template name="langId19139"/>
+  </xsl:variable>
+
+  <!-- ========================================================================================= -->
+  <xsl:template match="/">
 		<Document locale="{$isoLangId}">
 			<Field name="_locale" string="{$isoLangId}" store="true" index="true"/>
 
@@ -130,7 +141,6 @@
                     <!-- not tokenized title for sorting -->
                     <Field name="_title" string="{string(.)}" store="false" index="true"/>
 				</xsl:for-each>
-	
 				<xsl:for-each select="gmd:alternateTitle/gco:CharacterString">
 					<Field name="altTitle" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
@@ -180,7 +190,7 @@
             <xsl:for-each select="gmd:pointOfContact[1]/*/gmd:role/*/@codeListValue">
             	<Field name="responsiblePartyRole" string="{string(.)}" store="true" index="true"/>
             </xsl:for-each>
-            
+
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 	
 			<xsl:for-each select="gmd:abstract/gco:CharacterString">
@@ -220,10 +230,17 @@
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
       <xsl:for-each select="//gmd:MD_Keywords">
-
+        <!-- Index all keywords as text, multilingual text or anchor -->
+        <xsl:variable name="listOfKeywords"
+                      select="gmd:keyword/gco:CharacterString|
+                    gmd:keyword/gmx:Anchor|
+                    gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString"/>
         <xsl:for-each
-            select="gmd:keyword/gco:CharacterString|gmd:keyword/gmx:Anchor|gmd:keyword/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
+            select="$listOfKeywords">
           <Field name="keyword" string="{string(.)}" store="true" index="true"/>
+
+          <!-- If INSPIRE is enabled, check if the keyword is one of the 34 themes
+          and index annex, theme and theme in english. -->
           <xsl:if test="$inspire='true'">
             <xsl:if test="string-length(.) &gt; 0">
 
@@ -236,9 +253,14 @@
 
               <!-- Add the inspire field if it's one of the 34 themes -->
               <xsl:if test="normalize-space($inspireannex)!=''">
-                <!-- Maybe we should add the english version to the index to not take the language into account
-                or create one field in the metadata language and one in english ? -->
                 <Field name="inspiretheme" string="{string(.)}" store="false" index="true"/>
+                <xsl:variable name="englishInspireTheme">
+                  <xsl:call-template name="translateInspireThemeToEnglish">
+                    <xsl:with-param name="keyword" select="string(.)"/>
+                    <xsl:with-param name="inspireThemes" select="$inspire-theme"/>
+                  </xsl:call-template>
+                </xsl:variable>
+                <Field name="inspiretheme_en" string="{$englishInspireTheme}" store="true" index="true"/>
                 <Field name="inspireannex" string="{$inspireannex}" store="false" index="true"/>
                 <!-- FIXME : inspirecat field will be set multiple time if one record has many themes -->
                 <Field name="inspirecat" string="true" store="false" index="true"/>
@@ -246,11 +268,17 @@
             </xsl:if>
           </xsl:if>
         </xsl:for-each>
+
+        <!-- Index thesaurus name to easily search for records
+        using keyword from a thesaurus. -->
         <xsl:for-each select="gmd:thesaurusName/gmd:CI_Citation">
-          <xsl:if test="gmd:identifier/gmd:MD_Identifier/gmd:code/gmx:Anchor/text() != ''">
+          <xsl:variable name="thesaurusIdentifier"
+                        select="gmd:identifier/gmd:MD_Identifier/gmd:code/gmx:Anchor/text()"/>
+
+          <xsl:if test="$thesaurusIdentifier != ''">
             <Field name="thesaurusIdentifier"
                    string="{substring-after(
-                              gmd:identifier/gmd:MD_Identifier/gmd:code/gmx:Anchor/text(),
+                              $thesaurusIdentifier,
                               'geonetwork.thesaurus.')}"
                    store="true" index="true"/>
           </xsl:if>
@@ -259,9 +287,38 @@
                    string="{gmd:title/gco:CharacterString/text()}"
                    store="true" index="true"/>
           </xsl:if>
+
+
+          <xsl:if test="$indexAllKeywordDetails and $thesaurusIdentifier != ''">
+            <!-- field thesaurus-{{thesaurusIdentifier}}={{keyword}} allows
+            to group all keywords of same thesaurus in a field -->
+            <xsl:variable name="currentType" select="string(.)"/>
+            <xsl:for-each
+                select="$listOfKeywords">
+              <Field name="thesaurus-{substring-after(
+                              $thesaurusIdentifier,
+                              'geonetwork.thesaurus.')}"
+                     string="{string(.)}"
+                     store="true" index="true"/>
+
+            </xsl:for-each>
+          </xsl:if>
         </xsl:for-each>
+
+        <!-- Index thesaurus type -->
         <xsl:for-each select="gmd:type/gmd:MD_KeywordTypeCode/@codeListValue">
           <Field name="keywordType" string="{string(.)}" store="true" index="true"/>
+          <xsl:if test="$indexAllKeywordDetails">
+            <!-- field thesaurusType{{type}}={{keyword}} allows
+            to group all keywords of same type in a field -->
+            <xsl:variable name="currentType" select="string(.)"/>
+            <xsl:for-each
+                select="$listOfKeywords">
+              <Field name="keywordType-{$currentType}"
+                     string="{string(.)}"
+                     store="true" index="true"/>
+            </xsl:for-each>
+          </xsl:if>
         </xsl:for-each>
       </xsl:for-each>
 
@@ -293,7 +350,10 @@
 	
 			<xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode">
 				<Field name="topicCat" string="{string(.)}" store="true" index="true"/>
-				<Field name="keyword" string="{string(.)}" store="true" index="true"/>
+        <Field name="keyword"
+               string="{util:getCodelistTranslation('gmd:MD_TopicCategoryCode', string(.), string($isoLangId))}"
+               store="true"
+               index="true"/>
 			</xsl:for-each>
 
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
@@ -694,7 +754,27 @@
 				</xsl:for-each>
 			</xsl:attribute>
 		</Field>
-				
+
+    <xsl:variable name="identification" select="gmd:identificationInfo//gmd:MD_DataIdentification|
+			gmd:identificationInfo//*[contains(@gco:isoType, 'MD_DataIdentification')]|
+			gmd:identificationInfo/srv:SV_ServiceIdentification"/>
+
+
+    <Field name="anylight" store="false" index="true">
+      <xsl:attribute name="string">
+        <xsl:for-each
+            select="$identification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString|
+                    $identification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString|
+                    $identification/gmd:abstract/gco:CharacterString|
+                    $identification/gmd:credit/gco:CharacterString|
+                    $identification//gmd:organisationName/gco:CharacterString|
+                    $identification/gmd:supplementalInformation/gco:CharacterString|
+                    $identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString|
+                    $identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmx:Anchor">
+          <xsl:value-of select="concat(., ' ')"/>
+        </xsl:for-each>
+      </xsl:attribute>
+    </Field>
 		<!--<xsl:apply-templates select="." mode="codeList"/>-->
 		
 	</xsl:template>
@@ -719,16 +799,15 @@
 
 	<!-- inspireThemes is a nodeset consisting of skos:Concept elements -->
 	<!-- each containing a skos:definition and skos:prefLabel for each language -->
-	<!-- This template finds the provided keyword in the skos:prefLabel elements and returns the English one from the same skos:Concept -->
+	<!-- This template finds the provided keyword in the skos:prefLabel elements and
+	      returns the English one from the same skos:Concept -->
 	<xsl:template name="translateInspireThemeToEnglish">
 		<xsl:param name="keyword"/>
 		<xsl:param name="inspireThemes"/>
-		<xsl:for-each select="$inspireThemes/skos:prefLabel">
-			<!-- if this skos:Concept contains a kos:prefLabel with text value equal to keyword -->
-			<xsl:if test="text() = $keyword">
-				<xsl:value-of select="../skos:prefLabel[@xml:lang='en']/text()"/>
-			</xsl:if>
-		</xsl:for-each>
+
+    <xsl:value-of select="$inspireThemes/skos:prefLabel[
+          @xml:lang='en' and
+          ../skos:prefLabel = $keyword]/text()"/>
 	</xsl:template>	
 
 	<xsl:template name="determineInspireAnnex">

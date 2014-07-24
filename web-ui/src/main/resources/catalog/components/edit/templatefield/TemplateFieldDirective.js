@@ -29,30 +29,6 @@
         }
       };
     }]),
-  module.directive('gnTemplateFieldToggle', [
-    function() {
-      return {
-        restrict: 'A',
-        replace: true,
-        templateUrl: '../../catalog/components/edit/templatefield/' +
-            'partials/togglefield.html',
-        scope: {
-          id: '@gnTemplateFieldToggle',
-          label: '@'
-        },
-        link: function(scope, element, attrs) {
-          scope.checked = true;
-          scope.toggle = function() {
-            $('#' + scope.id).toggleClass('hidden');
-            if (scope.checked) {
-              $('#' + scope.id).find('input,select,textarea').each(function(e) {
-                $(this).val('');
-              });
-            }
-          };
-        }
-      };
-    }]),
   /**
      * The template field directive managed a custom field which
      * is based on an XML snippet to be sent in the form with some
@@ -73,7 +49,8 @@
         scope: {
           id: '@gnTemplateField',
           keys: '@',
-          values: '@'
+          values: '@',
+          notSetCheck: '@'
         },
         link: function(scope, element, attrs) {
           var xmlSnippetTemplate = element[0].innerHTML;
@@ -118,25 +95,46 @@
             }
           };
 
-          // Register change event on each fields to be
-          // replaced in the XML snippet.
-          angular.forEach(fields, function(value) {
-            $('#' + scope.id + '_' + value).change(function() {
-              generateSnippet();
+          var init = function() {
+            // Register change event on each fields to be
+            // replaced in the XML snippet.
+            angular.forEach(fields, function(value) {
+              $('#' + scope.id + '_' + value).change(function() {
+                generateSnippet();
+              });
             });
-          });
 
-          // Initialize all values
-          angular.forEach(values, function(value, key) {
-            var selector = '#' + scope.id + '_' + fields[key];
-            if ($(selector).attr('type') === 'checkbox') {
-              $(selector).attr('checked', value === 'true');
+            // Initialize all values
+            angular.forEach(values, function(value, key) {
+              var selector = '#' + scope.id + '_' + fields[key];
+              if ($(selector).attr('type') === 'checkbox') {
+                $(selector).attr('checked', value === 'true');
+              } else {
+                $(selector).val(value);
+              }
+            });
+
+            // If template element is not existing in the metadata
+            var unsetCheckbox = $('#gn-template-unset-' + scope.notSetCheck);
+            if (unsetCheckbox[0] !== undefined) {
+              // Reset the template
+              element[0].innerHTML = '';
+              // When checkbox is checked generate default
+              // snippet.
+              unsetCheckbox.change(function() {
+                $('#' + scope.notSetCheck).toggleClass('hidden');
+                if (unsetCheckbox[0].checked) {
+                  element[0].innerHTML = '';
+                } else {
+                  generateSnippet();
+                }
+              });
             } else {
-              $(selector).val(value);
+              generateSnippet();
             }
-          });
+          };
 
-          generateSnippet();
+          init();
         }
       };
     }]);

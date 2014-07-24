@@ -13,14 +13,14 @@
   <url>http://geonetwork-opensource.org</url>
   <scm>
     <connection>
-      scm:svn:https://geonetwork.svn.sourceforge.net/svnroot/geonetwork/trunk
+      scm:git:https://github.com/geonetwork/core-geonetwork
     </connection>
-    <url>https://geonetwork.svn.sourceforge.net/svnroot/geonetwork/trunk</url>
+    <url>https://github.com/geonetwork/core-geonetwork</url>
   </scm>
   <inceptionYear>2003</inceptionYear>
   <issueManagement>
-    <system>trac</system>
-    <url>http://trac.osgeo.org/geonetwork/report</url>
+    <system>GitHub Issues</system>
+    <url>https://github.com/geonetwork/core-geonetwork/issues</url>
   </issueManagement>
   <mailingLists>
     <mailingList>
@@ -246,6 +246,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
         <configuration>
           <source>1.6</source>  <!-- The -source argument for the Java compiler. -->
           <target>1.6</target>  <!-- The -target argument for the Java compiler. -->
@@ -259,6 +260,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
+        <version>2.6</version>
         <configuration>
           <encoding>UTF-8</encoding>
         </configuration>
@@ -268,6 +270,7 @@
       <plugin>
         <groupId>org.codehaus.cargo</groupId>
         <artifactId>cargo-maven2-plugin</artifactId>
+        <version>1.4.8</version>
         <configuration>
           <container>
             <containerId>jetty7x</containerId>
@@ -313,7 +316,7 @@
             <descriptor>release/zip-war.xml</descriptor>
             <descriptor>release/bin.xml</descriptor>
           </descriptors>
-          <finalName>geonetwork-${version}</finalName>
+          <finalName>geonetwork-${project.version}</finalName>
           <outputDirectory>${project.build.directory}/release</outputDirectory>
         </configuration>
       </plugin>
@@ -597,16 +600,6 @@
         <groupId>org.apache.jcs</groupId>
         <artifactId>jcs</artifactId>
         <version>1.3</version> <!-- TODO check version -->
-      </dependency>
-      <dependency>
-        <groupId>jfree</groupId>
-        <artifactId>jfreechart</artifactId>
-        <version>1.0.0</version>
-      </dependency>
-      <dependency>
-        <groupId>jfree</groupId>
-        <artifactId>jcommon</artifactId>
-        <version>1.0.15</version>
       </dependency>
       <!-- May be required to register connection unwrappers with
 			     geotools
@@ -1046,6 +1039,7 @@
 
     <!-- Local repository which allow to handle temporarly local dependencies
      // FIXME : Should be a remote repository -->
+    <!--
     <repository>
       <snapshots>
         <enabled>true</enabled>
@@ -1056,6 +1050,19 @@
       <id>localGeoNetwork</id>
       <name>GeoNetwork local repository</name>
       <url>file://maven_repo</url>
+    </repository>
+    -->
+    
+    <repository>
+    	<snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    	<id>core-maven-repo</id>
+    	<name>GeoNetwork remote repository</name>
+    	<url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
     </repository>
 
     <repository>

@@ -9,7 +9,12 @@ import java.util.regex.Pattern;
 
 import jeeves.component.ProfileManager;
 
+import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.search.CodeListTranslator;
+import org.fao.geonet.kernel.search.Translator;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.constants.Geonet;
@@ -65,6 +70,33 @@ public final class XslUtil
     public static boolean isCasEnabled() {
 		return ProfileManager.isCasEnabled();
 	}
+
+    /**
+     * Return a service handler config parameter
+     * @see org.fao.geonet.constants.Geonet.Config.
+     * @param key
+     * @return
+     */
+    public static String getConfigValue(String key) {
+        if (key == null) {
+            return "";
+        }
+
+        final ServiceContext serviceContext = ServiceContext.get();
+        if (serviceContext != null) {
+            ServiceConfig config = serviceContext.getBean(ServiceConfig.class);
+            if (config != null) {
+                String value = config.getValue(key);
+                if (value != null) {
+                    return value;
+                } else {
+                    return "";
+                }
+            }
+        }
+        return "";
+    }
+
     /** 
 	 * Check if bean is defined in the context
 	 * 
@@ -226,6 +258,36 @@ public final class XslUtil
             return "";
         }
     }
+
+
+    /**
+     * Return a translation for a codelist or enumeration element.
+     *
+     * @param codelist The codelist name (eg. gmd:MD_TopicCategoryCode)
+     * @param value The value to search for in the translation file
+     * @param langCode  The language
+     * @return  The translation, the code list value if not found or an empty string
+     * if no codelist value provided.
+     */
+    public static String getCodelistTranslation(Object codelist, Object value, Object langCode) {
+        String codeListValue = (String) value;
+        if (codeListValue != null && codelist != null && langCode != null) {
+            String translation = codeListValue;
+            try {
+                final GeonetContext gc = (GeonetContext) ServiceContext.get().getHandlerContext(Geonet.CONTEXT_NAME);
+                Translator t = new CodeListTranslator(gc.getBean(SchemaManager.class),
+                        (String) langCode,
+                        (String) codelist);
+                translation = t.translate(codeListValue);
+            } catch (Exception e) {
+                Log.error(Geonet.GEONETWORK, "Failed to translate codelist " + e.getMessage());
+            }
+            return translation;
+        } else {
+            return "";
+        }
+    }
+
     /**
      * Return 2 iso lang code from a 3 iso lang code. If any error occurs return "".
      *

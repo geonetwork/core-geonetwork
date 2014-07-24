@@ -390,19 +390,19 @@ public final class Xml
     /**
      * Transforms an xml tree into another using a stylesheet on disk and pass parameters.
      *
+     *
      * @param xml
      * @param styleSheetPath
      * @param params
      * @return
      * @throws Exception
      */
-	public static Element transform(Element xml, String styleSheetPath, Map<String,String> params) throws Exception
+	public static Element transform(Element xml, String styleSheetPath, Map<String, Object> params) throws Exception
 	{
 		JDOMResult resXml = new JDOMResult();
 		transform(xml, styleSheetPath, resXml, params);
 		return (Element)resXml.getDocument().getRootElement().detach();
 	}
-
 	//--------------------------------------------------------------------------
 
     /**
@@ -433,6 +433,56 @@ public final class Xml
 	{
 		transform(xml, styleSheetPath, result, null);
 	}
+
+
+    public static Element transformWithXmlParam(Element xml, String styleSheetPath, String xmlParamName, String xmlParam) throws Exception
+    {
+        JDOMResult resXml = new JDOMResult();
+
+        File styleSheet = new File(styleSheetPath);
+        Source srcSheet = new StreamSource(styleSheet);
+        transformWithXmlParam(xml, srcSheet, resXml, xmlParamName, xmlParam);
+
+        return (Element)resXml.getDocument().getRootElement().detach();
+    }
+
+    /**
+     * Transforms an xml tree putting the result to a stream. Sends xml snippet as parameter.
+     * @param xml
+     * @param xslt
+     * @param result
+     * @param xmlParamName
+     * @param xmlParam
+     * @throws Exception
+     */
+    public static void transformWithXmlParam(Element xml, Source xslt, Result result,
+                                             String xmlParamName, String xmlParam) throws Exception {
+        Source srcXml   = new JDOMSource(new Document((Element)xml.detach()));
+
+        // Dear old saxon likes to yell loudly about each and every XSLT 1.0
+        // stylesheet so switch it off but trap any exceptions because this
+        // code is run on transformers other than saxon
+        TransformerFactory transFact;
+        transFact = TransformerFactoryFactory.getTransformerFactory();
+
+        try {
+            transFact.setAttribute(FeatureKeys.VERSION_WARNING,false);
+            transFact.setAttribute(FeatureKeys.LINE_NUMBERING,true);
+            transFact.setAttribute(FeatureKeys.PRE_EVALUATE_DOC_FUNCTION,true);
+            transFact.setAttribute(FeatureKeys.RECOVERY_POLICY,Configuration.RECOVER_SILENTLY);
+            // Add the following to get timing info on xslt transformations
+            //transFact.setAttribute(FeatureKeys.TIMING,true);
+        } catch (IllegalArgumentException e) {
+            System.out.println("WARNING: transformerfactory doesnt like saxon attributes!");
+            //e.printStackTrace();
+        } finally {
+            Transformer t = transFact.newTransformer(xslt);
+            if (xmlParam != null) {
+                t.setParameter(xmlParamName, new StreamSource(new StringReader(xmlParam)));
+            }
+            t.transform(srcXml, result);
+        }
+    }
 
 	//--------------------------------------------------------------------------
 
@@ -499,13 +549,14 @@ public final class Xml
     /**
      * Transforms an xml tree putting the result to a stream with optional parameters.
      *
+     *
      * @param xml
      * @param styleSheetPath
      * @param result
      * @param params
      * @throws Exception
      */
-	public static void transform(Element xml, String styleSheetPath, Result result, Map<String,String> params) throws Exception
+	public static void transform(Element xml, String styleSheetPath, Result result, Map<String, Object> params) throws Exception
 	{
 		File styleSheet = new File(styleSheetPath);
 		Source srcXml   = new JDOMSource(new Document((Element)xml.detach()));
@@ -529,14 +580,13 @@ public final class Xml
 		} finally {
 			Transformer t = transFact.newTransformer(srcSheet);
 			if (params != null) {
-				for (Map.Entry<String,String> param : params.entrySet()) {
+				for (Map.Entry<String,Object> param : params.entrySet()) {
 					t.setParameter(param.getKey(),param.getValue());
 				}
 			}
 			t.transform(srcXml, result);
 		}
 	}
-
 	//--------------------------------------------------------------------------
 
     /**
