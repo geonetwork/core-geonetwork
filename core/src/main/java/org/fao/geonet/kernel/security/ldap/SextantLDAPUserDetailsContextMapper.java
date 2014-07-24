@@ -130,12 +130,28 @@ public class SextantLDAPUserDetailsContextMapper extends
 		for (String k : privs.keys()) {
 			// first, try to find the group
 			Group group = groupRepository.findByName(k);
-			// Group not found, skipping (Mantis issue #21571)
+			// Group not found, skipping it (Mantis issue #21571)
 			if (group == null) {
 				continue ;
 			}
-			// Then add a new entry for the user / group
-			Profile prof = (Profile) privs.get(k).toArray()[0];
+
+			// Mantis issue #21684: Elects the highest profile for the given group
+			Collection<Profile> cProfs = privs.get(k);
+			if (cProfs.isEmpty())
+				continue;
+			Profile[] profs = cProfs.toArray(new Profile[cProfs.size()]);
+			
+			String[] sProfs = new String[profs.length];
+			for (int i = 0 ;  i < profs.length ; i++) {
+				sProfs[i] = profs[i].name();
+			}
+			String sProf = getHighestProfile(sProfs);
+			if (sProf == null)
+				continue;
+			
+			Profile prof = Profile.findProfileIgnoreCase(sProf);
+			
+			
 			UserGroup newUg = new UserGroup().setGroup(group).setUser(u.getUser()).setProfile(prof);
 			userGroupRepository.saveAndFlush(newUg);
 			// if Reviewer, then the user is also considered as Editor
