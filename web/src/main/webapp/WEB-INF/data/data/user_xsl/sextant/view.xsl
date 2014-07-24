@@ -208,7 +208,6 @@
 		
 		<p><b><xsl:value-of select="$title" /></b></p>
 		<ul><xsl:apply-templates mode="iso19139" /></ul>
-    <xsl:value-of select="'TATA'" />
     <xsl:for-each select="*[@codeListValue = 'otherRestrictions']">
       <xsl:variable name="value" select="./@codeListValue" />
     </xsl:for-each>
