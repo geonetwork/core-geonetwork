@@ -99,11 +99,11 @@
           var styles = (params.STYLES !== undefined) ?
               params.STYLES.split(',') :
               new Array(layers.length).join(',').split(',');
+          var url = layer instanceof ol.source.ImageWMS ? layer.getSource().getUrl() :
+              layer.getSource().getUrls()[0];
           angular.extend(enc, {
             type: 'WMS',
-            baseURL: config.wmsUrl ||
-                layer.url ||
-                layer.getSource().getParams().URL,
+            baseURL: config.wmsUrl || url,
             layers: layers,
             styles: styles,
             format: 'image/' + (config.format || 'png'),
@@ -116,7 +116,6 @@
             singleTile: config.singleTile || false
           });
           return enc;
-
         },
         'OSM': function(layer, config) {
           var enc = self.encoders.
@@ -132,7 +131,6 @@
               layer.getSource().tileGrid.getTileSize()]
           });
           return enc;
-
         },
         'WMTS': function(layer, config) {
           var enc = self.encoders.layers['Layer'].
