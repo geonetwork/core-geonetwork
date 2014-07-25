@@ -15,7 +15,6 @@
   goog.require('gn_localisation');
   goog.require('gn_print');
 
-
   var module = angular.module('gn_viewer', [
     'gn_ncwms',
     'gn_viewer_service',
@@ -32,8 +31,10 @@
     'gn'
   ]);
 
-  module.controller('gnViewerController',
-    ['$scope', 'gnNcWms', 'goDecorateLayer',
+  module.controller('gnViewerController', [
+    '$scope',
+    'gnNcWms',
+    'goDecorateLayer',
       function($scope, gnNcWms, goDecorateLayer) {
 
         /** Define object to receive measure info */
@@ -60,6 +61,10 @@
           })
         });
         $scope.map.addLayer($scope.ncwmsLayer);
+
+        $scope.zoom = function(map, delta) {
+          map.getView().setZoom(map.getView().getZoom() + delta);
+        };
       }]);
 
 
