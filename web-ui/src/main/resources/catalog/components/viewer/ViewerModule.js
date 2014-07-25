@@ -13,7 +13,7 @@
   goog.require('gn_popup');
   goog.require('gn_ncwms');
   goog.require('gn_localisation');
-  goog.require('gn_printmap_directive');
+  goog.require('gn_print');
 
 
   var module = angular.module('gn_viewer', [
@@ -28,7 +28,7 @@
     'gn_ows',
     'gn_localisation',
     'gn_popup',
-    'gn_printmap_directive',
+    'gn_print',
     'gn'
   ]);
 
