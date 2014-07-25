@@ -5,28 +5,27 @@
 
   <!--Top right buttons - Tools-->
   <div class="tools" gi-btn-group gnv-close-panel data-ng-controller="toolsController">
-      <button class="btn btn-default" ng-model="activeTools.layers" type="submit" rel="#layers" gi-btn gnv-tools-btn>
-        <span class="fa fa-tasks"></span>
-        <span role="tooltip">Couches</span>
-      </button>
-      <button class="btn btn-default" ng-model="activeTools.contexts" type="submit" rel="#contexts" gi-btn gnv-tools-btn>
-        <span class="fa fa-book"></span>
-        <span role="tooltip">Contextes</span>
-      </button>
-      <button class="btn btn-default" ng-model="activeTools.print" type="submit" rel="#print" gi-btn gnv-tools-btn>
-        <span class="fa fa-print"></span>
-        <span role="tooltip">Impression</span>
-      </button>
-      <button gi-btn class="btn btn-default" type="submit" ng-model="mInteraction.active" rel="#measures" gnv-tools-btn>
-        <span class="fa fa-spoon"></span>
-        <span role="tooltip">Mesure</span>
-      </button>
-      <button gi-btn class="btn btn-default" type="submit" rel="#draw" ng-model="drawVector.inmap" gnv-tools-btn>
-        <span class="fa fa-pencil"></span>
-        <span role="tooltip">Annotations</span>
-      </button>
+    <button class="btn btn-default" ng-model="activeTools.layers" type="submit" rel="#layers" gi-btn gnv-tools-btn>
+      <span class="fa fa-tasks"></span>
+      <span role="tooltip">Couches</span>
+    </button>
+    <button class="btn btn-default" ng-model="activeTools.contexts" type="submit" rel="#contexts" gi-btn gnv-tools-btn>
+      <span class="fa fa-book"></span>
+      <span role="tooltip">Contextes</span>
+    </button>
+    <button class="btn btn-default" ng-model="activeTools.print" type="submit" rel="#print" gi-btn gnv-tools-btn>
+      <span class="fa fa-print"></span>
+      <span role="tooltip">Impression</span>
+    </button>
+    <button gi-btn class="btn btn-default" type="submit" ng-model="mInteraction.active" rel="#measures" gnv-tools-btn>
+      <span class="fa fa-spoon"></span>
+      <span role="tooltip">Mesure</span>
+    </button>
+    <button gi-btn class="btn btn-default" type="submit" rel="#draw" ng-model="drawVector.inmap" gnv-tools-btn>
+      <span class="fa fa-pencil"></span>
+      <span role="tooltip">Annotations</span>
+    </button>
   </div>
-
   <!--Bottom right buttons - Navigation-->
   <div class="tools control-tools">
     <button class="btn btn-default" type="submit">
@@ -132,7 +131,7 @@
         &times;
       </button>
       <h5>Impression</h5>
-      <!--<div data-ga-print="" data-layout="Thumbnail"></div>-->
+      <div gn-mapprint="" print-active="activeTools.print" map="map"></div>
     </div>
   </div>
 </div>

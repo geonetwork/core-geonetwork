@@ -13,6 +13,8 @@
   goog.require('gn_popup');
   goog.require('gn_ncwms');
   goog.require('gn_localisation');
+  goog.require('gn_printmap_directive');
+
 
   var module = angular.module('gn_viewer', [
     'gn_ncwms',
@@ -26,6 +28,7 @@
     'gn_ows',
     'gn_localisation',
     'gn_popup',
+    'gn_printmap_directive',
     'gn'
   ]);
 
@@ -40,7 +43,7 @@
         $scope.drawVector;
 
         /** print definition */
-        $scope.printactive = true;
+        $scope.activeTools = {};
 
         // TODO : Move on layer load
         $scope.ncwmsLayer = gnNcWms.createNcWmsLayer();
@@ -84,7 +87,6 @@
       ['$scope', 'gnMeasure',
         function($scope, gnMeasure) {
           $scope.mInteraction = gnMeasure.create($scope.map, $scope.measureObj, $scope);
-          $scope.activeTools = {};
         }
       ]);
 

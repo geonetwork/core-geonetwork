@@ -126,12 +126,15 @@
       return {
         restrict: 'A',
         require: 'giBtnGroup',
+        scope: true,
         link: function (scope, element, attrs, btngroupCtrl) {
           $('.close').click(function(){
             var t = $(this).parents('.panel-tools');
             t.addClass('force-hide');
             $('[rel=#'+t.attr('id')+']').removeClass('active');
-            btngroupCtrl.activate();
+            scope.$apply(function() {
+              btngroupCtrl.activate();
+            });
           });
         }
       };
