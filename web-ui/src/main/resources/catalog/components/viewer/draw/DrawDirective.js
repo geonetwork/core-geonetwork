@@ -32,7 +32,7 @@
             source: source,
             style: new ol.style.Style({
               fill: new ol.style.Fill({
-                color: 'rgba(255, 255, 255, 0.2)'
+                color: 'rgba(255, 255, 255, 0.4)'
               }),
               stroke: new ol.style.Stroke({
                 color: '#ffcc33',
@@ -80,7 +80,7 @@
                 scope.drawPolygon.active = false;
                 scope.drawPoint.active = false;
                 scope.drawLine.active = false;
-                map.removeLayer(vector);
+                //map.removeLayer(vector);
               }
             }
           });
