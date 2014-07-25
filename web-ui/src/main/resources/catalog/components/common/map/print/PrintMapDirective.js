@@ -7,15 +7,9 @@
 
     var printRectangle;
     var deregister;
-    var DPI = 72;
-    var DPI2 = 254;
-    var MM_PER_INCHES = 25.4;
-    var UNITS_RATIO = 39.37;
 
     var options = {
       printConfigUrl: '../../pdf/info.json?url=..%2F..%2Fpdf',
-      heightMargin: 0,
-      widthMargin: 0,
       legend: false,
       graticule: false
     };
@@ -27,7 +21,6 @@
     var updatePrintConfig = function() {
       var http = $http.get(options.printConfigUrl);
       http.success(function(data) {
-        $scope.capabilities = data;
 
         // default values:
         var layout = data.layouts[0];
@@ -38,13 +31,11 @@
             }
           });
         }
-        $scope.layout = layout;
-        $scope.scale=data.scales[5];
-        $scope.scales=data.scales;
-        $scope.dpi = data.dpis[0];
         $scope.config = {
+          createURL: data.createURL,
           layout: layout,
-          dpi: data.dpis[0],
+          layouts: data.layouts,
+          dpi: data.dpis[1],
           scales: data.scales,
           scale: data.scales[5]
         }
@@ -58,12 +49,14 @@
           $scope.map.on('precompose', handlePreCompose),
           $scope.map.on('postcompose', handlePostCompose),
           $scope.map.getView().on('propertychange', function(event) {
-            updatePrintRectanglePixels($scope.scale);
+            updatePrintRectanglePixels($scope.config.scale);
           })
         ];
-        $scope.scale = getOptimalScale();
+        $scope.config.scale = gnPrint.getOptimalScale($scope.map,
+            $scope.config.scales,
+            $scope.config.layout);
+
         refreshComp();
-        //registerEvents();
       };
       if(angular.isUndefined($scope.config)) {
         updatePrintConfig().then(initMapEvents);
@@ -128,70 +121,13 @@
       ctx.restore();
     };
 
-    var getPrintRectangleCenterCoord = function() {
-      // Framebuffer size!!
-      var bottomLeft = printRectangle.slice(0, 2);
-      var width = printRectangle[2] - printRectangle[0];
-      var height = printRectangle[3] - printRectangle[1];
-      var center = [bottomLeft[0] + width / 2, bottomLeft[1] + height / 2];
-      // convert back to map display size
-      var mapPixelCenter = [center[0] / ol.BrowserFeature.DEVICE_PIXEL_RATIO,
-            center[1] / ol.BrowserFeature.DEVICE_PIXEL_RATIO];
-      return $scope.map.getCoordinateFromPixel(mapPixelCenter);
-    };
-
     var updatePrintRectanglePixels = function(scale) {
-      printRectangle = calculatePageBoundsPixels(scale);
+      printRectangle = gnPrint.calculatePageBoundsPixels($scope.map, $scope.config.layout, scale);
       $scope.map.render();
     };
 
-    var getOptimalScale = function() {
-      var size = $scope.map.getSize();
-      var resolution = $scope.map.getView().getResolution();
-      var width = resolution * (size[0] - (options.widthMargin * 2));
-      var height = resolution * (size[1] - (options.heightMargin * 2));
-      var layoutSize = $scope.layout.map;
-      var scaleWidth = width * UNITS_RATIO * DPI / layoutSize.width;
-      var scaleHeight = height * UNITS_RATIO * DPI / layoutSize.height;
-      var testScale = scaleWidth;
-      if (scaleHeight < testScale) {
-        testScale = scaleHeight;
-      }
-      var nextBiggest = null;
-      //The algo below assumes that scales are sorted from
-      //biggest (1:500) to smallest (1:2500000)
-      angular.forEach($scope.scales, function(scale) {
-        if (nextBiggest == null ||
-            testScale > scale.value) {
-          nextBiggest = scale;
-        }
-      });
-      return nextBiggest;
-    };
-
-    var calculatePageBoundsPixels = function(scale) {
-      var s = parseFloat(scale.value);
-      var size = $scope.layout.map; // papersize in dot!
-      var view = $scope.map.getView();
-      var center = view.getCenter();
-      var resolution = view.getResolution();
-      var w = size.width / DPI * MM_PER_INCHES / 1000.0 * s / resolution;
-      var h = size.height / DPI * MM_PER_INCHES / 1000.0 * s / resolution;
-      var mapSize = $scope.map.getSize();
-      var center = [mapSize[0] * ol.BrowserFeature.DEVICE_PIXEL_RATIO / 2 ,
-            mapSize[1] * ol.BrowserFeature.DEVICE_PIXEL_RATIO / 2];
-
-      var minx, miny, maxx, maxy;
-
-      minx = center[0] - (w / 2);
-      miny = center[1] - (h / 2);
-      maxx = center[0] + (w / 2);
-      maxy = center[1] + (h / 2);
-      return [minx, miny, maxx, maxy];
-    };
-
     var refreshComp = function() {
-      updatePrintRectanglePixels($scope.scale);
+      updatePrintRectanglePixels($scope.config.scale);
       $scope.map.render();
     };
 
@@ -218,7 +154,7 @@
       var encLayers = [];
       var encLegends;
       var attributions = [];
-      var layers = this.map.getLayers();
+      var layers = $scope.map.getLayers();
       pdfLegendsToDownload = [];
 
       angular.forEach(layers, function(layer) {
@@ -245,31 +181,30 @@
         }
       });
 
-      var scales = this.scales.map(function(scale) {
+      var scales = $scope.config.scales.map(function(scale) {
         return parseInt(scale.value);
       });
-      var that = this;
       var spec = {
-        layout: that.layout.name,
+        layout: $scope.config.layout.name,
         srs: proj.getCode(),
         units: proj.getUnits() || 'm',
         rotation: -((view.getRotation() * 180.0) / Math.PI),
         lang: lang,
-        dpi: that.dpi.value,
+        dpi: $scope.config.dpi.value,
         layers: encLayers,
         legends: encLegends,
         enableLegends: (encLegends && encLegends.length > 0),
         pages: [
           angular.extend({
-            center: getPrintRectangleCenterCoord(),
+            center: gnPrint.getPrintRectangleCenterCoord($scope.map, printRectangle),
             // scale has to be one of the advertise by the print server
-            scale: $scope.scale.value,
+            scale: $scope.config.scale.value,
             dataOwner: '© ' + attributions.join(),
             rotation: -((view.getRotation() * 180.0) / Math.PI)
           }, defaultPage)
         ]
       };
-      var http = $http.post(that.capabilities.createURL + '?url=' +
+      var http = $http.post($scope.config.createURL + '?url=' +
           encodeURIComponent('../../pdf'), spec);
       http.success(function(data) {
         $scope.downloadUrl(data.getURL);

@@ -7,6 +7,100 @@
 
     var self = this;
 
+    var options = {
+      heightMargin: 0,
+      widthMargin: 0
+    };
+
+    var DPI = 72;
+    var MM_PER_INCHES = 25.4;
+    var UNITS_RATIO = 39.37;
+
+    /**
+     * Get the map coordinates of the center of the given print rectangle.
+     * @param map
+     * @param printRectangle
+     * @returns {*}
+     */
+    this.getPrintRectangleCenterCoord = function(map, printRectangle) {
+      // Framebuffer size!!
+      var bottomLeft = printRectangle.slice(0, 2);
+      var width = printRectangle[2] - printRectangle[0];
+      var height = printRectangle[3] - printRectangle[1];
+      var center = [bottomLeft[0] + width / 2, bottomLeft[1] + height / 2];
+      // convert back to map display size
+      var mapPixelCenter = [center[0] / ol.BrowserFeature.DEVICE_PIXEL_RATIO,
+            center[1] / ol.BrowserFeature.DEVICE_PIXEL_RATIO];
+      return map.getCoordinateFromPixel(mapPixelCenter);
+    };
+
+    /**
+     * Compute the bounds (in map coordinates) of the print area depending
+     * on the print scale and layout.
+     * @param map
+     * @param layout
+     * @param scale
+     * @returns {*[]} extent
+     */
+    this.calculatePageBoundsPixels = function(map, layout, scale) {
+      var s = parseFloat(scale.value);
+      var size = layout.map; // papersize in dot!
+      var view = map.getView();
+      var center = view.getCenter();
+      var resolution = view.getResolution();
+      var w = size.width / DPI * MM_PER_INCHES / 1000.0 * s / resolution;
+      var h = size.height / DPI * MM_PER_INCHES / 1000.0 * s / resolution;
+      var mapSize = map.getSize();
+      var center = [mapSize[0] * ol.BrowserFeature.DEVICE_PIXEL_RATIO / 2 ,
+            mapSize[1] * ol.BrowserFeature.DEVICE_PIXEL_RATIO / 2];
+
+      var minx, miny, maxx, maxy;
+
+      minx = center[0] - (w / 2);
+      miny = center[1] - (h / 2);
+      maxx = center[0] + (w / 2);
+      maxy = center[1] + (h / 2);
+      return [minx, miny, maxx, maxy];
+    };
+
+    /**
+     * Get the optimal print scale (from an array of scales) depending on
+     * the print layout and dpi
+     * @param map
+     * @param scales
+     * @param layout
+     * @returns {*}
+     */
+    this.getOptimalScale = function(map, scales, layout) {
+      var size = map.getSize();
+      var resolution = map.getView().getResolution();
+      var width = resolution * (size[0] - (options.widthMargin * 2));
+      var height = resolution * (size[1] - (options.heightMargin * 2));
+      var layoutSize = layout.map;
+      var scaleWidth = width * UNITS_RATIO * DPI / layoutSize.width;
+      var scaleHeight = height * UNITS_RATIO * DPI / layoutSize.height;
+      var testScale = scaleWidth;
+      if (scaleHeight < testScale) {
+        testScale = scaleHeight;
+      }
+      var nextBiggest = null;
+      //The algo below assumes that scales are sorted from
+      //biggest (1:500) to smallest (1:2500000)
+      angular.forEach(scales, function(scale) {
+        if (nextBiggest == null ||
+            testScale > scale.value) {
+          nextBiggest = scale;
+        }
+      });
+      return nextBiggest;
+    };
+
+    /**
+     * Object of methods that encode ol3 layers into print config objects.
+     *
+     * @type {{layers: {Layer: 'Layer', Group: 'Group', Vector: 'Vector', WMS: 'WMS',
+     *    OSM: 'OSM', WMTS: 'WMTS'}, legends: {ga_urllegend: 'ga_urllegend', base: 'base'}}}
+     */
     this.encoders = {
       'layers': {
         'Layer': function(layer) {
