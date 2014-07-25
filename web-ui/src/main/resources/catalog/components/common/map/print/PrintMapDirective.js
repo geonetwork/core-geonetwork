@@ -281,6 +281,14 @@
     };
   };
 
+  mapPrintController['$inject'] = [
+    '$scope',
+    'gnPrint',
+    '$http',
+    '$translate',
+    '$window'
+  ];
+
   module.directive('gnMapprint',
       ['gnCurrentEdit', function(gnCurrentEdit) {
         return {
