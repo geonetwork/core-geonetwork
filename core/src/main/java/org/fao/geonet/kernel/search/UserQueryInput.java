@@ -110,6 +110,10 @@ public class UserQueryInput {
         return searchCriteria;
     }
 
+    /**
+     * List of fields to exclude from language detection.
+     * TODO: should be lucene-config.xml
+     */
     public static final List<String> NO_TEXT_FIELDS = Arrays.asList(
             SearchParameter.UUID,
             SearchParameter.PARENTUUID,
@@ -117,6 +121,7 @@ public class UserQueryInput {
             SearchParameter._SCHEMA,
             SearchParameter.RELATION,
             SearchParameter.SITEID,
+            SearchParameter.TYPE,
             SearchParameter.HASFEATURECAT
             );
 
