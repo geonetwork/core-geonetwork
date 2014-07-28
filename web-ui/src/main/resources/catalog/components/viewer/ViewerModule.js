@@ -35,7 +35,8 @@
     '$scope',
     'gnNcWms',
     'goDecorateLayer',
-      function($scope, gnNcWms, goDecorateLayer) {
+      'gnMapConfig',
+      function($scope, gnNcWms, goDecorateLayer, gnMapConfig) {
 
         /** Define object to receive measure info */
         $scope.measureObj = {};
@@ -53,11 +54,10 @@
 
         $scope.map = new ol.Map({
           renderer: 'canvas',
-          target: 'map',
           view: new ol.View({
-            center: ol.proj.transform(
-              [-1.99667, 49.0], 'EPSG:4326', 'EPSG:3857'),
-            zoom: 6
+            center: gnMapConfig.center,
+            zoom: gnMapConfig.zoom,
+            maxResolution: gnMapConfig.maxResolution
           })
         });
         $scope.map.addLayer($scope.ncwmsLayer);
@@ -65,8 +65,17 @@
         $scope.zoom = function(map, delta) {
           map.getView().setZoom(map.getView().getZoom() + delta);
         };
+        $scope.zoomToMaxExtent = function(map) {
+          map.getView().setResolution(gnMapConfig.maxResolution);
+        }
       }]);
 
+  var mapConfig = {
+    maxResolution: '9783.93962050256',
+    center: [280274.03240585705, 6053178.654789996],
+    zoom: 2
+  };
+  module.constant('gnMapConfig', mapConfig);
 
   var bgLayer = new ol.layer.Tile({
     source: new ol.source.OSM(),
