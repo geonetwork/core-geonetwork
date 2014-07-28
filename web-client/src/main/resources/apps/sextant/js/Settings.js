@@ -111,12 +111,12 @@ Ext.BLANK_IMAGE_URL = 'images/s.gif';
 GeoNetwork.AnnuaireGroupMapping = {
   "iso19139.sextant": undefined,
   "iso19139.myocean": "MYOCEAN-ALL-PRODUCTS " +
-      "OR MYOCEAN-CORE-PRODUCTS " +
-      "OR MYOCEAN-DOCUMENTS " +
-      "OR MYOCEAN-INTERMEDIATE-PRODUCTS " +
-      "OR MYOCEAN-SERVICES-AND-DATASETS " +
-      "OR MYOCEAN-SPECIFIC-CORE " +
-      "OR MYOCEAN-UPSTREAM-PRODUCTS",
+      "or MYOCEAN-CORE-PRODUCTS " +
+      "or MYOCEAN-DOCUMENTS " +
+      "or MYOCEAN-INTERMEDIATE-PRODUCTS " +
+      "or MYOCEAN-SERVICES-AND-DATASETS " +
+      "or MYOCEAN-SPECIFIC-CORE " +
+      "or MYOCEAN-UPSTREAM-PRODUCTS",
   "iso19139.sdn-product" : "EMODNET_Chemistry " +
-      "OR SEADATANET"
+      "or SEADATANET"
 };
