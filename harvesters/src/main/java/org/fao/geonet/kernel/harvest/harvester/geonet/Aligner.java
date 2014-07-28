@@ -344,6 +344,7 @@ public class Aligner extends BaseAligner
 
         addCategories(metadata, params.getCategories(), localCateg, context, log, null);
 
+
         dataMan.setTemplateExt(iId, MetadataType.lookup(isTemplate));
         dataMan.setHarvestedExt(iId, params.uuid);
 
@@ -364,7 +365,6 @@ public class Aligner extends BaseAligner
         } else {
             addPrivilegesFromGroupPolicy(id, info.getChild("privileges"));
         }
-
         dataMan.flush();
 
         dataMan.indexMetadata(id, false);
@@ -610,9 +610,9 @@ public class Aligner extends BaseAligner
             boolean index = false;
             boolean updateDateStamp = true;
             String language = context.getLanguage();
-            metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate,
+            dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate,
                     updateDateStamp);
-
+            metadata = metadataRepository.findOne(id);
             result.updatedMetadata++;
 		}
 
