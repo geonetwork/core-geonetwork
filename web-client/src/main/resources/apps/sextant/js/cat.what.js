@@ -349,7 +349,7 @@ cat.what = function() {
       var resourceTypeHiddenField = new Ext.form.Hidden({
         name: 'E_type',
         id: 'E_type',
-        value: 'dataset or series or publication or nonGeographicDataset or feature or featureCatalog'
+        value: 'dataset or series or publication or nonGeographicDataset or feature or featureCatalog or map'
       });
 
       var downloadHiddenField = new Ext.form.Hidden({ name: 'E_operation' });
