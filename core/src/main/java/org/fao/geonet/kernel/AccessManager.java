@@ -436,10 +436,13 @@ public class AccessManager {
 
         Specifications spec = where (UserGroupSpecs.hasProfile(Profile.Editor)).and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
 
+        List<Integer> opAlloweds = new ArrayList<Integer>();
         for (OperationAllowed opAllowed : allOpAlloweds) {
-            spec = spec.and(UserGroupSpecs.hasGroupId(opAllowed.getId().getGroupId()));
+        	opAlloweds.add(opAllowed.getId().getGroupId());
         }
-        return _userGroupRepository.findOne(spec) != null;
+        spec = spec.and(UserGroupSpecs.hasGroupIds(opAlloweds));
+        
+        return (! _userGroupRepository.findAll(spec).isEmpty());
     }
 
     /**
@@ -514,16 +517,16 @@ public class AccessManager {
      * @param ip
      * @return
      */
-    private long getAddress(String ip) {
-        if(ip.trim().equals("?")) {
-            return 0;
-        } else {
-            StringTokenizer st = new StringTokenizer(ip, ".");
-            long a1 = Integer.parseInt(st.nextToken());
-            long a2 = Integer.parseInt(st.nextToken());
-            long a3 = Integer.parseInt(st.nextToken());
-            long a4 = Integer.parseInt(st.nextToken());
-            return a1<<24 | a2<<16 | a3<<8 | a4;
-        }
-    }
+	private long getAddress(String ip) {
+		if(ip.trim().equals("?")) {
+			return 0;
+		} else {
+			StringTokenizer st = new StringTokenizer(ip, ".");
+			long a1 = Integer.parseInt(st.nextToken());
+			long a2 = Integer.parseInt(st.nextToken());
+			long a3 = Integer.parseInt(st.nextToken());
+			long a4 = Integer.parseInt(st.nextToken());
+			return a1<<24 | a2<<16 | a3<<8 | a4;
+		}
+	}
 }
