@@ -442,7 +442,7 @@ public class AccessManager {
         }
         spec = spec.and(UserGroupSpecs.hasGroupIds(opAlloweds));
         
-        return _userGroupRepository.findOne(spec) != null;
+        return (! _userGroupRepository.findAll(spec).isEmpty());
     }
 
     /**
