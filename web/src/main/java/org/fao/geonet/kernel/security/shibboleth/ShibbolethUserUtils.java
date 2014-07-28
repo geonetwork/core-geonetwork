@@ -55,19 +55,9 @@ public class ShibbolethUserUtils {
         private String profile;
 
         static MinimalUser create(ServletRequest request, ShibbolethUserConfiguration config) {
-            // Get the header keys to lookup from the settings
-    //		SettingManager sm = gc.getSettingManager();
-    //		String prefix = "system/shib";
-    //		String usernameKey = sm.getValue(prefix + "/attrib/username");
-    //		String surnameKey = sm.getValue(prefix + "/attrib/surname");
-    //		String firstnameKey = sm.getValue(prefix + "/attrib/firstname");
-    //		String profileKey = sm.getValue(prefix + "/attrib/profile");
-    //        String groupKey = sm.getValue(prefix + "/attrib/group");
-    //        String defGroup =  sm.getValue(prefix +"/defaultGroup");
 
             // Read in the data from the headers
             HttpServletRequest req = (HttpServletRequest)request;
-
 
             String username = getHeader(req, config.getUsernameKey(), "");
             String surname = getHeader(req, config.getSurnameKey(), "");
@@ -119,9 +109,6 @@ public class ShibbolethUserUtils {
         public void setProfile(String profile) {
             this.profile = profile;
         }
-
-
-
     }
 
     /**

@@ -31,6 +31,7 @@
 				<sec:filter-chain pattern="/xml/schemas/**" filters="" />
 				<sec:filter-chain pattern="/xsl/harvesting/**" filters="" />
 				<sec:filter-chain pattern="/xsl/ownership/**" filters="" />
+				<ref bean="shibFilterChainPlaceholder"/>
 				<ref bean="coreFilterChain"/>
  				<!-- <sec:filter-chain pattern="/**" filters="securityContextPersistenceFilter,
  				logoutFilter,
@@ -44,7 +45,7 @@
 			</list>
 		</constructor-arg>
 	</bean>
-	
+
 	<bean id="coreFilterChain" class="org.springframework.security.web.DefaultSecurityFilterChain">
 		<constructor-arg>
 			<bean class="org.springframework.security.web.util.AntPathRequestMatcher">
@@ -55,25 +56,40 @@
 			<ref bean="filter"/>
 		</constructor-arg>
 	</bean>
+
 	<bean id="filter" class="java.util.ArrayList">
 		<constructor-arg>
 			<list>
 				<ref bean="securityContextPersistenceFilter" />
+				<ref bean="exceptionTranslationFilter" />
+				<ref bean="requestCacheFilter" />
 				<ref bean="logoutFilter" />
 				<!-- A filter that check if an external service already authenticated user
 					 (default implementation does nothing but can be overridden) -->
 				<ref bean="preAuthenticationFilter" />
 				<ref bean="basicAuthenticationFilter" />
 				<ref bean="formLoginFilter" />
-				<ref bean="requestCacheFilter" />
 				<ref bean="anonymousFilter" />
 				<ref bean="sessionMgmtFilter" />
-				<ref bean="exceptionTranslationFilter" />
 				<ref bean="overridefilterSecurityInterceptor" />
 				<ref bean="filterSecurityInterceptor" />
 			</list>
 		</constructor-arg>
 	</bean>
+
+    <!-- This filter chain only matches calls to shib.user.login. -->
+    <!-- The default placeholder does not do anything different than the default filter chain -->
+	<bean id="shibFilterChainPlaceholder" class="org.springframework.security.web.DefaultSecurityFilterChain">
+		<constructor-arg>
+			<bean class="org.springframework.security.web.util.AntPathRequestMatcher">
+				<constructor-arg value="/srv/???/shib.user.login"/>
+			</bean>
+		</constructor-arg>
+		<constructor-arg>
+			<ref bean="filter"/>
+		</constructor-arg>
+	</bean>
+
 	<!-- A filter that check if an external service already authenticated user
 					 (default implementation does nothing but can be overridden) -->
 	<bean id="preAuthenticationFilter" class="org.fao.geonet.kernel.security.PassthroughFilter"/>
@@ -112,16 +128,18 @@
 			<bean class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
 				<property name="defaultTargetUrl" value="/" />
 				<property name="targetUrlParameter" value="redirectUrl" />
+                <property name="useReferer" value="true"/>
+                <property name="requestCache" ref="requestCache"/>
 			</bean>
 		</property>
 		<property name="sessionAuthenticationStrategy">
 			<bean class="org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy" />
-		</property>	
+		</property>
 	</bean>
 
 	<bean id="basicAuthenticationFilter"
 		class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
-		<property name="authenticationManager" ref="authenticationManager" />
+		<property name="authenticationManager"    ref="authenticationManager" />
 		<property name="authenticationEntryPoint" ref="basicAuthenticationEntryPoint" />
 	</bean>
 
@@ -151,7 +169,12 @@
     <bean id="logoutSuccessHandler" class="org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler">
     	<property name="defaultTargetUrl" value="${logout.success.url}"></property>
     </bean>
-    <bean id="requestCacheFilter" class="org.springframework.security.web.savedrequest.RequestCacheAwareFilter" />
+
+    <bean id="requestCache" class="org.springframework.security.web.savedrequest.HttpSessionRequestCache"/>
+
+    <bean id="requestCacheFilter" class="org.springframework.security.web.savedrequest.RequestCacheAwareFilter">
+        <property name="requestCache" ref="requestCache"/>
+    </bean>
 
 	<bean id="exceptionTranslationFilter"
 		class="org.springframework.security.web.access.ExceptionTranslationFilter">

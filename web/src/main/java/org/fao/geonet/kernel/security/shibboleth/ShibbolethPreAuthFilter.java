@@ -26,6 +26,8 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import jeeves.server.ProfileManager;
 import jeeves.server.resources.ResourceManager;
 import jeeves.utils.Log;
@@ -38,6 +40,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.RequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -53,6 +58,8 @@ public class ShibbolethPreAuthFilter extends GenericFilterBean implements Applic
 	private ApplicationContext applicationContext;
 
     private ShibbolethUserConfiguration configuration;
+
+    private RequestCache requestCache;
 
     public ShibbolethPreAuthFilter() {
         if (Log.isDebugEnabled(Geonet.LOG_AUTH)) {
@@ -114,6 +121,33 @@ public class ShibbolethPreAuthFilter extends GenericFilterBean implements Applic
                     SecurityContextHolder.getContext().setAuthentication(auth);
 
                     Log.info(Geonet.LOG_AUTH, "User '"+user.getUsername()+"' properly authenticated via Shibboleth");
+
+                    HttpServletResponse hresp = (HttpServletResponse)response;
+
+                    if(requestCache != null) {
+                        String redirect = null;
+
+                        SavedRequest savedReq = requestCache.getRequest(hreq, hresp);
+                        if(savedReq != null) {
+                            redirect = savedReq.getRedirectUrl();
+                            Log.debug(Geonet.LOG_AUTH, "Found saved request location: " + redirect);
+                        } else {
+                            Log.debug(Geonet.LOG_AUTH, "No saved request found");
+                        }
+
+                        if(redirect != null) {
+                            Log.info(Geonet.LOG_AUTH, "Redirecting to " + redirect);
+
+                            // Removing original request, since we want to retain current headers.
+                            // If request remains in cache, requestCacheFilter will reinstate the original headers and we don't want it.
+                            requestCache.removeRequest(hreq, hresp);
+
+                            hresp.sendRedirect(redirect);
+                            return; // no further chain processing allowed
+                        }
+                    }
+
+
                 } else {
                     Log.warning(Geonet.LOG_AUTH, "Error in GN shibboleth precedures handling user '" + username);
                 }
@@ -135,5 +169,8 @@ public class ShibbolethPreAuthFilter extends GenericFilterBean implements Applic
         this.configuration = configuration;
     }
 
+    public void setRequestCache(RequestCache requestCache) {
+        this.requestCache = requestCache;
+    }
 
 }
