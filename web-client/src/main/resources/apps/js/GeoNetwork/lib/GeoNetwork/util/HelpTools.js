@@ -136,6 +136,12 @@ GeoNetwork.util.HelpTools = {
             url: url,
             data: requestBody,
             success: function(response){
+              //IE10 issue
+                if(!response.responseXML) {
+                  var parser = new DOMParser();
+                  response.responseXML = parser.parseFromString(response.responseText, "application/xml");
+                }
+
                 var el = response.responseXML.getElementsByTagName('element');
                 if (el[0] && el[0].getAttribute('error') === 'not-found') {
                     return;
