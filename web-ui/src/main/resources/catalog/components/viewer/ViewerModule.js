@@ -68,6 +68,41 @@
         $scope.zoomToMaxExtent = function(map) {
           map.getView().setResolution(gnMapConfig.maxResolution);
         }
+
+        // File drag & drop support
+        var dragAndDropInteraction = new ol.interaction.DragAndDrop({
+          formatConstructors: [
+            ol.format.GPX,
+            ol.format.GeoJSON,
+            ol.format.KML,
+            ol.format.TopoJSON
+          ]
+        });
+
+        $scope.map.getInteractions().push(dragAndDropInteraction);
+        dragAndDropInteraction.on('addfeatures', function(event) {
+          // FIXME add error handling message
+          if (!event.features || event.features.length == 0) {
+            return;
+          }
+
+          var vectorSource = new ol.source.Vector({
+            features: event.features,
+            projection: event.projection
+          });
+          var layer = new ol.layer.Vector({
+            source: vectorSource,
+            label: 'Fichier local : ' + event.file.name
+          });
+          goDecorateLayer(layer);
+          layer.displayInLayerManager = true;
+          $scope.$apply(function(){
+            $scope.map.getLayers().push(layer);
+            $scope.map.getView().fitExtent(vectorSource.getExtent(),
+                $scope.map.getSize());
+          });
+        });
+
       }]);
 
   var mapConfig = {
