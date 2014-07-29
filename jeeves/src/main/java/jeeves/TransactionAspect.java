@@ -94,7 +94,12 @@ public class TransactionAspect {
     private static void doRollback(PlatformTransactionManager transactionManager, TransactionStatus transaction) {
         try {
 
-            transactionManager.rollback(transaction);
+
+			if (!transaction.isCompleted()) {
+				transactionManager.rollback(transaction);
+			} 
+			//what if the transaction is completed?
+			//maybe then we shouldn't be here
         } catch (Throwable t) {
             Log.error(Log.JEEVES, "ERROR rolling back transaction", t);
         }
