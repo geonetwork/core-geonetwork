@@ -1764,7 +1764,8 @@ public class DataManager {
                 indexMetadata(metadataId, false);
             }
         }
-        return metadata;
+        // Return an up to date metadata record
+        return _metadataRepository.findOne(metadataId);
     }
 
     /**
