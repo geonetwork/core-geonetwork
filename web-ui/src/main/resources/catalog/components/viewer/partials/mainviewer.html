@@ -126,15 +126,19 @@
 
   <!--Measure Info Panel-->
   <div class="panel panel-default force-hide panel-tools" id="measures">
-    <div class="panel-body">
+    <div class="panel-body panel-sm">
       <button type="button" class="btn btn-default close">
         &times;
       </button>
       <h5>Mesures</h5>
       <div class="gn-measure-text">
-        <div class="hidden-print" translate>measure_instruction</div>
-        <div>{{'distance_label' | translate}}: {{measureObj.distance | measure}}</div>
-        <div>{{'surface_label' | translate}}: {{measureObj.surface | measure:'area':['km&sup2', ' m&sup2']}}</div>
+        <div class="alert alert-warning hidden-print" translate>measure_instruction</div>
+        <dl class="dl-horizontal">
+          <dt>{{'Distance' | translate}}</dt>
+          <dd>{{measureObj.distance | measure}}</dd>
+          <dt>{{'Surface' | translate}}</dt>
+          <dd>{{measureObj.surface | measure:'area':['km&sup2', ' m&sup2']}}</dd>
+        </dl>
       </div>
     </div>
   </div>

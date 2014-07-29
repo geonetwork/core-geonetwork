@@ -5334,4 +5334,20 @@ body {
   font-weight: normal;
   color: #555555;
 }
+/* Measures */
+.gn-measure-text .alert {
+  margin-top: 1em;
+}
+.gn-measure-text dt {
+  width: 120px;
+}
+.gn-measure-text dd {
+  margin-left: 130px;
+}
+.alert-warning {
+  background: rgba(252, 248, 227, 0.6);
+}
+.panel-sm {
+  font-size: 12px;
+}
 /*# sourceMappingURL=app.css.map */

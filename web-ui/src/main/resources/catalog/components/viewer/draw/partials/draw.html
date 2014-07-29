@@ -1,6 +1,10 @@
 <div go-btn-group>
-  <button go-btn="active" class="btn btn-default" ng-model="drawPoint.active">Point</button>
-  <button go-btn="active" class="btn btn-default" ng-model="drawLine.active">Linestring</button>
-  <button go-btn="active" class="btn btn-default" ng-model="drawPolygon.active">Polygon</button>
-  <button class="btn btn-default" data-ng-click="resetFeatures()">Effacer</button>
+  <div class="btn-group flux">
+    <button go-btn="active" class="btn btn-default" ng-model="drawPoint.active">Point</button>
+    <button go-btn="active" class="btn btn-default" ng-model="drawLine.active">Linestring</button>
+    <button go-btn="active" class="btn btn-default" ng-model="drawPolygon.active">Polygon</button>
+  </div>
+  <button class="btn btn-link center-block" data-ng-click="resetFeatures()">
+    <span class="fa fa-trash-o"></span> Effacer
+  </button>
 </div>
