@@ -293,7 +293,7 @@ function showAdvancedSearch() {
     }
 }
 
-function hideAdvancedSearch(updateSearch) {
+function resetAdvancedSearch(updateSearch) {
 
     if (Ext.getCmp('advanced-search-options-content-form')) {
 
@@ -330,6 +330,9 @@ function hideAdvancedSearch(updateSearch) {
     if (Ext.getCmp('facets-panel')) {
         Ext.getCmp('facets-panel').reset();
     }
+}
+
+function hideAdvancedSearch(updateSearch) {
 
     hide('advanced-search-options');
     hide('legend-search');

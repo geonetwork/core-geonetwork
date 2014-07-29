@@ -404,6 +404,7 @@ GeoNetwork.searchApp = function() {
                             catalogue.startRecord, true);
                     app.searchApp.firstSearch = true;
                     showSearch();
+										hideAdvancedSearch();
                 },
                 listeners : {
                     onreset : function() {

@@ -692,7 +692,7 @@ GeoNetwork.app = function() {
 
 Ext.onReady(function() {
 
-
+						resetAdvancedSearch();
             hideAdvancedSearch();
 
             var lang = /srv\/([a-z]{3})\/search/.exec(location.href);
