@@ -27,6 +27,23 @@ html, body {
   top: @viewport-padding;
   left: @viewport-padding;
   width: 20em;
+  .dropdown-menu {
+    width: 100%;
+    top: ~"calc(100% - 3px)";
+    ul {
+      margin-top: 10px;
+    }
+  }
+  .clear {
+    position: absolute;
+    top: .75em;
+    right: .75em;
+    color: #666;
+    &:hover {
+      cursor: pointer;
+      color: #222;
+    }
+  }
 }
 .tools {
   position: absolute;

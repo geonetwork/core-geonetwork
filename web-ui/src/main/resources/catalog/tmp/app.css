@@ -5058,6 +5058,23 @@ body {
   left: 1em;
   width: 20em;
 }
+.search-container .dropdown-menu {
+  width: 100%;
+  top: calc(100% - 3px);
+}
+.search-container .dropdown-menu ul {
+  margin-top: 10px;
+}
+.search-container .clear {
+  position: absolute;
+  top: .75em;
+  right: .75em;
+  color: #666;
+}
+.search-container .clear:hover {
+  cursor: pointer;
+  color: #222;
+}
 .tools {
   position: absolute;
   top: 1em;
