@@ -24,7 +24,6 @@
 package org.fao.geonet;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
-import jeeves.config.springutil.ReadOnlyMvcInterceptor;
 import jeeves.server.JeevesEngine;
 import jeeves.server.JeevesProxyInfo;
 import jeeves.config.springutil.ServerBeanPropertyUpdater;
