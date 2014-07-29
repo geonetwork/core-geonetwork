@@ -16,6 +16,7 @@
     function ($timeout) {
     return {
       restrict: 'A',
+      require: 'gnLocalisationInput',
       replace: true,
       templateUrl: '../../catalog/components/viewer/localisation/' +
         'partials/localisation.html',
@@ -23,29 +24,54 @@
         map: '='
       },
       controllerAs: 'locCtrl',
-      controller: ['$scope', 'gnHttp', function($scope, gnHttp){
-        this.zoomTo = function(extent, map) {
+      controller: ['$scope', '$http', function($scope, $http){
+
+        var zoomTo = function(extent, map) {
           map.getView().fitExtent(extent, map.getSize());
+        };
+        this.onClick = function(loc, map) {
+          zoomTo(loc.extent,map);
+          $scope.query = loc.name;
+          $scope.collapsed = true;
         };
 
         this.search = function(query) {
-          gnHttp.callService('suggestion', {
-            field: 'keyword',
-            q: query
-          }).success(function(response) {
+          if(query.length < 3) return;
+          var url = 'http://api.geonames.org/searchJSON';
+          $http.get(url, {
+            params: {
+              featureClass:'P',
+              lang:'en',
+              style:'full',
+              type:'json',
+              maxRows:5,
+              name_startsWith:query,
+              username:'georchestra'
+            }
+          }).
+          success(function(response) {
+            var loc;
             $scope.results = [];
-            for(var i=0;i<response[1].length;i++) {
-              if($.inArray(response[1][i],$scope.results) === -1) {
-                $scope.results.push(response[1][i]);
+            for(var i=0;i<response.geonames.length;i++) {
+              loc = response.geonames[i];
+              if($.inArray(response.geonames[i],$scope.results) === -1) {
+                $scope.results.push({
+                  name: loc.toponymName,
+                  region: loc.adminName1,
+                  country: loc.countryName,
+                  extent: ol.proj.transform([loc.bbox.west, loc.bbox.south, loc.bbox.east, loc.bbox.north], 'EPSG:4326', 'EPSG:3857')
+                });
               }
             }
           });
         };
       }],
-      link: function (scope, element, attrs) {
+      link: function (scope, element, attrs, ctrl) {
 
         /** localisation text query */
         scope.query = '';
+
+        scope.collapsed = true;
 
         /** default localisation */
         scope.localisations = [{
@@ -65,13 +91,11 @@
 
         // Bind events to display the dropdown menu
         element.find('input').bind('focus', function(evt) {
-          element.addClass('open');
-        }).bind('blur', function(evt) {
-          $timeout(function() {
-            element.removeClass('open');
-          }, 1000, false);
+          scope.$apply(function() {
+            ctrl.search(scope.query);
+            scope.collapsed = false;
+          });
         });
-
       }
     };
   }]);

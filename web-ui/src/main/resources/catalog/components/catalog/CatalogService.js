@@ -242,7 +242,7 @@
     removeThumbnail: 'md.thumbnail.remove@json',
     removeOnlinesrc: 'resource.del.and.detach', // TODO: CHANGE
     geoserverNodes: 'geoserver.publisher@json', // TODO: CHANGE
-    suggestion: 'main.search.suggest'
+    suggest: 'suggest'
 
   });
 
