@@ -43,9 +43,7 @@ GeoNetwork.SearchFormPanel = Ext.extend(Ext.FormPanel, {
          *  The search function
          */
         searchCb: undefined,
-        resetCb: function () {
-            this.getForm().reset();
-        }
+        resetCb: undefined
     },
     getSearchBt: function () {
         return this.searchBt;
@@ -103,7 +101,8 @@ GeoNetwork.SearchFormPanel = Ext.extend(Ext.FormPanel, {
     },
     reset: function (args) {
         this.searchTriggered = false;
-        this.resetCb(args);
+        if (this.resetCb) this.resetCb(args);
+        this.getForm().reset();
         this.fireEvent('onreset', args);
     },
     /** private: method[initComponent] 
