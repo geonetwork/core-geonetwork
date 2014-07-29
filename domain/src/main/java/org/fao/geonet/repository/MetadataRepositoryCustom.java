@@ -2,6 +2,7 @@ package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.repository.reports.MetadataReportsQueries;
 import org.fao.geonet.repository.statistic.MetadataStatisticsQueries;
@@ -9,9 +10,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * Custom (Non spring-data) Query methods for {@link Metadata} entities.
@@ -81,4 +83,11 @@ public interface MetadataRepositoryCustom {
     @Nullable
     Metadata findOneOldestByChangeDate();
 
+    /**
+     * Load the source info objects for all the metadata selected by the spec.
+     *
+     * @param spec the specification identifying the metadata of interest
+     * @return a map of metadataId -> SourceInfo
+     */
+    Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<Metadata> spec);
 }

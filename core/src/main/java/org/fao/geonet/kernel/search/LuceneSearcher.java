@@ -23,19 +23,13 @@
 
 package org.fao.geonet.kernel.search;
 
+import com.google.common.collect.Maps;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.exceptions.BadParameterEx;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.Util;
-import org.fao.geonet.utils.Xml;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.TokenStream;
@@ -76,11 +70,20 @@ import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopFieldCollector;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.region.Region;
+import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.search.LuceneConfig.Facet;
 import org.fao.geonet.kernel.search.LuceneConfig.FacetConfig;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
@@ -88,18 +91,15 @@ import org.fao.geonet.kernel.search.SearchManager.TermFrequency;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.search.log.SearcherLogger;
 import org.fao.geonet.kernel.search.lucenequeries.DateRangeQuery;
-import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.languages.LanguageDetector;
-import org.fao.geonet.kernel.region.Region;
-import org.fao.geonet.kernel.region.RegionsDAO;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
@@ -119,6 +119,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * search metadata locally using lucene.
@@ -321,7 +323,9 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 						md = LuceneSearcher.getMetadataFromIndex(doc, id, true, _language.presentationLanguage, _luceneConfig.getMultilingualSortFields(), _luceneConfig.getDumpFields());
 					    
 						// Retrieve dynamic properties according to context (eg. editable)
-                        gc.getBean(DataManager.class).buildPrivilegesMetadataInfo(srvContext, id, md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE));
+                        Map<String, Element> map = Maps.newHashMap();
+                        map.put(id, md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE));
+                        gc.getBean(DataManager.class).buildPrivilegesMetadataInfo(srvContext, map);
                     }
                     else if (srvContext != null) {
                         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
@@ -1477,8 +1481,8 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         Element info = md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
 
         if ( us.getProfile() == Profile.Administrator) {
-            info.addContent(new Element(Edit.Info.Elem.DOWNLOAD).setText("true"));
-            info.addContent(new Element(Edit.Info.Elem.DYNAMIC).setText("true"));
+            info.addContent(new Element(ReservedOperation.download.name()).setText("true"));
+            info.addContent(new Element(ReservedOperation.dynamic.name()).setText("true"));
 
         } else {
             // Owner
@@ -1497,8 +1501,8 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             }
 
             if (isOwner) {
-                info.addContent(new Element(Edit.Info.Elem.DOWNLOAD).setText("true"));
-                info.addContent(new Element(Edit.Info.Elem.DYNAMIC).setText("true"));
+                info.addContent(new Element(ReservedOperation.download.name()).setText("true"));
+                info.addContent(new Element(ReservedOperation.dynamic.name()).setText("true"));
 
             } else {
                 // Download
@@ -1506,7 +1510,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 for (IndexableField f : values) {
                     if (f != null) {
                         if (userGroups.contains(Integer.parseInt(f.stringValue()))) {
-                            info.addContent(new Element(Edit.Info.Elem.DOWNLOAD).setText("true"));
+                            info.addContent(new Element(ReservedOperation.download.name()).setText("true"));
                             break;
                         }
                     }
@@ -1517,7 +1521,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 for (IndexableField f : values) {
                     if (f != null) {
                         if (userGroups.contains(Integer.parseInt(f.stringValue()))) {
-                            info.addContent(new Element(Edit.Info.Elem.DYNAMIC).setText("true"));
+                            info.addContent(new Element(ReservedOperation.dynamic.name()).setText("true"));
                             break;
                         }
                     }
