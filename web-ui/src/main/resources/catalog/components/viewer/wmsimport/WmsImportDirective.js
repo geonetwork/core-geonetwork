@@ -19,6 +19,7 @@
     function (gnOwsCapabilities, gnMap, $translate) {
     return {
       restrict: 'A',
+      replace: true,
       templateUrl: '../../catalog/components/viewer/wmsimport/' +
         'partials/wmsimport.html',
       scope: {
