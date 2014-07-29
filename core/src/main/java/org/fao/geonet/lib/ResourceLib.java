@@ -90,10 +90,6 @@ public class ResourceLib {
         return getMetadataDir(context, id+"");
     }
 
-    private String getMetadataDir(String dataDir, int id) {
-        return getMetadataDir(dataDir, id+"");
-    }
-
     /**
 	 * Get the metadata data directory
 	 * 
