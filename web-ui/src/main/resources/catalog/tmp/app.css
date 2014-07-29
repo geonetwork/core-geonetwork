@@ -5132,6 +5132,7 @@ body {
 }
 .panel-tools .list-group-item > label {
   font-size: 90%;
+  max-width: 90%;
 }
 .panel-tools .list-group-item.active {
   background: #fff;
