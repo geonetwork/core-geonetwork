@@ -11,14 +11,14 @@
           'gn_searchsuggestion_service'
       ]);
 
-
-  /**
-   * GnsearchController provides administration tools
-   */
   module.controller('GnSearchController', [
     '$scope',
     function($scope) {
 
+      /** Define in the controller scope a reference to the map */
+      $scope.map = null;
+
+      /** Facets configuration */
       $scope.facetsConfig = {
         keyword: 'keywords',
         orgName: 'orgNames',
@@ -26,6 +26,8 @@
         format: 'formats',
         createDateYear: 'createDateYears'
       };
+
+      /* Pagination configuration */
       $scope.paginationInfo = {
         hitsPerPage: 3
       };
@@ -167,8 +169,7 @@
       'gnOlStyles',
     function($scope, gnHttp, gnHttpServices, gnRegionService, $timeout, suggestService,$http, gnOlStyles) {
 
-      /** Define in the controller scope a reference to the map */
-      $scope.map = null;
+
 
       $scope.types = ['any',
         'dataset',
