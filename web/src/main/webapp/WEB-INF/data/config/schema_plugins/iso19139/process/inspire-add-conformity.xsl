@@ -4,7 +4,8 @@
   xmlns:geonet="http://www.fao.org/geonetwork"
   xmlns:gml="http://www.opengis.net/gml" xmlns:srv="http://www.isotc211.org/2005/srv"
   xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmd="http://www.isotc211.org/2005/gmd"
-  xmlns:skos="http://www.w3.org/2004/02/skos/core#" exclude-result-prefixes="gmd">
+  xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+  xmlns:util="java:org.fao.geonet.util.XslUtil" exclude-result-prefixes="gmd">
   
   <xsl:import href="process-utility.xsl"/>
   
@@ -37,7 +38,7 @@
   
   <!-- TODO : retrieve local copy -->
   <xsl:variable name="inspire-thesaurus"
-    select="document(concat('file:///', replace(system-property(concat(substring-after($baseUrl, '/'), '.codeList.dir')), '\\', '/'), '/external/thesauri/theme/inspire-theme.rdf'))"/>
+    select="document(concat('file:///', replace(util:getConfigValue('codeListDir'), '\\', '/'), '/external/thesauri/theme/inspire-theme.rdf'))"/>
   <!--<xsl:variable name="inspire-thesaurus"
     select="document('http://geonetwork.svn.sourceforge.net/svnroot/geonetwork/utilities/gemet/thesauri/inspire-theme.rdf')"/>-->
   

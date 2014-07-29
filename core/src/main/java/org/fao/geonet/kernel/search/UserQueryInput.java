@@ -90,6 +90,12 @@ public class UserQueryInput {
         searchParamToLuceneField.put(SearchParameter.THEMEKEY, LuceneIndexField.KEYWORD);
         searchParamToLuceneField.put(SearchParameter.TOPICCATEGORY, LuceneIndexField.TOPIC_CATEGORY);
         searchParamToLuceneField.put(SearchParameter.CATEGORY, LuceneIndexField.CAT);
+        searchParamToLuceneField.put(SearchParameter.OP_VIEW,     LuceneIndexField._OP0);
+        searchParamToLuceneField.put(SearchParameter.OP_DOWNLOAD, LuceneIndexField._OP1);
+        searchParamToLuceneField.put(SearchParameter.OP_EDITING,  LuceneIndexField._OP2);
+        searchParamToLuceneField.put(SearchParameter.OP_NOTIFY,   LuceneIndexField._OP3);
+        searchParamToLuceneField.put(SearchParameter.OP_DYNAMIC,  LuceneIndexField._OP5);
+        searchParamToLuceneField.put(SearchParameter.OP_FEATURED, LuceneIndexField._OP6);
     }
     private Map<String, Set<String>> searchCriteria = new HashMap<String, Set<String>>();
     private Map<String, Set<String>> searchPrivilegeCriteria = new HashMap<String, Set<String>>();
@@ -104,6 +110,10 @@ public class UserQueryInput {
         return searchCriteria;
     }
 
+    /**
+     * List of fields to exclude from language detection.
+     * TODO: should be lucene-config.xml
+     */
     public static final List<String> NO_TEXT_FIELDS = Arrays.asList(
             SearchParameter.UUID,
             SearchParameter.PARENTUUID,
@@ -111,6 +121,7 @@ public class UserQueryInput {
             SearchParameter._SCHEMA,
             SearchParameter.RELATION,
             SearchParameter.SITEID,
+            SearchParameter.TYPE,
             SearchParameter.HASFEATURECAT
             );
 
@@ -161,9 +172,11 @@ public class UserQueryInput {
                     setSimilarity(jdom.getChildText(SearchParameter.SIMILARITY));
                 } else {
                     if (StringUtils.isNotBlank(nodeValue)) {
-
-                        if (SECURITY_FIELDS.contains(nodeName)
-                                || nodeName.contains("_op")) {
+                    	// Handles operation parameters. These parameters are safe, because
+                    	// the fields have been sanitized before (in LuceneSearcher.java:713)
+                    	if (nodeName.startsWith("_operation")) {
+                    		addValues(searchCriteria, searchParamToLuceneField.get(nodeName), nodeValue);
+                    	} else if (SECURITY_FIELDS.contains(nodeName) || nodeName.contains("_op")) {
                             addValues(searchPrivilegeCriteria, nodeName, nodeValue);
                         } else if (RESERVED_FIELDS.contains(nodeName)) {
                             searchOption.put(nodeName, nodeValue);
@@ -309,5 +322,6 @@ public class UserQueryInput {
     public String getEditable() {
         return editable;
     }
+
 
 }

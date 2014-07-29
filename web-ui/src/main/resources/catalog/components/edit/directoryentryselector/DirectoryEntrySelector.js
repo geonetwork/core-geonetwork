@@ -58,10 +58,22 @@
                _isTemplate: 's',
                fast: 'false'
              };
+             scope.subtemplateFilter = {
+               _isTemplate: 's',
+               any: '',
+               _root: 'gmd:CI_ResponsibleParty',
+               sortBy: 'title',
+               sortOrder: 'reverse',
+               resultType: 'subtemplates'
+             };
 
              scope.snippet = null;
              scope.snippetRef = gnEditor.
              buildXMLFieldName(scope.elementRef, scope.elementName);
+
+             scope.getEntries = function() {
+               scope.$broadcast('resetSearch', scope.subtemplateFilter);
+             };
 
              scope.add = function() {
                gnEditor.add(gnCurrentEdit.id,

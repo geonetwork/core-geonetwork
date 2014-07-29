@@ -153,7 +153,7 @@ public class LuceneQueryBuilder {
         // search criteria fields may contain zero or more _OR_ in their name, in which case the search will be a
         // disjunction of searches for fieldnames separated by that.
         //
-        // here such _OR_ fields are parsed, an OR searchCriteria map is created, and theyre removed from vanilla
+        // here such _OR_ fields are parsed, an OR searchCriteria map is created, and they're removed from vanilla
         // searchCriteria map.
         //
         Map<String, Set<String>> searchCriteriaOR = new HashMap<String, Set<String>>();

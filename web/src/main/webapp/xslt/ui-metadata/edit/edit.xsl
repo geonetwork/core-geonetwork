@@ -75,6 +75,11 @@
       <input type="hidden" id="showvalidationerrors" name="showvalidationerrors" value="{$showValidationErrors}"/>
 
 
+      <xsl:variable name="metadataExtents">
+        <saxon:call-template name="{concat('get-', $schema, '-extents-as-json')}"/>
+      </xsl:variable>
+      <input type="hidden" id="extent" value="{$metadataExtents}"/>
+      
       <xsl:call-template name="get-online-source-config">
         <xsl:with-param name="pattern" select="$geopublishMatchingPattern"/>
         <xsl:with-param name="id" select="'geoPublisherConfig'"/>
