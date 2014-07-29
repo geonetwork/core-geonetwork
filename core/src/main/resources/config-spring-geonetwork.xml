@@ -27,9 +27,37 @@
     <bean id="IsoLanguagesMapper" class="org.fao.geonet.languages.IsoLanguagesMapper" lazy-init="true"/>
 
 
+    <bean id="indexingList" class="org.fao.geonet.kernel.search.index.IndexingList"/>
 
+    <bean name="indexingTaskJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+      <property name="jobClass" value="org.fao.geonet.kernel.search.index.IndexingTask"/>
+    </bean>
 
-    <bean id="IncreasePopularityTask" class="org.fao.geonet.kernel.IncreasePopularityTask" lazy-init="true" scope="prototype"/>
+    <bean id="indexingTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+      <property name="jobDetail" ref="indexingTaskJob" />
+      <property name="cronExpression" value="0/30 * * * * ?" />
+      <property name="startDelay" value="60000"/>
+    </bean>
+
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+      <property name="jobFactory">
+        <bean class="org.fao.geonet.util.spring.AutowiringSpringBeanJobFactory"/>
+      </property>
+      <property name="triggers">
+        <list>
+          <ref bean="indexingTaskTrigger" />
+        </list>
+      </property>
+      <property name="quartzProperties">
+        <props>
+          <prop key="org.quartz.scheduler.instanceName">default.geonetwork.indexingtask</prop>
+          <prop key="org.quartz.scheduler.instanceId">AUTO</prop>
+          <prop key="org.quartz.jobStore.class">org.quartz.simpl.RAMJobStore</prop>
+          <prop key="org.quartz.threadPool.threadCount">1</prop>
+        </props>
+      </property>
+    </bean>
+
     <bean id="SearchLoggerTask" class="org.fao.geonet.kernel.search.SearchLoggerTask" lazy-init="true" scope="prototype"/>
     <bean id="MetadataNotifierTask" class="org.fao.geonet.notifier.MetadataNotifierTask" lazy-init="true" scope="prototype"/>
     <bean id="MetadataNotifierClient" class="org.fao.geonet.notifier.MetadataNotifierClient" lazy-init="true" scope="prototype"/>
