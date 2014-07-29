@@ -327,26 +327,28 @@ public class Aligner extends BaseAligner
 
 		int iId = Integer.parseInt(id);
 
+        dataMan.setTemplateExt(iId, MetadataType.lookup(isTemplate));
+        dataMan.setHarvestedExt(iId, params.uuid);
+
+
         MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
         Metadata metadata = metadataRepository.findOne(iId);
 
-		
+        addCategories(metadata, params.getCategories(), localCateg, context, log, null);
+
+        metadata = metadataRepository.findOne(iId);
+
 		if(!localRating) {
 			String rating = general.getChildText("rating");
 			if (rating != null) {
                 metadata.getDataInfo().setRating(Integer.valueOf(rating));
             }
 		}
-		
+
 		if (popularity != null) {
             metadata.getDataInfo().setPopularity(Integer.valueOf(popularity));
         }
 
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null);
-
-
-        dataMan.setTemplateExt(iId, MetadataType.lookup(isTemplate));
-        dataMan.setHarvestedExt(iId, params.uuid);
 
 		String pubDir = Lib.resource.getDir(context, "public",  id);
 		String priDir = Lib.resource.getDir(context, "private", id);
@@ -365,7 +367,8 @@ public class Aligner extends BaseAligner
         } else {
             addPrivilegesFromGroupPolicy(id, info.getChild("privileges"));
         }
-        dataMan.flush();
+        metadataRepository.save(metadata);
+//        dataMan.flush();
 
         dataMan.indexMetadata(id, false);
 		result.addedMetadata++;
@@ -586,7 +589,7 @@ public class Aligner extends BaseAligner
             }
         }
         final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-        final Metadata metadata;
+        Metadata metadata;
         if (!ri.isMoreRecentThan(date))
 		{
             if(log.isDebugEnabled())
@@ -616,6 +619,10 @@ public class Aligner extends BaseAligner
             result.updatedMetadata++;
 		}
 
+        metadata.getCategories().clear();
+        addCategories(metadata, params.getCategories(), localCateg, context, log, null);
+        metadata = metadataRepository.findOne(id);
+
 		Element general = info.getChild("general");
 
 		String popularity = general.getChildText("popularity");
@@ -631,9 +638,6 @@ public class Aligner extends BaseAligner
             metadata.getDataInfo().setPopularity(Integer.valueOf(popularity));
         }
 
-        metadata.getCategories().clear();
-        addCategories(metadata, params.getCategories(), localCateg, context, log, null);
-
 		if (params.createRemoteCategory) {
             Element categs = info.getChild("categories");
             if (categs != null) {
@@ -648,7 +652,9 @@ public class Aligner extends BaseAligner
         } else {
             addPrivilegesFromGroupPolicy(id, info.getChild("privileges"));
         }
-        dataMan.flush();
+
+        metadataRepository.save(metadata);
+//        dataMan.flush();
 
         dataMan.indexMetadata(id, false);
 	}
