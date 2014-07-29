@@ -3,6 +3,7 @@ package org.fao.geonet.repository.specification;
 import org.fao.geonet.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.Collection;
 import javax.persistence.criteria.*;
 
 public final class OperationAllowedSpecs {
@@ -47,8 +48,7 @@ public final class OperationAllowedSpecs {
             @Override
             public Predicate toPredicate(Root<OperationAllowed> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Path<Integer> mdIdAttributePath = root.get(OperationAllowed_.id).get(OperationAllowedId_.groupId);
-                Predicate mdIdEqualPredicate = cb.equal(mdIdAttributePath, cb.literal(groupId));
-                return mdIdEqualPredicate;
+                return cb.equal(mdIdAttributePath, cb.literal(groupId));
             }
         };
     }
@@ -98,4 +98,31 @@ public final class OperationAllowedSpecs {
             }
         };
     }
+
+    /**
+     * A specification that selects all the operations allowed for all the metadata.
+     * @param metadataIds the ids of all the metadata
+     */
+    public static Specification<OperationAllowed> hasMetadataIdIn(final Collection<Integer> metadataIds) {
+        return new Specification<OperationAllowed>() {
+            @Override
+            public Predicate toPredicate(Root<OperationAllowed> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                return root.get(OperationAllowed_.id).get(OperationAllowedId_.metadataId).in(metadataIds);
+            }
+        };
+    }
+
+    /**
+     * A specification that selects all the operations allowed for all the groups provided.
+     * @param groupIds the ids of all the groups
+     */
+    public static Specification<OperationAllowed> hasGroupIdIn(final Collection<Integer> groupIds) {
+        return new Specification<OperationAllowed>() {
+            @Override
+            public Predicate toPredicate(Root<OperationAllowed> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                return root.get(OperationAllowed_.id).get(OperationAllowedId_.groupId).in(groupIds);
+            }
+        };
+    }
+
 }
