@@ -3238,7 +3238,7 @@ public class DataManager {
                 operations = Sets.newHashSet(Arrays.asList(ReservedOperation.values()));
             }
 
-            if (isOwner || operations.contains(ReservedOperation.editing) {
+            if (isOwner || operations.contains(ReservedOperation.editing)) {
                 addElement(infoEl, Edit.Info.Elem.EDIT, "true");
             }
 
