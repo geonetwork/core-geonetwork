@@ -1,30 +1,20 @@
 package org.fao.geonet.services.user;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.xml.bind.JAXBElement;
-
+import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
-import org.fao.geonet.domain.Address;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserGroup;
-import org.fao.geonet.domain.responses.UserList;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.GroupRepositoryTest;
-import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.repository.UserRepositoryTest;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test listing a user service.
@@ -33,7 +23,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * Date: 10/12/13
  * Time: 8:30 PM
  */
-@RunWith(SpringJUnit4ClassRunner.class)
 public class UserListIntegrationTest extends AbstractServiceIntegrationTest {
     private AtomicInteger inc = new AtomicInteger();
     @Autowired
@@ -42,10 +31,6 @@ public class UserListIntegrationTest extends AbstractServiceIntegrationTest {
     UserGroupRepository _userGroupRepo;
     @Autowired
     GroupRepository _groupRepo;
-
-    @Autowired
-    List listService;
-
 
     @Test
     public void testExecAsUserNoGroups() throws Exception {
@@ -64,21 +49,24 @@ public class UserListIntegrationTest extends AbstractServiceIntegrationTest {
 
         _userRepo.save(UserRepositoryTest.newUser(inc));
 
+        final List listService = new List();
+
         final ServiceContext serviceContext = createServiceContext();
         UserSession userSession = new UserSession();
         userSession.loginAs(editor);
         serviceContext.setUserSession(userSession);
-        final UserList response = listService.exec();
+        Element params = createParams();
+        final Element response = listService.exec(params, serviceContext);
 
-        java.util.List<JAXBElement<? extends User>> records = response.getUsers();
-        assertEquals("Expected to find a record.", 1, records.size());
-        
-        User user = records.get(0).getValue();
+        java.util.List<?> records = Xml.selectNodes(response, "record");
+        assertEquals("Expected to find a record in: "+Xml.getString(response), 1, records.size());
+        assertEquals(Jeeves.Elem.RESPONSE, response.getName());
 
-        assertEquals(editor.getUsername(), user.getUsername(), "record/username");
-        assertEquals(editor.getPrimaryAddress().getAddress(), user.getPrimaryAddress().getAddress(), "record/primaryaddress/address");
-        assertEquals(editor.getProfile().name(), user.getProfile().name(), "record/profile");
-        assertEquals(editor.getEmailAddresses().iterator().next(), user.getEmailAddresses().iterator().next(), "record/emailaddresses/emailaddress");
+        assertEqualsText(editor.getUsername(), response, "record/username");
+        assertEqualsText(editor.getPrimaryAddress().getAddress(), response, "record/addresses/address/address");
+        assertEqualsText(editor.getPrimaryAddress().getAddress(), response, "record/primaryaddress/address");
+        assertEqualsText(editor.getProfile().name(), response, "record/profile");
+        assertEqualsText(editor.getEmailAddresses().iterator().next(), response, "record/emailaddresses/emailaddress");
     }
 
 
@@ -89,16 +77,20 @@ public class UserListIntegrationTest extends AbstractServiceIntegrationTest {
 
         _userRepo.save(UserRepositoryTest.newUser(inc));
 
+        final List listService = new List();
+
         final ServiceContext serviceContext = createServiceContext();
         UserSession userSession = new UserSession();
         User administrator = new User().setProfile(Profile.Administrator).setName("admin").setOrganisation("org").setSurname("admin");
 
         userSession.loginAs(administrator);
         serviceContext.setUserSession(userSession);
-        final UserList response = listService.exec();
+        Element params = createParams();
+        final Element response = listService.exec(params, serviceContext);
+        assertEquals(Jeeves.Elem.RESPONSE, response.getName());
 
-        java.util.List<?> records = response.getUsers();
-        assertEquals("Expected to find 3 records", 3, records.size());
+        java.util.List<?> records = Xml.selectNodes(response, "record");
+        assertEquals("Expected to find a record in: "+Xml.getString(response), 3, records.size());
     }
 
     @Test
@@ -115,15 +107,19 @@ public class UserListIntegrationTest extends AbstractServiceIntegrationTest {
         _userGroupRepo.save(new UserGroup().setGroup(group).setUser(user1).setProfile(Profile.Editor));
         _userGroupRepo.save(new UserGroup().setGroup(group).setUser(user2).setProfile(Profile.RegisteredUser));
 
+        final List listService = new List();
+
         final ServiceContext serviceContext = createServiceContext();
         UserSession userSession = new UserSession();
         userSession.loginAs(user1);
 
         serviceContext.setUserSession(userSession);
-        final UserList response = listService.exec();
+        Element params = createParams();
+        final Element response = listService.exec(params, serviceContext);
+        assertEquals(Jeeves.Elem.RESPONSE, response.getName());
 
-        java.util.List<?> records = response.getUsers();
-        assertEquals("Expected to find 2 records. ", 2, records.size());
+        java.util.List<?> records = Xml.selectNodes(response, "record");
+        assertEquals("Expected to find a record in: "+Xml.getString(response), 2, records.size());
     }
 
 }

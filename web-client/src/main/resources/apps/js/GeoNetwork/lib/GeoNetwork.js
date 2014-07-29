@@ -103,6 +103,7 @@
             "GeoNetwork/data/ValidationRuleStore.js",
             "GeoNetwork/data/LanguageStore.js",
             "GeoNetwork/data/SuggestionStore.js",
+            "GeoNetwork/data/ThesaurusFeedStore.js",
             "GeoNetwork/data/RegionStore.js",
             "GeoNetwork/data/CodeListStore.js",
             "GeoNetwork/data/ThesaurusStore.js",

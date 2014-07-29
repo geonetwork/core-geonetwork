@@ -1,6 +1,3 @@
-[submodule "maven_repo"]
-	path = maven_repo
-	url = https://github.com/geonetwork/core-maven-repo.git
 [submodule "web-itest/webspecs"]
 	path = web-itest/webspecs
 	url = https://github.com/camptocamp/webspecs.git

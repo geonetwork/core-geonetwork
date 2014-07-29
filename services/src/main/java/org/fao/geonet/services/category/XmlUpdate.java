@@ -23,40 +23,36 @@
 
 package org.fao.geonet.services.category;
 
-import jeeves.services.ReadWriteController;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.csw.common.util.Xml;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.Updater;
+import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Nonnull;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlValue;
 
 //=============================================================================
-@Controller("admin.category.update.labels")
-@ReadWriteController
-public class XmlUpdate{
 
-    @Autowired
-    private MetadataCategoryRepository categoryRepository;
+public class XmlUpdate extends NotInReadOnlyModeService {
+    public void init(String appPath, ServiceConfig params) throws Exception {
+        super.init(appPath, params);
+    }
 
-    @RequestMapping(value = "/{lang}/admin.category.update.labels", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    @ResponseBody
-    public OkResponse serviceSpecificExec(@RequestBody String request) throws Exception {
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-        Element requestXml = Xml.loadString(request, false);
-        for (Object r : requestXml.getChildren("category")) {
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+
+        final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
+        for (Object r : params.getChildren("category")) {
             Element categoryEl = (Element) r;
 
             String id = Util.getAttrib(categoryEl, Params.ID);
@@ -73,20 +69,6 @@ public class XmlUpdate{
             });
         }
 
-        return new OkResponse();
-    }
-
-    @XmlRootElement(name = "response")
-    static class OkResponse {
-        @XmlValue
-        private String value = "ok";
-
-		public String getValue() {
-			return value;
-		}
-
-		public void setValue(String value) {
-			this.value = value;
-		}
+        return new Element("ok");
     }
 }

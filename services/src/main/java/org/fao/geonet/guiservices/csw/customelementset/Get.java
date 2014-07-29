@@ -22,66 +22,68 @@
 //==============================================================================
 package org.fao.geonet.guiservices.csw.customelementset;
 
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.CustomElementSet;
-import org.fao.geonet.domain.responses.CustomElementSetsListResponse;
 import org.fao.geonet.repository.CustomElementSetRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.jdom.Element;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Retrieve custom element sets.
  *
  */
-@Controller("admin.config.csw.customelementset")
-public class Get {
-    @Autowired
-    private ConfigurableApplicationContext jeevesApplicationContext;
-
-    @Autowired
-    private CustomElementSetRepository customElementSetRepository;
+public class Get implements Service {
+    /**
+     * No specific initialization.
+     *
+     * @param appPath
+     * @param params
+     * @throws Exception
+     */
+	public void init(String appPath, ServiceConfig params) throws Exception {}
 
     /**
      * Retrieves custom elementsets.
      *
+     * @param params parameters to this request
+     * @param context Jeeves servicecontext
      * @return a customelementsets element
      * @throws Exception hmmm
      */
-    @RequestMapping(value = "/{lang}/admin.config.csw.customelementset", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody
-    CustomElementSetsListResponse exec() throws Exception {
-        SettingManager sm = jeevesApplicationContext.getBean(SettingManager.class);
+	public Element exec(Element params, ServiceContext context) throws Exception {
+		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        SettingManager sm = gc.getBean(SettingManager.class);
 
         boolean cswEnabled = sm.getValueAsBool("system/csw/enable");
 
-        CustomElementSetsListResponse response = new CustomElementSetsListResponse();
-        List<String> xpaths = new ArrayList<String>();
-
+        Element result = new Element("customelementsets");
         if(cswEnabled) {
-            List<CustomElementSet> records = customElementSetRepository.findAll();
+            List<CustomElementSet> records = context.getBean(CustomElementSetRepository.class).findAll();
             for(CustomElementSet record : records) {
-                xpaths.add(record.getXpath());
+                String xpath = record.getXpath();
+                Element xpathElement = new Element("xpath");
+                xpathElement.setText(xpath);
+                result.addContent(xpathElement);
             }
         }
 
-        response.setXpaths(xpaths);
-        response.setCswEnabled(cswEnabled);
+        Element cswEnabledElement = new Element("cswEnabled");
+        cswEnabledElement.setText(String.valueOf(cswEnabled));
 
-        //if(Log.isDebugEnabled(Geonet.CUSTOM_ELEMENTSET))
-        //    Log.debug(Geonet.CUSTOM_ELEMENTSET, "get customelementset:\n" + Xml.getString(result));
+        result.addContent(cswEnabledElement);
 
-        return response;
+        if(Log.isDebugEnabled(Geonet.CUSTOM_ELEMENTSET))
+            Log.debug(Geonet.CUSTOM_ELEMENTSET, "get customelementset:\n" + Xml.getString(result));
+
+        return result;
 	}
 
 }

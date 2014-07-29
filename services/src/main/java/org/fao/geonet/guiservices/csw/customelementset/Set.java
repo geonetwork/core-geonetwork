@@ -22,70 +22,68 @@
 //==============================================================================
 package org.fao.geonet.guiservices.csw.customelementset;
 
+import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
+import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.collections.ListUtils;
 import org.fao.geonet.domain.CustomElementSet;
-import org.fao.geonet.domain.responses.OkResponse;
 import org.fao.geonet.repository.CustomElementSetRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * Save custom element sets.
  *
  */
-@Controller("admin.config.csw.customelementset.save")
-public class Set {
-    @Autowired
-    private CustomElementSetRepository customElementSetRepository;
+public class Set implements Service {
+    /**
+     * No specific initialization.
+     *
+     * @param appPath
+     * @param params
+     * @throws Exception
+     */
+	public void init(String appPath, ServiceConfig params) throws Exception {}
 
     /**
      * Saves custom element sets.
      *
-     * @param xpathList
+     * @param params
+     * @param context
      * @return
      * @throws Exception
      */
-
-    @RequestMapping(value = "/{lang}/admin.config.csw.customelementset.save", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody
-    OkResponse exec(@RequestParam("xpath") List<String> xpathList) throws Exception {
-        saveCustomElementSets(xpathList);
-        return new OkResponse();
+	public Element exec(Element params, ServiceContext context) throws Exception {
+        saveCustomElementSets(params, context);
+        return new Element(Jeeves.Elem.RESPONSE).setText("ok");
 	}
 
     /**
      *
      * Processes parameters and saves custom element sets in database.
      *
-     * @param xpathList
+     * @param params
      * @throws Exception
      */
-    private void saveCustomElementSets(List<String> xpathList) throws Exception {
+    private void saveCustomElementSets(Element params, ServiceContext context) throws Exception {
         if (Log.isDebugEnabled(Geonet.CUSTOM_ELEMENTSET)) {
-            Log.debug(Geonet.CUSTOM_ELEMENTSET, "set customelementset:\n" + Arrays.toString(xpathList.toArray()));
+            Log.debug(Geonet.CUSTOM_ELEMENTSET, "set customelementset:\n" + Xml.getString(params));
         }
 
-        customElementSetRepository.deleteAll();
+        final CustomElementSetRepository repository = context.getBean(CustomElementSetRepository.class);
+        repository.deleteAll();
 
-        for(String xpath : xpathList) {
+        @SuppressWarnings("unchecked")
+        List<Element> xpaths = params.getChildren("xpath");
+        for(Element xpath : xpaths) {
             CustomElementSet customElementSet = new CustomElementSet();
-            customElementSet.setXpath(xpath);
+            customElementSet.setXpath(xpath.getText());
 
-            customElementSetRepository.save(customElementSet);
+            repository.save(customElementSet);
         }
     }
 

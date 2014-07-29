@@ -23,71 +23,69 @@
 
 package org.fao.geonet.services.category;
 
-import jeeves.services.ReadWriteController;
+import jeeves.constants.Jeeves;
+import jeeves.server.ServiceConfig;
+import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.Util;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.MetadataCategory;
-import org.fao.geonet.exceptions.MissingParameterEx;
 import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.Updater;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.fao.geonet.services.NotInReadOnlyModeService;
+import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 
 /**
  * Update the information of a category.
  */
-@Controller("admin.category.update")
-@ReadWriteController
-public class Update {
+public class Update extends NotInReadOnlyModeService {
+    public void init(String appPath, ServiceConfig params) throws Exception {
+        super.init(appPath, params);
+    }
 
-    @Autowired
-    private MetadataCategoryRepository categoryRepository;
-    @Autowired
-    private LanguageRepository langRepository;
+    //--------------------------------------------------------------------------
+    //---
+    //--- Service
+    //---
+    //--------------------------------------------------------------------------
 
-    @RequestMapping(value = "/{lang}/admin.category.update", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    @ResponseBody
-    public CategoryUpdateResponse exec(
-            @RequestParam final Integer id,
-            @RequestParam final String name
-    ) throws Exception {
-        if (name == null) {
-            throw new MissingParameterEx("name");
-        }
+    @Override
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        String id = params.getChildText(Params.ID);
+        final String name = Util.getParam(params, Params.NAME);
 
-        CategoryUpdateResponse response = new CategoryUpdateResponse();
+        Element elRes = new Element(Jeeves.Elem.RESPONSE);
+        final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
 
         MetadataCategory category;
-        if (id == null) {
-            // Adding new category
+        if (id == null || "".equals(id))    // For Adding new category
+        {
             category = new MetadataCategory();
             category.setName(name);
 
+            final LanguageRepository langRepository = context.getBean(LanguageRepository.class);
             java.util.List<Language> allLanguages = langRepository.findAll();
             for (Language l : allLanguages) {
                 category.getLabelTranslations().put(l.getId(), name);
             }
 
             categoryRepository.save(category);
-            response.addOperation(CategoryUpdateResponse.Operation.added);
+            elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.ADDED));
         } else {
-            categoryRepository.update(id, new Updater<MetadataCategory>() {
+            categoryRepository.update(Integer.valueOf(id), new Updater<MetadataCategory>() {
                 @Override
                 public void apply(@Nonnull MetadataCategory entity) {
                     entity.setName(name);
                 }
             });
 
-            response.addOperation(CategoryUpdateResponse.Operation.updated);
+            elRes.addContent(new Element(Jeeves.Elem.OPERATION).setText(Jeeves.Text.UPDATED));
         }
 
-        return response;
+        return elRes;
     }
 }

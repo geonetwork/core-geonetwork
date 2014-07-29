@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2013 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -20,46 +20,41 @@
 //===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
-
-package org.fao.geonet.services.group;
+package org.fao.geonet.guiservices.csw.virtual;
 
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.specification.GroupSpecs;
+import org.fao.geonet.Util;
+
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.repository.ServiceRepository;
 import org.jdom.Element;
 
-import static org.springframework.data.jpa.domain.Specifications.not;
-
-//=============================================================================
-
 /**
- * Retrieves all groups in the system
+ * Add a virtual CSW service configuration
  */
+public class Add implements Service {
 
-public class List implements Service {
     public void init(String appPath, ServiceConfig params) throws Exception {
     }
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Service
-    //---
-    //--------------------------------------------------------------------------
+    public Element exec(Element params, ServiceContext context)
+            throws Exception {
+        String serviceName = Util.getParam(params, "service");
+        String className = Util.getParam(params, "class");
+        String serviceDescription = Util.getParam(params, "servicedescription");
 
-    public Element exec(Element params, ServiceContext context) throws Exception {
-        Element elRes = context.getBean(GroupRepository.class).findAllAsXml(not(GroupSpecs.isReserved()));
+        final ServiceRepository serviceRepository = context.getBean(ServiceRepository.class);
 
-        Element elOper = params.getChild(Jeeves.Elem.OPERATION);
+        final org.fao.geonet.domain.Service service = new org.fao.geonet.domain.Service();
+        service.setDescription(serviceDescription);
+        service.setClassName(className);
+        service.setName(serviceName);
 
-        if (elOper != null)
-            elRes.addContent(elOper.detach());
+        serviceRepository.save(service);
 
-        return elRes.setName(Jeeves.Elem.RESPONSE);
+        return new Element(Jeeves.Elem.RESPONSE).setText("ok");
     }
 }
-
-//=============================================================================
-

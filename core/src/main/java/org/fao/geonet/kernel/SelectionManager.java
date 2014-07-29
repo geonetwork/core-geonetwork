@@ -29,6 +29,7 @@ import javax.annotation.Nonnull;
 public class SelectionManager {
 
 	private Hashtable<String, Set<String>> selections = null;
+	private UserSession session = null;
 
 	public static final String SELECTION_METADATA = "metadata";
 
@@ -41,12 +42,14 @@ public class SelectionManager {
 	private static final String REMOVE_SELECTED = "remove";
 	private static final String CLEAR_ADD_SELECTED = "clear-add";
 
-	private SelectionManager() {
+	private SelectionManager(UserSession session) {
 		selections = new Hashtable<String, Set<String>>(0);
 
 		Set<String> MDSelection = Collections
 				.synchronizedSet(new HashSet<String>(0));
 		selections.put(SELECTION_METADATA, MDSelection);
+
+		this.session = session;
 	}
 
 	/**
@@ -122,7 +125,7 @@ public class SelectionManager {
 		// Get the selection manager or create it
 		SelectionManager manager = getManager(session);
 
-		return manager.updateSelection(type, context, selected, paramid, session);
+		return manager.updateSelection(type, context, selected, paramid);
 	}
 
 	/**
@@ -140,7 +143,7 @@ public class SelectionManager {
 	 * 
 	 * @return number of selected element
 	 */
-	public int updateSelection(String type, ServiceContext context, String selected, String paramid, UserSession session) {
+	public int updateSelection(String type, ServiceContext context, String selected, String paramid) {
 
 		// Get the selection manager or create it
 		Set<String> selection = this.getSelection(type);
@@ -151,7 +154,7 @@ public class SelectionManager {
 
         if (selected != null) {
             if (selected.equals(ADD_ALL_SELECTED))
-                this.selectAll(type, context, session);
+                this.selectAll(type, context);
             else if (selected.equals(REMOVE_ALL_SELECTED))
                 this.close(type);
             else if (selected.equals(ADD_SELECTED) && (paramid != null))
@@ -188,7 +191,7 @@ public class SelectionManager {
 	public static SelectionManager getManager(UserSession session) {
 		SelectionManager manager = (SelectionManager) session.getProperty(Geonet.Session.SELECTED_RESULT);
 		if (manager == null) {
-			manager = new SelectionManager();
+			manager = new SelectionManager(session);
 			session.setProperty(Geonet.Session.SELECTED_RESULT, manager);
 		}
 		return manager;
@@ -203,7 +206,7 @@ public class SelectionManager {
 	 * @param context
 	 * 
 	 */
-	public void selectAll(String type, ServiceContext context, UserSession session) {
+	public void selectAll(String type, ServiceContext context) {
 		Set<String> selection = selections.get(type);
 		SettingInfo si = context.getBean(SettingInfo.class);
 		int maxhits = DEFAULT_MAXHITS;
