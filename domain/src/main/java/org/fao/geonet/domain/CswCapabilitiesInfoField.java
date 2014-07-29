@@ -1,5 +1,7 @@
 package org.fao.geonet.domain;
 
+import java.io.Serializable;
+
 import org.fao.geonet.entitylistener.CswCapabilitiesInfoFieldEntityListenerManager;
 import org.hibernate.annotations.Type;
 
@@ -18,8 +20,11 @@ import javax.persistence.*;
 @Table(name = "CswServerCapabilitiesInfo")
 @EntityListeners(CswCapabilitiesInfoFieldEntityListenerManager.class)
 @SequenceGenerator(name=CswCapabilitiesInfoField.ID_SEQ_NAME, initialValue=100, allocationSize=1)
-public class CswCapabilitiesInfoField extends GeonetEntity {
-    static final String ID_SEQ_NAME = "csw_server_capabilities_info_id_seq";
+public class CswCapabilitiesInfoField extends GeonetEntity implements Serializable {
+
+	private static final long serialVersionUID = -2893765878557173596L;
+
+	static final String ID_SEQ_NAME = "csw_server_capabilities_info_id_seq";
 
     private static final int ID_COLUMN_LENGTH = 10;
     private static final int LANG_ID_COLUMN_LENGTH = 5;

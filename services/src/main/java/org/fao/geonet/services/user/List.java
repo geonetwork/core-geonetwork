@@ -23,76 +23,97 @@
 
 package org.fao.geonet.services.user;
 
-import static org.fao.geonet.repository.specification.UserGroupSpecs.*;
-
-import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.User_;
-import org.fao.geonet.repository.*;
-import org.jdom.Element;
-import org.springframework.data.domain.Sort;
+import org.fao.geonet.domain.responses.UserList;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specifications;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasProfile;
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
 
 //=============================================================================
 
-/** Retrieves all users in the system
-  */
+/**
+ * Retrieves all users in the system
+ */
+@Controller("admin.user.list")
+public class List {
+	// --------------------------------------------------------------------------
+	// ---
+	// --- Init
+	// ---
+	// --------------------------------------------------------------------------
 
-public class List implements Service {
-	//--------------------------------------------------------------------------
-	//---
-	//--- Init
-	//---
-	//--------------------------------------------------------------------------
+	public void init(String appPath, ServiceConfig params) throws Exception {
+	}
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	// --------------------------------------------------------------------------
+	// ---
+	// --- Service
+	// ---
+	// --------------------------------------------------------------------------
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Service
-	//---
-	//--------------------------------------------------------------------------
+	@RequestMapping(value = "/{lang}/admin.user.list", produces = {
+			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+	public @ResponseBody
+	UserList exec() throws Exception {
+		User me = userRepository.findOneByUsername(SecurityContextHolder
+				.getContext().getAuthentication().getName());
 
-	public Element exec(Element params, ServiceContext context) throws Exception
-	{
-		UserSession session = context.getUserSession();
+		Set<Integer> hsMyGroups = getGroups(me.getId(), me.getProfile());
 
-		//--- retrieve groups for myself
+		Collection<? extends GrantedAuthority> roles = SecurityContextHolder
+				.getContext().getAuthentication().getAuthorities();
 
+		Set<String> profileSet = new HashSet<String>();
 
-		Set<Integer> hsMyGroups = getGroups(context, session.getUserIdAsInt(), session.getProfile());
+		for (GrantedAuthority rol : roles) {
+			profileSet.add(rol.getAuthority());
+		}
 
-        Set<String> profileSet = session.getProfile().getAllNames();
+		// --- retrieve all users
+		final java.util.List<User> all = userRepository.findAll(SortUtils
+				.createSort(User_.username));
 
-		//--- retrieve all users
-        final java.util.List<User> all = context.getBean(UserRepository.class).findAll(SortUtils.createSort(User_.username));
-
-		//--- now filter them
+		// --- now filter them
 
 		java.util.Set<Integer> usersToRemove = new HashSet<Integer>();
 
-		if (session.getProfile() != Profile.Administrator) {
+		if (!profileSet.contains(Profile.Administrator.name())) {
 
 			for (User user : all) {
 				int userId = user.getId();
-				Profile profile= user.getProfile();
+				Profile profile = user.getProfile();
 
-                if (user.getId() == session.getUserIdAsInt()) {
-                    // user is permitted to access his/her own user information
-                    continue;
-                }
-				Set<Integer> userGroups = getGroups(context, userId, profile);
+				// TODO is this already equivalent to ID?
+				if (user.getName().equals(
+						SecurityContextHolder.getContext().getAuthentication()
+								.getName())) {
+					// user is permitted to access his/her own user information
+					continue;
+				}
+				Set<Integer> userGroups = getGroups(userId, profile);
 				// Is user belong to one of the current user admin group?
 				boolean isInCurrentUserAdminGroups = false;
 				for (Integer userGroup : userGroups) {
@@ -101,50 +122,62 @@ public class List implements Service {
 						break;
 					}
 				}
-				//if (!hsMyGroups.containsAll(userGroups))
+				// if (!hsMyGroups.containsAll(userGroups))
 				if (!isInCurrentUserAdminGroups) {
 					usersToRemove.add(user.getId());
-                }
+				}
 
 				if (!profileSet.contains(profile.name())) {
 					usersToRemove.add(user.getId());
-                }
+				}
+			}
+		}
+		UserList res = new UserList();
+
+		for (User u : Collections.unmodifiableList(all)) {
+			if (!usersToRemove.contains(u.getId())) {
+				res.addUser(u);
 			}
 		}
 
-        Element rootEl = new Element(Jeeves.Elem.RESPONSE);
-
-        for (User user : all) {
-            if (!usersToRemove.contains(user.getId())) {
-                rootEl.addContent(user.asXml());
-            }
-        }
-
-        return rootEl;
+		
+		return res;
 	}
 
-	//--------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//--------------------------------------------------------------------------
+	// --------------------------------------------------------------------------
+	// ---
+	// --- Private methods
+	// ---
+	// --------------------------------------------------------------------------
 
-	private Set<Integer> getGroups(ServiceContext context, final int id, final Profile profile) throws Exception {
-        final GroupRepository groupRepository = context.getBean(GroupRepository.class);
-        final UserGroupRepository userGroupRepo = context.getBean(UserGroupRepository.class);
-        Set<Integer> hs = new HashSet<Integer>();
+	private Set<Integer> getGroups(final int id, final Profile profile)
+			throws Exception {
+		Set<Integer> hs = new HashSet<Integer>();
 
-        if (profile == Profile.Administrator) {
-            hs.addAll(groupRepository.findIds());
-        } else if (profile == Profile.UserAdmin) {
-            hs.addAll(userGroupRepo.findGroupIds(Specifications.where(hasProfile(profile)).and(hasUserId(id))));
-        } else {
-            hs.addAll(userGroupRepo.findGroupIds(hasUserId(id)));
-        }
+		if (profile == Profile.Administrator) {
+			hs.addAll(groupRepository.findIds());
+		} else if (profile == Profile.UserAdmin) {
+			hs.addAll(userGroupRepo.findGroupIds(Specifications.where(
+					hasProfile(profile)).and(hasUserId(id))));
+		} else {
+			hs.addAll(userGroupRepo.findGroupIds(hasUserId(id)));
+		}
 
 		return hs;
 	}
+
+	@Autowired
+	private ConfigurableApplicationContext jeevesApplicationContext;
+	@PersistenceContext
+	private EntityManager entityManager;
+	@Autowired
+	private GroupRepository groupRepository;
+	@Autowired
+	private UserGroupRepository userGroupRepo;
+	@Autowired
+	private UserRepository userRepository;
+
 }
 
-//=============================================================================
+// =============================================================================
 
