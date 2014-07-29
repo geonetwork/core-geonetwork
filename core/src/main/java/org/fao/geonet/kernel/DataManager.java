@@ -48,6 +48,7 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.repository.specification.*;
 import org.fao.geonet.repository.statistic.PathSpec;
+import org.fao.geonet.util.FileCopyMgr;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.Xml.ErrorHandler;
@@ -3311,6 +3312,15 @@ public class DataManager {
     public void batchDeleteMetadataAndUpdateIndex(Specification<Metadata> specification) throws Exception {
         final List<Integer> idsOfMetadataToDelete = _metadataRepository.findAllIdsBy(specification);
 
+        for (Integer id: idsOfMetadataToDelete) {
+            //--- remove metadata directory for each record
+            File pb = new File(Lib.resource.getMetadataDir(
+                    _applicationContext.getBean(GeonetworkDataDirectory.class).getMetadataDataDir().getPath(),
+                    id + ""));
+            FileCopyMgr.removeDirectoryOrFile(pb);
+        }
+
+        // Remove records from the index
         searchMan.delete("_id", Lists.transform(idsOfMetadataToDelete, new Function<Integer, String>() {
             @Nullable
             @Override
@@ -3318,6 +3328,8 @@ public class DataManager {
                 return input.toString();
             }
         }));
+
+        // Remove records from the database
         _metadataRepository.deleteAll(specification);
     }
 }
