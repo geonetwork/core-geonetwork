@@ -46,6 +46,8 @@ import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
+import org.fao.geonet.kernel.search.index.IndexingList;
+import org.fao.geonet.kernel.search.index.IndexingTask;
 import org.fao.geonet.repository.specification.*;
 import org.fao.geonet.repository.statistic.PathSpec;
 import org.fao.geonet.util.FileCopyMgr;
@@ -1341,9 +1343,20 @@ public class DataManager {
         // READONLYMODE
         GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
         if (!gc.isReadOnly()) {
-            final IncreasePopularityTask task = srvContext.getBean(IncreasePopularityTask.class);
-            task.setMetadataId(Integer.valueOf(id));
-            gc.getThreadPool().runTask(task);
+            // Update the popularity in database
+            Integer iId = Integer.valueOf(id);
+            _metadataRepository.update(iId, new Updater<Metadata>() {
+                @Override
+                public void apply(@Nonnull Metadata entity) {
+                    final MetadataDataInfo dataInfo = entity.getDataInfo();
+                    int popularity = dataInfo.getPopularity();
+                    dataInfo.setPopularity(popularity + 1);
+                }
+            });
+
+            // And register the metadata to be indexed in the near future
+            final IndexingList list = srvContext.getBean(IndexingList.class);
+            list.add(iId);
         } else {
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER, "GeoNetwork is operating in read-only mode. IncreasePopularity is skipped.");
