@@ -2,8 +2,23 @@ package org.fao.geonet.domain;
 
 import org.fao.geonet.entitylistener.IsoLanguageEntityListenerManager;
 
-import javax.persistence.*;
 import java.util.Map;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Cacheable;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 /**
  * An entity representing the bi-directional mapping between the different iso language codes (de -> ger) and translations of the
@@ -16,6 +31,7 @@ import java.util.Map;
 @Access(AccessType.PROPERTY)
 @Table(name = "IsoLanguages")
 @EntityListeners(IsoLanguageEntityListenerManager.class)
+@Cacheable
 @SequenceGenerator(name=IsoLanguage.ID_SEQ_NAME, initialValue=10000, allocationSize=1)
 public class IsoLanguage extends Localized {
     static final String ID_SEQ_NAME = "iso_language_id_seq";

@@ -4,7 +4,9 @@ import org.fao.geonet.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.*;
+
 import java.util.HashSet;
+import java.util.List;
 
 public final class UserGroupSpecs {
 
@@ -23,6 +25,18 @@ public final class UserGroupSpecs {
         };
     }
 
+    public static Specification<UserGroup> hasGroupIds(final List<Integer> groupId) {
+        return new Specification<UserGroup>() {
+            @Override
+            public Predicate toPredicate(Root<UserGroup> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            	Path<Integer> grpIdAttributePath = root.get(UserGroup_.id).get(UserGroupId_.groupId);
+                Predicate grpIdInPredicate = grpIdAttributePath.in(groupId);
+                return grpIdInPredicate;
+            }
+        };
+    }
+    
+    
     public static Specification<UserGroup> hasUserId(final int userId) {
         return new Specification<UserGroup>() {
             @Override

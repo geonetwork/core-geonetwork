@@ -2,9 +2,11 @@
 <beans default-lazy-init="true"
        xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 	">
 
     <!-- Look up the JPA repositories -->
@@ -19,16 +21,7 @@
         <property name="dataSource" ref="jdbcDataSource"/>
         <property name="packagesToScan" value="org.fao.geonet.domain"/>
         <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
-        <property name="jpaPropertyMap">
-            <map>
-                <entry key="access" value="PROPERTY"/>
-                <entry key="hibernate.id.new_generator_mappings" value="true"/>
-                <entry key="hibernate.cache.use_second_level_cache" value="false"/>
-                <entry key="hibernate.jdbc.batch_size" value="3"/>
-                <entry key="hibernate.jdbc.batch_versioned_data" value="true"/>
-                <entry key="hibernate.enable_lazy_load_no_trans" value="true"/>
-            </map>
-        </property>
+        <property name="jpaPropertyMap" ref="jpaPropertyMap"/>
     </bean>
 
     <bean id="generateDdl" class="java.lang.String" scope="singleton">

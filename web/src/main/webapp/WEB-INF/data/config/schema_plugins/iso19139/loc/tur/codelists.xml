@@ -318,11 +318,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>investigation</code>
-<<<<<<< HEAD
 			<label>Araştırma ve Sorgulama</label>
-=======
-			<label>Araştırma&Sorgulama</label>
->>>>>>> Git cherry pick revision 118bfde496eff4343fab8556703bb4cdf2746e83 from the 2.6 branch which contains the Tuk language inclusion.
 			<description>sistematik sorgulama veya araştırma</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1499,11 +1495,7 @@
 	<codelist name="gmd:MD_TopicCategoryCode">
 		<entry>
 			<code>farming</code>
-<<<<<<< HEAD
 			<label>Tarım ve Hayvancılık</label>
-=======
-			<label>Tarım&Hayvancılık</label>
->>>>>>> Git cherry pick revision 118bfde496eff4343fab8556703bb4cdf2746e83 from the 2.6 branch which contains the Tuk language inclusion.
 			<description>hayvan yetiştiriciliği ve/veya bitki ekimi. Örnekler: tarım, sulama, su ürünleri, fidan üretimi, hayvancılık, ürünü ve hayvanları etkileyen zararlılar ve hastalıklar</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -1614,11 +1606,7 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<entry>
 			<code>utilitiesCommunication</code>
-<<<<<<< HEAD
 			<label>Altyapı ve İletişim</label>
-=======
-			<label>Altyapı&İletişim</label>
->>>>>>> Git cherry pick revision 118bfde496eff4343fab8556703bb4cdf2746e83 from the 2.6 branch which contains the Tuk language inclusion.
 			<description>enerji, su ve atık sistemleri ve iletişim altyapısı ve servisleri. Örnekler: hidroelektrik, jeotermal, enerjinin güneş ve nükleer kaynakları, su arıtma ve dağıtma, kanalizasyon toplama ve boşaltma, elektrik ve gaz dağıtımı, veri iletişimi, telekomünikasyon, radyo, iletişim ağları</description>
 		</entry>
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->

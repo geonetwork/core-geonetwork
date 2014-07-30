@@ -89,8 +89,6 @@ public class JeevesEngine {
     @Autowired
     private MonitorManager _monitorManager;
     @Autowired
-	private ScheduleManager _scheduleMan;
-    @Autowired
 	private ConfigurableApplicationContext _applicationContext;
 
     private Logger _appHandLogger = Log.createLogger(Log.APPHAND);
@@ -157,8 +155,6 @@ public class JeevesEngine {
             _serviceMan.setBaseUrl(baseUrl);
             _serviceMan.setServlet(servlet);
 
-            _scheduleMan.setAppPath(appPath);
-            _scheduleMan.setBaseUrl(baseUrl);
 
             loadConfigFile(servletContext, configPath, Jeeves.CONFIG_FILE, _serviceMan);
             loadConfigDB(_applicationContext, -1);
@@ -168,9 +164,6 @@ public class JeevesEngine {
 
             for (int i = 0; i < _appHandList.size(); i++)
                 initAppHandler(_appHandList.get(i), servlet);
-
-            info("Starting schedule manager...");
-            _scheduleMan.start();
 
             //---------------------------------------------------------------------
 
@@ -311,15 +304,6 @@ public class JeevesEngine {
         for (Element aSrvList : srvList) {
             initServices(aSrvList);
         }
-		
-		//--- init schedules
-
-		List<Element> schedList = configRoot.getChildren(ConfigFile.Child.SCHEDULES);
-
-        for (Element aSchedList : schedList) {
-            initSchedules(aSchedList);
-        }
-
         //--- init monitoring
 
         List<Element> monitorList = configRoot.getChildren(ConfigFile.Child.MONITORS);
@@ -471,7 +455,6 @@ public class JeevesEngine {
 
 				_appHandlers.add(h);
 				_serviceMan.registerContext(h.getContextName(), context);
-				_scheduleMan.registerContext(h.getContextName(), context);
                 _monitorManager.initMonitorsForApp(srvContext);
 
 				info("--- Handler started ---------------------------------------");
@@ -538,52 +521,6 @@ public class JeevesEngine {
 
 	//---------------------------------------------------------------------------
 	//---
-	//--- 'schedules' element
-	//---
-	//---------------------------------------------------------------------------
-
-	/** Setup schedules found in the 'schedules' element (config.xml)
-	  */
-
-	@SuppressWarnings("unchecked")
-	private void initSchedules(Element schedules) throws Exception
-	{
-		info("Initializing schedules...");
-
-		//--- get schedules root package
-		String pack = schedules.getAttributeValue(ConfigFile.Schedules.Attr.PACKAGE);
-
-		// --- scan schedules elements
-		for (Element schedule : (List<Element>) schedules
-				.getChildren(ConfigFile.Schedules.Child.SCHEDULE)) {
-			String name = schedule
-					.getAttributeValue(ConfigFile.Schedule.Attr.NAME);
-
-			info("   Adding schedule : " + name);
-
-			try {
-				_scheduleMan.addSchedule(pack, schedule);
-			} catch (Exception e) {
-				error("Raised exception while registering schedule. Skipped.");
-				error("   Schedule  : " + name);
-				error("   Package   : " + pack);
-				error("   Exception : " + e);
-				error("   Message   : " + e.getMessage());
-				error("   Stack     : " + Util.getStackTrace(e));
-			}
-		}
-	}
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- 'schedules' element
-    //---
-    //---------------------------------------------------------------------------
-
-    /** Setup schedules found in the 'schedules' element (config.xml)
-     */
-	//---------------------------------------------------------------------------
-	//---
 	//--- Destroy
 	//---
 	//---------------------------------------------------------------------------
@@ -596,9 +533,6 @@ public class JeevesEngine {
 
 			info("Shutting down monitor manager...");
 			_monitorManager.shutdown();
-
-			info("Stopping schedule manager...");
-			_scheduleMan.exit();
 
 			info("Stopping handlers...");
 			stopHandlers();

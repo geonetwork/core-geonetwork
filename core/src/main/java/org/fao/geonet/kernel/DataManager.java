@@ -40,6 +40,16 @@ import jeeves.TransactionAspect;
 import jeeves.TransactionTask;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
+import org.fao.geonet.kernel.search.index.IndexingList;
+import org.fao.geonet.kernel.search.index.IndexingTask;
+import org.fao.geonet.repository.specification.*;
+import org.fao.geonet.repository.statistic.PathSpec;
+import org.fao.geonet.util.FileCopyMgr;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.Xml.ErrorHandler;
+
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
@@ -133,7 +143,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -1394,9 +1403,20 @@ public class DataManager {
         // READONLYMODE
         GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
         if (!gc.isReadOnly()) {
-            final IncreasePopularityTask task = srvContext.getBean(IncreasePopularityTask.class);
-            task.setMetadataId(Integer.valueOf(id));
-            gc.getThreadPool().runTask(task);
+            // Update the popularity in database
+            Integer iId = Integer.valueOf(id);
+            _metadataRepository.update(iId, new Updater<Metadata>() {
+                @Override
+                public void apply(@Nonnull Metadata entity) {
+                    final MetadataDataInfo dataInfo = entity.getDataInfo();
+                    int popularity = dataInfo.getPopularity();
+                    dataInfo.setPopularity(popularity + 1);
+                }
+            });
+
+            // And register the metadata to be indexed in the near future
+            final IndexingList list = srvContext.getBean(IndexingList.class);
+            list.add(iId);
         } else {
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER, "GeoNetwork is operating in read-only mode. IncreasePopularity is skipped.");
@@ -1818,7 +1838,8 @@ public class DataManager {
                 indexMetadata(metadataId, false);
             }
         }
-        return metadata;
+        // Return an up to date metadata record
+        return _metadataRepository.findOne(metadataId);
     }
 
     /**
@@ -3278,7 +3299,7 @@ public class DataManager {
      * @param value
      */
     private static void addElement(Element root, String name, Object value) {
-        root.addContent(new Element(name).setText(value.toString()));
+        root.addContent(new Element(name).setText(value == null ? "" : value.toString()));
     }
 
 
@@ -3395,6 +3416,15 @@ public class DataManager {
     public void batchDeleteMetadataAndUpdateIndex(Specification<Metadata> specification) throws Exception {
         final List<Integer> idsOfMetadataToDelete = _metadataRepository.findAllIdsBy(specification);
 
+        for (Integer id: idsOfMetadataToDelete) {
+            //--- remove metadata directory for each record
+            File pb = new File(Lib.resource.getMetadataDir(
+                    _applicationContext.getBean(GeonetworkDataDirectory.class).getMetadataDataDir().getPath(),
+                    id + ""));
+            FileCopyMgr.removeDirectoryOrFile(pb);
+        }
+
+        // Remove records from the index
         searchMan.delete("_id", Lists.transform(idsOfMetadataToDelete, new Function<Integer, String>() {
             @Nullable
             @Override
@@ -3402,6 +3432,8 @@ public class DataManager {
                 return input.toString();
             }
         }));
+
+        // Remove records from the database
         _metadataRepository.deleteAll(specification);
     }
 }

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 		">
 
     <bean id="nodeInfo" class="org.fao.geonet.NodeInfo">
@@ -34,4 +36,19 @@
     <bean id="generateDdl" class="java.lang.String">
         <constructor-arg value="true"/>
     </bean>
+
+    <util:map id="jpaPropertyMap">
+        <entry key="shared-cache-mode" value="ENABLE_SELECTIVE"/>
+        <entry key="javax.persistence.lock.timeout" value="30000"/>
+        <entry key="org.hibernate.flushMode" value="AUTO"/>
+        <entry key="access" value="PROPERTY"/>
+        <entry key="hibernate.id.new_generator_mappings" value="true"/>
+        <entry key="hibernate.cache.use_second_level_cache" value="true"/>
+        <!--<entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.internal.NoCachingRegionFactory"/>-->
+        <entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.EhCacheRegionFactory"/>
+        <entry key="hibernate.jdbc.batch_size" value="3"/>
+        <entry key="hibernate.jdbc.batch_versioned_data" value="true"/>
+        <entry key="hibernate.enable_lazy_load_no_trans" value="true"/>
+    </util:map>
+
 </beans>
