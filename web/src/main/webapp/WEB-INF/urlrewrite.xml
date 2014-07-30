@@ -20,10 +20,12 @@
 
     <!-- Rule to redirect old deprecated @json requests -->
     <rule>
+        <condition name="content-type" operator="notequal">multipart/form-data</condition>
         <from>^(.+)@json$</from>
         <to type="permanent-redirect">%{context-path}$1?format=json</to>
     </rule>
     <rule>
+        <condition name="content-type" operator="notequal">multipart/form-data</condition>
         <from>^(.+)@json(\?.*)$</from>
         <to type="permanent-redirect">%{context-path}$1$2&amp;format=json</to>
     </rule>
