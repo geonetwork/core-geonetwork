@@ -85,6 +85,99 @@
     };
   }]);
 
+  module.directive('gnKmlImport', [
+    'goDecorateLayer',
+    function (goDecorateLayer) {
+      return {
+        restrict: 'A',
+        replace: true,
+        templateUrl: '../../catalog/components/viewer/wmsimport/' +
+            'partials/kmlimport.html',
+        scope: {
+          map: '=gnKmlImportMap'
+        },
+        controllerAs: 'kmlCtrl',
+        controller: [ '$scope', function($scope) {
+
+          /**
+           * Create new vector Kml file from url and add it to
+           * the Map.
+           *
+           * @param url remote url of the kml file
+           * @param map
+           */
+          this.addKml = function(url, map) {
+
+            if(url == '') {
+              $scope.validUrl = true;
+              return;
+            }
+
+            var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
+            var kmlSource = new ol.source.KML({
+              projection: 'EPSG:3857',
+              url: proxyUrl
+            });
+            var vector = new ol.layer.Vector({
+              source: kmlSource
+            });
+
+            var listenerKey = kmlSource.on('change', function() {
+              if (kmlSource.getState() == 'ready') {
+                kmlSource.unByKey(listenerKey);
+                $scope.addToMap(vector, map);
+                $scope.validUrl = true;
+              }
+              else if (kmlSource.getState() == 'error') {
+                $scope.validUrl = false;
+              }
+              $scope.$apply();
+            });
+          };
+
+          $scope.addToMap = function(layer, map) {
+            goDecorateLayer(layer);
+            layer.displayInLayerManager = true;
+            map.getLayers().push(layer);
+            map.getView().fitExtent(layer.getSource().getExtent(),
+                map.getSize());
+          };
+        }],
+        link: function (scope, element, attrs) {
+
+          /** Used for ngClass of the input */
+          scope.validUrl = true;
+
+          /** File drag & drop support */
+          var dragAndDropInteraction = new ol.interaction.DragAndDrop({
+            formatConstructors: [
+              ol.format.GPX,
+              ol.format.GeoJSON,
+              ol.format.KML,
+              ol.format.TopoJSON
+            ]
+          });
+
+          scope.map.getInteractions().push(dragAndDropInteraction);
+          dragAndDropInteraction.on('addfeatures', function(event) {
+            // FIXME add error handling message
+            if (!event.features || event.features.length == 0) {
+              return;
+            }
+            var vectorSource = new ol.source.Vector({
+              features: event.features,
+              projection: event.projection
+            });
+            var layer = new ol.layer.Vector({
+              source: vectorSource,
+              label: 'Fichier local : ' + event.file.name
+            });
+            scope.addToMap(layer, scope.map);
+          });
+        }
+      };
+    }]);
+
   /**
    * @ngdoc directive
    * @name gn_wmsimport_directive.directive:gnCapTreeCol
