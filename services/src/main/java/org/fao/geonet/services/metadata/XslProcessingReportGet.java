@@ -23,6 +23,8 @@
 
 package org.fao.geonet.services.metadata;
 
+import javax.servlet.http.HttpSession;
+
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -38,7 +40,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 /**
  * Return the current or last batch process report in the user session.
 
-The service response contains:
+ The service response contains:
  * process: The name of the process
  * startdate: The date the report was initialized
  * reportdate: The date the report is generated
@@ -51,54 +53,52 @@ The service response contains:
  * notOwner: The number of records the user who starts the process is not allowed to edit
  * notFound: The number of records not found
  * metadataErrorReport: List of records with error and exception details
- 
- 
-Sample response:
-```
-<response 
-  process="sextant-theme-add" 
-  startdate="2013-08-23T18:33:09" 
-  reportdate="2013-08-23T18:34:09" 
-  running="true" 
-  totalRecords="477" 
-  processedRecords="43" 
-  nullRecords="0">
-  <done>28</done>
-  <notProcessFound>0</notProcessFound>
-  <notOwner>0</notOwner>
-  <notFound>0</notFound>
-  <metadataErrorReport>
-    <metadata id="1186">
-      <message>Failed to compile stylesheet. 1 error detected.</message>
-      <stack>
-javax.xml.transform.TransformerConfigurationException: Failed to compile stylesheet. 1 error detected. at net.sf.saxon.PreparedStylesheet.prepare(PreparedStylesheet.java:176) at net.sf.saxon.TransformerFactoryImpl.newTemplates(TransformerFactoryImpl.java:139) at net.sf.saxon.TransformerFactoryImpl.newTransformer(TransformerFactoryImpl.java:91) at jeeves.utils.Xml.transform(Xml.java:538) at jeeves.utils.Xml.transform(Xml.java:382) at org.fao.geonet.kernel.DataManager.updateFixedInfo(DataManager.java:2728) at org.fao.geonet.kernel.DataManager.updateMetadata(DataManager.java:1733) at 
-...
-```
-        ]]>
-      </documentation>
-      <class name=".services.metadata.XslProcessingReportGet"/>
-      <error sheet="../xslt/error/error-json.xsl"/>
-    </service> -->
 
-    <!-- <service name="resource-onlinesrc-upload">
-    <documentation>Upload online resource</documentation>
-      <class name=".services.resources.UploadAndProcess"/>
-      
-      FIXME : this is a default success response XSL
+
+ Sample response:
+ ```
+ <response 
+ process="sextant-theme-add" 
+ startdate="2013-08-23T18:33:09" 
+ reportdate="2013-08-23T18:34:09" 
+ running="true" 
+ totalRecords="477" 
+ processedRecords="43" 
+ nullRecords="0">
+ <done>28</done>
+ <notProcessFound>0</notProcessFound>
+ <notOwner>0</notOwner>
+ <notFound>0</notFound>
+ <metadataErrorReport>
+ <metadata id="1186">
+ <message>Failed to compile stylesheet. 1 error detected.</message>
+ <stack>
+ javax.xml.transform.TransformerConfigurationException: Failed to compile stylesheet. 1 error detected. at net.sf.saxon.PreparedStylesheet.prepare(PreparedStylesheet.java:176) at net.sf.saxon.TransformerFactoryImpl.newTemplates(TransformerFactoryImpl.java:139) at net.sf.saxon.TransformerFactoryImpl.newTransformer(TransformerFactoryImpl.java:91) at jeeves.utils.Xml.transform(Xml.java:538) at jeeves.utils.Xml.transform(Xml.java:382) at org.fao.geonet.kernel.DataManager.updateFixedInfo(DataManager.java:2728) at org.fao.geonet.kernel.DataManager.updateMetadata(DataManager.java:1733) at 
+ ...
+ ```
+ ]]>
+ </documentation>
+ <class name=".services.metadata.XslProcessingReportGet"/>
+ <error sheet="../xslt/error/error-json.xsl"/>
+ </service> -->
+
+ <!-- <service name="resource-onlinesrc-upload">
+ <documentation>Upload online resource</documentation>
+ <class name=".services.resources.UploadAndProcess"/>
+
+ FIXME : this is a default success response XSL
  * @author delawen
  *
  */
 public class XslProcessingReportGet {
-    public void init(String appPath, ServiceConfig config) throws Exception {
-    }
-    
-    @Autowired
-    private ServiceContext context;
+	public void init(String appPath, ServiceConfig config) throws Exception {
+	}
 
 	@RequestMapping(value = "/{lang}/md.processing.batch.report", produces = {
 			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public @ResponseBody XslProcessingReport exec() throws Exception {
-        UserSession session = context.getUserSession();
-        return (XslProcessingReport) session.getProperty(Geonet.Session.BATCH_PROCESSING_REPORT);
-    }
+	public @ResponseBody
+	XslProcessingReport exec(HttpSession session) throws Exception {
+		return (XslProcessingReport) session
+				.getAttribute(Geonet.Session.BATCH_PROCESSING_REPORT);
+	}
 }
