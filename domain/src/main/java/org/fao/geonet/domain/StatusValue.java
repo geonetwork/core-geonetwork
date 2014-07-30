@@ -13,6 +13,7 @@ import java.util.Map;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "StatusValues")
+@Cacheable
 @EntityListeners(StatusValueEntityListenerManager.class)
 @SequenceGenerator(name=StatusValue.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class StatusValue extends Localized {
