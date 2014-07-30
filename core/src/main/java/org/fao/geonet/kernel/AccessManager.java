@@ -52,6 +52,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -478,10 +479,13 @@ public class AccessManager {
 
         Specifications spec = where (UserGroupSpecs.hasProfile(Profile.Editor)).and(UserGroupSpecs.hasUserId(us.getUserIdAsInt()));
 
+        List<Integer> opAlloweds = new ArrayList<Integer>();
         for (OperationAllowed opAllowed : allOpAlloweds) {
-                spec = spec.and(UserGroupSpecs.hasGroupId(opAllowed.getId().getGroupId()));
+        	opAlloweds.add(opAllowed.getId().getGroupId());
         }
-        return _userGroupRepository.findOne(spec) != null;
+        spec = spec.and(UserGroupSpecs.hasGroupIds(opAlloweds));
+        
+        return (! _userGroupRepository.findAll(spec).isEmpty());
     }
 
     /**
