@@ -1,13 +1,18 @@
 package org.fao.geonet.repository.specification;
 
 import com.google.common.base.Optional;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.OperationAllowedId_;
+import org.fao.geonet.domain.OperationAllowed_;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.repository.AbstractOperationsAllowedTest;
 import org.fao.geonet.repository.SortUtils;
 import org.junit.Test;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.fao.geonet.repository.SpringDataTestSupport.setId;
@@ -41,6 +46,22 @@ public class OperationAllowedSpecsTest extends AbstractOperationsAllowedTest {
         assertEquals(_md1.getId(), found.get(0).getId().getMetadataId());
         assertEquals(_md1.getId(), found.get(1).getId().getMetadataId());
         assertEquals(_md1.getId(), found.get(2).getId().getMetadataId());
+    }
+
+    @Test
+    public void testHasMetadataIdIn() {
+        Specification<OperationAllowed> hasMetadataId = OperationAllowedSpecs.hasMetadataIdIn(Arrays.asList(_md1.getId(), _md2.getId()));
+        List<OperationAllowed> found = _opAllowRepo.findAll(hasMetadataId, new Sort(operationIdPath(), metadataIdPath()));
+
+        assertEquals(found.size(), 4);
+    }
+
+    @Test
+    public void testHasGroupIdIn() {
+        Specification<OperationAllowed> hasGroupIdIn = OperationAllowedSpecs.hasGroupIdIn(Arrays.asList(_intranetGroup.getId()));
+        List<OperationAllowed> found = _opAllowRepo.findAll(hasGroupIdIn, new Sort(operationIdPath(), metadataIdPath()));
+
+        assertEquals(found.size(), 3);
     }
 
     @Test

@@ -23,23 +23,45 @@
 
 package org.fao.geonet.kernel;
 
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.*;
-import static org.springframework.data.jpa.domain.Specifications.where;
-import java.util.*;
-
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.HarvesterSetting;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataSourceInfo;
+import org.fao.geonet.domain.Operation;
+import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.Pair;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.User_;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.HarvesterSettingRepository;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.OperationRepository;
+import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
-import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.StringTokenizer;
+
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasOperation;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
  * Handles the access to a metadata depending on the metadata/group.
@@ -269,17 +291,38 @@ public class AccessManager {
      * @return
      * @throws Exception
      */
-    public boolean isOwner(final ServiceContext context, final String id) throws Exception {
-        UserSession us = context.getUserSession();
-        if (!us.isAuthenticated()) {
-            return false;
-        }
+	public boolean isOwner(final ServiceContext context, final String id) throws Exception {
 
         //--- retrieve metadata info
         Metadata info = _metadataRepository.findOne(id);
 
         if (info == null)
             return false;
+        final MetadataSourceInfo sourceInfo = info.getSourceInfo();
+        return isOwner(context, sourceInfo);
+	}
+
+    /**
+     * Return true if the current user is:
+     * <ul>
+     *     <li>administrator</li>
+     *     <li>the metadata owner (the user who created the record)</li>
+     *     <li>reviewer in the group the metadata was created</li>
+     * </ul>
+     *
+     * Note: old GeoNetwork was also restricting editing on harvested
+     * record. This is not restricted on the server side anymore.
+     * If a record is harvested it could be edited by default
+     * but the client application may restrict this condition.
+     *
+     * @param sourceInfo    The metadata source/owner information
+     */
+    public boolean isOwner(ServiceContext context, MetadataSourceInfo sourceInfo) throws Exception {
+
+        UserSession us = context.getUserSession();
+        if (!us.isAuthenticated()) {
+            return false;
+        }
 
         //--- check if the user is an administrator
         final Profile profile = us.getProfile();
@@ -288,15 +331,15 @@ public class AccessManager {
 
         //--- check if the user is the metadata owner
         //
-        if (us.getUserIdAsInt() == info.getSourceInfo().getOwner())
-            return true;
+        if (us.getUserIdAsInt() == sourceInfo.getOwner())
+			return true;
 
         //--- check if the user is a reviewer or useradmin
         if (profile != Profile.Reviewer && profile != Profile.UserAdmin)
             return false;
 
         //--- if there is no group owner then the reviewer cannot review and the useradmin cannot administer
-        final Integer groupOwner = info.getSourceInfo().getGroupOwner();
+        final Integer groupOwner = sourceInfo.getGroupOwner();
         if (groupOwner == null) {
             return false;
         }

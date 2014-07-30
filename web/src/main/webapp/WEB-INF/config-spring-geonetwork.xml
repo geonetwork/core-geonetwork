@@ -24,11 +24,6 @@
     -->
     <import resource="config-versioning.xml"/>
 
-
-    <bean id="scheduler"
-          class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-        <property name="applicationContextSchedulerContextKey" value="applicationContext"/>
-    </bean>
     <bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory" lazy-init="true"/>
     <bean id="httpRequestFactor" class="org.fao.geonet.utils.GeonetHttpRequestFactory">
         <property name="numberOfConcurrentRequests" value="30" />
