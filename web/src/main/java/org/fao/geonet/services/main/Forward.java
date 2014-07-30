@@ -100,26 +100,9 @@ public class Forward implements Service
 	private void authenticate(XmlRequest req, String username, String password,
 									  String type) throws Exception
 	{
-		if (!type.equals("geonetwork"))
-			//--- set basic/digest credentials for non geonetwork sites
-			req.setCredentials(username, password);
+		//--- set basic/digest credentials
+		req.setCredentials(username, password);
 
-		else
-		{
-			String addr = req.getAddress();
-			int    pos  = addr.lastIndexOf('/');
-
-			req.setAddress(addr.substring(0, pos +1) + Geonet.Service.XML_LOGIN);
-			req.addParam("username", username);
-			req.addParam("password", password);
-
-			Element response = req.execute();
-
-			if (!response.getName().equals("ok"))
-				throw new UserNotFoundEx(username);
-
-			req.setAddress(addr);
-		}
 	}
 }
 
