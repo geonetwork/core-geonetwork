@@ -105,10 +105,22 @@
 
       }]);
 
+  var servicesUrl = {
+    wms: [
+      'http://ids.pigma.org/geoserver/wms',
+      'http://ids.pigma.org/geoserver/ign/wms',
+      'http://www.ifremer.fr/services/wms/oceanographie_physique'
+    ],
+    wmts: [
+      'http://sdi.georchestra.org/geoserver/gwc/service/wmts'
+    ]
+  };
+
   var mapConfig = {
     maxResolution: '9783.93962050256',
     center: [280274.03240585705, 6053178.654789996],
-    zoom: 2
+    zoom: 2,
+    servicesUrl: servicesUrl
   };
   module.constant('gnMapConfig', mapConfig);
 

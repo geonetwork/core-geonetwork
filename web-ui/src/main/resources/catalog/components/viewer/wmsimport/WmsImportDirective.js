@@ -16,7 +16,8 @@
     'gnOwsCapabilities',
     'gnMap',
     '$translate',
-    function (gnOwsCapabilities, gnMap, $translate) {
+    'gnMapConfig',
+    function (gnOwsCapabilities, gnMap, $translate, gnMapConfig) {
     return {
       restrict: 'A',
       replace: true,
@@ -25,7 +26,15 @@
       scope: {
         map: '=gnWmsImportMap'
       },
-      controller: function($scope){
+      controller: ['$scope', function($scope){
+
+        /**
+         * Transform a capabilities layer into an ol.Layer
+         * and add it to the map.
+         *
+         * @param getCapLayer
+         * @returns {*}
+         */
         this.addLayer = function(getCapLayer) {
 
           var legend, attribution;
@@ -56,16 +65,11 @@
               );
           }
         };
-      },
+      }],
       link: function (scope, element, attrs) {
 
-        //TODO: remove
-        scope.servicesList = [
-          'http://ids.pigma.org/geoserver/wms',
-          'http://ids.pigma.org/geoserver/ign/wms',
-          'http://www.ifremer.fr/services/wms/oceanographie_physique'
-        ];
-        scope.url = 'http://www.ifremer.fr/services/wms/oceanographie_physique';
+        scope.format =  attrs['gnWmsImport'];
+        scope.servicesList = gnMapConfig.servicesUrl[scope.format];
 
         scope.loading = false;
 
