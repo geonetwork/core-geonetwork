@@ -13,7 +13,7 @@
     <MergeFactor>10</MergeFactor>
 
     <!-- Default Lucene version to use (mainly for Analyzer creation). -->
-    <luceneVersion>36</luceneVersion>
+    <luceneVersion>4_9</luceneVersion>
     <!-- How often to check if a commit is required -->
     <commitInterval>30000</commitInterval>
     <!-- If true then NRTManagerReopenThread will control how often the reader are reopened.
