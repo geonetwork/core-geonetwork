@@ -1,7 +1,7 @@
 (function () {
-  goog.provide('gn_localisation');
+  goog.provide('gn_localisation_directive');
 
-  var module = angular.module('gn_localisation', [
+  var module = angular.module('gn_localisation_directive', [
   ]);
 
   /**
@@ -24,7 +24,7 @@
         map: '='
       },
       controllerAs: 'locCtrl',
-      controller: ['$scope', '$http', function($scope, $http){
+      controller: ['$scope', '$http', 'gnGetCoordinate', function($scope, $http, gnGetCoordinate){
 
         var zoomTo = function(extent, map) {
           map.getView().fitExtent(extent, map.getSize());
@@ -35,8 +35,28 @@
           $scope.collapsed = true;
         };
 
+        /**
+         * Request geonames search. Trigger when user changes
+         * the search input.
+         *
+         * @param query string value of the search input
+         */
         this.search = function(query) {
           if(query.length < 3) return;
+
+          var coord = gnGetCoordinate($scope.map.getView().getProjection().getExtent(), query);
+
+          if(coord) {
+            function moveTo(map, zoom, center) {
+              var view = map.getView();
+
+              view.setZoom(zoom);
+              view.setCenter(center);
+            }
+            moveTo($scope.map, 5, ol.proj.transform(coord, 'EPSG:4326', 'EPSG:3857'));
+            return;
+          }
+
           var url = 'http://api.geonames.org/searchJSON';
           $http.get(url, {
             params: {
@@ -54,14 +74,12 @@
             $scope.results = [];
             for(var i=0;i<response.geonames.length;i++) {
               loc = response.geonames[i];
-              if($.inArray(response.geonames[i],$scope.results) === -1) {
-                $scope.results.push({
-                  name: loc.toponymName,
-                  region: loc.adminName1,
-                  country: loc.countryName,
-                  extent: ol.proj.transform([loc.bbox.west, loc.bbox.south, loc.bbox.east, loc.bbox.north], 'EPSG:4326', 'EPSG:3857')
-                });
-              }
+              $scope.results.push({
+                name: loc.toponymName,
+                region: loc.adminName1,
+                country: loc.countryName,
+                extent: ol.proj.transform([loc.bbox.west, loc.bbox.south, loc.bbox.east, loc.bbox.north], 'EPSG:4326', 'EPSG:3857')
+              });
             }
           });
         };
