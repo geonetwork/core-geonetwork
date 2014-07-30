@@ -143,7 +143,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -3299,7 +3298,7 @@ public class DataManager {
      * @param value
      */
     private static void addElement(Element root, String name, Object value) {
-        root.addContent(new Element(name).setText(value.toString()));
+        root.addContent(new Element(name).setText(value == null ? "" : value.toString()));
     }
 
 
