@@ -87,7 +87,8 @@
 
   module.directive('gnKmlImport', [
     'goDecorateLayer',
-    function (goDecorateLayer) {
+      'gnAlertService',
+    function (goDecorateLayer, gnAlertService) {
       return {
         restrict: 'A',
         replace: true,
@@ -119,7 +120,8 @@
               url: proxyUrl
             });
             var vector = new ol.layer.Vector({
-              source: kmlSource
+              source: kmlSource,
+              label: 'Fichier externe : ' + url.split('/').pop()
             });
 
             var listenerKey = kmlSource.on('change', function() {
@@ -127,6 +129,7 @@
                 kmlSource.unByKey(listenerKey);
                 $scope.addToMap(vector, map);
                 $scope.validUrl = true;
+                $scope.url = '';
               }
               else if (kmlSource.getState() == 'error') {
                 $scope.validUrl = false;
@@ -141,6 +144,12 @@
             map.getLayers().push(layer);
             map.getView().fitExtent(layer.getSource().getExtent(),
                 map.getSize());
+
+            gnAlertService.addAlert({
+              msg: 'Une couche ajoutée : <strong>'+layer.get('label')+'</strong>',
+              type: 'success'
+            });
+
           };
         }],
         link: function (scope, element, attrs) {
@@ -160,8 +169,12 @@
 
           scope.map.getInteractions().push(dragAndDropInteraction);
           dragAndDropInteraction.on('addfeatures', function(event) {
-            // FIXME add error handling message
             if (!event.features || event.features.length == 0) {
+              gnAlertService.addAlert({
+                msg: 'Import impossible',
+                type: 'danger'
+              });
+              scope.$apply();
               return;
             }
             var vectorSource = new ol.source.Vector({
@@ -173,6 +186,7 @@
               label: 'Fichier local : ' + event.file.name
             });
             scope.addToMap(layer, scope.map);
+            scope.$apply();
           });
         }
       };

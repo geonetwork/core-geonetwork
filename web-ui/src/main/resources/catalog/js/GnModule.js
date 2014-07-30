@@ -23,6 +23,7 @@
   goog.require('gn_search_form_controller');
   goog.require('gn_search_manager');
   goog.require('gn_utility');
+  goog.require('gn_alert');
 
   var module = angular.module('gn', [
     'ngRoute',
@@ -38,7 +39,8 @@
     'gn_form_fields_directive',
     'gn_map',
     'gn_search_form_controller',
-    'gn_needhelp'
+    'gn_needhelp',
+    'gn_alert'
   ]);
 
   module.constant('$LOCALES', ['core']);
