@@ -1464,19 +1464,6 @@ public class SearchManager {
                     doc.add(fForFacet);
                 }
                 doc.add(f);
-
-                // Add value to the taxonomy
-//                // TODO : Add all facets whatever the types
-//                for (Map<String, FacetConfig> facets : _luceneConfig.getTaxonomy().values()) {
-//                    if (facets.containsKey(name)) {
-//                        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-//                            Log.debug(Geonet.INDEX_ENGINE, "Add category path: " + name + FACET_FIELD_SUFFIX + " with " + string);
-//                        }
-//                        categories.add(new CategoryPath(name + FACET_FIELD_SUFFIX, string));
-//
-//                        break;
-//                    }
-//                }
             }
         }
         
