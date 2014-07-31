@@ -149,7 +149,6 @@
               msg: 'Une couche ajoutée : <strong>'+layer.get('label')+'</strong>',
               type: 'success'
             });
-
           };
         }],
         link: function (scope, element, attrs) {
