@@ -91,9 +91,6 @@ class TaxonomyIndexTracker {
     Document addDocument(Document doc, Collection<CategoryPath> categories) {
         Document docAfterFacetBuild = null;
         try {
-//          LUCENE49FIX  FacetFields facetFields = new FacetFields(taxonomyWriter);
-//            facetFields.addFields(doc, categories);
-//            taxonomyWriter.commit();
             docAfterFacetBuild = config.build(taxonomyWriter, doc);
             if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
                 Log.debug(Geonet.INDEX_ENGINE, "Taxonomy writer: " + taxonomyWriter.toString());
