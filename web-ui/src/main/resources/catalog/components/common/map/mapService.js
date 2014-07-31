@@ -25,11 +25,10 @@
         return {
 
           importProj4js: function() {
-            Proj4js.defs['EPSG:3857'] = Proj4js.defs['EPSG:900913'];
-            if (Proj4js && gnConfig['map.proj4js'] &&
-                angular.isArray(gnConfig['map.proj4js'])) {
+            proj4.defs("EPSG:2154","+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
+            if (proj4 && angular.isArray(gnConfig['map.proj4js'])) {
               angular.forEach(gnConfig['map.proj4js'], function(item) {
-                Proj4js.defs[item.code] = item.value;
+                proj4.defs(item.code,item.value);
               });
             }
           },
