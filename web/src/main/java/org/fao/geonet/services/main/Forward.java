@@ -77,7 +77,7 @@ public class Forward implements Service
 		//--- do we need to authenticate?
 
 		if (username != null)
-			authenticate(req, username, password, type);
+			authenticate(context, req, username, password, type);
 
 		Lib.net.setupProxy(context, req);
 
@@ -97,13 +97,46 @@ public class Forward implements Service
 
 	//--------------------------------------------------------------------------
 
-	private void authenticate(XmlRequest req, String username, String password,
-									  String type) throws Exception
+	private void authenticate(ServiceContext context, XmlRequest req, String username, String password, String type) throws Exception
 	{
-		//--- set basic/digest credentials
-		req.setCredentials(username, password);
-
+    if (type.equals("geonetwork")) {
+      String addr = req.getAddress();
+      int    pos  = addr.lastIndexOf('/');
+      String addrBase = addr.substring(0,pos +1);
+      try {
+        context.info("Login check using service : "+req.getAddress()+ " on host "+req.getHost()+" port "+req.getPort());
+        req.setCredentials(username, password);
+        req.setAddress(addrBase+Geonet.Service.XML_INFO+"?type=me");
+        Element response = req.execute();
+        if (!response.getName().equals("info") 
+              || response.getChild("me") == null) {
+          pre29Login(context, addrBase, req, username, password);
+        } else if (!"true".equals(response.getChild("me").getAttributeValue("authenticated"))) {
+          throw new UserNotFoundEx(username);
+        }
+      } catch (Exception e) {
+        pre29Login(context, addrBase, req, username, password);
+      }
+      req.setAddress(addr);
+    } else {
+		  //--- set basic/digest credentials
+		  req.setCredentials(username, password);
+    }
 	}
+
+	//--------------------------------------------------------------------------
+
+  private void pre29Login(ServiceContext context, String addrBase, XmlRequest req, String username, String password) throws Exception
+  {
+      context.info("Login using pre-2.9 service "+Geonet.Service.XML_LOGIN);
+      req.setAddress(addrBase+Geonet.Service.XML_LOGIN);
+      req.addParam("username", username);
+      req.addParam("password", password);
+
+      Element response = req.execute();
+      if (!response.getName().equals("ok"))
+        throw new UserNotFoundEx(username);
+  }   
 }
 
 //=============================================================================
