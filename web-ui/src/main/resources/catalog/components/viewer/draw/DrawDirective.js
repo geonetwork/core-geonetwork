@@ -125,12 +125,6 @@
             scope.$apply();
           };
 
-          var disableDrawing = function() {
-            scope.drawPolygon.active = false;
-            scope.drawPoint.active = false;
-            scope.drawLine.active = false;
-          };
-
           var drawPolygon = new ol.interaction.Draw(({
                 type: 'Polygon',
                 source: source
@@ -208,7 +202,12 @@
               if (val) {
                 map.addLayer(vector);
               } else {
-                disableDrawing();
+                drawPolygon.active = false;
+                drawPoint.active = false;
+                drawLine.active = false;
+                drawText.active = false;
+                deleteF = false;
+                scope.modifying = false;
               }
             }
           });
