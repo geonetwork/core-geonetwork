@@ -4,7 +4,7 @@
       <span class="fa fa-cog"></span>
     </button>
     <label><input type="checkbox" ng-model="layer.visible" />
-      {{layer.get('label')}}
+      <span data-ng-click="gnLayermanagerCtrl.showMetadata(layer.get('metadata'), layer.get('label'))">{{layer.get('label')}}</span>
     </label>
     <div class="details">
       <button class="btn btn-default delete" ng-click="map.removeLayer(layer)">
