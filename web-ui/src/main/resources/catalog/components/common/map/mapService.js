@@ -191,6 +191,7 @@
               source: source,
               legend: options.legend,
               attribution: options.attribution,
+              metadata: options.metadata,
               label: options.label
             });
             // TODO : move this into layer definition (maybe into an object)

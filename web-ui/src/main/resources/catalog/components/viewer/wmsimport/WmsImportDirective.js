@@ -37,7 +37,7 @@
          */
         this.addLayer = function(getCapLayer) {
 
-          var legend, attribution;
+          var legend, attribution, metadata;
           if (getCapLayer) {
             var layer = getCapLayer;
 
@@ -52,6 +52,9 @@
                 attribution = layer.Attribution.Title;
               }
             }
+            if(angular.isArray(layer.MetadataURL)) {
+              metadata = layer.MetadataURL[0].OnlineResource;
+            }
 
             return gnMap.addWmsToMap($scope.map, {
                     LAYERS: layer.Name
@@ -60,6 +63,7 @@
                     label: layer.Title,
                     attribution: attribution,
                     legend: legend,
+                    metadata: metadata,
                     extent: gnOwsCapabilities.getLayerExtentFromGetCap($scope.map, layer)
                   }
               );
