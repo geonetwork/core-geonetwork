@@ -67,7 +67,7 @@
         };
         $scope.zoomToMaxExtent = function(map) {
           map.getView().setResolution(gnMapConfig.maxResolution);
-        }
+        };
       }]);
 
   var servicesUrl = {
@@ -89,12 +89,20 @@
   };
   module.constant('gnMapConfig', mapConfig);
 
-  var bgLayer = new ol.layer.Tile({
+  var osmLayer = new ol.layer.Tile({
     source: new ol.source.OSM(),
     title: 'OpenStreetMap'
   });
-  bgLayer.displayInLayerManager = false;
-  bgLayer.background = true;
+  osmLayer.displayInLayerManager = false;
+  osmLayer.background = true;
+
+  var mqLayer = new ol.layer.Tile({
+    style: 'Road',
+    source: new ol.source.MapQuest({layer: 'osm'}),
+    title: 'MapQuest'
+  });
+  mqLayer.displayInLayerManager = false;
+  mqLayer.background = true;
 
   var bingSatellite = new ol.layer.Tile({
     preload: Infinity,
@@ -107,7 +115,7 @@
   bingSatellite.displayInLayerManager = false;
   bingSatellite.background = true;
 
-  module.constant('gnBackgroundLayers', [bgLayer, bingSatellite]);
+  module.constant('gnBackgroundLayers', [mqLayer, osmLayer, bingSatellite]);
 
   module.controller('toolsController',
       ['$scope', 'gnMeasure',
