@@ -177,9 +177,7 @@
 
             var source = new ol.source.TileWMS({
               params: layerParams,
-              url: options.url,
-              extent: options.extent,
-              ratio: options.ratio || 1
+              url: options.url
             });
 
             var olLayer = new ol.layer.Tile({
@@ -191,9 +189,9 @@
               legend: options.legend,
               attribution: options.attribution,
               metadata: options.metadata,
-              label: options.label
+              label: options.label,
+              extent: options.extent
             });
-            // TODO : move this into layer definition (maybe into an object)
             goDecorateLayer(olLayer);
             olLayer.displayInLayerManager = true;
 

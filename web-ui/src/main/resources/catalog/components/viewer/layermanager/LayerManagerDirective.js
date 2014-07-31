@@ -65,6 +65,12 @@
           }
         },
 
+        this.zoomToExtent = function(layer, map) {
+          if(layer.getExtent()) {
+            map.getView().fitExtent(layer.getExtent(), map.getSize());
+          }
+        },
+
         /**
          * Set a property to the layer 'showInfo' to true and
          * false to all other layers. Used to display layer information

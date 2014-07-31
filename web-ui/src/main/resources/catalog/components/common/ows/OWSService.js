@@ -97,10 +97,14 @@
             var layer = getCapLayer;
             var srsCode = map.getView().getProjection().getCode();
 
-            if (layer.bbox) {
-              if (srsCode.toUpperCase() in layer.bbox) {
-                extent = layer.bbox[srsCode.toUpperCase()].bbox;
-              }
+            //var ext = layer.BoundingBox[0].extent;
+            //var olExtent = [ext[1],ext[0],ext[3],ext[2]];
+            // TODO fix using layer.BoundingBox[0].extent when sextant fix his capabilities
+            if (angular.isArray(layer.BoundingBox)) {
+              extent= ol.proj.transform(layer.EX_GeographicBoundingBox,
+                  //layer.BoundingBox[0].crs,
+                  'EPSG:4326',
+                  srsCode);
             }
             return extent;
           },
