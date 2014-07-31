@@ -12,6 +12,11 @@ import org.apache.lucene.search.FieldComparatorSource;
 import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.util.packed.PackedInts.Reader;
 
+/**
+ * TODO: it may be relevant to use
+ * http://lucene.apache.org/core/4_9_0/analyzers-common/org/apache/lucene/collation/CollationKeyAnalyzer.html
+ * instead ?
+ */
 public class CaseInsensitiveFieldComparatorSource extends FieldComparatorSource {
 
     private static final CaseInsensitiveFieldComparatorSource languageInsensitiveInstance         = new CaseInsensitiveFieldComparatorSource(null);
@@ -109,13 +114,15 @@ public class CaseInsensitiveFieldComparatorSource extends FieldComparatorSource 
 
         private String readerValue(int doc) {
             String term = null;
+
             int ord = shadowValues.getOrd(doc);
-            if(ord != 0) {
+            if(ord != -1) {
                 term = shadowValues.lookupOrd(ord).utf8ToString().trim();
             }
+
             if(term == null || term.isEmpty()) {
                 ord = currentReaderValues.getOrd(doc);
-                if (ord != 0) {
+                if (ord != -1) {
                     term = currentReaderValues.lookupOrd(ord).utf8ToString().trim();
                 } else {
                     return null;
@@ -139,7 +146,8 @@ public class CaseInsensitiveFieldComparatorSource extends FieldComparatorSource 
 
         @Override
         public FieldComparator<String> setNextReader(AtomicReaderContext context) throws IOException {
-           currentReaderValues = FieldCache.DEFAULT.getTermsIndex(context.reader(), field);
+          currentReaderValues = FieldCache.DEFAULT.getTermsIndex(context.reader(), field);
+
           if(searchLang != null) {
               this.shadowValues = FieldCache.DEFAULT.getTermsIndex(context.reader(), LuceneConfig.multilingualSortFieldName(field, searchLang));
           } else {
