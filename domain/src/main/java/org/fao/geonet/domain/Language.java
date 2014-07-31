@@ -17,6 +17,7 @@ import javax.persistence.*;
 @Entity
 @Access(AccessType.PROPERTY)
 @Table(name = "Languages")
+@Cacheable
 @EntityListeners(LanguageEntityListenerManager.class)
 public class Language extends GeonetEntity {
     String _id;

@@ -23,6 +23,7 @@
 
 package org.fao.geonet.kernel.search;
 
+import com.google.common.collect.Maps;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
 import jeeves.constants.Jeeves;
@@ -51,10 +52,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.AccessManager;
@@ -287,7 +285,9 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
 						md = LuceneSearcher.getMetadataFromIndex(doc, id, true, _language.presentationLanguage, _luceneConfig.getMultilingualSortFields(), _luceneConfig.getDumpFields());
 					    
 						// Retrieve dynamic properties according to context (eg. editable)
-                        gc.getBean(DataManager.class).buildPrivilegesMetadataInfo(srvContext, id, md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE));
+                        Map<String, Element> map = Maps.newHashMap();
+                        map.put(id, md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE));
+                        gc.getBean(DataManager.class).buildPrivilegesMetadataInfo(srvContext, map);
                     }
                     else if (srvContext != null) {
                         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;
@@ -1427,8 +1427,8 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
         Element info = md.getChild(Edit.RootChild.INFO, Edit.NAMESPACE);
 
         if ( us.getProfile() == Profile.Administrator) {
-            info.addContent(new Element(Edit.Info.Elem.DOWNLOAD).setText("true"));
-            info.addContent(new Element(Edit.Info.Elem.DYNAMIC).setText("true"));
+            info.addContent(new Element(ReservedOperation.download.name()).setText("true"));
+            info.addContent(new Element(ReservedOperation.dynamic.name()).setText("true"));
 
         } else {
             // Owner
@@ -1447,8 +1447,8 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             }
 
             if (isOwner) {
-                info.addContent(new Element(Edit.Info.Elem.DOWNLOAD).setText("true"));
-                info.addContent(new Element(Edit.Info.Elem.DYNAMIC).setText("true"));
+                info.addContent(new Element(ReservedOperation.download.name()).setText("true"));
+                info.addContent(new Element(ReservedOperation.dynamic.name()).setText("true"));
 
             } else {
                 // Download
@@ -1456,7 +1456,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 for (IndexableField f : values) {
                     if (f != null) {
                         if (userGroups.contains(Integer.parseInt(f.stringValue()))) {
-                            info.addContent(new Element(Edit.Info.Elem.DOWNLOAD).setText("true"));
+                            info.addContent(new Element(ReservedOperation.download.name()).setText("true"));
                             break;
                         }
                     }
@@ -1467,7 +1467,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                 for (IndexableField f : values) {
                     if (f != null) {
                         if (userGroups.contains(Integer.parseInt(f.stringValue()))) {
-                            info.addContent(new Element(Edit.Info.Elem.DYNAMIC).setText("true"));
+                            info.addContent(new Element(ReservedOperation.dynamic.name()).setText("true"));
                             break;
                         }
                     }
