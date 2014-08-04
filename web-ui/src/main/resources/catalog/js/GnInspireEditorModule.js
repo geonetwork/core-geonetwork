@@ -42,6 +42,8 @@
   module.controller('GnInspireController', [
     '$scope', 'inspireMetadataLoader', '$translate', '$http',
     function($scope, inspireMetadataLoader, $translate, $http) {
+
+      $scope.langs = {ger: 'ger', fre:'fre', ita:'ita', eng:'eng'};
       var allowUnload = false;
       window.onbeforeunload = function() {
         if (!allowUnload) {
