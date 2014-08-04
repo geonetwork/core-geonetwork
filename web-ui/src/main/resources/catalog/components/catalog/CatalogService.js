@@ -436,6 +436,9 @@
   module.factory('Metadata', function() {
     function Metadata(k) {
       $.extend(true, this, k);
+      if(!angular.isArray(this.category)){
+        this.category = [this.category];
+      }
     };
 
     function formatLink(sLink) {

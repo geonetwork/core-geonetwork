@@ -69,11 +69,20 @@
         },
         link: function(scope, element, attrs, controller) {
 
-          var fo = new ol.FeatureOverlay();
+          /** Display fa icons for categories */
+          scope.catIcons = {
+            featureCatalogs: 'fa-table',
+            services: 'fa-cog',
+            maps: 'fa-globe',
+            staticMaps: 'fa-globe',
+            datasets: 'fa-file',
+            interactiveResources: 'fa-rss'
+          };
 
           /**
            * Draw md bbox on search
            */
+          var fo = new ol.FeatureOverlay();
           scope.$watchCollection('searchResults.records', function(rec) {
             fo.getFeatures().clear();
             if (!angular.isArray(rec)) {
