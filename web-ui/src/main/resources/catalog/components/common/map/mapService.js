@@ -67,6 +67,28 @@
             ];
           },
 
+          /**
+           * Get the extent of the md.
+           * It is stored in the object md.geoBox as a String
+           * '150|-12|160|12'.
+           * Returns it as an array of floats.
+           *
+           * @param md
+           */
+          getBboxFromMd: function(md) {
+            if(angular.isUndefined(md.geoBox)) return;
+
+            var bbox = angular.isArray(md.geoBox) ?
+                md.geoBox[0] : md.geoBox;
+            var c = bbox.split('|');
+            if(angular.isArray(c) && c.length == 4) {
+              return [parseFloat(c[0]),
+                parseFloat(c[1]),
+                parseFloat(c[2]),
+                parseFloat(c[3])];
+            }
+          },
+
           getMapConfig: function() {
             if (gnConfig['map.config'] &&
                 angular.isObject(gnConfig['map.config'])) {

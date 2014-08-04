@@ -16,7 +16,9 @@
     function($scope) {
 
       /** Define in the controller scope a reference to the map */
-      $scope.map = null;
+      $scope.searchObj = {
+        map: null
+      };
 
       /** Facets configuration */
       $scope.facetsConfig = {
@@ -202,9 +204,9 @@
       };
 
       // Add canton vector layer to the map when map is created
-      var unregisterMap = $scope.$watch('map', function() {
-        if($scope.map) {
-          $scope.map.addLayer(cantonVector);
+      var unregisterMap = $scope.$watch('searchObj.map', function() {
+        if($scope.searchObj.map) {
+          $scope.searchObj.map.addLayer(cantonVector);
           unregisterMap();
           delete unregisterMap;
         }
@@ -220,7 +222,7 @@
             var id = cs[i].split('#')[1];
             addCantonFeature(Math.floor((Math.random() * 10) + 1)).then(function(){
               if(--nbCantons == 0) {
-                $scope.map.getView().fitExtent(cantonSource.getExtent(), $scope.map.getSize());
+                $scope.searchObj.map.getView().fitExtent(cantonSource.getExtent(), $scope.searchObj.map.getSize());
               }
             });
           }

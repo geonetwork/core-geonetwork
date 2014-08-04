@@ -1,5 +1,5 @@
 <ul class="list-group">
-  <li class="list-group-item" data-ng-repeat="md in searchResults.records">
+  <li class="list-group-item" data-ng-repeat="md in searchResults.records" gn-display-extent-on-hover="">
     <h4>{{md.title || md.defaultTitle}}</h4>
     <p class="small">{{md.abstract}}</p>
     <img ng-src="{{md.getThumbnails().small}}" />
