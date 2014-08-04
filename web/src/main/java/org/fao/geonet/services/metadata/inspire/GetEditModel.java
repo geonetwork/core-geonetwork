@@ -275,8 +275,9 @@ public class GetEditModel implements Service {
 
         addValue(conformanceResult, conformityJson, Save.JSON_CONFORMITY_RESULT_REF, "geonet:element/@ref");
 
-        addTranslatedElement(mainLanguage, conformanceResult, getIsoLanguagesMapper(), conformityJson, Save.JSON_TITLE,
-                "gmd:specification/gmd:CI_Citation/gmd:title");
+        final boolean hasTitle = addTranslatedElement(mainLanguage, conformanceResult, getIsoLanguagesMapper(), conformityJson,
+                Save.JSON_TITLE, "gmd:specification/gmd:CI_Citation/gmd:title");
+        conformityJson.put(Save.JSON_CONFORMITY_IS_TITLE_SET, hasTitle);
 
         JSONObject date = new JSONObject();
         date.put(Save.JSON_DATE, "2010-12-08");
@@ -698,8 +699,8 @@ public class GetEditModel implements Service {
         return addedElement;
     }
 
-    private static void addTranslatedElement(String mainLanguage, Element metadata, IsoLanguagesMapper mapper, JSONObject json,
-                                             String jsonKey, String xpath) throws JDOMException,
+    private static boolean addTranslatedElement(String mainLanguage, Element metadata, IsoLanguagesMapper mapper, JSONObject json,
+                                                String jsonKey, String xpath) throws JDOMException,
             JSONException {
         JSONObject obj = new JSONObject();
 
@@ -714,6 +715,7 @@ public class GetEditModel implements Service {
         }
 
         json.put(jsonKey, obj);
+        return !nodes.isEmpty();
     }
 
     private static void addTranslationElements(IsoLanguagesMapper mapper, JSONObject obj, List<?>nodes)

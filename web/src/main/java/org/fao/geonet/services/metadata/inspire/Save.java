@@ -137,6 +137,7 @@ public class Save implements Service {
     public static final String JSON_IDENTIFICATION_CONTAINS_OPERATIONS = "containsOperations";
     public static final String JSON_IDENTIFICATION_OPERATION_NAME = "operationName";
     public static final String JSON_IDENTIFICATION_DCP_LIST = "dcpList";
+    public static final String JSON_CONFORMITY_IS_TITLE_SET = "isTitleSet";
 
     @Override
     public void init(String appPath, ServiceConfig params) throws Exception {
@@ -482,7 +483,11 @@ public class Save implements Service {
             }
         }
 
-        if (conformanceResult == null) {
+        if (!conformityJson.getBoolean(JSON_CONFORMITY_IS_TITLE_SET) && conformanceResult == null) {
+            return;
+        }
+
+        if (conformityJson.getBoolean(JSON_CONFORMITY_IS_TITLE_SET) && conformanceResult == null) {
             conformanceResult = new Element("DQ_ConformanceResult", GMD);
 
             // iso19139 allows multiple gmd:results but inspire doesn't so check that we don't add an extra unintentionally

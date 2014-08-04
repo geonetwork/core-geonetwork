@@ -9,7 +9,6 @@
             <div class="col-xs-9">
                 <select id="replaceConformance"
                         class="form-control"
-                        data-ng-change="setConformityDate()"
                         data-ng-model="data.conformity.updateResultRef"
                         data-ng-options="opt.ref as updateConformanceResultTitle(opt, lang) for opt in data.conformity.allConformanceReports">
                 </select>
@@ -31,10 +30,10 @@
         <div class="form-group">
             <label for="conformityTitle" class="col-xs-3 control-label"><span data-translate="">title</span>: </label>
 
-            <div class="col-xs-9" data-ng-class="validationClassObject(data.conformity.title)">
+            <div class="col-xs-9" data-ng-class="data.conformity.isTitleSet ? '' : validationErrorClass">
                 <select id="conformityTitle"
                         class="form-control"
-                        data-ng-change="setConformityDate()"
+                        data-ng-change="data.conformity.isTitleSet = true"
                         data-ng-model="data.conformity.title"
                         data-ng-options="opt as opt[lang] for opt in data.conformityTitleOptions">
                 </select>
