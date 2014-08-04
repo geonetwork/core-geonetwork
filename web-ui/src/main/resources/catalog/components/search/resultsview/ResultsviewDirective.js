@@ -146,7 +146,7 @@
       };
     }]);
 
-  module.directive('gnDisplayExtentOnHover', [
+  module.directive('gnDisplayextentOnhover', [
     'gnMap',
     'gnOlStyles',
     function(gnMap, gnOlStyles) {
@@ -177,6 +177,34 @@
 
           element.bind('mouseleave', function() {
             fo.getFeatures().clear();
+          });
+        }
+      };
+    }]);
+
+  module.directive('gnZoomtoOnclick', [
+    'gnMap',
+    'gnOlStyles',
+    function(gnMap, gnOlStyles) {
+
+      return {
+        restrict: 'A',
+        link: function(scope, element, attrs, controller) {
+
+          var fo = new ol.FeatureOverlay({
+            style: gnOlStyles.bbox
+          });
+          var feat = new ol.Feature();
+
+          element.bind('dblclick', function() {
+
+            var extent = gnMap.getBboxFromMd(scope.md);
+            if(extent) {
+              extent = ol.proj.transformExtent(extent,
+                  'EPSG:4326',
+                  scope.map.getView().getProjection());
+              scope.map.getView().fitExtent(extent, scope.map.getSize());
+            }
           });
         }
       };
