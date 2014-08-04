@@ -159,18 +159,27 @@
 
 			function doTabAction(action, tab)
 			{
-				document.mainForm.currTab.value = tab;
-
               if (/.*\/metadata\.(edit)|(update)|(create).*/.test(window.location) && tab === 'inspire') {
                 var metadataId = document.mainForm.id.value;
-                doSaveAction(action, undefined, function() {
-                  disableEditForm();
-                  window.location.href = 'inspire.edit?id=' + metadataId;
-                });
+                var myAjax = new Ajax.Request(
+                  getGNServiceURL(action),
+                  {
+                    method: 'post',
+                    parameters: $('editForm').serialize(true),
+                    onSuccess: function (req) {
+                      window.location.href = 'inspire.edit?id=' + metadataId;
+                    },
+                    onFailure: function(req) {
+                      alert(translate("errorSaveFailed") + "/ status " + req.status + " text: " + req.statusText + " - " + translate("tryAgain"));
+                      Element.remove($("editorOverlay"));
+                      setBunload(true); // reset warning for window destroy
+                    }
+                  });
+                document.getElementsByTagName("body")[0].innerHTML = '<img src="' + Env.url + '/images/spinner.gif"></img>';
 
                 return;
               }
-
+              document.mainForm.currTab.value = tab;
               doAction(action);
 			}
 
