@@ -9,26 +9,9 @@
             restrict: 'A',
             templateUrl: '../../catalog/components/search/map/' +
                 'partials/mapfield.html',
-            scope: {
-              map: '=gnMapField'
-            },
-            controller: ['$scope', 'goDecorateInteraction',
-              function($scope, goDecorateInteraction) {
-                var map = new ol.Map({
-                  layers: [
-                    new ol.layer.Tile({
-                      source: new ol.source.OSM()
-                    })
-                  ],
-                  view: new ol.View({
-                    center: [-10997148, 4569099],
-                    zoom: 1
-                  })
-                });
-                $scope.map = map;
-              }],
             link: function(scope, element, attrs) {
 
+              scope.map = scope.$eval(attrs['gnMapField']);
               scope.zoom = function(delta) {
                 scope.map.getView().setZoom(scope.map.getView().getZoom()+ delta);
               };

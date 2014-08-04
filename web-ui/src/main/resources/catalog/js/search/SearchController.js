@@ -38,9 +38,17 @@
     function($scope) {
 
       /** Define in the controller scope a reference to the map */
-      $scope.searchObj = {
-        map: null
-      };
+      $scope.map = new ol.Map({
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.OSM()
+          })
+        ],
+        view: new ol.View({
+          center: [-10997148, 4569099],
+          zoom: 1
+        })
+      });
 
       /** Facets configuration */
       $scope.facetsConfig = {
@@ -104,15 +112,7 @@
           cantonSource.addFeature(feature);
         });
       };
-
-      // Add canton vector layer to the map when map is created
-      var unregisterMap = $scope.$watch('searchObj.map', function() {
-        if($scope.searchObj.map) {
-          $scope.searchObj.map.addLayer(cantonVector);
-          unregisterMap();
-          delete unregisterMap;
-        }
-      });
+      $scope.map.addLayer(cantonVector);
 
       // Request cantons geometry and zoom to extent when
       // all requests respond.
@@ -124,7 +124,7 @@
             var id = cs[i].split('#')[1];
             addCantonFeature(Math.floor((Math.random() * 10) + 1)).then(function(){
               if(--nbCantons == 0) {
-                $scope.searchObj.map.getView().fitExtent(cantonSource.getExtent(), $scope.searchObj.map.getSize());
+                $scope.map.getView().fitExtent(cantonSource.getExtent(), $scope.map.getSize());
               }
             });
           }

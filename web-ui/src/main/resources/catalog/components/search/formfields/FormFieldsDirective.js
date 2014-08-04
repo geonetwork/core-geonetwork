@@ -110,14 +110,16 @@
           return {
             restrict: 'A',
             scope: {
-              field: '@gnSearchSuggest'
+              field: '@gnSearchSuggest',
+              startswith: '@gnSearchSuggestStartswith'
             },
             link: function(scope, element, attrs) {
               element.tagsinput({
               });
               element.tagsinput('input').typeahead({
                 remote:{
-                  url :suggestService.getUrl('QUERY', scope.field, 'ALPHA'),
+                  url : suggestService.getUrl('QUERY', scope.field,
+                          (scope.startswith ?'STARTSWITHFIRST' : 'ALPHA')),
                   filter: suggestService.filterResponse,
                   wildcard: 'QUERY'
                 }
