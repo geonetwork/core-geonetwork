@@ -4,12 +4,8 @@
 
   var module = angular.module('placeholder_polyfill_directive', []);
 
-  module.directive('placeholder', function ($timeout) {
-    "use strict";
+  module.directive('placeholder', ['$timeout', function ($timeout) {
     var update = function (element) {
-      if (!element) {
-        element = elm;
-      }
       var val = element.val();
       var placeholder = val === element.attr('placeholder');
       if (!placeholder) {
@@ -46,7 +42,7 @@
             });
 
             if (attrs.ngModel) {
-              scope.$watch(attrs.ngModel, function(newValue) {
+              scope.$watch(attrs.ngModel, function() {
                 update(elm);
               });
             }
@@ -54,7 +50,7 @@
         });
       }
     };
-  });
+  }]);
 
 
 }());

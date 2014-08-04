@@ -14,7 +14,7 @@
 
   var deps = [ 'gn', 'inspire_contact_directive', 'inspire_multilingual_text_directive', 'inspire_metadata_factory',
     'inspire_get_shared_users_factory', 'inspire_get_keywords_factory', 'inspire_get_extents_factory',
-    'inspire_date_picker_directive'];
+    'inspire_date_picker_directive', 'placeholder_polyfill_directive'];
 
   var placeholderPolyfillRequired = document.createElement("input").placeholder === undefined;
   if (placeholderPolyfillRequired) {
@@ -171,7 +171,7 @@
           data: finalData,
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}
         }).success(function (data) {
-          if (typeof data[0] == 'string') {
+          if (typeof data[0] === 'string') {
 
             if (waitDialog) {
               waitDialog.modal('hide');
@@ -250,7 +250,7 @@
       };
 
       $scope.linkToOtherKeyword = function() {
-        var thesaurus = $scope.data.identification.type == 'data' ? dataThesaurus : serviceThesaurus;
+        var thesaurus = $scope.data.identification.type === 'data' ? dataThesaurus : serviceThesaurus;
 
         var keyword = $scope.selectedKeyword;
         $scope.keywordUnderEdit.code = keyword.code;
@@ -264,7 +264,7 @@
         var keyword, i, keywords, thesaurus, valid = false;
         keywords = $scope.data.identification.descriptiveKeywords;
 
-        thesaurus = $scope.data.identification.type == 'data' ? dataThesaurus : serviceThesaurus;
+        thesaurus = $scope.data.identification.type === 'data' ? dataThesaurus : serviceThesaurus;
 
         for (i = 0; i < keywords.length; i++) {
           keyword = keywords[i];
@@ -436,7 +436,7 @@
     '$scope', '$translate', function($scope, $translate) {
 
       $scope.validationClassObject = function(model) {
-        var cls, elem, i;
+        var elem, i;
         for (i in model) {
           if (model.hasOwnProperty(i)) {
             elem = model[i];
@@ -476,13 +476,14 @@
       $scope.updateConformanceResultTitle = function(desc, mainLang) {
         if (desc.title[mainLang]) {
           return desc.title[mainLang];
-        } else if (desc.title[$scope.data.language]) {
-          return desc.title[$scope.data.language];
-        } else if (desc.title.length > 0) {
-          return desc.title[0];
-        } else {
-          return desc.ref;
         }
+        if (desc.title[$scope.data.language]) {
+          return desc.title[$scope.data.language];
+        }
+        if (desc.title.length > 0) {
+          return desc.title[0];
+        }
+        return desc.ref;
       };
   }]);
 
@@ -491,32 +492,33 @@
 
       $scope.$watch('link', function(newVal) {
         var lang, url;
+        var errorHandler = function () {
+          $scope.isValidURL = false;
+        };
         $scope.isValidURL = undefined;
 
         for (lang in newVal.localizedURL) {
-          if ($scope.isValidURL === undefined) {
-              $scope.isValidURL = true;
-          }
           if (newVal.localizedURL.hasOwnProperty(lang) &&
               $scope.data.otherLanguages.indexOf(lang) > -1) {
+            if ($scope.isValidURL === undefined) {
+              $scope.isValidURL = true;
+            }
             url = newVal.localizedURL[lang];
             if (!/\S+/.test(url)) {
               if (lang === $scope.data.language) {
                 $scope.isValidURL = false;
               }
             } else {
-              $http.head("../../proxy?url=" + encodeURIComponent(url)).error(function () {
-                $scope.isValidURL = false;
-              });
+              $http.head("../../proxy?url=" + encodeURIComponent(url)).error(errorHandler);
             }
           } else {
-            delete newVal.localizedURL[lang]
+            delete newVal.localizedURL[lang];
           }
         }
       }, true);
       $scope.deleteLink = function(link) {
         delete link.localizedURL;
-      }
+      };
   }]);
 
 
