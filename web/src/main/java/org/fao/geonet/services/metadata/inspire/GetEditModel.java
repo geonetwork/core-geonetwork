@@ -968,13 +968,19 @@ public class GetEditModel implements Service {
         }
     };
 
-    private final JsonEncoder extentJsonEncoder = new JsonEncoder() {
+    final JsonEncoder extentJsonEncoder = new JsonEncoder() {
         final Pattern typenamePattern = Pattern.compile("typename=([^&]+)");
+        /**
+         * don't forget to update {@link org.fao.geonet.services.metadata.inspire.Save.ExtentHrefBuilder}
+         */
         Map<String, String> typenameMapper = Maps.newHashMap();
         {
             typenameMapper.put("gn:countries", "country");
             typenameMapper.put("gn:kantoneBB", "kantone");
             typenameMapper.put("gn:gemeindenBB", "gemeinden");
+            typenameMapper.put("gn:xlinks", "xlinks");
+            typenameMapper.put("gn:non_validated", "non_validated");
+            //
         }
 
         @Override
@@ -998,6 +1004,9 @@ public class GetEditModel implements Service {
                         throw new AssertionError("Unable to extract the typename in extent href: " + href);
                     }
                     String featureType = typenameMapper.get(matcher.group(1));
+                    if (featureType == null) {
+                        throw new RuntimeException(matcher.group(1) + " is not a recognized featuretype of geonetwork");
+                    }
                     json.put(Save.JSON_IDENTIFICATION_EXTENT_GEOM, featureType + ":" + id);
                 }
             }

@@ -1175,13 +1175,18 @@ public class Save implements Service {
         }
     }
 
-    private static class ExtentHrefBuilder implements HrefBuilder {
+    static class ExtentHrefBuilder implements HrefBuilder {
+        /**
+         * Don't forget to update {@link org.fao.geonet.services.metadata.inspire.GetEditModel#extentJsonEncoder}
+         */
         Map<String, String> typenameMapping = Maps.newHashMap();
 
         {
             typenameMapping.put("kantone", "kantoneBB");
             typenameMapping.put("gemeinden", "gemeindenBB");
             typenameMapping.put("country", "countries");
+            typenameMapping.put("xlinks", "xlinks");
+            typenameMapping.put("non_validated", "non_validated");
         }
 
         @Override
