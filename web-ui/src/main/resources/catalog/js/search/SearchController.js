@@ -11,6 +11,28 @@
           'gn_searchsuggestion_service'
       ]);
 
+  module.constant('gnOlStyles',{
+    bbox: new ol.style.Style({
+      stroke: new ol.style.Stroke({
+        color: 'rgba(255,0,0,1)',
+        width: 2
+      }),
+      fill: new ol.style.Fill({
+        color: 'rgba(255,0,0,0.3)'
+      }),
+      image: new ol.style.Circle({
+        radius: 7,
+        fill: new ol.style.Fill({
+          color: 'rgba(255,0,0,1)'
+        })
+      })
+    })
+  });
+
+  /**
+   * Main search controller attached to the first element of the
+   * included html file from the base-layout.xsl output.
+   */
   module.controller('GnSearchController', [
     '$scope',
     function($scope) {
@@ -37,129 +59,10 @@
       $scope.resultTemplate = '../../catalog/components/search/resultsview/partials/viewtemplates/thumb.html';
     }]);
 
-  module.directive('gnSearchSuggest',
-      ['suggestService',
-        function(suggestService) {
-          return {
-            restrict: 'A',
-            scope: {
-              field: '@gnSearchSuggest'
-            },
-            link: function(scope, element, attrs) {
-              element.tagsinput({
-              });
-              element.tagsinput('input').typeahead({
-                remote:{
-                  url :suggestService.getUrl('QUERY', scope.field, 'ALPHA'),
-                  filter: suggestService.filterResponse,
-                  wildcard: 'QUERY'
-                }
-              }).bind('typeahead:selected', $.proxy(function (obj, datum) {
-                this.tagsinput('add', datum.value);
-                this.tagsinput('input').typeahead('setQuery', '');
-              }, element));
-            }
-          }
-  }]);
-
-  module.directive('gnRegionMultiselect',
-      ['gnRegionService',
-        function(gnRegionService) {
-          return {
-            restrict: 'A',
-            scope: {
-              field: '@gnRegionMultiselect',
-              callback: '=gnCallback'
-            },
-            link: function(scope, element, attrs) {
-              var type = {
-                id: 'http://geonetwork-opensource.org/regions#'+scope.field
-              };
-              gnRegionService.loadRegion(type, 'fre').then(
-                  function(data) {
-
-                    $(element).tagsinput({
-                      itemValue:'id',
-                      itemText: 'name'
-                    });
-                    var field = $(element).tagsinput('input');
-                    field.typeahead({
-                      valueKey: 'name',
-                      local: data,
-                      minLength: 0,
-                      limit: 5
-                    }).on('typeahead:selected', function(event, datum) {
-                      $(element).tagsinput('add', datum);
-                      field.typeahead('setQuery', '');
-                    });
-
-                    $('input.tt-query')
-                        .on('click', function() {
-                          var $input = $(this);
-
-                          // these are all expected to be objects
-                          // so falsey check is fine
-                          if (!$input.data() || !$input.data().ttView ||
-                              !$input.data().ttView.datasets ||
-                              !$input.data().ttView.dropdownView ||
-                              !$input.data().ttView.inputView) {
-                            return;
-                          }
-
-                          var ttView = $input.data().ttView;
-
-                          var toggleAttribute = $input.attr('data-toggled');
-
-                          if (!toggleAttribute || toggleAttribute === 'off') {
-                            $input.attr('data-toggled', 'on');
-
-                            $input.typeahead('setQuery', '');
-
-                            if ($.isArray(ttView.datasets) &&
-                                ttView.datasets.length > 0) {
-                              // only pulling the first dataset for this hack
-                              var fullSuggestionList = [];
-                              // renderSuggestions expects a
-                              // suggestions array not an object
-                              $.each(ttView.datasets[0].itemHash, function(i, item) {
-                                fullSuggestionList.push(item);
-                              });
-
-                              ttView.dropdownView.renderSuggestions(
-                                  ttView.datasets[0], fullSuggestionList);
-                              ttView.inputView.setHintValue('');
-                              ttView.dropdownView.open();
-                            }
-                          }
-                          else if (toggleAttribute === 'on') {
-                            $input.attr('data-toggled', 'off');
-                            ttView.dropdownView.close();
-                          }
-                        });
-
-                  });
-            }
-          }
-        }]);
-
-  module.constant('gnOlStyles',{
-    bbox: new ol.style.Style({
-      stroke: new ol.style.Stroke({
-        color: 'rgba(255,0,0,1)',
-        width: 2
-      }),
-      fill: new ol.style.Fill({
-        color: 'rgba(255,0,0,0.3)'
-      }),
-      image: new ol.style.Circle({
-        radius: 7,
-        fill: new ol.style.Fill({
-          color: 'rgba(255,0,0,1)'
-        })
-      })
-    })
-  })
-
+  /**
+   * Specific geocat search form controller, attached to the root node of the search form,
+   * in the searchForm.html view.
+   */
   module.controller('gocatSearchFormCtrl', [
     '$scope',
       'gnHttp',
@@ -169,9 +72,8 @@
       'suggestService',
       '$http',
       'gnOlStyles',
+
     function($scope, gnHttp, gnHttpServices, gnRegionService, $timeout, suggestService,$http, gnOlStyles) {
-
-
 
       $scope.types = ['any',
         'dataset',
