@@ -4,9 +4,10 @@
     <div data-ng-class="title ? [cls, 'col-xs-9'] : [cls, 'col-xs-12']">
         <div data-placeholder-input
              data-parent="field"
+             data-ng-class="editLang === 'all' ? 'show-all' : ''"
              data-field="{{lang}}"
              data-rows="{{rows}}"
-             data-index="{{$index}}"
+             placeholder-placement-class="{{'placeholder-offset-' + $index}}"
              data-disabled="{{disabled}}"
              data-placeholder="{{placeholder ? placeholder + ' -- ' : ''}}{{lang | translate}}"
              data-validation-class="{{validationClass}}"

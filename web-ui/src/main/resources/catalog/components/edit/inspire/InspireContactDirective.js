@@ -18,6 +18,7 @@
 
       $scope.updateContact = function(newContact, skipConfirm) {
         if (skipConfirm || confirm($translate('overwriteContactConfirmation'))) {
+          newContact.role = $scope.$parent.contactUnderEdit.role;
           angular.copy(newContact, $scope.$parent.contactUnderEdit);
 
           var modal = $('#editContactModal');

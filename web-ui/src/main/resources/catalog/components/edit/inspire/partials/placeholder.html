@@ -1,15 +1,14 @@
 <div>
-    <input data-ng-if="!rows || rows < 2" data-ng-disabled="{{disabled}}"
+    <input data-ng-if="!rows || rows < 2" data-ng-disabled="disabled === 'true'"
               rows="{{rows ? rows : 1}}"
               class="form-control col-xs-12 placeholder-input"
               data-ng-class="parent[field] ? '' : 'empty'"
               data-ng-model="parent[field]"></input>
-    <textarea data-ng-if="rows && rows > 1" data-ng-disabled="{{disabled}}"
+    <textarea data-ng-if="rows && rows > 1" data-ng-disabled="disabled === 'true'"
               rows="{{rows}}"
               class="form-control col-xs-12 placeholder-input"
               data-ng-class="parent[field] ? '' : 'empty'"
               data-ng-model="parent[field]"></textarea>
     <label class="placeholder"
-           data-ng-class="editLang === 'all' ? 'show-all' : ''"
-           placement="{{index ? '_' + index : undefined}}">{{placeholder}}</label>
+           data-ng-class="placeholderPlacementClass">{{placeholder}}</label>
 </div>
