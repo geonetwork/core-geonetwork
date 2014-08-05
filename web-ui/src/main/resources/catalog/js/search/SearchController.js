@@ -86,8 +86,10 @@
       'suggestService',
       '$http',
       'gnOlStyles',
+      '$location',
 
-    function($scope, gnHttp, gnHttpServices, gnRegionService, $timeout, suggestService,$http, gnOlStyles) {
+    function($scope, gnHttp, gnHttpServices, gnRegionService,
+             $timeout, suggestService,$http, gnOlStyles, $location) {
 
       $scope.types = ['any',
         'dataset',

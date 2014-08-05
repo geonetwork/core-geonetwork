@@ -19,7 +19,7 @@
   /**
    * Controller to create new metadata record.
    */
-  var searchFormController = function($scope,
+  var searchFormController = function($scope, $location,
                                       gnSearchManagerService, gnFacetService, Metadata) {
     var defaultServiceUrl = 'qi@json';
     var defaultParams = {
@@ -45,6 +45,9 @@
     $scope.hasPagination = false;
     this.activatePagination = function() {
       $scope.hasPagination = true;
+      if(!$scope.searchObj.permalink) {
+        self.resetPagination();
+      }
     };
 
     /**
@@ -74,7 +77,7 @@
       $scope.searching++;
       angular.extend($scope.searchObj.params, defaultParams);
 
-      if(!keepPagination) {
+      if(!keepPagination && !$scope.searchObj.permalink) {
         self.resetPagination();
       }
 
@@ -100,6 +103,12 @@
             if ($scope.searchResults.records.length > 0 && $scope.hasPagination) {
 
               var paging = $scope.paginationInfo;
+
+              // Means the `from` and `to` params come from permalink
+              if((paging.currentPage-1)*paging.hitsPerPage+1 != params.from) {
+                paging.currentPage = (params.from-1) / paging.hitsPerPage +1;
+              }
+
               paging.resultsCount = $scope.searchResults.count;
               paging.to = Math.min(
                   data.count,
@@ -113,6 +122,31 @@
             }
           });
     };
+
+    if($scope.searchObj.permalink) {
+      var triggerSearchFn = self.triggerSearch;
+      var init = false; // Avoid the first $locationChangeSuccess event
+
+      self.triggerSearch = function(keepPagination) {
+        if(!keepPagination) {
+          self.resetPagination();
+        }
+        if(angular.equals($scope.searchObj.params, $location.search())) {
+          triggerSearchFn();
+        }
+        else {
+          $location.search($scope.searchObj.params);
+        }
+        init = true;
+      };
+
+      $scope.$on('$locationChangeSuccess', function () {
+        if(init) {
+          $scope.searchObj.params = $location.search();
+          triggerSearchFn();
+        }
+      });
+    }
 
     /**
      * update $scope.params by merging it with given params
@@ -146,28 +180,33 @@
 
   searchFormController['$inject'] = [
     '$scope',
+    '$location',
     'gnSearchManagerService',
     'gnFacetService',
     'Metadata'
   ];
 
   module.directive('ngSearchForm', [
-    '$parse',
-    function($parse) {
+    '$location',
+    function($location) {
       return {
         restrict: 'A',
         scope: true,
         controller: searchFormController,
         link: function(scope, element, attrs) {
 
-          // Get search params from parent scope
-          scope.params = $parse(attrs.gnParams)(scope) || {};
-
           if (attrs.runsearch) {
+
+            // get permalink params on page load
+            if(scope.searchObj.permalink) {
+              angular.extend(scope.searchObj.params, $location.search());
+            }
+
+            // wait for pagination to be set before triggering search
             if (element.find('[data-gn-pagination]').length > 0) {
               var unregisterFn = scope.$watch('hasPagination', function() {
                 if (scope.hasPagination) {
-                  scope.triggerSearch();
+                  scope.triggerSearch(true);
                   unregisterFn();
                 }
               });

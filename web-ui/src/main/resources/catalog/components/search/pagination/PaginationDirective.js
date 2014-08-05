@@ -66,7 +66,6 @@
             scope.config.currentPage = scope.config.pages;
             updateSearch();
           };
-          controller.updateSearchParams(getPaginationParams());
           controller.activatePagination();
         }
       };
