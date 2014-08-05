@@ -3,7 +3,8 @@
 
     <div data-ng-class="title ? [cls, 'col-xs-9'] : [cls, 'col-xs-12']">
         <div data-placeholder-input
-             data-field="field[lang]"
+             data-parent="field"
+             data-field="{{lang}}"
              data-rows="{{rows}}"
              data-index="{{$index}}"
              data-disabled="{{disabled}}"

@@ -12,14 +12,12 @@
         disabled: '@',
         placeholder: '@',
         validationClass: '@',
-        field: '='
+        parent: '=',
+        field: '@'
       },
       transclude: true,
       restrict: 'A',
       replace: 'true',
-      link: function($scope) {
-            console.log($scope.field);
-      },
       templateUrl: '../../catalog/components/edit/inspire/partials/placeholder.html'
     };
   });

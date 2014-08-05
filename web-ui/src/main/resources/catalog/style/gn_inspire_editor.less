@@ -72,22 +72,22 @@ label.placeholder {
   font-size: 0.85em;
   opacity: 0;
 }
-textarea:not(.empty):focus + label.placeholder {
+.placeholder-input:not(.empty):focus + label.placeholder {
   opacity: 1;
   padding-left: 5px;
   padding-right: 5px;
 }
-textarea:not(.empty):focus + label.placeholder.show-all[placement=_1] {
+.placeholder-input:not(.empty):focus + label.placeholder.show-all[placement=_1] {
   top: 2.1em;
 }
-textarea:not(.empty):focus + label.placeholder.show-all[placement=_2] {
+.placeholder-input:not(.empty):focus + label.placeholder.show-all[placement=_2] {
   top: 5.2em;
 }
-textarea:not(.empty):focus + label.placeholder.show-all[placement=_3] {
+.placeholder-input:not(.empty):focus + label.placeholder.show-all[placement=_3] {
   top: 8.3em;
 }
 
-textarea.empty + label.placeholder {
+.placeholder-input.empty + label.placeholder {
   top: 0.4em;
   opacity: 1;
   font-weight: normal;
@@ -96,12 +96,12 @@ textarea.empty + label.placeholder {
   left: 2em;
 }
 
-textarea.empty + label.placeholder.show-all[placement=_1] {
+.placeholder-input.empty + label.placeholder.show-all[placement=_1] {
   top: 3em;
 }
-textarea.empty + label.placeholder.show-all[placement=_2] {
+.placeholder-input.empty + label.placeholder.show-all[placement=_2] {
   top: 5.6em;
 }
-textarea.empty + label.placeholder.show-all[placement=_3] {
+.placeholder-input.empty + label.placeholder.show-all[placement=_3] {
   top: 8.3em;
 }

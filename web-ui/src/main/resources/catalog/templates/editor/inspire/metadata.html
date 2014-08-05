@@ -145,47 +145,47 @@
     <form id="inspireForm" class="col-xs-12 form-horizontal" role="form" >
         <fieldset id="metadata">
             <legend data-translate="">metadata</legend>
-            <!--<div class="form-group">-->
-                <!--<label for="metadataLanguage" class="col-xs-3 control-label" ><span data-translate="">language</span>: </label>-->
-                <!--<div class="col-xs-9" data-ng-class="validationClassString(data.language)">-->
-                    <!--<select id="metadataLanguage"-->
-                            <!--class="form-control"-->
-                            <!--data-ng-model="data.language"-->
-                            <!--data-ng-options="lang | translate for lang in languages">-->
-                    <!--</select>-->
-                <!--</div>-->
-            <!--</div>-->
+            <div class="form-group">
+                <label for="metadataLanguage" class="col-xs-3 control-label" ><span data-translate="">language</span>: </label>
+                <div class="col-xs-9" data-ng-class="validationClassString(data.language)">
+                    <select id="metadataLanguage"
+                            class="form-control"
+                            data-ng-model="data.language"
+                            data-ng-options="lang | translate for lang in languages">
+                    </select>
+                </div>
+            </div>
 
-            <!--<div class="form-group">-->
-                <!--<label class="col-xs-3 control-label"><span data-translate="">otherLanguages</span>: </label>-->
-                <!--<div class="col-xs-9">-->
-                    <!--<button data-ng-repeat="lang in languages"-->
-                            <!--data-ng-click="toggleLanguage(lang)"-->
-                            <!--class="btn btn-default btn-sm"-->
-                            <!--data-ng-class="{active: isOtherLanguage(lang)}">{{lang | translate}}</button>-->
-                <!--</div>-->
-            <!--</div>-->
+            <div class="form-group">
+                <label class="col-xs-3 control-label"><span data-translate="">otherLanguages</span>: </label>
+                <div class="col-xs-9">
+                    <button data-ng-repeat="lang in languages"
+                            data-ng-click="toggleLanguage(lang)"
+                            class="btn btn-default btn-sm"
+                            data-ng-class="{active: isOtherLanguage(lang)}">{{lang | translate}}</button>
+                </div>
+            </div>
 
-            <!--<div class="form-group">-->
-                <!--<label for="hierarchyLevel" class="col-xs-3 control-label"><span data-translate="">hierarchyLevel</span>: </label>-->
-                <!--<div class="col-xs-9" data-ng-class="validationClassString(data.hierarchyLevel)">-->
-                    <!--<select id="hierarchyLevel"-->
-                            <!--class="form-control"-->
-                            <!--data-ng-model="data.hierarchyLevel"-->
-                            <!--data-ng-class="validationClassString(data.hierarchyLevel)"-->
-                            <!--data-ng-options="opt.name as opt.title for opt in data.hierarchyLevelOptions">-->
-                    <!--</select>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group"-->
-                 <!--data-ng-hide="data.hierarchyLevel.indexOf('dataset') != -1">-->
-                <!--<label for="hierarchyLevelName" class="col-xs-3 control-label"><span data-translate="">hierarchyLevelName</span>: </label>-->
-                <!--<div class="col-xs-9"-->
-                     <!--data-ng-class="validationClassString(data.hierarchyLevelName)">-->
-                    <!--<input type="text" id="hierarchyLevelName" class="form-control" data-ng-model="data.hierarchyLevelName" >-->
-                    <!--</select>-->
-                <!--</div>-->
-            <!--</div>-->
+            <div class="form-group">
+                <label for="hierarchyLevel" class="col-xs-3 control-label"><span data-translate="">hierarchyLevel</span>: </label>
+                <div class="col-xs-9" data-ng-class="validationClassString(data.hierarchyLevel)">
+                    <select id="hierarchyLevel"
+                            class="form-control"
+                            data-ng-model="data.hierarchyLevel"
+                            data-ng-class="validationClassString(data.hierarchyLevel)"
+                            data-ng-options="opt.name as opt.title for opt in data.hierarchyLevelOptions">
+                    </select>
+                </div>
+            </div>
+            <div class="form-group"
+                 data-ng-hide="data.hierarchyLevel.indexOf('dataset') != -1">
+                <label for="hierarchyLevelName" class="col-xs-3 control-label"><span data-translate="">hierarchyLevelName</span>: </label>
+                <div class="col-xs-9"
+                     data-ng-class="validationClassString(data.hierarchyLevelName)">
+                    <input type="text" id="hierarchyLevelName" class="form-control" data-ng-model="data.hierarchyLevelName" >
+                    </select>
+                </div>
+            </div>
             <div class="table-responsive col-xs-12">
                 <table class="table table-condensed">
                     <tr data-ng-class="$first ? '' : 'col-xs-offset-3'"
@@ -214,137 +214,137 @@
 
         <!-- ------------------------------  Identification Section   ---------------------------------- -->
 
-        <!--<fieldset id="identification">-->
-            <!--<legend data-translate="">identificationInfo</legend>-->
-            <!--<div class="form-group">-->
-                <!--<label for="metadataType" class="col-xs-3 control-label" ><span data-translate="">metadataType</span>: </label>-->
-                <!--<div class="col-xs-9">-->
-                    <!--<select id="metadataType" class="form-control" ng-model="data.identification.type" data-ng-options="type | translate for type in data.metadataTypeOptions">-->
-                    <!--</select>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group" data-ng-show="data.identification.type == 'data'">-->
-                <!--<label for="identificationMetadataLanguage" class="col-xs-3 control-label" ><span data-translate="">metadataLanguage</span>: </label>-->
-                <!--<div class="col-xs-9" data-ng-class="validationClassString(data.identification.language)">-->
-                    <!--<select id="identificationMetadataLanguage" class="form-control" ng-model="data.identification.language" data-ng-options="lang | translate for lang in languages">-->
-                    <!--</select>-->
-                <!--</div>-->
-            <!--</div>-->
+        <fieldset id="identification">
+            <legend data-translate="">identificationInfo</legend>
+            <div class="form-group">
+                <label for="metadataType" class="col-xs-3 control-label" ><span data-translate="">metadataType</span>: </label>
+                <div class="col-xs-9">
+                    <select id="metadataType" class="form-control" ng-model="data.identification.type" data-ng-options="type | translate for type in data.metadataTypeOptions">
+                    </select>
+                </div>
+            </div>
+            <div class="form-group" data-ng-show="data.identification.type == 'data'">
+                <label for="identificationMetadataLanguage" class="col-xs-3 control-label" ><span data-translate="">metadataLanguage</span>: </label>
+                <div class="col-xs-9" data-ng-class="validationClassString(data.identification.language)">
+                    <select id="identificationMetadataLanguage" class="form-control" ng-model="data.identification.language" data-ng-options="lang | translate for lang in languages">
+                    </select>
+                </div>
+            </div>
 
-            <!--<div data-inspire-multilingual-text-->
-                 <!--validation-class="{{validationErrorClass}}"-->
-                 <!--data-title="title"-->
-                 <!--data-rows="1"-->
-                 <!--data-main-lang="data.language"-->
-                 <!--data-languages="data.otherLanguages"-->
-                 <!--data-field="data.identification.title"/>-->
+            <div data-inspire-multilingual-text
+                 validation-class="{{validationErrorClass}}"
+                 data-title="title"
+                 data-rows="1"
+                 data-main-lang="data.language"
+                 data-languages="data.otherLanguages"
+                 data-field="data.identification.title"/>
 
-            <!--<div class="form-group" data-ng-show="data.identification.type == 'data'">-->
-                <!--<label for="citationIdentifier" class="col-xs-3 control-label" ><span data-translate="">citationIdentifier</span>: </label>-->
-                <!--<div class="col-xs-9" data-ng-class="validationClassString(data.identification.citationIdentifier)">-->
-                    <!--<input id="citationIdentifier" class="form-control" ng-model="data.identification.citationIdentifier">-->
-                    <!--</input>-->
-                <!--</div>-->
-            <!--</div>-->
+            <div class="form-group" data-ng-show="data.identification.type == 'data'">
+                <label for="citationIdentifier" class="col-xs-3 control-label" ><span data-translate="">citationIdentifier</span>: </label>
+                <div class="col-xs-9" data-ng-class="validationClassString(data.identification.citationIdentifier)">
+                    <input id="citationIdentifier" class="form-control" ng-model="data.identification.citationIdentifier">
+                    </input>
+                </div>
+            </div>
 
-            <!--<div data-inspire-multilingual-text-->
-                 <!--validation-class="{{validationErrorClass}}"-->
-                 <!--data-title="abstract"-->
-                 <!--data-rows="5"-->
-                 <!--data-main-lang="data.language"-->
-                 <!--data-languages="data.otherLanguages"-->
-                 <!--data-field="data.identification.abstract"/>-->
+            <div data-inspire-multilingual-text
+                 validation-class="{{validationErrorClass}}"
+                 data-title="abstract"
+                 data-rows="5"
+                 data-main-lang="data.language"
+                 data-languages="data.otherLanguages"
+                 data-field="data.identification.abstract"/>
 
-            <!--<div class="form-group">-->
-                <!--<label class="col-xs-3 control-label"><span data-translate="">date</span>: </label>-->
-                <!--<div class="col-xs-9"-->
-                     <!--data-ng-class="validationClassString(data.identification.date.date)">-->
-                    <!--<div data-inspire-date-picker data-date-obj="data.identification.date"></div>-->
-                <!--</div>-->
-                <!--<div class="col-xs-offset-3 col-xs-9"-->
-                     <!--data-ng-class="validationClassString(data.identification.date.dateType)">-->
-                    <!--<select id="dateType"-->
-                            <!--class="form-control"-->
-                            <!--data-ng-model="data.identification.date.dateType"-->
-                            <!--data-ng-options="opt.name as opt.title for opt in data.dateTypeOptions">-->
-                    <!--</select>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group"-->
-                 <!--data-ng-show="data.identification.type == 'service'">-->
-                <!--<label for="serviceType" class="col-xs-3 control-label" ><span data-translate="">serviceType</span>: </label>-->
-                <!--<div class="col-xs-9"-->
-                     <!--data-ng-class="validationClassString(data.identification.serviceType)">-->
-                    <!--<select id="serviceType"-->
-                            <!--class="form-control"-->
-                            <!--data-ng-model="data.identification.serviceType"-->
-                            <!--data-ng-options="opt.name as opt.title for opt in data.serviceTypeOptions">-->
-                    <!--</select>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group"-->
-                 <!--data-ng-show="data.identification.type == 'data'">-->
-                <!--<label class="col-xs-3 control-label" ><span data-translate="">topicCategory</span>: </label>-->
-                <!--<div class="table-responsive col-xs-9">-->
-                    <!--<table class="table table-condensed">-->
-                        <!--<tr data-ng-repeat="categoryIndex in data.identification.topicCategory  | hideNonCheTopicCategories ">-->
+            <div class="form-group">
+                <label class="col-xs-3 control-label"><span data-translate="">date</span>: </label>
+                <div class="col-xs-9"
+                     data-ng-class="validationClassString(data.identification.date.date)">
+                    <div data-inspire-date-picker data-date-obj="data.identification.date"></div>
+                </div>
+                <div class="col-xs-offset-3 col-xs-9"
+                     data-ng-class="validationClassString(data.identification.date.dateType)">
+                    <select id="dateType"
+                            class="form-control"
+                            data-ng-model="data.identification.date.dateType"
+                            data-ng-options="opt.name as opt.title for opt in data.dateTypeOptions">
+                    </select>
+                </div>
+            </div>
+            <div class="form-group"
+                 data-ng-show="data.identification.type == 'service'">
+                <label for="serviceType" class="col-xs-3 control-label" ><span data-translate="">serviceType</span>: </label>
+                <div class="col-xs-9"
+                     data-ng-class="validationClassString(data.identification.serviceType)">
+                    <select id="serviceType"
+                            class="form-control"
+                            data-ng-model="data.identification.serviceType"
+                            data-ng-options="opt.name as opt.title for opt in data.serviceTypeOptions">
+                    </select>
+                </div>
+            </div>
+            <div class="form-group"
+                 data-ng-show="data.identification.type == 'data'">
+                <label class="col-xs-3 control-label" ><span data-translate="">topicCategory</span>: </label>
+                <div class="table-responsive col-xs-9">
+                    <table class="table table-condensed">
+                        <tr data-ng-repeat="categoryIndex in data.identification.topicCategory  | hideNonCheTopicCategories ">
 
-                            <!--<td data-ng-class="validationClassString(data.identification.topicCategory[categoryIndex])">-->
-                                <!--<select id="topicCategory{{categoryIndex}}" class="form-control"-->
-                                        <!--data-ng-model="data.identification.topicCategory[categoryIndex]"-->
-                                        <!--data-ng-options="opt.name as opt.title group by opt.group for opt in data.topicCategoryOptions">-->
-                                <!--</select>-->
-                            <!--</td>-->
-                            <!--<td width="24px">-->
-                                <!--&nbsp;-->
-                            <!--</td>-->
-                            <!--<td width="24px">-->
-                                <!--<a class="inspire-input-group"-->
-                                   <!--data-ng-hide="data.identification.topicCategory.length == 1"-->
-                                   <!--style="color: red"-->
-                                   <!--data-ng-click="deleteFromArray(data.identification.topicCategory, category)">-->
-                                    <!--<i class="fa fa-times fa-fw"></i>-->
-                                <!--</a>-->
-                            <!--</td>-->
-                        <!--</tr>-->
-                    <!--</table>-->
-                <!--</div>-->
-            <!--</div>-->
+                            <td data-ng-class="validationClassString(data.identification.topicCategory[categoryIndex])">
+                                <select id="topicCategory{{categoryIndex}}" class="form-control"
+                                        data-ng-model="data.identification.topicCategory[categoryIndex]"
+                                        data-ng-options="opt.name as opt.title group by opt.group for opt in data.topicCategoryOptions">
+                                </select>
+                            </td>
+                            <td width="24px">
+                                &nbsp;
+                            </td>
+                            <td width="24px">
+                                <a class="inspire-input-group"
+                                   data-ng-hide="data.identification.topicCategory.length == 1"
+                                   style="color: red"
+                                   data-ng-click="deleteFromArray(data.identification.topicCategory, category)">
+                                    <i class="fa fa-times fa-fw"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
 
 
-            <!--<div class="table-responsive col-xs-12">-->
-                <!--<table class="table table-condensed">-->
-                    <!--<tr data-ng-class="$first ? '' : 'col-xs-offset-3'"-->
-                        <!--data-ng-repeat="contact in data.identification.pointOfContact">-->
-                        <!--<td>-->
-                            <!--<div data-inspire-contact data-contact="contact" data-title="pointOfContact" data-show-title="{{$first ? 'true' : ''}}"-->
-                                 <!--data-role-options="data.roleOptions" data-edit-contact="editContact('pointOfContact', contact)"-->
-                                 <!--data-main-lang="data.language" data-languages="data.otherLanguages"-->
-                                 <!--validation-class="{{validationErrorClass}}"-->
-                                 <!--data-ng-dblclick="editContact('pointOfContact', contact)"></div>-->
-                        <!--</td>-->
-                        <!--<td width="24px">-->
-                            <!--<a class="inspire-input-group" data-ng-click="editContact('pointOfContact', contact)">-->
-                                <!--<i class="fa fa-edit fa-fw"></i>-->
-                            <!--</a>-->
-                        <!--</td>-->
-                        <!--<td width="24px">-->
-                            <!--<a class="inspire-input-group" data-ng-hide="data.identification.pointOfContact.length == 1" style="color: red" data-ng-click="deleteFromArray(data.identification.pointOfContact, contact)">-->
-                                <!--<i class="fa fa-times fa-fw"></i>-->
-                            <!--</a>-->
-                        <!--</td>-->
-                    <!--</tr>-->
-                <!--</table>-->
-            <!--</div>-->
+            <div class="table-responsive col-xs-12">
+                <table class="table table-condensed">
+                    <tr data-ng-class="$first ? '' : 'col-xs-offset-3'"
+                        data-ng-repeat="contact in data.identification.pointOfContact">
+                        <td>
+                            <div data-inspire-contact data-contact="contact" data-title="pointOfContact" data-show-title="{{$first ? 'true' : ''}}"
+                                 data-role-options="data.roleOptions" data-edit-contact="editContact('pointOfContact', contact)"
+                                 data-main-lang="data.language" data-languages="data.otherLanguages"
+                                 validation-class="{{validationErrorClass}}"
+                                 data-ng-dblclick="editContact('pointOfContact', contact)"></div>
+                        </td>
+                        <td width="24px">
+                            <a class="inspire-input-group" data-ng-click="editContact('pointOfContact', contact)">
+                                <i class="fa fa-edit fa-fw"></i>
+                            </a>
+                        </td>
+                        <td width="24px">
+                            <a class="inspire-input-group" data-ng-hide="data.identification.pointOfContact.length == 1" style="color: red" data-ng-click="deleteFromArray(data.identification.pointOfContact, contact)">
+                                <i class="fa fa-times fa-fw"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
 
-            <!--<div data-ng-include="base + '/templates/editor/inspire/keywords.html'" />-->
-            <!--<div data-ng-include="base + '/templates/editor/inspire/extents.html'" />-->
-            <!--<div data-ng-if="data.identification.type == 'service'" data-ng-include="base + '/templates/editor/inspire/service-coupling.html'" />-->
-        <!--</fieldset>-->
+            <div data-ng-include="base + '/templates/editor/inspire/keywords.html'" />
+            <div data-ng-include="base + '/templates/editor/inspire/extents.html'" />
+            <div data-ng-if="data.identification.type == 'service'" data-ng-include="base + '/templates/editor/inspire/service-coupling.html'" />
+        </fieldset>
 
-        <!--<div data-ng-include="base + '/templates/editor/inspire/constraints.html'" />-->
-        <!--<div data-ng-include="base + '/templates/editor/inspire/conformity.html'" />-->
-        <!--<div data-ng-include="base + '/templates/editor/inspire/links.html'" />-->
+        <div data-ng-include="base + '/templates/editor/inspire/constraints.html'" />
+        <div data-ng-include="base + '/templates/editor/inspire/conformity.html'" />
+        <div data-ng-include="base + '/templates/editor/inspire/links.html'" />
         <!---------------------------   End Identification Section  ----------------------------------------------------------->
     </form>
 </div>
