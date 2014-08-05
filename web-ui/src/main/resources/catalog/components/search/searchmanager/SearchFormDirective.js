@@ -45,7 +45,10 @@
     $scope.hasPagination = false;
     this.activatePagination = function() {
       $scope.hasPagination = true;
-      if(!$scope.searchObj.permalink) {
+      if(!$scope.searchObj.permalink || (
+          angular.isUndefined($scope.searchObj.params.from) &&
+          angular.isUndefined($scope.searchObj.params.to)
+          )) {
         self.resetPagination();
       }
     };
