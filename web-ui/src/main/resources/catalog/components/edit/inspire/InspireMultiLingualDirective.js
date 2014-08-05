@@ -1,8 +1,9 @@
 (function() {
   'use strict';
   goog.provide('inspire_multilingual_text_directive');
+  goog.require('placeholder_directive');
 
-  var module = angular.module('inspire_multilingual_text_directive', []);
+  var module = angular.module('inspire_multilingual_text_directive', ['placeholder_directive']);
 
   module.directive('inspireMultilingualText', function() {
     return {

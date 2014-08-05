@@ -1,0 +1,10 @@
+<div>
+    <textarea data-ng-disabled="{{disabled}}"
+              rows="{{rows}}"
+              class="form-control col-xs-12"
+              data-ng-class="field ? '' : 'empty'"
+              data-ng-model="field"/>
+    <label class="placeholder"
+           data-ng-class="editLang === 'all' ? 'show-all' : ''"
+           placement="{{index ? '_' + index : undefined}}">{{placeholder}}</label>
+</div>

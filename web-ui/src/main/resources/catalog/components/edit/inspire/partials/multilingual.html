@@ -1,20 +1,16 @@
 <div class="form-group">
-    <label data-ng-show="title" for="title" class="col-xs-3 control-label"><span data-translate="">{{title}}</span>: </label>
+    <label data-ng-show="title" class="col-xs-3 control-label"><span data-translate="">{{title}}</span>: </label>
 
     <div data-ng-class="title ? [cls, 'col-xs-9'] : [cls, 'col-xs-12']">
-        <div data-ng-class="editLang === 'all' && $index > 0? 'show-all' : ''"
+        <div data-placeholder-input
+             data-field="field[lang]"
+             data-rows="{{rows}}"
+             data-index="{{$index}}"
+             data-disabled="{{disabled}}"
+             data-placeholder="{{placeholder ? placeholder + ' -- ' : ''}}{{lang | translate}}"
+             data-validation-class="{{validationClass}}"
              data-ng-repeat="lang in languages"
-             data-ng-show="editLang === lang || editLang === 'all'">
-            <textarea data-ng-disabled="disabled"
-                      id="title"
-                      rows="{{rows}}"
-                      class="form-control col-xs-12"
-                      data-ng-class="field[lang] ? '' : 'empty'"
-                      data-ng-model="field[lang]"/>
-            <label class="placeholder"
-                   data-ng-class="editLang === 'all' ? 'show-all' : ''"
-                   placement="{{'_' + $index}}">{{placeholder ? placeholder + ' -- ' : ''}}{{lang | translate}}</label>
-        </div>
+             data-ng-show="editLang === lang || editLang === 'all'" />
         <ul class="nav nav-pills">
             <li data-ng-class="pillClass(lang)" data-ng-repeat="lang in languages" data-ng-hide="editLang === 'all'">
                 <a data-ng-click="setEditLang(lang)">{{lang | translate}}</a>
