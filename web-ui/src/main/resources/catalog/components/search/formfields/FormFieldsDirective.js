@@ -57,14 +57,20 @@
         function($http, gnSchemaManagerService) {
           return {
             restrict: 'A',
+            require: '^ngSearchForm',
             templateUrl: '../../catalog/components/search/formfields/' +
                 'partials/sortByCombo.html',
             scope: {
               params: '='
             },
-            link: function(scope, element, attrs) {
+            link: function(scope, element, attrs, searchFormCtrl) {
               scope.values = ['relevance', 'title', 'rating'];
-              scope.params.sortBy = scope.values[0];
+              scope.params.sortBy = scope.params.sortBy || scope.values[0];
+
+              scope.search = function() {
+                searchFormCtrl.triggerSearch(true);
+              }
+
             }
           };
         }])
