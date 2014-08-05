@@ -58,7 +58,8 @@
   module.directive('gnResultsContainer', [
       '$compile',
       'gnMap',
-    function($compile, gnMap) {
+      'gnOlStyles',
+    function($compile, gnMap, gnOlStyles) {
 
       return {
         restrict: 'A',
@@ -79,10 +80,16 @@
             interactiveResources: 'fa-rss'
           };
 
+          scope.hoverOL = new ol.FeatureOverlay({
+            style: gnOlStyles.bbox
+          });
+
           /**
            * Draw md bbox on search
            */
           var fo = new ol.FeatureOverlay();
+          fo.setMap(scope.map);
+
           scope.$watchCollection('searchResults.records', function(rec) {
             fo.getFeatures().clear();
             if (!angular.isArray(rec)) {
@@ -92,16 +99,22 @@
               var feat = new ol.Feature();
               var extent = gnMap.getBboxFromMd(rec[i]);
               if(extent) {
-                extent = ol.proj.transformExtent(extent,
-                    'EPSG:4326',
-                    scope.map.getView().getProjection());
+                var proj = scope.map.getView().getProjection();
+                extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
+                    ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
+                    proj.getExtent();
                 var coords = gnMap.getPolygonFromExtent(extent);
                 feat.setGeometry(new ol.geom.Polygon(coords));
                 fo.addFeature(feat);
-                fo.setMap(scope.map);
               }
             }
-            //scope.map.getView().fitExtent(cantonSource.getExtent(), scope.map.getSize());
+            var extent = ol.extent.createEmpty();
+            fo.getFeatures().forEach(function(f) {
+              ol.extent.extend(extent, f.getGeometry().getExtent());
+            });
+            if(!ol.extent.isEmpty(extent)) {
+              scope.map.getView().fitExtent(extent, scope.map.getSize());
+            }
           });
 
           scope.$watch('templateUrl', function(templateUrl) {
@@ -116,77 +129,39 @@
             element.append(template);
             $compile(template)(scope);
           });
-        }
-      };
-    }]);
 
-  module.directive('gnDisplayExtentOnHover', [
-    'gnMap',
-    'gnOlStyles',
-    function(gnMap, gnOlStyles) {
-
-      return {
-        restrict: 'A',
-        link: function(scope, element, attrs, controller) {
-
-          //TODO : change, just apply a style to the feature when featureoverlay is fixed
-          var fo = new ol.FeatureOverlay({
-            style: gnOlStyles.bbox
-          });
-          var feat = new ol.Feature();
-
-          element.bind('mouseenter', function() {
-
-            var extent = gnMap.getBboxFromMd(scope.md);
-            if(extent) {
-              extent = ol.proj.transformExtent(extent,
-                  'EPSG:4326',
-                  scope.map.getView().getProjection());
-              var coords = gnMap.getPolygonFromExtent(extent);
-              feat.setGeometry(new ol.geom.Polygon(coords));
-              fo.addFeature(feat);
-              fo.setMap(scope.map);
-            }
-          });
-
-          element.bind('mouseleave', function() {
-            fo.getFeatures().clear();
-          });
+          scope.hoverOL.setMap(scope.map);
         }
       };
     }]);
 
   module.directive('gnDisplayextentOnhover', [
     'gnMap',
-    'gnOlStyles',
-    function(gnMap, gnOlStyles) {
+    function(gnMap) {
 
       return {
         restrict: 'A',
         link: function(scope, element, attrs, controller) {
 
           //TODO : change, just apply a style to the feature when featureoverlay is fixed
-          var fo = new ol.FeatureOverlay({
-            style: gnOlStyles.bbox
-          });
           var feat = new ol.Feature();
 
           element.bind('mouseenter', function() {
 
             var extent = gnMap.getBboxFromMd(scope.md);
             if(extent) {
-              extent = ol.proj.transformExtent(extent,
-                  'EPSG:4326',
-                  scope.map.getView().getProjection());
+              var proj = scope.map.getView().getProjection();
+              extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
+                  ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
+                  proj.getExtent();
               var coords = gnMap.getPolygonFromExtent(extent);
               feat.setGeometry(new ol.geom.Polygon(coords));
-              fo.addFeature(feat);
-              fo.setMap(scope.map);
+              scope.hoverOL.addFeature(feat);
             }
           });
 
           element.bind('mouseleave', function() {
-            fo.getFeatures().clear();
+            scope.hoverOL.getFeatures().clear();
           });
         }
       };
@@ -210,9 +185,10 @@
 
             var extent = gnMap.getBboxFromMd(scope.md);
             if(extent) {
-              extent = ol.proj.transformExtent(extent,
-                  'EPSG:4326',
-                  scope.map.getView().getProjection());
+              var proj = scope.map.getView().getProjection();
+              extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
+                  ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
+                  proj.getExtent();
               scope.map.getView().fitExtent(extent, scope.map.getSize());
             }
           });
