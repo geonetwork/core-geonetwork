@@ -111,22 +111,31 @@
             restrict: 'A',
             scope: {
               field: '@gnSearchSuggest',
-              startswith: '@gnSearchSuggestStartswith'
+              startswith: '@gnSearchSuggestStartswith',
+              multi: '@'
             },
             link: function(scope, element, attrs) {
-              element.tagsinput({
-              });
-              element.tagsinput('input').typeahead({
-                remote:{
-                  url : suggestService.getUrl('QUERY', scope.field,
-                          (scope.startswith ?'STARTSWITHFIRST' : 'ALPHA')),
-                  filter: suggestService.filterResponse,
-                  wildcard: 'QUERY'
-                }
-              }).bind('typeahead:selected', $.proxy(function (obj, datum) {
-                this.tagsinput('add', datum.value);
-                this.tagsinput('input').typeahead('setQuery', '');
-              }, element));
+              var remote = {
+                url : suggestService.getUrl('QUERY', scope.field,
+                    (scope.startswith ?'STARTSWITHFIRST' : 'ALPHA')),
+                filter: suggestService.filterResponse,
+                wildcard: 'QUERY'
+              };
+              if(angular.isUndefined(scope.multi)) {
+                element.typeahead({
+                  remote: remote
+                });
+              }
+              else {
+                element.tagsinput({
+                });
+                element.tagsinput('input').typeahead({
+                  remote: remote
+                }).bind('typeahead:selected', $.proxy(function (obj, datum) {
+                  this.tagsinput('add', datum.value);
+                  this.tagsinput('input').typeahead('setQuery', '');
+                }, element));
+              }
             }
           }
         }])
