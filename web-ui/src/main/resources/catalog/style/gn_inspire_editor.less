@@ -57,6 +57,51 @@ td.no-border-top{
 table label {
   font-size: 14px;
 }
-.placeholder {
-  color: #b7b4c1;
+
+div.show-all {
+  margin-top: .5em
+}
+
+label.placeholder {
+  position: absolute;
+  top: -1em;
+  left: 2.08em;
+  color: #0099ff;
+  z-index:9999999999;
+  background-color: white;
+  font-size: 0.85em;
+  opacity: 0;
+}
+textarea:not(.empty):focus + label.placeholder {
+  opacity: 1;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+textarea:not(.empty):focus + label.placeholder.show-all[placement=_1] {
+  top: 2.1em;
+}
+textarea:not(.empty):focus + label.placeholder.show-all[placement=_2] {
+  top: 5.2em;
+}
+textarea:not(.empty):focus + label.placeholder.show-all[placement=_3] {
+  top: 8.3em;
+}
+
+textarea.empty + label.placeholder {
+  top: 0.4em;
+  opacity: 1;
+  font-weight: normal;
+  color: #aaaaaa;
+  font-size: 1em;
+  left: 2em;
+}
+
+textarea.empty + label.placeholder.show-all[placement=_1] {
+  top: 3em;
+}
+textarea.empty + label.placeholder.show-all[placement=_2] {
+  top: 5.6em;
+}
+textarea.empty + label.placeholder.show-all[placement=_3] {
+  top: 8.3em;
 }

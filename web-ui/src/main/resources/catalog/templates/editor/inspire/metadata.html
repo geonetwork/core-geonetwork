@@ -287,10 +287,11 @@
                 <label class="col-xs-3 control-label" ><span data-translate="">topicCategory</span>: </label>
                 <div class="table-responsive col-xs-9">
                     <table class="table table-condensed">
-                        <tr data-ng-repeat="category in data.identification.topicCategory">
-                            <td data-ng-class="validationClassString(category)">
-                                <select id="topicCategory{{$index}}" class="form-control"
-                                        data-ng-model="data.identification.topicCategory[$index]"
+                        <tr data-ng-repeat="categoryIndex in data.identification.topicCategory  | hideNonCheTopicCategories ">
+
+                            <td data-ng-class="validationClassString(data.identification.topicCategory[categoryIndex])">
+                                <select id="topicCategory{{categoryIndex}}" class="form-control"
+                                        data-ng-model="data.identification.topicCategory[categoryIndex]"
                                         data-ng-options="opt.name as opt.title group by opt.group for opt in data.topicCategoryOptions">
                                 </select>
                             </td>

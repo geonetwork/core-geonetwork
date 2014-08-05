@@ -10,17 +10,10 @@
   goog.require('inspire_get_extents_factory');
   goog.require('inspire_date_picker_directive');
   goog.require('inspire-metadata-loader');
-  goog.require('placeholder_polyfill_directive');
 
-  var deps = [ 'gn', 'inspire_contact_directive', 'inspire_multilingual_text_directive', 'inspire_metadata_factory',
-    'inspire_get_shared_users_factory', 'inspire_get_keywords_factory', 'inspire_get_extents_factory',
-    'inspire_date_picker_directive', 'placeholder_polyfill_directive'];
-
-  var placeholderPolyfillRequired = document.createElement("input").placeholder === undefined;
-  if (placeholderPolyfillRequired) {
-    deps.push('placeholder_polyfill_directive');
-  }
-  var module = angular.module('gn_inspire_editor', deps);
+  var module = angular.module('gn_inspire_editor', ['gn', 'inspire_contact_directive', 'inspire_multilingual_text_directive',
+    'inspire_metadata_factory', 'inspire_get_shared_users_factory', 'inspire_get_keywords_factory', 'inspire_get_extents_factory',
+    'inspire_date_picker_directive']);
 
 
   // Define the translation files to load
@@ -511,6 +504,7 @@
                 $scope.isValidURL = false;
               }
             } else {
+              $()
               $http.head("../../proxy?url=" + encodeURIComponent(url)).error(errorHandler);
             }
           } else {
@@ -523,5 +517,23 @@
       };
   }]);
 
+  module.filter('hideNonCheTopicCategories', function () {
+    var acceptable = {
+      environment: true,
+      geoscientificInformation: true,
+      planningCadastre: true,
+      imageryBaseMapsEarthCover: true,
+      utilitiesCommunication: true
+    };
+    return function (input) {
+      var i, filtered = [];
+      for(i = 0; i < input.length; i++) {
+        if (!acceptable.hasOwnProperty(input[i])) {
+          filtered.push(i);
+        }
+      }
+      return filtered;
+    };
+  });
 
 }());

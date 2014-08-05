@@ -2,10 +2,19 @@
     <label data-ng-show="title" for="title" class="col-xs-3 control-label"><span data-translate="">{{title}}</span>: </label>
 
     <div data-ng-class="title ? [cls, 'col-xs-9'] : [cls, 'col-xs-12']">
-        <textarea data-ng-disabled="disabled" rows="{{rows}}" id="title" class="form-control col-xs-12"
-                  data-ng-repeat="lang in languages" data-ng-model="field[lang]"
-                  data-ng-show="editLang === lang || editLang === 'all'"
-                  placeholder="{{placeholder ? placeholder + ' -- ' : ''}}{{lang | translate}}"/>
+        <div data-ng-class="editLang === 'all' && $index > 0? 'show-all' : ''"
+             data-ng-repeat="lang in languages"
+             data-ng-show="editLang === lang || editLang === 'all'">
+            <textarea data-ng-disabled="disabled"
+                      id="title"
+                      rows="{{rows}}"
+                      class="form-control col-xs-12"
+                      data-ng-class="field[lang] ? '' : 'empty'"
+                      data-ng-model="field[lang]"/>
+            <label class="placeholder"
+                   data-ng-class="editLang === 'all' ? 'show-all' : ''"
+                   placement="{{'_' + $index}}">{{placeholder ? placeholder + ' -- ' : ''}}{{lang | translate}}</label>
+        </div>
         <ul class="nav nav-pills">
             <li data-ng-class="pillClass(lang)" data-ng-repeat="lang in languages" data-ng-hide="editLang === 'all'">
                 <a data-ng-click="setEditLang(lang)">{{lang | translate}}</a>
