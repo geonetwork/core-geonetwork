@@ -6,8 +6,8 @@
     <div class="form-group">
       <label for="fullF" class="col-md-3 col-sm-12 control-label">Text search</label>
       <div class="col-sm-9">
-        <input class="form-control" type="text" id="fullF" gn-search-suggest="anylight" gn-search-suggest-startswith="true"
-               placeholder="{{'anyPlaceHolder' | translate}}" data-ng-model="params.any">
+        <input class="form-control" type="text" id="fullF" gn-search-suggest="anylight" gn-search-suggest-startswith="false"
+               placeholder="{{'anyPlaceHolder' | translate}}" data-ng-model="searchObj.params.any">
       </div>
     </div>
 
@@ -15,7 +15,7 @@
     <div class="form-group">
       <label for="typeF" class="col-md-3 col-sm-12 control-label">Type</label>
       <div class="col-sm-9" id="typeF">
-        <select class="form-control" data-ng-model="params.type">
+        <select class="form-control" data-ng-model="searchObj.params.type">
           <option data-ng-repeat="t in types">{{t}}</option>
         </select>
       </div>
@@ -24,8 +24,8 @@
     <div class="form-group">
       <label for="cantonF" class="col-md-3 col-sm-12 control-label">Cantons</label>
       <div class="col-sm-9">
-        <input type="text" id="cantonF" value="" class="form-control" data-ng-model="params.cantons" gn-region-multiselect="ocean" gn-callback="onCantonsSelect"/>
-        {{params.cantons}}
+        <input type="text" id="cantonF" value="" class="form-control" data-ng-model="searchObj.params.cantons" gn-region-multiselect="ocean" gn-callback="onCantonsSelect"/>
+        {{searchObj.params.cantons}}
       </div>
     </div>
 

@@ -72,7 +72,7 @@
     this.triggerSearch = function(keepPagination) {
 
       $scope.searching++;
-      angular.extend($scope.params, defaultParams);
+      angular.extend($scope.searchObj.params, defaultParams);
 
       if(!keepPagination) {
         self.resetPagination();
@@ -80,7 +80,7 @@
 
       // Don't add facet extra params to $scope.params but
       // compute them each time on a search.
-      var params = angular.copy($scope.params);
+      var params = angular.copy($scope.searchObj.params);
       if ($scope.currentFacets.length > 0) {
         angular.extend(params,
             gnFacetService.getParamsFromFacets($scope.currentFacets));
@@ -119,14 +119,14 @@
      * @param {!Object} params
      */
     this.updateSearchParams = function(params) {
-      angular.extend($scope.params, params);
+      angular.extend($scope.searchObj.params, params);
     };
 
     $scope.$on('resetSearch', function(evt, searchParams) {
       if (searchParams) {
-        $scope.params = searchParams;
+        $scope.searchObj.params = searchParams;
       } else {
-        $scope.params = {};
+        $scope.searchObj.params = {};
       }
       self.resetPagination();
       $scope.currentFacets = [];

@@ -35,7 +35,14 @@
    */
   module.controller('GnSearchController', [
     '$scope',
-    function($scope) {
+    '$location',
+    function($scope, $location) {
+
+      /** Object to be shared through directives and controllers */
+      $scope.searchObj = {
+        params: {},
+        permalink: true
+      };
 
       /** Define in the controller scope a reference to the map */
       $scope.map = new ol.Map({
@@ -63,7 +70,6 @@
       $scope.paginationInfo = {
         hitsPerPage: 3
       };
-
       $scope.resultTemplate = '../../catalog/components/search/resultsview/partials/viewtemplates/thumb.html';
     }]);
 
@@ -116,7 +122,7 @@
 
       // Request cantons geometry and zoom to extent when
       // all requests respond.
-      $scope.$watch('params.cantons', function(v){
+      $scope.$watch('searchObj.params.cantons', function(v){
         cantonSource.clear();
         if(angular.isDefined(v) && v != '') {
           var cs = v.split(',');
