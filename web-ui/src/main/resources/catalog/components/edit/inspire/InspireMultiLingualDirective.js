@@ -21,6 +21,16 @@
       restrict: 'A',
       replace: 'true',
       link: function($scope) {
+        $scope.placeholderOffset = function (index) {
+          var prefix = 'placeholder-offset-';
+          if (navigator.appVersion.indexOf('MSIE 9.') != -1) {
+            prefix = 'ie9-placeholder-offset-';
+          }
+          if ($scope.editLang === 'all') {
+            return prefix + index;
+          }
+          return '';
+        };
         $scope.$watchCollection('languages', function(newVal){
           if (newVal.indexOf($scope.editLang) < 0) {
             $scope.editLang = newVal[0];

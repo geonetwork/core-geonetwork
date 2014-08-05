@@ -18,11 +18,6 @@
       transclude: true,
       restrict: 'A',
       replace: 'true',
-      link: function($scope) {
-        $scope.isDisabled = function () {
-          return $scope.disabled === "true";
-        }
-      },
       templateUrl: '../../catalog/components/edit/inspire/partials/placeholder.html'
     };
   });

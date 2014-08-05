@@ -7,7 +7,7 @@
              data-ng-class="editLang === 'all' ? 'show-all' : ''"
              data-field="{{lang}}"
              data-rows="{{rows}}"
-             placeholder-placement-class="{{'placeholder-offset-' + $index}}"
+             placeholder-placement-class="{{placeholderOffset($index)}}"
              data-disabled="{{disabled}}"
              data-placeholder="{{placeholder ? placeholder + ' -- ' : ''}}{{lang | translate}}"
              data-validation-class="{{validationClass}}"
