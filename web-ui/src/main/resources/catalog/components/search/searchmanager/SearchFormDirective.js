@@ -126,23 +126,33 @@
     if($scope.searchObj.permalink) {
       var triggerSearchFn = self.triggerSearch;
       var init = false; // Avoid the first $locationChangeSuccess event
+      var facetsParams;
 
       self.triggerSearch = function(keepPagination) {
         if(!keepPagination) {
           self.resetPagination();
         }
-        if(angular.equals($scope.searchObj.params, $location.search())) {
+
+        facetsParams = gnFacetService.getParamsFromFacets($scope.currentFacets);
+        var params = angular.copy($scope.searchObj.params);
+        angular.extend(params, facetsParams);
+
+        if(angular.equals(params, $location.search())) {
           triggerSearchFn();
         }
         else {
-          $location.search($scope.searchObj.params);
+          $location.search(params);
         }
         init = true;
       };
 
       $scope.$on('$locationChangeSuccess', function () {
         if(init) {
-          $scope.searchObj.params = $location.search();
+          var params = angular.copy($location.search());
+          for(var o in facetsParams) {
+            delete params[o];
+          }
+          $scope.searchObj.params = params;
           triggerSearchFn();
         }
       });

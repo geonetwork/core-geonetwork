@@ -101,6 +101,7 @@
                 fo.setMap(scope.map);
               }
             }
+            //scope.map.getView().fitExtent(cantonSource.getExtent(), scope.map.getSize());
           });
 
           scope.$watch('templateUrl', function(templateUrl) {
