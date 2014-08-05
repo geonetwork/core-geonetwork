@@ -16,7 +16,8 @@
                 scope.map.getView().setZoom(scope.map.getView().getZoom()+ delta);
               };
               scope.maxExtent = function() {
-                scope.map.getView().setZoom(0);
+                scope.map.getView().fitExtent(scope.map.getView().getProjection().getExtent(),
+                    scope.map.getSize());
               }
             }
           };
