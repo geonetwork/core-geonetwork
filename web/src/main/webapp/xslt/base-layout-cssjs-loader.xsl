@@ -50,6 +50,7 @@
         <script src="{$uiResourcesPath}lib/angular-md5.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/datetimepicker.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/bootstrap/buttons.js"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/slider.js"></script>
 
         <script src="{$uiResourcesPath}lib/bootstrap-3.0.1.js"></script>
         <script src="{$uiResourcesPath}lib/jquery.ext/jquery-ui-slider.min.js"></script>

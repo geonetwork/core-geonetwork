@@ -6,6 +6,7 @@
 
   var module = angular.module('gn_ncwms', [
       'gn_ncwms_service',
-      'gn_ncwms_directive'
+      'gn_ncwms_directive',
+      'ui.slider'
   ]);
 })();
