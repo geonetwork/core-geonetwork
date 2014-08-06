@@ -48,15 +48,19 @@
         deregister = [
           $scope.map.on('precompose', handlePreCompose),
           $scope.map.on('postcompose', handlePostCompose),
-          $scope.map.getView().on('propertychange', function(event) {
-            updatePrintRectanglePixels($scope.config.scale);
+          $scope.map.getView().on('change:resolution', function(event) {
+            if($scope.auto) {
+              fitRectangleToView();
+              $scope.$apply();
+            }
+          }),
+          $scope.$watch('auto', function(v) {
+            if(v) {
+              fitRectangleToView();
+            }
           })
         ];
-        $scope.config.scale = gnPrint.getOptimalScale($scope.map,
-            $scope.config.scales,
-            $scope.config.layout);
-
-        refreshComp();
+        fitRectangleToView();
       };
       if(angular.isUndefined($scope.config)) {
         updatePrintConfig().then(initMapEvents);
@@ -68,7 +72,11 @@
     this.deactivate = function() {
       if (deregister) {
         for (var i = 0; i < deregister.length; i++) {
-          deregister[i].src.unByKey(deregister[i]);
+          if(angular.isFunction(deregister[i])) {
+            deregister[i]();
+          } else {
+            deregister[i].src.unByKey(deregister[i]);
+          }
         }
       }
       refreshComp();
@@ -129,6 +137,15 @@
     var refreshComp = function() {
       updatePrintRectanglePixels($scope.config.scale);
       $scope.map.render();
+    };
+    $scope.refreshComp = refreshComp;
+
+    var fitRectangleToView = function() {
+      $scope.config.scale = gnPrint.getOptimalScale($scope.map,
+          $scope.config.scales,
+          $scope.config.layout);
+
+      refreshComp();
     };
 
     $scope.downloadUrl = function(url) {
