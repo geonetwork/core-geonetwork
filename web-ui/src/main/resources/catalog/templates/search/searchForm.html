@@ -56,8 +56,17 @@
       </div>
     </div>
 
+    <div class="form-group">
+      <label for="categoriesF" class="col-md-3 col-sm-12 control-label">Début</label>
+      <div class="col-sm-9 input-group">
+        <input type="text" class="form-control" id="toto">
+        <span class="input-group-addon"><i class="fa fa-calendar"></i><</span>
+      </div>
+    </div>
+
     <div gn-map-field="map"></div>
 
+    <button type="button" data-ng-click="reset()" class="btn btn-primary" data-translate>Reset</button>
     <button type="button" data-ng-click="triggerSearch()" class="btn btn-primary" data-translate>Search</button>
 <!--
     <input type="text" name="region-picker-input" class="form-control bootstrap-tagsinput"
