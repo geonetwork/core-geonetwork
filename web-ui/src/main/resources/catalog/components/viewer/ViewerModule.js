@@ -89,6 +89,18 @@
   };
   module.constant('gnMapConfig', mapConfig);
 
+  var source = new ol.source.TileWMS({
+    params: {
+      LAYERS: 'ETOPO1_BATHY_R_3857,continent'
+    },
+    url: 'http://www.ifremer.fr/services/wms/wmsproxy_double.cgi?'
+  });
+  var sxtLayer = new ol.layer.Tile({
+    type: 'WMS',
+    source: source,
+    title: 'Sextant'
+  });
+
   var osmLayer = new ol.layer.Tile({
     source: new ol.source.OSM(),
     title: 'OpenStreetMap'
@@ -115,7 +127,7 @@
   bingSatellite.displayInLayerManager = false;
   bingSatellite.background = true;
 
-  module.constant('gnBackgroundLayers', [mqLayer, osmLayer, bingSatellite]);
+  module.constant('gnBackgroundLayers', [mqLayer, osmLayer, bingSatellite, sxtLayer]);
 
   module.controller('toolsController',
       ['$scope', 'gnMeasure',
