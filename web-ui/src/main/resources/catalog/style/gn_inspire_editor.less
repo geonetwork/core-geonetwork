@@ -1,4 +1,5 @@
 @import "gn.less";
+@import "gn_placeholder.less";
 
 #inspireForm {
   padding-top: 70px;
@@ -62,6 +63,7 @@ div.show-all {
   margin-top: .5em
 }
 
+
 label.placeholder {
   position: absolute;
   top: -1em;
@@ -77,25 +79,6 @@ label.placeholder {
   padding-left: 5px;
   padding-right: 5px;
 }
-.placeholder-input:not(.empty):focus + label.placeholder-offset-1 {
-  top: 2.1em;
-}
-.placeholder-input:not(.empty):focus + label.placeholder-offset-2 {
-  top: 5.2em;
-}
-.placeholder-input:not(.empty):focus + label.placeholder-offset-3 {
-  top: 8.3em;
-}
-.placeholder-input:not(.empty):focus + label.ie9-placeholder-offset-1 {
-  top: 2.4em;
-}
-.placeholder-input:not(.empty):focus + label.ie9-placeholder-offset-2 {
-  top: 5.8em;
-}
-.placeholder-input:not(.empty):focus + label.ie9-placeholder-offset-3 {
-  top: 9.3em;
-}
-
 .placeholder-input.empty + label.placeholder {
   top: 0.4em;
   opacity: 1;
@@ -103,24 +86,4 @@ label.placeholder {
   color: #aaaaaa;
   font-size: 1em;
   left: 2em;
-}
-
-.placeholder-input.empty + label.placeholder-offset-1 {
-  top: 3em;
-}
-.placeholder-input.empty + label.placeholder-offset-2 {
-  top: 5.6em;
-}
-.placeholder-input.empty + label.placeholder-offset-3 {
-  top: 8.3em;
-}
-
-.placeholder-input.empty + label.ie9-placeholder-offset-1 {
-  top: 3.4em;
-}
-.placeholder-input.empty + label.ie9-placeholder-offset-2 {
-  top: 6.3em;
-}
-.placeholder-input.empty + label.ie9-placeholder-offset-3 {
-  top: 9.3em;
 }

@@ -22,14 +22,18 @@
       replace: 'true',
       link: function($scope) {
         $scope.placeholderOffset = function (index) {
-          var prefix = 'placeholder-offset-';
+          var rows, prefix = 'placeholder-offset-';
+          rows = $scope.rows || 1;
           if (navigator.appVersion.indexOf('MSIE 9.') != -1) {
             prefix = 'ie9-placeholder-offset-';
           }
           if ($scope.editLang === 'all') {
-            return prefix + index;
+            return prefix + (index * rows);
           }
           return '';
+        };
+        $scope.showAllClass = function (index) {
+          return $scope.editLang === 'all' && index > 0 ? 'show-all' : '';
         };
         $scope.$watchCollection('languages', function(newVal){
           if (newVal.indexOf($scope.editLang) < 0) {

@@ -4,7 +4,7 @@
     <div data-ng-class="title ? [cls, 'col-xs-9'] : [cls, 'col-xs-12']">
         <div data-placeholder-input
              data-parent="field"
-             data-ng-class="editLang === 'all' ? 'show-all' : ''"
+             data-ng-class="showAllClass($index)"
              data-field="{{lang}}"
              data-rows="{{rows}}"
              placeholder-placement-class="{{placeholderOffset($index)}}"
@@ -13,14 +13,15 @@
              data-validation-class="{{validationClass}}"
              data-ng-repeat="lang in languages"
              data-ng-show="editLang === lang || editLang === 'all'" />
+
         <ul class="nav nav-pills">
             <li data-ng-class="pillClass(lang)" data-ng-repeat="lang in languages" data-ng-hide="editLang === 'all'">
                 <a data-ng-click="setEditLang(lang)">{{lang | translate}}</a>
             </li>
-            <li>
-                <a data-ng-click="editLang === 'all' ? setEditLang(mainLang) : setEditLang('all')">
-                    {{editLang === 'all' ? 'collapse' : 'all' | translate}}</a>
-            </li>
+            <!--<li>-->
+                <!--<a data-ng-click="editLang === 'all' ? setEditLang(mainLang) : setEditLang('all')">-->
+                    <!--{{editLang === 'all' ? 'collapse' : 'all' | translate}}</a>-->
+            <!--</li>-->
         </ul>
     </div>
 </div>
