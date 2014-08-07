@@ -26,6 +26,7 @@
           if (resetServiceType) {
             data.identification.serviceType = "";
           }
+
           angular.copy(data, templateData);
           if (waitDialog) {
             waitDialog.modal('hide');

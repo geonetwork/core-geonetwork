@@ -19,9 +19,13 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.EditLib;
+import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
+import org.fao.geonet.kernel.search.keyword.KeywordSearchType;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.Utils;
@@ -166,7 +170,8 @@ public class GetEditModel implements Service {
         metadataJson.put("conformityTitleOptions", CONFORMITY_TITLE_OPTIONS);
 
         processMetadata(metadataEl, metadataJson);
-        Element identificationInfo = processIdentificationInfo(metadataEl, metadataJson);
+        Element identificationInfo = processIdentificationInfo(context, metadataEl, metadataJson);
+
         processConstraints(identificationInfo, metadataJson);
         processConformity(metadataEl, metadataJson);
         processTransferOptions(metadataEl, metadataJson);
@@ -532,7 +537,7 @@ public class GetEditModel implements Service {
         }
     }
 
-    private Element processIdentificationInfo(Element metadataEl, JSONObject metadataJson) throws Exception {
+    private Element processIdentificationInfo(ServiceContext context, Element metadataEl, JSONObject metadataJson) throws Exception {
         Element identificationInfoEl = Xml.selectElement(metadataEl,
                 "gmd:identificationInfo/node()[@gco:isoType = 'gmd:MD_DataIdentification' or local-name() = 'CHE_MD_DataIdentification ' or local-name() = 'MD_DataIdentification ' or " +
                 "@gco:isoType = 'srv:SV_ServiceIdentification' or local-name() = 'CHE_SV_ServiceIdentification' or local-name() = 'SV_ServiceIdentification']", NS
@@ -572,6 +577,7 @@ public class GetEditModel implements Service {
                 Save.JSON_IDENTIFICATION_KEYWORDS, keywordJsonEncoder);
 
         addKeywordIfRequired(identificationJSON, isDataType);
+        addInspireKeywordIfRequired(getIsoLanguagesMapper(), context, mainLanguage, identificationJSON);
 
         addArray(mainLanguage, identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, "gmd:extent|srv:extent",
                 Save.JSON_IDENTIFICATION_EXTENTS, extentJsonEncoder);
@@ -581,6 +587,41 @@ public class GetEditModel implements Service {
                 Save.JSON_IDENTIFICATION_CONTAINS_OPERATIONS, containsOperationsEncoder);
 
         return identificationInfoEl;
+    }
+
+    private void addInspireKeywordIfRequired(IsoLanguagesMapper mapper, ServiceContext context, String mainLanguage,
+                                             JSONObject identificationJSON)
+            throws Exception {
+        final GeonetContext handlerContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        ThesaurusManager thesaurusManager = handlerContext.getThesaurusManager();
+        KeywordSearchParamsBuilder paramsBuilder = new KeywordSearchParamsBuilder(mapper).
+                keyword("INSPIRE", KeywordSearchType.MATCH, false).
+                addLang("eng").addLang("ger").addLang("ita").addLang("fre");
+
+        final List<KeywordBean> inspireKeywords = paramsBuilder.build().search(thesaurusManager);
+
+        if (inspireKeywords.isEmpty()) {
+            throw new IllegalStateException("No INSPIRE keyword registered in any of the thesauri");
+        } else {
+            final JSONArray jsonArray = identificationJSON.getJSONArray(Save.JSON_IDENTIFICATION_KEYWORDS);
+            for (KeywordBean keyword : inspireKeywords) {
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    final JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    if (keyword.getUriCode().equals(jsonObject.getString("code"))) {
+                        return;
+                    }
+                }
+            }
+
+            final KeywordBean bean = inspireKeywords.get(0);
+            String id = String.format("local://che.keyword.get?thesaurus=%s&id=%s&locales=en,it,de,fr",
+                    bean.getThesaurusKey(),
+                    bean.getUriCode());
+            final Element inspireKeywordEl = new Element("keyword").setAttribute(XLink.HREF, id, XLink.NAMESPACE_XLINK);
+            final Object inspireKeyword = keywordJsonEncoder.encode(mainLanguage, inspireKeywordEl, mapper);
+
+            jsonArray.put(inspireKeyword);
+        }
     }
 
     private void addKeywordIfRequired(JSONObject identificationJSON, boolean isDataType) throws JSONException {
@@ -851,8 +892,8 @@ public class GetEditModel implements Service {
                     }
                     json.put(Save.JSON_IDENTIFICATION_KEYWORD_CODE, code);
 
-                    addTranslatedElement(mainLanguage, node, mapper, json,
-                            Save.JSON_IDENTIFICATION_KEYWORD_WORD,"gmd:MD_Keywords/gmd:keyword");
+                    addTranslatedElement(mainLanguage, element, mapper, json,
+                            Save.JSON_IDENTIFICATION_KEYWORD_WORD,"gmd:keyword");
 
                     if (thesaurus != null) {
                         Map<String, String> thesaurusNames = getThesaurusTranslations(mapper, element);

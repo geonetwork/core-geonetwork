@@ -229,6 +229,7 @@
       var isEmpty = function (keyword) {
         return keyword.thesaurus === '' && keyword.code === -1;
       };
+
       $scope.deleteKeyword = function(keyword) {
         var keywords = $scope.data.identification.descriptiveKeywords;
         keywords.splice(keywords.indexOf(keyword), 1);
