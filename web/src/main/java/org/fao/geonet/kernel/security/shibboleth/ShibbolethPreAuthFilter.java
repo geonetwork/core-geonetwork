@@ -75,6 +75,8 @@ public class ShibbolethPreAuthFilter extends GenericFilterBean implements Applic
             Log.debug(Geonet.LOG_AUTH, "Performing Shibboleth pre-auth check. Existing auth is " + SecurityContextHolder.getContext().getAuthentication());
         }
 
+        HttpServletRequest hreq = (HttpServletRequest)request;
+
         String username = "UNIDENTIFIED";
         try {
             Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
