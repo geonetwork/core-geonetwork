@@ -215,23 +215,42 @@
   module.controller('InspireKeywordController', [
     '$scope', 'inspireGetKeywordsFactory',
     function($scope, inspireGetKeywordsFactory) {
+
+      var dataThesaurus = 'external.theme.inspire-theme';
+      var serviceThesaurus = 'external.theme.inspire-service-taxonomy';
+
       $scope.editKeyword = function(keyword) {
         $scope.keywordUnderEdit = keyword;
         $scope.selectedKeyword = {};
         var modal = $('#editKeywordModal');
         modal.modal('show');
       };
+
+      var isEmpty = function (keyword) {
+        return keyword.thesaurus === '' && keyword.code === -1;
+      };
       $scope.deleteKeyword = function(keyword) {
         var keywords = $scope.data.identification.descriptiveKeywords;
         keywords.splice(keywords.indexOf(keyword), 1);
+
+        for (var i = 0; i < keywords.length; i++) {
+          var k = keywords[i];
+          if (k.thesaurus === dataThesaurus || k.thesaurus === serviceThesaurus || isEmpty(k)) {
+            return;
+          }
+        }
+
+        keywords.push({
+          code: -1,
+          thesaurus: '',
+          words: {}
+        });
       };
 
       $scope.keywords = {
         data: {},
         service: {}
       };
-      var dataThesaurus = 'external.theme.inspire-theme';
-      var serviceThesaurus = 'external.theme.inspire-service-taxonomy';
 
       inspireGetKeywordsFactory($scope.url, dataThesaurus).then (function (keywords) {
         $scope.keywords.data = keywords;
