@@ -10,10 +10,11 @@
   goog.require('inspire_get_extents_factory');
   goog.require('inspire_date_picker_directive');
   goog.require('inspire-metadata-loader');
+  goog.require('inspire_ie9_select');
 
   var module = angular.module('gn_inspire_editor', ['gn', 'inspire_contact_directive', 'inspire_multilingual_text_directive',
     'inspire_metadata_factory', 'inspire_get_shared_users_factory', 'inspire_get_keywords_factory', 'inspire_get_extents_factory',
-    'inspire_date_picker_directive']);
+    'inspire_date_picker_directive', 'inspire_ie9_select']);
 
 
   // Define the translation files to load

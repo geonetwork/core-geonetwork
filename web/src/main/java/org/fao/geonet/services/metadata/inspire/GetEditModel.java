@@ -893,7 +893,7 @@ public class GetEditModel implements Service {
                     json.put(Save.JSON_IDENTIFICATION_KEYWORD_CODE, code);
 
                     addTranslatedElement(mainLanguage, element, mapper, json,
-                            Save.JSON_IDENTIFICATION_KEYWORD_WORD,"gmd:keyword");
+                            Save.JSON_IDENTIFICATION_KEYWORD_WORD, "gmd:keyword");
 
                     if (thesaurus != null) {
                         Map<String, String> thesaurusNames = getThesaurusTranslations(mapper, element);

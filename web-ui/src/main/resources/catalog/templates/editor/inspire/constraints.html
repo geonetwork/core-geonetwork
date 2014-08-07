@@ -16,10 +16,15 @@
                                         <tr data-ng-repeat="accessConstraint in legal.accessConstraints track by $index"
                                             data-ng-controller="InspireAccessConstraintController">
                                             <td class="'no-border-top'"
-                                                data-ng-class="validationClassString(accessConstraint)">
-                                                <select class="form-control" data-ng-model="legal.accessConstraints[$index]"
-                                                        data-ng-options="opt.name as opt.title for opt in data.constraintOptions">
-                                                </select>
+                                                data-ng-class="validationClassString(accessConstraint)">-={{legal.accessConstraints[$index]}}=-
+                                                <!--<div data-ie9-select-->
+                                                     <!--data-options="data.constraintOptions"-->
+                                                     <!--data-value="value"-->
+                                                     <!--data-title="title"-->
+                                                     <!--data-field="legal.accessConstraints"-->
+                                                     <!--data-field-accessor="$index"></div>-->
+                                                <!--<select class="form-control" data-ng-model="legal.accessConstraints[$index]"-->
+                                                        <!--data-ng-options="opt.name for opt in data.constraintOptions">-->
                                             </td>
                                             <td width="24px" data-ng-class="'no-border-top'">
                                                 <a class="inspire-input-group"
