@@ -203,4 +203,13 @@ public class JeevesUser implements UserDetails {
 		this.id = id;
 		return this;
 	}
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "[" +
+                (id!=null? id:"") +
+                ":" +
+                (username!=null?username:"")
+                +"]";
+    }
 }

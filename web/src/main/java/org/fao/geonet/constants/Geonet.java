@@ -576,6 +576,7 @@ public final class Geonet {
 	public static final String DATA_DIRECTORY = GEONETWORK + ".data.directory";
     public static final Version LUCENE_VERSION = Version.LUCENE_36;
     public static final String FEEDBACK = GEONETWORK + ".feedback";
+    public static final String LOG_AUTH = GEONETWORK + ".auth";
 
     /**
      * Services.

@@ -127,7 +127,7 @@ public final class Log
 		Logger.getLogger(module).warn(message);
 	}
 	
-	public static void warning(String module, Object message, IOException e) {
+	public static void warning(String module, Object message, Exception e) {
 		Logger.getLogger(module).warn(message, e);
 	}
 
