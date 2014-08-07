@@ -1,8 +1,9 @@
 (function() {
   'use strict';
   goog.provide('inspire_date_picker_directive');
+  goog.require('ui.bootstrap.datepicker');
 
-  var module = angular.module('inspire_date_picker_directive', []);
+  var module = angular.module('inspire_date_picker_directive', ['ui.bootstrap.datepicker']);
 
   /**
    *  Create a widget to handle date composed of
@@ -13,130 +14,64 @@
    *  It's also useful as html datetime input are not
    *  yet widely supported.
    */
-  module.directive('inspireDatePicker', ['$http', '$rootScope',
-    function($http, $rootScope) {
-
+  module.directive('inspireDatePicker', [ 'dateParser',
+    function(dateParser) {
       return {
         restrict: 'A',
         scope: {
-          dateObj: '=',
-          id: '@',
-          indeterminatePosition: '@'
+          dateObj: '='
         },
         templateUrl: '../../catalog/components/edit/inspire/datepicker/partials/datepicker.html',
-        link: function(scope, element, attrs) {
-
-          // Check if browser support date type or not to
-          // HTML date and time input types.
-          // If not datetimepicker.js is used (it will not
-          // support year or month only mode in this case)
-          scope.dateTypeSupported = Modernizr.inputtypes.date;
-
-          // Format date when datetimepicker is used.
-          scope.formatFromDatePicker = function(date) {
-            var format = 'YYYY-MM-DDTHH:mm:ss';
-            var dateTime = moment(date);
-            scope.dateInput = dateTime.format(format);
+        link: function($scope) {
+          $scope.today = function() {
+            $scope.dt = new Date();
           };
+          $scope.dt = null;
 
-          scope.mode = scope.year = scope.month = scope.time =
-              scope.date = scope.dateDropDownInput = '';
-          scope.withIndeterminatePosition =
-              attrs.indeterminatePosition !== undefined;
-
-          var processValue = function() {
-            scope.value = scope.dateObj.date;
-            scope.tagName = scope.dateObj.dateType;
-            // Default date is empty
-            // Compute mode based on date length. The format
-            // is always ISO YYYY-MM-DDTHH:mm:ss
-            if (!scope.value) {
-              scope.value = '';
-            } else if (scope.value.length === 4) {
-              scope.year = parseInt(scope.value, 10);
-              scope.mode = 'year';
-            } else if (scope.value.length === 7) {
-              scope.month = scope.value;
-              scope.mode = 'month';
+          $scope.$watch('dateObj', function(newValue) {
+            if (newValue && newValue.dateTagName === "gmd:DateTime") {
+              $scope.format = 'yyyy-MM-dd mm:ss';
             } else {
-              var isDateTime = scope.value.indexOf('T') !== -1;
-              var tokens = scope.value.split('T');
-              scope.date = isDateTime ? tokens[0] : scope.value;
-              scope.time = isDateTime ? tokens[1] : '';
+              $scope.format = 'yyyy-MM-dd';
             }
-            if (scope.dateTypeSupported !== true) {
-              scope.dateInput = scope.value;
-              scope.dateDropDownInput = scope.value;
+            if (newValue) {
+              $scope.dt = dateParser.parse(newValue.date, $scope.format);
             }
-          };
-
-          scope.setMode = function(mode) {
-            scope.mode = mode;
-          };
-
-          var resetDateIfNeeded = function() {
-            // Reset date if indeterminate position is now
-            // or unknown.
-            if (scope.withIndeterminatePosition &&
-                (scope.indeterminatePosition === 'now' ||
-                scope.indeterminatePosition === 'unknown')) {
-              scope.dateInput = '';
-              scope.date = '';
-              scope.year = '';
-              scope.month = '';
-              scope.time = '';
-            }
-          };
-
-          // Build xml snippet based on input date.
-          var buildDate = function() {
-            var tag = scope.tagName !== undefined ?
-              scope.tagName : 'gco:Date';
-
-            if (scope.dateTypeSupported !== true) {
-
-              if (scope.dateInput === undefined) {
-                return;
+          });
+          $scope.$watch('dt', function(newValue) {
+            if (newValue) {
+              var isoDate = newValue.toISOString();
+              if ($scope.dateObj.dateTagName === "gmd:DateTime") {
+                $scope.dateObj.date = isoDate;
+              } else {
+                $scope.dateObj.dateTagName = "gmd:Date";
+                $scope.dateObj.date = isoDate.substr(0, isoDate.indexOf('T'));
               }
-
-              tag = scope.tagName !== undefined ? scope.tagName :
-                  (scope.dateInput.indexOf('T') === -1 ?
-                    'gco:Date' : 'gco:DateTime');
-              scope.dateTime = scope.dateInput;
-            } else if (scope.mode === 'year') {
-              scope.dateTime = scope.year;
-            } else if (scope.mode === 'month') {
-              scope.dateTime = scope.month;
-            } else if (scope.time) {
-              tag = scope.tagName !== undefined ?
-                scope.tagName : 'gco:DateTime';
-              var time = scope.time;
-              scope.dateTime = scope.date;
-
-              // Add seconds if not set
-              if (time.length === 5) {
-                time += ':00';
-              }
-              scope.dateTime += 'T' + time;
             } else {
-              scope.dateTime = scope.date;
+              $scope.dateObj.dateTagName = "gmd:Date";
+              $scope.dateObj.date = '';
             }
-            scope.value = scope.dateTime;
 
-            scope.dateObj.date = scope.dateTime;
+          });
+
+          $scope.clear = function () {
+            $scope.dt = null;
           };
-          scope.$watch('dateObj', function(){
-            processValue();
-            buildDate();
-          }, true);
-          scope.$watch('date', buildDate);
-          scope.$watch('time', buildDate);
-          scope.$watch('year', buildDate);
-          scope.$watch('month', buildDate);
-          scope.$watch('dateInput', buildDate);
-          scope.$watch('indeterminatePosition', buildDate);
-          scope.$watch('indeterminatePosition', resetDateIfNeeded);
+
+          $scope.open = function($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+
+            $scope.opened = true;
+          };
+
+          $scope.dateOptions = {
+            formatYear: 'yy',
+            startingDay: 1
+          };
+
+          $scope.initDate = new Date('2016-15-20');
         }
       };
     }]);
-})();
+}());
