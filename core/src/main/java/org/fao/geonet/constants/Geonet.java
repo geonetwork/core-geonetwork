@@ -573,7 +573,7 @@ public final class Geonet {
 	public static final String SEARCH_LOGGER = GEONETWORK + ".search-logger";
 	public static final String THREADPOOL = GEONETWORK + ".threadpool";
 	public static final String DATA_DIRECTORY = GEONETWORK + ".data.directory";
-    public static final Version LUCENE_VERSION = Version.LUCENE_41;
+    public static final Version LUCENE_VERSION = Version.LUCENE_4_9;
     public static final String FEEDBACK = GEONETWORK + ".feedback";
     public static final String GEOPUBLISH = GEONETWORK + ".geopublisher";
     public static final String FORMATTER = GEONETWORK + ".formatter";

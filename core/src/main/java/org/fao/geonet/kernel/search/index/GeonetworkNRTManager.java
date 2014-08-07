@@ -3,15 +3,12 @@ package org.fao.geonet.kernel.search.index;
 import java.io.Closeable;
 import java.io.IOException;
 
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.TrackingIndexWriter;
+import org.apache.lucene.search.*;
 import org.fao.geonet.utils.Log;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.NRTManager;
-import org.apache.lucene.search.NRTManager.TrackingIndexWriter;
-import org.apache.lucene.search.NRTManagerReopenThread;
-import org.apache.lucene.search.SearcherFactory;
-import org.apache.lucene.search.SearcherLifetimeManager;
 import org.apache.lucene.search.SearcherLifetimeManager.PruneByAge;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneConfig;
@@ -20,29 +17,30 @@ import com.google.common.base.Predicate;
 
 class GeonetworkNRTManager implements Closeable {
 
-    private NRTManagerReopenThread reopenThread;
-    private NRTManager actualManager;
+    private ControlledRealTimeReopenThread<IndexSearcher> reopenThread;
+    private SearcherManager actualManager;
     String language;
     private SearcherLifetimeManager lifetimeManager = new SearcherLifetimeManager();
     // taxonomyTracker is here so that we can commit it and refresh reader when 
     // we refresh
     private TaxonomyIndexTracker taxonomyTracker;
 
-    public GeonetworkNRTManager(LuceneConfig luceneConfig, String language, TrackingIndexWriter writer, SearcherFactory searcherFactory,
+    public GeonetworkNRTManager(LuceneConfig luceneConfig, String language, TrackingIndexWriter writer, IndexWriter iWriter, SearcherFactory searcherFactory,
             boolean applyAllDeletes, TaxonomyIndexTracker taxonomyTracker) throws IOException {
         this.taxonomyTracker = taxonomyTracker;
-        actualManager = new NRTManager(writer, searcherFactory, applyAllDeletes);
+        actualManager = new SearcherManager(iWriter, applyAllDeletes, searcherFactory);
         this.language = language;
         if (luceneConfig.useNRTManagerReopenThread()) {
             double targetMaxStaleSec = luceneConfig.getNRTManagerReopenThreadMaxStaleSec();
             double targetMinStaleSec = luceneConfig.getNRTManagerReopenThreadMinStaleSec();
-            this.reopenThread = new NRTManagerReopenThread(actualManager, targetMaxStaleSec, targetMinStaleSec);
+            this.reopenThread = new ControlledRealTimeReopenThread<IndexSearcher>(writer, actualManager, targetMaxStaleSec, targetMinStaleSec);
             reopenThread.setName("NRT Reopen Thread for " + language + " index");
             reopenThread.setPriority(Math.min(Thread.currentThread().getPriority() + 2, Thread.MAX_PRIORITY));
             reopenThread.setDaemon(true);
             reopenThread.start();
         }
     }
+
 
     public SearcherLifetimeManager getLifetimeManager() {
         return lifetimeManager;
