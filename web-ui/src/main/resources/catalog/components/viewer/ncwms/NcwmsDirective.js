@@ -14,8 +14,8 @@
   module.directive('gnNcwmsTransect', [
       'gnHttp',
       'gnNcWms',
-      'gnNcWmsConst',
-    function (gnHttp, gnNcWms, gnNcWmsConst) {
+      'gnPopup',
+    function (gnHttp, gnNcWms, gnPopup) {
       return {
         restrict: 'A',
         scope: {
@@ -108,15 +108,18 @@
 
               drawInteraction.on('drawend',
                   function(evt) {
-                    window.open(gnNcWms.getNcwmsServiceUrl(
-                            scope.layer,
-                            scope.map.getView().getProjection(),
-                            evt.feature.getGeometry().getCoordinates(),
-                            activeTool),
-                        '_blank',
-                        'menubar=no, status=no, scrollbars=no, menubar=no, width=600, height=400');
 
-                    resetInteraction();
+                    gnPopup.create({
+                      title: activeTool,
+                      url : gnNcWms.getNcwmsServiceUrl(
+                          scope.layer,
+                          scope.map.getView().getProjection(),
+                          evt.feature.getGeometry().getCoordinates(),
+                          activeTool),
+                      content: '<div class="gn-popup-iframe" style="width:400px">' +
+                          '<iframe frameBorder="0" border="0" style="width:100%;height:100%;" src="{{options.url}}" ></iframe>' +
+                          '</div>'
+                    });
                     scope.$apply(function() {
                       scope.activeTool = undefined;
                     });
