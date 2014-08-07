@@ -73,12 +73,13 @@ label.placeholder {
   background-color: white;
   font-size: 0.85em;
   opacity: 0;
-}
-.placeholder-input:not(.empty):focus + label.placeholder {
-  opacity: 1;
   padding-left: 5px;
   padding-right: 5px;
 }
+.placeholder-input:not(.empty):focus + label.placeholder {
+  opacity: 1;
+}
+
 .placeholder-input.empty + label.placeholder {
   top: 0.4em;
   opacity: 1;

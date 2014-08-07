@@ -36,6 +36,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -841,15 +842,33 @@ public class GetEditModel implements Service {
             if (hRef != null) {
                 final Element element = GetEditModel.this.resolveXLink(hRef, ServiceContext.get());
                 if (element != null) {
+                    String thesaurus = null;
                     String code = URLDecoder.decode(org.fao.geonet.kernel.reusable.Utils.id(hRef), "UTF-8");
                     Matcher matcher = THESAURUS_PATTERN.matcher(hRef);
                     if (matcher.find()) {
-                        String thesaurus = matcher.group(1);
+                        thesaurus = matcher.group(1);
                         json.put(Save.JSON_IDENTIFICATION_KEYWORD_THESAURUS, thesaurus);
                     }
                     json.put(Save.JSON_IDENTIFICATION_KEYWORD_CODE, code);
 
-                    addTranslatedElement(mainLanguage, node, mapper, json, Save.JSON_IDENTIFICATION_KEYWORD_WORD, "gmd:MD_Keywords/gmd:keyword");
+                    addTranslatedElement(mainLanguage, node, mapper, json,
+                            Save.JSON_IDENTIFICATION_KEYWORD_WORD,"gmd:MD_Keywords/gmd:keyword");
+
+                    if (thesaurus != null) {
+                        Map<String, String> thesaurusNames = getThesaurusTranslations(mapper, element);
+                        final JSONObject translations = json.getJSONObject(Save.JSON_IDENTIFICATION_KEYWORD_WORD);
+                        final Iterator keys = translations.keys();
+
+                        while (keys.hasNext()) {
+                            String lang = (String) keys.next();
+                            String thesaurusName = thesaurusNames.get(lang);
+                            if (thesaurusName == null) {
+                                thesaurusName = thesaurus;
+                            }
+                            translations.put(lang, translations.getString(lang) + " (" + thesaurusName + ")");
+                        }
+                    }
+
                     return json;
                 }
             }
@@ -857,6 +876,23 @@ public class GetEditModel implements Service {
             return null;
         }
     };
+
+    private Map<String, String> getThesaurusTranslations(IsoLanguagesMapper mapper, Element element) throws JDOMException {
+        final String xpath = "gmd:thesaurusName/gmd:CI_Citation//gmd:title//gmd:LocalisedCharacterString";
+        final List<?> nodes = Xml.selectNodes(element, xpath, NS);
+
+
+        final HashMap<String, String> translations = Maps.newHashMap();
+        for (Object node : nodes) {
+            Element el = (Element) node;
+            String langCode = el.getAttributeValue("locale");
+            if (langCode != null) {
+                langCode = langCode.substring(1).toLowerCase();
+                translations.put(mapper.iso639_1_to_iso639_2(langCode), el.getTextTrim());
+            }
+        }
+        return translations;
+    }
 
     private static final JsonEncoder valueJsonEncoder = new JsonEncoder() {
 
