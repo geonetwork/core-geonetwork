@@ -281,8 +281,10 @@ public class Metadata extends GeonetEntity {
      *
      * @return the metadata categories
      */
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
-    @JoinTable(name = METADATA_CATEG_JOIN_TABLE_NAME, joinColumns = @JoinColumn(name = "metadataId"),
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH},
+            fetch = FetchType.EAGER)
+    @JoinTable(name = METADATA_CATEG_JOIN_TABLE_NAME,
+            joinColumns = @JoinColumn(name = "metadataId"),
             inverseJoinColumns = @JoinColumn(name =
             METADATA_CATEG_JOIN_TABLE_CATEGORY_ID))
     @Nonnull

@@ -1,28 +1,45 @@
 package org.fao.geonet.kernel;
 
-import static org.junit.Assert.*;
-import static org.springframework.data.jpa.domain.Specifications.where;
-
 import com.google.common.base.Optional;
+import com.google.common.collect.Maps;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.Updater;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
 
-import javax.annotation.Nonnull;
 import java.io.ByteArrayInputStream;
+import java.util.Map;
 import java.util.UUID;
+import javax.annotation.Nonnull;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
  * Tests for the DataManager.
@@ -53,6 +70,33 @@ public class DataManagerIntegrationTest extends AbstractCoreIntegrationTest {
         _dataManager.deleteMetadata(serviceContext, mdId);
 
         assertEquals(count, _metadataRepository.count());
+    }
+
+    @Test
+    public void testBuildPrivilegesMetadataInfo() throws Exception {
+        final ServiceContext serviceContext = createServiceContext();
+        loginAsAdmin(serviceContext);
+        final UserSession userSession = serviceContext.getUserSession();
+
+        final String mdId1 = _dataManager.insertMetadata(serviceContext, "iso19139", new Element("MD_Metadata"), "uuid",
+                userSession.getUserIdAsInt(),
+                "" + ReservedGroup.all.getId(), "sourceid", "n", "doctype", null, new ISODate().getDateAndTime(), new ISODate().getDateAndTime(),
+                false, false);
+
+
+        Element info = new Element("info", Geonet.Namespaces.GEONET);
+        Map<String, Element> map = Maps.newHashMap();
+        map.put(mdId1, info);
+            info.removeContent();
+            _dataManager.buildPrivilegesMetadataInfo(serviceContext, map);
+        assertEqualsText("true", info, "edit");
+        assertEqualsText("true", info, "owner");
+        assertEqualsText("true", info, "isPublishedToAll");
+        assertEqualsText("true", info, "view");
+        assertEqualsText("true", info, "notify");
+        assertEqualsText("true", info, "download");
+        assertEqualsText("true", info, "dynamic");
+        assertEqualsText("true", info, "featured");
     }
 
     @Test
