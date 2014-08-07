@@ -52,6 +52,8 @@
             if($scope.auto) {
               fitRectangleToView();
               $scope.$apply();
+            } else {
+              updatePrintRectanglePixels($scope.config.scale);
             }
           }),
           $scope.$watch('auto', function(v) {
@@ -321,6 +323,7 @@
           link: function(scope, elt, attrs, ctrl) {
 
             scope.defaultLayout = attrs.layout;
+            scope.auto =true;
 
             // Deactivate only if it has been activated once first
             scope.$watch('printActive', function(isActive, old) {
