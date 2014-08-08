@@ -169,7 +169,7 @@
       angular.extend($scope.searchObj.params, params);
     };
 
-    $scope.$on('resetSearch', function(evt, searchParams) {
+    this.resetSearch = function(searchParams) {
       if (searchParams) {
         $scope.searchObj.params = searchParams;
       } else {
@@ -179,6 +179,9 @@
       $scope.currentFacets = [];
       $scope.triggerSearch();
       $scope.$broadcast('resetSelection');
+    };
+    $scope.$on('resetSearch', function(evt, searchParams) {
+      resetSearch(searchParams);
     });
 
     $scope.$on('clearResults', function() {
@@ -189,6 +192,7 @@
     });
 
     $scope.triggerSearch = this.triggerSearch;
+    $scope.resetSearch = this.resetSearch;
   };
 
   searchFormController['$inject'] = [
