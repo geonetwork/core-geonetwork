@@ -591,6 +591,8 @@ public class EditLib {
                     final Element newElement = addElement(metadataSchema.getName(), propEl, child.getQualifiedName());
                     if (newElement.getParent() != null) {
                         propEl.setContent(propEl.indexOf(newElement), child);
+                    } else if (child.getParentElement() == null) {
+                        propEl.addContent(child);
                     }
                 }
             }

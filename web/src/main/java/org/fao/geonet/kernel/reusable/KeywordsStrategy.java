@@ -23,27 +23,11 @@
 
 package org.fao.geonet.kernel.reusable;
 
-import static org.fao.geonet.kernel.reusable.Utils.addChild;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
+import com.google.common.base.Function;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.utils.Xml;
 import jeeves.xlink.XLink;
-
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.KeywordBean;
@@ -64,12 +48,26 @@ import org.openrdf.model.GraphException;
 import org.openrdf.model.URI;
 import org.openrdf.sesame.config.AccessDeniedException;
 
-import com.google.common.base.Function;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import static org.fao.geonet.kernel.reusable.Utils.addChild;
 
 public final class KeywordsStrategy extends ReplacementStrategy
 {
     private static final String NAMESPACE = "http://custom.shared.obj.ch/concept#";
-    private static final String GEOCAT_THESAURUS_NAME = "local._none_.geocat.ch";
+    public static final String GEOCAT_THESAURUS_NAME = "local._none_.geocat.ch";
     public static final String NON_VALID_THESAURUS_NAME = "local._none_.non_validated";
 
     private final ThesaurusManager _thesaurusMan;
@@ -248,6 +246,10 @@ public final class KeywordsStrategy extends ReplacementStrategy
     {
         String thesaurus = validateName(thesaurusName);
         KeywordBean concept = lookup(id, session);
+        return createXlinkHRefImpl(concept, thesaurus);
+    }
+
+    public static String createXlinkHRefImpl(KeywordBean concept, String thesaurus) throws UnsupportedEncodingException {
         String uri = concept.getUriCode();
         return XLink.LOCAL_PROTOCOL+"che.keyword.get?thesaurus=" + thesaurus + "&id=" + URLEncoder.encode(uri, "utf-8");
     }
@@ -269,7 +271,7 @@ public final class KeywordsStrategy extends ReplacementStrategy
 
     }
 
-    private String validateName(String thesaurusName)
+    private static String validateName(String thesaurusName)
     {
         if (thesaurusName == null) {
             return NON_VALID_THESAURUS_NAME;
@@ -278,7 +280,7 @@ public final class KeywordsStrategy extends ReplacementStrategy
         }
     }
 
-    private KeywordBean lookup(String id, UserSession session)
+    private static KeywordBean lookup(String id, UserSession session)
     {
         KeywordsSearcher searcher = (KeywordsSearcher) session.getProperty(Geonet.Session.SEARCH_KEYWORDS_RESULT);
         KeywordBean concept = searcher.getKeywordFromResultsById(Integer.parseInt(id));

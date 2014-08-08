@@ -220,8 +220,8 @@ public class Save implements Service {
             AddElemValue value = new AddElemValue(new Element(specialTag).addContent(buildLocalizedElem));
 
             final boolean result = editLib.addElementOrFragmentFromXpath(element, metadataSchema, xpath, value, true);
-            buildLocalizedElem.getParentElement().setAttribute("type", "che:PT_FreeURL_PropertyType", XSI);
             assert result;
+            buildLocalizedElem.getParentElement().setAttribute("type", "che:PT_FreeURL_PropertyType", XSI);
         }
     }
 
@@ -483,11 +483,12 @@ public class Save implements Service {
             }
         }
 
-        if (!conformityJson.getBoolean(JSON_CONFORMITY_IS_TITLE_SET) && conformanceResult == null) {
+        if ((!conformityJson.has(JSON_CONFORMITY_IS_TITLE_SET) || !conformityJson.getBoolean(JSON_CONFORMITY_IS_TITLE_SET)) &&
+            conformanceResult == null) {
             return;
         }
 
-        if (conformityJson.getBoolean(JSON_CONFORMITY_IS_TITLE_SET) && conformanceResult == null) {
+        if (conformityJson.has(JSON_CONFORMITY_IS_TITLE_SET) && conformityJson.getBoolean(JSON_CONFORMITY_IS_TITLE_SET) && conformanceResult == null) {
             conformanceResult = new Element("DQ_ConformanceResult", GMD);
 
             // iso19139 allows multiple gmd:results but inspire doesn't so check that we don't add an extra unintentionally

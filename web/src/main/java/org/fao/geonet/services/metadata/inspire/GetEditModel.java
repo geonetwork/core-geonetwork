@@ -6,6 +6,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.vividsolutions.jts.util.Assert;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
@@ -22,6 +23,7 @@ import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.reusable.KeywordsStrategy;
 import org.fao.geonet.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
@@ -36,10 +38,14 @@ import org.jdom.JDOMException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.openrdf.sesame.config.AccessDeniedException;
+import org.openrdf.sesame.query.MalformedQueryException;
+import org.openrdf.sesame.query.QueryEvaluationException;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -592,13 +598,7 @@ public class GetEditModel implements Service {
     private void addInspireKeywordIfRequired(IsoLanguagesMapper mapper, ServiceContext context, String mainLanguage,
                                              JSONObject identificationJSON)
             throws Exception {
-        final GeonetContext handlerContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        ThesaurusManager thesaurusManager = handlerContext.getThesaurusManager();
-        KeywordSearchParamsBuilder paramsBuilder = new KeywordSearchParamsBuilder(mapper).
-                keyword("INSPIRE", KeywordSearchType.MATCH, false).
-                addLang("eng").addLang("ger").addLang("ita").addLang("fre");
-
-        final List<KeywordBean> inspireKeywords = paramsBuilder.build().search(thesaurusManager);
+        final List<KeywordBean> inspireKeywords = findINSPIREKeywordBeans(mapper, context);
 
         if (inspireKeywords.isEmpty()) {
             throw new IllegalStateException("No INSPIRE keyword registered in any of the thesauri");
@@ -616,12 +616,23 @@ public class GetEditModel implements Service {
             final KeywordBean bean = inspireKeywords.get(0);
             String id = String.format("local://che.keyword.get?thesaurus=%s&id=%s&locales=en,it,de,fr",
                     bean.getThesaurusKey(),
-                    bean.getUriCode());
+                    URLEncoder.encode(bean.getUriCode(), "UTF-8"));
             final Element inspireKeywordEl = new Element("keyword").setAttribute(XLink.HREF, id, XLink.NAMESPACE_XLINK);
             final Object inspireKeyword = keywordJsonEncoder.encode(mainLanguage, inspireKeywordEl, mapper);
-
+            Assert.isTrue(inspireKeyword != null);
             jsonArray.put(inspireKeyword);
         }
+    }
+
+    @VisibleForTesting
+    protected List<KeywordBean> findINSPIREKeywordBeans(IsoLanguagesMapper mapper, ServiceContext context) throws IOException, MalformedQueryException, QueryEvaluationException, AccessDeniedException {
+        final GeonetContext handlerContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        ThesaurusManager thesaurusManager = handlerContext.getThesaurusManager();
+        KeywordSearchParamsBuilder paramsBuilder = new KeywordSearchParamsBuilder(mapper).
+                keyword("INSPIRE", KeywordSearchType.MATCH, false).
+                addLang("eng").addLang("ger").addLang("ita").addLang("fre").addThesaurus(KeywordsStrategy.GEOCAT_THESAURUS_NAME);
+
+        return paramsBuilder.build().search(thesaurusManager);
     }
 
     private void addEmptyKeywordIfRequired(JSONObject identificationJSON, boolean isDataType) throws JSONException {
@@ -881,7 +892,10 @@ public class GetEditModel implements Service {
 
             final String hRef = XLink.getHRef(node);
             if (hRef != null) {
-                final Element element = GetEditModel.this.resolveXLink(hRef, ServiceContext.get());
+                Element element = GetEditModel.this.resolveXLink(hRef, ServiceContext.get());
+                if (element == null) {
+                    element = node;
+                }
                 if (element != null) {
                     String thesaurus = null;
                     String code = URLDecoder.decode(org.fao.geonet.kernel.reusable.Utils.id(hRef), "UTF-8");

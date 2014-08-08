@@ -5,8 +5,10 @@ import com.google.common.io.Files;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Xml;
 import org.apache.jcs.access.exception.CacheException;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.EditLib;
+import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.languages.IsoLanguagesMapper;
@@ -18,12 +20,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.openrdf.sesame.config.AccessDeniedException;
+import org.openrdf.sesame.query.MalformedQueryException;
+import org.openrdf.sesame.query.QueryEvaluationException;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,6 +38,7 @@ import java.util.regex.Pattern;
 import static org.fao.geonet.kernel.search.spatial.Pair.read;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class GetEditModelTest {
@@ -111,8 +119,6 @@ public class GetEditModelTest {
         final Element testMetadata = Xml.loadFile(GetEditModelTest.class.getResource("inspire-valid-che.xml"));
 
         TestGetEditModel service = new TestGetEditModel(testMetadata);
-        service.addSharedObject("local://che.keyword.get?thesaurus=external.theme.inspire-theme&id=http%3A%2F%2Frdfdata.eionet.europa.eu%2Finspirethemes%2Fthemes%2F5&locales=en,it,de,fr", new Element("keyword"));
-        service.addSharedObject("local://xml.extent.get?id=0&wfs=default&typename=gn:countries&format=GMD_BBOX&extentTypeCode=true", new Element("extent"));
         Element params = new Element("params").addContent(new Element("id").setText("2"));
         ServiceContext context = Mockito.mock(ServiceContext.class);
 
@@ -160,12 +166,16 @@ public class GetEditModelTest {
                 read("eng", "Federal Office of Topography"));
 
         final JSONArray keywords = identification.getJSONArray(Save.JSON_IDENTIFICATION_KEYWORDS);
-        assertEquals(1, keywords.length());
+        assertEquals(2, keywords.length());
         assertEquals("http://rdfdata.eionet.europa.eu/inspirethemes/themes/5",
                 keywords.getJSONObject(0).getString(Save.JSON_IDENTIFICATION_KEYWORD_CODE));
         assertJsonObjectHasProperties(keywords.getJSONObject(0).getJSONObject(Save.JSON_IDENTIFICATION_KEYWORD_WORD),
-                read("ger", "Adressen"), read("fre", "Adresses"),
-                read("ita", "Indirizzi"), read("eng", "Addresses"));
+                read("ger", "Adressen (GEMET - INSPIRE themes, version 1.0)"),
+                read("fre", "Adresses (GEMET - INSPIRE themes, version 1.0)"),
+                read("ita", "Indirizzi (GEMET - INSPIRE themes, version 1.0)"),
+                read("eng", "Addresses (GEMET - INSPIRE themes, version 1.0)"));
+        assertEquals("http://test.com/INSPIRE",
+                keywords.getJSONObject(1).getString(Save.JSON_IDENTIFICATION_KEYWORD_CODE));
 
 
         final JSONArray topicCategories = identification.getJSONArray(Save.JSON_IDENTIFICATION_TOPIC_CATEGORIES);
@@ -249,14 +259,6 @@ public class GetEditModelTest {
         final Element testMetadata = Xml.loadFile(GetEditModelTest.class.getResource("inspire-valid-service-che.xml"));
 
         TestGetEditModel service = new TestGetEditModel(testMetadata);
-        service.addSharedObject("local://che.keyword.get?thesaurus=external._none_.gemet&id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F14891&locales=en,it,de,fr", new Element("keyword"));
-        service.addSharedObject("local://che.keyword.get?thesaurus=external._none_.gemet&id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F5167&locales=en,it,de,fr", new Element("keyword"));
-        service.addSharedObject("local://che.keyword.get?thesaurus=local._none_.geocat.ch&id=http%3A%2F%2Fgeocat.ch%2Fconcept%2344&locales=en,it,de,fr", new Element("keyword"));
-        service.addSharedObject("local://che.keyword.get?thesaurus=external._none_.gemet&id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F1984&locales=en,it,de,fr", new Element("keyword"));
-        service.addSharedObject("local://che.keyword.get?thesaurus=external._none_.gemet&id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F4398&locales=en,it,de,fr", new Element("keyword"));
-        service.addSharedObject("local://che.keyword.get?thesaurus=external._none_.gemet&id=http%3A%2F%2Fwww.eionet.europa.eu%2Fgemet%2Fconcept%2F14940&locales=en,it,de,fr", new Element("keyword"));
-        service.addSharedObject("local://che.keyword.get?thesaurus=external.theme.inspire-service-taxonomy&id=urn%3Ainspire%3Aservice%3Ataxonomy%3AspatialFeatureMatchingService&locales=fr,en,de,it", new Element("keyword"));
-        service.addSharedObject("local://xml.extent.get?id=0&wfs=default&typename=gn:countries&format=GMD_COMPLETE&extentTypeCode=true", new Element("extent"));
         Element params = new Element("params").addContent(new Element("id").setText("2"));
         ServiceContext context = Mockito.mock(ServiceContext.class);
 
@@ -304,12 +306,16 @@ public class GetEditModelTest {
                 read("eng", "Federal Office of Topography"));
 
         final JSONArray keywords = identification.getJSONArray(Save.JSON_IDENTIFICATION_KEYWORDS);
-        assertEquals(7, keywords.length());
+        assertEquals(8, keywords.length());
         assertEquals("urn:inspire:service:taxonomy:spatialFeatureMatchingService",
                 keywords.getJSONObject(6).getString(Save.JSON_IDENTIFICATION_KEYWORD_CODE));
         assertJsonObjectHasProperties(keywords.getJSONObject(6).getJSONObject(Save.JSON_IDENTIFICATION_KEYWORD_WORD),
-                read("ger", "spatialFeatureMatchingService"), read("fre", "spatialFeatureMatchingService"),
-                read("ita", "spatialFeatureMatchingService"), read("eng", "spatialFeatureMatchingService"));
+                read("ger", "spatialFeatureMatchingService (external.theme.inspire-service-taxonomy)"),
+                read("fre", "spatialFeatureMatchingService (external.theme.inspire-service-taxonomy)"),
+                read("ita", "spatialFeatureMatchingService (external.theme.inspire-service-taxonomy)"),
+                read("eng", "spatialFeatureMatchingService (external.theme.inspire-service-taxonomy)"));
+        assertEquals("http://test.com/INSPIRE",
+                keywords.getJSONObject(7).getString(Save.JSON_IDENTIFICATION_KEYWORD_CODE));
 
 
         final JSONArray topicCategories = identification.getJSONArray(Save.JSON_IDENTIFICATION_TOPIC_CATEGORIES);
@@ -390,8 +396,8 @@ public class GetEditModelTest {
     public void testConformity_Existing_NonInspire() throws Exception {
         final Element testMetadata = Xml.loadFile(GetEditModelTest.class.getResource("updateConformityMultipleResultInResultElem/metadata.xml"));
 
-        GetEditModel service = new TestGetEditModel(testMetadata);
-
+        TestGetEditModel service = new TestGetEditModel(testMetadata);
+//        service.addSharedObject("local://che.keyword.get?thesaurus=external.theme.gemet-theme&id=file%3A%2F%2FC%3A%5CUsers%5CJesse%5Cgc_data%5Cconfig%5Ccodelist%5Cexternal%5Cthesauri%5Ctheme%5Cgemet-theme.rdf%2Ftheme%2F5&locales=en,it,de,fr", new Element("keyword", Geonet.Namespaces.GMD));
         Element params = new Element("params").addContent(new Element("id").setText("2"));
         ServiceContext context = Mockito.mock(ServiceContext.class);
 
@@ -498,8 +504,28 @@ public class GetEditModelTest {
         private final Element testMetadata;
         private final Map<String, Element> sharedObjects = Maps.newHashMap();
 
-        public TestGetEditModel(Element testMetadata) {
+
+        KeywordBean inspireBean = new KeywordBean().
+                setUriCode("http://test.com/INSPIRE").
+                setDefaultLang("ger").
+                setValue("ger", "INSPIRE").
+                setValue("fre", "INSPIRE").
+                setValue("eng", "INSPIRE").
+                setValue("fre", "INSPIRE");
+
+        public TestGetEditModel(Element testMetadata) throws IOException, JDOMException {
             this.testMetadata = testMetadata;
+            final List<?> objects = Xml.selectNodes(testMetadata, "*[@xlink:href != ''] | *//*[@xlink:href != '']", Save.NS);
+            for (Object object : objects) {
+                Element el = (Element) object;
+                if (!el.getChildren().isEmpty()) {
+                    final Element o = (Element) el.getChildren().get(0);
+                    addSharedObject(el.getAttributeValue("href", Geonet.Namespaces.XLINK), (Element) o.clone());
+                }
+            }
+
+            this.sharedObjects.put("local://che.keyword.get?thesaurus=null&id=http%3A%2F%2Ftest.com%2FINSPIRE&locales=en,it,de,fr",
+                   SaveServiceTestImpl.createKeyword("eng", "INSPIRE", "local._none_.geocat.ch") );
         }
 
         void addSharedObject(String href, Element obj) {
@@ -533,8 +559,15 @@ public class GetEditModelTest {
         }
 
         @Override
+        protected List<KeywordBean> findINSPIREKeywordBeans(IsoLanguagesMapper mapper, ServiceContext context) throws IOException, MalformedQueryException, QueryEvaluationException, AccessDeniedException {
+            return Collections.singletonList(inspireBean);
+        }
+
+        @Override
         protected Element resolveXLink(String hRef, ServiceContext context) throws JDOMException, CacheException, IOException {
-            return this.sharedObjects.get(hRef);
+            final Element element = this.sharedObjects.get(hRef);
+            assertNotNull("No shared object registered with hRef: "+ hRef, element);
+            return element;
         }
     }
 }

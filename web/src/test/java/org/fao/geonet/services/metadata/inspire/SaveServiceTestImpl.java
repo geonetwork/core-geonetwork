@@ -66,7 +66,7 @@ class SaveServiceTestImpl extends Save {
         sharedObjects.put("local://xml.extent.get?id=2196&amp;wfs=default&amp;typename=gn:gemeindenBB&amp;format=gmd_complete&amp;extentTypeCode=true", fribourgExtent);
     }
 
-    Element createExtent(String description, String id) throws IOException, JDOMException {
+    static Element createExtent(String description, String id) throws IOException, JDOMException {
         String xml = "<gmd:EX_Extent" +
                      "        xmlns:che=\"http://www.geocat.ch/2008/che\" " +
                      "        xmlns:srv=\"http://www.isotc211.org/2005/srv\" " +
@@ -122,7 +122,7 @@ class SaveServiceTestImpl extends Save {
         return Xml.loadString(String.format(xml, description, id), false);
     }
 
-    Element createKeyword(String lang, String word, String thesaurus) throws IOException, JDOMException {
+    static Element createKeyword(String lang, String word, String thesaurus) throws IOException, JDOMException {
         StringBuilder builder = new StringBuilder();
         builder.append("<gmd:MD_Keywords \n").
                 append("        xmlns:che=\"http://www.geocat.ch/2008/che\" ").

@@ -386,7 +386,6 @@
           </che:organisationAcronym>
         </che:CHE_CI_ResponsibleParty>
       </gmd:pointOfContact>
-      <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://che.keyword.get?thesaurus=external.theme.gemet-theme&amp;id=file%3A%2F%2FC%3A%5CUsers%5CJesse%5Cgc_data%5Cconfig%5Ccodelist%5Cexternal%5Cthesauri%5Ctheme%5Cgemet-theme.rdf%2Ftheme%2F5&amp;locales=en,it,de,fr" xlink:show="embed" />
       <gmd:descriptiveKeywords xmlns:xlink="http://www.w3.org/1999/xlink" xlink:show="embed">
         <gmd:MD_Keywords xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:util="java:org.fao.geonet.util.XslUtil">
           <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">

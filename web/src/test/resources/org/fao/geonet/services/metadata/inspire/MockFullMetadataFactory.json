@@ -143,6 +143,7 @@
     "scopeCode": "dataset",
     "scopeCodeDescription": {"eng":"scopeCodeDescription"},
     "conformanceResultRef": "",
+    "isTitleSet" : true,
     "title": {
       "eng":"conformity title"
     },
