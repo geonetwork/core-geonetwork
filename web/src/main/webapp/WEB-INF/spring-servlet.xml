@@ -47,7 +47,7 @@
 		  <property name="favorPathExtension" value="false"/>  
 		  <property name="ignoreAcceptHeader" value="false" /> 
 		  <property name="favorParameter" value="true"/>
-		  <property name="parameterName" value="format"/>
+		  <property name="parameterName" value="_content_type"/>
 		  <property name="defaultContentType" value="application/xml" />  
 		  <property name="useJaf" value="false"/>  
 		  

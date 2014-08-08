@@ -22,12 +22,12 @@
     <rule>
         <condition name="content-type" operator="notequal">multipart/form-data</condition>
         <from>^(.+)@json$</from>
-        <to type="permanent-redirect">%{context-path}$1?format=json</to>
+        <to type="permanent-redirect">%{context-path}$1?_content_type=json</to>
     </rule>
     <rule>
         <condition name="content-type" operator="notequal">multipart/form-data</condition>
         <from>^(.+)@json(\?.*)$</from>
-        <to type="permanent-redirect">%{context-path}$1$2&amp;format=json</to>
+        <to type="permanent-redirect">%{context-path}$1$2&amp;_content_type=json</to>
     </rule>
     <rule>
         <from>^(.*)/ar/(.*)$</from>
