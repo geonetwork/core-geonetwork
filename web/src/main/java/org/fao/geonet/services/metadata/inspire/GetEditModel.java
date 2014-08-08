@@ -576,8 +576,8 @@ public class GetEditModel implements Service {
         addArray(mainLanguage, identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, "gmd:descriptiveKeywords ",
                 Save.JSON_IDENTIFICATION_KEYWORDS, keywordJsonEncoder);
 
-        addKeywordIfRequired(identificationJSON, isDataType);
         addInspireKeywordIfRequired(getIsoLanguagesMapper(), context, mainLanguage, identificationJSON);
+        addEmptyKeywordIfRequired(identificationJSON, isDataType);
 
         addArray(mainLanguage, identificationInfoEl, getIsoLanguagesMapper(), identificationJSON, "gmd:extent|srv:extent",
                 Save.JSON_IDENTIFICATION_EXTENTS, extentJsonEncoder);
@@ -607,7 +607,7 @@ public class GetEditModel implements Service {
             for (KeywordBean keyword : inspireKeywords) {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     final JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    if (keyword.getUriCode().equals(jsonObject.getString("code"))) {
+                    if (jsonObject.has(Save.JSON_IDENTIFICATION_KEYWORD_CODE) && keyword.getUriCode().equals(jsonObject.getString(Save.JSON_IDENTIFICATION_KEYWORD_CODE))) {
                         return;
                     }
                 }
@@ -624,7 +624,7 @@ public class GetEditModel implements Service {
         }
     }
 
-    private void addKeywordIfRequired(JSONObject identificationJSON, boolean isDataType) throws JSONException {
+    private void addEmptyKeywordIfRequired(JSONObject identificationJSON, boolean isDataType) throws JSONException {
         String requiredThesaurus = "external.theme.inspire-theme";
         if (!isDataType) {
             requiredThesaurus = "external.theme.inspire-service-taxonomy";
