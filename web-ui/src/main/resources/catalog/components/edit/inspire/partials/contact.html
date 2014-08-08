@@ -30,10 +30,10 @@
         </div>
         <div class="form-group">
             <div class="col-xs-12" data-ng-class="validationClassString(contact.role)">
-                <select id="contactRole"
-                        class="form-control"
-                        data-ng-model="contact.role"
-                        data-ng-options="opt.name as opt.title for opt in roleOptions" />
+                <div data-ie9-select
+                     data-options="roleOptions"
+                     data-value="name" data-title="title"
+                     data-field="contact.role"></div>
             </div>
         </div>
         <div class="form-group">

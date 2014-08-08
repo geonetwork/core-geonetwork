@@ -146,13 +146,13 @@
         <fieldset id="metadata">
             <legend data-translate="">metadata</legend>
             <div class="form-group">
-                <label for="metadataLanguage" class="col-xs-3 control-label" ><span data-translate="">language</span>: </label>
+                <label class="col-xs-3 control-label" ><span data-translate="">language</span>: </label>
                 <div class="col-xs-9" data-ng-class="validationClassString(data.language)">
-                    <select id="metadataLanguage"
-                            class="form-control"
-                            data-ng-model="data.language"
-                            data-ng-options="lang | translate for lang in languages">
-                    </select>
+                    <div data-ie9-select
+                         data-options="languages"
+                         data-translate-title="true"
+                         data-default-value="0"
+                         data-field="data.language"></div>
                 </div>
             </div>
 
@@ -167,14 +167,12 @@
             </div>
 
             <div class="form-group">
-                <label for="hierarchyLevel" class="col-xs-3 control-label"><span data-translate="">hierarchyLevel</span>: </label>
+                <label class="col-xs-3 control-label"><span data-translate="">hierarchyLevel</span>: </label>
                 <div class="col-xs-9" data-ng-class="validationClassString(data.hierarchyLevel)">
-                    <select id="hierarchyLevel"
-                            class="form-control"
-                            data-ng-model="data.hierarchyLevel"
-                            data-ng-class="validationClassString(data.hierarchyLevel)"
-                            data-ng-options="opt.name as opt.title for opt in data.hierarchyLevelOptions">
-                    </select>
+                    <div data-ie9-select
+                         data-options="data.hierarchyLevelOptions"
+                         data-value="name" data-title="title"
+                         data-field="data.hierarchyLevel"></div>
                 </div>
             </div>
             <div class="form-group"
@@ -217,17 +215,22 @@
         <fieldset id="identification">
             <legend data-translate="">identificationInfo</legend>
             <div class="form-group">
-                <label for="metadataType" class="col-xs-3 control-label" ><span data-translate="">metadataType</span>: </label>
+                <label class="col-xs-3 control-label" ><span data-translate="">metadataType</span>: </label>
                 <div class="col-xs-9">
-                    <select id="metadataType" class="form-control" ng-model="data.identification.type" data-ng-options="type | translate for type in data.metadataTypeOptions">
-                    </select>
+                    <input class="form-control" disabled value="{{data.identification.type | translate}}"/>
+                    <!--<div data-ie9-select-->
+                         <!--data-options="data.metadataTypeOptions"-->
+                         <!--data-translate-title="true"-->
+                         <!--data-field="data.identification.type"></div>-->
                 </div>
             </div>
             <div class="form-group" data-ng-show="data.identification.type == 'data'">
-                <label for="identificationMetadataLanguage" class="col-xs-3 control-label" ><span data-translate="">metadataLanguage</span>: </label>
+                <label class="col-xs-3 control-label" ><span data-translate="">metadataLanguage</span>: </label>
                 <div class="col-xs-9" data-ng-class="validationClassString(data.identification.language)">
-                    <select id="identificationMetadataLanguage" class="form-control" ng-model="data.identification.language" data-ng-options="lang | translate for lang in languages">
-                    </select>
+                    <div data-ie9-select
+                         data-options="languages"
+                         data-translate-title="true"
+                         data-field="data.identification.language"></div>
                 </div>
             </div>
 
@@ -263,23 +266,21 @@
                 </div>
                 <div class="col-xs-offset-3 col-xs-9"
                      data-ng-class="validationClassString(data.identification.date.dateType)">
-                    <select id="dateType"
-                            class="form-control"
-                            data-ng-model="data.identification.date.dateType"
-                            data-ng-options="opt.name as opt.title for opt in data.dateTypeOptions">
-                    </select>
+                    <div data-ie9-select
+                         data-field="data.identification.date.dateType"
+                         data-options="data.dateTypeOptions"
+                         data-value="name" data-title="title"></div>
                 </div>
             </div>
             <div class="form-group"
                  data-ng-show="data.identification.type == 'service'">
-                <label for="serviceType" class="col-xs-3 control-label" ><span data-translate="">serviceType</span>: </label>
+                <label class="col-xs-3 control-label" ><span data-translate="">serviceType</span>: </label>
                 <div class="col-xs-9"
                      data-ng-class="validationClassString(data.identification.serviceType)">
-                    <select id="serviceType"
-                            class="form-control"
-                            data-ng-model="data.identification.serviceType"
-                            data-ng-options="opt.name as opt.title for opt in data.serviceTypeOptions">
-                    </select>
+                    <div data-ie9-select
+                         data-field="data.identification.serviceType"
+                         data-options="data.serviceTypeOptions"
+                         data-value="name" data-title="title"></div>
                 </div>
             </div>
             <div class="form-group"
@@ -290,10 +291,10 @@
                         <tr data-ng-repeat="categoryIndex in data.identification.topicCategory  | hideNonCheTopicCategories ">
 
                             <td data-ng-class="validationClassString(data.identification.topicCategory[categoryIndex])">
-                                <select id="topicCategory{{categoryIndex}}" class="form-control"
-                                        data-ng-model="data.identification.topicCategory[categoryIndex]"
-                                        data-ng-options="opt.name as opt.title group by opt.group for opt in data.topicCategoryOptions">
-                                </select>
+                                <div data-ie9-select id="topicCategory{{categoryIndex}}"
+                                     data-field="data.identification.topicCategory[categoryIndex]"
+                                     data-options="data.topicCategoryOptions"
+                                     data-group-by="group" data-value="name" data-title="title"></div>
                             </td>
                             <td width="24px">
                                 &nbsp;

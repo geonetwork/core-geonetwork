@@ -1,5 +1,15 @@
 <select class="form-control">
-    <option value=""></option>
-    <option data-ng-repeat="opt in options"
-            value="{{opt[value]}}">{{opt[title]}}</option>
+    <option data-ng-selected="!field"
+            data-ng-if="showEmptyOption"
+            data-ng-mouseup="updateField(-1)"
+            value="-1"></option>
+    <optgroup data-ng-repeat="grp in groups"
+              label="{{grp.title}}">
+        <!-- Need both click and mouseup because IE ignores mouseup and FF ignores click -->
+        <option data-ng-repeat="opt in grp.opts"
+                data-ng-mouseup="updateField(opt.actual, $event)"
+                data-ng-click="updateField(opt.actual, $event)"
+                data-ng-selected="opt.isSelected"
+                value="{{opt.value}}">{{opt.title}}</option>
+    </optgroup>
 </select>

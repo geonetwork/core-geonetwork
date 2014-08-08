@@ -45,7 +45,6 @@
         }
       };
       $scope.languages = ['ger', 'fre', 'ita', 'eng', 'roh'];
-
       var params = window.location.search;
       var mdId = params.substring(params.indexOf("id=") + 3);
       var indexOfAmp = mdId.indexOf('&');
@@ -428,9 +427,9 @@
           toRemove = [];
           for (i = 0; i < $scope.legal.otherConstraints.length; i++) {
             otherConstraint = $scope.legal.otherConstraints[i];
-            remove = otherConstraint[$scope.data.language].trim().length === 0;
+            remove = !otherConstraint[$scope.data.language] || otherConstraint[$scope.data.language].trim().length === 0;
             for (j = 0; j < $scope.data.otherLanguages.length; j++) {
-              if (otherConstraint[$scope.data.language].trim().length > 0) {
+              if (otherConstraint[$scope.data.language] && otherConstraint[$scope.data.language].trim().length > 0) {
                 remove = false;
                 break;
               }
@@ -489,17 +488,19 @@
           }
         }
       });
-      $scope.updateConformanceResultTitle = function(desc, mainLang) {
-        if (desc.title[mainLang]) {
-          return desc.title[mainLang];
-        }
-        if (desc.title[$scope.data.language]) {
-          return desc.title[$scope.data.language];
-        }
-        if (desc.title.length > 0) {
-          return desc.title[0];
-        }
-        return desc.ref;
+      $scope.updateConformanceResultTitle = function(mainLang) {
+        return function (desc) {
+          if (desc.title[mainLang]) {
+            return desc.title[mainLang];
+          }
+          if (desc.title[$scope.data.language]) {
+            return desc.title[$scope.data.language];
+          }
+          if (desc.title.length > 0) {
+            return desc.title[0];
+          }
+          return desc.ref;
+        };
       };
   }]);
 
