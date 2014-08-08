@@ -4,6 +4,7 @@
 
 @import "../lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.less";
 @import (less) "../lib/bootstrap.ext/datepicker/datepicker.css";
+@import (less) "../lib/style/datetimepicker.css";
 
 @fa-version: '4.1.0';
 @fa-font-path: '../lib/style/font-awesome/fonts';
@@ -57,7 +58,6 @@
 }
 
 /* typeahead styles */
-
 .tt-query {
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -97,7 +97,7 @@
 .tt-suggestion p {
   margin: 0;
 }
-
+/** Enf of typeahead styles */
 .bootstrap-tagsinput {
   width: 100%;
 }
@@ -107,5 +107,10 @@
     cursor: pointer;
     background-color:  #428bca;
   }
+}
+
+[gn-bootstrap-datepicker].input-group[class*="col-"] {
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
