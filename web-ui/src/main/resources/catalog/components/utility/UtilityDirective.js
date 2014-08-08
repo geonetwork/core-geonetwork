@@ -224,4 +224,36 @@
       }
     };
   });
+
+  /**
+   * Use to initialize bootstrap datepicker
+   */
+  module.directive('gnBootstrapDatepicker', [
+    function() {
+
+      return {
+        restrict: 'A',
+        scope: {
+          date: '=gnBootstrapDatepicker'
+        },
+        link: function (scope, element, attrs, ngModelCtrl) {
+
+          $(element).datepicker().on('changeDate', function(ev) {
+            // view -> model
+            scope.$apply(function () {
+              scope.date = $(element).find('input')[0].value;
+            });
+          });
+
+          // model -> view
+          scope.$watch('date', function(v) {
+            if(angular.isUndefined(v)) {
+              v ='';
+            }
+            $(element).find('input')[0].value = v;
+          });
+        }
+      }
+    }]);
+
 })();
