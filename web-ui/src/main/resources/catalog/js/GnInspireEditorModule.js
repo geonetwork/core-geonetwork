@@ -347,16 +347,18 @@
   module.controller('InspireConstraintsController', [
     '$scope', function($scope) {
       var countProperties = function(propertyName) {
-        var legal, i, count;
-        var legalConstraints = $scope.data.constraints.legal;
+        var legal, i, count = 0;
+        var allConstraints = [$scope.data.constraints.legal, $scope.data.constraints.generic, $scope.data.constraints.security];
 
-        count = 0;
-        for (i = 0; i < legalConstraints.length; i++) {
-          legal = legalConstraints[i];
-          if (legal[propertyName]) {
-            count += legal[propertyName].length;
+        angular.forEach(allConstraints, function (constraints) {
+          for (i = 0; i < constraints.length; i++) {
+            legal = constraints[i];
+            if (legal[propertyName]) {
+              count += legal[propertyName].length;
+            }
           }
-        }
+
+        });
         return count;
       };
 
@@ -398,6 +400,16 @@
           });
         }
 
+        $scope.propertyCount.updateAccessConstraints();
+        $scope.propertyCount.updateUseConstraints();
+        $scope.propertyCount.updateUseLimitations();
+      });
+      $scope.$watchCollection('data.constraints.generic', function(newValue) {
+        $scope.propertyCount.updateAccessConstraints();
+        $scope.propertyCount.updateUseConstraints();
+        $scope.propertyCount.updateUseLimitations();
+      });
+      $scope.$watchCollection('data.constraints.security', function(newValue) {
         $scope.propertyCount.updateAccessConstraints();
         $scope.propertyCount.updateUseConstraints();
         $scope.propertyCount.updateUseLimitations();

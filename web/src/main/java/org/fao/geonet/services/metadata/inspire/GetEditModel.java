@@ -506,7 +506,7 @@ public class GetEditModel implements Service {
             addArray(mainLanguage, securityConstraint, getIsoLanguagesMapper(), json, "gmd:useLimitation", Save.JSON_CONSTRAINTS_USE_LIMITATIONS,
                     translatedElemEncoder);
             addArray(mainLanguage, securityConstraint, getIsoLanguagesMapper(), json, "gmd:classification/gmd:MD_ClassificationCode",
-                    Save.JSON_CONSTRAINTS_USE_LIMITATIONS, codeListJsonEncoder);
+                    Save.JSON_CONSTRAINTS_CLASSIFICATION, codeListJsonEncoder);
             constraintsJson.append(Save.JSON_CONSTRAINTS_SECURITY, json);
         }
 
@@ -714,11 +714,13 @@ public class GetEditModel implements Service {
         metadataJson.put(jsonKey, value.trim());
     }
 
-    private static boolean addArray(String mainLanguage, Element metadataEl, IsoLanguagesMapper mapper, JSONObject metadataJson, String xpath, String jsonKey, JsonEncoder encoder)
+    private static boolean addArray(String mainLanguage, Element metadataEl, IsoLanguagesMapper mapper, JSONObject metadataJson,
+                                    String xpath, String jsonKey, JsonEncoder encoder)
             throws Exception {
         return addArray(mainLanguage, metadataEl, mapper, metadataJson, xpath, jsonKey, encoder, null);
     }
-    private static boolean addArray(String mainLanguage, Element metadataEl, IsoLanguagesMapper mapper, JSONObject metadataJson, String xpath, String jsonKey, JsonEncoder encoder, JSONArray defaultVal)
+    private static boolean addArray(String mainLanguage, Element metadataEl, IsoLanguagesMapper mapper, JSONObject metadataJson,
+                                    String xpath, String jsonKey, JsonEncoder encoder, JSONArray defaultVal)
             throws Exception {
         boolean addedElement = false;
 

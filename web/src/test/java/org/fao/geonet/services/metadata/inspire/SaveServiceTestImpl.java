@@ -59,6 +59,9 @@ class SaveServiceTestImpl extends Save {
         Element hydrographyKeyword = createKeyword("eng", "Hydrography", "external.theme.inspire-theme");
         sharedObjects.put("local://che.keyword.get?thesaurus=external.theme.inspire-theme&amp;id=http%3A%2F%2Frdfdata.eionet.europa" +
                     ".eu%2Finspirethemes%2Fthemes%2F9&amp;locales=fr,en,de,it", hydrographyKeyword);
+        Element nonThemeKeyword = createKeyword("eng", "otherWord", "external._none_.gemet");
+        sharedObjects.put("local://che.keyword.get?thesaurus=external._none_.gemet&amp;id=http%3A%2F%2Frdfdata.eionet.europa.eu%2F" +
+                          "inspirethemes%2Fthemes%2F9&amp;locales=fr,en,de,it", nonThemeKeyword);
 
         Element bernExtent = createExtent("Bern", "Bern");
         sharedObjects.put("local://xml.extent.get?id=2&amp;wfs=default&amp;typename=gn:kantoneBB&amp;format=gmd_complete&amp;extentTypeCode=true", bernExtent);
@@ -221,7 +224,7 @@ class SaveServiceTestImpl extends Save {
             }
             return (Element) element.clone();
         }
-        throw new IllegalArgumentException("Unexpected xlink: "+xlinkHref);
+        throw new Error("Unexpected xlink: " + xlinkHref);
     }
 
     @Override

@@ -335,7 +335,7 @@ public class SaveTest {
 
 
         List<?> keywords = identification.getChildren("descriptiveKeywords", GMD);
-        assertEquals(2, keywords.size());
+        assertEquals(3, keywords.size());
         final String buildingsKeywordXlink =
                 "local://che.keyword.get?thesaurus=external.theme.inspire-theme&amp;id=http%3A%2F%2Frdfdata.eionet.europa" +
                 ".eu%2Finspirethemes%2Fthemes%2F15&amp;locales=fr,en,de,it";
@@ -584,7 +584,7 @@ public class SaveTest {
         assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:citation//gmd:date//gmd:date", Save.NS).size());
         assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:citation//gmd:dateType", Save.NS).size());
         assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:abstract", Save.NS).size());
-        assertEquals(2, Xml.selectNodes(identificationInfo, "gmd:descriptiveKeywords", Save.NS).size());
+        assertEquals(3, Xml.selectNodes(identificationInfo, "gmd:descriptiveKeywords", Save.NS).size());
     }
 
     @Test
@@ -779,7 +779,7 @@ public class SaveTest {
         assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:citation//gmd:date//gmd:date", Save.NS).size());
         assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:citation//gmd:dateType", Save.NS).size());
         assertEquals(1, Xml.selectNodes(identificationInfo, "gmd:abstract", Save.NS).size());
-        assertEquals(2, Xml.selectNodes(identificationInfo, "gmd:descriptiveKeywords", Save.NS).size());
+        assertEquals(3, Xml.selectNodes(identificationInfo, "gmd:descriptiveKeywords", Save.NS).size());
     }
 
     @Test

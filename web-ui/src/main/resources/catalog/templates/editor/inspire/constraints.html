@@ -190,14 +190,12 @@
         <legend data-translate="">securityConstraints</legend>
         <div class="form-group">
 
-            <div class="table-responsive col-xs-12">
+            <div class="table-responsive col-xs-12" data-ng-repeat="security in data.constraints.security">
                 <table class="table table-condensed">
-                    <tr data-ng-repeat="security in data.constraints.security">
+                    <tr data-ng-repeat="limitation in security.useLimitations">
                         <td data-ng-class="$first ? 'no-border-top' : ''">
-                            <div data-ng-repeat="limitation in security.useLimitations"
-                                 data-ng-class="$first ? '' : ['col-xs-offset-3', 'indent-1em']">
+                            <div data-ng-class="$first ? '' : ['col-xs-offset-3', 'indent-1em']">
                                 <div data-inspire-multilingual-text
-                                     title="notEditableInInspireView"
                                      data-title="{{ $first ? 'useLimitations': ''}}"
                                      data-rows="1"
                                      data-main-lang="data.language"

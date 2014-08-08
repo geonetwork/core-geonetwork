@@ -81,9 +81,15 @@
     }],
     "descriptiveKeywords": [
       {
+        "thesaurus": "external.theme.inspire-theme",
         "code": "http://rdfdata.eionet.europa.eu/inspirethemes/themes/15", "words": {
         "eng": "Buildings"}},
       {
+        "thesaurus": "external.theme.inspire-theme",
+        "code": "http://rdfdata.eionet.europa.eu/inspirethemes/themes/9", "words": {
+        "eng": "Hydrography", "ger": "Schutzgebiete"}},
+      {
+        "thesaurus": "external._none_.gemet",
         "code": "http://rdfdata.eionet.europa.eu/inspirethemes/themes/9", "words": {
         "eng": "Hydrography", "ger": "Schutzgebiete"}}],
     "topicCategory": ["transportation", "imageryBaseMapsEarthCover_BaseMaps"],

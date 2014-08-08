@@ -138,6 +138,7 @@ public class Save implements Service {
     public static final String JSON_IDENTIFICATION_OPERATION_NAME = "operationName";
     public static final String JSON_IDENTIFICATION_DCP_LIST = "dcpList";
     public static final String JSON_CONFORMITY_IS_TITLE_SET = "isTitleSet";
+    public static final String JSON_CONSTRAINTS_CLASSIFICATION = "classification";
 
     @Override
     public void init(String appPath, ServiceConfig params) throws Exception {
@@ -1159,11 +1160,14 @@ public class Save implements Service {
 
             String hrefTemplate = "local://che.keyword.get?thesaurus=%s&amp;id=%s&amp;locales=fr,en,de,it";
 
-            String thesaurus;
-            if (identType.equals(JSON_IDENTIFICATION_TYPE_DATA_VALUE)) {
-                thesaurus = "external.theme.inspire-theme";
-            } else {
-                thesaurus = "external.theme.inspire-service-taxonomy";
+            String thesaurus = jsonObject.optString(JSON_IDENTIFICATION_KEYWORD_THESAURUS);
+
+            if (thesaurus == null) {
+                if (identType.equals(JSON_IDENTIFICATION_TYPE_DATA_VALUE)) {
+                    thesaurus = "external.theme.inspire-theme";
+                } else {
+                    thesaurus = "external.theme.inspire-service-taxonomy";
+                }
             }
 
             final String codeString = jsonObject.optString("code");
