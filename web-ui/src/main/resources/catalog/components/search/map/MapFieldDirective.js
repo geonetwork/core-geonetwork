@@ -4,7 +4,8 @@
   angular.module('gn_map_field_directive', [
   ])
       .directive('gnMapField', [
-        function() {
+        'gnMap',
+        function(gnMap) {
           return {
             restrict: 'A',
             templateUrl: '../../catalog/components/search/map/' +
@@ -12,9 +13,8 @@
             link: function(scope, element, attrs) {
 
               scope.map = scope.$eval(attrs['gnMapField']);
-              scope.zoom = function(delta) {
-                scope.map.getView().setZoom(scope.map.getView().getZoom()+ delta);
-              };
+              scope.gnMap = gnMap;
+
               scope.maxExtent = function() {
                 scope.map.getView().fitExtent(scope.map.getView().getProjection().getExtent(),
                     scope.map.getSize());
