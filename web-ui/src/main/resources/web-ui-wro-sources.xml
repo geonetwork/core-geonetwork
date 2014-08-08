@@ -29,5 +29,6 @@
     <jsSource webappPath="catalog/lib/bootstrap.ext/typeahead.js/typeahead.min.js"/>
     <jsSource webappPath="catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.min.js"/>
     <jsSource webappPath="catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput-angular.js"/>
+    <jsSource webappPath="catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.js"/>
   </declarative>
 </sources>
