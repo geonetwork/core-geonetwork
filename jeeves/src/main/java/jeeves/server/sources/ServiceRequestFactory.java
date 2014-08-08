@@ -53,7 +53,7 @@ import javax.servlet.http.HttpServletResponse;
 public final class ServiceRequestFactory
 {
 
-    private static final String JSON_URL_FLAG = "format=json";
+    private static final String JSON_URL_FLAG = "_content_type=json";
     private static String DEBUG_URL_FLAG = "!";
 
 	/**
