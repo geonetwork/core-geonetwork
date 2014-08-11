@@ -389,6 +389,28 @@
         }
       };
 
+      var hasNonEmptyOtherConstraintInConstraint = function(legalConstraint) {
+        var x;
+        for (x = 0; x < legalConstraint.otherConstraints.length; x++) {
+          if (legalConstraint.otherConstraints[x][$scope.data.language] !== '') {
+            return true;
+          }
+        }
+        return false;
+      };
+      $scope.hasNonEmptyOtherConstraint = function() {
+        var x;
+        for (x = 0; x < $scope.data.constraints.legal.length; x++) {
+          if (hasNonEmptyOtherConstraintInConstraint($scope.data.constraints.legal[x])) {
+            return true;
+          }
+        }
+        return false;
+      };
+
+      $scope.validityClass = {
+          otherConstraints: ''
+        };
       $scope.$watchCollection('data.constraints.legal', function(newValue) {
         if (newValue.length === 0) {
           newValue.push({
@@ -399,17 +421,16 @@
             legislationConstraints: []
           });
         }
-
         $scope.propertyCount.updateAccessConstraints();
         $scope.propertyCount.updateUseConstraints();
         $scope.propertyCount.updateUseLimitations();
       });
-      $scope.$watchCollection('data.constraints.generic', function(newValue) {
+      $scope.$watchCollection('data.constraints.generic', function() {
         $scope.propertyCount.updateAccessConstraints();
         $scope.propertyCount.updateUseConstraints();
         $scope.propertyCount.updateUseLimitations();
       });
-      $scope.$watchCollection('data.constraints.security', function(newValue) {
+      $scope.$watchCollection('data.constraints.security', function() {
         $scope.propertyCount.updateAccessConstraints();
         $scope.propertyCount.updateUseConstraints();
         $scope.propertyCount.updateUseLimitations();
@@ -429,34 +450,38 @@
     '$scope', function($scope) {
 
       $scope.$watch('accessConstraint', function() {
-        var i, j, otherConstraint, toRemove, remove;
+        var otherConstraint;
         var hasOtherRestrictions = $scope.hasOtherRestrictions($scope.legal);
-        if (hasOtherRestrictions && $scope.legal.otherConstraints.length === 0) {
+        if ($scope.legal.otherConstraints.length === 0) {
           otherConstraint = {};
           otherConstraint[$scope.data.language] = '';
           $scope.legal.otherConstraints.push(otherConstraint);
-        } else if (!hasOtherRestrictions) {
-          toRemove = [];
-          for (i = 0; i < $scope.legal.otherConstraints.length; i++) {
-            otherConstraint = $scope.legal.otherConstraints[i];
-            remove = !otherConstraint[$scope.data.language] || otherConstraint[$scope.data.language].trim().length === 0;
-            for (j = 0; j < $scope.data.otherLanguages.length; j++) {
-              if (otherConstraint[$scope.data.language] && otherConstraint[$scope.data.language].trim().length > 0) {
-                remove = false;
-                break;
-              }
-            }
+        }
+        $scope.validityClass.otherConstraints = !hasOtherRestrictions || $scope.hasNonEmptyOtherConstraint() ? '' : $scope.validationErrorClass;
+      });
+  }]);
+  module.controller('InspireUseConstraintController', [
+    '$scope', function($scope) {
 
-            if (remove) {
-              toRemove.push(otherConstraint);
-            }
-          }
-
-          for (i = 0; i < toRemove.length; i++) {
-            $scope.deleteFromArray($scope.legal.otherConstraints, toRemove[i]);
-          }
+      $scope.$watch('useConstraint', function() {
+        var otherConstraint;
+        if ($scope.legal.otherConstraints.length === 0) {
+          otherConstraint = {};
+          otherConstraint[$scope.data.language] = '';
+          $scope.legal.otherConstraints.push(otherConstraint);
         }
       });
+  }]);
+  module.controller('InspireOtherConstraintController', [
+    '$scope', function($scope) {
+
+      $scope.$watch('other', function() {
+        var hasOtherRestrictions = $scope.hasOtherRestrictions($scope.legal);
+        $scope.validityClass.otherConstraints = !hasOtherRestrictions || $scope.hasNonEmptyOtherConstraint() ? '' : $scope.validationErrorClass;
+      }, true);
+      $scope.deleteOtherConstraint = function (legal, constraint) {
+        $scope.deleteFromArray(legal.otherConstraints, constraint);
+      }
   }]);
 
   module.controller('InspireConformityController', [

@@ -55,6 +55,7 @@
   "loose": "Loose",
   "mixed": "Mixed",
   "securityConstraints" : "Security Constraints",
+  "otherConstraints" : "Other Constraints",
   "notEditableInInspireView": "Element is not editable in Inspire view.  To edit use the standard editor.",
   "metadataLanguage": "Metadata Language",
   "citationIdentifier": "Citation Identifier",

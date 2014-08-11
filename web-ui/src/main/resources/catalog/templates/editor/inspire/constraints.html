@@ -38,7 +38,8 @@
 
                                 <div class="table-responsive col-xs-9">
                                     <table class="table table-condensed">
-                                        <tr data-ng-repeat="useConstraint in legal.useConstraints track by $index">
+                                        <tr data-ng-repeat="useConstraint in legal.useConstraints track by $index"
+                                            data-ng-controller="InspireUseConstraintController">
                                             <td class="'no-border-top'"
                                                 data-ng-class="validationClassString(useConstraint)">
                                                 <div data-ie9-select
@@ -82,11 +83,11 @@
                                     </tr>
                                 </table>
                             </div>
-                            <div class="table-responsive col-xs-12"
-                                 data-ng-if="legal.otherConstraints && legal.otherConstraints.length > 0">
+                            <div class="table-responsive col-xs-12">
                                 <table class="table table-condensed">
-                                    <tr data-ng-repeat="other in legal.otherConstraints">
-                                        <td data-ng-class="'no-border-top'">
+                                    <tr data-ng-repeat="other in legal.otherConstraints"
+                                        data-ng-controller="InspireOtherConstraintController">
+                                        <td class="no-border-top" data-ng-class="validityClass.otherConstraints">
                                         <div
                                              data-ng-class="$first ? '' : ['col-xs-offset-3', 'indent-1em']">
                                             <div data-inspire-multilingual-text
@@ -101,7 +102,7 @@
                                             <a class="inspire-input-group"
                                                data-ng-hide="legal.otherConstraints.length === 1 && hasOtherRestrictions(legal)"
                                                style="color: red"
-                                               data-ng-click="deleteFromArray(legal.otherConstraints, other)">
+                                               data-ng-click="deleteOtherConstraint(legal, other)">
                                                 <i class="fa fa-times fa-fw"></i>
                                             </a>
                                         </td>
