@@ -89,5 +89,33 @@
   <medsea-metadata>Metadata</medsea-metadata>
   <characteristics>Characteristics</characteristics>
   <datasources>Data sources</datasources>
+  <overview>Overview</overview>
+  <spatialCoverage>Spatial coverage</spatialCoverage>
+  <timeCoverage>Time coverage</timeCoverage>
+  <accessibility>Accessibility</accessibility>
+  <programName>Program name</programName>
+  <edmerpName>EDMREP name</edmerpName>
+  <dataProvider>Data provider</dataProvider>
+  <uniqueIdentifier>Unique identifier</uniqueIdentifier>
+  <environmental-matrix>Environmental matrix</environmental-matrix>
+  <sdn-parameter-discovery>SeaDataNet Parameter Discovery Vocabulary (P02)</sdn-parameter-discovery>
+  <level-of-characteristics>Level of characteristicss</level-of-characteristics>
+  <providerSpecification>Purpose of characteristics production (provider specification)</providerSpecification>
+  <processStepReference>Production and quality assessment specifications reference</processStepReference>
+  <useOfTheCharacteristics>Title of the intended  use of the characteristic by the challenge</useOfTheCharacteristics>
+  <p03-field-missing>
+    <div class="text-danger">P03 thesaurus is missing.</div>
+  </p03-field-missing>
+  <p01-field-missing>
+    <div class="text-danger">P01 thesaurus is missing.</div>
+  </p01-field-missing>
 
+  <production-mode-field-missing>
+    <div class="text-danger">Use resource maintenance to store production mode ?</div>
+  </production-mode-field-missing>
+
+  <sdn-edmerp>
+    <div class="text-info">Choose a project from the
+      <a href="http://seadatanet.maris2.nl/v_edmerp/search.asp">European Directory of Marine Environmental Research Projects</a></div>
+  </sdn-edmerp>
 </strings>
