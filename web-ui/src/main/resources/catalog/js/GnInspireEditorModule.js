@@ -546,8 +546,10 @@
 
       $scope.$watch('link', function(newVal) {
         var lang, url;
-        var errorHandler = function () {
-          $scope.isValidURL = false;
+        var errorHandler = function (msg,errorCode) {
+          if (errorCode == 404) {
+            $scope.isValidURL = false;
+          }
         };
         $scope.isValidURL = undefined;
 
