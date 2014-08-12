@@ -36,7 +36,7 @@
             "role": '',
             "validated": false
           }],
-          "otherLanguages": ['ger', 'fre', 'ita', 'eng', 'roh'],
+          "otherLanguages": [],
           "identification": {
             "type": 'data',
             "title": {},
