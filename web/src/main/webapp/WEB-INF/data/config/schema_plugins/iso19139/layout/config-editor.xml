@@ -28,6 +28,7 @@
     <for name="gmd:specificUsage" use="textarea"/>
     <for name="gmd:userNote" use="textarea"/>
     <for name="gmd:useLimitation" use="textarea"/>
+    <for name="gmd:environmentDescription" use="textarea"/>
 
 
     <for name="gco:Distance" use="number"/>
@@ -1576,24 +1577,158 @@
                 gmd:purpose"/>
 
 
-          <field name="processStepReference"
-                 xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
-                    gmd:lineage/gmd:LI_Lineage/gmd:processStep/gmd:LI_ProcessStep/gmd:description"/>
+          <field
+              name="processStepReference"
+              xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
+                gmd:lineage/gmd:LI_Lineage/gmd:processStep/gmd:LI_ProcessStep/gmd:description"/>
 
-          <field name="useOfTheCharacteristics"
-                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+          <field
+              name="useOfTheCharacteristics"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
                 gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier/
                 gmd:authority//gmd:CI_Citation/gmd:title"/>
+
+          <field
+              name="intendedUse"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                  gmd:environmentDescription"/>
         </section>
       </tab>
-      <tab id="spatialCoverage">
-        <section></section>
+      <tab id="spatialCoverage" mode="flat">
+        <section>
+          <field
+              name="geographicalAreaCode"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+              gmd:extent/gmd:EX_Extent/gmd:description"/>
+          <field
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+              gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox"/>
+
+
+        </section>
+        <section name="horizontalAndVerticalInfo">
+
+          <field
+              name="horResolution"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                gmd:spatialResolution/gmd:MD_Resolution/gmd:distance"/>
+
+          <field
+              name="minDepth"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                gmd:extent/gmd:EX_Extent/
+                gmd:verticalElement/gmd:EX_VerticalExtent/gmd:minimumValue"/>
+
+          <field
+              name="maxDepth"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                gmd:extent/gmd:EX_Extent/
+                gmd:verticalElement/gmd:EX_VerticalExtent/gmd:maximumValue"/>
+
+          <field
+              name="verticalResolution"
+              xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/
+                gmd:MD_Georectified/gmd:numberOfDimensions"/>
+        </section>
       </tab>
       <tab id="timeCoverage">
-        <section></section>
+        <section>
+
+
+          <field name="temporalRangeSection" templateModeOnly="true"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement"
+                 if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+            <template>
+              <values>
+                <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
+                <key label="beginPosition"
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
+                     use="gn-date-picker"
+                     tooltip="gmd:extent|gmd:EX_TemporalExtent">
+                  <directiveAttributes data-tag-name="gml:beginPosition"/>
+                </key>
+                <key label="endPosition"
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
+                     use="gn-date-picker"
+                     tooltip="gmd:extent|gmd:EX_TemporalExtent"
+                    >
+                  <directiveAttributes
+                      data-tag-name="gml:endPosition"
+                      data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/>
+                </key>
+              </values>
+              <snippet>
+                <gmd:temporalElement>
+                  <gmd:EX_TemporalExtent>
+                    <gmd:extent>
+                      <gml:TimePeriod gml:id="">
+                        {{beginPosition}}
+                        {{endPosition}}
+                      </gml:TimePeriod>
+                    </gmd:extent>
+                  </gmd:EX_TemporalExtent>
+                </gmd:temporalElement>
+              </snippet>
+            </template>
+          </field>
+
+
+          <field
+              name="timeResolution"
+              xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_Georectified/
+                gmd:axisDimensionProperties/gmd:MD_Dimension/gmd:resolution"/>
+
+        </section>
       </tab>
       <tab id="accessibility">
-        <section></section>
+        <section>
+
+
+
+          <field
+              name="dataPolicy"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints"/>
+
+
+          <field
+              name="costBasis"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation"/>
+
+
+
+          <field name="dataFormats" templateModeOnly="true" notDisplayedIfMissing="true"
+                 xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"
+                 del=".">
+            <template>
+              <values>
+                <key label="format"
+                     xpath="gmd:MD_Format/gmd:name/gco:CharacterString"
+                     tooltip="gmd:name|gmd:MD_Format">
+                  <helper name="gmd:name" context="gmd:MD_Format"/>
+                </key>
+                <key label="format_version" xpath="gmd:MD_Format/gmd:version/gco:CharacterString"/>
+              </values>
+              <snippet>
+                <gmd:distributionFormat>
+                  <gmd:MD_Format>
+                    <gmd:name>
+                      <gco:CharacterString>{{format}}</gco:CharacterString>
+                    </gmd:name>
+                    <gmd:version>
+                      <gco:CharacterString>{{format_version}}</gco:CharacterString>
+                    </gmd:version>
+                    <gn:copy select="gmd:amendmentNumber"/>
+                    <gn:copy select="gmd:specification"/>
+                    <gn:copy select="gmd:fileDecompressionTechnique"/>
+                    <gn:copy select="gmd:formatDistributor"/>
+                  </gmd:MD_Format>
+                </gmd:distributionFormat>
+              </snippet>
+            </template>
+          </field>
+        </section>
       </tab>
     </view>
 

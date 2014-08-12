@@ -103,6 +103,19 @@
   <providerSpecification>Purpose of characteristics production (provider specification)</providerSpecification>
   <processStepReference>Production and quality assessment specifications reference</processStepReference>
   <useOfTheCharacteristics>Title of the intended  use of the characteristic by the challenge</useOfTheCharacteristics>
+  <intendedUse>Intended use description</intendedUse>
+  <geographicalAreaCode>Geographical area code</geographicalAreaCode>
+  <horizontalAndVerticalInfo>Horizontal and vertical information</horizontalAndVerticalInfo>
+  <horResolution>Hor. resolution</horResolution>
+  <minDepth>Min depth</minDepth>
+  <maxDepth>Max depth</maxDepth>
+  <verticalResolution>Vertical resolution or observations spacing</verticalResolution>
+  <timeResolution>Time resolution</timeResolution>
+  <dataDelivery>Data delivery mechanisms</dataDelivery>
+  <dataPolicy>Data policy</dataPolicy>
+  <costBasis>Cost basis</costBasis>
+  <dataFormats>Data formats</dataFormats>
+
   <p03-field-missing>
     <div class="text-danger">P03 thesaurus is missing.</div>
   </p03-field-missing>
