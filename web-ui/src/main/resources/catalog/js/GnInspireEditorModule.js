@@ -30,6 +30,14 @@
 
       var lang = location.href.split('/')[5].substring(0, 2) || 'en';
       $translateProvider.preferredLanguage(lang);
+      var languages = {
+        "eng" : "English",
+        "ger" : "Deutsch",
+        "fre" : "Français",
+        "ita" : "Italiano",
+        "roh" : "Rumantsch"
+      };
+      $translateProvider.translations("en", languages);
       moment.lang(lang);
     }]);
 

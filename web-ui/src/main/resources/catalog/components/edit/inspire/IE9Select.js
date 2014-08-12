@@ -65,14 +65,6 @@
           return title;
         };
 
-        if ($scope.translateTitle) {
-          $timeout(function() {
-            eachOption(function (opt) {
-              opt.title = $translate(titleKey(opt.actual))
-            });
-          }, 1000);
-        }
-
         var getTitle = function (option) {
           var title = titleKey(option);
           if ($scope.translateTitle === 'true') {
