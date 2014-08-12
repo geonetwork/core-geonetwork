@@ -103,6 +103,7 @@ public class Save implements Service {
     static final String JSON_CONSTRAINTS_LEGAL = "legal";
     static final String JSON_CONSTRAINTS_GENERIC = "generic";
     static final String JSON_CONSTRAINTS_SECURITY = "security";
+    public static final String JSON_CONSTRAINTS_CLASSIFICATION = "classification";
     static final String JSON_CHARACTER_SET = "characterSet";
     public static final String JSON_TITLE = "title";
     public static final String JSON_DATE_TAG_NAME = "dateTagName";
@@ -125,6 +126,9 @@ public class Save implements Service {
     public static final String JSON_CONFORMITY_LINEAGE = "lineage";
     public static final String JSON_CONFORMITY_LINEAGE_STATEMENT = "statement";
     public static final String JSON_CONFORMITY_ALL_CONFORMANCE_REPORTS = "allConformanceReports";
+    public static final String JSON_CONFORMITY_SCOPE_CODE = "scopeCode";
+    public static final String JSON_CONFORMITY_ALL_CONFORMANCE_REPORT_INDEX = "reportIndex";
+    public static final String JSON_CONFORMITY_IS_TITLE_SET = "isTitleSet";
     public static final String JSON_VALID_METADATA = "metadataIsXsdValid";
     public static final String JSON_CONFORMITY_UPDATE_ELEMENT_REF = "updateResultRef";
     public static final String JSON_LINKS = "links";
@@ -137,8 +141,6 @@ public class Save implements Service {
     public static final String JSON_IDENTIFICATION_CONTAINS_OPERATIONS = "containsOperations";
     public static final String JSON_IDENTIFICATION_OPERATION_NAME = "operationName";
     public static final String JSON_IDENTIFICATION_DCP_LIST = "dcpList";
-    public static final String JSON_CONFORMITY_IS_TITLE_SET = "isTitleSet";
-    public static final String JSON_CONSTRAINTS_CLASSIFICATION = "classification";
 
     @Override
     public void init(String appPath, ServiceConfig params) throws Exception {
@@ -536,6 +538,16 @@ public class Save implements Service {
         addElementFromXPath(editLib, metadataSchema, conformanceResult,
                 "gmd:explanation", explanation);
 
+        updateCodeList(editLib,
+                GetEditModel.getDataQualityEl(conformanceResult),
+                metadataSchema,
+                new Element("MD_ScopeCode", GMD),
+                conformityJson.getString(JSON_CONFORMITY_SCOPE_CODE),
+                "gmd:scope/gmd:DQ_Scope/gmd:level",
+                "http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode",
+                true
+        );
+
         JSONObject lineageJSON = conformityJson.getJSONObject(JSON_CONFORMITY_LINEAGE);
         String lineageRef = lineageJSON.optString(Params.REF);
 
@@ -550,6 +562,7 @@ public class Save implements Service {
 
         updateTranslatedInstance(mainLang, editLib, metadataSchema, lineageEl, lineageJSON.getJSONObject(JSON_CONFORMITY_LINEAGE_STATEMENT),
                 "gmd:statement", "statement", GMD);
+
     }
 
     protected Element updateIdentificationInfo(String mainLang, ServiceContext context, EditLib editLib, Element metadata,

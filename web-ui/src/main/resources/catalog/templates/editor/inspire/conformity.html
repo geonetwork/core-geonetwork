@@ -3,14 +3,25 @@
     <fieldset>
         <legend data-translate="">conformity</legend>
 
-        <div class="form-group" data-ng-if="!data.conformity.conformanceResultRef && data.conformity.allConformanceReports.length > 1">
+        <div class="form-group" data-ng-if="data.conformity.allConformanceReports.length > 1">
             <label class="col-xs-3 control-label"><span data-translate="">updateElement</span>: </label>
 
             <div class="col-xs-9">
                 <div data-ie9-select
                      data-options="data.conformity.allConformanceReports"
-                     data-value="ref" data-title-func="updateConformanceResultTitle(lang)"
-                     data-default-value="-1" data-field="data.conformity.updateResultRef"></div>
+                     data-change="updateSelectedConformity()"
+                     data-value="conformanceResultRef" data-title-func="updateConformanceResultTitle(lang)"
+                     data-default-value="{{data.conformity.reportIndex}}" data-field="data.conformity.updateResultRef"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-xs-3 control-label"><span data-translate="">dataQualityScopeCode</span>: </label>
+            <div class="col-xs-9" data-ng-class="validationClassString(data.conformity.scopeCode)">
+                <div data-ie9-select
+                     data-options="data.hierarchyLevelOptions"
+                     data-value="name" data-title="title"
+                     data-field="data.conformity.scopeCode"></div>
             </div>
         </div>
 
@@ -18,7 +29,7 @@
             <label class="col-xs-3 control-label"><span data-translate="">pass</span>: </label>
 
             <div class="col-xs-9" data-ng-class="validationClassObject(data.conformity.pass)">
-                <div data-ie9-select
+                <div data-ie9-select  data-keep-empty-el="true"
                      data-options="passOptions"
                      data-value="val" data-title="name"
                      data-field="data.conformity.pass"></div>
@@ -29,16 +40,10 @@
             <label class="col-xs-3 control-label"><span data-translate="">title</span>: </label>
 
             <div class="col-xs-9" data-ng-class="data.conformity.isTitleSet ? '' : validationErrorClass">
-                <div data-ie9-select
+                <div data-ie9-select data-keep-empty-el="true"
                      data-options="data.conformityTitleOptions" data-title="{{lang}}"
                      data-change="data.conformity.isTitleSet = true"
                      data-field="data.conformity.title"></div>
-                <!--<select id="conformityTitle"-->
-                        <!--class="form-control"-->
-                        <!--data-ng-change=""-->
-                        <!--data-ng-model="data.conformity.title"-->
-                        <!--data-ng-options="opt as opt[lang] for opt in data.conformityTitleOptions">-->
-                <!--</select>-->
             </div>
         </div>
         <div class="form-group">

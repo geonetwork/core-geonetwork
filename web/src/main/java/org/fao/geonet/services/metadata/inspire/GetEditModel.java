@@ -3,7 +3,6 @@ package org.fao.geonet.services.metadata.inspire;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.vividsolutions.jts.util.Assert;
@@ -115,18 +114,6 @@ public class GetEditModel implements Service {
             return input;
         }
     };
-    private Function<CodeListEntry, CodeListEntry> hierarchyLevelGrouper = new Function<CodeListEntry, CodeListEntry>() {
-        final List<String> legalOptions = Lists.newArrayList("dataset", "series", "service");
-        @Nullable
-        @Override
-        public CodeListEntry apply(@Nullable CodeListEntry input) {
-            if (input != null && legalOptions.contains(input.name)) {
-                return input;
-            }
-            return null;
-        }
-    };
-
     final static Set<String> ALLOWED_SERVICETYPES = Sets.newHashSet("view", "discovery", "download", "transformation", "invoke", "other");
     private Function<CodeListEntry, CodeListEntry> serviceTypeInspire = new Function<CodeListEntry, CodeListEntry>() {
         @Nullable
@@ -245,44 +232,70 @@ public class GetEditModel implements Service {
         List<Element> conformityElements = (List<Element>) Xml.selectNodes(metadataEl,
                 "gmd:dataQualityInfo/*/gmd:report//gmd:DQ_ConformanceResult", NS);
 
-        Element conformanceResult = null;
+        int conformanceResultIndex = -1;
         JSONArray allConformanceResults = new JSONArray();
+        int i = 0;
         for (Element conformityElement : conformityElements) {
-            List<Element> titles = (List<Element>) Xml.selectNodes(conformityElement,
-                    "gmd:specification//gmd:title//gmd:LocalisedCharacterString", NS);
-
-
             JSONObject conformanceJSON = new JSONObject();
-            JSONObject titleJson = new JSONObject();
-            addTranslationElements(getIsoLanguagesMapper(), titleJson, titles);
-            conformanceJSON.put(Save.JSON_TITLE, titleJson);
-            addRef(conformityElement, conformanceJSON);
+            addConformanceProperties(metadataJson, conformityElement, conformanceJSON);
+
+            JSONObject titles = conformanceJSON.getJSONObject(Save.JSON_TITLE);
+
+            final Iterator keys = titles.keys();
+
             allConformanceResults.put(conformanceJSON);
 
-
-            for (Element title : titles) {
-
+            while (keys.hasNext()) {
+                String key = (String) keys.next();
+                String title = titles.getString(key);
                 if (isConformityTitle(title)) {
-                    conformanceResult = conformityElement;
-                    break;
-                }
-
-                if (conformanceResult != null) {
+                    conformanceResultIndex = i;
                     break;
                 }
             }
+            i++;
         }
 
-        allConformanceResults.put(new JSONObject("{\"ref\": \"\", title: {\"eng\": \"New\", \"ger\": \"Neu\"," +
-                                                 " \"fre\": \"Nouveau\", \"ita\": \"Nuovo\"}}"));
-
-        if (conformanceResult == null) {
-            conformanceResult = new Element("DQ_ConformanceResult", Geonet.Namespaces.GMD);
+        if (conformanceResultIndex == -1) {
+            final JSONObject newObject = new JSONObject();
+            newObject.put(Save.JSON_CONFORMITY_RESULT_REF, "");
+            JSONObject title = new JSONObject();
+            title.put("eng", "New");
+            title.put("fre", "Nouveau");
+            title.put("ger", "Neu");
+            title.put("ita", "Nuovo");
+            newObject.put(Save.JSON_TITLE, title);
+            newObject.put(Save.JSON_CONFORMITY_SCOPE_CODE , "");
+            newObject.put(Save.JSON_CONFORMITY_EXPLANATION, "");
+            newObject.put(Save.JSON_CONFORMITY_PASS, "");
+            allConformanceResults.put(newObject);
         }
 
         JSONObject conformityJson = new JSONObject();
-        conformityJson.put(Save.JSON_CONFORMITY_UPDATE_ELEMENT_REF, "");
+        String updateRef = "";
+        if (conformanceResultIndex > -1) {
+            updateRef = allConformanceResults.getJSONObject(conformanceResultIndex).getString(Save.JSON_CONFORMITY_RESULT_REF);
+        }
+        conformityJson.put(Save.JSON_CONFORMITY_UPDATE_ELEMENT_REF, updateRef);
         conformityJson.put(Save.JSON_CONFORMITY_ALL_CONFORMANCE_REPORTS, allConformanceResults);
+        conformityJson.put(Save.JSON_CONFORMITY_ALL_CONFORMANCE_REPORT_INDEX, conformanceResultIndex);
+
+        JSONObject lineageJson = new JSONObject();
+        conformityJson.put(Save.JSON_CONFORMITY_LINEAGE, lineageJson);
+
+        Element lineageEl = Xml.selectElement(metadataEl, "gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage", NS);
+        String mainLanguage = metadataJson.getString(Save.JSON_LANGUAGE);
+        addTranslatedElement(mainLanguage, lineageEl, getIsoLanguagesMapper(), lineageJson, Save.JSON_CONFORMITY_LINEAGE_STATEMENT,
+                "gmd:statement");
+        addValue(lineageEl, lineageJson, Params.REF, "geonet:element/@ref");
+
+        conformityJson.put(Save.JSON_CONFORMITY_IS_TITLE_SET, false);
+        metadataJson.put(Save.JSON_CONFORMITY, conformityJson);
+    }
+
+    private JSONObject addConformanceProperties(JSONObject metadataJson, Element conformanceResult,
+                                                JSONObject conformityJson)
+            throws JSONException, JDOMException {
         String mainLanguage = metadataJson.getString(Save.JSON_LANGUAGE);
 
         addValue(conformanceResult, conformityJson, Save.JSON_CONFORMITY_RESULT_REF, "geonet:element/@ref");
@@ -299,20 +312,23 @@ public class GetEditModel implements Service {
 
         addValue(conformanceResult, conformityJson, Save.JSON_CONFORMITY_PASS, "gmd:pass/gco:Boolean");
         addValue(conformanceResult, conformityJson, Save.JSON_CONFORMITY_EXPLANATION, "gmd:explanation/gco:CharacterString");
+        final String scopeCodeXPath = "gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue";
+        addValue(getDataQualityEl(conformanceResult), conformityJson, Save.JSON_CONFORMITY_SCOPE_CODE, scopeCodeXPath, "");
 
-        JSONObject lineageJson = new JSONObject();
-        conformityJson.put(Save.JSON_CONFORMITY_LINEAGE, lineageJson);
-
-        Element lineageEl = Xml.selectElement(metadataEl, "gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage", NS);
-        addTranslatedElement(mainLanguage, lineageEl, getIsoLanguagesMapper(), lineageJson, Save.JSON_CONFORMITY_LINEAGE_STATEMENT, "gmd:statement");
-        addValue(lineageEl, lineageJson, Params.REF, "geonet:element/@ref");
-
-        metadataJson.put(Save.JSON_CONFORMITY, conformityJson);
-
+        return conformityJson;
     }
 
-    private static boolean isConformityTitle(Element titleElement) throws JSONException {
-        final String title = titleElement.getTextTrim().toLowerCase();
+    static Element getDataQualityEl(Element conformityElement) {
+        if (conformityElement != null && conformityElement.getParentElement() != null
+            && conformityElement.getParentElement().getParentElement() != null
+            && conformityElement.getParentElement().getParentElement().getParentElement() != null) {
+            return conformityElement.getParentElement().getParentElement().getParentElement().getParentElement();
+        }
+        return null;
+    }
+
+    private static boolean isConformityTitle(String title) throws JSONException {
+        title = title.toLowerCase();
         for (int i = 0; i < CONFORMITY_TITLE_OPTIONS.length(); i++) {
             JSONObject option = CONFORMITY_TITLE_OPTIONS.getJSONObject(i);
             final Iterator keys = option.keys();
@@ -323,6 +339,7 @@ public class GetEditModel implements Service {
                 }
             }
         }
+
         return false;
     }
 
@@ -343,8 +360,7 @@ public class GetEditModel implements Service {
 
         addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:CI_DateTypeCode", "dateTypeOptions", null);
         addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:CI_RoleCode", "roleOptions", this.inspireRoleFilter);
-        addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:MD_ScopeCode", "hierarchyLevelOptions",
-                hierarchyLevelGrouper);
+        addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:MD_ScopeCode", "hierarchyLevelOptions", null);
 
         addCodeListOptions(metadataJson, codelists, cheCodelistExtensions, "gmd:MD_TopicCategoryCode", "topicCategoryOptions",
                 topicCategoryGrouper);

@@ -15,7 +15,9 @@
         groupBy: '@',
         title: '@',
         titleFunc: '&',
-        translateTitle: '@'
+        translateTitle: '@',
+        keepEmptyEl: '@',
+        optionFilter: '&'
       },
       transclude: true,
       restrict: 'A',
@@ -25,7 +27,8 @@
         $scope.groups = [];
         $scope.showEmptyOption = true;
         var updateShowEmptyOption = function () {
-          $scope.showEmptyOption = (!$scope.field || angular.equals($scope.field, {})) && $scope.defaultValue === undefined;
+          $scope.showEmptyOption = (($scope.keepEmptyEl !== undefined && $scope.keepEmptyEl != 'false') || !$scope.field ||
+            angular.equals($scope.field, {})) && $scope.defaultValue === undefined;
         };
         var isSelected = function (option) {
           if ((!$scope.value && option === $scope.field) || ($scope.value && option[$scope.value] === $scope.field)) {
@@ -39,8 +42,8 @@
               if (i < 0) {
                 throw new Error($scope.defaultValue + " is out of range: " + $scope.options.length + " -- " + $scope.title);
               }
-              return option === $scope.options[i];
             }
+            return option === $scope.options[i];
           }
         };
         var getTitle = function (option) {
@@ -56,17 +59,26 @@
 
           return title;
         };
+        var fireChange = function (newVal) {
+          if ($scope.change) {
+            var changeFunc = $scope.change();
+            if (typeof changeFunc === "function") {
+              changeFunc(newVal);
+            }
+          }
+        };
         $scope.$watch('options', function(){
-          var k, groupTitle, opt, group, finalOpt,
+          var k, groupTitle, opt, group, finalOpt, selectedOpt,
             i = 0,
             groups = [],
             groupsMap = {},
-            options = $scope.options;
+            options = $scope.optionFilter() ? $scope.optionFilter()($scope.options) : $scope.options;
 
           updateShowEmptyOption();
 
           for (k in options) {
             if (options.hasOwnProperty(k)) {
+
               opt = options[k];
               groupTitle = $scope.groupBy ? opt[$scope.groupBy] : '';
               group = groupsMap[groupTitle];
@@ -76,6 +88,9 @@
                 isSelected: isSelected(opt),
                 title: getTitle(opt)
               };
+              if (finalOpt.isSelected) {
+                selectedOpt = opt;
+              }
               if (group) {
                 group.opts.push(finalOpt);
               } else {
@@ -91,16 +106,27 @@
           }
 
           $scope.groups = groups;
+
+          if (selectedOpt) {
+            $timeout(function () {
+              fireChange(opt);
+            });
+          }
         });
 
-        var lastField = $scope.field;
-        $scope.$watch('field', function(newVal, oldVal){
-          if (newVal !== oldVal && newVal !== lastField) {
+        var lastField = undefined;
+        $scope.$watch('field', function(newVal){
+          if (newVal !== lastField) {
+            var selected = undefined;
             angular.forEach($scope.groups, function(grp){
               angular.forEach(grp.opts, function (opt) {
                 opt.isSelected = isSelected(opt.actual);
+                if (opt.isSelected) {
+                  selected = opt.actual;
+                }
               });
             });
+            lastField = newVal;
           }
           updateShowEmptyOption();
         });
@@ -124,9 +150,7 @@
                 $scope.field = newFieldVal;
               }
               lastField = $scope.field;
-              if ($scope.change) {
-                $scope.change();
-              }
+              fireChange(newVal);
             }
 
           });

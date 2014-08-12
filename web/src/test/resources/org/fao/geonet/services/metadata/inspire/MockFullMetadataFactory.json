@@ -146,8 +146,7 @@
     }]
   },
   "conformity": {
-    "scopeCode": "dataset",
-    "scopeCodeDescription": {"eng":"scopeCodeDescription"},
+    "scopeCode": "feature",
     "conformanceResultRef": "",
     "isTitleSet" : true,
     "title": {

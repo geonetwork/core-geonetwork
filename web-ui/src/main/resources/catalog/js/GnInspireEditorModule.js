@@ -55,7 +55,18 @@
 
       $scope.data = inspireMetadataLoader($scope.lang, $scope.url, mdId);
       $scope.emptyContact = $scope.data.contact[0];
-
+      var legalNames = ["dataset", "series", "service"];
+      $scope.hierarchyLevelFilter = function () {
+        return function(input) {
+          var result = [];
+          angular.forEach(input, function (val) {
+            if (legalNames.indexOf(val.name) > -1) {
+              result.push(val);
+            }
+          });
+          return result;
+        };
+      };
       $scope.validationErrorClass = 'has-error';
       $scope.validationClassString = function(model) {
         if (model && model.length > 0) {
@@ -231,11 +242,11 @@
       };
 
       $scope.deleteKeyword = function(keyword) {
-        var keywords = $scope.data.identification.descriptiveKeywords;
+        var k, i, keywords = $scope.data.identification.descriptiveKeywords;
         keywords.splice(keywords.indexOf(keyword), 1);
 
-        for (var i = 0; i < keywords.length; i++) {
-          var k = keywords[i];
+        for (i = 0; i < keywords.length; i++) {
+          k = keywords[i];
           if (k.thesaurus === dataThesaurus || k.thesaurus === serviceThesaurus || isEmpty(k)) {
             return;
           }
@@ -481,7 +492,7 @@
       }, true);
       $scope.deleteOtherConstraint = function (legal, constraint) {
         $scope.deleteFromArray(legal.otherConstraints, constraint);
-      }
+      };
   }]);
 
   module.controller('InspireConformityController', [
@@ -525,6 +536,16 @@
           }
         }
       });
+      $scope.updateSelectedConformity = function() {
+        return function (report) {
+          var i = null;
+          for (i in report) {
+            if (report.hasOwnProperty(i)) {
+              $scope.data.conformity[i] = angular.copy(report[i]);
+            }
+          }
+        };
+      };
       $scope.updateConformanceResultTitle = function(mainLang) {
         return function (desc) {
           if (desc.title[mainLang]) {
@@ -536,7 +557,7 @@
           if (desc.title.length > 0) {
             return desc.title[0];
           }
-          return desc.ref;
+          return desc.conformanceResultRef;
         };
       };
   }]);
@@ -547,7 +568,7 @@
       $scope.$watch('link', function(newVal) {
         var lang, url;
         var errorHandler = function (msg,errorCode) {
-          if (errorCode == 404) {
+          if (errorCode === 404) {
             $scope.isValidURL = false;
           }
         };
@@ -565,7 +586,6 @@
                 $scope.isValidURL = false;
               }
             } else {
-              $()
               $http.head("../../proxy?url=" + encodeURIComponent(url)).error(errorHandler);
             }
           } else {

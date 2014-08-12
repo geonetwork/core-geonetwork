@@ -62,5 +62,6 @@
   "topicCategory" : "Topic Category",
   "pointOfContact" : "Point Of Contact",
   "data" : "Data",
-  "search" : "Search"
+  "search" : "Search",
+  "dataQualityScopeCode" : "Hierarchy Level"
 }

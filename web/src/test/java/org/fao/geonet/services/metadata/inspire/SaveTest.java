@@ -389,11 +389,13 @@ public class SaveTest {
         final Element conformanceResult = conformityCitation.getParentElement().getParentElement();
         assertEquals("true", conformanceResult.getChild("pass", GMD).getChildText("Boolean", GCO));
         assertEquals("explanation", conformanceResult.getChild("explanation", GMD).getChildText("CharacterString", GCO));
+        assertEquals("explanation", conformanceResult.getChild("explanation", GMD).getChildText("CharacterString", GCO));
 
         List<?> lineageNodes = Xml.selectNodes(testMetadata, "gmd:dataQualityInfo//gmd:LI_Lineage");
         assertEquals(1, lineageNodes.size());
 
         assertCorrectTranslation(metadataMainLang, (Element) lineageNodes.get(0), "gmd:statement", read("eng", "lineage EN"), read("ger", "lineage DE"));
+        assertEquals("feature", Xml.selectString(testMetadata, "gmd:dataQualityInfo/*/gmd:scope//gmd:MD_ScopeCode/@codeListValue", NS));
 
     }
 
