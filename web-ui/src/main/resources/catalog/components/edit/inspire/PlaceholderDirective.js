@@ -18,6 +18,15 @@
       transclude: true,
       restrict: 'A',
       replace: 'true',
+      link: function ($scope) {
+        $scope.selectInput = function ($event) {
+          $event.stopPropagation();
+          var inputEl = $($event.target.parentElement).find("input");
+          if (inputEl.length > 0) {
+            inputEl.focus();
+          }
+        };
+      },
       templateUrl: '../../catalog/components/edit/inspire/partials/placeholder.html'
     };
   });

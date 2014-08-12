@@ -4,7 +4,7 @@
 
   var module = angular.module('inspire_ie9_select', []);
 
-  module.directive('ie9Select', ['$translate', '$timeout', function($translate, $timeout) {
+  module.directive('ie9Select', ['$translate', '$timeout', '$rootScope', function($translate, $timeout, $rootScope) {
     return {
       scope: {
         field: "=",
@@ -26,6 +26,15 @@
         $scope.showEmptyOption = true;
         $scope.groups = [];
         $scope.showEmptyOption = true;
+
+        var eachOption = function (callback) {
+          angular.forEach($scope.groups, function(grp){
+            angular.forEach(grp.opts, function (opt) {
+              callback(opt);
+            });
+          });
+        };
+
         var updateShowEmptyOption = function () {
           $scope.showEmptyOption = (($scope.keepEmptyEl !== undefined && $scope.keepEmptyEl != 'false') || !$scope.field ||
             angular.equals($scope.field, {})) && $scope.defaultValue === undefined;
@@ -46,13 +55,28 @@
             return option === $scope.options[i];
           }
         };
-        var getTitle = function (option) {
+        var titleKey = function (option) {
           var title = option;
           if ($scope.title) {
             title = option[$scope.title];
           } else if ($scope.titleFunc()) {
             title = $scope.titleFunc()(option);
           }
+          return title;
+        };
+
+        if ($scope.translateTitle) {
+          console.log("register loader listener");
+          $rootScope.$on('$translateLoadingEnd', function () {
+            console.log("update loader listener");
+            eachOption(function (opt) {
+              opt.title = $translate(titleKey(opt.actual))
+            })
+          });
+        }
+
+        var getTitle = function (option) {
+          var title = titleKey(option);
           if ($scope.translateTitle === 'true') {
             title = $translate(title);
           }
@@ -118,13 +142,11 @@
         $scope.$watch('field', function(newVal){
           if (newVal !== lastField) {
             var selected = undefined;
-            angular.forEach($scope.groups, function(grp){
-              angular.forEach(grp.opts, function (opt) {
-                opt.isSelected = isSelected(opt.actual);
-                if (opt.isSelected) {
-                  selected = opt.actual;
-                }
-              });
+            eachOption(function (opt) {
+              opt.isSelected = isSelected(opt.actual);
+              if (opt.isSelected) {
+                selected = opt.actual;
+              }
             });
             lastField = newVal;
           }

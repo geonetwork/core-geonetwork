@@ -9,6 +9,6 @@
               class="form-control col-xs-12 placeholder-input"
               data-ng-class="parent[field] ? '' : 'empty'"
               data-ng-model="parent[field]"></textarea>
-    <label class="placeholder"
+    <label class="placeholder" data-ng-click="selectInput($event)"
            data-ng-class="placeholderPlacementClass">{{placeholder}}</label>
 </div>

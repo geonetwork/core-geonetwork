@@ -2,6 +2,7 @@ package org.fao.geonet.services.metadata.inspire;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
+import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -1081,7 +1082,7 @@ public class Save implements Service {
                                              String tagName, Namespace namespace) throws JSONException {
         IsoLanguagesMapper instance = getIsoLanguagesMapper();
         List<Element> translations = Lists.newArrayList();
-        final Iterator keys = translationJson.keys();
+        final Iterator keys = translationJson != null ? translationJson.keys() : Iterators.emptyIterator();
         String mainTranslation = null;
         while (keys.hasNext()) {
             String threeLetterLangCode = (String) keys.next();
