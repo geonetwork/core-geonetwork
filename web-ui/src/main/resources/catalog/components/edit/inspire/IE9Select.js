@@ -4,7 +4,7 @@
 
   var module = angular.module('inspire_ie9_select', []);
 
-  module.directive('ie9Select', ['$translate', '$timeout', '$rootScope', function($translate, $timeout, $rootScope) {
+  module.directive('ie9Select', ['$translate', '$timeout', '$rootScope', function($translate, $timeout) {
     return {
       scope: {
         field: "=",
@@ -66,13 +66,11 @@
         };
 
         if ($scope.translateTitle) {
-          console.log("register loader listener");
-          $rootScope.$on('$translateLoadingEnd', function () {
-            console.log("update loader listener");
+          $timeout(function() {
             eachOption(function (opt) {
               opt.title = $translate(titleKey(opt.actual))
-            })
-          });
+            });
+          }, 1000);
         }
 
         var getTitle = function (option) {
