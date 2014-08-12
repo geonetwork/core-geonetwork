@@ -63,5 +63,10 @@
   "pointOfContact" : "Point Of Contact",
   "data" : "Data",
   "search" : "Search",
-  "dataQualityScopeCode" : "Hierarchy Level"
+  "dataQualityScopeCode" : "Hierarchy Level",
+  "eng" : "English",
+  "ger" : "Deutsch",
+  "fre" : "Français",
+  "ita" : "Italiano",
+  "roh" : "Rumantsch"
 }
