@@ -68,5 +68,12 @@
   "ger" : "Deutsch",
   "fre" : "Français",
   "ita" : "Italiano",
-  "roh" : "Rumantsch"
+  "roh" : "Rumantsch",
+  "title" : "Title",
+  "name" : "Name",
+  "surname" : "Surname",
+  "email" : "Email",
+  "organization" : "Organization",
+  "metadataType" : "Metadata Type",
+  "save" : "Save"
 }

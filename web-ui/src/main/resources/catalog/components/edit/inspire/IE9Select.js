@@ -25,6 +25,7 @@
       link: function($scope) {
         $scope.showEmptyOption = true;
         $scope.groups = [];
+        $scope.allOpts = [];
         $scope.showEmptyOption = true;
 
         var eachOption = function (callback) {
@@ -105,6 +106,8 @@
               if (finalOpt.isSelected) {
                 selectedOpt = opt;
               }
+
+              $scope.allOpts.push(finalOpt);
               if (group) {
                 group.opts.push(finalOpt);
               } else {

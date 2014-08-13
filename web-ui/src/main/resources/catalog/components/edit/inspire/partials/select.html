@@ -1,15 +1,32 @@
-<select class="form-control">
-    <option data-ng-selected="!field"
-            data-ng-if="showEmptyOption"
-            data-ng-mouseup="updateField(-1)"
-            value="-1"></option>
-    <optgroup data-ng-repeat="grp in groups"
-              label="{{grp.title}}">
-        <!-- Need both click and mouseup because IE ignores mouseup and FF ignores click -->
-        <option data-ng-repeat="opt in grp.opts"
-                data-ng-mouseup="updateField(opt.actual, $event)"
-                data-ng-click="updateField(opt.actual, $event)"
-                data-ng-selected="opt.isSelected"
-                value="{{opt.value}}">{{opt.title}}</option>
-    </optgroup>
-</select>
+<div data-ng-switch="groups.length > 1">
+
+    <select class="form-control"
+            data-ng-switch-when="true">
+        <option data-ng-selected="!field"
+                data-ng-if="showEmptyOption"
+                data-ng-mouseup="updateField(-1)"
+                value="-1"></option>
+        <optgroup data-ng-repeat="grp in groups"
+                  label="{{grp.title}}">
+            <!-- Need both click and mouseup because IE ignores mouseup and FF ignores click -->
+            <option data-ng-repeat="opt in grp.opts"
+                    data-ng-mouseup="updateField(opt.actual, $event)"
+                    data-ng-click="updateField(opt.actual, $event)"
+                    data-ng-selected="opt.isSelected"
+                    value="{{opt.value}}">{{opt.title}}</option>
+        </optgroup>
+    </select>
+    <select class="form-control"
+            data-ng-switch-default="">
+        <option data-ng-selected="!field"
+                data-ng-if="showEmptyOption"
+                data-ng-mouseup="updateField(-1)"
+                value="-1"></option>
+            <!-- Need both click and mouseup because IE ignores mouseup and FF ignores click -->
+            <option data-ng-repeat="opt in allOpts"
+                    data-ng-mouseup="updateField(opt.actual, $event)"
+                    data-ng-click="updateField(opt.actual, $event)"
+                    data-ng-selected="opt.isSelected"
+                    value="{{opt.value}}">{{opt.title}}</option>
+    </select>
+</div>

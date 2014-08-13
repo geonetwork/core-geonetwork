@@ -42,7 +42,7 @@
             loading site information, check user login state
             and a facet search to get main site information.
             -->
-            <body data-ng-controller="GnCatController">
+            <body data-ng-controller="GnInspireController">
                 <!-- AngularJS application -->
                 <div data-ng-cloak="" class="ng-cloak">
                     <div data-ng-include="'{$uiResourcesPath}templates/editor/inspire/metadata.html'"></div>

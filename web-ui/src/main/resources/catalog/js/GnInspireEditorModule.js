@@ -2,7 +2,7 @@
   'use strict';
   goog.provide('gn_inspire_editor');
 
-  goog.require('gn');
+  goog.require('gn_language_switcher');
   goog.require('inspire_contact_directive');
   goog.require('inspire_multilingual_text_directive');
   goog.require('inspire_get_shared_users_factory');
@@ -12,13 +12,39 @@
   goog.require('inspire-metadata-loader');
   goog.require('inspire_ie9_select');
 
-  var module = angular.module('gn_inspire_editor', ['gn', 'inspire_contact_directive', 'inspire_multilingual_text_directive',
-    'inspire_metadata_factory', 'inspire_get_shared_users_factory', 'inspire_get_keywords_factory', 'inspire_get_extents_factory',
-    'inspire_date_picker_directive', 'inspire_ie9_select']);
+  var module = angular.module('gn_inspire_editor', ['gn_language_switcher', 'pascalprecht.translate', 'inspire_contact_directive',
+    'inspire_multilingual_text_directive', 'inspire_metadata_factory', 'inspire_get_shared_users_factory', 'inspire_get_keywords_factory',
+    'inspire_get_extents_factory', 'inspire_date_picker_directive', 'inspire_ie9_select']);
 
 
   // Define the translation files to load
-  module.constant('$LOCALES', ['core', 'editor', 'inspire']);
+  module.constant('$LOCALES', ['inspire']);
+  module.factory('localeLoader', ['$http', '$q', function($http, $q) {
+    return function(options) {
+      var allPromises = [];
+      angular.forEach(options.locales, function(value, index) {
+        var langUrl = options.prefix +
+          options.key + '-' + value + options.suffix;
+
+        var deferredInst = $q.defer();
+        allPromises.push(deferredInst.promise);
+
+        $http({
+          method: 'GET',
+          url: langUrl
+        }).success(function(data, status, header, config) {
+          deferredInst.resolve(data);
+        }).error(function(data, status, header, config) {
+          deferredInst.reject(options.key);
+        });
+      });
+
+      // Finally, create a single promise containing all the promises
+      // for each app module:
+      var deferred = $q.all(allPromises);
+      return deferred;
+    };
+  }]);
 
   module.config(['$translateProvider', '$LOCALES',
     function($translateProvider, $LOCALES) {
@@ -34,10 +60,34 @@
       moment.lang(lang);
     }]);
 
-  module.controller('GnInspireController', [
-    '$scope', 'inspireMetadataLoader', '$translate', '$http',
-    function($scope, inspireMetadataLoader, $translate, $http) {
+  module.filter('translateLang', function () {
+    var translations = {
+      "eng" : "English",
+      "en" : "English",
+      "fre" : "Français",
+      "fr" : "Français",
+      "ger" : "Deutsch",
+      "ge" : "Deutsch",
+      "de" : "Deutsch",
+      "deu" : "Deutsch",
+      "ita" : "Italiano",
+      "it" : "Italiano",
+      "roh" : "Rumantsch",
+      "rm" : "Rumantsch"
+    };
+    return function (input) {
+      var translation = translations[angular.lowercase(input)];
+      return translation ? translation : input;
+    };
+  });
 
+
+  module.controller('GnInspireController', [
+    '$scope', 'inspireMetadataLoader', 'translateLangFilter', '$translate', '$http',
+    function($scope, inspireMetadataLoader, translateLangFilter, $translate, $http) {
+      $scope.base = "../../catalog/";
+      $scope.url = "";
+      $scope.lang = location.href.split('/')[5].substring(0, 3) || 'eng';
       $scope.langs = {ger: 'ger', fre:'fre', ita:'ita', eng:'eng'};
       var allowUnload = false;
       window.onbeforeunload = function() {
@@ -56,6 +106,12 @@
 
       $scope.data = inspireMetadataLoader($scope.lang, $scope.url, mdId);
       $scope.emptyContact = $scope.data.contact[0];
+
+      $scope.translateLanguage = function(lang) {
+        return function (lang) {
+          return translateLangFilter(lang);
+        };
+      };
       var legalNames = ["dataset", "series", "service"];
       $scope.hierarchyLevelFilter = function () {
         return function(input) {
@@ -619,3 +675,4 @@
   });
 
 }());
+
