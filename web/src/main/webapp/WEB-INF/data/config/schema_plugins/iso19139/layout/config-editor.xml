@@ -1496,7 +1496,7 @@
               xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
-                'MedSea level of characteristics')]"/>
+                'MedSea processing level of characteristics')]"/>
 
           <text ref="production-mode-field-missing"/>
 
