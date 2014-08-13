@@ -130,7 +130,17 @@ public class ValidateTransformationTest
     	File file = new File(data, "iso19139/servicemetadata.xml");
     	Multimap<String, Requirement> rules = ArrayListMultimap.create();
     	rules.put("DATASECTION", new Not(new ContainsText("ERROR")));
-    	file = testFile(file, Control.ISO_GM03, rules, true);
+    	testFile(file, Control.ISO_GM03, rules, true);
+
+    }
+@Test
+    public void exportAltTitleDuplicated() throws Throwable
+    {
+    	File file = new File(data, "non_validating/iso19139che/problemTitle_remove_charstrings.xml");
+    	Multimap<String, Requirement> rules = ArrayListMultimap.create();
+    	rules.put("alternateTitle",
+                new Count(1, new Finder("plainText")));
+    	testFile(file, Control.ISO_GM03, rules, false);
 
     }
 
@@ -139,7 +149,7 @@ public class ValidateTransformationTest
     {
         File file = new File(data, "non_validating/smallGeom.xml");
 		Multimap<String, Requirement> rules = ArrayListMultimap.create();
-	    file = testFile(file, Control.GM03_2_ISO, rules, true);
+	    testFile(file, Control.GM03_2_ISO, rules, true);
     }
 
     @Test

@@ -147,7 +147,15 @@
 							</gmd:textGroup>
 						</gmd:PT_FreeText>
 					</gmd:title>
-					<gmd:date>
+                    <gmd:alternateTitle xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>altTitle</gco:CharacterString>
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#FR">altTitle</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:alternateTitle>
+                    <gmd:date>
 						<gmd:CI_Date>
 							<gmd:date>
 								<gco:Date>2009-12-31</gco:Date>

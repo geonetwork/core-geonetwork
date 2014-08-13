@@ -1,9 +1,9 @@
 package org.fao.xsl.support;
 
-import java.util.Iterator;
-
 import org.jdom.Element;
 import org.jdom.filter.Filter;
+
+import java.util.Iterator;
 
 public class Count implements Requirement
 {
@@ -28,7 +28,7 @@ public class Count implements Requirement
         }
 
         if(_expected != count) {
-            System.err.println("Expected "+_expected+" but got "+count);
+            System.err.println(toString() + "\n\tExpected "+_expected+" but got "+count);
         }
         return _expected == count;
     }

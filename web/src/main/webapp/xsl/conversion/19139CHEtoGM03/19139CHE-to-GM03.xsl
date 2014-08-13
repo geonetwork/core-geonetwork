@@ -101,12 +101,14 @@
                                     <plainText></plainText>
                                 </GM03_2_1Core.Core.PT_Group>
                             </xsl:if>
-                            <xsl:for-each select="gco:CharacterString[normalize-space(.) != '']">
-                                <GM03_2_1Core.Core.PT_Group>
-                                    <language><xsl:value-of select="$defaultLanguage"/></language>
-                                    <plainText><xsl:value-of select="."/></plainText>
-                                </GM03_2_1Core.Core.PT_Group>
-                            </xsl:for-each>
+                            <xsl:if test="normalize-space(gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = $defaultLanguage]) != ''">
+                                <xsl:for-each select="gco:CharacterString[normalize-space(.) != '']">
+                                    <GM03_2_1Core.Core.PT_Group>
+                                        <language><xsl:value-of select="$defaultLanguage"/></language>
+                                        <plainText><xsl:value-of select="."/></plainText>
+                                    </GM03_2_1Core.Core.PT_Group>
+                                </xsl:for-each>
+                            </xsl:if>
                             <xsl:for-each select="gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[normalize-space(text())!='']">
                                 <GM03_2_1Core.Core.PT_Group>
                                     <xsl:apply-templates mode="text" select="@locale"/>
