@@ -141,8 +141,7 @@
 
     <!-- Main Form -->
 
-
-    <form id="inspireForm" class="col-xs-12 form-horizontal" role="form" >
+    <form data-ng-cloak="" id="inspireForm" class="ng-cloakcol-xs-12 form-horizontal" role="form" >
         <fieldset id="metadata">
             <legend data-translate="">metadata</legend>
             <div class="form-group">
@@ -162,7 +161,7 @@
                     <button data-ng-repeat="lang in languages"
                             data-ng-click="toggleLanguage(lang)"
                             class="btn btn-default btn-sm"
-                            data-ng-class="{active: isOtherLanguage(lang)}">{{lang | translate}}</button>
+                            data-ng-class="{active: isOtherLanguage(lang)}">{{lang | translateLang}}</button>
                 </div>
             </div>
 
