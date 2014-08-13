@@ -136,10 +136,15 @@ public class ValidateTransformationTest
 @Test
     public void exportAltTitleDuplicated() throws Throwable
     {
-    	File file = new File(data, "non_validating/iso19139che/problemTitle_remove_charstrings.xml");
+    	File file = new File(data, "non_validating/iso19139che/duplicate_group_text_in_gm03_bug.xml");
     	Multimap<String, Requirement> rules = ArrayListMultimap.create();
-    	rules.put("alternateTitle",
-                new Count(1, new Finder("plainText")));
+    	rules.put("title", new Count("title", 1, new Finder("plainText")));
+    	rules.put("alternateTitle", new Count("alternateTitle", 1, new Finder("plainText")));
+    	rules.put("collectiveTitle", new Count("collectiveTitle", 1, new Finder("plainText")));
+    	rules.put("abstract", new Count("abstract", 1, new Finder("plainText")));
+    	rules.put("purpose", new Count("purpose", 2, new Finder("plainText")));
+    	rules.put("organisationName", new Count("organisationName", 2, new Finder("plainText")));
+    	rules.put("positionName", new Count("positionName", 2, new Finder("plainText")));
     	testFile(file, Control.ISO_GM03, rules, false);
 
     }
