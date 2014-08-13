@@ -38,6 +38,8 @@ import javax.servlet.ServletContext;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.server.overrides.ConfigurationOverrides;
+import org.apache.lucene.facet.FacetsConfig;
+import org.apache.lucene.facet.taxonomy.CategoryPath;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -64,6 +66,8 @@ public class LuceneConfig {
     private static final int ANALYZER_CLASS = 1;
 	private static final int BOOST_CLASS = 2;
 	private static final int DOC_BOOST_CLASS = 3;
+
+    private FacetsConfig facetConfiguration = null;
 
 
     @Autowired
@@ -644,7 +648,17 @@ public class LuceneConfig {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
+
+        this.facetConfiguration = new FacetsConfig();
+        for (Map<String, LuceneConfig.FacetConfig> facets : getTaxonomy().values()) {
+            for (LuceneConfig.FacetConfig facetConfig : facets.values()) {
+                String fieldName = facetConfig.getIndexKey()  +
+                        SearchManager.FACET_FIELD_SUFFIX;
+                this.facetConfiguration.setIndexFieldName(fieldName, fieldName);
+                this.facetConfiguration.setMultiValued(fieldName, true);
+            }
+        }
+    }
 	
 
     /**
@@ -841,6 +855,24 @@ public class LuceneConfig {
 	public boolean isNumericField(String fieldName) {
 		return this.numericFields.containsKey(fieldName);
 	}
+
+    /**
+     * Return true if the field is a facet field.
+     *
+     * TODO: Create a simple set of fieldname instead
+     * of looping on all summary configuration.
+     *
+     * @param fieldName
+     * @return
+     */
+    public boolean isFacetField(String fieldName) {
+        for (Map<String, FacetConfig> facets : getTaxonomy().values()) {
+            if (facets.containsKey(fieldName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 	/**
 	 * 
@@ -1059,6 +1091,10 @@ public class LuceneConfig {
 	public void setTaxonomy(Map<String, Map<String,FacetConfig>> taxonomy) {
 		this.taxonomy = taxonomy;
 	}
+
+    public FacetsConfig getTaxonomyConfiguration() {
+        return facetConfiguration;
+    }
 
     public static String multilingualSortFieldName(String fieldName, String locale) {
         return fieldName + "|" + locale;

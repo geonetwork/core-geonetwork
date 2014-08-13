@@ -5,7 +5,6 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.facet.taxonomy.CategoryPath;
 import org.apache.lucene.facet.taxonomy.TaxonomyWriter;
 import org.apache.lucene.index.*;
-import org.apache.lucene.search.NRTManager.TrackingIndexWriter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.fao.geonet.constants.Geonet;
@@ -98,7 +97,7 @@ public class LuceneIndexLanguageTracker {
             writer = new IndexWriter(cachedFSDir, conf);
             trackingIndexWriter = new TrackingIndexWriter(writer);
             nrtManager = new GeonetworkNRTManager(luceneConfig, indexId,
-                    trackingIndexWriter, null, true, taxonomyIndexTracker);
+                    trackingIndexWriter, writer, null, true, taxonomyIndexTracker);
         } catch (CorruptIndexException e) {
             IOUtils.closeQuietly(nrtManager);
             IOUtils.closeQuietly(writer);
@@ -235,10 +234,14 @@ public class LuceneIndexLanguageTracker {
             }
             open(language);
             // Add taxonomy first
-            if (categories.size() > 0) {
-                taxonomyIndexTracker.addDocument(doc, categories);
+            Document docAfterFacetBuild = doc;
+            docAfterFacetBuild = taxonomyIndexTracker.addDocument(doc, categories);
+            // Index the document returned after the facets are built by the taxonomy writer
+            if (docAfterFacetBuild == null) {
+                trackingWriters.get(language).addDocument(doc);
+            } else {
+                trackingWriters.get(language).addDocument(docAfterFacetBuild);
             }
-            trackingWriters.get(language).addDocument(doc);
         } finally {
             lock.unlock();
         }
