@@ -3,7 +3,8 @@
   The main entry point for all user interface generated
   from XSLT. 
 -->
-<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:java="java:org.fao.geonet.util.XslUtil">
 
     <xsl:output omit-xml-declaration="yes" method="html" doctype-public="html" indent="yes"
         encoding="UTF-8"/>
@@ -35,6 +36,9 @@
                     <!--title="concat($env/system/site/name, ' - ', $env/system/site/organization)"/>-->
 
                 <xsl:call-template name="css-load"/>
+                <script type="text/javascript">
+                    var translationJson = <xsl:value-of select="java:loadTranslationFile('/catalog/locales/%s-inspire.json', /root/gui/language)"/>
+                </script>
             </head>
 
 

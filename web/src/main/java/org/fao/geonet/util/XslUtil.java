@@ -2,6 +2,7 @@ package org.fao.geonet.util;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.io.Resources;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -10,6 +11,7 @@ import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.io.WKTWriter;
 import jeeves.exceptions.JeevesException;
 import jeeves.server.ProfileManager;
+import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.TransformerFactoryFactory;
 import net.sf.saxon.Configuration;
@@ -41,6 +43,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -890,6 +893,27 @@ public final class XslUtil {
             return null;
         }
 
+    }
+    public static String loadTranslationFile(Object filePattern, Object language) throws IOException {
+        if (filePattern != null) {
+            final ServiceContext serviceContext = ServiceContext.get();
+            if (serviceContext != null) {
+                final Charset charset = Charset.forName("UTF-8");
+
+                String desiredPath = String.format(filePattern.toString(), twoCharLangCode(language.toString()));
+                URL resource = serviceContext.getServlet().getServletContext().getResource(desiredPath);
+                if (resource != null) {
+                    return Resources.toString(resource, charset);
+                }
+                String defaultPath = String.format(filePattern.toString(), "en");
+                resource = serviceContext.getServlet().getServletContext().getResource(defaultPath);
+                if (resource != null) {
+                    return Resources.toString(resource, charset);
+                }
+            }
+        }
+
+        return "{}";
     }
     /**
      * Return 2 iso lang code from a 3 iso lang code. If any error occurs return "".

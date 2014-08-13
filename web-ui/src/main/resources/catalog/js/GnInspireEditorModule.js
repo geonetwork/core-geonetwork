@@ -18,9 +18,6 @@
     'inspire_multilingual_text_directive', 'inspire_metadata_factory', 'inspire_get_shared_users_factory', 'inspire_get_keywords_factory',
     'inspire_get_extents_factory', 'inspire_date_picker_directive', 'inspire_ie9_select']);
 
-
-  // Define the translation files to load
-  module.constant('$LOCALES', ['inspire']);
   module.factory('localeLoader', ['$http', '$q', function($http, $q) {
     return function(options) {
       var allPromises = [];
@@ -48,15 +45,11 @@
     };
   }]);
 
-  module.config(['$translateProvider', '$LOCALES',
-    function($translateProvider, $LOCALES) {
-      $translateProvider.useLoader('localeLoader', {
-        locales: $LOCALES,
-        prefix: '../../catalog/locales/',
-        suffix: '.json'
-      });
-
+  module.config(['$translateProvider',
+    function($translateProvider) {
       var lang = location.href.split('/')[5].substring(0, 2) || 'en';
+      $translateProvider.translations(lang, translationJson);
+
       $translateProvider.preferredLanguage(lang);
 
       moment.lang(lang);
