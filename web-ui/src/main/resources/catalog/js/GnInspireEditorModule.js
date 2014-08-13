@@ -12,6 +12,8 @@
   goog.require('inspire-metadata-loader');
   goog.require('inspire_ie9_select');
 
+  angular.module('gn', []);
+
   var module = angular.module('gn_inspire_editor', ['gn_language_switcher', 'pascalprecht.translate', 'inspire_contact_directive',
     'inspire_multilingual_text_directive', 'inspire_metadata_factory', 'inspire_get_shared_users_factory', 'inspire_get_keywords_factory',
     'inspire_get_extents_factory', 'inspire_date_picker_directive', 'inspire_ie9_select']);

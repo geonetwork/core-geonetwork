@@ -48,7 +48,7 @@
                     <div data-ng-include="'{$uiResourcesPath}templates/editor/inspire/metadata.html'"></div>
 
                     <xsl:if test="$isJsEnabled">
-                        <xsl:call-template name="javascript-load"/>
+                        <xsl:call-template name="javascript-load-inspire"/>
                     </xsl:if>
                 </div>
                 <xsl:if test="$isJsEnabled">
@@ -70,4 +70,47 @@
         </noscript>
     </xsl:template>
 
+
+
+    <xsl:template name="javascript-load-inspire">
+
+        <script>var geonet={provide:function(s){},require:function(s){}}</script>
+        <xsl:choose>
+            <xsl:when test="$isDebugMode">
+
+                <script src="{$uiResourcesPath}lib/modernizr.js"></script>
+                <script src="{$uiResourcesPath}lib/closure/base.js"></script>
+
+                <script src="{$uiResourcesPath}lib/jquery-2.0.3.js"></script>
+
+                <script src="{$uiResourcesPath}lib/moment+langs.min.js"></script>
+
+                <script src="{$uiResourcesPath}lib/angular/angular.js"></script>
+                <script src="{$uiResourcesPath}lib/angular/angular-resource.js"></script>
+                <script src="{$uiResourcesPath}lib/angular/angular-route.js"></script>
+
+                <script src="{$uiResourcesPath}lib/angular-translate.js"></script>
+
+                <script src="{$uiResourcesPath}lib/bootstrap-3.0.1.js"></script>
+                <script src="{$uiResourcesPath}lib/ol-whitespace.js"></script>
+
+            </xsl:when>
+            <xsl:otherwise>
+            </xsl:otherwise>
+        </xsl:choose>
+
+        <xsl:choose>
+            <xsl:when test="/root/request/debug">
+                <!-- Use Closure to load the application scripts -->
+                <script src="{/root/gui/url}/static/closure_deps.js"></script>
+                <script>
+                    goog.require('<xsl:value-of select="$angularApp"/>');
+                </script>
+            </xsl:when>
+            <xsl:otherwise>
+                <script src="{/root/gui/url}/static/inspire-lib.js"></script>
+                <script src="{/root/gui/url}/static/{$angularApp}.js{$minimizedParam}"></script>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
 </xsl:stylesheet>
