@@ -72,6 +72,10 @@
              var isField =
              element.is('input') || element.is('textarea');
 
+             element.on('$destroy', function() {
+               element.off();
+             });
+
              var initTooltip = function(event) {
                if (!isInitialized && gnCurrentEdit.displayTooltips) {
                  // Retrieve field information (there is a cache)
@@ -167,6 +171,11 @@
           direction: '@'
         },
         link: function(scope, element, attrs) {
+
+          element.on('$destroy', function() {
+            element.off();
+          });
+
           $(element).click(function() {
             gnEditor.move(scope.ref, scope.direction || 'down',
                 scope.domelementToMove);

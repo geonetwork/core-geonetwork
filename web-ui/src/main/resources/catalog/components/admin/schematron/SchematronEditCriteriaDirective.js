@@ -198,7 +198,6 @@
                      criteriaType.remote.selectTokensFunction =
                      selectTokensFunction;
                    }
-                   console.log(selectRecordArray);
                    data = selectRecordArray(parsedResponse, scope);
 
                    finalData = [];

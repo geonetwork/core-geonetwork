@@ -42,6 +42,9 @@
     </xsl:choose>
   </xsl:template>
 
+
+  <!-- Insert a HTML fragment in the editor from the
+  localization files. -->
   <xsl:template mode="form-builder" match="text">
     <xsl:variable name="id" select="@ref"/>
     <xsl:variable name="text" select="$strings/*[name() = $id]"/>
