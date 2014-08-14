@@ -93,7 +93,7 @@ public class CswPublicationDispatcher extends NotInReadOnlyModeService {
         }
         System.out.println("CSW operation: " + operation);
 
-        if(!operation.equals("Harvest") && !operation.equals("Transaction")) {
+        if(!operation.equals("Harvest") && !operation.equals("Transaction") &&!operation.equals("GetRecordById")) {
             System.out.println("Not a CSW Publication operation: " + operation);
             Element info  = new Element("info").setText("Not a CSW Publication operation: " + operation + ". Did you mean to use the CSW Discovery service? Use service name /csw");
 			response.addContent(info);
