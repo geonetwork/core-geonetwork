@@ -43,87 +43,77 @@ attached it to the metadata for data.
 		    gmd:identificationInfo|
 		    gmd:contentInfo"/>
 
-			<xsl:choose>
-				<xsl:when
-					test="gmd:identificationInfo/srv:SV_ServiceIdentification|
-				gmd:identificationInfo/*[@gco:isoType='srv:SV_ServiceIdentification']">
-					<xsl:copy-of select="gmd:distributionInfo"/>
-				</xsl:when>
-				<!-- In a dataset add a link in the distribution section -->
-				<xsl:otherwise>
-					<gmd:distributionInfo>
-						<gmd:MD_Distribution>
-							<xsl:copy-of
-								select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"/>
-							<xsl:copy-of
-								select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor"/>
-							<gmd:transferOptions>
-								<gmd:MD_DigitalTransferOptions>
-									<xsl:copy-of
-										select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:unitsOfDistribution"/>
-									<xsl:copy-of
-										select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:transferSize"/>
-									<xsl:copy-of
-										select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:onLine"/>
-									
-									
-									<!-- Add all online source from the target metadata to the
-									current one -->
-									<xsl:if test="//extra">
-										<xsl:for-each select="//extra//gmd:onLine">
-											<gmd:onLine>
-												<xsl:if test="$extra_metadata_uuid">
-													<xsl:attribute name="uuidref" select="$extra_metadata_uuid"/>
-												</xsl:if>
-												<xsl:copy-of select="*"/>
-											</gmd:onLine>
-										</xsl:for-each>
-									</xsl:if>
-									<xsl:if test="$url">
-										<xsl:for-each select="tokenize($name, ',')">
-											<xsl:variable name="pos" select="position()"/>
-											<gmd:onLine>
-												<xsl:if test="$uuidref">
-													<xsl:attribute name="uuidref" select="$uuidref"/>
-												</xsl:if>
-												<gmd:CI_OnlineResource>
-													<gmd:linkage>
-														<gmd:URL>
-														<xsl:value-of select="$url"/>
-														</gmd:URL>
-													</gmd:linkage>
-													<gmd:protocol>
-														<gco:CharacterString>
-														<xsl:value-of select="$protocol"/>
-														</gco:CharacterString>
-													</gmd:protocol>
-													<gmd:name>
-														<gco:CharacterString>
-														<xsl:value-of select="."/>
-														</gco:CharacterString>
-													</gmd:name>
-													<gmd:description>
-														<gco:CharacterString>
-														<xsl:value-of select="tokenize($desc, ',')[position() = $pos]"/>
-														</gco:CharacterString>
-													</gmd:description>
-												</gmd:CI_OnlineResource>
-											</gmd:onLine>
-										</xsl:for-each>
-									</xsl:if>
-									<xsl:copy-of
-										select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:offLine"
-									/>
-								</gmd:MD_DigitalTransferOptions>
-							</gmd:transferOptions>
-							<xsl:copy-of
-								select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[position() > 1]"
-							/>
-						</gmd:MD_Distribution>
-						
-					</gmd:distributionInfo>
-				</xsl:otherwise>
-			</xsl:choose>
+      <gmd:distributionInfo>
+        <gmd:MD_Distribution>
+          <xsl:copy-of
+            select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"/>
+          <xsl:copy-of
+            select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor"/>
+          <gmd:transferOptions>
+            <gmd:MD_DigitalTransferOptions>
+              <xsl:copy-of
+                select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:unitsOfDistribution"/>
+              <xsl:copy-of
+                select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:transferSize"/>
+              <xsl:copy-of
+                select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:onLine"/>
+
+
+              <!-- Add all online source from the target metadata to the
+              current one -->
+              <xsl:if test="//extra">
+                <xsl:for-each select="//extra//gmd:onLine">
+                  <gmd:onLine>
+                    <xsl:if test="$extra_metadata_uuid">
+                      <xsl:attribute name="uuidref" select="$extra_metadata_uuid"/>
+                    </xsl:if>
+                    <xsl:copy-of select="*"/>
+                  </gmd:onLine>
+                </xsl:for-each>
+              </xsl:if>
+              <xsl:if test="$url">
+                <xsl:for-each select="tokenize($name, ',')">
+                  <xsl:variable name="pos" select="position()"/>
+                  <gmd:onLine>
+                    <xsl:if test="$uuidref">
+                      <xsl:attribute name="uuidref" select="$uuidref"/>
+                    </xsl:if>
+                    <gmd:CI_OnlineResource>
+                      <gmd:linkage>
+                        <gmd:URL>
+                        <xsl:value-of select="$url"/>
+                        </gmd:URL>
+                      </gmd:linkage>
+                      <gmd:protocol>
+                        <gco:CharacterString>
+                        <xsl:value-of select="$protocol"/>
+                        </gco:CharacterString>
+                      </gmd:protocol>
+                      <gmd:name>
+                        <gco:CharacterString>
+                        <xsl:value-of select="."/>
+                        </gco:CharacterString>
+                      </gmd:name>
+                      <gmd:description>
+                        <gco:CharacterString>
+                        <xsl:value-of select="tokenize($desc, ',')[position() = $pos]"/>
+                        </gco:CharacterString>
+                      </gmd:description>
+                    </gmd:CI_OnlineResource>
+                  </gmd:onLine>
+                </xsl:for-each>
+              </xsl:if>
+              <xsl:copy-of
+                select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/gmd:offLine"
+              />
+            </gmd:MD_DigitalTransferOptions>
+          </gmd:transferOptions>
+          <xsl:copy-of
+            select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions[position() > 1]"
+          />
+        </gmd:MD_Distribution>
+
+      </gmd:distributionInfo>
 			
 			<xsl:copy-of
 				select="gmd:dataQualityInfo|
