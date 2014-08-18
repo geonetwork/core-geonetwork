@@ -935,7 +935,7 @@
         <env>prod</env>
         <server>ifr-myocean-ro-exp</server>
         <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork-myocean-ro-exp</geonetwork.webapp.name>
+        <geonetwork.webapp.name>geonetwork-myocean-ro</geonetwork.webapp.name>
       </properties>
     </profile>
     <profile>
