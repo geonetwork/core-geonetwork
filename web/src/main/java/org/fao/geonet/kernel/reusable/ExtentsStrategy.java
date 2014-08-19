@@ -23,30 +23,20 @@
 
 package org.fao.geonet.kernel.reusable;
 
-import static org.fao.geonet.kernel.reusable.Utils.gml2Conf;
-import static org.fao.geonet.kernel.reusable.Utils.gml3Conf;
-import static org.fao.geonet.kernel.reusable.Utils.addChild;
-import static org.fao.geonet.util.LangUtils.FieldType.STRING;
-
-import java.io.StringReader;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.UUID;
-
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.MultiPolygon;
+import com.vividsolutions.jts.geom.Polygon;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import jeeves.xlink.XLink;
-
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.services.extent.Add;
 import org.fao.geonet.services.extent.ExtentHelper;
@@ -68,7 +58,6 @@ import org.geotools.feature.FeatureCollections;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.geometry.jts.JTS;
-import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.geotools.xml.Parser;
 import org.jdom.Attribute;
 import org.jdom.Content;
@@ -85,13 +74,24 @@ import org.opengis.filter.expression.Literal;
 import org.opengis.filter.expression.PropertyName;
 import org.opengis.filter.spatial.Within;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Polygon;
+import java.io.StringReader;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.UUID;
+
+import static org.apache.lucene.search.WildcardQuery.WILDCARD_STRING;
+import static org.fao.geonet.kernel.reusable.Utils.addChild;
+import static org.fao.geonet.kernel.reusable.Utils.gml2Conf;
+import static org.fao.geonet.kernel.reusable.Utils.gml3Conf;
+import static org.fao.geonet.util.LangUtils.FieldType.STRING;
 
 public final class ExtentsStrategy extends ReplacementStrategy {
 
@@ -1108,5 +1108,15 @@ public final class ExtentsStrategy extends ReplacementStrategy {
 
             return href.replaceFirst("&id=[^&]+", "&id=" + id);
         }
+    }
+
+    @Override
+    public org.apache.lucene.search.Query createFindMetadataQuery(String field, String concreteId, boolean isValidated) {
+        String typename = isValidated ? XLINK_TYPE : NON_VALIDATED_TYPE;
+        WildcardQuery query = new WildcardQuery(new Term(field, WILDCARD_STRING + "id=" + concreteId + WILDCARD_STRING +
+                                                                  "typename=" + typename + WILDCARD_STRING));
+
+
+        return query;
     }
 }

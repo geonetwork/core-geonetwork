@@ -23,26 +23,28 @@
 
 package org.fao.geonet.services.reusable;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
-
 import jeeves.utils.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.reusable.*;
+import org.fao.geonet.kernel.reusable.DeletedObjects;
+import org.fao.geonet.kernel.reusable.MetadataRecord;
+import org.fao.geonet.kernel.reusable.ReplacementStrategy;
+import org.fao.geonet.kernel.reusable.SendEmailParameter;
+import org.fao.geonet.kernel.reusable.Utils;
 import org.jdom.Element;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Deletes the objects from deleted reusable object table and unpublishes the
@@ -81,7 +83,8 @@ public class Delete implements Service
         Multimap<String/* ownerid */, String/* metadataid */> emailInfo = HashMultimap.create();
 
         for (String id : ids) {
-            Set<MetadataRecord> md = Utils.getReferencingMetadata(context, Arrays.asList(DeletedObjects.getLuceneIndexField()),id, false, ReplacementStrategy.ID_FUNC);
+            Set<MetadataRecord> md = Utils.getReferencingMetadata(context, DeletedObjects.createFindMetadataReferences(),
+                    Arrays.asList(DeletedObjects.getLuceneIndexField()), id, false, false, ReplacementStrategy.ID_FUNC);
             for (MetadataRecord metadataRecord : md) {
                 metadataIds.add(metadataRecord.id);
 

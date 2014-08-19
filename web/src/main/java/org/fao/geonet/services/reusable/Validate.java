@@ -23,25 +23,16 @@
 
 package org.fao.geonet.services.reusable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.common.base.Function;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
-
 import jeeves.utils.Util;
 import jeeves.xlink.Processor;
 import jeeves.xlink.XLink;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
@@ -51,7 +42,13 @@ import org.fao.geonet.kernel.reusable.ReusableTypes;
 import org.fao.geonet.kernel.reusable.Utils;
 import org.jdom.Element;
 
-import com.google.common.base.Function;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Makes a list of all the non-validated elements
@@ -92,11 +89,10 @@ public class Validate implements Service
 
         List<Element> result = new ArrayList<Element>();
         for (String id : ids) {
-            Element e = updateXLink(dbms, strategy, context, idMapping, id, true);
+            Element e = updateXLink(dbms, strategy, context, idMapping, id);
             result.add(e);
         }
 
-        Processor.clearCache();
         return result;
     }
 
@@ -104,15 +100,14 @@ public class Validate implements Service
     {
     }
 
-	private Element updateXLink( Dbms dbms, ReplacementStrategy strategy, ServiceContext context, Map<String, String> idMapping, String id,
-	        boolean validated ) throws Exception {
+	private Element updateXLink(Dbms dbms, ReplacementStrategy strategy, ServiceContext context, Map<String, String> idMapping, String id) throws Exception {
 	
 	    UserSession session = context.getUserSession();
 	    List<String> luceneFields = new LinkedList<String>();
 	    luceneFields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
 
 	    final Function<String, String> idConverter = strategy.numericIdToConcreteId(session);
-	    Set<MetadataRecord> results = Utils.getReferencingMetadata(context, luceneFields, id, true, idConverter);
+	    Set<MetadataRecord> results = Utils.getReferencingMetadata(context, strategy, luceneFields, id, false, true, idConverter);
 	
 	    for( MetadataRecord metadataRecord : results ) {
 	
@@ -130,15 +125,18 @@ public class Validate implements Service
 	                    newId = id;
 	                }
 	                String validateHRef = strategy.updateHrefId(oldHref, newId, session);
-	                if (validated) {
-	                    xlink.setAttribute(XLink.HREF, validateHRef, XLink.NAMESPACE_XLINK);
-	                }
+                    xlink.setAttribute(XLink.HREF, validateHRef, XLink.NAMESPACE_XLINK);
 	            }
 	
 	        }
-	        metadataRecord.commit(dbms, context);
 	    }
-	    Element e = new Element("id");
+
+        Processor.clearCache();
+        for (MetadataRecord metadataRecord : results) {
+            metadataRecord.commit(dbms, context);
+        }
+
+        Element e = new Element("id");
 	    e.setText(id);
 	    return e;
 	}

@@ -23,18 +23,21 @@
 
 package org.fao.geonet.kernel.reusable;
 
-import static org.fao.geonet.kernel.reusable.Utils.addChild;
-
-import java.sql.SQLException;
-import java.util.List;
-
 import jeeves.resources.dbms.Dbms;
 import jeeves.utils.SerialFactory;
-
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.util.Xml;
 import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import static org.apache.lucene.search.WildcardQuery.WILDCARD_STRING;
+import static org.fao.geonet.kernel.reusable.Utils.addChild;
 
 /**
  * Handles operations for interacting with the Deleted Objects database table
@@ -117,4 +120,13 @@ public final class DeletedObjects
         return new String[]{"xlink_deleted"};
     }
 
+    public static FindMetadataReferences createFindMetadataReferences() {
+        return new FindMetadataReferences() {
+            @Override
+            public Query createFindMetadataQuery(String field, String concreteId, boolean validated) {
+                Term term = new Term(field, WILDCARD_STRING + "id=" + concreteId + WILDCARD_STRING);
+                return new WildcardQuery(term);
+            }
+        };
+    }
 }

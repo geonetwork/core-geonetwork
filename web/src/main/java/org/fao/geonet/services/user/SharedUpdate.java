@@ -236,7 +236,7 @@ public class SharedUpdate implements Service
 
         fields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
         fields.addAll(Arrays.asList(strategy.getValidXlinkLuceneField()));
-        final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, fields, id, false,
+        final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, strategy, fields, id, null, false,
                 Functions.<String>identity());
 
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);

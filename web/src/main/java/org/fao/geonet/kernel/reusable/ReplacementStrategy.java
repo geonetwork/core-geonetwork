@@ -23,33 +23,36 @@
 
 package org.fao.geonet.kernel.reusable;
 
+import com.google.common.base.Function;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.UserSession;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.WildcardQuery;
+import org.fao.geonet.kernel.search.spatial.Pair;
+import org.jdom.Element;
+
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
-import com.google.common.base.Function;
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.UserSession;
+import static org.apache.lucene.search.WildcardQuery.WILDCARD_STRING;
 
-import org.fao.geonet.kernel.search.spatial.Pair;
-import org.jdom.Element;
+public abstract class ReplacementStrategy implements FindMetadataReferences {
+    static final Pair<Collection<Element>, Boolean> NULL = Pair.read((Collection<Element>) Collections
+            .<Element>emptySet(), false);
+    public static final String REPORT_ROOT = "records";
+    static final String REPORT_ELEMENT = "record";
+    static final String REPORT_DESC = "desc";
+    static final String REPORT_URL = "url";
+    public static final String REPORT_ID = "id";
+    public static final String REPORT_XLINK = "xlink";
+    public static final String REPORT_TYPE = "type";
+    public static final String REPORT_SEARCH = "search";
+    public static final Function<String, String> ID_FUNC = new Function<String, String>() {
 
-public abstract class ReplacementStrategy
-{
-    static final Pair<Collection<Element>, Boolean> NULL           = Pair.read((Collection<Element>) Collections
-                                                                           .<Element> emptySet(), false);
-    public static final String                             REPORT_ROOT    = "records";
-    static final String                             REPORT_ELEMENT = "record";
-    static final String                             REPORT_DESC    = "desc";
-    static final String                             REPORT_URL     = "url";
-    public static final String                             REPORT_ID      = "id";
-    public static final String                             REPORT_XLINK      = "xlink";
-    public static final String                             REPORT_TYPE      = "type";
-    public static final String                             REPORT_SEARCH      = "search";
-    public static final Function<String,String> ID_FUNC = new Function<String,String>(){
-
-        public String apply( String s) {
+        public String apply(String s) {
             return s;
         }
     };
@@ -59,7 +62,6 @@ public abstract class ReplacementStrategy
      *
      * @return returns a pair with the collection of replaced elements and a true if all elements were matched.  If false
      * is returned then some elements were found but others need to be added
-     *
      */
     public abstract Pair<Collection<Element>, Boolean> find(Element placeholder, Element originalElem, String defaultMetadataLang)
             throws Exception;
@@ -68,8 +70,7 @@ public abstract class ReplacementStrategy
      * Adds the object as a non_validated reusable object and returns the
      * Element(s) to add to the metadata in place of the originalElem
      *
-     * @param placeholder
-     *            TODO
+     * @param placeholder TODO
      */
     public abstract Collection<Element> add(Element placeholder, Element originalElem, Dbms dbms, String metadataLanguage)
             throws Exception;
@@ -82,13 +83,10 @@ public abstract class ReplacementStrategy
     /**
      * Deletes the objects. No other function
      *
-     * @param ids
-     *            ids to delete
-     * @param session
-     *            TODO
-     * @param strategySpecificData
-     *            indicates the source to delete from. If null then assume
-     *            non_valid source
+     * @param ids                  ids to delete
+     * @param session              TODO
+     * @param strategySpecificData indicates the source to delete from. If null then assume
+     *                             non_valid source
      */
     public abstract void performDelete(String[] ids, Dbms dbms, UserSession session, String strategySpecificData) throws Exception;
 
@@ -99,9 +97,8 @@ public abstract class ReplacementStrategy
      * example contacts have which schema to display the xlink in. This should
      * be left off.
      *
-     * @param strategySpecificData
-     *            indicates the source to delete from. If null then assume
-     *            non_valid source
+     * @param strategySpecificData indicates the source to delete from. If null then assume
+     *                             non_valid source
      */
     public abstract String createXlinkHref(String id, UserSession session, String strategySpecificData) throws Exception;
 
@@ -115,10 +112,8 @@ public abstract class ReplacementStrategy
     /**
      * Update the non_validated ref to the validated ref.
      *
-     * @param id
-     *            TODO
-     * @param session
-     *            TODO
+     * @param id      TODO
+     * @param session TODO
      * @throws java.io.UnsupportedEncodingException
      */
     public abstract String updateHrefId(String oldHref, String id, UserSession session) throws UnsupportedEncodingException;
@@ -126,10 +121,9 @@ public abstract class ReplacementStrategy
     /**
      * Updates the SharedObject with the contents of the object below
      *
-     * @param xlink
-     *            new data
+     * @param xlink new data
      * @return elements that were added to the xlink but are not supported by
-     *         the xlink and must be added as a sibling to the xlink object.
+     * the xlink and must be added as a sibling to the xlink object.
      */
     public abstract Collection<Element> updateObject(Element xlink, Dbms dbms, String metadataLang) throws Exception;
 
@@ -153,7 +147,13 @@ public abstract class ReplacementStrategy
      */
     public abstract String createAsNeeded(String href, UserSession session) throws Exception;
 
-    public Function<String,String> numericIdToConcreteId(final UserSession session) {
+    public Function<String, String> numericIdToConcreteId(final UserSession session) {
         return ID_FUNC;
+    }
+
+    @Override
+    public Query createFindMetadataQuery(String field, String concreteId, boolean isValidated) {
+        Term term = new Term(field, WILDCARD_STRING + "id=" + concreteId + WILDCARD_STRING);
+        return new WildcardQuery(term);
     }
 }
