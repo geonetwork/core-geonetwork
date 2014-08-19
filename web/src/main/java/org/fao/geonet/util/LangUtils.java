@@ -165,7 +165,11 @@ public final class LangUtils
 
         if(fallback == null ){
             Iterator children = element.getDescendants(finder);
-            return ((Element) children.next()).getTextTrim();
+            if (children.hasNext()) {
+                return ((Element) children.next()).getTextTrim();
+            } else {
+                return element.toString();
+            }
         }
         return fallback;
     }
