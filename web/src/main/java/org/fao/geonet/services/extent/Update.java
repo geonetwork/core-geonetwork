@@ -23,27 +23,14 @@
 
 package org.fao.geonet.services.extent;
 
-import static org.fao.geonet.services.extent.ExtentHelper.DESC;
-import static org.fao.geonet.services.extent.ExtentHelper.GEO_ID;
-import static org.fao.geonet.services.extent.ExtentHelper.FORMAT;
-import static org.fao.geonet.services.extent.ExtentHelper.GEOM;
-import static org.fao.geonet.services.extent.ExtentHelper.ID;
-import static org.fao.geonet.services.extent.ExtentHelper.TYPENAME;
-import static org.fao.geonet.services.extent.ExtentHelper.SOURCE;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Set;
-import java.util.logging.Level;
-
 import com.google.common.base.Functions;
+import com.vividsolutions.jts.geom.Geometry;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.xlink.Processor;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.DataManager;
@@ -61,7 +48,18 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.GeometryDescriptor;
 
-import com.vividsolutions.jts.geom.Geometry;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.logging.Level;
+
+import static org.fao.geonet.services.extent.ExtentHelper.DESC;
+import static org.fao.geonet.services.extent.ExtentHelper.FORMAT;
+import static org.fao.geonet.services.extent.ExtentHelper.GEOM;
+import static org.fao.geonet.services.extent.ExtentHelper.GEO_ID;
+import static org.fao.geonet.services.extent.ExtentHelper.ID;
+import static org.fao.geonet.services.extent.ExtentHelper.SOURCE;
+import static org.fao.geonet.services.extent.ExtentHelper.TYPENAME;
 
 /**
  * Service for updating extent information
@@ -183,7 +181,7 @@ public class Update implements Service
 
         fields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
         fields.addAll(Arrays.asList(strategy.getValidXlinkLuceneField()));
-        final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, fields, id, false,
+        final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, strategy, fields, id, null, false,
                 Functions.<String>identity());
 
         DataManager dm = gc.getDataManager();

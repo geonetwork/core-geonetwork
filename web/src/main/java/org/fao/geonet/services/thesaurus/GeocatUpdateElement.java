@@ -23,8 +23,6 @@
 
 package org.fao.geonet.services.thesaurus;
 
-import java.util.*;
-
 import com.google.common.base.Functions;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
@@ -33,7 +31,6 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Util;
 import jeeves.xlink.Processor;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -45,6 +42,13 @@ import org.fao.geonet.kernel.reusable.KeywordsStrategy;
 import org.fao.geonet.kernel.reusable.MetadataRecord;
 import org.fao.geonet.kernel.reusable.Utils;
 import org.jdom.Element;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 //=============================================================================
 
@@ -126,7 +130,7 @@ public class GeocatUpdateElement implements Service {
 
         fields.addAll(Arrays.asList(strategy.getInvalidXlinkLuceneField()));
         fields.addAll(Arrays.asList(strategy.getValidXlinkLuceneField()));
-        final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, fields, newid, false,
+        final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, strategy, fields, newid, null, false,
                 Functions.<String>identity());
 
 

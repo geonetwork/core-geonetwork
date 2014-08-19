@@ -116,7 +116,7 @@ public class LocaleRedirects {
             return path + "?" + headers;
         } else {
             return path;
-        }
+    }
     }
 
     private String lang(String langParam, String langCookie, String langHeader) {

@@ -27,6 +27,56 @@
 
 package org.fao.geonet.kernel;
 
+import jeeves.constants.Jeeves;
+import jeeves.exceptions.JeevesException;
+import jeeves.exceptions.ServiceNotAllowedEx;
+import jeeves.exceptions.XSDValidationErrorEx;
+import jeeves.guiservices.session.JeevesUser;
+import jeeves.resources.dbms.Dbms;
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.utils.Log;
+import jeeves.utils.SerialFactory;
+import jeeves.utils.Util;
+import jeeves.utils.Xml;
+import jeeves.utils.Xml.ErrorHandler;
+import jeeves.xlink.Processor;
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Edit;
+import org.fao.geonet.constants.Geocat;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Geonet.Namespaces;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.exceptions.NoSchemaMatchesException;
+import org.fao.geonet.exceptions.SchemaMatchConflictException;
+import org.fao.geonet.exceptions.SchematronValidationErrorEx;
+import org.fao.geonet.kernel.csw.domain.CswCapabilitiesInfo;
+import org.fao.geonet.kernel.csw.domain.CustomElementSet;
+import org.fao.geonet.kernel.harvest.HarvestManager;
+import org.fao.geonet.kernel.reusable.ProcessParams;
+import org.fao.geonet.kernel.reusable.ReusableObjManager;
+import org.fao.geonet.kernel.reusable.log.ReusableObjectLogger;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.schema.SchemaDao;
+import org.fao.geonet.kernel.schema.SchematronCriteria;
+import org.fao.geonet.kernel.schema.SchematronCriteriaGroup;
+import org.fao.geonet.kernel.schema.SchematronRequirement;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.spatial.Pair;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
+import org.fao.geonet.services.extent.ExtentManager;
+import org.fao.geonet.util.ISODate;
+import org.fao.geonet.util.ThreadUtils;
+import org.jdom.Attribute;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
+import org.jdom.Parent;
+import org.jdom.filter.ElementFilter;
+
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -44,53 +94,6 @@ import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-
-import jeeves.constants.Jeeves;
-import jeeves.exceptions.JeevesException;
-import jeeves.exceptions.ServiceNotAllowedEx;
-import jeeves.exceptions.XSDValidationErrorEx;
-import jeeves.guiservices.session.JeevesUser;
-import jeeves.resources.dbms.Dbms;
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
-import jeeves.utils.Log;
-import jeeves.utils.SerialFactory;
-import jeeves.utils.Util;
-import jeeves.utils.Xml;
-import jeeves.utils.Xml.ErrorHandler;
-import jeeves.xlink.Processor;
-
-import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Edit;
-import org.fao.geonet.constants.Geocat;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Geonet.Namespaces;
-import org.fao.geonet.constants.Params;
-import org.fao.geonet.exceptions.NoSchemaMatchesException;
-import org.fao.geonet.exceptions.SchemaMatchConflictException;
-import org.fao.geonet.exceptions.SchematronValidationErrorEx;
-import org.fao.geonet.kernel.csw.domain.CswCapabilitiesInfo;
-import org.fao.geonet.kernel.csw.domain.CustomElementSet;
-import org.fao.geonet.kernel.harvest.HarvestManager;
-import org.fao.geonet.kernel.reusable.ProcessParams;
-import org.fao.geonet.kernel.reusable.ReusableObjManager;
-import org.fao.geonet.kernel.reusable.log.ReusableObjectLogger;
-import org.fao.geonet.kernel.schema.*;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.search.spatial.Pair;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.lib.Lib;
-import org.fao.geonet.services.extent.ExtentManager;
-import org.fao.geonet.util.ISODate;
-import org.fao.geonet.util.ThreadUtils;
-import org.jdom.Attribute;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
-import org.jdom.Parent;
-import org.jdom.filter.ElementFilter;
 
 /**
  * Handles all operations on metadata (select,insert,update,delete etc...).
@@ -449,7 +452,8 @@ public class DataManager {
      * @param reloadXLinks
      * @throws Exception
      */
-	public void indexMetadata(Dbms dbms, String id, boolean processSharedObjects, ServiceContext servContext, boolean performValidation, boolean fastIndex, boolean reloadXLinks) throws Exception {
+	public void indexMetadata(Dbms dbms, String id, boolean processSharedObjects, ServiceContext servContext, boolean performValidation,
+                              boolean fastIndex, boolean reloadXLinks) throws Exception {
         try {
             Vector<Element> moreFields = new Vector<Element>();
             int id$ = new Integer(id);

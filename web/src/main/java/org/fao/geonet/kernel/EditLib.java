@@ -28,6 +28,7 @@
 package org.fao.geonet.kernel;
 
 import com.google.common.annotations.VisibleForTesting;
+
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -593,7 +594,7 @@ public class EditLib {
                         propEl.setContent(propEl.indexOf(newElement), child);
                     } else if (child.getParentElement() == null) {
                         propEl.addContent(child);
-                    }
+            }
                 }
             }
         } else  if (newValue.getName().equals(propEl.getName()) && newValue.getNamespace().equals(propEl.getNamespace())) {

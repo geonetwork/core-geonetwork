@@ -23,19 +23,13 @@
 
 package org.fao.geonet.services.reusable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.base.Function;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geocat;
 import org.fao.geonet.constants.Geonet;
@@ -49,7 +43,11 @@ import org.fao.geonet.kernel.reusable.ReplacementStrategy;
 import org.fao.geonet.kernel.reusable.Utils;
 import org.jdom.Element;
 
-import com.google.common.base.Function;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Deletes the objects from deleted reusable object table and unpublishes the
@@ -92,7 +90,7 @@ public class DeleteUnused implements Service {
         for (Element element : nonValidated) {
             String objId = element.getChildTextTrim(ReplacementStrategy.REPORT_ID);
 
-            Set<MetadataRecord> md = Utils.getReferencingMetadata(context, luceneFields, objId, false, idConverter);
+            Set<MetadataRecord> md = Utils.getReferencingMetadata(context, strategy, luceneFields, objId, false, false, idConverter);
             if (md.isEmpty()) {
                 toDelete.add(objId);
             }
@@ -113,7 +111,8 @@ public class DeleteUnused implements Service {
         for (Element element : nonValidated) {
             String objId = element.getChildTextTrim(ReplacementStrategy.REPORT_ID);
 
-			Set<MetadataRecord> md = Utils.getReferencingMetadata(context, fields, objId, false, idConverter);
+			Set<MetadataRecord> md = Utils.getReferencingMetadata(context, DeletedObjects.createFindMetadataReferences(), fields, objId,
+                    false, false, idConverter);
             if (md.isEmpty()) {
                 toDelete.add(objId);
             }
