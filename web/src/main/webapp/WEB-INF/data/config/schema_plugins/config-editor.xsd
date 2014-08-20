@@ -137,8 +137,8 @@
         </xs:element>
         <xs:element minOccurs="0" maxOccurs="1" ref="flatModeExceptions">
           <xs:annotation>
-            <xs:documentation>Elements to apply "flat" mode exceptions. By default, 
-            "flat" mode does not display elements containing only children and no value.</xs:documentation>
+            <xs:documentation>Elements to apply "flat" mode exceptions. By default,
+              "flat" mode does not display elements containing only children and no value.</xs:documentation>
           </xs:annotation>
         </xs:element>
       </xs:sequence>
@@ -201,14 +201,14 @@
       <xs:sequence>
         <xs:element minOccurs="1" maxOccurs="unbounded" ref="for">
           <xs:annotation>
-            <xs:documentation>>Elements to apply "flat" mode exceptions. By default, 
-            "flat" mode does not display elements containing only children and no value.</xs:documentation>
+            <xs:documentation>>Elements to apply "flat" mode exceptions. By default,
+              "flat" mode does not display elements containing only children and no value.</xs:documentation>
           </xs:annotation>
         </xs:element>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  
+
   <xs:attribute name="mode" fixed="flat" type="xs:string">
     <xs:annotation>
       <xs:documentation>"flat" mode does not display elements containing only children and no value.
@@ -229,6 +229,7 @@
           </xs:annotation>
         </xs:element>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="action"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="text"/>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="section"/>
         <xs:element minOccurs="0" ref="fieldset"/>
       </xs:sequence>
@@ -267,14 +268,28 @@
         points to the parent of last element of the XPath attribute.</xs:documentation>
     </xs:annotation>
   </xs:attribute>
-  
+
+  <xs:element name="text">
+    <xs:annotation>
+      <xs:documentation>Insert an HTML fragment in the editor. The
+        fragment is defined in localization file strings.xml.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="ref" use="required" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>The tag name of the element to insert in the localization file.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
   <xs:element name="action">
     <xs:annotation>
       <xs:documentation>A button which trigger an action (usually a process or a add button).</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="template" minOccurs="0" maxOccurs="1"/> 
+        <xs:element ref="template" minOccurs="0" maxOccurs="1"/>
       </xs:sequence>
       <xs:attribute name="name" type="xs:string">
         <xs:annotation>
@@ -363,8 +378,8 @@
         <xs:annotation>
           <xs:documentation>The label to display if the element
             does not exist in the metadata record. It indicates that
-          the element is missing in the current record. It could be use
-          for a conformity section saying that the element is "not evaluated".
+            the element is missing in the current record. It could be use
+            for a conformity section saying that the element is "not evaluated".
           </xs:documentation>
         </xs:annotation>
       </xs:attribute>
@@ -444,7 +459,7 @@
             <xs:enumeration value="gn-date-picker">
               <xs:annotation>
                 <xs:documentation>
-                  Custom date picker directive which rely on 
+                  Custom date picker directive which rely on
                   HTML5 month, date and time type if the browser supports it.
                   If not, will provide a custom calendar picker.
                 </xs:documentation>

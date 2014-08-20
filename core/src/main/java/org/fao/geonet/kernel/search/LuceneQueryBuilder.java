@@ -844,8 +844,11 @@ public class LuceneQueryBuilder {
             for (String token : Splitter.on(separator).trimResults().split(text)) {
                 // TODO : here we should use similarity if set
                 Query subQuery = textFieldToken(token, fieldName, null);
-                BooleanClause clause = new BooleanClause(subQuery, occur);
-                query.add(clause);
+                // The subquery may be null if the analyzed string is null
+                if (subQuery != null) {
+                    BooleanClause clause = new BooleanClause(subQuery, occur);
+                    query.add(clause);
+                }
             }
         }
     }
