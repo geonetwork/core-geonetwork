@@ -309,6 +309,7 @@ class EditUtils {
                 String[] ids = ref.split("_");
                 // --- search element in current parent
                 Element parent = editLib.findElement(md, ids[2]);
+                // TODO: Should be based on SchemaPlugins
                 List<Element> elems = null;
                 try {
                   XPath xpath = XPath.newInstance(".//gmd:LocalisedCharacterString[@locale='#" + ids[1] + "']");
