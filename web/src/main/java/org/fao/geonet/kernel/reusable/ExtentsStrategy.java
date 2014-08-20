@@ -36,6 +36,8 @@ import jeeves.utils.Log;
 import jeeves.utils.Xml;
 import jeeves.xlink.XLink;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.WildcardQuery;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.services.extent.Add;
@@ -1116,8 +1118,12 @@ public final class ExtentsStrategy extends ReplacementStrategy {
         String typename = isValidated ? XLINK_TYPE : NON_VALIDATED_TYPE;
         WildcardQuery query = new WildcardQuery(new Term(field, WILDCARD_STRING + "id=" + concreteId + WILDCARD_STRING +
                                                                   "typename=" + typename + WILDCARD_STRING));
+        WildcardQuery query2 = new WildcardQuery(new Term(field, WILDCARD_STRING + "typename=" + typename + WILDCARD_STRING +
+                                                                 "id=" + concreteId + WILDCARD_STRING));
 
-
-        return query;
+        final BooleanQuery finalQuery = new BooleanQuery();
+        finalQuery.add(query, BooleanClause.Occur.SHOULD);
+        finalQuery.add(query2, BooleanClause.Occur.SHOULD);
+        return finalQuery;
     }
 }
