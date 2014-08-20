@@ -16,6 +16,7 @@ e2e-tests/*.db
 changes-*
 web/coverage.ec
 */target/
+*/*/target/
 */.externalToolBuilders
 web/src/main/webapp/data/
 web/src/main/webapp/WEB-INF/lucene/
