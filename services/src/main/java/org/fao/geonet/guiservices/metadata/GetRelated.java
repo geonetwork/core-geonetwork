@@ -38,6 +38,8 @@ import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.AssociatedResource;
+import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
+import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -200,8 +202,11 @@ public class GetRelated implements Service {
         }
 
         String schemaIdentifier = dm.getMetadataSchema(id);
-        SchemaPlugin schemaPlugin = SchemaManager.getSchemaPlugin(context, schemaIdentifier);
-
+        SchemaPlugin instance = SchemaManager.getSchemaPlugin(context, schemaIdentifier);
+        AssociatedResourcesSchemaPlugin schemaPlugin = null;
+        if (instance instanceof AssociatedResourcesSchemaPlugin) {
+            schemaPlugin = (AssociatedResourcesSchemaPlugin) instance;
+        }
 
         // Search for children of this record
         if (type.equals("") || type.contains("children")) {

@@ -11,6 +11,7 @@ import java.util.Set;
  */
 public abstract class SchemaPlugin {
     public static final String IDENTIFIER = null;
+    public static final String LOGGER_NAME = "geonetwork.schema-plugin";
     private static ImmutableSet<Namespace> allNamespaces = null;
 
     public String getIdentifier() {
@@ -20,27 +21,4 @@ public abstract class SchemaPlugin {
     public Set<Namespace> getNamespaces() {
         return ImmutableSet.copyOf(allNamespaces);
     }
-
-    /**
-     * Analyse a metadata record and extract associated
-     * resources.
-     *
-     * @return
-     */
-    public abstract Set<AssociatedResource> getAssociatedResourcesUUIDs(Element metadata);
-
-    /**
-     * Analyze a metadata record and extract associated parents
-     *
-     * @param metadata
-     * @return
-     */
-    public abstract Set<String> getAssociatedParentUUIDs(Element metadata);
-
-
-    public abstract Set<String> getAssociatedDatasetUUIDs(Element metadata);
-
-    public abstract Set<String> getAssociatedFeatureCatalogueUUIDs(Element metadata);
-
-    public abstract Set<String> getAssociatedSourceUUIDs(Element metadata);
 }

@@ -2,6 +2,7 @@ package org.fao.geonet.schema.dublincore;
 
 import com.google.common.collect.ImmutableSet;
 import org.fao.geonet.kernel.schema.AssociatedResource;
+import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -12,7 +13,9 @@ import java.util.Set;
 /**
  * Created by francois on 6/15/14.
  */
-public class DublinCoreSchemaPlugin extends org.fao.geonet.kernel.schema.SchemaPlugin {
+public class DublinCoreSchemaPlugin
+        extends org.fao.geonet.kernel.schema.SchemaPlugin
+        implements AssociatedResourcesSchemaPlugin {
     public static final String IDENTIFIER = "dublin-core";
 
     private static ImmutableSet<Namespace> allNamespaces;
