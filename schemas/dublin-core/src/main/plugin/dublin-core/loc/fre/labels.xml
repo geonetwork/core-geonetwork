@@ -260,11 +260,6 @@
     <description>A related resource that is substantially the same as the described resource, but in another format.</description>
   </element>
   <!-- ==================================================== -->
-  <element name="dct:isPartOf">
-    <label>Is Part Of</label>
-    <description>A related resource in which the described resource is physically or logically included.</description>
-  </element>
-  <!-- ==================================================== -->
   <element name="dct:isReferencedBy">
     <label>Is Referenced By</label>
     <description>A related resource that references, cites, or otherwise points to the described resource.</description>
