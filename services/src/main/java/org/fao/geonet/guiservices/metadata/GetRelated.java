@@ -208,7 +208,6 @@ public class GetRelated implements Service {
             relatedRecords.addContent(search(uuid, "children", context, from, to, fast));
         }
 
-        String schema = dm.getMetadataSchema(id + "");
         // Get parent record from this record
         if (schemaPlugin != null && (type.equals("") || type.contains("parent"))) {
             Set<String> listOfUUIDs = schemaPlugin.getAssociatedParentUUIDs(md);
