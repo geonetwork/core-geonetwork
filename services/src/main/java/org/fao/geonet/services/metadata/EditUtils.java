@@ -357,25 +357,6 @@ class EditUtils {
             }
         }
     }
-	/**
-     * If no PT_FreeText element exists, creates a geonet:element with an empty ref.
-     *
-     * @param parent
-     * @param name
-     * @param ns
-     * @return
-     */
-	protected static Element getOrAdd(Element parent, String name, Namespace ns) {
-		Element child = parent.getChild(name, ns);
-		if (child == null) {
-			child = new Element(name, ns);
-			Element refElem = new Element(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
-			refElem.setAttribute(Edit.Element.Attr.REF, "");
-			child.addContent(refElem);
-			parent.addContent(child);
-		}
-		return child;
-	}
 
     /**
      *

@@ -649,6 +649,7 @@ public class SchemaLoader
 		String path = new File(xmlSchemaFile).getParent() + "/";
 
 		//--- load xml-schema
+        Log.debug(Geonet.SCHEMA_MANAGER, "Loading schema " + xmlSchemaFile);
 
         Element elRoot = Xml.loadFile(xmlSchemaFile);
 		if (elFirst == null) elFirst = elRoot;
@@ -810,19 +811,29 @@ public class SchemaLoader
 			}
 			al.add(ee);
 
-			if (hmSubsLink.get(ee.name) != null) {
-				throw new IllegalArgumentException("Substitution link collision for : "+ee.name+" link to "+ee.substGroup);
+            String existingSubstitionGroup = hmSubsLink.get(ee.name);
+			if (existingSubstitionGroup != null
+                    && !ee.substGroup.equals(existingSubstitionGroup)) {
+				throw new IllegalArgumentException("Substitution link collision" +
+                        " for " + ee.name +
+                        " link to " + existingSubstitionGroup +
+                        ". Already bound to " + ee.substGroup);
 			} else {
-				hmSubsLink.put(ee.name,ee.substGroup);
+				hmSubsLink.put(ee.name, ee.substGroup);
 			}
 		}
 		if (ee.abstrElem)
 		{
-			if (hmAbsElems.containsKey(ee.name))
-				throw new IllegalArgumentException("Namespace collision for : " + ee.name);
-			hmAbsElems.put(ee.name, ee.type);
 
-
+            String existingType = hmAbsElems.get(ee.name);
+			if (existingType != null && !ee.type.equals(existingType)) {
+				throw new IllegalArgumentException("Namespace collision" +
+                        " for " + ee.name +
+                        " type " + existingType +
+                        ". Already bound to " + ee.type);
+            } else {
+			    hmAbsElems.put(ee.name, ee.type);
+            }
 			return;
 		}
 		if (ee.complexType != null)
@@ -865,11 +876,15 @@ public class SchemaLoader
 	private void buildComplexType(ElementInfo ei)
 	{
 		ComplexTypeEntry ct = new ComplexTypeEntry(ei);
-		if (hmTypes.containsKey(ct.name))
-			throw new IllegalArgumentException("Namespace collision for : " + ct.name);
 
-		hmTypes.put(ct.name, ct);
-	}
+        ComplexTypeEntry existingType = hmTypes.get(ct.name);
+        if (existingType != null && !ct.name.equals(existingType.name)) {
+            throw new IllegalArgumentException("Namespace collision" +
+                    " for complex type " + ct.name +
+                    " type " + existingType.name + "already defined.");
+        }
+        hmTypes.put(ct.name, ct);
+    }
 
 	//---------------------------------------------------------------------------
 

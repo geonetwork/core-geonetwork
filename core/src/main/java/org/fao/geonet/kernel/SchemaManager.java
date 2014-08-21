@@ -177,6 +177,7 @@ public class SchemaManager {
                 if (!saSchemas[i].equals("CVS") && !saSchemas[i].startsWith(".")) {
                     File schemaDir = new File(this.schemaPluginsDir + FS + saSchemas[i]);
                     if (schemaDir.isDirectory()) {
+                        Log.info(Geonet.SCHEMA_MANAGER, "Loading schema " + saSchemas[i] + "...");
                         processSchema(applicationContext, schemaPluginsDir + FS, saSchemas[i], schemaPluginCatRoot);
                     }
                 }
