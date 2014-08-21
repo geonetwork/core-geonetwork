@@ -64,6 +64,7 @@ html, body {
       border-radius: 0px;
       margin-left: -0.3em;
       background: none repeat scroll 0% 0% rgba(0, 0, 0, 0.7);
+      border-color: transparent;
       color: #FFF;
     }
   }
@@ -92,13 +93,14 @@ html, body {
   top: auto;
   bottom: @viewport-padding;
 }
-
+.panel {
+  background: rgba(255,255,255,.8);
+}
 .panel-tools {
   position: absolute;
   top: @viewport-padding;
   right: 3em;
   width: 26em;
-  background: rgba(255,255,255,.8);
   min-height: 12.8em;
   max-height: ~"calc(100% - 2em)";
   max-width: ~"calc(100% - 4em)";
@@ -121,7 +123,7 @@ html, body {
       max-width: 90%;
     }
     &.active {
-      background: #fff;
+      background: rgba(255,255,255,.6);
       & > label {
         font-weight: bold;
       }
@@ -133,12 +135,6 @@ html, body {
       }
       .btn-group {
         margin-top: 1em;
-        .btn:first-child {
-          flex: 2;
-          &:hover {
-            background: inherit;
-          }
-        }
       }
     }
   }
@@ -187,6 +183,28 @@ html, body {
   [gn-layermanager] {
     max-height: 44em;
     overflow-y: auto;
+  }
+}
+
+.panel-ncwms {
+  .btn-sm {
+    margin: 0 0 1em 1em;
+  }
+  input[type=date] {
+    width: 7.2em;
+    display: inline-block;
+  }
+  .ui-slider {
+    margin-left: .5em;
+  }
+  .fa.pull-right {
+    margin-left: 0;
+  }
+  .fa-spinner .fa-magic {
+    display: none;
+  }
+  label {
+    padding-top: .3em;
   }
 }
 
@@ -253,7 +271,8 @@ html, body {
     z-index: 2;
     width: 0.8em;
     height: 1.2em;
-    cursor: default;
+    border-radius: 1.2em;
+    cursor: ew-resize;
   }
   .ui-state-default {
     border: 1px solid #d3d3d3;
