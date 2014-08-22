@@ -60,6 +60,13 @@
           <script src="{$uiResourcesPath}lib/d3.v3.js"></script>
           <script src="{$uiResourcesPath}lib/nv.d3.js"></script>
         </xsl:if>
+
+        <xsl:if test="$angularApp = 'gn_viewer'">
+          <script src="{$uiResourcesPath}lib/zip/zip.js"></script>
+          <script type="text/javascript">
+            zip.workerScriptsPath = "../../catalog/lib/zip/";
+          </script>
+        </xsl:if>
         
         
         <!--<xsl:if test="$isEditing">-->
