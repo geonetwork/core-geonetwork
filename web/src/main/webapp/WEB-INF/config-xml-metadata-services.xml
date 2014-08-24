@@ -290,6 +290,7 @@
 
 		<service name="xml.mef.export">
 			<class name=".services.mef.Export" />
+			<output file="true" />
 			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
 		</service>
 
