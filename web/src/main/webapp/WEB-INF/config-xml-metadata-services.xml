@@ -277,6 +277,23 @@
 			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
     </service>
 
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- mef import/export                                             -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.mef.import">
+			<class name=".services.mef.Import" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.mef.export">
+			<class name=".services.mef.Export" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
   </services>
 </geonet>
 
