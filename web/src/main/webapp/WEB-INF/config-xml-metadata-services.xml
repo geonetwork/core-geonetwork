@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<geonet>
+	<services package="org.fao.geonet">
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- XML Metadata services (see developer manual) -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Insert, Update, Delete, Validate -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.insert">
+			<class name=".services.metadata.Insert"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.update">
+			<class name=".services.metadata.Update"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.delete">
+			<class name=".services.metadata.Delete"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.batch.delete">
+			<class name=".services.metadata.BatchDelete"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.validation">
+			<class name=".services.metadata.Validation"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/>
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Versioning Services -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.version">
+			<class name=".services.metadata.Version"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.batch.version">
+			<class name=".services.metadata.BatchVersion"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Subtemplate Services -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.batch.extract.subtemplates">
+			<class name=".services.metadata.BatchExtractSubtemplates"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Status Services -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.status.set">
+			<class name=".services.metadata.UpdateStatus"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.batch.update.status">
+			<class name=".services.metadata.BatchUpdateStatus"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.status.get">
+			<class name=".services.status.Get"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Validation Services -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.validate">
+			<class name=".services.metadata.Validate"/>
+		  <output sheet="metadata/validate.xsl" contentType="text/xml; charset=UTF-8">
+		    <xml name="validation" file="xml/metadata-validate.xml" />
+		  </output>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Relation Services -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	  <service name="xml.relation">
+	    <class name=".guiservices.metadata.GetRelated"/>
+	    <output sheet="metadata/relation.xsl" contentType="text/xml; charset=UTF-8"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+	  </service>
+	  
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.relation.get">
+			<class name=".services.relations.Get" />
+
+			<output sheet="portal-present.xsl" contentType="text/xml; charset=UTF-8">
+				<call name="sources" class=".guiservices.util.Sources" />
+			</output>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.relation.insert">
+			<class name=".services.relations.Insert" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.relation.delete">
+			<class name=".services.relations.Remove" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Category Services -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.category">
+			<class name=".services.metadata.UpdateCategories"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.batch.update.categories">
+			<class name=".services.metadata.BatchUpdateCategories"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- Privilege (admin) services                                    -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.privileges">
+			<class name=".services.metadata.UpdateAdminOper"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.batch.update.privileges">
+			<class name=".services.metadata.BatchUpdatePrivileges"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Ownership services -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.batch.newowner">
+			<class name=".services.metadata.BatchNewOwner"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.ownership.editors">
+			<class name=".services.ownership.Editors"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.ownership.groups">
+			<class name=".services.ownership.Groups"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.ownership.transfer">
+			<class name=".services.ownership.Transfer"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Update child services -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="xml.metadata.batch.update.children">
+			<class name=".services.metadata.UpdateChildren"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Processing Services -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.batch.processing">
+			<class name=".services.metadata.BatchXslProcessing"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.processing">
+			<class name=".services.metadata.XslProcessing"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+		
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		
+		<service name="xml.metadata.select">
+			<class name=".services.main.Select">
+				<param name="type" value="metadata" />
+			</class>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Schema Services                                               -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.schema.add">
+			<class name=".services.schema.Add"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.schema.delete">
+			<class name=".services.schema.Delete"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.schema.update">
+			<class name=".services.schema.Update"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Rating                                                        -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="xml.metadata.rate">
+			<class name=".services.metadata.Rate"/>
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+		</service>
+		
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!-- Metadata owned by user                                        -->
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <service name="xml.user.metadata">
+      <class name=".guiservices.metadata.GetByOwner" />
+			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
+    </service>
+
+  </services>
+</geonet>
+

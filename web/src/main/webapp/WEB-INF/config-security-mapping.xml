@@ -36,10 +36,13 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.templates.add.default!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.samples.add!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.schema.add!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.schema.add!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.schema.add.form!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.schema.update!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.schema.update!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.schema.update.form!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.schema.delete!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.schema.delete!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.schema.delete.form!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/help.edit.form!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/help.update!?.*" access="hasRole('Administrator')"></sec:intercept-url>
@@ -134,9 +137,11 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.ownership.groups!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.ownership.transfer!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.batch.newowner!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.batch.newowner!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.batch.newowner.form!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.usergroups.list!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.batch.processing!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.batch.processing!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.formatter.register!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.formatter.remove!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.formatter.download!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
@@ -147,11 +152,13 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/group.list!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/group.get!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.category!?.*" access="hasRole('Editor')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.category!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.category.form!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/category.list!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/category.get!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.batch.category.form!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.batch.update.categories!?.*" access="hasRole('Editor')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.batch.update.categories!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.status!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.status.form!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.status.set!?.*" access="hasRole('Editor')"></sec:intercept-url>
@@ -160,6 +167,8 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.add!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.add.form!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.admin!?.*" access="hasRole('Editor')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.privileges!?.*" access="hasRole('Editor')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.batch.update.privileges!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.admin.form!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.batch.admin.form!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.batch.update.privileges!?.*" access="hasRole('Editor')"></sec:intercept-url>
@@ -190,6 +199,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.update.forgetandfinish!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.batch.children.form!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.batch.update.children!?.*" access="hasRole('Editor')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.batch.update.children!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.validate!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.suggestion!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.validate!?.*" access="hasRole('Editor')"></sec:intercept-url>
@@ -198,6 +208,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.processing!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.batch.extract.subtemplates.form!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.batch.extract.subtemplates!?.*" access="hasRole('Editor')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.batch.extract.subtemplates!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.user.metadata!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.xmlinsert.form!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.insert!?.*" access="hasRole('Editor')"></sec:intercept-url>
@@ -214,7 +225,11 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.thumbnail.unset!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.thumbnail.unset.new!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.insert!?.*" access="hasRole('Editor')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.update!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.delete!?.*" access="hasRole('Editor')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.batch.delete!?.*" access="hasRole('Editor')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.version!?.*" access="hasRole('Editor')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.batch.version!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.user.list!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/mef.import!?.*" access="hasRole('Editor')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/mef.import.ui!?.*" access="hasRole('Editor')"></sec:intercept-url>
@@ -267,6 +282,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/resources.getgraphover!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/graphover.show!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/metadata.select!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.select!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/selection.search!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/pdf.selection.search!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/pdf.present!?.*" access="permitAll"></sec:intercept-url>
@@ -284,6 +300,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.file.disclaimer!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.file.download!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.status.get!?.*" access="permitAll"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.metadata.batch.update.status!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/search!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/view!?.*" access="permitAll"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/edit!?.*" access="hasRole('Editor')"></sec:intercept-url>
