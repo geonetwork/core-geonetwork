@@ -170,13 +170,17 @@
             ]
           });
 
+          var onError = function(msg) {
+            gnAlertService.addAlert({
+              msg: 'Import impossible',
+              type: 'danger'
+            });
+          };
+
           scope.map.getInteractions().push(dragAndDropInteraction);
           dragAndDropInteraction.on('addfeatures', function(event) {
             if (!event.features || event.features.length == 0) {
-              gnAlertService.addAlert({
-                msg: 'Import impossible',
-                type: 'danger'
-              });
+              onError();
               scope.$apply();
               return;
             }
@@ -191,6 +195,72 @@
             scope.addToMap(layer, scope.map);
             scope.$apply();
           });
+
+
+          var requestFileSystem = window.webkitRequestFileSystem || window.mozRequestFileSystem || window.requestFileSystem;
+          var unzipProgress = document.createElement("progress");
+          var fileInput = document.getElementById("file-input");
+
+          var model = (function() {
+            var URL = window.webkitURL || window.mozURL || window.URL;
+
+            return {
+              getEntries : function(file, onend) {
+                zip.createReader(new zip.BlobReader(file), function(zipReader) {
+                  zipReader.getEntries(onend);
+                }, onerror);
+              },
+              getEntryFile : function(entry, creationMethod, onend, onprogress) {
+                var writer, zipFileEntry;
+
+                function getData() {
+                  entry.getData(writer, function(blob) {
+                    var blobURL = URL.createObjectURL(blob);
+                    onend(blobURL);
+                  }, onprogress);
+                }
+                writer = new zip.BlobWriter();
+                getData();
+              }
+            };
+          })();
+
+          scope.onEntryClick = function(entry, evt) {
+            model.getEntryFile(entry, 'Blob', function(blobURL) {
+              entry.loading = true;
+              scope.$apply();
+              var vector = new ol.layer.Vector({
+                label: 'Fichier local : ' + entry.filename,
+                source: new ol.source.KML({
+                  projection: 'EPSG:3857',
+                  url: blobURL
+                })
+              });
+              var listenerKey = vector.getSource().on('change', function(evt){
+                if (vector.getSource().getState() == 'ready') {
+                  vector.getSource().unByKey(listenerKey);
+                  scope.addToMap(vector, scope.map);
+                  entry.loading = false;
+                }
+                else if (vector.getSource().getState() == 'error') {
+                }
+                scope.$apply();
+              });
+            }, function(current, total) {
+              unzipProgress.value = current;
+              unzipProgress.max = total;
+              evt.target.appendChild(unzipProgress);
+            });
+          };
+
+          scope.uploadKMZ = function() {
+            if(fileInput.files.length > 0) {
+              model.getEntries(fileInput.files[0], function(entries) {
+                scope.kmzEntries = entries;
+                scope.$apply();
+              });
+            }
+          };
         }
       };
     }]);

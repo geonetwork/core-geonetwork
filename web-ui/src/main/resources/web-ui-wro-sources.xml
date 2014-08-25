@@ -31,6 +31,8 @@
     <jsSource webappPath="catalog/lib/jquery.ext/jquery-ui-slider.min.js"/>
     <jsSource webappPath="catalog/lib/bootstrap.ext/typeahead.js/typeahead.min.js"/>
     <jsSource webappPath="catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.min.js"/>
+    <jsSource webappPath="catalog/lib/zip/zip.js"/>
+    <jsSource webappPath="catalog/lib/zip/include.js"/>
   </declarative>
 
 </sources>
