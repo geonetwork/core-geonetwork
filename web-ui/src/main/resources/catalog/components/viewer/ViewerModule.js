@@ -72,7 +72,8 @@
               LAYERS: layer.name
             }, {
               url: layer.url,
-              label: layer.description
+              label: layer.description,
+              group: layer.group
             })
           });
         });

@@ -4,6 +4,53 @@
   var module = angular.module('gn_layermanager_directive', [
   ]);
 
+    var findChild = function(node, name) {
+        var n;
+        if(node.nodes) {
+            for(var i=0;i<node.nodes.length;i++) {
+                n = node.nodes[i];
+                if(name == n.name) {
+                    return n;
+                  }
+              }
+         }
+      };
+   var createNode = function(layer, node, g, index) {
+       var group = g[index];
+       if(group) {
+           var newNode = findChild(node, group);
+           if(!newNode) {
+               newNode = {
+                     name: group
+               };
+             if(!node.nodes) node.nodes = [];
+             node.nodes.push(newNode);
+           }
+         createNode(layer, newNode, g, index+1);
+       } else {
+         if(!node.nodes) node.nodes = [];
+         node.nodes.push(layer);
+       }
+   };
+     var toto = function(layers) {
+     var tree = {
+         };
+       var sep = '/';
+   for(var i=0;i<layers.length;i++) {
+       var l = layers[i];
+       var groups = l.get('group');
+       if(!groups) {
+           //tree.layers.push(l);
+             }
+       else {
+           var g = groups.split(sep);
+           createNode(l, tree, g, 1);
+         }
+     }
+   return tree;
+ }
+
+
   /**
    * @ngdoc filter
    * @name gn_wmsimport_directive.filter:gnReverse
@@ -33,7 +80,7 @@
     return {
       restrict: 'A',
       templateUrl: '../../catalog/components/viewer/layermanager/' +
-        'partials/layermanager.html',
+        'partials/layermanagertree.html',
       scope: {
         map: '=gnLayermanagerMap'
       },
@@ -91,7 +138,55 @@
 
         scope.layers = scope.map.getLayers().getArray();
         scope.layerFilterFn = gnLayerFilters.selected;
+
+        scope.layerTree = {};
+        scope.toto = function() {
+          scope.layerTree = toto(scope.layers);
+        }
       }
     };
   }]);
+
+  module.directive('gnLayertreeCol', [
+    function () {
+      return {
+        restrict: 'E',
+        replace: true,
+        scope: {
+          collection: '='
+        },
+        template: "<ul class='list-group'><gn-layertree-elt ng-repeat='member in collection' member='member'></gn-layertree-elt></ul>"
+      }
+    }]);
+  module.directive('gnLayertreeElt', [
+    '$compile',
+    function ($compile) {
+      return {
+        restrict: "E",
+        replace: true,
+        require: '^gnLayermanager',
+        scope: {
+          member: '='
+        },
+        templateUrl: '../../catalog/components/viewer/layermanager/' +
+            'partials/layermanagertreeitem.html',
+        link: function (scope, element, attrs, controller) {
+          var el = element;
+          scope.gnLayermanagerCtrl = controller;
+          if (angular.isArray(scope.member.nodes)) {
+            element.append("<gn-layertree-col class='list-group' collection='member.nodes'></gn-layertree-col>");
+            $compile(element.contents())(scope);
+          }
+          scope.toggleNode = function(evt) {
+            el.find('.fa').first().toggleClass('fa-minus-square-o').toggleClass('fa-plus-square-o');
+            el.children('ul').toggle();
+            evt.stopPropagation();
+            return false;
+          };
+          scope.isParentNode = function() {
+            return angular.isDefined(scope.member.nodes);
+          }
+        }
+      }
+    }]);
 })();
