@@ -35,8 +35,10 @@
     '$scope',
     'gnNcWms',
     'goDecorateLayer',
-      'gnMapConfig',
-      function($scope, gnNcWms, goDecorateLayer, gnMapConfig) {
+    'gnMap',
+    'gnMapConfig',
+    'gnHttp',
+      function($scope, gnNcWms, goDecorateLayer, gnMap, gnMapConfig, gnHttp) {
 
         /** Define object to receive measure info */
         $scope.measureObj = {};
@@ -60,7 +62,20 @@
             maxResolution: gnMapConfig.maxResolution
           })
         });
-        $scope.map.addLayer($scope.ncwmsLayer);
+        //$scope.map.addLayer($scope.ncwmsLayer);
+
+        gnHttp.callService('layerSelection', {
+          action: 'get'
+        }).success(function(data) {
+          angular.forEach(data[0], function(layer){
+            gnMap.addWmsToMap($scope.map, {
+              LAYERS: layer.name
+            }, {
+              url: layer.url,
+              label: layer.description
+            })
+          });
+        });
 
         $scope.zoom = function(map, delta) {
           map.getView().setZoom(map.getView().getZoom() + delta);

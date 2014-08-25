@@ -221,6 +221,7 @@
     getRelations: 'md.relations@json',
     suggestionsList: 'md.suggestion@json',
     getValidation: 'md.validate@json',
+    layerSelection: 'md.layer.select@json',
 
     processMd: 'md.processing',
     processAll: 'md.processing.batch',
