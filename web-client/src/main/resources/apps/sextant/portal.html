@@ -1,0 +1,54 @@
+<!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>GeoNetwork - Sextant</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="icon" type="image/gif" href="../../images/logos/favicon.gif" />
+
+    <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.min.css" type="text/css">
+    <style>
+      #iframe {
+        width: 100%;
+        height: 600px;
+      }
+      .app {
+        padding-top: 30px;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <div class="container" >
+
+      <div class="header">
+        <ul class="nav nav-pills pull-right">
+          <li class="active"><a onclick="switchapp(0)" href="#">Catalogue</a></li>
+          <li><a onclick="switchapp(1)" href="#">Viewer</a></li>
+          <li><a href="#">Panier</a></li>
+        </ul>
+        <h3 class="text-muted">Sextant</h3>
+      </div>
+
+      <div class="row app">
+        <iframe id="iframe" src="index_debug.html" frameborder="0"></iframe>
+      </div>
+    </div>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script type="text/javascript">
+      var apps = [
+        'index_debug.html',
+        '../../srv/fre/catalog.viewer'
+      ];
+      var iframe = document.getElementById('iframe');
+
+      var switchapp = function(app) {
+        $('li').removeClass('active');
+        $('ul li:nth-child('+(app+1)+')').addClass('active');
+        iframe.setAttribute('src',apps[app]);
+      };
+    </script>
+  </body>
+</html>
