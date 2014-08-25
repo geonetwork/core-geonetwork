@@ -224,9 +224,18 @@ cat.app = function() {
         }
 
         if (metadataId) {
+          var recordStandard = record && record.get('standardName');
+
+          // Open Angular metadata editor for MedSea records.
+          if (recordStandard.indexOf('MedSea') !== -1) {
+            window.open(
+              catalogue.services.rootUrl +
+                'catalog.edit#/metadata/' + metadataId + '/tab/medsea-metadata')
+          } else {
             this.editorWindow.show();
             var recordSchema = record && record.get('schema');
             this.editorPanel.init(metadataId, create, group, child, undefined, true, recordSchema || schema);
+          }
         }
     }
 

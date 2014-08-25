@@ -45,7 +45,7 @@
     <gco:DateTime>2014-08-13T13:08:03</gco:DateTime>
   </gmd:dateStamp>
   <gmd:metadataStandardName>
-    <gco:CharacterString>ISO 19115:2003/19139</gco:CharacterString>
+    <gco:CharacterString>ISO 19115:2003/19139 - MedSea Checkpoint</gco:CharacterString>
   </gmd:metadataStandardName>
   <gmd:metadataStandardVersion>
     <gco:CharacterString>1.0</gco:CharacterString>

@@ -117,7 +117,7 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
         }
         return uri;
     }
-    
+
     function getContact(v, record){
         var i, contact = [], el, name;
         
@@ -229,7 +229,13 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
             return '';
         }
     }
-    
+    function getStandardName(v, record){
+      if (record.standardName) {
+        return record.standardName[0].value;
+      } else {
+        return '';
+      }
+    }
     function getPopularity(v, record){
         if (record.popularity) {
             return record.popularity[0].value;
@@ -419,6 +425,9 @@ GeoNetwork.data.MetadataResultsFastStore = function(){
             name: 'schema',
             mapping: 'geonet_info.schema[0].value',
             defaultValue: ''
+        }, {
+          name: 'standardName',
+          convert: getStandardName
         }, {
             name: 'contact',
             convert: getContact
