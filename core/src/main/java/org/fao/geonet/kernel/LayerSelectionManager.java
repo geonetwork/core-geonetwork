@@ -17,8 +17,6 @@ public class LayerSelectionManager {
 	private Hashtable<String, Set<Hashtable<String, String>>> selections = null;
 	private UserSession session = null;
 
-	public static final String SELECTION_METADATA = "metadata";
-
 	private static final String REMOVE_ALL_SELECTED = "remove-all";
 	private static final String ADD_SELECTED = "add";
 	private static final String REMOVE_SELECTED = "remove";
@@ -59,11 +57,12 @@ public class LayerSelectionManager {
         String descr = params.getChildText(Params.DESCRIPTION);
         String version = params.getChildText(Params.VERSION);
         String serviceUrl = params.getChildText(Params.URL);
+        String group = params.getChildText(Params.GROUP);
 
 		// Get the layer selection manager or create it
 		LayerSelectionManager manager = getManager(session);
 
-		return manager.updateSelection(type, context, selected, layerName, serviceUrl, descr, version);
+		return manager.updateSelection(type, context, selected, layerName, serviceUrl, descr, version, group);
 	}
 
 	/**
@@ -82,7 +81,8 @@ public class LayerSelectionManager {
      * @return number of selected element
 	 */
 	public int updateSelection(String type, ServiceContext context, String selected,
-                               String layerName, String serviceUrl, String layerDescr, String serviceVersion) {
+                               String layerName, String serviceUrl, String layerDescr,
+                               String serviceVersion, String group) {
 
 		// Get the selection manager or create it
 		Set<Hashtable<String, String>> selection = this.getSelection(type);
@@ -96,12 +96,12 @@ public class LayerSelectionManager {
             if (selected.equals(REMOVE_ALL_SELECTED))
                 this.close(type);
             else if (selected.equals(ADD_SELECTED) && (layerName != null))
-                selection.add(createLayerElement(layerName, serviceUrl, layerDescr, serviceVersion));
+                selection.add(createLayerElement(layerName, serviceUrl, layerDescr, serviceVersion, group));
             else if (selected.equals(REMOVE_SELECTED) && (layerName != null))
-                selection.remove(createLayerElement(layerName, serviceUrl, layerDescr, serviceVersion));
+                selection.remove(createLayerElement(layerName, serviceUrl, layerDescr, serviceVersion, group));
             else if (selected.equals(CLEAR_ADD_SELECTED) && (layerName != null)) {
                 this.close(type);
-                selection.add(createLayerElement(layerName, serviceUrl, layerDescr, serviceVersion));
+                selection.add(createLayerElement(layerName, serviceUrl, layerDescr, serviceVersion, group));
             }
         }
 
@@ -109,13 +109,14 @@ public class LayerSelectionManager {
     }
 
     private Hashtable<String, String> createLayerElement(String layerName,
-                    String serviceUrl, String layerDescr, String serviceVersion) {
+                    String serviceUrl, String layerDescr, String serviceVersion, String group) {
 
         Hashtable<String, String> layer = new Hashtable<String, String>(0);
         layer.put(Params.NAME, layerName);
         layer.put(Params.URL, serviceUrl);
         layer.put(Params.DESCRIPTION, layerDescr);
         layer.put(Params.VERSION, serviceVersion);
+        layer.put(Params.GROUP, group);
 
         return layer;
     }

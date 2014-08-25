@@ -72,13 +72,12 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
     	}
     		
     	if(type == 'wms') {
-	    	var theme = this.getStore().getAt(this.curId).get("sextantTheme")[0];
+	    	var group, theme = this.getStore().getAt(this.curId).get("sextantTheme")[0];
 	    	if(theme) {
 	    		var translationStore = Ext.getCmp('E_sextantTheme').storeLabel;
 	    		var idx = translationStore.findExact('name', theme.value);
 	            if(idx >= 0 && translationStore.getAt(idx).get('label')) {
-	            	Ext.get(Ext.query('input[id*=layergroup]')[0]).dom.value = 
-	            		translationStore.getAt(idx).get('label');
+                group = translationStore.getAt(idx).get('label');
 	            }
 	    	}
 	    	
@@ -105,6 +104,7 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
             description: c[1],
             url: c[2],
             version:p,
+            group: group,
             selected: 'add',
             type: 'wms'
           },
