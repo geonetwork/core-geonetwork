@@ -23,14 +23,10 @@
 
 package org.fao.geonet.services.logo;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-
 import org.fao.geonet.domain.responses.StatusResponse;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.utils.IO;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.http.MediaType;
@@ -40,13 +36,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+
 @Controller("admin.logo.upload")
 public class Add implements ApplicationContextAware {
 	private volatile String logoDirectory;
 
 	private ApplicationContext context;
 
-	public void setApplicationContext(ApplicationContext context) {
+	public synchronized void setApplicationContext(ApplicationContext context) {
 		this.context = context;
 	}
 
@@ -67,14 +68,13 @@ public class Add implements ApplicationContextAware {
 		BufferedOutputStream stream = null;
 
 		try {
-			if (logoDirectory == null) {
-				synchronized (this) {
-					if (logoDirectory == null) {
-						logoDirectory = Resources
-								.locateHarvesterLogosDirSMVC(context);
-					}
-				}
-			}
+            String logoDir;
+            synchronized (this) {
+                if(this.logoDirectory == null) {
+                    this.logoDirectory = Resources.locateHarvesterLogosDirSMVC(context);
+                }
+                logoDir = this.logoDirectory;
+            }
 
 			if (fname.getName().contains("..")) {
 				throw new BadParameterEx(
@@ -86,15 +86,17 @@ public class Add implements ApplicationContextAware {
 				throw new Exception("Logo name is not defined.");
 			}
 
-			File serverFile = new File(logoDirectory,
+			File serverFile = new File(logoDir,
 					fname.getOriginalFilename());
 			if (serverFile.exists()) {
-				serverFile.delete();
-				serverFile = new File(logoDirectory,
+                IO.delete(serverFile, true, "Deleting server file");
+				serverFile = new File(logoDir,
 						fname.getOriginalFilename());
 			}
 
-			serverFile.createNewFile();
+			if (!serverFile.createNewFile()){
+                throw new RuntimeException("Unable to create file: " + serverFile);
+            }
 
 			stream = new BufferedOutputStream(new FileOutputStream(serverFile));
 

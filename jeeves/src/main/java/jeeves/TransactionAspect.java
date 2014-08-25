@@ -1,6 +1,5 @@
 package jeeves;
 
-import jeeves.constants.Jeeves;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -12,6 +11,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+
+import javax.annotation.Nullable;
 
 /**
  * Declares the cut-points/places where transactions are needed in Geonetwork.  Each module that
@@ -91,11 +92,12 @@ public class TransactionAspect {
         return result;
     }
 
-    private static void doRollback(PlatformTransactionManager transactionManager, TransactionStatus transaction) {
+    private static void doRollback(PlatformTransactionManager transactionManager,
+                                   @Nullable TransactionStatus transaction) {
         try {
 
 
-			if (!transaction.isCompleted()) {
+			if (transaction != null && !transaction.isCompleted()) {
 				transactionManager.rollback(transaction);
 			} 
 			//what if the transaction is completed?
