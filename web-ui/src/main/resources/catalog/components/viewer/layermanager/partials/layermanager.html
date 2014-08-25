@@ -3,13 +3,18 @@
     <button class="btn btn-cog" data-ng-click="gnLayermanagerCtrl.showInfo(layer)">
       <span class="fa fa-cog"></span>
     </button>
-    <label><input type="checkbox" ng-model="layer.visible" />
-      <i class="fa fa-globe" data-ng-class="{disabled : !layer.getExtent()}" data-ng-click="gnLayermanagerCtrl.zoomToExtent(layer, map)"></i>
-      <span data-ng-click="gnLayermanagerCtrl.showMetadata(layer.get('metadata'), layer.get('label'))">
-        {{layer.get('label')}}
-      </span>
+    <button class="btn btn-cog" ng-if="layer.getExtent()" data-ng-click="gnLayermanagerCtrl.zoomToExtent(layer, map)">
+      <span class="fa fa-arrows-alt"></span>
+    </button>
+    <label>
+      <input type="checkbox" ng-model="layer.visible" />
+      {{layer.get('label')}}
     </label>
     <div class="details">
+      <button class="metadata" ng-if="layer.get('metadata')" data-ng-click="gnLayermanagerCtrl.showMetadata(layer.get('metadata'), layer.get('label'))">
+        <span class="fa fa-file"></span>
+        Voir les métadonnées
+      </button>
       <button class="btn btn-default delete" ng-click="map.removeLayer(layer)">
         <span class="fa fa-trash-o"></span>
         Supprimer

@@ -297,7 +297,8 @@
    */
   module.directive('gnCapTreeElt', [
     '$compile',
-    function ($compile) {
+    'gnAlertService',
+    function ($compile, gnAlertService) {
     return {
       restrict: "E",
       require: '^gnWmsImport',
@@ -305,24 +306,33 @@
       scope: {
         member: '='
       },
-      template: "<li class='list-group-item' ng-click='toggleNode($event)'><label>" +
-            "<span class='fa fa-plus-square-o'  ng-if='isParentNode()'></span>" +
-            "<input type='checkbox' ng-if='!isParentNode()' data-ng-model='inmap' data-ng-change='select()'>" +
+      template: "<li class='list-group-item' ng-click='handle($event)' ng-class='(!isParentNode()) ? \"leaf\" : \"\"'><label>" +
+            "<span class='fa'  ng-class='isParentNode() ? \"fa-folder-o\" : \"fa-plus-square-o\"'></span>" +
           " {{member.Title}}</label></li>",
       link: function (scope, element, attrs, controller) {
         var el = element;
+        var select = function() {
+          controller.addLayer(scope.member);
+          gnAlertService.addAlert({
+            msg: 'Une couche ajoutée : <strong>'+scope.member.Title +'</strong>',
+            type: 'success'
+          });
+        };
+        var toggleNode = function() {
+          el.find('.fa').first().toggleClass('fa-folder-o').toggleClass('fa-folder-open-o');
+          el.children('ul').toggle();
+        };
         if (angular.isArray(scope.member.Layer)) {
           element.append("<gn-cap-tree-col class='list-group' collection='member.Layer'></gn-cap-tree-col>");
           $compile(element.contents())(scope);
         }
-        scope.select = function() {
-          controller.addLayer(scope.member);
-        };
-        scope.toggleNode = function(evt) {
-          el.find('.fa').first().toggleClass('fa-plus-square-o').toggleClass('fa-minus-square-o');
-          el.children('ul').toggle();
+        scope.handle = function(evt) {
+          if (scope.isParentNode()) {
+            toggleNode();
+          } else {
+            select();
+          }
           evt.stopPropagation();
-          return false;
         };
         scope.isParentNode = function() {
           return angular.isDefined(scope.member.Layer);
