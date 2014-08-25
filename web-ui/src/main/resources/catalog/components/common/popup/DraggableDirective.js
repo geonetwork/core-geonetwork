@@ -16,7 +16,8 @@
    * a draggable zone, otherwise the entire element is the draggable zone.
    *
    */
-  module.directive('gnDraggable', function($document) {
+  module.directive('gnDraggable', ['$document',
+    function($document) {
     return function(scope, element, attr) {
       var startX = 0, startY = 0, x = null, y = null;
 
@@ -69,5 +70,5 @@
         $document.unbind('mouseup', mousemove);
       }
     }
-  });
+  }]);
 })();

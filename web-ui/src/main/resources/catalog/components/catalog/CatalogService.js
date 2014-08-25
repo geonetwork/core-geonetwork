@@ -241,7 +241,8 @@
     lang: 'lang@json',
     removeThumbnail: 'md.thumbnail.remove@json',
     removeOnlinesrc: 'resource.del.and.detach', // TODO: CHANGE
-    geoserverNodes: 'geoserver.publisher@json' // TODO: CHANGE
+    geoserverNodes: 'geoserver.publisher@json', // TODO: CHANGE
+    suggest: 'suggest'
 
   });
 

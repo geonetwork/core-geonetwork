@@ -303,7 +303,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             mdProcessing: serviceUrl + 'metadata.processing.new',
             mdMassiveChildrenForm: serviceUrl + 'metadata.batch.children.form',
             mdAdmin: serviceUrl + 'metadata.admin.form',
-            mdAdminSave: serviceUrl + 'metadata.admin',
+            mdAdminSave: serviceUrl + 'md.privileges.update',
             mdAdminXml: serviceUrl + 'xml.metadata.admin.form',
             mdBatchAdminXml: serviceUrl + 'xml.metadata.batch.admin.form',
             mdBatchSaveXml: serviceUrl + 'xml.metadata.batch.update.privileges',
@@ -349,7 +349,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
             thesaurusConceptUpdate: serviceUrl + 'thesaurus.updateelement',
             thesaurusConceptDelete: serviceUrl + 'thesaurus.deleteelement',
             getIcons: serviceUrl + 'xml.harvesting.info?type=icons',
-            opensearchSuggest: serviceUrl + 'main.search.suggest',
+            opensearchSuggest: serviceUrl + 'suggest',
             massiveOp: {
                 NewOwner: serviceUrl + 'metadata.batch.newowner.form',
                 Categories: serviceUrl + 'metadata.batch.category.form',

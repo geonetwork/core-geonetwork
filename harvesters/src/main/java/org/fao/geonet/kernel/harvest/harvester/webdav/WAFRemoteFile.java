@@ -91,7 +91,7 @@ class WAFRemoteFile implements RemoteFile {
         // md5 the full capabilities URL
         String uuid = Sha1Encoder.encodeString (url); // is the service identifier
 
-        Map<String, String> param = new HashMap<String, String>();
+        Map<String, Object> param = new HashMap<String, Object>();
         param.put("uuid", uuid);
 
         el = Xml.transform (xml, styleSheet, param);

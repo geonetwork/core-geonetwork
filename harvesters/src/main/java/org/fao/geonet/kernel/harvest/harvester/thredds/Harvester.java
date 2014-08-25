@@ -338,7 +338,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 			//--- (not sure that this is what we should do here really - the catalog
 			//--- is a dataset and a service??
 			log.info("Creating service metadata for thredds catalog...");
-			Map<String, String> param = new HashMap<String, String>();
+			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("lang",			params.lang);
 			param.put("topic",		params.topic);
 			param.put("uuid",			params.uuid);
@@ -1071,7 +1071,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
             if(log.isDebugEnabled()) log.debug("  - XSLT transformation using "+serviceStyleSheet);
 
-			Map<String, String> param = new HashMap<String, String>();
+			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("lang",		params.lang);
 			param.put("topic",	params.topic);
 			param.put("uuid",		sUuid);

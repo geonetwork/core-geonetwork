@@ -104,6 +104,14 @@
           <class name=".services.harvesting.Log" />
           <output file="true" contentType="text/plain"/>
       </service>
-      
+
+      <service name="admin.harvester.notifier.save">
+        <class name=".services.harvesting.notifier.SaveNotificationSettings" />
+      </service>
+
+
+      <service name="admin.harvester.notifier.get">
+        <class name=".services.harvesting.notifier.GetNotificationSettings" />
+      </service>
   </services>
 </geonet>

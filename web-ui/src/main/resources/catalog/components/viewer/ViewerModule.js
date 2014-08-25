@@ -12,6 +12,8 @@
   goog.require('gn_ows');
   goog.require('gn_popup');
   goog.require('gn_ncwms');
+  goog.require('gn_localisation');
+  goog.require('gn_print');
 
   var module = angular.module('gn_viewer', [
     'gn_ncwms',
@@ -23,13 +25,18 @@
     'gn_measure_directive',
     'gn_draw_directive',
     'gn_ows',
+    'gn_localisation',
     'gn_popup',
+    'gn_print',
     'gn'
   ]);
 
-  module.controller('gnViewerController',
-    ['$scope', 'gnNcWms', 'goDecorateLayer',
-      function($scope, gnNcWms, goDecorateLayer) {
+  module.controller('gnViewerController', [
+    '$scope',
+    'gnNcWms',
+    'goDecorateLayer',
+      'gnMapConfig',
+      function($scope, gnNcWms, goDecorateLayer, gnMapConfig) {
 
         /** Define object to receive measure info */
         $scope.measureObj = {};
@@ -38,7 +45,7 @@
         $scope.drawVector;
 
         /** print definition */
-        $scope.printactive = true;
+        $scope.activeTools = {};
 
         // TODO : Move on layer load
         $scope.ncwmsLayer = gnNcWms.createNcWmsLayer();
@@ -47,23 +54,67 @@
 
         $scope.map = new ol.Map({
           renderer: 'canvas',
-          target: 'map',
           view: new ol.View({
-            center: ol.proj.transform(
-              [-1.99667, 49.0], 'EPSG:4326', 'EPSG:3857'),
-            zoom: 6
+            center: gnMapConfig.center,
+            zoom: gnMapConfig.zoom,
+            maxResolution: gnMapConfig.maxResolution
           })
         });
         $scope.map.addLayer($scope.ncwmsLayer);
+
+        $scope.zoom = function(map, delta) {
+          map.getView().setZoom(map.getView().getZoom() + delta);
+        };
+        $scope.zoomToMaxExtent = function(map) {
+          map.getView().setResolution(gnMapConfig.maxResolution);
+        };
       }]);
 
+  var servicesUrl = {
+    wms: [
+      'http://ids.pigma.org/geoserver/wms',
+      'http://ids.pigma.org/geoserver/ign/wms',
+      'http://www.ifremer.fr/services/wms/oceanographie_physique'
+    ],
+    wmts: [
+      'http://sdi.georchestra.org/geoserver/gwc/service/wmts'
+    ]
+  };
 
-  var bgLayer = new ol.layer.Tile({
+  var mapConfig = {
+    maxResolution: '9783.93962050256',
+    center: [280274.03240585705, 6053178.654789996],
+    zoom: 2,
+    servicesUrl: servicesUrl
+  };
+  module.constant('gnMapConfig', mapConfig);
+
+  var source = new ol.source.TileWMS({
+    params: {
+      LAYERS: 'ETOPO1_BATHY_R_3857,continent'
+    },
+    url: 'http://www.ifremer.fr/services/wms/wmsproxy_double.cgi?'
+  });
+  var sxtLayer = new ol.layer.Tile({
+    type: 'WMS',
+    source: source,
+    title: 'Sextant'
+  });
+
+  var osmLayer = new ol.layer.Tile({
     source: new ol.source.OSM(),
     title: 'OpenStreetMap'
   });
-  bgLayer.displayInLayerManager = false;
-  bgLayer.background = true;
+  osmLayer.displayInLayerManager = false;
+  osmLayer.background = true;
+
+  var mqLayer = new ol.layer.Tile({
+    style: 'Road',
+    source: new ol.source.MapQuest({layer: 'osm'}),
+    title: 'MapQuest'
+  });
+  mqLayer.displayInLayerManager = false;
+  mqLayer.background = true;
 
   var bingSatellite = new ol.layer.Tile({
     preload: Infinity,
@@ -76,13 +127,12 @@
   bingSatellite.displayInLayerManager = false;
   bingSatellite.background = true;
 
-  module.constant('gnBackgroundLayers', [bgLayer, bingSatellite]);
+  module.constant('gnBackgroundLayers', [mqLayer, osmLayer, bingSatellite, sxtLayer]);
 
   module.controller('toolsController',
       ['$scope', 'gnMeasure',
         function($scope, gnMeasure) {
           $scope.mInteraction = gnMeasure.create($scope.map, $scope.measureObj, $scope);
-          $scope.activeTools = {};
         }
       ]);
 

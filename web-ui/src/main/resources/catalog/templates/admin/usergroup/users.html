@@ -26,7 +26,7 @@
   </div>
 
   <div class="col-lg-8" data-ng-hide="userSelected.id == null">
-    <div class="panel panel-default" data-ng-search-form="">
+    <div class="panel panel-default" >
       <div class="panel-heading"
         title="{{userHasRecords() ? ('cantDeleteUserHavingRecords' | translate) : ''}}">
         <span data-ng-hide="userSelected.id == ''" data-translate="">updateUser</span>
@@ -223,7 +223,7 @@
             </fieldset>
           </fieldset>
         </form>
-        <div data-ng-show="searchResults.count != 0">
+        <div data-ng-search-form="">
           <h3>
             <ng-pluralize count="searchResults.count"
                           when="{'0': ('noRecordFound' | translate),

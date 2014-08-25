@@ -555,7 +555,7 @@
   -->
   <xsl:template name="render-element-to-add">
     <xsl:param name="label" as="xs:string?"/>
-    <xsl:param name="directive" as="xs:string?"/>
+    <xsl:param name="directive" as="node()?"/>
     <xsl:param name="childEditInfo"/>
     <xsl:param name="parentEditInfo"/>
     <!-- Hide add element if child of an XLink section. -->
@@ -626,9 +626,10 @@
                 The directive is in charge of displaying the default add button if needed.
               -->
               <xsl:choose>
-                <xsl:when test="$directive != ''">
+                <xsl:when test="$directive/@addDirective != ''">
                   <div>
-                    <xsl:attribute name="{$directive}"/>
+                    <xsl:attribute name="{$directive/@addDirective}"/>
+                    <xsl:copy-of select="$directive/directiveAttributes/@*"/>
                     <xsl:attribute name="data-dom-id" select="$id"/>
                     <xsl:attribute name="data-element-name" select="$qualifiedName"/>
                     <xsl:attribute name="data-element-ref" select="$parentEditInfo/@ref"/>

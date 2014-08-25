@@ -3,23 +3,18 @@
 
   var module = angular.module('gn_ncwms_service', []);
 
-  module.constant('gnNcWmsConst', {
-    elevation: [
-      5,10,15,20,25,30,35,40,50,75,100,125,150,200,250,300,400,500
-    ],
-    colorscale : {
-      min: 7,
-      max: 15,
-      step: 1
-    }
-  });
-
   module.service('gnNcWms', [
       'gnMap',
       'gnUrlUtils',
       'gnOwsCapabilities',
-          function(gnMap, gnUrlUtils, gnOwsCapabilities) {
+      '$http',
+          function(gnMap, gnUrlUtils, gnOwsCapabilities, $http) {
 
+            /**
+             * TEMP Create a default ncWMS layer
+             * @param capLayer
+             * @returns {ol.layer.Tile}
+             */
             this.createNcWmsLayer = function(capLayer) {
               var source = new ol.source.TileWMS({
                 params: {
@@ -32,9 +27,9 @@
               var layer = new ol.layer.Tile({
                 url: 'http://behemoth.nerc-essc.ac.uk/ncWMS/wms',
                 type: 'WMS',
-                source: source
+                source: source,
+                label: 'Super NCWMS'
               });
-              layer.label = "Super NCWMS";
 
               gnOwsCapabilities.getCapabilities('http://behemoth.nerc-essc.ac.uk/ncWMS/wms?service=WMS&request=GetCapabilities')
                   .then(function (capObj) {
@@ -42,6 +37,48 @@
                   });
 
               return layer;
+            };
+
+            /**
+             * Parse a time serie from capabilities.
+             * Extract from string, 2 limit values.
+             * Ex : 2010-12-06T12:00:00.000Z/2010-12-31T12:00:00.000Z
+             *
+             * @param s
+             * @returns {{tsfromD: *, tstoD: *}}
+             */
+            this.parseTimeSeries = function(s) {
+              s = s.trim();
+              var as = s.split('/');
+              return {
+                tsfromD:moment(new Date(as[0])).format('YYYY-MM-DD'),
+                tstoD:moment(new Date(as[1])).format('YYYY-MM-DD')
+              }
+            };
+
+            /**
+             * Read from capabilities object dimension properties.
+             *
+             * @param ncInfo capabilities object.
+             * @param name type of the dimension.
+             * @returns {*}
+             */
+            this.getDimensionValue = function(ncInfo, name) {
+              var value;
+              if (angular.isArray(ncInfo.Dimension)) {
+                for (var i = 0; i < ncInfo.Dimension.length; i++) {
+                  if (ncInfo.Dimension[i].name == name) {
+                    value = ncInfo.Dimension[i].values;
+                    break;
+                  }
+                }
+              }
+              else if (angular.isObject(ncInfo.Dimension) &&
+                  ncInfo.Dimension.name == name) {
+                value = ncInfo.Dimension.values[0] ||
+                    ncInfo.Dimension.values;
+              }
+              return value;
             };
 
             /**
@@ -70,8 +107,31 @@
                 p.LINESTRING = gnMap.getTextFromCoordinates(geom);
               }
 
-              return url = gnUrlUtils.append(layer.getSource().getUrls(),
+              return gnUrlUtils.append(layer.getSource().getUrls(),
                   gnUrlUtils.toKeyValue(p));
+            };
+
+            this.getMetadataUrl = function(layer) {
+              return gnUrlUtils.append(layer.getSource().getUrls(),
+                  gnUrlUtils.toKeyValue(p));
+            };
+
+            this.getColorRangesBounds = function(layer, extent) {
+              var p = {
+                request: 'GetMetadata',
+                item: 'minmax',
+                width: 50,
+                height:50,
+                srs: 'EPSG:4326',
+                layers: layer.getSource().getParams().LAYERS,
+                bbox: extent
+              };
+
+              var url = gnUrlUtils.append(layer.getSource().getUrls(),
+                  gnUrlUtils.toKeyValue(p));
+
+              var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
+              return $http.get(proxyUrl);
             };
           }
   ]);

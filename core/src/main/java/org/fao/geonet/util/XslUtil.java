@@ -484,7 +484,7 @@ public final class XslUtil
         if(Geonet.Settings.Values.STRIP_MARKUP.equals(mefOutput)) {
             String styleSheetPath = context.getAppPath() + File.separator + "xsl" + File.separator + "strip-wiki-markup.xsl";
             
-            Map<String, String> params = new HashMap<String, String>();
+            Map<String, Object> params = new HashMap<String, Object>();
             params.put("markupType", markupType);
             params.put("outputType", mefOutput);
             params.put("wysiwygEnabled", wysiwygEnabled);

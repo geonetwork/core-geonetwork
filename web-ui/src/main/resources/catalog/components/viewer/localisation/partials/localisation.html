@@ -1,0 +1,17 @@
+<div class="search-container" data-ng-class="{open : !collapsed}">
+  <i class="fa fa-times-circle clear" ng-click="clearInput()" ng-hide="query==''"></i>
+  <input data-ng-model="query" data-ng-change="locCtrl.search(query)" type="search"
+         class="form-control" placeholder="Recherche">
+  <div class="dropdown-menu" role="menu">
+    <ul class="loc-defaults">
+      <li data-ng-repeat="loc in localisations | filter:query">
+        <a href="" data-ng-click="locCtrl.onClick(loc, map)">{{loc.name}}</a>
+      </li>
+    </ul>
+    <ul class="loc-geonames">
+      <li data-ng-repeat="loc in results">
+        <a href="" data-ng-click="locCtrl.onClick(loc, map)">{{loc.name}}, {{loc.region}}, {{loc.country}}</a>
+      </li>
+    </ul>
+  </div>
+</div>

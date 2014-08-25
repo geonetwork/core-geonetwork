@@ -5,51 +5,62 @@
   var module = angular.module('gn_facet_service', []);
 
   /**
-   * Contains all facets
-   */
-  module.value('gnCurrentFacet', {
-    facets: {},
-    deletedFacets: {}
-  });
-
-  /**
    * TODO: Translate indexkey/facetkey
    */
   module.factory('gnFacetService', [
     '$translate',
-    'gnCurrentFacet',
-    function($translate, gnCurrentFacet) {
+    function($translate) {
 
-      var add = function(field, value, label, reset) {
-        var facet = {value: value, label: label || value};
-        if (reset) {
-          gnCurrentFacet.facets[field] = facet;
-        } else {
-          if (gnCurrentFacet.facets[field]) {
-            var currentValue = gnCurrentFacet.facets[field].value;
-            var currentLabel = gnCurrentFacet.facets[field].label;
-            gnCurrentFacet.facets[field] =
-                {
-                  value: currentValue + ' or ' + value,
-                  label: currentLabel + $translate('or') + label
-                };
-          } else {
-            gnCurrentFacet.facets[field] = facet;
+      var add = function(currentFacets, field, value, label, reset) {
+        var facet = {
+          value: value,
+          label: label || value,
+          field: field
+        };
+        currentFacets.push(facet);
+      };
+
+      var remove = function(facets, facet) {
+        var index = -1;
+        for (var i = 0; i < facets.length; ++i) {
+          if (facets[i].field == facet.field &&
+              facets[i].value == facet.value) {
+            index = i;
           }
         }
-        return this;
-      };
-      var remove = function(field) {
-        if (field) {
-          delete gnCurrentFacet.facets[field];
-          gnCurrentFacet.deletedFacets[field] = true;
+        if (index >= 0) {
+          facets.splice(index, 1);
         }
       };
+
+      /**
+       * Get search parameters from facets object.
+       * Facet object is usually stored in the searchFrom controller
+       *
+       * @param {Array} facets
+       * @return {Object} search parameters object
+       */
+      var getParamsFromFacets = function(facets) {
+        var params = {};
+        angular.forEach(facets, function(facet) {
+          if (angular.isArray(facets[facet.field])) {
+            params[facet.field].push(facet.value);
+          }
+          else if (angular.isDefined(facets[facet.field])) {
+            params[facet.field] = [facet.value];
+          }
+          else {
+            params[facet.field] = facet.value;
+          }
+        });
+        return params;
+      };
+
       return {
         add: add,
-        remove: remove
+        remove: remove,
+        getParamsFromFacets: getParamsFromFacets
       };
     }
   ]);
-
 })();

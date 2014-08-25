@@ -106,15 +106,18 @@
           element.find('.btn-group button').bind('click', function() {
             element.find('.btn-group button').removeClass('active');
             element.addClass('active');
+            $(this).addClass('active');
             element.find('.layers').addClass('collapsed');
-            element.find('.layerTree').removeClass('collapsed');
+            element.find('.panel-carousel').removeClass('collapsed');
             element.find('.unfold').css('opacity',1);
+            element.find('.panel-carousel-container').css('left',
+                '-' + ($(this).index()*100) + '%');
           });
 
           element.find('.unfold').click(function(){
             element.find('.btn-group button').removeClass('active');
             element.find('.layers').removeClass('collapsed');
-            element.find('.layerTree').addClass('collapsed');
+            element.find('.panel-carousel').addClass('collapsed');
             element.find('.unfold').css('opacity',0);
           });
         }
@@ -126,12 +129,15 @@
       return {
         restrict: 'A',
         require: 'giBtnGroup',
+        scope: true,
         link: function (scope, element, attrs, btngroupCtrl) {
           $('.close').click(function(){
             var t = $(this).parents('.panel-tools');
             t.addClass('force-hide');
             $('[rel=#'+t.attr('id')+']').removeClass('active');
-            btngroupCtrl.activate();
+            scope.$apply(function() {
+              btngroupCtrl.activate();
+            });
           });
         }
       };

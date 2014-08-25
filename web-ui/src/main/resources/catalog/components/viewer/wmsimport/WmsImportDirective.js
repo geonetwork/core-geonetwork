@@ -16,18 +16,28 @@
     'gnOwsCapabilities',
     'gnMap',
     '$translate',
-    function (gnOwsCapabilities, gnMap, $translate) {
+    'gnMapConfig',
+    function (gnOwsCapabilities, gnMap, $translate, gnMapConfig) {
     return {
       restrict: 'A',
+      replace: true,
       templateUrl: '../../catalog/components/viewer/wmsimport/' +
         'partials/wmsimport.html',
       scope: {
         map: '=gnWmsImportMap'
       },
-      controller: function($scope){
+      controller: ['$scope', function($scope){
+
+        /**
+         * Transform a capabilities layer into an ol.Layer
+         * and add it to the map.
+         *
+         * @param getCapLayer
+         * @returns {*}
+         */
         this.addLayer = function(getCapLayer) {
 
-          var legend, attribution;
+          var legend, attribution, metadata;
           if (getCapLayer) {
             var layer = getCapLayer;
 
@@ -42,29 +52,28 @@
                 attribution = layer.Attribution.Title;
               }
             }
+            if(angular.isArray(layer.MetadataURL)) {
+              metadata = layer.MetadataURL[0].OnlineResource;
+            }
 
             return gnMap.addWmsToMap($scope.map, {
                     LAYERS: layer.Name
                   }, {
-                    url: $scope.url,
+                    url: layer.url,
                     label: layer.Title,
                     attribution: attribution,
                     legend: legend,
+                    metadata: metadata,
                     extent: gnOwsCapabilities.getLayerExtentFromGetCap($scope.map, layer)
                   }
               );
           }
         };
-      },
+      }],
       link: function (scope, element, attrs) {
 
-        //TODO: remove
-        scope.servicesList = [
-          'http://ids.pigma.org/geoserver/wms',
-          'http://ids.pigma.org/geoserver/ign/wms',
-          'http://www.ifremer.fr/services/wms/oceanographie_physique'
-        ];
-        scope.url = 'http://www.ifremer.fr/services/wms/oceanographie_physique';
+        scope.format =  attrs['gnWmsImport'];
+        scope.servicesList = gnMapConfig.servicesUrl[scope.format];
 
         scope.loading = false;
 
@@ -79,6 +88,112 @@
       }
     };
   }]);
+
+  module.directive('gnKmlImport', [
+    'goDecorateLayer',
+      'gnAlertService',
+    function (goDecorateLayer, gnAlertService) {
+      return {
+        restrict: 'A',
+        replace: true,
+        templateUrl: '../../catalog/components/viewer/wmsimport/' +
+            'partials/kmlimport.html',
+        scope: {
+          map: '=gnKmlImportMap'
+        },
+        controllerAs: 'kmlCtrl',
+        controller: [ '$scope', function($scope) {
+
+          /**
+           * Create new vector Kml file from url and add it to
+           * the Map.
+           *
+           * @param url remote url of the kml file
+           * @param map
+           */
+          this.addKml = function(url, map) {
+
+            if(url == '') {
+              $scope.validUrl = true;
+              return;
+            }
+
+            var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
+            var kmlSource = new ol.source.KML({
+              projection: 'EPSG:3857',
+              url: proxyUrl
+            });
+            var vector = new ol.layer.Vector({
+              source: kmlSource,
+              label: 'Fichier externe : ' + url.split('/').pop()
+            });
+
+            var listenerKey = kmlSource.on('change', function() {
+              if (kmlSource.getState() == 'ready') {
+                kmlSource.unByKey(listenerKey);
+                $scope.addToMap(vector, map);
+                $scope.validUrl = true;
+                $scope.url = '';
+              }
+              else if (kmlSource.getState() == 'error') {
+                $scope.validUrl = false;
+              }
+              $scope.$apply();
+            });
+          };
+
+          $scope.addToMap = function(layer, map) {
+            goDecorateLayer(layer);
+            layer.displayInLayerManager = true;
+            map.getLayers().push(layer);
+            map.getView().fitExtent(layer.getSource().getExtent(),
+                map.getSize());
+
+            gnAlertService.addAlert({
+              msg: 'Une couche ajoutée : <strong>'+layer.get('label')+'</strong>',
+              type: 'success'
+            });
+          };
+        }],
+        link: function (scope, element, attrs) {
+
+          /** Used for ngClass of the input */
+          scope.validUrl = true;
+
+          /** File drag & drop support */
+          var dragAndDropInteraction = new ol.interaction.DragAndDrop({
+            formatConstructors: [
+              ol.format.GPX,
+              ol.format.GeoJSON,
+              ol.format.KML,
+              ol.format.TopoJSON
+            ]
+          });
+
+          scope.map.getInteractions().push(dragAndDropInteraction);
+          dragAndDropInteraction.on('addfeatures', function(event) {
+            if (!event.features || event.features.length == 0) {
+              gnAlertService.addAlert({
+                msg: 'Import impossible',
+                type: 'danger'
+              });
+              scope.$apply();
+              return;
+            }
+            var vectorSource = new ol.source.Vector({
+              features: event.features,
+              projection: event.projection
+            });
+            var layer = new ol.layer.Vector({
+              source: vectorSource,
+              label: 'Fichier local : ' + event.file.name
+            });
+            scope.addToMap(layer, scope.map);
+            scope.$apply();
+          });
+        }
+      };
+    }]);
 
   /**
    * @ngdoc directive

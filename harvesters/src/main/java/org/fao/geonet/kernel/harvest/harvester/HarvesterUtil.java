@@ -14,10 +14,10 @@ import java.util.Map;
  * Created by francois on 3/7/14.
  */
 public class HarvesterUtil {
-    public static Pair<String, Map<String, String>> parseXSLFilter(String filter,
+    public static Pair<String, Map<String, Object>> parseXSLFilter(String filter,
                                 Logger log) {
         String processName = filter;
-        Map<String, String> processParams = new HashMap<String, String>();
+        Map<String, Object> processParams = new HashMap<String, Object>();
 
         // Parse complex xslfilter process_name?process_param1=value&process_param2=value...
         if (filter.contains("?")) {
@@ -49,15 +49,17 @@ public class HarvesterUtil {
     /**
      * Filter the metadata if process parameter is set and
      * corresponding XSL transformation exists.
+     *
      * @param metadataSchema
      * @param md
      *
+     * @param processParams
      * @return
      */
     public static Element processMetadata(MetadataSchema metadataSchema,
                                           Element md,
                                           String processName,
-                                          Map<String, String> processParams,
+                                          Map<String, Object> processParams,
                                           Logger log) {
 
         String filePath = metadataSchema.getSchemaDir() +

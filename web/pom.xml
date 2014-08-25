@@ -48,14 +48,6 @@
       <artifactId>saxon-dom</artifactId>
     </dependency>
     <dependency>
-      <groupId>jfree</groupId>
-      <artifactId>jfreechart</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>jfree</groupId>
-      <artifactId>jcommon</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.openrdf</groupId>
       <artifactId>openrdf-model</artifactId>
     </dependency>
@@ -251,10 +243,6 @@
     <dependency>
       <groupId>eu.medsea.mimeutil</groupId>
       <artifactId>mime-util</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
     </dependency>
     <dependency>
       <groupId>joda-time</groupId>
@@ -730,12 +718,12 @@
                 </executions>
                 <configuration>
                     <!-- The targetGroups are the groups to test for existence.  if they are not found then
-                         an error is raised.  Currently the groups from web-ui, web-client and web are listed
+                         an error is raised.  Currently the groups from web-ui and web-client are listed
                          here.  If web-client (for example) is removed then remove the group below
 
                          Note:  all groups must be on the same line with not whitespace.
                     -->
-                    <targetGroups>gn,gn_admin,gn_login,lib,gn.libs,gn.libs.map,gn.libs.scriptaculous,gn,gn.search,gn.editor,gn.geo.libs,kernel,geonetwork-client-ext-ux_css,geonetwork-client_css,geonetwork-client-mini-nomap,geonetwork-client-mini,geonetwork-client-search-app,geonetwork-client-tabsearch-app,geonetwork-client-html5ui-app,closure_deps,srv_custom_style</targetGroups>
+                    <targetGroups>gn,gn_admin,gn_login,geonetwork-client-ext-ux_css,geonetwork-client_css,geonetwork-client-mini-nomap,geonetwork-client-mini,geonetwork-client-search-app,geonetwork-client-tabsearch-app,geonetwork-client-html5ui-app,closure_deps,srv_custom_style</targetGroups>
                     <minimize>true</minimize>
                     <destinationFolder>${wro4jOutput}</destinationFolder>
                     <cssDestinationFolder>${wro4jOutput}/css</cssDestinationFolder>

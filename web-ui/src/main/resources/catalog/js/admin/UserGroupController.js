@@ -17,6 +17,11 @@
     function($scope, $routeParams, $http, $rootScope, 
         $translate, $timeout) {
 
+      $scope.searchParams = {
+        template: 'y or n',
+        sortBy: 'title'
+      };
+
       $scope.pageMenu = {
         folder: 'usergroup/',
         defaultTab: 'groups',

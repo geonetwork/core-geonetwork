@@ -280,6 +280,7 @@
    -->
   <tokenized>
     <Field name="any"/>
+    <Field name="anylight"/>
     <Field name="abstract"/>
     <Field name="defaultAbstract"/>
     <Field name="title"/>

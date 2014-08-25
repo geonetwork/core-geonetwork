@@ -24,7 +24,6 @@
 
 		<gui>
 			<xml name="strings" file="xml/strings.xml" />
-			<xml name="countries" file="xml/countries.xml" />
 
 			<call name="isolanguages" class="org.fao.geonet.guiservices.isolanguages.Get"/>
 
@@ -1162,14 +1161,10 @@
 
 	<!-- ====================================================================== -->
 
-	<include>config-metadata.xml</include>
-	<include>config-metadata-experimental.xml</include>
-	<include>config-thesaurus.xml</include>
-	<include>config-harvesting.xml</include>
-	<include>config-portal.xml</include>
-	<include>config-export.xml</include>
-	<include>config-statistics.xml</include>
-  <include>config-test.xml</include>
+  <include>config-metadata.xml</include>
+  <include>config-metadata-experimental.xml</include>
+  <include>config-portal.xml</include>
+  <include>config-export.xml</include>
 
 	<!-- ====================================================================== -->
 

@@ -14,8 +14,8 @@
   module.directive('gnNcwmsTransect', [
       'gnHttp',
       'gnNcWms',
-      'gnNcWmsConst',
-    function (gnHttp, gnNcWms, gnNcWmsConst) {
+      'gnPopup',
+    function (gnHttp, gnNcWms, gnPopup) {
       return {
         restrict: 'A',
         scope: {
@@ -27,36 +27,7 @@
         link: function (scope, element, attrs) {
 
           var drawInteraction, featureOverlay;
-          scope.constants = gnNcWmsConst;
-
-          // 2010-12-06T12:00:00.000Z/2010-12-31T12:00:00.000Z
-          var parseTimeSeries = function(s) {
-            s = s.trim();
-            var as = s.split('/');
-            scope.tsfromD = moment(new Date(as[0])).format('YYYY-MM-DD');
-            scope.tstoD = moment(new Date(as[1])).format('YYYY-MM-DD');
-          };
-
-          var getDimensionValue = function(ncInfo, name) {
-            var value;
-            if (angular.isArray(ncInfo.Dimension)) {
-              for (var i = 0; i < ncInfo.Dimension.length; i++) {
-                if (ncInfo.Dimension[i].name == name) {
-                  value = ncInfo.Dimension[i].values;
-                  break;
-                }
-              }
-            }
-            else if (angular.isObject(ncInfo.Dimension) &&
-                ncInfo.Dimension.name == name) {
-              value = ncInfo.Dimension.values[0] ||
-                  ncInfo.Dimension.values;
-            }
-            return value;
-          };
-          parseTimeSeries(getDimensionValue(scope.layer.ncInfo, 'time'));
-
-          scope.elevations = getDimensionValue(scope.layer.ncInfo, 'elevation').split(',');
+          var map = scope.map;
 
           /**
            * Just manage active button in ui.
@@ -72,15 +43,21 @@
             activateInteraction(scope.activeTool);
           };
 
+          var resetInteraction = function() {
+            if(featureOverlay) {
+              featureOverlay.setMap(null);
+              delete featureOverlay;
+            }
+            if(drawInteraction) {
+              scope.map.removeInteraction(drawInteraction);
+              delete drawInteraction;
+            };
+          };
 
           var activateInteraction = function(activeTool) {
             if(!activeTool) {
-              featureOverlay.setMap(null);
-              delete featureOverlay;
-              scope.map.removeInteraction(drawInteraction);
-              delete drawInteraction;
+              resetInteraction();
             }
-
             else {
               var type = 'Point';
               if(activeTool == 'transect') {
@@ -91,7 +68,6 @@
                 featureOverlay = new ol.FeatureOverlay();
                 featureOverlay.setMap(scope.map);
               }
-
               if(drawInteraction) {
                 scope.map.removeInteraction(drawInteraction);
               }
@@ -103,18 +79,35 @@
 
               drawInteraction.on('drawend',
                   function(evt) {
-                    window.open(gnNcWms.getNcwmsServiceUrl(
-                            scope.layer,
-                            scope.map.getView().getProjection(),
-                            evt.feature.getGeometry().getCoordinates(),
-                            activeTool),
-                        '_blank',
-                        'menubar=no, status=no, scrollbars=no, menubar=no, width=600, height=400');
+
+                    gnPopup.create({
+                      title: activeTool,
+                      url : gnNcWms.getNcwmsServiceUrl(
+                          scope.layer,
+                          scope.map.getView().getProjection(),
+                          evt.feature.getGeometry().getCoordinates(),
+                          activeTool),
+                      content: '<div class="gn-popup-iframe" style="width:400px">' +
+                          '<iframe frameBorder="0" border="0" style="width:100%;height:100%;" src="{{options.url}}" ></iframe>' +
+                          '</div>'
+                    });
+                    scope.$apply(function() {
+                      scope.activeTool = undefined;
+                    });
                   }, this);
 
               scope.map.addInteraction(drawInteraction);
             }
           };
+          var disableInteractionWatchFn = function(nv, ov) {
+            if(!nv) {
+              resetInteraction();
+              scope.activeTool = undefined;
+            }
+          };
+          scope.$watch('layer.showInfo', disableInteractionWatchFn);
+          scope.$watch('layer.visible', disableInteractionWatchFn);
+          scope.$watch('layer', disableInteractionWatchFn);
 
           /**
            * init source layer params object
@@ -123,26 +116,57 @@
 
             scope.params = scope.layer.getSource().getParams() || {};
 
-            var colors = scope.layer.getSource().getParams().COLORSCALERANGE.split(',');
-            scope.colorscalerange = [colors[0], colors[1]];
+            scope.colorRange = {
+              step: 1
+            };
+            scope.timeSeries = gnNcWms.parseTimeSeries(gnNcWms.getDimensionValue(scope.layer.ncInfo, 'time'));
+            scope.elevations = gnNcWms.getDimensionValue(scope.layer.ncInfo, 'elevation').split(',');
+
+
+            // Get maxExtent color ranges
+            gnNcWms.getColorRangesBounds(scope.layer,
+                scope.layer.ncInfo.EX_GeographicBoundingBox.join(',')).success(function(data) {
+
+                  var min = Number((data.min).toFixed(5));
+                  var max = Number((data.max).toFixed(5));
+
+                  angular.extend(scope.colorRange, {min: min, max: max});
+                  scope.colorscalerange = [min, max];
+                  scope.onColorscaleChange(scope.colorscalerange);
+            });
 
             if(angular.isUndefined(scope.params.LOGSCALE)) {
               scope.params.LOGSCALE = false;
             }
           };
 
+          /**
+           *  Get bounds of color range depending on the current extent.
+           *  Called when user wlick on 'auto' button.
+           *  Update the slider values to this bounds.
+           */
+          scope.setAutoColorranges = function(evt) {
+            $(evt.target).addClass('fa fa-spinner');
+            gnNcWms.getColorRangesBounds(scope.layer,
+                ol.proj.transform(map.getView().calculateExtent(map.getSize()),
+                    map.getView().getProjection(), 'EPSG:4326').join(',')).success(function(data) {
+                  scope.colorscalerange = [data.min, data.max];
+                  scope.onColorscaleChange(scope.colorscalerange);
+                  $(evt.target).removeClass('fa fa-spinner');
+                });
+          };
+
+          /**
+           * Call when the input of the double slider get change.
+           * The input is an array of 2 values. It updates the layer
+           * with `COLORSCALERANGE` params and refreshes it.
+           * @param v the colorange array
+           */
           scope.onColorscaleChange = function(v) {
-            var colorange;
-            if(angular.isString(v) && v == 'auto') {
-              colorange = v;
-            }
-            else if(angular.isArray(v) && v.length == 2) {
+            if(angular.isArray(v) && v.length == 2) {
               colorange = v[0] + ',' + v[1];
-            }
-            if(colorange) {
               scope.params.COLORSCALERANGE = colorange;
-              scope.updateLayerParams();
-            }
+              scope.updateLayerParams();}
           };
 
           scope.updateLayerParams = function() {
@@ -153,140 +177,4 @@
         }
       };
     }]);
-
-  /*
-   jQuery UI Slider plugin wrapper
-   */
-  module.value('uiSliderConfig',{}).directive('uiSlider', ['uiSliderConfig', '$timeout', function(uiSliderConfig, $timeout) {
-    uiSliderConfig = uiSliderConfig || {};
-    return {
-      require: 'ngModel',
-      compile: function () {
-        return function (scope, elm, attrs, ngModel) {
-
-          function parseNumber(n, decimals) {
-            return (decimals) ? parseFloat(n) : parseInt(n);
-          };
-
-          var options = angular.extend(scope.$eval(attrs.uiSlider) || {}, uiSliderConfig);
-          // Object holding range values
-          var prevRangeValues = {
-            min: null,
-            max: null
-          };
-
-          // convenience properties
-          var properties = ['min', 'max', 'step'];
-          var useDecimals = (!angular.isUndefined(attrs.useDecimals)) ? true : false;
-
-          var init = function() {
-            // When ngModel is assigned an array of values then range is expected to be true.
-            // Warn user and change range to true else an error occurs when trying to drag handle
-            if (angular.isArray(ngModel.$viewValue) && options.range !== true) {
-              console.warn('Change your range option of ui-slider. When assigning ngModel an array of values then the range option should be set to true.');
-              options.range = true;
-            }
-
-            // Ensure the convenience properties are passed as options if they're defined
-            // This avoids init ordering issues where the slider's initial state (eg handle
-            // position) is calculated using widget defaults
-            // Note the properties take precedence over any duplicates in options
-            angular.forEach(properties, function(property) {
-              if (angular.isDefined(attrs[property])) {
-                options[property] = parseNumber(attrs[property], useDecimals);
-              }
-            });
-
-            elm.slider(options);
-            init = angular.noop;
-          };
-
-          // Find out if decimals are to be used for slider
-          angular.forEach(properties, function(property) {
-            // support {{}} and watch for updates
-            attrs.$observe(property, function(newVal) {
-              if (!!newVal) {
-                init();
-                elm.slider('option', property, parseNumber(newVal, useDecimals));
-                ngModel.$render();
-              }
-            });
-          });
-          attrs.$observe('disabled', function(newVal) {
-            init();
-            elm.slider('option', 'disabled', !!newVal);
-          });
-
-          // Watch ui-slider (byVal) for changes and update
-          scope.$watch(attrs.uiSlider, function(newVal) {
-            init();
-            if(newVal != undefined) {
-              elm.slider('option', newVal);
-            }
-          }, true);
-
-          // Late-bind to prevent compiler clobbering
-          $timeout(init, 0, true);
-
-          // Update model value from slider
-          elm.bind('slide', function(event, ui) {
-            ngModel.$setViewValue(ui.values || ui.value);
-            scope.$apply();
-          });
-
-          // Update slider from model value
-          ngModel.$render = function() {
-            init();
-            var method = options.range === true ? 'values' : 'value';
-
-            if (!options.range && isNaN(ngModel.$viewValue) && !(ngModel.$viewValue instanceof Array)) {
-              ngModel.$viewValue = 0;
-            }
-            else if (options.range && !angular.isDefined(ngModel.$viewValue)) {
-              ngModel.$viewValue = [0,0];
-            }
-
-            // Do some sanity check of range values
-            if (options.range === true) {
-
-              // Check outer bounds for min and max values
-              if (angular.isDefined(options.min) && options.min > ngModel.$viewValue[0]) {
-                ngModel.$viewValue[0] = options.min;
-              }
-              if (angular.isDefined(options.max) && options.max < ngModel.$viewValue[1]) {
-                ngModel.$viewValue[1] = options.max;
-              }
-
-              // Check min and max range values
-              if (ngModel.$viewValue[0] > ngModel.$viewValue[1]) {
-                // Min value should be less to equal to max value
-                if (prevRangeValues.min >= ngModel.$viewValue[1])
-                  ngModel.$viewValue[0] = prevRangeValues.min;
-                // Max value should be less to equal to min value
-                if (prevRangeValues.max <= ngModel.$viewValue[0])
-                  ngModel.$viewValue[1] = prevRangeValues.max;
-              }
-
-              // Store values for later user
-              prevRangeValues.min = ngModel.$viewValue[0];
-              prevRangeValues.max = ngModel.$viewValue[1];
-
-            }
-            elm.slider(method, ngModel.$viewValue);
-          };
-
-          scope.$watch(attrs.ngModel, function() {
-            if (options.range === true) {
-              ngModel.$render();
-            }
-          }, true);
-
-          function destroy() {
-            elm.slider('destroy');
-          }
-          elm.bind('$destroy', destroy);
-        };
-      }
-    };
-  }]);
 })();

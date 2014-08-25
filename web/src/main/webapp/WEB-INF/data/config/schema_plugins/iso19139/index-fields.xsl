@@ -152,7 +152,6 @@
                     <!-- not tokenized title for sorting -->
                     <Field name="_title" string="{string(.)}" store="false" index="true"/>
 				</xsl:for-each>
-	
 				<xsl:for-each select="gmd:alternateTitle/gco:CharacterString">
 					<Field name="altTitle" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
@@ -202,7 +201,7 @@
             <xsl:for-each select="gmd:pointOfContact[1]/*/gmd:role/*/@codeListValue">
             	<Field name="responsiblePartyRole" string="{string(.)}" store="true" index="true"/>
             </xsl:for-each>
-            
+
 			<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->		
 	
 			<xsl:for-each select="gmd:abstract/gco:CharacterString">
@@ -791,7 +790,27 @@
 				</xsl:for-each>
 			</xsl:attribute>
 		</Field>
-				
+
+    <xsl:variable name="identification" select="gmd:identificationInfo//gmd:MD_DataIdentification|
+			gmd:identificationInfo//*[contains(@gco:isoType, 'MD_DataIdentification')]|
+			gmd:identificationInfo/srv:SV_ServiceIdentification"/>
+
+
+    <Field name="anylight" store="false" index="true">
+      <xsl:attribute name="string">
+        <xsl:for-each
+            select="$identification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString|
+                    $identification/gmd:citation/gmd:CI_Citation/gmd:alternateTitle/gco:CharacterString|
+                    $identification/gmd:abstract/gco:CharacterString|
+                    $identification/gmd:credit/gco:CharacterString|
+                    $identification//gmd:organisationName/gco:CharacterString|
+                    $identification/gmd:supplementalInformation/gco:CharacterString|
+                    $identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString|
+                    $identification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gmx:Anchor">
+          <xsl:value-of select="concat(., ' ')"/>
+        </xsl:for-each>
+      </xsl:attribute>
+    </Field>
 		<!--<xsl:apply-templates select="." mode="codeList"/>-->
 		
 	</xsl:template>

@@ -38,7 +38,7 @@
         map: '=gnLayermanagerMap'
       },
       controllerAs: 'gnLayermanagerCtrl',
-      controller: [ '$scope', function($scope) {
+      controller: [ '$scope', 'gnPopup', function($scope, gnPopup) {
 
         /**
          * Change layer index in the map.
@@ -52,6 +52,24 @@
           layersCollection.removeAt(index);
           layersCollection.insertAt(index + delta, layer);
         };
+
+        this.showMetadata = function(url, title) {
+          if(url) {
+            gnPopup.create({
+              title: title,
+              url : 'http://sextant.ifremer.fr/geonetwork/srv/fre/metadata.formatter.html?xsl=mdviewer&style=sextant&url=' + encodeURIComponent(url),
+              content: '<div class="gn-popup-iframe">' +
+                  '<iframe frameBorder="0" border="0" style="width:100%;height:100%;" src="{{options.url}}" ></iframe>' +
+                  '</div>'
+            });
+          }
+        },
+
+        this.zoomToExtent = function(layer, map) {
+          if(layer.getExtent()) {
+            map.getView().fitExtent(layer.getExtent(), map.getSize());
+          }
+        },
 
         /**
          * Set a property to the layer 'showInfo' to true and

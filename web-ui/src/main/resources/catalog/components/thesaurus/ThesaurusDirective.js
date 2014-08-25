@@ -35,6 +35,8 @@
              scope.snippet = null;
              scope.snippetRef = null;
 
+             scope.allowFreeTextKeywords = (attrs.allowFreeTextKeywords === undefined) || (attrs.allowFreeTextKeywords == 'true');
+
              // TODO: Remove from list existing thesaurus
              // in the record ?
              gnThesaurusService.getAll().then(

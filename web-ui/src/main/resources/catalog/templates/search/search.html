@@ -1,25 +1,36 @@
-<div class="container" data-ng-controller="GnSearchController">
+<div class="container gn-search-page" data-ng-controller="GnSearchController">
 
-  <h1 data-ng-translate="">Search Your Data, Maps &amp; Services</h1>
+  <form data-ng-search-form="" runsearch="true">
 
-  <div class="row">
-    <div class="col-lg-12">
-
-      <form data-ng-search-form="">
-
-        <input class="form-control" type="text"
-               data-ng-change="triggerSearch()"
-               placeholder="{{'anyPlaceHolder' | translate}}" autofocus=""
-               data-ng-model="params.any"/>
-
+    <!--Main search 'any' input-->
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="input-group">
+            <span class="input-group-addon"><i
+                    class="fa fa-search" /></span>
+          <input class="form-control input-lg" type="text"
+                 data-ng-change="triggerSearch()"
+                 placeholder="{{'anyPlaceHolder' | translate}}" autofocus=""
+                 data-ng-model="params.any"/>
+        </div>
+        <div data-gn-facet-breadcrumb="currentFacets"></div>
+      </div>
+    </div>
+    <div class="row top-buffer">
+      <div class="col-md-3">
+        <div data-gn-facet-list="searchResults.facet"
+             data-facet-config="facetsConfig"
+             data-current-facets="currentFacets">
+        </div>
+      </div>
+      <div class="col-md-9">
         <div>
           <ng-pluralize count="searchResults.count"
                         when="{'0 ': ('noRecordFound' | translate),
               'one': '1 ' +  ('record' | translate),
               'other': '{} ' +  ('records' | translate)}"
-              ></ng-pluralize>
+                  ></ng-pluralize>
         </div>
-
         <div class="list-group">
           <li class="list-group-item"
               data-ng-repeat="e in searchResults.records">
@@ -27,7 +38,7 @@
           </li>
         </div>
         <div data-gn-pagination="paginationInfo"/>
-      </form>
+      </div>
     </div>
-  </div>
+  </form>
 </div>

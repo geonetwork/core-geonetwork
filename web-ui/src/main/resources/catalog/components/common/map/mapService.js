@@ -27,11 +27,10 @@
         return {
 
           importProj4js: function() {
-            Proj4js.defs['EPSG:3857'] = Proj4js.defs['EPSG:900913'];
-            if (Proj4js && gnConfig['map.proj4js'] &&
-                angular.isArray(gnConfig['map.proj4js'])) {
+            proj4.defs("EPSG:2154","+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
+            if (proj4 && angular.isArray(gnConfig['map.proj4js'])) {
               angular.forEach(gnConfig['map.proj4js'], function(item) {
-                Proj4js.defs[item.code] = item.value;
+                proj4.defs(item.code,item.value);
               });
             }
           },
@@ -63,7 +62,8 @@
                      [extent[0], extent[1]],
                      [extent[0], extent[3]],
                      [extent[2], extent[3]],
-                     [extent[2], extent[1]]
+                     [extent[2], extent[1]],
+                     [extent[0], extent[1]]
               ]
             ];
           },
@@ -173,34 +173,29 @@
           },
 
           addWmsToMap : function(map, layerParams, layerOptions, index) {
-            var createWmsLayer = function(params, options, index) {
-              options = options || {};
 
-              var source = new ol.source.TileWMS({
-                params: params,
-                url: options.url,
-                extent: options.extent,
-                ratio: options.ratio || 1
-              });
+            var options = layerOptions || {};
 
-              var layer = new ol.layer.Tile({
-                url: options.url,
-                type: 'WMS',
-                opacity: options.opacity,
-                visible: options.visible,
-                source: source
-              });
-              // TODO : move this into layer definition (maybe into an object)
-              goDecorateLayer(layer);
-              layer.preview = options.preview;
-              layer.label = options.label;
-              layer.displayInLayerManager = true;
-              layer.legend = options.legend;
-              layer.attribution = options.attribution;
-              return layer;
-            };
+            var source = new ol.source.TileWMS({
+              params: layerParams,
+              url: options.url
+            });
 
-            var olLayer = createWmsLayer(layerParams, layerOptions);
+            var olLayer = new ol.layer.Tile({
+              url: options.url,
+              type: 'WMS',
+              opacity: options.opacity,
+              visible: options.visible,
+              source: source,
+              legend: options.legend,
+              attribution: options.attribution,
+              metadata: options.metadata,
+              label: options.label,
+              extent: options.extent
+            });
+            goDecorateLayer(olLayer);
+            olLayer.displayInLayerManager = true;
+
             if (index) {
               map.getLayers().insertAt(index, olLayer);
             } else {

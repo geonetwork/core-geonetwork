@@ -1021,7 +1021,7 @@ public class DataManager {
                 String schemaTronXmlXslt = metadataSchema.getSchemaDir() + File.separator
                         + "schematron" + File.separator + rule;
                 try {
-                    Map<String,String> params = new HashMap<String,String>();
+                    Map<String,Object> params = new HashMap<String,Object>();
                     params.put("lang", lang);
                     params.put("rule", rule);
                     params.put("thesaurusDir", this.thesaurusDir);
@@ -2122,7 +2122,7 @@ public class DataManager {
                     report.setAttribute("required", requirement.toString(), Edit.NAMESPACE);
 
                     try {
-                        Map<String,String> params = new HashMap<String,String>();
+                        Map<String,Object> params = new HashMap<String,Object>();
                         params.put("lang", lang);
                         params.put("rule", ruleId);
                         params.put("thesaurusDir", this.thesaurusDir);
@@ -3017,20 +3017,21 @@ public class DataManager {
      * Children MUST be editable and also in the same schema of the parent.
      * If not, child is not updated.
      *
+     *
      * @param srvContext
      *            service context
      * @param parentUuid
      *            parent uuid
-     * @param params
-     *            parameters
      * @param children
      *            children
+     * @param params
+     *            parameters
      * @return
      * @throws Exception
      */
-    public Set<String> updateChildren(ServiceContext srvContext, String parentUuid, String[] children, Map<String, String> params) throws Exception {
-        String parentId = params.get(Params.ID);
-        String parentSchema = params.get(Params.SCHEMA);
+    public Set<String> updateChildren(ServiceContext srvContext, String parentUuid, String[] children, Map<String, Object> params) throws Exception {
+        String parentId = (String)params.get(Params.ID);
+        String parentSchema = (String)params.get(Params.SCHEMA);
 
         // --- get parent metadata in read/only mode
         boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = false;

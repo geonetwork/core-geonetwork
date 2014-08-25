@@ -39,7 +39,7 @@ public class AbstractSchematronTest {
     protected final static File WEBAPP_DIR = findWebappDir(CLASS_FILE);
     protected final static File SCHEMATRON_COMPILATION_FILE = new File(WEBAPP_DIR, "WEB-INF/classes/schematron/iso_svrl_for_xslt2.xsl");
     protected final static File SCHEMA_PLUGINS = new File(WEBAPP_DIR, "WEB-INF/data/config/schema_plugins/");
-    protected Map<String, String> params = new HashMap<String, String>();
+    protected Map<String, Object> params = new HashMap<String, Object>();
 
     protected static File THESAURUS_DIR;
     @Rule

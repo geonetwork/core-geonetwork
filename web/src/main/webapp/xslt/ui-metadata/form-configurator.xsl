@@ -414,8 +414,11 @@
       </xsl:choose>
     </xsl:if>
   </xsl:template>
-  
-  
+
+  <xsl:template mode="form-builder" match="section[@template]">
+    <saxon:call-template name="{@template}"/>
+  </xsl:template>
+
   <xsl:template mode="form-builder" match="action[@type='add']">
     <xsl:param name="base" as="node()"/>
     <!-- Match any gn:child nodes from the metadocument which

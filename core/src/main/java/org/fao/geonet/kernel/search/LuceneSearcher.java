@@ -593,7 +593,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             String[] items = summaryItemsEl.getValue().split(",");
 
             for (String item : items) {
-                if (item.equals("any")) {
+                if (item.startsWith("any")) {
                     tmpConfig = _summaryConfig;
                     break;
                 }
