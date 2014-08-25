@@ -704,7 +704,11 @@
 		<xsl:for-each select="gmd:parentIdentifier/gco:CharacterString">
 			<Field name="parentUuid" string="{string(.)}" store="true" index="true"/>
 		</xsl:for-each>
-		
+
+    <xsl:for-each select="gmd:metadataStandardName/gco:CharacterString">
+      <Field name="standardName" string="{string(.)}" store="true" index="true"/>
+    </xsl:for-each>
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		
 		<xsl:for-each select="gmd:dateStamp/*">
