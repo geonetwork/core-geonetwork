@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import org.apache.lucene.facet.FacetsConfig;
 import org.apache.lucene.store.Directory;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
@@ -11,7 +12,6 @@ import org.fao.geonet.utils.Log;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.facet.index.FacetFields;
 import org.apache.lucene.facet.taxonomy.CategoryPath;
 import org.apache.lucene.facet.taxonomy.TaxonomyReader;
 import org.apache.lucene.facet.taxonomy.TaxonomyWriter;
@@ -36,12 +36,15 @@ class TaxonomyIndexTracker {
     private final DirectoryFactory taxonomyDir;
     private final LuceneConfig luceneConfig;
     private Directory cachedFSDir;
-    
+    private final FacetsConfig config;
+
     public TaxonomyIndexTracker(DirectoryFactory taxonomyDir, LuceneConfig luceneConfig) throws Exception {
         this.taxonomyDir = taxonomyDir;
         this.luceneConfig = luceneConfig;
+        this.config = luceneConfig.getTaxonomyConfiguration();
         init();
     }
+
     private void init() throws Exception {
 		try {
             cachedFSDir = taxonomyDir.createTaxonomyDirectory(luceneConfig);
@@ -85,21 +88,17 @@ class TaxonomyIndexTracker {
     }
 
 
-    void addDocument(Document doc, Collection<CategoryPath> categories) {
+    Document addDocument(Document doc, Collection<CategoryPath> categories) {
+        Document docAfterFacetBuild = null;
         try {
-            FacetFields facetFields = new FacetFields(taxonomyWriter);
-            facetFields.addFields(doc, categories);
-            taxonomyWriter.commit();
-            
+            docAfterFacetBuild = config.build(taxonomyWriter, doc);
             if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
                 Log.debug(Geonet.INDEX_ENGINE, "Taxonomy writer: " + taxonomyWriter.toString());
-                Log.debug(Geonet.INDEX_ENGINE, "Categories:" + categories.size());
-//                Log.debug(Geonet.INDEX_ENGINE, "categoryDocBuilder:" + categoryDocBuilder.toString());
-//                Log.debug(Geonet.INDEX_ENGINE, "getCacheMemoryUsage:" + _taxoIndexWriter.getCacheMemoryUsage() + ", " + _taxoIndexWriter.getSize());
             }
         } catch (Exception e) {
                 e.printStackTrace();
         }
+        return docAfterFacetBuild;
     }
 
     void close(List<Throwable> errors) throws IOException {

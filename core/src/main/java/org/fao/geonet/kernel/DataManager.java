@@ -27,51 +27,110 @@
 
 package org.fao.geonet.kernel;
 
-import static org.fao.geonet.kernel.schema.MetadataSchema.SCHEMATRON_DIR;
-import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
-
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
-
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.SetMultimap;
+import com.google.common.collect.Sets;
 import jeeves.TransactionAspect;
 import jeeves.TransactionTask;
-import org.eclipse.jetty.util.ConcurrentHashSet;
-import org.fao.geonet.exceptions.JeevesException;
-import org.fao.geonet.exceptions.ServiceNotAllowedEx;
-import org.fao.geonet.exceptions.XSDValidationErrorEx;
-
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
+import org.fao.geonet.kernel.search.index.IndexingList;
+import org.fao.geonet.kernel.search.index.IndexingTask;
 import org.fao.geonet.repository.specification.*;
 import org.fao.geonet.repository.statistic.PathSpec;
+import org.fao.geonet.util.FileCopyMgr;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.Xml.ErrorHandler;
 
 import jeeves.xlink.Processor;
-
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Geonet.Namespaces;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Constants;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataDataInfo;
+import org.fao.geonet.domain.MetadataDataInfo_;
+import org.fao.geonet.domain.MetadataFileUpload;
+import org.fao.geonet.domain.MetadataFileUpload_;
+import org.fao.geonet.domain.MetadataHarvestInfo;
+import org.fao.geonet.domain.MetadataRatingByIp;
+import org.fao.geonet.domain.MetadataRatingByIpId;
+import org.fao.geonet.domain.MetadataSourceInfo;
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.MetadataStatusId;
+import org.fao.geonet.domain.MetadataStatusId_;
+import org.fao.geonet.domain.MetadataStatus_;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.MetadataValidation;
+import org.fao.geonet.domain.MetadataValidationId;
+import org.fao.geonet.domain.MetadataValidationStatus;
+import org.fao.geonet.domain.Metadata_;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.OperationAllowedId;
+import org.fao.geonet.domain.OperationAllowedId_;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.Schematron;
+import org.fao.geonet.domain.SchematronCriteria;
+import org.fao.geonet.domain.SchematronCriteriaGroup;
+import org.fao.geonet.domain.SchematronRequirement;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.UserGroupId;
+import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.SchemaMatchConflictException;
 import org.fao.geonet.exceptions.SchematronValidationErrorEx;
+import org.fao.geonet.exceptions.ServiceNotAllowedEx;
+import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.notifier.MetadataNotifierManager;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.MetadataFileUploadRepository;
+import org.fao.geonet.repository.MetadataRatingByIpRepository;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.MetadataStatusRepository;
+import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
+import org.fao.geonet.repository.SchematronRepository;
+import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.repository.StatusValueRepository;
+import org.fao.geonet.repository.Updater;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
+import org.fao.geonet.repository.specification.MetadataSpecs;
+import org.fao.geonet.repository.specification.MetadataStatusSpecs;
+import org.fao.geonet.repository.specification.OperationAllowedSpecs;
+import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.fao.geonet.repository.specification.UserSpecs;
+import org.fao.geonet.repository.statistic.PathSpec;
 import org.fao.geonet.util.ThreadUtils;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.Xml.ErrorHandler;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -84,23 +143,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.Path;
-import javax.persistence.criteria.Root;
-
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -113,6 +165,17 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Root;
+
+import static org.fao.geonet.kernel.schema.MetadataSchema.SCHEMATRON_DIR;
+import static org.fao.geonet.repository.specification.MetadataSpecs.hasMetadataUuid;
+import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
  * Handles all operations on metadata (select,insert,update,delete etc...).
@@ -1340,9 +1403,20 @@ public class DataManager {
         // READONLYMODE
         GeonetContext gc = (GeonetContext) srvContext.getHandlerContext(Geonet.CONTEXT_NAME);
         if (!gc.isReadOnly()) {
-            final IncreasePopularityTask task = srvContext.getBean(IncreasePopularityTask.class);
-            task.setMetadataId(Integer.valueOf(id));
-            gc.getThreadPool().runTask(task);
+            // Update the popularity in database
+            Integer iId = Integer.valueOf(id);
+            _metadataRepository.update(iId, new Updater<Metadata>() {
+                @Override
+                public void apply(@Nonnull Metadata entity) {
+                    final MetadataDataInfo dataInfo = entity.getDataInfo();
+                    int popularity = dataInfo.getPopularity();
+                    dataInfo.setPopularity(popularity + 1);
+                }
+            });
+
+            // And register the metadata to be indexed in the near future
+            final IndexingList list = srvContext.getBean(IndexingList.class);
+            list.add(iId);
         } else {
             if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER, "GeoNetwork is operating in read-only mode. IncreasePopularity is skipped.");
@@ -1764,7 +1838,8 @@ public class DataManager {
                 indexMetadata(metadataId, false);
             }
         }
-        return metadata;
+        // Return an up to date metadata record
+        return _metadataRepository.findOne(metadataId);
     }
 
     /**
@@ -2540,7 +2615,7 @@ public class DataManager {
                     // Reserved groups
                     if (ReservedGroup.isReserved(grpId)) {
 
-                        Specification<UserGroup> hasUserIdAndProfile = Specifications.where(UserGroupSpecs.hasProfile(Profile.Reviewer))
+                        Specification<UserGroup> hasUserIdAndProfile = where(UserGroupSpecs.hasProfile(Profile.Reviewer))
                                 .and(UserGroupSpecs.hasUserId(userId));
                         List<Integer> groupIds = userGroupRepo.findGroupIds(hasUserIdAndProfile);
 
@@ -2660,7 +2735,7 @@ public class DataManager {
     }
 
     public boolean existsUser(ServiceContext context, int id) throws Exception {
-        return context.getBean(UserRepository.class).count(Specifications.where(UserSpecs.hasUserId(id))) > 0;
+        return context.getBean(UserRepository.class).count(where(UserSpecs.hasUserId(id))) > 0;
     }
 
     //--------------------------------------------------------------------------
@@ -3077,7 +3152,9 @@ public class DataManager {
             addElement(info, Edit.Info.Elem.VERSION, version);
         }
 
-        buildPrivilegesMetadataInfo(context, id, info);
+        Map<String, Element> map = Maps.newHashMap();
+        map.put(id, info);
+        buildPrivilegesMetadataInfo(context, map);
 
         // add owner name
         User user = _applicationContext.getBean(UserRepository.class).findOne(owner);
@@ -3141,50 +3218,77 @@ public class DataManager {
     }
 
     /**
-     * Add privileges information about the metadata record
+     * Add privileges information about metadata record
      * which depends on context and usually could not be stored in db 
      * or Lucene index because depending on the current user
      * or current client IP address.
      *
      * @param context
-     * @param id    The metadata id
-     * @param info  The element to add the info into
+     * @param mdIdToInfoMap a map from the metadata Id -> the info element to which the privilege information should be added.
      * @throws Exception
      */
-    public void buildPrivilegesMetadataInfo(ServiceContext context, String id,
-                                       Element info) throws Exception {
-        if (accessMan.canEdit(context, id))
-            addElement(info, Edit.Info.Elem.EDIT, "true");
+    public void buildPrivilegesMetadataInfo(ServiceContext context, Map<String,Element> mdIdToInfoMap) throws Exception {
+        Collection<Integer> metadataIds = Collections2.transform(mdIdToInfoMap.keySet(), new Function<String, Integer>() {
+            @Nullable
+            @Override
+            public Integer apply(String input) {
+                return Integer.valueOf(input);
+            }
+        });
+        Specification<OperationAllowed> operationAllowedSpec = OperationAllowedSpecs.hasMetadataIdIn(metadataIds);
 
-        if (accessMan.isOwner(context, id)) {
-            addElement(info, Edit.Info.Elem.OWNER, "true");
+        final Collection<Integer> allUserGroups = accessMan.getUserGroups(context.getUserSession(), context.getIpAddress(), false);
+        final SetMultimap<Integer, ReservedOperation> operationsPerMetadata = loadOperationsAllowed(context, where(operationAllowedSpec).and(OperationAllowedSpecs.hasGroupIdIn(allUserGroups)));
+        final Set<Integer> visibleToAll = loadOperationsAllowed(context, where(operationAllowedSpec).and(OperationAllowedSpecs.isPublic(ReservedOperation.view))).keySet();
+        final Set<Integer> downloadableByGuest = loadOperationsAllowed(context, where(operationAllowedSpec).and(OperationAllowedSpecs.hasGroupId(ReservedGroup.guest.getId())).and(OperationAllowedSpecs.hasOperation(ReservedOperation.download))).keySet();
+        final Map<Integer, MetadataSourceInfo> allSourceInfo = _metadataRepository.findAllSourceInfo(MetadataSpecs.hasMetadataIdIn(metadataIds));
+
+        for (Map.Entry<String, Element> entry : mdIdToInfoMap.entrySet()) {
+            Element infoEl = entry.getValue();
+            final Integer mdId = Integer.valueOf(entry.getKey());
+            MetadataSourceInfo sourceInfo = allSourceInfo.get(mdId);
+            Set<ReservedOperation> operations = operationsPerMetadata.get(mdId);
+            if (operations == null) {
+                operations = Collections.emptySet();
+            }
+
+            boolean isOwner = accessMan.isOwner(context, sourceInfo);
+
+            if (isOwner) {
+                operations = Sets.newHashSet(Arrays.asList(ReservedOperation.values()));
+            }
+
+            if (isOwner || operations.contains(ReservedOperation.editing)) {
+                addElement(infoEl, Edit.Info.Elem.EDIT, "true");
+            }
+
+            if (isOwner) {
+                addElement(infoEl, Edit.Info.Elem.OWNER, "true");
+            }
+
+            addElement(infoEl, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, visibleToAll.contains(mdId));
+            addElement(infoEl, ReservedOperation.view.name(), operations.contains(ReservedOperation.view));
+            addElement(infoEl, ReservedOperation.notify.name(), operations.contains(ReservedOperation.notify));
+            addElement(infoEl, ReservedOperation.download.name(), operations.contains(ReservedOperation.download));
+            addElement(infoEl, ReservedOperation.dynamic.name(), operations.contains(ReservedOperation.dynamic));
+            addElement(infoEl, ReservedOperation.featured.name(), operations.contains(ReservedOperation.featured));
+
+            if (!operations.contains(ReservedOperation.download)) {
+                addElement(infoEl, Edit.Info.Elem.GUEST_DOWNLOAD, downloadableByGuest.contains(mdId));
+            }
         }
+    }
 
-        if (accessMan.isVisibleToAll(id)) {
-            addElement(info, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, "true");
-        } else {
-            addElement(info, Edit.Info.Elem.IS_PUBLISHED_TO_ALL, "false");
+    private SetMultimap<Integer, ReservedOperation> loadOperationsAllowed(ServiceContext context, Specification<OperationAllowed>
+            operationAllowedSpec) {
+        final OperationAllowedRepository operationAllowedRepo= context.getBean(OperationAllowedRepository.class);
+        List<OperationAllowed> operationsAllowed = operationAllowedRepo.findAll(operationAllowedSpec);
+        SetMultimap<Integer, ReservedOperation> operationsPerMetadata = HashMultimap.create();
+        for (OperationAllowed allowed : operationsAllowed) {
+            final OperationAllowedId id = allowed.getId();
+            operationsPerMetadata.put(id.getMetadataId(), ReservedOperation.lookup(id.getOperationId()));
         }
-
-        Set<Operation> operations = accessMan.getAllOperations(context, id, context.getIpAddress());
-        Set<String> hsOper = accessMan.getOperationNames(context, id, context.getIpAddress(), operations);
-
-        addElement(info, Edit.Info.Elem.VIEW,               String.valueOf(hsOper.contains(ReservedOperation.view.name())));
-        addElement(info, Edit.Info.Elem.NOTIFY,             String.valueOf(hsOper.contains(ReservedOperation.notify.name())));
-        addElement(info, Edit.Info.Elem.DOWNLOAD,           String.valueOf(hsOper.contains(ReservedOperation.download.name())));
-        addElement(info, Edit.Info.Elem.DYNAMIC, String.valueOf(hsOper.contains(ReservedOperation.dynamic.name())));
-        addElement(info, Edit.Info.Elem.FEATURED, String.valueOf(hsOper.contains(ReservedOperation.featured.name())));
-
-        if (!hsOper.contains(ReservedOperation.download.name())) {
-            ApplicationContext appContext = context.getApplicationContext();
-            int groupId = ReservedGroup.guest.getId();
-            int metadataId = Integer.parseInt(id);
-            int operationId = ReservedOperation.download.getId();
-            OperationAllowed opAllowed = appContext.getBean(OperationAllowedRepository.class).findOneById_GroupIdAndId_MetadataIdAndId_OperationId(groupId, metadataId, operationId);
-            boolean canDownload = opAllowed != null;
-            addElement(info, Edit.Info.Elem.GUEST_DOWNLOAD, String.valueOf(canDownload));
-        }
-
+        return operationsPerMetadata;
     }
 
     /**
@@ -3193,8 +3297,8 @@ public class DataManager {
      * @param name
      * @param value
      */
-    private static void addElement(Element root, String name, String value) {
-        root.addContent(new Element(name).setText(value));
+    private static void addElement(Element root, String name, Object value) {
+        root.addContent(new Element(name).setText(value == null ? "" : value.toString()));
     }
 
 
@@ -3311,6 +3415,15 @@ public class DataManager {
     public void batchDeleteMetadataAndUpdateIndex(Specification<Metadata> specification) throws Exception {
         final List<Integer> idsOfMetadataToDelete = _metadataRepository.findAllIdsBy(specification);
 
+        for (Integer id: idsOfMetadataToDelete) {
+            //--- remove metadata directory for each record
+            File pb = new File(Lib.resource.getMetadataDir(
+                    _applicationContext.getBean(GeonetworkDataDirectory.class).getMetadataDataDir().getPath(),
+                    id + ""));
+            FileCopyMgr.removeDirectoryOrFile(pb);
+        }
+
+        // Remove records from the index
         searchMan.delete("_id", Lists.transform(idsOfMetadataToDelete, new Function<Integer, String>() {
             @Nullable
             @Override
@@ -3318,6 +3431,8 @@ public class DataManager {
                 return input.toString();
             }
         }));
+
+        // Remove records from the database
         _metadataRepository.deleteAll(specification);
     }
 }

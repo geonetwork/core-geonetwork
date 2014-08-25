@@ -32,12 +32,6 @@
           <groupId>org.slf4j</groupId>
           <artifactId>slf4j-log4j12</artifactId>
       </dependency>
-
-      <dependency>
-      	<groupId>net.sf.ehcache</groupId>
-      	<artifactId>ehcache-core</artifactId>
-      </dependency>
-
       <!-- rewrite url servletfilter -->
       <dependency>
           <groupId>org.tuckey</groupId>
@@ -941,7 +935,7 @@
         <env>prod</env>
         <server>ifr-myocean-ro-exp</server>
         <widgets.webapp.resources>,../web-client/src/main/resources/</widgets.webapp.resources>
-        <geonetwork.webapp.name>geonetwork-myocean-ro-exp</geonetwork.webapp.name>
+        <geonetwork.webapp.name>geonetwork-myocean-ro</geonetwork.webapp.name>
       </properties>
     </profile>
     <profile>

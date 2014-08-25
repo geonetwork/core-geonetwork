@@ -28,7 +28,9 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.AccessManager;
@@ -68,6 +70,7 @@ public class BatchDelete extends BackupFileService {
 		Set<Integer> metadata = new HashSet<Integer>();
 		Set<Integer> notFound = new HashSet<Integer>();
 		Set<Integer> notOwner = new HashSet<Integer>();
+        boolean backupFile = Util.getParam(params, Params.BACKUP_FILE, true);
 
         if(context.isDebugEnabled())
             context.debug("Get selected metadata");
@@ -94,7 +97,7 @@ public class BatchDelete extends BackupFileService {
 				} else {
 	
 					//--- backup metadata in 'removed' folder
-					if (info.getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
+					if (backupFile && info.getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
 						backupFile(context, id, info.getUuid(), MEFLib.doExport(context, info.getUuid(), "full", false, true, false));
 					}
 			

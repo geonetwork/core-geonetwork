@@ -878,3 +878,17 @@ background-image: none;
 	height: 16px;
 	width: 14px;
 }
+
+.file-link {
+    margin-left: 10px;
+    background-image:url("../apps/sextant/images/default/link-over.png");
+    background-repeat: no-repeat;
+    border: medium none;
+    height: 16px;
+    width: 16px;
+    z-index: 99;
+    cursor:pointer;
+}
+.file-link:hover {
+    background-position:-16px 0;
+}

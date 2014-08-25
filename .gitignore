@@ -1,9 +1,9 @@
 .DS_Store
 .checkstyle
 *.iml
+rebel.xml
 harvesters/harvester_*.log
 web/src/main/webapp/WEB-INF/data/config/schema_plugins/*/schematron/schematron*.xsl
-
 web/src/main/webapp/WEB-INF/data/config/schemaplugin-uri-catalog.xml
 web/src/main/webapp/scripts/lib/*
 web/src/main/webapp/images/logos/*

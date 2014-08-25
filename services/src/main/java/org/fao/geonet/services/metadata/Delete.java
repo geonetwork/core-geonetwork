@@ -24,6 +24,8 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
+import org.fao.geonet.Util;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
@@ -60,6 +62,7 @@ public class Delete extends BackupFileService {
 		DataManager   dataMan   = gc.getBean(DataManager.class);
 		AccessManager accessMan = gc.getBean(AccessManager.class);
 
+        boolean backupFile = Util.getParam(params, Params.BACKUP_FILE, true);
 		String id = Utils.getIdentifierFromParameters(params, context);
 
         // If send a non existing uuid, Utils.getIdentifierFromParameters returns null
@@ -80,7 +83,7 @@ public class Delete extends BackupFileService {
 		//-----------------------------------------------------------------------
 		//--- backup metadata in 'removed' folder
 
-		if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE)
+		if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE && backupFile)
 			backupFile(context, id, metadata.getUuid(), MEFLib.doExport(context, metadata.getUuid(), "full", false, true, false));
 
 		//-----------------------------------------------------------------------

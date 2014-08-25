@@ -98,13 +98,22 @@ public class ResourceLib {
 	 * @return The metadata data directory
 	 */
 	public String getMetadataDir(ServiceContext context, String id) {
-		String group = pad(Integer.parseInt(id) / 100, 3);
-		String groupDir = group + "00-" + group + "99";
-
-        String dataDir = context.getBean(GeonetworkDataDirectory.class).getMetadataDataDir().getPath(); 
-        return dataDir + "/" + groupDir + "/" + id + "/";
+		String dataDir = context.getBean(GeonetworkDataDirectory.class).getMetadataDataDir().getPath();
+        return getMetadataDir(dataDir, id);
 	}
 
+    /**
+     * Get the metadata data directory
+     * @param dataDir The data directory
+     * @param id
+     *            The metadata identifier
+     * @return The metadata data directory
+     */
+    public String getMetadataDir(String dataDir, String id) {
+        String group = pad(Integer.parseInt(id) / 100, 3);
+        String groupDir = group + "00-" + group + "99";
+        return dataDir + "/" + groupDir + "/" + id + "/";
+    }
 	/**
 	 * Check that the operation is allowed for current user. See
 	 * {@link AccessManager#getOperations(ServiceContext, String, String)}.

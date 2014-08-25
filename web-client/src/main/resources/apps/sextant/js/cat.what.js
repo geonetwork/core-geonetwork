@@ -6,6 +6,9 @@ cat.what = function() {
 	
 	/** Restricted list of catalogues passed to the portlet **/
 	var configwhat= "";
+  var listOfGroups = [];
+  var groupToRemove = [];
+  var groupToDisplay = [];
 	
 	/** List of catalogs form Field **/
 	var catalogueField = undefined;
@@ -46,8 +49,6 @@ cat.what = function() {
 				});
 			
 			var filtered = false;
-			var groupToRemove = [];
-			var groupToDisplay = [];
       var listOfThesaurus = configlistThesaurus &&
                             configlistThesaurus[0] &&
                             configlistThesaurus[0].value;
@@ -92,6 +93,14 @@ cat.what = function() {
 			            }
 	                    return true;
 			        });
+            // Empty the list of active groups
+            while(listOfGroups.length > 0) {
+              listOfGroups.pop();
+            }
+            // Populate it
+            s.each(function (r) {
+              listOfGroups.push(r.get('value'));
+            });
                     catalogue.reseting = false;
                     catalogue.fireEvent('afterReset');
 			    });
@@ -343,11 +352,11 @@ cat.what = function() {
       var resourceTypeHiddenField = new Ext.form.Hidden({
         name: 'E_type',
         id: 'E_type',
-        value: 'dataset or series or publication or nonGeographicDataset or feature or featureCatalog'
+        value: 'dataset or series or publication or nonGeographicDataset or feature or featureCatalog or map'
       });
-      
+
       var downloadHiddenField = new Ext.form.Hidden({ name: 'E_operation' });
-      var dldlHiddenField = new Ext.form.Hidden({ name: 'E_download' });
+      var dldlHiddenField = new Ext.form.Hidden({ name: 'E_download'});
       var dynamicHiddenField = new Ext.form.Hidden({ name: 'E_operation' });
       var dydyHiddenField = new Ext.form.Hidden({ name: 'E_dynamic' });
 
@@ -355,9 +364,16 @@ cat.what = function() {
           name: 'download',
           id: 'download',
           boxLabel: OpenLayers.i18n('search-dowload'),
-          value: false,
+          checked: cookie.get('cat.searchform.download') || (cookie.state.s && cookie.state.s.cat_searchform_download == 'true'),
           listeners: {
+            afterrender: function(cpt) {
+              if(cpt.getValue()) {
+                downloadHiddenField.setValue("download");
+                dldlHiddenField.setValue("true");
+              }
+            },
         	  check: function(that, checked) {
+              cookie.set('cat.searchform.download', checked);
         		  if (checked) {
         			  downloadHiddenField.setValue("download");
         			  dldlHiddenField.setValue("true");
@@ -373,9 +389,16 @@ cat.what = function() {
           name: 'dynamic',
           id: 'dynamic',
           boxLabel: OpenLayers.i18n('search-view'),
-          value: false,
+          checked: cookie.get('cat.searchform.dynamic') || (cookie.state.s && cookie.state.s.cat_searchform_dynamic == 'true'),
           listeners: {
+            afterrender: function(cpt) {
+              if(cpt.getValue()) {
+                dynamicHiddenField.setValue("dynamic");
+                dydyHiddenField.setValue("true");
+              }
+            },
         	  check: function(that, checked) {
+              cookie.set('cat.searchform.dynamic', checked);
         		  if (checked) {
         			  dynamicHiddenField.setValue("dynamic");
         			  dydyHiddenField.setValue("true");
@@ -389,7 +412,12 @@ cat.what = function() {
 
       var downloadOrViewGroup = new Ext.form.CheckboxGroup({
         fieldLabel: OpenLayers.i18n('search-data'),
+        id: 'downloadOrViewGroup',
         columns: 2,
+        reset: function() {
+          dynamicCb.setValue(false);
+          downloadCb.setValue(false);
+        },
         items: [
           dynamicCb, downloadCb
         ]});
@@ -401,7 +429,7 @@ cat.what = function() {
       });
 
       advancedFields.push(resourceTypeHiddenField);
-      var items = [ searchField, sep1, catalogueField, sep2, radioGroup, sep3 ];
+      var items = [ searchField, sep1, catalogueField, sep2, radioGroup];
       
       
       
@@ -410,8 +438,8 @@ cat.what = function() {
       });
       items.push(resourceTypeHiddenField);
 
-      items.push(sep3, downloadHiddenField, dynamicHiddenField, dldlHiddenField, dydyHiddenField, downloadOrViewGroup, dynamicCb, downloadCb);
-      advancedFields.push(downloadHiddenField, dynamicHiddenField, dldlHiddenField, dydyHiddenField, downloadOrViewGroup, dynamicCb, downloadCb);
+      items.push(sep3, downloadHiddenField, dynamicHiddenField, dldlHiddenField, dydyHiddenField, downloadOrViewGroup);
+      advancedFields.push(downloadHiddenField, dynamicHiddenField, dldlHiddenField, dydyHiddenField, downloadOrViewGroup);
       
       panel = new Ext.Panel({
         title: OpenLayers.i18n('What'),
@@ -444,10 +472,30 @@ cat.what = function() {
 		getPanel : function() {
 			return panel;
 		},
-		
+    /**
+     * Return the config what parameter.
+     * Configwhat could be a list of comma separated groups
+     * to display or groups to exclude (starting with '-').
+     *
+     * @returns {string}
+     */
 		getConfigWhat: function() {
-			return configwhat;
+      return configwhat;
 		},
+    /**
+     * Get the list of groups enabled in the store.
+     * When the groups are loaded, the configwhat parameter
+     * applies as filter to the store.
+     *
+     * If the catalog field does not select any element,
+     * this method should be used to retrieve the list of
+     * active groups.
+     *
+     * @returns {string}
+     */
+    getGroups: function() {
+      return listOfGroups;
+    },
 		
 		getCatalogueField : function() {
 			return catalogueField;

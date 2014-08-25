@@ -783,3 +783,9 @@ input[type="text"] {
 .bold {
 	font-weight: 700 !important;
 }
+
+.sxt-glyph {
+    float: right;
+    font-size: 1.8em;
+    color: #565656;
+}

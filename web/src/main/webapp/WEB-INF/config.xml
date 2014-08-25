@@ -121,10 +121,6 @@
 
 	<!-- ====================================================================== -->
 
-	<schedules package="org.fao.geonet" />
-
-	<!-- ====================================================================== -->
-
 	<services package="org.fao.geonet">
 		<service name="main.home">
 			<output sheet="main-page.xsl">

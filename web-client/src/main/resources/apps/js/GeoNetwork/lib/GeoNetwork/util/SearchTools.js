@@ -213,6 +213,7 @@ GeoNetwork.util.SearchTools = {
                             cur.setValue(value, true);
                         }
                     } else if (cur.isXType('gn_categorytree')) {}
+                      else if (cur.isXType('checkboxgroup')) {}
                     else {
                         // Hack to set sort order which is based on 
                         // 2 inputs and one combo
@@ -330,7 +331,9 @@ GeoNetwork.util.SearchTools = {
             if (value) {
                 filters.push(name + "=" + 'on');
             }
-        } else {
+        } else if(type === 'cat') {
+        }
+      else {
             alert("Cannot parse " + type);
         }
     },

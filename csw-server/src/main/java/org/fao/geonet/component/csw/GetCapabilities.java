@@ -376,6 +376,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 		String port = sm.getValue(Geonet.Settings.SERVER_PORT);
 		vars.put("$PORT", "80".equals(port) ? "" : ":" + port);
         vars.put("$END-POINT", context.getService());
+        vars.put("$NODE_ID", context.getNodeId());
 
         String providerName = sm.getValue("system/site/organization");
         vars.put("$PROVIDER_NAME", StringUtils.isNotEmpty(providerName)?providerName:"GeoNetwork opensource");

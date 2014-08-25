@@ -171,7 +171,17 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
         GeoNetwork.editor.SubTemplateSelectionPanel.superclass.initComponent.call(this);
     },
     
-    getSearchField: function(){
+    getSearchField: function() {
+        var groupFilterCfg = {},
+            groupFilter = GeoNetwork.AnnuaireGroupMapping[this.metadataSchema];
+        if (groupFilter) {
+          groupFilterCfg = {
+            xtype: 'textfield',
+            hidden: true,
+            name: 'E__groupPublished',
+            value : groupFilter
+          }
+        }
         this.subTplTypeField = new Ext.form.TextField({
                 name: 'E__root',
                 hidden: true,
@@ -193,7 +203,7 @@ GeoNetwork.editor.SubTemplateSelectionPanel = Ext.extend(Ext.FormPanel, {
             fieldLabel: OpenLayers.i18n('maxResults'),
             value: 50,
             width: 40
-        }, this.subTplTypeField
+        }, groupFilterCfg, this.subTplTypeField
             , {
                 xtype: 'textfield',
                 name: 'E__isTemplate',

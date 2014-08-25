@@ -28,6 +28,7 @@
     <for name="gmd:specificUsage" use="textarea"/>
     <for name="gmd:userNote" use="textarea"/>
     <for name="gmd:useLimitation" use="textarea"/>
+    <for name="gmd:environmentDescription" use="textarea"/>
 
 
     <for name="gco:Distance" use="number"/>
@@ -1364,6 +1365,373 @@
                  in="/gmd:MD_Metadata"/>
       </tab>
     </view>
+
+
+    <view name="medsea" upAndDownControlHidden="true">
+      <tab id="medsea-metadata" default="true" mode="flat">
+        <section>
+          <field xpath="/gmd:MD_Metadata/gmd:language" or="language" in="/gmd:MD_Metadata"/>
+          <!--<field xpath="/gmd:MD_Metadata/gmd:contact" or="contact" in="/gmd:MD_Metadata"/>-->
+
+          <field name="metadataPointOfContact"
+                 templateModeOnly="true"
+                 notDisplayedIfMissing="true"
+                 xpath="/gmd:MD_Metadata/gmd:contact"
+                 del=".">
+            <template>
+              <values readonlyIf="count(@xlink:href) > 0">
+                <key label="organisationName"
+                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                <key label="electronicMailAddress"
+                     xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
+                  gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
+                     use="email"/>
+                <key label="role"
+                     xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
+                  <codelist name="gmd:CI_RoleCode"/>
+                </key>
+              </values>
+              <snippet>
+                <gmd:contact>
+                  <gmd:CI_ResponsibleParty>
+                    <gn:copy select="gmd:individualName"/>
+                    <gmd:organisationName>
+                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gn:copy select="gmd:positionName"/>
+                    <gmd:contactInfo>
+                      <gmd:CI_Contact>
+                        <gn:copy select="gmd:phone"/>
+                        <gmd:address>
+                          <gmd:CI_Address>
+                            <gn:copy select="gmd:deliveryPoint"/>
+                            <gn:copy select="gmd:city"/>
+                            <gn:copy select="gmd:administrativeArea"/>
+                            <gn:copy select="gmd:postalCode"/>
+                            <gn:copy select="gmd:country"/>
+                            <gmd:electronicMailAddress>
+                              <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
+                            </gmd:electronicMailAddress>
+                          </gmd:CI_Address>
+                        </gmd:address>
+                        <gn:copy select="gmd:onlineResource"/>
+                        <gn:copy select="gmd:hoursOfService"/>
+                        <gn:copy select="gmd:contactInstructions"/>
+                      </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gmd:role>
+                      <gmd:CI_RoleCode
+                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                          codeListValue="{{role}}"/>
+                    </gmd:role>
+                  </gmd:CI_ResponsibleParty>
+                </gmd:contact>
+              </snippet>
+            </template>
+          </field>
+
+          <action type="add" name="metadataPointOfContact"
+                  addDirective="data-gn-directory-entry-selector" or="contact" in="/gmd:MD_Metadata"/>
+
+
+          <!-- MedSea challenges
+          TODO: Can't define to use Anchor mode by default
+          in keyword selector.
+          -->
+          <field
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:descriptiveKeywords
+                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
+                'MedSea challenges')]"/>
+
+          <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
+
+          <field name="lineage"
+                 xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
+                    gmd:lineage/gmd:LI_Lineage/gmd:statement"/>
+        </section>
+      </tab>
+      <tab id="characteristics" mode="flat">
+        <section>
+          <field
+              name="uniqueIdentifier"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code"/>
+
+          <!-- MedSea env matrix
+                  TODO: Can't define to use Anchor mode by default
+                  in keyword selector.
+                  -->
+          <field
+              name="environmental-matrix"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:descriptiveKeywords
+                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
+                'MedSea environmental matrix')]"/>
+
+          <!-- P03 thesaurus is missing TODO -->
+          <text ref="p03-field-missing"/>
+
+          <!-- A title in the thesaurus could be better -->
+          <field
+              name="sdn-parameter-discovery"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:descriptiveKeywords
+                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
+                'parameter.seadatanet-ocean-discovery-parameter.rdf')]"/>
+
+          <!-- P01 thesaurus is missing TODO -->
+          <text ref="p01-field-missing"/>
+
+          <field
+              name="inspireTheme"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:descriptiveKeywords
+                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
+                'INSPIRE themes')]"/>
+
+
+          <field
+              name="level-of-characteristics"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:descriptiveKeywords
+                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
+                'MedSea processing level of characteristics')]"/>
+
+          <text ref="production-mode-field-missing"/>
+
+          <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevel"/>
+        </section>
+      </tab>
+      <tab id="datasources">
+        <section>
+
+          <field
+              name="programName"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:aggregationInfo/gmd:MD_AggregateInformation[
+                gmd:initiativeType/gmd:DS_InitiativeTypeCode/@codeListValue = 'program']/
+                gmd:aggregateDataSetName/gmd:CI_Citation/gmd:title"/>
+
+
+          <field
+              name="edmerpName"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:aggregationInfo/gmd:MD_AggregateInformation[
+                gmd:initiativeType/gmd:DS_InitiativeTypeCode/@codeListValue = 'project']/
+                gmd:aggregateDataSetName/gmd:CI_Citation/gmd:title"/>
+
+          <text ref="sdn-edmerp"/>
+
+          <field name="dataProvider" templateModeOnly="true"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact">
+            <template>
+              <values readonlyIf="count(@xlink:href) > 0">
+                <key label="organisationName"
+                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+              </values>
+              <snippet>
+                <gmd:pointOfContact>
+                  <gmd:CI_ResponsibleParty>
+                    <gn:copy select="gmd:individualName"/>
+                    <gmd:organisationName>
+                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gn:copy select="gmd:positionName"/>
+                    <gmd:contactInfo>
+                      <gmd:CI_Contact>
+                        <gn:copy select="gmd:phone"/>
+                        <gmd:address>
+                          <gmd:CI_Address>
+                            <gn:copy select="gmd:deliveryPoint"/>
+                            <gn:copy select="gmd:city"/>
+                            <gn:copy select="gmd:administrativeArea"/>
+                            <gn:copy select="gmd:postalCode"/>
+                            <gn:copy select="gmd:country"/>
+                            <gn:copy select="gmd:electronicMailAddress"/>
+                          </gmd:CI_Address>
+                        </gmd:address>
+                        <gn:copy select="gmd:onlineResource"/>
+                        <gn:copy select="gmd:hoursOfService"/>
+                        <gn:copy select="gmd:contactInstructions"/>
+                      </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gn:copy select="gmd:role"/>
+                  </gmd:CI_ResponsibleParty>
+                </gmd:pointOfContact>
+              </snippet>
+            </template>
+          </field>
+
+          <field
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title"/>
+
+        </section>
+      </tab>
+
+      <tab id="overview">
+        <section>
+          <field
+              name="providerSpecification"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                gmd:purpose"/>
+
+
+          <field
+              name="processStepReference"
+              xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
+                gmd:lineage/gmd:LI_Lineage/gmd:processStep/gmd:LI_ProcessStep/gmd:description"/>
+
+          <field
+              name="useOfTheCharacteristics"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:RS_Identifier/
+                gmd:authority//gmd:CI_Citation/gmd:title"/>
+
+          <field
+              name="intendedUse"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                  gmd:environmentDescription"/>
+        </section>
+      </tab>
+      <tab id="spatialCoverage" mode="flat">
+        <section>
+          <field
+              name="geographicalAreaCode"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+              gmd:extent/gmd:EX_Extent/gmd:description"/>
+          <field
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+              gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox"/>
+
+
+        </section>
+        <section name="horizontalAndVerticalInfo">
+
+          <field
+              name="horResolution"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                gmd:spatialResolution/gmd:MD_Resolution/gmd:distance"/>
+
+          <field
+              name="minDepth"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                gmd:extent/gmd:EX_Extent/
+                gmd:verticalElement/gmd:EX_VerticalExtent/gmd:minimumValue"/>
+
+          <field
+              name="maxDepth"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                gmd:extent/gmd:EX_Extent/
+                gmd:verticalElement/gmd:EX_VerticalExtent/gmd:maximumValue"/>
+
+          <field
+              name="verticalResolution"
+              xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/
+                gmd:MD_Georectified/gmd:numberOfDimensions"/>
+        </section>
+      </tab>
+      <tab id="timeCoverage">
+        <section>
+
+
+          <field name="temporalRangeSection" templateModeOnly="true"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement"
+                 if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+            <template>
+              <values>
+                <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
+                <key label="beginPosition"
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
+                     use="gn-date-picker"
+                     tooltip="gmd:extent|gmd:EX_TemporalExtent">
+                  <directiveAttributes data-tag-name="gml:beginPosition"/>
+                </key>
+                <key label="endPosition"
+                     xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
+                     use="gn-date-picker"
+                     tooltip="gmd:extent|gmd:EX_TemporalExtent"
+                    >
+                  <directiveAttributes
+                      data-tag-name="gml:endPosition"
+                      data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/>
+                </key>
+              </values>
+              <snippet>
+                <gmd:temporalElement>
+                  <gmd:EX_TemporalExtent>
+                    <gmd:extent>
+                      <gml:TimePeriod gml:id="">
+                        {{beginPosition}}
+                        {{endPosition}}
+                      </gml:TimePeriod>
+                    </gmd:extent>
+                  </gmd:EX_TemporalExtent>
+                </gmd:temporalElement>
+              </snippet>
+            </template>
+          </field>
+
+
+          <field
+              name="timeResolution"
+              xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo/gmd:MD_Georectified/
+                gmd:axisDimensionProperties/gmd:MD_Dimension/gmd:resolution"/>
+
+        </section>
+      </tab>
+      <tab id="accessibility">
+        <section>
+
+
+
+          <field
+              name="dataPolicy"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints"/>
+
+
+          <field
+              name="costBasis"
+              xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                gmd:resourceConstraints/gmd:MD_Constraints/gmd:useLimitation"/>
+
+
+
+          <field name="dataFormats" templateModeOnly="true" notDisplayedIfMissing="true"
+                 xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"
+                 del=".">
+            <template>
+              <values>
+                <key label="format"
+                     xpath="gmd:MD_Format/gmd:name/gco:CharacterString"
+                     tooltip="gmd:name|gmd:MD_Format">
+                  <helper name="gmd:name" context="gmd:MD_Format"/>
+                </key>
+                <key label="format_version" xpath="gmd:MD_Format/gmd:version/gco:CharacterString"/>
+              </values>
+              <snippet>
+                <gmd:distributionFormat>
+                  <gmd:MD_Format>
+                    <gmd:name>
+                      <gco:CharacterString>{{format}}</gco:CharacterString>
+                    </gmd:name>
+                    <gmd:version>
+                      <gco:CharacterString>{{format_version}}</gco:CharacterString>
+                    </gmd:version>
+                    <gn:copy select="gmd:amendmentNumber"/>
+                    <gn:copy select="gmd:specification"/>
+                    <gn:copy select="gmd:fileDecompressionTechnique"/>
+                    <gn:copy select="gmd:formatDistributor"/>
+                  </gmd:MD_Format>
+                </gmd:distributionFormat>
+              </snippet>
+            </template>
+          </field>
+        </section>
+      </tab>
+    </view>
+
     <view name="xml">
       <tab id="xml" default="true"/>
     </view>

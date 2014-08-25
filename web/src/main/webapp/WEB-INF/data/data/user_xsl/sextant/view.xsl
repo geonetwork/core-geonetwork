@@ -208,9 +208,12 @@
 		
 		<p><b><xsl:value-of select="$title" /></b></p>
 		<ul><xsl:apply-templates mode="iso19139" /></ul>
-		
+    <xsl:for-each select="*[@codeListValue = 'otherRestrictions']">
+      <xsl:variable name="value" select="./@codeListValue" />
+    </xsl:for-each>
+
 	</xsl:template>
-	
+
 	<xsl:template mode="iso19139"
 		match="gmd:pointOfContact|gfc:producer" priority="3">
 		
@@ -264,8 +267,29 @@
 		<!-- Here you could display translation using PT_FreeText -->
 	</xsl:template>
 
+  <!-- Display CodeList -->
+  <xsl:template mode="iso19139"
+                match="gmd:*[gmd:MD_RestrictionCode[@codeListValue]]"
+                priority="2">
 
-	<!-- Get title from che profil if exist, if not default to iso. -->
+    <xsl:variable name="name" select="name(.)" />
+    <xsl:variable name="title">
+      <xsl:call-template name="getTitle">
+        <xsl:with-param name="name" select="$name" />
+      </xsl:call-template>
+    </xsl:variable>
+
+    <xsl:variable name="codelist" select="./gmd:MD_RestrictionCode/@codeListValue" />
+
+    <li>
+      <b><xsl:value-of select="$title" /> : </b>
+      <xsl:value-of select="string($labelIso/codelists/codelist[@name = 'gmd:MD_RestrictionCode']/entry[code = $codelist]/label)" />
+    </li>
+
+  </xsl:template>
+
+
+  <!-- Get title from che profil if exist, if not default to iso. -->
 	<xsl:template name="getTitle">
 		<xsl:param name="name" />
 		<xsl:variable name="title"

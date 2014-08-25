@@ -1,5 +1,5 @@
 var catalogue;
-
+var app ={};
 
 Ext.onReady(function() {
 	

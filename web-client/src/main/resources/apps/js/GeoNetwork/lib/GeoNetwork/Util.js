@@ -259,12 +259,18 @@ GeoNetwork.Util = {
      *   Return Ext.menu.Menu
      */
     buildPermalinkMenu: function (l, scope) {
-        var menu = new Ext.menu.Menu();
+        var menu = new Ext.menu.Menu({
+            cls: 'no-icon-menu permalink-menu',
+            floating: true,
+            showSeparator: false
+        });
+
         var permalinkMenu = new Ext.menu.TextItem({text: '<input/><br/><a>&nbsp;</a>'});
         menu.add(
-                '<b class="menu-title">' + OpenLayers.i18n('permalinkInfo') + '</b>',
-                permalinkMenu
-            );
+            OpenLayers.i18n('permalinkInfo'),
+            permalinkMenu
+        );
+
         // update link when item is displayed
         var updatePermalink = function() {
             var link = l;
@@ -274,8 +280,8 @@ GeoNetwork.Util = {
             var id = 'permalink-' + permalinkMenu.getId();
             permalinkMenu.update('<input id="' + id + '" value="' + link + '"/>'
                 + '</br>'
-                + '<a href="' + link + '">Link</a>', 
-                true, 
+                + '<a target="#" href="' + link + '">' + OpenLayers.i18n('link') + '</a>',
+                true,
                 // Select permalink input for user to easily copy/paste link
                 function() {
                     // On IE8, select() on an element scroll to top of page, why ?
@@ -289,15 +295,27 @@ GeoNetwork.Util = {
                             }
                         }, 100);
                     }
-            });
-            
+                });
+
         };
         // onstatechange does not work because the menu item may be not be rendered
         //this.permalinkProvider.on('statechange', onStatechange, this.permalinkMenu);
         menu.on('show', updatePermalink, scope);
-        return new Ext.Button({
-            iconCls: 'linkIcon',
-            menu: menu
+        return new Ext.BoxComponent({
+            autoEl: {
+                id: 'md-search-link-btn',
+                tag: 'div',
+                html: '&nbsp;',
+                cls: 'file-link',
+                'ext:qtip': OpenLayers.i18n('link')
+            },
+            listeners: {
+                afterrender: function(b) {
+                    b.el.on('click', function(btn) {
+                        menu.showAt([b.el.getX(), b.el.getY() + b.el.getHeight()]);
+                    }, this);
+                }
+            }
         });
     }
 };

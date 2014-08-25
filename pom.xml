@@ -580,6 +580,11 @@
         <artifactId>batik-ext</artifactId>
         <version>1.6</version>
       </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.5</version>
+        </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-log4j12</artifactId>
@@ -880,7 +885,7 @@
       </dependency>
       <dependency>
         <groupId>org.mockito</groupId>
-        <artifactId>mockito-core</artifactId>
+        <artifactId>mockito-all</artifactId>
         <version>1.9.5</version>
         <scope>test</scope>
       </dependency>
@@ -1034,8 +1039,13 @@
     <dependency>
 	  <groupId>org.hibernate</groupId>
 	  <artifactId>hibernate-entitymanager</artifactId>
-	  <version>4.3.0.Beta5</version>
+	  <version>4.3.6.Final</version>
     </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-ehcache</artifactId>
+            <version>4.3.6.Final</version>
+        </dependency>
     <dependency>
       <groupId>org.springframework.data</groupId>
       <artifactId>spring-data-jpa</artifactId>
@@ -1205,7 +1215,7 @@
   <properties>
     <jetty.version>8.1.9.v20130131</jetty.version>
     <geotools.version>8.6</geotools.version>
-    <lucene.version>4.1.0</lucene.version>
+    <lucene.version>4.9.0</lucene.version>
     <spring.version>3.2.5.RELEASE</spring.version>
     <spring.security.version>3.1.4.RELEASE</spring.security.version>
     <metrics.version>2.1.1</metrics.version>

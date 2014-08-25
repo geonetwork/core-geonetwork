@@ -63,6 +63,8 @@ public class SelectionManager {
 	 * <li>set selected false if result element not in session</li>
 	 * </ul>
 	 * </p>
+     *
+     * Parse abstract wiki markup if enabled.
 	 * 
 	 * @param result
 	 *            the result modified<br/>

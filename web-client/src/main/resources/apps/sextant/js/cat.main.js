@@ -355,7 +355,6 @@ cat.app = function() {
             searchFormCmp : Ext.getCmp('searchForm'),
             sortByCmp : Ext.getCmp('E_sortBy'),
             metadataResultsView : metadataResultsView,
-            permalinkProvider: permalinkProvider,
             config : {
                 selectAction : false,
                 sortByAction : true,
@@ -375,7 +374,7 @@ cat.app = function() {
                     text : '',
                     id : 'info'
                 }, ' ',' ', ' ', ' ', ' ', 
-                pdfAction, 
+                pdfAction,  GeoNetwork.Util.buildPermalinkMenu(permalinkProvider.getLink, permalinkProvider),
                 new Ext.Toolbar.TextItem({
                     id: 'gn-sxt-restb-admin-btn',
                     cls: 'admin-btn-tbar',
@@ -619,7 +618,8 @@ cat.app = function() {
                         whatForm.body && whatForm.body.removeClass('hidden');
 
 
-                    Ext.getCmp('radiogroup').doLayout()
+                  Ext.getCmp('radiogroup').doLayout();
+                  Ext.getCmp('downloadOrViewGroup').doLayout();
                 });
                 cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced') && cpt.ownerCt.header.child('#searchFormHeaderLinkadvanced').hide();
                 cpt.ownerCt.header.child('#searchFormHeaderLinksimple') && cpt.ownerCt.header.child('#searchFormHeaderLinksimple').show();
@@ -807,6 +807,42 @@ cat.app = function() {
                     if(cookie.state.s.timeType) delete cookie.state.s.timeType;
                 }
             }
+            cookie.getLink = function(base) {
+              base = base || document.location.href;
+
+              if(base.charAt(base.length -1) === '#') {
+                base = base.substring(0,base.length-1);
+              }
+              var params = {};
+
+              var id, k, state = this.state;
+              for(id in state) {
+                if(id.indexOf('cat.') != 0 && state.hasOwnProperty(id)) {
+                  for(k in state[id]) {
+                    params[id + "_" + k] = this.encodeType ?
+                        unescape(this.encodeValue(state[id][k])) : state[id][k];
+                  }
+                }
+                else if(id == 'cat.searchform.download' || id == 'cat.searchform.dynamic') {
+                  params['s_'+id.replace(/\./g,'_')] = this.encodeType ?
+                      unescape(this.encodeValue(state[id])) : state[id];
+                }
+              }
+
+              // merge params in the URL into the state params
+              OpenLayers.Util.applyDefaults(
+                  params, OpenLayers.Util.getParameters(base));
+
+              var paramsStr = OpenLayers.Util.getParameterString(params);
+
+              var qMark = base.indexOf("?");
+              if(qMark > 0) {
+                base = base.substring(0, qMark);
+              }
+
+              return Ext.urlAppend(base, paramsStr);
+            };
+
             Ext.state.Manager.setProvider(cookie);
             
             // Create connexion to the catalogue
@@ -832,7 +868,7 @@ cat.app = function() {
             //createLanguageSwitcher(cat.language);
 
             edit();
-            resultsPanel = createResultsPanel();
+            resultsPanel = createResultsPanel(cookie);
             
             createLoginForm();
             

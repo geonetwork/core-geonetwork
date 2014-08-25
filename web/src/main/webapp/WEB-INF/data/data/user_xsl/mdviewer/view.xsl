@@ -23,7 +23,6 @@
 				<link rel="stylesheet" type="text/css" href="{root/url}/apps/sextant/css/gnmetadatadefault.css"/>
 				<link rel="stylesheet" type="text/css" href="{root/url}/apps/sextant/css/main.css"/>
 				<link rel="stylesheet" type="text/css" href="{root/url}/apps/sextant/css/schema/main.css"/>
-				<!-- <link rel="stylesheet" type="text/css" href="{root/url}/apps/sextant/css/schema/reset.css"/> -->
 			</head>
 			<body class="view-win">
 			
@@ -34,11 +33,8 @@
 			
 			<script type="text/javascript" src="{root/url}/apps/js/ext/adapter/ext/ext-base.js"></script>
 			<script type="text/javascript" src="{root/url}/apps/js/ext/ext-all.js"></script>
-			<script type="text/javascript" src="{root/url}/apps/js/proj4js-compressed.js"></script>
-			<script type="text/javascript" src="{root/url}/apps/js/OpenLayers/lib/OpenLayers.js"></script>
-			<script type="text/javascript" src="{root/url}/apps/js/GeoExt/lib/GeoExt.js"></script>
-			<script type="text/javascript" src="{root/url}/apps/js/GeoNetwork/lib/GeoNetwork.js"></script>
-			
+      <script type="text/javascript" src="{root/url}/static/geonetwork-client-mini-nomap.js"></script>
+
 			<script type="text/javascript" src="{root/url}/apps/sextant/js/cat.lang/fr.js"></script>
 			<script type="text/javascript" src="{root/url}/apps/sextant/js/cat.lang/en.js"></script>
 			
@@ -46,7 +42,7 @@
 			<script type="text/javascript" src="{root/url}/apps/sextant/js/cat.map/Settings.js"></script>
 			<script type="text/javascript" src="{root/url}/apps/sextant/js/cat.ViewWindow.js"></script>
 			<script type="text/javascript" src="{root/url}/apps/sextant/js/cat.ViewPanel.js"></script>
-			
+
 			<script type="text/javascript" src="{root/resourceUrl}/js/main.js"/>
 			
 			</body>

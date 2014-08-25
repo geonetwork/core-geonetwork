@@ -24,11 +24,6 @@
     -->
     <import resource="config-versioning.xml"/>
 
-
-    <bean id="scheduler"
-          class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-        <property name="applicationContextSchedulerContextKey" value="applicationContext"/>
-    </bean>
     <bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory" lazy-init="true"/>
     <bean id="httpRequestFactor" class="org.fao.geonet.utils.GeonetHttpRequestFactory">
         <property name="numberOfConcurrentRequests" value="30" />
@@ -57,4 +52,20 @@
         <value>spa</value>
         <value>tur</value>
     </util:set>
+
+
+    <util:map id="jpaPropertyMap">
+        <entry key="shared-cache-mode" value="ENABLE_SELECTIVE"/>
+        <entry key="javax.persistence.lock.timeout" value="30000"/>
+        <entry key="org.hibernate.flushMode" value="AUTO"/>
+        <entry key="access" value="PROPERTY"/>
+        <entry key="hibernate.id.new_generator_mappings" value="true"/>
+        <entry key="hibernate.cache.use_second_level_cache" value="true"/>
+        <!--<entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.internal.NoCachingRegionFactory"/>-->
+        <entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.EhCacheRegionFactory"/>
+        <entry key="hibernate.jdbc.batch_size" value="3"/>
+        <entry key="hibernate.jdbc.batch_versioned_data" value="true"/>
+        <entry key="hibernate.enable_lazy_load_no_trans" value="true"/>
+    </util:map>
+
 </beans>

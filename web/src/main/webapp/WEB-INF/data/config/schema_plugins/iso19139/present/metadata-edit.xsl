@@ -1378,7 +1378,7 @@
     <xsl:param name="listOfKeywords"/>
     <xsl:param name="listOfTransformations"/>
     <xsl:param name="transformation"/>
-    <xsl:param name="maxKeywords" select="'100'"/>
+    <xsl:param name="maxKeywords" select="'200'"/>
     <xsl:param name="searchOnLoad" select="'true'"/>
     <xsl:param name="itemSelectorHeight" select="'undefined'" required="no"/>
     <xsl:param name="itemSelectorWidth" select="'undefined'" required="no"/>
