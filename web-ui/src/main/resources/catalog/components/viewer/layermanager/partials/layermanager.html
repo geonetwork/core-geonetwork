@@ -1,27 +1,5 @@
 <ul class="list-group">
-  <li ng-repeat="layer in (layers | gnReverse | filter:layerFilterFn)" class="list-group-item" data-ng-class="{'active': layer.showInfo}">
-    <button class="btn btn-cog" data-ng-click="gnLayermanagerCtrl.showInfo(layer)">
-      <span class="fa fa-cog"></span>
-    </button>
-    <label><input type="checkbox" ng-model="layer.visible" />
-      <i class="fa fa-globe" data-ng-class="{disabled : !layer.getExtent()}" data-ng-click="gnLayermanagerCtrl.zoomToExtent(layer, map)"></i>
-      <span data-ng-click="gnLayermanagerCtrl.showMetadata(layer.get('metadata'), layer.get('label'))">
-        {{layer.get('label')}}
-      </span>
-    </label>
-    <div class="details">
-      <button class="btn btn-default delete" ng-click="map.removeLayer(layer)">
-        <span class="fa fa-trash-o"></span>
-        Supprimer
-      </button>
-      <label>Transparence <input type="range" min="0" max="1" step="0.05" ng-model="layer.opacity" /></label>
-      <h6 ng-if="layer.get('legend')">Légende</h6>
-      <p ng-if="layer.get('legend')">
-        <img src="{{layer.get('legend')}}"/>
-      </p>
-      <h6 ng-if="layer.get('attribution')">Source</h6>
-      <p ng-if="layer.get('attribution')"><em>{{layer.get('attribution')}}</em></p>
-      <div gn-ncwms-transect="" map="map" layer="layer" data-ng-if="layer.ncInfo"/>
-    </div>
+  <li gn-layermanager-item="layer" map="map" ng-repeat="layer in (layers | gnReverse | filter:layerFilterFn)"
+      class="list-group-item" data-ng-class="{'active': layer.showInfo}">
   </li>
 </ul>
