@@ -244,7 +244,7 @@ public class Update extends NotInReadOnlyModeService {
     private void setUserGroups(final User user, final Element params, final ServiceContext context) throws Exception {
 		String[] profiles = {Profile.UserAdmin.name(), Profile.Reviewer.name(), Profile.Editor.name(), Profile.RegisteredUser.name()};
         Collection<UserGroup> toAdd = new ArrayList<UserGroup>();
-
+        Set<String> listOfAddedProfiles = new HashSet<String>();
         final GroupRepository groupRepository = context.getBean(GroupRepository.class);
         final UserGroupRepository userGroupRepository = context.getBean(UserGroupRepository.class);
 
@@ -264,14 +264,22 @@ public class Update extends NotInReadOnlyModeService {
                                 .setGroup(group)
                                 .setProfile(Profile.Editor)
                                 .setUser(user);
-                        toAdd.add(userGroup);
+                        String key = Profile.Editor.toString() + group.getId();
+                        if (!listOfAddedProfiles.contains(key)) {
+                            toAdd.add(userGroup);
+                            listOfAddedProfiles.add(key);
+                        }
 					}
 
                     final UserGroup userGroup = new UserGroup()
                             .setGroup(group)
                             .setProfile(Profile.findProfileIgnoreCase(profile))
                             .setUser(user);
-                    toAdd.add(userGroup);
+                    String key = profile + group.getId();
+                    if (!listOfAddedProfiles.contains(key)) {
+                        toAdd.add(userGroup);
+                        listOfAddedProfiles.add(key);
+                    }
 				}
 			}
 		}
