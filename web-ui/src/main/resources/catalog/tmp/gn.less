@@ -115,12 +115,21 @@ html, body {
       margin-top: -.5em;
       background: inherit;
     }
+    .fa-arrows-alt {
+      opacity: 0;
+      transition: opacity @transition-params;
+    }
+    &:hover {
+      .fa-arrows-alt {
+        opacity: 1
+      }
+    }
     label {
       font-weight: normal;
     }
     & > label {
       font-size: 90%;
-      max-width: 90%;
+      max-width: 82%;
     }
     &.active {
       background: rgba(255,255,255,.6);
@@ -183,6 +192,13 @@ html, body {
   [gn-layermanager] {
     max-height: 44em;
     overflow-y: auto;
+  }
+  .metadata {
+    .btn;
+    .btn-link;
+    width: 100%;
+    font-style: italic;
+    font-size: 13px;
   }
 }
 

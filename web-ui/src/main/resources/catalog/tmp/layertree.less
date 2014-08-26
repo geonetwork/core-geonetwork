@@ -12,17 +12,32 @@
     display: none;
   }
   label {
+    color: #444;
     font-weight: normal;
     display: block;
     padding: 10px 0 10px 15px;
     margin-bottom: 0;
     &:hover {
-      background: #fff;
+      color: #000;
+      text-shadow: 0 0 2px #FFF;
     }
     .fa {
       margin-right: .1em;
       font-size: 1.15em;
       vertical-align: middle;
+    }
+  }
+  .leaf label {
+    .fa {
+      opacity: 0;
+      transition: opacity @transition-params;
+    }
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+      .fa {
+        opacity: 1;
+      }
     }
   }
   .list-group-item {
