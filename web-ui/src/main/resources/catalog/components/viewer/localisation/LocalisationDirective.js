@@ -121,6 +121,20 @@
           });
         });
 
+        element.on('keydown', 'input', function(e) {
+          if (e.keyCode === 40) {
+            $(this).parents('.search-container')
+                .find('.dropdown-menu a').first().focus();
+          }
+        });
+
+        element.on('keydown', 'a', function(e) {
+          if (e.keyCode === 40) {
+            var links = $(this).parents('.search-container').find('.dropdown-menu a');
+            $(links[links.index(this)]).focus();
+          }
+        });
+
         scope.map.on('click', function() {
           scope.$apply(function() {
             $(':focus').blur();
