@@ -170,8 +170,8 @@ cat.app = function() {
         win.show();
     }
     
-    function edit(metadataId, create, group, child, isTemplate, schema) {
-        var record = catalogue.metadataStore.getAt(catalogue.metadataStore.find('id', metadataId));
+    function edit(metadataId, create, group, child, isTemplate, schema, record) {
+        var record = record || catalogue.metadataStore.getAt(catalogue.metadataStore.find('id', metadataId));
 
         if (!this.editorWindow) {
             this.editorPanel = new GeoNetwork.editor.EditorPanel({
@@ -227,7 +227,7 @@ cat.app = function() {
           var recordStandard = record && record.get('standardName');
 
           // Open Angular metadata editor for MedSea records.
-          if (recordStandard.indexOf('MedSea') !== -1) {
+          if (recordStandard && recordStandard.indexOf('MedSea') !== -1) {
             window.open(
               catalogue.services.rootUrl +
                 'catalog.edit#/metadata/' + metadataId + '/tab/medsea-metadata')
