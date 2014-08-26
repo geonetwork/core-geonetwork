@@ -25,6 +25,7 @@
     <bean id="SettingManager" class="org.fao.geonet.kernel.setting.SettingManager" lazy-init="true"/>
     <bean id="MetadataNotifierManager" class="org.fao.geonet.notifier.MetadataNotifierManager" lazy-init="true"/>
     <bean id="IsoLanguagesMapper" class="org.fao.geonet.languages.IsoLanguagesMapper" lazy-init="true"/>
+    <bean id="selectionManager" class="org.fao.geonet.kernel.SelectionManager" lazy-init="true"/>
 
 
     <bean id="indexingList" class="org.fao.geonet.kernel.search.index.IndexingList"/>

@@ -23,25 +23,29 @@
 
 package org.fao.geonet.services.resources;
 
-import java.io.File;
+import javax.servlet.http.HttpServletRequest;
 
-import jeeves.constants.Jeeves;
-import org.fao.geonet.exceptions.BadParameterEx;
-import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
 
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.responses.IdResponse;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.metadata.XslProcessing;
 import org.fao.geonet.services.metadata.XslProcessingReport;
 import org.fao.geonet.services.resources.handlers.IResourceUploadHandler;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Handles the file upload and attach the uploaded service to the metadata record
@@ -49,16 +53,29 @@ import org.jdom.Element;
  * 
  * Return a simple JSON response in case of success.
  */
-public class UploadAndProcess implements Service {
+@Controller("resource.upload.and.link")
+public class UploadAndProcess {
     public void init(String appPath, ServiceConfig params) throws Exception {
     }
+    
+    @Autowired
+    private ServiceContext context;
+    @Autowired
+    private DataManager dm;
 
-    public Element exec(Element params, ServiceContext context)
+	@RequestMapping(value = {"/{lang}/resource.upload.and.link", "/{lang}/resource-onlinesrc-upload"}, produces = {
+			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody IdResponse exec(HttpServletRequest request, 
+    		@RequestParam("file") MultipartFile file,
+    		@RequestParam(value=Params.TITLE,defaultValue="") String description,
+    		@RequestParam(defaultValue="") String id, @RequestParam(defaultValue="") String uuid,
+    		@RequestParam(defaultValue="private", value=Params.ACCESS) String access, 
+    		@RequestParam(value=Params.OVERWRITE, defaultValue="no") String overwrite)
             throws Exception {
-
-        String id = Utils.getIdentifierFromParameters(params, context);
-        String filename = Util.getParam(params, Params.FILENAME);
-        String description = Util.getParam(params, Params.TITLE, "");
+		
+		  if(id.trim().isEmpty()){
+				id = dm.getMetadataId(uuid);
+	        }
 
         Lib.resource.checkEditPrivilege(context, id);
 
@@ -69,25 +86,20 @@ public class UploadAndProcess implements Service {
         if (username == null)
             username = "unknown (this shouldn't happen?)";
 
-        Element fnameElem = params.getChild("filename");
-        String fname = fnameElem.getText();
-        String fsize = fnameElem.getAttributeValue("size");
-        if (fsize == null)
-            fsize = "0";
-
+        String fname = file.getName();
+        String fsize = Long.toString(file.getSize());
         IResourceUploadHandler uploadHook = (IResourceUploadHandler) context.getApplicationContext().getBean("resourceUploadHandler");
-        uploadHook.onUpload(context, params, Integer.parseInt(id), fname, new Double(fsize).doubleValue());
-        
+        uploadHook.onUpload(context, access, overwrite, Integer.parseInt(id), fname, new Double(fsize).doubleValue());
+
 
         context.info("UPLOADED:" + fname + "," + id + ","
                 + context.getIpAddress() + "," + username);
 
         // Set parameter and process metadata to reference the uploaded file
-        params.addContent(new Element("url").setText(filename));
-        params.addContent(new Element("name").setText(filename));
-        params.addContent(new Element("desc").setText(description));
-        params.addContent(new Element("protocol")
-                .setText("WWW:DOWNLOAD-1.0-http--download"));
+        request.getParameterMap().put("url", new String[]{file.getName()});
+        request.getParameterMap().put("name", new String[]{file.getName()});
+        request.getParameterMap().put("desc", new String[]{description});
+        request.getParameterMap().put("protocol", new String[]{"WWW:DOWNLOAD-1.0-http--download"});
 
         String process = "onlinesrc-add";
         XslProcessingReport report = new XslProcessingReport(process);
@@ -95,8 +107,8 @@ public class UploadAndProcess implements Service {
         Element processedMetadata;
         try {
             final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
-            processedMetadata = XslProcessing.process(id, process,
-                    true, context.getAppPath(), params, context, report, true, siteURL);
+            processedMetadata = XslProcessing.get().process(id, process,
+                    true, context.getAppPath(), report, true, siteURL, request);
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed", "Not found:"
                         + report.getNotFoundMetadataCount() + ", Not owner:" + report.getNotEditableMetadataCount()
@@ -106,9 +118,7 @@ public class UploadAndProcess implements Service {
             throw e;
         }
         // -- return the processed metadata id
-        Element response = new Element(Jeeves.Elem.RESPONSE)
-                .addContent(new Element(Geonet.Elem.ID).setText(id));
 
-        return response;
+        return new IdResponse(id);
     }
 }
