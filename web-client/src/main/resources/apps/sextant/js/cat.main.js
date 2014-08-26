@@ -228,9 +228,15 @@ cat.app = function() {
 
           // Open Angular metadata editor for MedSea records.
           if (recordStandard && recordStandard.indexOf('MedSea') !== -1) {
+            var url = 'catalog.edit#/';
+            if (create) {
+              url += 'create/from/' + metadataId +
+                '/in/' + group;
+            } else {
+              url += 'metadata/' + metadataId + '/tab/medsea-metadata';
+            }
             window.open(
-              catalogue.services.rootUrl +
-                'catalog.edit#/metadata/' + metadataId + '/tab/medsea-metadata')
+              catalogue.services.rootUrl + url)
           } else {
             this.editorWindow.show();
             var recordSchema = record && record.get('schema');
