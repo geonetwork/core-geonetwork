@@ -125,6 +125,8 @@
                    '@name' : 'view'
                  }, {
                    '@name' : 'dynamic'
+                 }, {
+                   '@name' : 'download'
                  }]};
              };
              var defaultPrivileges = [getPrivilege(1)];
