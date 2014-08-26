@@ -181,15 +181,310 @@
 
 	<!-- ==================================================================== -->
 
-	<!--
-		OperatesOn element display or edit attribute uuidref. In edit mode
-		the metadata selection panel is provided to set the uuid.
-		In view mode, the title of the metadata is displayed.
+    <!-- Adds the possibility to add and change uom attribute for gmd:resolution/gco:Distance
+    -->
 
-		Note: it could happen that linked metadata record is not accessible
-		to current user. In such a situation, clicking the link will return
-		a privileges exception.
-		-->
+    <xsl:template mode="iso19139" match="gmd:resolution[gco:Distance]" priority="2">
+        <xsl:param name="schema"/>
+        <xsl:param name="edit"/>
+
+        <xsl:choose>
+            <xsl:when test="$edit=true()">
+                <xsl:variable name="text">
+                    <xsl:variable name="ref" select="gco:Distance/geonet:element/@ref"/>
+
+                    <input type="text" class="md" name="_{$ref}" id="_{$ref}"
+                           onkeyup="validateNumber(this,true,true);"
+                           onchange="validateNumber(this,true,true);"
+                           value="{gco:Distance}" size="30"/>
+
+                    &#160;
+                    <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name = 'uom']/label"/>
+                    &#160;
+                    <input type="text" class="md" name="_{$ref}_uom" id="_{$ref}_uom"
+                           value="{gco:Distance/@uom}" size="10"/>
+
+                    <xsl:for-each select="gco:Distance">
+                        <xsl:call-template name="helper">
+                            <xsl:with-param name="schema" select="$schema"/>
+                            <xsl:with-param name="attribute" select="false()"/>
+                        </xsl:call-template>
+                    </xsl:for-each>
+
+                </xsl:variable>
+
+                <xsl:apply-templates mode="simpleElement" select=".">
+                    <xsl:with-param name="schema" select="$schema"/>
+                    <xsl:with-param name="edit"   select="true()"/>
+                    <xsl:with-param name="text"   select="$text"/>
+                </xsl:apply-templates>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates mode="simpleElement" select=".">
+                    <xsl:with-param name="schema"  select="$schema"/>
+                    <xsl:with-param name="text">
+                        <xsl:value-of select="gco:Distance"/>
+                        <xsl:if test="gco:Distance/@uom"><xsl:text>&#160;</xsl:text>
+                            <xsl:choose>
+                                <xsl:when test="contains(gco:Distance/@uom, '#')">
+                                    <a href="{gco:Distance/@uom}"><xsl:value-of select="substring-after(gco:Distance/@uom, '#')"/></a>
+                                </xsl:when>
+                                <xsl:otherwise><xsl:value-of select="gco:Distance/@uom"/></xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:if>
+                    </xsl:with-param>
+                </xsl:apply-templates>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <!-- ==================================================================== -->
+
+    <!-- Adds the possibility to add and change uom attribute for gmd:resolution/gco:Angle
+    -->
+
+    <xsl:template mode="iso19139" match="gmd:resolution[gco:Angle]" priority="2">
+        <xsl:param name="schema"/>
+        <xsl:param name="edit"/>
+
+        <xsl:choose>
+            <xsl:when test="$edit=true()">
+                <xsl:variable name="text">
+                    <xsl:variable name="ref" select="gco:Angle/geonet:element/@ref"/>
+
+                    <input type="text" class="md" name="_{$ref}" id="_{$ref}"
+                           onkeyup="validateNumber(this,true,true);"
+                           onchange="validateNumber(this,true,true);"
+                           value="{gco:Angle}" size="30"/>
+
+                    &#160;
+                    <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name = 'uom']/label"/>
+                    &#160;
+                    <input type="text" class="md" name="_{$ref}_uom" id="_{$ref}_uom"
+                           value="{gco:Angle/@uom}" size="10"/>
+
+                    <xsl:for-each select="gco:Angle">
+                        <xsl:call-template name="helper">
+                            <xsl:with-param name="schema" select="$schema"/>
+                            <xsl:with-param name="attribute" select="false()"/>
+                        </xsl:call-template>
+                    </xsl:for-each>
+
+                </xsl:variable>
+
+                <xsl:apply-templates mode="simpleElement" select=".">
+                    <xsl:with-param name="schema" select="$schema"/>
+                    <xsl:with-param name="edit"   select="true()"/>
+                    <xsl:with-param name="text"   select="$text"/>
+                </xsl:apply-templates>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates mode="simpleElement" select=".">
+                    <xsl:with-param name="schema"  select="$schema"/>
+                    <xsl:with-param name="text">
+                        <xsl:value-of select="gco:Angle"/>
+                        <xsl:if test="gco:Angle/@uom"><xsl:text>&#160;</xsl:text>
+                            <xsl:choose>
+                                <xsl:when test="contains(gco:Angle/@uom, '#')">
+                                    <a href="{gco:Angle/@uom}"><xsl:value-of select="substring-after(gco:Angle/@uom, '#')"/></a>
+                                </xsl:when>
+                                <xsl:otherwise><xsl:value-of select="gco:Angle/@uom"/></xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:if>
+                    </xsl:with-param>
+                </xsl:apply-templates>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <!-- ==================================================================== -->
+
+    <!-- Adds the possibility to add and change uom attribute for gmd:resolution/gco:Length
+    -->
+
+    <xsl:template mode="iso19139" match="gmd:resolution[gco:Length]" priority="2">
+        <xsl:param name="schema"/>
+        <xsl:param name="edit"/>
+
+        <xsl:choose>
+            <xsl:when test="$edit=true()">
+                <xsl:variable name="text">
+                    <xsl:variable name="ref" select="gco:Length/geonet:element/@ref"/>
+
+                    <input type="text" class="md" name="_{$ref}" id="_{$ref}"
+                           onkeyup="validateNumber(this,true,true);"
+                           onchange="validateNumber(this,true,true);"
+                           value="{gco:Length}" size="30"/>
+
+                    &#160;
+                    <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name = 'uom']/label"/>
+                    &#160;
+                    <input type="text" class="md" name="_{$ref}_uom" id="_{$ref}_uom"
+                           value="{gco:Length/@uom}" size="10"/>
+
+                    <xsl:for-each select="gco:Length">
+                        <xsl:call-template name="helper">
+                            <xsl:with-param name="schema" select="$schema"/>
+                            <xsl:with-param name="attribute" select="false()"/>
+                        </xsl:call-template>
+                    </xsl:for-each>
+
+                </xsl:variable>
+
+                <xsl:apply-templates mode="simpleElement" select=".">
+                    <xsl:with-param name="schema" select="$schema"/>
+                    <xsl:with-param name="edit"   select="true()"/>
+                    <xsl:with-param name="text"   select="$text"/>
+                </xsl:apply-templates>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates mode="simpleElement" select=".">
+                    <xsl:with-param name="schema"  select="$schema"/>
+                    <xsl:with-param name="text">
+                        <xsl:value-of select="gco:Length"/>
+                        <xsl:if test="gco:Length/@uom"><xsl:text>&#160;</xsl:text>
+                            <xsl:choose>
+                                <xsl:when test="contains(gco:Length/@uom, '#')">
+                                    <a href="{gco:Length/@uom}"><xsl:value-of select="substring-after(gco:Length/@uom, '#')"/></a>
+                                </xsl:when>
+                                <xsl:otherwise><xsl:value-of select="gco:Length/@uom"/></xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:if>
+                    </xsl:with-param>
+                </xsl:apply-templates>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <!-- ==================================================================== -->
+
+    <!-- Adds the possibility to add and change uom attribute for gmd:resolution/gco:Measure
+    -->
+
+    <xsl:template mode="iso19139" match="gmd:resolution[gco:Measure]" priority="2">
+        <xsl:param name="schema"/>
+        <xsl:param name="edit"/>
+
+        <xsl:choose>
+            <xsl:when test="$edit=true()">
+                <xsl:variable name="text">
+                    <xsl:variable name="ref" select="gco:Measure/geonet:element/@ref"/>
+
+                    <input type="text" class="md" name="_{$ref}" id="_{$ref}"
+                           onkeyup="validateNumber(this,true,true);"
+                           onchange="validateNumber(this,true,true);"
+                           value="{gco:Measure}" size="30"/>
+
+                    &#160;
+                    <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name = 'uom']/label"/>
+                    &#160;
+                    <input type="text" class="md" name="_{$ref}_uom" id="_{$ref}_uom"
+                           value="{gco:Measure/@uom}" size="10"/>
+
+                    <xsl:for-each select="gco:Measure">
+                        <xsl:call-template name="helper">
+                            <xsl:with-param name="schema" select="$schema"/>
+                            <xsl:with-param name="attribute" select="false()"/>
+                        </xsl:call-template>
+                    </xsl:for-each>
+
+                </xsl:variable>
+
+                <xsl:apply-templates mode="simpleElement" select=".">
+                    <xsl:with-param name="schema" select="$schema"/>
+                    <xsl:with-param name="edit"   select="true()"/>
+                    <xsl:with-param name="text"   select="$text"/>
+                </xsl:apply-templates>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates mode="simpleElement" select=".">
+                    <xsl:with-param name="schema"  select="$schema"/>
+                    <xsl:with-param name="text">
+                        <xsl:value-of select="gco:Measure"/>
+                        <xsl:if test="gco:Measure/@uom"><xsl:text>&#160;</xsl:text>
+                            <xsl:choose>
+                                <xsl:when test="contains(gco:Measure/@uom, '#')">
+                                    <a href="{gco:Measure/@uom}"><xsl:value-of select="substring-after(gco:Measure/@uom, '#')"/></a>
+                                </xsl:when>
+                                <xsl:otherwise><xsl:value-of select="gco:Measure/@uom"/></xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:if>
+                    </xsl:with-param>
+                </xsl:apply-templates>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <!-- ==================================================================== -->
+
+    <!-- Adds the possibility to add and change uom attribute for gmd:resolution/gco:Scale
+    -->
+
+    <xsl:template mode="iso19139" match="gmd:resolution[gco:Scale]" priority="2">
+        <xsl:param name="schema"/>
+        <xsl:param name="edit"/>
+
+        <xsl:choose>
+            <xsl:when test="$edit=true()">
+                <xsl:variable name="text">
+                    <xsl:variable name="ref" select="gco:Scale/geonet:element/@ref"/>
+
+                    <input type="text" class="md" name="_{$ref}" id="_{$ref}"
+                           onkeyup="validateNumber(this,true,true);"
+                           onchange="validateNumber(this,true,true);"
+                           value="{gco:Scale}" size="30"/>
+
+                    &#160;
+                    <xsl:value-of select="/root/gui/schemas/iso19139/labels/element[@name = 'uom']/label"/>
+                    &#160;
+                    <input type="text" class="md" name="_{$ref}_uom" id="_{$ref}_uom"
+                           value="{gco:Scale/@uom}" size="10"/>
+
+                    <xsl:for-each select="gco:Scale">
+                        <xsl:call-template name="helper">
+                            <xsl:with-param name="schema" select="$schema"/>
+                            <xsl:with-param name="attribute" select="false()"/>
+                        </xsl:call-template>
+                    </xsl:for-each>
+
+                </xsl:variable>
+
+                <xsl:apply-templates mode="simpleElement" select=".">
+                    <xsl:with-param name="schema" select="$schema"/>
+                    <xsl:with-param name="edit"   select="true()"/>
+                    <xsl:with-param name="text"   select="$text"/>
+                </xsl:apply-templates>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:apply-templates mode="simpleElement" select=".">
+                    <xsl:with-param name="schema"  select="$schema"/>
+                    <xsl:with-param name="text">
+                        <xsl:value-of select="gco:Scale"/>
+                        <xsl:if test="gco:Scale/@uom"><xsl:text>&#160;</xsl:text>
+                            <xsl:choose>
+                                <xsl:when test="contains(gco:Scale/@uom, '#')">
+                                    <a href="{gco:Scale/@uom}"><xsl:value-of select="substring-after(gco:Scale/@uom, '#')"/></a>
+                                </xsl:when>
+                                <xsl:otherwise><xsl:value-of select="gco:Scale/@uom"/></xsl:otherwise>
+                            </xsl:choose>
+                        </xsl:if>
+                    </xsl:with-param>
+                </xsl:apply-templates>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <!-- ==================================================================== -->
+
+    <!--
+        OperatesOn element display or edit attribute uuidref. In edit mode
+        the metadata selection panel is provided to set the uuid.
+        In view mode, the title of the metadata is displayed.
+
+        Note: it could happen that linked metadata record is not accessible
+        to current user. In such a situation, clicking the link will return
+        a privileges exception.
+        -->
 	<xsl:template mode="iso19139" match="srv:operatesOn">
 		<xsl:param name="schema"/>
 		<xsl:param name="edit"/>
