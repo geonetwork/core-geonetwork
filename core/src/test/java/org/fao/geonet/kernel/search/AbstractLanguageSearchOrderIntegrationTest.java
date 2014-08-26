@@ -148,8 +148,17 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
         importMetadata("" + System.currentTimeMillis());
         setSearchSettings(PREFER_LOCALE, false, false);
         String[] titles = doSearch("fre");
-        assertArrayEquals(new String[]{"A ENG EN and FR is FR", "A FRA EN and FR is FR", "E2 ENG EN and FR is FR",
-                "e eng en and fr is fr", "é fra is fr", "G eng is fr", "xx", "yy", "Z3 FRA EN and FR is FR", "zz"}, titles);
+        assertArrayEquals(new String[]{
+                "A ENG EN and FR is FR",
+                "A FRA EN and FR is FR",
+                "E2 ENG EN and FR is FR",
+                "e eng en and fr is fr",
+                "é fra is fr",
+                "G eng is fr",
+                "xx",
+                "yy",
+                "Z3 FRA EN and FR is FR",
+                "zz"}, titles);
     }
 
     @Test

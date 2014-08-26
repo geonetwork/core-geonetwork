@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.search;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.index.SpatialIndex;
+import org.apache.lucene.facet.FacetField;
 import org.apache.lucene.index.*;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -104,7 +105,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * Indexes metadata using Lucene.
  */
 public class SearchManager {
-	private static final String INDEXING_ERROR_MSG = "_indexingErrorMsg";
+    private static final String INDEXING_ERROR_MSG = "_indexingErrorMsg";
 	private static final String INDEXING_ERROR_FIELD = "_indexingError";
 	public static final int LUCENE = 1;
 	public static final int Z3950 = 2;
@@ -116,8 +117,9 @@ public class SearchManager {
 	private static final Configuration FILTER_1_0_0 = new org.geotools.filter.v1_0.OGCConfiguration();
     private static final Configuration FILTER_1_1_0 = new org.geotools.filter.v1_1.OGCConfiguration();
     private static final Configuration FILTER_2_0_0 = new org.geotools.filter.v2_0.FESConfiguration();
+    public static final String FACET_FIELD_SUFFIX = "_facet";
 
-	private File _stylesheetsDir;
+    private File _stylesheetsDir;
     private static File _stopwordsDir;
 	Map<String, FacetConfig> _summaryConfigValues = null;
 
@@ -985,7 +987,7 @@ public class SearchManager {
         IndexAndTaxonomy indexAndTaxonomy = getNewIndexReader(null);
         try {
             @SuppressWarnings("resource")
-            AtomicReader reader = new SlowCompositeReaderWrapper(indexAndTaxonomy.indexReader);
+            AtomicReader reader = SlowCompositeReaderWrapper.wrap(indexAndTaxonomy.indexReader);
             Terms terms = reader.terms(fld);
             if (terms != null) {
                 TermsEnum enu = terms.iterator(null);
@@ -1407,62 +1409,61 @@ public class SearchManager {
                 boolean bIndex = sIndex != null && sIndex.equals("true");
                 boolean token = _luceneConfig.isTokenizedField(name);
                 boolean isNumeric = _luceneConfig.isNumericField(name);
-                
+                boolean isFacetField = _luceneConfig.isFacetField(name);
+
                 FieldType fieldType = new FieldType();
                 fieldType.setStored(bStore);
                 fieldType.setIndexed(bIndex);
                 fieldType.setTokenized(token);
-                    Field f;
-                    if (isNumeric) {
-                        try {
-                            f = addNumericField(name, string, fieldType);
-                        } catch (Exception e) {
-                            String msg = "Invalid value. Field '" + name + "' is not added to the document. Error is: " + e.getMessage();
-                            
-                            Field idxError = new Field(INDEXING_ERROR_FIELD, "1", storeNotTokenizedFieldType);
-                            Field idxMsg = new Field(INDEXING_ERROR_MSG, "GNIDX-BADNUMVALUE|" + name + "|" +  e.getMessage(), storeNotIndexedFieldType);
-                            
-                            doc.add(idxError);
-                            doc.add(idxMsg);
-                            
-                            Log.warning(Geonet.INDEX_ENGINE, msg);
-                            // If an exception occur, the field is not added to the document
-                            // and to the taxonomy
-                            continue;
-                        }
-                    } else {
-                        f = new Field(name, string, fieldType);
-                    }
-                    
-                    // As of lucene 4.0 to boost a document all field boosts must be premultiplied by documentBoost
-                    // because there is no doc.setBoost method anymore.
-                    // Boost a particular field according to Lucene config.
-                    
-                    // You cannot set an index-time boost on an unindexed field, or one that omits norms
-                    if (bIndex && !f.fieldType().omitNorms()) {
-                        Float boost = _luceneConfig.getFieldBoost(name);
-                        if (boost != null) {
-                            if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
-                                Log.debug(Geonet.INDEX_ENGINE, "Boosting field: " + name + " with boost factor: " + boost + " x " + documentBoost);
-                            f.setBoost(documentBoost * boost);
-                        } else if(documentBoost != 1) {
-                            f.setBoost(documentBoost);
-                        }
-                    }
-                    doc.add(f);
-                    
-                    // Add value to the taxonomy
-                    // TODO : Add all facets whatever the types
-                for (Map<String, FacetConfig> facets : _luceneConfig.getTaxonomy().values()) {
-                    if (facets.containsKey(name)) {
-                        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-                            Log.debug(Geonet.INDEX_ENGINE, "Add category path: " + name + " with " + string);
-                        }
-                        categories.add(new CategoryPath(name, string));
+                Field f;
+                Field fForFacet = null;
+                if (isNumeric) {
+                    try {
+                        f = addNumericField(name, string, fieldType);
+                    } catch (Exception e) {
+                        String msg = "Invalid value. Field '" + name + "' is not added to the document. Error is: " + e.getMessage();
 
-                        break;
+                        Field idxError = new Field(INDEXING_ERROR_FIELD, "1", storeNotTokenizedFieldType);
+                        Field idxMsg = new Field(INDEXING_ERROR_MSG, "GNIDX-BADNUMVALUE|" + name + "|" +  e.getMessage(), storeNotIndexedFieldType);
+
+                        doc.add(idxError);
+                        doc.add(idxMsg);
+
+                        Log.warning(Geonet.INDEX_ENGINE, msg);
+                        // If an exception occur, the field is not added to the document
+                        // and to the taxonomy
+                        continue;
+                    }
+                } else {
+                    // TODO: Can we use the same field for facet and search ?
+                    if (isFacetField) {
+                        fForFacet = new FacetField(name + FACET_FIELD_SUFFIX, string);
+                        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+                            Log.debug(Geonet.INDEX_ENGINE, "Facet field: " + fForFacet.toString());
+                        }
+                    }
+                    f = new Field(name, string, fieldType);
+                }
+
+                // As of lucene 4.0 to boost a document all field boosts must be premultiplied by documentBoost
+                // because there is no doc.setBoost method anymore.
+                // Boost a particular field according to Lucene config.
+
+                // You cannot set an index-time boost on an unindexed field, or one that omits norms
+                if (bIndex && !f.fieldType().omitNorms()) {
+                    Float boost = _luceneConfig.getFieldBoost(name);
+                    if (boost != null) {
+                        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
+                            Log.debug(Geonet.INDEX_ENGINE, "Boosting field: " + name + " with boost factor: " + boost + " x " + documentBoost);
+                        f.setBoost(documentBoost * boost);
+                    } else if(documentBoost != 1) {
+                        f.setBoost(documentBoost);
                     }
                 }
+                if(fForFacet != null) {
+                    doc.add(fForFacet);
+                }
+                doc.add(f);
             }
         }
         

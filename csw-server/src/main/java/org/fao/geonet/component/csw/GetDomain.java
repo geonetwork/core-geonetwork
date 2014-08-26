@@ -235,7 +235,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 
 				Pair<TopDocs,Element> searchResults = LuceneSearcher.doSearchAndMakeSummary( 
 						maxRecords, 0, maxRecords, context.getLanguage(), 
-						null, reader, 
+						null, luceneConfig.getTaxonomyConfiguration(), reader,
 						query, filter, sort, null, false, false,
 						false, false	// Scoring is useless for GetDomain operation
 				);
@@ -250,7 +250,7 @@ public class GetDomain extends AbstractOperation implements CatalogService
 	
 					// check if params asked is in the index using getFieldNames ?
 					@SuppressWarnings("resource")
-                    FieldInfos fi = new SlowCompositeReaderWrapper(reader).getFieldInfos();
+                    FieldInfos fi = SlowCompositeReaderWrapper.wrap(reader).getFieldInfos();
 					if (fi.fieldInfo(property) == null)
 						continue;
 					

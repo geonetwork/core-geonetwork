@@ -24,10 +24,10 @@
 package org.fao.geonet.kernel.search.function;
 
 import org.apache.lucene.index.AtomicReaderContext;
+import org.apache.lucene.index.SortedDocValues;
 import org.apache.lucene.queries.CustomScoreProvider;
 import org.apache.lucene.queries.CustomScoreQuery;
 import org.apache.lucene.search.FieldCache;
-import org.apache.lucene.search.FieldCache.DocTerms;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.util.BytesRef;
 import org.fao.geonet.domain.ISODate;
@@ -75,16 +75,17 @@ public class RecencyBoostingQuery extends CustomScoreQuery {
 	}
 
 	private class RecencyBooster extends CustomScoreProvider {
-		final DocTerms publishDay;
+		final SortedDocValues publishDay;
 
 		public RecencyBooster(AtomicReaderContext r) throws IOException {
 			super(r);
-			publishDay = FieldCache.DEFAULT.getTerms(r.reader(), dayField);
+
+			publishDay = FieldCache.DEFAULT.getTermsIndex(r.reader(), dayField);
 		}
 
 		public float customScore(int doc, float subQueryScore, float valSrcScore) {
 			BytesRef ret = new BytesRef();
-			publishDay.getTerm(doc, ret);
+			publishDay.get(doc);
             ISODate d = new ISODate(ret.utf8ToString());
 			long daysAgo = today.timeDifferenceInSeconds(d) / SEC_PER_DAY;
 			if (daysAgo < maxDaysAgo) {	// skip old document
