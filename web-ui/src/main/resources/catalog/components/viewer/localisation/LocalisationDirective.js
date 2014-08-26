@@ -120,6 +120,14 @@
             scope.collapsed = false;
           });
         });
+
+        scope.map.on('click', function() {
+          scope.$apply(function() {
+            $(':focus').blur();
+            scope.collapsed = true;
+          });
+        });
+
       }
     };
   }]);
