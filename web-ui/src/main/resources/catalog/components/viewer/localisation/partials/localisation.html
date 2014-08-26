@@ -3,14 +3,16 @@
   <input data-ng-model="query" data-ng-change="locCtrl.search(query)" type="search"
          class="form-control" placeholder="Recherche">
   <div class="dropdown-menu" role="menu">
-    <ul class="loc-defaults">
-      <li data-ng-repeat="loc in localisations | filter:query">
+    <h5 ng-if="(localisations | filter:query).length > 0">Zones</h5>
+    <ul class="loc-defaults list-group">
+      <li data-ng-repeat="loc in localisations | filter:query" class="list-group-item">
         <a href="" data-ng-click="locCtrl.onClick(loc, map)">{{loc.name}}</a>
       </li>
     </ul>
-    <ul class="loc-geonames">
-      <li data-ng-repeat="loc in results">
-        <a href="" data-ng-click="locCtrl.onClick(loc, map)">{{loc.name}}, {{loc.region}}, {{loc.country}}</a>
+    <h5 ng-if="results.length>0">Résultats</h5>
+    <ul class="loc-geonames list-group">
+      <li data-ng-repeat="loc in results" class="list-group-item">
+      <a href="" data-ng-click="locCtrl.onClick(loc, map)">{{loc.name}} <em>{{loc.formattedName}}</em></a>
       </li>
     </ul>
   </div>

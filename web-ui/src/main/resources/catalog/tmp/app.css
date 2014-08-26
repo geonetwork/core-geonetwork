@@ -5736,9 +5736,27 @@ body {
 .search-container .dropdown-menu {
   width: 100%;
   top: calc(100% - 3px);
+  background: rgba(255, 255, 255, 0.8);
+  padding: 0 0 1em;
+}
+.search-container .dropdown-menu h5 {
+  padding: 0 1em;
 }
 .search-container .dropdown-menu ul {
-  margin-top: 10px;
+  margin: 0;
+  background: #fff;
+}
+.search-container .dropdown-menu li {
+  background: transparent;
+  padding: 0;
+}
+.search-container .dropdown-menu a {
+  padding: .5em 1em;
+  display: block;
+}
+.search-container .dropdown-menu a em {
+  font-size: 90%;
+  color: grey;
 }
 .search-container .clear {
   position: absolute;

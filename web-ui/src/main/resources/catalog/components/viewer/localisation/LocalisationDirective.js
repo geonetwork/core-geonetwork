@@ -56,15 +56,20 @@
             moveTo($scope.map, 5, ol.proj.transform(coord, 'EPSG:4326', 'EPSG:3857'));
             return;
           }
-
+          var formatter = function(loc) {
+            var props = [];
+            ['toponymName','adminName1','countryName'].forEach(function(p) {
+              if (loc[p]) { props.push(loc[p]); }
+            });
+            return (props.length == 0) ? '' : '—' + props.join(', ');
+          };
           var url = 'http://api.geonames.org/searchJSON';
           $http.get(url, {
             params: {
-              featureClass:'P',
-              lang:'en',
+              lang:'fr',
               style:'full',
               type:'json',
-              maxRows:5,
+              maxRows:10,
               name_startsWith:query,
               username:'georchestra'
             }
@@ -74,12 +79,13 @@
             $scope.results = [];
             for(var i=0;i<response.geonames.length;i++) {
               loc = response.geonames[i];
-              $scope.results.push({
-                name: loc.toponymName,
-                region: loc.adminName1,
-                country: loc.countryName,
-                extent: ol.proj.transform([loc.bbox.west, loc.bbox.south, loc.bbox.east, loc.bbox.north], 'EPSG:4326', 'EPSG:3857')
-              });
+              if (loc.bbox) {
+                $scope.results.push({
+                  name: loc.name,
+                  formattedName: formatter(loc),
+                  extent: ol.proj.transform([loc.bbox.west, loc.bbox.south, loc.bbox.east, loc.bbox.north], 'EPSG:4326', 'EPSG:3857')
+                });
+              }
             }
           });
         };
