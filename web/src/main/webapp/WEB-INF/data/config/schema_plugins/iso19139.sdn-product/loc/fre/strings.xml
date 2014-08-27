@@ -72,7 +72,7 @@
   <conformity_date>Date de publication</conformity_date>
   <explanation>Explanation</explanation>
   <pass>Conforme</pass>
-  <pointOfContact>Organisation responsable de la ressource</pointOfContact>
+  <!--<pointOfContact>Organisation responsable de la ressource</pointOfContact>-->
   <metadataPointOfContact>Point de contact des métadonnées</metadataPointOfContact>
   <organisationName>Nom de l'organisation</organisationName>
   <electronicMailAddress>Email de l'organisation</electronicMailAddress>
