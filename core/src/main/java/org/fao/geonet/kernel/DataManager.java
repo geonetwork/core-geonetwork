@@ -2631,19 +2631,16 @@ public class DataManager {
                             if (userGroupRepo.exists(new UserGroupId().setGroupId(grpId).setUserId(userId))) {
                                 throw new ServiceNotAllowedEx("User can't set operation for group " + grpId + " because the user in not"
                                                               + " member of this group.");
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if (operationAllowed == null) {
-            return Optional.of(new OperationAllowed(new OperationAllowedId().setGroupId(grpId).setMetadataId(mdId).setOperationId(opId)));
-        } else {
-            return Optional.absent();
-        }
-    }
+							}
+						}
+					}
+				}
+			}
+			return Optional.of(new OperationAllowed(new OperationAllowedId().setGroupId(grpId).setMetadataId(mdId)
+					.setOperationId(opId)));
+		}
+		return Optional.absent();
+	}
 
     /**
      *
