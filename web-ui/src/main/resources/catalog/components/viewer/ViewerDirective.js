@@ -107,18 +107,29 @@
             element.find('.btn-group button').removeClass('active');
             element.addClass('active');
             $(this).addClass('active');
+            var carousel = $(this).parents('.panel-body').first().find('.panel-carousel-window');
             element.find('.layers').addClass('collapsed');
-            element.find('.panel-carousel').removeClass('collapsed');
+            carousel.find('.panel-carousel').removeClass('collapsed');
             element.find('.unfold').css('opacity',1);
-            element.find('.panel-carousel-container').css('left',
+            carousel.find('.panel-carousel-container').css('left',
                 '-' + ($(this).index()*100) + '%');
+          });
+          element.find('.nav li').bind('click', function(e) {
+            e.preventDefault();
+            $(this).parents('.nav').first().find('li').removeClass('active');
+            $(this).addClass('active');
+            var carousel = $(this).parents('.layers').first().find('.panel-carousel-window');
+            carousel.find('.panel-carousel-container').css('left',
+                '-' + ($(this).index()*100) + '%');
+            $(':focus').blur();
           });
 
           element.find('.unfold').click(function(){
-            element.find('.btn-group button').removeClass('active');
+            var el = $(this).parent('.panel-body');
+            el.find('.btn-group button').removeClass('active');
             element.find('.layers').removeClass('collapsed');
-            element.find('.panel-carousel').addClass('collapsed');
-            element.find('.unfold').css('opacity',0);
+            el.find('.panel-carousel').addClass('collapsed');
+            el.find('.unfold').css('opacity',0);
           });
         }
       };
@@ -132,7 +143,7 @@
         scope: true,
         link: function (scope, element, attrs, btngroupCtrl) {
           $('.close').click(function(){
-            var t = $(this).parents('.panel-tools');
+            var t = $(this).parents('.panel-tools').first();
             t.addClass('force-hide');
             $('[rel=#'+t.attr('id')+']').removeClass('active');
             scope.$apply(function() {
