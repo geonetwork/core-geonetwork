@@ -104,18 +104,24 @@ function radioModalUpdate(div, service, modalbox, title) {
 
 
 function addGroups(xmlRes){
-    var list = xmlRes.getElementsByTagName('groups'), i;
+    var list = xmlRes.getElementsByTagName('record'), i, listOfUserGroups = {};
     Ext.getDom('group').options.length = 0;
     for (i = 0; i < list.length; i++) {
         var id = list[i].getElementsByTagName('id')[0].firstChild.nodeValue;
         var name = list[i].getElementsByTagName('name')[0].firstChild.nodeValue;
-        var opt = document.createElement('option');
-        opt.text = name;
-        opt.value = id;
-        if (list.length === 1) {
-            opt.selected = true;
+
+        // User may have a group defined for more than one profile.
+        // Only display groups once.
+        if (!listOfUserGroups[id]) {
+          var opt = document.createElement('option');
+          opt.text = name;
+          opt.value = id;
+          if (list.length === 1) {
+              opt.selected = true;
+          }
+          Ext.getDom('group').options.add(opt);
+          listOfUserGroups[id] = true;
         }
-        Ext.getDom('group').options.add(opt);
     }
 }
 
