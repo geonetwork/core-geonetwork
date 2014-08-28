@@ -30,7 +30,7 @@
     "saveAtimeAgo": "Dernières modifications, {{timeAgo}}.",
     "saving": "Sauvegarde ...",
     "cancelling": "Annulation ...",
-    "cancel": "Annuler",
+    "cancel": "Annuler et fermer",
     "cancelChangesFromNow": "Annuler les modifications faites depuis le début, {{timeAgo}}.",
     "share": "Partager",
     "share-help": "Définir qui peut consulter cette fiche",
