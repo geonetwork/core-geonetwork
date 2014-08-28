@@ -96,7 +96,7 @@
                     });
                   }, this);
 
-              scope.map.addInteraction(drawInteraction);
+              map.addInteraction(drawInteraction);
             }
           };
           var disableInteractionWatchFn = function(nv, ov) {
@@ -114,15 +114,32 @@
            */
           var initNcwmsParams = function() {
 
-            scope.params = scope.layer.getSource().getParams() || {};
+            var layer = scope.layer;
+            var ncInfo = layer.ncInfo;
 
+            layer.setExtent(ol.proj.transform([
+                  parseFloat(ncInfo.bbox[0]),
+                  parseFloat(ncInfo.bbox[1]),
+                  parseFloat(ncInfo.bbox[2]),
+                  parseFloat(ncInfo.bbox[3])],
+                'EPSG:4326',
+                map.getView().getProjection().getCode())
+            );
+
+            scope.params = layer.getSource().getParams() || {};
             scope.colorRange = {
-              step: 1
+              step: 1,
+              min: ncInfo.scaleRange[0],
+              max: ncInfo.scaleRange[1]
             };
-            scope.timeSeries = gnNcWms.parseTimeSeries(gnNcWms.getDimensionValue(scope.layer.ncInfo, 'time'));
-            scope.elevations = gnNcWms.getDimensionValue(scope.layer.ncInfo, 'elevation').split(',');
+            //scope.colorscalerange = [ncInfo.scaleRange[0], ncInfo.scaleRange[1]];
+            //scope.onColorscaleChange(scope.colorscalerange);
 
+            //scope.timeSeries = gnNcWms.parseTimeSeries(gnNcWms.getDimensionValue(scope.layer.ncInfo, 'time'));
+            scope.elevations = ncInfo.zaxis.values;
+            scope.styles = gnNcWms.parseStyles(ncInfo);
 
+/*
             // Get maxExtent color ranges
             gnNcWms.getColorRangesBounds(scope.layer,
                 scope.layer.ncInfo.EX_GeographicBoundingBox.join(',')).success(function(data) {
@@ -134,6 +151,7 @@
                   scope.colorscalerange = [min, max];
                   scope.onColorscaleChange(scope.colorscalerange);
             });
+*/
 
             if(angular.isUndefined(scope.params.LOGSCALE)) {
               scope.params.LOGSCALE = false;
@@ -146,13 +164,13 @@
            *  Update the slider values to this bounds.
            */
           scope.setAutoColorranges = function(evt) {
-            $(evt.target).addClass('fa fa-spinner');
+            $(evt.target).addClass('fa-spinner');
             gnNcWms.getColorRangesBounds(scope.layer,
                 ol.proj.transform(map.getView().calculateExtent(map.getSize()),
                     map.getView().getProjection(), 'EPSG:4326').join(',')).success(function(data) {
                   scope.colorscalerange = [data.min, data.max];
                   scope.onColorscaleChange(scope.colorscalerange);
-                  $(evt.target).removeClass('fa fa-spinner');
+                  $(evt.target).removeClass('fa-spinner');
                 });
           };
 
@@ -166,7 +184,8 @@
             if(angular.isArray(v) && v.length == 2) {
               colorange = v[0] + ',' + v[1];
               scope.params.COLORSCALERANGE = colorange;
-              scope.updateLayerParams();}
+              scope.updateLayerParams();
+            }
           };
 
           scope.updateLayerParams = function() {

@@ -21,12 +21,13 @@
       <!--Color ranges double slider-->
       <div class="form-group">
         <label class="col-sm-4">
-          <span>{{colorscalerange[0] | number: 1}}</span>
-          <span class="fa fa-arrows-h"></span> <span>{{colorscalerange[1] | number: 1}}</span>
+          <span>{{colorscalerange[0] | number: 3}}</span>
+          <span class="fa fa-arrows-h"></span> <span>{{colorscalerange[1] | number: 3}}</span>
+          <span>({{layer.ncInfo.units}})</span>
         </label>
         <div class="col-sm-6">
           <div ui-slider="{range: true}" min="{{colorRange.min}}" max="{{colorRange.max}}" id="ncwmsscales"
-            step="{{colorRange.step}}" use-decimals ng-model="colorscalerange" data-ng-change="onColorscaleChange(colorscalerange)"></div>
+             use-decimals ng-model="colorscalerange" data-ng-change="onColorscaleChange(colorscalerange)"></div>
         </div>
       </div>
 
@@ -35,7 +36,7 @@
         <label class="col-sm-4" for="ncwmselevation">Elévation</label>
         <div class="col-sm-8">
           <select class="form-control input-sm" id="ncwmselevation" data-ng-model="params.ELEVATION" data-ng-change="updateLayerParams()">
-            <option data-ng-repeat="el in elevations">{{el}}</option>
+            <option value="{{el}}" data-ng-repeat="el in elevations">{{el | number: 1}}</option>
           </select>
         </div>
       </div>
@@ -45,7 +46,7 @@
         <label class="col-sm-4" for="ncwmsstyles">Styles</label>
         <div class="col-sm-8">
           <select class="form-control input-sm" id="ncwmsstyles" data-ng-model="params.STYLES" data-ng-change="updateLayerParams()">
-            <option data-ng-repeat="style in layer.ncInfo.Style" value="{{style.Name}}">{{style.Title}}</option>
+            <option data-ng-repeat="style in styles" value="{{style}}">{{style}}</option>
           </select>
         </div>
       </div>

@@ -18,9 +18,7 @@
             this.createNcWmsLayer = function(capLayer) {
               var source = new ol.source.TileWMS({
                 params: {
-                  LAYERS:'NCOF_MRCS/POT',
-                  ELEVATION:'-5.0',
-                  COLORSCALERANGE:'10.45782,15.45782'
+                  LAYERS:'NCOF_MRCS/POT'
                 },
                 url: 'http://behemoth.nerc-essc.ac.uk/ncWMS/wms'
               });
@@ -31,9 +29,12 @@
                 label: 'Super NCWMS'
               });
 
-              gnOwsCapabilities.getCapabilities('http://behemoth.nerc-essc.ac.uk/ncWMS/wms?service=WMS&request=GetCapabilities')
-                  .then(function (capObj) {
-                    layer.ncInfo = gnOwsCapabilities.getLayerInfoFromCap(layer.getSource().getParams().LAYERS, capObj);
+              var url = this.getMetadataUrl(layer);
+              var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
+
+              $http.get(proxyUrl)
+                  .success(function (json) {
+                    layer.ncInfo = json;
                   });
 
               return layer;
@@ -56,9 +57,28 @@
               }
             };
 
+            this.parseStyles = function(info) {
+              var t = [];
+              if(angular.isArray(info.supportedStyles)) {
+                angular.forEach(info.supportedStyles, function (s) {
+                  if (s == 'boxfill') {
+                    if (angular.isArray(info.palettes)) {
+                      angular.forEach(info.palettes, function (p) {
+                        t.push(s + '/' + p);
+                      });
+                    }
+                  }
+                  else if (s == 'contour') {
+                    t.push(s + '/');
+                  }
+                });
+              }
+              return t;
+            };
+
             /**
              * Read from capabilities object dimension properties.
-             *
+             * (DEPECRATED)
              * @param ncInfo capabilities object.
              * @param name type of the dimension.
              * @returns {*}
@@ -111,11 +131,28 @@
                   gnUrlUtils.toKeyValue(p));
             };
 
+            /**
+             * Get metadataurl with item=layerDetails to retrieve
+             * all layer basic informations
+             * @param layer
+             * @returns {*}
+             */
             this.getMetadataUrl = function(layer) {
+              var p = {
+                request: 'GetMetadata',
+                item: 'layerDetails',
+                layerName: layer.getSource().getParams().LAYERS
+              };
               return gnUrlUtils.append(layer.getSource().getUrls(),
                   gnUrlUtils.toKeyValue(p));
             };
 
+            /**
+             * Get auto colorange bounds depending on an extent.
+             * @param layer
+             * @param extent
+             * @returns {*}
+             */
             this.getColorRangesBounds = function(layer, extent) {
               var p = {
                 request: 'GetMetadata',

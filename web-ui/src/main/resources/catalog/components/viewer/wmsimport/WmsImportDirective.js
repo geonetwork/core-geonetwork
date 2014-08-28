@@ -123,9 +123,39 @@
               projection: 'EPSG:3857',
               url: proxyUrl
             });
+            var clusterSource = new ol.source.Cluster({
+              distance: 40,
+              source: kmlSource
+            });
+            var styleCache = {};
             var vector = new ol.layer.Vector({
-              source: kmlSource,
-              label: 'Fichier externe : ' + url.split('/').pop()
+              source: clusterSource,
+              label: 'Fichier externe : ' + url.split('/').pop(),
+              style: function(feature, resolution) {
+                var size = feature.get('features').length;
+                var style = styleCache[size];
+                if (!style) {
+                  style = [new ol.style.Style({
+                    image: new ol.style.Circle({
+                      radius: 10,
+                      stroke: new ol.style.Stroke({
+                        color: '#fff'
+                      }),
+                      fill: new ol.style.Fill({
+                        color: '#3399CC'
+                      })
+                    }),
+                    text: new ol.style.Text({
+                      text: size.toString(),
+                      fill: new ol.style.Fill({
+                        color: '#fff'
+                      })
+                    })
+                  })];
+                  styleCache[size] = style;
+                }
+                return style;
+              }
             });
 
             var listenerKey = kmlSource.on('change', function() {
@@ -184,13 +214,45 @@
               scope.$apply();
               return;
             }
+
             var vectorSource = new ol.source.Vector({
               features: event.features,
               projection: event.projection
             });
+            var clusterSource = new ol.source.Cluster({
+              distance: 40,
+              source: vectorSource
+            });
+            var styleCache = {};
+
             var layer = new ol.layer.Vector({
-              source: vectorSource,
-              label: 'Fichier local : ' + event.file.name
+              source: clusterSource,
+              label: 'Fichier local : ' + event.file.name,
+              style: function(feature, resolution) {
+                var size = feature.get('features').length;
+                var style = styleCache[size];
+                if (!style) {
+                  style = [new ol.style.Style({
+                    image: new ol.style.Circle({
+                      radius: 10,
+                      stroke: new ol.style.Stroke({
+                        color: '#fff'
+                      }),
+                      fill: new ol.style.Fill({
+                        color: '#3399CC'
+                      })
+                    }),
+                    text: new ol.style.Text({
+                      text: size.toString(),
+                      fill: new ol.style.Fill({
+                        color: '#fff'
+                      })
+                    })
+                  })];
+                  styleCache[size] = style;
+                }
+                return style;
+              }
             });
             scope.addToMap(layer, scope.map);
             scope.$apply();
