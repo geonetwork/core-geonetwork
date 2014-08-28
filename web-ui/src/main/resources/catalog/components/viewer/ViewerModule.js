@@ -87,7 +87,8 @@
           var f;
           var pixel = $scope.map.getEventPixel(e.originalEvent);
           var coordinate = $scope.map.getEventCoordinate(e.originalEvent);
-          $scope.map.forEachFeatureAtPixel(pixel, function(feature) {
+          $scope.map.forEachFeatureAtPixel(pixel, function(feature, layer) {
+            if (!layer) { return; }
             $timeout.cancel(hidetimer);
             if (f != feature) {
               f = feature;
@@ -108,6 +109,8 @@
             }
             overlay.setPosition(coordinate);
             $(overlay.getElement()).show();
+          }, this, function(layer) {
+            return !layer.get('temporary');
           });
           if (!f) {
             hidetimer = $timeout(function(){
