@@ -79,7 +79,7 @@
 
         $scope.map.addOverlay(overlay);
 
-        var timer, hidetimer;
+        var hidetimer;
         var hovering = false;
         $($scope.map.getViewport()).on('mousemove', function(e) {
           if (hovering) { return; }
@@ -87,6 +87,7 @@
           var pixel = $scope.map.getEventPixel(e.originalEvent);
           var coordinate = $scope.map.getEventCoordinate(e.originalEvent);
           $scope.map.forEachFeatureAtPixel(pixel, function(feature) {
+            $timeout.cancel(hidetimer);
             if (f != feature) {
               f = feature;
               var html = '';
