@@ -117,7 +117,7 @@
             var layer = scope.layer;
             var ncInfo = layer.ncInfo;
 
-            layer.setExtent(ol.proj.transform([
+            layer.set('cextent', ol.proj.transform([
                   parseFloat(ncInfo.bbox[0]),
                   parseFloat(ncInfo.bbox[1]),
                   parseFloat(ncInfo.bbox[2]),

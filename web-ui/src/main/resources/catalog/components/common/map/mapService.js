@@ -191,7 +191,7 @@
               attribution: options.attribution,
               metadata: options.metadata,
               label: options.label,
-              extent: options.extent
+              cextent: options.extent
             });
             goDecorateLayer(olLayer);
             olLayer.displayInLayerManager = true;

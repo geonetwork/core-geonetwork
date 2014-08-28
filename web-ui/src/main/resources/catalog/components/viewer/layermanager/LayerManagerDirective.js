@@ -104,8 +104,8 @@
           };
 
           scope.zoomToExtent = function(layer, map) {
-            if(layer.getExtent()) {
-              map.getView().fitExtent(layer.getExtent(), map.getSize());
+            if(layer.get('cextent')) {
+              map.getView().fitExtent(layer.get('cextent'), map.getSize());
             }
           };
         }
