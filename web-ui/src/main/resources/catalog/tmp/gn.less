@@ -135,12 +135,12 @@ html, body {
       margin-top: -.5em;
       background: inherit;
     }
-    .fa-arrows-alt {
+    .fa-arrows-alt, .gn-layer-ordering {
       opacity: 0;
       transition: opacity @transition-params;
     }
     &:hover {
-      .fa-arrows-alt {
+      .fa-arrows-alt, .gn-layer-ordering {
         opacity: 1
       }
     }
@@ -402,14 +402,15 @@ html, body {
   .gn-popup-iframe {
     width: 1000px;
     height: 600px;
-  }
-  .gn-popup-iframe.profile {
-    width: 500px;
-    height: 400px;
-  }
-  .gn-popup-iframe.transect {
-    width: 400px;
-    height: 600px;
+
+    &.profile {
+      width: 500px;
+      height: 400px;
+    }
+    &.transect {
+      width: 400px;
+      height: 600px;
+    }
   }
 }
 

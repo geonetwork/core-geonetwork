@@ -5840,11 +5840,13 @@ body {
   margin-top: -0.5em;
   background: inherit;
 }
-.panel-tools .list-group-item .fa-arrows-alt {
+.panel-tools .list-group-item .fa-arrows-alt,
+.panel-tools .list-group-item .gn-layer-ordering {
   opacity: 0;
   transition: opacity 0.3s ease;
 }
-.panel-tools .list-group-item:hover .fa-arrows-alt {
+.panel-tools .list-group-item:hover .fa-arrows-alt,
+.panel-tools .list-group-item:hover .gn-layer-ordering {
   opacity: 1;
 }
 .panel-tools .list-group-item label {
