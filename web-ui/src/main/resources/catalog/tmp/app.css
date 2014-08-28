@@ -5839,6 +5839,7 @@ body {
   margin-right: -0.6em;
   margin-top: -0.5em;
   background: inherit;
+  padding: 6px 8px;
 }
 .panel-tools .list-group-item .fa-arrows-alt,
 .panel-tools .list-group-item .gn-layer-ordering {
@@ -5921,6 +5922,23 @@ body {
 .panel-tools [gn-layermanager] {
   max-height: 44em;
   overflow-y: auto;
+}
+.panel-tools [gn-layermanager] .gn-layer-ordering {
+  position: absolute;
+  right: 4em;
+}
+.panel-tools [gn-layermanager] .gn-layer-ordering .fa {
+  display: block;
+  color: #666;
+  font-size: 12px;
+}
+.panel-tools [gn-layermanager] .gn-layer-ordering .fa:hover,
+.panel-tools [gn-layermanager] .gn-layer-ordering .fa:focus {
+  text-decoration: none;
+  color: #428bca;
+}
+.panel-tools [gn-layermanager] .gn-layer-ordering .fa:only-child {
+  margin-top: .5em;
 }
 .panel-tools .metadata {
   display: inline-block;

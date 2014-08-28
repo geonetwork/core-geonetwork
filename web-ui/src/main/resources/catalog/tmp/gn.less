@@ -134,6 +134,7 @@ html, body {
       margin-right: -.6em;
       margin-top: -.5em;
       background: inherit;
+      padding: 6px 8px;
     }
     .fa-arrows-alt, .gn-layer-ordering {
       opacity: 0;
@@ -212,6 +213,22 @@ html, body {
   [gn-layermanager] {
     max-height: 44em;
     overflow-y: auto;
+    .gn-layer-ordering {
+      position: absolute;
+      right: 4em;
+      .fa {
+        display: block;
+        color: #666;
+        font-size: 12px;
+        &:hover, &:focus {
+          text-decoration: none;
+          color: @link-color;
+        }
+        &:only-child {
+          margin-top: .4em;
+        }
+      }
+    }
   }
   .metadata {
     .btn;
