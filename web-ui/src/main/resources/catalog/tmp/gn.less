@@ -278,7 +278,47 @@ html, body {
 
 /* hackish tmp */
 .ol-overlaycontainer-stopevent {
-  display: none;
+  /* display: none; */
+}
+.overlay {
+  position: absolute;
+  bottom: 12px;
+  left: ~"calc(-10px - 2em)";
+  background: rgba(60,60,60,.8);
+  line-height: 2em;
+  padding: 1em;
+  width: 17em;
+  color: #fff;
+  text-shadow: 0 0 1px #000;
+  border-radius: 2px;
+  font-size: 12px;
+  &:after {
+     content: ' ';
+     position: absolute;
+     bottom: -10px;
+     left: 2em;
+     width: 0;
+     height: 0;
+     border-style: solid;
+     border-width: 10px 10px 0 10px;
+     border-color: rgba(60,60,60,.8) transparent;
+  }
+  dl {
+    margin-bottom: 0;
+    dl dd, dl dt {
+      display: block;
+      float: none;
+      width: 100%;
+      margin-left: 0;
+      text-align: left;
+    }
+  }
+  dt {
+    width: 6em;
+  }
+  dd {
+    margin-left: 6.5em;
+  }
 }
 
 /* jquery-ui slider */

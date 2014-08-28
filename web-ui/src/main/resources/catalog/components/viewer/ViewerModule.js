@@ -33,10 +33,11 @@
 
   module.controller('gnViewerController', [
     '$scope',
+    '$timeout',
     'gnNcWms',
     'goDecorateLayer',
       'gnMapConfig',
-      function($scope, gnNcWms, goDecorateLayer, gnMapConfig) {
+      function($scope, $timeout, gnNcWms, goDecorateLayer, gnMapConfig) {
 
         /** Define object to receive measure info */
         $scope.measureObj = {};
@@ -68,6 +69,56 @@
         $scope.zoomToMaxExtent = function(map) {
           map.getView().setResolution(gnMapConfig.maxResolution);
         };
+
+        var div = document.createElement('div');
+        div.className = 'overlay';
+        var overlay = new ol.Overlay({
+          element: div,
+          positioning: 'bottom-left'
+        });
+
+        $scope.map.addOverlay(overlay);
+
+        var timer, hidetimer;
+        var hovering = false;
+        $($scope.map.getViewport()).on('mousemove', function(e) {
+          if (hovering) { return; }
+          var f;
+          var pixel = $scope.map.getEventPixel(e.originalEvent);
+          var coordinate = $scope.map.getEventCoordinate(e.originalEvent);
+          $scope.map.forEachFeatureAtPixel(pixel, function(feature) {
+            if (f != feature) {
+              f = feature;
+              var html = '';
+              if (feature.getKeys().indexOf('description') >=0 ) {
+                html = feature.get('description');
+              } else {
+                $.each(feature.getKeys(), function(i, key) {
+                  if (key == feature.getGeometryName() || key == 'styleUrl') {
+                    return;
+                  }
+                  html += '<dt>' + key + '</dt>';
+                  html += '<dd>' + feature.get(key) + '</dd>';
+                });
+                html = '<dl class="dl-horizontal">' + html + '</dl>';
+              }
+              overlay.getElement().innerHTML = html;
+            }
+            overlay.setPosition(coordinate);
+            $(overlay.getElement()).show();
+          });
+          if (!f) {
+            hidetimer = $timeout(function(){
+              $(div).hide();
+            }, 200);
+          }
+        });
+        $(div).on('mouseover', function() {
+          hovering = true;
+        });
+        $(div).on('mouseleave', function() {
+          hovering = false;
+        });
       }]);
 
   var servicesUrl = {
