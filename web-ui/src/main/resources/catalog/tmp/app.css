@@ -6095,6 +6095,16 @@ fieldset[disabled] .panel-tools .metadata:focus {
   max-height: 50em;
   transition: max-height 0.25s ease;
 }
+.fu {
+  position: relative;
+}
+.fu input[type=file] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  width: 100%;
+}
 .collapsed {
   max-height: 0;
   min-height: 0;
@@ -6276,3 +6286,4 @@ fieldset[disabled] .panel-tools .metadata:focus {
   width: 400px;
   height: 600px;
 }
+/*# sourceMappingURL=app.css.map */

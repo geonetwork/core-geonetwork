@@ -263,6 +263,17 @@ html, body {
 
 @import "./layertree.less";
 
+.fu {
+  position: relative;
+  input[type=file] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    width: 100%;
+  }
+}
+
 .collapsed {
   max-height: 0;
   min-height: 0;
