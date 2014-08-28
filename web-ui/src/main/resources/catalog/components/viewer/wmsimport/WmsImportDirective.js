@@ -123,13 +123,15 @@
               projection: 'EPSG:3857',
               url: proxyUrl
             });
+/*
             var clusterSource = new ol.source.Cluster({
               distance: 40,
               source: kmlSource
             });
+*/
             var styleCache = {};
             var vector = new ol.layer.Vector({
-              source: clusterSource,
+              source: kmlSource,
               label: 'Fichier externe : ' + url.split('/').pop(),
               style: function(feature, resolution) {
                 var size = feature.get('features').length;
@@ -219,14 +221,16 @@
               features: event.features,
               projection: event.projection
             });
+/*
             var clusterSource = new ol.source.Cluster({
               distance: 40,
               source: vectorSource
             });
+*/
             var styleCache = {};
 
             var layer = new ol.layer.Vector({
-              source: clusterSource,
+              source: vectorSource,
               label: 'Fichier local : ' + event.file.name,
               style: function(feature, resolution) {
                 var size = feature.get('features').length;
