@@ -117,7 +117,8 @@
 
           var vector = new ol.layer.Vector({
             source: source,
-            style: featureStyle
+            style: featureStyle,
+            temporary: true
           });
           scope.vector = vector;
 
