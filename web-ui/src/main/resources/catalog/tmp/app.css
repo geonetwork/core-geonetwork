@@ -6225,4 +6225,11 @@ fieldset[disabled] .panel-tools .metadata:focus {
   width: 1000px;
   height: 600px;
 }
-/*# sourceMappingURL=app.css.map */
+.gn-popup-content .gn-popup-iframe.profile {
+  width: 500px;
+  height: 400px;
+}
+.gn-popup-content .gn-popup-iframe.transect {
+  width: 400px;
+  height: 600px;
+}

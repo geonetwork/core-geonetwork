@@ -87,8 +87,8 @@
                           scope.map.getView().getProjection(),
                           evt.feature.getGeometry().getCoordinates(),
                           activeTool),
-                      content: '<div class="gn-popup-iframe" style="width:400px">' +
-                          '<iframe frameBorder="0" border="0" style="width:100%;height:100%;" src="{{options.url}}" ></iframe>' +
+                      content: '<div class="gn-popup-iframe ' + activeTool + '">' +
+                          '<img style="width:100%;height:100%;" src="{{options.url}}" />' +
                           '</div>'
                     });
                     scope.$apply(function() {
