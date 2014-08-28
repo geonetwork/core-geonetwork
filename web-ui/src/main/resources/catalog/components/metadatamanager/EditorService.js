@@ -163,17 +163,6 @@
              var refreshForm = function(snippet) {
                // Compiling
                var content = snippet;
-               if (gnCurrentEdit.compileScope) {
-                 // Destroy previous scope
-                 if (gnCurrentEdit.formScope) {
-                   gnCurrentEdit.formScope.$destroy();
-                 }
-
-                 // Compile against a new scope
-                 gnCurrentEdit.formScope =
-                 gnCurrentEdit.compileScope.$new();
-                 content = $compile(snippet)(gnCurrentEdit.formScope);
-               }
 
                // Remove form element / To be improved
                // If not doing this, a detached DOM tree
@@ -184,7 +173,19 @@
                // make those objects not reachable by GC.
                $(gnCurrentEdit.formId).find('*').remove();
 
-               $(gnCurrentEdit.formId).replaceWith(content);
+               $(gnCurrentEdit.formId).replaceWith(snippet);
+
+               if (gnCurrentEdit.compileScope) {
+                 // Destroy previous scope
+                 if (gnCurrentEdit.formScope) {
+                   gnCurrentEdit.formScope.$destroy();
+                 }
+
+                 // Compile against a new scope
+                 gnCurrentEdit.formScope =
+                 gnCurrentEdit.compileScope.$new();
+                 $compile(snippet)(gnCurrentEdit.formScope);
+               }
 
                scope.onFormLoad();
              };

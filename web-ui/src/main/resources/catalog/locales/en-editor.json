@@ -28,7 +28,7 @@
     "saveAtimeAgo": "Last edit was {{timeAgo}}.",
     "saving": "Saving ...",
     "cancelling": "Cancelling ...",
-    "cancel": "Cancel",
+    "cancel": "Cancel & close",
     "cancelChangesFromNow": "Cancel all changes since the start of the editing session {{timeAgo}}.",
     "share": "Share",
     "beforeUnloadEditor": "You may have unsaved changes since last save {{timeAgo}}.",
