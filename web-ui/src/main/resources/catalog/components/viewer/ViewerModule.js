@@ -36,8 +36,9 @@
     '$timeout',
     'gnNcWms',
     'goDecorateLayer',
-      'gnMapConfig',
-      function($scope, $timeout, gnNcWms, goDecorateLayer, gnMapConfig) {
+    'gnMap',
+    'gnMapConfig',
+      function($scope, $timeout, gnNcWms, goDecorateLayer, gnMap, gnMapConfig) {
 
         /** Define object to receive measure info */
         $scope.measureObj = {};
@@ -64,7 +65,7 @@
         $scope.map.addLayer($scope.ncwmsLayer);
 
         $scope.zoom = function(map, delta) {
-          map.getView().setZoom(map.getView().getZoom() + delta);
+          gnMap.zoom(map,delta);
         };
         $scope.zoomToMaxExtent = function(map) {
           map.getView().setResolution(gnMapConfig.maxResolution);
