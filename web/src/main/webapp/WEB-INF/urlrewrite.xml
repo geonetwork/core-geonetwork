@@ -116,7 +116,11 @@
         <from>^/index.jsp$</from>
         <to type="permanent-redirect" last="true">%{context-path}/home</to>
     </rule>
-    
+    <rule>
+      <from>^/([a-zA-Z0-9_\-]+)$</from>
+      <to type="permanent-redirect" last="true">%{context-path}/home?node=$1</to>
+    </rule>
+
     <!-- Rules for RESTful urls for metadata retrieve -->
     <rule>
         <note>

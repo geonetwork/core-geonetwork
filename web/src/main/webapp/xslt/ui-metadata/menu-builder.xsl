@@ -2,7 +2,10 @@
 <xsl:stylesheet version="2.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:gn="http://www.fao.org/geonetwork"
   xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform" exclude-result-prefixes="#all">
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:saxon="http://saxon.sf.net/"
+  extension-element-prefixes="saxon"
+  exclude-result-prefixes="#all">
 
   <!--
     Build the menu on top of the metadata  
@@ -49,17 +52,66 @@
             </xsl:when>
             <xsl:otherwise>
               <xsl:for-each select="$config/editor/views/view[not(@disabled)]">
-                <li>
-                  <xsl:if test="@name = $currentView/@name">
-                    <xsl:attribute name="class">disabled</xsl:attribute>
-                  </xsl:if>
-                  <!-- When a view contains multiple tab, the one with
-                the default attribute is the one to open -->
-                  <a data-ng-click="switchToTab('{tab[@default]/@id}', '{tab[@default]/@mode}')" href="">
-                    <xsl:variable name="viewName" select="@name"/>
-                    <xsl:value-of select="$strings/*[name() = $viewName]"/>
-                  </a>
-                </li>
+
+                <xsl:variable name="isViewDisplayed" as="xs:boolean">
+                  <!-- Evaluate XPath expression to
+                    see if view should be displayed
+                    according to the metadata record or
+                    the session information. -->
+                  <xsl:variable name="isInRecord" as="xs:boolean">
+                    <xsl:choose>
+                      <xsl:when test="@displayIfRecord">
+                        <saxon:call-template name="{concat('evaluate-', $schema, '-boolean')}">
+                          <xsl:with-param name="base" select="$metadata"/>
+                          <xsl:with-param name="in" select="concat('/../', @displayIfRecord)"/>
+                        </saxon:call-template>
+                      </xsl:when>
+                      <xsl:otherwise><xsl:value-of select="false()"/></xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:variable>
+
+                  <xsl:variable name="isInServiceInfo" as="xs:boolean">
+                    <xsl:choose>
+                      <xsl:when test="@displayIfServiceInfo">
+                        <saxon:call-template name="{concat('evaluate-', $schema, '-boolean')}">
+                          <xsl:with-param name="base" select="$serviceInfo"/>
+                          <xsl:with-param name="in" select="concat('/', @displayIfServiceInfo)"/>
+                        </saxon:call-template>
+                      </xsl:when>
+                      <xsl:otherwise><xsl:value-of select="false()"/></xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:variable>
+
+                  <xsl:choose>
+                    <xsl:when test="@displayIfServiceInfo and @displayIfRecord">
+                      <xsl:value-of select="$isInServiceInfo and $isInRecord"/>
+                    </xsl:when>
+                    <xsl:when test="@displayIfServiceInfo">
+                      <xsl:value-of select="$isInServiceInfo"/>
+                    </xsl:when>
+                    <xsl:when test="@displayIfRecord">
+                      <xsl:value-of select="$isInRecord"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:value-of select="true()"/>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </xsl:variable>
+
+
+                <xsl:if test="$isViewDisplayed">
+                  <li>
+                    <xsl:if test="@name = $currentView/@name">
+                      <xsl:attribute name="class">disabled</xsl:attribute>
+                    </xsl:if>
+                    <!-- When a view contains multiple tab, the one with
+                  the default attribute is the one to open -->
+                    <a data-ng-click="switchToTab('{tab[@default]/@id}', '{tab[@default]/@mode}')" href="">
+                      <xsl:variable name="viewName" select="@name"/>
+                      <xsl:value-of select="$strings/*[name() = $viewName]"/>
+                    </a>
+                  </li>
+                </xsl:if>
               </xsl:for-each>
               
               <li class="divider"/>
