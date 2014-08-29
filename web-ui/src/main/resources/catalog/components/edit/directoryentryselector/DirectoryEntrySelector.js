@@ -51,6 +51,13 @@
              scope.templateAddAction = scope.templateAddAction === 'true';
 
              // Search only for contact subtemplate
+             scope.params = {
+               // TODO : sThis could use gnElementsMap to get the
+               // element name and if not available default to tagName.
+               _root: scope.tagName || 'gmd:CI_ResponsibleParty',
+               _isTemplate: 's',
+               fast: 'false'
+             };
              scope.subtemplateFilter = {
                _isTemplate: 's',
                any: '',

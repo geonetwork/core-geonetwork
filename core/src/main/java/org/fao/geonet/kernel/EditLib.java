@@ -27,18 +27,10 @@
 
 package org.fao.geonet.kernel;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.Vector;
-
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.jxpath.ri.parser.Token;
 import org.apache.commons.jxpath.ri.parser.XPathParser;
@@ -62,9 +54,18 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.Vector;
 
 /**
  * TODO javadoc.
@@ -600,7 +601,7 @@ public class EditLib {
             if (propNode != null) {
                 // Update element content with node
                 if (propNode instanceof Element && value.isXml()) {
-                    doAddFragmentFromXpath(value.getNodeValue(), (Element) propNode);
+                    doAddFragmentFromXpath(metadataSchema, value.getNodeValue(), (Element) propNode);
                 } else if (propNode instanceof Element && !value.isXml()) {
                     // Update element text with value
                     ((Element) propNode).setText(value.getStringValue());
@@ -656,10 +657,11 @@ public class EditLib {
     /**
      * Performs the updating of the element selected from the metadata by the xpath.
      */
-    private void doAddFragmentFromXpath(Element newValue, Element propEl) {
+    private void doAddFragmentFromXpath(MetadataSchema metadataSchema, Element newValue, Element propEl) throws Exception {
 
         if (newValue.getName().equals(SpecialUpdateTags.REPLACE) || newValue.getName().equals(SpecialUpdateTags.ADD)) {
-            if (newValue.getName().equals(SpecialUpdateTags.REPLACE)) {
+            final boolean isReplace = newValue.getName().equals(SpecialUpdateTags.REPLACE);
+            if (isReplace) {
                 propEl.removeContent();
             }
 
@@ -669,7 +671,17 @@ public class EditLib {
                 if (Log.isDebugEnabled(Geonet.EDITORADDELEMENT)) {
                     Log.debug(Geonet.EDITORADDELEMENT, " > add " + Xml.getString(child));
                 }
-                propEl.addContent(child.detach());
+                child.detach();
+                if (isReplace) {
+                    propEl.addContent(child);
+                } else {
+                    final Element newElement = addElement(metadataSchema, propEl, child.getQualifiedName());
+                    if (newElement.getParent() != null) {
+                        propEl.setContent(propEl.indexOf(newElement), child);
+                    } else if (child.getParentElement() == null) {
+                        propEl.addContent(child);
+            }
+                }
             }
         } else  if (newValue.getName().equals(propEl.getName()) && newValue.getNamespace().equals(propEl.getNamespace())) {
             int idx = propEl.getParentElement().indexOf(propEl);
@@ -687,9 +699,14 @@ public class EditLib {
             xpathProperty = xpathProperty.substring(metadataRecord.getQualifiedName().length()+1);
         }
         List<String> xpathParts = Arrays.asList(xpathProperty.split("/"));
+        SelectResult rootElem = trySelectNode(metadataRecord, metadataSchema, xpathParts.get(0));
 
-        Pair<Element, String> result = findLongestMatch(metadataRecord, metadataRecord, 0, metadataSchema, xpathParts.size() / 2,
-                xpathParts);
+        Pair<Element, String> result;
+        if (rootElem.result instanceof Element) {
+            result = findLongestMatch(metadataRecord, metadataSchema, xpathParts);
+        } else {
+            result = Pair.read(metadataRecord, SLASH_STRING_JOINER.join(xpathParts));
+        }
         final Element elementToAttachTo = result.one();
         final Element clonedMetadata = (Element) elementToAttachTo.clone();
 
@@ -807,7 +824,7 @@ public class EditLib {
             // when adding the fragment child nodes or suggestion may also be added.
             // In this case, the snippet only has to be inserted
             currentNode.removeContent();
-            doAddFragmentFromXpath(value.getNodeValue(), currentNode);
+            doAddFragmentFromXpath(metadataSchema, value.getNodeValue(), currentNode);
         } else {
             if (isAttribute) {
                 currentNode.setAttribute(previousToken.image, value.getStringValue());
@@ -826,8 +843,23 @@ public class EditLib {
     }
 
     private static final Joiner SLASH_STRING_JOINER = Joiner.on('/');
+    @VisibleForTesting
+    protected Pair<Element, String> findLongestMatch(final Element metadataRecord,
+                                                     final MetadataSchema metadataSchema,
+                                                     final List<String> xpathPropertyParts) {
+        BitSet bitSet = new BitSet(xpathPropertyParts.size());
+        return findLongestMatch(metadataRecord, metadataRecord, 0, metadataSchema,
+                xpathPropertyParts.size() / 2, xpathPropertyParts, bitSet);
+    }
+
     private Pair<Element, String> findLongestMatch(final Element metadataRecord, final Element bestMatch, final int indexOfBestMatch,
-                                     final MetadataSchema metadataSchema,  final int nextIndex, final List<String> xpathPropertyParts) {
+                                     final MetadataSchema metadataSchema,  final int nextIndex, final List<String> xpathPropertyParts,
+                                     BitSet visited) {
+
+        if (visited.get(nextIndex)) {
+            return Pair.read(bestMatch, SLASH_STRING_JOINER.join(xpathPropertyParts.subList(indexOfBestMatch, xpathPropertyParts.size())));
+        }
+        visited.set(nextIndex);
 
         // do linear search when for last couple elements of xpath
         if (xpathPropertyParts.size() - nextIndex < 3) {
@@ -841,23 +873,21 @@ public class EditLib {
             }
             return Pair.read(bestMatch, SLASH_STRING_JOINER.join(xpathPropertyParts.subList(indexOfBestMatch, xpathPropertyParts.size())));
         } else {
-            final String currentXPath = SLASH_STRING_JOINER.join(xpathPropertyParts.subList(0, nextIndex));
-            final SelectResult found = trySelectNode(metadataRecord, metadataSchema, currentXPath);
+            final SelectResult found = trySelectNode(metadataRecord, metadataSchema, SLASH_STRING_JOINER.join(xpathPropertyParts
+                    .subList(0,
+                            nextIndex)));
             if (found.result instanceof Element) {
                 Element newBest = (Element) found.result;
                 int newIndex = nextIndex + ((xpathPropertyParts.size() - nextIndex) / 2);
-                return findLongestMatch(metadataRecord, newBest, nextIndex, metadataSchema, newIndex, xpathPropertyParts);
+                return findLongestMatch(metadataRecord, newBest, nextIndex, metadataSchema, newIndex, xpathPropertyParts, visited);
             } else if(!found.error) {
                 int newNextIndex = indexOfBestMatch + ((nextIndex - indexOfBestMatch) / 2);
-                if (newNextIndex == indexOfBestMatch) {
-                    String xpath = SLASH_STRING_JOINER.join(xpathPropertyParts.subList(indexOfBestMatch, xpathPropertyParts.size()));
-                    return Pair.read(bestMatch, xpath);
+                return findLongestMatch(metadataRecord, bestMatch, indexOfBestMatch, metadataSchema,
+                        newNextIndex, xpathPropertyParts, visited);
                 } else {
-                    return findLongestMatch(metadataRecord, bestMatch, indexOfBestMatch, metadataSchema, newNextIndex, xpathPropertyParts);
-                }
-            } else {
                 int newNextIndex = nextIndex + 1;
-                return findLongestMatch(metadataRecord, bestMatch, indexOfBestMatch, metadataSchema, newNextIndex, xpathPropertyParts);
+                return findLongestMatch(metadataRecord, bestMatch, indexOfBestMatch, metadataSchema,
+                        newNextIndex, xpathPropertyParts, visited);
             }
         }
     }

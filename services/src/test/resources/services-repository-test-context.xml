@@ -2,10 +2,17 @@
 <beans default-lazy-init="true" xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util
+		http://www.springframework.org/schema/util/spring-util.xsd
        ">
 
+
+    <bean id="configPath" class="java.lang.String">
+        <constructor-arg index="0" value="/WEB-INF/" />
+    </bean>
 
     <!-- Define the languages in the UI.  Seems like these should come from database at some point but at the moment they
          are needed here.
@@ -27,4 +34,5 @@
         <value>spa</value>
         <value>tur</value>
     </util:set>
+
 </beans>

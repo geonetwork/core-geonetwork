@@ -495,6 +495,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
               <sec:intercept-url pattern="/error" access="permitAll"/>
                 <sec:intercept-url pattern="/home\?.*" access="permitAll"/>
                 <sec:intercept-url pattern="/home" access="permitAll"/>
+                <sec:intercept-url pattern="/rewritestatus" access="permitAll"/>
 
                 <sec:intercept-url pattern="/.*" access="denyAll"/>
             </sec:filter-security-metadata-source>

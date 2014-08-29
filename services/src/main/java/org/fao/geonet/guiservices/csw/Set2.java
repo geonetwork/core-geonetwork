@@ -22,70 +22,84 @@
 //==============================================================================
 package org.fao.geonet.guiservices.csw;
 
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
-import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.domain.Language;
-import org.fao.geonet.lib.Lib;
+import org.fao.geonet.domain.responses.OkResponse;
 import org.fao.geonet.repository.CswCapabilitiesInfo;
 import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepository;
 import org.fao.geonet.repository.LanguageRepository;
-import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Copy of Set - only takes care of saving GetCapabilities properties
  * and not settings. In order to save settings use the setting service.
  * 
  */
-public class Set2 implements Service {
+@Controller("admin.config.csw.save")
+public class Set2 {
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
-    }
+    @Autowired
+    private LanguageRepository languageRepository;
 
-    public Element exec(Element params, ServiceContext context) throws Exception {
+    @Autowired
+    private CswCapabilitiesInfoFieldRepository cswCapabilitiesInfoFieldRepository;
+
+    @RequestMapping(value = "/{lang}/admin.config.csw.save", produces = {
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody
+    OkResponse exec(@RequestParam MultiValueMap parameters) throws Exception {
         // Process parameters and save capabilities information in database
-        saveCswCapabilitiesInfo(params, context);
+        saveCswCapabilitiesInfo(parameters);
 
-        // Build response
-        return new Element(Jeeves.Elem.RESPONSE).setText("ok");
+        return new OkResponse();
     }
 
-    private void saveCswCapabilitiesInfo(Element params, ServiceContext context) throws Exception {
+    private void saveCswCapabilitiesInfo(MultiValueMap parameters) throws Exception {
 
-        final List<Language> langs = context.getBean(LanguageRepository.class).findAll();
-
-        final CswCapabilitiesInfoFieldRepository cswInfoFieldRepository = context.getBean(CswCapabilitiesInfoFieldRepository.class);
+        final List<Language> langs = languageRepository.findAll();
 
         for (Language lang : langs) {
-
-            CswCapabilitiesInfo cswCapInfo = cswInfoFieldRepository.findCswCapabilitiesInfo(lang.getId());
+            CswCapabilitiesInfo cswCapInfo = cswCapabilitiesInfoFieldRepository.findCswCapabilitiesInfo(lang.getId());
 
             String langId = lang.getId();
-            Element title = params.getChild("csw.title_" + langId);
-            if (title != null) {
-                cswCapInfo.setTitle(title.getValue());
+            if (parameters.get("csw.title_" + langId) != null) {
+                String title = (String)((LinkedList) parameters.get("csw.title_" + langId)).get(0);
+                if (StringUtils.isNotEmpty(title)) {
+                    cswCapInfo.setTitle(title);
+                }
             }
-            Element abs = params.getChild("csw.abstract_" + langId);
-            if (abs != null) {
-                cswCapInfo.setAbstract(abs.getValue());
+            if (parameters.get("csw.abstract_" + langId) != null) {
+                String abs = (String)((LinkedList) parameters.get("csw.abstract_" + langId)).get(0);
+                if (StringUtils.isNotEmpty(abs)) {
+                    cswCapInfo.setAbstract(abs);
+                }
             }
-            Element fees = params.getChild("csw.fees_" + langId);
-            if (fees != null) {
-                cswCapInfo.setFees(fees.getValue());
+
+            if (parameters.get("csw.fees_" + langId) != null) {
+                String fees = (String)((LinkedList) parameters.get("csw.fees_" + langId)).get(0);
+                if (StringUtils.isNotEmpty(fees)) {
+                    cswCapInfo.setFees(fees);
+                }
             }
-            Element accessConstraints = params.getChild("csw.accessConstraints_" + langId);
-            if (accessConstraints != null) {
-                cswCapInfo.setAccessConstraints(accessConstraints.getValue());
+            if (parameters.get("csw.accessConstraints_" + langId) != null) {
+                String accessConstraints = (String)((LinkedList) parameters.get("csw.accessConstraints_" + langId)).get(0);
+                if (StringUtils.isNotEmpty(accessConstraints)) {
+                    cswCapInfo.setAccessConstraints(accessConstraints);
+                }
             }
+
+
             // Save item
-            cswInfoFieldRepository.save(cswCapInfo);
+            cswCapabilitiesInfoFieldRepository.save(cswCapInfo);
         }
     }
 

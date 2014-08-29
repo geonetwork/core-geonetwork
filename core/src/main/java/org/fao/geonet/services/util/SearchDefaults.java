@@ -98,7 +98,9 @@ public class SearchDefaults {
 			@SuppressWarnings("unchecked")
             List<Element> otherEl = request.getChildren();
 			for (Element e : otherEl) {
-                elData.addContent(new Element(e.getName()).setText(e.getText()));
+				if(!e.getName().equalsIgnoreCase("_content_type")) {
+					elData.addContent(new Element(e.getName()).setText(e.getText()));
+				}
 			}
 
 		} else if (elSession != null) {

@@ -126,4 +126,23 @@ public class DefaultResourceUploadHandler implements IResourceUploadHandler {
                     "Unable to move uploaded file to destination directory");
         }
     }
+    
+    public void onUpload(ServiceContext context, String access, String overwrite,
+            int metadataId, String fileName, double fileSize) throws ResourceHandlerException {
+
+		try {
+			String uploadDir = context.getUploadDir();
+			
+			File dir = new File(Lib.resource.getDir(context, access, metadataId));
+			moveFile(context, uploadDir, fileName, dir, overwrite);
+			
+			storeFileUploadRequest(context, metadataId, fileName, fileSize);
+		
+		} catch (Exception ex) {
+			Log.error(Geonet.RESOURCES, "DefaultResourceUploadHandler (onUpload): " + ex.getMessage());
+			ex.printStackTrace();
+			throw new ResourceHandlerException(ex);
+		}
+	}
+
 }
