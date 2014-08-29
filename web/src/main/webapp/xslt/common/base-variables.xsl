@@ -65,7 +65,8 @@
   <xsl:variable name="fullURLForService" select="concat($fullURL, /root/gui/locService)"/>
   
   <xsl:variable name="isMailEnabled" select="$env/feedback/emailServer/host != ''"/>
-  
+
+  <xsl:variable name="serviceInfo" select="/root/gui"/>
   <xsl:variable name="session" select="/root/gui/session"/>
   <xsl:variable name="isLoggedIn" select="$session/userId != ''"/>
   
