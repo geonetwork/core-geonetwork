@@ -34,6 +34,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
@@ -101,7 +102,8 @@ public class BatchNewOwner extends NotInReadOnlyModeService {
                     //-- group does which is why we have an ownerGroup (parameter groupid)
                     Integer sourceUsr = info.getSourceInfo().getOwner();
                     Integer sourceGrp = info.getSourceInfo().getGroupOwner();
-                    Vector<String> sourcePriv = retrievePrivileges(context, id, "" + sourceUsr, "" + sourceGrp);
+                    Vector<OperationAllowedId> sourcePriv =
+                            retrievePrivileges(context, id, "" + sourceUsr, "" + sourceGrp);
 
                     // -- Set new privileges for new owner from privileges of the old
                     // -- owner, if none then set defaults
@@ -109,9 +111,12 @@ public class BatchNewOwner extends NotInReadOnlyModeService {
                         dm.copyDefaultPrivForGroup(context, id, targetGrp, false);
                         context.info("No privileges for user " + sourceUsr + " on metadata " + id + ", so setting default privileges");
                     } else {
-                        for (String priv : sourcePriv) {
-                            dm.unsetOperation(context, id, "" + sourceGrp, priv);
-                            dm.setOperation(context, id, targetGrp, priv);
+                        for (OperationAllowedId priv : sourcePriv) {
+                            dm.unsetOperation(context, id,
+                                    "" + sourceGrp,
+                                    "" + priv.getOperationId());
+                            dm.setOperation(context, id, targetGrp,
+                                    "" + priv.getOperationId());
                         }
                     }
                     // -- set the new owner into the metadata record
@@ -138,7 +143,7 @@ public class BatchNewOwner extends NotInReadOnlyModeService {
 
     //--------------------------------------------------------------------------
 
-    private Vector<String> retrievePrivileges(ServiceContext context, String id, String userId, String groupId) throws Exception {
+    private Vector<OperationAllowedId> retrievePrivileges(ServiceContext context, String id, String userId, String groupId) throws Exception {
 
         OperationAllowedRepository opAllowRepo = context.getBean(OperationAllowedRepository.class);
 
@@ -151,9 +156,9 @@ public class BatchNewOwner extends NotInReadOnlyModeService {
 
         List<OperationAllowed> operationsAllowed = opAllowRepo.findAllWithOwner(iUserId, Optional.of(spec));
 
-        Vector<String> result = new Vector<String>();
+        Vector<OperationAllowedId> result = new Vector<OperationAllowedId>();
         for (OperationAllowed operationAllowed : operationsAllowed) {
-            result.add(String.valueOf(operationAllowed.getId()));
+            result.add(operationAllowed.getId());
         }
 
         return result;

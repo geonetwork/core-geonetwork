@@ -65,7 +65,10 @@
           when('/create', {
             templateUrl: tplFolder + 'new-metadata.html',
             controller: 'GnNewMetadataController'}).
-          when('/create/from/:id/in/:group/astemplate/:template', {
+          when('/create/from/:id/in/:group', {
+            templateUrl: tplFolder + 'editor.html',
+            controller: 'GnNewMetadataController'}).
+          when('/create/from/:id/in/:group/template/:template', {
             templateUrl: tplFolder + 'editor.html',
             controller: 'GnNewMetadataController'}).
           when('/directory', {
@@ -353,11 +356,16 @@
       $scope.cancel = function(refreshForm) {
         gnEditor.cancel(refreshForm)
           .then(function(form) {
-              $scope.savedStatus = gnCurrentEdit.savedStatus;
-              $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('cancelMetadataSuccess')
-              });
-              gnEditor.refreshEditorForm(null, true);
+            // Refresh editor form after cancel
+            //  $scope.savedStatus = gnCurrentEdit.savedStatus;
+            //  $rootScope.$broadcast('StatusUpdated', {
+            //    title: $translate('cancelMetadataSuccess')
+            //  });
+            //  gnEditor.refreshEditorForm(null, true);
+
+            // Close the editor tab
+              window.onbeforeunload = null;
+              window.close();
             }, function(error) {
               $scope.savedStatus = gnCurrentEdit.savedStatus;
               $rootScope.$broadcast('StatusUpdated', {

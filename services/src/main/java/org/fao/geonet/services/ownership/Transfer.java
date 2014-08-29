@@ -53,7 +53,7 @@ public class Transfer extends NotInReadOnlyModeService {
      * @param params
      * @throws Exception
      */
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+    public void init(String appPath, ServiceConfig params) throws Exception {}
 
     /**
      *
@@ -62,71 +62,82 @@ public class Transfer extends NotInReadOnlyModeService {
      * @return
      * @throws Exception
      */
-	public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
-		int sourceUsr = Util.getParamAsInt(params, "sourceUser");
-		int sourceGrp = Util.getParamAsInt(params, "sourceGroup");
-		int targetUsr = Util.getParamAsInt(params, "targetUser");
-		int targetGrp = Util.getParamAsInt(params, "targetGroup");
+    public Element serviceSpecificExec(Element params, ServiceContext context) throws Exception {
+        int sourceUsr = Util.getParamAsInt(params, "sourceUser");
+        int sourceGrp = Util.getParamAsInt(params, "sourceGroup");
+        int targetUsr = Util.getParamAsInt(params, "targetUser");
+        int targetGrp = Util.getParamAsInt(params, "targetGroup");
 
-		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager   dm = gc.getBean(DataManager.class);
+        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
+        DataManager   dm = gc.getBean(DataManager.class);
 
-		//--- transfer privileges (if case)
+        //--- transfer privileges (if case)
 
-		Set<String> sourcePriv = retrievePrivileges(context, sourceUsr, sourceGrp);
-		Set<String> targetPriv = retrievePrivileges(context, null, targetGrp);
+        Set<String> sourcePriv = retrievePrivileges(context, sourceUsr, sourceGrp);
+        Set<String> targetPriv = retrievePrivileges(context, null, targetGrp);
 
-		//--- a commit just to release some resources
+        //--- a commit just to release some resources
 
         dm.flush();
 
         int privCount = 0;
 
-		Set<Integer> metadata = new HashSet<Integer>();
+        Set<Integer> metadata = new HashSet<Integer>();
 
-		for (String priv : sourcePriv)
-		{
-			StringTokenizer st = new StringTokenizer(priv, "|");
+        for (String priv : sourcePriv)
+        {
+            StringTokenizer st = new StringTokenizer(priv, "|");
 
-			int opId = Integer.parseInt(st.nextToken());
-			int mdId = Integer.parseInt(st.nextToken());
+            int opId = Integer.parseInt(st.nextToken());
+            int mdId = Integer.parseInt(st.nextToken());
 
-			dm.unsetOperation(context, mdId, sourceGrp, opId);
+            // 2 cases could happen, 1) only the owner change
+            // in that case sourceGrp = targetGrp and operations
+            // allowed does not need to be modified.
+            if (sourceGrp != targetGrp) {
+                // 2) the sourceGrp != targetGrp and in that
+                // case, all operations need to be transfered to
+                // the new group if not already defined.
+                dm.unsetOperation(context, mdId, sourceGrp, opId);
 
-			if (!targetPriv.contains(priv)) {
-			    OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
-			    OperationAllowedId id = new OperationAllowedId()
-			        .setGroupId(targetGrp)
-			        .setMetadataId(mdId)
-			        .setOperationId(opId);
-                OperationAllowed operationAllowed = new OperationAllowed(id );
-                repository.save(operationAllowed);
-			}
+                if (!targetPriv.contains(priv)) {
+                    OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
+                    OperationAllowedId id = new OperationAllowedId()
+                            .setGroupId(targetGrp)
+                            .setMetadataId(mdId)
+                            .setOperationId(opId);
+                    OperationAllowed operationAllowed = new OperationAllowed(id );
+                    repository.save(operationAllowed);
+                }
+            }
 
+            // Collect all metadata ids
+            metadata.add(mdId);
+            privCount++;
+        }
+
+        // Set owner for all records to be modified.
+        for (Integer i : metadata) {
             final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
-            final Metadata metadata1 = metadataRepository.findOne(mdId);
+            final Metadata metadata1 = metadataRepository.findOne(i);
             metadata1.getSourceInfo().setGroupOwner(targetGrp).setOwner(targetUsr);
             metadataRepository.save(metadata1);
-
-            metadata.add(mdId);
-			privCount++;
-		}
+        }
 
         dm.flush();
 
         //--- reindex metadata
         List<String> list = new ArrayList<String>();
-		for (int mdId : metadata) {
+        for (int mdId : metadata) {
             list.add(Integer.toString(mdId));
         }
-
         dm.indexMetadata(list);
 
         //--- return summary
-		return new Element("response")
-			.addContent(new Element("privileges").setText(privCount      +""))
-			.addContent(new Element("metadata")  .setText(metadata.size()+""));
-	}
+        return new Element("response")
+                .addContent(new Element("privileges").setText(privCount      +""))
+                .addContent(new Element("metadata")  .setText(metadata.size()+""));
+    }
 
     /**
      *
