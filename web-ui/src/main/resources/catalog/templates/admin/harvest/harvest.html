@@ -7,12 +7,16 @@
     </div>
 
     <div class="panel-body">
-      <input class="form-control" data-ng-model="harvesterSearch.$" autofocus=""
+      <input class="form-control"
+             data-ng-show="harvesters.length > 1"
+             data-ng-model="harvesterSearch.$"
+             data-ng-change="firstPage()"
+             autofocus=""
              placeholder="{{'filter' | translate}}"/>
 
-      <div class="list-group">
+      <div class="list-group" data-ng-hide="isLoadingHarvester">
         <a href="" class="list-group-item"
-           data-ng-repeat="h in harvesters | filter:harvesterSearch | orderBy:'name'"
+           data-ng-repeat="h in pageItems()"
            data-ng-class="h['@id'] === harvesterSelected['@id'] ? 'active' : ''"
            data-ng-click="selectHarvester(h)"
            title="{{h.info.lastRun.length === 0 ? '' : ('lastRun' | translate) + (h.info.lastRun | gnFromNow)}}">
@@ -23,6 +27,8 @@
             >{{h.info.result.total}}</span>
           <i data-ng-show="h.info.running" class="fa fa-spinner fa-spin"/>
         </a>
+        <span data-gn-pagination-list=""
+              data-items="harvesters | filter:harvesterSearch | orderBy:'name'"/>
       </div>
 
       <div class="btn-group">
