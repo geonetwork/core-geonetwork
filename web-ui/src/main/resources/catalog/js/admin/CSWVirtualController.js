@@ -12,13 +12,13 @@
    *
    */
   module.controller('GnCSWVirtualController', [
-    '$scope', '$http', '$rootScope', '$translate',
-    function($scope, $http, $rootScope, $translate) {
+    '$scope', '$http', '$rootScope', '$translate', '$timeout',
+    function($scope, $http, $rootScope, $translate, $timeout) {
 
       /**
        * CSW virtual
        */
-      $scope.cswVirtual = {};
+      $scope.cswVirtual = null;
       $scope.virtualCSWSelected = null;
       $scope.virtualCSWUpdated = false;
       $scope.virtualCSWSearch = '';
@@ -74,6 +74,10 @@
                         serviceParameters[param['@name']] = param['#text'];
                   });
               $scope.virtualCSWUpdated = false;
+
+              $timeout(function() {
+                $('#servicename').focus();
+              }, 100);
             }).error(function(data) {
               // TODO
             });
@@ -97,6 +101,10 @@
             'type': ''
           }
         };
+
+        $timeout(function() {
+          $('#servicename').focus();
+        }, 100);
       };
       $scope.saveVirtualCSW = function(formId) {
 

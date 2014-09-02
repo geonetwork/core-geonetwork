@@ -4,13 +4,18 @@
       <div class="panel-heading" data-translate="">thesaurus</div>
 
       <div class="panel-body">
-        <input class="form-control" autofocus="" data-ng-model="thesaurusSearch.$"
+        <input class="form-control" autofocus=""
+               data-ng-show="thesaurus.length > 1"
+               data-ng-model="thesaurusSearch.$"
           placeholder="{{'filter' | translate}}"/>
         <input type="hidden" data-ng-model="thesaurusSelected.id"/>
         <div class="list-group">
           <a href="" class="list-group-item"
-            data-ng-repeat="t in thesaurus | filter:thesaurusSearch | orderBy:'title'"
+            data-ng-repeat="t in pageItems()"
             data-ng-click="selectThesaurus(t)"> {{t.title}} ({{t.dname}}) </a>
+          <span data-gn-pagination-list=""
+                data-items="thesaurus | filter:thesaurusSearch | orderBy:'title'"
+                data-cache="thesaurus"/>
         </div>
 
         <div class="btn-group btn-block">

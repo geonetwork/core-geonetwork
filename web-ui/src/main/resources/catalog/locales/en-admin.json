@@ -18,7 +18,8 @@
     "cron-0 0/5 14 * * ?": "Fire every 5 minutes starting at 2pm and ending at 2:55pm, every day",
     "cron-0 15 10 ? * MON-FRI": "Fire at 10:15am every Monday, Tuesday, Wednesday, Thursday and Friday",
     "cron-0 15 10 15 * ?": "Fire at 10:15am on the 15th day of every month",
-    
+    "recordsHarvestedIn": " record(s) harvested in ",
+    "seconds": "seconds",
     "totalNumberOfRecords": "records in the catalog",
     "totalNumberOfRecordsHelp": "Total number of records visible to you.",
     
@@ -428,7 +429,7 @@
     "geonetwork-xslfilter": "XSL filter name to apply",
     "geonetwork-xslfilterHelp": "The XSL filter is applied to each metadata record",
     "geonetwork-customCriteria": "Custom criteria",
-    "geonetwork-customCriteriaHelp": "Define whatever criteria supported by the remote node and not available in the predifined filters (eg. 'similarity' set to '1' for non fuzzy search).",
+    "geonetwork-customCriteriaHelp": "Define whatever criteria supported by the remote node and not available in the predifined filters (eg. 'similarity' set to '1' for non fuzzy search). You may specify multiple criteria separated by ';' (eg. _schema;siteId with values iso19139;7fc45be3-9aba-4198-920c-b8737112d522)",
     
     "harvester-ogcwxs": "OGC Web Services",
     "harvester-ogcwxsHelp": "Harvest the GetCapabilities document from an OGC server (eg. WMS, WFS, WCS, SOS, WPS, CSW).",
