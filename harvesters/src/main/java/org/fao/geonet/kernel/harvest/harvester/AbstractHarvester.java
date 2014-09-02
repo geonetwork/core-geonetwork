@@ -562,7 +562,8 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
                     .setHarvesterUuid(getParams().uuid)
                     .setElapsedTime((int) elapsedTime)
                     .setHarvestDate(new ISODate(lastRun))
-                    .setParams(getParams().node);
+                    .setParams(getParams().node)
+                    .setInfo(result);
             historyRepository.save(history);
 
 
