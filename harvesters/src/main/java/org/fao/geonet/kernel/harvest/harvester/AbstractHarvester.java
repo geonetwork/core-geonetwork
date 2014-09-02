@@ -491,7 +491,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
             this.log.info("Starting harvesting of " + this.getParams().name);
             error = null;
             errors.clear();
-            final Logger logger = Log.createLogger(Geonet.HARVESTER);
+            final Logger logger = this.log;
             final String nodeName = getParams().name + " (" + getClass().getSimpleName() + ")";
             final String lastRun = new DateTime().withZone(DateTimeZone.forID("UTC")).toString();
             try {
