@@ -16,6 +16,8 @@
     "tools": "Outils",
     "totalNumberOfRecords": " fiches dans le catalogue",
     "totalNumberOfRecordsHelp": "Nombre totale de fiches que vous pouvez consulter.",
+    "recordsHarvestedIn": " fiche(s) moissonnée(s) en",
+    "seconds": "secondes",
     "status": "Statut",
     "information": "Information",
     "dbUrl": "Base de données",

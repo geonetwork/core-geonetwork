@@ -18,7 +18,8 @@
     "cron-0 0/5 14 * * ?": "Fire every 5 minutes starting at 2pm and ending at 2:55pm, every day",
     "cron-0 15 10 ? * MON-FRI": "Fire at 10:15am every Monday, Tuesday, Wednesday, Thursday and Friday",
     "cron-0 15 10 15 * ?": "Fire at 10:15am on the 15th day of every month",
-    
+    "recordsHarvestedIn": " record(s) harvested in ",
+    "seconds": "seconds",
     "totalNumberOfRecords": "records in the catalog",
     "totalNumberOfRecordsHelp": "Total number of records visible to you.",
     
