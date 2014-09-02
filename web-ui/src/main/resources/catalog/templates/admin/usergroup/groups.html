@@ -1,7 +1,10 @@
 <div class="row" data-ng-controller="GnUserGroupController">
   <div class="col-lg-4">
     <div class="panel panel-default">
-      <div class="panel-heading" data-translate="">groups</div>
+      <div class="panel-heading">
+        <span data-translate="">groups</span>
+        <i data-ng-show="isLoadingGroups" class="fa fa-spinner fa-spin"></i>
+      </div>
       <div class="panel-body">
         <input class="form-control"
                data-ng-show="groups.length > 1"

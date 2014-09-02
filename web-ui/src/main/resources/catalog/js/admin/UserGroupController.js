@@ -63,14 +63,19 @@
       $scope.userUpdated = false;
       $scope.passwordCheck = '';
 
+      $scope.isLoadingUsers = false;
+      $scope.isLoadingGroups = false;
 
 
 
       function loadGroups() {
+        $scope.isLoadingGroups = true;
         $http.get('admin.group.list@json').success(function(data) {
           $scope.groups = data !== 'null' ? data : null;
+          $scope.isLoadingGroups = false;
         }).error(function(data) {
           // TODO
+          $scope.isLoadingGroups = false;
         }).then(function() {
           // Search if requested group in location is
           // in the list and trigger selection.
@@ -86,10 +91,13 @@
         });
       }
       function loadUsers() {
+        $scope.isLoadingUsers = true;
         $http.get('admin.user.list@json').success(function(data) {
           $scope.users = data;
+          $scope.isLoadingUsers = false;
         }).error(function(data) {
           // TODO
+          $scope.isLoadingUsers = false;
         }).then(function() {
           // Search if requested user in location is
           // in the list and trigger user selection.
