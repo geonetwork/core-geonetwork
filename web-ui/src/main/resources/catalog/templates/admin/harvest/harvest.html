@@ -1,11 +1,15 @@
 <div class="row">
 <div class="col-lg-4">
   <div class="panel panel-default">
-    <div class="panel-heading" data-translate="">harvester</div>
+    <div class="panel-heading">
+      <span data-translate="">harvester</span>
+      <i data-ng-show="isLoadingHarvester" class="fa fa-spinner fa-spin"></i>
+    </div>
 
     <div class="panel-body">
       <input class="form-control" data-ng-model="harvesterSearch.$" autofocus=""
              placeholder="{{'filter' | translate}}"/>
+
       <div class="list-group">
         <a href="" class="list-group-item"
            data-ng-repeat="h in harvesters | filter:harvesterSearch | orderBy:'name'"
@@ -111,6 +115,7 @@
   <div class="panel panel-default" data-ng-hide="harvesterSelected['@id'] == ''">
     <div class="panel-heading">
       <span data-translate="">harvesterHistory</span>
+      <i data-ng-show="isLoadingHarvesterHistory" class="fa fa-spinner fa-spin"></i>
       <div class="btn-toolbar">
         <button type="button" class="btn btn-primary pull-right btn-danger fa fa-trash-o"
                 data-ng-hide="harvesterHistory.length === 0" data-ng-click="deleteHarvesterHistory()"
@@ -152,7 +157,7 @@
                 {{h.info[0].total}}
                 <span data-translate="">recordsHarvestedIn</span>
                 {{h.elapsedtime}}
-                <span data-translate="">seconds</span>.
+                <span data-translate="">seconds</span>
               </h4>
               <p>
                 <small class="text-muted">

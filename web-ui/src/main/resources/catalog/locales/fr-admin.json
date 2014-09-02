@@ -345,7 +345,7 @@
     "deleteCriteriaGroup" : "Delete Criteria Group",
     "deleteCriteria" : "Delete Criteria",
 
-    "harvester": "noeuds distants",
+    "harvester": "Noeuds distants",
     "newHarvester": "Moissonner ",
     "deleteHarvester": "Supprimer",
     "deleteHarvesterHelp": "Supprimer le noeud et tous les fiches associées",

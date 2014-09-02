@@ -33,30 +33,39 @@
       $scope.harvesterUpdated = false;
       $scope.harvesterNew = false;
       $scope.harvesterHistory = {};
+      $scope.isLoadingHarvester = false;
+      $scope.isLoadingHarvesterHistory = false;
 
 
       var unbindStatusListener = null;
 
 
       function loadHarvesters() {
+        $scope.isLoadingHarvester = true;
+        $scope.harvesters = {};
         return $http.get('admin.harvester.list@json').success(function(data) {
           if (data != 'null') {
             $scope.harvesters = data;
             gnUtilityService.parseBoolean($scope.harvesters);
+            $scope.isLoadingHarvester = false;
           }
         }).error(function(data) {
           // TODO
+          $scope.isLoadingHarvester = false;
         });
       }
 
 
       function loadHistory() {
+        $scope.isLoadingHarvesterHistory = true;
         $scope.harvesterHistory = undefined;
         $http.get('admin.harvester.history@json?uuid=' +
             $scope.harvesterSelected.site.uuid).success(function(data) {
           $scope.harvesterHistory = data.harvesthistory;
+          $scope.isLoadingHarvesterHistory = false;
         }).error(function(data) {
           // TODO
+          $scope.isLoadingHarvesterHistory = false;
         });
       }
 
