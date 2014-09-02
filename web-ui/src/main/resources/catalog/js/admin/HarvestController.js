@@ -28,7 +28,7 @@
         tabs: []
       };
       $scope.harvesterTypes = {};
-      $scope.harvesters = {};
+      $scope.harvesters = null;
       $scope.harvesterSelected = null;
       $scope.harvesterUpdated = false;
       $scope.harvesterNew = false;
@@ -42,7 +42,7 @@
 
       function loadHarvesters() {
         $scope.isLoadingHarvester = true;
-        $scope.harvesters = {};
+        $scope.harvesters = null;
         return $http.get('admin.harvester.list@json').success(function(data) {
           if (data != 'null') {
             $scope.harvesters = data;

@@ -256,11 +256,14 @@ class Harvester implements IHarvester<HarvestResult> {
             harvestError.setHint("Check with your administrator.");
             this.errors.add(harvestError);
             throw new OperationAbortedEx("Raised exception when searching", e);
-		}
-		catch(Exception e)
-		{
-			log.warning("Raised exception when searching : "+ e);
-			throw new OperationAbortedEx("Raised exception when searching", e);
+        } catch(Exception e) {
+            HarvestError harvestError = new HarvestError(e, log);
+            harvestError.setDescription("Error while searching on "
+                    + params.name + ". ");
+            harvestError.setHint("Check with your administrator.");
+            this.errors.add(harvestError);
+            log.warning("Raised exception when searching : "+ e);
+            return new Element("response");
 		}
 	}
 
