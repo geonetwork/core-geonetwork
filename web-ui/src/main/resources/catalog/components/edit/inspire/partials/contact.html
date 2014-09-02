@@ -7,7 +7,7 @@
                 <div data-placeholder-input
                      data-parent="contact"
                      data-field="name"
-                     data-disabled="{{contact.validated}}"
+                     data-disabled="{{contact.validated || !contact.id}}"
                      data-placeholder="{{'name' | translate}}"/>
 
             </div>
@@ -15,7 +15,7 @@
                 <div data-placeholder-input
                      data-parent="contact"
                      data-field="surname"
-                     data-disabled="{{contact.validated}}"
+                     data-disabled="{{contact.validated || !contact.id}}"
                      data-placeholder="{{'surname' | translate}}"/>
             </div>
         </div>
@@ -24,7 +24,7 @@
                 <div data-placeholder-input
                      data-parent="contact"
                      data-field="email"
-                     data-disabled="{{contact.validated}}"
+                     data-disabled="{{contact.validated || !contact.id}}"
                      data-placeholder="{{'email' | translate}}"/>
             </div>
         </div>
@@ -33,12 +33,13 @@
                 <div data-ie9-select
                      data-options="roleOptions"
                      data-value="name" data-title="title"
+                     data-disabled="{{!contact.id}}"
                      data-field="contact.role"></div>
             </div>
         </div>
         <div class="form-group">
             <div class="col-xs-12">
-                <div data-ng-disabled="contact.validated" data-inspire-multilingual-text data-field="contact.organization"
+                <div data-ng-disabled="contact.validated || !contact.id" data-inspire-multilingual-text data-field="contact.organization"
                      validation-class="{{validationClass}}"
                      data-placeholder="{{'organization' | translate}}" data-rows="1" data-main-lang="mainLang"
                      data-languages="languages"/>

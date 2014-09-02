@@ -1,6 +1,7 @@
 <div data-ng-switch="groups.length > 1">
 
     <select class="form-control"
+            data-ng-disabled="disabled === 'true'"
             data-ng-switch-when="true">
         <option data-ng-selected="!field"
                 data-ng-if="showEmptyOption"
@@ -17,6 +18,7 @@
         </optgroup>
     </select>
     <select class="form-control"
+            data-ng-disabled="disabled === 'true'"
             data-ng-switch-default="">
         <option data-ng-selected="!field"
                 data-ng-if="showEmptyOption"

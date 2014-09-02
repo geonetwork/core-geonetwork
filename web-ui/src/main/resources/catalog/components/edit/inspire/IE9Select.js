@@ -17,6 +17,7 @@
         titleFunc: '&',
         translateTitle: '@',
         keepEmptyEl: '@',
+        disabled: '@',
         optionFilter: '&'
       },
       transclude: true,
