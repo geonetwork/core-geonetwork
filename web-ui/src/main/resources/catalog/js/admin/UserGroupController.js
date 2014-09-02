@@ -132,7 +132,8 @@
         $scope.userIsAdmin = false;
         $timeout(function() {
           $scope.setUserProfile();
-        });
+          $('#username').focus();
+        }, 100);
       };
 
       /**
@@ -184,6 +185,10 @@
         });
 
         $scope.userUpdated = false;
+
+        $timeout(function() {
+          $('#username').focus();
+        }, 100);
       };
 
 
@@ -346,6 +351,9 @@
           description: '',
           email: ''
         };
+        $timeout(function() {
+          $('#groupname').focus();
+        }, 100);
       };
 
       $scope.saveGroup = function(formId) {
@@ -402,6 +410,10 @@
           sortBy: 'title'
         });
         $scope.groupUpdated = false;
+
+        $timeout(function() {
+          $('#groupname').focus();
+        });
       };
 
       $scope.updatingGroup = function() {
