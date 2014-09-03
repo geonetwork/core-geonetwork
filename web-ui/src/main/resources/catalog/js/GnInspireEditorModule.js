@@ -80,6 +80,7 @@
   module.controller('GnInspireController', [
     '$scope', 'inspireMetadataLoader', 'translateLangFilter', '$translate', '$http',
     function($scope, inspireMetadataLoader, translateLangFilter, $translate, $http) {
+      $scope.metadataIcon = "";
       $scope.base = "../../catalog/";
       $scope.url = "";
       $scope.lang = location.href.split('/')[5].substring(0, 3) || 'eng';
@@ -101,6 +102,31 @@
 
       $scope.data = inspireMetadataLoader($scope.lang, $scope.url, mdId);
       $scope.emptyContact = $scope.data.contact[0];
+
+      $http.get($scope.url + "q@json?fast=true&from=1&to=1&sortBy=relevance&_id=" + mdId).success(function(data){
+        var metadata, logoId;
+        if (data.metadata) {
+          if (data.metadata[0]) {
+            metadata = data.metadata[0];
+          } else {
+            metadata = data.metadata;
+          }
+          if (metadata.catalog && metadata.catalog.length == 2) {
+            logoId = metadata.catalog[1];
+          } else {
+            logoId = metadata.source;
+          }
+        }
+
+        if (logoId) {
+          $scope.metadataIcon = "http://localhost:8190/geonetwork/images/logos/"+logoId+".gif";
+        }
+      }).error(function(err){
+        if (waitDialog) {
+          waitDialog.modal('hide');
+        }
+        alert(err);
+      });
 
       $scope.translateLanguage = function(lang) {
         return function (lang) {
