@@ -47,8 +47,8 @@
           if (data != 'null') {
             $scope.harvesters = data;
             gnUtilityService.parseBoolean($scope.harvesters);
-            $scope.isLoadingHarvester = false;
           }
+          $scope.isLoadingHarvester = false;
         }).error(function(data) {
           // TODO
           $scope.isLoadingHarvester = false;
