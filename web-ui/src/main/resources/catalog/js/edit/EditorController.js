@@ -356,14 +356,14 @@
       $scope.cancel = function(refreshForm) {
         gnEditor.cancel(refreshForm)
           .then(function(form) {
-            // Refresh editor form after cancel
-            //  $scope.savedStatus = gnCurrentEdit.savedStatus;
-            //  $rootScope.$broadcast('StatusUpdated', {
-            //    title: $translate('cancelMetadataSuccess')
-            //  });
-            //  gnEditor.refreshEditorForm(null, true);
+              // Refresh editor form after cancel
+              //  $scope.savedStatus = gnCurrentEdit.savedStatus;
+              //  $rootScope.$broadcast('StatusUpdated', {
+              //    title: $translate('cancelMetadataSuccess')
+              //  });
+              //  gnEditor.refreshEditorForm(null, true);
 
-            // Close the editor tab
+              // Close the editor tab
               window.onbeforeunload = null;
               window.close();
             }, function(error) {

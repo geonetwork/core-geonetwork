@@ -1,16 +1,24 @@
 <div class="row" data-ng-controller="GnUserGroupController">
   <div class="col-lg-4">
     <div class="panel panel-default">
-      <div class="panel-heading" data-translate="">groups</div>
+      <div class="panel-heading">
+        <span data-translate="">groups</span>
+        <i data-ng-show="isLoadingGroups" class="fa fa-spinner fa-spin"></i>
+      </div>
       <div class="panel-body">
-        <input class="form-control" data-ng-model="groupSearch.$" autofocus=""
+        <input class="form-control"
+               data-ng-show="groups.length > 1"
+               data-ng-model="groupSearch.$" autofocus=""
           placeholder="{{'filter' | translate}}"/>
         <input type="hidden" data-ng-model="groupSelected.id"/>
         <div class="list-group">
           <a href="" class="list-group-item"
-            data-ng-repeat="g in groups | filter:groupSearch | orderBy:'name'"
+            data-ng-repeat="g in pageItems()"
             data-ng-class="g.id === groupSelected.id ? 'active' : ''" data-ng-click="selectGroup(g)"
             > {{g.label[lang]}} </a>
+          <span data-gn-pagination-list=""
+              data-items="groups | filter:groupSearch | orderBy:'name'"
+              data-cache="groups"/>
         </div>
 
         <button type="button" class="btn btn-primary btn-block" data-ng-click="addGroup()"
@@ -53,8 +61,9 @@
               value="{{groupSelected.id}}"/>
             <div data-ng-class="gnGroupEdit.name.$error.required ? 'has-error' : ''">
               <label class="control-label" data-translate="">groupName</label>
-              <input type="text" name="name" class="form-control" data-ng-model="groupSelected.name"
-                data-ng-required="true"/>
+              <input type="text" id="groupname" name="name" class="form-control"
+                     data-ng-model="groupSelected.name"
+                     data-ng-required="true"/>
               <p class="help-block" data-translate="">groupNameHelp</p>
             </div>
             <label data-translate="">groupDescription</label>

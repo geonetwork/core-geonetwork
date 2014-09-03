@@ -10,8 +10,10 @@
    * to manage category.
    */
   module.controller('GnCategoriesController', [
-    '$scope', '$routeParams', '$http', '$rootScope', '$translate',
-    function($scope, $routeParams, $http, $rootScope, $translate) {
+    '$scope', '$routeParams', '$http', '$rootScope',
+    '$translate', '$timeout',
+    function($scope, $routeParams, $http, $rootScope,
+             $translate, $timeout) {
 
       $scope.categories = null;
       $scope.categorySelected = {id: $routeParams.categoryId};
@@ -21,6 +23,9 @@
       $scope.selectCategory = function(c) {
         $scope.cateroryUpdated = false;
         $scope.categorySelected = c;
+        $timeout(function() {
+          $('#categoryname').focus();
+        }, 100);
       };
 
 
@@ -71,6 +76,9 @@
           '@id': '',
           name: ''
         };
+        $timeout(function() {
+          $('#categoryname').focus();
+        }, 100);
       };
 
       $scope.unselectCategory = function() {

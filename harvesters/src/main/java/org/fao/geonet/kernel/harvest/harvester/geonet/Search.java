@@ -23,10 +23,18 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
+import com.google.common.base.Splitter;
+import org.fao.geonet.Logger;
 import org.fao.geonet.Util;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+
+import java.util.Iterator;
 
 //=============================================================================
 
@@ -37,8 +45,8 @@ class Search
 	//--- Constructor
 	//---
 	//---------------------------------------------------------------------------
-
-	public Search() {}
+	public Search() {
+    }
 
 	//---------------------------------------------------------------------------
 
@@ -94,7 +102,24 @@ class Search
 		add(req, "abstract", abstrac);
 		add(req, "themekey", keywords);
 		add(req, "siteId",   sourceUuid);
-		add(req, anyField, anyValue);
+
+        try {
+            Iterable<String> fields = Splitter.on(';').split(anyField);
+            Iterable<String> values = Splitter.on(';').split(anyValue);
+            Iterator<String> valuesIterator = values.iterator();
+            for (String field : fields) {
+                String value = valuesIterator.next();
+                if (field != null && value != null) {
+                    add(req, field, value);
+                }
+            }
+        } catch (Exception e) {
+            throw new OperationAbortedEx("Search request criteria error. " +
+                    "Check that the free criteria fields '" +
+                    anyField + "' and values '" +
+                    anyValue + "' are correct. You MUST have the same " +
+                    "number of criteria and values.", e);
+        }
 
 		if (digital)
 			Lib.element.add(req, "digital", "on");
