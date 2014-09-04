@@ -32,24 +32,6 @@
          node.nodes.push(layer);
        }
    };
-     var toto = function(layers) {
-     var tree = {
-         };
-       var sep = '/';
-   for(var i=0;i<layers.length;i++) {
-       var l = layers[i];
-       var groups = l.get('group');
-       if(!groups) {
-           //tree.layers.push(l);
-             }
-       else {
-           var g = groups.split(sep);
-           createNode(l, tree, g, 1);
-         }
-     }
-   return tree;
- }
-
 
   /**
    * @ngdoc filter
@@ -76,7 +58,8 @@
    */
   module.directive('gnLayermanager', [
     'gnLayerFilters',
-    function (gnLayerFilters) {
+    '$filter',
+    function (gnLayerFilters, $filter) {
     return {
       restrict: 'A',
       templateUrl: '../../catalog/components/viewer/layermanager/' +
@@ -121,10 +104,24 @@
         scope.layers = scope.map.getLayers().getArray();
         scope.layerFilterFn = gnLayerFilters.selected;
 
-        scope.layerTree = {};
-        scope.toto = function() {
-          scope.layerTree = toto(scope.layers);
-        }
+        scope.map.getLayers().on('change:length', function(e) {
+          scope.layerTree = {
+            nodes: []
+          };
+          var sep = '/';
+          var fLayers = $filter('filter')(scope.layers, scope.layerFilterFn);
+          for (var i = 0; i < fLayers.length; i++) {
+            var l = fLayers[i];
+            var groups = l.get('group');
+            if (!groups) {
+              scope.layerTree.nodes.push(l);
+            }
+            else {
+              var g = groups.split(sep);
+              createNode(l, scope.layerTree, g, 1);
+            }
+          }
+        });
       }
     };
   }]);
@@ -177,7 +174,7 @@
       return {
         require: '^gnLayermanager',
         restrict: 'A',
-        replace: true,
+        replace: false,
         templateUrl: '../../catalog/components/viewer/layermanager/' +
             'partials/layermanageritem.html',
         scope: true,

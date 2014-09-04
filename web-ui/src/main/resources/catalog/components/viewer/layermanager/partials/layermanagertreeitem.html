@@ -1,30 +1,7 @@
 <li class="list-group-item">
     <span ng-click="toggleNode($event)" class="fa fa-minus-square-o"  ng-if="isParentNode()">{{member.name}}</span>
-    <div ng-if="!isParentNode()" data-ng-class="{'active': member.showInfo}">
-        {{member.showInfo}}
-        <button class="btn btn-cog" data-ng-click="gnLayermanagerCtrl.showInfo(member)">
-          <span class="fa fa-cog"></span>
-        </button>
-        <label><input type="checkbox" ng-model="member.visible" />
-          <i class="fa fa-globe" data-ng-class="{disabled : !member.getExtent()}"
-             data-ng-click="gnLayermanagerCtrl.zoomToExtent(member, map)"></i>
-          <span data-ng-click="gnLayermanagerCtrl.showMetadata(member.get('metadata'), member.get('label'))">
-            {{member.get('label')}}
-           </span>
-        </label>
-        <div class="details">
-          <button class="btn btn-default delete" ng-click="map.removeLayer(member)">
-            <span class="fa fa-trash-o"></span>
-            Supprimer
-          </button>
-          <label>Transparence <input type="range" min="0" max="1" step="0.05" ng-model="member.opacity" /></label>
-          <h6 ng-if="member.get('legend')">Légende</h6>
-          <p ng-if="member.get('legend')">
-            <img src="{{member.get('legend')}}"/>
-          </p>
-          <h6 ng-if="member.get('attribution')">Source</h6>
-          <p ng-if="member.get('attribution')"><em>{{member.get('attribution')}}</em></p>
-          <div gn-ncwms-transect="" map="map" layer="member" data-ng-if="member.ncInfo"/>
-        </div>
+    <div ng-if="!isParentNode()"
+         gn-layermanager-item="member" map="map"
+         data-ng-class="{'active': member.showInfo}">
     </div>
   </li>
