@@ -7,6 +7,7 @@
 
   var module = angular.module('gn_search_controller',[
     'bootstrap-tagsinput',
+    'ui.bootstrap.typeahead',
     'gn_searchsuggestion_service',
     'gn_search_customui'
   ]);
@@ -36,12 +37,36 @@
   module.controller('GnSearchController', [
     '$scope',
     '$location',
-    function($scope, $location) {
+      'suggestService',
+      '$http',
+    function($scope, $location, suggestService,$http) {
+
+///////////////////////////////////////////////////////////////////
+      $scope.getLocation = function(val) {
+        var url = suggestService.getUrl(val, 'anylight',
+            ('STARTSWITHFIRST'));
+
+        return $http.get(url, {
+        }).then(function(res){
+          return res.data[1];
+        });
+      };
+
+      $scope.$watch('searchObj.advancedMode', function(val) {
+        if(val && ($scope.map.getSize()[0] == 0 || $scope.map.getSize()[1] == 0)){
+          setTimeout(function(){
+            $scope.map.updateSize();
+          }, 0);
+        }
+      });
+
+///////////////////////////////////////////////////////////////////
 
       /** Object to be shared through directives and controllers */
       $scope.searchObj = {
         params: {},
-        permalink: true
+        permalink: true,
+        advancedMode: false
       };
 
       /** Define in the controller scope a reference to the map */

@@ -4,7 +4,9 @@
   <xsl:include href="../base-layout.xsl"/>
 
   <xsl:template mode="content" match="/">
-    <div data-ng-include="'{$uiResourcesPath}templates/search/search.html'">
+
+    <xsl:variable name="view" select="if (/root/request/view) then /root/request/view else 'search'"></xsl:variable>
+    <div data-ng-include="'{$uiResourcesPath}templates/search/{$view}.html'">
     </div>
   </xsl:template>
 </xsl:stylesheet>
