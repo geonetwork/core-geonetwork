@@ -304,11 +304,7 @@ public class GetEditModel implements Service {
                 Save.JSON_TITLE, "gmd:specification/gmd:CI_Citation/gmd:title");
         conformityJson.put(Save.JSON_CONFORMITY_IS_TITLE_SET, hasTitle);
 
-        JSONObject date = new JSONObject();
-        date.put(Save.JSON_DATE, "2010-12-08");
-        date.put(Save.JSON_DATE_TYPE, "publication");
-        date.put(Save.JSON_DATE_TAG_NAME, "gco:Date");
-        conformityJson.put(Save.JSON_DATE, date);
+        addConformityDate(conformityJson);
 
         addValue(conformanceResult, conformityJson, Save.JSON_CONFORMITY_PASS, "gmd:pass/gco:Boolean");
         addValue(conformanceResult, conformityJson, Save.JSON_CONFORMITY_EXPLANATION, "gmd:explanation/gco:CharacterString");
@@ -316,6 +312,14 @@ public class GetEditModel implements Service {
         addValue(getDataQualityEl(conformanceResult), conformityJson, Save.JSON_CONFORMITY_SCOPE_CODE, scopeCodeXPath, "");
 
         return conformityJson;
+    }
+
+    static void addConformityDate(JSONObject conformityJson) throws JSONException {
+        JSONObject date = new JSONObject();
+        date.put(Save.JSON_DATE, "2010-12-08");
+        date.put(Save.JSON_DATE_TYPE, "publication");
+        date.put(Save.JSON_DATE_TAG_NAME, "gco:Date");
+        conformityJson.put(Save.JSON_DATE, date);
     }
 
     static Element getDataQualityEl(Element conformityElement) {

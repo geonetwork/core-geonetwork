@@ -524,6 +524,9 @@ public class Save implements Service {
                 "gmd:specification/gmd:CI_Citation/gmd:title", title);
 
         Element citationEl = title.getParentElement();
+        if (!conformityJson.has(JSON_DATE)) {
+            GetEditModel.addConformityDate(conformityJson);
+        }
         updateDate(editLib, metadataSchema, citationEl, "gmd:date", conformityJson);
 
         Element pass = new Element(JSON_CONFORMITY_PASS, GMD).addContent(
