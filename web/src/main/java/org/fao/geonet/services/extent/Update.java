@@ -29,6 +29,8 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.resources.ResourceManager;
+import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.xlink.Processor;
 import org.fao.geonet.GeonetContext;
@@ -73,7 +75,7 @@ public class Update implements Service
     {
     }
 
-    public Element exec(Element params, ServiceContext context) throws Exception
+    public Element exec(Element params, final ServiceContext context) throws Exception
     {
 
         final GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -184,13 +186,39 @@ public class Update implements Service
         final Set<MetadataRecord> referencingMetadata = Utils.getReferencingMetadata(context, strategy, fields, id, null, false,
                 Functions.<String>identity());
 
-        DataManager dm = gc.getDataManager();
+        final ResourceManager resourceManager = context.getResourceManager();
+        gc.getThreadPool().runTask(new Runnable() {
+            @Override
+            public void run() {
+                DataManager dm = gc.getDataManager();
 
-        Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-        for (MetadataRecord metadataRecord : referencingMetadata) {
-            dm.indexMetadata(dbms, metadataRecord.id, true, context, false, false, true);
-        }
-
+                Dbms dbms = null;
+                try {
+                    dbms = (Dbms) resourceManager.openDirect(Geonet.Res.MAIN_DB);
+                    for (MetadataRecord metadataRecord : referencingMetadata) {
+                        try {
+                            dm.indexMetadata(dbms, metadataRecord.id, true, context, false, false, true);
+                        } catch (Exception e) {
+                            // we want to continue indexing so log and continue on
+                            Log.error("Error indexing metadata after updating extent:\n\tMetadata Id: " + metadataRecord.id
+                                      + "\n\tExtent Id: " + id + "\n\tExtent typename: " + typename, e);
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.error("Error opening database when trying to index metadata after updating extent"
+                              + "\n\tExtent Id: " + id + "\n\tExtent typename: " + typename, e);
+                } finally {
+                    if (dbms != null) {
+                        try {
+                            resourceManager.close(Geonet.Res.MAIN_DB, dbms);
+                        } catch (Exception e) {
+                            Log.error("Error closing database when trying to index metadata after updating extent"
+                                      + "\n\tExtent Id: " + id + "\n\tExtent typename: " + typename, e);
+                        }
+                    }
+                }
+            }
+        });
 
         return responseElem;
     }
