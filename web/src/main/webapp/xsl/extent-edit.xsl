@@ -155,6 +155,14 @@
             }
             
             function submitExtent(){
+               var ok = confirm("This request will return quickly but all the metadata that reference this extent must be indexed, this means this might take
+                        a significant amount of time before the index is consistent with this change.  Please be patient as it could take
+                        10-15 minutes if there are many metadata that reference this extent.  Once the indexing is complete, the spatial
+                        searches will use the new extent in their searches.\n\nPress Ok to continue.");
+
+               if (!ok) {
+                   return
+               }
                submitButton().addClass('loading');
                Ext.get('resetButton').setVisible(false);
 			   new Ajax.Request($('editform').action,
