@@ -23,11 +23,15 @@
 
 package org.fao.geonet.services.metadata;
 
+import com.google.common.collect.Lists;
 import org.fao.geonet.exceptions.BadParameterEx;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
+import org.fao.geonet.kernel.*;
+import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
+import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.Util;
 import org.fao.geonet.utils.Xml;
@@ -37,14 +41,8 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.exceptions.ConcurrentUpdateEx;
-import org.fao.geonet.kernel.AccessManager;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.EditLib;
-import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.lib.Lib;
 import org.jdom.*;
-import org.jdom.filter.ElementFilter;
-import org.jdom.xpath.XPath;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -218,7 +216,7 @@ class EditUtils {
 			String val = entry.getValue().trim();
 			String attr= null;
 
-			if(updatedLocalizedTextElement(md, ref, val, editLib)) {
+			if(updatedLocalizedTextElement(md, schema, ref, val, editLib)) {
 			    continue;
 			}
 
@@ -303,45 +301,29 @@ class EditUtils {
      * @param val
      * @return
      */
-    protected static boolean updatedLocalizedTextElement(Element md, String ref, String val, EditLib editLib) {
+    protected boolean updatedLocalizedTextElement(Element md, String schema,
+                                                  String ref, String val, EditLib editLib) {
         if (ref.startsWith("lang")) {
             if (val.length() > 0) {
-                String[] ids = ref.split("_");
-                // --- search element in current parent
-                Element parent = editLib.findElement(md, ids[2]);
-                List<Element> elems = null;
-                try {
-                  XPath xpath = XPath.newInstance(".//gmd:LocalisedCharacterString[@locale='#" + ids[1] + "']");
-                  @SuppressWarnings("unchecked")
-                  List<Element> tmp = xpath.selectNodes(parent);
-                  elems = tmp;
-                } catch (Exception e) {
-                  Log.debug(Geonet.DATA_MANAGER, "updatedLocalizedTextElement exception " + e.getMessage());
-                }
-                
-                // Element exists, set the value
-                if (elems != null  && elems.size() > 0) {
-                  elems.get(0).setText(val);
-                } else {
-                  // --- add required attribute
-                  parent.setAttribute("type", "gmd:PT_FreeText_PropertyType", Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance"));
-  
-                  // --- add new translation
-                  Namespace gmd = Namespace.getNamespace("gmd", "http://www.isotc211.org/2005/gmd");
-                  Element langElem = new Element("LocalisedCharacterString", gmd);
-                  langElem.setAttribute("locale", "#" + ids[1]);
-                  langElem.setText(val);
-  
-                  Element freeText = getOrAdd(parent, "PT_FreeText", gmd);
-  
-                  Element textGroup = new Element("textGroup", gmd);
-                  freeText.addContent(textGroup);
-                  textGroup.addContent(langElem);
-                  
-                  Element refElem = new Element(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
-                  refElem.setAttribute(Edit.Element.Attr.REF, "");
-                  textGroup.addContent(refElem);
-                  langElem.addContent((Element) refElem.clone());
+
+                SchemaPlugin schemaPlugin = SchemaManager.getSchemaPlugin(context, schema);
+                if (schemaPlugin instanceof MultilingualSchemaPlugin) {
+                    String[] ids = ref.split("_");
+                    // --- search element in current parent
+                    Element parent = editLib.findElement(md, ids[2]);
+                    String language = ids[1];
+                    List<Element> elems = ((MultilingualSchemaPlugin) schemaPlugin)
+                            .getTranslationForElement(parent, language);
+
+                    // Element exists, set the value
+                    if (elems != null  && elems.size() > 0) {
+                        elems.get(0).setText(val);
+                    } else {
+                        ((MultilingualSchemaPlugin) schemaPlugin).addTranslationToElement(
+                                parent, language, val
+                        );
+                        addMissingGeoNetRef(parent);
+                    }
                 }
             }
             return true;
@@ -349,25 +331,32 @@ class EditUtils {
         return false;
     }
 
-	/**
-     * If no PT_FreeText element exists, creates a geonet:element with an empty ref.
+    /**
+     * Visit all descendants of an element and
+     * add an empty geonet:ref element
+     * for later use by the editor.
      *
-     * @param parent
-     * @param name
-     * @param ns
-     * @return
+     * @param element
      */
-	protected static Element getOrAdd(Element parent, String name, Namespace ns) {
-		Element child = parent.getChild(name, ns);
-		if (child == null) {
-			child = new Element(name, ns);
-			Element refElem = new Element(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
-			refElem.setAttribute(Edit.Element.Attr.REF, "");
-			child.addContent(refElem);
-			parent.addContent(child);
-		}
-		return child;
-	}
+    protected static void addMissingGeoNetRef(Element element) {
+        Iterator<Object> descendants = element.getDescendants();
+        List<Object> list = Lists.newArrayList(descendants);
+
+        for (Object descendant : list) {
+            if (descendant instanceof Element) {
+                Element e = (Element) descendant;
+                if (e.getName() != Edit.RootChild.ELEMENT
+                        && e.getNamespace() != Edit.NAMESPACE) {
+                    Element geonetRef = e.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
+                    if (geonetRef == null) {
+                        geonetRef = new Element(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
+                        geonetRef.setAttribute(Edit.Element.Attr.REF, "");
+                        e.addContent(geonetRef);
+                    }
+                }
+            }
+        }
+    }
 
     /**
      *

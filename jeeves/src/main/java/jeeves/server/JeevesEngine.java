@@ -460,7 +460,8 @@ public class JeevesEngine {
 				info("--- Handler started ---------------------------------------");
 			} catch (Exception e) {
                 Map<String, String> errors = new HashMap<String, String>();
-                String eS = "Raised exception while starting appl handler. Skipped.";
+                String eS = "Raised exception while starting the application. " +
+                        "Fix the error and restart.";
                 error(eS);
                 errors.put("Error", eS);
                 error("   Handler   : " + className);

@@ -5,6 +5,10 @@ rebel.xml
 harvesters/harvester_*.log
 web/src/main/webapp/WEB-INF/data/config/schema_plugins/*/schematron/schematron*.xsl
 web/src/main/webapp/WEB-INF/data/config/schemaplugin-uri-catalog.xml
+web/src/main/webapp/WEB-INF/data/config/schema_plugins/csw-record
+web/src/main/webapp/WEB-INF/data/config/schema_plugins/dublin-core
+web/src/main/webapp/WEB-INF/data/config/schema_plugins/fgdc-std
+web/src/main/webapp/WEB-INF/data/config/schema_plugins/iso19*
 web/src/main/webapp/scripts/lib/*
 web/src/main/webapp/images/logos/*
 web/src/main/webapp/images/statTmp
@@ -16,6 +20,7 @@ e2e-tests/*.db
 changes-*
 web/coverage.ec
 */target/
+*/*/target/
 */.externalToolBuilders
 web/src/main/webapp/data/
 web/src/main/webapp/WEB-INF/lucene/
