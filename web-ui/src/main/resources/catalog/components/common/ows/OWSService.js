@@ -23,7 +23,7 @@
           // Push all leaves into a flat array of Layers.
           var getFlatLayers = function(layer) {
             if(angular.isArray(layer)) {
-              for (var i = 0, len = layer.length - 1; i < len; i++) {
+              for (var i = 0, len = layer.length; i < len; i++) {
                 getFlatLayers(layer[i]);
               }
             } else if(angular.isDefined(layer)) {
