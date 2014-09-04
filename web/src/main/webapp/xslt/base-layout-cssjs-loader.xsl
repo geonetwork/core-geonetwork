@@ -49,6 +49,9 @@
         <script src="{$uiResourcesPath}lib/angular-md5.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/datetimepicker.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/buttons.js"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/typeahead.js"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/position.js"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/bindHtml.js"></script>
 
         <script src="{$uiResourcesPath}lib/bootstrap-3.0.1.js"></script>
         <script src="{$uiResourcesPath}lib/proj4js-compressed.js"></script>
