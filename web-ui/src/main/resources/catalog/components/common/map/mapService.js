@@ -191,8 +191,8 @@
               attribution: options.attribution,
               metadata: options.metadata,
               label: options.label,
-              extent: options.extent,
               group: options.group
+              cextent: options.extent
             });
             goDecorateLayer(olLayer);
             olLayer.displayInLayerManager = true;
@@ -203,6 +203,25 @@
               map.addLayer(olLayer);
             }
             return olLayer;
+          },
+
+          /**
+           * Zoom by delta with animation
+           * @param map
+           * @param delta
+           */
+          zoom: function(map, delta) {
+            var view = map.getView();
+            var currentResolution = view.getResolution();
+            if (angular.isDefined(currentResolution)) {
+                map.beforeRender(ol.animation.zoom({
+                  resolution: currentResolution,
+                  duration: 250,
+                  easing: ol.easing.easeOut
+                }));
+              var newResolution = view.constrainResolution(currentResolution, delta);
+              view.setResolution(newResolution);
+            }
           }
         };
       }];

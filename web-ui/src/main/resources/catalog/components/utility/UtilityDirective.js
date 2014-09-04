@@ -224,4 +224,52 @@
       }
     };
   });
+
+  /**
+   * Use to initialize bootstrap datepicker
+   */
+  module.directive('gnBootstrapDatepicker', [
+    function() {
+
+      return {
+        restrict: 'A',
+        scope: {
+          date: '=gnBootstrapDatepicker',
+          dates: '=dateAvailable'
+        },
+        link: function (scope, element, attrs, ngModelCtrl) {
+
+          var available = function(date) {
+            if(scope.dates && scope.dates[date.getFullYear()] &&
+                scope.dates[date.getFullYear()][date.getMonth()] &&
+                $.inArray(date.getDate(), scope.dates[date.getFullYear()][date.getMonth()]) != -1 ) {
+              return '';
+            } else {
+              return 'disabled';
+            }
+          };
+
+          $(element).datepicker({
+            onRender:
+                function(dt,a,b)
+                {
+                  return available(dt);
+                }
+          }).on('changeDate', function(ev) {
+            // view -> model
+            scope.$apply(function () {
+              scope.date = $(element).find('input')[0].value;
+            });
+          });
+
+          // model -> view
+          scope.$watch('date', function(v) {
+            if(angular.isUndefined(v)) {
+              v ='';
+            }
+            $(element).find('input')[0].value = v;
+          });
+        }
+      }
+    }]);
 })();

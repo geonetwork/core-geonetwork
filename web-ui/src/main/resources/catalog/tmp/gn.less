@@ -1,7 +1,7 @@
 // GN Styles
 @import "../lib/style/font-awesome/less/font-awesome.less";
 @import "gn_bootstrap.less";
-@import "../lib/style/datetimepicker.css";
+@import (less) "../lib/bootstrap.ext/datepicker/datepicker.css";
 
 @fa-version: '4.1.0';
 @fa-font-path: '../lib/style/font-awesome/fonts';
@@ -30,8 +30,28 @@ html, body {
   .dropdown-menu {
     width: 100%;
     top: ~"calc(100% - 3px)";
+    background: rgba(255,255,255,.8);
+    padding: 0 0 1em;
+    h5 {
+      padding: 0 1em;
+    }
     ul {
-      margin-top: 10px;
+      margin:0;
+      background: #fff;
+    }
+    li {
+      background: transparent;
+      padding: 0;
+      &:hover {
+      }
+    }
+    a {
+      padding: .5em 1em;
+      display: block;
+      em {
+        font-size: 90%;
+        color: grey;
+      }
     }
   }
   .clear {
@@ -114,13 +134,14 @@ html, body {
       margin-right: -.6em;
       margin-top: -.5em;
       background: inherit;
+      padding: 6px 8px;
     }
-    .fa-arrows-alt {
+    .fa-arrows-alt, .gn-layer-ordering {
       opacity: 0;
       transition: opacity @transition-params;
     }
     &:hover {
-      .fa-arrows-alt {
+      .fa-arrows-alt, .gn-layer-ordering {
         opacity: 1
       }
     }
@@ -192,6 +213,22 @@ html, body {
   [gn-layermanager] {
     max-height: 44em;
     overflow-y: auto;
+    .gn-layer-ordering {
+      position: absolute;
+      right: 4em;
+      .fa {
+        display: block;
+        color: #666;
+        font-size: 12px;
+        &:hover, &:focus {
+          text-decoration: none;
+          color: @link-color;
+        }
+        &:only-child {
+          margin-top: .4em;
+        }
+      }
+    }
   }
   .metadata {
     .btn;
@@ -243,6 +280,17 @@ html, body {
 
 @import "./layertree.less";
 
+.fu {
+  position: relative;
+  input[type=file] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    width: 100%;
+  }
+}
+
 .collapsed {
   max-height: 0;
   min-height: 0;
@@ -258,7 +306,47 @@ html, body {
 
 /* hackish tmp */
 .ol-overlaycontainer-stopevent {
-  display: none;
+  /* display: none; */
+}
+.overlay {
+  position: absolute;
+  bottom: 12px;
+  left: ~"calc(-10px - 2em)";
+  background: rgba(60,60,60,.8);
+  line-height: 2em;
+  padding: 1em;
+  width: 17em;
+  color: #fff;
+  text-shadow: 0 0 1px #000;
+  border-radius: 2px;
+  font-size: 12px;
+  &:after {
+     content: ' ';
+     position: absolute;
+     bottom: -10px;
+     left: 2em;
+     width: 0;
+     height: 0;
+     border-style: solid;
+     border-width: 10px 10px 0 10px;
+     border-color: rgba(60,60,60,.8) transparent;
+  }
+  dl {
+    margin-bottom: 0;
+    dl dd, dl dt {
+      display: block;
+      float: none;
+      width: 100%;
+      margin-left: 0;
+      text-align: left;
+    }
+  }
+  dt {
+    width: 6em;
+  }
+  dd {
+    margin-left: 6.5em;
+  }
 }
 
 /* jquery-ui slider */
@@ -382,6 +470,23 @@ html, body {
   .gn-popup-iframe {
     width: 1000px;
     height: 600px;
+
+    &.profile {
+      width: 500px;
+      height: 400px;
+    }
+    &.transect {
+      width: 400px;
+      height: 600px;
+    }
+    &.time {
+      width: 400px;
+      height: 300px;
+    }
   }
 }
 
+[gn-bootstrap-datepicker].input-group[class*="col-"] {
+  padding-left: 15px;
+  padding-right: 15px;
+}

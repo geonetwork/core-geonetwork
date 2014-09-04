@@ -180,12 +180,11 @@
         replace: true,
         templateUrl: '../../catalog/components/viewer/layermanager/' +
             'partials/layermanageritem.html',
-        scope: {
-          layer: '=gnLayermanagerItem'
-        },
+        scope: true,
         link: function (scope, element, attrs, ctrl) {
-          scope.map = scope.$parent.$eval(attrs['map']);
+          scope.layer = scope.$eval(attrs['gnLayermanagerItem']);
           scope.showInfo = ctrl.showInfo;
+          scope.moveLayer = ctrl.moveLayer;
 
           scope.showMetadata = function(url, title) {
             if(url) {
@@ -200,8 +199,8 @@
           };
 
           scope.zoomToExtent = function(layer, map) {
-            if(layer.getExtent()) {
-              map.getView().fitExtent(layer.getExtent(), map.getSize());
+            if(layer.get('cextent')) {
+              map.getView().fitExtent(layer.get('cextent'), map.getSize());
             }
           };
         }

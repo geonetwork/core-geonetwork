@@ -1,0 +1,83 @@
+<form role="form">
+
+  <!--Point-->
+  <div data-ng-if="getType() == 'point'">
+    <div class="form-group">
+      <label>Rayon
+        <input type="number" class="form-control input-sm" data-ng-model="style.image.radius" placeholder="width" >
+      </label>
+    </div>
+    <div class="form-group">
+      <label>Couleur
+        <select type="text" class="form-control input-sm" placeholder="Couleur" data-ng-model="style.image.fill.color">
+          <option data-ng-repeat="c in colors | orderBy">{{c}}</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <!--Linestring-->
+  <div data-ng-if="getType() == 'line'">
+    <div class="form-group">
+      <label>Épaisseur
+        <input type="number" class="form-control input-sm" data-ng-model="style.stroke.width" placeholder="width" >
+      </label>
+    </div>
+    <div class="form-group">
+      <label>Couleur
+        <select type="text" class="form-control input-sm" placeholder="Couleur" data-ng-model="style.stroke.color">
+          <option data-ng-repeat="c in colors | orderBy">{{c}}</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <!--Polygon-->
+  <div data-ng-if="getType() == 'polygon'">
+    <div class="form-group">
+      <label>Épaisseur
+        <input type="number" class="form-control input-sm" data-ng-model="style.stroke.width" placeholder="width" >
+      </label>
+    </div>
+    <div class="form-group">
+      <label>Couleur
+        <select type="text" class="form-control input-sm" placeholder="Couleur" data-ng-model="style.stroke.color">
+          <option data-ng-repeat="c in colors | orderBy">{{c}}</option>
+        </select>
+      </label>
+    </div>
+    <div class="form-group">
+      <label>Remplissage
+        <input type="text" class="form-control" data-ng-model="style.fill.color" placeholder="color" >
+      </label>
+    </div>
+  </div>
+
+  <!--Text-->
+  <div data-ng-if="getType() == 'text'">
+    <div class="form-group">
+      <label>Police
+        <input type="text" class="form-control input-sm" data-ng-model="style.text.font" placeholder="color" >
+      </label>
+    </div>
+    <div class="form-group">
+      <label>Épaisseur
+        <input type="number" class="form-control input-sm" data-ng-model="style.text.stroke.width" placeholder="width" >
+      </label>
+    </div>
+    <div class="form-group">
+      <label>Couleur contours
+        <select type="text" class="form-control input-sm" placeholder="Couleur" data-ng-model="style.text.stroke.color">
+          <option data-ng-repeat="c in colors | orderBy">{{c}}</option>
+        </select>
+      </label>
+    </div>
+    <div class="form-group">
+      <label>Couleur
+        <select type="text" class="form-control input-sm" placeholder="Couleur" data-ng-model="style.text.fill.color">
+          <option data-ng-repeat="c in colors | orderBy">{{c}}</option>
+        </select>
+      </label>
+    </div>
+  </div>
+</form>

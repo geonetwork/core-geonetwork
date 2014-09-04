@@ -80,15 +80,30 @@
               drawInteraction.on('drawend',
                   function(evt) {
 
-                    gnPopup.create({
-                      title: activeTool,
-                      url : gnNcWms.getNcwmsServiceUrl(
+                    var url;
+                    if(activeTool == 'time') {
+                      url = scope.layer.getSource().getGetFeatureInfoUrl(
+                          evt.feature.getGeometry().getCoordinates(),
+                          map.getView().getResolution(),
+                          map.getView().getProjection(), {
+                            TIME: gnNcWms.formatTimeSeries(scope.timeSeries.tsfromD, scope.timeSeries.tstoD),
+                            //'2009-11-02T00:00:00.000Z/2009-11-09T00:00:00.000Z',
+                            //'2009-11-02T00:00:00.000Z/2009-11-09T00:00:00.000Z
+                            INFO_FORMAT: 'image/png'
+                          });
+                    } else {
+                      url = gnNcWms.getNcwmsServiceUrl(
                           scope.layer,
                           scope.map.getView().getProjection(),
                           evt.feature.getGeometry().getCoordinates(),
-                          activeTool),
-                      content: '<div class="gn-popup-iframe" style="width:400px">' +
-                          '<iframe frameBorder="0" border="0" style="width:100%;height:100%;" src="{{options.url}}" ></iframe>' +
+                          activeTool)
+                    }
+
+                    gnPopup.create({
+                      title: activeTool,
+                      url : url,
+                      content: '<div class="gn-popup-iframe ' + activeTool + '">' +
+                          '<img style="width:100%;height:100%;" src="{{options.url}}" />' +
                           '</div>'
                     });
                     scope.$apply(function() {
@@ -96,7 +111,7 @@
                     });
                   }, this);
 
-              scope.map.addInteraction(drawInteraction);
+              map.addInteraction(drawInteraction);
             }
           };
           var disableInteractionWatchFn = function(nv, ov) {
@@ -114,26 +129,27 @@
            */
           var initNcwmsParams = function() {
 
-            scope.params = scope.layer.getSource().getParams() || {};
+            var layer = scope.layer;
+            var ncInfo = layer.ncInfo;
 
+            layer.set('cextent', ol.proj.transform([
+                  parseFloat(ncInfo.bbox[0]),
+                  parseFloat(ncInfo.bbox[1]),
+                  parseFloat(ncInfo.bbox[2]),
+                  parseFloat(ncInfo.bbox[3])],
+                'EPSG:4326',
+                map.getView().getProjection().getCode())
+            );
+
+            scope.params = layer.getSource().getParams() || {};
             scope.colorRange = {
-              step: 1
+              step: 1,
+              min: ncInfo.scaleRange[0],
+              max: ncInfo.scaleRange[1]
             };
-            scope.timeSeries = gnNcWms.parseTimeSeries(gnNcWms.getDimensionValue(scope.layer.ncInfo, 'time'));
-            scope.elevations = gnNcWms.getDimensionValue(scope.layer.ncInfo, 'elevation').split(',');
-
-
-            // Get maxExtent color ranges
-            gnNcWms.getColorRangesBounds(scope.layer,
-                scope.layer.ncInfo.EX_GeographicBoundingBox.join(',')).success(function(data) {
-
-                  var min = Number((data.min).toFixed(5));
-                  var max = Number((data.max).toFixed(5));
-
-                  angular.extend(scope.colorRange, {min: min, max: max});
-                  scope.colorscalerange = [min, max];
-                  scope.onColorscaleChange(scope.colorscalerange);
-            });
+            scope.timeSeries = {};
+            scope.elevations = ncInfo.zaxis.values;
+            scope.styles = gnNcWms.parseStyles(ncInfo);
 
             if(angular.isUndefined(scope.params.LOGSCALE)) {
               scope.params.LOGSCALE = false;
@@ -146,13 +162,13 @@
            *  Update the slider values to this bounds.
            */
           scope.setAutoColorranges = function(evt) {
-            $(evt.target).addClass('fa fa-spinner');
+            $(evt.target).addClass('fa-spinner');
             gnNcWms.getColorRangesBounds(scope.layer,
                 ol.proj.transform(map.getView().calculateExtent(map.getSize()),
                     map.getView().getProjection(), 'EPSG:4326').join(',')).success(function(data) {
                   scope.colorscalerange = [data.min, data.max];
                   scope.onColorscaleChange(scope.colorscalerange);
-                  $(evt.target).removeClass('fa fa-spinner');
+                  $(evt.target).removeClass('fa-spinner');
                 });
           };
 
@@ -166,7 +182,8 @@
             if(angular.isArray(v) && v.length == 2) {
               colorange = v[0] + ',' + v[1];
               scope.params.COLORSCALERANGE = colorange;
-              scope.updateLayerParams();}
+              scope.updateLayerParams();
+            }
           };
 
           scope.updateLayerParams = function() {

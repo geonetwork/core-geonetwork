@@ -78,6 +78,8 @@
       
         <script src="{$uiResourcesPath}lib/bootstrap.ext/typeahead.js/typeahead.js"></script>
         <script src="{$uiResourcesPath}lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.js"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.js"></script>
+
         <!--</xsl:if>-->
         
       </xsl:when>

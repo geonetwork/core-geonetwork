@@ -33,12 +33,13 @@
 
   module.controller('gnViewerController', [
     '$scope',
+    '$timeout',
     'gnNcWms',
     'goDecorateLayer',
     'gnMap',
     'gnMapConfig',
     'gnHttp',
-      function($scope, gnNcWms, goDecorateLayer, gnMap, gnMapConfig, gnHttp) {
+      function($scope, $timeout, gnNcWms, goDecorateLayer, gnMap, gnMapConfig, gnHttp) {
 
         /** Define object to receive measure info */
         $scope.measureObj = {};
@@ -79,11 +80,65 @@
         });
 
         $scope.zoom = function(map, delta) {
-          map.getView().setZoom(map.getView().getZoom() + delta);
+          gnMap.zoom(map,delta);
         };
         $scope.zoomToMaxExtent = function(map) {
           map.getView().setResolution(gnMapConfig.maxResolution);
         };
+
+        var div = document.createElement('div');
+        div.className = 'overlay';
+        var overlay = new ol.Overlay({
+          element: div,
+          positioning: 'bottom-left'
+        });
+
+        $scope.map.addOverlay(overlay);
+
+        var hidetimer;
+        var hovering = false;
+        $($scope.map.getViewport()).on('mousemove', function(e) {
+          if (hovering) { return; }
+          var f;
+          var pixel = $scope.map.getEventPixel(e.originalEvent);
+          var coordinate = $scope.map.getEventCoordinate(e.originalEvent);
+          $scope.map.forEachFeatureAtPixel(pixel, function(feature, layer) {
+            if (!layer) { return; }
+            $timeout.cancel(hidetimer);
+            if (f != feature) {
+              f = feature;
+              var html = '';
+              if (feature.getKeys().indexOf('description') >=0 ) {
+                html = feature.get('description');
+              } else {
+                $.each(feature.getKeys(), function(i, key) {
+                  if (key == feature.getGeometryName() || key == 'styleUrl') {
+                    return;
+                  }
+                  html += '<dt>' + key + '</dt>';
+                  html += '<dd>' + feature.get(key) + '</dd>';
+                });
+                html = '<dl class="dl-horizontal">' + html + '</dl>';
+              }
+              overlay.getElement().innerHTML = html;
+            }
+            overlay.setPosition(coordinate);
+            $(overlay.getElement()).show();
+          }, this, function(layer) {
+            return !layer.get('temporary');
+          });
+          if (!f) {
+            hidetimer = $timeout(function(){
+              $(div).hide();
+            }, 200);
+          }
+        });
+        $(div).on('mouseover', function() {
+          hovering = true;
+        });
+        $(div).on('mouseleave', function() {
+          hovering = false;
+        });
       }]);
 
   var servicesUrl = {

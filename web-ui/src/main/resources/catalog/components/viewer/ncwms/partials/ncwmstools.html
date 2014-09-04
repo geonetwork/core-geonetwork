@@ -21,12 +21,13 @@
       <!--Color ranges double slider-->
       <div class="form-group">
         <label class="col-sm-4">
-          <span>{{colorscalerange[0] | number: 1}}</span>
-          <span class="fa fa-arrows-h"></span> <span>{{colorscalerange[1] | number: 1}}</span>
+          <span>{{colorscalerange[0] | number: 3}}</span>
+          <span class="fa fa-arrows-h"></span> <span>{{colorscalerange[1] | number: 3}}</span>
+          <span>({{layer.ncInfo.units}})</span>
         </label>
         <div class="col-sm-6">
           <div ui-slider="{range: true}" min="{{colorRange.min}}" max="{{colorRange.max}}" id="ncwmsscales"
-            step="{{colorRange.step}}" use-decimals ng-model="colorscalerange" data-ng-change="onColorscaleChange(colorscalerange)"></div>
+             use-decimals ng-model="colorscalerange" data-ng-change="onColorscaleChange(colorscalerange)"></div>
         </div>
       </div>
 
@@ -35,7 +36,7 @@
         <label class="col-sm-4" for="ncwmselevation">Elévation</label>
         <div class="col-sm-8">
           <select class="form-control input-sm" id="ncwmselevation" data-ng-model="params.ELEVATION" data-ng-change="updateLayerParams()">
-            <option data-ng-repeat="el in elevations">{{el}}</option>
+            <option value="{{el}}" data-ng-repeat="el in elevations">{{el | number: 1}}</option>
           </select>
         </div>
       </div>
@@ -45,15 +46,19 @@
         <label class="col-sm-4" for="ncwmsstyles">Styles</label>
         <div class="col-sm-8">
           <select class="form-control input-sm" id="ncwmsstyles" data-ng-model="params.STYLES" data-ng-change="updateLayerParams()">
-            <option data-ng-repeat="style in layer.ncInfo.Style" value="{{style.Name}}">{{style.Title}}</option>
+            <option data-ng-repeat="style in styles" value="{{style}}">{{style}}</option>
           </select>
         </div>
       </div>
-
-      <!--Tools buttons for time series, vertical profile and transect-->
-      <div class="col-sm-offset-4">
+      <div class="btn-group">
         <button class="btn btn-default btn-sm" data-ng-click="setActiveTool('time')" type="button" data-ng-class="{'active':activeTool=='time'}">
           <span class="fa fa-history"></span> Temps
+        </button>
+        <button class="btn btn-default btn-sm" data-ng-click="setActiveTool('profile')" type="button" data-ng-class="{'active':activeTool=='profile'}">
+          <span class="fa fa-crop"></span> Profil
+        </button>
+        <button class="btn btn-default btn-sm" data-ng-click="setActiveTool('transect')" type="button" data-ng-class="{'active':activeTool=='transect'}">
+          <span class="fa fa-image"></span> Transect
         </button>
       </div>
 
@@ -61,20 +66,20 @@
       <div class="form-group" data-ng-show="activeTool=='time'">
         <label class="col-sm-4">Dates</label>
         <div class="col-sm-8">
-          <input type="date" class="form-control input-sm" datetimepicker="" data-ng-model="timeSeries.tsfromD"/>
+          <div class="input-group date" data-date="" data-date-format="dd-mm-yyyy"
+               gn-bootstrap-datepicker="timeSeries.tsfromD" date-available="layer.ncInfo.datesWithData">
+            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            <input class="form-control input-sm" type="text">
+          </div>
           à
-          <input type="date" class="form-control input-sm" data-ng-model="timeSeries.tstoD"/>
+          <div class="input-group date" data-date="" data-date-format="dd-mm-yyyy"
+               gn-bootstrap-datepicker="timeSeries.tstoD" date-available="layer.ncInfo.datesWithData">
+            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            <input class="form-control input-sm" type="text">
+          </div>
         </div>
       </div>
 
-      <div class="btn-group">
-        <button class="btn btn-default" data-ng-click="setActiveTool('profile')" type="button" data-ng-class="{'active':activeTool=='profile'}">
-          <span class="fa fa-crop"></span> Profil
-        </button>
-        <button class="btn btn-default" data-ng-click="setActiveTool('transect')" type="button" data-ng-class="{'active':activeTool=='transect'}">
-          <span class="fa fa-image"></span> Transect
-        </button>
-      </div>
 
     </form>
   </div>

@@ -123,6 +123,7 @@
               projection: 'EPSG:3857',
               url: proxyUrl
             });
+
             var vector = new ol.layer.Vector({
               source: kmlSource,
               label: 'Fichier externe : ' + url.split('/').pop()
@@ -184,10 +185,12 @@
               scope.$apply();
               return;
             }
+
             var vectorSource = new ol.source.Vector({
               features: event.features,
               projection: event.projection
             });
+
             var layer = new ol.layer.Vector({
               source: vectorSource,
               label: 'Fichier local : ' + event.file.name
