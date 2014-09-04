@@ -56,6 +56,11 @@
                 tstoD:moment(new Date(as[1])).format('YYYY-MM-DD')
               }
             };
+            this.formatTimeSeries = function(from, to) {
+              return moment(from, 'DD-MM-YYYY').format('YYYY-MM-DD[T]HH:mm:ss.SSS[Z]') +
+                  '/' +
+                  moment(to, 'DD-MM-YYYY').format('YYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
+            };
 
             this.parseStyles = function(info) {
               var t = [];
@@ -116,9 +121,7 @@
                   CRS: proj.getCode(),
                   LAYER: layer.getSource().getParams().LAYERS
               };
-              if(service == 'time') {
-
-              } else if (service == 'profile') {
+              if (service == 'profile') {
                 p.REQUEST = 'GetVerticalProfile';
                 p.POINT = gnMap.getTextFromCoordinates(geom);
 
@@ -126,9 +129,9 @@
                 p.REQUEST = 'GetTransect';
                 p.LINESTRING = gnMap.getTextFromCoordinates(geom);
               }
-
               return gnUrlUtils.append(layer.getSource().getUrls(),
                   gnUrlUtils.toKeyValue(p));
+
             };
 
             /**

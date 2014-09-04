@@ -80,13 +80,28 @@
               drawInteraction.on('drawend',
                   function(evt) {
 
-                    gnPopup.create({
-                      title: activeTool,
-                      url : gnNcWms.getNcwmsServiceUrl(
+                    var url;
+                    if(activeTool == 'time') {
+                      url = scope.layer.getSource().getGetFeatureInfoUrl(
+                          evt.feature.getGeometry().getCoordinates(),
+                          map.getView().getResolution(),
+                          map.getView().getProjection(), {
+                            TIME: gnNcWms.formatTimeSeries(scope.timeSeries.tsfromD, scope.timeSeries.tstoD),
+                            //'2009-11-02T00:00:00.000Z/2009-11-09T00:00:00.000Z',
+                            //'2009-11-02T00:00:00.000Z/2009-11-09T00:00:00.000Z
+                            INFO_FORMAT: 'image/png'
+                          });
+                    } else {
+                      url = gnNcWms.getNcwmsServiceUrl(
                           scope.layer,
                           scope.map.getView().getProjection(),
                           evt.feature.getGeometry().getCoordinates(),
-                          activeTool),
+                          activeTool)
+                    }
+
+                    gnPopup.create({
+                      title: activeTool,
+                      url : url,
                       content: '<div class="gn-popup-iframe ' + activeTool + '">' +
                           '<img style="width:100%;height:100%;" src="{{options.url}}" />' +
                           '</div>'
@@ -132,26 +147,9 @@
               min: ncInfo.scaleRange[0],
               max: ncInfo.scaleRange[1]
             };
-            //scope.colorscalerange = [ncInfo.scaleRange[0], ncInfo.scaleRange[1]];
-            //scope.onColorscaleChange(scope.colorscalerange);
-
-            //scope.timeSeries = gnNcWms.parseTimeSeries(gnNcWms.getDimensionValue(scope.layer.ncInfo, 'time'));
+            scope.timeSeries = {};
             scope.elevations = ncInfo.zaxis.values;
             scope.styles = gnNcWms.parseStyles(ncInfo);
-
-/*
-            // Get maxExtent color ranges
-            gnNcWms.getColorRangesBounds(scope.layer,
-                scope.layer.ncInfo.EX_GeographicBoundingBox.join(',')).success(function(data) {
-
-                  var min = Number((data.min).toFixed(5));
-                  var max = Number((data.max).toFixed(5));
-
-                  angular.extend(scope.colorRange, {min: min, max: max});
-                  scope.colorscalerange = [min, max];
-                  scope.onColorscaleChange(scope.colorscalerange);
-            });
-*/
 
             if(angular.isUndefined(scope.params.LOGSCALE)) {
               scope.params.LOGSCALE = false;
