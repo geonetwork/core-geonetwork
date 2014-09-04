@@ -92,7 +92,7 @@
 
           scope.$watchCollection('searchResults.records', function(rec) {
             fo.getFeatures().clear();
-            if (!angular.isArray(rec)) {
+            if (!angular.isArray(rec) || angular.isUndefined(scope.map.getTarget())) {
               return;
             }
             for(var i=0;i<rec.length;i++) {
