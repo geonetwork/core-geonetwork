@@ -1,0 +1,23 @@
+<form role="form">
+  <h3>Style</h3>
+  <h4>Trait</h4>
+  <div class="form-group">
+    <label>Épaisseur
+      <input type="number" class="form-control" data-ng-model="style.stroke.width" placeholder="width" >
+    </label>
+  </div>
+  <div class="form-group">
+    <label>Couleur
+      <select type="text" class="form-control" placeholder="Couleur" data-ng-model="style.stroke.color">
+        <option data-ng-repeat="c in colors | orderBy">{{c}}</option>
+      </select>
+    </label>
+  </div>
+  <h4>Remplissage</h4>
+  <div class="form-group">
+    <label>Couleur
+      <input type="text" class="form-control" data-ng-model="style.fill.color" placeholder="color" >
+    </label>
+  </div>
+
+</form>

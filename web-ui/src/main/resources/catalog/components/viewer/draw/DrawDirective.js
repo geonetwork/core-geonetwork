@@ -51,7 +51,8 @@
             },
             stroke: {
               color: '#319FD3',
-              width: 1
+              width: 1,
+              lineDash: [0]
             },
             text: {
               font: '14px Calibri,sans-serif',
@@ -64,6 +65,16 @@
               }
             }
           };
+          scope.featureStyleCfg = {
+            fill: {
+              color: 'rgba(255, 255, 255, 0.6)'
+            },
+            stroke: {
+              color: 'red',
+              width: 1
+            }
+          };
+
 
           var textFeatStyleFn = function(resolution) {
             var text = this.get('name');
@@ -122,7 +133,19 @@
           });
           scope.vector = vector;
 
-          var onDrawend = function() {
+          var onDrawend = function(evt) {
+            if(evt) {
+              var style = scope.featureStyleCfg;
+              evt.feature.setStyle(new ol.style.Style({
+                fill: new ol.style.Fill({
+                  color: style.fill.color
+                }),
+                stroke: new ol.style.Stroke({
+                  color: style.stroke.color,
+                  width: style.stroke.width
+                })
+              }));
+            }
             scope.$apply();
           };
 
@@ -215,4 +238,22 @@
         }
       }
     }]);
+
+  module.directive('gnStyleForm', [
+    'goDecorateInteraction',
+    function(goDecorateInteraction) {
+      return {
+        restrict: 'A',
+        replace: false,
+        templateUrl: '../../catalog/components/viewer/draw/' +
+            'partials/styleform.html',
+        scope: {
+          style: '=gnStyleForm'
+        },
+        link: function (scope, element, attrs) {
+          scope.colors = ['red', 'orange', 'blue', 'white', 'black','yellow','green','pink', 'brown'];
+        }
+      }
+    }]);
+
 })();
