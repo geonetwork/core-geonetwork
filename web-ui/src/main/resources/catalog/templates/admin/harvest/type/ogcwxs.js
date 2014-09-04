@@ -29,9 +29,9 @@ var gnHarvesterogcwxs = {
                 "status" : "active",
                 "lang" : "eng",
                 "topic" : "",
-                "createThumbnails" : "true",
-                "useLayer" : "true",
-                "useLayerMd" : "true",
+                "createThumbnails" : "",
+                "useLayer" : "",
+                "useLayerMd" : "",
                 "datasetCategory" : "",
                 "outputSchema" : "iso19139"
             },
