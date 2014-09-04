@@ -72,7 +72,24 @@
             stroke: {
               color: 'red',
               width: 1
+            },
+            image: {
+              radius: 7,
+              fill: {
+                color: '#ffcc33'
+              }
+            },
+            text: {
+              font: '14px Calibri,sans-serif',
+              fill: {
+                color: '#000'
+              },
+              stroke: {
+                color: '#fff',
+                width: 3
+              }
             }
+
           };
 
 
@@ -88,14 +105,14 @@
                   width: textStyleCfg.stroke.width
                 }),
                 text: new ol.style.Text({
-                  font: textStyleCfg.text.font,
+                  font: scope.featureStyleCfg.text.font,
                   text: text,
                   fill: new ol.style.Fill({
-                    color: textStyleCfg.text.fill.color
+                    color: scope.featureStyleCfg.text.fill.color
                   }),
                   stroke: new ol.style.Stroke({
-                    color: textStyleCfg.text.stroke.color,
-                    width: textStyleCfg.text.stroke.width
+                    color: scope.featureStyleCfg.text.stroke.color,
+                    width: scope.featureStyleCfg.text.stroke.width
                   })
                 })
               })];
@@ -143,6 +160,12 @@
                 stroke: new ol.style.Stroke({
                   color: style.stroke.color,
                   width: style.stroke.width
+                }),
+                image: new ol.style.Circle({
+                  radius: style.image.radius,
+                  fill: new ol.style.Fill({
+                    color: style.image.fill.color
+                  })
                 })
               }));
             }
@@ -235,6 +258,13 @@
               }
             }
           });
+
+          scope.getActiveDrawType = function() {
+            if(scope.drawPoint.active) return 'point';
+            else if(scope.drawLine.active) return 'line';
+            else if(scope.drawPolygon.active) return 'polygon';
+            else if(scope.drawText.active) return 'text';
+          }
         }
       }
     }]);
@@ -248,7 +278,8 @@
         templateUrl: '../../catalog/components/viewer/draw/' +
             'partials/styleform.html',
         scope: {
-          style: '=gnStyleForm'
+          style: '=gnStyleForm',
+          getType: '&gnStyleType'
         },
         link: function (scope, element, attrs) {
           scope.colors = ['red', 'orange', 'blue', 'white', 'black','yellow','green','pink', 'brown'];
