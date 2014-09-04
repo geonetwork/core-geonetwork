@@ -103,7 +103,7 @@
       $scope.data = inspireMetadataLoader($scope.lang, $scope.url, mdId);
       $scope.emptyContact = $scope.data.contact[0];
 
-      $http.get($scope.url + "q@json?fast=true&from=1&to=1&sortBy=relevance&_id=" + mdId).success(function(data){
+      $http.get($scope.url + "q@json?fast=index&from=1&to=1&sortBy=relevance&_id=" + mdId).success(function(data){
         var metadata, logoId;
         if (data.metadata) {
           if (data.metadata[0]) {
@@ -111,15 +111,20 @@
           } else {
             metadata = data.metadata;
           }
-          if (metadata.catalog && metadata.catalog.length == 2) {
+          if (metadata.groupLogoUuid) {
+            logoId = metadata.groupLogoUuid;
+          }
+          if (!logoId && metadata.catalog && metadata.catalog.length == 2) {
             logoId = metadata.catalog[1];
-          } else {
+          }
+
+          if (!logoId) {
             logoId = metadata.source;
           }
         }
 
         if (logoId) {
-          $scope.metadataIcon = "http://localhost:8190/geonetwork/images/logos/"+logoId+".gif";
+          $scope.metadataIcon = "/geonetwork/images/logos/"+logoId+".gif";
         }
       }).error(function(err){
         if (waitDialog) {
