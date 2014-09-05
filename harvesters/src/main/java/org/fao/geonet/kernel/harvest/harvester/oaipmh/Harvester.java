@@ -477,7 +477,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
             boolean index = false;
             String language = context.getLanguage();
             final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate.toString(),
-                    false);
+                    true);
 
             //--- the administrator could change privileges and categories using the
 			//--- web interface so we have to re-set both
