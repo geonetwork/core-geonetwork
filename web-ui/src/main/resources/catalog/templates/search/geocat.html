@@ -10,18 +10,23 @@
         <div class="panel panel-default">
           <div class="panel-heading">
             <div gn-results-tpl-switcher template-url="resultTemplate" class="pull-right"></div>
-            <div data-gn-pagination="paginationInfo"></div>
-            <div hitsperpage-combo pagination-cfg="paginationInfo"></div>
             <div sortby-combo params="searchObj.params"></div>
           </div>
           <div data-gn-facet-breadcrumb="currentFacets"></div>
           <div gn-results-container class="panel-body" data-ng-class="{'bg-success' : searching}"
                search-results="searchResults" template-url="resultTemplate" map="map"></div>
+          <div class="panel-footer">
+            <div class="pull-right" hitsperpage-combo pagination-cfg="paginationInfo"></div>
+            <div data-gn-pagination="paginationInfo"></div>
+          </div>
         </div>
       </div>
       <div class="col-md-3">
         <div class="panel panel-default">
-          <div class="panel-heading" data-translate>Refine search</div>
+          <div class="panel-heading">
+            <button class="btn btn-default active"><i class="fa fa-filter"></i></button>
+            <span data-translate>Refine search</span>
+          </div>
           <div class="panel-body"
             data-gn-facet-list="searchResults.facet"
             data-facet-config="facetsConfig"

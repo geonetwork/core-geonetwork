@@ -6857,11 +6857,16 @@ button.close {
   height: 14px;
 }
 .gn-facet .list-group-item {
-  border: none;
-  padding: 3px 15px;
+  border-width: 0;
+  border-radius: 0;
+  padding: .35em 15px;
+  border-top: 1px dotted lightgrey;
 }
 .gn-facet .list-group-item:hover {
   color: #428bca;
+}
+.gn-facet h4 {
+  padding-left: .8em;
 }
 .gn-facet-breadcrumb {
   margin-top: 8px;
