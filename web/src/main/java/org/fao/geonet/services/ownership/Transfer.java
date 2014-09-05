@@ -87,11 +87,21 @@ public class Transfer extends NotInReadOnlyModeService {
 			int opId = Integer.parseInt(st.nextToken());
 			int mdId = Integer.parseInt(st.nextToken());
 
-			dm.unsetOperation(context, dbms, mdId, sourceGrp, opId);
 
-			if (!targetPriv.contains(priv))
-				dbms.execute("INSERT INTO OperationAllowed(metadataId, groupId, operationId) " +
-								 "VALUES(?,?,?)", mdId, targetGrp, opId);
+            // 2 cases could happen, 1) only the owner change
+            // in that case sourceGrp = targetGrp and operations
+            // allowed does not need to be modified.
+            if (sourceGrp != targetGrp) {
+                // 2) the sourceGrp != targetGrp and in that
+                // case, all operations need to be transfered to
+                // the new group if not already defined.
+
+                dm.unsetOperation(context, dbms, mdId, sourceGrp, opId);
+                if (!targetPriv.contains(priv)) {
+                    dbms.execute("INSERT INTO OperationAllowed(metadataId, groupId, operationId) " +
+                            "VALUES(?,?,?)", mdId, targetGrp, opId);
+                }
+            }
 
 			dbms.execute("UPDATE Metadata SET owner=?, groupOwner=? WHERE id=?", targetUsr, targetGrp, mdId);
 
