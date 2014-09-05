@@ -43,12 +43,32 @@
 
 			<xsl:for-each select="/root/search/*">
 				<xsl:sort select="local-name()"/>
-				
-				<xsl:variable name="fieldId" select="concat('csw.',local-name())"/>
-				<tr>
+
+        <!-- Queryable fields with a namespace are stored replacing : with __ to avoid issues in the SettingsManager -->
+        <xsl:variable name="nameVal">
+          <xsl:choose>
+            <xsl:when test="contains(name(), ':')">
+              <xsl:value-of select="concat(subtring-before(name(), ':'), '__', substring-after(name(), ':'))" />
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="name()" />
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="fieldId" select="concat('csw.',normalize-space($nameVal))"/>
+
+        <tr>
 					<td/>
 					<td class="padded">
-						<label for="{$fieldId}"><xsl:value-of select="local-name()"/></label>
+            <label for="{$fieldId}">
+              <!-- Queryable fields with a namespace are stored replacing : with __ to avoid issues in the SettingsManager -->
+              <xsl:choose>
+                <xsl:when test="contains(local-name(), '__')">
+                  <xsl:value-of select="substring-after(local-name(), '__')"/>
+                </xsl:when>
+                <xsl:otherwise><xsl:value-of select="local-name()"/></xsl:otherwise>
+              </xsl:choose>
+            </label>
 					</td>
 					<td class="padded">
 						<input type="text">

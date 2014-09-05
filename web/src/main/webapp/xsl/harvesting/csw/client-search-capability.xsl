@@ -40,8 +40,20 @@
 				 <td class="padded">
 		<input type="text" >
 			<xsl:attribute name="id">
-				<xsl:value-of select="concat('csw.',local-name())" />
-			</xsl:attribute>
+        <!-- Queryable fields with a namespace are stored replacing : with __ to avoid issues in the SettingsManager -->
+        <xsl:variable name="nameVal">
+          <xsl:choose>
+            <xsl:when test="contains(name(), ':')">
+              <xsl:value-of select="concat(substring-before(name(), ':'), '__', substring-after(name(), ':'))" />
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="name()" />
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+
+        <xsl:value-of select="concat('csw.',normalize-space($nameVal))" />
+      </xsl:attribute>
 			<xsl:attribute name="class">content</xsl:attribute>
 			<xsl:attribute name="value"></xsl:attribute>
 			<xsl:attribute name="size">30</xsl:attribute>
