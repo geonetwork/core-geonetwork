@@ -32,6 +32,11 @@
         'service-OGC:WFS'
       ];
 
+      gnRegionService.loadRegion('ocean', 'fre').then(
+          function (data) {
+            $scope.cantons = data;
+          });
+
       /** Manage cantons selection (add feature to the map) */
       var cantonSource = new ol.source.Vector();
       var nbCantons = 0;

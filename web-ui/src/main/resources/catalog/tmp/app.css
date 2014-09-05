@@ -6926,10 +6926,12 @@ select[multiple][hitsperpage-combo] select {
 }
 .tt-hint {
   color: #999;
+  pointer-events: none;
 }
 .tt-dropdown-menu {
   width: 422px;
-  margin-top: 12px;
+  margin-top: 7px;
+  margin-left: -8px;
   padding: 8px 0;
   background-color: #fff;
   border: 1px solid #ccc;
@@ -6943,8 +6945,6 @@ select[multiple][hitsperpage-combo] select {
 }
 .tt-suggestion {
   padding: 3px 20px;
-  font-size: 14px;
-  line-height: 24px;
 }
 .tt-suggestion.tt-is-under-cursor {
   color: #fff;
@@ -6980,6 +6980,14 @@ select[multiple][hitsperpage-combo] select {
 .panel-heading [sortby-combo],
 .panel-heading [hitsperpage-combo] {
   vertical-align: middle;
+}
+[ng-search-form] .relative {
+  position: relative;
+}
+[ng-search-form] .inner-spinner {
+  position: absolute;
+  top: 0.7em;
+  right: 1.6em;
 }
 .more {
   margin: 0 0 .7em 15px;

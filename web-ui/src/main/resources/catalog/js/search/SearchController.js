@@ -42,7 +42,7 @@
     function($scope, $location, suggestService,$http) {
 
 ///////////////////////////////////////////////////////////////////
-      $scope.getLocation = function(val) {
+      $scope.getAnySuggestions = function(val) {
         var url = suggestService.getUrl(val, 'anylight',
             ('STARTSWITHFIRST'));
 
