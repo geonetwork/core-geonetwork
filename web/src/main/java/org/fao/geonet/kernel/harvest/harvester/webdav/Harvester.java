@@ -37,6 +37,7 @@ import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UriMapper;
+import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
@@ -177,8 +178,20 @@ class Harvester extends BaseAligner{
         //
         String group = null, isTemplate = null, docType = null, title = null, category = null;
         boolean ufo = false, indexImmediate = false;
+
+        String changeDate = rf.getChangeDate();
+        // WAF harvester returns null for the change date, try to get it from the xml
+        if (changeDate == null) {
+            try {
+                changeDate = dataMan.extractDateModified(schema, md);
+            } catch (Exception ex) {
+                log.error("WebDavHarvester - addMetadata - Can't get metadata modified date for metadata uuid= " + uuid + ", using current date for modified date");
+                changeDate = new ISODate().toString();
+            }
+        }
+
         String id = dataMan.insertMetadata(context, dbms, schema, md, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, Integer.parseInt(params.ownerId), group, params.uuid,
-                     isTemplate, docType, title, category, rf.getChangeDate(), rf.getChangeDate(), ufo, indexImmediate);
+                     isTemplate, docType, title, category, changeDate, changeDate, ufo, indexImmediate);
 
 
 		int iId = Integer.parseInt(id);
@@ -291,7 +304,20 @@ class Harvester extends BaseAligner{
             boolean ufo = false;
             boolean index = false;
             String language = context.getLanguage();
-            dataMan.updateMetadata(context, dbms, record.id, md, validate, ufo, index, language, rf.getChangeDate(), false);
+
+            String changeDate = rf.getChangeDate();
+            // WAF harvester returns null for the change date, try to get it from the xml
+            if (changeDate == null) {
+                try {
+                    String schema = dataMan.autodetectSchema(md);
+                    changeDate = dataMan.extractDateModified(schema, md);
+                } catch (Exception ex) {
+                    log.error("WebDavHarvester - updateMetadata - Can't get metadata modified date for metadata id= " + record.id + ", using current date for modified date");
+                    changeDate = new ISODate().toString();
+                }
+            }
+
+            dataMan.updateMetadata(context, dbms, record.id, md, validate, ufo, index, language, changeDate, true);
 
 			//--- the administrator could change privileges and categories using the
 			//--- web interface so we have to re-set both

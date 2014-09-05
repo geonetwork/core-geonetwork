@@ -291,9 +291,19 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
         boolean ufo = false;
         boolean index = false;
         String language = context.getLanguage();
-        dataMan.updateMetadata(context, dbms, id, xml, validate, ufo, index, language, new ISODate().toString(), false);
 
-		dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
+        String changeDate;
+        try {
+            String schema = dataMan.autodetectSchema(xml);
+            changeDate = dataMan.extractDateModified(schema, xml);
+        } catch (Exception ex) {
+            log.error("LocalFilesystemHarvester - updateMetadata - can't get metadata modified date for metadata id= " + id + ", using current date for modified date");
+            changeDate = new ISODate().toString();
+        }
+
+        dataMan.updateMetadata(context, dbms, id, xml, validate, ufo, index, language, changeDate, true);
+
+        dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
 
 		dbms.execute("DELETE FROM MetadataCateg WHERE metadataId=?", Integer.parseInt(id));
@@ -318,7 +328,14 @@ public class LocalFilesystemHarvester extends AbstractHarvester {
 		System.out.println("  - Adding metadata with remote uuid: "+ uuid);
 
 		String source = params.uuid;
-		String createDate = new ISODate().toString();
+		String createDate = null;
+
+        try {
+            createDate = dataMan.extractDateModified(schema, xml);
+        } catch (Exception ex) {
+            log.error("LocalFilesystemHarvester - addMetadata - can't get metadata modified date for metadata uuid= " + uuid + ", using current date for modified date");
+            createDate = new ISODate().toString();
+        }
 
         //
         // insert metadata

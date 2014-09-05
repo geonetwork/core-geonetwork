@@ -426,7 +426,7 @@ class Harvester extends BaseAligner {
             boolean ufo = false;
             boolean index = false;
             String language = context.getLanguage();
-            dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, ri.changeDate.toString(), false);
+            dataMan.updateMetadata(context, dbms, id, md, validate, ufo, index, language, ri.changeDate.toString(), true);
 
 			//--- the administrator could change privileges and categories using the
 			//--- web interface so we have to re-set both
