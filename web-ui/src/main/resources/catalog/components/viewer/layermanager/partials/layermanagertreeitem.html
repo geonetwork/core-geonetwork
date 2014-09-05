@@ -1,7 +1,7 @@
-<li class="list-group-item">
+<li class="list-group-item" data-ng-class="{'active': member.showInfo}">
     <span ng-click="toggleNode($event)" class="fa fa-minus-square-o"  ng-if="isParentNode()">{{member.name}}</span>
     <div ng-if="!isParentNode()"
-         gn-layermanager-item="member" map="map"
-         data-ng-class="{'active': member.showInfo}">
+         gn-layermanager-item="member" map="map" gn-mode="tree"
+         >
     </div>
   </li>

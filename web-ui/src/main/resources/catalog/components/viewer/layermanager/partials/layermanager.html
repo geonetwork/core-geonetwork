@@ -1,5 +1,5 @@
 <ul class="list-group">
   <li gn-layermanager-item="layer" ng-repeat="layer in (layers | gnReverse | filter:layerFilterFn)"
-      class="list-group-item" data-ng-class="{'active': layer.showInfo}">
+      class="list-group-item" data-ng-class="{'active': layer.showInfo}" gn-mode="flat">
   </li>
 </ul>
