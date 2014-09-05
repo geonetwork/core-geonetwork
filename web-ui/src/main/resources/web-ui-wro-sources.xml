@@ -17,6 +17,8 @@
     <jsSource webappPath="catalog/lib/angular.ext/datetimepicker.js"/>
     <jsSource webappPath="catalog/lib/angular.ext/buttons.js"/>
     <jsSource webappPath="catalog/lib/angular.ext/typeahead.js"/>
+    <jsSource webappPath="catalog/lib/angular.ext/position.js"/>
+    <jsSource webappPath="catalog/lib/angular.ext/bindHtml.js"/>
     <jsSource webappPath="catalog/lib/bootstrap-3.0.1.min.js"/>
     <jsSource webappPath="catalog/lib/proj4js-compressed.js" minimize="false"/>
     <jsSource webappPath="catalog/lib/ngeo/ngeo.js"/>
