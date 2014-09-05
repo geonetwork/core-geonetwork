@@ -14,9 +14,11 @@
         </div>
       </div>
 
-      <div class="col-md-6">
+      <div ng-class="(collapsed) ? 'col-md-6' : 'col-md-9'">
         <div class="panel panel-default">
           <div class="panel-heading">
+            <button class="btn btn-default filter" ng-class="{ active: collapsed }"
+              ng-click="collapsed=!collapsed"><i class="fa fa-filter"></i></button>
             <div gn-results-tpl-switcher template-url="resultTemplate" class="pull-right"></div>
             <div sortby-combo params="searchObj.params"></div>
           </div>
@@ -29,10 +31,9 @@
           </div>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-3" ng-if="collapsed">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <button class="btn btn-default active"><i class="fa fa-filter"></i></button>
             <span data-translate>Refine search</span>
           </div>
           <div class="panel-body"

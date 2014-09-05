@@ -7022,6 +7022,16 @@ select[multiple][hitsperpage-combo] select {
   /* width: 100%; */
   text-align: right;
 }
+[data-ng-search-form] .col-md-6,
+[ng-search-form] .col-md-6 {
+  transition: width ease .25s;
+}
+[data-ng-search-form] .filter,
+[ng-search-form] .filter {
+  float: right;
+  float: right !important;
+  margin: 0.8em -0.3em 0 0.8em;
+}
 [search-results] .list-group {
   margin-bottom: 0;
 }
