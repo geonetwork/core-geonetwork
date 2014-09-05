@@ -210,6 +210,15 @@ html, body {
   h5 {
     margin: .2em 0;
   }
+  .nav-justified {
+    padding: 0 1em;
+    li a {
+      border-bottom-width: 0;
+    }
+    .active a {
+      background: transparent;
+    }
+  }
   [gn-layermanager] {
     max-height: 44em;
     overflow-y: auto;
@@ -270,6 +279,9 @@ html, body {
   left: 0;
   transition: left @transition-params;
   display: flex;
+}
+.layermanager-carousel .panel-carousel-container {
+  width: 200%;
 }
 .panel-carousel {
   flex: 1;

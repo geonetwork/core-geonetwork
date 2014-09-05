@@ -6097,6 +6097,15 @@ body {
 .panel-tools h5 {
   margin: .2em 0;
 }
+.panel-tools .nav-justified {
+  padding: 0 1em;
+}
+.panel-tools .nav-justified li a {
+  border-bottom-width: 0;
+}
+.panel-tools .nav-justified .active a {
+  background: transparent;
+}
 .panel-tools [gn-layermanager] {
   max-height: 44em;
   overflow-y: auto;
@@ -6226,6 +6235,9 @@ fieldset[disabled] .panel-tools .metadata:focus {
   left: 0;
   transition: left 0.3s ease;
   display: flex;
+}
+.layermanager-carousel .panel-carousel-container {
+  width: 200%;
 }
 .panel-carousel {
   flex: 1;
