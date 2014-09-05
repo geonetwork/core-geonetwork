@@ -96,14 +96,16 @@ GeoNetwork.searchApp = function() {
                     change : function() {
                         if (this.getValue().length > 0)
                             Ext.getCmp('E_trueany').setValue(
-                                    this.getValue() + "*");
+                                    this.getValue() //+ "*"
+																		);
                         else
                             Ext.getCmp('E_trueany').setValue(this.getValue());
                     },
                     keyup : function(e, a) {
                         if (this.getValue().length > 0)
                             Ext.getCmp('E_trueany').setValue(
-                                    this.getValue() + "*");
+                                    this.getValue() //+ "*"
+																		);
                         else
                             Ext.getCmp('E_trueany').setValue(this.getValue());
                         if (a.ENTER == a.keyCode) {
@@ -238,6 +240,8 @@ GeoNetwork.searchApp = function() {
                 		catalogue.services.getSources, catalogue.services.logoUrl, true);
         		var groupField = GeoNetwork.util.SearchFormTools.getGroupField(
                 		catalogue.services.getGroups, true);
+        		var statusField = GeoNetwork.util.SearchFormTools.getStatusField(
+                		catalogue.services.getStatus, true);
         		var metadataTypeField = GeoNetwork.util.SearchFormTools
                 		.getMetadataTypeField(true);
         		var categoryField = GeoNetwork.util.SearchFormTools.getCategoryField(
@@ -266,7 +270,7 @@ GeoNetwork.searchApp = function() {
 						    .getServiceTypeField(true);
 
             advancedCriteria.push(themekeyField, orgNameField,
-										catalogueField, groupField, metadataTypeField, 
+										catalogueField, groupField, statusField, metadataTypeField, 
 										categoryField, validField, spatialTypes, denominatorField,
                     ownerField, isHarvestedField, siteId);
 
@@ -402,7 +406,11 @@ GeoNetwork.searchApp = function() {
                             catalogue.startRecord, true);
                     app.searchApp.firstSearch = true;
                     showSearch();
+										hideAdvancedSearch();
                 },
+								resetCb: function() {
+            			Ext.getCmp('sortByToolBar').setValue("relevance");
+								},
                 listeners : {
                     onreset : function() {
                         if (Ext.getCmp('facets-panel')) {

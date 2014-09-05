@@ -204,23 +204,10 @@
 			</error>
 		</service>
 
-		<service name="xml.metadata.validate">
-			<class name=".services.metadata.Validate"/>
-		  <output sheet="metadata/validate.xsl" contentType="text/xml; charset=UTF-8">
-		    <xml name="validation" file="xml/metadata-validate.xml" />
-		  </output>
-		</service>
-
 		<service name="metadata.relation">
 			<class name=".guiservices.metadata.GetRelated"/>
 		</service>
 		
-	  <service name="xml.relation">
-	    <class name=".guiservices.metadata.GetRelated"/>
-	    <output sheet="metadata/relation.xsl" contentType="text/xml; charset=UTF-8"/>
-	  </service>
-	  
-
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<service name="metadata.elem.down">
@@ -415,11 +402,6 @@
 		<service name="metadata.processing">
 			<class name=".services.metadata.XslProcessing"/>
 			<output forward="metadata.edit" />
-		</service>
-		
-		<service name="xml.metadata.processing">
-			<class name=".services.metadata.XslProcessing"/>
-			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/> 
 		</service>
 		
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -649,43 +631,9 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.ownership.editors">
-			<class name=".services.ownership.Editors"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.ownership.groups">
-			<class name=".services.ownership.Groups"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.ownership.transfer">
-			<class name=".services.ownership.Transfer"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		<!-- Status                                                        -->
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.metadata.status.set">
-			<class name=".services.metadata.UpdateStatus"/>
-		</service>
-		
-		<service name="xml.metadata.status.get">
-			<class name=".services.status.Get"/>
-		</service>
-		
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Rating                                                        -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<service name="xml.metadata.rate">
-			<class name=".services.metadata.Rate"/>
-		</service>
-		
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Order templates											   -->
         <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -720,14 +668,6 @@
                     <param name="timeBetweenUpdates" value="10" />
                 </call>
             </output>
-        </service>
-
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-        <!-- Metadata owned by user                                        -->
-        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-        <service name="xml.user.metadata">
-          <class name=".guiservices.metadata.GetByOwner" />
         </service>
 
         <!-- - - - - - - - - - - - - - Format MD services - - - - - - - - - - - - - - - - -->

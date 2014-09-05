@@ -2779,7 +2779,12 @@ public class DataManager {
                 env.addContent(new Element("id").setText(id));
                 env.addContent(new Element("uuid").setText(uuid));
                 Element schemaLoc = new Element("schemaLocation");
-                schemaLoc.setAttribute(schemaMan.getSchemaLocation(schema,context));
+								Attribute schemaLocAttr = schemaMan.getSchemaLocation(schema,context);
+								if (schemaLocAttr != null) {
+                	schemaLoc.setAttribute(schemaLocAttr);
+								} else {
+									Log.error(Geonet.DATA_MANAGER, "No schemaLocation attribute defined for schema "+schema);
+								}
                 env.addContent(schemaLoc);
 
                 if (updateDatestamp == UpdateDatestamp.yes) {

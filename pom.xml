@@ -113,6 +113,11 @@
           <version>2.0</version>
         </plugin>
         <plugin>
+          <groupId>org.mortbay.jetty</groupId>
+          <artifactId>jetty-maven-plugin</artifactId>
+          <version>${jetty.version}</version>
+        </plugin>
+        <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>findbugs-maven-plugin</artifactId>
           <version>2.5.2</version>
@@ -166,6 +171,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+				<version>2.5.1</version>
         <configuration>
           <source>1.6</source>  <!-- The -source argument for the Java compiler. -->
           <target>1.6</target>  <!-- The -target argument for the Java compiler. -->
@@ -181,6 +187,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
         <configuration>
           <encoding>UTF-8</encoding>
         </configuration>
@@ -190,6 +197,7 @@
       <plugin>
         <groupId>org.codehaus.cargo</groupId>
         <artifactId>cargo-maven2-plugin</artifactId>
+				<version>1.4.9</version>
         <configuration>
           <container>
             <containerId>jetty7x</containerId>
@@ -235,7 +243,7 @@
             <descriptor>release/zip-war.xml</descriptor>
             <descriptor>release/bin.xml</descriptor>
           </descriptors>
-          <finalName>geonetwork-${version}</finalName>
+          <finalName>geonetwork-${project.version}</finalName>
           <outputDirectory>${project.build.directory}/release</outputDirectory>
         </configuration>
       </plugin>
@@ -804,9 +812,9 @@
         <version>1.1-20120112</version>
       </dependency>
       <dependency>
-        <groupId>net.arnx.jsonic</groupId>
+        <groupId>net.arnx</groupId>
         <artifactId>jsonic</artifactId>
-        <version>1.2.0</version>
+        <version>1.2.11</version>
       </dependency>
       <!-- end language detection -->
 
@@ -927,22 +935,7 @@
       <url>http://mvnrepository.com/artifact</url>
     </repository>
 
-    <!-- seasar repo, has jsonic - used by langdetect -->
-    <repository>
-      <id>maven.seasar.org</id>
-      <name>The Seasar Foundation Maven2 Repository</name>
-      <url>http://maven.seasar.org/maven2</url>
-    </repository>
-
   </repositories>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <name>oss.sonatype.org - github-releases</name>
-      <id>oss.sonatype.org-github-releases</id>
-      <url>http://oss.sonatype.org/content/repositories/github-releases</url>
-    </pluginRepository>
-  </pluginRepositories>
 
   <!-- =========================================================== -->
   <!--     Modules for the build in approximate dependency order   -->

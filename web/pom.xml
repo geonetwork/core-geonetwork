@@ -381,9 +381,8 @@
           <artifactId>langdetect</artifactId>
       </dependency>
       <dependency>
-          <groupId>net.arnx.jsonic</groupId>
+          <groupId>net.arnx</groupId>
           <artifactId>jsonic</artifactId>
-          <version>1.2.0</version>
       </dependency>
       <!-- end language detection -->
 		<dependency>

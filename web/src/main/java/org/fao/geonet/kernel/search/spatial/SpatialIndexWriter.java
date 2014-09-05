@@ -323,7 +323,12 @@ public class SpatialIndexWriter implements FeatureListener
           try {
 						if (srs != null && !(srs.equals(""))) sourceCRS = CRS.decode(srs);
             MultiPolygon jts = parseGml(parser, gml);
-							
+
+						if (jts.isEmpty()) {
+							Log.error(Geonet.INDEX_ENGINE, "Skipping Empty MultiPolygon.....");
+							continue; // skip to next
+						}
+
 						// if we have an srs and its not WGS84 then transform to WGS84
 						if (!CRS.equalsIgnoreMetadata(sourceCRS, DefaultGeographicCRS.WGS84)) {
 							MathTransform tform = CRS.findMathTransform(sourceCRS, DefaultGeographicCRS.WGS84);

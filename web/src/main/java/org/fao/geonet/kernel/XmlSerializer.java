@@ -42,6 +42,7 @@ import jeeves.xlink.Processor;
 
 import org.apache.log4j.Priority;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -259,6 +260,8 @@ public abstract class XmlSerializer {
 	
 		if (resolveXLinks()) Processor.removeXLink(xml);
 
+		xml = removeGeonetElements(xml);
+
 		String date = new ISODate().toString();
 
 		if (createDate == null)
@@ -319,6 +322,7 @@ public abstract class XmlSerializer {
      */
 	protected void updateDb(Dbms dbms, String id, Element xml, String changeDate, String root, boolean updateDateStamp, String uuid) throws SQLException {
 		if (resolveXLinks()) Processor.removeXLink(xml);
+		xml = removeGeonetElements(xml);
         if (logEmptyWithheld(id, xml, "XmlSerializer.updateDb")) {
             StackTraceElement[] stacktrace = new Exception("").getStackTrace();
             StringBuffer info = new StringBuffer();
@@ -406,6 +410,33 @@ public abstract class XmlSerializer {
             }
         }
 	}
+
+	private Element removeGeonetElements(Element md) {
+    //--- purge geonet: attributes
+
+    List listAtts = md.getAttributes();
+    for (int i=0; i<listAtts.size(); i++) {
+      Attribute attr = (Attribute) listAtts.get(i);
+      if (Edit.NAMESPACE.getPrefix().equals(attr.getNamespacePrefix())) {
+        attr.detach();
+        i--;
+      }
+    }
+
+    //--- purge geonet: children
+    List list = md.getChildren();
+    for (int i=0; i<list.size(); i++) {
+      Element child = (Element) list.get(i);
+      if (!Edit.NAMESPACE.getPrefix().equals(child.getNamespacePrefix()))
+        removeGeonetElements(child);
+      else {
+        child.detach();
+        i--;
+      }
+    }
+
+		return md;
+  }
 
 	/* API to be overridden by extensions */
 
