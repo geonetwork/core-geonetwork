@@ -1,14 +1,15 @@
-<div class="">
-  <div go-map style="width:100%;height: 200px"></div>
-  <button class="btn btn-default" data-ng-click="maxExtent()">
-    <i class="fa fa-globe"></i>
-  </button>
-  <button class="btn btn-default"  data-ng-click="gnMap.zoom(map, -1)">
-    <i class="fa fa-minus"></i>
-  </button>
-  <button class="btn btn-default" data-ng-click="gnMap.zoom(map, 1)">
-    <i class="fa fa-plus"></i>
-  </button>
+<div go-map style="width:100%;height: 200px">
+  <div class="btn-group-vertical">
+    <button class="btn btn-default" data-ng-click="gnMap.zoom(map, 1)">
+      <i class="fa fa-plus"></i>
+    </button>
+    <button class="btn btn-default" data-ng-click="maxExtent()">
+      <i class="fa fa-globe"></i>
+    </button>
+    <button class="btn btn-default"  data-ng-click="gnMap.zoom(map, -1)">
+      <i class="fa fa-minus"></i>
+    </button>
+  </div>
   <button class="btn btn-default" gn-draw-bbox-btn="searchObj.params.geometry" go-btn data-ng-model="interaction.active">
     <i class="fa fa-pencil"></i>
   </button>

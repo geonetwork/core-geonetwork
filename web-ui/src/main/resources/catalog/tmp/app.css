@@ -6969,3 +6969,62 @@ select[multiple][hitsperpage-combo] select {
   padding-left: 0;
   padding-right: 0;
 }
+.twitter-typeahead {
+  width: 100%;
+}
+.panel-heading {
+  padding: 0 15px;
+  height: 3.8em;
+  line-height: 3.8em;
+}
+.panel-heading [sortby-combo],
+.panel-heading [hitsperpage-combo] {
+  vertical-align: middle;
+}
+.more {
+  margin: 0 0 .7em 15px;
+}
+.advanced {
+  max-height: 0;
+  overflow-y: hidden;
+  transition: max-height ease 0.25s;
+}
+.advanced.active {
+  max-height: 30em;
+}
+[gn-map-field] {
+  border: 1px solid #cccccc;
+  border-radius: 3px;
+  position: relative;
+}
+[gn-map-field] [gn-draw-bbox-btn],
+[gn-map-field] .btn-group-vertical {
+  position: absolute;
+  top: 4px;
+  z-index: 10;
+}
+[gn-map-field] .btn-group-vertical {
+  right: 4px;
+}
+[gn-map-field] [gn-draw-bbox-btn] {
+  left: 4px;
+}
+.submit {
+  margin-top: 1.5em;
+  /* width: 100%; */
+  text-align: right;
+}
+[search-results] .list-group {
+  margin-bottom: 0;
+}
+[search-results] .list-group-item {
+  border-left: 0;
+  border-right: 0;
+  border-radius: 0;
+}
+[search-results] .list-group-item:first-of-type {
+  border-top-width: 0;
+}
+[search-results] .list-group-item:last-of-type {
+  border-bottom-width: 0;
+}
