@@ -63,11 +63,12 @@
             maxResolution: gnMapConfig.maxResolution
           })
         });
-        //$scope.map.addLayer($scope.ncwmsLayer);
+        $scope.map.addLayer($scope.ncwmsLayer);
 
         gnHttp.callService('layerSelection', {
           action: 'get'
         }).success(function(data) {
+          if(!data || !angular.isArray(data)) return;
           angular.forEach(data[0], function(layer){
             gnMap.addWmsToMap($scope.map, {
               LAYERS: layer.name
