@@ -1,10 +1,12 @@
 <ul class="list-group gn-resultview">
   <li class="list-group-item" data-ng-repeat="md in searchResults.records"
       gn-displayextent-onhover="" gn-zoomto-onclick>
+    <div class="categories">
+      <i data-ng-repeat="cat in md.category" class="fa" data-ng-class="catIcons[cat]" title="{{cat}}">&nbsp;</i>
+    </div>
     <h4><img ng-src="../../images/logos/{{md.source}}.gif"/>{{md.title || md.defaultTitle}}</h4>
-    <p class="small text-justify">{{md.abstract}}</p>
-    <img ng-src="{{md.getThumbnails().small}}" />
-    <i data-ng-repeat="cat in md.category" class="fa" data-ng-class="catIcons[cat]" title="{{cat}}">&nbsp;</i>
-    <em class="small">{{md.getContacts().resource}}</em>
+    <img ng-src="{{md.getThumbnails().small}}" class="img-thumbnail pull-right" ng-if="md.getThumbnails().small"/>
+    <p class="text-justify">{{md.abstract}}</p>
+    <blockquote ng-if="md.getContacts().resource">{{md.getContacts().resource}}</blockquote>
   </li>
 </ul>

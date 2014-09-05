@@ -7028,3 +7028,21 @@ select[multiple][hitsperpage-combo] select {
 [search-results] .list-group-item:last-of-type {
   border-bottom-width: 0;
 }
+.gn-resultview .categories {
+  float: right;
+  font-size: 20px;
+  line-height: 2.75em;
+}
+.gn-resultview .img-thumbnail {
+  margin-left: 1em;
+}
+.gn-resultview p {
+  font-size: .9em;
+}
+.gn-resultview blockquote {
+  font-size: 90%;
+  color: #666;
+}
+.gn-resultview li:hover {
+  background: lightyellow;
+}
