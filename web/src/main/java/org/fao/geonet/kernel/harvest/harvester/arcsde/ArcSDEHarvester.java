@@ -156,15 +156,15 @@ public class ArcSDEHarvester extends AbstractHarvester {
 
 	@Override
 	protected void doHarvest(Logger l, ResourceManager rm) throws Exception {
-		System.out.println("ArcSDE harvest starting");
+        if(log.isDebugEnabled())  log.debug("ArcSDE - harvest starting");
 		ArcSDEMetadataAdapter adapter = new ArcSDEMetadataAdapter(params.server, params.port, params.database, params.username, params.password);
 		List<String> metadataList = adapter.retrieveMetadata();
 		align(metadataList, rm);
-		System.out.println("ArcSDE harvest finished");
+        if(log.isDebugEnabled()) log.debug("ArcSDE - harvest finished");
 	}
 	
 	private void align(List<String> metadataList, ResourceManager rm) throws Exception {
-		System.out.println("Start of alignment for : "+ params.name);
+        if(log.isDebugEnabled()) log.debug("Start of alignment for : "+ params.name);
 		result = new ArcSDEResult();
 		Dbms dbms = (Dbms) rm.open(Geonet.Res.MAIN_DB);
 		//----------------------------------------------------------------
@@ -193,7 +193,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
 			else {
 				String uuid = dataMan.extractUUID(schema, iso19139);
 				if(uuid == null || uuid.equals("")) {
-					System.out.println("Skipping metadata due to failure extracting uuid (uuid null or empty).");
+                    log.warning("Skipping metadata due to failure extracting uuid (uuid null or empty).");
 					result.badFormat++;
 				}
 				else {
@@ -201,7 +201,7 @@ public class ArcSDEHarvester extends AbstractHarvester {
                     // validate it here if requested
                     if (params.validate) {
                         if(!dataMan.validate(iso19139))  {
-                            System.out.println("Ignoring invalid metadata with uuid " + uuid);
+                            log.warning("Skipping metadata that does not validate, uuid " + uuid);
                             result.doesNotValidate++;
                             continue;
                         }
@@ -212,12 +212,10 @@ public class ArcSDEHarvester extends AbstractHarvester {
 					//
 					String id = dataMan.getMetadataId(dbms, uuid);
 					if (id == null)	{
-						System.out.println("adding new metadata");
 						id = addMetadata(iso19139, uuid, dbms, schema, localGroups, localCateg);
 						result.added++;
 					}
 					else {
-						System.out.println("updating existing metadata, id is: " + id);
 						updateMetadata(iso19139, id, dbms, localGroups, localCateg);
 						result.updated++;
 					}
@@ -240,7 +238,8 @@ public class ArcSDEHarvester extends AbstractHarvester {
 	}
 
 	private void updateMetadata(Element xml, String id, Dbms dbms, GroupMapper localGroups, CategoryMapper localCateg) throws Exception {
-		System.out.println("  - Updating metadata with id: "+ id);
+        if(log.isDebugEnabled()) log.debug("  - Updating metadata with id : "+ id);
+
         //
         // update metadata
         //
@@ -248,7 +247,18 @@ public class ArcSDEHarvester extends AbstractHarvester {
         boolean ufo = false;
         boolean index = false;
         String language = context.getLanguage();
-        dataMan.updateMetadata(context, dbms, id, xml, validate, ufo, index, language, new ISODate().toString(), false);
+
+        String changeDate = null;
+        try {
+            String schema = dataMan.autodetectSchema(xml);
+            changeDate = dataMan.extractDateModified(schema, xml);
+        } catch (Exception ex) {
+            log.error("ArcSDEHarverter - updateMetadata - can't get metadata modified date for metadata id= " + id + ", using current date for modified date");
+            changeDate = new ISODate().toString();
+        }
+
+        dataMan.updateMetadata(context, dbms, id, xml, validate, ufo, index, language, changeDate, true);
+
 
 		dbms.execute("DELETE FROM OperationAllowed WHERE metadataId=?", Integer.parseInt(id));
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, dbms, log);
@@ -270,13 +280,20 @@ public class ArcSDEHarvester extends AbstractHarvester {
 	 * @throws Exception
 	 */
 	private String addMetadata(Element xml, String uuid, Dbms dbms, String schema, GroupMapper localGroups, CategoryMapper localCateg) throws Exception {
-		System.out.println("  - Adding metadata with remote uuid: "+ uuid);
+        if(log.isDebugEnabled()) log.debug("  - Adding metadata with uuid : "+ uuid);
 
         //
         // insert metadata
         //
         String source = params.uuid;
-        String createDate = new ISODate().toString();
+        String createDate = null;
+        try {
+            createDate = dataMan.extractDateModified(schema, xml);
+        } catch (Exception ex) {
+            log.error("ArcSDEHarverter - addMetadata - can't get metadata modified date for metadata with uuid= " + uuid + ", using current date for modified date");
+            createDate = new ISODate().toString();
+        }
+
         String docType = null, title = null, isTemplate = null, group = null, category = null;
         boolean ufo = false, indexImmediate = false;
         String id = dataMan.insertMetadata(context, dbms, schema, xml, context.getSerialFactory().getSerial(dbms, "Metadata"), uuid, Integer.parseInt(params.ownerId), group, source,
@@ -305,10 +322,10 @@ public class ArcSDEHarvester extends AbstractHarvester {
 			String name = localCateg.getName(catId);
 
 			if (name == null) {
-				System.out.println("    - Skipping removed category with id:"+ catId);
+                log.warning("Skipping removed category with id:"+ catId);
 			}
 			else {
-				System.out.println("    - Setting category : "+ name);
+                if (log.isDebugEnabled()) log.debug("Setting category : "+ name);
 				dataMan.setCategory(context, dbms, id, catId);
 			}
 		}
