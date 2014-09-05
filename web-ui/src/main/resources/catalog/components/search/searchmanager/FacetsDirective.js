@@ -24,11 +24,17 @@
         },
         link: function(scope, element, attrs, controller) {
 
+          var initialMaxResults = 5;
+
           scope.add = function(f, reset) {
             gnFacetService.add(scope.currentFacets, scope.indexKey,
                 f['@name'], f['@label']);
             controller.resetPagination();
             controller.triggerSearch();
+          };
+          scope.maxItems = initialMaxResults;
+          scope.toggle = function() {
+            scope.maxItems = (scope.maxItems == Infinity) ? initialMaxResults : Infinity;
           };
         }
       };

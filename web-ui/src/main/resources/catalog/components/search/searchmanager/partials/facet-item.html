@@ -2,9 +2,13 @@
   <h4>{{facet | translate}}</h4>
   <div class="list-group">
     <a class="list-group-item" data-ng-repeat="f in facetResults[facet]"
-        data-ng-click="add(f)" href="">
+        data-ng-click="add(f)" href="" ng-if="$index < maxItems">
       <span class="badge">{{f['@count']}}</span>
       <span class="gn-facet-label">{{f['@label'] || f['@name']}}</span>
     </a>
+    <button ng-click="toggle()" ng-if="facetResults[facet].length >= maxItems"
+      class="btn btn-link">
+      {{facetResults[facet].length-maxItems}} more
+    </button>
   </div>
 </div>
