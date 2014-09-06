@@ -38,13 +38,6 @@
 		</service>
 
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-		<service name="xml.metadata.validation">
-			<class name=".services.metadata.Validation"/>
-			<error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8"/>
-		</service>
-
-		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- Versioning Services -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
