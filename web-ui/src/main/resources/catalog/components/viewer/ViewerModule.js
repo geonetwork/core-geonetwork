@@ -208,7 +208,7 @@
         }
       ]);
 
-  module.value('gnViewerSettings', {
+  module.constant('gnViewerSettings', {
     proxyUrl: '../../proxy?url='
   });
 })();
