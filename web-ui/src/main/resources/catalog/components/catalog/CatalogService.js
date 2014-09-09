@@ -263,6 +263,11 @@
    */
   module.provider('gnHttp', function() {
 
+    var remote;
+    this.setRemote = function(value) {
+      remote = value;
+    };
+
     this.$get = ['$http', 'gnHttpServices' , '$location', 'gnUrlUtils',
       function($http, gnHttpServices, $location, gnUrlUtils) {
 
@@ -307,8 +312,12 @@
            */
           callService: function(serviceKey, params, httpConfig) {
 
+            var url = gnHttpServices[serviceKey];
+            if(remote) {
+              url = remote.proxy + encodeURIComponent(remote.gnUrl + url);
+            }
             var config = {
-              url: gnHttpServices[serviceKey],
+              url: url,
               params: params,
               method: 'GET'
             };
