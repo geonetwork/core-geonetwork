@@ -24,7 +24,7 @@
     <admin.password>admin</admin.password>
     <base.url>/geonetwork/srv/eng</base.url>
     <base.loc.url>/geonetwork/srv/eng</base.loc.url>
-    
+    <rootProjectDir>${basedir}/..</rootProjectDir>
     <!-- jetty properties -->
     <geonetworkWar>${basedir}/target/geonetworkWar</geonetworkWar>
   </properties>
@@ -177,4 +177,10 @@
       </build>
     </profile>
   </profiles>
+  <distributionManagement>
+    <site>
+      <id>Maven generated site and reports</id>
+      <url>file://${rootProjectDir}/target/site/${artifactId}</url>
+    </site>
+  </distributionManagement>
 </project>

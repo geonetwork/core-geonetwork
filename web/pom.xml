@@ -876,7 +876,12 @@
     </profile>
     
   </profiles>
-
+  <distributionManagement>
+    <site>
+      <id>Maven generated site and reports</id>
+      <url>file://${rootProjectDir}/target/site/${artifactId}</url>
+    </site>
+  </distributionManagement>
   <properties>
     <geonetwork.version>${project.version}</geonetwork.version>
     <geonetwork.subversion>SNAPSHOT</geonetwork.subversion>
