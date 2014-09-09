@@ -24,7 +24,7 @@
 					<gmd:address>
 						<gmd:CI_Address>
 							<gmd:electronicMailAddress>
-								<gco:CharacterString>mail@mail.com</gco:CharacterString>
+								<gco:CharacterString>sextant@ifremer.fr</gco:CharacterString>
 							</gmd:electronicMailAddress>
 						</gmd:CI_Address>
 					</gmd:address>
