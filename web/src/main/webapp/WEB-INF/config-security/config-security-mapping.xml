@@ -401,6 +401,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 guideline https://github.com/geonetwork/core-geonetwork/wiki/RefactoringXSLTAndUserInterface -->
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/q!?.*" access="permitAll"/>
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/qi!?.*" access="permitAll"/>
+                <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/suggest!?.*" access="permitAll"/>
 
                 <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/info!?.*" access="permitAll"/>
 
