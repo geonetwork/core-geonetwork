@@ -8,7 +8,8 @@
       'gnUrlUtils',
       'gnOwsCapabilities',
       '$http',
-          function(gnMap, gnUrlUtils, gnOwsCapabilities, $http) {
+      'gnViewerSettings',
+          function(gnMap, gnUrlUtils, gnOwsCapabilities, $http, gnViewerSettings) {
 
             /**
              * TEMP Create a default ncWMS layer
@@ -30,7 +31,7 @@
               });
 
               var url = this.getMetadataUrl(layer);
-              var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
+              var proxyUrl = gnViewerSettings.proxyUrl + encodeURIComponent(url);
 
               $http.get(proxyUrl)
                   .success(function (json) {

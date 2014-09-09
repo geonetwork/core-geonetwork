@@ -208,4 +208,7 @@
         }
       ]);
 
+  module.value('gnViewerSettings', {
+    proxyUrl: '../../proxy?url='
+  });
 })();
