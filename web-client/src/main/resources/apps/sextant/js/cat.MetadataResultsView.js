@@ -80,9 +80,6 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
                 group = translationStore.getAt(idx).get('label');
 	            }
 	    	}
-	    	
-	    	Ext.get(Ext.query('input[id*=layername]')[0]).dom.value = c[0];
-	    	Ext.get(Ext.query('input[id*=wmsurl]')[0]).dom.value = c[2];
 
         var p='';
         switch (c[3]) {
@@ -116,8 +113,7 @@ cat.MetadataResultsView = Ext.extend(GeoNetwork.MetadataResultsView, {
           }
         });
 
-	    	Ext.get(Ext.query('input[id*=wmsversion]')[0]).set({value:p});
-	    	url='http://localhost:8080/geonetwork/srv/eng/md.layer.select?action=get' ///Ext.get(Ext.query('input[id*=configgeoviewerurl]')[0]).getValue();
+	    	url=catalogue.services.mdLayerSelect + '?action=get';
 	    	
 	    	//check if configgeoviewerurl is on the same host
 	    	var aElt = document.createElement('a');
