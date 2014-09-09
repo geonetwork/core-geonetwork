@@ -210,18 +210,13 @@
       };
 
       this.zoomToExtent = function(layer, map) {
-        if(layer.get('cextent')) {
+        if (layer.get('cextent')) {
           map.getView().fitExtent(layer.get('cextent'), map.getSize());
-        }        this.moveLayer = function(layer, delta) {
-          var index = $scope.layers.indexOf(layer);
-          var layersCollection = $scope.map.getLayers();
-          layersCollection.removeAt(index);
-          layersCollection.insertAt(index + delta, layer);
-        };
+        }
       };
 
-      this.showInfo = function(layer) {
-        angular.forEach($scope.layers, function(l) {
+      this.showInfo = function(layer, layers) {
+        angular.forEach(layers, function(l) {
           if(l != layer){
             l.showInfo = false;
           }
@@ -230,7 +225,7 @@
       }
 
       this.moveLayer = function(map, layer, delta) {
-        var index = map.layers.indexOf(layer);
+        var index = map.getLayers().getArray().indexOf(layer);
         var layersCollection = map.getLayers();
         layersCollection.removeAt(index);
         layersCollection.insertAt(index + delta, layer);
