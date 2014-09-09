@@ -449,7 +449,7 @@ cat.app = function() {
         var services = catalogue.services;
         cat.what.createCmp(catalogue);
         
-        searchModes = Ext.get(Ext.query('input[id*=configtypesearch]')[0]).getValue().split(',');
+        searchModes = GeoNetwork.Settings.bootsrap.configtypesearch.split(',');
         activeSearchMode = searchModes.indexOf('simple') >= 0 ? 'simple' : searchModes[0];
         
         var whereForm = cat.where.createCmp();
