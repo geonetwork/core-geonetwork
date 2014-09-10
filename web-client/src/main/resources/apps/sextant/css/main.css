@@ -673,6 +673,7 @@ div.x-tip-body div.help {
  * is not an option.
  */
 .myocean * .gmdalternateTitle span.buttons,
+.myocean * .gmdcredit span.buttons,
 .sdnProduct * .gmdalternateTitle span.buttons,
 .sdnProduct * .gmdresolution span.buttons,
 .sdnProduct * .gmduseLimitation span.buttons {
