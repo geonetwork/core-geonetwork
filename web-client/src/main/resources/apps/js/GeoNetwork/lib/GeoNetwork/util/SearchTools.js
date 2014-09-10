@@ -221,7 +221,8 @@ GeoNetwork.util.SearchTools = {
                         if (name === 'E_sortBy') {
                             var cb =  cur.linkedCombo;
                             if (map['E_sortOrder']) {
-                                cb.setValue(value + '#' + map['E_sortOrder']);
+                              cb.setValue(value + '#' + map['E_sortOrder']);
+                              Ext.getCmp('E_sortBy').setValue(value);
                             } else {
                                 var idx = cb.getStore().find('id', new RegExp(value + '*'));
                                 if (idx !== -1) {
