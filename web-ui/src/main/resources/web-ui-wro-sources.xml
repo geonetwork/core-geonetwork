@@ -12,6 +12,7 @@
     <jsSource webappPath="catalog/lib/angular/angular.min.js"/>
     <jsSource webappPath="catalog/lib/angular/angular-resource.min.js"/>
     <jsSource webappPath="catalog/lib/angular/angular-route.min.js"/>
+    <jsSource webappPath="catalog/lib/angular/angular-sanitize.min.js"/>
     <jsSource webappPath="catalog/lib/angular-translate.min.js"/>
     <jsSource webappPath="catalog/lib/angular-md5.min.js"/>
     <jsSource webappPath="catalog/lib/angular.ext/datetimepicker.js"/>
@@ -19,6 +20,7 @@
     <jsSource webappPath="catalog/lib/angular.ext/typeahead.js"/>
     <jsSource webappPath="catalog/lib/angular.ext/position.js"/>
     <jsSource webappPath="catalog/lib/angular.ext/bindHtml.js"/>
+    <jsSource webappPath="catalog/lib/angular.ext/slider.js"/>
     <jsSource webappPath="catalog/lib/bootstrap-3.0.1.min.js"/>
     <jsSource webappPath="catalog/lib/proj4js-compressed.js" minimize="false"/>
     <jsSource webappPath="catalog/lib/ngeo/ngeo.js"/>
@@ -29,9 +31,12 @@
     <jsSource webappPath="catalog/lib/jquery.ext/jquery.fileupload.js"/>
     <jsSource webappPath="catalog/lib/jquery.ext/jquery.fileupload-process.js"/>
     <jsSource webappPath="catalog/lib/jquery.ext/jquery.fileupload-angular.js"/>
+    <jsSource webappPath="catalog/lib/jquery.ext/jquery-ui-slider.min.js"/>
     <jsSource webappPath="catalog/lib/bootstrap.ext/typeahead.js/typeahead.min.js"/>
     <jsSource webappPath="catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.min.js"/>
     <jsSource webappPath="catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput-angular.js"/>
     <jsSource webappPath="catalog/lib/bootstrap.ext/datepicker/bootstrap-datepicker.js"/>
+    <jsSource webappPath="catalog/lib/zip/zip.js"/>
+    <jsSource webappPath="catalog/lib/zip/include.js"/>
   </declarative>
 </sources>

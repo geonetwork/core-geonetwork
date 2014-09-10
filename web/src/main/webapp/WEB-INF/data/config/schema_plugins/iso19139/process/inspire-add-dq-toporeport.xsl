@@ -7,7 +7,8 @@
   xmlns:geonet="http://www.fao.org/geonetwork" xmlns:gml="http://www.opengis.net/gml"
   xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco"
   xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:util="java:org.fao.geonet.util.XslUtil"
   exclude-result-prefixes="gmd">
 
   <xsl:import href="process-utility.xsl"/>
@@ -21,7 +22,7 @@
   </xsl:variable>
 
   <xsl:variable name="inspire-thesaurus-dq-topo"
-    select="document(concat('file:///', replace(system-property(concat(substring-after($baseUrl, '/'), '.codeList.dir')), '\\', '/'), '/external/thesauri/theme/inspire-theme.rdf'))"/>
+    select="document(concat('file:///', replace(util:getConfigValue('codeListDir'), '\\', '/'), '/external/thesauri/theme/inspire-theme.rdf'))"/>
 
   <xsl:template name="list-inspire-add-dq-toporeport">
     <suggestion process="inspire-add-dq-toporeport"/>

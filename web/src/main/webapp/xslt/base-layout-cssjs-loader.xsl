@@ -22,7 +22,6 @@
     </xsl:if>
     
     <link rel="shortcut icon" type="image/x-icon" href="../../images/logos/favicon.ico" />
-
     <link href="{/root/gui/url}/catalog/tmp/app.css" rel="stylesheet" media="screen" />
     <link href="{/root/gui/url}/static/{/root/gui/nodeId}_custom_style.css{$minimizedParam}" rel="stylesheet" media="screen" />
   </xsl:template>
@@ -44,7 +43,8 @@
         <script src="{$uiResourcesPath}lib/angular/angular.js"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-resource.js"></script>
         <script src="{$uiResourcesPath}lib/angular/angular-route.js"></script>
-        
+        <script src="{$uiResourcesPath}lib/angular/angular-sanitize.js"></script>
+
         <script src="{$uiResourcesPath}lib/angular-translate.js"></script>
         <script src="{$uiResourcesPath}lib/angular-md5.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/datetimepicker.js"></script>
@@ -54,11 +54,19 @@
         <script src="{$uiResourcesPath}lib/angular.ext/bindHtml.js"></script>
 
         <script src="{$uiResourcesPath}lib/bootstrap-3.0.1.js"></script>
+        <script src="{$uiResourcesPath}lib/jquery.ext/jquery-ui-slider.min.js"></script>
         <script src="{$uiResourcesPath}lib/proj4js-compressed.js"></script>
         <script src="{$uiResourcesPath}lib/ngeo/ngeo-whitespace.js"></script>
         <xsl:if test="$withD3">
           <script src="{$uiResourcesPath}lib/d3.v3.js"></script>
           <script src="{$uiResourcesPath}lib/nv.d3.js"></script>
+        </xsl:if>
+
+        <xsl:if test="$angularApp = 'gn_viewer'">
+          <script src="{$uiResourcesPath}lib/zip/zip.js"></script>
+          <script type="text/javascript">
+            zip.workerScriptsPath = "../../catalog/lib/zip/";
+          </script>
         </xsl:if>
         
         
@@ -71,7 +79,6 @@
       
         <script src="{$uiResourcesPath}lib/bootstrap.ext/typeahead.js/typeahead.js"></script>
         <script src="{$uiResourcesPath}lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.js"></script>
-        <script src="{$uiResourcesPath}lib/bootstrap.ext/tagsinput/bootstrap-tagsinput-angular.js"></script>
         <script src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.js"></script>
         <!--</xsl:if>-->
         

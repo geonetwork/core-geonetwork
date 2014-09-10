@@ -31,8 +31,8 @@
 								//mousedown: $.proxy(this.mousedown, this)
 							});
 		this.isInput = this.element.is('input');
-		this.component = this.element.is('.date') ? this.element.find('.input-group-addon') : false;
-		
+    this.component = this.element.is('.date') ? this.element.find('.input-group-addon') : false;
+
 		if (this.isInput) {
 			this.element.on({
 				focus: $.proxy(this.show, this),

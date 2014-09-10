@@ -1,0 +1,19 @@
+<div class="search-container" data-ng-class="{open : !collapsed}">
+  <i class="fa fa-times-circle clear" ng-click="clearInput()" ng-hide="query==''"></i>
+  <input data-ng-model="query" data-ng-change="locCtrl.search(query)" type="search"
+         class="form-control" placeholder="Recherche">
+  <div class="dropdown-menu" role="menu">
+    <h5 ng-if="(localisations | filter:query).length > 0">Zones</h5>
+    <ul class="loc-defaults list-group">
+      <li data-ng-repeat="loc in localisations | filter:query" class="list-group-item">
+        <a href="" data-ng-click="locCtrl.onClick(loc, map)">{{loc.name}}</a>
+      </li>
+    </ul>
+    <h5 ng-if="results.length>0">Résultats</h5>
+    <ul class="loc-geonames list-group">
+      <li data-ng-repeat="loc in results" class="list-group-item">
+      <a href="" data-ng-click="locCtrl.onClick(loc, map)">{{loc.name}} <em>{{loc.formattedName}}</em></a>
+      </li>
+    </ul>
+  </div>
+</div>

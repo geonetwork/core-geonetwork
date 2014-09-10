@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import jeeves.component.ProfileManager;
 
+import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.kernel.SchemaManager;
@@ -69,6 +70,33 @@ public final class XslUtil
     public static boolean isCasEnabled() {
 		return ProfileManager.isCasEnabled();
 	}
+
+    /**
+     * Return a service handler config parameter
+     * @see org.fao.geonet.constants.Geonet.Config.
+     * @param key
+     * @return
+     */
+    public static String getConfigValue(String key) {
+        if (key == null) {
+            return "";
+        }
+
+        final ServiceContext serviceContext = ServiceContext.get();
+        if (serviceContext != null) {
+            ServiceConfig config = serviceContext.getBean(ServiceConfig.class);
+            if (config != null) {
+                String value = config.getValue(key);
+                if (value != null) {
+                    return value;
+                } else {
+                    return "";
+                }
+            }
+        }
+        return "";
+    }
+
     /** 
 	 * Check if bean is defined in the context
 	 * 

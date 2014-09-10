@@ -1,0 +1,34 @@
+<div>
+  <form class="ng-pristine ng-valid" role="form">
+    <div class="form-group" data-ng-class="{'has-error' : !validUrl}">
+
+      <!--File URL-->
+      <input class="form-control input-sm ng-pristine ng-valid" placeholder="KML file URL" type="text"
+             data-ng-model="url" data-ng-change="kmlCtrl.addKml(url, map)">
+
+     <p> ou </p>
+
+      <!--KMZ upload-->
+      <div class="fu">
+        <buton type="button" class="btn btn-info">
+          <span class="fa fa-upload"></span>
+          Uploader un fichier KMZ
+        </buton>
+        <input class="form-control input-sm ng-pristine ng-valid" type="file"
+               accept="application/vnd.google-earth.kmz" id="file-input"
+                data-ng-model="kmzFile" data-ng-change="uploadKMZ()">
+      </div>
+      <div class="list-group" id="file-list">
+          <a href="" class="list-group-item" data-ng-repeat="e in kmzEntries" data-ng-click="onEntryClick(e, $event)">
+            <span class="pull-right" data-ng-class="{'fa fa-spinner fa-spin' : e.loading }"></span>
+            {{e.filename}}
+          </a>
+        </div>
+    </div>
+  </form>
+
+  <div class="alert alert-warning" role="alert">
+    <span class="fa fa-info-circle"></span>
+    Vous pouvez aussi glisser/déposer un fichier sur la carte.
+  </div>
+</div>

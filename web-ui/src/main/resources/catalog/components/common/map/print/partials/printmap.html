@@ -1,0 +1,29 @@
+<form class="" >
+  <div class="form-group">
+    <label class="control-label"
+           data-translate="">print_layout</label>
+    <div class="">
+      <select class="form-control"
+              data-ng-model="config.layout"
+              data-ng-options="l.name for l in config.layouts"></select>
+    </div>
+  </div>
+  <div class="form-group">
+
+    <label class="control-label"
+           data-translate="">print_scale</label>
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" ng-model="auto"> Auto
+      </label>
+    </div>
+
+    <div class="">
+      <select class="form-control"
+              data-ng-model="config.scale"
+              data-ng-change="refreshComp()"
+              data-ng-options="l.name for l in config.scales"></select>
+    </div>
+  </div>
+  <button class="btn btn-default" data-ng-click="submit()"><i class="fa fa-print"></i></button>
+</form>

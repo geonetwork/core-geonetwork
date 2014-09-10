@@ -1,0 +1,34 @@
+ <div>
+   <button class="btn btn-cog" data-ng-click="showInfo(layer)">
+     <span class="fa fa-cog"></span>
+   </button>
+   <button class="btn btn-cog" data-ng-click="zoomToExtent(layer, map)">
+     <span class="fa fa-arrows-alt"></span>
+   </button>
+   <span class="gn-layer-ordering">
+     <a href="#" class="fa fa-arrow-up" ng-if="!$first" ng-click="moveLayer(layer, 1)"></a>
+     <a href="#" class="fa fa-arrow-down" ng-if="!$last" ng-click="moveLayer(layer, -1)"></a>
+   </span>
+   <label>
+     <input type="checkbox" ng-model="layer.visible" />
+     {{layer.get('label')}}
+   </label>
+   <div class="details">
+     <button class="metadata" ng-if="layer.get('metadata')" data-ng-click="showMetadata(layer.get('metadata'), layer.get('label'))">
+       <span class="fa fa-file"></span>
+       Voir les métadonnées
+     </button>
+     <button class="btn btn-default delete" ng-click="map.removeLayer(layer)">
+       <span class="fa fa-trash-o"></span>
+       Supprimer
+     </button>
+     <label>Transparence <input type="range" min="0" max="1" step="0.05" ng-model="layer.opacity" /></label>
+     <h6 ng-if="layer.get('legend')">Légende</h6>
+     <p ng-if="layer.get('legend')">
+       <img src="{{layer.get('legend')}}"/>
+     </p>
+     <h6 ng-if="layer.get('attribution')">Source</h6>
+     <p ng-if="layer.get('attribution')"><em>{{layer.get('attribution')}}</em></p>
+     <div gn-ncwms-transect="" map="map" layer="layer" data-ng-if="layer.ncInfo"/>
+   </div>
+</div>

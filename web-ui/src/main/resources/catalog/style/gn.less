@@ -206,3 +206,53 @@ font-size: small;
 span.twitter-typeahead {
   display: block !important;
 }
+
+@gn-popup-max-height: 400px;
+
+[gn-popup] {
+  display: none;
+  min-width: 200px;
+  max-width: 600px;
+  min-height: 100px;
+  max-height: @gn-popup-max-height;
+  z-index: 2000;
+
+  @media (max-width: @screen-tablet) {
+    z-index: 1500;
+    left: 2%;
+    right: 2%;
+    top: 2%;
+    bottom: 2%;
+    max-height: none;
+    max-width: none;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  @media (max-width: @screen-phone) {
+    position: fixed !important;
+    overflow: hidden;
+  }
+}
+
+.gn-popup-content {
+  overflow: auto;
+  max-width: inherit;
+  max-height: (@gn-popup-max-height - 60);
+  font-size: 12px;
+  @media (max-width: @screen-phone) {
+    width: 100%;
+    height: auto;
+    max-height: none;
+    position: absolute;
+    top: 36px;
+    bottom: 10px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    table {
+      width: 100% !important;
+      td {
+        vertical-align: top;
+      }
+    }
+  }
+}

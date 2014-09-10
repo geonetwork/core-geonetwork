@@ -228,7 +228,7 @@ class Harvester implements IHarvester<HarvestResult> {
 
 	private Element doSearch(XmlRequest request, Search s) throws OperationAbortedEx
 	{
-		request.setAddress(params.getServletPath() +"/srv/en/"+ Geonet.Service.XML_SEARCH);
+		request.setAddress(params.getServletPath() +"/srv/eng/"+ Geonet.Service.XML_SEARCH);
 		request.clearParams();
 		try
 		{

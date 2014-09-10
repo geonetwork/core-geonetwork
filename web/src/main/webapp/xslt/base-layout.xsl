@@ -51,10 +51,9 @@
             </div>
           </xsl:when>
           <xsl:otherwise>
-            <!-- AngularJS application -->
-            <div data-ng-cloak="" class="ng-cloak">
 
-              <xsl:if test="$angularApp != 'gn_search'">
+              <!-- AngularJS application -->
+              <xsl:if test="$angularApp != 'gn_search' and $angularApp != 'gn_viewer'">
                 <div class="navbar navbar-default"
                      data-ng-include="'{$uiResourcesPath}templates/top-toolbar.html'"> </div>
               </xsl:if>
@@ -64,7 +63,6 @@
               <xsl:if test="$isJsEnabled">
                 <xsl:call-template name="javascript-load"/>
               </xsl:if>
-            </div>
             <xsl:if test="$isJsEnabled">
               <xsl:call-template name="no-js-alert"/>
             </xsl:if>
