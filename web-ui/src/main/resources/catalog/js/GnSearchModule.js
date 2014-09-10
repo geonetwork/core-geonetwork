@@ -4,12 +4,15 @@
   goog.require('gn');
   goog.require('gn_resultsview');
   goog.require('gn_map_field_directive');
+  goog.require('gn_viewer');
 
   var module = angular.module('gn_search', [
     'gn',
     'gn_resultsview',
     'gn_map_field_directive',
     'ui.bootstrap.buttons',
+    'ui.bootstrap.tabs',
+    'gn_viewer',
     'go'
   ]);
 

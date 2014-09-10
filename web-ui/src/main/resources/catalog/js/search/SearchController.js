@@ -6,7 +6,6 @@
   goog.require('gn_search_customui');
 
   var module = angular.module('gn_search_controller',[
-    'bootstrap-tagsinput',
     'ui.bootstrap.typeahead',
     'gn_searchsuggestion_service',
     'gn_search_customui'

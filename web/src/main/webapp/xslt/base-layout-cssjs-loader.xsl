@@ -52,6 +52,8 @@
         <script src="{$uiResourcesPath}lib/angular.ext/typeahead.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/position.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/bindHtml.js"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/tabs.js"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/slider.js"></script>
 
         <script src="{$uiResourcesPath}lib/bootstrap-3.0.1.js"></script>
         <script src="{$uiResourcesPath}lib/jquery.ext/jquery-ui-slider.min.js"></script>
