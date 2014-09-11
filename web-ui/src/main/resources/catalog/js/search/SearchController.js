@@ -36,9 +36,13 @@
   module.controller('GnSearchController', [
     '$scope',
     '$location',
-      'suggestService',
-      '$http',
-    function($scope, $location, suggestService,$http) {
+    'suggestService',
+    '$http',
+    'gnSearchConfig',
+    function($scope, $location, suggestService, $http, gnSearchConfig) {
+
+      var viewerMap = gnSearchConfig.viewerMap;
+      var searchMap = gnSearchConfig.searchMap;
 
 ///////////////////////////////////////////////////////////////////
       $scope.getAnySuggestions = function(val) {
@@ -52,9 +56,9 @@
       };
 
       $scope.$watch('searchObj.advancedMode', function(val) {
-        if(val && ($scope.map.getSize()[0] == 0 || $scope.map.getSize()[1] == 0)){
+        if(val && (searchMap.getSize()[0] == 0 || searchMap.getSize()[1] == 0)){
           setTimeout(function(){
-            $scope.map.updateSize();
+            searchMap.updateSize();
           }, 0);
         }
       });
@@ -65,21 +69,10 @@
       $scope.searchObj = {
         params: {},
         permalink: true,
-        advancedMode: false
+        advancedMode: false,
+        viewerMap: viewerMap,
+        searchMap: searchMap
       };
-
-      /** Define in the controller scope a reference to the map */
-      $scope.map = new ol.Map({
-        layers: [
-          new ol.layer.Tile({
-            source: new ol.source.OSM()
-          })
-        ],
-        view: new ol.View({
-          center: [-10997148, 4569099],
-          zoom: 1
-        })
-      });
 
       /** Facets configuration */
       $scope.facetsConfig = {

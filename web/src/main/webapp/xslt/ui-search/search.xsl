@@ -5,8 +5,8 @@
 
   <xsl:template mode="content" match="/">
 
-    <xsl:variable name="view" select="if (/root/request/view) then /root/request/view else 'search'"></xsl:variable>
-    <div data-ng-include="'{$uiResourcesPath}templates/search/{$view}.html'">
+    <xsl:variable name="view" select="if (/root/request/view) then /root/request/view else 'default'"></xsl:variable>
+    <div data-ng-include="'{$uiResourcesPath}templates/search/{$view}/search.html'">
     </div>
   </xsl:template>
 </xsl:stylesheet>

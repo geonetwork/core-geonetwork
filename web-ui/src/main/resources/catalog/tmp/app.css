@@ -6929,6 +6929,7 @@ button.close {
   height: 14px;
 }
 [gn-main-viewer] {
+  position: relative;
   /* hackish tmp */
   /* jquery-ui slider */
   /* Measures */
@@ -6941,7 +6942,7 @@ button.close {
 }
 [gn-main-viewer] #map {
   width: 100%;
-  height: 100%;
+  height: 500px;
 }
 [gn-main-viewer] .search-container {
   position: absolute;

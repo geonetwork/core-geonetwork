@@ -9,7 +9,7 @@
       <tab-heading>
         Map
       </tab-heading>
-      <div gn-main-viewer="">
+      <div gn-main-viewer="" map="searchObj.viewerMap">
       </div>
     </tab>
     <tab>
@@ -61,7 +61,7 @@
           <div class="panel panel-default col-md-4">
             <div class="panel-heading">Where</div>
             <div class="panel-body">
-              <div gn-map-field="map"></div>
+              <div gn-map-field="searchObj.searchMap"></div>
             </div>
           </div>
           <div class="panel panel-default col-md-4">
@@ -99,7 +99,7 @@
           </div>
           <div data-gn-facet-breadcrumb="currentFacets"></div>
           <div gn-results-container class="panel-body" data-ng-class="{'bg-success' : searching}"
-               search-results="searchResults" template-url="resultTemplate" map="map"></div>
+               search-results="searchResults" template-url="resultTemplate" map="searchObj.searchMap"></div>
         </div>
 
 
