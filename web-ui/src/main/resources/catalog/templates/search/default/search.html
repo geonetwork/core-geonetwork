@@ -4,19 +4,18 @@
 
 <div class="container gn-search-page" data-ng-controller="GnSearchController">
 
-  <tabset>
-    <tab>
-      <tab-heading>
-        Map
-      </tab-heading>
+  <tabset id="main-tabset">
+    <tab heading="{{mainTabs.home.title}}" active="mainTabs.home.active">
+      HOME
+    </tab>
+    <tab select="displayMapTab()" heading="{{mainTabs.map.title}} {{mainTabs.map.titleInfo}}" active="mainTabs.map.active">
       <div gn-main-viewer="" map="searchObj.viewerMap">
       </div>
     </tab>
-    <tab>
-      <tab-heading>
-        Search
-      </tab-heading>
+    <tab heading="{{mainTabs.search.title}}" active="mainTabs.search.active">
       <form data-ng-search-form="" class="form-horizontal" role="form">
+
+        <button type="button" data-ng-click="addLayerToMap(2)" class="btn btn-primary btn-lg" data-translate>ADD</button>
 
         <!--ANY full text search input-->
         <div class="form-group row ">

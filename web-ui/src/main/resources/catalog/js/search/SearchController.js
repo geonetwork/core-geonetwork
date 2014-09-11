@@ -44,6 +44,35 @@
       var viewerMap = gnSearchConfig.viewerMap;
       var searchMap = gnSearchConfig.searchMap;
 
+      $scope.mainTabs = {
+      home :{
+        title: 'Home',
+        titleInfo: '',
+        active: true
+      },
+      search: {
+        title: 'Search',
+        titleInfo: '',
+        active: false
+      },
+      map:{
+        title: 'Map',
+        active: false
+      }};
+
+      $scope.addLayerToMap = function(number) {
+        $scope.mainTabs.map.titleInfo = '  (+' + number + ')';
+      };
+
+      $scope.displayMapTab = function() {
+        if(viewerMap.getSize()[0] == 0 || viewerMap.getSize()[1] == 0){
+          setTimeout(function(){
+            viewerMap.updateSize();
+          }, 0);
+        }
+        $scope.mainTabs.map.titleInfo = '';
+      };
+      
 ///////////////////////////////////////////////////////////////////
       $scope.getAnySuggestions = function(val) {
         var url = suggestService.getUrl(val, 'anylight',
