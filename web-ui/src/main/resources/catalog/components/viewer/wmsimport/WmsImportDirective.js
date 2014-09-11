@@ -16,8 +16,8 @@
     'gnOwsCapabilities',
     'gnMap',
     '$translate',
-    'gnMapConfig',
-    function (gnOwsCapabilities, gnMap, $translate, gnMapConfig) {
+    'gnSearchConfig',
+    function (gnOwsCapabilities, gnMap, $translate, gnSearchConfig) {
     return {
       restrict: 'A',
       replace: true,
@@ -73,7 +73,7 @@
       link: function (scope, element, attrs) {
 
         scope.format =  attrs['gnWmsImport'];
-        scope.servicesList = gnMapConfig.servicesUrl[scope.format];
+        scope.servicesList = gnSearchConfig.servicesUrl[scope.format];
 
         scope.loading = false;
 
