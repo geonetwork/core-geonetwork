@@ -118,6 +118,8 @@
         'service-OGC:WFS'
       ];
 
+      var map = $scope.searchObj.searchMap;
+
       gnRegionService.loadRegion('ocean', 'fre').then(
           function (data) {
             $scope.cantons = data;
@@ -141,7 +143,7 @@
           cantonSource.addFeature(feature);
         });
       };
-      $scope.map.addLayer(cantonVector);
+      map.addLayer(cantonVector);
 
       // Request cantons geometry and zoom to extent when
       // all requests respond.
@@ -153,7 +155,7 @@
             var id = cs[i].split('#')[1];
             addCantonFeature(Math.floor((Math.random() * 10) + 1)).then(function(){
               if(--nbCantons == 0) {
-                $scope.map.getView().fitExtent(cantonSource.getExtent(), $scope.map.getSize());
+                map.getView().fitExtent(cantonSource.getExtent(), map.getSize());
               }
             });
           }

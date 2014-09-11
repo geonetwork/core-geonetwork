@@ -72,7 +72,7 @@
         }
         $scope.mainTabs.map.titleInfo = '';
       };
-      
+
 ///////////////////////////////////////////////////////////////////
       $scope.getAnySuggestions = function(val) {
         var url = suggestService.getUrl(val, 'anylight',
