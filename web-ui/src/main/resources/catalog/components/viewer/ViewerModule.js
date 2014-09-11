@@ -40,46 +40,6 @@
     'gnMapConfig',
       function($scope, $timeout, gnNcWms, goDecorateLayer, gnMap, gnMapConfig) {
 
-        /** Define object to receive measure info */
-        $scope.measureObj = {};
-
-        /** Define vector layer used for drawing */
-        $scope.drawVector;
-
-        /** print definition */
-        $scope.activeTools = {};
-
-        // TODO : Move on layer load
-        $scope.ncwmsLayer = gnNcWms.createNcWmsLayer();
-        $scope.ncwmsLayer.displayInLayerManager = true;
-        goDecorateLayer($scope.ncwmsLayer);
-
-        $scope.map = new ol.Map({
-          renderer: 'canvas',
-          view: new ol.View({
-            center: gnMapConfig.center,
-            zoom: gnMapConfig.zoom,
-            maxResolution: gnMapConfig.maxResolution
-          })
-        });
-        $scope.map.addLayer($scope.ncwmsLayer);
-
-        $scope.zoom = function(map, delta) {
-          gnMap.zoom(map,delta);
-        };
-        $scope.zoomToMaxExtent = function(map) {
-          map.getView().setResolution(gnMapConfig.maxResolution);
-        };
-
-        var div = document.createElement('div');
-        div.className = 'overlay';
-        var overlay = new ol.Overlay({
-          element: div,
-          positioning: 'bottom-left'
-        });
-
-        $scope.map.addOverlay(overlay);
-
         var hidetimer;
         var hovering = false;
         $($scope.map.getViewport()).on('mousemove', function(e) {
