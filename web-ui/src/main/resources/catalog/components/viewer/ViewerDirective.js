@@ -12,13 +12,51 @@
    * @description
    */
   module.directive('gnMainViewer', [
-    function () {
+      'gnMap',
+    function (goDecorateLayer, gnNcWms, gnMap) {
       return {
         restrict: 'A',
         replace: true,
+        scope:true,
         templateUrl: '../../catalog/components/viewer/' +
           'partials/mainviewer.html',
-        link: function (scope, element, attrs) {
+        compile: function compile(tElement, tAttrs, transclude) {
+          return {
+            pre: function preLink(scope, iElement, iAttrs, controller) {
+              scope.map = scope.$eval(iAttrs['map']);
+
+              /** Define object to receive measure info */
+              scope.measureObj = {};
+
+              /** Define vector layer used for drawing */
+              scope.drawVector;
+
+              /** print definition */
+              scope.activeTools = {};
+
+              scope.zoom = function(map, delta) {
+                gnMap.zoom(map,delta);
+              };
+              scope.zoomToMaxExtent = function(map) {
+                map.getView().setResolution(gnMapConfig.maxResolution);
+              };
+
+              var div = document.createElement('div');
+              div.className = 'overlay';
+              var overlay = new ol.Overlay({
+                element: div,
+                positioning: 'bottom-left'
+              });
+              scope.map.addOverlay(overlay);
+
+            },
+            post: function postLink(scope, iElement, iAttrs, controller) {
+              //TODO: find another solution to render the map
+              setTimeout(function() {
+                scope.map.updateSize();
+              }, 100);
+            }
+          }
         }
       };
     }]);

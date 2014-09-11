@@ -10,14 +10,17 @@
             restrict: 'A',
             templateUrl: '../../catalog/components/search/map/' +
                 'partials/mapfield.html',
-            link: function(scope, element, attrs) {
+            compile: function compile(tElement, tAttrs, transclude) {
+              return {
+                pre: function preLink(scope, iElement, iAttrs, controller) {
+                  scope.map = scope.$eval(iAttrs['gnMapField']);
+                  scope.gnMap = gnMap;
 
-              scope.map = scope.$eval(attrs['gnMapField']);
-              scope.gnMap = gnMap;
-
-              scope.maxExtent = function() {
-                scope.map.getView().fitExtent(scope.map.getView().getProjection().getExtent(),
-                    scope.map.getSize());
+                  scope.maxExtent = function () {
+                    scope.map.getView().fitExtent(scope.map.getView().getProjection().getExtent(),
+                        scope.map.getSize());
+                  }
+                }
               }
             }
           };
