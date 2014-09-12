@@ -3,7 +3,7 @@
 </div>
 
 <div class="container gn-search-page" data-ng-controller="GnSearchController">
-  <div class="container gn-search-page" data-ng-controller="gnsDefault">
+  <div class="" data-ng-controller="gnsDefault">
 
     <tabset id="main-tabset">
       <tab heading="{{mainTabs.home.title}}" active="mainTabs.home.active">
@@ -21,10 +21,10 @@
           <!--ANY full text search input-->
           <div class="form-group row ">
             <div class="col-md-9">
-              <input type="text" ng-model="searchObj.params.any" placeholder="Search"
-                     typeahead="address for address in getLocation($viewValue)" typeahead-loading="loadingLocations" class="form-control input-lg"
+              <input type="text" ng-model="searchObj.params.any" placeholder="{{'anyPlaceHolder' | translate}}"
+                     typeahead="address for address in getAnySuggestions($viewValue)" typeahead-loading="anyLoading" class="form-control input-lg"
                      typeahead-min-length="1">
-              <i ng-show="loadingLocations" class="fa fa-refresh"></i>
+              <i ng-show="anyLoading" class="fa fa-refresh inner-spinner"></i>
             </div>
             <button type="button" data-ng-click="triggerSearch()" class="btn btn-primary btn-lg" data-translate>Search</button>
 
