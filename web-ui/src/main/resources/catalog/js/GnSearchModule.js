@@ -5,6 +5,7 @@
   goog.require('gn_resultsview');
   goog.require('gn_map_field_directive');
   goog.require('gn_viewer');
+  goog.require('gn_search_controller');
 
   var module = angular.module('gn_search', [
     'gn',
@@ -13,11 +14,13 @@
     'ui.bootstrap.buttons',
     'ui.bootstrap.tabs',
     'gn_viewer',
+    'gn_search_controller',
     'go'
   ]);
 
   //Define the translation files to load
   module.constant('$LOCALES', ['core']);
+
 
   module.config(['$translateProvider', '$LOCALES',
                  function($translateProvider, $LOCALES) {

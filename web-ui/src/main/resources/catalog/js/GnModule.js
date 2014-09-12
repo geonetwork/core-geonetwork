@@ -19,7 +19,6 @@
   goog.require('gn_metadata_manager');
   goog.require('gn_needhelp');
   goog.require('gn_pagination');
-  goog.require('gn_search_controller');
   goog.require('gn_search_form_controller');
   goog.require('gn_search_manager');
   goog.require('gn_utility');
@@ -35,7 +34,6 @@
     'gn_metadata_manager',
     'gn_pagination',
     'gn_cat_controller',
-    'gn_search_controller',
     'gn_form_fields_directive',
     'gn_map',
     'gn_search_form_controller',

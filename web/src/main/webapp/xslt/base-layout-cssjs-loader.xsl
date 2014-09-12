@@ -103,12 +103,12 @@
             <!-- Use Closure to load the application scripts -->
             <script src="{/root/gui/url}/static/closure_deps.js"></script>
             <script>
-                goog.require('<xsl:value-of select="$angularApp"/>');
+                 goog.require('<xsl:value-of select="$angularModule"/>');
             </script>
         </xsl:when>
         <xsl:otherwise>
             <script src="{/root/gui/url}/static/lib.js"></script>
-            <script src="{/root/gui/url}/static/{$angularApp}.js{$minimizedParam}"></script>
+            <script src="{/root/gui/url}/static/{$angularModule}.js{$minimizedParam}"></script>
         </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

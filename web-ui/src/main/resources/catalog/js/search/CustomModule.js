@@ -85,6 +85,7 @@
         viewerMap: viewerMap,
         searchMap: searchMap,
         servicesUrl: servicesUrl
+
       });
     }]);
 
