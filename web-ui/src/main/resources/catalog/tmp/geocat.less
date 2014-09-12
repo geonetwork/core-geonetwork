@@ -63,8 +63,15 @@
 }
 [data-ng-search-form],
 [ng-search-form] {
+  .whidden,
+  .col-md-9,
+  .col-md-3,
   .col-md-6 {
     transition: width ease .25s;
+  }
+  .whidden {
+    width: 0;
+    overflow-x: hidden;
   }
   .filter {
     .pull-right();

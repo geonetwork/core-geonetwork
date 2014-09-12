@@ -7638,3 +7638,110 @@ select[multiple][hitsperpage-combo] select {
   padding-left: 0;
   padding-right: 0;
 }
+.twitter-typeahead {
+  width: 100%;
+}
+.panel-heading {
+  padding: 0 15px;
+  height: 3.8em;
+  line-height: 3.8em;
+}
+.panel-heading [sortby-combo],
+.panel-heading [hitsperpage-combo] {
+  vertical-align: middle;
+}
+[ng-search-form] .relative {
+  position: relative;
+}
+[ng-search-form] .inner-spinner {
+  position: absolute;
+  top: 0.7em;
+  right: 1.6em;
+}
+.more {
+  margin: 0 0 .7em 15px;
+}
+.advanced {
+  max-height: 0;
+  overflow-y: hidden;
+  transition: max-height ease 0.25s;
+}
+.advanced.active {
+  max-height: 30em;
+}
+[gn-map-field] {
+  border: 1px solid #cccccc;
+  border-radius: 3px;
+  position: relative;
+}
+[gn-map-field] [gn-draw-bbox-btn],
+[gn-map-field] .btn-group-vertical {
+  position: absolute;
+  top: 4px;
+  z-index: 10;
+}
+[gn-map-field] .btn-group-vertical {
+  right: 4px;
+}
+[gn-map-field] [gn-draw-bbox-btn] {
+  left: 4px;
+}
+.submit {
+  margin-top: 1.5em;
+  /* width: 100%; */
+  text-align: right;
+}
+[data-ng-search-form] .whidden,
+[ng-search-form] .whidden,
+[data-ng-search-form] .col-md-9,
+[ng-search-form] .col-md-9,
+[data-ng-search-form] .col-md-3,
+[ng-search-form] .col-md-3,
+[data-ng-search-form] .col-md-6,
+[ng-search-form] .col-md-6 {
+  transition: width ease .25s;
+}
+[data-ng-search-form] .whidden,
+[ng-search-form] .whidden {
+  width: 0;
+  overflow-x: hidden;
+}
+[data-ng-search-form] .filter,
+[ng-search-form] .filter {
+  float: right;
+  float: right !important;
+  margin: 0.8em -0.3em 0 0.8em;
+}
+[search-results] .list-group {
+  margin-bottom: 0;
+}
+[search-results] .list-group-item {
+  border-left: 0;
+  border-right: 0;
+  border-radius: 0;
+}
+[search-results] .list-group-item:first-of-type {
+  border-top-width: 0;
+}
+[search-results] .list-group-item:last-of-type {
+  border-bottom-width: 0;
+}
+.gn-resultview .categories {
+  float: right;
+  font-size: 20px;
+  line-height: 2.75em;
+}
+.gn-resultview .img-thumbnail {
+  margin-left: 1em;
+}
+.gn-resultview p {
+  font-size: .9em;
+}
+.gn-resultview blockquote {
+  font-size: 90%;
+  color: #666;
+}
+.gn-resultview li:hover {
+  background: lightyellow;
+}
+/*# sourceMappingURL=app.css.map */
