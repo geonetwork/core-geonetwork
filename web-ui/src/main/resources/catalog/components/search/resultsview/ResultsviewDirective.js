@@ -58,8 +58,8 @@
   module.directive('gnResultsContainer', [
       '$compile',
       'gnMap',
-      'searchSettings',
-    function($compile, gnMap, searchSettings) {
+      'gnSearchSettings',
+    function($compile, gnMap, gnSearchSettings) {
 
       return {
         restrict: 'A',
@@ -81,14 +81,14 @@
           };
 
           scope.hoverOL = new ol.FeatureOverlay({
-            style: searchSettings.olStyles.mdExtentHighlight
+            style: gnSearchSettings.olStyles.mdExtentHighlight
           });
 
           /**
            * Draw md bbox on search
            */
           var fo = new ol.FeatureOverlay({
-            style: searchSettings.olStyles.mdExtent
+            style: gnSearchSettings.olStyles.mdExtent
           });
           fo.setMap(scope.map);
 

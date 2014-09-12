@@ -16,10 +16,10 @@
     '$timeout',
     'suggestService',
     '$http',
-    'searchSettings',
+    'gnSearchSettings',
 
     function($scope, gnHttp, gnHttpServices, gnRegionService,
-             $timeout, suggestService,$http, searchSettings) {
+             $timeout, suggestService,$http, gnSearchSettings) {
 
       $scope.types = ['any',
         'dataset',
@@ -44,7 +44,7 @@
       var nbCantons = 0;
       var cantonVector = new ol.layer.Vector({
         source: cantonSource,
-        style: searchSettings.olStyles.drawBbox
+        style: gnSearchSettings.olStyles.drawBbox
       });
       var addCantonFeature = function(id) {
         var url = 'http://www.geocat.ch/geonetwork/srv/eng/region.geom.wkt?id=kantone:'+id+'&srs=EPSG:3857';
