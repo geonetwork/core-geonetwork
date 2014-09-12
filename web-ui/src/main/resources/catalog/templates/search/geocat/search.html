@@ -4,9 +4,11 @@
     <div class="row top-buffer">
       <div class="col-md-3">
         <div class="panel panel-primary">
-          <div class="panel-heading">
-            <i class="fa fa-search"></i>
-            <span data-translate>Search</span>
+          <div class="panel-heading search-top">
+            <input type="text" ng-model="searchObj.params.any" placeholder="{{'anyPlaceHolder' | translate}}"
+                   typeahead="address for address in getAnySuggestions($viewValue)" typeahead-loading="anyLoading" class="form-control"
+                   typeahead-min-length="1">
+            <i ng-show="anyLoading" class="fa fa-refresh inner-spinner"></i>
           </div>
           <div class="panel-body">
             <div data-ng-include="'../../catalog/templates/search/geocat/searchForm.html'"></div>

@@ -2,16 +2,6 @@
 
   <div class="form-horizontal" role="form">
 
-    <!-- Text search - Any field -->
-    <div class="form-group">
-      <div class="col-sm-12 relative">
-        <input type="text" ng-model="searchObj.params.any" placeholder="{{'anyPlaceHolder' | translate}}"
-               typeahead="address for address in getAnySuggestions($viewValue)" typeahead-loading="anyLoading" class="form-control"
-               typeahead-min-length="1">
-        <i ng-show="anyLoading" class="fa fa-refresh inner-spinner"></i>
-      </div>
-    </div>
-
     <!-- Types Combo (from a local scope array) -->
     <div class="form-group">
       <label for="typeF" class="col-md-4 col-sm-12 control-label">Type</label>
