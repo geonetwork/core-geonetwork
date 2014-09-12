@@ -86,25 +86,6 @@
         });
       }]);
 
-  var servicesUrl = {
-    wms: [
-      'http://ids.pigma.org/geoserver/wms',
-      'http://ids.pigma.org/geoserver/ign/wms',
-      'http://www.ifremer.fr/services/wms/oceanographie_physique'
-    ],
-    wmts: [
-      'http://sdi.georchestra.org/geoserver/gwc/service/wmts'
-    ]
-  };
-
-  var mapConfig = {
-    maxResolution: '9783.93962050256',
-    center: [280274.03240585705, 6053178.654789996],
-    zoom: 2,
-    servicesUrl: servicesUrl
-  };
-  module.constant('gnMapConfig', mapConfig);
-
   var source = new ol.source.TileWMS({
     params: {
       LAYERS: 'ETOPO1_BATHY_R_3857,continent'
@@ -116,34 +97,6 @@
     source: source,
     title: 'Sextant'
   });
-
-  var osmLayer = new ol.layer.Tile({
-    source: new ol.source.OSM(),
-    title: 'OpenStreetMap'
-  });
-  osmLayer.displayInLayerManager = false;
-  osmLayer.background = true;
-
-  var mqLayer = new ol.layer.Tile({
-    style: 'Road',
-    source: new ol.source.MapQuest({layer: 'osm'}),
-    title: 'MapQuest'
-  });
-  mqLayer.displayInLayerManager = false;
-  mqLayer.background = true;
-
-  var bingSatellite = new ol.layer.Tile({
-    preload: Infinity,
-    source: new ol.source.BingMaps({
-      key: 'Ak-dzM4wZjSqTlzveKz5u0d4IQ4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
-      imagerySet: 'Aerial'
-    }),
-    title: 'Bing Aerial'
-  });
-  bingSatellite.displayInLayerManager = false;
-  bingSatellite.background = true;
-
-  module.constant('gnBackgroundLayers', [mqLayer, osmLayer, bingSatellite, sxtLayer]);
 
   module.controller('toolsController',
       ['$scope', 'gnMeasure',

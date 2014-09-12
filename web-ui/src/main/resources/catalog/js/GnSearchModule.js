@@ -11,12 +11,15 @@
     'gn',
     'gn_resultsview',
     'gn_map_field_directive',
+    'gn_search_controller',
+    'gn_viewer',
     'ui.bootstrap.buttons',
     'ui.bootstrap.tabs',
-    'gn_viewer',
-    'gn_search_controller',
     'go'
   ]);
+
+  module.constant('gnSearchSettings', {});
+  module.constant('gnViewerSettings', {});
 
   //Define the translation files to load
   module.constant('$LOCALES', ['core']);

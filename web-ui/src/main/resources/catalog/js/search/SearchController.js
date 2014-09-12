@@ -15,11 +15,14 @@
    */
   module.controller('GnSearchController', [
     '$scope',
-    '$location',
-    'suggestService',
-    '$http',
-    'gnSearchConfig',
-    function($scope, $location, suggestService, $http, gnSearchConfig) {
+    'gnSearchSettings',
+    function($scope, gnSearchSettings) {
+
+      /** Facets configuration */
+      $scope.facetsConfig = gnSearchSettings.facetsConfig;
+
+      /* Pagination configuration */
+      $scope.paginationInfo = gnSearchSettings.paginationInfo;
 
     }]);
 })();
