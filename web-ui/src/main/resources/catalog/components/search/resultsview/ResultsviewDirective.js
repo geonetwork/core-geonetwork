@@ -58,8 +58,8 @@
   module.directive('gnResultsContainer', [
       '$compile',
       'gnMap',
-      'gnOlStyles',
-    function($compile, gnMap, gnOlStyles) {
+      'searchSettings',
+    function($compile, gnMap, searchSettings) {
 
       return {
         restrict: 'A',
@@ -81,13 +81,15 @@
           };
 
           scope.hoverOL = new ol.FeatureOverlay({
-            style: gnOlStyles.bbox
+            style: searchSettings.olStyles.mdExtentHighlight
           });
 
           /**
            * Draw md bbox on search
            */
-          var fo = new ol.FeatureOverlay();
+          var fo = new ol.FeatureOverlay({
+            style: searchSettings.olStyles.mdExtent
+          });
           fo.setMap(scope.map);
 
           scope.$watchCollection('searchResults.records', function(rec) {
@@ -169,17 +171,11 @@
 
   module.directive('gnZoomtoOnclick', [
     'gnMap',
-    'gnOlStyles',
-    function(gnMap, gnOlStyles) {
+    function(gnMap) {
 
       return {
         restrict: 'A',
         link: function(scope, element, attrs, controller) {
-
-          var fo = new ol.FeatureOverlay({
-            style: gnOlStyles.bbox
-          });
-          var feat = new ol.Feature();
 
           element.bind('dblclick', function() {
 

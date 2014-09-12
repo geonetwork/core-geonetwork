@@ -28,15 +28,15 @@
       .directive('gnDrawBboxBtn', [
         'goDecorateInteraction',
         '$parse',
-        'gnOlStyles',
+        'searchSettings',
         'gnMap',
-        function(goDecorateInteraction, $parse, gnOlStyles, gnMap) {
+        function(goDecorateInteraction, $parse, searchSettings, gnMap) {
           return {
             restrict: 'A',
             scope: true,
             controller: ['$scope', function($scope) {
               var dragbox = new ol.interaction.DragBox({
-                style: gnOlStyles.bbox
+                style: searchSettings.olStyles.drawBbox
               });
               goDecorateInteraction(dragbox, $scope.map);
               $scope.interaction = dragbox;
@@ -50,7 +50,7 @@
               // Create overlay to persist the bbox
               var feature = new ol.Feature();
               var featureOverlay = new ol.FeatureOverlay({
-                style: gnOlStyles.bbox
+                style: searchSettings.olStyles.drawBbox
               });
               featureOverlay.setMap(scope.map);
               featureOverlay.addFeature(feature);
