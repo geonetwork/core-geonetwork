@@ -21,8 +21,8 @@
    * element.
    */
   module.directive('gnResultsTplSwitcher', [
-    'gnFacetService',
-    function(gnFacetService) {
+    'gnSearchSettings',
+    function(gnSearchSettings) {
 
       return {
         restrict: 'A',
@@ -32,15 +32,7 @@
           'templateUrl': '='
         },
         link: function(scope, element, attrs, controller) {
-          scope.tpls = [{
-            tplUrl: '../../catalog/components/search/resultsview/partials/viewtemplates/title.html',
-            tooltip: 'Simple',
-            icon: 'fa-list'
-          }, {
-            tplUrl: '../../catalog/components/search/resultsview/partials/viewtemplates/thumb.html',
-            tooltip: 'Thumbnails',
-            icon: 'fa-th-list'
-          }]
+          scope.tpls = gnSearchSettings.resultViewTpls;
         }
       };
     }]);

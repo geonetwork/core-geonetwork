@@ -24,5 +24,8 @@
       /* Pagination configuration */
       $scope.paginationInfo = gnSearchSettings.paginationInfo;
 
+      /* Default result view template */
+      $scope.resultTemplate = gnSearchSettings.resultViewTpls[0].tplUrl;
+
     }]);
 })();
