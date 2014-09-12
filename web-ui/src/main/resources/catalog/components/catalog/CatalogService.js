@@ -463,13 +463,16 @@
       getLinks: function() {
         return this.link;
       },
-      getLinksByType: function(type) {
+      getLinksByType: function() {
         var ret = [];
+        var types = Array.prototype.splice.call(arguments, 0);
         angular.forEach(this.link, function(link) {
           var linkInfo = formatLink(link);
-          if (linkInfo.protocol.indexOf(type) >= 0) {
-            ret.push(linkInfo);
-          }
+          types.forEach(function(type) {
+            if (linkInfo.protocol.indexOf(type) >= 0) {
+              ret.push(linkInfo);
+            }
+          });
         });
         return ret;
       },
