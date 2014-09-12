@@ -7731,14 +7731,49 @@ select[multiple][hitsperpage-combo] select {
   border-bottom-width: 0;
 }
 .gn-resultview .categories {
-  float: right;
-  line-height: 2.75em;
+  background: rgba(0, 0, 0, 0.02);
+  line-height: 3em;
+  font-size: 90%;
+  margin: 1em -15px;
+  margin-left: 5em;
 }
 .gn-resultview .categories i {
-  font-size: 18px;
+  display: inline;
+  padding: .2em .6em .3em;
+  font-size: 75%;
+  font-weight: bold;
+  line-height: 1;
+  color: #ffffff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25em;
+  background-color: #5bc0de;
+  font-weight: normal;
+  font-size: 14px;
+  margin-right: .5em;
+  padding: .3em .4em .3em .6em;
+}
+.gn-resultview .categories i[href]:hover,
+.gn-resultview .categories i[href]:focus {
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
+}
+.gn-resultview .categories i:empty {
+  display: none;
+}
+.btn .gn-resultview .categories i {
+  position: relative;
+  top: -1px;
+}
+.gn-resultview .categories i[href]:hover,
+.gn-resultview .categories i[href]:focus {
+  background-color: #31b0d5;
 }
 .gn-resultview .img-thumbnail {
   margin-left: 1em;
+  max-height: 140px;
 }
 .gn-resultview p {
   font-size: .9em;
