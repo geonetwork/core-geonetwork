@@ -18,6 +18,12 @@
     'gnSearchSettings',
     function($scope, gnSearchSettings) {
 
+      /** Object to be shared through directives and controllers */
+      $scope.searchObj = {
+        params: {},
+        permalink: true
+      };
+
       /** Facets configuration */
       $scope.facetsConfig = gnSearchSettings.facetsConfig;
 

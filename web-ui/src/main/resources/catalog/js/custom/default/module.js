@@ -68,14 +68,10 @@
 
 ///////////////////////////////////////////////////////////////////
 
-      /** Object to be shared through directives and controllers */
-      $scope.searchObj = {
-        params: {},
-        permalink: true,
+      angular.extend($scope.searchObj, {
         advancedMode: false,
         viewerMap: viewerMap,
         searchMap: searchMap
-      };
+      });
     }]);
-
 })();

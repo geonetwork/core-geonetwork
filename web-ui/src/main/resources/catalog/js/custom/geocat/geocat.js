@@ -7,18 +7,24 @@
 
   var module = angular.module('gn_search_geocat', ['gn_search', 'gn_search_geocat_config']);
 
+  /**
+   * @ngdoc controller
+   * @name gn_search_geocat.controller:gnsGeocat
+   *
+   * @description
+   * Geocat view root controller
+   * its $scope inherits from gnSearchController scope.
+   *
+   */
   module.controller('gnsGeocat', [
       '$scope',
       'gnSearchSettings',
     function($scope, gnSearchSettings) {
 
-      /** Object to be shared through directives and controllers */
-      $scope.searchObj = {
-        params: {},
-        permalink: true,
+      angular.extend($scope.searchObj, {
         advancedMode: false,
         searchMap: gnSearchSettings.searchMap
-      };
+      });
     }]);
 
     module.controller('gocatSearchFormCtrl', [
