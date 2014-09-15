@@ -36,38 +36,7 @@
          * @returns {*}
          */
         this.addLayer = function(getCapLayer) {
-
-          var legend, attribution, metadata;
-          if (getCapLayer) {
-            var layer = getCapLayer;
-
-            // TODO: parse better legend & attribution
-            if(angular.isArray(layer.Style) && layer.Style.length > 0) {
-              legend = layer.Style[layer.Style.length-1].LegendURL[0].OnlineResource;
-            }
-            if(angular.isDefined(layer.Attribution) ) {
-              if(angular.isArray(layer.Attribution)){
-
-              } else {
-                attribution = layer.Attribution.Title;
-              }
-            }
-            if(angular.isArray(layer.MetadataURL)) {
-              metadata = layer.MetadataURL[0].OnlineResource;
-            }
-
-            return gnMap.addWmsToMap($scope.map, {
-                    LAYERS: layer.Name
-                  }, {
-                    url: layer.url,
-                    label: layer.Title,
-                    attribution: attribution,
-                    legend: legend,
-                    metadata: metadata,
-                    extent: gnOwsCapabilities.getLayerExtentFromGetCap($scope.map, layer)
-                  }
-              );
-          }
+          return gnMap.addWmsToMapFromCap($scope.map, getCapLayer);
         };
       }],
       link: function (scope, element, attrs) {
