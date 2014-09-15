@@ -1,18 +1,7 @@
 @import "gn_search.less";
 
-@panel-heading-height: 3.8em;
-
 .twitter-typeahead {
   width: 100%;
-}
-
-.panel-heading {
-  padding: 0 15px;
-  height: @panel-heading-height;
-  line-height: @panel-heading-height;
-  [sortby-combo], [hitsperpage-combo] {
-    vertical-align: middle;
-  }
 }
 
 [ng-search-form] {
@@ -42,91 +31,8 @@
   }
 }
 
-[gn-map-field] {
-  border: 1px solid @btn-default-border;
-  border-radius: 3px;
-  position: relative;
-  [gn-draw-bbox-btn],
-  .btn-group-vertical {
-    position: absolute;
-    top: 4px;
-    z-index: 10;
-  }
-  .btn-group-vertical {
-    right: 4px;
-  }
-  [gn-draw-bbox-btn] {
-    left: 4px;
-  }
-}
-
 .submit {
   margin-top: 1.5em;
   /* width: 100%; */
   text-align: right;
-}
-[data-ng-search-form],
-[ng-search-form] {
-  .whidden,
-  .col-md-9,
-  .col-md-3,
-  .col-md-6 {
-    transition: width ease .25s;
-  }
-  .whidden {
-    width: 0;
-    overflow-x: hidden;
-  }
-  .filter {
-    .pull-right();
-    margin: .8em -.3em 0 .8em;
-  }
-}
-
-[search-results] {
-  .list-group {
-    margin-bottom: 0;
-  }
-  .list-group-item {
-    border-left: 0;
-    border-right: 0;
-    border-radius: 0;
-    &:first-of-type {
-      border-top-width: 0;
-    }
-    &:last-of-type {
-      border-bottom-width: 0;
-    }
-  }
-}
-.gn-resultview {
-  .categories {
-    background: rgba(0,0,0,.02);
-    line-height: 3em;
-    font-size: 90%;
-    margin: 1em -15px;
-    margin-left: 5em;
-    i {
-        .label;
-        .label-info;
-        font-weight: normal;
-        font-size: 14px;
-        margin-right: .5em;
-        padding: .3em .4em .3em .6em;
-    }
-  }
-  .img-thumbnail {
-    margin-left: 1em;
-    max-height: 140px;
-  }
-  p {
-    font-size: .9em;
-  }
-  blockquote {
-    font-size: 90%;
-    color: #666;
-  }
-  li:hover {
-    background: lightyellow;
-  }
 }

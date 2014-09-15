@@ -36,7 +36,7 @@
         }};
 
       $scope.addLayerToMap = function(number) {
-        $scope.mainTabs.map.titleInfo = '  (+' + number + ')';
+        $scope.mainTabs.map.titleInfo = '+' + number;
       };
 
       $scope.$on('addLayerFromMd', function(evt, getCapLayer) {
