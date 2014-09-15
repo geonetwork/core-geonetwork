@@ -28,7 +28,7 @@
         <link href="{/root/gui/url}/catalog/tmp/{$searchView}.css" rel="stylesheet" media="screen" />
     </xsl:when>
     <xsl:otherwise>
-      <link href="{/root/gui/url}/catalog/tmp/app.css" rel="stylesheet" media="screen" />
+      <link href="{/root/gui/url}/static/{$angularApp}.css{$minimizedParam}" rel="stylesheet" media="screen" />
     </xsl:otherwise>
     </xsl:choose>
 
