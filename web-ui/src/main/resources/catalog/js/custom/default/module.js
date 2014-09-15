@@ -39,14 +39,8 @@
         $scope.mainTabs.map.titleInfo = '  (+' + number + ')';
       };
 
-      $scope.$on('addLayerFromMd', function(evt, link) {
-        gnMap.addWmsToMap(viewerMap, {
-          LAYERS: link.name
-        }, {
-          url: link.url,
-          label: link.desc,
-          group: link.group
-        })
+      $scope.$on('addLayerFromMd', function(evt, getCapLayer) {
+        gnMap.addWmsToMapFromCap(viewerMap, getCapLayer);
       });
 
 

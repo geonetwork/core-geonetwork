@@ -50,8 +50,9 @@
   module.directive('gnResultsContainer', [
       '$compile',
       'gnMap',
+      'gnOwsCapabilities',
       'gnSearchSettings',
-    function($compile, gnMap, gnSearchSettings) {
+    function($compile, gnMap, gnOwsCapabilities, gnSearchSettings) {
 
       return {
         restrict: 'A',
@@ -126,8 +127,12 @@
             $compile(template)(scope);
           });
 
-          scope.addToMap = function(layer) {
-            scope.$emit('addLayerFromMd', layer);
+          scope.addToMap = function(link) {
+            gnOwsCapabilities.getCapabilities(link.url).then(function(capObj) {
+              var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(link.name, capObj);
+              scope.$emit('addLayerFromMd', layerInfo);
+            });
+
           };
 
           scope.hoverOL.setMap(scope.map);
