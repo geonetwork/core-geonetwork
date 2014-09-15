@@ -445,9 +445,9 @@
     function formatLink(sLink) {
       var linkInfos = sLink.split('|');
       return {
-        name: linkInfos[1],
+        name: linkInfos[0],
         url: linkInfos[2],
-        desc: linkInfos[0],
+        desc: linkInfos[1],
         protocol: linkInfos[3],
         contentType: linkInfos[4]
       };
