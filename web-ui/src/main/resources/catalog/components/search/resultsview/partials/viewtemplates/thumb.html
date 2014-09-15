@@ -28,7 +28,7 @@
         </button>
         <ul class="dropdown-menu" role="menu">
           <li ng-repeat="link in links">
-            <a href="{{link.url}}" target="_blank">{{link.name}}</a></li>
+            <a href="{{link.url}}" target="_blank">{{link.desc}}</a></li>
         </ul>
       </div>
 
@@ -43,7 +43,7 @@
           <li ng-repeat="link in downloads">
             <a href="{{link.url}}" download="{{link.desc}}">
               <span class="fa fa-file-zip-o" ng-if="link.contentType=='application/zip'"></span>
-              {{link.name}} </a></li>
+              {{link.desc}} </a></li>
         </ul>
       </div>
 
@@ -58,7 +58,7 @@
           <li ng-repeat="layer in layers"><a href="" ng-click="addToMap(layer)">
             <span class="fa fa-google" ng-if="layer.contentType=='application/vnd.google-earth.kml+xml'"></span>
             <span class="fa fa-globe" ng-if="layer.contentType=='application/vnd.ogc.wms_xml'"></span>
-            {{layer.name}} </a></li>
+            {{layer.desc}} </a></li>
           <li class="divider"></li>
           <li><a href="#">Add all layers</a></li>
         </ul>
