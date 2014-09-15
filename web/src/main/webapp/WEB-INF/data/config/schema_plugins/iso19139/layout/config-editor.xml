@@ -1368,90 +1368,7 @@
 
 
     <view name="medsea" upAndDownControlHidden="true">
-      <tab id="medsea-metadata" default="true" mode="flat">
-        <section>
-          <field xpath="/gmd:MD_Metadata/gmd:language" or="language" in="/gmd:MD_Metadata"/>
-          <!--<field xpath="/gmd:MD_Metadata/gmd:contact" or="contact" in="/gmd:MD_Metadata"/>-->
-
-          <field name="metadataPointOfContact"
-                 templateModeOnly="true"
-                 notDisplayedIfMissing="true"
-                 xpath="/gmd:MD_Metadata/gmd:contact"
-                 del=".">
-            <template>
-              <values readonlyIf="count(@xlink:href) > 0">
-                <key label="organisationName"
-                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
-                <key label="electronicMailAddress"
-                     xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
-                  gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
-                     use="email"/>
-                <key label="role"
-                     xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
-                  <codelist name="gmd:CI_RoleCode"/>
-                </key>
-              </values>
-              <snippet>
-                <gmd:contact>
-                  <gmd:CI_ResponsibleParty>
-                    <gn:copy select="gmd:individualName"/>
-                    <gmd:organisationName>
-                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
-                    </gmd:organisationName>
-                    <gn:copy select="gmd:positionName"/>
-                    <gmd:contactInfo>
-                      <gmd:CI_Contact>
-                        <gn:copy select="gmd:phone"/>
-                        <gmd:address>
-                          <gmd:CI_Address>
-                            <gn:copy select="gmd:deliveryPoint"/>
-                            <gn:copy select="gmd:city"/>
-                            <gn:copy select="gmd:administrativeArea"/>
-                            <gn:copy select="gmd:postalCode"/>
-                            <gn:copy select="gmd:country"/>
-                            <gmd:electronicMailAddress>
-                              <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
-                            </gmd:electronicMailAddress>
-                          </gmd:CI_Address>
-                        </gmd:address>
-                        <gn:copy select="gmd:onlineResource"/>
-                        <gn:copy select="gmd:hoursOfService"/>
-                        <gn:copy select="gmd:contactInstructions"/>
-                      </gmd:CI_Contact>
-                    </gmd:contactInfo>
-                    <gmd:role>
-                      <gmd:CI_RoleCode
-                          codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode"
-                          codeListValue="{{role}}"/>
-                    </gmd:role>
-                  </gmd:CI_ResponsibleParty>
-                </gmd:contact>
-              </snippet>
-            </template>
-          </field>
-
-          <action type="add" name="metadataPointOfContact"
-                  addDirective="data-gn-directory-entry-selector" or="contact" in="/gmd:MD_Metadata"/>
-
-
-          <!-- MedSea challenges
-          TODO: Can't define to use Anchor mode by default
-          in keyword selector.
-          -->
-          <field
-              xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
-                gmd:descriptiveKeywords
-                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
-                'MedSea challenges')]"/>
-
-          <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
-
-          <field name="lineage"
-                 xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
-                    gmd:lineage/gmd:LI_Lineage/gmd:statement"/>
-        </section>
-      </tab>
-      <tab id="characteristics" mode="flat">
+      <tab id="characteristics" mode="flat" default="true">
         <section>
           <field
               name="uniqueIdentifier"
@@ -1728,6 +1645,89 @@
               </snippet>
             </template>
           </field>
+        </section>
+      </tab>
+      <tab id="medsea-metadata" mode="flat">
+        <section>
+          <field xpath="/gmd:MD_Metadata/gmd:language" or="language" in="/gmd:MD_Metadata"/>
+          <!--<field xpath="/gmd:MD_Metadata/gmd:contact" or="contact" in="/gmd:MD_Metadata"/>-->
+
+          <field name="metadataPointOfContact"
+                 templateModeOnly="true"
+                 notDisplayedIfMissing="true"
+                 xpath="/gmd:MD_Metadata/gmd:contact"
+                 del=".">
+            <template>
+              <values readonlyIf="count(@xlink:href) > 0">
+                <key label="organisationName"
+                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+                <key label="electronicMailAddress"
+                     xpath="gmd:CI_ResponsibleParty/gmd:contactInfo/
+                  gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString"
+                     use="email"/>
+                <key label="role"
+                     xpath="gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue">
+                  <codelist name="gmd:CI_RoleCode"/>
+                </key>
+              </values>
+              <snippet>
+                <gmd:contact>
+                  <gmd:CI_ResponsibleParty>
+                    <gn:copy select="gmd:individualName"/>
+                    <gmd:organisationName>
+                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gn:copy select="gmd:positionName"/>
+                    <gmd:contactInfo>
+                      <gmd:CI_Contact>
+                        <gn:copy select="gmd:phone"/>
+                        <gmd:address>
+                          <gmd:CI_Address>
+                            <gn:copy select="gmd:deliveryPoint"/>
+                            <gn:copy select="gmd:city"/>
+                            <gn:copy select="gmd:administrativeArea"/>
+                            <gn:copy select="gmd:postalCode"/>
+                            <gn:copy select="gmd:country"/>
+                            <gmd:electronicMailAddress>
+                              <gco:CharacterString>{{electronicMailAddress}}</gco:CharacterString>
+                            </gmd:electronicMailAddress>
+                          </gmd:CI_Address>
+                        </gmd:address>
+                        <gn:copy select="gmd:onlineResource"/>
+                        <gn:copy select="gmd:hoursOfService"/>
+                        <gn:copy select="gmd:contactInstructions"/>
+                      </gmd:CI_Contact>
+                    </gmd:contactInfo>
+                    <gmd:role>
+                      <gmd:CI_RoleCode
+                              codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode"
+                              codeListValue="{{role}}"/>
+                    </gmd:role>
+                  </gmd:CI_ResponsibleParty>
+                </gmd:contact>
+              </snippet>
+            </template>
+          </field>
+
+          <action type="add" name="metadataPointOfContact"
+                  addDirective="data-gn-directory-entry-selector" or="contact" in="/gmd:MD_Metadata"/>
+
+
+          <!-- MedSea challenges
+          TODO: Can't define to use Anchor mode by default
+          in keyword selector.
+          -->
+          <field
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:descriptiveKeywords
+                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
+                'MedSea challenges')]"/>
+
+          <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
+
+          <field name="lineage"
+                 xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
+                    gmd:lineage/gmd:LI_Lineage/gmd:statement"/>
         </section>
       </tab>
     </view>
