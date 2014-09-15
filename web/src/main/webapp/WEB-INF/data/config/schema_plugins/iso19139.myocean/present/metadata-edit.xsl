@@ -26,7 +26,20 @@
 			</xsl:with-param>
 		</xsl:apply-templates>
 	</xsl:template>-->
-	
+
+	<!-- removing gmd:credit to use a simple input type=text instead of a textarea
+		for the field (see metadata-edit.xsl from regular iso19139 schema line 3769
+		for original template -->
+	<xsl:template mode="iso19139.myocean" match="gmd:credit[gco:CharacterString]">
+		<xsl:param name="schema" />
+		<xsl:param name="edit" />
+		<xsl:variable name="class" />
+		<xsl:call-template name="localizedCharStringField">
+			<xsl:with-param name="schema" select="$schema" />
+			<xsl:with-param name="edit" select="$edit" />
+			<xsl:with-param name="class" select="$class" />
+		</xsl:call-template>
+	</xsl:template>
 
 	<xsl:template mode="iso19139.myocean" match="gmd:contact|gmd:pointOfContact|gmd:citedResponsibleParty|gmd:distributorContact" priority="99">
 		<xsl:param name="schema"/>

@@ -7,16 +7,22 @@
   "ascent": 850,
   "glyphs": [
     {
-      "uid": "64f5a50cf7ac972a56a9a511acb5d28e",
-      "css": "map",
-      "code": 59392,
-      "src": "entypo"
+      "uid": "d2c499942f8a7c037d5a94f123eeb478",
+      "css": "layers",
+      "code": 59393,
+      "src": "iconic"
     },
     {
-      "uid": "248db7c0563d8cee80b7041f7736dcad",
-      "css": "database",
-      "code": 59393,
-      "src": "entypo"
+      "uid": "117d7f4e196f826847929c6550734615",
+      "css": "globe",
+      "code": 59392,
+      "src": "mfglabs"
+    },
+    {
+      "uid": "77bf693b887ab9243826db6e682ea973",
+      "css": "globe-inv",
+      "code": 59394,
+      "src": "mfglabs"
     }
   ]
 }

@@ -673,6 +673,7 @@ div.x-tip-body div.help {
  * is not an option.
  */
 .myocean * .gmdalternateTitle span.buttons,
+.myocean * .gmdcredit span.buttons,
 .sdnProduct * .gmdalternateTitle span.buttons,
 .sdnProduct * .gmdresolution span.buttons,
 .sdnProduct * .gmduseLimitation span.buttons {
@@ -785,7 +786,9 @@ input[type="text"] {
 }
 
 .sxt-glyph {
-    float: right;
+    float: left;
     font-size: 1.8em;
     color: #565656;
+    margin-top: -3px;
+    padding-right: 4px;
 }
