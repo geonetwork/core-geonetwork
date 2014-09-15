@@ -113,6 +113,7 @@
           });
 
           scope.$watch('templateUrl', function(templateUrl) {
+
             if (angular.isUndefined(templateUrl)) {
               return;
             }
@@ -124,6 +125,10 @@
             element.append(template);
             $compile(template)(scope);
           });
+
+          scope.addToMap = function(layer) {
+            scope.$emit('addLayerFromMd', layer);
+          };
 
           scope.hoverOL.setMap(scope.map);
         }

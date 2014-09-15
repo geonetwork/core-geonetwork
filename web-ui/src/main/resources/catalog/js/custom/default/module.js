@@ -13,7 +13,8 @@
     'suggestService',
     '$http',
     'gnSearchSettings',
-    function($scope, $location, suggestService, $http, gnSearchSettings) {
+      'gnMap',
+    function($scope, $location, suggestService, $http, gnSearchSettings, gnMap) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -37,6 +38,18 @@
       $scope.addLayerToMap = function(number) {
         $scope.mainTabs.map.titleInfo = '  (+' + number + ')';
       };
+
+      $scope.$on('addLayerFromMd', function(evt, link) {
+        gnMap.addWmsToMap(viewerMap, {
+          LAYERS: link.name
+        }, {
+          url: link.url,
+          label: link.desc,
+          group: link.group
+        })
+      });
+
+
 
       $scope.displayMapTab = function() {
         if(viewerMap.getSize()[0] == 0 || viewerMap.getSize()[1] == 0){
