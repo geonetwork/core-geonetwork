@@ -137,7 +137,7 @@
 					</gmd:date>
 					<gmd:edition>
 						<!-- OPTIONAL: version of the product (depends on observation datasets and algorithm -->
-						<gco:CharacterString>2.1</gco:CharacterString>
+						<gco:CharacterString>1.0</gco:CharacterString>
 					</gmd:edition>
 					<gmd:editionDate>
 						<!-- MANDATORY: latest update date for the product (ie for the data of the product) -->
