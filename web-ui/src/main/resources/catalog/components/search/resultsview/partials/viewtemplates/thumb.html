@@ -1,5 +1,6 @@
 <ul class="list-group gn-resultview">
-  <li class="list-group-item" data-ng-repeat="md in searchResults.records" gn-displayextent-onhover="" gn-zoomto-onclick>
+  <li class="list-group-item" data-ng-repeat="md in searchResults.records" gn-displayextent-onhover="" gn-zoomto-onclick
+          gn-fix-mdlinks="md">
     <div class="media">
 
       <a class="pull-left">
@@ -19,43 +20,43 @@
 
     <div class="categories" ng-if="md.category.length > 0">
 
-      <div class="btn-group" ng-if="md.getLinksByType('LINK').length > 0">
+      <div class="btn-group" ng-if="links.length > 0">
         <button type="button" class="btn btn-success dropdown-toggle btn-xs" data-toggle="dropdown">
           <span class="fa fa-link"></span>
-          {{md.getLinksByType('LINK').length}}
-          <ng-pluralize count="md.getLinksByType('LINK').length" when="{'one': 'link', 'other': 'links'}"></ng-pluralize>
+          {{links.length}}
+          <ng-pluralize count="links.length" when="{'one': 'link', 'other': 'links'}"></ng-pluralize>
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
-          <li ng-repeat="link in md.getLinksByType('LINK')">
+          <li ng-repeat="link in links">
             <a href="{{link.url}}" target="_blank">{{link.name}}</a></li>
         </ul>
       </div>
 
-      <div class="btn-group" ng-if="md.getLinksByType('DOWNLOAD').length > 0">
+      <div class="btn-group" ng-if="downloads.length > 0">
         <button type="button" class="btn btn-success dropdown-toggle btn-xs" data-toggle="dropdown">
           <span class="fa fa-download"></span>
-          {{md.getLinksByType('DOWNLOAD').length}} 
-          <ng-pluralize count="md.getLinksByType('DOWNLOAD').length" when="{'one': 'download', 'other': 'downloads'}"></ng-pluralize>
+          {{downloads.length}}
+          <ng-pluralize count="downloads.length" when="{'one': 'download', 'other': 'downloads'}"></ng-pluralize>
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
-          <li ng-repeat="link in md.getLinksByType('DOWNLOAD')">
+          <li ng-repeat="link in downloads">
             <a href="{{link.url}}" download="{{link.desc}}">
               <span class="fa fa-file-zip-o" ng-if="link.contentType=='application/zip'"></span>
               {{link.name}} </a></li>
         </ul>
       </div>
 
-      <div class="btn-group" ng-if="md.getLinksByType('OGC', 'kml').length > 0">
+      <div class="btn-group" ng-if="layers.length > 0">
         <button type="button" class="btn btn-success dropdown-toggle btn-xs" data-toggle="dropdown">
           <span class="fa fa-globe"></span>
-          {{md.getLinksByType('OGC', 'kml').length}} 
-          <ng-pluralize count="md.getLinksByType('OGC', 'kml').length" when="{'one': 'layer', 'other': 'layers'}"></ng-pluralize>
+          {{layers.length}}
+          <ng-pluralize count="layers.length" when="{'one': 'layer', 'other': 'layers'}"></ng-pluralize>
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
-          <li ng-repeat="layer in md.getLinksByType('OGC', 'kml')"><a href="{{layer.url}}">
+          <li ng-repeat="layer in layers"><a href="" ng-click="addToMap(layer)">
             <span class="fa fa-google" ng-if="layer.contentType=='application/vnd.google-earth.kml+xml'"></span>
             <span class="fa fa-globe" ng-if="layer.contentType=='application/vnd.ogc.wms_xml'"></span>
             {{layer.name}} </a></li>
@@ -66,7 +67,7 @@
 
       <div class="pull-right">
         <i data-ng-repeat="cat in md.category" class="fa" data-ng-class="catIcons[cat]" title="{{cat}}">&nbsp;</i>
-      </div&
+      </div>
     </div>
 
   </li>

@@ -129,7 +129,24 @@
       };
     }]);
 
-  module.directive('gnDisplayextentOnhover', [
+  module.directive('gnFixMdlinks', [
+    function($compile, gnMap, gnSearchSettings) {
+
+      return {
+        restrict: 'A',
+        scope: {
+          md: '=gnFixMdlinks'
+        },
+        link: function (scope, element, attrs, controller) {
+          scope.$parent.links = scope.md.getLinksByType('LINK');
+          scope.$parent.downloads = scope.md.getLinksByType('DOWNLOAD');
+          scope.$parent.layers = scope.md.getLinksByType('OGC', 'kml');
+
+        }
+      }
+    }]);
+
+          module.directive('gnDisplayextentOnhover', [
     'gnMap',
     function(gnMap) {
 
