@@ -85,6 +85,7 @@
           fo.setMap(scope.map);
 
           scope.$watchCollection('searchResults.records', function(rec) {
+
             fo.getFeatures().clear();
             if (!angular.isArray(rec) || angular.isUndefined(scope.map.getTarget())) {
               return;
@@ -129,18 +130,20 @@
       };
     }]);
 
+  /**
+   * As we cannot use nested ng-repeat on a getLinksByType()
+   * function, we have to load them once into the scope on rendering.
+   */
   module.directive('gnFixMdlinks', [
     function($compile, gnMap, gnSearchSettings) {
 
       return {
         restrict: 'A',
-        scope: {
-          md: '=gnFixMdlinks'
-        },
+        scope: false,
         link: function (scope, element, attrs, controller) {
-          scope.$parent.links = scope.md.getLinksByType('LINK');
-          scope.$parent.downloads = scope.md.getLinksByType('DOWNLOAD');
-          scope.$parent.layers = scope.md.getLinksByType('OGC', 'kml');
+          scope.links = scope.md.getLinksByType('LINK');
+          scope.downloads = scope.md.getLinksByType('DOWNLOAD');
+          scope.layers = scope.md.getLinksByType('OGC', 'kml');
 
         }
       }
