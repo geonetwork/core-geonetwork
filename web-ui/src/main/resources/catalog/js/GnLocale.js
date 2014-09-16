@@ -3,7 +3,7 @@
 
   var module = angular.module('gn_locale', [
     'pascalprecht.translate',
-    'angular-md5',
+    'angular-md5'
   ]);
 
   module.constant('$LOCALES', ['core']);

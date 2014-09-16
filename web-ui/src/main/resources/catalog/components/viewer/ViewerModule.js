@@ -1,7 +1,7 @@
 (function () {
   goog.provide('gn_viewer');
 
-  goog.require('gn');
+  goog.require('gn_module');
   goog.require('gn_viewer_directive');
   goog.require('gn_viewer_service');
   goog.require('gn_wmsimport_directive');
@@ -28,7 +28,7 @@
     'gn_localisation',
     'gn_popup',
     'gn_print',
-    'gn'
+    'gn_module'
   ]);
 
   module.controller('gnViewerController', [

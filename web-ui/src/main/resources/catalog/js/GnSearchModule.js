@@ -1,14 +1,14 @@
 (function() {
   goog.provide('gn_search');
 
-  goog.require('gn');
+  goog.require('gn_module');
   goog.require('gn_resultsview');
   goog.require('gn_map_field_directive');
   goog.require('gn_viewer');
   goog.require('gn_search_controller');
 
   var module = angular.module('gn_search', [
-    'gn',
+    'gn_module',
     'gn_resultsview',
     'gn_map_field_directive',
     'gn_search_controller',
