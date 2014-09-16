@@ -6,9 +6,8 @@
       <span class="badge">{{f['@count']}}</span>
       <span class="gn-facet-label">{{f['@label'] || f['@name']}}</span>
     </a>
-    <button ng-click="toggle()" ng-if="facetResults[facet].length >= maxItems"
-      class="btn btn-link">
-      {{facetResults[facet].length-maxItems}} more
+    <button ng-click="toggle()" ng-if="facetResults[facet].length-initialMaxItems > 0" class="btn btn-link">
+      {{facetResults[facet].length-initialMaxItems}} {{ (facetResults[facet].length >= maxItems) ? 'more' : 'less' }}
     </button>
   </div>
 </div>
