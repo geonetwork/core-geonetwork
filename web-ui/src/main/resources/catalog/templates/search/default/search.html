@@ -93,12 +93,16 @@
 
           </div>
 
-          <div class="row">
+          <div class="alert alert-warning" role="alert" ng-if="searchResults.records.length == 0">
+            <i class="fa fa-frown-o"></i> Zaroo results found!
+          </div>
 
-            <div ng-class="(!collapsed) ? 'col-md-9' : 'col-md-12'">
+          <div class="row" ng-show="searchResults.records.length > 0">
+
+            <div ng-class="(collapsed) ? 'col-md-9' : 'col-md-12'">
               <div class="panel panel-default">
                 <div class="panel-heading">
-                  <button class="btn btn-default filter" ng-class="{ active: !collapsed }"
+                  <button class="btn btn-default filter" ng-class="{ active: collapsed }"
                     ng-click="collapsed=!collapsed"><i class="fa fa-filter"></i></button>
                   <div gn-results-tpl-switcher template-url="resultTemplate" class="pull-right"></div>
                   <div sortby-combo params="searchObj.params"></div>
@@ -113,7 +117,7 @@
               </div>
             </div>
 
-            <div ng-class="(!collapsed) ? 'col-md-3' : 'whidden'">
+            <div ng-class="(collapsed) ? 'col-md-3' : 'whidden'">
               <div class="panel panel-default">
                 <div class="panel-heading">
                   <span data-translate>Refine search</span>
