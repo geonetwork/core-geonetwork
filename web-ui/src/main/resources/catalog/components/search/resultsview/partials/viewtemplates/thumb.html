@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <div class="categories clearfix" ng-if="md.category.length > 0">
+    <div class="categories clearfix">
 
       <div class="btn-group" ng-if="links.length > 0">
         <button type="button" class="btn btn-success dropdown-toggle btn-xs" data-toggle="dropdown">
@@ -64,7 +64,7 @@
         </ul>
       </div>
 
-      <div class="pull-right">
+      <div class="pull-right" ng-if="md.category.length > 0">
         <i data-ng-repeat="cat in md.category" class="fa" data-ng-class="catIcons[cat]" title="{{cat}}">&nbsp;</i>
       </div>
     </div>
