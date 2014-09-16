@@ -1,5 +1,9 @@
 @import "gn_search.less";
 
+body {
+  font-family: Arial, @font-family-sans-serif;
+}
+
 .twitter-typeahead {
   width: 100%;
 }
@@ -30,9 +34,40 @@
     max-height: 30em;
   }
 }
+[search-results] {
+  .list-group-item.row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
 
 .submit {
   margin-top: 1.5em;
   /* width: 100%; */
   text-align: right;
+}
+
+.aside {
+  font-size: 90%;
+  .well {
+    margin-bottom: .5em;
+    margin-right: -20px;
+    .fa {
+      font-size: 110%;
+      margin-left: .5em;
+    }
+  }
+  .btn-group {
+    clear: both;
+    display: block;
+    width: 100%;
+    margin-bottom: .5em;
+    .fa {
+      color: @brand-primary;
+    }
+  }
+}
+
+[data-gn-facet-list] {
+  font-size: 90%;
 }

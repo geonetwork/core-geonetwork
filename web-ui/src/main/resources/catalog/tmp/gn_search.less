@@ -131,6 +131,9 @@
 }
 
 [search-results] {
+  h4 {
+    font-size: 15px;
+  }
   .list-group {
     margin-bottom: 0;
   }
@@ -176,17 +179,15 @@
     color: #666;
   }
   li:hover {
-    background: lightyellow;
+    background: lighten(spin(@state-info-bg, -10), 7%);
+
   }
 }
 
 [data-ng-search-form],
 [ng-search-form] {
   .whidden,
-  .col-md-12,
-  .col-md-9,
-  .col-md-3,
-  .col-md-6 {
+  [class*=col-md] {
     transition: width ease .25s;
     transition-property: width, margin;
   }
