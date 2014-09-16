@@ -24,7 +24,7 @@
         },
         link: function(scope, element, attrs, controller) {
 
-          var initialMaxResults = 5;
+          var initialMaxItems = 5;
 
           scope.add = function(f, reset) {
             gnFacetService.add(scope.currentFacets, scope.indexKey,
@@ -32,9 +32,10 @@
             controller.resetPagination();
             controller.triggerSearch();
           };
-          scope.maxItems = initialMaxResults;
+          scope.initialMaxItems = initialMaxItems;
+          scope.maxItems = initialMaxItems;
           scope.toggle = function() {
-            scope.maxItems = (scope.maxItems == Infinity) ? initialMaxResults : Infinity;
+            scope.maxItems = (scope.maxItems == Infinity) ? initialMaxItems : Infinity;
           };
         }
       };
