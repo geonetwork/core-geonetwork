@@ -1,9 +1,14 @@
 (function() {
+
   goog.provide('gn_login_controller');
 
-  var module = angular.module('gn_login_controller', []);
+  goog.require('gn_utility');
+  goog.require('gn_catalog_service');
 
-  module.constant('$LOCALES', ['core']);
+  var module = angular.module('gn_login_controller', [
+      'gn_utility',
+      'gn_catalog_service'
+  ]);
 
   /**
    *    Take care of login action, reset and update password.
