@@ -1,8 +1,11 @@
 (function() {
   goog.provide('gn_map_service');
 
+  goog.require('gn_ows');
+
 
   var module = angular.module('gn_map_service', [
+    'gn_ows',
     'go'
   ]);
 
