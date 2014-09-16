@@ -80,6 +80,7 @@
       <item name="sextantTheme" plural="sextantThemes" indexKey="sextantTheme" max="200"/>
       <item name="keywordType-parameter" plural="keywordType-parameter" indexKey="keywordType-parameter" max="200"/>
       <item name="_groupPublished" plural="_groupPublished" indexKey="_groupPublished" max="300"/>
+      <item name="p35" plural="p35" indexKey="thesaurus-parameter.seadatanet-ocean-discovery-parameter.rdf" max="300"/>
 		</suggestions>
 	</def>
 </summary>
