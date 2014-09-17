@@ -1,8 +1,56 @@
+<nav class="navbar navbar-default" role="navigation">
+
+  <div class="container-fluid">
+
+    <div class="navbar-header">
+
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">
+        <img src="http://www.geocat.ch/internet/geocat/fr/home.parsys.00011.Image.jpeg" alt="{{'Geocat Logo' | translate}}">
+        geocat.ch
+      </a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+      <ul class="nav navbar-nav">
+        <li class=""><a href="#" translate>Overview</a></li>
+        <li class=""><a href="#" translate>About</a></li>
+      </ul>
+
+      <div class="form-group navbar-right navbar-btn" gn-language-switcher="lang" data-langs="langs"></div>
+
+      <form class="navbar-form navbar-right" role="login" action="../../j_spring_security_check" method="post" ng-if="user['@authenticated'] != 'true'">
+        <div class="form-group">
+          <input type="text" name="username" class="form-control" placeholder="{{ 'username' | translate }}">
+          <input type="password" name="password" class="form-control" placeholder="{{ 'password' | translate }}">
+        </div>
+        <button type="submit" class="btn btn-default" translate>Signin</button>
+      </form>
+
+      <div ng-if="user['@authenticated'] == 'true'" class="navbar-text navbar-right">
+        <span translate>Signed in as </span> {{user['username']}}
+        <a ng-show="authenticated" href="../../j_spring_security_logout" title="{{'signout' | translate}}" class="navbar-link">
+          <i class="fa fa-sign-out"></i>
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+
+</nav>
+
 <div class="container-fluid gn-search-page" data-ng-controller="GnSearchController">
   <div class="" data-ng-controller="gnsGeocat">
 
     <form ng-search-form="" runsearch="true">
-      <div class="row top-buffer">
+      <div class="row">
         <div class="col-md-3">
           <div class="panel panel-primary">
             <div class="panel-heading search-top">
