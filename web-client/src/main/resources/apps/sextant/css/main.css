@@ -785,6 +785,26 @@ input[type="text"] {
 	font-weight: 700 !important;
 }
 
+/* Editor styling ajustments */
+input.md {
+    margin-right: 10px;
+}
+.metadata #editForm * label {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.slidingWindow select {
+    margin-right: 20px;
+    float: left;
+}
+.slidingWindow {
+    padding-bottom: 8px;
+}
+
+.slidingWindow label{
+    margin-top: 3px;
+}
+
 .sxt-glyph {
     float: left;
     font-size: 1.8em;

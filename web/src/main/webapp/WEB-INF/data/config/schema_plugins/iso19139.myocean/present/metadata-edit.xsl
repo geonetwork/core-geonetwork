@@ -1137,9 +1137,8 @@
 												value="{$value}" size="30"/>											
 											
 											<div class="slidingWindow">
-												<label><xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/startPeriod"/></label>
+												<label style="margin:0"><xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/startPeriod"/></label>
 												<br/>
-												<label>
 													<select id="_{$id}_s" onchange="updateSlidingWindow('_{$id}');">
 														<option value="">+ (after processing time)</option>
 														<option value="-">
@@ -1148,34 +1147,36 @@
 															</xsl:if>
 															- (before processing time)</option>
 													</select>
-													<xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/month"/>
+
+                        <label for="_{$id}_s_month">
+
+                        <xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/month"/>
 												</label>
-												<input type="number" min="0" class="md small" 
-													id="_{$id}_s_month" 
+												<input type="number" min="0" class="md small"
+													id="_{$id}_s_month"
 													onkeyup="updateSlidingWindow('_{$id}');"
 													onchange="updateSlidingWindow('_{$id}');"
 													value="{$start-months}" size="5"/>
-												<label for="_{$id}_s_month">
+												<label for="_{$id}_s_day">
 													<xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/day"/>
 												</label>
-												<input type="number" min="0" class="md small" 
-													id="_{$id}_s_day" 
+												<input type="number" min="0" class="md small"
+													id="_{$id}_s_day"
 													onkeyup="updateSlidingWindow('_{$id}');"
 													onchange="updateSlidingWindow('_{$id}');"
 													value="{$start-days}" size="5"/>
 												<label for="_{$id}_s_hour">
 													<xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/hour"/>
 												</label>
-												<input type="number" min="0" class="md small" 
+												<input type="number" min="0" class="md small"
 													id="_{$id}_s_hour" 
 													onkeyup="updateSlidingWindow('_{$id}');"
 													onchange="updateSlidingWindow('_{$id}');"
 													value="{$start-hours}" size="5"/>
 											</div>
 											<div class="slidingWindow">
-												<label><xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/endPeriod"/></label>
+												<label style="margin:0"><xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/endPeriod"/></label>
 												<br/>
-												<label>
 													<select id="_{$id}_e" onchange="updateSlidingWindow('_{$id}');">
 														<option value="">+ (after processing time)</option>
 														<option value="-">
@@ -1184,14 +1185,17 @@
 															</xsl:if>
 															- (before processing time)</option>
 													</select>
-													<xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/month"/>
-												</label>
-												<input type="number" min="0" class="md small" 
+
+                        <label for="_{$id}_e_month">
+                          <xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/month"/>
+                        </label>
+
+                        <input type="number" min="0" class="md small"
 													id="_{$id}_e_month" 
 													onkeyup="updateSlidingWindow('_{$id}');"
 													onchange="updateSlidingWindow('_{$id}');"
 													value="{$end-months}" size="5"/>
-												<label for="_{$id}_e_month">
+												<label for="_{$id}_e_day">
 													<xsl:value-of select="/root/gui/schemas/*[name()=$schema]/strings/day"/>
 												</label>
 												<input type="number" min="0" class="md small" 
