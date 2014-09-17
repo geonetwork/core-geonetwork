@@ -52,7 +52,7 @@ cat.list = function() {
       '<tpl if="values.type==\'map\'">',
         '<span class="sxt-glyph icon-globe"></span>',
       '</tpl>',
-      '<tpl if="values.type==\'dataset\'">',
+      '<tpl if="values.type==\'dataset\' || values.type==\'series\'">',
         '<span class="sxt-glyph icon-layers"></span>',
       '</tpl>',
       cat.Templates.TITLE,
