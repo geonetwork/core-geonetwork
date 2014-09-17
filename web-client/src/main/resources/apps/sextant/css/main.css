@@ -814,7 +814,7 @@ input.md {
 }
 
 .sxt-glyph {
-    float: left;
+    float: right;
     font-size: 1.8em;
     color: #565656;
     margin-top: -3px;
