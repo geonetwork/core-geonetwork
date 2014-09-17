@@ -25,8 +25,8 @@
 
     <div class="form-group">
       <div class="col-md-offset-4">
-        <button class="btn btn-default more" ng-class="{ 'active': advanced }" ng-click="advanced = !advanced">
-          Advanced form
+        <button class="btn btn-default more" ng-click="advanced = !advanced" ng-class="{'backtonormal': advanced}">
+          {{ (advanced) ? 'Back to simple form' : 'Advanced form' }}
         </button>
       </div>
     </div>
