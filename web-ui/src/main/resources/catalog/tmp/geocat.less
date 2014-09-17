@@ -24,7 +24,7 @@ body {
 }
 
 .more {
-  margin: 0 0 .7em 15px;
+  margin: 0 0 0 15px;
 }
 .advanced {
   max-height: 0;
@@ -32,6 +32,26 @@ body {
   transition: max-height ease .25s;
   &.active {
     max-height: 30em;
+    overflow-y: visible;
+  }
+}
+.geocat-search {
+  font-size: 90%;
+  label {
+    font-weight: normal;
+  }
+  input, select {
+    .input-sm;
+  }
+  .form-group {
+    margin-bottom: 10px;
+  }
+  .bootstrap-tagsinput {
+    padding: 0;
+    margin-bottom: 0;
+  }
+  .tt-dropdown-menu {
+    left: 6px !important;
   }
 }
 [search-results] {
@@ -61,9 +81,16 @@ body {
     clear: both;
     display: block;
     width: 100%;
-    margin-bottom: .5em;
     .fa {
       color: @brand-primary;
+    }
+    .btn-default {
+      border-color: transparent;
+      background: inherit;
+      &:hover {
+        border-color: @dropdown-border;
+        background-color: white;
+      }
     }
   }
 }
