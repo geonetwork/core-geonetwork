@@ -805,6 +805,14 @@ input.md {
     margin-top: 3px;
 }
 
+.thesaurusPicker * fieldset legend {
+    padding-left: 0px;
+}
+.thesaurusPicker * .x-table-layout-cell > div.x-panel {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
 .sxt-glyph {
     float: left;
     font-size: 1.8em;

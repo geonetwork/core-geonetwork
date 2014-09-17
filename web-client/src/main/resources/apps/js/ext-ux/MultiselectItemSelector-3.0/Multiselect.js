@@ -378,7 +378,7 @@ Ext.ux.ItemSelector = Ext.extend(Ext.form.Field,  {
 		if ((!this.drawBotIcon || this.hideNavIcons) && this.toBottomIcon) { this.toBottomIcon.dom.style.display='none'; }
 
 		var tb = p.body.first();
-		this.el.setWidth(p.body.first().getWidth());
+		this.el.setWidth(p.body.first().getWidth()+100);
 		p.body.removeClass();
 		
 		this.hiddenName = this.name;

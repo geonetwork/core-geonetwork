@@ -349,7 +349,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             dataFields: ["value", "thesaurus"],
             //toData: [],
             toStore: this.selectedKeywordStore,
-            msWidth: 350,
+            msWidth: 400,
             msHeight: 260,
             valueField: "value",
             toSortField: undefined,
