@@ -1263,7 +1263,21 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  
+
+  <xsl:template mode="iso19139" match="gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:tditle|
+  gmd:identificatidonInfo/*/gmd:abstract" priority="2">
+    <xsl:param name="schema"/>
+    <xsl:param name="edit"/>
+    <xsl:apply-templates mode="simpleElement" select=".">
+      <xsl:with-param name="schema"  select="$schema"/>
+      <xsl:with-param name="text">
+        <xsl:apply-templates mode="localised" select=".">
+          <xsl:with-param name="langId" select="$langId"/>
+        </xsl:apply-templates>
+      </xsl:with-param>
+    </xsl:apply-templates>
+  </xsl:template>
+
   <!--
   Keyword editing using classic mode (ie. one field per XML tag)
   based on geonet:element/@ref.
