@@ -14,6 +14,13 @@
             <div class="panel-body geocat-search">
               <div data-ng-include="'../../catalog/templates/search/geocat/searchForm.html'"></div>
             </div>
+            <div class="panel-footer">
+              <div class="submit">
+                <button type="button" data-ng-click="resetSearch();" class="btn btn-link" data-translate>Reset</button>
+                <button type="button" data-ng-click="triggerSearch()" class="btn btn-primary">
+                  <i class="fa fa-search"></i> <span data-translate>Search</span></button>
+              </div>
+            </div>
           </div>
         </div>
 

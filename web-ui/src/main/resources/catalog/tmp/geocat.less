@@ -26,15 +26,21 @@ body {
 .more {
   margin: 0 0 0 15px;
 }
-.advanced {
+.basic,
+.advanced,
+.administrative {
   max-height: 0;
   overflow-y: hidden;
   transition: max-height ease .25s;
   &.active {
-    max-height: 30em;
+    max-height: 50em;
     overflow-y: visible;
   }
 }
+.administrative.active {
+  max-height: 5em;
+}
+
 .geocat-search {
   font-size: 90%;
   label {
@@ -53,6 +59,12 @@ body {
   .tt-dropdown-menu {
     left: 6px !important;
   }
+  legend {
+    font-size: 1em;
+    font-style: italic;
+    padding-top: 1em;
+    margin-bottom: 12px;
+  }
 }
 [search-results] {
   .list-group-item.row {
@@ -62,9 +74,10 @@ body {
 }
 
 .submit {
-  margin-top: 1.5em;
-  /* width: 100%; */
   text-align: right;
+  .btn-link {
+    color: @gray-light;
+  }
 }
 
 .aside {
