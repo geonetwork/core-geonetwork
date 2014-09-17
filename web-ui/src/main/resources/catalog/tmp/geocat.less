@@ -3,6 +3,21 @@
 body {
   font-family: Arial, @font-family-sans-serif;
 }
+.navbar {
+  .navbar-brand {
+    padding: 0 15px;
+    line-height: 50px;
+  }
+  img {
+    max-height: 50px;
+  }
+  .navbar-form input {
+    width: 7em;
+  }
+  [gn-language-switcher] {
+    margin-left: 1em;
+  }
+}
 
 .twitter-typeahead {
   width: 100%;
@@ -24,14 +39,50 @@ body {
 }
 
 .more {
-  margin: 0 0 .7em 15px;
+  margin: 0 0 0 15px;
 }
-.advanced {
+.basic,
+.advanced,
+.administrative {
   max-height: 0;
   overflow-y: hidden;
   transition: max-height ease .25s;
   &.active {
-    max-height: 30em;
+    max-height: 60em;
+    overflow-y: visible;
+  }
+}
+.administrative.active {
+  max-height: 5em;
+}
+
+.geocat-search {
+  .backtonormal {
+    position: absolute;
+    top: 4.33em;
+  }
+  font-size: 90%;
+  label {
+    font-weight: normal;
+  }
+  input, select {
+    .input-sm;
+  }
+  .form-group {
+    margin-bottom: 10px;
+  }
+  .bootstrap-tagsinput {
+    padding: 0;
+    margin-bottom: 0;
+  }
+  .tt-dropdown-menu {
+    left: 6px !important;
+  }
+  legend {
+    font-size: 1em;
+    font-style: italic;
+    padding-top: .4em;
+    margin-bottom: 12px;
   }
 }
 [search-results] {
@@ -42,9 +93,10 @@ body {
 }
 
 .submit {
-  margin-top: 1.5em;
-  /* width: 100%; */
   text-align: right;
+  .btn-link {
+    color: @gray-light;
+  }
 }
 
 .aside {
@@ -61,9 +113,16 @@ body {
     clear: both;
     display: block;
     width: 100%;
-    margin-bottom: .5em;
     .fa {
       color: @brand-primary;
+    }
+    .btn-default {
+      border-color: transparent;
+      background: inherit;
+      &:hover {
+        border-color: @dropdown-border;
+        background-color: white;
+      }
     }
   }
 }
