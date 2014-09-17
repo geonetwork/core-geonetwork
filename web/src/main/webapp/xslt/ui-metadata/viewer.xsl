@@ -7,7 +7,7 @@
 
     <xsl:template mode="content" match="/">
 
-        <div data-gn-main-viewer="">
+        <div gn-main-viewer="">
         </div>
     </xsl:template>
 </xsl:stylesheet>

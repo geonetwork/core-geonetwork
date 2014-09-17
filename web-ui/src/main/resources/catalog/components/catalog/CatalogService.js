@@ -235,6 +235,7 @@
     regionsList: 'regions.category.list@json',
     region: 'regions.list@json',
 
+    suggest: 'suggest',
 
     edit: 'md.edit',
     search: 'qi@json',
@@ -445,15 +446,19 @@
    */
   module.factory('Metadata', function() {
     function Metadata(k) {
-      this.props = $.extend(true, {}, k);
+      $.extend(true, this, k);
+      if(angular.isDefined(this.category) &&
+          !angular.isArray(this.category)){
+        this.category = [this.category];
+      }
     };
 
     function formatLink(sLink) {
       var linkInfos = sLink.split('|');
       return {
-        name: linkInfos[1],
+        name: linkInfos[0],
         url: linkInfos[2],
-        desc: linkInfos[0],
+        desc: linkInfos[1],
         protocol: linkInfos[3],
         contentType: linkInfos[4]
       };
@@ -464,21 +469,53 @@
 
     Metadata.prototype = {
       getUuid: function() {
-        return this.props['geonet:info'].uuid;
+        return this['geonet:info'].uuid;
       },
       getLinks: function() {
-        return this.props.link;
+        return this.link;
       },
-      getLinksByType: function(type) {
+      getLinksByType: function() {
         var ret = [];
-        angular.forEach(this.props.link, function(link) {
+        var types = Array.prototype.splice.call(arguments, 0);
+        angular.forEach(this.link, function(link) {
           var linkInfo = formatLink(link);
-          if (linkInfo.protocol.indexOf(type) >= 0) {
-            ret.push(linkInfo);
-          }
+          types.forEach(function(type) {
+            if (linkInfo.protocol.indexOf(type) >= 0) {
+              ret.push(linkInfo);
+            }
+          });
         });
         return ret;
+      },
+      getThumbnails: function() {
+        if(angular.isArray(this.image)) {
+          var ret = {};
+          for(var i=0;i<this.image.length;i++) {
+            var s = this.image[i].split('|');
+            if(s[0] === 'thumbnail') {
+              ret.small = s[1];
+            } else if(s[0] === 'overview') {
+              ret.big = s[1];
+            }
+          }
+        }
+        return ret;
+      },
+      getContacts: function() {
+        if(angular.isArray(this.responsibleParty)) {
+          var ret = {};
+          for(var i=0;i<this.responsibleParty.length;i++) {
+            var s = this.responsibleParty[i].split('|');
+            if(s[1] === 'resource') {
+              ret.resource = s[2];
+            } else if(s[1] === 'metadata') {
+              ret.metadata = s[2];
+            }
+          }
+        }
+        return ret;
       }
+
     };
     return Metadata;
   });

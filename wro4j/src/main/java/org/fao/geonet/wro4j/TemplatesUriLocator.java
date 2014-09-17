@@ -50,6 +50,9 @@ public class TemplatesUriLocator implements UriLocator {
             if(files != null) {
                 for(int i=0;i<files.length;++i) {
 
+                    if(files[i].isDirectory()) {
+                        break;
+                    }
                     BufferedReader br = null;
                     StringBuilder template = null;
 

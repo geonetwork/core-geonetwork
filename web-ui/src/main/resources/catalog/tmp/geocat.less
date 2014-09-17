@@ -1,0 +1,113 @@
+@import "gn_search.less";
+
+body {
+  font-family: Arial, @font-family-sans-serif;
+}
+
+.twitter-typeahead {
+  width: 100%;
+}
+
+[ng-search-form] {
+  .relative {
+    position: relative;
+  }
+  .search-top {
+    position: relative;
+    padding-top: .65em;
+  }
+  .inner-spinner {
+    position: absolute;
+    top: 1.3em;
+    right: 1.6em;
+  }
+}
+
+.more {
+  margin: 0 0 0 15px;
+}
+.basic,
+.advanced,
+.administrative {
+  max-height: 0;
+  overflow-y: hidden;
+  transition: max-height ease .25s;
+  &.active {
+    max-height: 50em;
+    overflow-y: visible;
+  }
+}
+.administrative.active {
+  max-height: 5em;
+}
+
+.geocat-search {
+  font-size: 90%;
+  label {
+    font-weight: normal;
+  }
+  input, select {
+    .input-sm;
+  }
+  .form-group {
+    margin-bottom: 10px;
+  }
+  .bootstrap-tagsinput {
+    padding: 0;
+    margin-bottom: 0;
+  }
+  .tt-dropdown-menu {
+    left: 6px !important;
+  }
+  legend {
+    font-size: 1em;
+    font-style: italic;
+    padding-top: 1em;
+    margin-bottom: 12px;
+  }
+}
+[search-results] {
+  .list-group-item.row {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+.submit {
+  text-align: right;
+  .btn-link {
+    color: @gray-light;
+  }
+}
+
+.aside {
+  font-size: 90%;
+  .well {
+    margin-bottom: .5em;
+    margin-right: -20px;
+    .fa {
+      font-size: 110%;
+      margin-left: .5em;
+    }
+  }
+  .btn-group {
+    clear: both;
+    display: block;
+    width: 100%;
+    .fa {
+      color: @brand-primary;
+    }
+    .btn-default {
+      border-color: transparent;
+      background: inherit;
+      &:hover {
+        border-color: @dropdown-border;
+        background-color: white;
+      }
+    }
+  }
+}
+
+[data-gn-facet-list] {
+  font-size: 90%;
+}

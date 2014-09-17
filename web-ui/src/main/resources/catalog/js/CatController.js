@@ -17,9 +17,8 @@
   module.controller('GnCatController', [
     '$scope', '$http', '$q', '$rootScope', '$translate',
     'gnSearchManagerService', 'gnConfigService',
-    'gnMap',
     function($scope, $http, $q, $rootScope, $translate,
-            gnSearchManagerService, gnConfigService, gnMap) {
+            gnSearchManagerService, gnConfigService) {
       $scope.version = '0.0.1';
       // TODO : add language
       var tokens = location.href.split('/');
@@ -56,7 +55,8 @@
 
       gnConfigService.load().then(function(c) {
         // Config loaded
-        gnMap.importProj4js();
+        //gnMap.importProj4js();
+        // TODO: make map proj load in mapService.config instead of here
       });
 
       /**

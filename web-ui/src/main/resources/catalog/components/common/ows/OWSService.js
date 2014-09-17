@@ -80,7 +80,13 @@
               //send request and decode result
               if (gnUrlUtils.isValid(url)) {
                 var proxyUrl = gnViewerSettings.proxyUrl + encodeURIComponent(url);
-                $http.get(proxyUrl)
+                $http.get(proxyUrl, {
+                  cache: true
+                })
+                var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
+                $http.get(proxyUrl, {
+                  cache: true
+                })
                   .success(function (data, status, headers, config) {
                     defer.resolve(displayFileContent(data));
                   })

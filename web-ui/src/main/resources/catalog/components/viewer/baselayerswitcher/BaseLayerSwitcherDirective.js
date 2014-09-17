@@ -13,8 +13,8 @@
    * given map
    */
   module.directive('gnBaselayerswitcher', [
-    'gnBackgroundLayers',
-    function (gnBackgroundLayers) {
+    'gnViewerSettings',
+    function (gnViewerSettings) {
     return {
       restrict: 'A',
       templateUrl: '../../catalog/components/viewer/baselayerswitcher/' +
@@ -23,7 +23,7 @@
         map: '=gnBaselayerswitcherMap'
       },
       link: function (scope, element, attrs) {
-        scope.layers = gnBackgroundLayers;
+        scope.layers = gnViewerSettings.bgLayers;
         scope.map.getLayers().insertAt(0, scope.layers[0]);
         scope.setBgLayer = function(layer) {
           var layers = scope.map.getLayers();

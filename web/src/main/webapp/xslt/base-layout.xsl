@@ -13,7 +13,7 @@
   <xsl:include href="base-layout-cssjs-loader.xsl"/>
 
   <xsl:template match="/">
-    <html ng-app="{$angularApp}" lang="{$lang}" id="ng-app">
+    <html ng-app="{$angularModule}" lang="{$lang}" id="ng-app">
       <head>
         <title>
           <xsl:value-of select="concat($env/system/site/name, ' - ', $env/system/site/organization)"
@@ -51,11 +51,12 @@
             </div>
           </xsl:when>
           <xsl:otherwise>
-            <!-- AngularJS application -->
-                <xsl:if test="$angularApp != 'gn_viewer'">
-                    <div class="navbar navbar-default"
-                         data-ng-include="'{$uiResourcesPath}templates/top-toolbar.html'"> </div>
-                </xsl:if>
+
+              <!-- AngularJS application -->
+              <xsl:if test="$angularApp != 'gn_search' and $angularApp != 'gn_viewer'">
+                <div class="navbar navbar-default"
+                     data-ng-include="'{$uiResourcesPath}templates/top-toolbar.html'"> </div>
+              </xsl:if>
 
               <xsl:apply-templates mode="content" select="."/>
 

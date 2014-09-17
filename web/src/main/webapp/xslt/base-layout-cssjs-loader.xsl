@@ -22,8 +22,16 @@
     </xsl:if>
     
     <link rel="shortcut icon" type="image/x-icon" href="../../images/logos/favicon.ico" />
-    
-    <link href="{/root/gui/url}/catalog/tmp/app.css" rel="stylesheet" media="screen" />
+
+    <xsl:choose>
+      <xsl:when test="$angularApp = 'gn_search'">
+        <link href="{/root/gui/url}/catalog/tmp/{$searchView}.css" rel="stylesheet" media="screen" />
+    </xsl:when>
+    <xsl:otherwise>
+      <link href="{/root/gui/url}/static/{$angularApp}.css{$minimizedParam}" rel="stylesheet" media="screen" />
+    </xsl:otherwise>
+    </xsl:choose>
+
     <link href="{/root/gui/url}/static/{/root/gui/nodeId}_custom_style.css{$minimizedParam}" rel="stylesheet" media="screen" />
   </xsl:template>
   
@@ -49,7 +57,11 @@
         <script src="{$uiResourcesPath}lib/angular-translate.js"></script>
         <script src="{$uiResourcesPath}lib/angular-md5.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/datetimepicker.js"></script>
-        <script src="{$uiResourcesPath}lib/angular.ext/bootstrap/buttons.js"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/buttons.js"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/typeahead.js"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/position.js"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/bindHtml.js"></script>
+        <script src="{$uiResourcesPath}lib/angular.ext/tabs.js"></script>
         <script src="{$uiResourcesPath}lib/angular.ext/slider.js"></script>
 
         <script src="{$uiResourcesPath}lib/bootstrap-3.0.1.js"></script>
@@ -79,7 +91,6 @@
         <script src="{$uiResourcesPath}lib/bootstrap.ext/typeahead.js/typeahead.js"></script>
         <script src="{$uiResourcesPath}lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.js"></script>
         <script src="{$uiResourcesPath}lib/bootstrap.ext/datepicker/bootstrap-datepicker.js"></script>
-
         <!--</xsl:if>-->
         
       </xsl:when>
@@ -92,12 +103,12 @@
             <!-- Use Closure to load the application scripts -->
             <script src="{/root/gui/url}/static/closure_deps.js"></script>
             <script>
-                goog.require('<xsl:value-of select="$angularApp"/>');
+                 goog.require('<xsl:value-of select="$angularModule"/>');
             </script>
         </xsl:when>
         <xsl:otherwise>
             <script src="{/root/gui/url}/static/lib.js"></script>
-            <script src="{/root/gui/url}/static/{$angularApp}.js{$minimizedParam}"></script>
+            <script src="{/root/gui/url}/static/{$angularModule}.js{$minimizedParam}"></script>
         </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

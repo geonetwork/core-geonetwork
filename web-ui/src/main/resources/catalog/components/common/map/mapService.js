@@ -1,16 +1,20 @@
 (function() {
   goog.provide('gn_map_service');
 
+  goog.require('gn_ows');
+
 
   var module = angular.module('gn_map_service', [
+    'gn_ows',
     'go'
   ]);
 
   module.provider('gnMap', function() {
     this.$get = [
       'goDecorateLayer',
+      'gnOwsCapabilities',
       'gnConfig',
-      function(goDecorateLayer, gnConfig) {
+      function(goDecorateLayer, gnOwsCapabilities, gnConfig) {
 
         var defaultMapConfig = {
           'useOSM': 'true',
@@ -66,6 +70,28 @@
                      [extent[0], extent[1]]
               ]
             ];
+          },
+
+          /**
+           * Get the extent of the md.
+           * It is stored in the object md.geoBox as a String
+           * '150|-12|160|12'.
+           * Returns it as an array of floats.
+           *
+           * @param md
+           */
+          getBboxFromMd: function(md) {
+            if (angular.isUndefined(md.geoBox)) return;
+
+            var bbox = angular.isArray(md.geoBox) ?
+                md.geoBox[0] : md.geoBox;
+            var c = bbox.split('|');
+            if (angular.isArray(c) && c.length == 4) {
+              return [parseFloat(c[0]),
+                parseFloat(c[1]),
+                parseFloat(c[2]),
+                parseFloat(c[3])];
+            }
           },
 
           /**
@@ -206,6 +232,52 @@
           },
 
           /**
+           * Parse an object describing a layer from
+           * a getCapabilities document parsing. Create a ol.Layer WMS
+           * from this object and add it to the map with all known
+           * properties.
+           *
+           * @param map
+           * @param getCapLayer
+           * @returns {*}
+           */
+          addWmsToMapFromCap : function(map, getCapLayer) {
+
+            var legend, attribution, metadata;
+            if (getCapLayer) {
+              var layer = getCapLayer;
+
+              // TODO: parse better legend & attribution
+              if(angular.isArray(layer.Style) && layer.Style.length > 0) {
+                legend = layer.Style[layer.Style.length-1].LegendURL[0].OnlineResource;
+              }
+              if(angular.isDefined(layer.Attribution) ) {
+                if(angular.isArray(layer.Attribution)){
+
+                } else {
+                  attribution = layer.Attribution.Title;
+                }
+              }
+              if(angular.isArray(layer.MetadataURL)) {
+                metadata = layer.MetadataURL[0].OnlineResource;
+              }
+
+              return this.addWmsToMap(map, {
+                    LAYERS: layer.Name
+                  }, {
+                    url: layer.url,
+                    label: layer.Title,
+                    attribution: attribution,
+                    legend: legend,
+                    metadata: metadata,
+                    extent: gnOwsCapabilities.getLayerExtentFromGetCap(map, layer)
+                  }
+              );
+            }
+          },
+
+
+          /**
            * Zoom by delta with animation
            * @param map
            * @param delta
@@ -214,11 +286,11 @@
             var view = map.getView();
             var currentResolution = view.getResolution();
             if (angular.isDefined(currentResolution)) {
-                map.beforeRender(ol.animation.zoom({
-                  resolution: currentResolution,
-                  duration: 250,
-                  easing: ol.easing.easeOut
-                }));
+              map.beforeRender(ol.animation.zoom({
+                resolution: currentResolution,
+                duration: 250,
+                easing: ol.easing.easeOut
+              }));
               var newResolution = view.constrainResolution(currentResolution, delta);
               view.setResolution(newResolution);
             }

@@ -43,7 +43,7 @@
 
           var updateSearch = function() {
             controller.updateSearchParams(getPaginationParams());
-            controller.triggerSearch();
+            controller.triggerSearch(true);
           };
 
           scope.previous = function() {
@@ -58,7 +58,14 @@
               updateSearch();
             }
           };
-          controller.updateSearchParams(getPaginationParams());
+          scope.first = function() {
+            scope.config.currentPage = 1;
+            updateSearch();
+          };
+          scope.last = function() {
+            scope.config.currentPage = scope.config.pages;
+            updateSearch();
+          };
           controller.activatePagination();
         }
       };
