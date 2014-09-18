@@ -23,26 +23,12 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
-
+import com.vividsolutions.jts.geom.Geometry;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
 import jeeves.utils.Xml;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.document.Document;
@@ -77,7 +63,6 @@ import org.fao.geonet.kernel.search.DuplicateDocFilter;
 import org.fao.geonet.kernel.search.IndexAndTaxonomy;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
-import org.fao.geonet.kernel.search.LuceneIndexField;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.LuceneUtils;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -86,14 +71,25 @@ import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.services.region.Region;
 import org.fao.geonet.services.region.RegionsDAO;
-import org.geotools.xml.Encoder;
 import org.geotools.gml2.GMLConfiguration;
+import org.geotools.xml.Encoder;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
-import com.vividsolutions.jts.geom.Geometry;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 //=============================================================================
 
@@ -749,31 +745,34 @@ public class CatalogSearcher {
         parser.setNumericConfigMap(numericMap);
         Query q = parser.parse(cswServiceSpecificConstraint, "title");
 
-        // List of lucene fields which MUST not be control by user, to be removed from the CSW service specific constraint
-        List<String> SECURITY_FIELDS = Arrays.asList(
-             LuceneIndexField.OWNER,
-             LuceneIndexField.GROUP_OWNER);
-        
-        BooleanQuery bq;
-        if (q instanceof BooleanQuery) {
-            bq = (BooleanQuery) q;
-            List<BooleanClause> clauses = bq.clauses();
-    
-            Iterator<BooleanClause> it = clauses.iterator();
-            while (it.hasNext()) {
-                BooleanClause bc = it.next();
-    
-                for (String fieldName : SECURITY_FIELDS){
-                    if (bc.getQuery().toString().contains(fieldName + ":")) {
-                        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
-                            Log.debug(Geonet.CSW_SEARCH,"LuceneSearcher getCswServiceSpecificConstraintQuery removed security field: " + fieldName);
-                        it.remove();
-    
-                        break;
-                    }
-                }
-            }
-        }
+
+//        GEOCAT: This is commented out so that liechtenstein query will work.  we need to be able to select only for a specific group.
+//        // List of lucene fields which MUST not be control by user, to be removed from the CSW service specific constraint
+//        List<String> SECURITY_FIELDS = Arrays.asList(
+//             LuceneIndexField.OWNER,
+//             LuceneIndexField.GROUP_OWNER);
+//
+//        BooleanQuery bq;
+//        if (q instanceof BooleanQuery) {
+//            bq = (BooleanQuery) q;
+//            List<BooleanClause> clauses = bq.clauses();
+//
+//            Iterator<BooleanClause> it = clauses.iterator();
+//            while (it.hasNext()) {
+//                BooleanClause bc = it.next();
+//
+//                for (String fieldName : SECURITY_FIELDS){
+//                    if (bc.getQuery().toString().contains(fieldName + ":")) {
+//                        if(Log.isDebugEnabled(Geonet.CSW_SEARCH))
+//                            Log.debug(Geonet.CSW_SEARCH,"LuceneSearcher getCswServiceSpecificConstraintQuery removed security field: " + fieldName);
+//                        it.remove();
+//
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+//        END GEOCAT
         return q;
     }
 
