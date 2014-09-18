@@ -5,6 +5,7 @@
   goog.require('gn_viewer_directive');
   goog.require('gn_viewer_service');
   goog.require('gn_wmsimport_directive');
+  goog.require('gn_owscontext');
   goog.require('gn_layermanager_directive');
   goog.require('gn_baselayerswitcher_directive');
   goog.require('gn_measure_directive');
@@ -20,6 +21,7 @@
     'gn_viewer_service',
     'gn_viewer_directive',
     'gn_wmsimport_directive',
+    'gn_owscontext',
     'gn_layermanager_directive',
     'gn_baselayerswitcher_directive',
     'gn_measure_directive',
