@@ -49,7 +49,7 @@ GeoNetwork.BreadCrumb = function() {
          *            when clicking on it
          */
         setCurrent : function(crumb) {
-            if (this.current) {
+            if (this.current && !(this.current.text == crumb.text)) {
                 this.previous.push(this.current);
             }
             this.current = crumb;
