@@ -45,6 +45,7 @@
     function($scope, gnHttp, gnHttpServices, gnRegionService,
              $timeout, suggestService,$http, gnSearchSettings) {
 
+      // data store for types field
       $scope.types = ['any',
         'dataset',
         'basicgeodata',
@@ -56,6 +57,7 @@
         'service-OGC:WFS'
       ];
 
+      // data store for archives field
       $scope.archives = [{
         value: '',
         label: 'archiveincluded'
@@ -65,7 +67,7 @@
       },{
         value: 'y',
         label: 'archiveonly'
-      }]
+      }];
 
       var map = $scope.searchObj.searchMap;
 
