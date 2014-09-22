@@ -26,42 +26,71 @@
     <div class="form-group">
       <div class="col-md-offset-4">
         <button class="btn btn-default more" ng-click="advanced = !advanced" ng-class="{'backtonormal': advanced}">
-          {{ (advanced) ? 'Back to simple form' : 'Advanced form' }}
+          <i translate>{{ (advanced) ? 'simpleForm' : 'advancedForm' }}</i>
         </button>
       </div>
     </div>
 
+    <!-- Advanced search form -->
     <div class="advanced" ng-class="{ 'active': advanced }">
 
       <fieldset>
 
         <legend translate>What</legend>
 
+        <!--Title-->
         <div class="form-group">
-          <label for="keywordsF" class="col-md-4 col-sm-12 control-label" translate>Keywords</label>
+          <label for="titleF" class="col-md-4 col-sm-12 control-label" translate>title</label>
+          <div class="col-sm-8">
+            <input type="text" id="titleF" value="" class="form-control" data-ng-model="searchObj.params.title"/>
+          </div>
+        </div>
+
+        <!--Abstract-->
+        <div class="form-group">
+          <label for="abstractF" class="col-md-4 col-sm-12 control-label" translate>abstract</label>
+          <div class="col-sm-8">
+            <input type="text" id="abstractF" value="" class="form-control" data-ng-model="searchObj.params.title"/>
+          </div>
+        </div>
+
+        <!--Keywords-->
+        <div class="form-group">
+          <label for="keywordsF" class="col-md-4 col-sm-12 control-label" translate>keywords</label>
           <div class="col-sm-8">
             <input type="text" id="keywordsF" value="" class="form-control" data-ng-model="searchObj.params.keyword" gn-search-suggest="keyword" multi="true"/>
           </div>
         </div>
 
+        <!--Topic category-->
         <div class="form-group">
-          <label for="orgNameF" class="col-md-4 col-sm-12 control-label" translate>Organisation</label>
+          <label for="topiccatF" class="col-md-4 col-sm-12 control-label" translate>topiccat</label>
           <div class="col-sm-8">
-            <input type="text" id="orgNameF" value="" class="form-control" data-ng-model="orgName" gn-search-suggest="orgName"/>
+            <input type="text" id="topiccatF" value="" class="form-control" data-ng-model="searchObj.params.topicCat"/>
           </div>
         </div>
 
+        <!--Family name-->
         <div class="form-group">
-          <label for="datefromF" class="col-md-4 col-sm-12 control-label" translate>From</label>
+          <label for="creatorF" class="col-md-4 col-sm-12 control-label" translate>contact</label>
           <div class="col-sm-8">
-            <input type="date" id="datefromF" value="" class="form-control" />
+            <input type="text" id="creatorF" value="" class="form-control" data-ng-model="searchObj.params.creator"/>
           </div>
         </div>
 
+        <!--Organisation-->
         <div class="form-group">
-          <label for="categoriesF" class="col-md-4 col-sm-12 control-label" translate>Categories</label>
+          <label for="orgNameF" class="col-md-4 col-sm-12 control-label" translate>organisation</label>
           <div class="col-sm-8">
-            <input type="text" id="categoriesF" value="" class="form-control" />
+            <input type="text" id="orgNameF" value="" class="form-control" data-ng-model="searchObj.params.orgName" gn-search-suggest="orgName"/>
+          </div>
+        </div>
+
+        <!--Identifier-->
+        <div class="form-group">
+          <label for="basicidF" class="col-md-4 col-sm-12 control-label" translate>identifier</label>
+          <div class="col-sm-8">
+            <input type="text" id="basicidF" value="" class="form-control" data-ng-model="searchObj.params.basicgeodataid"/>
           </div>
         </div>
 
@@ -73,18 +102,21 @@
 
         <!-- Types Combo (from a local scope array) -->
         <div class="form-group">
-          <label for="typeF" class="col-md-4 col-sm-12 control-label" translate>Type</label>
-          <div class="col-sm-8" id="typeF">
+          <label for="typeAF" class="col-md-4 col-sm-12 control-label" translate>type</label>
+          <div class="col-sm-8" id="typeAF">
             <select class="form-control" data-ng-model="searchObj.params.type">
               <option data-ng-repeat="t in types">{{t}}</option>
             </select>
           </div>
         </div>
 
+        <!-- Archives Combo (from a local scope array) -->
         <div class="form-group">
-          <label class="col-md-4 col-sm-12 control-label" translate>Archive</label>
+          <label class="col-md-4 col-sm-12 control-label" translate>archive</label>
           <div class="col-sm-8">
-            <select class="form-control input-sm" name=""><option value=""></option></select>
+            <select class="form-control input-sm" data-ng-model="searchObj.params.historicalArchive" name="">
+              <option data-ng-repeat="a in archives" value="{{a.value}}" translate>{{a.label}}</option>
+            </select>
           </div>
         </div>
       </fieldset>
@@ -93,9 +125,9 @@
       <fieldset>
         <legend translate>Source</legend>
         <div class="form-group">
-          <label class="col-md-4 col-sm-12 control-label" translate>Source</label>
+          <label class="col-md-4 col-sm-12 control-label" translate>source</label>
           <div class="col-sm-8">
-            <select class="form-control input-sm" name=""><option value=""></option></select>
+            <select class="form-control input-sm" name="" data-ng-model="searchObj.params._catalog"><option value=""></option></select>
           </div>
         </div>
       </fieldset>
@@ -105,7 +137,7 @@
         <legend translate>When</legend>
 
         <div class="form-group">
-          <label class="col-md-4 col-sm-12 control-label" translate>Début</label>
+          <label class="col-md-4 col-sm-12 control-label" translate>from</label>
           <div class="input-group date col-sm-8" data-date="" data-date-format="dd-mm-yyyy"
             gn-bootstrap-datepicker="searchObj.params.creationDateFrom">
             <input class="form-control" type="text">
@@ -114,7 +146,7 @@
         </div>
 
         <div class="form-group">
-          <label class="col-md-4 col-sm-12 control-label" translate>Fin</label>
+          <label class="col-md-4 col-sm-12 control-label" translate>to</label>
           <div class="input-group date col-sm-8" data-date="" data-date-format="dd-mm-yyyy"
             gn-bootstrap-datepicker="searchObj.params.creationDateTo">
             <input class="form-control" type="text">
@@ -126,14 +158,16 @@
 
       <fieldset>
 
-        <legend translate>Restrict search area to</legend>
+        <legend translate>restrictArea</legend>
 
         <div class="form-group">
           <div class="col-sm-12">
             <div class="btn-group btn-group-justified">
-              <div class="btn-group"><button type="submit" class="btn btn-default btn-sm" translate>BBOX</button></div>
-              <div class="btn-group"><button type="submit" class="btn btn-default btn-sm" ng-class="{'active': administrative}" ng-click="administrative = !administrative" >Administrative</button></div>
-              <div class="btn-group"><button type="submit" class="btn btn-default btn-sm" translate>Drawing</button></div>
+              <div class="btn-group"><button type="submit" class="btn btn-default btn-sm" translate>bbox</button></div>
+              <div class="btn-group">
+                <button type="submit" class="btn btn-default btn-sm"
+                                      ng-class="{'active': administrative}" ng-click="administrative = !administrative" >AU</button></div>
+              <div class="btn-group"><button type="submit" class="btn btn-default btn-sm" translate>drawOnMap</button></div>
             </div>
           </div>
         </div>
@@ -141,7 +175,7 @@
         <div class="administrative" ng-class="{'active': administrative}">
 
           <div class="form-group">
-            <label for="cantonF" class="col-md-4 col-sm-12 control-label" translate>Cantons</label>
+            <label for="cantonF" class="col-md-4 col-sm-12 control-label" translate>cantons</label>
             <div class="col-sm-8">
               <input type="text" id="cantonF" value="" class="form-control input-sm" data-ng-model="searchObj.params.cantons" gn-region-multiselect="ocean" gn-callback="onCantonsSelect"/>
             </div>

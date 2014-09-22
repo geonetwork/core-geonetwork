@@ -103,7 +103,7 @@
    * @description
    * Add a multiselect typeahead based input for suggestion.
    * It binds a tagsinput to the input for multi select.
-   * It uses typeahead retrieve and display suggestions from the geonetwork
+   * It uses typeahead to retrieve and display suggestions from the geonetwork
    * open suggestion service `suggest`, in remote mode.
    * The index fields for the suggestion is given by the `gnSearchSuggest`
    * attribute.

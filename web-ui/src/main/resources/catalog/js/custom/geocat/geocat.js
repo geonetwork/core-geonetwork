@@ -56,6 +56,17 @@
         'service-OGC:WFS'
       ];
 
+      $scope.archives = [{
+        value: '',
+        label: 'archiveincluded'
+      }, {
+        value: 'n',
+        label: 'archiveexcluded'
+      },{
+        value: 'y',
+        label: 'archiveonly'
+      }]
+
       var map = $scope.searchObj.searchMap;
 
       gnRegionService.loadRegion('ocean', 'fre').then(
@@ -101,6 +112,7 @@
       });
 
 
+/*
       $('#categoriesF').tagsinput({
         itemValue: 'id',
         itemText: 'label'
@@ -124,6 +136,7 @@
         this.tagsinput('add', datum);
         this.tagsinput('input').typeahead('setQuery', '');
       }, $('#categoriesF')));
+*/
 
 
       // Keywords input list

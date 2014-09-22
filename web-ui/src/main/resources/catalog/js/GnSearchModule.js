@@ -22,7 +22,7 @@
   module.constant('gnViewerSettings', {});
 
   //Define the translation files to load
-  module.constant('$LOCALES', ['core']);
+  module.constant('$LOCALES', ['core', 'search']);
 
 
   module.config(['$translateProvider', '$LOCALES',
