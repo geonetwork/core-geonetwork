@@ -7868,14 +7868,14 @@ body {
 .advanced,
 .administrative {
   max-height: 0;
-  overflow-y: hidden;
+  overflow: hidden;
   transition: max-height ease 0.25s;
 }
 .basic.active,
 .advanced.active,
 .administrative.active {
   max-height: 60em;
-  overflow-y: visible;
+  overflow: visible;
 }
 .administrative.active {
   max-height: 5em;
