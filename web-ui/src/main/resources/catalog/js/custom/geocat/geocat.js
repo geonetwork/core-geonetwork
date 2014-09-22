@@ -41,9 +41,11 @@
     'suggestService',
     '$http',
     'gnSearchSettings',
+    'goDecorateInteraction',
 
     function($scope, gnHttp, gnHttpServices, gnRegionService,
-             $timeout, suggestService,$http, gnSearchSettings) {
+             $timeout, suggestService,$http, gnSearchSettings,
+             goDecorateInteraction) {
 
       // data store for types field
       $scope.types = ['any',
@@ -71,10 +73,51 @@
 
       var map = $scope.searchObj.searchMap;
 
-      gnRegionService.loadRegion('ocean', 'fre').then(
-          function (data) {
-            $scope.cantons = data;
-          });
+      /** Manage draw area on search map */
+      var feature = new ol.Feature();
+      var featureOverlay = new ol.FeatureOverlay({
+        style: gnSearchSettings.olStyles.drawBbox
+      });
+      featureOverlay.setMap(map);
+      featureOverlay.addFeature(feature);
+
+      var cleanDraw = function() {
+        featureOverlay.getFeatures().clear();
+        drawInteraction.active = false
+      };
+
+      var drawInteraction = new ol.interaction.Draw({
+        features: featureOverlay.getFeatures(),
+        type: 'Polygon',
+        style: gnSearchSettings.olStyles.drawBbox
+      });
+      drawInteraction.on('drawend', function(){
+        setTimeout(function() {
+          drawInteraction.active = false;
+        }, 0);
+      });
+      drawInteraction.on('drawstart', function(){
+        featureOverlay.getFeatures().clear();
+      });
+      goDecorateInteraction(drawInteraction, map);
+
+      $scope.$watch('restrictArea', function(v){
+        if(angular.isDefined(v)) {
+          if($scope.restrictArea == 'draw') {
+            drawInteraction.active = true;
+          }
+          else {
+            cleanDraw();
+          }
+        }
+      });
+
+      /** When we switch between simple and advanced form*/
+      $scope.$watch('advanced', function(v){
+        if(v == false) {
+          $scope.restrictArea = '';
+        }
+      });
 
       /** Manage cantons selection (add feature to the map) */
       var cantonSource = new ol.source.Vector();

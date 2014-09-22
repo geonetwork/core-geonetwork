@@ -53,9 +53,7 @@
    * The server list is given in global properties.
    */
   module.service('gnMeasure', [
-    'goDecorateLayer',
-    'goDecorateInteraction',
-    function(goDecorateLayer, goDecorateInteraction) {
+    function() {
 
       var mInteraction, updateMeasuresFn, distFeature, areaFeature;
       var options = {
