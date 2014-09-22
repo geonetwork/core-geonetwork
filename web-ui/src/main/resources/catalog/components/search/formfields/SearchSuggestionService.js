@@ -6,8 +6,8 @@
   .service('suggestService', [
         'gnHttpServices',
         'gnUrlUtils',
-
-        function(gnHttpServices, gnUrlUtils) {
+        '$http',
+        function(gnHttpServices, gnUrlUtils, $http) {
 
           this.getUrl = function(filter, field, sortBy) {
             return gnUrlUtils.append(gnHttpServices.suggest,
@@ -31,6 +31,21 @@
                   type: type
                 })
             );
+          };
+
+          /**
+           * Return suggestion for field 'any'
+           * @param val
+           * @returns {*}
+           */
+          this.getAnySuggestions = function(val) {
+            var url = this.getUrl(val, 'anylight',
+                ('STARTSWITHFIRST'));
+
+            return $http.get(url, {
+            }).then(function(res){
+              return res.data[1];
+            });
           };
 
 

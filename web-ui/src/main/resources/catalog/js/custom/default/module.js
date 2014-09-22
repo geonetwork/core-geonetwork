@@ -55,16 +55,6 @@
       };
 
 ///////////////////////////////////////////////////////////////////
-      $scope.getAnySuggestions = function(val) {
-        var url = suggestService.getUrl(val, 'anylight',
-            ('STARTSWITHFIRST'));
-
-        return $http.get(url, {
-        }).then(function(res){
-          return res.data[1];
-        });
-      };
-
       $scope.$watch('searchObj.advancedMode', function(val) {
         if(val && (searchMap.getSize()[0] == 0 || searchMap.getSize()[1] == 0)){
           setTimeout(function(){

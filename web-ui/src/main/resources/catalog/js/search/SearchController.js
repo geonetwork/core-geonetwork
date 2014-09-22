@@ -15,8 +15,9 @@
    */
   module.controller('GnSearchController', [
     '$scope',
+    'suggestService',
     'gnSearchSettings',
-    function($scope, gnSearchSettings) {
+    function($scope, suggestService, gnSearchSettings) {
 
       /** Object to be shared through directives and controllers */
       $scope.searchObj = {
@@ -32,6 +33,11 @@
 
       /* Default result view template */
       $scope.resultTemplate = gnSearchSettings.resultViewTpls[1].tplUrl;
+
+      $scope.getAnySuggestions = function(val) {
+        return suggestService.getAnySuggestions(val);
+      };
+
 
     }]);
 })();
