@@ -1,0 +1,25 @@
+{
+  "source": "Catalogue(s)",
+  "title": "Title",
+  "abstract": "Abstract",
+  "topiccat": "Topic(s)",
+  "cantons": "Canton(s)",
+  "contact": "Contact",
+  "identifier": "Identifier",
+  "type": "Type",
+  "archive": "Archive",
+  "archiveincluded": "Include archived",
+  "archiveexcluded": "Exclude archived",
+  "archiveonly": "Archived only",
+  "What": "What ?",
+  "When": "When ?",
+  "Where": "Where ?",
+  "recordType": "Record type ?",
+  "bbox": "bbox",
+  "AU": "Administrative units",
+  "drawOnMap": "Draw on map",
+  "advancedForm": "Show advanced options",
+  "simpleForm": "Hide advanced options",
+  "restrictArea": "Restrict search area to"
+
+}
