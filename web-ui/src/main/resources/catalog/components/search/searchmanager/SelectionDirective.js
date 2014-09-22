@@ -18,7 +18,7 @@
 
         // initial state
         gnHttp.callService('mdSelect', {}).success(function(res) {
-          scope.selectedCount = parseInt(res[0], 10);
+          scope.searchResults.selectedCount = parseInt(res[0], 10);
         });
 
         var updateCkb = function(records) {
@@ -55,7 +55,7 @@
               selected: selected ? 'add' : 'remove',
               id: record.getUuid()
             }).success(function(res) {
-              scope.selectedCount = parseInt(res[0], 10);
+              scope.searchResults.selectedCount = parseInt(res[0], 10);
             });
           });
         };
@@ -64,7 +64,7 @@
           gnHttp.callService('mdSelect', {
             selected: 'add-all'
           }).success(function(res) {
-            scope.selectedCount = parseInt(res[0], 10);
+            scope.searchResults.selectedCount = parseInt(res[0], 10);
             scope.searchResults.records.forEach(function(record) {
               record['geonet:info'].selected = true;
             });
@@ -75,7 +75,7 @@
           gnHttp.callService('mdSelect', {
             selected: 'remove-all'
           }).success(function(res) {
-            scope.selectedCount = parseInt(res[0], 10);
+            scope.searchResults.selectedCount = parseInt(res[0], 10);
             scope.searchResults.records.forEach(function(record) {
               record['geonet:info'].selected = false;
             });
@@ -98,7 +98,7 @@
             selected: element[0].checked ? 'add' : 'remove',
             id: scope.md.getUuid()
           }).success(function(res) {
-            scope.selectedCount = parseInt(res[0], 10);
+            scope.searchResults.selectedCount = parseInt(res[0], 10);
           });
         };
 
