@@ -25,7 +25,7 @@
      <label>Transparence <input type="range" min="0" max="1" step="0.05" ng-model="layer.opacity" /></label>
      <h6 ng-if="layer.get('legend')">Légende</h6>
      <p ng-if="layer.get('legend')">
-       <img src="{{layer.get('legend')}}"/>
+       <img ng-src="{{layer.get('legend')}}"/>
      </p>
      <h6 ng-if="layer.get('attribution')">Source</h6>
      <p ng-if="layer.get('attribution')"><em>{{layer.get('attribution')}}</em></p>
