@@ -130,6 +130,22 @@
   }
 }
 
+[gn-selection-widget] {
+  display: inline-block;
+  position: relative;
+  .md-checkbox {
+    position: absolute;
+    z-index: 10;
+    top: 1.3em;
+    left: 0.9em;
+  }
+  .btn-group [type=checkbox] {
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+
 [search-results] {
   h4 {
     font-size: 15px;

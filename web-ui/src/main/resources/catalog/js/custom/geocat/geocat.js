@@ -4,8 +4,13 @@
 
   goog.require('gn_search');
   goog.require('gn_search_geocat_config');
+  goog.require('gn_selection_directive');
 
-  var module = angular.module('gn_search_geocat', ['gn_search', 'gn_search_geocat_config']);
+  var module = angular.module('gn_search_geocat', [
+    'gn_search',
+    'gn_search_geocat_config',
+    'gn_selection_directive'
+  ]);
 
   /**
    * @ngdoc controller

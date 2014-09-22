@@ -221,6 +221,7 @@
     getRelations: 'md.relations@json',
     suggestionsList: 'md.suggestion@json',
     getValidation: 'md.validate@json',
+    mdSelect: 'metadata.select@json', // TODO: CHANGE
 
     processMd: 'md.processing',
     processAll: 'md.processing.batch',

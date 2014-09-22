@@ -1,0 +1,14 @@
+<input type="checkbox" class="md-checkbox"/>
+<div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    <input type="checkbox"> <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li ng-show="selectedCount > 0"><a href="#">{{selectedCount}} selected</a></li>
+    <li class="divider" ng-show="selectedCount > 0"></li>
+    <li><a href="#" ng-click="selectAllInPage(true)" translate>Select All in page</a></li>
+    <li><a href="" ng-click="selectAll()" translate>Select All</a></li>
+    <li class="divider"></li>
+    <li><a href="" ng-click="unSelectAll()" translate>Empty selection</a></li>
+  </ul>
+</div>

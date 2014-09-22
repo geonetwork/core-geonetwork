@@ -4,14 +4,16 @@
 
     <div class="media col-md-8 col-sm-12">
 
-      <a class="pull-left">
-        <img ng-src="../../images/logos/{{md.source}}.gif" class="media-object"/>
-      </a>
 
       <div class="media-body">
         <h4>
+          <input gn-selection-md type="checkbox" ng-model="md['geonet:info'].selected" ng-change="change()"/>
           {{md.title || md.defaultTitle}}
         </h4>
+
+        <a class="pull-left">
+          <img ng-src="../../images/logos/{{md.source}}.gif" class="media-object"/>
+        </a>
         <p class="text-justify">{{md.abstract}}</p>
         <p ng-if="md.getContacts().resource"><em><strong>Contact: </strong> {{md.getContacts().resource}}</em></p>
       </div>
