@@ -120,12 +120,7 @@
       });
 
       /** Manage cantons selection (add feature to the map) */
-      var cantonSource = new ol.source.Vector();
       var nbCantons = 0;
-      var cantonVector = new ol.layer.Vector({
-        source: cantonSource,
-        style: gnSearchSettings.olStyles.drawBbox
-      });
       var addCantonFeature = function(id) {
         var url = 'http://www.geocat.ch/geonetwork/srv/eng/region.geom.wkt?id=kantone:'+id+'&srs=EPSG:3857';
         var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
@@ -134,22 +129,26 @@
         return $http.get(proxyUrl).success(function(wkt) {
           var parser = new ol.format.WKT();
           var feature = parser.readFeature(wkt);
-          cantonSource.addFeature(feature);
+          featureOverlay.getFeatures().push(feature);
         });
       };
-      map.addLayer(cantonVector);
 
       // Request cantons geometry and zoom to extent when
       // all requests respond.
       $scope.$watch('searchObj.params.cantons', function(v){
-        cantonSource.clear();
+        featureOverlay.getFeatures().clear();
         if(angular.isDefined(v) && v != '') {
           var cs = v.split(',');
           for(var i=0; i<cs.length;i++) {
             var id = cs[i].split('#')[1];
             addCantonFeature(Math.floor((Math.random() * 10) + 1)).then(function(){
               if(--nbCantons == 0) {
-                map.getView().fitExtent(cantonSource.getExtent(), map.getSize());
+                var features = featureOverlay.getFeatures();
+                var extent = features.item(0).getGeometry().getExtent();
+                features.forEach(function(f) {
+                  ol.extent.extend(extent, f.getGeometry().getExtent());
+                });
+                map.getView().fitExtent(extent, map.getSize());
               }
             });
           }

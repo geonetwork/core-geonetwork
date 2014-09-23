@@ -1,8 +1,9 @@
 (function() {
+
   goog.provide('gn_map_field_directive');
 
-  angular.module('gn_map_field_directive', [
-  ])
+  angular.module('gn_map_field_directive', [])
+
       .directive('gnMapField', [
         'gnMap',
         function(gnMap) {
@@ -24,7 +25,9 @@
               }
             }
           };
-        }])
+        }
+      ])
+
       .directive('gnDrawBboxBtn', [
         'goDecorateInteraction',
         '$parse',
@@ -79,5 +82,6 @@
               })
             }
           };
-        }])
+        }
+      ])
 })();
