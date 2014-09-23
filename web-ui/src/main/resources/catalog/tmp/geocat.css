@@ -7874,7 +7874,7 @@ body {
 .basic.active,
 .advanced.active,
 .administrative.active {
-  max-height: 60em;
+  max-height: 70em;
   overflow: visible;
 }
 .administrative.active {
