@@ -7917,6 +7917,8 @@ select[multiple].geocat-search select {
 }
 .geocat-search .bootstrap-tagsinput {
   padding: 0;
+}
+.geocat-search .advanced .bootstrap-tagsinput {
   margin-bottom: 0;
 }
 .geocat-search .tt-dropdown-menu {
@@ -7927,6 +7929,16 @@ select[multiple].geocat-search select {
   font-style: italic;
   padding-top: .4em;
   margin-bottom: 12px;
+}
+.geocat-search .bootstrap-tagsinput .label {
+  background-color: #428bca;
+  font-size: 12px;
+  font-weight: normal;
+  margin: 2px;
+}
+.geocat-search .bootstrap-tagsinput .label[href]:hover,
+.geocat-search .bootstrap-tagsinput .label[href]:focus {
+  background-color: #3071a9;
 }
 [search-results] .list-group-item.row {
   margin-left: 0;

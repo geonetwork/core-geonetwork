@@ -194,7 +194,6 @@
     });
 
     $scope.triggerSearch = this.triggerSearch;
-    $scope.resetSearch = this.resetSearch;
   };
 
   searchFormController['$inject'] = [
@@ -212,7 +211,13 @@
         restrict: 'A',
         scope: true,
         controller: searchFormController,
+        controllerAs: 'controller',
         link: function(scope, element, attrs) {
+
+          scope.resetSearch = function() {
+            scope.controller.resetSearch();
+            $('.geocat-search').find('.bootstrap-tagsinput .tag').remove();
+          };
 
           if (attrs.runsearch) {
 
