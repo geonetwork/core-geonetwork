@@ -1,0 +1,41 @@
+<rdf:RDF 
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:skos="http://www.w3.org/2004/02/skos/core#">
+
+    <!-- term with broader term with broader term -->
+
+    <skos:Concept rdf:about="http://www.my.com/#sea_surface_temperature">
+        <skos:prefLabel xml:lang="en">sea surface temperature</skos:prefLabel>
+        <skos:broader rdf:resource="http://www.my.com/#ocean_temperature"/>
+    </skos:Concept>
+
+    <skos:Concept rdf:about="http://www.my.com/#ocean_temperature">
+        <skos:prefLabel xml:lang="en">ocean temperature</skos:prefLabel>
+        <skos:broader rdf:resource="http://www.my.com/#ocean"/>
+        <skos:narrower rdf:resource="http://www.my.com/#sea_surface_temperature"/>
+    </skos:Concept>
+
+    <skos:Concept rdf:about="http://www.my.com/#ocean">
+        <skos:prefLabel xml:lang="en">ocean</skos:prefLabel>
+        <skos:narrower rdf:resource="http://www.my.com/#ocean_temperature"/>
+    </skos:Concept>
+
+    <!-- term with two broader terms -->
+
+    <skos:Concept rdf:about="http://www.my.com/#air_sea_flux">
+        <skos:prefLabel xml:lang="en">air sea flux</skos:prefLabel>
+        <skos:broader rdf:resource="http://www.my.com/#physical_air"/>
+        <skos:broader rdf:resource="http://www.my.com/#physical_water"/>
+    </skos:Concept>
+
+    <skos:Concept rdf:about="http://www.my.com/#physical_air">
+        <skos:prefLabel xml:lang="en">physical - air</skos:prefLabel>
+        <skos:narrower rdf:resource="http://www.my.com/#air_sea_flux"/>
+    </skos:Concept>
+
+    <skos:Concept rdf:about="http://www.my.com/#physical_water">
+        <skos:prefLabel xml:lang="en">physical - water</skos:prefLabel>
+        <skos:narrower rdf:resource="http://www.my.com/#air_sea_flux"/>
+    </skos:Concept>
+
+</rdf:RDF>

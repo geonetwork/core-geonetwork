@@ -26,6 +26,7 @@ package org.fao.geonet.services.thesaurus;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
@@ -35,6 +36,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.ThesaurusActivationRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
@@ -78,7 +80,8 @@ public class Add extends NotInReadOnlyModeService {
 		
 		File rdfFile = new File(filePath);
         final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
-        Thesaurus thesaurus = new Thesaurus(context.getApplicationContext(), fname, tname, tnamespace, type, dname, rdfFile, siteURL, false);
+        final IsoLanguagesMapper isoLanguageMapper = context.getBean(IsoLanguagesMapper.class);
+        Thesaurus thesaurus = new Thesaurus(isoLanguageMapper, fname, tname, tnamespace, type, dname, rdfFile, siteURL, false);
 		tm.addThesaurus(thesaurus, true);
 
 		// Save activated status in the database

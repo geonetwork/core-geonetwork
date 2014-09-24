@@ -26,6 +26,14 @@ public class SingleThesaurusFinder implements ThesaurusFinder {
     }
 
     @Override
+    public Thesaurus getThesaurusByConceptScheme(String conceptSchemeUri) {
+        if (thesaurus.hasConceptScheme(conceptSchemeUri)) {
+            return thesaurus;
+        }
+        return null;
+    }
+
+    @Override
     public Map<String, Thesaurus> getThesauriMap() {
         return Collections.singletonMap(thesaurus.getKey(), thesaurus);
     }

@@ -27,9 +27,11 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.OperationAbortedEx;
+
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.utils.*;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
@@ -37,6 +39,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -247,7 +250,8 @@ public class Upload implements Service {
 					newFile));
 
             final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
-            Thesaurus gst = new Thesaurus(context.getApplicationContext(), fname, type, dir, newFile, siteURL);
+            final IsoLanguagesMapper isoLanguageMapper = context.getBean(IsoLanguagesMapper.class);
+            Thesaurus gst = new Thesaurus(isoLanguageMapper, fname, type, dir, newFile, siteURL);
 			thesaurusMan.addThesaurus(gst, false);
 		} else {
 			IO.delete(rdfFile, false, Geonet.THESAURUS);

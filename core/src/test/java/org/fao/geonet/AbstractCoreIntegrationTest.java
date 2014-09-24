@@ -1,14 +1,28 @@
 package org.fao.geonet;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.TreeTraverser;
-import com.google.common.io.Files;
-import com.vividsolutions.jts.geom.MultiPolygon;
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.net.URL;
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.sql.DataSource;
+
 import jeeves.constants.ConfigFile;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.ServiceRequest;
+
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
@@ -20,6 +34,7 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
@@ -53,21 +68,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Constructor;
-import java.net.URL;
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.sql.DataSource;
-
-import static org.junit.Assert.assertTrue;
+import com.google.common.collect.Lists;
+import com.google.common.collect.TreeTraverser;
+import com.google.common.io.Files;
+import com.vividsolutions.jts.geom.MultiPolygon;
 
 /**
  * A helper class for testing services.  This super-class loads in the spring beans for Spring-data repositories and mocks for
@@ -77,7 +81,10 @@ import static org.junit.Assert.assertTrue;
  * Date: 10/12/13
  * Time: 8:31 PM
  */
-@ContextConfiguration(inheritLocations = true, locations = "classpath:core-repository-test-context.xml")
+@ContextConfiguration(
+    inheritLocations = true,
+    locations = {"classpath:core-repository-test-context.xml", "classpath:web-test-context.xml"}
+)
 public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest {
     private static final String DATA_DIR_LOCK_NAME = "lock";
     @Autowired
@@ -159,6 +166,10 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
         _directoryFactory.resetIndex();
 
+        ThesaurusManager thesaurusManager = _applicationContext.getBean(ThesaurusManager.class);
+        ServiceContext context = createServiceContext();
+        thesaurusManager.init(context, webappDir, "WEB-INF/data/config/codelist");
+
         final String schemaPluginsDir = geonetworkDataDirectory.getSchemaPluginsDir().getPath();
 
         final String resourcePath = geonetworkDataDirectory.getResourcesDir().getPath();
@@ -170,7 +181,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
             final String schemaPluginsCatalogFile = new File(schemaPluginsDir, "/schemaplugin-uri-catalog.xml").getPath();
             deploySchema(webappDir, schemaPluginsDir);
 
-            _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
+            _applicationContext.getBean(LuceneConfig.class).configure(getTestResourceDir(), "WEB-INF/config-lucene.xml");
             SchemaManager.registerXmlCatalogFiles(webappDir, schemaPluginsCatalogFile);
 
             schemaManager.configure(_applicationContext, webappDir, resourcePath,
@@ -456,6 +467,15 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         }
 
         return new File(here.getParentFile(), "web/src/main/webapp/").getAbsolutePath() + File.separator;
+    }
+
+    /**
+     * Look up the test resources directory.
+     *
+     * @return
+     */
+    private String getTestResourceDir() {
+        return getClass().getResource("/").getFile();
     }
 
     protected static File getClassFile(Class<?> cl) {

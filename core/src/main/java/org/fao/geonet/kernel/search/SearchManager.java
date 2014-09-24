@@ -21,11 +21,32 @@
 //==============================================================================
 
 package org.fao.geonet.kernel.search;
-import com.google.common.collect.Lists;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.index.SpatialIndex;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.Vector;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import jeeves.server.context.ServiceContext;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
@@ -59,8 +80,9 @@ import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.search.LuceneConfig.FacetConfig;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
+import org.fao.geonet.kernel.search.classifier.Classifier;
+import org.fao.geonet.kernel.search.facet.Dimension;
 import org.fao.geonet.kernel.search.function.DocumentBoosting;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
 import org.fao.geonet.kernel.search.index.IndexInformation;
@@ -97,30 +119,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 
-import java.io.File;
-
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.Vector;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import com.google.common.collect.Lists;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.index.SpatialIndex;
 
 /**
  * Indexes metadata using Lucene.
@@ -138,11 +140,8 @@ public class SearchManager {
 	private static final Configuration FILTER_1_0_0 = new org.geotools.filter.v1_0.OGCConfiguration();
     private static final Configuration FILTER_1_1_0 = new org.geotools.filter.v1_1.OGCConfiguration();
     private static final Configuration FILTER_2_0_0 = new org.geotools.filter.v2_0.FESConfiguration();
-    public static final String FACET_FIELD_SUFFIX = "_facet";
-
     private File _stylesheetsDir;
     private static File _stopwordsDir;
-	Map<String, FacetConfig> _summaryConfigValues = null;
 
     /**
      * Used when adding documents to the Lucene index.
@@ -508,7 +507,6 @@ public class SearchManager {
      */
 	public void init(boolean logAsynch, boolean logSpatialObject, String luceneTermsToExclude,
                      int maxWritesInTransaction) throws Exception {
-        _summaryConfigValues = _luceneConfig.getTaxonomy().get("hits");
 
         String appPath = _geonetworkDataDirectory.getWebappDir();
 		_stylesheetsDir = new File(appPath, SEARCH_STYLESHEETS_DIR_PATH);
@@ -1459,14 +1457,13 @@ public class SearchManager {
                 boolean bIndex = sIndex != null && sIndex.equals("true");
                 boolean token = _luceneConfig.isTokenizedField(name);
                 boolean isNumeric = _luceneConfig.isNumericField(name);
-                boolean isFacetField = _luceneConfig.isFacetField(name);
 
                 FieldType fieldType = new FieldType();
                 fieldType.setStored(bStore);
                 fieldType.setIndexed(bIndex);
                 fieldType.setTokenized(token);
                 Field f;
-                Field fForFacet = null;
+                List<Field> fFacets = new ArrayList<Field>();
                 if (isNumeric) {
                     try {
                         f = addNumericField(name, string, fieldType);
@@ -1485,14 +1482,8 @@ public class SearchManager {
                         continue;
                     }
                 } else {
-                    // TODO: Can we use the same field for facet and search ?
-                    if (isFacetField) {
-                        fForFacet = new FacetField(name + FACET_FIELD_SUFFIX, string);
-                        if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-                            Log.debug(Geonet.INDEX_ENGINE, "Facet field: " + fForFacet.toString());
-                        }
-                    }
                     f = new Field(name, string, fieldType);
+                    fFacets.addAll(getFacetFieldsFor(name, string));
                 }
 
                 // As of lucene 4.0 to boost a document all field boosts must be premultiplied by documentBoost
@@ -1510,10 +1501,14 @@ public class SearchManager {
                         f.setBoost(documentBoost);
                     }
                 }
-                if(fForFacet != null) {
-                    doc.add(fForFacet);
-                }
                 doc.add(f);
+
+                for (Field fFacet: fFacets) {
+                    if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
+                        Log.debug(Geonet.INDEX_ENGINE, "Facet field: " + fFacet.toString());
+                    }
+                   doc.add(fFacet);
+                }
             }
         }
         
@@ -1522,8 +1517,29 @@ public class SearchManager {
         }
         
         return new IndexInformation(language, doc, categories);
+    }
 
-	}
+    private List<Field> getFacetFieldsFor(String indexKey, String value) {
+        List<Field> result = new ArrayList<Field>();
+
+        for (Dimension dimension : _luceneConfig.getDimensionsUsing(indexKey)) {
+            result.addAll(getFacetFieldsFor(dimension, value));
+        }
+
+        return result;
+    }
+
+    private List<Field> getFacetFieldsFor(Dimension dimension, String value) {
+        List<Field> result = new ArrayList<Field>();
+
+        Classifier classifier = dimension.getClassifier();
+
+        for (CategoryPath categoryPath: classifier.classify(value)) {
+            result.add(new FacetField(dimension.getName(), categoryPath.components));
+        }
+
+        return result;
+    }
 
 	/**
 	 * Creates Lucene numeric field.

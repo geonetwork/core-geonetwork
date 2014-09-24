@@ -26,20 +26,21 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
+
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.Util;
+
 import jeeves.xlink.Processor;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.oaipmh.Lib;
-
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.MetadataRepository;
 import org.jdom.Element;
-
 import org.openrdf.sesame.Sesame;
 import org.openrdf.sesame.config.ConfigurationException;
 import org.openrdf.sesame.config.RepositoryConfig;
@@ -57,7 +58,6 @@ import java.io.OutputStream;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -236,10 +236,10 @@ public class ThesaurusManager implements ThesaurusFinder {
                     continue;
                 }
 
-                gst = new Thesaurus(context.getApplicationContext(), aRdfDataFile, root, thesauriDirectory.getName(), outputRdf, siteURL);
+                gst = new Thesaurus(getIsoLanguagesMapper(context), aRdfDataFile, root, thesauriDirectory.getName(), outputRdf, siteURL);
 
             } else {
-                gst = new Thesaurus(context.getApplicationContext(), aRdfDataFile, root, thesauriDirectory.getName(), new File(thesauriDirectory, aRdfDataFile), siteURL);
+                gst = new Thesaurus(getIsoLanguagesMapper(context), aRdfDataFile, root, thesauriDirectory.getName(), new File(thesauriDirectory, aRdfDataFile), siteURL);
             }
 
             try {
@@ -368,7 +368,26 @@ public class ThesaurusManager implements ThesaurusFinder {
     @Override
     public Thesaurus getThesaurusByName(String thesaurusName) {
 		return thesauriMap.get(thesaurusName);
-	}	
+	}
+
+	@Override
+	public Thesaurus getThesaurusByConceptScheme(String uri) {
+		
+		for (Map.Entry<String, Thesaurus> entry : thesauriMap.entrySet()) {
+			try {
+				Thesaurus thesaurus = entry.getValue();
+				
+				if (thesaurus.hasConceptScheme(uri)) {
+					return thesaurus;
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return null;	
+	}
 
 	/**
 	 * @param name
@@ -397,7 +416,7 @@ public class ThesaurusManager implements ThesaurusFinder {
         String thesaurusFile = buildThesaurusFilePath(aRdfDataFile, root, type);
         File outputRdf = new File(thesaurusFile);
         final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
-        Thesaurus gst = new Thesaurus(context.getApplicationContext(), aRdfDataFile, root, type, outputRdf, siteURL);
+        Thesaurus gst = new Thesaurus(getIsoLanguagesMapper(context), aRdfDataFile, root, type, outputRdf, siteURL);
 
 		FileOutputStream outputRdfStream = null;
 		try {
@@ -427,5 +446,9 @@ public class ThesaurusManager implements ThesaurusFinder {
 
 		return theKey;
 	}
+
+    private IsoLanguagesMapper getIsoLanguagesMapper(ServiceContext context) {
+        return context.getBean(IsoLanguagesMapper.class);
+    }
 
 }
