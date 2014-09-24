@@ -535,7 +535,6 @@ public class Save implements Service {
         addElementFromXPath(editLib, metadataSchema, conformanceResult,
                 "gmd:pass", pass);
 
-
         Element explanation = new Element("explanation", GMD).addContent(
                 new Element("CharacterString", GCO).setText(conformityJson.optString(JSON_CONFORMITY_EXPLANATION, ""))
         );
@@ -582,10 +581,12 @@ public class Save implements Service {
 
         updateDate(editLib, metadataSchema, identification, "gmd:citation/gmd:CI_Citation/gmd:date", identificationJson);
 
-        String citationIdentifier = identificationJson.optString(JSON_IDENTIFICATION_IDENTIFIER, "");
-        updateCharString(editLib, identification, metadataSchema,
-                "gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code", citationIdentifier);
-
+        final String identificationType = identificationJson.optString(JSON_IDENTIFICATION_TYPE, JSON_IDENTIFICATION_TYPE_DATA_VALUE);
+        if (identificationType.equals(JSON_IDENTIFICATION_TYPE_DATA_VALUE)) {
+            String citationIdentifier = identificationJson.optString(JSON_IDENTIFICATION_IDENTIFIER, "");
+            updateCharString(editLib, identification, metadataSchema,
+                    "gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code", citationIdentifier);
+        }
         updateTranslatedInstance(mainLang, editLib, metadataSchema, identification, identificationJson.optJSONObject(JSON_IDENTIFICATION_ABSTRACT),
                 "gmd:abstract", "abstract", GMD);
 
@@ -595,7 +596,6 @@ public class Save implements Service {
         updateCharString(editLib, identification, metadataSchema, "gmd:language", identificationJson.optString(JSON_LANGUAGE));
 
         updateKeywords(context, editLib, metadataSchema, identification, identificationJson);
-        final String identificationType = identificationJson.optString(JSON_IDENTIFICATION_TYPE, JSON_IDENTIFICATION_TYPE_DATA_VALUE);
         if (identificationType.equals(JSON_IDENTIFICATION_TYPE_DATA_VALUE)) {
             updateTopicCategory(editLib, metadataSchema, identification, identificationJson);
         }

@@ -47,6 +47,7 @@ import static org.fao.geonet.kernel.search.spatial.Pair.read;
 import static org.fao.geonet.services.metadata.inspire.Save.NS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class SaveTest {
@@ -260,6 +261,7 @@ public class SaveTest {
         )), context);
 
         savedMd = service.getSavedMetadata();
+        assertNull(Xml.selectElement(savedMd, "gmd:identificationInfo//gmd:citation/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code"));
         serviceTypeNodes = Xml.selectNodes(savedMd, "gmd:identificationInfo//srv:serviceType/gco:LocalName", NS);
         assertEquals(1, serviceTypeNodes.size());
         assertEquals("discovery", ((Element)serviceTypeNodes.get(0)).getText());
