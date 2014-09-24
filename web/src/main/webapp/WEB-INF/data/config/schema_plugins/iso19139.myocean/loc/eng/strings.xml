@@ -22,6 +22,9 @@
     <orgOriginator>Production center</orgOriginator>
     <orgCustodian>Product manager</orgCustodian>
     <orgServiceDesk>Local service desk</orgServiceDesk>
+    <orgProductionUnit>Production unit</orgProductionUnit>
+    <orgDisseminationUnit>Dissemination unit</orgDisseminationUnit>
+    
     <slidingWindow>Sliding window of updates</slidingWindow>
     <unknown>Unknown</unknown>
     

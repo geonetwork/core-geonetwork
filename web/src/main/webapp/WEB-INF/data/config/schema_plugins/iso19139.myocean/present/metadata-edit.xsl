@@ -1330,6 +1330,52 @@
 					</xsl:call-template>
 				</xsl:for-each>
 				
+				<!-- production unit -->
+				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
+					gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='resourceProvider']">
+					
+					<xsl:variable name="id" select="concat('myocean-org-', generate-id(.))"/>
+					
+					<xsl:call-template name="complexElementGuiWrapper">
+						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/orgProductionUnit"/>
+						<xsl:with-param name="id" select="$id"/>
+						<xsl:with-param name="content">
+							<span class="buttons">
+								<a class="small del" href="javascript:void(0);" 
+									onclick="doRemoveElementActionSimple('metadata.elem.delete.new', {geonet:element/@ref}, {../geonet:element/@ref}, '{$id}');"><span>  Remove</span></a>
+							</span>
+							
+							<xsl:apply-templates mode="iso19139.myocean" select=".">
+								<xsl:with-param name="schema" select="$schema"/>
+								<xsl:with-param name="edit"   select="$edit"/>
+							</xsl:apply-templates>
+						</xsl:with-param>
+					</xsl:call-template>
+				</xsl:for-each>
+				
+				<!-- Dissemination unit -->
+				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
+					gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='distribution']">
+					
+					<xsl:variable name="id" select="concat('myocean-org-', generate-id(.))"/>
+					
+					<xsl:call-template name="complexElementGuiWrapper">
+						<xsl:with-param name="title" select="/root/gui/schemas/*[name()=$schema]/strings/orgDisseminationUnit"/>
+						<xsl:with-param name="id" select="$id"/>
+						<xsl:with-param name="content">
+							<span class="buttons">
+								<a class="small del" href="javascript:void(0);" 
+									onclick="doRemoveElementActionSimple('metadata.elem.delete.new', {geonet:element/@ref}, {../geonet:element/@ref}, '{$id}');"><span>  Remove</span></a>
+							</span>
+							
+							<xsl:apply-templates mode="iso19139.myocean" select=".">
+								<xsl:with-param name="schema" select="$schema"/>
+								<xsl:with-param name="edit"   select="$edit"/>
+							</xsl:apply-templates>
+						</xsl:with-param>
+					</xsl:call-template>
+				</xsl:for-each>				
+				
 				<xsl:if test="$edit">
 					<xsl:copy-of select="geonet:makeSubTemplateButton(gmd:identificationInfo/gmd:MD_DataIdentification/geonet:element/@ref, 
 						'gmd:pointOfContact', 
