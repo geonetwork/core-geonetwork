@@ -1355,7 +1355,7 @@
 				
 				<!-- Dissemination unit -->
 				<xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/
-					gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='distribution']">
+					gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='distributor']">
 					
 					<xsl:variable name="id" select="concat('myocean-org-', generate-id(.))"/>
 					
