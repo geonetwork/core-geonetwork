@@ -71,9 +71,9 @@ public class GetEditModel implements Service {
     static {
         try {
             final JSONObject option = new JSONObject();
-            option.put("ger", "VERORDNUNG (EG) NR. 1089/2010 DER KOMMISSION VOM 23. NOVEMBER 2010 ZUR DURCHFÜHRUNG DER RICHTLINIE " +
-                              "2007/2/EG DES EUROPÄISCHEN PARLAMENTS UND DES RATES HINSICHTLICH DER INTEROPERABILITÄT VON " +
-                              "GEODATENSÄTZEN UND -DIENSTEN");
+            option.put("ger", "VERORDNUNG (EG) Nr. 1089/2010 DER KOMMISSION vom 23. November 2010 zur Durchführung " +
+                              "der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität " +
+                              "von Geodatensätzen und -diensten");
             option.put("eng", "COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing " +
                               "Directive 2007/2/EC of the European Parliament and of the Council as regards " +
                               "interoperability of spatial data sets and services");
@@ -266,6 +266,7 @@ public class GetEditModel implements Service {
             title.put("ita", "Nuovo");
             newObject.put(Save.JSON_TITLE, title);
             newObject.put(Save.JSON_CONFORMITY_SCOPE_CODE , "");
+            newObject.put(Save.JSON_CONFORMITY_LEVEL_DESC, "");
             newObject.put(Save.JSON_CONFORMITY_EXPLANATION, "");
             newObject.put(Save.JSON_CONFORMITY_PASS, "");
             allConformanceResults.put(newObject);
@@ -304,14 +305,43 @@ public class GetEditModel implements Service {
                 Save.JSON_TITLE, "gmd:specification/gmd:CI_Citation/gmd:title");
         conformityJson.put(Save.JSON_CONFORMITY_IS_TITLE_SET, hasTitle);
 
+        if (hasTitle) {
+            addConformityTitleTranslations(conformityJson);
+        }
+
         addConformityDate(conformityJson);
 
         addValue(conformanceResult, conformityJson, Save.JSON_CONFORMITY_PASS, "gmd:pass/gco:Boolean");
         addValue(conformanceResult, conformityJson, Save.JSON_CONFORMITY_EXPLANATION, "gmd:explanation/gco:CharacterString");
         final String scopeCodeXPath = "gmd:scope/gmd:DQ_Scope/gmd:level/gmd:MD_ScopeCode/@codeListValue";
         addValue(getDataQualityEl(conformanceResult), conformityJson, Save.JSON_CONFORMITY_SCOPE_CODE, scopeCodeXPath, "");
+        String levelDescXPath = "gmd:scope/gmd:DQ_Scope/gmd:levelDescription/gmd:MD_ScopeDescription/gmd:other/gco:CharacterString";
+        addValue(getDataQualityEl(conformanceResult), conformityJson, Save.JSON_CONFORMITY_LEVEL_DESC, levelDescXPath, "");
 
         return conformityJson;
+    }
+
+    private void addConformityTitleTranslations(JSONObject conformityJson) throws JSONException {
+        final JSONObject titles = conformityJson.getJSONObject(Save.JSON_TITLE);
+
+        final Iterator keys = titles.keys();
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
+            final String title = titles.getString(key);
+            final int length = CONFORMITY_TITLE_OPTIONS.length();
+            for (int i = 0; i < length; i++) {
+                final JSONObject titleOption = CONFORMITY_TITLE_OPTIONS.getJSONObject(i);
+                final Iterator optionKeys = titleOption.keys();
+                while (optionKeys.hasNext()) {
+                    String optionKey = (String) optionKeys.next();
+                    String translation = titleOption.getString(optionKey);
+                    if (translation.equalsIgnoreCase(title)) {
+                        conformityJson.put(Save.JSON_TITLE, titleOption);
+                        return;
+                    }
+                }
+            }
+        }
     }
 
     static void addConformityDate(JSONObject conformityJson) throws JSONException {

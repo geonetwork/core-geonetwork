@@ -92,6 +92,7 @@
             "allConformanceReports": [{
               "conformanceResultRef":"",
               "scopeCode" : "",
+              "levelDescription" : "",
               "title": {},
               "pass": "",
               "explanation": ""

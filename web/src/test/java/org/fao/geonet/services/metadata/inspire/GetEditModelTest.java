@@ -229,7 +229,7 @@ public class GetEditModelTest {
         assertEquals(0, conformity.getInt(Save.JSON_CONFORMITY_ALL_CONFORMANCE_REPORT_INDEX));
 
         final JSONObject conformityJSONObject = conformity.getJSONObject(Save.JSON_CONFORMITY_LINEAGE);
-        assertEquals("376", conformityJSONObject.getString(Params.REF));
+        assertEquals("380", conformityJSONObject.getString(Params.REF));
         assertTranslations(conformityJSONObject, Save.JSON_CONFORMITY_LINEAGE_STATEMENT,
                 read("ger", "INSPIRE Testdaten"));
 
@@ -238,8 +238,19 @@ public class GetEditModelTest {
         assertTranslations(conformityResult, Save.JSON_TITLE,
                 read("ger", "VERORDNUNG (EG) Nr. 1089/2010 DER KOMMISSION vom 23. November 2010 zur Durchführung " +
                             "der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität " +
-                            "von Geodatensätzen und -diensten"));
-        assertEquals("358", conformityResult.getString(Save.JSON_CONFORMITY_RESULT_REF));
+                            "von Geodatensätzen und -diensten"),
+                read("eng", "COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing " +
+                            "Directive 2007/2/EC of the European Parliament and of the Council as regards " +
+                            "interoperability of spatial data sets and services"),
+                read("fre", "Règlement (UE) n o 1089/2010 de la commission du 23 novembre 2010 portant modalités d'application " +
+                            "de la directive 2007/2/ce du Parlement Européen et du conseil en ce qui concerne l'interopérabilité " +
+                            "des séries et des services de données géographiques"),
+                read("ita", "REGOLAMENTO (UE) N. 1089/2010 DELLA COMMISSIONE del 23 novembre 2010 recante " +
+                            "attuazione della direttiva 2007/2/CE del Parlamento europeo e del Consiglio per quanto riguarda " +
+                            "l'interoperabilità dei set di dati territoriali e dei servizi di dati territoriali"));
+        assertEquals("362", conformityResult.getString(Save.JSON_CONFORMITY_RESULT_REF));
+        assertEquals("dataset", conformityResult.getString(Save.JSON_CONFORMITY_SCOPE_CODE));
+        assertEquals("DataSet", conformityResult.getString(Save.JSON_CONFORMITY_LEVEL_DESC));
 
         assertEquals("false", conformityResult.getString(Save.JSON_CONFORMITY_PASS));
         assertEquals("INSPIRE Implementing rules", conformityResult.getString(Save.JSON_CONFORMITY_EXPLANATION));
@@ -377,9 +388,18 @@ public class GetEditModelTest {
 
         JSONObject conformityResult = conformity.getJSONArray(Save.JSON_CONFORMITY_ALL_CONFORMANCE_REPORTS).getJSONObject(0);
         assertTranslations(conformityResult, Save.JSON_TITLE,
-                read("fre", "règlement (ue) n o 1089/2010 de la commission du 23 novembre 2010 portant modalités " +
-                            "d'application de la directive 2007/2/ce du parlement européen et du conseil en ce qui concerne" +
-                            " l'interopérabilité des séries et des services de données géographiques"));
+                read("ger", "VERORDNUNG (EG) Nr. 1089/2010 DER KOMMISSION vom 23. November 2010 zur Durchführung " +
+                            "der Richtlinie 2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der Interoperabilität " +
+                            "von Geodatensätzen und -diensten"),
+                read("eng", "COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing " +
+                            "Directive 2007/2/EC of the European Parliament and of the Council as regards " +
+                            "interoperability of spatial data sets and services"),
+                read("fre", "Règlement (UE) n o 1089/2010 de la commission du 23 novembre 2010 portant modalités d'application " +
+                            "de la directive 2007/2/ce du Parlement Européen et du conseil en ce qui concerne l'interopérabilité " +
+                            "des séries et des services de données géographiques"),
+                read("ita", "REGOLAMENTO (UE) N. 1089/2010 DELLA COMMISSIONE del 23 novembre 2010 recante " +
+                            "attuazione della direttiva 2007/2/CE del Parlamento europeo e del Consiglio per quanto riguarda " +
+                            "l'interoperabilità dei set di dati territoriali e dei servizi di dati territoriali"));
         assertEquals("529", conformityResult.getString(Save.JSON_CONFORMITY_RESULT_REF));
         assertEquals("false", conformityResult.getString(Save.JSON_CONFORMITY_PASS));
         assertEquals("INSPIRE Implementing rules", conformityResult.getString(Save.JSON_CONFORMITY_EXPLANATION));

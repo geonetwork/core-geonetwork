@@ -147,6 +147,7 @@
   },
   "conformity": {
     "scopeCode": "feature",
+    "levelDescription": "levelDescription",
     "conformanceResultRef": "",
     "isTitleSet" : true,
     "title": {

@@ -75,5 +75,6 @@
   "email" : "Email",
   "organization" : "Organization",
   "metadataType" : "Metadata Type",
-  "save" : "Save"
+  "save" : "Save",
+  "levelDescription" : "Level Description"
 }

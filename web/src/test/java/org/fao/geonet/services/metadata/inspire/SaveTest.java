@@ -403,6 +403,7 @@ public class SaveTest {
 
         assertCorrectTranslation(metadataMainLang, (Element) lineageNodes.get(0), "gmd:statement", read("eng", "lineage EN"), read("ger", "lineage DE"));
         assertEquals("feature", Xml.selectString(testMetadata, "gmd:dataQualityInfo/*/gmd:scope//gmd:MD_ScopeCode/@codeListValue", NS));
+        assertEquals("levelDescription", Xml.selectString(testMetadata, "gmd:dataQualityInfo/*/gmd:scope//gmd:MD_ScopeDescription/gmd:other/gco:CharacterString", NS));
 
     }
 

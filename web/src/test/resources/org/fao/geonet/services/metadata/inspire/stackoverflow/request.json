@@ -114,6 +114,7 @@
 }, "metadataIsXsdValid": true, "language": "ger", "conformity": {
   "updateResultRef": "",
   "scopeCode" : "dataset",
+  "levelDescription" : "levelDescription",
   "title": {
     "ita": "REGOLAMENTO (UE) N. 1089/2010 DELLA COMMISSIONE del 23 novembre 2010 recante attuazione della direttiva 2007/2/CE del Parlamento europeo e del Consiglio per quanto riguarda l'interoperabilità dei set di dati territoriali e dei servizi di dati territoriali",
     "ger": "VERORDNUNG (EG) NR. 1089/2010 DER KOMMISSION VOM 23. NOVEMBER 2010 ZUR DURCHFÜHRUNG DER RICHTLINIE 2007/2/EG DES EUROPÄISCHEN PARLAMENTS UND DES RATES HINSICHTLICH DER INTEROPERABILITÄT VON GEODATENSÄTZEN UND -DIENSTEN",

@@ -128,6 +128,7 @@ public class Save implements Service {
     public static final String JSON_CONFORMITY_LINEAGE_STATEMENT = "statement";
     public static final String JSON_CONFORMITY_ALL_CONFORMANCE_REPORTS = "allConformanceReports";
     public static final String JSON_CONFORMITY_SCOPE_CODE = "scopeCode";
+    public static final String JSON_CONFORMITY_LEVEL_DESC = "levelDescription";
     public static final String JSON_CONFORMITY_ALL_CONFORMANCE_REPORT_INDEX = "reportIndex";
     public static final String JSON_CONFORMITY_IS_TITLE_SET = "isTitleSet";
     public static final String JSON_VALID_METADATA = "metadataIsXsdValid";
@@ -572,8 +573,9 @@ public class Save implements Service {
         addElementFromXPath(editLib, metadataSchema, conformanceResult,
                 "gmd:explanation", explanation);
 
+        final Element dataQualityEl = GetEditModel.getDataQualityEl(conformanceResult);
         updateCodeList(editLib,
-                GetEditModel.getDataQualityEl(conformanceResult),
+                dataQualityEl,
                 metadataSchema,
                 new Element("MD_ScopeCode", GMD),
                 conformityJson.getString(JSON_CONFORMITY_SCOPE_CODE),
@@ -582,6 +584,11 @@ public class Save implements Service {
                 true
         );
 
+        if (conformityJson.has(JSON_CONFORMITY_LEVEL_DESC)) {
+            updateCharString(editLib, dataQualityEl, metadataSchema,
+                    "gmd:scope/gmd:DQ_Scope/gmd:levelDescription/gmd:MD_ScopeDescription/gmd:other",
+                    conformityJson.getString(JSON_CONFORMITY_LEVEL_DESC));
+        }
         JSONObject lineageJSON = conformityJson.getJSONObject(JSON_CONFORMITY_LINEAGE);
         String lineageRef = lineageJSON.optString(Params.REF);
 
