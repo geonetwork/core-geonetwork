@@ -94,6 +94,14 @@ public class LangSortField extends SortField {
 
         private String readerValue(int docID) {
             int ord = currentReaderValues.getOrd(docID);
+            //if ord < 0 then it is a missing value
+            if(ord < 0) {
+            	//Using default 0 instead of throwing an error
+            	ord = 0;
+            }
+            
+            System.out.println(ord + " -> " + currentReaderValues.lookupOrd(ord).utf8ToString());
+            
             return currentReaderValues.lookupOrd(ord).utf8ToString();
         }
 
