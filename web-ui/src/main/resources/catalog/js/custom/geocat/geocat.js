@@ -42,10 +42,11 @@
     '$http',
     'gnSearchSettings',
     'goDecorateInteraction',
+    'gnMap',
 
     function($scope, gnHttp, gnHttpServices, gnRegionService,
              $timeout, suggestService,$http, gnSearchSettings,
-             goDecorateInteraction) {
+             goDecorateInteraction, gnMap) {
 
       // data store for types field
       $scope.types = ['any',
@@ -73,6 +74,11 @@
 
       var map = $scope.searchObj.searchMap;
 
+      var setSearchGeometry = function(geometry) {
+        geometry.transform('EPSG:3857', 'EPSG:4326');
+        $scope.searchObj.params.geometry = format.writeGeometry(geometry);
+      };
+
       /** Manage draw area on search map */
       var feature = new ol.Feature();
       var featureOverlay = new ol.FeatureOverlay({
@@ -92,6 +98,7 @@
         style: gnSearchSettings.olStyles.drawBbox
       });
       drawInteraction.on('drawend', function(){
+        setSearchGeometry(featureOverlay.getFeatures().item(0).getGeometry());
         setTimeout(function() {
           drawInteraction.active = false;
         }, 0);
@@ -155,6 +162,22 @@
         }
       });
 
+      var key;
+      var format = new ol.format.WKT();
+      $scope.$watch('restrictArea', function(v) {
+        if (v == 'bbox') {
+          key = map.getView().on('propertychange', function() {
+            var geometry = new ol.geom.Polygon(gnMap.getPolygonFromExtent(
+                map.getView().calculateExtent(map.getSize())));
+            setSearchGeometry(geometry);
+          });
+        } else {
+          $scope.searchObj.params.geometry = '';
+          map.getView().unByKey(key);
+        }
+      });
+
+      $scope.searchObj.params.relation = 'within';
 
 /*
       $('#categoriesF').tagsinput({

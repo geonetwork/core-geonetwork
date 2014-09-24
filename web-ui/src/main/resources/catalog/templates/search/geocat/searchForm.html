@@ -199,6 +199,12 @@
 
         </div>
 
+        <select name="relation" ng-show="restrictArea != null" class="geotype" ng-model="searchObj.params.relation">
+          <option value="within" selected translate>within</option>
+          <option value="intersection" translate>intersection</option>
+          <option value="encloses" translate>encloses</option>
+        </select>
+
       </fieldset>
     </div>
 
