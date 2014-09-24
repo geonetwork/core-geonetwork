@@ -118,6 +118,16 @@
             <description>Party who can be contacted for acquiring knowledge about or acquisition of the
                 resource</description>
         </entry>
+        		<entry>
+			<code>resourceProvider</code>
+			<label>Production Unit</label>
+			<description>Production Unit</description>
+		</entry>
+		<entry>
+			<code>distributor</code>
+			<label>Dissemination Unit</label>
+			<description>Dissemination Unit</description>
+		</entry>
     </codelist>
     
 </codelists>
