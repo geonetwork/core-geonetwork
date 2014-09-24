@@ -200,7 +200,7 @@ public class Save implements Service {
                 String ref = linkJson.optString(Params.REF);
                 if (Strings.isNullOrEmpty(ref)) {
                     if (linkJson.has(Save.JSON_LINKS_LOCALIZED_URL)) {
-                        addXLink(editLib, metadataSchema, linkJson, metadata, false);
+                        addLink(editLib, metadataSchema, linkJson, metadata, false);
                     }
                 } else {
                     boolean delete = !linkJson.has(Save.JSON_LINKS_LOCALIZED_URL);
@@ -208,28 +208,43 @@ public class Save implements Service {
                     if (delete) {
                         element.detach();
                     } else {
-                        addXLink(editLib, metadataSchema, linkJson, element, true);
+                        addLink(editLib, metadataSchema, linkJson, element, true);
                     }
                 }
             }
         }
     }
 
-    private void addXLink(EditLib editLib, MetadataSchema metadataSchema, JSONObject linkJson, Element element, boolean replace) throws JSONException {
+    private void addLink(EditLib editLib, MetadataSchema metadataSchema, JSONObject linkJson, Element element, boolean replace) throws JSONException {
         final JSONObject localizedURL = linkJson.optJSONObject(JSON_LINKS_LOCALIZED_URL);
+        JSONObject description = linkJson.optJSONObject(JSON_LINKS_DESCRIPTION);
         if (localizedURL != null) {
             final String xpath = linkJson.getString(JSON_LINKS_XPATH);
             final String specialTag = replace ? EditLib.SpecialUpdateTags.REPLACE : EditLib.SpecialUpdateTags.ADD;
-            final Element buildLocalizedElem = buildLocalizedElem(localizedURL);
+            final Element buildLocalizedElem = buildLocalizedURLElem(localizedURL);
             AddElemValue value = new AddElemValue(new Element(specialTag).addContent(buildLocalizedElem));
 
             final boolean result = editLib.addElementOrFragmentFromXpath(element, metadataSchema, xpath, value, true);
             assert result;
-            buildLocalizedElem.getParentElement().setAttribute("type", "che:PT_FreeURL_PropertyType", XSI);
+            final Element parentElement = buildLocalizedElem.getParentElement();
+            parentElement.setAttribute("type", "che:PT_FreeURL_PropertyType", XSI);
+            final Element onlineResource = parentElement.getParentElement();
+            final Element descriptionEl = onlineResource.getChild("description", GMD);
+            if (description == null || description.length() == 0) {
+                if (descriptionEl != null) {
+                    descriptionEl.detach();
+                }
+            } else {
+                if (descriptionEl != null) {
+                    final Element freeText = buildLocalizedCharStringElem(description);
+                    descriptionEl.setContent(freeText);
+                }
+            }
+
         }
     }
 
-    private Element buildLocalizedElem(JSONObject localizedURL) throws JSONException {
+    private Element buildLocalizedURLElem(JSONObject localizedURL) throws JSONException {
         final Iterator keys = localizedURL.keys();
         final Element freeUrl = new Element("PT_FreeURL", CHE_NAMESPACE);
         ArrayList<Element> translations = Lists.newArrayList();
@@ -239,6 +254,22 @@ public class Save implements Service {
             String code = "#" + getIsoLanguagesMapper().iso639_2_to_iso639_1(lang.toLowerCase()).toUpperCase();
             translations.add(new Element("URLGroup", CHE_NAMESPACE).addContent(
                     new Element("LocalisedURL", CHE_NAMESPACE).setAttribute("locale", code).setText(url)
+            ));
+        }
+        freeUrl.addContent(translations);
+        return freeUrl;
+    }
+
+    private Element buildLocalizedCharStringElem(JSONObject description) throws JSONException {
+        final Iterator keys = description.keys();
+        final Element freeUrl = new Element("PT_FreeText", GMD);
+        ArrayList<Element> translations = Lists.newArrayList();
+        while (keys.hasNext()) {
+            String lang = (String) keys.next();
+            final String text = description.getString(lang);
+            String code = "#" + getIsoLanguagesMapper().iso639_2_to_iso639_1(lang.toLowerCase()).toUpperCase();
+            translations.add(new Element("textGroup", GMD).addContent(
+                    new Element("LocalisedCharacterString", GMD).setAttribute("locale", code).setText(text)
             ));
         }
         freeUrl.addContent(translations);

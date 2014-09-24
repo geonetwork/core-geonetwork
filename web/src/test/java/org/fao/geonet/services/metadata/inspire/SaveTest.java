@@ -212,7 +212,7 @@ public class SaveTest {
         service.setTestMetadata(testMetadata);
 
         String json = ("{\"links\": [{\"xpath\": \"@@xpath@@\",\"localizedURL\": {\"eng\": \"eng translation\"," +
-                       "\"fre\": \"fre translation\"}}]}");
+                       "\"fre\": \"fre translation\"}, \"description\":{\"eng\":\"eng desc\"}}]}");
         json = json.replace("@@xpath@@", GetEditModel.TRANSFER_OPTION_XPATH);
         service.exec(new Element("request").addContent(Arrays.asList(
                 new Element("id").setText("12"),
@@ -234,6 +234,11 @@ public class SaveTest {
         for (Element linkage : linkages) {
             assertEquals("che:PT_FreeURL_PropertyType", linkage .getAttributeValue("type", XSI));
         }
+
+        final List freeText = linkages.get(0).getParentElement().getChild("description", GMD).getChildren("PT_FreeText", GMD);
+        assertEquals(1, freeText.size());
+        final List textGroups = ((Element) freeText.get(0)).getChildren("textGroup", GMD);
+        assertEquals(1, textGroups.size());
     }
 
     @Test
