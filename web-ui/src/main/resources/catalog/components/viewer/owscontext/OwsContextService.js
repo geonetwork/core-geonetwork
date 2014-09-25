@@ -18,7 +18,8 @@
   var marshaller = context.createMarshaller();
 
   module.service('gnOwsContextService', [
-    function() {
+    '$http',
+    function($http) {
 
       /**
        * Loads a context, ie. creates layers and centers the map
@@ -70,6 +71,19 @@
                 map.addLayer(olLayer);
             }
         }
+      };
+
+      /**
+       * Loads a context from an URL.
+       * @param url URL to context
+       * @param map map
+       */
+      this.loadContextFromUrl = function(url, map) {
+        var self = this;
+        var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
+        $http.get(proxyUrl).success(function(data) {
+          self.loadContext(data, map);
+        });
       };
 
       /**

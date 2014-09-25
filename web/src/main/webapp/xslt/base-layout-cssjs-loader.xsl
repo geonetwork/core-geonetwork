@@ -122,5 +122,13 @@
             <script src="{/root/gui/url}/static/{$angularModule}.js{$minimizedParam}"></script>
         </xsl:otherwise>
     </xsl:choose>
+    <xsl:if test="$owsContext">
+        <script type="text/javascript">
+            var module = angular.module('gn_search');
+            module.config(['gnViewerSettings', function(gnViewerSettings) {
+                gnViewerSettings.owsContext = '<xsl:value-of select="$owsContext"/>';
+            }]);
+        </script>
+    </xsl:if>
   </xsl:template>
 </xsl:stylesheet>

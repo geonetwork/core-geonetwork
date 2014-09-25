@@ -61,6 +61,12 @@
               });
             }
           };
+
+          // load context from url
+          if (gnViewerSettings.owsContext) {
+            gnOwsContextService.loadContextFromUrl(gnViewerSettings.owsContext,
+              scope.map);
+          }
         }
       };
     }
