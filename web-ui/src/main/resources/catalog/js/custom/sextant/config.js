@@ -119,11 +119,11 @@
 
       /* Custom templates for search result views */
       searchSettings.resultViewTpls = [{
-        tplUrl: '../../catalog/components/search/resultsview/partials/viewtemplates/title.html',
+        tplUrl: '../../catalog/components/search/resultsview/partials/viewtemplates/thumb.html',
         tooltip: 'Simple',
         icon: 'fa-list'
       }, {
-        tplUrl: '../../catalog/components/search/resultsview/partials/viewtemplates/thumb.html',
+        tplUrl: '../../catalog/components/search/resultsview/partials/viewtemplates/sextant.html',
         tooltip: 'Thumbnails',
         icon: 'fa-th-list'
       }];
