@@ -18,6 +18,7 @@
 
                   scope.map = scope.$eval(iAttrs['gnMapField']);
                   scope.gnDrawBboxBtn = iAttrs['gnMapFieldGeom'];
+                  scope.gnDrawBboxExtent = iAttrs['gnMapFieldExtent'];
                   scope.gnMap = gnMap;
 
                   scope.maxExtent = function () {
@@ -63,23 +64,38 @@
               featureOverlay.setMap(scope.map);
               featureOverlay.addFeature(feature);
 
+              /**
+               * Update extent scope value with the WKT polygon
+               * @param geom
+               */
+              var updateField = function(geom) {
+                feature.setGeometry(geom);
+
+                // Write the extent as 4326 WKT polygon
+                var lonlatFeat, writer, wkt;
+                lonlatFeat = feature.clone();
+                lonlatFeat.getGeometry().transform('EPSG:3857', 'EPSG:4326');
+                writer = new ol.format.WKT();
+                wkt = writer.writeFeature(lonlatFeat);
+                bboxSet(parent, wkt);
+              };
+
+              // If given extent coords are given through attributes,
+              // display the bbox on the map
+              var coords = scope.$eval(attrs['gnDrawBboxExtent']);
+              if(coords) {
+                updateField(new ol.geom.Polygon(coords));
+              }
+
               scope.interaction.on('boxend', function(mapBrowserEvent) {
                 scope.$apply(function() {
-                  feature.setGeometry(scope.interaction.getGeometry());
-
-                  // Write the extent as 4326 WKT polygon
-                  var lonlatFeat, writer, wkt;
-                  lonlatFeat = feature.clone();
-                  lonlatFeat.getGeometry().transform('EPSG:3857', 'EPSG:4326');
-                  writer = new ol.format.WKT();
-                  wkt = writer.writeFeature(lonlatFeat);
-                  bboxSet(scope.$parent, wkt);
+                  updateField(scope.interaction.getGeometry());
                 });
               });
 
               // Remove the bbox when the interaction is not active
-              scope.$watch('interaction.active', function(v){
-                if(!v) {
+              scope.$watch('interaction.active', function(v,o){
+                if(!v && o) {
                   feature.setGeometry(null);
                   bboxSet(parent, '');
                   scope.map.render();
