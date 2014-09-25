@@ -225,23 +225,24 @@
       vertical-align: middle;
     }
   }
-
-  [gn-map-field] {
-    border: 1px solid @btn-default-border;
-    border-radius: 3px;
-    position: relative;
-    [gn-draw-bbox-btn],
-    .btn-group-vertical {
-      position: absolute;
-      top: 4px;
-      z-index: 10;
-    }
-    .btn-group-vertical {
-      right: 4px;
-    }
-    [gn-draw-bbox-btn] {
-      left: 4px;
-    }
-  }
-
 }
+
+[gn-map-field] {
+  border: 1px solid @btn-default-border;
+  border-radius: 3px;
+  position: relative;
+  padding: 0;
+  [gn-draw-bbox-btn],
+  .btn-group-vertical {
+    position: absolute;
+    top: 4px;
+    z-index: 10;
+  }
+  .btn-group-vertical {
+    right: 4px;
+  }
+  [gn-draw-bbox-btn] {
+    left: 4px;
+  }
+}
+
