@@ -19,8 +19,9 @@
 
   module.service('gnOwsContextService', [
     'gnMap',
+    'gnOwsCapabilities',
     '$http',
-    function(gnMap, $http) {
+    function(gnMap, gnOwsCapabilities, $http) {
 
       /**
        * Loads a context, ie. creates layers and centers the map
@@ -29,12 +30,15 @@
       this.loadContext = function(text, map) {
         var context = unmarshaller.unmarshalString(text).value;
         // first remove any existing layer
+        var layersToRemove = [];
         map.getLayers().forEach(function(layer) {
-          console.info('Layer removed: ', layer);
           if (layer.displayInLayerManager) {
-            map.removeLayer(layer);
+            layersToRemove.push(layer);
           }
         });
+        for (var i = 0; i < layersToRemove.length; i++) {
+          map.removeLayer(layersToRemove[i]);
+        }
 
         // set the General.BoundingBox
         var bbox = context.general.boundingBox.value;
@@ -49,6 +53,7 @@
         // load the resources
         var layers = context.resourceList.layer;
         var i, olLayer;
+        var self = this;
         for (i = 0; i < layers.length; i++) {
           var layer = layers[i];
           if (layer.name.indexOf('google') != -1 ||
@@ -57,16 +62,7 @@
           } else {
             var server = layer.server[0];
             if (server.service == 'urn:ogc:serviceType:WMS') {
-              var onlineResource = server.onlineResource[0];
-              var params = {'LAYERS': layer.name};
-              var options = {
-                url: onlineResource.href,
-                label: layer.name,
-                group: layer.group,
-                opacity: layer.opacity,
-                visible: !layer.hidden
-              };
-              gnMap.addWmsToMap(map, params, options);
+              self.addWmsLayer(layer, map);
             }
           }
         }
@@ -153,7 +149,26 @@
           value: context
         });
         return xml;
-      }
+      };
+
+      /**
+       * Adds a WMS layer to map
+       * @param layer layer
+       * @param map map
+       */
+      this.addWmsLayer = function(obj, map) {
+        var server = obj.server[0];
+        var res = server.onlineResource[0];
+        gnOwsCapabilities.getCapabilities(res.href).then(function(capObj) {
+          var info = gnOwsCapabilities.getLayerInfoFromCap(obj.name, capObj);
+          var layer = gnMap.addWmsToMapFromCap(map, info);
+
+          layer.setOpacity(obj.opacity);
+          layer.setVisible(!obj.hidden);
+          // TODO test this
+          layer.set('group', obj.group);
+        });
+      };
     }
   ]);
 })();
