@@ -9,12 +9,15 @@
         function(gnMap) {
           return {
             restrict: 'A',
+            scope:true,
             templateUrl: '../../catalog/components/search/map/' +
                 'partials/mapfield.html',
             compile: function compile(tElement, tAttrs, transclude) {
               return {
                 pre: function preLink(scope, iElement, iAttrs, controller) {
+
                   scope.map = scope.$eval(iAttrs['gnMapField']);
+                  scope.gnDrawBboxBtn = iAttrs['gnMapFieldGeom'];
                   scope.gnMap = gnMap;
 
                   scope.maxExtent = function () {
@@ -46,6 +49,8 @@
             }],
             link: function(scope, element, attrs) {
 
+              var parent = scope.$parent.$parent;
+
               // Assign drawn extent to given scope property
               var bboxGet = $parse(attrs['gnDrawBboxBtn']);
               var bboxSet = bboxGet.assign;
@@ -76,7 +81,7 @@
               scope.$watch('interaction.active', function(v){
                 if(!v) {
                   feature.setGeometry(null);
-                  bboxSet(scope.$parent, '');
+                  bboxSet(parent, '');
                   scope.map.render();
                 }
               })
