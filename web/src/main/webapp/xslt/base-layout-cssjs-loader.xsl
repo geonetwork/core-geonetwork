@@ -44,6 +44,8 @@
 
         <script src="{$uiResourcesPath}lib/modernizr.js"></script>
         <script src="{$uiResourcesPath}lib/closure/base.js"></script>
+
+        <script src="{$uiResourcesPath}lib/base64.js"></script>
         
         <script src="{$uiResourcesPath}lib/jquery-2.0.3.js"></script>
         
@@ -79,6 +81,15 @@
             zip.workerScriptsPath = "../../catalog/lib/zip/";
           </script>
         </xsl:if>
+
+        <!-- Jsonix resources (OWS Context) -->
+        <script src="{$uiResourcesPath}lib/jsonix/jsonix/Jsonix-min.js"></script>
+        <script src="{$uiResourcesPath}lib/jsonix/w3c-schemas/XLink_1_0.js"></script>
+        <script src="{$uiResourcesPath}lib/jsonix/ogc-schemas/OWS_1_0_0.js"></script>
+        <script src="{$uiResourcesPath}lib/jsonix/ogc-schemas/Filter_1_0_0.js"></script>
+        <script src="{$uiResourcesPath}lib/jsonix/ogc-schemas/GML_2_1_2.js"></script>
+        <script src="{$uiResourcesPath}lib/jsonix/ogc-schemas/SLD_1_0_0.js"></script>
+        <script src="{$uiResourcesPath}lib/jsonix/ogc-schemas/OWC_0_3_1.js"></script>
         
         
         <!--<xsl:if test="$isEditing">-->
@@ -111,5 +122,13 @@
             <script src="{/root/gui/url}/static/{$angularModule}.js{$minimizedParam}"></script>
         </xsl:otherwise>
     </xsl:choose>
+    <xsl:if test="$owsContext">
+        <script type="text/javascript">
+            var module = angular.module('gn_search');
+            module.config(['gnViewerSettings', function(gnViewerSettings) {
+                gnViewerSettings.owsContext = '<xsl:value-of select="$owsContext"/>';
+            }]);
+        </script>
+    </xsl:if>
   </xsl:template>
 </xsl:stylesheet>
