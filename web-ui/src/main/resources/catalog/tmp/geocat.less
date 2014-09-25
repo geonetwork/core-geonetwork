@@ -61,8 +61,7 @@ body {
 
 .geocat-search {
   .backtonormal {
-    position: absolute;
-    top: 4.33em;
+    margin-bottom: -20px;
   }
   font-size: 90%;
   label {
@@ -154,4 +153,40 @@ body {
 
 [data-gn-facet-list] {
   font-size: 90%;
+}
+
+@media (min-width: @screen-lg-min) {
+  html, body,
+  body > div,
+  .container-fluid,
+  .hfull,
+  {
+    height: 100%;
+    overflow: hidden;
+  }
+  .container-fluid {
+    height: ~"calc(100% - 6em)";
+  }
+  .maincol .panel{
+    position: relative;
+    .panel-footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      z-index: 2000;
+    }
+    [search-results],
+    .panel-body {
+      height: ~"calc(100% - 7.4em)";
+      overflow: auto;
+    }
+    .geocat-search {
+      height: ~"calc(100% - 10em - 200px)";
+    }
+    [gn-map-field] {
+      position: absolute;
+      bottom: 5.7em;
+      width: ~"calc(100% - 30px)";
+    }
+  }
 }

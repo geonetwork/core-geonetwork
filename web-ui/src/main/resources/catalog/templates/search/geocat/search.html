@@ -47,12 +47,12 @@
 </nav>
 
 <div class="container-fluid gn-search-page" data-ng-controller="GnSearchController">
-  <div class="" data-ng-controller="gnsGeocat">
+  <div class="hfull" data-ng-controller="gnsGeocat">
 
-    <form ng-search-form="" runsearch="true">
-      <div class="row">
-        <div class="col-md-3">
-          <div class="panel panel-primary">
+    <form ng-search-form="" runsearch="true" class="hfull">
+      <div class="row hfull">
+        <div class="col-md-3 maincol hfull">
+          <div class="panel panel-primary hfull">
             <div class="panel-heading search-top">
               <input type="text" ng-model="searchObj.params.any" placeholder="{{'anyPlaceHolder' | translate}}"
                      typeahead="address for address in getAnySuggestions($viewValue)" typeahead-loading="anyLoading" class="form-control"
@@ -72,8 +72,8 @@
           </div>
         </div>
 
-        <div ng-class="(collapsed) ? 'col-md-7' : 'col-md-9'">
-          <div class="panel panel-default">
+        <div ng-class="(collapsed) ? 'col-md-7' : 'col-md-9'" class="maincol hfull">
+          <div class="panel panel-default hfull">
             <div class="panel-heading">
               <button class="btn btn-default filter" ng-class="{ active: collapsed }"
                 ng-click="collapsed=!collapsed"><i class="fa fa-filter"></i></button>
@@ -81,7 +81,6 @@
               <div gn-selection-widget results="searchResults"></div>
               <div sortby-combo params="searchObj.params"></div>
             </div>
-            <div data-gn-facet-breadcrumb="currentFacets"></div>
             <div gn-results-container data-ng-class="{'bg-success' : searching}"
               search-results="searchResults" template-url="resultTemplate" map="searchObj.searchMap"></div>
             <div class="panel-footer">
@@ -90,19 +89,22 @@
             </div>
           </div>
         </div>
-        <div ng-class="(collapsed) ? 'col-md-2' : 'whidden'">
-          <div class="panel panel-default">
+
+        <div ng-class="(collapsed) ? 'col-md-2' : 'whidden'" class="maincol hfull">
+          <div class="panel panel-default hfull">
             <div class="panel-heading">
               <span data-translate>Refine search</span>
             </div>
-            <div class="panel-body"
-              data-gn-facet-list="searchResults.facet"
-              data-facet-config="facetsConfig"
-              data-current-facets="currentFacets">
+            <div class="panel-body">
+              <div data-gn-facet-breadcrumb="currentFacets"></div>
+              <div data-gn-facet-list="searchResults.facet"
+                data-facet-config="facetsConfig"
+                data-current-facets="currentFacets">
             </div>
           </div>
         </div>
       </div>
+
     </form>
   </div>
 </div>

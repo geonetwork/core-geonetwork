@@ -164,13 +164,13 @@
           <div class="col-sm-12">
             <div class="btn-group btn-group-justified">
               <div class="btn-group">
-                <button type="button" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'bbox'" uncheckable>bbox</button>
+                <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'bbox'" uncheckable>bbox</button>
               </div>
               <div class="btn-group">
-                <button type="button" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'au'" uncheckable>AU</button>
+                <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'au'" uncheckable>AU</button>
               </div>
               <div class="btn-group">
-                <button type="button" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'draw'" uncheckable>drawOnMap</button>
+                <button type="button" ng-click="scrollToBottom($event)" class="btn btn-default btn-sm" ng-model="restrictArea" btn-radio="'draw'" uncheckable>drawOnMap</button>
               </div>
             </div>
           </div>

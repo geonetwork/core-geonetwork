@@ -7887,8 +7887,7 @@ body {
   font-size: 90%;
 }
 .geocat-search .backtonormal {
-  position: absolute;
-  top: 4.33em;
+  margin-bottom: -20px;
 }
 .geocat-search label {
   font-weight: normal;
@@ -8042,5 +8041,40 @@ select[multiple].geocat-search .geotype {
 }
 [data-gn-facet-list] {
   font-size: 90%;
+}
+@media (min-width: 1200px) {
+  html,
+  body,
+  body > div,
+  .container-fluid,
+  .hfull {
+    height: 100%;
+    overflow: hidden;
+  }
+  .container-fluid {
+    height: calc(100% - 6em);
+  }
+  .maincol .panel {
+    position: relative;
+  }
+  .maincol .panel .panel-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    z-index: 2000;
+  }
+  .maincol .panel [search-results],
+  .maincol .panel .panel-body {
+    height: calc(100% - 7.4em);
+    overflow: auto;
+  }
+  .maincol .panel .geocat-search {
+    height: calc(100% - 10em - 200px);
+  }
+  .maincol .panel [gn-map-field] {
+    position: absolute;
+    bottom: 5.7em;
+    width: calc(100% - 30px);
+  }
 }
 /*# sourceMappingURL=geocat.css.map */

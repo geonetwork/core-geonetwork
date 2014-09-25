@@ -181,6 +181,13 @@
 
       $scope.searchObj.params.relation = 'within';
 
+      $scope.scrollToBottom = function($event) {
+        var elem = $($event.target).parents('.panel-body')[0];
+        setTimeout(function() {
+          elem.scrollTop = elem.scrollHeight;
+        }, 0);
+      };
+
 /*
       $('#categoriesF').tagsinput({
         itemValue: 'id',
