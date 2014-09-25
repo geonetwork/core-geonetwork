@@ -20,6 +20,10 @@
   "drawOnMap": "Dessiner sur la carte",
   "advancedForm": "Recherche avancée",
   "simpleForm": "Recherche simple",
-  "restrictArea": "Restreindre l'emprise à"
+  "restrictArea": "Restreindre l'emprise à",
+  "layer": "couche",
+  "nolayer": "Aucune couche",
+  "layers": "couches",
+  "inbasket": "dans votre panier"
 
 }

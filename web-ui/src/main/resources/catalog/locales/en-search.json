@@ -20,6 +20,10 @@
   "drawOnMap": "Draw on map",
   "advancedForm": "Show advanced options",
   "simpleForm": "Hide advanced options",
-  "restrictArea": "Restrict search area to"
+  "restrictArea": "Restrict search area to",
+  "layer": "layer",
+  "nolayer": "No layer",
+  "layers": "layers",
+  "inbasket": "in your basket"
 
 }
