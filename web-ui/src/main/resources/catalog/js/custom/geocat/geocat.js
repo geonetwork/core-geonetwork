@@ -164,13 +164,15 @@
 
       var key;
       var format = new ol.format.WKT();
+      var setSearchGeometryFromMapExtent = function() {
+        var geometry = new ol.geom.Polygon(gnMap.getPolygonFromExtent(
+            map.getView().calculateExtent(map.getSize())));
+        setSearchGeometry(geometry);
+      };
       $scope.$watch('restrictArea', function(v) {
         if (v == 'bbox') {
-          key = map.getView().on('propertychange', function() {
-            var geometry = new ol.geom.Polygon(gnMap.getPolygonFromExtent(
-                map.getView().calculateExtent(map.getSize())));
-            setSearchGeometry(geometry);
-          });
+          setSearchGeometryFromMapExtent();
+          key = map.getView().on('propertychange', setSearchGeometryFromMapExtent);
         } else {
           $scope.searchObj.params.geometry = '';
           map.getView().unByKey(key);
