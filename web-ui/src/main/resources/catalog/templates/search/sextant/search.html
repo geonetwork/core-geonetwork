@@ -21,7 +21,7 @@
         </div>
       </tab>
       <tab heading="{{mainTabs.search.title}}" active="mainTabs.search.active">
-        <div class="container">
+        <div class="container" data-ng-controller="gnsSextantSearch">
           <form data-ng-search-form="" class="form-horizontal" role="form">
 
             <!--ANY full text search input-->
@@ -134,6 +134,9 @@
 
           </form>
         </div>
+      </tab>
+      <tab select="displayPanierTab()" heading="{{mainTabs.panier.title}}" active="mainTabs.panier.active">
+        <div sxt-panier="searchObj.panier"></div>
       </tab>
     </tabset>
   </div>

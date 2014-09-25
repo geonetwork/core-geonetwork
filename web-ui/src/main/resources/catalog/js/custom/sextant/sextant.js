@@ -4,8 +4,13 @@
 
   goog.require('gn_search');
   goog.require('gn_search_sextant_config');
+  goog.require('sxt_panier_directive');
 
-  var module = angular.module('gn_search_sextant', ['gn_search', 'gn_search_sextant_config']);
+  var module = angular.module('gn_search_sextant', [
+    'gn_search',
+    'gn_search_sextant_config',
+    'sxt_panier_directive'
+  ]);
 
   module.controller('gnsSextant', [
     '$scope',
@@ -33,6 +38,10 @@
         map:{
           title: 'Map',
           active: false
+        },
+        panier:{
+          title: 'Panier',
+          active: false
         }};
 
       $scope.addLayerToMap = function(number) {
@@ -51,6 +60,12 @@
         }
         $scope.mainTabs.map.titleInfo = '';
       };
+
+      $scope.displayPanierTab = function() {
+        $scope.$broadcast('renderPanierMap');
+        $scope.mainTabs.panier.titleInfo = '';
+      };
+
 
 ///////////////////////////////////////////////////////////////////
       $scope.getAnySuggestions = function(val) {
@@ -76,7 +91,30 @@
       angular.extend($scope.searchObj, {
         advancedMode: false,
         viewerMap: viewerMap,
-        searchMap: searchMap
+        searchMap: searchMap,
+        panier: []
       });
     }]);
-})();
+
+  module.controller('gnsSextantSearch', [
+      '$scope',
+      'gnOwsCapabilities',
+      'gnMap',
+    function($scope, gnOwsCapabilities, gnMap) {
+
+      $scope.resultviewFns = {
+        addMdLayerToMap: function(link) {
+          gnOwsCapabilities.getCapabilities(link.url).then(function(capObj) {
+            var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(link.name, capObj);
+            gnMap.addWmsToMapFromCap($scope.searchObj.viewerMap, layerInfo);
+          });
+
+        },
+        addMdLayerToPanier: function(link,md) {
+          md.url = link.url;
+          $scope.searchObj.panier.push(md);
+        }
+      };
+    }]);
+
+    })();
