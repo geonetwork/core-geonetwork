@@ -1,0 +1,72 @@
+<div data-ng-controller="InspireFormatController" data-ng-if="data.identification.type == 'service'">
+    <div id="editFormatModal" tabindex="-1" class="modal fade" >
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" data-translate="">formats</h4>
+                </div>
+                <div class="modal-body">
+                    <input class="form-control" type="search"
+                           placeholder="{{'search' | translate}}" ng-model="formatSearch.$"/>
+                    <div class="list-group well" data-ng-show="allFormats.validated.length > 0">
+                        <a class="list-group-item"
+                           data-ng-repeat="format in allFormats.validated | filter:formatSearch:strict"
+                           data-ng-class="selectedFormat === format ? 'active' : ''"
+                           data-ng-dblclick="linkToOtherFormat()"
+                           data-ng-click="selectFormat(format)">
+                            <i class="fa fa-check-circle-o" style="color: green"></i> {{format.name}} ({{format.version}})
+                        </a>
+                    </div>
+                    <div class="list-group well" data-ng-show="allFormats.nonValidated.length > 0">
+                        <a class="list-group-item"
+                           data-ng-repeat="format in allFormats.nonValidated | filter:formatSearch:strict"
+                           data-ng-class="selectedFormat === format ? 'active' : ''"
+                           data-ng-dblclick="linkToOtherFormat()"
+                           data-ng-click="selectFormat(format)">
+                            <i class="fa fa-circle-o" style="color: red"></i>{{format.name}} ({{format.version}})
+                        </a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-translate="">cancel</button>
+                    <button type="button" class="btn btn-primary" data-translate=""
+                            data-ng-disabled="!selectedFormat.id"
+                            data-ng-click="linkToOtherFormat()">update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <fieldset>
+        <legend data-translate="">distributionFormats</legend>
+
+        <div class="form-group">
+            <div class="table-responsive col-xs-offset-3 col-xs-9"
+                 data-ng-class="validationCls">
+                <table class="table table-condensed">
+                    <tr data-ng-class="$first ? '' : 'col-xs-offset-3'"
+                        data-ng-repeat="format in data.distributionFormats">
+                        <td width="98%">
+                            <input disabled="true"
+                                   class="form-control"
+                                   value="{{format.name}} {{format.version ? '('+format.version+')':''}}"/>
+                        </td>
+                        <td width="24px">
+                            <a class="inspire-input-group" data-ng-click="editFormat(format)">
+                                <i class="fa fa-edit fa-fw"></i>
+                            </a>
+                        </td>
+                        <td width="24px">
+                            <a class="inspire-input-group"
+                               data-ng-hide="data.distributionFormats.length == 1"
+                               style="color: red"
+                               data-ng-click="deleteFormat(format)">
+                                <i class="fa fa-times fa-fw"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </fieldset>
+</div>

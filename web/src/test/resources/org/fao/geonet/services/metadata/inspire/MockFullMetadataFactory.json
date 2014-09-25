@@ -167,5 +167,11 @@
         "ger": "lineage DE"
       }
     }
-  }
+  },
+  "distributionFormats": [{
+    "name": "newname",
+    "version": "newversion",
+    "id": "3",
+    "validated": false
+  }]
 }

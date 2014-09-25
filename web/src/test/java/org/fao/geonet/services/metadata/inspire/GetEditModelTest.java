@@ -267,6 +267,14 @@ public class GetEditModelTest {
             assertTrue(!link.optString(Save.JSON_LINKS_DESCRIPTION, "").isEmpty());
             assertTrue(!link.optString(Save.JSON_LINKS_PROTOCOL, "").isEmpty());
         }
+
+        final JSONArray formats = inspireModel.getJSONArray(Save.JSON_DISTRIBUTION_FORMAT);
+        assertEquals(1, formats.length());
+        JSONObject format = formats.getJSONObject(0);
+        assertEquals("INTERLIS", format.getString(Save.JSON_DISTRIBUTION_FORMAT_NAME));
+        assertEquals("2", format.getString(Save.JSON_DISTRIBUTION_FORMAT_VERSION));
+        assertEquals("1", format.getString(Params.ID));
+        assertEquals(false, format.getBoolean(Save.JSON_DISTRIBUTION_FORMAT_VALIDATED));
     }
 
     @Test
@@ -402,7 +410,17 @@ public class GetEditModelTest {
                             "l'interoperabilità dei set di dati territoriali e dei servizi di dati territoriali"));
         assertEquals("529", conformityResult.getString(Save.JSON_CONFORMITY_RESULT_REF));
         assertEquals("false", conformityResult.getString(Save.JSON_CONFORMITY_PASS));
+
+
         assertEquals("INSPIRE Implementing rules", conformityResult.getString(Save.JSON_CONFORMITY_EXPLANATION));
+
+        final JSONArray formats = inspireModel.getJSONArray(Save.JSON_DISTRIBUTION_FORMAT);
+        assertEquals(1, formats.length());
+        JSONObject format = formats.getJSONObject(0);
+        assertEquals("INTERLIS", format.getString(Save.JSON_DISTRIBUTION_FORMAT_NAME));
+        assertEquals("2", format.getString(Save.JSON_DISTRIBUTION_FORMAT_VERSION));
+        assertEquals("1", format.getString(Params.ID));
+        assertEquals(false, format.getBoolean(Save.JSON_DISTRIBUTION_FORMAT_VALIDATED));
 
     }
 

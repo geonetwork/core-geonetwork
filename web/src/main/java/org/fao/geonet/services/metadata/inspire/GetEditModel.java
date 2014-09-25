@@ -58,6 +58,7 @@ import javax.annotation.Nullable;
 
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GEONET;
+import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
 import static org.fao.geonet.constants.Geonet.Namespaces.XLINK;
 import static org.fao.geonet.services.metadata.inspire.Save.NS;
 
@@ -182,8 +183,10 @@ public class GetEditModel implements Service {
         JSONArray linksJson = new JSONArray();
         metadataJson.put(Save.JSON_LINKS, linksJson);
 
-        final String xpath = "gmd:distributionInfo//gmd:transferOptions//gmd:linkage";
-        processLinkages(metadataEl, linksJson, xpath, "gmd:CI_OnlineResource/gmd:linkage");
+        final String xpathLinkage = "gmd:distributionInfo/*/gmd:transferOptions//gmd:linkage";
+        processLinkages(metadataEl, linksJson, xpathLinkage, "gmd:CI_OnlineResource/gmd:linkage");
+
+        processDistributionFormat(metadataEl, metadataJson);
 
         String identificationType = metadataJson.getJSONObject(Save.JSON_IDENTIFICATION).getString(Save.JSON_IDENTIFICATION_TYPE);
 
@@ -194,6 +197,46 @@ public class GetEditModel implements Service {
             link.put(Save.JSON_LINKS_XPATH, TRANSFER_OPTION_XPATH);
             linksJson.put(link);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void processDistributionFormat(Element metadataEl, JSONObject metadataJson) throws JDOMException, JSONException {
+        final String xpathDistributionFormat = "gmd:distributionInfo/*/gmd:distributionFormat/gmd:MD_Format";
+        final List<Element> formats = (List<Element>) Xml.selectNodes(metadataEl, xpathDistributionFormat, NS);
+        JSONArray formatJson = new JSONArray();
+        metadataJson.put(Save.JSON_DISTRIBUTION_FORMAT, formatJson);
+        for (Element format : formats) {
+            final Element nameEl = format.getChild("name", GMD);
+            String name = "";
+            if (nameEl != null) {
+                name = nameEl.getChildText("CharacterString", GCO);
+            }
+            final Element versionEl = format.getChild("version", GMD);
+            String version = "";
+            if (versionEl != null) {
+                version = versionEl.getChildText("CharacterString", GCO);
+            }
+            final String href = format.getParentElement().getAttributeValue("href", XLINK, "");
+            final String validated = format.getParentElement().getAttributeValue("role", XLINK, "");
+            String id = org.fao.geonet.kernel.reusable.Utils.id(href);
+
+            formatJson.put(createDistributionFormat(name, version, id, !ReusableObjManager.NON_VALID_ROLE.equals(validated)));
+        }
+
+        if (formatJson.length() == 0) {
+            formatJson.put(createDistributionFormat("", "", "", false));
+        }
+    }
+
+    private JSONObject createDistributionFormat(String name, String version, String id, boolean validated) throws JSONException {
+        JSONObject obj = new JSONObject();
+
+        obj.put(Save.JSON_DISTRIBUTION_FORMAT_NAME, name);
+        obj.put(Save.JSON_DISTRIBUTION_FORMAT_VERSION, version);
+        obj.put(Save.JSON_DISTRIBUTION_FORMAT_VALIDATED, validated);
+        obj.put(Params.ID, id);
+
+        return obj;
     }
 
     private void processLinkages(Element metadataEl, JSONArray linksJson, String xpath, String jsonXLink) throws JDOMException, JSONException {

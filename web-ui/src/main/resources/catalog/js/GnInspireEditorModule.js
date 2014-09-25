@@ -11,12 +11,13 @@
   goog.require('inspire_date_picker_directive');
   goog.require('inspire-metadata-loader');
   goog.require('inspire_ie9_select');
+  goog.require('inspire_get_shared_formats_factory');
 
   angular.module('gn', []);
 
   var module = angular.module('gn_inspire_editor', ['gn_language_switcher', 'pascalprecht.translate', 'inspire_contact_directive',
     'inspire_multilingual_text_directive', 'inspire_metadata_factory', 'inspire_get_shared_users_factory', 'inspire_get_keywords_factory',
-    'inspire_get_extents_factory', 'inspire_date_picker_directive', 'inspire_ie9_select']);
+    'inspire_get_extents_factory', 'inspire_date_picker_directive', 'inspire_ie9_select', 'inspire_get_shared_formats_factory']);
 
   module.factory('localeLoader', ['$http', '$q', function($http, $q) {
     return function(options) {
@@ -387,6 +388,67 @@
       };
 
       $scope.$watch('data.identification.descriptiveKeywords', $scope.validateKeywords, true);
+    }]);
+
+
+  module.controller('InspireFormatController', [
+    '$scope', 'inspireGetFormatsFactory',
+    function($scope, inspireGetFormatsFactory) {
+      $scope.allFormats = {validated: [], nonValidated: []};
+
+      inspireGetFormatsFactory.loadAll($scope.url).then(function(formats) {
+        $scope.allFormats.validated = formats.validated;
+        $scope.allFormats.nonValidated = formats.nonValidated;
+      });
+
+      $scope.editFormat = function(format) {
+        $scope.formatUnderEdit = format;
+        $scope.selectedFormat = {};
+        var modal = $('#editFormatModal');
+        modal.modal('show');
+      };
+
+      $scope.deleteFormat = function(format) {
+        var k, i, formats = $scope.data.distributionFormats;
+        if (formats.length > 1) {
+          formats.splice(formats.indexOf(format), 1);
+        } else {
+          formats[0].id = "";
+          formats[0].name = "";
+          formats[0].version = "";
+          formats[0].validated = false;
+        }
+      };
+
+      $scope.selectFormat = function(format) {
+        $scope.selectedFormat = format;
+      };
+
+      $scope.linkToOtherFormat = function() {
+        var format = $scope.selectedFormat;
+        angular.copy(format, $scope.formatUnderEdit);
+
+        var modal = $('#editFormatModal');
+        modal.modal('hide');
+      };
+
+      $scope.validationCls = '';
+      $scope.validateFormats = function(){
+        var format, i, formats, thesaurus, valid = false;
+        formats = $scope.data.distributionFormats;
+
+        for (i = 0; i < formats.length; i++) {
+          format = formats[i];
+
+          if (format.id) {
+            valid = true;
+          }
+        }
+
+        $scope.validationCls = valid ? '' : $scope.validationErrorClass;
+      };
+
+      $scope.$watch('data.distributionFormats', $scope.validateFormats, true);
     }]);
 
 

@@ -143,6 +143,10 @@ public class Save implements Service {
     public static final String JSON_IDENTIFICATION_CONTAINS_OPERATIONS = "containsOperations";
     public static final String JSON_IDENTIFICATION_OPERATION_NAME = "operationName";
     public static final String JSON_IDENTIFICATION_DCP_LIST = "dcpList";
+    public static final String JSON_DISTRIBUTION_FORMAT = "distributionFormats";
+    public static final String JSON_DISTRIBUTION_FORMAT_NAME = "name";
+    public static final String JSON_DISTRIBUTION_FORMAT_VERSION = "version";
+    public static final String JSON_DISTRIBUTION_FORMAT_VALIDATED = "validated";
 
     @Override
     public void init(String appPath, ServiceConfig params) throws Exception {
@@ -174,6 +178,7 @@ public class Save implements Service {
             updateConformity(editLib, metadata, metadataSchema, jsonObject, mainLang);
 
             updateLinks(editLib, metadataSchema, metadata, jsonObject);
+            updateFormats(editLib, metadataSchema, metadata, jsonObject);
 
             editLib.removeEditingInfo(metadata);
             Element metadataToSave = (Element) metadata.clone();
@@ -189,6 +194,48 @@ public class Save implements Service {
             t.printStackTrace(s);
             return new Element("pre").addContent(
                     new Element("code").addContent(out.toString()));
+        }
+    }
+
+    private void updateFormats(EditLib editLib, MetadataSchema metadataSchema, Element metadata, JSONObject jsonObject)
+            throws JSONException, JDOMException {
+        Element distributionInfo = Xml.selectElement(metadata, "gmd:distributionInfo/gmd:MD_Distribution", NS);
+        if (distributionInfo != null) {
+            @SuppressWarnings("unchecked")
+            final List<Element> formats = Lists.newArrayList((List<Element>) distributionInfo.getChildren("distributionFormat", GMD));
+            for (Element format : formats) {
+                format.detach();
+            }
+        }
+
+        JSONArray formatJson = jsonObject.optJSONArray(JSON_DISTRIBUTION_FORMAT);
+        if (formatJson != null) {
+            for (int i = 0; i < formatJson.length(); i++) {
+                JSONObject format = formatJson.getJSONObject(i);
+                String name = format.getString(JSON_DISTRIBUTION_FORMAT_NAME);
+                String version = format.getString(JSON_DISTRIBUTION_FORMAT_VERSION);
+                String id = format.getString(Params.ID);
+                boolean validated = format.getBoolean(JSON_DISTRIBUTION_FORMAT_VALIDATED);
+                Element formatEl = new Element("distributionFormat", GMD).addContent(
+                        new Element("MD_Format", GMD).addContent(Arrays.asList(
+                                new Element("name", GMD).addContent(new Element("CharacterString", GCO).setText(name)),
+                                new Element("version", GMD).addContent(new Element("CharacterString", GCO).setText(version))
+                        ))
+                );
+                formatEl.setAttribute("href", "local://xml.format.get?id=" + id, XLINK);
+                if (!validated) {
+                    formatEl.setAttribute("role", ReusableObjManager.NON_VALID_ROLE, XLINK);
+                }
+
+                if (distributionInfo != null) {
+                    distributionInfo.addContent(i, formatEl);
+                } else {
+                    addElementFromXPath(editLib, metadataSchema, metadata,
+                            "gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat", formatEl);
+
+                    distributionInfo = formatEl.getParentElement();
+                }
+            }
         }
     }
 
@@ -241,7 +288,6 @@ public class Save implements Service {
                     descriptionEl.setContent(freeText);
                 }
             }
-
         }
     }
 

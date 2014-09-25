@@ -103,7 +103,8 @@
               "ref": "",
               "statement" : {}
             }
-          }
+          },
+          "distributionFormats": []
         };
         // END TEST DATA
     };

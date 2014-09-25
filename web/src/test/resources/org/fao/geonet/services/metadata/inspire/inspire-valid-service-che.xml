@@ -794,13 +794,13 @@
     </gmd:identificationInfo>
     <gmd:distributionInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <gmd:MD_Distribution>
-            <gmd:distributionFormat xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://xml.format.get?id=2" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
+            <gmd:distributionFormat xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="local://xml.format.get?id=1" xlink:role="http://www.geonetwork.org/non_valid_obj" xlink:show="embed">
                 <gmd:MD_Format>
                     <gmd:name>
-                        <gco:CharacterString>N/A</gco:CharacterString>
+                        <gco:CharacterString>INTERLIS</gco:CharacterString>
                     </gmd:name>
                     <gmd:version>
-                        <gco:CharacterString>N/A</gco:CharacterString>
+                        <gco:CharacterString>2</gco:CharacterString>
                     </gmd:version>
                 </gmd:MD_Format>
             </gmd:distributionFormat>

@@ -46,6 +46,7 @@
   "unexpectedSaveError": "An unexpected error occurred while saving",
   "loadingMetadata": "Loading Metadata.  Please Wait...",
   "update": "Update",
+  "cancel": "Cancel",
   "createNew": "Create",
   "updateElement": "Conformance Report to Update",
   "xsdInvalidWarning": "Potential validation errors have been detected.  Switch to the default editor and check validation errors there.",
@@ -76,5 +77,8 @@
   "organization" : "Organization",
   "metadataType" : "Metadata Type",
   "save" : "Save",
-  "levelDescription" : "Level Description"
+  "levelDescription" : "Level Description",
+  "distributionFormats" : "Distribution Formats",
+  "formats" : "Formats",
+  "beforeUnloadEditor" : "Warning: all changes will be lost if you continue."
 }

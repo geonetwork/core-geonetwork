@@ -6,6 +6,7 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.TransformerFactoryFactory;
 import jeeves.utils.Xml;
+import jeeves.xlink.XLink;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.GeonetworkDataDirectory;
@@ -15,6 +16,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.EditLibTest;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.reusable.ReusableObjManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.resources.Resources;
@@ -42,6 +44,7 @@ import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GEONET;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
 import static org.fao.geonet.constants.Geonet.Namespaces.SRV;
+import static org.fao.geonet.constants.Geonet.Namespaces.XLINK;
 import static org.fao.geonet.constants.Geonet.Namespaces.XSI;
 import static org.fao.geonet.kernel.search.spatial.Pair.read;
 import static org.fao.geonet.services.metadata.inspire.Save.NS;
@@ -371,8 +374,28 @@ public class SaveTest {
         assertCorrectConstraints(identification);
 
         assertConformity(savedMetadata, metadataMainLang);
+        assertDistributionFormats(savedMetadata);
 
         assertTrue(service.isSaved());
+    }
+
+    private void assertDistributionFormats(Element savedMetadata) throws JDOMException {
+        final List<?> formats = Xml.selectNodes(savedMetadata, "gmd:distributionInfo/*/gmd:distributionFormat/gmd:MD_Format", NS);
+        assertEquals(1, formats.size());
+
+        Element format = (Element) formats.get(0);
+
+        final String name = format.getChild("name", GMD).getChildText("CharacterString", GCO);
+        final String version = format.getChild("version", GMD).getChildText("CharacterString", GCO);
+        final String href = format.getParentElement().getAttributeValue(XLink.HREF, XLINK);
+        final String role = format.getParentElement().getAttributeValue(XLink.ROLE, XLINK);
+
+        assertEquals("newname", name);
+        assertEquals("newversion", version);
+        assertEquals("local://xml.format.get?id=3", href);
+        assertEquals(ReusableObjManager.NON_VALID_ROLE, role);
+
+
     }
 
     private void assertConformity(Element testMetadata, String metadataMainLang) throws JDOMException {
