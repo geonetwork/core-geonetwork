@@ -18,8 +18,9 @@
   var marshaller = context.createMarshaller();
 
   module.service('gnOwsContextService', [
+    'gnMap',
     '$http',
-    function($http) {
+    function(gnMap, $http) {
 
       /**
        * Loads a context, ie. creates layers and centers the map
@@ -29,8 +30,10 @@
         var context = unmarshaller.unmarshalString(text).value;
         // first remove any existing layer
         map.getLayers().forEach(function(layer) {
-            console.info('Layer removed: ', layer);
+          console.info('Layer removed: ', layer);
+          if (layer.displayInLayerManager) {
             map.removeLayer(layer);
+          }
         });
 
         // set the General.BoundingBox
@@ -47,29 +50,25 @@
         var layers = context.resourceList.layer;
         var i, olLayer;
         for (i = 0; i < layers.length; i++) {
-            var layer = layers[i];
-            if (layer.name.indexOf('google') != -1) {
-                // pass
-            } else if (layer.name.indexOf('osm') != -1) {
-                var osmSource = new ol.source.OSM();
-                olLayer = new ol.layer.Tile({source: osmSource});
-            } else {
-                var server = layer.server[0];
-                if (server.service == 'urn:ogc:serviceType:WMS') {
-                    var onlineResource = server.onlineResource[0];
-                    var source = new ol.source.ImageWMS({
-                        url: onlineResource.href,
-                        params: {'LAYERS': layer.name}
-                    });
-                    olLayer = new ol.layer.Image({ source: source });
-                }
+          var layer = layers[i];
+          if (layer.name.indexOf('google') != -1 ||
+              layer.name.indexOf('osm') != -1) {
+            // pass
+          } else {
+            var server = layer.server[0];
+            if (server.service == 'urn:ogc:serviceType:WMS') {
+              var onlineResource = server.onlineResource[0];
+              var params = {'LAYERS': layer.name};
+              var options = {
+                url: onlineResource.href,
+                label: layer.name,
+                group: layer.group,
+                opacity: layer.opacity,
+                visible: !layer.hidden
+              };
+              gnMap.addWmsToMap(map, params, options);
             }
-            if (olLayer) {
-                olLayer.setOpacity(layer.opacity);
-                olLayer.setVisible(!layer.hidden);
-                olLayer.set('group', layer.group);
-                map.addLayer(olLayer);
-            }
+          }
         }
       };
 
