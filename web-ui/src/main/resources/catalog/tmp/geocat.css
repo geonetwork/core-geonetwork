@@ -7922,6 +7922,7 @@ select[multiple].geocat-search select {
 }
 .geocat-search .tt-dropdown-menu {
   left: 6px !important;
+  width: 100%;
 }
 .geocat-search legend {
   font-size: 1em;
