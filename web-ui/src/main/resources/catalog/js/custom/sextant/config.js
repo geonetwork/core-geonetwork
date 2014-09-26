@@ -4,9 +4,11 @@
 
   var module = angular.module('gn_search_sextant_config', []);
 
-  module.config(['gnSearchSettings', 'gnViewerSettings',
+  module.constant('gnPanierSettings', {});
 
-    function(searchSettings, viewerSettings) {
+  module.config(['gnSearchSettings', 'gnViewerSettings', 'gnPanierSettings',
+
+    function(searchSettings, viewerSettings, gnPanierSettings) {
 
       /** *************************************
        * Define mapviewer background layers
@@ -133,5 +135,66 @@
         viewerMap: viewerMap,
         searchMap: searchMap
       });
+
+      gnPanierSettings.projs = [{
+        value: '27571',
+        label: 'Lambert Zone I - Datum NTF'
+      },{
+        value: '27572',
+        label: 'Lambert Zone II - Datum NTF'
+      },{
+        value: '27573',
+        label: 'Lambert Zone III - Datum NTF'
+      },{
+        value: '27574',
+        label: 'Lambert Zone IV - Datum NTF'
+      },{
+        value: '27561',
+        label: 'Lambert Nord France - Datum NTF'
+      },{
+        value: '27562',
+        label: 'Lambert Centre France - Datum NTF'
+      },{
+        value: '27563',
+        label: 'Lambert Sud France - Datum NTF'
+      },{
+        value: '27564',
+        label: 'Lambert Corse - Datum NTF'
+      },{
+        value: '4326',
+        label: 'Geographique - Datum WGS84'
+      },{
+        value: '32600',
+        label: 'UTM - Datum WGS84'
+      },{
+        value: '4230',
+        label: 'Geographique - Datum ED50'
+      },{
+        value: '4258',
+        label: 'European Terrestrial Reference System 1989 (ETRS89)'
+      },{
+        value: '3395',
+        label: 'Mercator - Datum WGS84'
+      }];
+
+      gnPanierSettings.formats = [{
+        value: 'ESRI Shapefile',
+        label: 'ESRI Shapefile'
+      },{
+        value: 'MapInfo File TAB',
+        label: 'MapInfo File TAB'
+      },{
+        value: 'GML',
+        label: 'GML'
+      },{
+        value: 'KML',
+        label: 'KML'
+      }];
+
+      gnPanierSettings.defaults = {
+        format: 'ESRI Shapefile',
+        proj: '4326'
+      }
+
     }]);
 })();

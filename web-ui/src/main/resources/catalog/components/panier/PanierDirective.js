@@ -38,7 +38,8 @@
   module.directive('sxtPanierElt', [
     'gnMap',
     'gnSearchSettings',
-    function (gnMap, gnSearchSettings) {
+    'gnPanierSettings',
+    function (gnMap, gnSearchSettings, gnPanierSettings) {
       return {
         restrict: 'A',
         require: '^sxtPanier',
