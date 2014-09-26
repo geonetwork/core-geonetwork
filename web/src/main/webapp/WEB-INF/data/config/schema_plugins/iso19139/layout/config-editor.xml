@@ -1384,7 +1384,7 @@
               xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
-                'MedSea environmental matrix')]"/>
+                'Environmental matrix')]"/>
 
           <!-- P03 thesaurus is missing TODO -->
           <text ref="p03-field-missing"/>
@@ -1413,7 +1413,7 @@
               xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
-                'MedSea processing level of characteristics')]"/>
+                'Processing level of characteristics')]"/>
 
           <text ref="production-mode-field-missing"/>
 
@@ -1721,7 +1721,7 @@
                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
-                'MedSea challenges')]"/>
+                'Challenges')]"/>
 
           <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
 
