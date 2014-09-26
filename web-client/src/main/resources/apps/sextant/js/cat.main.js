@@ -233,7 +233,7 @@ cat.app = function() {
               url += 'create/from/' + metadataId +
                 '/in/' + group;
             } else {
-              url += 'metadata/' + metadataId + '/tab/medsea-metadata';
+              url += 'metadata/' + metadataId + '/tab/characteristics';
             }
             window.open(
               catalogue.services.rootUrl + url)
