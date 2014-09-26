@@ -135,7 +135,12 @@
           </form>
         </div>
       </tab>
-      <tab select="displayPanierTab()" heading="{{mainTabs.panier.title}}" active="mainTabs.panier.active">
+      <tab select="displayPanierTab()" active="mainTabs.panier.active">
+        <tab-heading>
+          {{mainTabs.panier.title}}
+          <span class="badge" ng-if="mainTabs.panier.titleInfo">{{mainTabs.panier.titleInfo}}</span>
+        </tab-heading>
+
         <div sxt-panier="searchObj.panier"></div>
       </tab>
     </tabset>

@@ -27,26 +27,25 @@
       $scope.mainTabs = {
         home :{
           title: 'Home',
-          titleInfo: '',
+          titleInfo: 0,
           active: true
         },
         search: {
           title: 'Search',
-          titleInfo: '',
+          titleInfo: 0,
           active: false
         },
         map:{
           title: 'Map',
-          active: false
+          active: false,
+          titleInfo: 0
+
         },
         panier:{
           title: 'Panier',
-          active: false
+          active: false,
+          titleInfo: 0
         }};
-
-      $scope.addLayerToMap = function(number) {
-        $scope.mainTabs.map.titleInfo = '  (+' + number + ')';
-      };
 
       $scope.$on('addLayerFromMd', function(evt, getCapLayer) {
         gnMap.addWmsToMapFromCap(viewerMap, getCapLayer);
@@ -58,12 +57,12 @@
             viewerMap.updateSize();
           }, 0);
         }
-        $scope.mainTabs.map.titleInfo = '';
+        $scope.mainTabs.map.titleInfo = 0;
       };
 
       $scope.displayPanierTab = function() {
         $scope.$broadcast('renderPanierMap');
-        $scope.mainTabs.panier.titleInfo = '';
+        $scope.mainTabs.panier.titleInfo = 0;
       };
 
 
@@ -108,11 +107,13 @@
             var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(link.name, capObj);
             gnMap.addWmsToMapFromCap($scope.searchObj.viewerMap, layerInfo);
           });
+          $scope.mainTabs.map.titleInfo += 1;
 
         },
         addMdLayerToPanier: function(link,md) {
           md.url = link.url;
           $scope.searchObj.panier.push(md);
+          $scope.mainTabs.panier.titleInfo += 1;
         }
       };
     }]);
