@@ -12,6 +12,9 @@
     "METADATA": "Metadata",
     "TEMPLATE": "Template",
     "SUB_TEMPLATE": "Directory entry",
+    "VALID": "Valid",
+    "INVALID": "Invalid",
+    "NEVER_CALCULATED": "Never validated",
     
     "eng": "English",
     "fre": "Français",
