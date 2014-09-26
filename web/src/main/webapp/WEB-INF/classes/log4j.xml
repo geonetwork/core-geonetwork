@@ -192,6 +192,11 @@
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
+    <logger name="org.hibernate.tool.hbm2ddl" additivity="false">
+        <level value="WARN" />
+        <appender-ref ref="consoleAppender" />
+        <appender-ref ref="fileAppender" />
+    </logger>
 
 
     <!-- Turn off logging except when explicitly declared below -->
