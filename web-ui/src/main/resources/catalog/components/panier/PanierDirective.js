@@ -54,12 +54,17 @@
           return {
             pre: function preLink(scope, iElement, iAttrs, controller) {
 
+              /** To iniate combo box values */
+              scope.settings = gnPanierSettings;
+
               /** Use to know if we need to zoom on the md extent or not */
               var rendered = false;
 
               /** object that contains the form values */
               scope.form = {
-                uuid: scope.md.getUuid()
+                uuid: scope.md.getUuid(),
+                format: gnPanierSettings.defaults.format,
+                projection: gnPanierSettings.defaults.proj
               };
 
               /** Map useed to draw the bbox */
