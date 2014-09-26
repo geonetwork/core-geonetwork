@@ -75,8 +75,9 @@
       var map = $scope.searchObj.searchMap;
 
       var setSearchGeometry = function(geometry) {
-        geometry.transform('EPSG:3857', 'EPSG:4326');
-        $scope.searchObj.params.geometry = format.writeGeometry(geometry);
+        $scope.searchObj.params.geometry = format.writeGeometry(
+          geometry.clone().transform('EPSG:3857', 'EPSG:4326')
+        );
       };
 
       /** Manage draw area on search map */
