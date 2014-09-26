@@ -14,6 +14,9 @@
     "METADATA": "Fiche",
     "TEMPLATE": "Modèle de fiche",
     "SUB_TEMPLATE": "Annuaire",
+    "VALID": "Valide",
+    "INVALID": "Invalide",
+    "NEVER_CALCULATED": "Non validé",
     
     "eng": "English",
     "fre": "Français",
