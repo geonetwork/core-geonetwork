@@ -62,11 +62,21 @@
             }
           };
 
-          // load context from url
+          // load context from url or from storage
           if (gnViewerSettings.owsContext) {
             gnOwsContextService.loadContextFromUrl(gnViewerSettings.owsContext,
               scope.map);
+          } else if (window.localStorage.getItem('owsContext')) {
+            var c = window.localStorage.getItem('owsContext');
+            gnOwsContextService.loadContext(c, scope.map);
           }
+
+
+          // store the current context in local storage to reload it
+          // automatically on next connexion
+          $(window).on('unload', function () {
+            gnOwsContextService.saveToLocalStorage(scope.map);
+          });
         }
       };
     }

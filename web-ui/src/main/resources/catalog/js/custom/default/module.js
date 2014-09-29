@@ -13,8 +13,10 @@
     'suggestService',
     '$http',
     'gnSearchSettings',
+    'gnViewerSettings',
       'gnMap',
-    function($scope, $location, suggestService, $http, gnSearchSettings, gnMap) {
+    function($scope, $location, suggestService, $http, gnSearchSettings,
+        gnViewerSettings, gnMap) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -49,6 +51,10 @@
         if(viewerMap.getSize()[0] == 0 || viewerMap.getSize()[1] == 0){
           setTimeout(function(){
             viewerMap.updateSize();
+            if (gnViewerSettings.initialExtent) {
+              viewerMap.getView().fitExtent(gnViewerSettings.initialExtent,
+                  viewerMap.getSize());
+            }
           }, 0);
         }
         $scope.mainTabs.map.titleInfo = '';

@@ -21,7 +21,8 @@
     'gnMap',
     'gnOwsCapabilities',
     '$http',
-    function(gnMap, gnOwsCapabilities, $http) {
+    'gnViewerSettings',
+    function(gnMap, gnOwsCapabilities, $http, gnViewerSettings) {
 
       /**
        * Loads a context, ie. creates layers and centers the map
@@ -47,7 +48,12 @@
         var extent = ll.concat(ur);
         var projection = bbox.crs;
         // reproject in case bbox's projection doesn't match map's projection
-        extent = ol.proj.transformExtent(extent, map.getView().getProjection(), projection);
+        extent = ol.proj.transformExtent(extent, map.getView().getProjection(),
+          projection);
+
+        // store the extent into view settings so that it can be used later in
+        // case the map is not visible yet
+        gnViewerSettings.initialExtent = extent;
         map.getView().fitExtent(extent, map.getSize());
 
         // load the resources
@@ -56,8 +62,8 @@
         var self = this;
         for (i = 0; i < layers.length; i++) {
           var layer = layers[i];
-          if (layer.name.indexOf('google') != -1 ||
-              layer.name.indexOf('osm') != -1) {
+          if (layer.name && (layer.name.indexOf('google') != -1 ||
+              layer.name.indexOf('osm') != -1)){
             // pass
           } else {
             var server = layer.server[0];
@@ -115,10 +121,13 @@
             name = "{type=osm}";
           } else if (source instanceof ol.source.ImageWMS) {
             name = source.getParams().LAYERS;
-            url = layer.getSource().getUrl();
+            url = source.getUrl();
+          } else if (source instanceof ol.source.TileWMS) {
+            name = source.getParams().LAYERS;
+            url = source.getUrls()[0];
           }
           resourceList.layer.push({
-            hidden: layer.getVisible(),
+            hidden: !layer.getVisible(),
             opacity: layer.getOpacity(),
             name: name,
             title: layer.get('title'),
@@ -149,6 +158,15 @@
           value: context
         });
         return xml;
+      };
+
+      /**
+       * Saves the map context to local storage
+       */
+      this.saveToLocalStorage = function(map) {
+        var xml = this.writeContext(map);
+        var xmlString = (new XMLSerializer()).serializeToString(xml);
+        window.localStorage.setItem("owsContext", xmlString);
       };
 
       /**
