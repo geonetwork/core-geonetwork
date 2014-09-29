@@ -72,45 +72,25 @@
           </div>
         </div>
 
-        <div ng-class="(!collapsed) ? 'col-md-7' : 'col-md-9'" class="maincol hfull">
+        <div ng-class="(!collapsed) ? 'col-md-7' : 'col-md-9'" class="maincol hfull" ng-controller="gnsGeocatHome">
           <div class="panel panel-default hfull" ng-if="initial">
             <div class="panel-heading" translate>
-              Search for geodata &amp; geoservices
+              <h3 class="panel-title"translate>homeTitle</h3>
             </div>
             <div class="panel-body">
-
-              <div class="row">
-
-                <div class="col-md-6">
-                  <p class="text-center"><img src="http://www.geocat.ch/geonetwork/images/geocatII-web.jpg" alt="Miaou"></p>
-                  <h4>Most popular</h4>
-                  <ul>
-                    <li><a>WMS GeORG Basic data</a></li>
-                    <li><a>WMS GeORG Geology data</a></li>
-                    <li><a>WMS GeORG Position data</a></li>
-                    <li><a>WMS GeORG Temperature Data</a></li>
-                    <li><a>WMS GeORG Cross sections</a></li>
-                  </ul>
-                </div>
-
-                <div class="col-md-6">
-                  <h4>Recent Changes</h4>
-                  <ul>
-                    <li><a>Oeffentlicher Verkehr, Fahrzeuglängen</a></li>
-                    <li><a>WMS GeORG Position data</a></li>
-                    <li><a>WMS GeORG Geology data</a></li>
-                    <li><a>Périmètres de subventionnement approuvés, archive 2008-2011</a></li>
-                    <li><a>WMS GeORG Temperature Data</a></li>
-                    <li><a>WMS GeORG Heat in Place</a></li>
-                    <li><a>WMS GeORG Cross sections</a></li>
-                    <li><a>WMS GeORG Thickness data</a></li>
-                    <li><a>WMS GeORG Gas storage data</a></li>
-                    <li><a>WMS GeORG Basic data</a></li>
-                  </ul>
-                </div>
-
-              </div>
-
+              <img src="http://www.geocat.ch/geonetwork/images/geocatII-web.jpg" alt=""></p>
+              <h4 translate>mostPopular</h4>
+              <ul>
+                <li ng-repeat="md in mostPopular">
+                  <a href="">{{md.title || md.defaultTitle}}</a>
+                </li>
+              </ul>
+              <h4><span translate>recentChanges</span>  <a href="../../srv/en/rss.latest?georss=simplepoint" class="fa fa-rss-square"></a></h4>
+              <ul>
+                <li ng-repeat="md in lastUpdated">
+                  <a href="">{{md.title || md.defaultTitle}}</a>
+                </li>
+              </ul>
             </div>
           </div>
 

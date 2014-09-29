@@ -126,6 +126,7 @@
             $compile(template)(scope);
           });
 
+          //TODO: remove this is defined in custom controllers
           scope.addToMap = function(link) {
             gnOwsCapabilities.getCapabilities(link.url).then(function(capObj) {
               var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(link.name, capObj);

@@ -32,7 +32,33 @@
       });
     }]);
 
-    module.controller('gocatSearchFormCtrl', [
+  module.controller('gnsGeocatHome', [
+    '$scope',
+    'gnSearchManagerService',
+    function($scope, gnSearchManagerService) {
+
+      $scope.mdLists = {};
+      var callSearch = function(sortBy, to) {
+        return gnSearchManagerService.gnSearch({
+          sortBy: sortBy,
+          fast: 'index',
+          from: 1,
+          to: to
+        });
+      };
+
+      // Fill last updated section
+      callSearch('changeDate', 10).then(function(data) {
+        $scope.lastUpdated = data.metadata;
+      });
+
+      // Fill most popular section
+      callSearch('popularity', 5).then(function(data) {
+        $scope.mostPopular = data.metadata;
+      });
+  }]);
+
+  module.controller('gocatSearchFormCtrl', [
     '$scope',
     'gnHttp',
     'gnHttpServices',

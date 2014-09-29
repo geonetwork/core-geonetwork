@@ -24,6 +24,8 @@
   "layer": "layer",
   "nolayer": "No layer",
   "layers": "layers",
-  "inbasket": "in your basket"
+  "mostPopular": "Most popular",
+  "recentChanges": "Recent changes",
+  "homeTitle": "Search for geodata and geoservices"
 
 }

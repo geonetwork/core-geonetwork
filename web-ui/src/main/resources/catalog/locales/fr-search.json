@@ -24,6 +24,9 @@
   "layer": "couche",
   "nolayer": "Aucune couche",
   "layers": "couches",
-  "inbasket": "dans votre panier"
+  "inbasket": "dans votre panier",
+  "mostPopular": "Les plus populaires",
+  "recentChanges": "Derniers ajouts",
+  "homeTitle": "Recherche de géodonnées et géoservices"
 
 }
