@@ -1,11 +1,11 @@
 <input type="checkbox" class="md-checkbox"/>
 <div class="btn-group">
   <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-    <input type="checkbox"> <span class="caret"></span>
+    <input type="checkbox">
+    <span ng-show="searchResults.selectedCount > 0" class="badge">{{searchResults.selectedCount}}</span>
+    <span class="caret"></span>
   </button>
   <ul class="dropdown-menu" role="menu">
-    <li ng-show="searchResults.selectedCount > 0"><a href="#">{{searchResults.selectedCount}} selected</a></li>
-    <li class="divider" ng-show="searchResults.selectedCount > 0"></li>
     <li><a href="#" ng-click="selectAllInPage(true)" translate>Select All in page</a></li>
     <li><a href="" ng-click="selectAll()" translate>Select All</a></li>
     <li class="divider"></li>
