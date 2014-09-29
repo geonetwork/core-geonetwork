@@ -58,13 +58,17 @@
 
         // load the resources
         var layers = context.resourceList.layer;
-        var i, olLayer;
+        var i, j, olLayer;
         var self = this;
         for (i = 0; i < layers.length; i++) {
           var layer = layers[i];
-          if (layer.name && (layer.name.indexOf('google') != -1 ||
-              layer.name.indexOf('osm') != -1)){
-            // pass
+          if (layer.group == 'Background layers'){
+            $.each(gnViewerSettings.bgLayers, function(index, bgLayer) {
+              if (bgLayer.get('title') == layer.title) {
+                map.getLayers().removeAt(0);
+                map.getLayers().insertAt(0, bgLayer);
+              }
+            });
           } else {
             var server = layer.server[0];
             if (server.service == 'urn:ogc:serviceType:WMS') {
