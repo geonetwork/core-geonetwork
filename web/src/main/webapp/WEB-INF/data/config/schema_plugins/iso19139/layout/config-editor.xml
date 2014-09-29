@@ -1367,7 +1367,8 @@
     </view>
 
 
-    <view name="medsea" upAndDownControlHidden="true">
+    <view name="medsea" upAndDownControlHidden="true"
+          displayIfRecord="contains(gmd:MD_Metadata/gmd:metadataStandardName/gco:CharacterString, 'MedSea')">
       <tab id="characteristics" mode="flat" default="true">
         <section>
           <field
@@ -1417,7 +1418,8 @@
 
           <text ref="production-mode-field-missing"/>
 
-          <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevel"/>
+          <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevel"
+                  name="medseaHierarchyLevel"/>
         </section>
       </tab>
       <tab id="datasources">

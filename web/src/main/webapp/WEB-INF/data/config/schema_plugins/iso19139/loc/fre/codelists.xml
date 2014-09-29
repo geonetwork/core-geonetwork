@@ -1328,7 +1328,29 @@
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
 	</codelist>
 	<!-- ==================================================== -->
-	<codelist name="gmd:MD_ScopeCode">
+  <codelist name="gmd:MD_ScopeCode"
+            displayIf="ancestor::node()[
+              name()='gmd:MD_Metadata' and
+              contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]">
+    <entry>
+      <code>dataset</code>
+      <label>Dataset</label>
+      <description>Information applies to the dataset</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>series</code>
+      <label>Series</label>
+      <description>Information applies to the series</description>
+    </entry>
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <entry>
+      <code>nonGeographicDataset</code>
+      <label>Non geographic dataset</label>
+      <description>Information applies to non-geographic data</description>
+    </entry>
+  </codelist>
+  <codelist name="gmd:MD_ScopeCode">
 		<entry>
 			<code>attribute</code>
 			<label>Attribut</label>
