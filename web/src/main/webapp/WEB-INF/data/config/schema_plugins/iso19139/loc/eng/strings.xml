@@ -88,6 +88,7 @@
   <medsea>MedSea</medsea>
   <medsea-metadata>Metadata</medsea-metadata>
   <characteristics>Characteristics</characteristics>
+  <medseaHierarchyLevel>Hierarchy data level</medseaHierarchyLevel>
   <datasources>Data sources</datasources>
   <overview>Overview</overview>
   <spatialCoverage>Spatial coverage</spatialCoverage>
@@ -99,7 +100,7 @@
   <uniqueIdentifier>Unique identifier</uniqueIdentifier>
   <environmental-matrix>Environmental matrix</environmental-matrix>
   <sdn-parameter-discovery>SeaDataNet Parameter Discovery Vocabulary (P02)</sdn-parameter-discovery>
-  <level-of-characteristics>Level of characteristicss</level-of-characteristics>
+  <level-of-characteristics>Level of characteristics</level-of-characteristics>
   <providerSpecification>Purpose of characteristics production (provider specification)</providerSpecification>
   <processStepReference>Production and quality assessment specifications reference</processStepReference>
   <useOfTheCharacteristics>Title of the intended  use of the characteristic by the challenge</useOfTheCharacteristics>
