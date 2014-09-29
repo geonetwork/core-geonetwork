@@ -21,7 +21,7 @@
   /**
    * Controller to create new metadata record.
    */
-  var searchFormController = function($scope, $location,
+  var searchFormController = function($scope, $location, gnSearchSettings,
                                       gnSearchManagerService, gnFacetService, Metadata) {
     var defaultServiceUrl = 'qi@json';
     var defaultParams = {
@@ -177,6 +177,8 @@
       } else {
         $scope.searchObj.params = {};
       }
+      $scope.searchObj.params.sortBy = gnSearchSettings.sortbyValues[0];
+
       self.resetPagination();
       $scope.currentFacets = [];
       $scope.triggerSearch();
@@ -199,6 +201,7 @@
   searchFormController['$inject'] = [
     '$scope',
     '$location',
+    'gnSearchSettings',
     'gnSearchManagerService',
     'gnFacetService',
     'Metadata'

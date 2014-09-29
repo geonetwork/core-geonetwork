@@ -53,8 +53,8 @@
           };
         }])
 
-      .directive('sortbyCombo', ['$http', 'gnSchemaManagerService',
-        function($http, gnSchemaManagerService) {
+      .directive('sortbyCombo', ['gnSearchSettings',
+        function(gnSearchSettings) {
           return {
             restrict: 'A',
             require: '^ngSearchForm',
@@ -64,7 +64,7 @@
               params: '='
             },
             link: function(scope, element, attrs, searchFormCtrl) {
-              scope.values = ['relevance', 'title', 'rating'];
+              scope.values = gnSearchSettings.sortbyValues;
               scope.params.sortBy = scope.params.sortBy || scope.values[0];
 
               scope.search = function() {
@@ -75,8 +75,8 @@
           };
         }])
 
-      .directive('hitsperpageCombo', ['$http', 'gnSchemaManagerService',
-        function($http, gnSchemaManagerService) {
+      .directive('hitsperpageCombo', ['gnSearchSettings',
+        function(gnSearchSettings) {
           return {
             restrict: 'A',
             require: '^ngSearchForm',
@@ -86,7 +86,7 @@
               pagination: '=paginationCfg'
             },
             link: function(scope, element, attrs, searchFormCtrl) {
-              scope.values = [3,10,20,50,100];
+              scope.values = gnSearchSettings.hitsperpageValues;
               scope.updatePagination = function() {
                 searchFormCtrl.resetPagination();
                 searchFormCtrl.triggerSearch();

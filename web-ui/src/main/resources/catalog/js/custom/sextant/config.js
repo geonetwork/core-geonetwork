@@ -130,6 +130,12 @@
         icon: 'fa-th-list'
       }];
 
+      /* Hits per page combo values configuration */
+      searchSettings.hitsperpageValues = [3,10,20,50,100];
+
+      /* Sort by combo values configuration */
+      searchSettings.sortbyValues = ['relevance', 'title', 'rating'];
+
       // Set custom config in gnSearchSettings
       angular.extend(searchSettings, {
         viewerMap: viewerMap,

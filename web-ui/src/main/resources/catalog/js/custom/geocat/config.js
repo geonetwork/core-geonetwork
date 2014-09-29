@@ -61,6 +61,12 @@
         hitsPerPage: 3
       };
 
+      /* Hits per page combo values configuration */
+      searchSettings.hitsperpageValues = [3,10,20,50,100];
+
+      /* Sort by combo values configuration */
+      searchSettings.sortbyValues = ['relevance', 'title', 'rating'];
+
       /* Custom templates for search result views */
       searchSettings.resultViewTpls = [{
         tplUrl: '../../catalog/components/search/resultsview/partials/viewtemplates/title.html',
