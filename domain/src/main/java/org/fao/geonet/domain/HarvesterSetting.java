@@ -1,8 +1,11 @@
 package org.fao.geonet.domain;
 
+import com.google.common.collect.Sets;
 import org.fao.geonet.entitylistener.HarvesterSettingEntityListenerManager;
 import org.hibernate.annotations.Type;
 
+import java.util.HashSet;
+import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.*;
@@ -25,6 +28,7 @@ import static javax.persistence.CascadeType.*;
 @SequenceGenerator(name=HarvesterSetting.ID_SEQ_NAME, initialValue=100, allocationSize=1)
 public class HarvesterSetting extends GeonetEntity {
     static final String ID_SEQ_NAME = "harvester_setting_id_seq";
+    private static final HashSet<String> EXCLUDE_FROM_XML = Sets.newHashSet("valueAsBool", "valueAsInt");
 
     private int _id;
     private HarvesterSetting _parent;
@@ -171,6 +175,11 @@ public class HarvesterSetting extends GeonetEntity {
      */
     public HarvesterSetting setValue(boolean value) {
         return setValue(String.valueOf(value));
+    }
+
+    @Override
+    protected Set<String> propertiesToExcludeFromXml() {
+        return EXCLUDE_FROM_XML;
     }
 
     @Override
