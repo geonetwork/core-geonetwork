@@ -102,8 +102,9 @@
               <div gn-selection-widget results="searchResults"></div>
               <div sortby-combo params="searchObj.params"></div>
             </div>
-            <div gn-results-container data-ng-class="{'bg-success' : searching}"
-              search-results="searchResults" template-url="resultTemplate" map="searchObj.searchMap"></div>
+            <span class="loading fa fa-spinner fa-spin" ng-show="searching"></span>
+            <div gn-results-container search-results="searchResults" template-url="resultTemplate" map="searchObj.searchMap">
+            </div>
             <div class="panel-footer">
               <div class="pull-right" hitsperpage-combo pagination-cfg="paginationInfo"></div>
               <div data-gn-pagination="paginationInfo"></div>

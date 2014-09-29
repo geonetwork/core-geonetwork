@@ -7808,26 +7808,22 @@ select[multiple][hitsperpage-combo] select {
 [ng-search-form] .panel-heading [hitsperpage-combo] {
   vertical-align: middle;
 }
-[data-ng-search-form] [gn-map-field],
-[ng-search-form] [gn-map-field] {
+[gn-map-field] {
   border: 1px solid #cccccc;
   border-radius: 3px;
   position: relative;
+  padding: 0;
 }
-[data-ng-search-form] [gn-map-field] [gn-draw-bbox-btn],
-[ng-search-form] [gn-map-field] [gn-draw-bbox-btn],
-[data-ng-search-form] [gn-map-field] .btn-group-vertical,
-[ng-search-form] [gn-map-field] .btn-group-vertical {
+[gn-map-field] [gn-draw-bbox-btn],
+[gn-map-field] .btn-group-vertical {
   position: absolute;
   top: 4px;
   z-index: 10;
 }
-[data-ng-search-form] [gn-map-field] .btn-group-vertical,
-[ng-search-form] [gn-map-field] .btn-group-vertical {
+[gn-map-field] .btn-group-vertical {
   right: 4px;
 }
-[data-ng-search-form] [gn-map-field] [gn-draw-bbox-btn],
-[ng-search-form] [gn-map-field] [gn-draw-bbox-btn] {
+[gn-map-field] [gn-draw-bbox-btn] {
   left: 4px;
 }
 body {
@@ -7998,6 +7994,18 @@ select.geocat-search .geotype {
 textarea.geocat-search .geotype,
 select[multiple].geocat-search .geotype {
   height: auto;
+}
+.loading {
+  position: absolute;
+  top: 1.8em;
+  font-size: 40px;
+  left: 50%;
+  margin-left: 20px;
+  text-shadow: 0 0 1px white;
+  z-index: 200;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 1em;
+  padding: .2em;
 }
 [search-results] .list-group-item.row {
   margin-left: 0;
