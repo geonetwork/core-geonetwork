@@ -55,7 +55,10 @@
               selected: selected ? 'add' : 'remove',
               id: record.getUuid()
             }).success(function(res) {
-              scope.searchResults.selectedCount = parseInt(res[0], 10);
+              var fn = (selected) ? Math.max : Math.min;
+              scope.searchResults.selectedCount = fn(
+                scope.searchResults.selectedCount,
+                parseInt(res[0], 10));
             });
           });
         };
