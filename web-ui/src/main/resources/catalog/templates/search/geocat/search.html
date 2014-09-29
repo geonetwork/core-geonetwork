@@ -72,10 +72,50 @@
           </div>
         </div>
 
-        <div ng-class="(collapsed) ? 'col-md-7' : 'col-md-9'" class="maincol hfull">
-          <div class="panel panel-default hfull">
+        <div ng-class="(!collapsed) ? 'col-md-7' : 'col-md-9'" class="maincol hfull">
+          <div class="panel panel-default hfull" ng-if="initial">
+            <div class="panel-heading" translate>
+              Search for geodata &amp; geoservices
+            </div>
+            <div class="panel-body">
+
+              <div class="row">
+
+                <div class="col-md-6">
+                  <p class="text-center"><img src="http://www.geocat.ch/geonetwork/images/geocatII-web.jpg" alt="Miaou"></p>
+                  <h4>Most popular</h4>
+                  <ul>
+                    <li><a>WMS GeORG Basic data</a></li>
+                    <li><a>WMS GeORG Geology data</a></li>
+                    <li><a>WMS GeORG Position data</a></li>
+                    <li><a>WMS GeORG Temperature Data</a></li>
+                    <li><a>WMS GeORG Cross sections</a></li>
+                  </ul>
+                </div>
+
+                <div class="col-md-6">
+                  <h4>Recent Changes</h4>
+                  <ul>
+                    <li><a>Oeffentlicher Verkehr, Fahrzeuglängen</a></li>
+                    <li><a>WMS GeORG Position data</a></li>
+                    <li><a>WMS GeORG Geology data</a></li>
+                    <li><a>Périmètres de subventionnement approuvés, archive 2008-2011</a></li>
+                    <li><a>WMS GeORG Temperature Data</a></li>
+                    <li><a>WMS GeORG Heat in Place</a></li>
+                    <li><a>WMS GeORG Cross sections</a></li>
+                    <li><a>WMS GeORG Thickness data</a></li>
+                    <li><a>WMS GeORG Gas storage data</a></li>
+                    <li><a>WMS GeORG Basic data</a></li>
+                  </ul>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+          <div class="panel panel-default hfull" ng-if="!initial">
             <div class="panel-heading">
-              <button class="btn btn-default filter" ng-class="{ active: collapsed }"
+              <button class="btn btn-default filter" ng-class="{ active: !collapsed }"
                 ng-click="collapsed=!collapsed"><i class="fa fa-filter"></i></button>
               <div gn-results-tpl-switcher template-url="resultTemplate" class="pull-right"></div>
               <div gn-selection-widget results="searchResults"></div>
@@ -90,7 +130,7 @@
           </div>
         </div>
 
-        <div ng-class="(collapsed) ? 'col-md-2' : 'whidden'" class="maincol hfull">
+        <div ng-class="(!collapsed) ? 'col-md-2' : 'whidden'" class="maincol hfull">
           <div class="panel panel-default hfull">
             <div class="panel-heading">
               <span data-translate>Refine search</span>

@@ -77,9 +77,10 @@
      * @param {boolean} resetPagination If true, then
      * don't reset pagination info.
      */
-    this.triggerSearch = function(keepPagination) {
+    this.triggerSearch = function(keepPagination, initial) {
 
       $scope.searching++;
+      $scope.initial = !!initial;
       angular.extend($scope.searchObj.params, defaultParams);
 
       if(!keepPagination && !$scope.searchObj.permalink) {
@@ -133,7 +134,7 @@
       var init = false; // Avoid the first $locationChangeSuccess event
       var facetsParams;
 
-      self.triggerSearch = function(keepPagination) {
+      self.triggerSearch = function(keepPagination, initial) {
         if(!keepPagination) {
           self.resetPagination();
         }
@@ -143,7 +144,7 @@
         angular.extend(params, facetsParams);
 
         if(angular.equals(params, $location.search())) {
-          triggerSearchFn();
+          triggerSearchFn(false, initial);
         }
         else {
           $location.search(params);
@@ -226,16 +227,18 @@
               angular.extend(scope.searchObj.params, $location.search());
             }
 
+            var initial = jQuery.isEmptyObject(scope.searchObj.params);
+
             // wait for pagination to be set before triggering search
             if (element.find('[data-gn-pagination]').length > 0) {
               var unregisterFn = scope.$watch('hasPagination', function() {
                 if (scope.hasPagination) {
-                  scope.triggerSearch(true);
+                  scope.triggerSearch(true, initial);
                   unregisterFn();
                 }
               });
             } else {
-              scope.triggerSearch();
+              scope.triggerSearch(false, initial);
             }
           }
         }
