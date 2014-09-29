@@ -117,21 +117,31 @@
           var source = layer.getSource();
           var url = "";
           var name;
+          var group;
           if (source instanceof ol.source.OSM) {
             name = "{type=osm}";
+            group = "Background layers";
+          } else if (source instanceof ol.source.MapQuest) {
+            name = "{type=mapquest}";
+            group = "Background layers";
+          } else if (source instanceof ol.source.BingMaps) {
+            name = "{type=bing}";
+            group = "Background layers";
           } else if (source instanceof ol.source.ImageWMS) {
             name = source.getParams().LAYERS;
             url = source.getUrl();
+            group = layer.get('group');
           } else if (source instanceof ol.source.TileWMS) {
             name = source.getParams().LAYERS;
             url = source.getUrls()[0];
+            group = layer.get('group');
           }
           resourceList.layer.push({
             hidden: !layer.getVisible(),
             opacity: layer.getOpacity(),
             name: name,
             title: layer.get('title'),
-            group: layer.get("group"),
+            group: group,
             server: [{
               onlineResource: [{
                 href: url
