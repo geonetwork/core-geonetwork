@@ -77,10 +77,9 @@
      * @param {boolean} resetPagination If true, then
      * don't reset pagination info.
      */
-    this.triggerSearch = function(keepPagination, initial) {
+    this.triggerSearchFn = function(keepPagination) {
 
       $scope.searching++;
-      $scope.initial = !!initial;
       angular.extend($scope.searchObj.params, defaultParams);
 
       if(!keepPagination && !$scope.searchObj.permalink) {
@@ -130,11 +129,11 @@
     };
 
     if($scope.searchObj.permalink) {
-      var triggerSearchFn = self.triggerSearch;
-      var init = false; // Avoid the first $locationChangeSuccess event
+      var triggerSearchFn = self.triggerSearchFn;
       var facetsParams;
 
       self.triggerSearch = function(keepPagination, initial) {
+        $scope.initial = !!initial;
         if(!keepPagination) {
           self.resetPagination();
         }
@@ -144,24 +143,24 @@
         angular.extend(params, facetsParams);
 
         if(angular.equals(params, $location.search())) {
-          triggerSearchFn(false, initial);
+          triggerSearchFn(false);
         }
         else {
           $location.search(params);
         }
-        init = true;
       };
 
       $scope.$on('$locationChangeSuccess', function () {
-        if(init) {
           var params = angular.copy($location.search());
           for(var o in facetsParams) {
             delete params[o];
           }
           $scope.searchObj.params = params;
           triggerSearchFn();
-        }
       });
+    }
+    else {
+      this.triggerSearch = this.triggerSearchFn;
     }
 
     /**
