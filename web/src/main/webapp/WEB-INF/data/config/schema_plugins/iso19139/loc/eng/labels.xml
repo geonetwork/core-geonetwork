@@ -1796,6 +1796,13 @@
 		<description>Other restrictions and legal prerequisites for accessing and using the
             resource</description>
 		<condition>conditional</condition>
+    <!-- MedSea list of values -->
+    <helper>
+      <option value="restricted">restricted</option>
+      <option value="accessible under moratorium">accessible under moratorium</option>
+      <option value="unrestricted">unrestricted</option>
+      <option value="unknown">unknown</option>
+    </helper>
 	</element>
 	<element name="gmd:page" id="406.0">
 		<label>Page</label>
@@ -2005,6 +2012,11 @@
 	<element name="gmd:resolution" id="182.0">
 		<label>Resolution</label>
 		<description>Degree of detail in the grid dataset</description>
+    <helper relAtt="uom">
+      <option value="3" title="hour">3 hours</option>
+      <option value="6" title="month">6 months</option>
+      <option value="10" title="second">10 seconds</option>
+    </helper>
 	</element>
 	<element name="gmd:resourceConstraints" id="35.0">
 		<label>Resource constraints</label>
@@ -2303,6 +2315,17 @@
 		<label>Use limitation</label>
 		<description>Limitation affecting the fitness for use of the resource. Example, _not to be
             used for navigation_</description>
+
+    <helper displayIf="ancestor::node()[
+              name()='gmd:MD_Metadata' and
+              contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]">
+      <option value="no charge">no charge</option>
+      <option value="distribution cost charge">distribution cost charge</option>
+      <option value="collection cost charge">collection cost charge</option>
+      <option value="commercial cost charge">commercial cost charge</option>
+      <option value="cost charge depends on intented use and category of users">cost charge depends on intented use and category of users</option>
+      <option value="unknown">unknown</option>
+    </helper>
     <helper>
       <option value="No condition applies">No condition applies</option>
       <option value="Data under Licence ouverte / Open licence : http://www.etalab.gouv.fr/pages/licence-ouverte-open-licence-5899923.html">Data under Licence ouverte / Open licence : http://www.etalab.gouv.fr/pages/licence-ouverte-open-licence-5899923.html</option>

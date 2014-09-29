@@ -89,6 +89,7 @@
   <medsea>MedSea</medsea>
   <medsea-metadata>Metadata</medsea-metadata>
   <characteristics>Characteristics</characteristics>
+  <medseaTitle>Data source name</medseaTitle>
   <medseaHierarchyLevel>Hierarchy data level</medseaHierarchyLevel>
   <datasources>Data sources</datasources>
   <overview>Overview</overview>
