@@ -33,6 +33,7 @@
       angular.forEach(viewerSettings.bgLayers, function(l) {
         l.displayInLayerManager = false;
         l.background = true;
+        l.set('group', 'Background layers');
       });
 
       /** *************************************
