@@ -1425,6 +1425,11 @@
       <tab id="datasources">
         <section>
 
+          <!--
+          Ne pas utiliser de référence croisée mais bien utiliser du texte libre
+          pour ‘Program name’ et la liste seadatanet pour ‘Edmerp Identifier’
+          (qui n’est pas encore accessible dans le template). Utiliser la balise
+          XML ‘Reconnaissance’ pour le project /programme name
           <field
               name="programName"
               xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
@@ -1439,6 +1444,16 @@
                 gmd:aggregationInfo/gmd:MD_AggregateInformation[
                 gmd:initiativeType/gmd:DS_InitiativeTypeCode/@codeListValue = 'project']/
                 gmd:aggregateDataSetName/gmd:CI_Citation/gmd:title"/>
+-->
+          <field
+                  name="programName"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:credit"/>
+          <field
+                  name="edmerpName"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:descriptiveKeywords
+                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
+                'SDN EDMERP Identifier')]"/>
 
           <text ref="sdn-edmerp"/>
 
@@ -1483,6 +1498,7 @@
           </field>
 
           <field
+              name="medseaTitle"
               xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title"/>
 
         </section>
@@ -1727,9 +1743,9 @@
 
           <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
 
-          <field name="lineage"
+          <!--<field name="lineage"
                  xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
-                    gmd:lineage/gmd:LI_Lineage/gmd:statement"/>
+                    gmd:lineage/gmd:LI_Lineage/gmd:statement"/>-->
         </section>
       </tab>
     </view>
