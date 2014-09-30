@@ -4,8 +4,13 @@
 
   goog.require('gn_search');
   goog.require('gn_search_geocat_config');
+  goog.require('gn_selection_directive');
 
-  var module = angular.module('gn_search_geocat', ['gn_search', 'gn_search_geocat_config']);
+  var module = angular.module('gn_search_geocat', [
+    'gn_search',
+    'gn_search_geocat_config',
+    'gn_selection_directive'
+  ]);
 
   /**
    * @ngdoc controller
@@ -27,7 +32,33 @@
       });
     }]);
 
-    module.controller('gocatSearchFormCtrl', [
+  module.controller('gnsGeocatHome', [
+    '$scope',
+    'gnSearchManagerService',
+    function($scope, gnSearchManagerService) {
+
+      $scope.mdLists = {};
+      var callSearch = function(sortBy, to) {
+        return gnSearchManagerService.gnSearch({
+          sortBy: sortBy,
+          fast: 'index',
+          from: 1,
+          to: to
+        });
+      };
+
+      // Fill last updated section
+      callSearch('changeDate', 10).then(function(data) {
+        $scope.lastUpdated = data.metadata;
+      });
+
+      // Fill most popular section
+      callSearch('popularity', 5).then(function(data) {
+        $scope.mostPopular = data.metadata;
+      });
+  }]);
+
+  module.controller('gocatSearchFormCtrl', [
     '$scope',
     'gnHttp',
     'gnHttpServices',
@@ -36,10 +67,14 @@
     'suggestService',
     '$http',
     'gnSearchSettings',
+    'goDecorateInteraction',
+    'gnMap',
 
     function($scope, gnHttp, gnHttpServices, gnRegionService,
-             $timeout, suggestService,$http, gnSearchSettings) {
+             $timeout, suggestService,$http, gnSearchSettings,
+             goDecorateInteraction, gnMap) {
 
+      // data store for types field
       $scope.types = ['any',
         'dataset',
         'basicgeodata',
@@ -51,20 +86,75 @@
         'service-OGC:WFS'
       ];
 
+      // data store for archives field
+      $scope.archives = [{
+        value: '',
+        label: 'archiveincluded'
+      }, {
+        value: 'n',
+        label: 'archiveexcluded'
+      },{
+        value: 'y',
+        label: 'archiveonly'
+      }];
+
       var map = $scope.searchObj.searchMap;
 
-      gnRegionService.loadRegion('ocean', 'fre').then(
-          function (data) {
-            $scope.cantons = data;
-          });
+      var setSearchGeometry = function(geometry) {
+        $scope.searchObj.params.geometry = format.writeGeometry(
+          geometry.clone().transform('EPSG:3857', 'EPSG:4326')
+        );
+      };
 
-      /** Manage cantons selection (add feature to the map) */
-      var cantonSource = new ol.source.Vector();
-      var nbCantons = 0;
-      var cantonVector = new ol.layer.Vector({
-        source: cantonSource,
+      /** Manage draw area on search map */
+      var feature = new ol.Feature();
+      var featureOverlay = new ol.FeatureOverlay({
         style: gnSearchSettings.olStyles.drawBbox
       });
+      featureOverlay.setMap(map);
+      featureOverlay.addFeature(feature);
+
+      var cleanDraw = function() {
+        featureOverlay.getFeatures().clear();
+        drawInteraction.active = false
+      };
+
+      var drawInteraction = new ol.interaction.Draw({
+        features: featureOverlay.getFeatures(),
+        type: 'Polygon',
+        style: gnSearchSettings.olStyles.drawBbox
+      });
+      drawInteraction.on('drawend', function(){
+        setSearchGeometry(featureOverlay.getFeatures().item(0).getGeometry());
+        setTimeout(function() {
+          drawInteraction.active = false;
+        }, 0);
+      });
+      drawInteraction.on('drawstart', function(){
+        featureOverlay.getFeatures().clear();
+      });
+      goDecorateInteraction(drawInteraction, map);
+
+      $scope.$watch('restrictArea', function(v){
+        if(angular.isDefined(v)) {
+          if($scope.restrictArea == 'draw') {
+            drawInteraction.active = true;
+          }
+          else {
+            cleanDraw();
+          }
+        }
+      });
+
+      /** When we switch between simple and advanced form*/
+      $scope.$watch('advanced', function(v){
+        if(v == false) {
+          $scope.restrictArea = '';
+        }
+      });
+
+      /** Manage cantons selection (add feature to the map) */
+      var nbCantons = 0;
       var addCantonFeature = function(id) {
         var url = 'http://www.geocat.ch/geonetwork/srv/eng/region.geom.wkt?id=kantone:'+id+'&srs=EPSG:3857';
         var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
@@ -73,29 +163,59 @@
         return $http.get(proxyUrl).success(function(wkt) {
           var parser = new ol.format.WKT();
           var feature = parser.readFeature(wkt);
-          cantonSource.addFeature(feature);
+          featureOverlay.getFeatures().push(feature);
         });
       };
-      map.addLayer(cantonVector);
 
       // Request cantons geometry and zoom to extent when
       // all requests respond.
       $scope.$watch('searchObj.params.cantons', function(v){
-        cantonSource.clear();
+        featureOverlay.getFeatures().clear();
         if(angular.isDefined(v) && v != '') {
           var cs = v.split(',');
           for(var i=0; i<cs.length;i++) {
             var id = cs[i].split('#')[1];
             addCantonFeature(Math.floor((Math.random() * 10) + 1)).then(function(){
               if(--nbCantons == 0) {
-                map.getView().fitExtent(cantonSource.getExtent(), map.getSize());
+                var features = featureOverlay.getFeatures();
+                var extent = features.item(0).getGeometry().getExtent();
+                features.forEach(function(f) {
+                  ol.extent.extend(extent, f.getGeometry().getExtent());
+                });
+                map.getView().fitExtent(extent, map.getSize());
               }
             });
           }
         }
       });
 
+      var key;
+      var format = new ol.format.WKT();
+      var setSearchGeometryFromMapExtent = function() {
+        var geometry = new ol.geom.Polygon(gnMap.getPolygonFromExtent(
+            map.getView().calculateExtent(map.getSize())));
+        setSearchGeometry(geometry);
+      };
+      $scope.$watch('restrictArea', function(v) {
+        if (v == 'bbox') {
+          setSearchGeometryFromMapExtent();
+          key = map.getView().on('propertychange', setSearchGeometryFromMapExtent);
+        } else {
+          $scope.searchObj.params.geometry = '';
+          map.getView().unByKey(key);
+        }
+      });
 
+      $scope.searchObj.params.relation = 'within';
+
+      $scope.scrollToBottom = function($event) {
+        var elem = $($event.target).parents('.panel-body')[0];
+        setTimeout(function() {
+          elem.scrollTop = elem.scrollHeight;
+        }, 0);
+      };
+
+/*
       $('#categoriesF').tagsinput({
         itemValue: 'id',
         itemText: 'label'
@@ -119,6 +239,7 @@
         this.tagsinput('add', datum);
         this.tagsinput('input').typeahead('setQuery', '');
       }, $('#categoriesF')));
+*/
 
 
       // Keywords input list

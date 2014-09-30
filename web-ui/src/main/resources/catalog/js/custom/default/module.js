@@ -13,8 +13,10 @@
     'suggestService',
     '$http',
     'gnSearchSettings',
+    'gnViewerSettings',
       'gnMap',
-    function($scope, $location, suggestService, $http, gnSearchSettings, gnMap) {
+    function($scope, $location, suggestService, $http, gnSearchSettings,
+        gnViewerSettings, gnMap) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -49,22 +51,16 @@
         if(viewerMap.getSize()[0] == 0 || viewerMap.getSize()[1] == 0){
           setTimeout(function(){
             viewerMap.updateSize();
+            if (gnViewerSettings.initialExtent) {
+              viewerMap.getView().fitExtent(gnViewerSettings.initialExtent,
+                  viewerMap.getSize());
+            }
           }, 0);
         }
         $scope.mainTabs.map.titleInfo = '';
       };
 
 ///////////////////////////////////////////////////////////////////
-      $scope.getAnySuggestions = function(val) {
-        var url = suggestService.getUrl(val, 'anylight',
-            ('STARTSWITHFIRST'));
-
-        return $http.get(url, {
-        }).then(function(res){
-          return res.data[1];
-        });
-      };
-
       $scope.$watch('searchObj.advancedMode', function(val) {
         if(val && (searchMap.getSize()[0] == 0 || searchMap.getSize()[1] == 0)){
           setTimeout(function(){

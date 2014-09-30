@@ -10,7 +10,8 @@
       <i class="fa fa-minus"></i>
     </button>
   </div>
-  <button class="btn btn-default" gn-draw-bbox-btn="searchObj.params.geometry" go-btn data-ng-model="interaction.active">
+  <button class="btn btn-default" gn-draw-bbox-btn="{{gnDrawBboxBtn}}"
+          gn-draw-bbox-extent="{{gnDrawBboxExtent}}" go-btn data-ng-model="interaction.active">
     <i class="fa fa-pencil"></i>
   </button>
 </div>

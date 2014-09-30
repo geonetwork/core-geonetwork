@@ -56,12 +56,11 @@
 
       return {
         restrict: 'A',
-        scope: {
-          searchResults: '=',
-          templateUrl: '=',
-          map: '='
-        },
+        scope: true,
         link: function(scope, element, attrs, controller) {
+
+          scope.map = scope.$eval(attrs.map);
+          //scope.searchResults = scope.$eval(attrs.searchResults);
 
           /** Display fa icons for categories */
           scope.catIcons = {
@@ -113,20 +112,21 @@
             }
           });
 
-          scope.$watch('templateUrl', function(templateUrl) {
+          scope.$watch('resultTemplate', function(templateUrl) {
 
             if (angular.isUndefined(templateUrl)) {
               return;
             }
             var template = angular.element(document.createElement('div'))
             template.attr({
-              'ng-include': 'templateUrl'
+              'ng-include': 'resultTemplate'
             });
             element.empty();
             element.append(template);
             $compile(template)(scope);
           });
 
+          //TODO: remove this is defined in custom controllers
           scope.addToMap = function(link) {
             gnOwsCapabilities.getCapabilities(link.url).then(function(capObj) {
               var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(link.name, capObj);

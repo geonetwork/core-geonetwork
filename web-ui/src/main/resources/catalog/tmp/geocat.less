@@ -3,6 +3,21 @@
 body {
   font-family: Arial, @font-family-sans-serif;
 }
+.navbar {
+  .navbar-brand {
+    padding: 0 15px;
+    line-height: 50px;
+  }
+  img {
+    max-height: 50px;
+  }
+  .navbar-form input {
+    width: 7em;
+  }
+  [gn-language-switcher] {
+    margin-left: 1em;
+  }
+}
 
 .twitter-typeahead {
   width: 100%;
@@ -30,18 +45,24 @@ body {
 .advanced,
 .administrative {
   max-height: 0;
-  overflow-y: hidden;
+  overflow: hidden;
   transition: max-height ease .25s;
   &.active {
-    max-height: 50em;
-    overflow-y: visible;
+    max-height: 70em;
+    overflow: visible;
   }
 }
 .administrative.active {
   max-height: 5em;
 }
+.basic.active {
+  max-height: 6em;
+}
 
 .geocat-search {
+  .backtonormal {
+    margin-bottom: -20px;
+  }
   font-size: 90%;
   label {
     font-weight: normal;
@@ -54,22 +75,57 @@ body {
   }
   .bootstrap-tagsinput {
     padding: 0;
+  }
+  .advanced .bootstrap-tagsinput {
     margin-bottom: 0;
   }
   .tt-dropdown-menu {
     left: 6px !important;
+    width: 100%;
   }
   legend {
     font-size: 1em;
     font-style: italic;
-    padding-top: 1em;
+    padding-top: .4em;
     margin-bottom: 12px;
   }
+  .bootstrap-tagsinput {
+    .label {
+      .label-primary;
+      font-size: 12px;
+      font-weight: normal;
+      margin: 2px;
+    }
+  }
+  .geotype {
+    .form-control;
+    .input-sm;
+    width: 50%;
+    margin: 0 0 1em 25%;
+    z-index: 2000;
+  }
 }
+.loading {
+  position: absolute;
+  top: 1.8em;
+  font-size: 40px;
+  left: 50%;
+  margin-left: 20px;
+  text-shadow: 0 0 1px white;
+  z-index: 200;
+  background: rgba(255,255,255,.7);
+  border-radius: 1em;
+  padding: .2em;
+}
+
 [search-results] {
   .list-group-item.row {
     margin-left: 0;
     margin-right: 0;
+    padding-left: 13px;
+    .pull-left {
+      margin-right: .8em;
+    }
   }
 }
 
@@ -110,4 +166,40 @@ body {
 
 [data-gn-facet-list] {
   font-size: 90%;
+}
+
+@media (min-width: @screen-lg-min) {
+  html, body,
+  body > div,
+  .container-fluid,
+  .hfull,
+  {
+    height: 100%;
+    overflow: hidden;
+  }
+  .container-fluid {
+    height: ~"calc(100% - 6em)";
+  }
+  .maincol .panel{
+    position: relative;
+    .panel-footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      z-index: 2000;
+    }
+    [search-results],
+    .panel-body {
+      height: ~"calc(100% - 7.4em)";
+      overflow: auto;
+    }
+    .geocat-search {
+      height: ~"calc(100% - 10em - 200px)";
+    }
+    [gn-map-field] {
+      position: absolute;
+      bottom: 5.7em;
+      width: ~"calc(100% - 30px)";
+    }
+  }
 }

@@ -1,10 +1,58 @@
-<div class="container-fluid gn-search-page" data-ng-controller="GnSearchController">
-  <div class="" data-ng-controller="gnsGeocat">
+<nav class="navbar navbar-default" role="navigation">
 
-    <form ng-search-form="" runsearch="true">
-      <div class="row top-buffer">
-        <div class="col-md-3">
-          <div class="panel panel-primary">
+  <div class="container-fluid">
+
+    <div class="navbar-header">
+
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">
+        <img src="http://www.geocat.ch/internet/geocat/fr/home.parsys.00011.Image.jpeg" alt="{{'Geocat Logo' | translate}}">
+        geocat.ch
+      </a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+      <ul class="nav navbar-nav">
+        <li class=""><a href="#" translate>Overview</a></li>
+        <li class=""><a href="#" translate>About</a></li>
+      </ul>
+
+      <div class="form-group navbar-right navbar-btn" gn-language-switcher="lang" data-langs="langs"></div>
+
+      <form class="navbar-form navbar-right" role="login" action="../../j_spring_security_check" method="post" ng-if="user['@authenticated'] != 'true'">
+        <div class="form-group">
+          <input type="text" name="username" class="form-control" placeholder="{{ 'username' | translate }}">
+          <input type="password" name="password" class="form-control" placeholder="{{ 'password' | translate }}">
+        </div>
+        <button type="submit" class="btn btn-default" translate>Signin</button>
+      </form>
+
+      <div ng-if="user['@authenticated'] == 'true'" class="navbar-text navbar-right">
+        <span translate>Signed in as </span> {{user['username']}}
+        <a ng-show="authenticated" href="../../j_spring_security_logout" title="{{'signout' | translate}}" class="navbar-link">
+          <i class="fa fa-sign-out"></i>
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+
+</nav>
+
+<div class="container-fluid gn-search-page" data-ng-controller="GnSearchController">
+  <div class="hfull" data-ng-controller="gnsGeocat">
+
+    <form ng-search-form="" runsearch="true" class="hfull">
+      <div class="row hfull">
+        <div class="col-md-3 maincol hfull">
+          <div class="panel panel-primary hfull">
             <div class="panel-heading search-top">
               <input type="text" ng-model="searchObj.params.any" placeholder="{{'anyPlaceHolder' | translate}}"
                      typeahead="address for address in getAnySuggestions($viewValue)" typeahead-loading="anyLoading" class="form-control"
@@ -24,36 +72,61 @@
           </div>
         </div>
 
-        <div ng-class="(collapsed) ? 'col-md-7' : 'col-md-9'">
-          <div class="panel panel-default">
+        <div ng-class="(!collapsed) ? 'col-md-7' : 'col-md-9'" class="maincol hfull">
+          <div class="panel panel-default hfull" ng-if="initial" ng-controller="gnsGeocatHome">
+            <div class="panel-heading" translate>
+              <h3 class="panel-title"translate>homeTitle</h3>
+            </div>
+            <div class="panel-body">
+              <img src="http://www.geocat.ch/geonetwork/images/geocatII-web.jpg" alt=""></p>
+              <h4 translate>mostPopular</h4>
+              <ul>
+                <li ng-repeat="md in mostPopular">
+                  <a href="">{{md.title || md.defaultTitle}}</a>
+                </li>
+              </ul>
+              <h4><span translate>recentChanges</span>  <a href="../../srv/en/rss.latest?georss=simplepoint" class="fa fa-rss-square"></a></h4>
+              <ul>
+                <li ng-repeat="md in lastUpdated">
+                  <a href="">{{md.title || md.defaultTitle}}</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panel panel-default hfull" ng-show="!initial">
             <div class="panel-heading">
-              <button class="btn btn-default filter" ng-class="{ active: collapsed }"
+              <button class="btn btn-default filter" ng-class="{ active: !collapsed }"
                 ng-click="collapsed=!collapsed"><i class="fa fa-filter"></i></button>
               <div gn-results-tpl-switcher template-url="resultTemplate" class="pull-right"></div>
+              <div gn-selection-widget results="searchResults"></div>
               <div sortby-combo params="searchObj.params"></div>
             </div>
-            <div data-gn-facet-breadcrumb="currentFacets"></div>
-            <div gn-results-container data-ng-class="{'bg-success' : searching}"
-              search-results="searchResults" template-url="resultTemplate" map="searchObj.searchMap"></div>
+            <span class="loading fa fa-spinner fa-spin" ng-show="searching"></span>
+            <div gn-results-container search-results="searchResults" template-url="resultTemplate" map="searchObj.searchMap">
+            </div>
             <div class="panel-footer">
               <div class="pull-right" hitsperpage-combo pagination-cfg="paginationInfo"></div>
               <div data-gn-pagination="paginationInfo"></div>
             </div>
           </div>
         </div>
-        <div ng-class="(collapsed) ? 'col-md-2' : 'whidden'">
-          <div class="panel panel-default">
+
+        <div ng-class="(!collapsed) ? 'col-md-2' : 'whidden'" class="maincol hfull">
+          <div class="panel panel-default hfull">
             <div class="panel-heading">
               <span data-translate>Refine search</span>
             </div>
-            <div class="panel-body"
-              data-gn-facet-list="searchResults.facet"
-              data-facet-config="facetsConfig"
-              data-current-facets="currentFacets">
+            <div class="panel-body">
+              <div data-gn-facet-breadcrumb="currentFacets"></div>
+              <div data-gn-facet-list="searchResults.facet"
+                data-facet-config="facetsConfig"
+                data-current-facets="currentFacets">
             </div>
           </div>
         </div>
       </div>
+
     </form>
   </div>
 </div>

@@ -1,0 +1,18 @@
+<div class="container">
+  <div class="alert alert-warning" role="alert">
+    <ng-pluralize count="panier.length"
+                  when="{'0': ('nolayer' | translate),
+                            '1': '1 ' +  ('layer' | translate),
+                            'other': '{} ' +  ('layers' | translate)}">
+
+    </ng-pluralize>
+    <span translate>inbasket</span>.
+  </div>
+
+  <ul class="list-group">
+    <li ng-repeat="elt in panier" class="list-group-item" sxt-panier-elt="formObj" sxt-panier-elt-md="elt.md">
+    </li>
+  </ul>
+
+  <label data-ng-show="panier.length > 0" class="btn btn-primary" ng-click="extract()">Télécharger</label>
+</div>
