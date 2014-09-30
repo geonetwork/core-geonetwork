@@ -21,7 +21,8 @@
     'gnMap',
     'gnOwsCapabilities',
     '$http',
-    function(gnMap, gnOwsCapabilities, $http) {
+    'gnViewerSettings',
+    function(gnMap, gnOwsCapabilities, $http, gnViewerSettings) {
 
       /**
        * Loads a context, ie. creates layers and centers the map
@@ -47,18 +48,27 @@
         var extent = ll.concat(ur);
         var projection = bbox.crs;
         // reproject in case bbox's projection doesn't match map's projection
-        extent = ol.proj.transformExtent(extent, map.getView().getProjection(), projection);
+        extent = ol.proj.transformExtent(extent, map.getView().getProjection(),
+          projection);
+
+        // store the extent into view settings so that it can be used later in
+        // case the map is not visible yet
+        gnViewerSettings.initialExtent = extent;
         map.getView().fitExtent(extent, map.getSize());
 
         // load the resources
         var layers = context.resourceList.layer;
-        var i, olLayer;
+        var i, j, olLayer;
         var self = this;
         for (i = 0; i < layers.length; i++) {
           var layer = layers[i];
-          if (layer.name.indexOf('google') != -1 ||
-              layer.name.indexOf('osm') != -1) {
-            // pass
+          if (layer.group == 'Background layers'){
+            $.each(gnViewerSettings.bgLayers, function(index, bgLayer) {
+              if (bgLayer.get('title') == layer.title) {
+                map.getLayers().removeAt(0);
+                map.getLayers().insertAt(0, bgLayer);
+              }
+            });
           } else {
             var server = layer.server[0];
             if (server.service == 'urn:ogc:serviceType:WMS') {
@@ -113,16 +123,23 @@
           var name;
           if (source instanceof ol.source.OSM) {
             name = "{type=osm}";
+          } else if (source instanceof ol.source.MapQuest) {
+            name = "{type=mapquest}";
+          } else if (source instanceof ol.source.BingMaps) {
+            name = "{type=bing}";
           } else if (source instanceof ol.source.ImageWMS) {
             name = source.getParams().LAYERS;
-            url = layer.getSource().getUrl();
+            url = source.getUrl();
+          } else if (source instanceof ol.source.TileWMS) {
+            name = source.getParams().LAYERS;
+            url = source.getUrls()[0];
           }
           resourceList.layer.push({
-            hidden: layer.getVisible(),
+            hidden: !layer.getVisible(),
             opacity: layer.getOpacity(),
             name: name,
             title: layer.get('title'),
-            group: layer.get("group"),
+            group: layer.get('group'),
             server: [{
               onlineResource: [{
                 href: url
@@ -149,6 +166,15 @@
           value: context
         });
         return xml;
+      };
+
+      /**
+       * Saves the map context to local storage
+       */
+      this.saveToLocalStorage = function(map) {
+        var xml = this.writeContext(map);
+        var xmlString = (new XMLSerializer()).serializeToString(xml);
+        window.localStorage.setItem("owsContext", xmlString);
       };
 
       /**
