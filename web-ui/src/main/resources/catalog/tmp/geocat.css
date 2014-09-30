@@ -7859,6 +7859,7 @@ body {
 }
 .more {
   margin: 0 0 0 15px;
+  font-style: italic;
 }
 .basic,
 .advanced,

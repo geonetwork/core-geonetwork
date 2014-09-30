@@ -26,7 +26,8 @@
     <div class="form-group">
       <div class="col-md-offset-4">
         <button class="btn btn-default more" ng-click="advanced = !advanced" ng-class="{'backtonormal': advanced}">
-          <i translate>{{ (advanced) ? 'simpleForm' : 'advancedForm' }}</i>
+          <span translate ng-show="!advanced">advancedForm</span>
+          <span translate ng-show="advanced">simpleForm</span>
         </button>
       </div>
     </div>
