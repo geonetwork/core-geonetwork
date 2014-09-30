@@ -117,8 +117,10 @@
 
         },
         addMdLayerToPanier: function(link,md) {
-          md.url = link.url;
-          $scope.searchObj.panier.push(md);
+          $scope.searchObj.panier.push({
+            link: link,
+              md: md
+          });
           $scope.mainTabs.panier.titleInfo += 1;
         }
       };
