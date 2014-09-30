@@ -7996,6 +7996,9 @@ textarea.geocat-search .geotype,
 select[multiple].geocat-search .geotype {
   height: auto;
 }
+.geocat-search [gn-draw-bbox-extent] {
+  display: none;
+}
 .datepicker {
   height: auto;
 }
