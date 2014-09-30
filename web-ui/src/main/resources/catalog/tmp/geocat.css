@@ -8029,7 +8029,6 @@ select[multiple].geocat-search .geotype {
 }
 .aside .well {
   margin-bottom: .5em;
-  margin-right: -20px;
 }
 .aside .well .fa {
   font-size: 110%;
@@ -8046,10 +8045,21 @@ select[multiple].geocat-search .geotype {
 .aside .btn-group .btn-default {
   border-color: transparent;
   background: inherit;
+  width: 100%;
+  text-align: left;
 }
 .aside .btn-group .btn-default:hover {
   border-color: rgba(0, 0, 0, 0.15);
   background-color: white;
+}
+.aside .btn-group .btn-default .caret {
+  position: absolute;
+  top: 1.1em;
+  right: 1em;
+}
+.aside .btn-group .dropdown-menu {
+  right: 0;
+  left: auto;
 }
 [data-gn-facet-list] {
   font-size: 90%;

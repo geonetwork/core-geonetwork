@@ -145,7 +145,6 @@ body {
   font-size: 90%;
   .well {
     margin-bottom: .5em;
-    margin-right: -20px;
     .fa {
       font-size: 110%;
       margin-left: .5em;
@@ -161,10 +160,21 @@ body {
     .btn-default {
       border-color: transparent;
       background: inherit;
+      width: 100%;
+      text-align: left;
       &:hover {
         border-color: @dropdown-border;
         background-color: white;
       }
+      .caret {
+        position: absolute;
+        top: 1.1em;
+        right: 1em;
+      }
+    }
+    .dropdown-menu {
+      right: 0;
+      left: auto;
     }
   }
 }
