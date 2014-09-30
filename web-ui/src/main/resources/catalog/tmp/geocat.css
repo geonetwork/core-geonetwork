@@ -7995,6 +7995,9 @@ textarea.geocat-search .geotype,
 select[multiple].geocat-search .geotype {
   height: auto;
 }
+.datepicker {
+  height: auto;
+}
 .loading {
   position: absolute;
   top: 1.8em;
