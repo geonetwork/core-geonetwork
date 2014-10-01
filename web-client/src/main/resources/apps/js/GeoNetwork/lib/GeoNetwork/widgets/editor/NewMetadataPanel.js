@@ -199,8 +199,7 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
             store: this.groupStore,
             allowBlank: false,
             valueField: 'id',
-            displayField: 'name',
-            tpl: '<tpl for="."><div class="x-combo-list-item">{[values.label.' + GeoNetwork.Util.getCatalogueLang(OpenLayers.Lang.getCode()) + ']}</div></tpl>',
+            displayField: 'labelInLang',
             listeners: {
                 select: function(field, record, idx){
                     this.selectedGroup = record.get('id');
@@ -239,7 +238,12 @@ GeoNetwork.editor.NewMetadataPanel = Ext.extend(Ext.Panel, {
                         this.validate();
                     }
                 }
-                this.manageLoadedEvent();
+                this.groupStore.sort([{
+                  field: 'labelInLang',
+                  direction: 'ASC'
+                }]);
+
+              this.manageLoadedEvent();
             },
             scope: this
         });
