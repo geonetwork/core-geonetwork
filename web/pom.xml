@@ -290,7 +290,7 @@
     <!-- ====================== -->
     <!-- Generated dependencies -->
     <dependency>
-      <groupId>org.geonetwork-opensource</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>jeeves</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -478,12 +478,12 @@
     <!-- Add dependencies to schema plugin
     having a custom Bean to be loaded. -->
     <dependency>
-      <groupId>org.geonetwork-opensource</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>schema-iso19139</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.geonetwork-opensource</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>schema-dublin-core</artifactId>
       <version>${project.version}</version>
     </dependency>
