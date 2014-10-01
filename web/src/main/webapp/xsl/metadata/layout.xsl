@@ -2216,7 +2216,7 @@
           <xsl:when test="$label">
             <xsl:value-of select="$label"/>
           </xsl:when>
-          <xsl:when test="starts-with($schema,'iso19139') and (gco:CharacterString or gmd:PT_FreeText)">
+          <xsl:when test="starts-with($schema,'iso19139') and (../gco:CharacterString or ../gmd:PT_FreeText)">
             <xsl:apply-templates mode="localised" select="..">
               <xsl:with-param name="langId" select="$langId"/>
             </xsl:apply-templates>

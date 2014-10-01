@@ -1097,9 +1097,9 @@ GeoNetwork.editor.EditorPanel = Ext.extend(Ext.Panel, {
                     i = input.options.length;
                 }
             }
-            // FIXME this.enableLocalInput(input, false);
+            enableLocalInput(input, false);
         }, this);
-        
+
         // --- display validator events when needed.
         items = Ext.DomQuery.select('input,textarea,select');
         Ext.each(items, function(input){
