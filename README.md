@@ -9,3 +9,4 @@ Features
 * Support for OGC-CSW 2.0.2 ISO Profile, OAI-PMH, Z39.50 protocols
 * Fine-grained access control with group and user management
 * Multi-lingual user interface
+*
