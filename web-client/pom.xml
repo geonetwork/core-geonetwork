@@ -71,18 +71,18 @@
         <groupId>net.alchim31.maven</groupId>
         <artifactId>yuicompressor-maven-plugin</artifactId>
         <!--  mvn net.alchim31.maven:yuicompressor-maven-plugin:compress -->
-        <executions>
-          <execution>
+<!--         <executions> -->
+<!--           <execution> -->
             <!-- 
                 minified files need to be generated before resource
                 phase so they are copied to target folder.  If not in target folder
                 then they will not be copied to jar.
              -->
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>compress</goal>
-            </goals>
-          </execution>
+<!--             <phase>generate-resources</phase> -->
+<!--             <goals> -->
+<!--               <goal>compress</goal> -->
+<!--             </goals> -->
+<!--           </execution> -->
           <!--          <execution>
             <id>gn-jslint</id>
             <phase>compile</phase>
@@ -90,7 +90,7 @@
               <goal>jslint</goal>
             </goals>
           </execution>-->
-        </executions>
+<!--         </executions> -->
         <configuration>
           <nosuffix>true</nosuffix>
           <gzip>false</gzip>

@@ -936,6 +936,17 @@
       <name>Repository that has juniversalchardet</name>
       <url>http://mvnrepository.com/artifact</url>
     </repository>
+    
+    
+    <repository>
+	   <id>boundless</id>
+	   <name>Boundless Maven Repository</name>
+	   <url>http://repo.boundlessgeo.com/main</url>
+	   <snapshots>
+	     <enabled>true</enabled>
+	   </snapshots>
+	</repository>
+    
 
   </repositories>
 
