@@ -49,10 +49,11 @@
                        .tooltipContent(function(key, y, e, graph) {
                 // TODO : %age should be relative to
                 // the current set of displayed values
+                var value = d3.format('.0f')(y.replace(',', ''));
                 return '<h3>' + key + '</h3>' +
-                    '<p>' + parseInt(y).toFixed() + ' ' +
-                    $translate('records') + ' (' +
-                    (y / total * 100).toFixed() + '%)</p>';
+                  '<p>' + value + ' ' +
+                  $translate('records') + ' (' +
+                  (value / total * 100).toFixed() + '%)</p>';
               })
                        .showLabels(true);
 

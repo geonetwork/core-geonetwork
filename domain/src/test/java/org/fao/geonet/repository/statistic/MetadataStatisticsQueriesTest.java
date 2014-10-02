@@ -659,8 +659,10 @@ public class MetadataStatisticsQueriesTest extends AbstractSpringDataTest {
                 .getMetadataValidationStatusToStatMap(metadataCount());
         metadataStatistics.getMetadataValidationStatusToStatMap(ratingSum());
         metadataStatistics.getMetadataValidationStatusToStatMap(popularitySum());
-        assertEquals(1, metadataValidationStatusToStatMap.size());
+        assertEquals(3, metadataValidationStatusToStatMap.size());
         assertEquals(0, metadataValidationStatusToStatMap.get(MetadataValidationStatus.NEVER_CALCULATED).intValue());
+        assertEquals(0, metadataValidationStatusToStatMap.get(MetadataValidationStatus.VALID).intValue());
+        assertEquals(0, metadataValidationStatusToStatMap.get(MetadataValidationStatus.INVALID).intValue());
 
         final Map<Pair<String, MetadataValidationStatus>, Integer> metadataValidationTypeAndStatusToStatMap =
                 metadataStatistics.getMetadataValidationTypeAndStatusToStatMap(metadataCount());

@@ -120,7 +120,7 @@
             <xsl:variable name="match">
               <xsl:call-template name="evaluate-iso19139">
                 <xsl:with-param name="base" select="$metadata/descendant-or-self::node()[gn:element/@ref = $node/gn:element/@ref]"/>
-                <xsl:with-param name="in" select="@displayIf"/>
+                <xsl:with-param name="in" select="concat('/', @displayIf)"/>
               </xsl:call-template>
             </xsl:variable>
             <xsl:if test="$match != ''">

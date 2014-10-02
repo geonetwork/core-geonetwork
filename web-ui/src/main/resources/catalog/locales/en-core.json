@@ -18,6 +18,12 @@
     "adminConsole": "Admin console",
     "any": "Full text",
     "anyPlaceHolder": "Search ...",
+    "VALID": "Valid",
+    "INVALID": "Invalid",
+    "NEVER_CALCULATED": "Never validated",
+    
+    "eng": "English",
+    "fre": "Français",
     "ara": "عربي",
     "by": "by",
     "cat": "Català",

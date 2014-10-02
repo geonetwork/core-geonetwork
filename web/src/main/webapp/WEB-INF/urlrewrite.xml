@@ -117,7 +117,7 @@
         <to type="permanent-redirect" last="true">%{context-path}/home</to>
     </rule>
     <rule>
-      <from>^/(?!home$)([a-zA-Z0-9_\-]+)$</from>
+      <from>^/(?!home$)(?!monitor$)(?!\w*healthcheck$)([a-zA-Z0-9_\-]+)$</from>
       <to type="permanent-redirect" last="true">%{context-path}/home?node=$1</to>
     </rule>
 

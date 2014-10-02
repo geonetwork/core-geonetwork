@@ -26,10 +26,13 @@ package org.fao.geonet.kernel.search;
 import com.google.common.collect.Maps;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.WKTReader;
+
+import jeeves.constants.ConfigFile;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.TokenStream;
@@ -76,6 +79,7 @@ import org.jdom.JDOMException;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
@@ -450,14 +454,18 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
             @Nullable ServiceContext srvContext,
             @Nonnull Element request,
             @Nonnull SettingInfo settingInfo) {
-        if (settingInfo != null && settingInfo.getRequestedLanguageOnly() == SettingInfo.SearchRequestLanguage.OFF) {
+    	String finalDetectedLanguage = null;
+         if (settingInfo != null && settingInfo.getRequestedLanguageOnly() == SettingInfo.SearchRequestLanguage.OFF) {
             if (Log.isDebugEnabled(Geonet.LUCENE)) {
-                Log.debug(Geonet.LUCENE, "requestedlanguage ignored");
+                Log.debug(Geonet.LUCENE, "requestedlanguage ignored, using default one ");
             }
-            return null;
+            
+            //Return default language defined on config.xml
+            finalDetectedLanguage = srvContext.getLanguage();
+	       return new LanguageSelection(finalDetectedLanguage, finalDetectedLanguage);
+
         }
         String requestedLanguage = request.getChildText("requestedLanguage");
-        String finalDetectedLanguage = null;
         // requestedLanguage in request
         if (StringUtils.isNotEmpty(requestedLanguage)) {
             if (Log.isDebugEnabled(Geonet.LUCENE)) {
