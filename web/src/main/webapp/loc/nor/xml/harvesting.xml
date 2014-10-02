@@ -492,7 +492,7 @@
 		<tip id="csw.capabUrl">
 			URL'en må peke til et capabilities dokument. Formatet på capabilties URL'en er slik: 
 			:<br/>
-			http://SERVER/STI?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.1			
+			http://SERVER/STI?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.2			
 		</tip>
 
 		<tip id="csw.addSearch">

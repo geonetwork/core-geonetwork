@@ -469,7 +469,8 @@
 		<tip id="csw.capabUrl">
 			The given URL must point to a capabilities document. The format of a capabilities
 			URL is like this:<br/>
-			http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.1			
+			http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.2			
+			http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.1
 		</tip>
 
 		<tip id="csw.addSearch">

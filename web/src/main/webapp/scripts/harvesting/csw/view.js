@@ -283,16 +283,16 @@ function addEmptySearch()
 			queryables.sort();
 			
 			for (var i=0; i < queryables.length; i++) {
-			    var sub = doc.createElement(queryables[i]);
-                search.appendChild(sub);
-                // If the queryable has a namespace, replace the : with __
-                // Otherwise the SettingManager doesn't like entries that contains a : in the name
-                var queryableName = queryables[i].replace(":", "__");
-                var text = doc.createTextNode('{'+queryableName +'}');
-                var subtmp = doc.createElement(queryableName);
+          // If the queryable has a namespace, replace the : with __
+          // Otherwise the SettingManager doesn't like entries that contains a : in the name
+          var queryableName = queryables[i].replace(":", "__");
+			    var sub = doc.createElement(queryableName);
+          search.appendChild(sub);
+          var text = doc.createTextNode('{'+queryableName +'}');
+          var subtmp = doc.createElement(queryableName);
 
-                subtmp.appendChild(text);
-                searchtmp.appendChild(subtmp);
+          subtmp.appendChild(text);
+          searchtmp.appendChild(subtmp);
 			}
 			
 			addSearchTemp(searchtmp);

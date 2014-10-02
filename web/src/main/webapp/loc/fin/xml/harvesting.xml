@@ -449,7 +449,7 @@
 		<!-- CSW harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<tip id="csw.capabUrl">
-			Annetun www-osoitteen on osoitettava capabilities-dokumenttiin. Esimerkki capabilities-tiedoston www-osoittesta: http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.1			
+			Annetun www-osoitteen on osoitettava capabilities-dokumenttiin. Esimerkki capabilities-tiedoston www-osoittesta: http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.2			
 		</tip>
 
 		<tip id="csw.addSearch">
