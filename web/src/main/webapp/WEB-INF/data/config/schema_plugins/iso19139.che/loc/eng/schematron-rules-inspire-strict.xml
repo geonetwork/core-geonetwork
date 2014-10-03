@@ -14,8 +14,13 @@
     <report.M44.dataQualityExpected><div>Data Quality Elements</div></report.M44.dataQualityExpected>
     <assert.M44.dataQualityScopeNotAllowed><div>No children of data quality scope allowed for Inspire compatibility</div></assert.M44.dataQualityScopeNotAllowed>
 
-    <uselimitation>UseLimitation</uselimitation>
+    <uselimitation>Use Limitation</uselimitation>
     <assert.useLimitation><div>Identification / resourceConstraints // useLimitation is required</div></assert.useLimitation>
     <report.useLimitation><div>Use Limitation Elements</div></report.useLimitation>
 
+    <refSys>Reference System</refSys>
+    <assert.refSys>One of the Reference Systems Unique Identifier must be an
+        <a href="http://inspire-geoportal.ec.europa.eu/documentation/legal-and-tgs/ds/INSPIRE_DataSpecification_AD_v3.1/?zoomToText=TG%20Requirement%202">Inspire acceptable CRS</a>
+    </assert.refSys>
+    <report.refSys>There is an Inspire CRS Identifier accepted code.</report.refSys>
 </strings>

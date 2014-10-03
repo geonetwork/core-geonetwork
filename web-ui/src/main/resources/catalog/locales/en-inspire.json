@@ -80,5 +80,6 @@
   "levelDescription" : "Level Description",
   "distributionFormats" : "Distribution Formats",
   "formats" : "Formats",
-  "beforeUnloadEditor" : "Warning: all changes will be lost if you continue."
+  "beforeUnloadEditor" : "Warning: all changes will be lost if you continue.",
+  "linkageURL" : "Linkage (URL)"
 }

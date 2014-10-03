@@ -46,7 +46,7 @@
     "unexpectedSaveError": "Ein unerwarteter Fehler ist aufgetreten",
     "loadingMetadata": "Metadaten werden geladen. Bitte warten...",
     "update": "Update",
-    "cancel": "Cancel",
+    "cancel": "abbrechen",
     "createNew": "Erstellen",
     "updateElement": "Übereinstimmungsreport muss aktualisiert werden.",
     "xsdInvalidWarning": "Es wurden mögliche Validations-Fehler entdeckt. Wechseln Sie zum Standardeditor und überprüfen Sie die Validierungsfehler dort.",
@@ -76,8 +76,9 @@
     "organization": "Organisation",
     "metadataType": "Metadaten Typ",
     "save": "Speichern",
-    "levelDescription": "Level Description",
-    "distributionFormats": "Distribution Formats",
-    "formats": "Formats",
-    "beforeUnloadEditor": "Warning: all changes will be lost if you continue."
+    "levelDescription": "Beschreibung der Ebene",
+    "distributionFormats": "Vertriebsformat",
+    "formats": "Formate",
+    "beforeUnloadEditor": "Warnung: Wenn Sie fortfahren, gehen alle Änderungen verloren .",
+    "linkageURL": "URL"
 }

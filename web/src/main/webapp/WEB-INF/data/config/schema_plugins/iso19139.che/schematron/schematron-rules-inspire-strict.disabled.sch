@@ -19,12 +19,11 @@
     <sch:ns prefix="geonet" uri="http://www.fao.org/geonetwork"/>
     <sch:ns prefix="skos" uri="http://www.w3.org/2004/02/skos/core#"/>
     <sch:ns prefix="xlink" uri="http://www.w3.org/1999/xlink"/>
+    <sch:ns prefix="xslutil" uri="java:org.fao.geonet.util.XslUtil"/>
 
     <sch:pattern>
-        <sch:title>$loc/strings/conformity</sch:title>
-        <sch:rule context="//gmd:dataQualityInfo/*/gmd:report/*/gmd:result">
-            <sch:let name="degree" value="*/gmd:pass/*/text()"/>
-            <sch:let name="lang" value="normalize-space(/*/gmd:language)" />
+    <sch:title>$loc/strings/refSys</sch:title>
+        <sch:rule context="/">
             <sch:let name="langCodeMap">
                 <ger>#DE</ger>
                 <eng>#EN</eng>
@@ -34,6 +33,65 @@
                 <fin>#FI</fin>
                 <dut>#NL</dut>
             </sch:let>
+            <sch:let name="lang" value="normalize-space(/*/gmd:language)" />
+            <sch:let name="langCode" value="normalize-space($langCodeMap//*[name() = $lang])" />
+            <sch:let name="codes" value="/*/gmd:referenceSystemInfo//gmd:RS_Identifier//gmd:code"/>
+
+            <sch:let name="options">
+                -http://www.opengis.net/def/crs/EPSG/0/4936-
+                -http://www.opengis.net/def/crs/EPSG/0/4937-
+                -http://www.opengis.net/def/crs/EPSG/0/4258-
+                -http://www.opengis.net/def/crs/EPSG/0/3035-
+                -http://www.opengis.net/def/crs/EPSG/0/3034-
+                -http://www.opengis.net/def/crs/EPSG/0/3038-
+                -http://www.opengis.net/def/crs/EPSG/0/3039-
+                -http://www.opengis.net/def/crs/EPSG/0/3040-
+                -http://www.opengis.net/def/crs/EPSG/0/30-
+                -http://www.opengis.net/def/crs/EPSG/0/3042-
+                -http://www.opengis.net/def/crs/EPSG/0/3043-
+                -http://www.opengis.net/def/crs/EPSG/0/3044-
+                -http://www.opengis.net/def/crs/EPSG/0/3045-
+                -http://www.opengis.net/def/crs/EPSG/0/3046-
+                -http://www.opengis.net/def/crs/EPSG/0/3047-
+                -http://www.opengis.net/def/crs/EPSG/0/3048-
+                -http://www.opengis.net/def/crs/EPSG/0/3049-
+                -http://www.opengis.net/def/crs/EPSG/0/3050-
+                -http://www.opengis.net/def/crs/EPSG/0/3051-
+                -http://www.opengis.net/def/crs/EPSG/0/5730-
+                -http://www.opengis.net/def/crs/EPSG/0/7409-
+            </sch:let>
+
+
+            <sch:let name="defIdentifier" value="$codes//gco:CharacterString"/>
+            <sch:let name="locIdentifier" value="$codes//gmd:LocalisedCharacterString[@locale = $langCode]"/>
+            <sch:let name="allIdentifiers" value="$defIdentifier | $locIdentifier"/>
+
+            <sch:let name="hasCrs"
+                value="$allIdentifiers[string-length(normalize-space(.)) > 0 and contains($options/text(), concat('-', normalize-space(.), '-'))]"/>
+
+            <sch:assert test="$hasCrs">
+                <sch:value-of select="$loc/strings/assert.refSys"/>
+            </sch:assert>
+            <sch:report test="$hasCrs">
+                <sch:value-of select="$loc/strings/report.refSys"/>
+                <sch:value-of select="$hasCrs"/>
+            </sch:report>
+        </sch:rule>
+    </sch:pattern>
+    <sch:pattern>
+        <sch:title>$loc/strings/conformity</sch:title>
+        <sch:rule context="//gmd:dataQualityInfo/*/gmd:report/*/gmd:result">
+            <sch:let name="degree" value="*/gmd:pass/*/text()"/>
+            <sch:let name="langCodeMap">
+                <ger>#DE</ger>
+                <eng>#EN</eng>
+                <fre>#FR</fre>
+                <ita>#IT</ita>
+                <spa>#ES</spa>
+                <fin>#FI</fin>
+                <dut>#NL</dut>
+            </sch:let>
+            <sch:let name="lang" value="normalize-space(/*/gmd:language)" />
             <sch:let name="langCode" value="normalize-space($langCodeMap//*[name() = $lang])" />
 
             <sch:let name="specification_title_charstring" value="*/gmd:specification/*/gmd:title/gco:CharacterString/text()[string-length(.) > 0]" />
