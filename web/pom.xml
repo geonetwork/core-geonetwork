@@ -439,6 +439,7 @@
                  </goals>
                  <configuration>
                      <sources>
+              			  <source>${basedir}/src/main/java</source>
                           <source>${basedir}/src/main/webapp/WEB-INF/classes/setup/sql/migrate</source>
                      </sources>
                  </configuration>
