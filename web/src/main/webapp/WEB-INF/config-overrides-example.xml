@@ -52,7 +52,7 @@
 	</file>
 	<textFile name="data-db-default.sql">
 		<!-- generate server configuration updates -->
-		<update linePattern="(INSERT INTO Settings VALUES \(11,10,'name',').+?('.*)">$1My GeoNetwork catalogue$2</update>
+		<update linePattern="(INSERT INTO Settings VALUES \(11,10,'name',').+?('.*)">$1EUROSTAT GeoNetwork catalogue$2</update>
 		<update linePattern="(INSERT INTO Settings VALUES \(12,10,'siteId',').+?('.*)">$1Dummy$2</update>
 		<update linePattern="(INSERT INTO Settings VALUES \(13,10,'organization',').+?('.*)">$1My organization$2</update>
 		<update linePattern="(INSERT INTO Settings VALUES \(21,20,'host',').+?('.*)">$1localhost$2</update>

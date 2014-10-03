@@ -173,7 +173,7 @@ Example of xml.config.get response::
  <?xml version="1.0" encoding="UTF-8"?>
  <config>
   <site>
-    <name>My GeoNetwork catalogue</name>
+    <name>EUROSTAT GeoNetwork catalogue</name>
     <organization>My organization</organization>
     <svnUuid>c7799284-e786-4425-a6cf-824bb07e478e</svnUuid>
     <siteId>b7ce20f2-888a-4139-8802-916730c4be06</siteId>

@@ -280,7 +280,7 @@ Harvester settings in XML are used by the harvester services - see :ref:`service
       <hardcopy>true</hardcopy>
       <source>
         <uuid>b7ce20f2-888a-4139-8802-916730c4be06</uuid>
-        <name>My GeoNetwork catalogue</name>
+        <name>EUROSTAT GeoNetwork catalogue</name>
       </source>
     </search>
   </searches>

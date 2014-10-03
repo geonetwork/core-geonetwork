@@ -1045,6 +1045,7 @@
 
 	<header_meta>
 		<meta name="keywords" content="GeoNetwork opensource metadata ISO19115 ISO19139 ISO GIS remote sensing data shapefiles spatial data satellite images map maps interactive opengis geospatial CSW reference implementation mapping 19115 19139 geographic z39.50 catalog clearinghouse coverages grid raster data opensource open source network"/>
+
 		<meta name="description" content="GeoNetwork opensource provides Internet access to interactive maps, satellite imagery and related spatial databases. It's purpose is to improve access to and integrated use of spatial data and information. GeoNetwork opensource allows to easily share spatial data among different users"/>
 		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"/>
 		<meta name="DC.title" lang="English" content="GeoNetwork opensource portal to spatial data and information"/>
@@ -1059,7 +1060,7 @@
 		<meta name="DC.coverage" content="Global"/>
 	</header_meta>
 	<mainpage1>
-		<h1>GeoNetwork's purpose is:</h1>
+		<h1>EUROSTAT GeoNetwork's purpose is:</h1>
 		<ul>
 			<li>To improve access to and integrated use of spatial data and information</li>
 			<li>To support decision making</li>

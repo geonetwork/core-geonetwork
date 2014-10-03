@@ -880,9 +880,9 @@ INSERT INTO Settings VALUES  (0,NULL,'root',NULL);
 INSERT INTO Settings VALUES (1,0,'system',NULL);
 INSERT INTO Settings VALUES (2,0,'harvesting',NULL);
 INSERT INTO Settings VALUES (10,1,'site',NULL);
-INSERT INTO Settings VALUES (11,10,'name','My GeoNetwork catalogue');
+INSERT INTO Settings VALUES (11,10,'name','EUROSTAT GeoNetwork catalogue');
 INSERT INTO Settings VALUES (12,10,'siteId','Dummy');
-INSERT INTO Settings VALUES (13,10,'organization','My organization');
+INSERT INTO Settings VALUES (13,10,'organization','EUROSTAT');
 INSERT INTO Settings VALUES (14,1,'platform',NULL);
 -- FIXME : needs to use maven filter for version and subVersion
 INSERT INTO Settings VALUES (15,14,'version','2.10.3');
