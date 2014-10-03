@@ -37,6 +37,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.metadata.Show;
 import org.fao.geonet.services.metadata.format.function.FormatterFunctionManager;
 import org.fao.geonet.utils.Xml;
@@ -69,13 +70,20 @@ public class Format extends AbstractFormatService {
         ensureInitializedDir(context);
 
         String xslid = Util.getParam(params, "xsl", null);
-        String uuid = Util.getParam(params, Params.UUID, null);
-        String id = Util.getParam(params, Params.ID, null);
-
-        if (uuid == null && id == null) {
-            throw new IllegalArgumentException("Either '" + Params.UUID + "' or '" + Params.ID + "'is a required parameter");
+        String id;
+        try {
+            id = Utils.getIdentifierFromParameters(params, context);
+            Integer.parseInt(id); // check that it is an id and not a uuid
+        } catch (Exception e) {
+            id = Utils.getIdentifierFromParameters(params, context, Params.ID, Params.ID);
         }
 
+        if (id == null) {
+            throw new IllegalArgumentException("Either '" + Params.UUID + "' or '" + Params.ID + "'is a required parameter");
+        }
+        params.removeChild(Params.ID);
+        params.removeChild(Params.UUID);
+        params.addContent(new Element(Params.ID).setText(id));
         Element metadata = showService.exec(params, context);
         final SchemaManager bean = context.getBean(SchemaManager.class);
         final String schema = bean.autodetectSchema(metadata, null);

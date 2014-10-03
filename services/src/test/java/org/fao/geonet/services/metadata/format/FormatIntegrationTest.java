@@ -2,10 +2,8 @@ package org.fao.geonet.services.metadata.format;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import com.google.common.io.Files;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
@@ -18,11 +16,11 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.util.List;
 import javax.annotation.Nullable;
 
 import static org.fao.geonet.domain.Pair.read;
+import static org.junit.Assert.assertTrue;
 
 public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
@@ -63,8 +61,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
             final Element view = formatService.exec(createParams(read("id", id), read("xsl", formatter)), serviceContext);
             view.setName("body");
             Element html = new Element("html").addContent(view);
-            Files.write(Xml.getString(html).getBytes(Constants.ENCODING), new File("e:/tmp/" + formatter + ".html"));
-
+            assertFalse(html.getChildren().isEmpty());
         }
     }
 

@@ -60,32 +60,45 @@ public class ListFormatters extends AbstractFormatService {
         
         Element response = new Element("formatters");
 
-        addFormatters(schema, response, new File(userXslDir), false);
+        addFormatters(schema, response, new File(userXslDir),  new File(userXslDir), false);
 
         final SchemaManager schemaManager = context.getBean(SchemaManager.class);
         final Set<String> schemas = schemaManager.getSchemas();
         for (String schemaName : schemas) {
             if (schema.equals("all") || schema.equals(schemaName)) {
                 final String schemaDir = schemaManager.getSchemaDir(schemaName);
-                addFormatters(schema, response, new File(schemaDir, FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR), true);
+                final File formatterDir = new File(schemaDir, FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR);
+                addFormatters(schema, response, formatterDir, formatterDir, true);
             }
         }
         return response;
     }
 
-    private void addFormatters(String schema, Element response, File root, boolean assumeCorrectSchema) throws IOException {
-        File[] xslFormatters = root.listFiles(new FormatterFilter());
+    private void addFormatters(String schema, Element response, File root, File file, boolean assumeCorrectSchema) throws IOException {
+        File[] xslFormatters = file.listFiles();
+        final FormatterFilter formatterFilter = new FormatterFilter();
+
         if (xslFormatters != null) {
             for (File xsl : xslFormatters) {
-            	boolean add = true;
-            	if(!schema.equalsIgnoreCase("all") && !assumeCorrectSchema) {
-            		ConfigFile config = new ConfigFile(xsl);
-            		if(!config.listOfApplicableSchemas().contains(schema)){
-            			add = false;
-            		}
-            	}
-            	if (add)
-            		response.addContent(new Element(FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR).setText(xsl.getName()));
+                boolean add = true;
+                if (formatterFilter.accept(xsl)) {
+                    if (!schema.equalsIgnoreCase("all") && !assumeCorrectSchema) {
+                        ConfigFile config = new ConfigFile(xsl);
+                        if (!config.listOfApplicableSchemas().contains(schema)) {
+                            add = false;
+                        }
+                    }
+
+                    if (add) {
+                        String path = xsl.getPath().substring(root.getPath().length()).replace("\\", "/");
+                        if (path.startsWith("/")) {
+                            path = path.substring(1);
+                        }
+                        response.addContent(new Element(FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR).setText(path));
+                    }
+                } else {
+                    addFormatters(schema, response, root, xsl, assumeCorrectSchema);
+                }
             }
         }
     }

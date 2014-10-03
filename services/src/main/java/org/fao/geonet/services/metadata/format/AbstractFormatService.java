@@ -75,8 +75,12 @@ abstract class AbstractFormatService implements Service {
 	}
     protected static boolean containsFile(File container, File desiredFile) throws IOException {
         File canonicalDesired = desiredFile.getCanonicalFile();
-        File canonicalContainer = container.getCanonicalFile();
-        return canonicalDesired.getParentFile().equals(canonicalContainer);
+        final File canonicalContainer = container.getCanonicalFile();
+        while (canonicalDesired.getParentFile()!= null && !canonicalDesired.getParentFile().equals(canonicalContainer)) {
+            canonicalDesired = canonicalDesired.getParentFile();
+        }
+
+        return canonicalContainer.equals(canonicalDesired.getParentFile());
     }
     protected File getAndVerifyFormatDir(String paramName, String xslid, File schemaDir) throws BadParameterEx, IOException {
         if (xslid == null) {

@@ -200,7 +200,6 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
                 conn.close();
             }
         }
-
     }
 
     private void setUpDataDirectory() {
@@ -246,6 +245,9 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
         boolean deleteNewFilesFromDataDir = _dataDirectory.exists();
 
+        for (File file : Files.fileTreeTraverser().postOrderTraversal(new File(_dataDirectory, "config/schema_plugins"))) {
+            file.delete();
+        }
         final TreeTraverser<File> fileTreeTraverser = Files.fileTreeTraverser();
 
 
@@ -256,9 +258,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
                 String relativePath = dataDirFile.getPath().substring(prefixPathLength2);
                 final File srcFile = new File(srcDataDir, relativePath);
                 if (!srcFile.exists()) {
-                    if (srcFile.getParent().endsWith("schematron") &&
-                            relativePath.contains("schema_plugins") &&
-                            relativePath.endsWith(".xsl")) {
+                    if (relativePath.contains("schema_plugins")) {
                         // don't copy because the schematron xsl files are generated.
                         // normally they shouldn't be here because they don't need to be in the
                         // repository but some tests can generate them into the schematrons folder
