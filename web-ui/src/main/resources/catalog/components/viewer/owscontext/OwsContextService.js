@@ -64,7 +64,7 @@
           var layer = layers[i];
           if (layer.group == 'Background layers'){
             $.each(gnViewerSettings.bgLayers, function(index, bgLayer) {
-              if (bgLayer.get('title') == layer.title) {
+              if (bgLayer.get('title') == layer.title && !layer.hidden) {
                 map.getLayers().removeAt(0);
                 map.getLayers().insertAt(0, bgLayer);
               }
@@ -83,10 +83,12 @@
        * @param url URL to context
        * @param map map
        */
-      this.loadContextFromUrl = function(url, map) {
+      this.loadContextFromUrl = function(url, map, useProxy) {
         var self = this;
-        var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
-        $http.get(proxyUrl).success(function(data) {
+        if (useProxy) {
+          url = '../../proxy?url=' + encodeURIComponent(url);
+        }
+        $http.get(url).success(function(data) {
           self.loadContext(data, map);
         });
       };
@@ -117,9 +119,10 @@
         var resourceList = {
           layer: []
         };
-        map.getLayers().forEach(function(layer) {
+
+        // add the background layers
+        angular.forEach(gnViewerSettings.bgLayers, function(layer) {
           var source = layer.getSource();
-          var url = "";
           var name;
           if (source instanceof ol.source.OSM) {
             name = "{type=osm}";
@@ -127,7 +130,27 @@
             name = "{type=mapquest}";
           } else if (source instanceof ol.source.BingMaps) {
             name = "{type=bing}";
-          } else if (source instanceof ol.source.ImageWMS) {
+          }
+          resourceList.layer.push({
+            hidden: map.getLayers().getArray().indexOf(layer) < 0,
+            opacity: layer.getOpacity(),
+            name: name,
+            title: layer.get('title'),
+            group: layer.get('group')
+          });
+        });
+
+        map.getLayers().forEach(function(layer) {
+          var source = layer.getSource();
+          var url = "";
+          var name;
+
+          // background layers already taken into account
+          if (layer.background) {
+            return;
+          }
+
+          if (source instanceof ol.source.ImageWMS) {
             name = source.getParams().LAYERS;
             url = source.getUrl();
           } else if (source instanceof ol.source.TileWMS) {
