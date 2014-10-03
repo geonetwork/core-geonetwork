@@ -1111,8 +1111,8 @@
     <module>web-ui-docs</module>
     <module>domain</module>
     <module>oaipmh</module>
-    <module>core</module>
     <module>schemas</module>
+    <module>core</module>
     <module>csw-server</module>
     <module>harvesters</module>
     <module>healthmonitor</module>
