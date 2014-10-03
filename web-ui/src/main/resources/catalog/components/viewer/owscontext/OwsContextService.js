@@ -58,23 +58,41 @@
 
         // load the resources
         var layers = context.resourceList.layer;
-        var i, j, olLayer;
+        var i, j, olLayer, bgLayers = [];
         var self = this;
+        var re = /{.*type\s*=\s*(.*)\s*}/;
         for (i = 0; i < layers.length; i++) {
           var layer = layers[i];
-          if (layer.group == 'Background layers'){
-            $.each(gnViewerSettings.bgLayers, function(index, bgLayer) {
-              if (bgLayer.get('title') == layer.title && !layer.hidden) {
-                map.getLayers().removeAt(0);
-                map.getLayers().insertAt(0, bgLayer);
-              }
-            });
+          if (layer.group == 'Background layers' && layer.name.match(re)) {
+            var type = re.exec(layer.name)[1];
+            var olLayer = gnMap.createLayerForType(type);
+            if (olLayer) {
+              bgLayers.push(olLayer);
+              olLayer.displayInLayerManager = false;
+              olLayer.background = true;
+              olLayer.set('group', 'Background layers');
+              olLayer.setVisible(!layer.hidden);
+            }
           } else {
             var server = layer.server[0];
             if (server.service == 'urn:ogc:serviceType:WMS') {
               self.addWmsLayer(layer, map);
             }
           }
+        }
+
+        // if there's at least one valid bg layer in the context use them for
+        // the application otherwise use the defaults from config
+        if (bgLayers.length > 0) {
+          // first clear settings bgLayers
+          gnViewerSettings.bgLayers.length = 0;
+          $.each(bgLayers, function(index, item) {
+            gnViewerSettings.bgLayers.push(item);
+            if (item.getVisible()) {
+              map.getLayers().removeAt(0);
+              map.getLayers().insertAt(0, item);
+            }
+          });
         }
       };
 
@@ -129,7 +147,9 @@
           } else if (source instanceof ol.source.MapQuest) {
             name = "{type=mapquest}";
           } else if (source instanceof ol.source.BingMaps) {
-            name = "{type=bing}";
+            name = "{type=bing_aerial}";
+          } else {
+            return;
           }
           resourceList.layer.push({
             hidden: map.getLayers().getArray().indexOf(layer) < 0,

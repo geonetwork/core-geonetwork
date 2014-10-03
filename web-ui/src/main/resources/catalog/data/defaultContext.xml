@@ -6,7 +6,7 @@
         </ows:BoundingBox>
     </ows-context:General>
     <ows-context:ResourceList>
-        <ows-context:Layer name="{type=bing}" group="Background layers" hidden="true" opacity="1">
+        <ows-context:Layer name="{type=bing_aerial}" group="Background layers" hidden="false" opacity="1">
             <ows:Title xmlns:ows="http://www.opengis.net/ows">Bing Aerial</ows:Title>
         </ows-context:Layer>
     </ows-context:ResourceList>

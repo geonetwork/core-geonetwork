@@ -14,7 +14,8 @@
       'goDecorateLayer',
       'gnOwsCapabilities',
       'gnConfig',
-      function(goDecorateLayer, gnOwsCapabilities, gnConfig) {
+      '$log',
+      function(goDecorateLayer, gnOwsCapabilities, gnConfig, $log) {
 
         var defaultMapConfig = {
           'useOSM': 'true',
@@ -323,7 +324,7 @@
                   title: 'Bing Aerial'
                 })
             }
-            console.error('Unsupported type');
+            $log.warn('Unsupported layer type: ', type);
           }
         };
       }];
