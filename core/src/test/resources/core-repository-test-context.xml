@@ -48,4 +48,7 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
     <bean id="forceInitRepositoriesForTestingBean" class="org.fao.geonet.kernel.ForceInitRepositoriesForTestingBean" lazy-init="false"/>
     <bean id="httpRequestFactory" class="org.fao.geonet.utils.GeonetHttpRequestFactory" />
 
+    <bean id="stagingProfile" class="java.lang.String">
+        <constructor-arg value="development" />
+    </bean>
 </beans>

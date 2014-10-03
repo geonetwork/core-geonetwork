@@ -123,7 +123,7 @@ public class Register extends AbstractFormatService {
     }
 
     private void handleRawXsl(File uploadedFile, File dir) throws IOException {
-        FileUtils.moveFile(uploadedFile, new File(dir, VIEW_XSL_FILENAME));
+        FileUtils.moveFile(uploadedFile, new File(dir, FormatterConstants.VIEW_XSL_FILENAME));
     }
 
     private void handleZipFile(ZipFile zipFile, File dir) throws IOException {
@@ -132,7 +132,7 @@ public class Register extends AbstractFormatService {
         Collection<File> xslFiles = FileUtils.listFiles(dir, new String[]{"xsl"}, false);
         File toRename = null;
         for (File file : xslFiles) {
-            if (file.getName().equals(VIEW_XSL_FILENAME)) return;
+            if (file.getName().equals(FormatterConstants.VIEW_XSL_FILENAME)) return;
             toRename = file;
         }
         
@@ -140,7 +140,7 @@ public class Register extends AbstractFormatService {
             throw new IllegalStateException("Uploaded zip file must have a view.xsl file or only a single xsl file");
         }
         
-        FileUtils.moveFile(toRename, new File(dir, VIEW_XSL_FILENAME));
+        FileUtils.moveFile(toRename, new File(dir, FormatterConstants.VIEW_XSL_FILENAME));
     }
 
     private void removeTopDir(File dir) throws IOException {

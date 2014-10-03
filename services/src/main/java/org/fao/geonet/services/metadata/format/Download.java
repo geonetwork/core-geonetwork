@@ -24,6 +24,7 @@
 package org.fao.geonet.services.metadata.format;
 
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.Util;
 import org.apache.commons.io.FileUtils;
@@ -45,7 +46,12 @@ public class Download extends AbstractFormatService {
     public Element exec(Element params, ServiceContext context) throws Exception {
         ensureInitializedDir(context);
         String xslid = Util.getParam(params, Params.ID, null);
-        File formatDir = getAndVerifyFormatDir(Params.ID, xslid);
+        String schema = Util.getParam(params, Params.SCHEMA, null);
+        File schemaDir = null;
+        if (schema != null) {
+            schemaDir = new File(context.getBean(SchemaManager.class).getSchemaDir(schema));
+        }
+        File formatDir = getAndVerifyFormatDir(Params.ID, xslid, schemaDir);
         
         try {
             

@@ -27,9 +27,12 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.SchemaManager;
 import org.jdom.Element;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Set;
 
 /**
  * List all formatters
@@ -40,7 +43,7 @@ public class ListFormatters extends AbstractFormatService {
 
     public Element exec(Element params, ServiceContext context) throws Exception {
         ensureInitializedDir(context);
-        String schema = Util.getParam(params, "schema", null);
+        String schema = Util.getParam(params, Params.SCHEMA, null);
         if (Util.getParam(params, Params.ID, null) != null ||
         		Util.getParam(params, Params.UUID, null) != null) {
 	        try {
@@ -56,21 +59,35 @@ public class ListFormatters extends AbstractFormatService {
         schema = schema.trim();
         
         Element response = new Element("formatters");
-        File[] xslFormatters = new File(userXslDir).listFiles(new FormatterFilter());
+
+        addFormatters(schema, response, new File(userXslDir), false);
+
+        final SchemaManager schemaManager = context.getBean(SchemaManager.class);
+        final Set<String> schemas = schemaManager.getSchemas();
+        for (String schemaName : schemas) {
+            if (schema.equals("all") || schema.equals(schemaName)) {
+                final String schemaDir = schemaManager.getSchemaDir(schemaName);
+                addFormatters(schema, response, new File(schemaDir, FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR), true);
+            }
+        }
+        return response;
+    }
+
+    private void addFormatters(String schema, Element response, File root, boolean assumeCorrectSchema) throws IOException {
+        File[] xslFormatters = root.listFiles(new FormatterFilter());
         if (xslFormatters != null) {
             for (File xsl : xslFormatters) {
             	boolean add = true;
-            	if(!schema.equalsIgnoreCase("all")) {
+            	if(!schema.equalsIgnoreCase("all") && !assumeCorrectSchema) {
             		ConfigFile config = new ConfigFile(xsl);
             		if(!config.listOfApplicableSchemas().contains(schema)){
             			add = false;
             		}
             	}
             	if (add)
-            		response.addContent(new Element("formatter").setText(xsl.getName()));
+            		response.addContent(new Element(FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR).setText(xsl.getName()));
             }
         }
-        return response;
     }
 
     @Override

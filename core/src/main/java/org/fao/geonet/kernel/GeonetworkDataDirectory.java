@@ -1,21 +1,17 @@
 package org.fao.geonet.kernel;
 
-import java.io.File;
-import java.io.IOException;
-
 import jeeves.server.ServiceConfig;
 import jeeves.server.sources.http.JeevesServlet;
-import org.apache.commons.io.FileUtils;
-import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
-
-import org.fao.geonet.constants.Geonet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.stereotype.Component;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * The GeoNetwork data directory is the location on the file system where
@@ -54,6 +50,7 @@ public class GeonetworkDataDirectory {
     private File metadataRevisionDir;
     private File resourcesDir;
     private File htmlCacheDir;
+    private File formatterDir;
     private String nodeId;
 
     @Autowired
@@ -281,6 +278,9 @@ public class GeonetworkDataDirectory {
                 Geonet.Config.DATA_DIR);
 		metadataRevisionDir = setDir(jeevesServlet, webappName, handlerConfig, systemDataDir, ".svn" + KEY_SUFFIX,
                 "data" + File.separator + "metadata_subversion",
+                Geonet.Config.SUBVERSION_PATH);
+		formatterDir = setDir(jeevesServlet, webappName, handlerConfig, systemDataDir, ".formatter" + KEY_SUFFIX,
+                "data" + File.separator + "user_xsl",
                 Geonet.Config.SUBVERSION_PATH);
 		resourcesDir = setDir(jeevesServlet, webappName, handlerConfig, systemDataDir,
                 ".resources" + KEY_SUFFIX, "data" + File.separator + "resources",
@@ -556,4 +556,11 @@ public class GeonetworkDataDirectory {
         return nodeId;
     }
 
+    public File getFormatterDir() {
+        return formatterDir;
+    }
+
+    public void setFormatterDir(File formatterDir) {
+        this.formatterDir = formatterDir;
+    }
 }

@@ -29,6 +29,7 @@ import org.apache.commons.io.FileUtils;
 import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.SchemaManager;
 import org.jdom.Element;
 
 import java.io.File;
@@ -46,8 +47,13 @@ public class EditFile extends AbstractFormatService {
 
         String xslid = Util.getParam(params, Params.ID);
         String file = URLDecoder.decode(Util.getParam(params, Params.FNAME), Constants.ENCODING);
+        String schema = Util.getParam(params, Params.SCHEMA, null);
+        File schemaDir = null;
+        if (schema != null) {
+            schemaDir = new File(context.getBean(SchemaManager.class).getSchemaDir(schema));
+        }
 
-        File formatDir = getAndVerifyFormatDir(Params.ID, xslid);
+        File formatDir = getAndVerifyFormatDir(Params.ID, xslid, schemaDir);
 
         Element result = new Element("data");
 

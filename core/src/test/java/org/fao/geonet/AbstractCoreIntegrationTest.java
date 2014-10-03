@@ -92,7 +92,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     protected DirectoryFactory _directoryFactory;
 
     /**
-     * Contain all datadirectories for all nodes.
+     * Contain all data directories for all nodes.
      */
     protected static File _dataDirContainer;
     private static File _dataDirLockFile;
@@ -280,7 +280,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
                         continue;
                     }
 
-                    if (dataDirFile.isFile() || dataDirFile.list().length == 0) {
+                    if (dataDirFile.isFile() || dataDirFile.list() == null || dataDirFile.list().length == 0) {
                         if (!dataDirFile.delete()) {
                             // a file is holding on to a reference so we can't properly clean the data directory.
                             // this means we need a new one.

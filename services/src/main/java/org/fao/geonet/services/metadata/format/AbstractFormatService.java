@@ -16,7 +16,6 @@ import org.jdom.Element;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.util.regex.Pattern;
 
 /**
  * Common constants and methods for Metadata formatter classes
@@ -24,16 +23,13 @@ import java.util.regex.Pattern;
  * @author jeichar
  */
 abstract class AbstractFormatService implements Service {
-    protected static final String USER_XSL_DIR = "user_xsl_dir";
-    protected static final Pattern ID_XSL_REGEX = Pattern.compile("[\\w0-9\\-_]+");
-    protected static final String VIEW_XSL_FILENAME = "view.xsl";
 
     protected volatile String userXslDir;
     protected volatile boolean initializedDir;
 
     public void init(String appPath, ServiceConfig params) throws Exception
     {
-        userXslDir = params.getMandatoryValue(USER_XSL_DIR);
+        userXslDir = params.getMandatoryValue(FormatterConstants.USER_XSL_DIR);
         if(!userXslDir.endsWith(File.separator)) {
             userXslDir = userXslDir + File.separator;
         }
@@ -64,8 +60,8 @@ abstract class AbstractFormatService implements Service {
     }
 
     protected void checkLegalId(String paramName, String xslid) throws BadParameterEx {
-        if(!ID_XSL_REGEX.matcher(xslid).matches()) {
-            throw new BadParameterEx(paramName, "Only the following are permitted in the id"+ID_XSL_REGEX);
+        if(!FormatterConstants.ID_XSL_REGEX.matcher(xslid).matches()) {
+            throw new BadParameterEx(paramName, "Only the following are permitted in the id"+ FormatterConstants.ID_XSL_REGEX);
         }
     }
 	protected String getMetadataSchema(Element params, ServiceContext context)
@@ -78,18 +74,28 @@ abstract class AbstractFormatService implements Service {
 		return schema;
 	}
     protected static boolean containsFile(File container, File desiredFile) throws IOException {
-        String canonicalDesired = desiredFile.getCanonicalPath();
-        String canonicalContainer = container.getCanonicalPath();
-        return canonicalDesired.startsWith(canonicalContainer);
+        File canonicalDesired = desiredFile.getCanonicalFile();
+        File canonicalContainer = container.getCanonicalFile();
+        return canonicalDesired.getParentFile().equals(canonicalContainer);
     }
-    protected File getAndVerifyFormatDir(String paramName, String xslid) throws BadParameterEx, IOException {
+    protected File getAndVerifyFormatDir(String paramName, String xslid, File schemaDir) throws BadParameterEx, IOException {
         if (xslid == null) {
             throw new BadParameterEx(paramName, "missing "+paramName+" param");
         }
         
         checkLegalId(paramName, xslid);
-        File formatDir = new File(userXslDir + xslid);
-        
+        File formatDir = null;
+        if (schemaDir != null && schemaDir.exists()) {
+            formatDir = new File(new File(schemaDir, FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR), xslid);
+            if (!formatDir.exists()) {
+                formatDir = null;
+            }
+        }
+
+        if (formatDir == null) {
+            formatDir = new File(userXslDir, xslid);
+        }
+
         if(!formatDir.exists()) {
             throw new BadParameterEx(paramName, "Format bundle "+xslid+" does not exist");
         }
@@ -98,12 +104,15 @@ abstract class AbstractFormatService implements Service {
             throw new BadParameterEx(paramName, "Format bundle "+xslid+" is not a directory");
         }
         
-        if(!new File(formatDir, VIEW_XSL_FILENAME).exists()) {
-            throw new BadParameterEx(paramName, "Format bundle "+xslid+" is not a valid format bundle because it does not have a "+VIEW_XSL_FILENAME+" file");
+        if(!new File(formatDir, FormatterConstants.VIEW_XSL_FILENAME).exists()) {
+            throw new BadParameterEx(paramName, "Format bundle "+xslid+" is not a valid format bundle because it does not have a "+
+                                                FormatterConstants.VIEW_XSL_FILENAME+" file");
         }
         
         if (!containsFile(new File(userXslDir), formatDir)) {
-            throw new BadParameterEx(paramName, "Format bundle "+xslid+" is not a format bundle id because it does not reference a file contained within the userXslDir");
+            if (schemaDir == null || !containsFile(new File(schemaDir, FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR), formatDir)) {
+                throw new BadParameterEx(paramName, "Format bundle " + xslid + " is not a format bundle id because it does not reference a file contained within the userXslDir");
+            }
         }
         return formatDir;
     }
@@ -111,7 +120,7 @@ abstract class AbstractFormatService implements Service {
     protected static class FormatterFilter implements FileFilter {
         @Override
         public boolean accept(File file) {
-            return file.isDirectory() && new File(file, VIEW_XSL_FILENAME).exists();
+            return file.isDirectory() && new File(file, FormatterConstants.VIEW_XSL_FILENAME).exists();
         }
     }
     

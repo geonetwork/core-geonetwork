@@ -31,6 +31,7 @@ import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.SchemaManager;
 import org.jdom.Element;
 
 import java.io.File;
@@ -49,8 +50,13 @@ public class UpdateFile extends AbstractFormatService {
         String fileName = URLDecoder.decode(Util.getParam(params, Params.FNAME), Constants.ENCODING);
         String xslid = Util.getParam(params, Params.ID);
         String data =  Util.getParam(params, Params.DATA);
-        
-        File formatDir = getAndVerifyFormatDir(Params.ID, xslid);
+        String schema = Util.getParam(params, Params.SCHEMA, null);
+        File schemaDir = null;
+        if (schema != null) {
+            schemaDir = new File(context.getBean(SchemaManager.class).getSchemaDir(schema));
+        }
+
+        File formatDir = getAndVerifyFormatDir(Params.ID, xslid, schemaDir);
         
         File toUpdate = new File(formatDir, fileName.replaceAll("/", File.separator));
         

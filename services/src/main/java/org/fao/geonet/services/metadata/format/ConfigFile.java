@@ -1,7 +1,7 @@
 package org.fao.geonet.services.metadata.format;
 
-import org.apache.commons.io.FileUtils;
 import org.fao.geonet.Constants;
+import org.jdom.Namespace;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,12 +19,17 @@ public class ConfigFile {
     private static final String SCHEMAS_TO_LOAD_PROP = "schemasToLoad";
     private static final String APPLICABLE_SCHEMAS = "applicableSchemas";
 
-	private Properties config;
+    private Properties config;
+    private List<Namespace> namespaces;
 
-	public ConfigFile(File bundleDir) throws IOException {
+    public ConfigFile(File bundleDir) throws IOException {
 		this.config = new Properties();
-        for (File file: FileUtils.listFiles(bundleDir, new String[]{"properties"}, false)) {
-            if(file.getName().equalsIgnoreCase(CONFIG_PROPERTIES_FILENAME)){
+        File[] properties = new File[]{
+                new File(bundleDir.getParentFile(), CONFIG_PROPERTIES_FILENAME),
+                new File(bundleDir, CONFIG_PROPERTIES_FILENAME)};
+
+        for (File file: properties) {
+            if(file.exists()){
                 FileInputStream inStream = new FileInputStream (file);
                 try {
                     config.load(inStream);
