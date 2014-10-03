@@ -46,7 +46,7 @@
 
             var str = new XMLSerializer().serializeToString(xml);
             var base64 = base64EncArr(strToUTF8Arr(str));
-            $($event.target).attr('href', 'data:xml;base64,' + base64);
+            $($event.target).attr('href', 'data:text/xml;base64,' + base64);
           };
 
           var fileInput = element.find('input[type="file"]')[0];
