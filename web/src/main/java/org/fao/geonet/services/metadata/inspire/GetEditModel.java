@@ -89,6 +89,30 @@ public class GetEditModel implements Service {
             throw new RuntimeException(e);
         }
     }
+    private static final JSONArray REF_SYS_OPTIONS = new JSONArray();
+    static {
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/4936");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/4937");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/4258");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3035");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3034");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3038");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3039");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3040");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/30");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3042");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3043");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3044");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3045");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3046");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3047");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3048");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3049");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3050");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3051");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/5730");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/7409");
+    }
     private Function<CodeListEntry, CodeListEntry> topicCategoryGrouper = new Function<CodeListEntry, CodeListEntry>() {
         Map<String, String> topicCategoryGrouping = Maps.newHashMap();
 
@@ -162,11 +186,13 @@ public class GetEditModel implements Service {
         metadataJson.append("metadataTypeOptions", "service");
 
         metadataJson.put("conformityTitleOptions", CONFORMITY_TITLE_OPTIONS);
+        metadataJson.put("refSysOptions", REF_SYS_OPTIONS);
 
         processMetadata(metadataEl, metadataJson);
         Element identificationInfo = processIdentificationInfo(context, metadataEl, metadataJson);
 
         processConstraints(identificationInfo, metadataJson);
+        processReferenceSystems(metadataEl, metadataJson);
         processConformity(metadataEl, metadataJson);
         processTransferOptions(metadataEl, metadataJson);
 
@@ -177,6 +203,24 @@ public class GetEditModel implements Service {
             jsonString = metadataJson.toString();
         }
         return new Element("data").setText(jsonString);
+    }
+
+    private void processReferenceSystems(Element metadataEl, JSONObject metadataJson) throws JSONException,
+            JDOMException {
+        String mainLanguage = metadataJson.getString(Save.JSON_LANGUAGE);
+        JSONArray referenceSystemJson = new JSONArray();
+        metadataJson.put(Save.JSON_REF_SYS, referenceSystemJson);
+
+        final List<Element> refSysEls = metadataEl.getChildren("referenceSystemInfo", GMD);
+
+        for (Element refSysEl : refSysEls) {
+            JSONObject instanceJson = new JSONObject();
+            addRef(refSysEl, instanceJson);
+            addTranslatedElement(mainLanguage, refSysEl, getIsoLanguagesMapper(), instanceJson,
+                    Save.JSON_REF_SYS_CODE, "gmd:MD_ReferenceSystem//gmd:code");
+
+            referenceSystemJson.put(instanceJson);
+        }
     }
 
     private void processTransferOptions(Element metadataEl, JSONObject metadataJson) throws JDOMException, JSONException {

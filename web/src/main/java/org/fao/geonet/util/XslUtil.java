@@ -894,7 +894,7 @@ public final class XslUtil {
         }
 
     }
-    public static String loadTranslationFile(Object filePattern, Object language) throws IOException {
+    public static String loadTranslationFile(Object filePattern, String language) throws IOException {
         if (filePattern != null) {
             final ServiceContext serviceContext = ServiceContext.get();
             if (serviceContext != null) {

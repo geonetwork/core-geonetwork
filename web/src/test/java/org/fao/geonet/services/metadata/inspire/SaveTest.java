@@ -298,6 +298,12 @@ public class SaveTest {
         assertEquals(Xml.selectString(savedMetadata, "gmd:language/gco:CharacterString", NS), "eng");
         assertEquals(Xml.selectString(savedMetadata, "gmd:hierarchyLevelName/gco:CharacterString", NS), "");
         assertEquals(Xml.selectString(savedMetadata, "gmd:characterSet/gmd:MD_CharacterSetCode/@codeListValue", NS), "utf8");
+
+        assertEquals(1, savedMetadata.getChildren("referenceSystemInfo", GMD).size());
+        final Element referenceSystemInfo = savedMetadata.getChild("referenceSystemInfo", GMD);
+        assertEquals("http://www.opengis.net/def/crs/EPSG/0/4936",
+                Xml.selectString(referenceSystemInfo, "*//gmd:code//gmd:LocalisedCharacterString", NS));
+
         assertEquals(Xml.selectString(savedMetadata, "gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue", NS), "dataset");
         final List<?> contact = Xml.selectNodes(savedMetadata, "gmd:contact", NS);
         assertEquals(3, contact.size());
@@ -713,7 +719,8 @@ public class SaveTest {
                 new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
         service.addXLink("local://xml.user.get?id=5&amp;schema=iso19139.che&amp;role=pointOfContact",
                 new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
-        service.addXLink("local://che.keyword.get?thesaurus=external.theme.inspire-service-taxonomy&amp;id=urn%3Ainspire%3Aservice%3Ataxonomy%3AcomGeographicCompressionService&amp;locales=fr,en,de,it",
+        service.addXLink("local://che.keyword.get?thesaurus=external.theme.inspire-service-taxonomy&amp;" +
+                         "id=urn%3Ainspire%3Aservice%3Ataxonomy%3AcomGeographicCompressionService&amp;locales=fr,en,de,it",
                 new Element("CHE_CI_ResponsibleParty", XslUtil.CHE_NAMESPACE));
         service.addXLink("local://xml.extent.get?id=0&amp;wfs=default&amp;typename=gn:countries&amp;format=gmd_complete&amp;extentTypeCode=true",
                 new Element("extent", SRV));
@@ -782,6 +789,67 @@ public class SaveTest {
         String langCode = "#"+SaveServiceTestImpl.LANGUAGES_MAPPER.iso639_2_to_iso639_1(translation.one()).toUpperCase();
         assertEquals(translation.two(), Xml.selectString(containsOperations1, "srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage//node" +
                                                                               "()[@locale = '" + langCode + "']", NS));
+    }
+
+    @Test
+    public void testService_UpdateExistingRefSys() throws Exception {
+        testMetadata = Xml.loadFile(SaveTest.class.getResource("refSysUpdateExistingEl/metadata.xml"));
+        service.setTestMetadata(testMetadata);
+
+        final String jsonString = loadTestJson("refSysUpdateExistingEl/requestData.json");
+        JSONObject json = new JSONObject(jsonString);
+
+        final Element result = service.exec(new Element("request").addContent(Arrays.asList(
+                new Element("id").setText("12"),
+                new Element("data").setText(json.toString())
+        )), context);
+
+        assertEquals(Xml.getString(result), "data", result.getName());
+
+        final Element savedMetadata = service.getSavedMetadata();
+
+        final Element code = Xml.selectElement(savedMetadata, "gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code", NS);
+        assertNotNull(code);
+        assertEquals(5, code.getChild("PT_FreeText", GMD).getChildren().size());
+        assertEquals("http://www.opengis.net/def/crs/EPSG/0/3034", Xml.selectString(code, "*//gmd:LocalisedCharacterString[@locale='#DE']", NS));
+
+        assertNotNull(code.getParentElement().getChild("codeSpace", GMD));
+        assertNotNull(code.getParentElement().getChild("version", GMD));
+    }
+
+    @Test
+    public void testService_UpdateRefSysLoosesData() throws Exception {
+        testMetadata = Xml.loadFile(SaveTest.class.getResource("refSysLoosesOtherData/metadata.xml"));
+        service.setTestMetadata(testMetadata);
+
+        final String jsonString = loadTestJson("refSysLoosesOtherData/requestData.json");
+        JSONObject json = new JSONObject(jsonString);
+
+        final Element result = service.exec(new Element("request").addContent(Arrays.asList(
+                new Element("id").setText("12"),
+                new Element("data").setText(json.toString())
+        )), context);
+
+        assertEquals(Xml.getString(result), "data", result.getName());
+
+        final Element savedMetadata = service.getSavedMetadata();
+
+        @SuppressWarnings("unchecked")
+        final List<Element> codes = (List<Element>) Xml.selectNodes(savedMetadata, "gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd" +
+                                                                                  ":referenceSystemIdentifier/gmd:RS_Identifier/gmd:code", NS);
+        assertEquals(2, codes.size());
+        final Element OldEl = codes.get(0);
+        assertEquals(1, OldEl.getChild("PT_FreeText", GMD).getChildren().size());
+        assertEquals("invalid code", Xml.selectString(OldEl, "*//gmd:LocalisedCharacterString[@locale='#DE']", NS));
+        assertNotNull(OldEl.getParentElement().getChild("codeSpace", GMD));
+        assertNotNull(OldEl.getParentElement().getChild("version", GMD));
+
+
+        final Element validEl = codes.get(1);
+        assertEquals(5, validEl.getChild("PT_FreeText", GMD).getChildren().size());
+        assertEquals("http://www.opengis.net/def/crs/EPSG/0/3044", Xml.selectString(validEl, "*//gmd:LocalisedCharacterString[@locale='#DE']", NS));
+        assertNull(validEl.getParentElement().getChild("codeSpace", GMD));
+        assertNull(validEl.getParentElement().getChild("version", GMD));
     }
 
     /**

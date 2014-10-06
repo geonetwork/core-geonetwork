@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<che:CHE_MD_Metadata xmlns:che="http://www.geocat.ch/2008/che" xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gco:isoType="gmd:MD_Metadata">
+  <gmd:fileIdentifier>
+    <gco:CharacterString>b1bfaa81-e86d-4f16-9058-5d926b6df0b4</gco:CharacterString>
+  </gmd:fileIdentifier>
+  <gmd:language xmlns:java="java:org.fao.geonet.util.XslUtil" xmlns:fra="http://www.cnig.gouv.fr/2005/fra" xmlns:xalan="http://xml.apache.org/xalan">
+    <gco:CharacterString>ger</gco:CharacterString>
+  </gmd:language>
+  <gmd:characterSet xmlns:java="java:org.fao.geonet.util.XslUtil" xmlns:fra="http://www.cnig.gouv.fr/2005/fra" xmlns:xalan="http://xml.apache.org/xalan">
+    <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_CharacterSetCode"/>
+  </gmd:characterSet>
+  <gmd:hierarchyLevel xmlns:java="java:org.fao.geonet.util.XslUtil" xmlns:fra="http://www.cnig.gouv.fr/2005/fra" xmlns:xalan="http://xml.apache.org/xalan">
+    <gmd:MD_ScopeCode codeListValue="dataset" codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode"/>
+  </gmd:hierarchyLevel>
+  <gmd:hierarchyLevelName gco:nilReason="missing">
+    <gco:CharacterString/>
+  </gmd:hierarchyLevelName>
+  <gmd:dateStamp>
+    <gco:DateTime>2014-10-06T07:30:40</gco:DateTime>
+  </gmd:dateStamp>
+  <gmd:metadataStandardName xmlns:java="java:org.fao.geonet.util.XslUtil" xmlns:fra="http://www.cnig.gouv.fr/2005/fra" xmlns:xalan="http://xml.apache.org/xalan">
+    <gco:CharacterString>GM03_2</gco:CharacterString>
+  </gmd:metadataStandardName>
+  <gmd:locale>
+    <gmd:PT_Locale id="DE">
+      <gmd:languageCode>
+        <gmd:LanguageCode codeList="#LanguageCode" codeListValue="ger"/>
+      </gmd:languageCode>
+      <gmd:characterEncoding>
+        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+      </gmd:characterEncoding>
+    </gmd:PT_Locale>
+  </gmd:locale>
+  <gmd:locale>
+    <gmd:PT_Locale id="FR">
+      <gmd:languageCode>
+        <gmd:LanguageCode codeList="#LanguageCode" codeListValue="fre"/>
+      </gmd:languageCode>
+      <gmd:characterEncoding>
+        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+      </gmd:characterEncoding>
+    </gmd:PT_Locale>
+  </gmd:locale>
+  <gmd:locale>
+    <gmd:PT_Locale id="IT">
+      <gmd:languageCode>
+        <gmd:LanguageCode codeList="#LanguageCode" codeListValue="ita"/>
+      </gmd:languageCode>
+      <gmd:characterEncoding>
+        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+      </gmd:characterEncoding>
+    </gmd:PT_Locale>
+  </gmd:locale>
+  <gmd:locale>
+    <gmd:PT_Locale id="EN">
+      <gmd:languageCode>
+        <gmd:LanguageCode codeList="#LanguageCode" codeListValue="eng"/>
+      </gmd:languageCode>
+      <gmd:characterEncoding>
+        <gmd:MD_CharacterSetCode codeListValue="utf8" codeList="#MD_CharacterSetCode">UTF8</gmd:MD_CharacterSetCode>
+      </gmd:characterEncoding>
+    </gmd:PT_Locale>
+  </gmd:locale>
+    <gmd:referenceSystemInfo>
+        <gmd:MD_ReferenceSystem>
+            <gmd:referenceSystemIdentifier>
+                <gmd:RS_Identifier>
+                    <gmd:code xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gco:CharacterString>http://www.opengis.net/def/crs/EPSG/0/4936</gco:CharacterString>
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">http://www.opengis.net/def/crs/EPSG/0/4936
+                                </gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:code>
+                    <gmd:codeSpace>
+                        <gco:CharacterString>asfasfasf</gco:CharacterString>
+                    </gmd:codeSpace>
+                    <gmd:version>
+                        <gco:CharacterString>asdfasf</gco:CharacterString>
+                    </gmd:version>
+                </gmd:RS_Identifier>
+            </gmd:referenceSystemIdentifier>
+        </gmd:MD_ReferenceSystem>
+    </gmd:referenceSystemInfo>
+</che:CHE_MD_Metadata>

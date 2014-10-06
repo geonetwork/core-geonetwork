@@ -37,7 +37,7 @@
 
                 <xsl:call-template name="css-load"/>
                 <script type="text/javascript">
-                    var translationJson = <xsl:value-of select="java:loadTranslationFile('/catalog/locales/%s-inspire.json', /root/gui/language)"/>
+                    var translationJson = <xsl:value-of select="java:loadTranslationFile('/catalog/locales/%s-inspire.json', /root/gui/language/text())"/>
                 </script>
             </head>
 

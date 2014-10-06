@@ -226,7 +226,87 @@
           model.splice(i, 1);
         }
       };
+      $scope.refSysTitle = function() {
+        return function (refSys) {
+          if (refSys[$scope.lang]) {
+            return refSys[$scope.lang];
+          } else {
+            for (var lang in refSys) {
+              if (refSys.hasOwnProperty(lang)) {
+                return refSys[lang];
+              }
 
+              return "";
+            }
+          }
+        }
+      };
+      $scope.refSysValidationErrorClass = '';
+      var addEmptyRefSys = function () {
+        var j;
+        var refSys = {
+          code: {},
+          options: [{}]
+        };
+        for (j = 0; j < $scope.data.refSysOptions.length; j++) {
+          refSys.options.push({
+            "eng": $scope.data.refSysOptions[j],
+            "fre": $scope.data.refSysOptions[j],
+            "ger": $scope.data.refSysOptions[j],
+            "ita": $scope.data.refSysOptions[j],
+            "roh": $scope.data.refSysOptions[j]
+          });
+        }
+        $scope.data.refSys.push(refSys);
+      };
+      var removeEmptyRefSys = function () {
+        var i;
+        for (i = $scope.data.refSys.length - 1; i > -1; i--) {
+          if ($scope.data.refSys[i].ref === undefined && ($scope.data.refSys[i].code === undefined ||
+              $scope.data.refSys[i].code.eng === undefined)) {
+            $scope.data.refSys.splice(i, 1);
+            return;
+          }
+        }
+      };
+      $scope.$watch("data.refSys", function () {
+          var refSys = $scope.data.refSys;
+          var i, doAdd = $scope.data.refSysOptions !== undefined;
+          var refSysClass = $scope.validationErrorClass;
+
+          for (i = 0; i < refSys.length; i++) {
+            if (refSys[i].code) {
+              if (refSys[i].code[$scope.lang] && $scope.data.refSysOptions.indexOf(refSys[i].code[$scope.lang]) > -1) {
+                refSysClass = '';
+                removeEmptyRefSys();
+                doAdd = false;
+              }
+
+              if (refSys[i].ref === undefined || !$scope.refSysTitle()(refSys[i].code)) {
+                doAdd = false;
+              }
+            }
+          }
+          $scope.refSysValidationErrorClass = refSysClass;
+          if (doAdd) {
+            addEmptyRefSys();
+          }
+      }, true);
+      $scope.$watch("data.refSysOptions", function () {
+        var i,j;
+        for (i = 0; i < $scope.data.refSys.length; i++ ){
+          $scope.data.refSys[i].options = [$scope.data.refSys[i].code];
+          for (j = 0; j < $scope.data.refSysOptions.length; j++) {
+            $scope.data.refSys[i].options.push({
+              "eng": $scope.data.refSysOptions[j],
+              "fre": $scope.data.refSysOptions[j],
+              "ger": $scope.data.refSysOptions[j],
+              "ita": $scope.data.refSysOptions[j],
+              "roh": $scope.data.refSysOptions[j]
+            });
+          }
+        }
+      });
       $scope.saveMetadata = function(editTab, finish) {
         var waitDialog = $('#pleaseWaitDialog');
         if (waitDialog) {
@@ -246,6 +326,10 @@
         delete dataClone.allConformanceReports;
         delete dataClone.couplingTypeOptions;
         delete dataClone.dcpListOptions;
+        delete dataClone.refSysOptions;
+        for (var i = 0; i < dataClone.refSys; i++) {
+          delete dataClone.refSys[i].options;
+        }
 
         var data = encodeURIComponent(JSON.stringify(dataClone));
         var finalData = 'id=' + mdId + '&data=' + data;

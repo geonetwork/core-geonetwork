@@ -22,6 +22,7 @@
           "conformityTitleOptions": [],
           "dcpListOptions": [],
           "couplingTypeOptions": [],
+          "refSysOptions": [],
 
           "language": "",
           "characterSet": "utf-8",
@@ -104,7 +105,8 @@
               "statement" : {}
             }
           },
-          "distributionFormats": []
+          "distributionFormats": [],
+          "refSys": []
         };
         // END TEST DATA
     };

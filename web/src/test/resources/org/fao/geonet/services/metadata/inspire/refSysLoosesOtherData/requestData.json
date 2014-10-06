@@ -1,0 +1,30 @@
+{
+  "refSys":[
+    {
+      "ref":"40",
+      "code":{
+        "ger":"invalid code"
+      }
+    },
+    {
+      "code":{
+        "eng":"http://www.opengis.net/def/crs/EPSG/0/3044",
+        "fre":"http://www.opengis.net/def/crs/EPSG/0/3044",
+        "ger":"http://www.opengis.net/def/crs/EPSG/0/3044",
+        "ita":"http://www.opengis.net/def/crs/EPSG/0/3044",
+        "roh":"http://www.opengis.net/def/crs/EPSG/0/3044"
+      }
+    }
+  ],
+  "metadataIsXsdValid":false,
+  "characterSet":"utf8",
+  "hierarchyLevelName":"",
+  "otherLanguages":[
+    "ger",
+    "fre",
+    "ita",
+    "eng"
+  ],
+  "hierarchyLevel":"dataset",
+  "language":"ger"
+}

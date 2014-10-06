@@ -30,6 +30,7 @@ import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.AjaxEditUtils;
 import org.fao.geonet.util.ISODate;
 import org.fao.geonet.util.XslUtil;
+import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
@@ -147,6 +148,8 @@ public class Save implements Service {
     public static final String JSON_DISTRIBUTION_FORMAT_NAME = "name";
     public static final String JSON_DISTRIBUTION_FORMAT_VERSION = "version";
     public static final String JSON_DISTRIBUTION_FORMAT_VALIDATED = "validated";
+    public static final String JSON_REF_SYS = "refSys";
+    public static final String JSON_REF_SYS_CODE = "code";
 
     @Override
     public void init(String appPath, ServiceConfig params) throws Exception {
@@ -174,6 +177,7 @@ public class Save implements Service {
 
             final Element identificationInfo = updateIdentificationInfo(mainLang, context, editLib, metadata, metadataSchema, jsonObject);
             updateConstraints(editLib, metadataSchema, identificationInfo, jsonObject, mainLang);
+            updateSysRef(editLib, metadataSchema, metadata, jsonObject, mainLang);
 
             updateConformity(editLib, metadata, metadataSchema, jsonObject, mainLang);
 
@@ -195,6 +199,65 @@ public class Save implements Service {
             return new Element("pre").addContent(
                     new Element("code").addContent(out.toString()));
         }
+    }
+
+    private void updateSysRef(EditLib editLib, MetadataSchema metadataSchema, Element metadata, JSONObject jsonObject, String mainLang) throws JSONException, JDOMException {
+        @SuppressWarnings("unchecked")
+        final List<Element> sysRefsEls = Lists.newArrayList(metadata.getChildren("referenceSystemInfo", GMD));
+        final JSONArray sysRefJson = jsonObject.optJSONArray(JSON_REF_SYS);
+        if (sysRefJson == null) {
+            return ;
+        }
+        Map<String, JSONObject> refs = Maps.newHashMap();
+
+        List<Element> newEls = Lists.newArrayList();
+
+        for (int i = 0; i < sysRefJson.length(); i++) {
+            final JSONObject obj = sysRefJson.getJSONObject(i);
+            String ref = obj.optString(Params.REF, "").trim();
+            if (!ref.trim().isEmpty()) {
+                refs.put(ref, obj);
+            } else {
+                newEls.add(createNewSysRef(obj, mainLang));
+            }
+        }
+
+        for (Element sysRef : sysRefsEls) {
+            final String ref = sysRef.getChild("element", GEONET).getAttributeValue("ref");
+            if (refs.containsKey(ref)) {
+                final JSONObject translationJson = refs.get(ref);
+                Element code = createTranslatedInstance(mainLang, translationJson.getJSONObject(Save.JSON_REF_SYS_CODE), "code", GMD);
+                addElementFromXPath(editLib, metadataSchema, sysRef, "gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier/gmd:RS_Identifier/gmd:code", code);
+            } else {
+                sysRef.detach();
+            }
+        }
+
+        int addIndex = -1;
+        final List infos = metadata.getChildren("referenceSystemInfo", GMD);
+        if (!infos.isEmpty()) {
+            addIndex = metadata.indexOf((Content) infos.get(infos.size() - 1)) + 1;
+        }
+        for (Element newEl : newEls) {
+            if (addIndex == -1) {
+                addElementFromXPath(editLib, metadataSchema, metadata, "gmd:referenceSystemInfo", newEl);
+                addIndex = metadata.indexOf(newEl);
+            } else {
+                metadata.addContent(addIndex, newEl);
+            }
+            addIndex++;
+        }
+    }
+
+    private Element createNewSysRef(JSONObject obj, String mainLang) throws JSONException {
+        final Element code = createTranslatedInstance(mainLang, obj.getJSONObject(JSON_REF_SYS_CODE), "code", GMD);
+        return new Element("referenceSystemInfo", GMD).addContent(
+                new Element("MD_ReferenceSystem", GMD).addContent(
+                        new Element("referenceSystemIdentifier", GMD).addContent(
+                                new Element("RS_Identifier", GMD).addContent(code)
+                        )
+                )
+        );
     }
 
     private void updateFormats(EditLib editLib, MetadataSchema metadataSchema, Element metadata, JSONObject jsonObject)

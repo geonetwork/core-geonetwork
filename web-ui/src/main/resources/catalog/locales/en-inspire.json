@@ -81,5 +81,6 @@
   "distributionFormats" : "Distribution Formats",
   "formats" : "Formats",
   "beforeUnloadEditor" : "Warning: all changes will be lost if you continue.",
-  "linkageURL" : "Linkage (URL)"
+  "linkageURL" : "Linkage (URL)",
+  "refSys" : "Reference System"
 }

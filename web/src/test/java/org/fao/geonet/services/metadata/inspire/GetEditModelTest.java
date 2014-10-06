@@ -198,7 +198,7 @@ public class GetEditModelTest {
         assertEquals("patent", legalConstraint.getJSONArray(Save.JSON_CONSTRAINTS_ACCESS_CONSTRAINTS).getString(1));
         assertEquals(1, legalConstraint.getJSONArray(Save.JSON_CONSTRAINTS_USE_CONSTRAINTS).length());
         assertEquals("license", legalConstraint.getJSONArray(Save.JSON_CONSTRAINTS_USE_CONSTRAINTS).getString(0));
-        assertEquals("222", legalConstraint.getString(Params.REF));
+        assertEquals("238", legalConstraint.getString(Params.REF));
 
         assertEquals(1, legalConstraint.getJSONArray(Save.JSON_CONSTRAINTS_OTHER_CONSTRAINTS).length());
         assertJsonObjectHasProperties(legalConstraint.getJSONArray(Save.JSON_CONSTRAINTS_OTHER_CONSTRAINTS).getJSONObject(0),
@@ -212,14 +212,14 @@ public class GetEditModelTest {
         JSONArray genericConstraints = inspireModel.getJSONObject(Save.JSON_CONSTRAINTS).getJSONArray(Save.JSON_CONSTRAINTS_GENERIC);
         assertEquals(1, genericConstraints.length());
         JSONObject genericConstraint = genericConstraints.getJSONObject(0);
-        assertEquals("266", genericConstraint.getString(Params.REF));
+        assertEquals("282", genericConstraint.getString(Params.REF));
         assertJsonObjectHasProperties(genericConstraint.getJSONArray(Save.JSON_CONSTRAINTS_USE_LIMITATIONS).getJSONObject(0),
                 Pair.read("ger", "test use limitation for INSPIRE"));
 
         JSONArray securityConstraints = inspireModel.getJSONObject(Save.JSON_CONSTRAINTS).getJSONArray(Save.JSON_CONSTRAINTS_SECURITY);
         assertEquals(1, securityConstraints.length());
         JSONObject securityConstraint = securityConstraints.getJSONObject(0);
-        assertEquals("258", securityConstraint.getString(Params.REF));
+        assertEquals("274", securityConstraint.getString(Params.REF));
         assertJsonObjectHasProperties(securityConstraint.getJSONArray(Save.JSON_CONSTRAINTS_USE_LIMITATIONS).getJSONObject(0),
                 Pair.read("ger", "test security constraints for INSPIRE"));
 
@@ -229,7 +229,7 @@ public class GetEditModelTest {
         assertEquals(0, conformity.getInt(Save.JSON_CONFORMITY_ALL_CONFORMANCE_REPORT_INDEX));
 
         final JSONObject conformityJSONObject = conformity.getJSONObject(Save.JSON_CONFORMITY_LINEAGE);
-        assertEquals("380", conformityJSONObject.getString(Params.REF));
+        assertEquals("396", conformityJSONObject.getString(Params.REF));
         assertTranslations(conformityJSONObject, Save.JSON_CONFORMITY_LINEAGE_STATEMENT,
                 read("ger", "INSPIRE Testdaten"));
 
@@ -248,13 +248,21 @@ public class GetEditModelTest {
                 read("ita", "REGOLAMENTO (UE) N. 1089/2010 DELLA COMMISSIONE del 23 novembre 2010 recante " +
                             "attuazione della direttiva 2007/2/CE del Parlamento europeo e del Consiglio per quanto riguarda " +
                             "l'interoperabilità dei set di dati territoriali e dei servizi di dati territoriali"));
-        assertEquals("362", conformityResult.getString(Save.JSON_CONFORMITY_RESULT_REF));
+        assertEquals("378", conformityResult.getString(Save.JSON_CONFORMITY_RESULT_REF));
         assertEquals("dataset", conformityResult.getString(Save.JSON_CONFORMITY_SCOPE_CODE));
         assertEquals("DataSet", conformityResult.getString(Save.JSON_CONFORMITY_LEVEL_DESC));
 
         assertEquals("false", conformityResult.getString(Save.JSON_CONFORMITY_PASS));
         assertEquals("INSPIRE Implementing rules", conformityResult.getString(Save.JSON_CONFORMITY_EXPLANATION));
 
+
+        JSONArray refSys = inspireModel.getJSONArray(Save.JSON_REF_SYS);
+        assertEquals(2, refSys.length());
+        assertEquals("102", refSys.getJSONObject(0).getString(Params.REF));
+        assertEquals("http://www.opengis.net/def/crs/EPSG/0/4936", refSys.getJSONObject(0).getJSONObject(Save.JSON_REF_SYS_CODE).getString("ger"));
+
+        assertEquals("110", refSys.getJSONObject(1).getString(Params.REF));
+        assertEquals("EPSG:4936", refSys.getJSONObject(1).getJSONObject(Save.JSON_REF_SYS_CODE).getString("ger"));
 
         JSONArray links = inspireModel.getJSONArray(Save.JSON_LINKS);
         assertEquals(1, links.length());

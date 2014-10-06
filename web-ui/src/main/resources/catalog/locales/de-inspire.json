@@ -80,5 +80,6 @@
     "distributionFormats": "Vertriebsformat",
     "formats": "Formate",
     "beforeUnloadEditor": "Warnung: Wenn Sie fortfahren, gehen alle Änderungen verloren .",
-    "linkageURL": "URL"
+    "linkageURL": "URL",
+    "refSys" : "Referenzsystem"
 }

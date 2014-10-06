@@ -1,0 +1,22 @@
+{
+  "refSys":[
+    {
+      "ref":"40",
+      "code":{
+        "eng":"http://www.opengis.net/def/crs/EPSG/0/3034",
+        "fre":"http://www.opengis.net/def/crs/EPSG/0/3034",
+        "ger":"http://www.opengis.net/def/crs/EPSG/0/3034",
+        "ita":"http://www.opengis.net/def/crs/EPSG/0/3034",
+        "roh":"http://www.opengis.net/def/crs/EPSG/0/3034"
+      }
+    }
+  ],
+  "otherLanguages":[
+    "ger",
+    "fre",
+    "ita",
+    "eng"
+  ],
+  "hierarchyLevel":"dataset",
+  "language":"ger"
+}

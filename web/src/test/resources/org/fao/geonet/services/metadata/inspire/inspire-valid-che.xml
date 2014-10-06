@@ -163,6 +163,36 @@
             </gmd:characterEncoding>
         </gmd:PT_Locale>
     </gmd:locale>
+    <gmd:referenceSystemInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <gmd:MD_ReferenceSystem>
+            <gmd:referenceSystemIdentifier>
+                <gmd:RS_Identifier>
+                    <gmd:code xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">http://www.opengis.net/def/crs/EPSG/0/4936</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:code>
+                </gmd:RS_Identifier>
+            </gmd:referenceSystemIdentifier>
+        </gmd:MD_ReferenceSystem>
+    </gmd:referenceSystemInfo>
+    <gmd:referenceSystemInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <gmd:MD_ReferenceSystem>
+            <gmd:referenceSystemIdentifier>
+                <gmd:RS_Identifier>
+                    <gmd:code xsi:type="gmd:PT_FreeText_PropertyType">
+                        <gmd:PT_FreeText>
+                            <gmd:textGroup>
+                                <gmd:LocalisedCharacterString locale="#DE">EPSG:4936</gmd:LocalisedCharacterString>
+                            </gmd:textGroup>
+                        </gmd:PT_FreeText>
+                    </gmd:code>
+                </gmd:RS_Identifier>
+            </gmd:referenceSystemIdentifier>
+        </gmd:MD_ReferenceSystem>
+    </gmd:referenceSystemInfo>
     <gmd:identificationInfo xmlns:xalan="http://xml.apache.org/xalan" xmlns:java="java:org.fao.geonet.util.XslUtil" xmlns:fra="http://www.cnig.gouv.fr/2005/fra">
         <che:CHE_MD_DataIdentification gco:isoType="gmd:MD_DataIdentification">
             <gmd:citation>

@@ -179,7 +179,6 @@
                 <div class="col-xs-9"
                      data-ng-class="validationClassString(data.hierarchyLevelName)">
                     <input type="text" id="hierarchyLevelName" class="form-control" data-ng-model="data.hierarchyLevelName" >
-                    </select>
                 </div>
             </div>
             <div class="table-responsive col-xs-12">
@@ -205,6 +204,31 @@
                         </td>
                     </tr>
                 </table>
+            </div>
+
+            <div class="form-group">
+                <label class="col-xs-3 control-label"><span data-translate="">refSys</span>: </label>
+                <div class="table-responsive col-xs-9" ng-class="refSysValidationErrorClass">
+                    <table class="table table-condensed">
+                        <tr data-ng-class="$first ? '' : 'col-xs-offset-3'"
+                            data-ng-repeat="refSys in data.refSys">
+                            <td>
+                                <div data-ie9-select
+                                     data-show-empty-option="false"
+                                     data-options="refSys.options"
+                                     data-title-func="refSysTitle()"
+                                     data-field="refSys.code"></div>
+                            </td>
+                            <td width="24px">
+                            </td>
+                            <td width="24px">
+                                <a class="inspire-input-group" style="color: red" data-ng-click="deleteFromArray(data.refSys, refSys)">
+                                    <i class="fa fa-times fa-fw"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </fieldset>
 
