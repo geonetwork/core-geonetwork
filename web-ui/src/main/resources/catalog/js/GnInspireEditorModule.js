@@ -151,7 +151,10 @@
           return result;
         };
       };
-      $scope.validationErrorClass = 'has-error';
+      $scope.validationErrorClass = '';
+      $scope.$watch('data.refSysOptions', function (refSysOptions) {
+        $scope.validationErrorClass = refSysOptions && refSysOptions.length > 0 ? 'has-error' : '';
+      });
       $scope.validationClassString = function(model) {
         if (model && model.length > 0) {
           return '';
