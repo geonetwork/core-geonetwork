@@ -277,26 +277,28 @@ public class Save implements Service {
                 JSONObject format = formatJson.getJSONObject(i);
                 String name = format.getString(JSON_DISTRIBUTION_FORMAT_NAME);
                 String version = format.getString(JSON_DISTRIBUTION_FORMAT_VERSION);
-                String id = format.getString(Params.ID);
-                boolean validated = format.getBoolean(JSON_DISTRIBUTION_FORMAT_VALIDATED);
-                Element formatEl = new Element("distributionFormat", GMD).addContent(
-                        new Element("MD_Format", GMD).addContent(Arrays.asList(
-                                new Element("name", GMD).addContent(new Element("CharacterString", GCO).setText(name)),
-                                new Element("version", GMD).addContent(new Element("CharacterString", GCO).setText(version))
-                        ))
-                );
-                formatEl.setAttribute("href", "local://xml.format.get?id=" + id, XLINK);
-                if (!validated) {
-                    formatEl.setAttribute("role", ReusableObjManager.NON_VALID_ROLE, XLINK);
-                }
+                String id = format.optString(Params.ID, "");
+                if (!id.trim().isEmpty()) {
+                    boolean validated = format.getBoolean(JSON_DISTRIBUTION_FORMAT_VALIDATED);
+                    Element formatEl = new Element("distributionFormat", GMD).addContent(
+                            new Element("MD_Format", GMD).addContent(Arrays.asList(
+                                    new Element("name", GMD).addContent(new Element("CharacterString", GCO).setText(name)),
+                                    new Element("version", GMD).addContent(new Element("CharacterString", GCO).setText(version))
+                            ))
+                    );
+                    formatEl.setAttribute("href", "local://xml.format.get?id=" + id, XLINK);
+                    if (!validated) {
+                        formatEl.setAttribute("role", ReusableObjManager.NON_VALID_ROLE, XLINK);
+                    }
 
-                if (distributionInfo != null) {
-                    distributionInfo.addContent(i, formatEl);
-                } else {
-                    addElementFromXPath(editLib, metadataSchema, metadata,
-                            "gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat", formatEl);
+                    if (distributionInfo != null) {
+                        distributionInfo.addContent(i, formatEl);
+                    } else {
+                        addElementFromXPath(editLib, metadataSchema, metadata,
+                                "gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat", formatEl);
 
-                    distributionInfo = formatEl.getParentElement();
+                        distributionInfo = formatEl.getParentElement();
+                    }
                 }
             }
         }
