@@ -11,7 +11,7 @@ INSERT INTO CategoriesDes VALUES (2,'eng','Datasets');
 INSERT INTO CategoriesDes VALUES (3,'eng','Interactive resources');
 INSERT INTO CategoriesDes VALUES (4,'eng','Applications');
 INSERT INTO CategoriesDes VALUES (5,'eng','Case studies, best practices');
-INSERT INTO CategoriesDes VALUES (6,'eng','Conference proceedings');
+INSERT INTO CategoriesDes VALUES (6,'eng','Conference proceeding');
 INSERT INTO CategoriesDes VALUES (7,'eng','Photo');
 INSERT INTO CategoriesDes VALUES (8,'eng','Audio/Video');
 INSERT INTO CategoriesDes VALUES (9,'eng','Directories');

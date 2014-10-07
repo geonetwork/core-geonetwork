@@ -60,15 +60,16 @@ public class ThesaurusBasedRegionsDAO extends RegionsDAO {
     private Thesaurus getThesaurus(ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         ThesaurusManager th = gc.getThesaurusManager();
+        System.out.println("test11");
         Thesaurus regions = th.getThesaurusByName(thesaurusName);
         if(regions != null) {
-            return regions;
+            return regions; 
         }
         Set<Entry<String, Thesaurus>> all = th.getThesauriMap().entrySet();
         for (Entry<String, Thesaurus> entry : all) {
             if(entry.getKey().contains("regions")) {
                 return entry.getValue();
-            }
+            } 
         }
         
         return null;

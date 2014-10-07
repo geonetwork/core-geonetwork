@@ -5,7 +5,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>2.10.3-SNAPSHOT</version>
+  <version>2.10.3</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -13,9 +13,9 @@
   <url>http://geonetwork-opensource.org</url>
   <scm>
     <connection>
-      scm:git:https://github.com/geonetwork/core-geonetwork
+      scm:git:https://github.com/ESTAT/core-geonetwork/
     </connection>
-    <url>https://github.com/geonetwork/core-geonetwork</url>
+    <url>https://github.com/ESTAT/core-geonetwork</url>
   </scm>
   <inceptionYear>2003</inceptionYear>
   <issueManagement>
@@ -94,6 +94,21 @@
     <!-- =========================================================== -->
     <pluginManagement>
       <plugins>
+      
+			      	<plugin>
+					<groupId>org.zeroturnaround</groupId>
+					<artifactId>jrebel-maven-plugin</artifactId>
+					<version>1.1.5</version>
+					<executions>
+					<execution>
+					<id>generate-rebel-xml</id>
+					<phase>process-resources</phase>
+					<goals>
+					<goal>generate</goal>
+					</goals>
+					</execution>
+					</executions>
+					</plugin>
         <plugin>
           <groupId>net.alchim31.maven</groupId>
           <artifactId>yuicompressor-maven-plugin</artifactId>

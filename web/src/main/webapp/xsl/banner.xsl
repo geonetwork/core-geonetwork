@@ -27,10 +27,10 @@
             <!-- title -->
             <tr class="banner">
                 <td class="banner">
-                    <img src="{/root/gui/url}/images/header-left.jpg" alt="World picture" align="top" />
+                    <img src="{/root/gui/url}/images/logos/eurostat_logo.gif" alt="Logo" align="top" />
                 </td>
                 <td align="right" class="banner">
-                    <img src="{/root/gui/url}/images/header-right.gif" alt="GeoNetwork opensource logo" align="top" />
+                    <img src="{/root/gui/url}/images/header-right.gif" alt="GeoNetwork opensource logo" align="top" /> 
                 </td>
             </tr>
 
@@ -218,7 +218,7 @@
             <!-- TODO : Mutualize with main banner template -->
             <tr class="banner">
                 <td class="banner">
-                    <img src="{/root/gui/url}/images/header-left.jpg" alt="GeoNetwork opensource" align="top" />
+                    <img src="{/root/gui/url}/images/atkins.jpg" alt="GeoNetwork opensource" align="top" />
                 </td>
                 <td align="right" class="banner">
                     <img src="{/root/gui/url}/images/header-right.gif" alt="World picture" align="top" />

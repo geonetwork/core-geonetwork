@@ -137,7 +137,7 @@
 	-->
 
 	<resources>
-	  <resource enabled="true">
+	  <resource enabled="false">
 	    <name>main-db</name>
 	    <provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 	    <config>
@@ -220,7 +220,7 @@
 		<!-- mysql -->
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-		<resource enabled="false">
+		<resource enabled="true">
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 			<config>

@@ -308,7 +308,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 			if (dbms != null) rm.close(Geonet.Res.MAIN_DB, dbms);
 		}
 	}
-
+ 
 	/**
 	 * Build thesaurus file path according to thesaurus configuration (ie. codelist directory location).
 	 * If directory does not exist, it will create it.
@@ -326,7 +326,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 			dir.mkdirs();
 		}
 		return dirPath + File.separator + fname;
-	}	
+	}	       
 
 	/**
 	 * 
