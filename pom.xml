@@ -13,7 +13,7 @@
   <url>http://geonetwork-opensource.org</url>
   <scm>
     <connection>
-      scm:git:https://github.com/ESTAT/core-geonetwork/
+      scm:git:https://github.com/ESTAT/core-geonetwork/ 
     </connection>
     <url>https://github.com/ESTAT/core-geonetwork</url>
   </scm>
