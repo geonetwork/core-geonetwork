@@ -1589,7 +1589,7 @@
         <section>
 
 
-          <field name="temporalRangeSection" templateModeOnly="true"
+          <field name="temporalExtent" templateModeOnly="true"
                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement"
                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
             <template>
@@ -1638,6 +1638,11 @@
         <section>
 
 
+          <field xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:descriptiveKeywords
+                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
+                'Data delivery mechanism')]"/>
+
 
           <field
               name="dataPolicy"
@@ -1682,6 +1687,14 @@
               </snippet>
             </template>
           </field>
+
+          <field name="responsiveness"
+                 xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
+                    gmd:report/gmd:DQ_DomainConsistency[gmd:nameOfMeasure/gco:CharacterString = 'Responsiveness']/
+                    gmd:result/gmd:DQ_QuantitativeResult/gmd:value"/>
+
+          <text ref="reliability-field-missing"/>
+
         </section>
       </tab>
       <tab id="medsea-metadata" mode="flat">

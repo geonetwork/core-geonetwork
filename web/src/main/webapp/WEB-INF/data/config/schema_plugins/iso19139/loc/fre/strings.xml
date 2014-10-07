@@ -120,6 +120,7 @@
   <costBasis>Cost basis*</costBasis>
   <dataFormats>Data formats*</dataFormats>
   <temporalExtent>Temporal extent*</temporalExtent>
+  <responsiveness>Responsiveness*</responsiveness>
 
   <medseaDataSourceCatalogueName>Catalog name</medseaDataSourceCatalogueName>
   <medseaDataSourceCatalogueURL>Catalog URL*</medseaDataSourceCatalogueURL>

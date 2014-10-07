@@ -2384,20 +2384,34 @@
 		<description>Explanation of the application of the legal constraints or other restrictions
             and legal prerequisites for obtaining and using the resource or metadata</description>
 	</element>
-	<element name="gmd:value" id="137.0" context="gmd:DQ_QuantitativeResult">
+	<!--<element name="gmd:value" id="137.0" context="gmd:DQ_QuantitativeResult">
 		<condition>mandatory</condition>
 		<label>Value</label>
 		<description>Quantitative value or values, content determined by the evaluation procedure
             used</description>
-	</element>
-	<element name="gmd:value">
-		<label>Value</label>
-		<description />
-	</element>
+	</element>-->
 	<element name="gmd:value" id="544.0" context="gmd:MD_Type">
 		<label>Value</label>
 		<description>Data type value</description>
 	</element>
+  <element name="gmd:value" context="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:report/gmd:DQ_DomainConsistency/gmd:result/gmd:DQ_QuantitativeResult/gmd:value">
+    <label>Value</label>
+    <description>Quantitative value or values, content determined by the evaluation procedure
+      used</description>
+    <helper displayIf="ancestor::node()[
+              name()='gmd:MD_Metadata' and
+              contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]">
+      <option value="&lt;15mn (on-line download)">&lt;15mn (on-line download)</option>
+      <option value="Less than 3 hours">Less than 3 hours</option>
+      <option value="Less than 24 hours">Less than 24 hours</option>
+      <option value="Less than 1 week">Less than 1 week</option>
+      <option value="More than 1 week">More than 1 week</option>
+    </helper>
+  </element>
+  <element name="gmd:value">
+    <label>Value</label>
+    <description />
+  </element>
 	<element name="gmd:valueType" id="134.0">
 		<label>Value type</label>
 		<description>Quantitative conformance quality level value or range of values</description>
