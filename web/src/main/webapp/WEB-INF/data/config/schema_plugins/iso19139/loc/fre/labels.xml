@@ -2487,7 +2487,15 @@ période de temps couverte par le service.
     <description>URL ou indication semblable d'une adresse Internet pour un accès on-line , par exemple http://www.isotc211.org</description>
     <help>Lien Internet, par exemple www.cosig.ch.</help>
     <condition/>
-    
+    <helper displayIf="ancestor::node()[
+              name()='gmd:MD_Metadata' and
+              contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]">
+      <option value="http://www.seadatanet.org/Metadata/EDMED-Datasets">http://www.seadatanet.org/Metadata/EDMED-Datasets</option>
+      <option value="http://www.seadatanet.org/Data-Access/Common-Data-Index-CDI">http://www.seadatanet.org/Data-Access/Common-Data-Index-CDI</option>
+      <option value="http://inspire-geoportal.ec.europa.eu/">http://inspire-geoportal.ec.europa.eu/</option>
+      <option value="http://www.myocean.eu/">http://www.myocean.eu/</option>
+      <option value="http ://www.mongoos.eu/">http ://www.mongoos.eu/</option>
+    </helper>
   </element>
   <element name="gmd:maintenanceAndUpdateFrequency" id="143.0">
     <label>Fréquence de mise à jour</label>
@@ -2665,6 +2673,20 @@ période de temps couverte par le service.
     <help>Nom de la source en ligne.</help>
     <condition>Obligatoire</condition>
     
+  </element>
+
+  <element name="gmd:name" context="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:name" id="400.0">
+    <label>Nom</label>
+    <description>Nom de la ressource en ligne</description>
+    <helper displayIf="ancestor::node()[
+              name()='gmd:MD_Metadata' and
+              contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]">
+      <option value="SDN EDMED">SDN EDMED</option>
+      <option value="SDN CDI">SDN CDI</option>
+      <option value="INSPIRE Geoportal/">INSPIRE Geoportal</option>
+      <option value="MyOcean">MyOcean</option>
+      <option value="Mongoos">Mongoos</option>
+    </helper>
   </element>
   <element name="gmd:name" id="404.0" context="gmd:CI_Series">
     <label>Nom</label>

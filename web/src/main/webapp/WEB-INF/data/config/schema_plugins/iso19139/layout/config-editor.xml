@@ -1418,8 +1418,8 @@
 
           <text ref="production-mode-field-missing"/>
 
-          <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevel"
-                  name="medseaHierarchyLevel"/>
+          <field name="medseaHierarchyLevel"
+                 xpath="/gmd:MD_Metadata/gmd:hierarchyLevel"/>
         </section>
       </tab>
       <tab id="datasources">
@@ -1500,7 +1500,26 @@
           <field
               name="medseaTitle"
               xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title"/>
-
+          <field
+              name="medseaDataSourceCatalogueName"
+              xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/
+                      gmd:transferOptions/gmd:MD_DigitalTransferOptions/
+                        gmd:onLine[1]/gmd:CI_OnlineResource/gmd:name"/>
+          <field
+              name="medseaDataSourceCatalogueURL"
+              xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/
+                  gmd:transferOptions/gmd:MD_DigitalTransferOptions/
+                    gmd:onLine[1]/gmd:CI_OnlineResource/gmd:linkage"/>
+          <field
+                  name="medseaDataSourceIdentifier"
+                  xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/
+                      gmd:transferOptions/gmd:MD_DigitalTransferOptions/
+                        gmd:onLine[1]/gmd:CI_OnlineResource/gmd:name"/>
+          <field
+                  name="medseaDataSourceDOI"
+                  xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/
+                  gmd:transferOptions/gmd:MD_DigitalTransferOptions/
+                    gmd:onLine[1]/gmd:CI_OnlineResource/gmd:linkage"/>
         </section>
       </tab>
 

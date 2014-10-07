@@ -119,6 +119,11 @@
   <costBasis>Cost basis</costBasis>
   <dataFormats>Data formats</dataFormats>
 
+  <medseaDataSourceCatalogueName>Catalog name</medseaDataSourceCatalogueName>
+  <medseaDataSourceCatalogueURL>Catalog URL</medseaDataSourceCatalogueURL>
+  <medseaDataSourceIdentifier>Dataset identifier in the catalog</medseaDataSourceIdentifier>
+  <medseaDataSourceDOI>URL DOI</medseaDataSourceDOI>
+
   <p03-field-missing>
     <div class="text-danger">P03 thesaurus is missing.</div>
   </p03-field-missing>
