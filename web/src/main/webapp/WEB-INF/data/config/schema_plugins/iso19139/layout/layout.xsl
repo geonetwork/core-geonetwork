@@ -269,6 +269,7 @@
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="codelists" select="$iso19139codelists" required="no"/>
+    <xsl:param name="overrideLabel" select="''" required="no"/>
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
@@ -276,7 +277,7 @@
 
     <xsl:call-template name="render-element">
       <xsl:with-param name="label"
-        select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
+                      select="if ($overrideLabel != '') then $overrideLabel else gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
       <xsl:with-param name="value" select="*/@codeListValue"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="$xpath"/>
