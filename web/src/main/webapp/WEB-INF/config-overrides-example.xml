@@ -28,19 +28,19 @@
 		<replaceText xpath="appHandler/luceneDir">WEB-INF/lucene</replaceText>
 		<replaceText xpath="appHandler/dataDir">WEB-INF/data</replaceText>
 		<replaceText xpath="appHandler/param[name = 'preferredSchema']">iso19139</replaceText>
-        <replaceXML xpath="resources">
-            <resource enabled="true">
-                <name>main-db</name>
-                <provider>jeeves.resources.dbms.ApacheDBCPool</provider>
-                <config>
-                    <user>${db.user}</user>
-                    <password>${db.pass}</password>
-                    <driver>org.h2.Driver</driver>
-                    <url>jdbc:h2:geonetwork</url>
-                    <poolSize>33</poolSize>
-                </config>
-            </resource>
-        </replaceXML>
+<!--         <replaceXML xpath="resources"> -->
+<!--             <resource enabled="true"> -->
+<!--                 <name>main-db</name> -->
+<!--                 <provider>jeeves.resources.dbms.ApacheDBCPool</provider> -->
+<!--                 <config> -->
+<!--                     <user>${db.user}</user> -->
+<!--                     <password>${db.pass}</password> -->
+<!--                     <driver>org.h2.Driver</driver> -->
+<!--                     <url>jdbc:h2:geonetwork</url> -->
+<!--                     <poolSize>33</poolSize> -->
+<!--                 </config> -->
+<!--             </resource> -->
+<!--         </replaceXML> -->
 		
 	</file>
 	<file name=".*/WEB-INF/config-gui.xml">

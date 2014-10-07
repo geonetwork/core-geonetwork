@@ -79,7 +79,7 @@ public class ApacheDBCPool extends AbstractDbmsPool {
 	 */
 	private void parseJeevesDBConfig(Element config) throws Exception {
 		url = config.getChildText(Jeeves.Res.Pool.URL);
-
+System.out.println(url);
 		String user = config.getChildText(Jeeves.Res.Pool.USER);
 		String passwd = config.getChildText(Jeeves.Res.Pool.PASSWORD);
 		String driver = config.getChildText(Jeeves.Res.Pool.DRIVER);

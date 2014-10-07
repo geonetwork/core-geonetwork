@@ -224,8 +224,8 @@
 			<name>main-db</name>
 			<provider>jeeves.resources.dbms.ApacheDBCPool</provider>
 			<config>
-				<user>admin</user>
-				<password>admin</password>
+				<user>geon</user>
+				<password>geon123</password>
 				<driver>com.mysql.jdbc.Driver</driver>
 				<url>jdbc:mysql://localhost:3306/geonetwork</url>
 				<poolSize>10</poolSize>
