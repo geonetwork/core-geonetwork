@@ -51,9 +51,9 @@
                 // the current set of displayed values
                 var value = d3.format('.0f')(y.replace(',', ''));
                 return '<h3>' + key + '</h3>' +
-                  '<p>' + value + ' ' +
-                  $translate('records') + ' (' +
-                  (value / total * 100).toFixed() + '%)</p>';
+                    '<p>' + value + ' ' +
+                    $translate('records') + ' (' +
+                    (value / total * 100).toFixed() + '%)</p>';
               })
                        .showLabels(true);
 

@@ -16,8 +16,8 @@
    * TODO: This could be used in other places
    * probably. Move to another common or language module ?
    */
-  module.directive('gnCountryPicker', ['gnHttp',
-    function(gnHttp) {
+  module.directive('gnCountryPicker', ['gnHttp', 'gnUtilityService',
+    function(gnHttp, gnUtilityService) {
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
@@ -35,13 +35,20 @@
               });
               country.name = country.label[scope.lang];
             });
-
-            $(element).typeahead({
-              name: 'countries',
-              valueKey: 'name',
+            var source = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
               local: data,
-              minLength: 0,
               limit: 30
+            });
+            source.initialize();
+            $(element).typeahead({
+              minLength: 0,
+              highlight: true
+            }, {
+              name: 'countries',
+              displayKey: 'name',
+              source: source.ttAdapter()
             }).on('typeahead:selected', function(event, datum) {
               if (angular.isFunction(scope.onRegionSelect)) {
                 scope.onRegionSelect(datum);
@@ -108,11 +115,21 @@
               gnRegionService.loadRegion(scope.region, scope.lang).then(
                   function(data) {
                     $(element).typeahead('destroy');
-                    $(element).typeahead({
-                      valueKey: 'name',
+                    var source = new Bloodhound({
+                      datumTokenizer:
+                          Bloodhound.tokenizers.obj.whitespace('name'),
+                      queryTokenizer: Bloodhound.tokenizers.whitespace,
                       local: data,
-                      minLength: 0,
                       limit: 30
+                    });
+                    source.initialize();
+                    $(element).typeahead({
+                      minLength: 0,
+                      highlight: true
+                    }, {
+                      name: 'countries',
+                      displayKey: 'name',
+                      source: source.ttAdapter()
                     }).on('typeahead:selected', function(event, datum) {
                       if (angular.isFunction(scope.onRegionSelect)) {
                         scope.onRegionSelect(datum);
@@ -154,16 +171,25 @@
               lang.name = lang.label[scope.lang] || defaultName;
               lang.tokens = [lang.name, lang.code, defaultName];
             });
-
-            $(element).typeahead({
-              name: 'isoLanguages',
-              valueKey: 'code',
-              template: function(datum) {
-                return '<p>' + datum.name + ' (' + datum.code + ')</p>';
-              },
+            var source = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
               local: data,
-              minLength: 0,
               limit: 30
+            });
+            source.initialize();
+            $(element).typeahead({
+              minLength: 0,
+              highlight: true
+            }, {
+              name: 'isoLanguages',
+              displayKey: 'code',
+              source: source.ttAdapter(),
+              templates: {
+                suggestion: function(datum) {
+                  return '<p>' + datum.name + ' (' + datum.code + ')</p>';
+                }
+              }
             });
           });
         }
