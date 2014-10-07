@@ -25,4 +25,12 @@
     </assert.refSys>
     <report.refSys>There is an Inspire CRS Identifier accepted code.</report.refSys>
 
+    <transferOptionLinks>Transfer Links</transferOptionLinks>
+    <assert.transferOptionLinks>One of the urls in the Distribution Info/Transfer Links is not a valid URL or references a non-existant page:</assert.transferOptionLinks>
+    <report.transferOptionLinks>Validation passed of the Distribution Info/Transfer Link:</report.transferOptionLinks>
+
+    <containsOperations>Contains Operations</containsOperations>
+    <assert.containsOperations>One of the urls in the Identification/Coupled Options is not a valid URL or references a non-existant page:</assert.containsOperations>
+    <report.containsOperations>Validation passed for the Identification/Coupled Options link:</report.containsOperations>
+
 </strings>

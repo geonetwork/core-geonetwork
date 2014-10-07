@@ -20,6 +20,7 @@
     <sch:ns prefix="skos" uri="http://www.w3.org/2004/02/skos/core#"/>
     <sch:ns prefix="xlink" uri="http://www.w3.org/1999/xlink"/>
     <sch:ns prefix="xslutil" uri="java:org.fao.geonet.util.XslUtil"/>
+    <sch:ns prefix="che" uri="http://www.geocat.ch/2008/che"/>
 
     <sch:pattern>
     <sch:title>$loc/strings/refSys</sch:title>
@@ -192,6 +193,44 @@
             </sch:report>
 
 
+        </sch:rule>
+    </sch:pattern>
+
+    <sch:pattern>
+        <sch:title>$loc/strings/transferOptionLinks</sch:title>
+        <!-- Check specification names and status -->
+        <sch:rule context="gmd:distributionInfo/*/gmd:transferOptions//gmd:CI_OnlineResource/gmd:linkage//che:LocalisedURL |
+                           gmd:distributionInfo/*/gmd:transferOptions//gmd:CI_OnlineResource/gmd:linkage//gmd:URL">
+
+            <sch:let name="isValidUrl" value="xslutil:validateURL(string(.))"/>
+            <sch:assert test="$isValidUrl">
+                <sch:value-of select="$loc/strings/assert.transferOptionLinks"/>
+                <sch:value-of select="string(.)"/>
+            </sch:assert>
+
+            <sch:report test="$isValidUrl">
+                <sch:value-of select="$loc/strings/report.transferOptionLinks"/>
+                <sch:value-of select="string(.)"/>
+            </sch:report>
+        </sch:rule>
+    </sch:pattern>
+
+    <sch:pattern>
+        <sch:title>$loc/strings/containsOperations</sch:title>
+        <!-- Check specification names and status -->
+        <sch:rule context="gmd:identificationInfo/*/srv:containsOperations/srv:SV_OperationMetadata/srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage//che:LocalisedURL |
+                           gmd:identificationInfo/*/srv:containsOperations/srv:SV_OperationMetadata/srv:connectPoint/gmd:CI_OnlineResource/gmd:linkage//gmd:URL">
+
+            <sch:let name="isValidUrl" value="xslutil:validateURL(string(.))"/>
+            <sch:assert test="$isValidUrl">
+                <sch:value-of select="$loc/strings/assert.containsOperations"/>
+                <sch:value-of select="string(.)"/>
+            </sch:assert>
+
+            <sch:report test="$isValidUrl">
+                <sch:value-of select="$loc/strings/report.containsOperations"/>
+                <sch:value-of select="string(.)"/>
+            </sch:report>
         </sch:rule>
     </sch:pattern>
 

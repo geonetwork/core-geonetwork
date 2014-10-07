@@ -23,6 +23,9 @@ import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.om.SingletonIterator;
 import net.sf.saxon.om.UnfailingIterator;
 import net.sf.saxon.type.Type;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.HeadMethod;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.LuceneSearcher;
@@ -1006,7 +1009,28 @@ public final class XslUtil {
 		}
 		return src.toString().matches(pattern.toString());
 	}
+    public static boolean validateURL(String urlString) {
+        try {
+            System.out.println("Testing url : " + urlString);
+            HeadMethod method = new HeadMethod(urlString);
+            method.setFollowRedirects(true);
+            HttpClient client = new HttpClient();
 
+            String proxyHost = System.getProperty("http.proxyHost");
+            String proxyPort = System.getProperty("http.proxyPort");
+
+            // Added support for proxy
+            if (proxyHost != null && proxyPort != null) {
+                client.getHostConfiguration().setProxy(proxyHost, new Integer(proxyPort));
+            }
+            client.getHttpConnectionManager().getParams().setConnectionTimeout(1000);
+            client.executeMethod(method);
+
+            return method.getStatusCode() != HttpStatus.SC_NOT_FOUND;
+        } catch (Exception e) {
+            return false;
+        }
+    }
     private static ThreadLocal<Boolean> allowScripting = new InheritableThreadLocal<Boolean>();
     public static void setNoScript() {
         allowScripting.set(false);
