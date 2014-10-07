@@ -1329,6 +1329,7 @@
 	</codelist>
 	<!-- ==================================================== -->
   <codelist name="gmd:MD_ScopeCode"
+            editorMode="radio"
             displayIf="ancestor::node()[
               name()='gmd:MD_Metadata' and
               contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]">
