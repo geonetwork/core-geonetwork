@@ -151,7 +151,7 @@ public class HttpProxyServlet extends HttpServlet {
                 response.sendError(org.springframework.http.HttpStatus.BAD_REQUEST.value(), "only HTTP(S) protocol supported");
             }
         } catch (Exception e) {
-            response.sendError(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR.value(), "Some unexpected error occurred. Error text was: " + e.getMessage());
+            response.sendError(org.springframework.http.HttpStatus.NOT_FOUND.value(), "Some unexpected error occurred. Error text was: " + e.getMessage());
         } finally {
             if (method != null) method.releaseConnection();
         }
