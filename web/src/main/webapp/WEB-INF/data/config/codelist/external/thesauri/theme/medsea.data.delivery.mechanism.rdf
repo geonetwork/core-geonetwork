@@ -6,51 +6,37 @@
          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
          xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
   <skos:ConceptScheme rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/environmental-matrix">
-    <dc:title>Environmental matrix</dc:title>
+    <dc:title>Data delivery mechanisms</dc:title>
     <dc:description></dc:description>
     <dcterms:issued>2014-08-11</dcterms:issued>
     <dcterms:modified>2014-08-11</dcterms:modified>
   </skos:ConceptScheme>
-  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/challenges#air">
-    <skos:prefLabel xml:lang="en">Air</skos:prefLabel>
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/data-delivery#order-form">
+    <skos:prefLabel xml:lang="en">Order form/envoice</skos:prefLabel>
     <skos:definition xml:lang="en"></skos:definition>
-    <skos:prefLabel xml:lang="fr">Air</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Order form/envoice</skos:prefLabel>
     <skos:definition xml:lang="fr"></skos:definition>
   </skos:Concept>
-  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/challenges#biota-biology">
-    <skos:prefLabel xml:lang="en">Biota - Biology</skos:prefLabel>
+
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/data-delivery#download">
+    <skos:prefLabel xml:lang="en">On-line downloading services</skos:prefLabel>
     <skos:definition xml:lang="en"></skos:definition>
-    <skos:prefLabel xml:lang="fr">Biota - Biology</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">On-line downloading services</skos:prefLabel>
     <skos:definition xml:lang="fr"></skos:definition>
   </skos:Concept>
-  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/challenges#fresh-water">
-    <skos:prefLabel xml:lang="en">Fresh water</skos:prefLabel>
+
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/data-delivery#discovery+view+download">
+    <skos:prefLabel xml:lang="en">On-line discovery+viewing + downloading services</skos:prefLabel>
     <skos:definition xml:lang="en"></skos:definition>
-    <skos:prefLabel xml:lang="fr">Fresh water</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">On-line discovery+viewing + downloading services</skos:prefLabel>
     <skos:definition xml:lang="fr"></skos:definition>
   </skos:Concept>
-  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/challenges#human-activities">
-    <skos:prefLabel xml:lang="en">Human activities</skos:prefLabel>
+
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/data-delivery#discovery+view+download+adv">
+    <skos:prefLabel xml:lang="en">On-line discovery + viewing + downloading + advanced services (High resolution viewing,3D viewing services, Processing/Mapping services...)</skos:prefLabel>
     <skos:definition xml:lang="en"></skos:definition>
-    <skos:prefLabel xml:lang="fr">Human activities</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">On-line discovery + viewing + downloading + advanced services (High resolution viewing,3D viewing services, Processing/Mapping services...)</skos:prefLabel>
     <skos:definition xml:lang="fr"></skos:definition>
   </skos:Concept>
-  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/challenges#marine-water">
-    <skos:prefLabel xml:lang="en">Marine water</skos:prefLabel>
-    <skos:definition xml:lang="en"></skos:definition>
-    <skos:prefLabel xml:lang="fr">Marine water</skos:prefLabel>
-    <skos:definition xml:lang="fr"></skos:definition>
-  </skos:Concept>
-  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/challenges#seabed-riverbed">
-    <skos:prefLabel xml:lang="en">Seabed - Riverbed</skos:prefLabel>
-    <skos:definition xml:lang="en"></skos:definition>
-    <skos:prefLabel xml:lang="fr">Seabed - Riverbed</skos:prefLabel>
-    <skos:definition xml:lang="fr"></skos:definition>
-  </skos:Concept>
-  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/challenges#unspecified">
-    <skos:prefLabel xml:lang="en">Unspecified</skos:prefLabel>
-    <skos:definition xml:lang="en"></skos:definition>
-    <skos:prefLabel xml:lang="fr">Unspecified</skos:prefLabel>
-    <skos:definition xml:lang="fr"></skos:definition>
-  </skos:Concept>
+
 </rdf:RDF>
