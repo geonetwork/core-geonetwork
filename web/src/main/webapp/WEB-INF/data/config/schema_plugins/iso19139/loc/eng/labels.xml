@@ -1797,11 +1797,14 @@
             resource</description>
 		<condition>conditional</condition>
     <!-- MedSea list of values -->
-    <helper>
-      <option value="restricted">restricted</option>
-      <option value="accessible under moratorium">accessible under moratorium</option>
-      <option value="unrestricted">unrestricted</option>
-      <option value="unknown">unknown</option>
+    <helper displayIf="ancestor::node()[
+              name()='gmd:MD_Metadata' and
+              contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]"
+            editorMode="radio">
+      <option value="Restricted">Restricted</option>
+      <option value="Accessible under moratorium">Accessible under moratorium</option>
+      <option value="Unrestricted">Unrestricted</option>
+      <option value="Unknown">Unknown</option>
     </helper>
 	</element>
 	<element name="gmd:page" id="406.0">
@@ -2318,13 +2321,14 @@
 
     <helper displayIf="ancestor::node()[
               name()='gmd:MD_Metadata' and
-              contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]">
-      <option value="no charge">no charge</option>
-      <option value="distribution cost charge">distribution cost charge</option>
-      <option value="collection cost charge">collection cost charge</option>
-      <option value="commercial cost charge">commercial cost charge</option>
-      <option value="cost charge depends on intented use and category of users">cost charge depends on intented use and category of users</option>
-      <option value="unknown">unknown</option>
+              contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]"
+            editorMode="radio">
+      <option value="No charge">No charge</option>
+      <option value="Distribution cost charge">Distribution cost charge</option>
+      <option value="Collection cost charge">Collection cost charge</option>
+      <option value="Commercial cost charge">Commercial cost charge</option>
+      <option value="Cost charge depends on intented use and category of users">Cost charge depends on intented use and category of users</option>
+      <option value="Unknown">unknown</option>
     </helper>
     <helper>
       <option value="No condition applies">No condition applies</option>
