@@ -111,6 +111,18 @@
     <dependency>
       <groupId>org.geotools.jdbc</groupId>
       <artifactId>gt-jdbc-h2</artifactId>
+      <exclusions>
+          <!-- this artifact is no longer available as of Oct 2014-->
+          <exclusion>
+              <groupId>net.sourceforge.hatbox</groupId>
+              <artifactId>hatbox</artifactId>
+          </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+        <groupId>net.sourceforge.hatbox</groupId>
+        <artifactId>hatbox</artifactId>
+        <version>1.0.b8</version>
     </dependency>
     <dependency>
       <groupId>org.geotools.jdbc</groupId>
@@ -177,6 +189,15 @@
       <artifactId>spring-security-web</artifactId>
     </dependency>
   </dependencies>
+
+  <repositories>
+      <!-- this repo is used only for hatbox -->
+      <repository>
+          <id>boundless</id>
+          <name>BoundlessGeo Maven Repository</name>
+          <url>http://repo.boundlessgeo.com/main</url>
+      </repository>
+  </repositories>
 
   <profiles>
 	<profile>
