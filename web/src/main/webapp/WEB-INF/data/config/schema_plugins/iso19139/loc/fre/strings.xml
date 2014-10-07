@@ -85,12 +85,13 @@
   <add-extent-from-geokeywordsHelp>Analyse les mots clés de type géographique et ajoute les emprises correspondantes.</add-extent-from-geokeywordsHelp>
 
 
+
   <!-- Medsea-->
   <medsea>MedSea</medsea>
   <medsea-metadata>Metadata</medsea-metadata>
+  <medseaTitle>Data collection name or data set name*</medseaTitle>
   <characteristics>Characteristics</characteristics>
-  <medseaTitle>Data source name</medseaTitle>
-  <medseaHierarchyLevel>Hierarchy data level</medseaHierarchyLevel>
+  <medseaHierarchyLevel>Hierarchy data level*</medseaHierarchyLevel>
   <datasources>Data sources</datasources>
   <overview>Overview</overview>
   <spatialCoverage>Spatial coverage</spatialCoverage>
@@ -98,15 +99,15 @@
   <accessibility>Accessibility</accessibility>
   <programName>Program name</programName>
   <edmerpName>EDMREP name</edmerpName>
-  <dataProvider>Data provider</dataProvider>
-  <uniqueIdentifier>Unique identifier</uniqueIdentifier>
-  <environmental-matrix>Environmental matrix</environmental-matrix>
+  <dataProvider>Data provider*</dataProvider>
+  <uniqueIdentifier>Unique identifier*</uniqueIdentifier>
+  <environmental-matrix>Environmental matrix*</environmental-matrix>
   <sdn-parameter-discovery>SeaDataNet Parameter Discovery Vocabulary (P02)</sdn-parameter-discovery>
   <level-of-characteristics>Level of characteristics</level-of-characteristics>
-  <providerSpecification>Purpose of characteristics production (provider specification)</providerSpecification>
+  <providerSpecification>Purpose of characteristics production (provider specification)*</providerSpecification>
   <processStepReference>Production and quality assessment specifications reference</processStepReference>
-  <useOfTheCharacteristics>Title of the intended  use of the characteristic by the challenge</useOfTheCharacteristics>
-  <intendedUse>Intended use description</intendedUse>
+  <useOfTheCharacteristics>Title of the intended  use of the characteristic by the challenge*</useOfTheCharacteristics>
+  <intendedUse>Intended use description*</intendedUse>
   <geographicalAreaCode>Geographical area code</geographicalAreaCode>
   <horizontalAndVerticalInfo>Horizontal and vertical information</horizontalAndVerticalInfo>
   <horResolution>Hor. resolution</horResolution>
@@ -115,14 +116,15 @@
   <verticalResolution>Vertical resolution or observations spacing</verticalResolution>
   <timeResolution>Time resolution</timeResolution>
   <dataDelivery>Data delivery mechanisms</dataDelivery>
-  <dataPolicy>Data policy</dataPolicy>
-  <costBasis>Cost basis</costBasis>
-  <dataFormats>Data formats</dataFormats>
+  <dataPolicy>Data policy*</dataPolicy>
+  <costBasis>Cost basis*</costBasis>
+  <dataFormats>Data formats*</dataFormats>
+  <temporalExtent>Temporal extent*</temporalExtent>
 
   <medseaDataSourceCatalogueName>Catalog name</medseaDataSourceCatalogueName>
-  <medseaDataSourceCatalogueURL>Catalog URL</medseaDataSourceCatalogueURL>
+  <medseaDataSourceCatalogueURL>Catalog URL*</medseaDataSourceCatalogueURL>
   <medseaDataSourceIdentifier>Dataset identifier in the catalog</medseaDataSourceIdentifier>
-  <medseaDataSourceDOI>URL DOI</medseaDataSourceDOI>
+  <medseaDataSourceDOI>URL DOI*</medseaDataSourceDOI>
 
   <p03-field-missing>
     <div class="text-danger">P03 thesaurus is missing.</div>
