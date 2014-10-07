@@ -147,7 +147,7 @@ public class Reject implements Service
         }
         strategy.performDelete(ids, dbms, session, strategySpecificData);
 
-        gc.getDataManager().indexInThreadPool(context, allAffectedMdIds, dbms, false, true);
+        gc.getDataManager().indexInThreadPool(context, allAffectedMdIds, dbms, false, false);
 
         return result;
 

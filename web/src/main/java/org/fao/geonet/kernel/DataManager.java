@@ -274,7 +274,7 @@ public class DataManager {
         else perThread = ids.size() / threadCount;
         int index = 0;
 
-        boolean performValidation = true;
+        boolean performValidation = false;
         boolean processSharedObjects = true;
 
         while(index < ids.size()) {
@@ -355,7 +355,6 @@ public class DataManager {
         private final int beginIndex;
         private final int count;
         private final boolean processSharedObjects;
-        private final boolean performValidation;
         private JeevesUser user;
 
         IndexMetadataTask(ServiceContext context, boolean processSharedObjects, List<String> ids, boolean performValidation) {
@@ -367,7 +366,6 @@ public class DataManager {
             this.beginIndex = 0;
             this.count = ids.size();
             this.processSharedObjects = processSharedObjects;
-            this.performValidation = performValidation;
             if(context.getUserSession() != null) {
                 this.user = context.getUserSession().getPrincipal();
             }
@@ -381,7 +379,6 @@ public class DataManager {
             this.beginIndex = beginIndex;
             this.count = count;
             this.processSharedObjects = processSharedObjects;
-            this.performValidation = performValidation;
             if(context.getUserSession() != null) {
                 this.user = context.getUserSession().getPrincipal();
             }
@@ -409,7 +406,7 @@ public class DataManager {
                         try {
                             for(int i=beginIndex; i<beginIndex+count; i++) {
                                 try {
-                                    indexMetadata(dbms, ids.get(i).toString(), processSharedObjects, context, performValidation, false,
+                                    indexMetadata(dbms, ids.get(i).toString(), processSharedObjects, context, false, false,
                                             false);
                                 }
                                 catch (Exception e) {
@@ -421,7 +418,7 @@ public class DataManager {
                         }
                     }
                     else {
-                        indexMetadata(dbms, ids.get(0), processSharedObjects, context, performValidation, false, false);
+                        indexMetadata(dbms, ids.get(0), processSharedObjects, context, false, false, false);
                     }
                 }
                 finally {
@@ -1686,37 +1683,28 @@ public class DataManager {
 	}
 	public Element getGeocatMetadata(ServiceContext srvContext, String id, boolean forEditing, boolean withEditorValidationErrors, boolean keepXlinkAttributes, boolean elementsHide, boolean allowDbmsClosing) throws Exception {
 		Dbms dbms = (Dbms) srvContext.getResourceManager().open(Geonet.Res.MAIN_DB);
-		boolean doXLinks = true;
 		Element md = xmlSerializer.selectNoXLinkResolver(dbms, "Metadata", id, false, srvContext);
 		if (md == null) return null;
 
 		String version = null;
 
 		if (forEditing) { // copy in xlink'd fragments but leave xlink atts to editor
-			if (doXLinks) Processor.processXLink(md, srvContext);
+			Processor.processXLink(md, srvContext);
 			String schema = getMetadataSchema(dbms, id);
             md = Xml.transform(md, stylePath+"characterstring-to-localisedcharacterstring.xsl");
 
-            if (withEditorValidationErrors) {
-			    version = doValidate(srvContext, dbms, schema, id, md, srvContext.getLanguage(), forEditing).two();
-			}
-            else {
-                editLib.expandElements(schema, md);
-                version = editLib.getVersionForEditing(schema, id, md);
-            }
+            editLib.expandElements(schema, md);
+            version = editLib.getVersionForEditing(schema, id, md);
 		}
         else {
-			if (doXLinks) {
-			    if (keepXlinkAttributes) {
-			        Processor.processXLink(md, srvContext);
-			    } else {
-			        Processor.detachXLink(md,srvContext);
-			    }
-			}
-	                     if( getMetadataSchema(dbms, id).equals("iso19139.che")) {
-	                            md = Xml.transform(md, stylePath+"add-charstring.xsl");
-	                        }
-
+            if (keepXlinkAttributes) {
+                Processor.processXLink(md, srvContext);
+            } else {
+                Processor.detachXLink(md,srvContext);
+            }
+            if( getMetadataSchema(dbms, id).equals("iso19139.che")) {
+                md = Xml.transform(md, stylePath+"add-charstring.xsl");
+            }
 		}
 
         if (elementsHide) {
@@ -1860,17 +1848,17 @@ public class DataManager {
 
 		try {
     		//--- do the validation last - it throws exceptions
-    		if (session != null && validate) {
-    		    Element xlinkResolved = Processor.processXLink((Element) md.clone(), context);
-    			doValidate(context, dbms, schema,id,xlinkResolved,lang, false);
-    		}
+//    		if (session != null && validate) {
+//    		    Element xlinkResolved = Processor.processXLink((Element) md.clone(), context);
+//    			doValidate(context, dbms, schema,id,xlinkResolved,lang, false);
+//    		}
 		}
         finally {
             if(index) {
                 //--- update search criteria
                 boolean indexGroup = false;
                 boolean processSharedObjects = false;
-                indexMetadata(dbms, id, processSharedObjects, context, true, false, false);
+                indexMetadata(dbms, id, processSharedObjects, context, false, false, false);
             }
 		}
 		return true;

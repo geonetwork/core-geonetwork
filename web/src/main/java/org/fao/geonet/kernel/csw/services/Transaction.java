@@ -23,7 +23,6 @@
 
 package org.fao.geonet.kernel.csw.services;
 
-import jeeves.exceptions.OperationNotAllowedEx;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -38,7 +37,11 @@ import org.fao.geonet.csw.common.OutputSchema;
 import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
-import org.fao.geonet.kernel.*;
+import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.AddElemValue;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.EditLib;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
@@ -46,17 +49,18 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.spatial.Pair;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.geotools.data.DataStore;
-import org.jaxen.SimpleNamespaceContext;
-import org.jaxen.XPath;
-import org.jaxen.jdom.JDOMXPath;
-import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import java.io.File;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 //=============================================================================
 
@@ -163,7 +167,7 @@ public class Transaction extends AbstractOperation implements CatalogService
 		finally
 		{
             try {
-                dataMan.indexInThreadPool(context, new ArrayList<String>(toIndex), null, true, true);
+                dataMan.indexInThreadPool(context, new ArrayList<String>(toIndex), null, true, false);
             } catch (SQLException e) {
                 Log.error(Geonet.CSW, "cannot index");
                 Log.error(Geonet.CSW, " (C) StackTrace\n" + Util.getStackTrace(e));

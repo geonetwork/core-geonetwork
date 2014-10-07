@@ -81,6 +81,11 @@ public class GetAdminOper implements Service
 		if (info == null)
 			throw new MetadataNotFoundEx(id);
 
+        // GEOCAT
+        Element md = dm.getGeocatMetadata(context, id, false, false, false, false, false);
+        dm.doValidate(context, dbms,info.schemaId,id,md,context.getLanguage(), false);
+        // END GEOCAT
+
 		Element ownerId = new Element("ownerid").setText(info.owner);
 		Element groupOwner = new Element("groupOwner").setText(info.groupOwner);
 		Element schema = new Element("schema").setText(info.schemaId);

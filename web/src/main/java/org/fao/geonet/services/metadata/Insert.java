@@ -25,7 +25,6 @@ package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
 import jeeves.exceptions.BadParameterEx;
-import jeeves.exceptions.MissingParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
@@ -153,7 +152,7 @@ public class Insert implements Service
 		} 
 
 		// Index
-        dm.indexInThreadPool(context, id.get(0), dbms, true, true);
+        dm.indexInThreadPool(context, id.get(0), dbms, true, false);
         
 		// Return response
 		Element response = new Element(Jeeves.Elem.RESPONSE);

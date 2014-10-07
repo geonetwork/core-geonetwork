@@ -71,7 +71,7 @@ public class Index implements Service {
             }
             final GeonetContext geonet = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
             Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
-            geonet.getDataManager().indexInThreadPool(context, new ArrayList<String>(selection), dbms, true, true);
+            geonet.getDataManager().indexInThreadPool(context, new ArrayList<String>(selection), dbms, true, false);
         }
 
         return new Element("results").setAttribute("numberIndexed", "" + index);
