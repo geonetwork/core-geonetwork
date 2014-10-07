@@ -20,9 +20,6 @@
     <label>Mots-clés</label>
     <description>Mots-clés, phrases de résumé, ou codes de classement.</description>
     <example/>
-    <helper>
-      <option value="OpenData">OpenData</option>
-    </helper>
   </element>
 
   <element name="dc:description">

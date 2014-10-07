@@ -14,16 +14,21 @@
     <for name="dct:dateAccepted" use="date"/>
     <for name="dct:dateCopyrighted" use="date"/>
 
+
+    <for name="dc:subject" use="data-gn-keyword-picker"/>
     <for name="dc:language" use="data-gn-language-picker"/>
   </fields>
 
 
   <!-- View configuration -->
   <views>
-    <view name="default">
+    <view name="default" upAndDownControlHidden="true" >
       <tab id="default" default="true" mode="flat">
         <section xpath="/simpledc"/>
       </tab>
+      <flatModeExceptions>
+        <for name="dc:subject" />
+      </flatModeExceptions>
     </view>
     <view name="advanced">
       <tab id="advanced" default="true">
