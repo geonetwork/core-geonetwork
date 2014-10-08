@@ -121,7 +121,7 @@
              scope.invalidKeywordMatch = false;
              scope.selected = [];
              scope.initialKeywords = scope.keywords ?
-             scope.keywords.split(',') : [];
+             scope.keywords.split('|') : [];
              scope.transformationLists =
              scope.transformations.indexOf(',') !== -1 ?
              scope.transformations.split(',') : [scope.transformations];
