@@ -1455,8 +1455,6 @@
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
                 'SDN EDMERP Identifier')]"/>
 
-          <text ref="sdn-edmerp"/>
-
           <field name="dataProvider" templateModeOnly="true"
                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact">
             <template>

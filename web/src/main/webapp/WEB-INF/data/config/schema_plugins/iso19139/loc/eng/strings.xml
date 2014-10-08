@@ -137,8 +137,4 @@
     <div class="text-danger">Use resource maintenance to store production mode ?</div>
   </production-mode-field-missing>
 
-  <sdn-edmerp>
-    <div class="text-info">Choose a project from the
-      <a href="http://seadatanet.maris2.nl/v_edmerp/search.asp">European Directory of Marine Environmental Research Projects</a></div>
-  </sdn-edmerp>
 </strings>
