@@ -125,10 +125,10 @@
   <medseaDataSourceDOI>URL DOI*</medseaDataSourceDOI>
 
   <p03-field-missing>
-    <div class="text-danger">P03 thesaurus is missing.</div>
+    <div class="text-danger">SeaDataNet Agreed Parameter Groupes P03 thesaurus is missing.</div>
   </p03-field-missing>
   <p01-field-missing>
-    <div class="text-danger">P01 thesaurus is missing.</div>
+    <div class="text-danger">SeaDataNet Parameter Discovery Vocabulary P01 thesaurus is missing.</div>
   </p01-field-missing>
   <reliability-field-missing>
     <div class="text-danger">Reliability field is missing.</div>
