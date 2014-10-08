@@ -138,6 +138,7 @@
       <xsl:when test="$codelists">
         <!-- Return the default -->
         <codelist>
+          <xsl:copy-of select="$codelists[not(@displayIf)]/@*"/>
           <xsl:copy-of select="$codelists[not(@displayIf)]/*[not(@hideInEditMode)]"/>
         </codelist>
       </xsl:when>
