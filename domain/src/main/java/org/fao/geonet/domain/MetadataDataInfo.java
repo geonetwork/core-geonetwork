@@ -1,7 +1,12 @@
 package org.fao.geonet.domain;
 
-import javax.persistence.*;
 import java.io.Serializable;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Transient;
 
 /**
  * Encapsulates the metadata about a metadata document. (title, rating, schema etc...) This is a JPA Embeddable object that is embedded
@@ -21,6 +26,7 @@ public class MetadataDataInfo implements Serializable {
     private char _template = Constants.YN_FALSE;
     private String _root;
     private String _doctype;
+    private String _extra;
     private Integer _displayOrder;
     private int _rating;
     private int _popularity;
@@ -44,6 +50,33 @@ public class MetadataDataInfo implements Serializable {
      */
     public MetadataDataInfo setTitle(String title) {
         this._title = title;
+        return this;
+    }
+
+    /**
+     * Get the "extra" data associates with the metadata.  This is situation specific for example it might provide extra
+     * parameters for searching for metadata.
+     *
+     * This data is normally used for custom geonetwork applications which
+     * need this data for some application specific task.
+     */
+    @Column
+    public String getExtra() {
+        return _extra;
+    }
+
+    /**
+     * Set the "extra" data associates with the metadata.  This is situation specific for example it might provide extra
+     * parameters for searching for metadata.
+     *
+     * This data is normally used for custom geonetwork applications which
+     * need this data for some application specific task.
+     *
+     * @param extra new value.
+     * @return this data info object
+     */
+    public MetadataDataInfo setExtra(String extra) {
+        this._title = extra;
         return this;
     }
 

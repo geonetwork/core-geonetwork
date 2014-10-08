@@ -539,6 +539,7 @@ public class DataManager {
             final MetadataType metadataType = fullMd.getDataInfo().getType();
             final String  root       = fullMd.getDataInfo().getRoot();
             final String  uuid       = fullMd.getUuid();
+            final String  extra       = fullMd.getDataInfo().getExtra();
             final String  isHarvested = String.valueOf(Constants.toYN_EnabledChar(fullMd.getHarvestInfo().isHarvested()));
             final String  owner      = String.valueOf(fullMd.getSourceInfo().getOwner());
             final String  groupOwner = String.valueOf(fullMd.getSourceInfo().getGroupOwner());
@@ -564,6 +565,7 @@ public class DataManager {
             moreFields.add(SearchManager.makeField("_popularity",  popularity,  true, true));
             moreFields.add(SearchManager.makeField("_rating",      rating,      true, true));
             moreFields.add(SearchManager.makeField("_displayOrder",displayOrder, true, false));
+            moreFields.add(SearchManager.makeField("_extra",       extra,       true, false));
 
             if (owner != null) {
                 User user = _applicationContext.getBean(UserRepository.class).findOne(fullMd.getSourceInfo().getOwner());
