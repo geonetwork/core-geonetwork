@@ -1514,12 +1514,12 @@
                   name="medseaDataSourceIdentifier"
                   xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/
                       gmd:transferOptions/gmd:MD_DigitalTransferOptions/
-                        gmd:onLine[1]/gmd:CI_OnlineResource/gmd:name"/>
+                        gmd:onLine[2]/gmd:CI_OnlineResource/gmd:name"/>
           <field
                   name="medseaDataSourceDOI"
                   xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/
                   gmd:transferOptions/gmd:MD_DigitalTransferOptions/
-                    gmd:onLine[1]/gmd:CI_OnlineResource/gmd:linkage"/>
+                    gmd:onLine[2]/gmd:CI_OnlineResource/gmd:linkage"/>
         </section>
       </tab>
 
