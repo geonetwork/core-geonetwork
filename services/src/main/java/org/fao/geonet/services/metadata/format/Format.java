@@ -53,7 +53,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.WeakHashMap;
 
+import static com.google.common.io.Files.getNameWithoutExtension;
 import static org.fao.geonet.constants.Geonet.StagingProfile.DEVELOPMENT;
+import static org.fao.geonet.services.metadata.format.FormatterConstants.COMPILED_FUNCTIONS_FILE_NAME;
 
 /**
  * Allows a user to display a metadata with a particular formatters
@@ -168,7 +170,9 @@ public class Format extends AbstractFormatService {
         final String canonicalPath = viewXslFile.getCanonicalPath();
         if (!compiled.contains(canonicalPath)) {
             compiled.add(canonicalPath);
-            File functionsFile = new File(viewXslFile.getParentFile(), FormatterConstants.COMPILED_FILE_NAME);
+            this.compiledXslt.add(canonicalPath);
+            final String functionsFileName = getNameWithoutExtension(viewXslFile.getName()) + "_" + COMPILED_FUNCTIONS_FILE_NAME;
+            File functionsFile = new File(viewXslFile.getParentFile(), functionsFileName);
             if (functionsFile.lastModified() < viewXslFile.lastModified()) {
                 final HashSet<String> applicableSchemaSet = Sets.newHashSet(applicableSchemas);
                 if (schema != null) {
@@ -201,7 +205,7 @@ public class Format extends AbstractFormatService {
     private boolean hasIncludeEl(Element xslRootEl) {
         final List<Element> includes = xslRootEl.getChildren("include", Geonet.Namespaces.XSL);
         for (Element include : includes) {
-            if (FormatterConstants.COMPILED_FILE_NAME.equals(include.getAttributeValue("href"))) {
+            if (COMPILED_FUNCTIONS_FILE_NAME.equals(include.getAttributeValue("href"))) {
                 return true;
             }
         }
@@ -215,7 +219,7 @@ public class Format extends AbstractFormatService {
         for (Element include : includes) {
             final String pathToOtherFile = include.getAttributeValue("href");
             final File includedFile = new File(viewXslFile.getParentFile(), pathToOtherFile);
-            if (includedFile.exists() && !includedFile.getName().equals(FormatterConstants.COMPILED_FILE_NAME)) {
+            if (includedFile.exists() && !includedFile.getName().endsWith(COMPILED_FUNCTIONS_FILE_NAME)) {
                 compileFunctionsFile(context, includedFile, schema, applicableSchemas, compiled);
             }
         }

@@ -20,7 +20,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import static org.fao.geonet.domain.Pair.read;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 

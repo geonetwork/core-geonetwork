@@ -7,15 +7,14 @@
     xmlns:gmd="http://www.isotc211.org/2005/gmd"
     xmlns:gnf="http://www.fao.org/geonetwork/functions">
 
-    <xsl:include href="../common-templates.xsl" />
-    <xsl:output omit-xml-declaration="yes" method="xml" doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN"
-        doctype-system="http://www.w3.org/TR/html4/loose.dtd" indent="yes" encoding="UTF-8" />
+    <xsl:template mode="iso19139" match="*[gco:CharacterString or ./gmd:PT_FreeText//gmd:LocalisedCharacterString]" priority="1">
+        <xsl:copy-of select="gnf:translatedStringWidget(
+            name(), ., $root
+        )" />
+    </xsl:template>
 
-    <xsl:variable name="root" select="/" />
-    <xsl:template match="/">
-        <div>
-            <xsl:apply-templates mode="iso19139" select="gnf:metadataRoot(root())"/>
-        </div>
+    <xsl:template mode="iso19139" match="text()" priority="0">
+        <xsl:value-of select="." />
     </xsl:template>
 
 </xsl:stylesheet>
