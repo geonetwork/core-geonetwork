@@ -743,8 +743,8 @@ public class SearchManager {
         if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
             Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n" + Xml.getString(metadata));
         }
-         File defaultLangStyleSheet = getIndexFieldsXsl(schemaDir, root, "index-fields");
-         File otherLocalesStyleSheet = getIndexFieldsXsl(schemaDir, root, "language-index-fields");
+         File defaultLangStyleSheet = getIndexFieldsXsl(schemaDir, root, "");
+         File otherLocalesStyleSheet = getIndexFieldsXsl(schemaDir, root, "language-");
 
         Element xmlDoc = getIndexFields(metadata, defaultLangStyleSheet, otherLocalesStyleSheet);
 
@@ -783,9 +783,14 @@ public class SearchManager {
             root = root.split(":",2)[1];
         }
 
-        File defaultLangStyleSheet = new File(schemaDir, indexName + "-" + root + ".xsl");
+        final String basicName = "index-fields";
+        File defaultLangStyleSheet = new File(new File(schemaDir, basicName), indexName + root + ".xsl");
         if (!defaultLangStyleSheet.exists()) {
-            defaultLangStyleSheet = new File(schemaDir, indexName + ".xsl");
+            defaultLangStyleSheet = new File(new File(schemaDir, basicName), indexName + "default.xsl");
+        }
+        if (!defaultLangStyleSheet.exists()) {
+            // backward compatibility
+            defaultLangStyleSheet = new File(schemaDir, indexName + basicName + ".xsl");
         }
         return defaultLangStyleSheet;
     }
