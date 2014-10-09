@@ -76,7 +76,7 @@ public class MetadataDataInfo implements Serializable {
      * @return this data info object
      */
     public MetadataDataInfo setExtra(String extra) {
-        this._title = extra;
+        this._extra = extra;
         return this;
     }
 
