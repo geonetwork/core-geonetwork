@@ -231,6 +231,7 @@
 
       return {
         search: search,
+        format: format,
         gnSearch: gnSearch,
         register: register,
         select: select,

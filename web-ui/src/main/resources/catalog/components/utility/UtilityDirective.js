@@ -21,6 +21,7 @@
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
+          element.attr('placeholder', '...');
           gnHttp.callService('country', {}, {
             cache: true
           }).success(function(response) {
@@ -100,7 +101,6 @@
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
-
           if (attrs['gnRegion']) {
             gnRegionService.loadList().then(function(data) {
               for (i = 0; i < data.length; ++i) {
@@ -161,6 +161,7 @@
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
+          element.attr('placeholder', '...');
           gnHttp.callService('lang', {}, {
             cache: true
           }).success(function(data) {
@@ -191,6 +192,68 @@
                 }
               }
             });
+          });
+        }
+      };
+    }]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_fields_directive.directive:gnDirectoryEntryPicker
+   * @function
+   *
+   * @description
+   * Use the directory (aka subtemplate) search service
+   * to retrieve the list of entry available and provide autocompletion
+   * for the input field with that directive attached.
+   *
+   */
+  module.directive('gnDirectoryEntryPicker',
+    ['gnUrlUtils', 'gnSearchManagerService',
+    function(gnUrlUtils, gnSearchManagerService) {
+      return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+          element.attr('placeholder', '...');
+
+          var url = gnUrlUtils.append('q@json',
+            gnUrlUtils.toKeyValue({
+              _isTemplate: 's',
+              any: '*QUERY*',
+              _root: 'gmd:CI_ResponsibleParty',
+              sortBy: 'title',
+              sortOrder: 'reverse',
+              resultType: 'subtemplates',
+              fast: 'index'
+            })
+          );
+          var parseResponse = function(data) {
+            var records = gnSearchManagerService.format(data);
+            return records.metadata;
+          };
+          var source = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            limit: 200,
+            remote: {
+              wildcard: 'QUERY',
+              url: url,
+              filter: parseResponse
+            }
+          });
+          source.initialize();
+          $(element).typeahead({
+            minLength: 0,
+            highlight: true
+          }, {
+            name: 'directoryEntry',
+            displayKey: 'title',
+            source: source.ttAdapter(),
+            templates: {
+              suggestion: function(datum) {
+                return '<p>' + datum.title + '</p>';
+              }
+            }
           });
         }
       };

@@ -188,6 +188,14 @@ font-size: small;
   width: inherit;
 }
 
+/* Do not show scrollbar as this dropdown contains
+   dropdown button (eg. for choosing contact role)
+   whose content will not be displayed properly
+   with a scrollbar. */
+*[data-gn-directory-entry-selector] .tt-dropdown-menu {
+  overflow: visible;
+}
+
 .tt-suggestion {
   padding: 3px 20px;
   font-size: 18px;
