@@ -99,7 +99,7 @@ public class GetEditModel implements Service {
             REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3038");
             REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3039");
             REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3040");
-            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/30");
+            REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3041");
             REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3042");
             REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3043");
             REF_SYS_OPTIONS.put("http://www.opengis.net/def/crs/EPSG/0/3044");

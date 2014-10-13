@@ -47,7 +47,7 @@
                 -http://www.opengis.net/def/crs/EPSG/0/3038-
                 -http://www.opengis.net/def/crs/EPSG/0/3039-
                 -http://www.opengis.net/def/crs/EPSG/0/3040-
-                -http://www.opengis.net/def/crs/EPSG/0/30-
+                -http://www.opengis.net/def/crs/EPSG/0/3041-
                 -http://www.opengis.net/def/crs/EPSG/0/3042-
                 -http://www.opengis.net/def/crs/EPSG/0/3043-
                 -http://www.opengis.net/def/crs/EPSG/0/3044-
