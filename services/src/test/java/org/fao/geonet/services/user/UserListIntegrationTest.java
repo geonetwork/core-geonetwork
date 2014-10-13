@@ -1,14 +1,7 @@
 package org.fao.geonet.services.user;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.xml.bind.JAXBElement;
-
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.domain.Address;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Profile;
@@ -25,6 +18,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.concurrent.atomic.AtomicInteger;
+import javax.xml.bind.JAXBElement;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test listing a user service.
@@ -75,10 +73,10 @@ public class UserListIntegrationTest extends AbstractServiceIntegrationTest {
         
         User user = records.get(0).getValue();
 
-        assertEquals(editor.getUsername(), user.getUsername(), "record/username");
-        assertEquals(editor.getPrimaryAddress().getAddress(), user.getPrimaryAddress().getAddress(), "record/primaryaddress/address");
-        assertEquals(editor.getProfile().name(), user.getProfile().name(), "record/profile");
-        assertEquals(editor.getEmailAddresses().iterator().next(), user.getEmailAddresses().iterator().next(), "record/emailaddresses/emailaddress");
+        assertEquals("record/username", editor.getUsername(), user.getUsername());
+        assertEquals("record/primaryaddress/address", editor.getPrimaryAddress().getAddress(), user.getPrimaryAddress().getAddress());
+        assertEquals("record/profile", editor.getProfile().name(), user.getProfile().name());
+        assertEquals("record/emailaddresses/emailaddress", editor.getEmailAddresses().iterator().next(), user.getEmailAddresses().iterator().next());
     }
 
 
@@ -90,11 +88,8 @@ public class UserListIntegrationTest extends AbstractServiceIntegrationTest {
         _userRepo.save(UserRepositoryTest.newUser(inc));
 
         final ServiceContext serviceContext = createServiceContext();
-        UserSession userSession = new UserSession();
-        User administrator = new User().setProfile(Profile.Administrator).setName("admin").setOrganisation("org").setSurname("admin");
+        loginAsAdmin(serviceContext);
 
-        userSession.loginAs(administrator);
-        serviceContext.setUserSession(userSession);
         final UserList response = listService.exec();
 
         java.util.List<?> records = response.getUsers();
