@@ -4,10 +4,18 @@
   var module = angular.module('gn_thesaurus_directive', []);
 
   /**
-   * The thesaurus selector is composed of a drop down list
+   * The thesaurus selector is available in 2 modes:
+   *
+   * One is composed of a drop down list
    * of thesaurus available in the catalog. On selection,
    * an empty XML fragment is requested and added to the form
-   * before the editor is saved and refreshed.
+   * before the editor is saved and refreshed. This mode
+   * should be used in the metadata editor.
+   *
+   * When selectorOnly attribute is set, then only a dropdown
+   * containing the list of thesaurus is displayed. In this
+   * mode, the property thesaurusKey in the scope of the parent
+   * is modified when a thesaurus is selected.
    *
    */
   module.directive('gnThesaurusSelector',
@@ -26,12 +34,14 @@
              mode: '@gnThesaurusSelector',
              elementName: '@',
              elementRef: '@',
-             domId: '@'
+             domId: '@',
+             selectorOnly: '@'
            },
            templateUrl: '../../catalog/components/thesaurus/' +
            'partials/thesaurusselector.html',
            link: function(scope, element, attrs) {
              scope.thesaurus = null;
+             scope.thesaurusKey = null;
              scope.snippet = null;
              scope.snippetRef = null;
 
@@ -49,22 +59,29 @@
              };
 
              scope.addThesaurus = function(thesaurusIdentifier) {
-               gnThesaurusService
-                .getXML(thesaurusIdentifier).then(
-               function(data) {
-                 // Add the fragment to the form
-                 scope.snippet = gnEditorXMLService.
-                 buildXML(scope.elementName, data);
-                 scope.snippetRef = gnEditor.
-                 buildXMLFieldName(scope.elementRef, scope.elementName);
+               if (scope.selectorOnly) {
+                 scope.$parent.thesaurusKey = scope.thesaurusKey =
+                         thesaurusIdentifier;
+               } else {
+                 gnThesaurusService
+                         .getXML(thesaurusIdentifier).then(
+                         function(data) {
+                   // Add the fragment to the form
+                   scope.snippet = gnEditorXMLService.
+                                 buildXML(scope.elementName, data);
+                   scope.snippetRef = gnEditor.
+                                 buildXMLFieldName(
+                                   scope.elementRef,
+                                   scope.elementName);
 
 
-                 $timeout(function() {
-                   // Save the metadata and refresh the form
-                   gnEditor.save(gnCurrentEdit.id, true);
-                 });
+                   $timeout(function() {
+                     // Save the metadata and refresh the form
+                     gnEditor.save(gnCurrentEdit.id, true);
+                   });
 
-               });
+                     });
+               }
                return false;
              };
            }
@@ -87,10 +104,10 @@
    * TODO: explain transformation
    */
   module.directive('gnKeywordSelector',
-      ['$timeout',
+      ['$timeout', '$translate',
        'gnThesaurusService', 'gnEditor',
        'Keyword',
-       function($timeout,
+       function($timeout, $translate,
                gnThesaurusService, gnEditor, Keyword) {
 
          return {
@@ -129,7 +146,6 @@
 
 
              // Check initial keywords are available in the thesaurus
-
              scope.sortKeyword = function(a, b) {
                if (a.getLabel().toLowerCase() <
                b.getLabel().toLowerCase()) {
@@ -208,88 +224,52 @@
                   .then(function(listOfKeywords) {
 
                    var field = $(id).tagsinput('input');
+                   field.attr('placeholder', $translate('searchKeyword'));
+
+                   var keywordsAutocompleter =
+                   gnThesaurusService.getKeywordAutocompleter({
+                     thesaurusKey: scope.thesaurusKey,
+                     dataToExclude: scope.selected
+                   });
+
+                   // Init typeahead
                    field.typeahead({
-                     valueKey: 'label',
-                     local: listOfKeywords,
-                     // Then filter on typing
-                     remote: {
-                       wildcard: 'QUERY',
-                       url: gnThesaurusService.getKeywordsSearchUrl('QUERY',
-                       scope.thesaurusKey, scope.max),
-                       filter: gnThesaurusService.parseKeywordsResponse
-                     },
                      minLength: 0,
-                     limit: gnThesaurusService.DEFAULT_NUMBER_OF_SUGGESTIONS
+                     highlight: true
                      // template: '<p>{{label}}</p>'
                      // TODO: could be nice to have definition
+                   }, {
+                     name: 'keyword',
+                     displayKey: 'label',
+                     source: keywordsAutocompleter.ttAdapter()
                    }).bind('typeahead:selected',
                    $.proxy(function(obj, keyword) {
                      // Add to tags
                      this.tagsinput('add', keyword);
 
                      // Update selection and snippet
-                     scope.selected = this.tagsinput('items');
+                     angular.copy(this.tagsinput('items'), scope.selected);
                      getSnippet(); // FIXME: should not be necessary
                      // as there is a watch on it ?
 
                      // Clear typeahead
-                     this.tagsinput('input').typeahead('setQuery', '');
+                     this.tagsinput('input').typeahead('val', '');
                    }, $(id))
                    );
 
                    $(id).on('itemRemoved', function() {
-                     scope.selected = $(this).tagsinput('items');
+                     angular.copy($(this).tagsinput('items'), scope.selected);
                      getSnippet();
                    });
 
-                   // Display full list when input is clicked
-                   // TODO: add config for that
-                   // From http://stackoverflow.com/questions/18768401/
-                   //   typeahead-js-displaying-all-prefetched-datums
-                   $(element).find('input.tt-query')
-                      .on('click', function() {
-                     var $input = $(this);
-
-                     // these are all expected to be objects
-                     // so falsey check is fine
-                     if (!$input.data() || !$input.data().ttView ||
-                     !$input.data().ttView.datasets ||
-                     !$input.data().ttView.dropdownView ||
-                     !$input.data().ttView.inputView) {
-                       return;
-                     }
-
-                     var ttView = $input.data().ttView;
-
-                     var toggleAttribute = $input.attr('data-toggled');
-
-                     if (!toggleAttribute || toggleAttribute === 'off') {
-                       $input.attr('data-toggled', 'on');
-
-                       $input.typeahead('setQuery', '');
-
-                       if ($.isArray(ttView.datasets) &&
-                       ttView.datasets.length > 0) {
-                         // only pulling the first dataset for this hack
-                         var fullSuggestionList = [];
-                         // renderSuggestions expects a
-                         // suggestions array not an object
-                         $.each(ttView.datasets[0].itemHash, function(i, item) {
-                           fullSuggestionList.push(item);
-                         });
-
-                         ttView.dropdownView.renderSuggestions(
-                         ttView.datasets[0], fullSuggestionList);
-                         ttView.inputView.setHintValue('');
-                         ttView.dropdownView.open();
-                       }
-                     }
-                     else if (toggleAttribute === 'on') {
-                       $input.attr('data-toggled', 'off');
-                       ttView.dropdownView.close();
+                   // When clicking the element trigger input
+                   // to show autocompletion list.
+                   field.on('click', function() {
+                     if (field.val() == '') {
+                       field.val('*').trigger('input');
+                       field.val('');
                      }
                    });
-
                  });
                });
              };
@@ -360,4 +340,93 @@
            }
          };
        }]);
+
+
+  /**
+     * @ngdoc directive
+     * @name gn_fields_directive.directive:gnKeywordPicker
+     * @function
+     *
+     * @description
+     * Provide simple keyword search.
+     *
+     * We can't transclude input (http://plnkr.co/edit/R2O2ixWA1QJUsVcUHl0N)
+     */
+  module.directive('gnKeywordPicker', [
+    'gnThesaurusService', '$compile', '$translate',
+    function(gnThesaurusService, $compile, $translate) {
+      return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+          scope.thesaurusKey = '';
+          scope.max = gnThesaurusService.DEFAULT_NUMBER_OF_RESULTS;
+          var initialized = false;
+
+          // Create an input group around the element
+          // with a thesaurus selector on the right.
+          var addThesaurusSelectorOnElement = function() {
+            var inputGroup = angular.
+                element('<div class="input-group"></div>');
+            var dropDown = angular.
+                element('<div class="input-group-btn"></div>');
+            // Thesaurus selector is a directive
+            var thesaurusSel = '<span data-gn-thesaurus-selector="" ' +
+                'data-selector-only="true"></span>';
+
+            var input = element.replaceWith(inputGroup);
+            inputGroup.append(input);
+            inputGroup.append(dropDown);
+            // Compile before insertion
+            dropDown.append($compile(thesaurusSel)(scope));
+          };
+
+
+          var init = function() {
+            // Get list of available thesaurus (if not defined
+            // by scope)
+            element.typeahead('destroy');
+            element.attr('placeholder', $translate('searchOrTypeKeyword'));
+            if (!initialized) {
+              addThesaurusSelectorOnElement(element);
+            }
+            var keywordsAutocompleter =
+                gnThesaurusService.getKeywordAutocompleter({
+                  thesaurusKey: scope.thesaurusKey
+                });
+
+            // Init typeahead
+            element.typeahead({
+              minLength: 0,
+              highlight: true
+              // template: '<p>{{label}}</p>'
+              // TODO: could be nice to have definition
+            }, {
+              name: 'keyword',
+              displayKey: 'label',
+              source: keywordsAutocompleter.ttAdapter()
+              // templates: {
+              // header: '<h4>' + scope.thesaurusKey + '</h4>'
+              // }
+            });
+
+            // When clicking the element trigger input
+            // to show autocompletion list.
+            element.on('click', function() {
+              if (element.val() == '') {
+                element.val('*').trigger('input');
+                // FIXME : does not properly reset value
+                element.val('');
+              }
+            });
+            initialized = true;
+          };
+
+          init();
+
+          scope.$watch('thesaurusKey', function(newValue) {
+            init();
+          });
+        }
+      };
+    }]);
 })();

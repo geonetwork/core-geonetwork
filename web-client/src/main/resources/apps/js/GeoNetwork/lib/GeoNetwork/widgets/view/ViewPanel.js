@@ -65,7 +65,7 @@ GeoNetwork.view.ViewPanel = Ext.extend(Ext.Panel, {
          */
         printDefaultForTabs: false,
         printMode: undefined,
-        printUrl: 'print.html',
+        printUrl: '../../apps/search/print.html',
         /** api: config[permalink]
          *  Define if permalink button should be displayed or not. Default is false.
          */

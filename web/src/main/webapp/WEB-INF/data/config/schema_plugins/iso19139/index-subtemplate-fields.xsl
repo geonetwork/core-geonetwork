@@ -11,11 +11,16 @@
   This is the method to identify a subtemplate.
   -->
   <xsl:template mode="index" match="gmd:CI_ResponsibleParty[count(ancestor::node()) =  1]">
+
+    <xsl:variable name="org"
+                  select="normalize-space(gmd:organisationName/gco:CharacterString)"/>
+    <xsl:variable name="name"
+                  select="normalize-space(gmd:individualName/gco:CharacterString)"/>
     <Field name="_title"
-      string="{normalize-space(gmd:organisationName/gco:CharacterString)}:
-      {normalize-space(gmd:individualName/gco:CharacterString)}"
+      string="{if ($name != '') then concat($org, ' (', $name, ')') else $org}"
       store="true" index="true"/>
-    
+    <Field name="orgName" string="{$org}" store="true" index="true"/>
+
     <xsl:call-template name="subtemplate-common-fields"/>
   </xsl:template>
 

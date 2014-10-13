@@ -111,7 +111,7 @@
     "gmd:MD_Distribution": "Online resources",
     "importEntry": "Import directory entry",
     "xmlSnippet": "XML snippet",
-    "addRecord": "Add dataset",
+    "addRecord": "Add record",
     "yourMetadata": "Your metadata",
     "unsupportedSchemaAlert": "Metadata <strong>{{title}}</strong> is using <strong>{{schema}}</strong> standard. This is not supported by the editor. <a href='#'>Return to editor board</a>.",
     "geopublisher": "Publish as WMS, WFS, WCS",
@@ -167,5 +167,7 @@
     "importRecords": "Import",
     "importFromDirReport": "{{success}}/{{records}} record(s) imported successfully in {{time}} seconds.",
     "setMetadataGroup": "Change metadata group",
-    "current": "current"
+    "current": "current",
+    "searchKeyword": "Search keyword ...",
+    "searchOrTypeKeyword": "Type or search keyword ..."
 }
