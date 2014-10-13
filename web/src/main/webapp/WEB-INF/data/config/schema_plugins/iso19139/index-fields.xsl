@@ -211,10 +211,11 @@
 				<xsl:for-each select="gmd:geographicElement/gmd:EX_GeographicDescription/gmd:geographicIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString">
 					<Field name="geoDescCode" string="{string(.)}" store="true" index="true"/>
 				</xsl:for-each>
-
-				<xsl:for-each select="gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent">
+				<xsl:for-each select="gmd:temporalElement/
+				  (gmd:EX_TemporalExtent|gmd:EX_SpatialTemporalExtent)/gmd:extent">
 					<xsl:for-each select="gml:TimePeriod">
-						<xsl:variable name="times">
+
+            <xsl:variable name="times">
 							<xsl:call-template name="newGmlTime">
 								<xsl:with-param name="begin" select="gml:beginPosition|gml:begin/gml:TimeInstant/gml:timePosition"/>
 								<xsl:with-param name="end" select="gml:endPosition|gml:end/gml:TimeInstant/gml:timePosition"/>
