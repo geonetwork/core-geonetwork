@@ -204,7 +204,7 @@
 
                  // Compile against a new scope
                  gnCurrentEdit.formScope =
-                   gnCurrentEdit.compileScope.$new();
+                 gnCurrentEdit.compileScope.$new();
                  $compile(snippet)(gnCurrentEdit.formScope);
                }
 

@@ -209,55 +209,55 @@
    *
    */
   module.directive('gnDirectoryEntryPicker',
-    ['gnUrlUtils', 'gnSearchManagerService',
-    function(gnUrlUtils, gnSearchManagerService) {
-      return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-          element.attr('placeholder', '...');
+      ['gnUrlUtils', 'gnSearchManagerService',
+       function(gnUrlUtils, gnSearchManagerService) {
+         return {
+           restrict: 'A',
+           link: function(scope, element, attrs) {
+             element.attr('placeholder', '...');
 
-          var url = gnUrlUtils.append('q@json',
-            gnUrlUtils.toKeyValue({
-              _isTemplate: 's',
-              any: '*QUERY*',
-              _root: 'gmd:CI_ResponsibleParty',
-              sortBy: 'title',
-              sortOrder: 'reverse',
-              resultType: 'subtemplates',
-              fast: 'index'
-            })
-          );
-          var parseResponse = function(data) {
-            var records = gnSearchManagerService.format(data);
-            return records.metadata;
-          };
-          var source = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            limit: 200,
-            remote: {
-              wildcard: 'QUERY',
-              url: url,
-              filter: parseResponse
-            }
-          });
-          source.initialize();
-          $(element).typeahead({
-            minLength: 0,
-            highlight: true
-          }, {
-            name: 'directoryEntry',
-            displayKey: 'title',
-            source: source.ttAdapter(),
-            templates: {
-              suggestion: function(datum) {
-                return '<p>' + datum.title + '</p>';
-              }
-            }
-          });
-        }
-      };
-    }]);
+             var url = gnUrlUtils.append('q@json',
+             gnUrlUtils.toKeyValue({
+               _isTemplate: 's',
+               any: '*QUERY*',
+               _root: 'gmd:CI_ResponsibleParty',
+               sortBy: 'title',
+               sortOrder: 'reverse',
+               resultType: 'subtemplates',
+               fast: 'index'
+             })
+             );
+             var parseResponse = function(data) {
+               var records = gnSearchManagerService.format(data);
+               return records.metadata;
+             };
+             var source = new Bloodhound({
+               datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+               queryTokenizer: Bloodhound.tokenizers.whitespace,
+               limit: 200,
+               remote: {
+                 wildcard: 'QUERY',
+                 url: url,
+                 filter: parseResponse
+               }
+             });
+             source.initialize();
+             $(element).typeahead({
+               minLength: 0,
+               highlight: true
+             }, {
+               name: 'directoryEntry',
+               displayKey: 'title',
+               source: source.ttAdapter(),
+               templates: {
+                 suggestion: function(datum) {
+                   return '<p>' + datum.title + '</p>';
+                 }
+               }
+             });
+           }
+         };
+       }]);
 
   /**
    * @ngdoc directive
