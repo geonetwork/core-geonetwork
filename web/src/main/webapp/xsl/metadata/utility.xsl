@@ -117,7 +117,7 @@
             </xsl:if>
           </xsl:for-each>
         </xsl:variable>
-        
+
         <xsl:choose>
           <xsl:when test="$matchingHelpers/helper">
             <xsl:copy-of select="$matchingHelpers/helper"/>

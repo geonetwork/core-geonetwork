@@ -202,6 +202,7 @@
                 <xsl:with-param name="in" select="concat('/', @displayIf)"/>
               </saxon:call-template>
             </xsl:variable>
+
             <xsl:choose>
               <xsl:when test="$match/*">
                 <xsl:copy-of select="option"/>
@@ -213,9 +214,6 @@
               <xsl:otherwise>
               </xsl:otherwise>
             </xsl:choose>
-            <!--<xsl:if test="$match/*">
-              <xsl:copy-of select="option"/>
-            </xsl:if>-->
           </xsl:for-each>
         </helper>
       </xsl:when>
