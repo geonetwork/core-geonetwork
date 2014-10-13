@@ -20,9 +20,6 @@
     <label>Mots-clés</label>
     <description>Mots-clés, phrases de résumé, ou codes de classement.</description>
     <example/>
-    <helper>
-      <option value="OpenData">OpenData</option>
-    </helper>
   </element>
 
   <element name="dc:description">
@@ -258,11 +255,6 @@
   <element name="dct:isFormatOf">
     <label>Is Format Of</label>
     <description>A related resource that is substantially the same as the described resource, but in another format.</description>
-  </element>
-  <!-- ==================================================== -->
-  <element name="dct:isPartOf">
-    <label>Is Part Of</label>
-    <description>A related resource in which the described resource is physically or logically included.</description>
   </element>
   <!-- ==================================================== -->
   <element name="dct:isReferencedBy">

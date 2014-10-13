@@ -59,11 +59,24 @@
                   })
               );
             };
-            var parseKeywordsResponse = function(data) {
+
+
+            var parseKeywordsResponse = function(data, dataToExclude) {
               var listOfKeywords = [];
               angular.forEach(data[0], function(k) {
                 listOfKeywords.push(new Keyword(k));
               });
+
+              if (dataToExclude && dataToExclude.length > 0) {
+                // Remove from search already selected keywords
+                listOfKeywords = $.grep(listOfKeywords, function(n) {
+                  var isSelected = false;
+                  isSelected = $.grep(dataToExclude, function(s) {
+                    return s.getLabel() === n.getLabel();
+                  }).length !== 0;
+                  return !isSelected;
+                });
+              }
               return listOfKeywords;
             };
 
@@ -77,6 +90,24 @@
                * Number of keywords to display in autocompletion list
                */
               DEFAULT_NUMBER_OF_SUGGESTIONS: 30,
+              getKeywordAutocompleter: function(config) {
+                var keywordsAutocompleter = new Bloodhound({
+                  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+                  queryTokenizer: Bloodhound.tokenizers.whitespace,
+                  limit: config.max || this.DEFAULT_NUMBER_OF_RESULTS,
+                  remote: {
+                    wildcard: 'QUERY',
+                    url: this.getKeywordsSearchUrl('QUERY',
+                        config.thesaurusKey || '',
+                        config.max || this.DEFAULT_NUMBER_OF_RESULTS),
+                    filter: function(data) {
+                      return parseKeywordsResponse(data, config.dataToExclude);
+                    }
+                  }
+                });
+                keywordsAutocompleter.initialize();
+                return keywordsAutocompleter;
+              },
               /**
                * Request the XML for the thesaurus and its keywords
                * in a specific format (based on the transformation).
@@ -134,6 +165,10 @@
 
               },
               getKeywordsSearchUrl: getKeywordsSearchUrl,
+              /**
+               * Convert JSON response to array of Keyword object.
+               * Filter element if dataToExclude parameter defined.
+               */
               parseKeywordsResponse: parseKeywordsResponse,
               getKeywords: function(filter, thesaurus, max, typeSearch) {
                 var defer = $q.defer();

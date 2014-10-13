@@ -65,7 +65,8 @@
         <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload-process.js"></script>
         <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload-angular.js"></script>
       
-        <script src="{$uiResourcesPath}lib/bootstrap.ext/typeahead.js/typeahead.js"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap.ext/typeahead.js/bloodhound.js"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap.ext/typeahead.js/typeahead.bundle.js"></script>
         <script src="{$uiResourcesPath}lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.js"></script>
         <!--</xsl:if>-->
         
