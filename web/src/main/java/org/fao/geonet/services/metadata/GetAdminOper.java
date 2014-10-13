@@ -28,7 +28,9 @@ import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.utils.Xml;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
@@ -83,6 +85,8 @@ public class GetAdminOper implements Service
 
         // GEOCAT
         Element md = dm.getGeocatMetadata(context, id, false, false, false, false, false);
+        md.removeChild("info", Edit.NAMESPACE);
+        md = Xml.transform(md, context.getAppPath() + "/xsl/characterstring-to-localisedcharacterstring.xsl");  // HACK I thin
         dm.doValidate(context, dbms,info.schemaId,id,md,context.getLanguage(), false);
         // END GEOCAT
 
@@ -189,7 +193,3 @@ public class GetAdminOper implements Service
 		return elRes;
 	}
 }
-
-//=============================================================================
-
-
