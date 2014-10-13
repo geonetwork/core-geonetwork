@@ -893,7 +893,7 @@
     <textarea id="{$elementRef}_config" class="hidden">
       <xsl:copy-of select="java-xsl-util:xmlToJson(
         saxon:serialize($listOfValues, 'default-serialize-mode'))"/></textarea>
-    <div 
+    <div
       data-gn-editor-helper="{$listOfValues/@editorMode}"
       data-ref="{$elementRef}"
       data-type="{$dataType}"

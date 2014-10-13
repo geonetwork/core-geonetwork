@@ -27,7 +27,7 @@
     
     
     <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
-    <xsl:variable name="flatModeException" select="gn-fn-metadata:getFieldFlatModeException($viewConfig, $name)"/>
+    <xsl:variable name="flatModeException" select="gn-fn-metadata:isFieldFlatModeException($viewConfig, $name)"/>
 
     <!-- TODO: this should be common to all schemas -->
 	<xsl:if test="$isEditing and

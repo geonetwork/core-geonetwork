@@ -196,6 +196,7 @@
                 displayTooltips:
                     gnCurrentEdit.schemaConfig.displayToolTip === true,
                 compileScope: $scope,
+                formScope: $scope.$new(),
                 sessionStartTime: moment(),
                 formLoadExtraFn: setViewMenuInTopToolbar
               });

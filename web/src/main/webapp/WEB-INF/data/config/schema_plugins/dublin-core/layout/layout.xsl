@@ -8,8 +8,7 @@
 
   <xsl:include href="utility-fn.xsl"/>
 
-
-  <!-- Get the main metadata languages - none for ISO19110 -->
+  <!-- Get the main metadata languages -->
   <xsl:template name="get-dublin-core-language">
     <xsl:value-of select="$metadata/descendant::node()/dc:language[1]"/>
   </xsl:template>
@@ -92,7 +91,11 @@
 
 
   <!-- Hide from the editor the dct:references pointing to uploaded files -->
-  <xsl:template mode="mode-dublin-core" priority="101" match="dct:references[starts-with(., 'http') or contains(. , 'resources.get') or contains(., 'file.disclaimer')]" />
+  <xsl:template mode="mode-dublin-core" priority="101"
+                match="dct:references[
+                          starts-with(., 'http') or
+                          contains(. , 'resources.get') or
+                          contains(., 'file.disclaimer')]" />
 
 
   <!-- the other elements in DC. -->
@@ -102,6 +105,8 @@
     <xsl:variable name="labelConfig" select="gn-fn-metadata:getLabel($schema, $name, $labels)"/>
     <xsl:variable name="helper" select="gn-fn-metadata:getHelper($labelConfig/helper, .)"/>
 
+    <xsl:variable name="added" select="parent::node()/parent::node()/@gn:addedObj"/>
+    <xsl:variable name="container" select="parent::node()/parent::node()"/>
 
     <!-- Add view and edit template-->
     <xsl:call-template name="render-element">
@@ -114,11 +119,20 @@
       <!--<xsl:with-param name="attributesSnippet" as="node()"/>-->
       <xsl:with-param name="type" select="gn-fn-metadata:getFieldType($editorConfig, name(), '')"/>
       <xsl:with-param name="name" select="if ($isEditing) then gn:element/@ref else ''"/>
-      <xsl:with-param name="editInfo" select="gn:element"/>
+      <xsl:with-param name="editInfo"
+                      select="gn:element"/>
+      <xsl:with-param name="parentEditInfo"
+                      select="if ($added) then $container/gn:element else element()"/>
       <xsl:with-param name="listOfValues" select="$helper"/>
+      <!-- When adding an element, the element container contains
+      information about cardinality. -->
       <xsl:with-param name="isFirst"
-                      select="(gn:element/@down = 'true' and not(gn:element/@up)) or
-                      (not(gn:element/@down) and not(gn:element/@up))"/>
+                      select="if ($added) then
+                      (($container/gn:element/@down = 'true' and not($container/gn:element/@up)) or
+                      (not($container/gn:element/@down) and not($container/gn:element/@up)))
+                      else
+                      ((gn:element/@down = 'true' and not(gn:element/@up)) or
+                      (not(gn:element/@down) and not(gn:element/@up)))"/>
     </xsl:call-template>
 
     <!-- Add a control to add this type of element
@@ -126,8 +140,12 @@
     -->
     <xsl:if
       test="$isEditing and 
-      not($isFlatMode) and 
-      count(following-sibling::node()[name() = $name]) = 0">
+            (
+              not($isFlatMode) or
+              gn-fn-metadata:isFieldFlatModeException($viewConfig, $name)
+            ) and
+            $service != 'md.element.add' and
+            count(following-sibling::node()[name() = $name]) = 0">
 
       <!-- Create configuration to add action button for this element. -->
       <xsl:variable name="dcConfig"

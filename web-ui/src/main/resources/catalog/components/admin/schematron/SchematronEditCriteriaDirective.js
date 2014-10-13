@@ -159,7 +159,8 @@
                scope.editing = false;
              };
              scope.updateTypeAhead = function() {
-               var input, criteriaType, typeaheadOptions, parseResponseFunction;
+               var input, criteriaType, source, typeaheadOptions,
+               parseResponseFunction;
                input = findValueInput();
                input.typeahead('destroy');
 
@@ -219,25 +220,50 @@
                  if (criteriaType.remote) {
                    if (criteriaType.remote.cacheTime &&
                    criteriaType.remote.cacheTime > 0) {
-                     typeaheadOptions.prefetch = {
-                       url: criteriaType.remote.url,
-                       ttl: parseInt(criteriaType.remote.cacheTime),
-                       filter: parseResponseFunction
-                     };
+                     source = new Bloodhound({
+                       datumTokenizer:
+                       Bloodhound.tokenizers.obj.whitespace('value'),
+                       queryTokenizer: Bloodhound.tokenizers.whitespace,
+                       prefetch: {
+                         url: criteriaType.remote.url,
+                         ttl: parseInt(criteriaType.remote.cacheTime),
+                         filter: parseResponseFunction
+                       },
+                       limit: 30
+                     });
                    } else {
-                     typeaheadOptions.remote = {
-                       url: criteriaType.remote.url,
-                       cache: false,
-                       timeout: 1000,
-                       wildcard: '@@search@@',
-                       filter: parseResponseFunction
-                     };
+                     source = new Bloodhound({
+                       datumTokenizer:
+                       Bloodhound.tokenizers.obj.whitespace('value'),
+                       queryTokenizer: Bloodhound.tokenizers.whitespace,
+                       remote: {
+                         url: criteriaType.remote.url,
+                         cache: false,
+                         timeout: 1000,
+                         wildcard: '@@search@@',
+                         filter: parseResponseFunction
+                       },
+                       limit: 30
+                     });
                    }
                  } else {
-                   typeaheadOptions.local = criteriaType.local;
+                   var source = new Bloodhound({
+                     datumTokenizer:
+                     Bloodhound.tokenizers.obj.whitespace('value'),
+                     queryTokenizer: Bloodhound.tokenizers.whitespace,
+                     local: data,
+                     limit: 30
+                   });
                  }
-
-                 input.typeahead(typeaheadOptions);
+                 source.initialize();
+                 input.typeahead({
+                   minLength: 0,
+                   highlight: true
+                 }, {
+                   name: typeaheadOptions.name,
+                   displayKey: 'value',
+                   source: source.ttAdapter()
+                 });
                  input.on('typeahead:selected', function(event, data) {
                    scope.criteria.value = data.data;
                    scope.criteria.uivalue = data.value;
