@@ -202,10 +202,20 @@
                 <xsl:with-param name="in" select="concat('/', @displayIf)"/>
               </saxon:call-template>
             </xsl:variable>
-            
-            <xsl:if test="$match/*">
+            <xsl:choose>
+              <xsl:when test="$match/*">
+                <xsl:copy-of select="option"/>
+              </xsl:when>
+              <xsl:when test="$helper[not(@displayIf)]">
+                <!-- The defautl helper is the one with no condition. -->
+                <xsl:copy-of select="$helper[not(@displayIf)]/*"/>
+              </xsl:when>
+              <xsl:otherwise>
+              </xsl:otherwise>
+            </xsl:choose>
+            <!--<xsl:if test="$match/*">
               <xsl:copy-of select="option"/>
-            </xsl:if>
+            </xsl:if>-->
           </xsl:for-each>
         </helper>
       </xsl:when>

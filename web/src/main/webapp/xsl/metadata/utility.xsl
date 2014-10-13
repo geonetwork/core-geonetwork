@@ -119,8 +119,11 @@
         </xsl:variable>
         
         <xsl:choose>
-          <xsl:when test="$matchingHelpers">
+          <xsl:when test="$matchingHelpers/helper">
             <xsl:copy-of select="$matchingHelpers/helper"/>
+          </xsl:when>
+          <xsl:when test="$helpers/helper[not(@displayIf)]">
+            <xsl:copy-of select="$helpers/helper[not(@displayIf)]"/>
           </xsl:when>
           <xsl:otherwise>
             <null/>
