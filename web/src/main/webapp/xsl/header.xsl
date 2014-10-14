@@ -89,8 +89,12 @@
 		</script><xsl:text>&#10;</xsl:text>
 
 		<!-- stylesheet -->
+		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/ec.css"/>
+		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/ec-content.css" media="all"/>
+		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/ec-components-only.css" media="all"/>
 		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/geonetwork.css"/>
 		<link rel="stylesheet" type="text/css" href="{/root/gui/url}/modalbox.css"/>
+
 		<xsl:apply-templates mode="css" select="/"/>
 
 		<!-- JS -->

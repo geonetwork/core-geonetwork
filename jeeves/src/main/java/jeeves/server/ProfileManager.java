@@ -78,7 +78,7 @@ public class ProfileManager
 
 	@SuppressWarnings("unchecked")
 	public ProfileManager(ServletContext servletContext, String appPath, String profilesFile) throws Exception
-	{
+	{  
 		Element elProfiles = Xml.loadFile(profilesFile);
 		if (servletContext != null) {
 		      ConfigurationOverrides.DEFAULT.updateWithOverrides(profilesFile, servletContext, appPath, elProfiles);

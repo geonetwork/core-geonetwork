@@ -264,6 +264,10 @@
           <outputDirectory>${project.build.directory}/release</outputDirectory>
         </configuration>
       </plugin>
+      
+      
+    
+      
     </plugins>
   </build>
 

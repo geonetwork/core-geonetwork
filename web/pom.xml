@@ -440,7 +440,7 @@
                  <configuration>
                      <sources>
               			  <source>${basedir}/src/main/java</source>
-                          <source>${basedir}/src/main/webapp/WEB-INF/classes/setup/sql/migrate</source>
+<!--                           <source>${basedir}/src/main/webapp/WEB-INF/classes/setup/sql/migrate</source> -->
                      </sources>
                  </configuration>
             </execution>
@@ -489,7 +489,7 @@
          </executions>
       </plugin>
       
-<!-- This plugin is commented out by PRI - Not sure what are the artefacts -->      
+<!-- This plugin is commented out by PRI - It appears to be related to SVN versioning and therefore not of use here -->      
 <!--       <plugin>  -->
 <!--         <groupId>org.codehaus.mojo</groupId>  -->
 <!--         <artifactId>buildnumber-maven-plugin</artifactId>  -->

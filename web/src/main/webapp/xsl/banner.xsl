@@ -24,15 +24,38 @@
 
         <table width="100%">
 
-            <!-- title -->
-            <tr class="banner">
-                <td class="banner">
-                    <img src="{/root/gui/url}/images/logos/eurostat_logo.gif" alt="Logo" align="top" />
-                </td>
-                <td align="right" class="banner">
-                    <img src="{/root/gui/url}/images/header-right.gif" alt="GeoNetwork opensource logo" align="top" /> 
-                </td>
-            </tr>
+<!--             title -->
+<!--             <tr class="banner"> -->
+<!--                 <td class="banner"> -->
+<!--                     <img src="{/root/gui/url}/images/logos/eurostat_logo.gif" alt="Logo" align="top" /> -->
+<!--                 </td> -->
+<!--                 <td align="right" class="banner"> -->
+<!--                     <img src="{/root/gui/url}/images/header-right.gif" alt="GeoNetwork opensource logo" align="top" /> -->
+<!--                 </td>                 -->
+<!--             </tr> -->
+            
+            
+            
+              
+            
+            
+            <div class="lang-en" id="header">			
+				<p class="banner-flag">
+					<img alt="European Commission logo" id="banner-flag" src="{/root/gui/url}/images/logos/logo_en.gif"></img>
+				</p>
+				<p id="banner-title-text">European Commission<br/>
+					<span>Title of the site</span>
+				</p>
+				<span id="banner-image-right"></span><span class="title-en" id="banner-image-title"></span>
+				<p class="off-screen">Accessibility tools</p>
+				<p class="off-screen">Service tools</p>
+		
+				<p class="off-screen mob-title" id="language-selector-title">Language selector</p>
+
+			</div>
+            
+            
+            
 
             <!-- buttons -->
             <tr class="banner">
