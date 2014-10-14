@@ -17,7 +17,9 @@
     'gnMap',
     '$translate',
     'gnViewerSettings',
-    function (gnOwsCapabilities, gnMap, $translate, gnViewerSettings) {
+    'gnNcWms',
+    'goDecorateLayer',
+    function (gnOwsCapabilities, gnMap, $translate, gnViewerSettings, gnNcWms, goDecorateLayer) {
     return {
       restrict: 'A',
       replace: true,
@@ -54,6 +56,9 @@
               scope.capability = capability;
             });
         };
+        var layer = gnNcWms.createNcWmsLayer();
+        goDecorateLayer(layer);
+        scope.map.addLayer(layer);
       }
     };
   }]);

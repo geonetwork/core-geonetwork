@@ -10,6 +10,7 @@
     <jsSource webappPath="catalog/lib/jquery-2.0.3.min.js"/>
     <jsSource webappPath="catalog/lib/moment+langs.min.js"/>
     <jsSource webappPath="catalog/lib/angular/angular.min.js"/>
+    <jsSource webappPath="catalog/lib/angular-filter.min.js" minimize="false"/>
     <jsSource webappPath="catalog/lib/angular/angular-resource.min.js"/>
     <jsSource webappPath="catalog/lib/angular/angular-route.min.js"/>
     <jsSource webappPath="catalog/lib/angular/angular-sanitize.min.js"/>
