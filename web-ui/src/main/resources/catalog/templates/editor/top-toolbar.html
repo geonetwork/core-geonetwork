@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation"
+<nav class="navbar navbar-default navbar-fixed-top gn-top-bar" role="navigation"
      data-ng-if="!unsupportedSchema">
   <div>
     <ul class="gn-view-menu-button pull-left nav navbar-nav">
@@ -42,23 +42,23 @@
     <div data-gn-metadata-group-updater="groupOwner"/>
 
     <button type="button" class="btn btn-primary navbar-btn" data-ng-click="save(true)">
-      <i class="fa fa-save"/>
-      <span data-translate="">save</span>
+      <i class="fa fa-save"/>&nbsp;
+      <span class="visible-lg" data-translate="">save</span>
     </button>
     <button type="button" class="btn navbar-btn" data-ng-click="validate()">
-      <i class="fa fa-check"/>
-      <span data-translate=""
+      <i class="fa fa-check"/>&nbsp;
+      <span class="visible-lg" data-translate=""
             title="{{'validate-help' | translate}}">validate</span>
     </button>
     <!-- TODO: automatic save status -->
     <button type="button" class="btn btn-danger navbar-btn gn-tooltip" data-ng-click="cancel()" 
       data-ng-mouseover="getCancelStatus()" title="{{cancelStatus}}">
-      <i class="fa fa-undo"/>
-      <span data-translate="">cancel</span>
+      <i class="fa fa-undo"/>&nbsp;
+      <span class="visible-lg" data-translate="">cancel</span>
     </button>
     <button type="button" class="btn btn-danger navbar-btn gn-tooltip" data-ng-click="close()">
-      <i class="fa fa-sign-out"/>
-      <span data-translate="">closeEditor</span>
+      <i class="fa fa-sign-out"/>&nbsp;
+      <span class="visible-lg" data-translate="">closeEditor</span>
     </button>
   </div>
 </nav>
