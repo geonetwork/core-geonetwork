@@ -14,13 +14,11 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -28,7 +26,9 @@ import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
 import static org.fao.geonet.csw.common.Csw.NAMESPACE_CSW;
 import static org.fao.geonet.csw.common.Csw.NAMESPACE_OGC;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * Test Csw Transaction handling.
@@ -335,7 +335,7 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
                 SearchManager.makeField("_owner", "" + ownerId, true, true)
         );
         _searchManager.index(schemaDir, metadata.getXmlData(false), "" + metadata.getId(), extras,
-                MetadataType.METADATA, false);
+                MetadataType.METADATA, metadata.getDataInfo().getRoot(), false);
     }
 
     private Element createUpdateTransaction(String property, Object newValue) {

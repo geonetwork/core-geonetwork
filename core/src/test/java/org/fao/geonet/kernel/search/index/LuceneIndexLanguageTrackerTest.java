@@ -1,8 +1,5 @@
 package org.fao.geonet.kernel.search.index;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assume.assumeTrue;
-
 import com.google.common.io.Files;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -16,7 +13,10 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
 
-import java.io.*;
+import java.io.Closeable;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
@@ -25,6 +25,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * Test {@link org.fao.geonet.kernel.search.index.LuceneIndexLanguageTracker}
@@ -195,7 +198,7 @@ public class LuceneIndexLanguageTrackerTest {
         document.add(new IntField("intField1", 3, Field.Store.YES));
 
         Collection<CategoryPath> categories = Arrays.asList(new CategoryPath("intField1", "1"), new CategoryPath("intField1", "3"));
-        tracker.addDocument(LANG, document, categories);
+        tracker.addDocument(new IndexInformation(LANG, document, categories));
 
         final IndexAndTaxonomy acquire = tracker.acquire(LANG, -1);
         assertEquals(2, acquire.indexReader.document(0).getValues("intField1").length);

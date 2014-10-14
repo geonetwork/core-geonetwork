@@ -1,14 +1,18 @@
 package org.fao.geonet.kernel.schema;
 
-import org.fao.geonet.domain.Pair;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Map;
 
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
@@ -21,18 +25,18 @@ import static org.junit.Assert.assertEquals;
  * Created by Jesse on 3/25/14.
  */
 public class SchematronRulesIsoTest extends AbstractSchematronTest {
-
+    @Autowired
+    private SchemaManager schemaManager;
 
     protected File schematronXsl;
     protected Element schematron;
-
+    private Map<String, Object> params;
     @Before
-    public void before() {
-        super.before();
-        String schematronFile = "iso19139/schematron/schematron-rules-iso.sch";
-        Pair<Element,File> compiledResult = compileSchematron(new File(SCHEMA_PLUGINS, schematronFile));
-        schematron = compiledResult.one();
-        schematronXsl = compiledResult.two();
+    public void before() throws IOException, JDOMException {
+        String schematronFile = "schematron/schematron-rules-iso";
+        schematron = Xml.loadFile(new File(schemaManager.getSchemaDir("iso19139"), schematronFile+".sch"));
+        schematronXsl = new File(schemaManager.getSchemaDir("iso19139"), schematronFile+".xsl");
+        this.params = getParams("schematron-rules-inspire.disabled");
     }
 
     protected File getSchematronXsl() {
