@@ -1,0 +1,42 @@
+@media screen /* // EUROPA 2013 - HIGH CONTRAST 1.0 */
+{
+	html body.contrast,
+	html body.contrast *,
+	html body.contrast #services,
+	html body.contrast .banner-right,
+	html body.contrast #path,
+	html body.contrast #language-selector,
+	html body.contrast .ws-links a,
+	html body.contrast .ws-links a:visited,
+	html body.contrast .ws-popup-show span.ws-popup-layout,
+	html body.contrast #search-form,
+	html body.contrast #search-form *,
+	
+	html body.contrast #share_button_container a,
+	html body.contrast #share_button_container a:hover,
+	html body.contrast #share_button_container a:focus,
+	html body.contrast #share_button_container a:active{background-color:#000;background-image:none !important;color:#ff0;border-color:#ff0 !important}
+	
+	html body.contrast #share_button_container{border:1px solid #ff0;}
+	
+	html body.contrast select,
+	html body.contrast .layout a,
+	html body.contrast #services a,
+	html body.contrast #path a,
+	html body.contrast .layout-footer a,
+	
+	html body.contrast #share_content_inner a{color:#0ff}
+	
+	html body.contrast #search-form *{border:0;}
+	html body.contrast #search-form{border:1px solid #ff0;}
+	html body.contrast #path li{background:url("/wel/template-2013/images/breadcrumb-contrast.gif") transparent left center no-repeat !important;}
+
+	html body.contrast .ws-links a:hover,
+	html body.contrast .ws-links a:focus{background-color:#ff0;color:#000;}
+
+	.blue h1,.blue h2,.blue h3,.blue h4,.blue h5,.blue h6{color:#369;}
+
+	.red h1,.red h2,.red h3,.red h4,.red h5,.red h6{color:#a00;}
+
+	.green h1,.green h2,.green h3,.green h4,.green h5,.green h6{color:#0a0;}
+}
