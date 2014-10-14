@@ -138,8 +138,10 @@
 				</MD_Keywords>
 			</descriptiveKeywords>
 		</xsl:for-each>
-		
-		<xsl:for-each-group select="$s/wms:KeywordList/wms:Keyword" group-by="@vocabulary">
+
+
+    <!-- Add keyword part of a vocabulary -->
+		<xsl:for-each-group select="$s/wms:KeywordList/wms:Keyword[@vocabulary]" group-by="@vocabulary">
 			<descriptiveKeywords>
 				<MD_Keywords>
 					<xsl:for-each select="../wms:Keyword[@vocabulary = current-grouping-key()]">
@@ -166,7 +168,26 @@
 				</MD_Keywords>
 			</descriptiveKeywords>
 		</xsl:for-each-group>
-		
+
+
+    <!-- Add other keyword  -->
+    <xsl:if test="$s/wms:KeywordList/wms:Keyword[not(@vocabulary)]">
+      <descriptiveKeywords>
+        <MD_Keywords>
+          <xsl:for-each select="$s/wms:KeywordList/wms:Keyword[not(@vocabulary)]">
+            <keyword>
+              <gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+            </keyword>
+          </xsl:for-each>
+          <type>
+            <MD_KeywordTypeCode codeList="./resources/codeList.xml#MD_KeywordTypeCode" codeListValue="theme" />
+          </type>
+        </MD_Keywords>
+      </descriptiveKeywords>
+    </xsl:if>
+
+
+    <!-- Add INSPIRE classification of service -->
 		<xsl:for-each select="//*:ExtendedCapabilities/inspire_common:MandatoryKeyword[@xsi:type='inspire_common:classificationOfSpatialDataService']">
 			<descriptiveKeywords>
 				<MD_Keywords xmlns:gmx="http://www.isotc211.org/2005/gmx">
