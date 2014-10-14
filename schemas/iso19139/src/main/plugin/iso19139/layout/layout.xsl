@@ -27,7 +27,7 @@
     
     
     <xsl:variable name="name" select="concat(@prefix, ':', @name)"/>
-    <xsl:variable name="flatModeException" select="gn-fn-metadata:getFieldFlatModeException($viewConfig, $name)"/>
+    <xsl:variable name="flatModeException" select="gn-fn-metadata:isFieldFlatModeException($viewConfig, $name)"/>
 
     <!-- TODO: this should be common to all schemas -->
 	<xsl:if test="$isEditing and
@@ -125,7 +125,7 @@
   <xsl:template mode="mode-iso19139" priority="200"
     match="*[gco:CharacterString|gco:Integer|gco:Decimal|
        gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
-       gco:Scale|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName|gmd:PT_FreeText]">
+       gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName|gmd:PT_FreeText]">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="overrideLabel" select="''" required="no"/>
@@ -146,7 +146,7 @@
     <!-- TODO: Support gmd:LocalisedCharacterString -->
     <xsl:variable name="theElement" select="gco:CharacterString|gco:Integer|gco:Decimal|
       gco:Boolean|gco:Real|gco:Measure|gco:Length|gco:Distance|gco:Angle|gmx:FileName|
-      gco:Scale|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName"/>
+      gco:Scale|gco:Record|gco:RecordType|gmx:MimeFileType|gmd:URL|gco:LocalName"/>
     
     <!--
       This may not work if node context is lost eg. when an element is rendered
@@ -269,6 +269,7 @@
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="codelists" select="$iso19139codelists" required="no"/>
+    <xsl:param name="overrideLabel" select="''" required="no"/>
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
@@ -276,7 +277,7 @@
 
     <xsl:call-template name="render-element">
       <xsl:with-param name="label"
-        select="gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
+                      select="if ($overrideLabel != '') then $overrideLabel else gn-fn-metadata:getLabel($schema, name(), $labels, name(..), $isoType, $xpath)/label"/>
       <xsl:with-param name="value" select="*/@codeListValue"/>
       <xsl:with-param name="cls" select="local-name()"/>
       <xsl:with-param name="xpath" select="$xpath"/>

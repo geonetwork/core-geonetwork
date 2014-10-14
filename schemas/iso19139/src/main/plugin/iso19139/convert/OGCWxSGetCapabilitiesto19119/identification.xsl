@@ -19,6 +19,7 @@
 										xmlns:exslt="http://exslt.org/common"
 										xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0"
 										xmlns:inspire_vs="http://inspire.ec.europa.eu/schemas/inspire_vs/1.0"
+										xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0"
 										extension-element-prefixes="math exslt wcs ows wps wps1 ows11 wfs gml">
 
 	<!-- ============================================================================= -->
@@ -58,9 +59,9 @@
 					<CI_Date>
 						<date>
 							<xsl:choose>
-								<xsl:when test="//inspire_vs:ExtendedCapabilities/inspire_common:TemporalReference/inspire_common:DateOfLastRevision">
+								<xsl:when test="//*:ExtendedCapabilities/inspire_common:TemporalReference/inspire_common:DateOfLastRevision">
 									<gco:Date>
-										<xsl:value-of select="//inspire_vs:ExtendedCapabilities/inspire_common:TemporalReference/inspire_common:DateOfLastRevision"/>
+										<xsl:value-of select="//*:ExtendedCapabilities/inspire_common:TemporalReference/inspire_common:DateOfLastRevision"/>
 									</gco:Date>
 								</xsl:when>
 								<xsl:otherwise>
@@ -137,8 +138,10 @@
 				</MD_Keywords>
 			</descriptiveKeywords>
 		</xsl:for-each>
-		
-		<xsl:for-each-group select="$s/wms:KeywordList/wms:Keyword" group-by="@vocabulary">
+
+
+    <!-- Add keyword part of a vocabulary -->
+		<xsl:for-each-group select="$s/wms:KeywordList/wms:Keyword[@vocabulary]" group-by="@vocabulary">
 			<descriptiveKeywords>
 				<MD_Keywords>
 					<xsl:for-each select="../wms:Keyword[@vocabulary = current-grouping-key()]">
@@ -165,8 +168,27 @@
 				</MD_Keywords>
 			</descriptiveKeywords>
 		</xsl:for-each-group>
-		
-		<xsl:for-each select="//inspire_vs:ExtendedCapabilities/inspire_common:MandatoryKeyword[@xsi:type='inspire_common:classificationOfSpatialDataService']">
+
+
+    <!-- Add other keyword  -->
+    <xsl:if test="$s/wms:KeywordList/wms:Keyword[not(@vocabulary)]">
+      <descriptiveKeywords>
+        <MD_Keywords>
+          <xsl:for-each select="$s/wms:KeywordList/wms:Keyword[not(@vocabulary)]">
+            <keyword>
+              <gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+            </keyword>
+          </xsl:for-each>
+          <type>
+            <MD_KeywordTypeCode codeList="./resources/codeList.xml#MD_KeywordTypeCode" codeListValue="theme" />
+          </type>
+        </MD_Keywords>
+      </descriptiveKeywords>
+    </xsl:if>
+
+
+    <!-- Add INSPIRE classification of service -->
+		<xsl:for-each select="//*:ExtendedCapabilities/inspire_common:MandatoryKeyword[@xsi:type='inspire_common:classificationOfSpatialDataService']">
 			<descriptiveKeywords>
 				<MD_Keywords xmlns:gmx="http://www.isotc211.org/2005/gmx">
 					<xsl:for-each select="inspire_common:KeywordValue">
@@ -259,7 +281,7 @@
 		<srv:serviceType>
 			<gco:LocalName codeSpace="www.w3c.org">
 				<xsl:choose>
-					<xsl:when test="//inspire_vs:ExtendedCapabilities/inspire_common:SpatialDataServiceType"><xsl:value-of select="//inspire_vs:ExtendedCapabilities/inspire_common:SpatialDataServiceType"/></xsl:when>
+					<xsl:when test="//*:ExtendedCapabilities/inspire_common:SpatialDataServiceType"><xsl:value-of select="//*:ExtendedCapabilities/inspire_common:SpatialDataServiceType"/></xsl:when>
 					<xsl:when test="name(.)='WMT_MS_Capabilities' or name(.)='WMS_Capabilities'">OGC:WMS</xsl:when>
 					<xsl:when test="name(.)='WCS_Capabilities'">OGC:WCS</xsl:when>
 					<xsl:when test="name(.)='wps:Capabilities'">OGC:WPS</xsl:when>

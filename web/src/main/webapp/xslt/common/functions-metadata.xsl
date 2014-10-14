@@ -138,6 +138,7 @@
       <xsl:when test="$codelists">
         <!-- Return the default -->
         <codelist>
+          <xsl:copy-of select="$codelists[not(@displayIf)]/@*"/>
           <xsl:copy-of select="$codelists[not(@displayIf)]/*[not(@hideInEditMode)]"/>
         </codelist>
       </xsl:when>
@@ -201,10 +202,18 @@
                 <xsl:with-param name="in" select="concat('/', @displayIf)"/>
               </saxon:call-template>
             </xsl:variable>
-            
-            <xsl:if test="$match/*">
-              <xsl:copy-of select="option"/>
-            </xsl:if>
+
+            <xsl:choose>
+              <xsl:when test="$match/*">
+                <xsl:copy-of select="option"/>
+              </xsl:when>
+              <xsl:when test="$helper[not(@displayIf)]">
+                <!-- The defautl helper is the one with no condition. -->
+                <xsl:copy-of select="$helper[not(@displayIf)]/*"/>
+              </xsl:when>
+              <xsl:otherwise>
+              </xsl:otherwise>
+            </xsl:choose>
           </xsl:for-each>
         </helper>
       </xsl:when>
@@ -297,7 +306,7 @@
 
 
   <!-- Return if a flat mode exception has been defined in the current view for a field. -->
-  <xsl:function name="gn-fn-metadata:getFieldFlatModeException" as="xs:boolean">
+  <xsl:function name="gn-fn-metadata:isFieldFlatModeException" as="xs:boolean">
     <xsl:param name="configuration" as="node()"/>
     <xsl:param name="name" as="xs:string"/>
 

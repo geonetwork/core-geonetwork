@@ -1,29 +1,54 @@
-<a class="navbar-brand" href="{{pages.home}}">
-  <img class="gn-logo" ng-src="../../images/logos/{{info.site.siteId}}.gif?{{info.site.lastUpdate}}"/>
-  {{info.site.name}}</a>
-<a class="navbar-brand" href="{{pages.signin}}" 
-    data-ng-show="!authenticated"
-    data-ng-keypress="$event"
-    data-translate="">signIn</a>
-<a class="navbar-brand" href="{{pages.admin}}" data-ng-show="authenticated" data-translate>adminConsole</a>
+<a class="navbar-link" href="{{pages.home}}">
+  <img class="gn-logo"
+       ng-src="../../images/logos/{{info.site.siteId}}.gif?{{info.site.lastUpdate}}"/>
+  <span class="visible-lg">{{info.site.name}}</span>
+</a>
+
+<a href="{{pages.home}}"
+   class="btn btn-default navbar-btn"
+   title="{{'search' | translate}}">
+    <i class="fa fa-search"/>
+    <span class="visible-lg" data-translate="">search</span>
+</a>
+<a href="catalog.edit"
+   class="btn btn-default navbar-btn"
+   data-ng-show="authenticated"
+   title="{{'editorBoard' | translate}}">
+    <i class="fa fa-pencil"/>
+    <span class="visible-lg" data-translate="">editorBoard</span>
+</a>
+<a class="btn btn-default navbar-btn" href="{{pages.admin}}"
+   data-ng-show="authenticated"
+   title="{{'adminConsole' | translate}}">
+    <i class="fa fa-th"/>
+    <span class="visible-lg" data-translate="">adminConsole</span>
+</a>
 
 
 <div class="navbar-collapse navbar-ex1-collapse pull-right">
     <ul class="nav navbar-nav">
         <li data-ng-show="authenticated">
             <p class="navbar-text"><img class="img-circle" ng-src="http://gravatar.com/avatar/{{u.email | md5}}?s=18"/>
-                <a href="admin.console#/organization/users/{{user.username}}"  
-                    title="{{'userDetails' | translate}}" class="navbar-link">
-                    {{user.name}} {{user.surname}} ({{user.profile | translate}})<i class="fa fa-user"></i></a>
-                <a href="catalog.edit"
-                   target="_blank"
-                   title="{{'editorBoard' | translate}}">
-                  <i class="fa fa-pencil"></i>
+                <a href="admin.console#/organization/users/{{user.username}}"
+                    title="{{'userDetails' | translate}}"
+                    class="hidden-xs navbar-link">
+                    {{user.name}} {{user.surname}} ({{user.profile | translate}})
                 </a>
-                <a href="../../j_spring_security_logout" title="{{'signout' | translate}}">
+
+                <a href="../../j_spring_security_logout"
+                   class="btn btn-link"
+                   title="{{'signout' | translate}}">
                   <i class="fa fa-sign-out"></i>
                 </a>
             </p>
+        </li>
+        <li data-ng-show="!authenticated">
+            <a href="{{pages.signin}}"
+               class="btn btn-link"
+               data-ng-keypress="$event">
+                <i class="fa fa-sign-in"/>
+                <span class="visible-lg" data-translate="">signIn</span>
+            </a>
         </li>
         <li>
             <form class="navbar-form navbar-left" role="search">

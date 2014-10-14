@@ -1311,6 +1311,11 @@
       <!-- Elements that should not use the "flat" mode --> 
       <flatModeExceptions>
         <for name="gmd:descriptiveKeywords" />
+        <for name="gmd:pointOfContact"/>
+        <for name="gmd:distributor"/>
+        <for name="gmd:contact"/>
+        <for name="gmd:processor"/>
+        <for name="gmd:citedResponsibleParty"/>
       </flatModeExceptions>
     </view>
     <view name="advanced">
