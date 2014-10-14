@@ -283,12 +283,16 @@ function addEmptySearch()
 			queryables.sort();
 			
 			for (var i=0; i < queryables.length; i++) {
-			    var sub = doc.createElement(queryables[i]);
-                search.appendChild(sub);
-                var text = doc.createTextNode('{'+queryables[i] +'}');
-                var subtmp = doc.createElement(queryables[i]);
-                subtmp.appendChild(text);
-                searchtmp.appendChild(subtmp);
+          // If the queryable has a namespace, replace the : with __
+          // Otherwise the SettingManager doesn't like entries that contains a : in the name
+          var queryableName = queryables[i].replace(":", "__");
+			    var sub = doc.createElement(queryableName);
+          search.appendChild(sub);
+          var text = doc.createTextNode('{'+queryableName +'}');
+          var subtmp = doc.createElement(queryableName);
+
+          subtmp.appendChild(text);
+          searchtmp.appendChild(subtmp);
 			}
 			
 			addSearchTemp(searchtmp);
@@ -309,8 +313,9 @@ function addSearchCap(search)
 {
 	var id = ''+ currSearchId++;
 	search.setAttribute('id', id);
-	
-	elemCap = elemCapTransf.transform(search); 
+
+  search.setAttribute('xmlns:apiso', 'http://www.opengis.net/cat/csw/apiso/1.0');
+  elemCap = elemCapTransf.transform(search);
 	
 	var html = searchCapTransf.transformToText(search);
 	

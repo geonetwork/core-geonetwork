@@ -475,7 +475,7 @@
 
 		<tip id="csw.capabUrl">
 			Verilen URL yetkinlik dokümanına erişmelidir. URL formatı şu şekilde olmalıdır:<br/>
-			http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.1			
+			http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.2			
 		</tip>
 
 		<tip id="csw.addSearch">

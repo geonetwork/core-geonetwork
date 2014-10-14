@@ -473,7 +473,8 @@
 		<tip id="csw.capabUrl">
 			Aquesta URL ha d'apuntar al document de capabilities. El format de la URL del document capabilities
 			és com aquesta:<br/>
-			http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.1			
+			http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.2			
+			http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.1
 		</tip>
 
 		<tip id="csw.addSearch">

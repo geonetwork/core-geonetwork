@@ -471,7 +471,7 @@
 
 		<tip id="csw.capabUrl">
 			Указанный URL должен указывать на capabilities-документ. Например:<br/>
-			http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.1			
+			http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.2			
 		</tip>
 
 		<tip id="csw.addSearch">

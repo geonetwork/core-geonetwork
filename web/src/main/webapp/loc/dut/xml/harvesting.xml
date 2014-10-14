@@ -469,7 +469,7 @@
 		<tip id="csw.capabUrl">
 			De gegeven URL moet verwijzen naar een capabilities document. Het formaat van een capabilities
 			URL ziet er als volgt uit:<br/>
-			http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.1			
+			http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.2
 		</tip>
 
 		<tip id="csw.addSearch">

@@ -464,7 +464,7 @@
 		<!-- CSW harvesting type - - - - - - - - - - - - - - - - - - - - - - -->
 
 		<tip id="csw.capabUrl">
-			La URL fornita deve puntare ad un documento di capabilities. Il formato di una URL di capabilities è del tipo: <i>http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.1</i>			
+			La URL fornita deve puntare ad un documento di capabilities. Il formato di una URL di capabilities è del tipo: <i>http://HOST/PATH?request=GetCapabilities&amp; service=CSW&amp; acceptVersions=2.0.2</i>			
 		</tip>
 
 		<tip id="csw.addSearch">

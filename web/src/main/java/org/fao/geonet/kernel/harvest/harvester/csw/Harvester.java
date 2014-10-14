@@ -96,8 +96,11 @@ class Harvester
 					s.addAttribute(element.getName(), element.getChildText("value").trim());
 				}
 			} else if (element.getText()!=null) {
-				s.addAttribute(element.getName(), element.getText().trim());
-			}
+                // Queryables with a namespace are stored in the Settings replacing : with __
+                // Otherwise SettingsManager causes issues
+                // When building the filter replacing __ with :
+                s.addAttribute(element.getName().replace("__", ":"), element.getText().trim());
+            }
 		}
 			
 		records.addAll(search(server,s));
@@ -358,8 +361,14 @@ class Harvester
 		if (!s.attributesMap.isEmpty()){
 			for(Entry<String, String> entry : s.attributesMap.entrySet()) {
 			    if (entry.getValue()!=null){
-			    	buildFilterQueryable(queriables, "csw:"+entry.getKey(), entry.getValue());
-		    	}
+                    // If the queriable has the namespace, use it
+                    String queryableName = entry.getKey();
+                    if (!queryableName.contains(":")) {
+                        queryableName = "csw:"+queryableName;
+                    }
+
+                    buildFilterQueryable(queriables, queryableName, entry.getValue());
+                }
 			}
 		} else {
 		    log.debug("no search criterion specified, harvesting all ... ");

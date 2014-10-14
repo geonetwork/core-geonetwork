@@ -20,15 +20,26 @@
 		
 	<xsl:template match="*" mode="data">
 		<xsl:for-each select="/root/search/*">
-		
-		<capability>
-			<xsl:attribute name="name">
-				<xsl:value-of select="local-name()" />
-			</xsl:attribute>
-		
-				<xsl:value-of select="concat('csw.',local-name())" />
-		
-		</capability>
+
+      <!-- Queryable fields with a namespace are stored replacing : with __ to avoid issues in the SettingsManager -->
+      <xsl:variable name="nameVal">
+        <xsl:choose>
+          <xsl:when test="contains(name(), ':')">
+            <xsl:value-of select="concat(substring-before(name(), ':'), '__', substring-after(name(), ':'))" />
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="name()" />
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
+
+      <capability>
+        <xsl:attribute name="name">
+          <xsl:value-of select="normalize-space($nameVal)" />
+        </xsl:attribute>
+
+        <xsl:value-of select="concat('csw.',normalize-space($nameVal))" />
+      </capability>
 		</xsl:for-each>
 		
 	</xsl:template>
