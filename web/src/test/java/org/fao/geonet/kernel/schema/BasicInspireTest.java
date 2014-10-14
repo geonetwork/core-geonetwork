@@ -1,14 +1,18 @@
 package org.fao.geonet.kernel.schema;
 
-import org.fao.geonet.domain.Pair;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -21,14 +25,18 @@ import static org.junit.Assert.assertTrue;
 public class BasicInspireTest extends AbstractInspireTest {
     protected File schematronXsl;
     protected Element inspire_schematron;
+    @Autowired
+    private SchemaManager schemaManager;
+    private Map<String, Object> params;
+
 
     @Before
-    public void before() {
+    public void before() throws IOException, JDOMException {
         super.before();
-        String schematronFile = "iso19139/schematron/schematron-rules-inspire.disabled.sch";
-        Pair<Element,File> compiledResult = compileSchematron(new File(SCHEMA_PLUGINS, schematronFile));
-        inspire_schematron = compiledResult.one();
-        schematronXsl = compiledResult.two();
+        String schematronFile = "schematron/schematron-rules-inspire.disabled";
+        inspire_schematron = Xml.loadFile(new File(schemaManager.getSchemaDir("iso19139"), schematronFile+".sch"));
+        schematronXsl = new File(schemaManager.getSchemaDir("iso19139"), schematronFile+".xsl");
+        this.params = getParams("schematron-rules-inspire.disabled");
     }
 
     protected File getSchematronXsl() {

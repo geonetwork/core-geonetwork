@@ -1,7 +1,7 @@
 package org.fao.geonet.kernel.schema;
 
-import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.EditLib;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
@@ -9,8 +9,10 @@ import org.jdom.JDOMException;
 import org.jdom.Text;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +29,9 @@ import static org.junit.Assert.assertTrue;
  * Created by Jesse on 1/31/14.
  */
 public class StrictInspireTest extends AbstractInspireTest {
+    @Autowired
+    private SchemaManager schemaManager;
+
     protected File schematronXsl;
     protected Element inspire_schematron;
 
@@ -41,13 +46,16 @@ public class StrictInspireTest extends AbstractInspireTest {
         CONFORMITY_STRING.put("dut", "verordening (eu) n r. 1089/2010 van de commissie van 23 november 2010 ter uitvoering van richtlijn 2007/2/eg van het europees parlement en de raad betreffende de interoperabiliteit van verzamelingen ruimtelijke gegevens en van diensten met betrekking tot ruimtelijke gegevens");
     }
 
+    private Map<String, Object> params;
+
+
     @Before
-    public void before() {
+    public void before() throws IOException, JDOMException {
         super.before();
-        String schematronFile = "iso19139/schematron/schematron-rules-inspire-strict.disabled.sch";
-        Pair<Element,File> compiledResult = compileSchematron(new File(SCHEMA_PLUGINS, schematronFile));
-        inspire_schematron = compiledResult.one();
-        schematronXsl = compiledResult.two();
+        String schematronFile = "schematron/schematron-rules-inspire-strict.disabled";
+        inspire_schematron = Xml.loadFile(new File(schemaManager.getSchemaDir("iso19139"), schematronFile+".sch"));
+        schematronXsl = new File(schemaManager.getSchemaDir("iso19139"), schematronFile+".xsl");
+        this.params = getParams("schematron-rules-inspire.disabled");
     }
 
     protected File getSchematronXsl() {
