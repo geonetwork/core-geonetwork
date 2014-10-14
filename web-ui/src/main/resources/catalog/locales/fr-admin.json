@@ -664,7 +664,6 @@
     "keywords-mapper": "Rechercher/Remplacer des mots clés",
     "urlPrefix": "Préfix de l'URL à rechercher",
     "newUrlPrefix": "Remplacer le préfixe par ",
-    "search": "Rechercher",
     "replace": "Remplacer",
     "emailToSearch": "Email à rechercher",
     "contactAsXML": "Fragment de XML à insérer pour les contacts correspondant",
