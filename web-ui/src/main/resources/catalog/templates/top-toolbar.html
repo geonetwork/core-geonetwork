@@ -17,13 +17,6 @@
     <i class="fa fa-pencil"/>
     <span class="visible-lg" data-translate="">editorBoard</span>
 </a>
-<a href="{{pages.signin}}"
-   class="btn btn-default navbar-btn"
-    data-ng-show="!authenticated"
-    data-ng-keypress="$event">
-    <i class="fa fa-sign-in"/>
-    <span class="visible-lg" data-translate="">signIn</span>
-</a>
 <a class="btn btn-default navbar-btn" href="{{pages.admin}}"
    data-ng-show="authenticated"
    title="{{'adminConsole' | translate}}">
@@ -48,6 +41,14 @@
                   <i class="fa fa-sign-out"></i>
                 </a>
             </p>
+        </li>
+        <li data-ng-show="!authenticated">
+            <a href="{{pages.signin}}"
+               class="btn btn-link"
+               data-ng-keypress="$event">
+                <i class="fa fa-sign-in"/>
+                <span class="visible-lg" data-translate="">signIn</span>
+            </a>
         </li>
         <li>
             <form class="navbar-form navbar-left" role="search">
