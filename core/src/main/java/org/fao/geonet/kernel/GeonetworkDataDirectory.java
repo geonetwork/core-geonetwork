@@ -280,7 +280,7 @@ public class GeonetworkDataDirectory {
                 "data" + File.separator + "metadata_subversion",
                 Geonet.Config.SUBVERSION_PATH);
 		formatterDir = setDir(jeevesServlet, webappName, handlerConfig, systemDataDir, ".formatter" + KEY_SUFFIX,
-                "data" + File.separator + "user_xsl",
+                "data" + File.separator + "formatter",
                 Geonet.Config.SUBVERSION_PATH);
 		resourcesDir = setDir(jeevesServlet, webappName, handlerConfig, systemDataDir,
                 ".resources" + KEY_SUFFIX, "data" + File.separator + "resources",

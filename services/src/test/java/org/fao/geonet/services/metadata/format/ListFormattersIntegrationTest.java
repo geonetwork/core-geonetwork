@@ -31,7 +31,7 @@ public class ListFormattersIntegrationTest extends AbstractServiceIntegrationTes
 
         final ListFormatters listService = new ListFormatters();
         final ServiceConfig serviceConfig = new ServiceConfig();
-        serviceConfig.setValue(FormatterConstants.USER_XSL_DIR, dataDirectory.getWebappDir() + "/xsl");
+        serviceConfig.setValue(FormatterConstants.USER_XSL_DIR, dataDirectory.getWebappDir() + "/formatters");
 
         listService.init(dataDirectory.getWebappDir(), serviceConfig);
         assertFormattersForSchema("iso19139", listService, "full_view",
