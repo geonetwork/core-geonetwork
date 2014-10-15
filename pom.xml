@@ -1050,9 +1050,6 @@
       <name>Developer k-int repository</name>
       <url>http://developer.k-int.com/maven2/</url>
     </repository>
-
-    <!-- Local repository which allow to handle temporarly local dependencies
-     // FIXME : Should be a remote repository -->
     <repository>
       <snapshots>
         <enabled>true</enabled>
@@ -1060,11 +1057,10 @@
       <releases>
         <enabled>true</enabled>
       </releases>
-      <id>localGeoNetwork</id>
-      <name>GeoNetwork local repository</name>
-      <url>file://maven_repo</url>
+      <id>core-maven-repo</id>
+      <name>GeoNetwork remote repository</name>
+      <url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
     </repository>
-
     <repository>
       <id>mvnrepository.com</id>
       <name>Repository that has juniversalchardet</name>
