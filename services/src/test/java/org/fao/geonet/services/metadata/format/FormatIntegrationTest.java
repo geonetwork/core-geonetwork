@@ -27,6 +27,7 @@ import static org.fao.geonet.domain.Pair.read;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
@@ -123,41 +124,46 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         assertNotNull("body", view.getChild("body"));
 
         // Check that the "handlers.add 'gmd:abstract', { el ->" correctly applied
-        final String abstractLabelXPath = "body/p[@class = 'abstract']/span[@class='label']";
-        assertEquals(1, Xml.selectNodes(view, abstractLabelXPath).size());
+        final String abstractLabelXPath = "body//p[@class = 'abstract']/span[@class='label']";
+        final String viewAsText = Xml.getString(view);
+        assertEquals(viewAsText, 1, Xml.selectNodes(view, abstractLabelXPath).size());
         assertEqualsText("Abstract", view, abstractLabelXPath);
-        final String abstractValueXpath = "body/p[@class = 'abstract']/span[@class='value']";
-        assertEquals(1, Xml.selectNodes(view, abstractValueXpath).size());
+        final String abstractValueXpath = "body//p[@class = 'abstract']/span[@class='value']";
+        assertEquals(viewAsText, 1, Xml.selectNodes(view, abstractValueXpath).size());
         assertEqualsText("Abstract {uuid}", view, abstractValueXpath);
 
         // Check that the "handlers.add ~/...:title/, { el ->" correctly applied
-        final String titleLabelXpath = "body/p[@class = 'title']/span[@class='label']";
-        assertEquals(1, Xml.selectNodes(view, titleLabelXpath).size());
+        final String titleLabelXpath = "body//p[@class = 'title']/span[@class='label']";
+        assertEquals(viewAsText, 1, Xml.selectNodes(view, titleLabelXpath).size());
         assertEqualsText("Title", view, titleLabelXpath);
-        final String titleValueXpath = "body/p[@class = 'title']/span[@class='value']";
-        assertEquals(1, Xml.selectNodes(view, titleValueXpath).size());
+        final String titleValueXpath = "body//p[@class = 'title']/span[@class='value']";
+        assertEquals(viewAsText, 1, Xml.selectNodes(view, titleValueXpath).size());
         assertEqualsText("Title", view, titleValueXpath);
 
         // Check that the "handlers.withPath ~/[^>]+>gmd:identificationInfo>.*extent/, Iso19139Functions.&handleExtent" correctly applied
-        final String formatterXpath = "body/p[@class = 'formatter']";
-        assertEquals(1, Xml.selectNodes(view, formatterXpath).size());
+        final String formatterXpath = "body//p[@class = 'formatter']";
+        assertEquals(viewAsText, 1, Xml.selectNodes(view, formatterXpath).size());
         assertEqualsText("fromFormatterGroovy", view, formatterXpath);
 
 
         // Check that the "handlers.withPath ~/[^>]+>gmd:identificationInfo>.*extent/, Iso19139Functions.&handleExtent" correctly applied
-        final String sharedXpath = "body/p[@class = 'shared']";
-        assertEquals(1, Xml.selectNodes(view, sharedXpath).size());
+        final String sharedXpath = "body//p[@class = 'shared']";
+        assertEquals(viewAsText, 1, Xml.selectNodes(view, sharedXpath).size());
         assertEqualsText("fromSharedFunctions", view, sharedXpath);
 
 
         // Check that the "handlers.add ~/...:title/, { el ->" correctly applied
-        final String codeLabelXpath = "body/p[@class = 'code']/span[@class='label']";
-        assertEquals(1, Xml.selectNodes(view, codeLabelXpath).size());
+        final String codeLabelXpath = "body//p[@class = 'code']/span[@class='label']";
+        assertEquals(viewAsText, 1, Xml.selectNodes(view, codeLabelXpath).size());
         assertEqualsText("Unique resource identifier", view, codeLabelXpath);
-        final String codeValueXpath = "body/p[@class = 'code']/span[@class='value']";
-        assertEquals(1, Xml.selectNodes(view, codeValueXpath).size());
+        final String codeValueXpath = "body//p[@class = 'code']/span[@class='value']";
+        assertEquals(viewAsText, 1, Xml.selectNodes(view, codeValueXpath).size());
         assertEqualsText("WGS 1984", view, codeValueXpath);
 
+        // Check that the handlers.add select: { it.children().size() > 0 }, priority: 10, processChildren: true, was applied
+        assertTrue(Xml.selectNodes(view, "*//p[@class = 'block']").size() > 0);
     }
+
+
 
 }

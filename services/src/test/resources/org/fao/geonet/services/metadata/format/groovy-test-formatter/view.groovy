@@ -40,6 +40,11 @@ handlers.root 'gmd:DataQuality'
 // The parameters passed to the handler are:
 // * the GPathResult representing the current node
 // * a groovy.xml.MarkupBuilder - if null any data is written to this then all other return values are ignored
+// * A string representing the data obtained from processing all child data.
+//   Children are processed only if
+//     1. There are at least 3 parameters in the handler
+//     2. processChildren is true (the default) (see later example for configuring extra parameters on the handlers)
+//   If the child parameter is present but the handler is configured with processChildren as false then "" will be passed as childData
 //
 // Like Javascript you only need to specify as many parameters as needed.
 //
@@ -137,18 +142,24 @@ handlers.add isRefSysCode, { el, html ->
     }
 }
 
-// A handler can also be assigned a priority.  The handlers with a higher priority will be evaluated before
-// handlers with a lower priority.  The priority only makes sense when dealing with handlers that have a
-// selector function (as opposed to handlers with element id).
+// This example illustrates another way of configuring a handler. this add method take a map of values and
+// constructs a handler from them.  The values that will be used from the map are:
 //
-// this example also shows the parameter called processChildren by default it is fail but if it is true
-//handlers.add select: { it.name().children.size > 0 }, priority: 10, processChildren: true, { el, html, children ->
-    // children is Future which will contain the children once they have been processed
-    // this allows the children to be inserted into the results
+// * select - the function for determining if this handler should be applied
+// * priority - handlers with a higher priority will be evaluated before handlers with a lower priority
+// * processChildren - if true the handler function takes at least 3 parameters then all children of this node will be processed
+//                     and that data passed to the function for use by the handler
+handlers.add select: { it.children().size() > 0 }, priority: 10, processChildren: true, { el, html, childData ->
     // we are returning a FileResult which has a path to the file as first parameter and takes a map
     // of String -> Object which are the replacements.  When this is returned the file will be loaded
     // (UTF-8 by default) and all parts of the file with the pattern: ${key} will be replaced with the
     // the value in the replacement map.  So in this example ${label} will be replaced with the
     // translated node name and ${children} will be replaced with the children XML.
-//    handlers.fileResult("block.html", [label: translate(el.name()), children: children])
-//}
+    //
+    // the files are relative to the view.groovy file so this example should be in the same directory as view.groovy
+    if (!childData.isEmpty()) {
+        return handlers.fileResult("block.html", [label: f.label(el.name()), childData: childData])
+    }
+
+    // return null if we don't want to add this element, just because it matches doesn't mean it has to produce data
+}

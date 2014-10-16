@@ -2,6 +2,8 @@ package org.fao.geonet.services.metadata.format.groovy;
 
 import groovy.lang.Closure;
 
+import java.io.IOException;
+
 /**
  * A handler for start and end processing events.
  *
@@ -14,7 +16,7 @@ public class StartEndHandler {
         this.function = function;
     }
 
-    public void handle(StringBuilder resultantXml) {
+    public void handle(StringBuilder resultantXml) throws IOException {
         if (this.function != null) {
             final Object result = this.function.call();
             Handler.processResult(this, result, resultantXml);

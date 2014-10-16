@@ -2,8 +2,12 @@ package org.fao.geonet.services.metadata.format.groovy;
 
 import com.google.common.collect.Sets;
 import groovy.lang.Closure;
+import groovy.lang.GString;
+import groovy.util.slurpersupport.GPathResult;
 
+import java.io.File;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -14,15 +18,24 @@ import java.util.regex.Pattern;
  * @author Jesse on 10/15/2014.
  */
 public class Handlers {
-    PriorityQueue<Handler> handlers = new PriorityQueue<Handler>();
-    Set<String> roots = Sets.newHashSet();
+    private static final String HANDLER_SELECT = "select";
+    private static final String HANDLER_PRIORITY = "priority";
+    private static final String HANDLER_PROCESS_CHILDREN = "processChildren";
+    private final File formatterDir;
+    final PriorityQueue<Handler> handlers = new PriorityQueue<Handler>();
+    final Set<String> roots = Sets.newHashSet();
     StartEndHandler startHandler = new StartEndHandler(null);
     StartEndHandler endHandler = new StartEndHandler(null);
 
+    public Handlers(File formatterDir) {
+        this.formatterDir = formatterDir;
+    }
+
     /**
      * Set the xpaths for selecting the roots for processing the metadata.
-     *
-     * Each xpath should be the type of xpath used when calling {@link org.fao.geonet.utils.Xml#selectNodes(org.jdom.Element, String, java.util.List)}
+     * <p/>
+     * Each xpath should be the type of xpath used when calling {@link org.fao.geonet.utils.Xml#selectNodes(org.jdom.Element, String,
+     * java.util.List)}
      */
     public void roots(String... xpaths) {
         this.roots.clear();
@@ -31,8 +44,9 @@ public class Handlers {
 
     /**
      * Add a root xpath selector to the set of roots.
-     *
-     * The xpath should be the type of xpath used when calling {@link org.fao.geonet.utils.Xml#selectNodes(org.jdom.Element, String, java.util.List)}
+     * <p/>
+     * The xpath should be the type of xpath used when calling {@link org.fao.geonet.utils.Xml#selectNodes(org.jdom.Element, String,
+     * java.util.List)}
      */
     public void root(String xpath) {
         this.roots.add(xpath);
@@ -42,12 +56,22 @@ public class Handlers {
      * Add a handler with the priority 1 which will exactly match element name and prefix.
      *
      * @param elementName the qualified element name to match
-     * @param function the handler closure/function
+     * @param function    the handler closure/function
      */
     public Handler add(String elementName, Closure function) {
-        final ByNameHandler handler = new ByNameHandler(Pattern.compile(Pattern.quote(elementName)), 1, function);
+        final HandlerNameMatch handler = new HandlerNameMatch(Pattern.compile(Pattern.quote(elementName)), 1, function);
         handlers.add(handler);
         return handler;
+    }
+
+    public boolean canHandle(GPathResult elem) {
+        for (Handler handler : handlers) {
+            if (handler.canHandle(TransformationContext.getContext(), elem)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -55,19 +79,20 @@ public class Handlers {
      * to the element.
      *
      * @param nameMatcher the regular expression to match.
-     * @param function the handler closure/function
+     * @param function    the handler closure/function
      */
     public Handler add(Pattern nameMatcher, Closure function) {
-        final ByNameHandler handler = new ByNameHandler(nameMatcher, 0, function);
+        final HandlerNameMatch handler = new HandlerNameMatch(nameMatcher, 0, function);
         handlers.add(handler);
         return handler;
     }
+
     /**
      * Add a handler with priority 0 which will do a regular expression match against full path from root to see if it applies
      * to the element.  Each segment of path will be separated by >
      *
      * @param pathMatcher the regular expression to match.
-     * @param function the handler closure/function
+     * @param function    the handler closure/function
      */
     public Handler withPath(Pattern pathMatcher, Closure function) {
         final PathMatchingHandler handler = new PathMatchingHandler(pathMatcher, 0, function);
@@ -79,7 +104,7 @@ public class Handlers {
      * Add a handler with priority 0 which will do a execute the matcher function with the current element to see if it the handler
      * should be applied to the element.
      *
-     * @param matcher the regular expression to match.
+     * @param matcher  the regular expression to match.
      * @param function the handler closure/function
      */
     public Handler add(Closure matcher, Closure function) {
@@ -87,10 +112,81 @@ public class Handlers {
         handlers.add(handler);
         return handler;
     }
+
+    /**
+     * Create a handler from a map of properties to values.  Allowed properties are:
+     * <ul>
+     *   <li>{@link #HANDLER_SELECT} - <strong>(Required)</strong> One of:
+     *   <ul>
+     *      <li>a function for determining if this handler should be applied</li>
+     *      <li>a string for matching against the name</li>
+     *      <li>a regular expression for matching against the path</li>
+     *   </ul>
+     *   </li>
+     *   <li>
+     *       {@link #HANDLER_PRIORITY} - <strong>(Optional)</strong> handlers with a higher priority will be evaluated before
+     *       handlers with a lower priority
+     *   </li>
+     *   <li>
+     *     {@link #HANDLER_PROCESS_CHILDREN} - <strong>(Optional)</strong> if true the handler function takes at least 3 parameters
+     *     then all children of this node will be processed and that data passed to the function for use by the handler
+     *   </li>
+     * </ul>
+     */
+    public Handler add(Map<String, Object> properties, Closure handlerFunction) {
+        Object matcher = null;
+        int priority = 0;
+        boolean processChildren = false;
+        for (Map.Entry<String, Object> entry : properties.entrySet()) {
+            if (entry.getKey().equalsIgnoreCase(HANDLER_SELECT)) {
+                matcher = entry.getValue();
+            } else if (entry.getKey().equalsIgnoreCase(HANDLER_PRIORITY)) {
+                priority = Integer.parseInt(entry.getValue().toString());
+            } else if (entry.getKey().equalsIgnoreCase(HANDLER_PROCESS_CHILDREN)) {
+                processChildren = Boolean.parseBoolean(entry.getValue().toString());
+            } else {
+                throw new IllegalArgumentException("Handler's do not have a configurable property: " + entry.getKey() + " value = " +
+                                                   entry.getValue());
+            }
+        }
+
+        if (matcher == null) {
+            throw new IllegalArgumentException("A property " + HANDLER_SELECT + " must be present in the properties map");
+        }
+
+        final Handler handler;
+        if (matcher instanceof Closure) {
+            handler = add((Closure) matcher, handlerFunction);
+        } else if (matcher instanceof String || matcher instanceof GString) {
+            handler = add(matcher.toString(), handlerFunction);
+        } else if (matcher instanceof Pattern) {
+            handler = withPath((Pattern) matcher, handlerFunction);
+        } else {
+            throw new IllegalArgumentException(
+                    "The property " + HANDLER_SELECT + " is not a legal type.  Legal types are: Closure/function or String or " +
+                    "Regular Expression(Pattern) but was " + matcher.getClass());
+        }
+        handler.setPriority(priority);
+        handler.setProcessChildren(processChildren);
+
+        return handler;
+    }
+
+    /**
+     * Create a FileResult object as a result from a handler function.
+     * See {@link org.fao.geonet.services.metadata.format.groovy.FileResult}
+     * @param path The relative path from the formatter directory to the file to load.
+     * @param substitutions the key -> substitution String/GString map of substitutions.
+     */
+    public FileResult fileResult (String path, Map<String, Object> substitutions) {
+        return new FileResult(new File(this.formatterDir, path), substitutions);
+    }
+
     public StartEndHandler start(Closure function) {
         this.startHandler = new StartEndHandler(function);
         return this.startHandler;
     }
+
     public StartEndHandler end(Closure function) {
         this.endHandler = new StartEndHandler(function);
         return this.endHandler;

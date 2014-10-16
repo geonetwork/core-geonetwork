@@ -15,7 +15,7 @@ public class FunctionMatchingHandler extends Handler {
     }
 
     @Override
-    public boolean canHandle(String rootPath, GPathResult elem) {
+    public boolean canHandle(TransformationContext rootPath, GPathResult elem) {
         final int maximumNumberOfParameters = this.matcherFunction.getMaximumNumberOfParameters();
         boolean matches;
         switch (maximumNumberOfParameters) {

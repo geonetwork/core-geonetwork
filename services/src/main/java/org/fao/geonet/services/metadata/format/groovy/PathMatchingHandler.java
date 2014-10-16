@@ -21,8 +21,8 @@ public class PathMatchingHandler extends Handler {
     }
 
     @Override
-    public boolean canHandle(String rootPath, GPathResult element) {
-        StringBuilder path = new StringBuilder(rootPath);
+    public boolean canHandle(TransformationContext context, GPathResult element) {
+        StringBuilder path = new StringBuilder(context.getRootPath());
         if (path.length() > 0) {
             path.append(">");
         }

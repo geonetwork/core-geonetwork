@@ -20,6 +20,7 @@ import java.util.Map;
  * @author Jesse on 10/15/2014.
  */
 public class Transformer {
+
     private final Handlers handlers;
     private final String formatterPath;
 
@@ -29,6 +30,8 @@ public class Transformer {
     }
 
     public Element apply(Element metadata, List<Namespace> namespaces) throws Exception {
+        TransformationContext context = new TransformationContext();
+        context.setThreadLocal();
         Map<String, String> namespaceUriToPrefix = Maps.newHashMap();
         for (Namespace namespace : namespaces) {
             namespaceUriToPrefix.put(namespace.getPrefix(), namespace.getURI());
@@ -49,7 +52,9 @@ public class Transformer {
                 }
                 StringBuilder path = new StringBuilder();
                 createPath(root.getParentElement(), path);
-                handleElement(path.toString(), md, resultantXml);
+
+                context.setRootPath(path.toString());
+                handleElement(context, md, resultantXml);
             }
         }
         handlers.endHandler.handle(resultantXml);
@@ -69,29 +74,30 @@ public class Transformer {
         path.append(node.getQualifiedName());
     }
 
-    private void processChildren(String rootPath, GPathResult md, StringBuilder resultantXml) throws IOException {
+    private void processChildren(TransformationContext context, GPathResult md, StringBuilder resultantXml) throws IOException {
         @SuppressWarnings("unchecked")
         final List<GPathResult> children  = md.children().list();
 
         for (GPathResult child : children) {
-            handleElement(rootPath, child, resultantXml);
+            handleElement(context, child, resultantXml);
         }
     }
 
-    private void handleElement(String rootPath, GPathResult elem, StringBuilder resultantXml) throws IOException {
+    private void handleElement(TransformationContext context, GPathResult elem, StringBuilder resultantXml) throws IOException {
         boolean continueProcessing = true;
         for (Handler handler : handlers.handlers) {
-            if (handler.canHandle(rootPath, elem)) {
+            if (handler.canHandle(context, elem)) {
+                StringBuilder childData = new StringBuilder();
                 if (handler.processChildren()) {
-                    processChildren(rootPath, elem, resultantXml);
+                    processChildren(context, elem, childData);
                 }
-                handler.handle(elem, resultantXml);
+                handler.handle(context, elem, resultantXml, childData.toString());
                 continueProcessing = false;
                 break;
             }
         }
         if (continueProcessing) {
-            processChildren(rootPath, elem, resultantXml);
+            processChildren(context, elem, resultantXml);
         }
     }
 }
