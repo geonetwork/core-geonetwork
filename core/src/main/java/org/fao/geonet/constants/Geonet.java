@@ -616,5 +616,6 @@ public final class Geonet {
 
     public class StagingProfile {
         public static final String DEVELOPMENT = "development";
+        public static final String BEAN_NAME = "stagingProfile";
     }
 }

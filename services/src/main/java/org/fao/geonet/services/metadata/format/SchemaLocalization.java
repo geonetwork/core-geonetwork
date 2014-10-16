@@ -8,13 +8,15 @@ import java.io.File;
 import java.io.IOException;
 
 /**
-* @author Jesse on 10/15/2014.
-*/
+ * Contains all the translation/localization files for a particular schema.
+ *
+ * @author Jesse on 10/15/2014.
+ */
 public class SchemaLocalization {
-    final String schema;
-    final Element strings;
-    final Element codelists;
-    final Element labels;
+    public final String schema;
+    public final Element strings;
+    public final Element codelists;
+    public final Element labels;
 
     SchemaLocalization(String schema, String schemaLocDir) throws IOException, JDOMException {
         this.schema = schema;

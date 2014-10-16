@@ -405,12 +405,13 @@
         <version>5.1-GEONETWORK</version>
       </dependency>
 
-      <dependency>
-        <groupId>org.codehaus.groovy</groupId>
-        <artifactId>groovy</artifactId>
-        <version>2.3.6</version>
-      </dependency>
-      <!-- universal character set detector -->
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>2.3.7</version>
+        </dependency>
+
+        <!-- universal character set detector -->
       <dependency>
         <groupId>com.googlecode.juniversalchardet</groupId>
         <artifactId>juniversalchardet</artifactId>

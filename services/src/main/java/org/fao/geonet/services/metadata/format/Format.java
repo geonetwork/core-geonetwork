@@ -23,7 +23,7 @@
 
 package org.fao.geonet.services.metadata.format;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FileUtils;
@@ -31,10 +31,15 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.exceptions.MetadataNotFoundEx;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.XmlSerializer;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
-import org.fao.geonet.services.metadata.Show;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -43,6 +48,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
@@ -53,8 +59,14 @@ import java.util.WeakHashMap;
  */
 public class Format extends AbstractFormatService {
 
-    private Show showService;
-    private WeakHashMap<String, List<SchemaLocalization>> labels = new WeakHashMap<String, List<SchemaLocalization>>();
+    /**
+     * Map is 3CharLangCode -> Map(SchemaName, LocalizationFilesForThatSchema)
+     */
+    private WeakHashMap<String, Map<String, SchemaLocalization>> schemaLocs = new WeakHashMap<String, Map<String, SchemaLocalization>>();
+    /**
+     * Map (canonical path to formatter dir -> Element containing all xml files in Formatter bundle's loc directory)
+     */
+    private WeakHashMap<String, Element> pluginLocs = new WeakHashMap<String, Element>();
 
     public Element exec(Element params, ServiceContext context) throws Exception {
         ensureInitializedDir(context);
@@ -74,7 +86,7 @@ public class Format extends AbstractFormatService {
         params.removeChild(Params.ID);
         params.removeChild(Params.UUID);
         params.addContent(new Element(Params.ID).setText(id));
-        Element metadata = showService.exec(params, context);
+        Element metadata = getMetadata(params, context);
         final SchemaManager bean = context.getBean(SchemaManager.class);
         final String schema = bean.autodetectSchema(metadata, null);
         File schemaDir = null;
@@ -101,6 +113,7 @@ public class Format extends AbstractFormatService {
         fparams.formatDir = formatDir;
         fparams.metadata = metadata;
         fparams.schema = schema;
+        fparams.url = context.getBean(SettingManager.class).getSiteURL(context);
 
         if (viewXslFile.exists()) {
             fparams.viewFile = viewXslFile;
@@ -114,6 +127,40 @@ public class Format extends AbstractFormatService {
 
     }
 
+    public Element getMetadata(Element params, ServiceContext context) throws Exception {
+        DataManager dm = context.getBean(DataManager.class);
+        SchemaManager sm = context.getBean(SchemaManager.class);
+
+        String id = Utils.getIdentifierFromParameters(params, context);
+        boolean skipPopularity = false;
+        if (!skipPopularity) { // skipPopularity could be a URL param as well
+            String skip = Util.getParam(params, "skipPopularity", "n");
+            skipPopularity = skip.equals("y");
+        }
+
+        boolean withholdWithheldElements = Util.getParam(params, "hide_withheld", false);
+        if (XmlSerializer.getThreadLocal(false) != null || withholdWithheldElements) {
+            XmlSerializer.getThreadLocal(true).setForceFilterEditOperation(withholdWithheldElements);
+        }
+        if (id == null) {
+            throw new MetadataNotFoundEx("Metadata not found.");
+        }
+
+        Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
+        final Element md = dm.getMetadataNoInfo(context, id);
+
+
+        if (md == null) {
+            throw new MetadataNotFoundEx(id);
+        }
+
+        if (!skipPopularity) {
+            dm.increasePopularity(context, id);
+        }
+
+        return md;
+
+    }
     private boolean isCompatibleMetadata(Element params, ServiceContext context, ConfigFile config) throws Exception {
         String schema = getMetadataSchema(params, context);
         List<String> applicable = config.listOfApplicableSchemas();
@@ -130,21 +177,30 @@ public class Format extends AbstractFormatService {
         return new Element("strings");
     }
 
-    Element getResources(ServiceContext context, File formatDir, String lang) throws Exception {
-        Element resources = new Element("loc");
-        File baseLoc = new File(formatDir, "loc");
-        File locDir = findLocDir(lang, baseLoc);
+    /**
+     * Get the localization files from current format plugin.  It will load all xml file in the loc/lang/ directory as children
+     * of the returned element.
+     */
+    synchronized Element getPluginLocResources(ServiceContext context, File formatDir, String lang) throws Exception {
+        final String canonicalPath = formatDir.getCanonicalPath();
+        Element resources = this.pluginLocs.get(canonicalPath);
+        if (isDevMode(context) || resources == null) {
+            resources = new Element("loc");
+            File baseLoc = new File(formatDir, "loc");
+            File locDir = findLocDir(lang, baseLoc);
 
-        resources.addContent(new Element("iso639_2").setAttribute("codeLength", "3").setText(locDir.getName()));
-        String iso639_1 = context.getBean(IsoLanguagesMapper.class).iso639_2_to_iso639_1(locDir.getName());
+            resources.addContent(new Element("iso639_2").setAttribute("codeLength", "3").setText(locDir.getName()));
+            String iso639_1 = context.getBean(IsoLanguagesMapper.class).iso639_2_to_iso639_1(locDir.getName());
 
-        resources.addContent(new Element("iso639_1").setAttribute("codeLength", "2").setText(iso639_1));
+            resources.addContent(new Element("iso639_1").setAttribute("codeLength", "2").setText(iso639_1));
 
-        if (locDir.exists()) {
-            Collection<File> files = FileUtils.listFiles(locDir, new String[]{"xml"}, false);
-            for (File file : files) {
-                resources.addContent(Xml.loadFile(file));
+            if (locDir.exists()) {
+                Collection<File> files = FileUtils.listFiles(locDir, new String[]{"xml"}, false);
+                for (File file : files) {
+                    resources.addContent(Xml.loadFile(file));
+                }
             }
+            this.pluginLocs.put(canonicalPath, resources);
         }
         return resources;
     }
@@ -163,29 +219,35 @@ public class Format extends AbstractFormatService {
         return locDir;
     }
 
-    synchronized List<SchemaLocalization> getLabels(ServiceContext context, String lang) throws IOException, JDOMException {
+    /**
+     * Get the strings.xml, codelists.xml and labels.xml for the correct language from the schema plugin
+     *
+     * @return Map(SchemaName, SchemaLocalizations)
+     */
+    synchronized Map<String, SchemaLocalization> getSchemaLocalizations(ServiceContext context, String lang) throws IOException, JDOMException {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        List<SchemaLocalization> localization = labels.get(lang);
-        if (localization == null) {
+        Map<String, SchemaLocalization> localization = schemaLocs.get(lang);
+        if (isDevMode(context) || localization == null) {
             SchemaManager schemamanager = gc.getBean(SchemaManager.class);
             Set<String> schemas = schemamanager.getSchemas();
-            localization = Lists.newArrayList();
+            localization = Maps.newHashMap();
             for (String schema : schemas) {
                 String schemaLocDir = schemamanager.getSchemaDir(schema) + File.separator + "loc" + File.separator + lang + File
                         .separator;
-                localization.add(new SchemaLocalization(schema, schemaLocDir));
-                labels.put(lang, localization);
+                localization.put(schema, new SchemaLocalization(schema, schemaLocDir));
+                schemaLocs.put(lang, localization);
             }
         }
 
         return localization;
     }
 
+    boolean isDevMode(ServiceContext context) {
+        return Geonet.StagingProfile.DEVELOPMENT.equals(context.getApplicationContext().getBean(Geonet.StagingProfile.BEAN_NAME));
+    }
+
     @Override
     public void init(String appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
-
-        showService = new Show();
-        showService.init(appPath, params);
     }
 }

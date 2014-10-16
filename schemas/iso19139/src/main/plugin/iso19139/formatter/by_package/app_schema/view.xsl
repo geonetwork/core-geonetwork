@@ -5,7 +5,8 @@
     xmlns:gml="http://www.opengis.net/gml"
     xmlns:xslutil="java:org.fao.geonet.util.XslUtil"
     xmlns:gmd="http://www.isotc211.org/2005/gmd"
-    xmlns:gnf="http://www.fao.org/geonetwork/functions">
+    xmlns:gnf="http://www.fao.org/geonetwork/functions"
+    exclude-result-prefixes="#all">
 
     <xsl:include href="../../common-templates.xsl" />
 

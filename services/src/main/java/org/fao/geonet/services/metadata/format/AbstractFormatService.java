@@ -17,6 +17,9 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 
+import static org.fao.geonet.services.metadata.format.FormatterConstants.VIEW_GROOVY_FILENAME;
+import static org.fao.geonet.services.metadata.format.FormatterConstants.VIEW_XSL_FILENAME;
+
 /**
  * Common constants and methods for Metadata formatter classes
  * 
@@ -108,14 +111,18 @@ abstract class AbstractFormatService implements Service {
             throw new BadParameterEx(paramName, "Format bundle "+xslid+" is not a directory");
         }
         
-        if(!new File(formatDir, FormatterConstants.VIEW_XSL_FILENAME).exists()) {
-            throw new BadParameterEx(paramName, "Format bundle "+xslid+" is not a valid format bundle because it does not have a "+
-                                                FormatterConstants.VIEW_XSL_FILENAME+" file");
+        if(!new File(formatDir, VIEW_XSL_FILENAME).exists() &&
+                !new File(formatDir, VIEW_GROOVY_FILENAME).exists()) {
+            throw new BadParameterEx(paramName,
+                    "Format bundle "+xslid+" is not a valid format bundle because it does not have a '"+
+                    VIEW_XSL_FILENAME+"' file or a '" + VIEW_GROOVY_FILENAME + "' file.");
         }
         
         if (!containsFile(new File(userXslDir), formatDir)) {
             if (schemaDir == null || !containsFile(new File(schemaDir, FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR), formatDir)) {
-                throw new BadParameterEx(paramName, "Format bundle " + xslid + " is not a format bundle id because it does not reference a file contained within the userXslDir");
+                throw new BadParameterEx(paramName,
+                        "Format bundle " + xslid + " is not a format bundle id because it does not reference a " +
+                        "file contained within the userXslDir");
             }
         }
         return formatDir;
@@ -124,7 +131,7 @@ abstract class AbstractFormatService implements Service {
     protected static class FormatterFilter implements FileFilter {
         @Override
         public boolean accept(File file) {
-            return file.isDirectory() && new File(file, FormatterConstants.VIEW_XSL_FILENAME).exists();
+            return file.isDirectory() && new File(file, VIEW_XSL_FILENAME).exists();
         }
     }
     
