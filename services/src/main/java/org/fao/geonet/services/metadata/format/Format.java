@@ -25,23 +25,33 @@ package org.fao.geonet.services.metadata.format;
 
 import com.google.common.collect.Maps;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import org.apache.commons.io.FileUtils;
-import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.services.Utils;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.services.metadata.format.groovy.ParamValue;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,90 +60,119 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Allows a user to display a metadata with a particular formatters
  *
  * @author jeichar
  */
+@Controller("metadata.formatter")
 public class Format extends AbstractFormatService {
+
+    @Autowired
+    private SettingManager settingManager;
+    @Autowired
+    private MetadataRepository metadataRepository;
+    @Autowired
+    private XmlSerializer xmlSerializer;
+    @Autowired
+    private XsltFormatter xsltFormatter;
+    @Autowired
+    private GroovyFormatter groovyFormatter;
+    @Autowired
+    private ServiceManager serviceManager;
+    @Autowired
+    private SchemaManager schemaManager;
+    @Autowired
+    private DataManager dataManager;
+    @Autowired
+    private GeonetworkDataDirectory geonetworkDataDirectory;
 
     /**
      * Map (canonical path to formatter dir -> Element containing all xml files in Formatter bundle's loc directory)
      */
     private WeakHashMap<String, Element> pluginLocs = new WeakHashMap<String, Element>();
 
-    public Element exec(Element params, ServiceContext context) throws Exception {
-        ensureInitializedDir(context);
 
-        String xslid = Util.getParam(params, "xsl", null);
-        String id;
-        try {
-            id = Utils.getIdentifierFromParameters(params, context);
-            Integer.parseInt(id); // check that it is an id and not a uuid
-        } catch (Exception e) {
-            id = Utils.getIdentifierFromParameters(params, context, Params.ID, Params.ID);
-        }
+    @RequestMapping(value = "/{lang}/metadata.formatter.{type}", produces = {
+            MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_HTML_VALUE })
+    @ResponseBody
+    public String exec(
+            @PathVariable final String lang,
+            @PathVariable final String type,
+            @RequestParam(required = false) final String id,
+            @RequestParam(required = false) final String uuid,
+            @RequestParam(value = "xsl", required = false) final String xslid,
+            @RequestParam(defaultValue = "n") final String skipPopularity,
+            @RequestParam(value = "hide_withheld", required = false) final Boolean hide_withheld,
+            final HttpServletRequest request) throws Exception {
 
-        if (id == null) {
-            throw new IllegalArgumentException("Either '" + Params.UUID + "' or '" + Params.ID + "'is a required parameter");
-        }
-        params.removeChild(Params.ID);
-        params.removeChild(Params.UUID);
-        params.addContent(new Element(Params.ID).setText(id));
-        Element metadata = getMetadata(params, context);
-        final SchemaManager bean = context.getBean(SchemaManager.class);
-        final String schema = bean.autodetectSchema(metadata, null);
+        ServiceContext context = this.serviceManager.createServiceContext("metadata.formatter" + type, lang, request);
+        Element metadata = getMetadata(context, id, uuid, new ParamValue(skipPopularity), hide_withheld);
+
+        final String schema = schemaManager.autodetectSchema(metadata, null);
         File schemaDir = null;
         if (schema != null) {
-            schemaDir = new File(bean.getSchemaDir(schema));
+            schemaDir = new File(schemaManager.getSchemaDir(schema));
         }
-        File formatDir = getAndVerifyFormatDir("xsl", xslid, schemaDir);
+        File formatDir = getAndVerifyFormatDir(geonetworkDataDirectory, "xsl", xslid, schemaDir);
 
         ConfigFile config = new ConfigFile(formatDir);
 
-        if (!isCompatibleMetadata(params, context, config)) {
-            final String metadataSchema = getMetadataSchema(params, context);
-            throw new IllegalArgumentException("The bundle cannot format metadata with the " + metadataSchema + " schema");
+        if (!isCompatibleMetadata(schema, config)) {
+            throw new IllegalArgumentException("The bundle cannot format metadata with the " + schema + " schema");
         }
 
         File viewXslFile = new File(formatDir, FormatterConstants.VIEW_XSL_FILENAME);
         File viewGroovyFile = new File(formatDir, FormatterConstants.VIEW_GROOVY_FILENAME);
 
+
         FormatterParams fparams = new FormatterParams();
         fparams.config = config;
         fparams.format = this;
-        fparams.params = params;
+        fparams.params = request.getParameterMap();
         fparams.context = context;
         fparams.formatDir = formatDir;
         fparams.metadata = metadata;
         fparams.schema = schema;
-        fparams.url = context.getBean(SettingManager.class).getSiteURL(context);
+        fparams.url = settingManager.getSiteURL(lang);
 
         if (viewXslFile.exists()) {
             fparams.viewFile = viewXslFile;
-            return context.getBean(XsltFormatter.class).format(fparams);
+            return Xml.getString(this.xsltFormatter.format(fparams));
         } else if (viewGroovyFile.exists()){
             fparams.viewFile = viewGroovyFile;
-            return context.getBean(GroovyFormatter.class).format(fparams);
+            return this.groovyFormatter.format(fparams);
         } else {
             throw new IllegalArgumentException("The 'xsl' parameter must be a valid id of a formatter");
         }
 
     }
 
-    public Element getMetadata(Element params, ServiceContext context) throws Exception {
-        DataManager dm = context.getBean(DataManager.class);
-        SchemaManager sm = context.getBean(SchemaManager.class);
+    public Element getMetadata(ServiceContext context, String id, String uuid, ParamValue skipPopularity, Boolean hide_withheld)
+            throws Exception {
 
-        String id = Utils.getIdentifierFromParameters(params, context);
-        boolean skipPopularity = false;
-        if (!skipPopularity) { // skipPopularity could be a URL param as well
-            String skip = Util.getParam(params, "skipPopularity", "n");
-            skipPopularity = skip.equals("y");
+        Metadata md = null;
+        if (id != null) {
+            try {
+                md = metadataRepository.findOne(Integer.parseInt(id));
+            } catch (NumberFormatException e) {
+                md = metadataRepository.findOneByUuid(id);
+            }
         }
 
-        boolean withholdWithheldElements = Util.getParam(params, "hide_withheld", false);
+        if (id == null && uuid != null) {
+            md = metadataRepository.findOneByUuid(uuid);
+        }
+
+        if (md == null) {
+            throw new IllegalArgumentException("Either '" + Params.UUID + "' or '" + Params.ID + "'is a required parameter");
+        }
+        Element metadata = xmlSerializer.removeHiddenElements(false, md);
+
+
+        boolean withholdWithheldElements = hide_withheld != null && hide_withheld;
         if (XmlSerializer.getThreadLocal(false) != null || withholdWithheldElements) {
             XmlSerializer.getThreadLocal(true).setForceFilterEditOperation(withholdWithheldElements);
         }
@@ -142,25 +181,19 @@ public class Format extends AbstractFormatService {
         }
 
         Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
-        final Element md = dm.getMetadataNoInfo(context, id);
 
-
-        if (md == null) {
-            throw new MetadataNotFoundEx(id);
+        if (!skipPopularity.toBool()) {
+            this.dataManager.increasePopularity(context, id);
         }
 
-        if (!skipPopularity) {
-            dm.increasePopularity(context, id);
-        }
 
-        return md;
+        return metadata;
 
     }
-    private boolean isCompatibleMetadata(Element params, ServiceContext context, ConfigFile config) throws Exception {
-        String schema = getMetadataSchema(params, context);
-        List<String> applicable = config.listOfApplicableSchemas();
-        return applicable.contains(schema) || applicable.contains("all");
+    private boolean isCompatibleMetadata(String schemaName, ConfigFile config) throws Exception {
 
+        List<String> applicable = config.listOfApplicableSchemas();
+        return applicable.contains(schemaName) || applicable.contains("all");
     }
 
     Element getStrings(String appPath, String lang) throws IOException, JDOMException {

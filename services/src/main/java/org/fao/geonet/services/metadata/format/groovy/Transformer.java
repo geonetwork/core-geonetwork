@@ -33,7 +33,7 @@ public class Transformer {
         this.formatterPath = formatterPath;
     }
 
-    public Element apply(Element metadata, List<Namespace> namespaces) throws Exception {
+    public String apply(Element metadata, List<Namespace> namespaces) throws Exception {
         TransformationContext context = new TransformationContext();
         context.setThreadLocal();
         Map<String, String> namespaceUriToPrefix = Maps.newHashMap();
@@ -57,7 +57,7 @@ public class Transformer {
         }
         handlers.endHandler.handle(resultantXml);
         try {
-            return Xml.loadString(resultantXml.toString(), false);
+            return resultantXml.toString();
         } catch (Exception e) {
             Log.error(Geonet.FORMATTER, "Error parsing the resulting XML from '" + formatterPath + "' formatter.  Resulting XML is: " +
                                         resultantXml, e);

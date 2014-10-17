@@ -24,12 +24,14 @@
 package org.fao.geonet.services.metadata.format;
 
 import jeeves.constants.Jeeves;
+import jeeves.interfaces.Service;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.jdom.Element;
 
@@ -41,10 +43,9 @@ import java.net.URLDecoder;
  * 
  * @author jeichar
  */
-public class UpdateFile extends AbstractFormatService {
+public class UpdateFile extends AbstractFormatService implements Service {
 
     public Element exec(Element params, ServiceContext context) throws Exception {
-        ensureInitializedDir(context);
 
         String fileName = URLDecoder.decode(Util.getParam(params, Params.FNAME), Constants.ENCODING);
         String xslid = Util.getParam(params, Params.ID);
@@ -55,7 +56,7 @@ public class UpdateFile extends AbstractFormatService {
             schemaDir = new File(context.getBean(SchemaManager.class).getSchemaDir(schema));
         }
 
-        File formatDir = getAndVerifyFormatDir(Params.ID, xslid, schemaDir);
+        File formatDir = getAndVerifyFormatDir(context.getBean(GeonetworkDataDirectory.class), Params.ID, xslid, schemaDir);
         
         File toUpdate = new File(formatDir, fileName.replaceAll("/", File.separator));
         

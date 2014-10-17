@@ -127,10 +127,7 @@ public class ResourceLib {
 	 */
     public void checkPrivilege(ServiceContext context, String id,
             ReservedOperation operation) throws Exception {
-        GeonetContext gc = (GeonetContext) context
-                .getHandlerContext(Geonet.CONTEXT_NAME);
-
-        AccessManager accessMan = gc.getBean(AccessManager.class);
+        AccessManager accessMan = context.getBean(AccessManager.class);
 
         Set<Operation> hsOper = accessMan.getOperations(context, id, context.getIpAddress());
         

@@ -442,7 +442,7 @@ public class JeevesEngine {
 
 			ApplicationHandler h = (ApplicationHandler) c.newInstance();
 
-			ServiceContext srvContext = _serviceMan.createServiceContext("AppHandler", _applicationContext);
+			ServiceContext srvContext = _serviceMan.createServiceContext("AppHandler");
 			srvContext.setLanguage(_defaultLang);
 			srvContext.setLogger(_appHandLogger);
 			srvContext.setServlet(servlet);

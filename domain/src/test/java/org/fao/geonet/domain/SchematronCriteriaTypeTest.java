@@ -31,7 +31,8 @@ public class SchematronCriteriaTypeTest extends AbstractSpringDataTest {
 
         int metadataId = metadata.getId();
         assertTrue(SchematronCriteriaType.GROUP.accepts(_appContext, "" + group.getId(), metadataId, metadata.getXmlData(false), null));
-        assertFalse(SchematronCriteriaType.GROUP.accepts(_appContext, "" + (group.getId() + 1), metadataId, metadata.getXmlData(false), null));
+        assertFalse(SchematronCriteriaType.GROUP.accepts(_appContext, "" + (group.getId() + 1), metadataId, metadata.getXmlData(false
+        ), null));
 
     }
     @Test

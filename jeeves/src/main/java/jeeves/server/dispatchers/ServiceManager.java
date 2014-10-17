@@ -50,14 +50,15 @@ import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.NotAllowedEx;
 import org.fao.geonet.exceptions.ServiceNotFoundEx;
 import org.fao.geonet.exceptions.ServiceNotMatchedEx;
-import org.fao.geonet.utils.*;
+import org.fao.geonet.utils.BLOB;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.SOAPUtil;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
@@ -65,6 +66,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 //=============================================================================
 public class ServiceManager {
@@ -334,14 +339,29 @@ public class ServiceManager {
 
     //---------------------------------------------------------------------------
 
-    public ServiceContext createServiceContext(String name, ConfigurableApplicationContext appContext) {
-        ServiceContext context = new ServiceContext(name, appContext, htContexts,
+    public ServiceContext createServiceContext(String name) {
+        ServiceContext context = new ServiceContext(name, jeevesApplicationContext, htContexts,
                 entityManager);
 
         context.setBaseUrl(baseUrl);
         context.setLanguage("?");
         context.setUserSession(null);
         context.setIpAddress("?");
+        context.setAppPath(appPath);
+        context.setUploadDir(uploadDir);
+        context.setMaxUploadSize(maxUploadSize);
+        context.setServlet(servlet);
+
+        return context;
+    }
+
+    public ServiceContext createServiceContext(String name, String lang, HttpServletRequest request) {
+        ServiceContext context = new ServiceContext(name, jeevesApplicationContext, htContexts,
+                entityManager);
+
+        context.setBaseUrl(baseUrl);
+        context.setLanguage(lang);
+        context.setIpAddress(request.getRemoteAddr());
         context.setAppPath(appPath);
         context.setUploadDir(uploadDir);
         context.setMaxUploadSize(maxUploadSize);

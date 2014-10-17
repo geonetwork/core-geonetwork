@@ -23,7 +23,9 @@
 
 package org.fao.geonet.services.metadata.format;
 
+import jeeves.interfaces.Service;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.IO;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -51,10 +53,9 @@ import java.util.zip.ZipFile;
  *  
  * @author jeichar
  */
-public class Register extends AbstractFormatService {
+public class Register extends AbstractFormatService implements Service {
 
     public Element exec(Element params, ServiceContext context) throws Exception {
-        ensureInitializedDir(context);
         String fileName = Util.getParam(params, Params.FNAME);
         String xslid = Util.getParam(params, Params.ID, null);
         if (xslid == null) {
@@ -66,7 +67,8 @@ public class Register extends AbstractFormatService {
         }
 
         checkLegalId(Params.ID, xslid);
-        File file = new File(userXslDir + xslid);
+        File userXslDir = context.getBean(GeonetworkDataDirectory.class).getFormatterDir();
+        File file = new File(userXslDir, xslid);
         
         File uploadedFile = new File(context.getUploadDir(), fileName);
         if (file.exists()) {

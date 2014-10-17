@@ -13,7 +13,6 @@ import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.format.groovy.Functions;
 import org.fao.geonet.services.metadata.format.groovy.Handlers;
 import org.fao.geonet.services.metadata.format.groovy.Transformer;
-import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -41,7 +40,7 @@ public class GroovyFormatter {
     @Autowired
     private IsoLanguagesMapper mapper;
 
-    public Element format(FormatterParams fparams) throws Exception {
+    public String format(FormatterParams fparams) throws Exception {
         final Transformer transformer = createTransformer(fparams);
 
         final List<Namespace> namespaces = this.schemaManager.getSchema(fparams.schema).getNamespaces();

@@ -30,11 +30,11 @@ public class Handlers {
     <link rel="stylesheet" href="metadata.css"/>
 </head>
 <body>
-<div class="container" gn-metadata>
+<div class="container" gn-metadata="">
 '''
         } else {
             return '''
-<div class="container" gn-metadata>
+<div class="container" gn-metadata="">
 '''
         }
     }

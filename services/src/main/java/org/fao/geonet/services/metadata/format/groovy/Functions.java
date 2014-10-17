@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Contains several functions and properties which can be used when implementing view.groovy formatter files (or the helper classes).
@@ -58,11 +59,10 @@ public class Functions {
         this.formatterLocResources = fparams.getPluginLocResources(fparams.context.getLanguage());
         this.defaultFormatterLocResources = fparams.getPluginLocResources(Geonet.DEFAULT_LANGUAGE);
 
-        @SuppressWarnings("unchecked")
-        final List<Element> paramEls = fparams.params.getChildren();
-
-        for (Element paramEl : paramEls) {
-            this.params.put(paramEl.getName(), new ParamValue(paramEl.getTextTrim()));
+        for (Map.Entry<String, String[]> entry : fparams.params.entrySet()) {
+            for (String value : entry.getValue()) {
+                this.params.put(entry.getKey(), new ParamValue(value));
+            }
         }
 
     }
@@ -136,7 +136,27 @@ public class Functions {
     public ParamValue param(String paramName) {
         final Collection<ParamValue> paramValues = this.params.get(paramName);
         if (paramValues.isEmpty()) {
-            return null;
+            return new ParamValue("") {
+                @Override
+                public String toString() {
+                    return "Null Value";
+                }
+
+                @Override
+                public boolean toBool() {
+                    return false;
+                }
+
+                @Override
+                public int toInt() {
+                    return -1;
+                }
+
+                @Override
+                public Double toDouble() {
+                    return -1.0;
+                }
+            };
         }
         return paramValues.iterator().next();
     }

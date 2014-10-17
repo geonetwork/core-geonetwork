@@ -23,8 +23,10 @@
 
 package org.fao.geonet.services.metadata.format;
 
+import jeeves.interfaces.Service;
 import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.Util;
@@ -39,10 +41,9 @@ import java.io.File;
  * 
  * @author jeichar
  */
-public class Resource extends AbstractFormatService {
+public class Resource extends AbstractFormatService implements Service {
 
     public Element exec(Element params, ServiceContext context) throws Exception {
-        ensureInitializedDir(context);
         String xslid = Util.getParam(params, Params.ID);
         String fileName = Util.getParam(params, Params.FNAME);
         String schema = Util.getParam(params, Params.SCHEMA, null);
@@ -51,7 +52,7 @@ public class Resource extends AbstractFormatService {
             schemaDir = new File(context.getBean(SchemaManager.class).getSchemaDir(schema));
         }
 
-        File formatDir = getAndVerifyFormatDir(Params.ID, xslid, schemaDir);
+        File formatDir = getAndVerifyFormatDir(context.getBean(GeonetworkDataDirectory.class), Params.ID, xslid, schemaDir);
         File desiredFile = new File(formatDir, fileName.replace("/", File.separator));
         
         if(!containsFile(formatDir, desiredFile)) {

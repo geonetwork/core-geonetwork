@@ -1,7 +1,7 @@
 package jeeves.server.sources.http;
 
-import javax.servlet.ServletContext;
 import java.io.File;
+import javax.servlet.ServletContext;
 
 /**
  * Look up all the paths that the ServletContext is needed to find.

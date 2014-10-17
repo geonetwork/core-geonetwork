@@ -18,7 +18,7 @@ public class ParamValue {
     }
 
     public boolean toBool() {
-        String processedValue = this.value;
+        String processedValue = this.value == null ? "false" : this.value;
         if (processedValue.equalsIgnoreCase("yes") || processedValue.equalsIgnoreCase("y") || processedValue.equals("1")) {
             return true;
         }

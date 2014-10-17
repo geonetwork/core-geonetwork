@@ -15,6 +15,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -33,6 +34,8 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
     private GeonetworkDataDirectory dataDirectory;
     @Autowired
     private SchemaManager schemaManager;
+    @Autowired
+    private Format formatService;
 
     @Test
     public void testExec() throws Exception {
@@ -57,8 +60,8 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         });
 
         for (String formatter : formatters) {
-            final Format formatService = new Format();
-            final Element view = formatService.exec(createParams(read("id", id), read("xsl", formatter)), serviceContext);
+            MockHttpServletRequest request = new MockHttpServletRequest();
+            final Element view = Xml.loadString(formatService.exec("eng", "html", "" + id, null, formatter, null, null, request), false);
             view.setName("body");
             Element html = new Element("html").addContent(view);
             assertFalse(html.getChildren().isEmpty());
@@ -81,9 +84,8 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         final String functionsXslName = "functions.xsl";
         IO.copy(new File(testFormatter.getParentFile(), functionsXslName), new File(this.dataDirectory.getFormatterDir(), functionsXslName));
 
-        final Format formatService = new Format();
-        final Element view = formatService.exec(createParams(read("id", id), read("xsl", formatterName)), serviceContext);
-
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        final Element view = Xml.loadString(formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request), false);
         assertEqualsText("fromFunction", view, "*//p");
     }
 
@@ -103,10 +105,9 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         final String groovySharedClasses = "groovy";
         IO.copy(new File(testFormatter.getParentFile(), groovySharedClasses), new File(this.dataDirectory.getFormatterDir(), groovySharedClasses));
 
-        final Format formatService = new Format();
-        final Element params = createParams(read("id", id), read("xsl", formatterName), read("h2IdentInfo", "true"));
-        final Element view = formatService.exec(params, serviceContext);
-
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("h2IdentInfo", "true");
+        final Element view = Xml.loadString(formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request), false);
         assertEquals("html", view.getName());
         assertNotNull("body", view.getChild("body"));
 

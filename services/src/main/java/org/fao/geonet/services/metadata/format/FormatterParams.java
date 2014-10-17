@@ -1,7 +1,6 @@
 package org.fao.geonet.services.metadata.format;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -15,7 +14,7 @@ import java.util.Map;
  */
 public class FormatterParams {
     public Format format;
-    public Element params;
+    public  Map<String,String[]> params;
     public ServiceContext context;
     public File formatDir;
     public File viewFile;
@@ -24,8 +23,15 @@ public class FormatterParams {
     public ConfigFile config;
     public String url;
 
+    public String param(String paramName, String defaultVal) {
+        String[] values = this.params.get(paramName);
+        if (values == null) {
+            return defaultVal;
+        }
+        return values[0];
+    }
     public String getResourceUrl() {
-        String xslid = Util.getParam(params, "xsl", null);
+        String xslid = param("xsl", null);
         String resourceUrl = getLocUrl() + "/metadata.formatter.resource?" + Params.SCHEMA + "=" + schema + "&" +
                              Params.ID + "=" + xslid + "&" + Params.FNAME + "=";
 

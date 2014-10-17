@@ -3,7 +3,6 @@ package org.fao.geonet.services.metadata.format;
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 import org.fao.geonet.Constants;
-import org.fao.geonet.Util;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -77,7 +76,7 @@ public class XsltFormatter {
                 }
             }
         }
-        if (Util.getParam(fparams.params, "debug", false)) {
+        if (!"false".equalsIgnoreCase(fparams.param("debug", "false"))) {
             return root;
         }
         Element transformed = Xml.transform(root, fparams.viewFile.getAbsolutePath());

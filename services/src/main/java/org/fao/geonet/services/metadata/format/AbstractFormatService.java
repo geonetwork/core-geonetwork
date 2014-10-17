@@ -1,15 +1,11 @@
 package org.fao.geonet.services.metadata.format;
 
-import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.services.Utils;
-import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 
 import java.io.File;
@@ -24,25 +20,8 @@ import static org.fao.geonet.services.metadata.format.FormatterConstants.VIEW_XS
  * 
  * @author jeichar
  */
-abstract class AbstractFormatService implements Service {
-
-    protected volatile File userXslDir;
-    protected volatile boolean initializedDir;
-
-    @Override
+abstract class AbstractFormatService {
     public void init(String appPath, ServiceConfig params) throws Exception {
-    }
-
-    protected void ensureInitializedDir(ServiceContext context) throws IOException {
-        if (!initializedDir) {
-            synchronized (this) {
-                if (!initializedDir) {
-                    this.userXslDir = context.getBean(GeonetworkDataDirectory.class).getFormatterDir();
-                    IO.mkdirs(userXslDir, "Formatter directory");
-                    initializedDir = true;
-                }
-            }
-        }
     }
 
     protected void checkLegalId(String paramName, String xslid) throws BadParameterEx {
@@ -50,12 +29,9 @@ abstract class AbstractFormatService implements Service {
             throw new BadParameterEx(paramName, "Only the following are permitted in the id"+ FormatterConstants.ID_XSL_REGEX);
         }
     }
-	protected String getMetadataSchema(Element params, ServiceContext context)
-			throws Exception {
+	protected String getMetadataSchema(Element params, ServiceContext context) throws Exception {
 		String metadataId = Utils.getIdentifierFromParameters(params, context);
-    	GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-		DataManager dm = gc.getBean(DataManager.class);
+		DataManager dm = context.getBean(DataManager.class);
 		String schema = dm.getMetadataSchema(metadataId);
 		return schema;
 	}
@@ -68,7 +44,7 @@ abstract class AbstractFormatService implements Service {
 
         return canonicalContainer.equals(canonicalDesired.getParentFile());
     }
-    protected File getAndVerifyFormatDir(String paramName, String xslid, File schemaDir) throws BadParameterEx, IOException {
+    protected File getAndVerifyFormatDir(GeonetworkDataDirectory dataDirectory, String paramName, String xslid, File schemaDir) throws BadParameterEx, IOException {
         if (xslid == null) {
             throw new BadParameterEx(paramName, "missing "+paramName+" param");
         }
@@ -82,6 +58,7 @@ abstract class AbstractFormatService implements Service {
             }
         }
 
+        File userXslDir = dataDirectory.getFormatterDir();
         if (formatDir == null) {
             formatDir = new File(userXslDir, xslid);
         }
