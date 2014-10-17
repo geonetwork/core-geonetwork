@@ -19,7 +19,7 @@ public class StartEndHandler {
     public void handle(StringBuilder resultantXml) throws IOException {
         if (this.function != null) {
             final Object result = this.function.call();
-            Handler.processResult(this, result, resultantXml);
+            Handler.processResult(result, resultantXml);
         }
     }
 }

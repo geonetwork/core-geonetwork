@@ -48,17 +48,13 @@ handlers.root 'gmd:DataQuality'
  * - a groovy.xml.MarkupBuilder - if null any data is written to this then all other return values are ignored
  * - A string representing the data obtained from processing all child data.
  *   Children are processed only if
- *     1. There are at least 3 parameters in the handler
+ *     1. There are at least 2 parameters in the handler
  *     2. processChildren is true (the default) (see later example for configuring extra parameters on the handlers)
  *   If the child parameter is present but the handler is configured with processChildren as false then "" will be passed as childData
  *
  * Like Javascript you only need to specify as many parameters as needed.
  *
- * Handlers can return:
- * - a string
- * - a org.fao.geonet.services.metadata.format.groovy.FileResult
- * - if any data is written to the html parameter below (name is not important, the object is a groovy.xml.MarkupBuilder) then
- *   the return value is ignored and the data written to the markup builder is used.
+ * The return value will be converted to a string via the toString method and that string will be added to the resulting xml/html
  */
 handlers.add 'gmd:abstract', { el ->
     // Don't need a return because last expression of a function is
@@ -158,10 +154,19 @@ def isRefSysCode = {el, path -> el.name() == 'gmd:code' && path.contains ('gmd:r
  * must either be a method and provide the &methodName reference or be assigned to a variable like in this
  * example
  */
-handlers.add isRefSysCode, { el, html ->
-    html.p ('class' : 'code') {
-        span ('class' : 'label', f.label(el.name())) // translate is a method provided by framework
-        span ('class' : 'value', isoText(el))
+handlers.add isRefSysCode, { el ->
+    /*
+     * The html function in f (org.fao.geonet.services.metadata.format.groovy.Functions) allows
+     * the use of the very handy groovy.xml.MarkupBuilder which provides a light-weight method of writing XML or HTML.
+     *
+     * The f.html method takes a closure which can use the groovy.xml.MarkupBuilder and will return the html that has been
+     * created as a string.  There for it is very useful for building html in handlers
+     */
+    f.html { html ->
+        html.p('class': 'code') {
+            span('class': 'label', f.label(el.name())) // translate is a method provided by framework
+            span('class': 'value', isoText(el))
+        }
     }
 }
 
@@ -171,10 +176,10 @@ handlers.add isRefSysCode, { el, html ->
  *
  * - select - the function for determining if this handler should be applied
  * - priority - handlers with a higher priority will be evaluated before handlers with a lower priority
- * - processChildren - if true the handler function takes at least 3 parameters then all children of this node will be processed
+ * - processChildren - if true the handler function takes at least 2 parameters then all children of this node will be processed
  *                     and that data passed to the function for use by the handler
  */
-handlers.add select: { it.children().size() > 0 }, priority: -1, processChildren: true, { el, html, childData ->
+handlers.add select: { it.children().size() > 0 }, priority: -1, processChildren: true, { el, childData ->
     /*
      * we are returning a FileResult which has a path to the file as first parameter and takes a map
      * of String -> Object which are the replacements.  When this is returned the file will be loaded
