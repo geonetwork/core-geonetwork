@@ -9,11 +9,13 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Transforms the metadata using the Groovy formatter.
@@ -42,33 +44,46 @@ public class Transformer {
         StringBuilder resultantXml = new StringBuilder();
         handlers.startHandler.handle(resultantXml);
 
-        for (String rootXpath : this.handlers.roots) {
+        Set<String> rootXpaths = this.handlers.roots;
+        if (rootXpaths.isEmpty()) {
+            processRoot(context, namespaceUriToPrefix, xmlSlurper, resultantXml, metadata);
+        }
+        for (String rootXpath : rootXpaths) {
             @SuppressWarnings("unchecked")
             final List<Content> roots = (List<Content>) Xml.selectNodes(metadata, rootXpath, namespaces);
             for (Content root : roots) {
-                // later for performance we could start a thread to write to a PipedInputStream and parse the PipedOutputStream
-                // however until we if there is a performance issue here we will not do that.
-                GPathResult md = xmlSlurper.parseText(Xml.getString((Element) root)).declareNamespace(namespaceUriToPrefix);
-                if (md.size() == 0) {
-                    throw new IllegalArgumentException("There are not elements parsed from the xml");
-                }
-                StringBuilder path = new StringBuilder();
-                createPath(root.getParentElement(), path);
-
-                context.setRootPath(path.toString());
-                handleElement(context, md, resultantXml);
+                processRoot(context, namespaceUriToPrefix, xmlSlurper, resultantXml, root);
             }
         }
         handlers.endHandler.handle(resultantXml);
         try {
             return Xml.loadString(resultantXml.toString(), false);
         } catch (Exception e) {
-            Log.error(Geonet.FORMATTER, "Error parsing the resulting XML from '" + formatterPath + "' formatter.  Resulting XML is: " + resultantXml, e);
+            Log.error(Geonet.FORMATTER, "Error parsing the resulting XML from '" + formatterPath + "' formatter.  Resulting XML is: " +
+                                        resultantXml, e);
             throw e;
         }
     }
 
+    private void processRoot(TransformationContext context, Map<String, String> namespaceUriToPrefix, XmlSlurper xmlSlurper,
+                             StringBuilder resultantXml, Content root) throws IOException, SAXException {
+        // later for performance we could start a thread to write to a PipedInputStream and parse the PipedOutputStream
+        // however until we if there is a performance issue here we will not do that.
+        GPathResult md = xmlSlurper.parseText(Xml.getString((Element) root)).declareNamespace(namespaceUriToPrefix);
+        if (md.size() == 0) {
+            throw new IllegalArgumentException("There are not elements parsed from the xml");
+        }
+        StringBuilder path = new StringBuilder();
+        createPath(root.getParentElement(), path);
+
+        context.setRootPath(path.toString());
+        handleElement(context, md, resultantXml);
+    }
+
     private void createPath(Element node, StringBuilder path) {
+        if (node == null) {
+            return;
+        }
         if (node.getParentElement() != null) {
             createPath(node.getParentElement(), path);
             path.append(">");

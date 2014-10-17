@@ -24,7 +24,6 @@
 package org.fao.geonet.services.metadata.format;
 
 import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.Constants;
@@ -67,11 +66,6 @@ public class UpdateFile extends AbstractFormatService {
         elResp.addContent(new Element(Params.FNAME).setText(fileName));
 
         return elResp;
-    }
-
-    @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {
-        super.init(appPath, params);
     }
 
 }

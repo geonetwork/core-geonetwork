@@ -9,7 +9,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>services</artifactId>
-    	<name>GeoNetwork services</name>
+    <name>GeoNetwork services</name>
 
 	<dependencies>
 		<dependency>

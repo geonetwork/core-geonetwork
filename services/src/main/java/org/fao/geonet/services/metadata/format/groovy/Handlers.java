@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import groovy.lang.Closure;
 import groovy.lang.GString;
 import groovy.util.slurpersupport.GPathResult;
+import org.fao.geonet.services.metadata.format.FormatterParams;
 
 import java.io.File;
 import java.util.Arrays;
@@ -22,16 +23,19 @@ public class Handlers {
     private static final String HANDLER_SELECT = "select";
     private static final String HANDLER_PRIORITY = "priority";
     private static final String HANDLER_PROCESS_CHILDREN = "processChildren";
+
     private final File formatterDir;
     private final File schemaDir;
     private final File rootFormatterDir;
     final List<Handler> handlers = Lists.newArrayList();
     final Set<String> roots = Sets.newHashSet();
+    private final FormatterParams fparams;
     StartEndHandler startHandler = new StartEndHandler(null);
     StartEndHandler endHandler = new StartEndHandler(null);
 
-    public Handlers(File formatterDir, File schemaDir, File rootFormatterDir) {
-        this.formatterDir = formatterDir;
+    public Handlers(FormatterParams fparams, File schemaDir, File rootFormatterDir) {
+        this.fparams = fparams;
+        this.formatterDir = fparams.formatDir;
         this.schemaDir = schemaDir;
         this.rootFormatterDir = rootFormatterDir;
     }
@@ -207,11 +211,19 @@ public class Handlers {
         return new FileResult(file, substitutions);
     }
 
+    /**
+     * Set the start handler.
+     * @param function the function executed at the start of the transformation.
+     */
     public StartEndHandler start(Closure function) {
         this.startHandler = new StartEndHandler(function);
         return this.startHandler;
     }
 
+    /**
+     * Set the end handler.
+     * @param function the function executed at the end of the transformation.
+     */
     public StartEndHandler end(Closure function) {
         this.endHandler = new StartEndHandler(function);
         return this.endHandler;

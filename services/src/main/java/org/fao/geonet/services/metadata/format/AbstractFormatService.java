@@ -1,16 +1,15 @@
 package org.fao.geonet.services.metadata.format;
 
-import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Log;
 import org.fao.geonet.GeonetContext;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.services.Utils;
+import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 
 import java.io.File;
@@ -27,35 +26,19 @@ import static org.fao.geonet.services.metadata.format.FormatterConstants.VIEW_XS
  */
 abstract class AbstractFormatService implements Service {
 
-    protected volatile String userXslDir;
+    protected volatile File userXslDir;
     protected volatile boolean initializedDir;
 
-    public void init(String appPath, ServiceConfig params) throws Exception
-    {
-        userXslDir = params.getMandatoryValue(FormatterConstants.USER_XSL_DIR);
-        if(!userXslDir.endsWith(File.separator)) {
-            userXslDir = userXslDir + File.separator;
-        }
-        
-        Log.info(Geonet.DATA_DIRECTORY, "Custom Metadata format XSL directory set to initial value of: "+userXslDir);
+    @Override
+    public void init(String appPath, ServiceConfig params) throws Exception {
     }
 
     protected void ensureInitializedDir(ServiceContext context) throws IOException {
         if (!initializedDir) {
             synchronized (this) {
                 if (!initializedDir) {
-                    if (!new File(userXslDir).isAbsolute()) {
-                        String systemDataDir = context.getBean(GeonetworkDataDirectory.class).getSystemDataDir();
-
-                        if (!systemDataDir.endsWith(File.separator)) {
-                            systemDataDir = systemDataDir + File.separator;
-                        }
-                        userXslDir = systemDataDir + "data" + File.separator + userXslDir;
-                    }
-                    IO.mkdirs(new File(userXslDir), "Formatter directory");
-
-                    Log.info(Geonet.DATA_DIRECTORY, "Final Custom Metadata format XSL directory set to: " + userXslDir);
-
+                    this.userXslDir = context.getBean(GeonetworkDataDirectory.class).getFormatterDir();
+                    IO.mkdirs(userXslDir, "Formatter directory");
                     initializedDir = true;
                 }
             }
@@ -118,7 +101,7 @@ abstract class AbstractFormatService implements Service {
                     VIEW_XSL_FILENAME+"' file or a '" + VIEW_GROOVY_FILENAME + "' file.");
         }
         
-        if (!containsFile(new File(userXslDir), formatDir)) {
+        if (!containsFile(userXslDir, formatDir)) {
             if (schemaDir == null || !containsFile(new File(schemaDir, FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR), formatDir)) {
                 throw new BadParameterEx(paramName,
                         "Format bundle " + xslid + " is not a format bundle id because it does not reference a " +

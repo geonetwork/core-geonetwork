@@ -2,7 +2,6 @@ package org.fao.geonet.services.metadata.format;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.eclipse.jetty.util.IO;
 import org.fao.geonet.constants.Params;
@@ -14,7 +13,6 @@ import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,7 +26,6 @@ import static org.fao.geonet.domain.Pair.read;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
@@ -36,13 +33,6 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
     private GeonetworkDataDirectory dataDirectory;
     @Autowired
     private SchemaManager schemaManager;
-    private ServiceConfig serviceConfig;
-
-    @Before
-    public void setUp() throws Exception {
-        this.serviceConfig = new ServiceConfig();
-        serviceConfig.setValue(FormatterConstants.USER_XSL_DIR, dataDirectory.getFormatterDir().getAbsolutePath());
-    }
 
     @Test
     public void testExec() throws Exception {
@@ -56,8 +46,6 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         final String schema = schemaManager.autodetectSchema(sampleMetadataXml);
 
         final ListFormatters listService = new ListFormatters();
-
-        listService.init(dataDirectory.getWebappDir(), serviceConfig);
         final Element formattersEl = listService.exec(createParams(read("schema", schema)), serviceContext);
 
         final List<String> formatters = Lists.transform(formattersEl.getChildren("formatter"), new Function() {
@@ -70,7 +58,6 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
         for (String formatter : formatters) {
             final Format formatService = new Format();
-            formatService.init(dataDirectory.getWebappDir(), serviceConfig);
             final Element view = formatService.exec(createParams(read("id", id), read("xsl", formatter)), serviceContext);
             view.setName("body");
             Element html = new Element("html").addContent(view);
@@ -95,7 +82,6 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         IO.copy(new File(testFormatter.getParentFile(), functionsXslName), new File(this.dataDirectory.getFormatterDir(), functionsXslName));
 
         final Format formatService = new Format();
-        formatService.init(dataDirectory.getWebappDir(), serviceConfig);
         final Element view = formatService.exec(createParams(read("id", id), read("xsl", formatterName)), serviceContext);
 
         assertEqualsText("fromFunction", view, "*//p");
@@ -118,7 +104,6 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         IO.copy(new File(testFormatter.getParentFile(), groovySharedClasses), new File(this.dataDirectory.getFormatterDir(), groovySharedClasses));
 
         final Format formatService = new Format();
-        formatService.init(dataDirectory.getWebappDir(), serviceConfig);
         final Element params = createParams(read("id", id), read("xsl", formatterName), read("h2IdentInfo", "true"));
         final Element view = formatService.exec(params, serviceContext);
 

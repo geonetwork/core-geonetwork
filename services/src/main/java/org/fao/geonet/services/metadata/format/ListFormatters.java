@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.metadata.format;
 
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
@@ -60,7 +59,7 @@ public class ListFormatters extends AbstractFormatService {
         
         Element response = new Element("formatters");
 
-        addFormatters(schema, response, new File(userXslDir),  new File(userXslDir), false);
+        addFormatters(schema, response, userXslDir,  userXslDir, false);
 
         final SchemaManager schemaManager = context.getBean(SchemaManager.class);
         final Set<String> schemas = schemaManager.getSchemas();
@@ -101,11 +100,6 @@ public class ListFormatters extends AbstractFormatService {
                 }
             }
         }
-    }
-
-    @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {
-        super.init(appPath, params);
     }
 
 }

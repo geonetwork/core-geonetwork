@@ -63,6 +63,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
@@ -216,7 +217,9 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
             dir = new File(dir, pathToTargetDir+"/integration-test-datadirs");
 
             int i = 0;
-            while (new File(dir.getPath()+i, DATA_DIR_LOCK_NAME).exists() && new File(dir.getPath()+i, DATA_DIR_LOCK_NAME).exists()) {
+            final long timeOut = TimeUnit.MINUTES.toMillis(30);
+            while (new File(dir.getPath()+i, DATA_DIR_LOCK_NAME).exists() &&
+                                System.currentTimeMillis() - new File(dir.getPath()+i, DATA_DIR_LOCK_NAME).lastModified() < timeOut) {
                 i++;
             }
 
@@ -450,12 +453,12 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
      */
     public static String getWebappDir(Class<?> cl) {
         File here = getClassFile(cl);
-        while (!new File(here, "pom.xml").exists() && !new File(here.getParentFile(), "web/src/main/webapp/").exists()) {
+        while (!new File(here, "web/src/main/webapp/").exists()) {
 //            System.out.println("Did not find pom file in: "+here);
             here = here.getParentFile();
         }
 
-        return new File(here.getParentFile(), "web/src/main/webapp/").getAbsolutePath() + File.separator;
+        return new File(here, "web/src/main/webapp/").getAbsolutePath() + File.separator;
     }
 
     protected static File getClassFile(Class<?> cl) {

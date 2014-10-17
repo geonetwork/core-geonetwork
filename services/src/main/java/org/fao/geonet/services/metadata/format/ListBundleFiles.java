@@ -101,9 +101,5 @@ public class ListBundleFiles extends AbstractFormatService {
         return !f.getName().startsWith(".") && !f.isHidden() && f.canRead() && f.canWrite();
     }
 
-    @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {
-        super.init(appPath, params);
-    }
 
 }

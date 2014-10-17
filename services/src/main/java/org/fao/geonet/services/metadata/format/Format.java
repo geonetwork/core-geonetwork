@@ -24,7 +24,6 @@
 package org.fao.geonet.services.metadata.format;
 
 import com.google.common.collect.Maps;
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import org.apache.commons.io.FileUtils;
@@ -238,8 +237,4 @@ public class Format extends AbstractFormatService {
         return Geonet.StagingProfile.DEVELOPMENT.equals(context.getApplicationContext().getBean(Geonet.StagingProfile.BEAN_NAME));
     }
 
-    @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {
-        super.init(appPath, params);
-    }
 }
