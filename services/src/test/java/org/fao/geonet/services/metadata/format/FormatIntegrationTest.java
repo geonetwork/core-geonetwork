@@ -119,7 +119,8 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
         final Format formatService = new Format();
         formatService.init(dataDirectory.getWebappDir(), serviceConfig);
-        final Element view = formatService.exec(createParams(read("id", id), read("xsl", formatterName)), serviceContext);
+        final Element params = createParams(read("id", id), read("xsl", formatterName), read("h2IdentInfo", "true"));
+        final Element view = formatService.exec(params, serviceContext);
 
         assertEquals("html", view.getName());
         assertNotNull("body", view.getChild("body"));
@@ -143,15 +144,18 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         assertElement(view, "body//p[@class = 'code']/span[@class='label']", "Unique resource identifier", 1);
         assertElement(view, "body//p[@class = 'code']/span[@class='value']", "WGS 1984", 1);
 
-        // Check that the handlers.add select: { it.children().size() > 0 }, priority: 10, processChildren: true, was applied
-        assertTrue(Xml.selectNodes(view, "*//p[@class = 'block']").size() > 0);
-
         // Check that the handlers.add 'gmd:CI_OnlineResource', { el -> handler is applied
         assertElement(view, "body//p[@class = 'online-resource']/h3", "OnLine resource", 1);
         assertElement(view, "body//p[@class = 'online-resource']/div/strong", "REPOM", 1);
         assertElement(view, "body//p[@class = 'online-resource']/div[@class='desc']", "", 1);
         assertElement(view, "body//p[@class = 'online-resource']/div[@class='linkage']/span[@class='label']", "URL:", 1);
         assertElement(view, "body//p[@class = 'online-resource']/div[@class='linkage']/span[@class='value']", "http://services.sandre.eaufrance.fr/geo/ouvrage", 1);
+
+        // Check that the handler:
+        //   handlers.add select: {el -> el.name() == 'gmd:identificationInfo' && f.param('h2IdentInfo').toBool()},
+        //                processChildren: true, { el, childData ->
+        // was applied
+        assertElement(view, "*//div[@class = 'identificationInfo']/h2", "Data identification", 1);
     }
 
     private void assertElement(Element view, String onlineResourceHeaderXpath, String expected, int numberOfElements) throws JDOMException {

@@ -221,12 +221,30 @@ handlers.add 'gmd:CI_OnlineResource', { el ->
             }
         }
     }
-    handlers.fileResult ("groovy/online-resource.html",
-            [
+    handlers.fileResult ("groovy/online-resource.html",[
                     resourceLabel: f.label(el),
                     name:  isoText(el.'gmd:name'), // get text of name child
                     desc: isoText(el.'gmd:description'), // get text of description child
                     linkage: linkage,
 
             ])
+}
+
+/*
+ * This example demonstrates accessing the request parameters.
+ *
+ * The f (org.fao.geonet.services.metadata.format.groovy.Functions) object has a method for getting the parameters
+ */
+handlers.add select: {el -> el.name() == 'gmd:MD_DataIdentification' && f.param('h2IdentInfo').toBool()},
+             processChildren: true, { el, childData ->
+    f.html {
+        it.div('class':'identificationInfo') {
+            h2 (f.label(el))
+            // mkp.yield and mkp.yieldUnescaped addes data to the body of the current tag.  You can also add text
+            // as the last parameter of the tag params but that will be escaped.
+            //
+            // mkp has several useful methods for making XML
+            mkp.yieldUnescaped(childData)
+        }
+    }
 }
