@@ -37,7 +37,6 @@ public class Functions {
      * localization files from formatter bundle's loc/lang directory.
      */
     private final Element formatterLocResources;
-    private final SchemaLocalization defaultSchemaLocalizations;
     private final Element defaultFormatterLocResources;
 
     public Functions(FormatterParams fparams, IsoLanguagesMapper mapper) throws Exception {
@@ -46,17 +45,14 @@ public class Functions {
 
         this.resourceUrl = fparams.getLocUrl();
         this.mapper = mapper;
-        this.schemaLocalizations = fparams.getSchemaLocalizations(fparams.context.getLanguage()).get(fparams.schema);
-        this.defaultSchemaLocalizations = fparams.getSchemaLocalizations(Geonet.DEFAULT_LANGUAGE).get(fparams.schema);
+        this.schemaLocalizations = fparams.getSchemaLocalizations().get(fparams.schema);
         this.formatterLocResources = fparams.getPluginLocResources(fparams.context.getLanguage());
         this.defaultFormatterLocResources = fparams.getPluginLocResources(Geonet.DEFAULT_LANGUAGE);
     }
 
-    public String label(String qualifiedNodeName) {
+    public String label(String qualifiedNodeName) throws Exception {
         String label = label(qualifiedNodeName, this.schemaLocalizations);
-        if (label == null) {
-            label = label(qualifiedNodeName, this.defaultSchemaLocalizations);
-        }
+
         if (label == null) {
             label = qualifiedNodeName;
         }
@@ -64,9 +60,9 @@ public class Functions {
         return label;
     }
 
-    private String label(String qualifiedNodeName, SchemaLocalization localizations) {
+    private String label(String qualifiedNodeName, SchemaLocalization localizations) throws Exception {
         @SuppressWarnings("unchecked")
-        final List<Element> children = localizations.labels.getChildren();
+        final List<Element> children = localizations.getLabels().getChildren();
         for (Element child : children) {
             if (child.getName().equals("element") && qualifiedNodeName.equals(child.getAttributeValue("name"))) {
                 return child.getChildText("label");
@@ -75,7 +71,7 @@ public class Functions {
         return null;
     }
 
-    public String label(GPathResult node) {
+    public String label(GPathResult node) throws Exception {
         return label(node.name());
     }
 }

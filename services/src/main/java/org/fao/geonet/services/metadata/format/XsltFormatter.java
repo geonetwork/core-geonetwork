@@ -43,7 +43,7 @@ public class XsltFormatter {
         }
 
         String lang = fparams.config.getLang(fparams.context.getLanguage());
-        Iterable<SchemaLocalization> localization = fparams.format.getSchemaLocalizations(fparams.context, lang).values();
+        Iterable<SchemaLocalization> localization = fparams.format.getSchemaLocalizations(fparams.context).values();
 
         Element root = new Element("root");
 
@@ -71,9 +71,9 @@ public class XsltFormatter {
                     Element schemaEl = new Element(currentSchema);
                     schemas.addContent(schemaEl);
 
-                    schemaEl.addContent((Element) schemaLocalization.labels.clone());
-                    schemaEl.addContent((Element) schemaLocalization.codelists.clone());
-                    schemaEl.addContent((Element) schemaLocalization.strings.clone());
+                    schemaEl.addContent((Element) schemaLocalization.getLabels().clone());
+                    schemaEl.addContent((Element) schemaLocalization.getCodelists().clone());
+                    schemaEl.addContent((Element) schemaLocalization.getStrings().clone());
                 }
             }
         }

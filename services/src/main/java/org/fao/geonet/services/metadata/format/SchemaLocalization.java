@@ -1,11 +1,12 @@
 package org.fao.geonet.services.metadata.format;
 
-import org.fao.geonet.utils.Xml;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.guiservices.XmlFile;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * Contains all the translation/localization files for a particular schema.
@@ -14,24 +15,28 @@ import java.io.IOException;
  */
 public class SchemaLocalization {
     public final String schema;
-    public final Element strings;
-    public final Element codelists;
-    public final Element labels;
+    private final Map<String, XmlFile> schemaInfo;
+    private final ServiceContext context;
 
-    SchemaLocalization(String schema, String schemaLocDir) throws IOException, JDOMException {
+    public SchemaLocalization(ServiceContext context, String schema, Map<String, XmlFile> schemaInfo) {
         this.schema = schema;
-        this.strings = loadLocalizations(schemaLocDir, "strings");
-        this.codelists = loadLocalizations(schemaLocDir, "codelists");
-        this.labels = loadLocalizations(schemaLocDir, "labels");
+        this.schemaInfo = schemaInfo;
+        this.context = context;
     }
 
-    private Element loadLocalizations(String schemaLocDir, String type) throws IOException, JDOMException {
-        final File file = new File(schemaLocDir, type + ".xml");
-        if (file.exists()) {
-            return Xml.loadFile(file).setName(type);
-        } else {
-            return new Element(type);
-        }
+    public Element getLabels() throws Exception {
+        return getXml("labels.xml");
     }
 
+    public Element getCodelists() throws Exception {
+        return getXml("codelists.xml");
+    }
+
+    public Element getStrings() throws Exception {
+        return getXml("strings.xml");
+    }
+
+    private Element getXml(String key) throws JDOMException, IOException {
+        return schemaInfo.get(key).getXml(context, context.getLanguage(), false);
+    }
 }

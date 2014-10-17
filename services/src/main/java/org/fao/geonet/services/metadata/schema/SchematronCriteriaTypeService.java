@@ -127,7 +127,7 @@ public class SchematronCriteriaTypeService implements Service {
         Element criteriaTypeTranslations;
         try {
             criteriaTypeTranslations = cacheManager.get(context, true, schemaDir + File.separator + "loc",
-                    translationFile, context.getLanguage(), Geonet.DEFAULT_LANGUAGE);
+                    translationFile, context.getLanguage(), Geonet.DEFAULT_LANGUAGE, true);
         } catch (FileNotFoundException e) {
             // there is a case where the schematron plugin doesn't have any translations for the criteria (maybe there aren't any criteria).
             criteriaTypeTranslations = new Element("strings");

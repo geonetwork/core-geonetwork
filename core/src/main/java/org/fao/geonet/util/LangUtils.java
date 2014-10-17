@@ -1,16 +1,15 @@
 package org.fao.geonet.util;
 
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.guiservices.XmlCacheManager;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.jdom.Element;
-import org.jdom.JDOMException;
-
-import jeeves.server.context.ServiceContext;
-import jeeves.server.dispatchers.guiservices.XmlCacheManager;
-import org.fao.geonet.utils.Xml;
 
 public class LangUtils {
 
@@ -31,7 +30,8 @@ public class LangUtils {
         
         for (File file : loc.listFiles()) {
             if(file.isDirectory() && new File(file, typeWithExtension).exists()) {
-                Element xml = cacheManager.get(context, true, loc.getAbsolutePath(), typeWithExtension, file.getName(), file.getName());
+                Element xml = cacheManager.get(context, true, loc.getAbsolutePath(), typeWithExtension, file.getName(),
+                        file.getName(), true);
                 String translation = Xml.selectString(xml, key);
                 if(translation != null && !translation.trim().isEmpty()) {
                     translations.put(file.getName(), translation);

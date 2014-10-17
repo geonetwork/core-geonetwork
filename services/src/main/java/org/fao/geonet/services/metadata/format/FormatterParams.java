@@ -36,8 +36,8 @@ public class FormatterParams {
         return url + "/" + context.getNodeId() + "/" + context.getLanguage() + "/";
     }
 
-    public Map<String, SchemaLocalization> getSchemaLocalizations(String language) throws IOException, JDOMException {
-        return this.format.getSchemaLocalizations(this.context, language);
+    public Map<String, SchemaLocalization> getSchemaLocalizations() throws IOException, JDOMException {
+        return this.format.getSchemaLocalizations(this.context);
     }
 
     public Element getPluginLocResources(String language) throws Exception {

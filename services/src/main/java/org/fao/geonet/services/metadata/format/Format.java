@@ -26,8 +26,8 @@ package org.fao.geonet.services.metadata.format;
 import com.google.common.collect.Maps;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.guiservices.XmlFile;
 import org.apache.commons.io.FileUtils;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
@@ -59,10 +59,6 @@ import java.util.WeakHashMap;
  */
 public class Format extends AbstractFormatService {
 
-    /**
-     * Map is 3CharLangCode -> Map(SchemaName, LocalizationFilesForThatSchema)
-     */
-    private WeakHashMap<String, Map<String, SchemaLocalization>> schemaLocs = new WeakHashMap<String, Map<String, SchemaLocalization>>();
     /**
      * Map (canonical path to formatter dir -> Element containing all xml files in Formatter bundle's loc directory)
      */
@@ -224,19 +220,15 @@ public class Format extends AbstractFormatService {
      *
      * @return Map(SchemaName, SchemaLocalizations)
      */
-    synchronized Map<String, SchemaLocalization> getSchemaLocalizations(ServiceContext context, String lang) throws IOException, JDOMException {
-        GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
-        Map<String, SchemaLocalization> localization = schemaLocs.get(lang);
-        if (isDevMode(context) || localization == null) {
-            SchemaManager schemamanager = gc.getBean(SchemaManager.class);
-            Set<String> schemas = schemamanager.getSchemas();
-            localization = Maps.newHashMap();
-            for (String schema : schemas) {
-                String schemaLocDir = schemamanager.getSchemaDir(schema) + File.separator + "loc" + File.separator + lang + File
-                        .separator;
-                localization.put(schema, new SchemaLocalization(schema, schemaLocDir));
-                schemaLocs.put(lang, localization);
-            }
+    synchronized Map<String, SchemaLocalization> getSchemaLocalizations(ServiceContext context)
+            throws IOException, JDOMException {
+
+        Map<String, SchemaLocalization> localization =  Maps.newHashMap();
+        final SchemaManager schemaManager = context.getBean(SchemaManager.class);
+        final Set<String> allSchemas = schemaManager.getSchemas();
+        for (String schema : allSchemas) {
+            Map<String, XmlFile> schemaInfo = schemaManager.getSchemaInfo(schema);
+            localization.put(schema, new SchemaLocalization(context, schema, schemaInfo));
         }
 
         return localization;

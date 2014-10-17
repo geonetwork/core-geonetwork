@@ -29,6 +29,9 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.jdom.Element;
+import org.jdom.JDOMException;
+
+import java.io.IOException;
 
 //=============================================================================
 
@@ -79,13 +82,17 @@ public class XmlFile implements GuiService
 
         String lang = context.getLanguage();
 
+        return getXml(context, lang, true);
+	}
+
+    public Element getXml(ServiceContext context, String lang, boolean makeCopy) throws JDOMException, IOException {
         String preferedLanguage = language;
         if(localized || preferedLanguage  == null) preferedLanguage = lang;
         if(preferedLanguage == null) preferedLanguage = defaultLang;
 
-        Element element = context.getXmlCacheManager().get(context, localized, base, file, preferedLanguage, defaultLang);
+        Element element = context.getXmlCacheManager().get(context, localized, base, file, preferedLanguage, defaultLang, makeCopy);
         element.setName(name);
         return element;
-	}
+    }
 }
 
