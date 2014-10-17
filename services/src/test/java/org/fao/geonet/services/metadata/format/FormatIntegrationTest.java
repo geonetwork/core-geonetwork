@@ -13,6 +13,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,46 +125,39 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         assertNotNull("body", view.getChild("body"));
 
         // Check that the "handlers.add 'gmd:abstract', { el ->" correctly applied
-        final String abstractLabelXPath = "body//p[@class = 'abstract']/span[@class='label']";
-        final String viewAsText = Xml.getString(view);
-        assertEquals(viewAsText, 1, Xml.selectNodes(view, abstractLabelXPath).size());
-        assertEqualsText("Abstract", view, abstractLabelXPath);
-        final String abstractValueXpath = "body//p[@class = 'abstract']/span[@class='value']";
-        assertEquals(viewAsText, 1, Xml.selectNodes(view, abstractValueXpath).size());
-        assertEqualsText("Abstract {uuid}", view, abstractValueXpath);
+        assertElement(view, "body//p[@class = 'abstract']/span[@class='label']", "Abstract", 1);
+        assertElement(view, "body//p[@class = 'abstract']/span[@class='value']", "Abstract {uuid}", 1);
 
         // Check that the "handlers.add ~/...:title/, { el ->" correctly applied
-        final String titleLabelXpath = "body//p[@class = 'title']/span[@class='label']";
-        assertEquals(viewAsText, 1, Xml.selectNodes(view, titleLabelXpath).size());
-        assertEqualsText("Title", view, titleLabelXpath);
-        final String titleValueXpath = "body//p[@class = 'title']/span[@class='value']";
-        assertEquals(viewAsText, 1, Xml.selectNodes(view, titleValueXpath).size());
-        assertEqualsText("Title", view, titleValueXpath);
+        assertElement(view, "body//p[@class = 'title']/span[@class='label']", "Title", 1);
+        assertElement(view, "body//p[@class = 'title']/span[@class='value']", "Title", 1);
 
         // Check that the "handlers.withPath ~/[^>]+>gmd:identificationInfo>.*extent/, Iso19139Functions.&handleExtent" correctly applied
-        final String formatterXpath = "body//p[@class = 'formatter']";
-        assertEquals(viewAsText, 1, Xml.selectNodes(view, formatterXpath).size());
-        assertEqualsText("fromFormatterGroovy", view, formatterXpath);
-
+        assertElement(view, "body//p[@class = 'formatter']", "fromFormatterGroovy", 1);
 
         // Check that the "handlers.withPath ~/[^>]+>gmd:identificationInfo>.*extent/, Iso19139Functions.&handleExtent" correctly applied
-        final String sharedXpath = "body//p[@class = 'shared']";
-        assertEquals(viewAsText, 1, Xml.selectNodes(view, sharedXpath).size());
-        assertEqualsText("fromSharedFunctions", view, sharedXpath);
+        assertElement(view, "body//p[@class = 'shared']", "fromSharedFunctions", 1);
 
 
         // Check that the "handlers.add ~/...:title/, { el ->" correctly applied
-        final String codeLabelXpath = "body//p[@class = 'code']/span[@class='label']";
-        assertEquals(viewAsText, 1, Xml.selectNodes(view, codeLabelXpath).size());
-        assertEqualsText("Unique resource identifier", view, codeLabelXpath);
-        final String codeValueXpath = "body//p[@class = 'code']/span[@class='value']";
-        assertEquals(viewAsText, 1, Xml.selectNodes(view, codeValueXpath).size());
-        assertEqualsText("WGS 1984", view, codeValueXpath);
+        assertElement(view, "body//p[@class = 'code']/span[@class='label']", "Unique resource identifier", 1);
+        assertElement(view, "body//p[@class = 'code']/span[@class='value']", "WGS 1984", 1);
 
         // Check that the handlers.add select: { it.children().size() > 0 }, priority: 10, processChildren: true, was applied
         assertTrue(Xml.selectNodes(view, "*//p[@class = 'block']").size() > 0);
+
+        // Check that the handlers.add 'gmd:CI_OnlineResource', { el -> handler is applied
+        assertElement(view, "body//p[@class = 'online-resource']/h3", "OnLine resource", 1);
+        assertElement(view, "body//p[@class = 'online-resource']/div/strong", "REPOM", 1);
+        assertElement(view, "body//p[@class = 'online-resource']/div[@class='desc']", "", 1);
+        assertElement(view, "body//p[@class = 'online-resource']/div[@class='linkage']/span[@class='label']", "URL:", 1);
+        assertElement(view, "body//p[@class = 'online-resource']/div[@class='linkage']/span[@class='value']", "http://services.sandre.eaufrance.fr/geo/ouvrage", 1);
     }
 
+    private void assertElement(Element view, String onlineResourceHeaderXpath, String expected, int numberOfElements) throws JDOMException {
+        assertEquals(Xml.getString(view), numberOfElements, Xml.selectNodes(view, onlineResourceHeaderXpath).size());
+        assertEqualsText(expected, view, onlineResourceHeaderXpath);
+    }
 
 
 }

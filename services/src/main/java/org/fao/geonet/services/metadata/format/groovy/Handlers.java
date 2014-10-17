@@ -1,5 +1,6 @@
 package org.fao.geonet.services.metadata.format.groovy;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import groovy.lang.Closure;
 import groovy.lang.GString;
@@ -7,8 +8,8 @@ import groovy.util.slurpersupport.GPathResult;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -22,13 +23,17 @@ public class Handlers {
     private static final String HANDLER_PRIORITY = "priority";
     private static final String HANDLER_PROCESS_CHILDREN = "processChildren";
     private final File formatterDir;
-    final PriorityQueue<Handler> handlers = new PriorityQueue<Handler>();
+    private final File schemaDir;
+    private final File rootFormatterDir;
+    final List<Handler> handlers = Lists.newArrayList();
     final Set<String> roots = Sets.newHashSet();
     StartEndHandler startHandler = new StartEndHandler(null);
     StartEndHandler endHandler = new StartEndHandler(null);
 
-    public Handlers(File formatterDir) {
+    public Handlers(File formatterDir, File schemaDir, File rootFormatterDir) {
         this.formatterDir = formatterDir;
+        this.schemaDir = schemaDir;
+        this.rootFormatterDir = rootFormatterDir;
     }
 
     /**
@@ -175,11 +180,31 @@ public class Handlers {
     /**
      * Create a FileResult object as a result from a handler function.
      * See {@link org.fao.geonet.services.metadata.format.groovy.FileResult}
-     * @param path The relative path from the formatter directory to the file to load.
+     *
+     * File resolution is done by searching:
+     * <ul>
+     *     <li>formatterDir/path</li>
+     *     <li>schemaFormatterDir/path</li>
+     *     <li>rootFormatterDir/path</li>
+     * </ul>
+     * @param path The relative path to the file to load.
      * @param substitutions the key -> substitution String/GString map of substitutions.
      */
     public FileResult fileResult (String path, Map<String, Object> substitutions) {
-        return new FileResult(new File(this.formatterDir, path), substitutions);
+        File file = new File(this.formatterDir, path);
+        if (!file.exists() && this.schemaDir != null) {
+            file = new File(this.schemaDir, path);
+        }
+        if (!file.exists()) {
+            file = new File(this.rootFormatterDir, path);
+        }
+        if (!file.exists()) {
+            throw new IllegalArgumentException("There is not file: " + path + " in any of: \n" +
+                                               "\t * " + this.formatterDir + "\n" +
+                                               "\t * " + this.schemaDir + "\n" +
+                                               "\t * " + this.rootFormatterDir);
+        }
+        return new FileResult(file, substitutions);
     }
 
     public StartEndHandler start(Closure function) {

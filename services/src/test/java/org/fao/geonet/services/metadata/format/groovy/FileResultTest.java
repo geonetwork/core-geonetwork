@@ -18,7 +18,7 @@ public class FileResultTest {
         substitutions.put("label", "My Label");
         substitutions.put("childData", "Children");
         final FileResult fileResult = new FileResult(new File(file), substitutions);
-        final String data = fileResult.resolve().replaceAll("\\s+", " ");
+        final String data = fileResult.toString().replaceAll("\\s+", " ");
         assertEquals("<p class=\"block\"> <h1>My Label</h1> Children </p>", data);
     }
 }

@@ -15,7 +15,7 @@ import java.io.StringWriter;
  * @author Jesse on 10/15/2014.
  */
 public abstract class Handler implements Comparable<Handler> {
-    private int priority = 0;
+    protected int priority = 0;
     private boolean processChildren = false;
     private Closure handlerFunction;
 
@@ -27,7 +27,7 @@ public abstract class Handler implements Comparable<Handler> {
 
     @Override
     public int compareTo(Handler o) {
-        return Integer.compare(this.priority, o.priority);
+        return Integer.compare(o.priority, this.priority);
     }
 
     public abstract boolean canHandle(TransformationContext rootPath, GPathResult element);
@@ -88,7 +88,7 @@ public abstract class Handler implements Comparable<Handler> {
         } else if (result instanceof GStringImpl) {
             resultantXml.append(result);
         } else if (result instanceof FileResult) {
-            resultantXml.append(((FileResult) result).resolve());
+            resultantXml.append(((FileResult) result).toString());
         } else {
             throw new AssertionError("Handler '" + handler + "' returned a result that is not recognized: \n Result Class:"
                                      + result.getClass() + "\nresult.toString():" + result);

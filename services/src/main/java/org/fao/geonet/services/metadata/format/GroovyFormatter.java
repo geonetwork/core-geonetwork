@@ -51,7 +51,7 @@ public class GroovyFormatter {
         };
         GroovyScriptEngine gse = new GroovyScriptEngine(roots);
 
-        Handlers handlers = new Handlers(fparams.formatDir);
+        Handlers handlers = new Handlers(fparams.formatDir, schemaShared.getParentFile(), baseShared.getParentFile());
         Functions functions = new Functions(fparams, this.mapper);
         Binding binding = new Binding();
         binding.setVariable("handlers", handlers);

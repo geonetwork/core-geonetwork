@@ -30,4 +30,9 @@ public class PathMatchingHandler extends Handler {
         return this.pathMatcher.matcher(path.toString()).matches();
     }
 
+    @Override
+    public String toString() {
+        return "Path ~= /" + pathMatcher + "/, Priority=" + super.priority;
+    }
+
 }

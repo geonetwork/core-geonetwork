@@ -220,7 +220,7 @@ public class Format extends AbstractFormatService {
      *
      * @return Map(SchemaName, SchemaLocalizations)
      */
-    synchronized Map<String, SchemaLocalization> getSchemaLocalizations(ServiceContext context)
+    Map<String, SchemaLocalization> getSchemaLocalizations(ServiceContext context)
             throws IOException, JDOMException {
 
         Map<String, SchemaLocalization> localization =  Maps.newHashMap();

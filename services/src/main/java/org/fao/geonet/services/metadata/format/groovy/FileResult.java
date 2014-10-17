@@ -26,23 +26,28 @@ public class FileResult {
         this.substitutions = substitutions;
     }
 
-    public String resolve() throws IOException {
-        final String data = Files.toString(file, Charset.forName(Constants.ENCODING));
-        final Matcher matcher = KEY_PATTERN.matcher(data);
-        StringBuilder finalData = new StringBuilder();
-        int start = 0;
-        while (matcher.find()) {
-            String key = matcher.group(1);
-            Object value = this.substitutions.get(key);
-            if (value == null) {
-                throw new IllegalArgumentException("A substitution ${" + key + "} was found in " + this.file
-                                                   + " but no replacement was found in the substitutions map");
+    @Override
+    public String toString() {
+        try {
+            final String data = Files.toString(file, Charset.forName(Constants.ENCODING));
+            final Matcher matcher = KEY_PATTERN.matcher(data);
+            StringBuilder finalData = new StringBuilder();
+            int start = 0;
+            while (matcher.find()) {
+                String key = matcher.group(1);
+                Object value = this.substitutions.get(key);
+                if (value == null) {
+                    throw new IllegalArgumentException("A substitution ${" + key + "} was found in " + this.file
+                                                       + " but no replacement was found in the substitutions map");
+                }
+                finalData.append(data.substring(start, matcher.start()));
+                finalData.append(value);
+                start = matcher.end();
             }
-            finalData.append(data.substring(start, matcher.start()));
-            finalData.append(value);
-            start = matcher.end();
+            finalData.append(data.substring(start, data.length()));
+            return finalData.toString();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        finalData.append(data.substring(start, data.length()));
-        return finalData.toString();
     }
 }

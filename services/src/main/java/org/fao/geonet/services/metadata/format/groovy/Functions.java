@@ -1,12 +1,17 @@
 package org.fao.geonet.services.metadata.format.groovy;
 
+import com.google.common.io.Closer;
+import groovy.lang.Closure;
 import groovy.util.slurpersupport.GPathResult;
+import groovy.xml.MarkupBuilder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.format.FormatterParams;
 import org.fao.geonet.services.metadata.format.SchemaLocalization;
 import org.jdom.Element;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.List;
 
 /**
@@ -73,5 +78,21 @@ public class Functions {
 
     public String label(GPathResult node) throws Exception {
         return label(node.name());
+    }
+
+    public String html(Closure htmlFunction) {
+        Closer closer = Closer.create();
+        try {
+            final StringWriter writer = closer.register(new StringWriter());
+            MarkupBuilder html = new MarkupBuilder(writer);
+            htmlFunction.call(html);
+            return writer.toString();
+        } finally {
+            try {
+                closer.close();
+            } catch (IOException e) {
+                throw new Error(e);
+            }
+        }
     }
 }

@@ -11,6 +11,7 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,7 @@ public class Transformer {
 
     public Transformer(Handlers handlers, String formatterPath) {
         this.handlers = handlers;
+        Collections.sort(handlers.handlers);
         this.formatterPath = formatterPath;
     }
 

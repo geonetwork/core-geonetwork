@@ -36,4 +36,11 @@ public class FunctionMatchingHandler extends Handler {
 
         return matches;
     }
+
+
+    @Override
+    public String toString() {
+        return "FunctionMatcher, Priority=" + super.priority;
+    }
+
 }

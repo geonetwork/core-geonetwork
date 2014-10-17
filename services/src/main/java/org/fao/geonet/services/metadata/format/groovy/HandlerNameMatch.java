@@ -23,4 +23,9 @@ public class HandlerNameMatch extends Handler {
         final String qualifiedName = element.name();
         return nameMatcher.matcher(qualifiedName).matches();
     }
+
+    @Override
+    public String toString() {
+        return "Name ~= /" + nameMatcher + "/, Priority=" + super.priority;
+    }
 }
