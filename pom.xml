@@ -1124,6 +1124,7 @@
     <module>harvesters</module>
     <module>healthmonitor</module>
     <module>services</module>
+    <module>schemas-test</module>
     <module>web-client</module>
     <module>wro4j</module>
     <module>web</module>

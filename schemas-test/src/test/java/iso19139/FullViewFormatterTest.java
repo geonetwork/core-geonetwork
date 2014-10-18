@@ -8,12 +8,14 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.services.metadata.format.Format;
+import org.fao.geonet.utils.Xml;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.util.List;
 
 /**
  * @author Jesse on 10/17/2014.
@@ -39,5 +41,9 @@ public class FullViewFormatterTest extends AbstractServiceIntegrationTest {
         final String view = formatService.exec("eng", "html", "" + id, null, "full_view", null, null, request);
 
         Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
+
+
+        final List<?> text = Xml.selectNodes(Xml.loadString(xml, false), "//text()");
+        System.out.println(text);
     }
 }

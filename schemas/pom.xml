@@ -27,7 +27,6 @@
     <module>iso19110</module>
     <module>iso19115</module>
     <module>iso19139</module>
-    <module>tests</module>
   </modules>
   <properties>
     <rootProjectDir>../..</rootProjectDir>

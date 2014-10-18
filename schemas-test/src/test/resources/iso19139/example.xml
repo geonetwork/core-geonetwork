@@ -11,24 +11,80 @@
     <gmd:contact>
         <gmd:CI_ResponsibleParty>
             <gmd:individualName>
-                <gco:CharacterString>contact</gco:CharacterString>
+                <gco:CharacterString>Jippe Hoogeveen</gco:CharacterString>
             </gmd:individualName>
+            <gmd:organisationName>
+                <gco:CharacterString>FAO - NRCW</gco:CharacterString>
+            </gmd:organisationName>
+            <gmd:positionName>
+                <gco:CharacterString>Technical Officer</gco:CharacterString>
+            </gmd:positionName>
             <gmd:contactInfo>
                 <gmd:CI_Contact>
                     <gmd:phone>
-                        <gmd:CI_Telephone />
+                        <gmd:CI_Telephone>
+                            <gmd:voice>
+                                <gco:CharacterString>sdgsdfg</gco:CharacterString>
+                            </gmd:voice>
+                            <gmd:voice>
+                                <gco:CharacterString>sdfgdsfg</gco:CharacterString>
+                            </gmd:voice>
+                            <gmd:facsimile>
+                                <gco:CharacterString>sdfgdfg</gco:CharacterString>
+                            </gmd:facsimile>
+                        </gmd:CI_Telephone>
                     </gmd:phone>
                     <gmd:address>
                         <gmd:CI_Address>
+                            <gmd:deliveryPoint>
+                                <gco:CharacterString>Viale delle Terme di Caracalla</gco:CharacterString>
+                            </gmd:deliveryPoint>
+                            <gmd:city>
+                                <gco:CharacterString>Rome</gco:CharacterString>
+                            </gmd:city>
+                            <gmd:administrativeArea>
+                                <gco:CharacterString>sdfgsdfgsdfg</gco:CharacterString>
+                            </gmd:administrativeArea>
+                            <gmd:postalCode>
+                                <gco:CharacterString>00153</gco:CharacterString>
+                            </gmd:postalCode>
+                            <gmd:country>
+                                <gco:CharacterString>Italy</gco:CharacterString>
+                            </gmd:country>
                             <gmd:electronicMailAddress>
-                                <gco:CharacterString>ccc@ccc.ccc</gco:CharacterString>
+                                <gco:CharacterString>jippe.hoogeveen@fao.org</gco:CharacterString>
                             </gmd:electronicMailAddress>
                         </gmd:CI_Address>
                     </gmd:address>
+                    <gmd:onlineResource>
+                        <gmd:CI_OnlineResource>
+                            <gmd:linkage>
+                                <gmd:URL>sdfgsdfg</gmd:URL>
+                            </gmd:linkage>
+                            <gmd:protocol>
+                                <gco:CharacterString>sdgsdgdsfg</gco:CharacterString>
+                            </gmd:protocol>
+                            <gmd:applicationProfile>
+                                <gco:CharacterString>sdfgsdfgdsfg</gco:CharacterString>
+                            </gmd:applicationProfile>
+                            <gmd:name>
+                                <gco:CharacterString>sdfgsdfg</gco:CharacterString>
+                            </gmd:name>
+                            <gmd:description>
+                                <gco:CharacterString>sdfgsdfg</gco:CharacterString>
+                            </gmd:description>
+                        </gmd:CI_OnlineResource>
+                    </gmd:onlineResource>
+                    <gmd:hoursOfService>
+                        <gco:CharacterString>sdgsdgsdg</gco:CharacterString>
+                    </gmd:hoursOfService>
+                    <gmd:contactInstructions>
+                        <gmx:FileName xmlns:gmx="http://www.isotc211.org/2005/gmx" src="">sdgsdgdsgsdfgdfg</gmx:FileName>
+                    </gmd:contactInstructions>
                 </gmd:CI_Contact>
             </gmd:contactInfo>
             <gmd:role>
-                <gmd:CI_RoleCode codeListValue="pointOfContact" codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_RoleCode" />
+                <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact"/>
             </gmd:role>
         </gmd:CI_ResponsibleParty>
     </gmd:contact>

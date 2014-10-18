@@ -34,10 +34,10 @@ public class FileResult {
             StringBuilder finalData = new StringBuilder();
             int start = 0;
             while (matcher.find()) {
-                String key = matcher.group(1);
+                String key = matcher.group(1).trim();
                 Object value = this.substitutions.get(key);
                 if (value == null) {
-                    throw new IllegalArgumentException("A substitution ${" + key + "} was found in " + this.file
+                    throw new IllegalArgumentException("A substitution {{" + key + "}} was found in " + this.file
                                                        + " but no replacement was found in the substitutions map");
                 }
                 finalData.append(data.substring(start, matcher.start()));

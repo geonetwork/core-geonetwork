@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>schemas</artifactId>
+        <artifactId>geonetwork</artifactId>
         <groupId>org.geonetwork-opensource</groupId>
         <version>2.11.0-SNAPSHOT</version>
     </parent>
@@ -13,6 +13,10 @@
     <name>Tests for schema plugins</name>
 
     <dependencies>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+        </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>services</artifactId>
