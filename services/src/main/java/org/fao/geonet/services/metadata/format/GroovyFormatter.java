@@ -1,6 +1,6 @@
 package org.fao.geonet.services.metadata.format;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import groovy.lang.Binding;
 import groovy.util.GroovyScriptEngine;
@@ -18,9 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import static org.fao.geonet.services.metadata.format.FormatterConstants.GROOVY_SCRIPT_ROOT;
 import static org.fao.geonet.services.metadata.format.FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR;
@@ -76,13 +76,13 @@ public class GroovyFormatter {
     }
 
     private void loadScripts(File baseShared, GroovyScriptEngine gse) throws ResourceException, ScriptException {
-        Collection<File> compileErrors = Lists.newArrayList();
+        Map<File, Throwable> compileErrors = Maps.newHashMap();
         for (File file : Files.fileTreeTraverser().breadthFirstTraversal(baseShared)) {
             if (file.isFile() && file.getName().endsWith(".groovy") && !file.getName().equals(FormatterConstants.VIEW_GROOVY_FILENAME)) {
                 try {
                     gse.loadScriptByName(file.toURI().toString());
                 } catch (CompilationFailedException e) {
-                    compileErrors.add(file);
+                    compileErrors.put(file, null);
                 }
             }
         }
@@ -91,17 +91,27 @@ public class GroovyFormatter {
 
         while (numErrors != compileErrors.size() && compileErrors.size() > 0) {
             numErrors = compileErrors.size();
-            Iterator<File> iter = compileErrors.iterator();
+            Iterator<File> iter = compileErrors.keySet().iterator();
             while (iter.hasNext()) {
                 File file = iter.next();
                 try {
                     gse.loadScriptByName(file.toURI().toString());
                     iter.remove();
                 } catch (CompilationFailedException e) {
+                    compileErrors.put(file, e);
                     // skip
                 }
             }
+
+            if (!compileErrors.isEmpty()) {
+                StringBuilder errorMsg = new StringBuilder("Errors occurred while compiling files:");
+
+                for (Map.Entry<File, Throwable> entry : compileErrors.entrySet()) {
+                    errorMsg.append("\n\n").append(entry.getKey()).append(":\n").append(entry.getValue().getMessage());
+                }
+
+                throw new AssertionError(errorMsg.toString());
+            }
         }
     }
-
 }
