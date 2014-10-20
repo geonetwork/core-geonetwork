@@ -13,26 +13,26 @@ import java.util.regex.Pattern;
  * @author Jesse on 10/15/2014.
  */
 public class HandlerPathSelect extends Handler {
-    private final Pattern pathMatcher;
+    private final Pattern pathPattern;
 
-    public HandlerPathSelect(Pattern pathMatcher, int priority, Closure handler) {
+    public HandlerPathSelect(Pattern pathPattern, int priority, Closure handler) {
         super(priority, handler);
-        this.pathMatcher = pathMatcher;
+        this.pathPattern = pathPattern;
     }
 
     @Override
-    public boolean canHandle(TransformationContext context, GPathResult element) {
+    public boolean select(TransformationContext context, GPathResult element) {
         StringBuilder path = new StringBuilder(context.getRootPath());
         if (path.length() > 0) {
             path.append(">");
         }
         createPath(element, path);
-        return this.pathMatcher.matcher(path.toString()).matches();
+        return this.pathPattern.matcher(path.toString()).matches();
     }
 
     @Override
     public String toString() {
-        return "Path ~= /" + pathMatcher + "/, Priority=" + super.priority;
+        return "Path ~= /" + pathPattern + "/, Priority=" + super.priority;
     }
 
 }

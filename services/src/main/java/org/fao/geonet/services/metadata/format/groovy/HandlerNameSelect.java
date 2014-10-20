@@ -11,21 +11,21 @@ import java.util.regex.Pattern;
  * @author Jesse on 10/15/2014.
  */
 public class HandlerNameSelect extends Handler {
-    private final Pattern nameMatcher;
+    private final Pattern namePattern;
 
-    public HandlerNameSelect(Pattern nameMatcher, int priority, Closure handler) {
+    public HandlerNameSelect(Pattern namePattern, int priority, Closure handler) {
         super(priority, handler);
-        this.nameMatcher = nameMatcher;
+        this.namePattern = namePattern;
     }
 
     @Override
-    public boolean canHandle(TransformationContext rootPath, GPathResult element) {
+    public boolean select(TransformationContext rootPath, GPathResult element) {
         final String qualifiedName = element.name();
-        return nameMatcher.matcher(qualifiedName).matches();
+        return namePattern.matcher(qualifiedName).matches();
     }
 
     @Override
     public String toString() {
-        return "Name ~= /" + nameMatcher + "/, Priority=" + super.priority;
+        return "Name ~= /" + namePattern + "/, Priority=" + super.priority;
     }
 }

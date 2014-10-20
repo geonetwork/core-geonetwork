@@ -4,11 +4,13 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import groovy.lang.Closure;
 import groovy.lang.GString;
+import groovy.util.ClosureComparator;
 import groovy.util.slurpersupport.GPathResult;
 import org.fao.geonet.services.metadata.format.FormatterParams;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -30,9 +32,12 @@ public class Handlers {
     private final File schemaDir;
     private final File rootFormatterDir;
     private final TemplateCache templateCache;
-    final List<Handler> handlers = Lists.newArrayList();
     private final Set<String> roots = Sets.newHashSet();
     private Callable<Iterable<Object>> functionRoots = null;
+
+    private List<Sorter> sorters = Lists.newArrayList();
+
+    final List<Handler> handlers = Lists.newArrayList();
     StartEndHandler startHandler = new StartEndHandler(null);
     StartEndHandler endHandler = new StartEndHandler(null);
 
@@ -42,6 +47,11 @@ public class Handlers {
         this.schemaDir = schemaDir;
         this.rootFormatterDir = rootFormatterDir;
         this.templateCache = templateCache;
+    }
+
+    public void prepareForTransformation() {
+        Collections.sort(this.handlers);
+        Collections.sort(this.sorters);
     }
 
     /**
@@ -99,14 +109,14 @@ public class Handlers {
      * @param function    the handler closure/function
      */
     public Handler add(String elementName, Closure function) {
-        final HandlerNameMatch handler = new HandlerNameMatch(Pattern.compile(Pattern.quote(elementName)), 1, function);
+        final HandlerNameSelect handler = new HandlerNameSelect(Pattern.compile(Pattern.quote(elementName)), 1, function);
         handlers.add(handler);
         return handler;
     }
 
-    public boolean canHandle(GPathResult elem) {
+    public boolean hasHandlerFor(GPathResult elem) {
         for (Handler handler : handlers) {
-            if (handler.canHandle(TransformationContext.getContext(), elem)) {
+            if (handler.select(TransformationContext.getContext(), elem)) {
                 return true;
             }
         }
@@ -118,11 +128,11 @@ public class Handlers {
      * Add a handler with priority 0 which will do a regular expression match against the qualified element name to see if it applies
      * to the element.
      *
-     * @param nameMatcher the regular expression to match.
+     * @param namePattern the regular expression to match.
      * @param function    the handler closure/function
      */
-    public Handler add(Pattern nameMatcher, Closure function) {
-        final HandlerNameMatch handler = new HandlerNameMatch(nameMatcher, 0, function);
+    public Handler add(Pattern namePattern, Closure function) {
+        final HandlerNameSelect handler = new HandlerNameSelect(namePattern, 0, function);
         handlers.add(handler);
         return handler;
     }
@@ -131,11 +141,11 @@ public class Handlers {
      * Add a handler with priority 0 which will do a regular expression match against full path from root to see if it applies
      * to the element.  Each segment of path will be separated by >
      *
-     * @param pathMatcher the regular expression to match.
+     * @param pathPattern the regular expression to match.
      * @param function    the handler closure/function
      */
-    public Handler withPath(Pattern pathMatcher, Closure function) {
-        final PathMatchingHandler handler = new PathMatchingHandler(pathMatcher, 0, function);
+    public Handler withPath(Pattern pathPattern, Closure function) {
+        final HandlerPathSelect handler = new HandlerPathSelect(pathPattern, 0, function);
         handlers.add(handler);
         return handler;
     }
@@ -144,11 +154,11 @@ public class Handlers {
      * Add a handler with priority 0 which will do a execute the matcher function with the current element to see if it the handler
      * should be applied to the element.
      *
-     * @param matcher  the regular expression to match.
+     * @param select  the regular expression to match.
      * @param function the handler closure/function
      */
-    public Handler add(Closure matcher, Closure function) {
-        final Handler handler = new FunctionMatchingHandler(matcher, 0, function);
+    public Handler add(Closure select, Closure function) {
+        final Handler handler = new HandlerFunctionSelect(select, 0, function);
         handlers.add(handler);
         return handler;
     }
@@ -174,12 +184,12 @@ public class Handlers {
      * </ul>
      */
     public Handler add(Map<String, Object> properties, Closure handlerFunction) {
-        Object matcher = null;
+        Object select = null;
         int priority = 0;
         boolean processChildren = false;
         for (Map.Entry<String, Object> entry : properties.entrySet()) {
             if (entry.getKey().equalsIgnoreCase(HANDLER_SELECT)) {
-                matcher = entry.getValue();
+                select = entry.getValue();
             } else if (entry.getKey().equalsIgnoreCase(HANDLER_PRIORITY)) {
                 priority = Integer.parseInt(entry.getValue().toString());
             } else if (entry.getKey().equalsIgnoreCase(HANDLER_PROCESS_CHILDREN)) {
@@ -190,21 +200,21 @@ public class Handlers {
             }
         }
 
-        if (matcher == null) {
+        if (select == null) {
             throw new IllegalArgumentException("A property " + HANDLER_SELECT + " must be present in the properties map");
         }
 
         final Handler handler;
-        if (matcher instanceof Closure) {
-            handler = add((Closure) matcher, handlerFunction);
-        } else if (matcher instanceof String || matcher instanceof GString) {
-            handler = add(matcher.toString(), handlerFunction);
-        } else if (matcher instanceof Pattern) {
-            handler = withPath((Pattern) matcher, handlerFunction);
+        if (select instanceof Closure) {
+            handler = add((Closure) select, handlerFunction);
+        } else if (select instanceof String || select instanceof GString) {
+            handler = add(select.toString(), handlerFunction);
+        } else if (select instanceof Pattern) {
+            handler = withPath((Pattern) select, handlerFunction);
         } else {
             throw new IllegalArgumentException(
                     "The property " + HANDLER_SELECT + " is not a legal type.  Legal types are: Closure/function or String or " +
-                    "Regular Expression(Pattern) but was " + matcher.getClass());
+                    "Regular Expression(Pattern) but was " + select.getClass());
         }
         handler.setPriority(priority);
         handler.setProcessChildren(processChildren);
@@ -247,7 +257,104 @@ public class Handlers {
         return this.endHandler;
     }
 
-//    public Sorter sort() {
-//
-//    }
+    /**
+     * Add a strategy for sorting the children of a node.
+     *
+     * @param select a closure for selecting if the sorter should be applied to a given node.  If there is a match
+     *                then the sorter will sort the children of the node and add the data resulting in processing the children
+     *                in the sorted order.
+     * @param sortFunction a function that compares two elements and the data produced by processing/transforming them.  The function
+     *                     must return a negative, 0 or positive number in the same way as a Comparator class.
+     */
+    public Sorter sort(Closure select, Closure sortFunction) {
+        final SorterFunctionSelect sorter = new SorterFunctionSelect(select, new ClosureComparator(sortFunction));
+        this.sorters.add(sorter);
+        return sorter;
+    }
+
+    /**
+     * Add a strategy for sorting the children of a node.
+     *
+     * @param elemName The name of the element this applies to
+     * @param sortFunction a function that compares two elements and the data produced by processing/transforming them.  The function
+     *                     must return a negative, 0 or positive number in the same way as a Comparator class.
+     */
+    public Sorter sort(String elemName, Closure sortFunction) {
+        final Sorter sorter = new SorterNameSelect(Pattern.compile(Pattern.quote(elemName)),
+                new ClosureComparator(sortFunction));
+        this.sorters.add(sorter);
+        return sorter;
+    }
+
+    /**
+     * Add a strategy for sorting the children of a node.
+     *
+     * @param namePattern A pattern to use for matching the name of the element to apply the sorter to.
+     * @param sortFunction a function that compares two elements and the data produced by processing/transforming them.  The function
+     *                     must return a negative, 0 or positive number in the same way as a Comparator class.
+     */
+    public Sorter sort(Pattern namePattern, Closure sortFunction) {
+        final Sorter sorter = new SorterNameSelect(namePattern,
+                new ClosureComparator(sortFunction));
+        this.sorters.add(sorter);
+        return sorter;
+    }
+    /**
+     * Add a strategy for sorting the children of a node.
+     *
+     * @param pathSelect A pattern to use for matching the path of the element to apply the sorter to.
+     * @param sortFunction a function that compares two elements and the data produced by processing/transforming them.  The function
+     *                     must return a negative, 0 or positive number in the same way as a Comparator class.
+     */
+    public Sorter sortPathMatcher(Pattern pathSelect, Closure sortFunction) {
+        final Sorter sorter = new SorterPathSelect(pathSelect,
+                new ClosureComparator(sortFunction));
+        this.sorters.add(sorter);
+        return sorter;
+    }
+    Sorter findSorter(TransformationContext context, GPathResult md) {
+        Sorter sorter = null;
+        for (Sorter s : this.sorters) {
+            if (s.select(context, md)) {
+                sorter = s;
+                break;
+            }
+        }
+        return sorter;
+    }
+
+    public Sorter sort(Map<String, Object> properties, Closure handlerFunction) {
+        Object select = null;
+        int priority = 0;
+        for (Map.Entry<String, Object> entry : properties.entrySet()) {
+            if (entry.getKey().equalsIgnoreCase(HANDLER_SELECT)) {
+                select = entry.getValue();
+            } else if (entry.getKey().equalsIgnoreCase(HANDLER_PRIORITY)) {
+                priority = Integer.parseInt(entry.getValue().toString());
+            } else {
+                throw new IllegalArgumentException("Sorters's do not have a configurable property: " + entry.getKey() + " value = " +
+                                                   entry.getValue());
+            }
+        }
+
+        if (select == null) {
+            throw new IllegalArgumentException("A property " + HANDLER_SELECT + " must be present in the properties map");
+        }
+
+        final Sorter sorter;
+        if (select instanceof Closure) {
+            sorter = sort((Closure) select, handlerFunction);
+        } else if (select instanceof String || select instanceof GString) {
+            sorter = sort(select.toString(), handlerFunction);
+        } else if (select instanceof Pattern) {
+            sorter = sortPathMatcher((Pattern) select, handlerFunction);
+        } else {
+            throw new IllegalArgumentException(
+                    "The property " + HANDLER_SELECT + " is not a legal type.  Legal types are: Closure/function or String or " +
+                    "Regular Expression(Pattern) but was " + select.getClass());
+        }
+        sorter.setPriority(priority);
+
+        return sorter;
+    }
 }

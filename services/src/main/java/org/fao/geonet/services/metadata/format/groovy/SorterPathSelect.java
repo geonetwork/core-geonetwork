@@ -9,11 +9,11 @@ import java.util.regex.Pattern;
  * @author Jesse on 10/20/2014.
  */
 public class SorterPathSelect extends Sorter {
-    private final Pattern pathMatcher;
+    private final Pattern pathPattern;
 
-    public SorterPathSelect(Pattern pathMatcher, ClosureComparator comparator) {
+    public SorterPathSelect(Pattern pathPattern, ClosureComparator comparator) {
     super(comparator);
-        this.pathMatcher = pathMatcher;
+        this.pathPattern = pathPattern;
     }
 
     @Override
@@ -24,6 +24,6 @@ public class SorterPathSelect extends Sorter {
         }
         Handler.createPath(parentElement, path);
 
-        return this.pathMatcher.matcher(path.toString()).matches();
+        return this.pathPattern.matcher(path.toString()).matches();
     }
 }

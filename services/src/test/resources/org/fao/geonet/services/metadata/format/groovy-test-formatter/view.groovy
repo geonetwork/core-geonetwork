@@ -264,3 +264,31 @@ handlers.add select: {el -> el.name() == 'gmd:MD_DataIdentification' && env.para
         }
     }
 }
+
+
+
+/**
+ * Sorters can be used to control the order in which the data is added to the resulting document.  When the children of an
+ * element are being processed a sorter (if its matches method selects the element) will sort the data before it is added
+ * to the document.
+ *
+ * Like handlers, sorters can be prioritized so that the highest priority sorter that matches an element will be applied.
+ *
+ * The data passed to be sorted are org.fao.geonet.services.metadata.format.groovy.SortData objects.
+ */
+handlers.sort ~/.*/, {sd1, sd2 ->
+    sd1.el.name().compareTo(sd2.el.name())
+}
+
+def sortVal = { sd ->
+    switch (sd.el.name()) {
+        case "gmd:abstract":
+        case "gmd:pointOfContact":
+            return 0
+        default:
+            return 1;
+    }
+}
+handlers.sort select: 'gmd:MD_DataIdentification', priority: 5, {sd1, sd2 ->
+    sortVal(sd1) - sortVal(sd2)
+}

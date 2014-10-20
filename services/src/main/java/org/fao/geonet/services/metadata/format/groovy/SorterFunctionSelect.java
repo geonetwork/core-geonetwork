@@ -11,16 +11,16 @@ import java.util.Comparator;
  * @author Jesse on 10/20/2014.
  */
 public class SorterFunctionSelect extends Sorter {
-    private final Closure matcher;
+    private final Closure select;
 
     @SuppressWarnings("unchecked")
-    public SorterFunctionSelect(Closure matcher, Comparator comparator) {
+    public SorterFunctionSelect(Closure select, Comparator comparator) {
         super(comparator);
-        this.matcher = matcher;
+        this.select = select;
     }
 
     @Override
     public boolean select(TransformationContext context, GPathResult parentElement) {
-        return (Boolean) this.matcher.call(parentElement);
+        return (Boolean) this.select.call(parentElement);
     }
 }

@@ -12,9 +12,9 @@ import org.jdom.Namespace;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Set;
 
 /**
@@ -29,7 +29,7 @@ public class Transformer {
 
     public Transformer(Handlers handlers, String formatterPath) {
         this.handlers = handlers;
-        Collections.sort(handlers.handlers);
+        handlers.prepareForTransformation();
         this.formatterPath = formatterPath;
     }
 
@@ -94,16 +94,34 @@ public class Transformer {
     private void processChildren(TransformationContext context, GPathResult md, StringBuilder resultantXml) throws IOException {
         @SuppressWarnings("unchecked")
         final List<GPathResult> children  = md.children().list();
+        if (children.isEmpty()) {
+            return;
+        }
+        Sorter sorter = handlers.findSorter(context, md);
 
-        for (GPathResult child : children) {
-            handleElement(context, child, resultantXml);
+        if (sorter == null) {
+            for (GPathResult child : children) {
+                handleElement(context, child, resultantXml);
+            }
+        } else {
+            PriorityQueue<SortData> sortData = new PriorityQueue<SortData>(md.children().size(), sorter);
+            for (GPathResult child : children) {
+                StringBuilder builder = new StringBuilder();
+                handleElement(context, child, builder);
+                sortData.add(new SortData(child, builder.toString()));
+            }
+
+            for (SortData data : sortData) {
+                resultantXml.append(data.data);
+            }
         }
     }
+
 
     private void handleElement(TransformationContext context, GPathResult elem, StringBuilder resultantXml) throws IOException {
         boolean continueProcessing = true;
         for (Handler handler : handlers.handlers) {
-            if (handler.canHandle(context, elem)) {
+            if (handler.select(context, elem)) {
                 StringBuilder childData = new StringBuilder();
                 if (handler.processChildren()) {
                     processChildren(context, elem, childData);

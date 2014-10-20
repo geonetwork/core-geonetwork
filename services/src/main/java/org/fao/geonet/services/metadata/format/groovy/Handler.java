@@ -26,7 +26,7 @@ public abstract class Handler implements Comparable<Handler> {
         return Integer.compare(o.priority, this.priority);
     }
 
-    public abstract boolean canHandle(TransformationContext rootPath, GPathResult element);
+    public abstract boolean select(TransformationContext rootPath, GPathResult element);
 
     public boolean processChildren() {
         return this.processChildren && this.handlerFunction.getMaximumNumberOfParameters() > 1;

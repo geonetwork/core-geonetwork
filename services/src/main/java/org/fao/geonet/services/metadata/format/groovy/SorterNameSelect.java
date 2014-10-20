@@ -9,15 +9,15 @@ import java.util.regex.Pattern;
  * @author Jesse on 10/20/2014.
  */
 public class SorterNameSelect extends Sorter {
-    private final Pattern nameMatcher;
+    private final Pattern namePattern;
 
-    public SorterNameSelect(Pattern nameMatcher, ClosureComparator comparator) {
+    public SorterNameSelect(Pattern namePattern, ClosureComparator comparator) {
         super(comparator);
-        this.nameMatcher = nameMatcher;
+        this.namePattern = namePattern;
     }
 
     @Override
     public boolean select(TransformationContext context, GPathResult result) {
-        return nameMatcher.matcher(result.name()).matches();
+        return namePattern.matcher(result.name()).matches();
     }
 }

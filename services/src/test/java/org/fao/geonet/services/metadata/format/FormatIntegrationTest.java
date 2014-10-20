@@ -25,6 +25,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 
 import static org.fao.geonet.domain.Pair.read;
@@ -127,23 +128,24 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("h2IdentInfo", "true");
-//        long start = System.nanoTime();
-//        final long fiveSec = TimeUnit.SECONDS.toNanos(5);
-//        while (System.nanoTime() - start < fiveSec) {
-//            formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request);
-//        }
-//        final long thirtySec = TimeUnit.SECONDS.toNanos(30);
-//        start = System.nanoTime();
-//        int executions = 0;
-//        while (System.nanoTime() - start < thirtySec) {
-//            formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request);
-//            executions++;
-//        }
-//
-//        System.out.println("Executed " + executions + " in 30 seconds.  Average of " + (30000.0/executions) + "ms per execution");
+        long start = System.nanoTime();
+        final long fiveSec = TimeUnit.SECONDS.toNanos(5);
+        while (System.nanoTime() - start < fiveSec) {
+            formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request);
+        }
+        final long thirtySec = TimeUnit.SECONDS.toNanos(30);
+        start = System.nanoTime();
+        int executions = 0;
+        while (System.nanoTime() - start < thirtySec) {
+            formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request);
+            executions++;
+        }
+
+        System.out.println("Executed " + executions + " in 30 seconds.  Average of " + (30000.0/executions) + "ms per execution");
 
 
         final String viewString = formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request);
+//        Files.write(viewString, new File("e:/tmp/view.html"), Constants.CHARSET);
         final Element view = Xml.loadString(viewString, false);
         assertEquals("html", view.getName());
         assertNotNull("body", view.getChild("body"));
@@ -179,6 +181,12 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         //                processChildren: true, { el, childData ->
         // was applied
         assertElement(view, "*//div[@class = 'identificationInfo']/h2", "Data identification", 1);
+        List<Element> identificationElements = (List<Element>) Xml.selectNodes(view, "*//div[@class = 'identificationInfo']/p");
+        assertEquals(viewString, 4, identificationElements.size());
+        assertEquals(viewString, "abstract", identificationElements.get(0).getAttributeValue("class"));
+        assertEquals(viewString, "shared", identificationElements.get(1).getAttributeValue("class"));
+        assertEquals(viewString, "block", identificationElements.get(2).getAttributeValue("class"));
+        assertEquals(viewString, "block", identificationElements.get(3).getAttributeValue("class"));
     }
 
     private void assertElement(Element view, String onlineResourceHeaderXpath, String expected, int numberOfElements) throws JDOMException {
