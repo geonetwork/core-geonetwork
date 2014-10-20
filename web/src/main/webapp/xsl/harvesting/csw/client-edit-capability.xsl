@@ -44,18 +44,22 @@
 			<xsl:for-each select="/root/search/*">
 				<xsl:sort select="local-name()"/>
 
-        <!-- Queryable fields with a namespace are stored replacing : with __ to avoid issues in the SettingsManager -->
-        <xsl:variable name="nameVal">
-          <xsl:choose>
-            <xsl:when test="contains(name(), ':')">
-              <xsl:value-of select="concat(subtring-before(name(), ':'), '__', substring-after(name(), ':'))" />
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="name()" />
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:variable>
-        <xsl:variable name="fieldId" select="concat('csw.',normalize-space($nameVal))"/>
+          <!-- Queryable fields with a namespace are stored replacing : with __ to avoid issues in the SettingsManager -->
+          <xsl:variable name="nameVal">
+            <xsl:choose>
+              <xsl:when test="contains(name(), ':')">
+                <xsl:call-template name="replace-string">
+                  <xsl:with-param name="text" select="name()"/>
+                  <xsl:with-param name="replace" select="':'" />
+                  <xsl:with-param name="with" select="'__'"/>
+                </xsl:call-template>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="name()" />
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:variable>
+          <xsl:variable name="fieldId" select="concat('csw.',normalize-space($nameVal))"/>
 
         <tr>
 					<td/>
@@ -94,6 +98,29 @@
 
 	<xsl:template match="strings"/>
 	<xsl:template match="env"/>
+
+    <!-- ============================================================================================= -->
+
+    <xsl:template name="replace-string">
+      <xsl:param name="text"/>
+      <xsl:param name="replace"/>
+      <xsl:param name="with"/>
+      <xsl:choose>
+        <xsl:when test="contains($text,$replace)">
+          <xsl:value-of select="substring-before($text,$replace)"/>
+          <xsl:value-of select="$with"/>
+          <xsl:call-template name="replace-string">
+            <xsl:with-param name="text"
+                            select="substring-after($text,$replace)"/>
+            <xsl:with-param name="replace" select="$replace"/>
+            <xsl:with-param name="with" select="$with"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$text"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:template>
 
 	<!-- ============================================================================================= -->
 

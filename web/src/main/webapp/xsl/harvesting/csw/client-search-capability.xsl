@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-	
+
 	<!-- ============================================================================================= -->
 
 	<xsl:output method="xml" encoding="UTF-8" indent="yes"/>
@@ -18,7 +18,7 @@
 	</xsl:template>
 
 	<!-- ============================================================================================= -->
-		
+
 	<xsl:template match="*" mode="data">
 		<table>
 			<tr>
@@ -26,13 +26,13 @@
 					<a onclick="harvesting.csw.removeSearchRow('{@id}')">
 						<img style="cursor:hand; cursor:pointer" src="{/root/env/url}/images/fileclose.png" alt="Remove"/>
 					</a>
-					
+
 				</td>
 				<td class="padded" bgcolor="#D0E0FF"><b><xsl:value-of select="/root/strings/search"/></b></td>
 			</tr>
-			
-			
-			
+
+
+
 		<xsl:for-each select="/root/search/*">
 			<tr>
 				<td/>
@@ -44,13 +44,17 @@
         <xsl:variable name="nameVal">
           <xsl:choose>
             <xsl:when test="contains(name(), ':')">
-              <xsl:value-of select="concat(substring-before(name(), ':'), '__', substring-after(name(), ':'))" />
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="name()" />
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:variable>
+                      <xsl:call-template name="replace-string">
+                        <xsl:with-param name="text" select="name()"/>
+                        <xsl:with-param name="replace" select="':'" />
+                        <xsl:with-param name="with" select="'__'"/>
+                      </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:value-of select="name()" />
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </xsl:variable>
 
         <xsl:value-of select="concat('csw.',normalize-space($nameVal))" />
       </xsl:attribute>
@@ -58,11 +62,11 @@
 			<xsl:attribute name="value"></xsl:attribute>
 			<xsl:attribute name="size">30</xsl:attribute>
 		</input>
-					</td> 
+					</td>
 			</tr>
 		</xsl:for-each>
 
-						
+
 		</table>
 	</xsl:template>
 
@@ -72,5 +76,29 @@
 	<xsl:template match="env"/>
 
 	<!-- ============================================================================================= -->
+
+    <xsl:template name="replace-string">
+      <xsl:param name="text"/>
+      <xsl:param name="replace"/>
+      <xsl:param name="with"/>
+      <xsl:choose>
+        <xsl:when test="contains($text,$replace)">
+          <xsl:value-of select="substring-before($text,$replace)"/>
+          <xsl:value-of select="$with"/>
+          <xsl:call-template name="replace-string">
+            <xsl:with-param name="text"
+                            select="substring-after($text,$replace)"/>
+            <xsl:with-param name="replace" select="$replace"/>
+            <xsl:with-param name="with" select="$with"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$text"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:template>
+
+    <!-- ============================================================================================= -->
+
 
 </xsl:stylesheet>
