@@ -8,6 +8,7 @@ import groovy.util.slurpersupport.GPathResult;
 import org.fao.geonet.services.metadata.format.FormatterParams;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -27,17 +28,20 @@ public class Handlers {
     private final File formatterDir;
     private final File schemaDir;
     private final File rootFormatterDir;
+    private final FormatterParams fparams;
+    private final TemplateCache templateCache;
     final List<Handler> handlers = Lists.newArrayList();
     final Set<String> roots = Sets.newHashSet();
-    private final FormatterParams fparams;
     StartEndHandler startHandler = new StartEndHandler(null);
     StartEndHandler endHandler = new StartEndHandler(null);
 
-    public Handlers(FormatterParams fparams, File schemaDir, File rootFormatterDir) {
+    public Handlers(FormatterParams fparams, File schemaDir, File rootFormatterDir,
+                    TemplateCache templateCache) {
         this.fparams = fparams;
         this.formatterDir = fparams.formatDir;
         this.schemaDir = schemaDir;
         this.rootFormatterDir = rootFormatterDir;
+        this.templateCache = templateCache;
     }
 
     /**
@@ -194,21 +198,8 @@ public class Handlers {
      * @param path The relative path to the file to load.
      * @param substitutions the key -> substitution String/GString map of substitutions.
      */
-    public FileResult fileResult (String path, Map<String, Object> substitutions) {
-        File file = new File(this.formatterDir, path);
-        if (!file.exists() && this.schemaDir != null) {
-            file = new File(this.schemaDir, path);
-        }
-        if (!file.exists()) {
-            file = new File(this.rootFormatterDir, path);
-        }
-        if (!file.exists()) {
-            throw new IllegalArgumentException("There is not file: " + path + " in any of: \n" +
-                                               "\t * " + this.formatterDir + "\n" +
-                                               "\t * " + this.schemaDir + "\n" +
-                                               "\t * " + this.rootFormatterDir);
-        }
-        return new FileResult(file, substitutions);
+    public FileResult fileResult (String path, Map<String, Object> substitutions) throws IOException {
+        return this.templateCache.createFileResult(this.formatterDir, this.schemaDir, this.rootFormatterDir, path, substitutions);
     }
 
     /**

@@ -1,5 +1,7 @@
 package org.fao.geonet.services.metadata.format;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import groovy.lang.Binding;
@@ -12,10 +14,10 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.format.groovy.Environment;
-import org.fao.geonet.services.metadata.format.groovy.EnvironmentImpl;
 import org.fao.geonet.services.metadata.format.groovy.EnvironmentProxy;
 import org.fao.geonet.services.metadata.format.groovy.Functions;
 import org.fao.geonet.services.metadata.format.groovy.Handlers;
+import org.fao.geonet.services.metadata.format.groovy.TemplateCache;
 import org.fao.geonet.services.metadata.format.groovy.Transformer;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,12 @@ public class GroovyFormatter {
     SchemaManager schemaManager;
     @Autowired
     private IsoLanguagesMapper mapper;
+    @Autowired
+    private TemplateCache templateCache;
+    private final Cache<String, Transformer> transformers = CacheBuilder.newBuilder().
+            concurrencyLevel(1).
+            maximumSize(40).
+            initialCapacity(40).build();
     private GroovyClassLoader baseClassLoader;
     private Map<String, GroovyClassLoader> schemaClassLoaders = Maps.newHashMap();
 
@@ -55,38 +63,43 @@ public class GroovyFormatter {
         return transformer.apply(fparams.metadata, namespaces);
     }
 
-    private Transformer createTransformer(FormatterParams fparams) throws Exception {
-        Transformer transformer;
-        final File baseShared = new File(this.dataDirectory.getFormatterDir(), GROOVY_SCRIPT_ROOT);
-        final File schemaFormatterDir = new File(this.schemaManager.getSchemaDir(fparams.schema), SCHEMA_PLUGIN_FORMATTER_DIR);
-        final File schemaShared = new File(schemaFormatterDir, GROOVY_SCRIPT_ROOT);
-        GroovyClassLoader cl = getParentClassLoader(fparams, baseShared, schemaShared);
+    private synchronized Transformer createTransformer(FormatterParams fparams) throws Exception {
+        final String formatDirPath = fparams.formatDir.getPath();
+        Transformer transformer = this.transformers.getIfPresent(formatDirPath);
+//        Transformer transformer;
+        if (transformer == null) {
+            final File baseShared = new File(this.dataDirectory.getFormatterDir(), GROOVY_SCRIPT_ROOT);
+            final File schemaFormatterDir = new File(this.schemaManager.getSchemaDir(fparams.schema), SCHEMA_PLUGIN_FORMATTER_DIR);
+            final File schemaShared = new File(schemaFormatterDir, GROOVY_SCRIPT_ROOT);
+            GroovyClassLoader cl = getParentClassLoader(fparams, baseShared, schemaShared);
 
-        String[] roots = new String[]{
-                fparams.formatDir.getAbsoluteFile().toURI().toString()
-        };
-        GroovyScriptEngine groovyScriptEngine = new GroovyScriptEngine(roots, cl);
+            String[] roots = new String[]{
+                    fparams.formatDir.getAbsoluteFile().toURI().toString()
+            };
+            GroovyScriptEngine groovyScriptEngine = new GroovyScriptEngine(roots, cl);
 
-        loadScripts(fparams.formatDir, groovyScriptEngine);
+            loadScripts(fparams.formatDir, groovyScriptEngine);
 
-        Handlers handlers = new Handlers(fparams, schemaShared.getParentFile(), baseShared.getParentFile());
-        Functions functions = new Functions(fparams);
-        Environment env = new EnvironmentImpl(fparams, this.mapper);
-        Binding binding = new Binding();
-        binding.setVariable("handlers", handlers);
-        binding.setVariable("env", env);
-        binding.setVariable("f", functions);
+            Handlers handlers = new Handlers(fparams, schemaShared.getParentFile(), baseShared.getParentFile(), this.templateCache);
+            Functions functions = new Functions(fparams);
+            Environment env = new EnvironmentProxy();
+            Binding binding = new Binding();
+            binding.setVariable("handlers", handlers);
+            binding.setVariable("env", env);
+            binding.setVariable("f", functions);
 
-        final String scriptName = fparams.viewFile.getAbsoluteFile().toURI().toString();
-        groovyScriptEngine.run(scriptName, binding);
+            final String scriptName = fparams.viewFile.getAbsoluteFile().toURI().toString();
+            groovyScriptEngine.run(scriptName, binding);
 
-        transformer = new Transformer(handlers, fparams.formatDir.getAbsolutePath());
+            transformer = new Transformer(handlers, fparams.formatDir.getAbsolutePath());
+            this.transformers.put(formatDirPath, transformer);
+        }
 
         return transformer;
     }
 
-    private synchronized GroovyClassLoader getParentClassLoader(FormatterParams fparams, File baseShared, File schemaShared)
-            throws IOException, ResourceException, ScriptException {
+    private GroovyClassLoader getParentClassLoader(FormatterParams fparams, File baseShared, File schemaShared) throws IOException,
+            ResourceException, ScriptException {
         GroovyClassLoader cl = this.schemaClassLoaders.get(fparams.schema);
         if (cl == null) {
             String[] roots = new String[]{baseShared.toURI().toString()};

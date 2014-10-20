@@ -41,7 +41,24 @@ public class FullViewFormatterTest extends AbstractServiceIntegrationTest {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("html", "true");
-        final String view = formatService.exec("eng", "html", "" + id, null, "full_view", null, null, request);
+//
+//        long start = System.nanoTime();
+//        final long fiveSec = TimeUnit.SECONDS.toNanos(5);
+//        while (System.nanoTime() - start < fiveSec) {
+//            formatService.exec("eng", "html", "" + id, null, "full_view", "true", false, request);
+//        }
+//        System.out.println("Starting big run");
+//        final long thirtySec = TimeUnit.SECONDS.toNanos(30);
+//        start = System.nanoTime();
+//        int executions = 0;
+//        while (System.nanoTime() - start < thirtySec) {
+//            formatService.exec("eng", "html", "" + id, null, "full_view", "true", false, request);
+//            executions++;
+//        }
+//
+//        System.out.println("Executed " + executions + " in 30 seconds.  Average of " + (30000.0/executions) + "ms per execution");
+
+        final String view = formatService.exec("eng", "html", "" + id, null, "full_view", "true", false, request);
 
         Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
 

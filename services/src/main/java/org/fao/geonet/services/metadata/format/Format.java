@@ -133,16 +133,16 @@ public class Format extends AbstractFormatService {
         fparams.format = this;
         fparams.params = request.getParameterMap();
         fparams.context = context;
-        fparams.formatDir = formatDir;
+        fparams.formatDir = formatDir.getCanonicalFile();
         fparams.metadata = metadata;
         fparams.schema = schema;
         fparams.url = settingManager.getSiteURL(lang);
 
         if (viewXslFile.exists()) {
-            fparams.viewFile = viewXslFile;
+            fparams.viewFile = viewXslFile.getCanonicalFile();
             return Xml.getString(this.xsltFormatter.format(fparams));
         } else if (viewGroovyFile.exists()){
-            fparams.viewFile = viewGroovyFile;
+            fparams.viewFile = viewGroovyFile.getCanonicalFile();
             return this.groovyFormatter.format(fparams);
         } else {
             throw new IllegalArgumentException("The 'xsl' parameter must be a valid id of a formatter");
@@ -210,8 +210,8 @@ public class Format extends AbstractFormatService {
      * of the returned element.
      */
     synchronized Element getPluginLocResources(ServiceContext context, File formatDir, String lang) throws Exception {
-        final String canonicalPath = formatDir.getCanonicalPath();
-        Element resources = this.pluginLocs.get(canonicalPath);
+        final String formatDirPath = formatDir.getPath();
+        Element resources = this.pluginLocs.get(formatDirPath);
         if (isDevMode(context) || resources == null) {
             resources = new Element("loc");
             File baseLoc = new File(formatDir, "loc");
@@ -228,7 +228,7 @@ public class Format extends AbstractFormatService {
                     resources.addContent(Xml.loadFile(file));
                 }
             }
-            this.pluginLocs.put(canonicalPath, resources);
+            this.pluginLocs.put(formatDirPath, resources);
         }
         return resources;
     }

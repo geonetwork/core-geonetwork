@@ -36,9 +36,9 @@ public class XsltFormatter {
 
     public Element format(FormatterParams fparams) throws Exception {
 
-        final String canonicalPath = fparams.viewFile.getCanonicalPath();
-        if (fparams.isDevMode() || !this.compiledXslt.contains(canonicalPath)) {
-            compileFunctionsFile(fparams.viewFile, canonicalPath);
+        final String viewFilePath = fparams.viewFile.getPath();
+        if (fparams.isDevMode() || !this.compiledXslt.contains(viewFilePath)) {
+            compileFunctionsFile(fparams.viewFile, viewFilePath);
         }
 
         String lang = fparams.config.getLang(fparams.context.getLanguage());

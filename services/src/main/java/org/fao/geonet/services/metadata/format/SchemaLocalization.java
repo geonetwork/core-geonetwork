@@ -18,6 +18,7 @@ public class SchemaLocalization {
     private final Map<String, XmlFile> schemaInfo;
     private final ServiceContext context;
 
+
     public SchemaLocalization(ServiceContext context, String schema, Map<String, XmlFile> schemaInfo) {
         this.schema = schema;
         this.schemaInfo = schemaInfo;

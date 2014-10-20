@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import javax.annotation.Nonnull;
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.ServletContext;
@@ -83,6 +84,12 @@ public class SettingManager {
     @Autowired
     private ServletContext servletContext;
 
+    private ServletPathFinder pathFinder;
+
+    @PostConstruct
+    private void init() {
+        this.pathFinder = new ServletPathFinder(servletContext);
+    }
 
     /**
      * Get all settings as xml.
@@ -324,7 +331,6 @@ public class SettingManager {
             language = languageRepository.findOneByDefaultLanguage().getId();
         }
 
-        final ServletPathFinder pathFinder = new ServletPathFinder(servletContext);
         String baseURL = pathFinder.getBaseUrl();
         String protocol = getValue(Geonet.Settings.SERVER_PROTOCOL);
         String host    = getValue(Geonet.Settings.SERVER_HOST);

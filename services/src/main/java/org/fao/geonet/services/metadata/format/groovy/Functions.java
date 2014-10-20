@@ -1,13 +1,11 @@
 package org.fao.geonet.services.metadata.format.groovy;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import com.google.common.io.Closer;
 import groovy.lang.Closure;
+import groovy.util.IndentPrinter;
 import groovy.util.slurpersupport.GPathResult;
 import groovy.xml.MarkupBuilder;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.format.FormatterParams;
 import org.fao.geonet.services.metadata.format.SchemaLocalization;
 import org.jdom.Element;
@@ -15,7 +13,6 @@ import org.jdom.Element;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Contains several functions and properties which can be used when implementing view.groovy formatter files (or the helper classes).
@@ -32,11 +29,13 @@ public class Functions {
      */
     private final Element formatterLocResources;
     private final Element defaultFormatterLocResources;
+    private final boolean autoIndent;
 
     public Functions(FormatterParams fparams) throws Exception {
         this.schemaLocalizations = fparams.getSchemaLocalizations().get(fparams.schema);
         this.formatterLocResources = fparams.getPluginLocResources(fparams.context.getLanguage());
         this.defaultFormatterLocResources = fparams.getPluginLocResources(Geonet.DEFAULT_LANGUAGE);
+        autoIndent = fparams.isDevMode();
     }
 
     /**
@@ -83,7 +82,8 @@ public class Functions {
         Closer closer = Closer.create();
         try {
             final StringWriter writer = closer.register(new StringWriter());
-            MarkupBuilder html = new MarkupBuilder(writer);
+            final IndentPrinter indentPrinter = new IndentPrinter(writer, " ", true, false);
+            MarkupBuilder html = new MarkupBuilder(indentPrinter);
             htmlFunction.call(html);
             return writer.toString();
         } finally {
