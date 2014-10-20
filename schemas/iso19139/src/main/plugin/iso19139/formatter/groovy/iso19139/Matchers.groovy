@@ -3,6 +3,7 @@ package iso19139
 public class Matchers {
     def handlers;
     def f
+    def env
 
     def isUrlEl = {!it.'gmd:URL'.text().isEmpty()}
     def isCodeListEl = {!it['@codeListValue'].text().isEmpty()}

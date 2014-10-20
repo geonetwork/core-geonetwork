@@ -3,7 +3,8 @@ package common
 public class Functions {
     def handlers;
     def f
+    def env
 
-    def hasHtmlParam = { f.param('html').any{it.toBool()} }
+    def hasHtmlParam = { env.param('html').any{it.toBool()} }
 
 }

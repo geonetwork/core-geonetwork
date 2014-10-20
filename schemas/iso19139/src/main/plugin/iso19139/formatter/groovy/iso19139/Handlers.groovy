@@ -3,16 +3,18 @@ package iso19139
 public class Handlers {
     def handlers;
     def f
+    def env
     Matchers matchers
     Functions isofunc
     common.Handlers commonHandlers
 
-    public Handlers(handlers, f) {
+    public Handlers(handlers, f, env) {
         this.handlers = handlers
         this.f = f
-        isofunc = new Functions(handlers: handlers, f:f)
-        matchers =  new Matchers(handlers: handlers, f:f)
-        commonHandlers = new common.Handlers(handlers, f)
+        this.env = env
+        isofunc = new Functions(handlers: handlers, f:f, env:env)
+        matchers =  new Matchers(handlers: handlers, f:f, env:env)
+        commonHandlers = new common.Handlers(handlers, f, env)
     }
 
     def addDefaultHandlers() {

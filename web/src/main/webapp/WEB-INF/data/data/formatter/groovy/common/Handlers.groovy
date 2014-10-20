@@ -3,15 +3,17 @@ package common
 public class Handlers {
     def handlers;
     def f
+    def env
 
     common.Matchers matchers
     common.Functions func
 
-    public Handlers(handlers, f) {
+    public Handlers(handlers, f, env) {
         this.handlers = handlers
         this.f = f
-        func = new common.Functions(handlers: handlers, f:f)
-        matchers =  new common.Matchers(handlers: handlers, f:f)
+        this.env = env
+        func = new common.Functions(handlers: handlers, f:f, env:env)
+        matchers =  new common.Matchers(handlers: handlers, f:f, env:env)
     }
 
     def addDefaultStartAndEndHandlers() {

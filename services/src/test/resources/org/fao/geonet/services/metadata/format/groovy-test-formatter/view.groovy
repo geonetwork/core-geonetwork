@@ -3,8 +3,13 @@
  * (org.fao.geonet.services.metadata.format.groovy.Handlers).  To script has
  * the following variables bound before execution:
  *
- * * handlers - an org.fao.geonet.services.metadata.format.groovy.Handlers object
- * * f - an org.fao.geonet.services.metadata.format.groovy.Functions object
+ * - handlers - an org.fao.geonet.services.metadata.format.groovy.Handlers object
+ * - f - an org.fao.geonet.services.metadata.format.groovy.Functions object
+ * - env - an org.fao.geonet.services.metadata.format.groovy.Environment object.
+ *         *IMPORTANT* this object can only be used during process time. When this
+ *                     script is executed the org.fao.geonet.services.metadata.format.groovy.Transformer
+ *                     object is created but not executed.  The transformer is cached so that the
+ *                     groovy processing only needs to be executed once.
  */
 
 
@@ -22,6 +27,10 @@ handlers.roots ('gmd:distributionInfo//gmd:onLine[1]', 'gmd:identificationInfo/*
 // According to Groovy the brackets in a method call are optional (in many cases) so roots can be written:
 // handlers.roots 'gmd:identificationInfo/*', 'gmd:distributionInfo//*[gco:CharacterString]'
 
+/**
+ * Another way to set the roots is to call the roots method with a closure.  This is useful
+ * if you need to use data in the en
+ */
 
 /*
  * a root can also be added by calling:
@@ -129,7 +138,7 @@ handlers.withPath ~/[^>]+>gmd:identificationInfo>[^>]+>gmd:pointOfContact/, Shar
  * where they are the 3 and 2 letter language codes respectively
  */
 def isoText = { el ->
-    def uiCode = "#${f.lang2.toUpperCase()}" // using interpolation to create a code like #DE
+    def uiCode = "#${env.lang2.toUpperCase()}" // using interpolation to create a code like #DE
     def locStrings = el.'**'.find{ it.name == 'gmd:LocalisedCharacterString'}
     def ptEl = locStrings.find{it.'@locale' == uiCode}
     if (ptEl != null) return ptEl.text()
@@ -233,9 +242,9 @@ handlers.add 'gmd:CI_OnlineResource', { el ->
 /*
  * This example demonstrates accessing the request parameters.
  *
- * The f (org.fao.geonet.services.metadata.format.groovy.Functions) object has a method for getting the parameters
+ * The env (org.fao.geonet.services.metadata.format.groovy.Environment) object has a method for getting the parameters
  */
-handlers.add select: {el -> el.name() == 'gmd:MD_DataIdentification' && f.param('h2IdentInfo').toBool()},
+handlers.add select: {el -> el.name() == 'gmd:MD_DataIdentification' && env.param('h2IdentInfo').toBool()},
              processChildren: true, { el, childData ->
     f.html {
         it.div('class':'identificationInfo') {

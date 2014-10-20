@@ -1,0 +1,68 @@
+package org.fao.geonet.services.metadata.format.groovy;
+
+import com.google.common.collect.Multimap;
+import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.services.metadata.format.FormatterParams;
+import org.springframework.security.core.Authentication;
+
+import java.util.Collection;
+
+/**
+ * This class is the actual object passed to the Groovy script.  It looks up in the current ThreadLocal the environment object for the
+ * current request.
+ *
+ * @author Jesse on 10/20/2014.
+ */
+public class EnvironmentProxy implements Environment {
+    private static ThreadLocal<Environment> currentEnvironment = new InheritableThreadLocal<Environment>();
+
+    public static void setCurrentEnvironment(FormatterParams fparams, IsoLanguagesMapper mapper) {
+        currentEnvironment.set(new EnvironmentImpl(fparams, mapper));
+    }
+    private static Environment get() {
+        final Environment env = currentEnvironment.get();
+        if (env == null) {
+            throw new AssertionError(
+                    "The Environment object cannot be used at the moment, it can only be used during XML processing," +
+                    " not during the configuration stage.  It is accessible here only so that it is in scope in all" +
+                    " handlers without having to pass it in as a parameter to all handlers and sorters and similar" +
+                    " object used for XML processing");
+        }
+
+        return env;
+    }
+    @Override
+    public String getLang3() {
+        return get().getLang3();
+    }
+
+    @Override
+    public String getLang2() {
+        return get().getLang2();
+    }
+
+    @Override
+    public String getResourceUrl() {
+        return get().getResourceUrl();
+    }
+
+    @Override
+    public Authentication getAuth() {
+        return get().getAuth();
+    }
+
+    @Override
+    public Multimap<String, ParamValue> params() {
+        return get().params();
+    }
+
+    @Override
+    public ParamValue param(String paramName) {
+        return get().param(paramName);
+    }
+
+    @Override
+    public Collection<ParamValue> paramValues(String paramName) {
+        return get().paramValues(paramName);
+    }
+}
