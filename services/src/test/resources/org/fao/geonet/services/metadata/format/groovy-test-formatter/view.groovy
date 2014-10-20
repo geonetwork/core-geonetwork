@@ -76,7 +76,7 @@ handlers.add 'gmd:abstract', { el ->
     // Don't need a return because last expression of a function is
     // always returned in groovy
     """<p class="abstract">
-         <span class="label">${f.label('gmd:abstract')}</span>
+         <span class="label">${f.nodeLabel('gmd:abstract')}</span>
          <span class="value">${el.'gco:CharacterString'.text()}</span>
        </p>"""
 }
@@ -113,7 +113,7 @@ handlers.end {
  */
 handlers.add ~/...:title/, { el ->
     """<p class="title">
-         <span class="label">${f.label(el)}</span>
+         <span class="label">${f.nodeLabel(el)}</span>
          <span class="value">${el.'gco:CharacterString'.text()}</span>
        </p>"""
 }
@@ -180,7 +180,7 @@ handlers.add isRefSysCode, { el ->
      */
     f.html { html ->
         html.p('class': 'code') {
-            span('class': 'label', f.label(el.name())) // translate is a method provided by framework
+            span('class': 'label', f.nodeLabel(el.name())) // translate is a method provided by framework
             span('class': 'value', isoText(el))
         }
     }
@@ -209,7 +209,7 @@ handlers.add select: { it.children().size() > 0 }, priority: -1, processChildren
      * - Finally look in the formatter directory for the file
      */
     if (!childData.isEmpty()) {
-        return handlers.fileResult("block.html", [label: f.label(el.name()), childData: childData])
+        return handlers.fileResult("block.html", [label: f.nodeLabel(el.name()), childData: childData])
     }
 
     // return null if we don't want to add this element, just because it matches doesn't mean it has to produce data
@@ -232,13 +232,13 @@ handlers.add 'gmd:CI_OnlineResource', { el ->
     if (!linkage.trim().isEmpty()) {
         linkage = f.html {html ->
             html.div ('class':'linkage') {
-                span ('class': 'label', f.label(el.'gmd:linkage'.'gmd:URL') + ":")
+                span ('class': 'label', f.nodeLabel(el.'gmd:linkage'.'gmd:URL') + ":")
                 span ('class': 'value', linkage)
             }
         }
     }
     handlers.fileResult ("groovy/online-resource.html",[
-                    resourceLabel: f.label(el),
+                    resourceLabel: f.nodeLabel(el),
                     name:  isoText(el.'gmd:name'), // get text of name child
                     desc: isoText(el.'gmd:description'), // get text of description child
                     linkage: linkage,
@@ -255,7 +255,7 @@ handlers.add select: {el -> el.name() == 'gmd:MD_DataIdentification' && env.para
              processChildren: true, { el, childData ->
     f.html {
         it.div('class':'identificationInfo') {
-            h2 (f.label(el))
+            h2 (f.nodeLabel(el))
             // mkp.yield and mkp.yieldUnescaped addes data to the body of the current tag.  You can also add text
             // as the last parameter of the tag params but that will be escaped.
             //

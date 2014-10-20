@@ -25,7 +25,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 
 import static org.fao.geonet.domain.Pair.read;
@@ -128,20 +127,20 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("h2IdentInfo", "true");
-        long start = System.nanoTime();
-        final long fiveSec = TimeUnit.SECONDS.toNanos(5);
-        while (System.nanoTime() - start < fiveSec) {
-            formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request);
-        }
-        final long thirtySec = TimeUnit.SECONDS.toNanos(30);
-        start = System.nanoTime();
-        int executions = 0;
-        while (System.nanoTime() - start < thirtySec) {
-            formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request);
-            executions++;
-        }
-
-        System.out.println("Executed " + executions + " in 30 seconds.  Average of " + (30000.0/executions) + "ms per execution");
+//        long start = System.nanoTime();
+//        final long fiveSec = TimeUnit.SECONDS.toNanos(5);
+//        while (System.nanoTime() - start < fiveSec) {
+//            formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request);
+//        }
+//        final long thirtySec = TimeUnit.SECONDS.toNanos(30);
+//        start = System.nanoTime();
+//        int executions = 0;
+//        while (System.nanoTime() - start < thirtySec) {
+//            formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request);
+//            executions++;
+//        }
+//
+//        System.out.println("Executed " + executions + " in 30 seconds.  Average of " + (30000.0/executions) + "ms per execution");
 
 
         final String viewString = formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request);

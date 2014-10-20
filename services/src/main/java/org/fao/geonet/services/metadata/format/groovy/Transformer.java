@@ -1,5 +1,8 @@
 package org.fao.geonet.services.metadata.format.groovy;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import groovy.util.XmlSlurper;
 import groovy.util.slurpersupport.GPathResult;
@@ -12,10 +15,14 @@ import org.jdom.Namespace;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
+import javax.annotation.Nullable;
 
 /**
  * Transforms the metadata using the Groovy formatter.
@@ -71,7 +78,7 @@ public class Transformer {
         // however until we if there is a performance issue here we will not do that.
         GPathResult md = xmlSlurper.parseText(Xml.getString((Element) root)).declareNamespace(namespaceUriToPrefix);
         if (md.size() == 0) {
-            throw new IllegalArgumentException("There are not elements parsed from the xml");
+            throw new IllegalArgumentException("There are no elements parsed from the xml");
         }
         StringBuilder path = new StringBuilder();
         createPath(root.getParentElement(), path);
@@ -104,12 +111,24 @@ public class Transformer {
                 handleElement(context, child, resultantXml);
             }
         } else {
+            final Function<SortData, Object> toName = new Function<SortData, Object>() {
+                @Nullable
+                @Override
+                public Object apply(@Nullable SortData input) {
+                    return input.el.name();
+                }
+            };
             PriorityQueue<SortData> sortData = new PriorityQueue<SortData>(md.children().size(), sorter);
             for (GPathResult child : children) {
                 StringBuilder builder = new StringBuilder();
                 handleElement(context, child, builder);
-                sortData.add(new SortData(child, builder.toString()));
+                final SortData data = new SortData(child, builder.toString());
+                sortData.add(data);
             }
+            Collection<Object> names = Lists.newArrayList( Collections2.transform(sortData, toName));
+            ArrayList<SortData> resorted = Lists.newArrayList(sortData);
+            Collections.sort(resorted, sorter);
+            Collection<Object> resortedNames = Collections2.transform(resorted, toName);
 
             for (SortData data : sortData) {
                 resultantXml.append(data.data);

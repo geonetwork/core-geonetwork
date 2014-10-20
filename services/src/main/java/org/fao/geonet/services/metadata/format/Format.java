@@ -209,7 +209,7 @@ public class Format extends AbstractFormatService {
      * Get the localization files from current format plugin.  It will load all xml file in the loc/lang/ directory as children
      * of the returned element.
      */
-    synchronized Element getPluginLocResources(ServiceContext context, File formatDir, String lang) throws Exception {
+    protected synchronized Element getPluginLocResources(ServiceContext context, File formatDir, String lang) throws Exception {
         final String formatDirPath = formatDir.getPath();
         Element resources = this.pluginLocs.get(formatDirPath);
         if (isDevMode(context) || resources == null) {
@@ -252,7 +252,7 @@ public class Format extends AbstractFormatService {
      *
      * @return Map(SchemaName, SchemaLocalizations)
      */
-    Map<String, SchemaLocalization> getSchemaLocalizations(ServiceContext context)
+    protected Map<String, SchemaLocalization> getSchemaLocalizations(ServiceContext context)
             throws IOException, JDOMException {
 
         Map<String, SchemaLocalization> localization =  Maps.newHashMap();
@@ -266,7 +266,7 @@ public class Format extends AbstractFormatService {
         return localization;
     }
 
-    boolean isDevMode(ServiceContext context) {
+    protected boolean isDevMode(ServiceContext context) {
         return Geonet.StagingProfile.DEVELOPMENT.equals(context.getApplicationContext().getBean(Geonet.StagingProfile.BEAN_NAME));
     }
 

@@ -72,7 +72,7 @@ public class GroovyFormatter {
         final String formatDirPath = fparams.formatDir.getPath();
         Transformer transformer = this.transformers.getIfPresent(formatDirPath);
 //        Transformer transformer;
-        if (transformer == null) {
+        if (fparams.isDevMode() || transformer == null) {
             final File baseShared = new File(this.dataDirectory.getFormatterDir(), GROOVY_SCRIPT_ROOT);
             final File schemaFormatterDir = new File(this.schemaManager.getSchemaDir(fparams.schema), SCHEMA_PLUGIN_FORMATTER_DIR);
             final File schemaShared = new File(schemaFormatterDir, GROOVY_SCRIPT_ROOT);
@@ -106,7 +106,7 @@ public class GroovyFormatter {
     private GroovyClassLoader getParentClassLoader(FormatterParams fparams, File baseShared, File schemaShared) throws IOException,
             ResourceException, ScriptException {
         GroovyClassLoader cl = this.schemaClassLoaders.get(fparams.schema);
-        if (cl == null) {
+        if (fparams.isDevMode() || cl == null) {
             String[] roots = new String[]{baseShared.toURI().toString()};
             GroovyScriptEngine groovyScriptEngine = new GroovyScriptEngine(roots);
             loadScripts(baseShared, groovyScriptEngine);
