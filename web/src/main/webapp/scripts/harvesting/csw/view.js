@@ -267,8 +267,8 @@ function addEmptySearch()
    			var searchtmp = doc.createElement('search');
    			
     		var format = new OpenLayers.Format.XML();
-    		var doc = format.read(response.responseText);
-    		var nodes = format.getElementsByTagNameNS(doc, '*', 'Constraint');
+    		var docFormat = format.read(response.responseText);
+    		var nodes = format.getElementsByTagNameNS(docFormat, '*', 'Constraint');
     		var queryables = [];
     		
 			for(var i=0; i < nodes.length; i++) {
