@@ -9,7 +9,9 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
+import org.fao.geonet.services.metadata.format.groovy.EnvironmentProxy;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -21,6 +23,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nullable;
 
@@ -37,6 +40,8 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
     private SchemaManager schemaManager;
     @Autowired
     private Format formatService;
+    @Autowired
+    private IsoLanguagesMapper mapper;
     private ServiceContext serviceContext;
     private int id;
     private String schema;
@@ -56,6 +61,13 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
     @Test(expected = AssertionError.class)
     public void testGroovyUseEnvDuringConfigStage() throws Exception {
+        final FormatterParams fparams = new FormatterParams();
+        fparams.context = this.serviceContext;
+        fparams.params = Collections.emptyMap();
+        // make sure context is cleared
+        EnvironmentProxy.setCurrentEnvironment(fparams, mapper);
+
+
         final String formatterName = "groovy-illegal-env-access-formatter";
         final URL testFormatterViewFile = FormatIntegrationTest.class.getResource(formatterName+"/view.groovy");
         final File testFormatter = new File(testFormatterViewFile.getFile()).getParentFile();

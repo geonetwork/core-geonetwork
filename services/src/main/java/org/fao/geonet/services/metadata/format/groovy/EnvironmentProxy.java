@@ -19,6 +19,9 @@ public class EnvironmentProxy implements Environment {
     public static void setCurrentEnvironment(FormatterParams fparams, IsoLanguagesMapper mapper) {
         currentEnvironment.set(new EnvironmentImpl(fparams, mapper));
     }
+    public static void clearContext() {
+        currentEnvironment.set(null);
+    }
     private static Environment get() {
         final Environment env = currentEnvironment.get();
         if (env == null) {
@@ -65,4 +68,5 @@ public class EnvironmentProxy implements Environment {
     public Collection<ParamValue> paramValues(String paramName) {
         return get().paramValues(paramName);
     }
+
 }

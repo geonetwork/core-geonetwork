@@ -12,10 +12,10 @@ import java.util.regex.Pattern;
  *
  * @author Jesse on 10/15/2014.
  */
-public class PathMatchingHandler extends Handler {
+public class HandlerPathSelect extends Handler {
     private final Pattern pathMatcher;
 
-    public PathMatchingHandler(Pattern pathMatcher, int priority, Closure handler) {
+    public HandlerPathSelect(Pattern pathMatcher, int priority, Closure handler) {
         super(priority, handler);
         this.pathMatcher = pathMatcher;
     }

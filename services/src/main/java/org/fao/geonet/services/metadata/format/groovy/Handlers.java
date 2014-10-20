@@ -9,10 +9,11 @@ import org.fao.geonet.services.metadata.format.FormatterParams;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.regex.Pattern;
 
 /**
@@ -28,16 +29,15 @@ public class Handlers {
     private final File formatterDir;
     private final File schemaDir;
     private final File rootFormatterDir;
-    private final FormatterParams fparams;
     private final TemplateCache templateCache;
     final List<Handler> handlers = Lists.newArrayList();
-    final Set<String> roots = Sets.newHashSet();
+    private final Set<String> roots = Sets.newHashSet();
+    private Callable<Iterable<Object>> functionRoots = null;
     StartEndHandler startHandler = new StartEndHandler(null);
     StartEndHandler endHandler = new StartEndHandler(null);
 
     public Handlers(FormatterParams fparams, File schemaDir, File rootFormatterDir,
                     TemplateCache templateCache) {
-        this.fparams = fparams;
         this.formatterDir = fparams.formatDir;
         this.schemaDir = schemaDir;
         this.rootFormatterDir = rootFormatterDir;
@@ -50,9 +50,36 @@ public class Handlers {
      * Each xpath should be the type of xpath used when calling {@link org.fao.geonet.utils.Xml#selectNodes(org.jdom.Element, String,
      * java.util.List)}
      */
-    public void roots(String... xpaths) {
+    public void roots(Object... xpaths) {
         this.roots.clear();
-        this.roots.addAll(Arrays.asList(xpaths));
+        this.functionRoots = null;
+        for (Object xpath : xpaths) {
+            this.roots.add(xpath.toString());
+        }
+    }
+
+
+    /**
+     * Set the xpaths for selecting the roots for processing the metadata.
+     * <p/>
+     * Each xpath should be the type of xpath used when calling {@link org.fao.geonet.utils.Xml#selectNodes(org.jdom.Element, String,
+     * java.util.List)}
+     */
+    @SuppressWarnings("unchecked")
+    public void roots(Closure rootFunction) {
+        this.roots.clear();
+        this.functionRoots = rootFunction;
+    }
+
+    public Set<String> getRoots() throws Exception {
+        final HashSet<String> allRoots = Sets.newHashSet(this.roots);
+        if (this.functionRoots != null) {
+            Iterable<Object> fromFunc = this.functionRoots.call();
+            for (Object root : fromFunc) {
+                allRoots.add(root.toString());
+            }
+        }
+        return allRoots;
     }
 
     /**
@@ -61,8 +88,8 @@ public class Handlers {
      * The xpath should be the type of xpath used when calling {@link org.fao.geonet.utils.Xml#selectNodes(org.jdom.Element, String,
      * java.util.List)}
      */
-    public void root(String xpath) {
-        this.roots.add(xpath);
+    public void root(Object xpath) {
+        this.roots.add(xpath.toString());
     }
 
     /**
@@ -219,4 +246,8 @@ public class Handlers {
         this.endHandler = new StartEndHandler(function);
         return this.endHandler;
     }
+
+//    public Sorter sort() {
+//
+//    }
 }

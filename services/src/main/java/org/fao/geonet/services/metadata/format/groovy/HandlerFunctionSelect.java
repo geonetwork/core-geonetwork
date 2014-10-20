@@ -6,10 +6,10 @@ import groovy.util.slurpersupport.GPathResult;
 /**
  * @author Jesse on 10/16/2014.
  */
-public class FunctionMatchingHandler extends Handler {
+public class HandlerFunctionSelect extends Handler {
     private final Closure matcherFunction;
 
-    public FunctionMatchingHandler(Closure matcher, int priority, Closure handlerFunction) {
+    public HandlerFunctionSelect(Closure matcher, int priority, Closure handlerFunction) {
         super(priority, handlerFunction);
         this.matcherFunction = matcher;
     }

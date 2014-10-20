@@ -10,10 +10,10 @@ import java.util.regex.Pattern;
  *
  * @author Jesse on 10/15/2014.
  */
-public class HandlerNameMatch extends Handler {
+public class HandlerNameSelect extends Handler {
     private final Pattern nameMatcher;
 
-    public HandlerNameMatch(Pattern nameMatcher, int priority, Closure handler) {
+    public HandlerNameSelect(Pattern nameMatcher, int priority, Closure handler) {
         super(priority, handler);
         this.nameMatcher = nameMatcher;
     }

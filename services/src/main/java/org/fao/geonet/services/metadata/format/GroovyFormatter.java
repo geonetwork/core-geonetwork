@@ -56,11 +56,16 @@ public class GroovyFormatter {
     private Map<String, GroovyClassLoader> schemaClassLoaders = Maps.newHashMap();
 
     public String format(FormatterParams fparams) throws Exception {
+        EnvironmentProxy.clearContext();
         final Transformer transformer = createTransformer(fparams);
 
         EnvironmentProxy.setCurrentEnvironment(fparams, this.mapper);
-        final List<Namespace> namespaces = this.schemaManager.getSchema(fparams.schema).getNamespaces();
-        return transformer.apply(fparams.metadata, namespaces);
+        try {
+            final List<Namespace> namespaces = this.schemaManager.getSchema(fparams.schema).getNamespaces();
+            return transformer.apply(fparams.metadata, namespaces);
+        } finally {
+            EnvironmentProxy.clearContext();
+        }
     }
 
     private synchronized Transformer createTransformer(FormatterParams fparams) throws Exception {

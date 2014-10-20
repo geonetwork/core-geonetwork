@@ -44,7 +44,7 @@ public class Transformer {
         StringBuilder resultantXml = new StringBuilder();
         handlers.startHandler.handle(resultantXml);
 
-        Set<String> rootXpaths = this.handlers.roots;
+        Set<String> rootXpaths = this.handlers.getRoots();
         if (rootXpaths.isEmpty()) {
             processRoot(context, namespaceUriToPrefix, xmlSlurper, resultantXml, metadata);
         }

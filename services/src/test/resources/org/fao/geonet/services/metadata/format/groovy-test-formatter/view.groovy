@@ -29,8 +29,15 @@ handlers.roots ('gmd:distributionInfo//gmd:onLine[1]', 'gmd:identificationInfo/*
 
 /**
  * Another way to set the roots is to call the roots method with a closure.  This is useful
- * if you need to use data in the en
+ * if you need to use data in the env object to determine which roots to select.
  */
+handlers.roots {
+    if (env.param('brief') == 'true') {
+        ['gmd:distributionInfo//gmd:onLine[1]']
+    } else {
+        ['gmd:distributionInfo//gmd:onLine[1]', 'gmd:identificationInfo/*', 'gmd:referenceSystemInfo']
+    }
+}
 
 /*
  * a root can also be added by calling:
