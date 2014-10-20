@@ -96,7 +96,6 @@ public class Handlers {
         phone.'gmd:facsimile'.each {contactData.add(text(it))}
         contactData = contactData.findAll{it != null}
         return handlers.fileResult('html/2-level-entry.html', [label: f.label(el), childData: contactData.join("\n")])
-
     }
 
 }

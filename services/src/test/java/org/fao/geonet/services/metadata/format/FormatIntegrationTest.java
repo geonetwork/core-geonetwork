@@ -13,6 +13,7 @@ import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -36,17 +37,38 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
     private SchemaManager schemaManager;
     @Autowired
     private Format formatService;
+    private ServiceContext serviceContext;
+    private int id;
+    private String schema;
 
-    @Test
-    public void testExec() throws Exception {
-        final ServiceContext serviceContext = createServiceContext();
+    @Before
+    public void setUp() throws Exception {
+        this.serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
 
         final Element sampleMetadataXml = getSampleMetadataXml();
         final ByteArrayInputStream stream = new ByteArrayInputStream(Xml.getString(sampleMetadataXml).getBytes("UTF-8"));
-        final int id =  importMetadataXML(serviceContext, "uuid", stream, MetadataType.METADATA,
+        this.id =  importMetadataXML(serviceContext, "uuid", stream, MetadataType.METADATA,
                 ReservedGroup.all.getId(), Params.GENERATE_UUID);
-        final String schema = schemaManager.autodetectSchema(sampleMetadataXml);
+        this.schema = schemaManager.autodetectSchema(sampleMetadataXml);
+
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testGroovyUseEnvDuringConfigStage() throws Exception {
+        final String formatterName = "groovy-illegal-env-access-formatter";
+        final URL testFormatterViewFile = FormatIntegrationTest.class.getResource(formatterName+"/view.groovy");
+        final File testFormatter = new File(testFormatterViewFile.getFile()).getParentFile();
+        IO.copy(testFormatter, new File(this.dataDirectory.getFormatterDir(), formatterName));
+        final String functionsXslName = "functions.xsl";
+        IO.copy(new File(testFormatter.getParentFile(), functionsXslName), new File(this.dataDirectory.getFormatterDir(), functionsXslName));
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request);
+    }
+    @Test
+    public void testExec() throws Exception {
+
 
         final ListFormatters listService = new ListFormatters();
         final Element formattersEl = listService.exec(createParams(read("schema", schema)), serviceContext);
@@ -70,13 +92,6 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void testExecXslt() throws Exception {
-        final ServiceContext serviceContext = createServiceContext();
-        loginAsAdmin(serviceContext);
-
-        final Element sampleMetadataXml = getSampleMetadataXml();
-        final ByteArrayInputStream stream = new ByteArrayInputStream(Xml.getString(sampleMetadataXml).getBytes("UTF-8"));
-        final int id =  importMetadataXML(serviceContext, "uuid", stream, MetadataType.METADATA,
-                ReservedGroup.all.getId(), Params.GENERATE_UUID);
         final String formatterName = "xsl-test-formatter";
         final URL testFormatterViewFile = FormatIntegrationTest.class.getResource(formatterName+"/view.xsl");
         final File testFormatter = new File(testFormatterViewFile.getFile()).getParentFile();
@@ -91,13 +106,6 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void testExecGroovy() throws Exception {
-        final ServiceContext serviceContext = createServiceContext();
-        loginAsAdmin(serviceContext);
-
-        final Element sampleMetadataXml = getSampleMetadataXml();
-        final ByteArrayInputStream stream = new ByteArrayInputStream(Xml.getString(sampleMetadataXml).getBytes("UTF-8"));
-        final int id =  importMetadataXML(serviceContext, "uuid", stream, MetadataType.METADATA,
-                ReservedGroup.all.getId(), Params.GENERATE_UUID);
         final String formatterName = "groovy-test-formatter";
         final URL testFormatterViewFile = FormatIntegrationTest.class.getResource(formatterName+"/view.groovy");
         final File testFormatter = new File(testFormatterViewFile.getFile()).getParentFile();
@@ -107,6 +115,22 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("h2IdentInfo", "true");
+//        long start = System.nanoTime();
+//        final long fiveSec = TimeUnit.SECONDS.toNanos(5);
+//        while (System.nanoTime() - start < fiveSec) {
+//            formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request);
+//        }
+//        final long thirtySec = TimeUnit.SECONDS.toNanos(30);
+//        start = System.nanoTime();
+//        int executions = 0;
+//        while (System.nanoTime() - start < thirtySec) {
+//            formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request);
+//            executions++;
+//        }
+//
+//        System.out.println("Executed " + executions + " in 30 seconds.  Average of " + (30000.0/executions) + "ms per execution");
+
+
         final String viewString = formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request);
         final Element view = Xml.loadString(viewString, false);
         assertEquals("html", view.getName());
