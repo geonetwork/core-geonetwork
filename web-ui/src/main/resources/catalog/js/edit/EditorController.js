@@ -94,7 +94,7 @@
    */
   module.controller('GnEditorController', [
     '$scope', '$routeParams', '$http', '$rootScope',
-    '$translate', '$compile', '$timeout',
+    '$translate', '$compile', '$timeout', '$location',
     'gnEditor',
     'gnSearchManagerService',
     'gnConfigService',
@@ -102,7 +102,7 @@
     'gnCurrentEdit',
     'gnConfig',
     function($scope, $routeParams, $http, $rootScope, 
-        $translate, $compile, $timeout, 
+        $translate, $compile, $timeout, $location,
         gnEditor, 
         gnSearchManagerService, 
         gnConfigService,
@@ -187,6 +187,7 @@
 
             if ($scope.metadataFound) {
               // TODO: Set metadata title in page HEAD ?
+              $scope.layout.hideTopToolBar = true;
 
               angular.extend(gnCurrentEdit, {
                 id: $routeParams.id,
@@ -203,8 +204,12 @@
 
               $scope.gnCurrentEdit = gnCurrentEdit;
 
+              // Create URL for loading the metadata form
+              // appending a random int in order to avoid
+              // caching by route.
               $scope.editorFormUrl = gnEditor
-                .buildEditUrlPrefix('md.edit') + '&starteditingsession=yes';
+                .buildEditUrlPrefix('md.edit') + '&starteditingsession=yes&' +
+                  '_random=' + Math.floor(Math.random() * 10000);
 
 
               window.onbeforeunload = function() {
@@ -348,6 +353,18 @@
         $scope.savedStatus = gnCurrentEdit.savedStatus;
         return false;
       };
+      var closeEditor = function() {
+        $scope.layout.hideTopToolBar = false;
+        // Close the editor tab
+        window.onbeforeunload = null;
+        // Go to editor home
+        $location.path('');
+        // Tentative to close the browser tab
+        window.close();
+        // This last point may trigger
+        // "Scripts may close only the windows that were opened by it."
+        // when the editor was not opened by a script.
+      };
 
       $scope.cancel = function(refreshForm) {
         gnEditor.cancel(refreshForm)
@@ -358,10 +375,7 @@
               //    title: $translate('cancelMetadataSuccess')
               //  });
               //  gnEditor.refreshEditorForm(null, true);
-
-              // Close the editor tab
-              window.onbeforeunload = null;
-              window.close();
+              closeEditor();
             }, function(error) {
               $scope.savedStatus = gnCurrentEdit.savedStatus;
               $rootScope.$broadcast('StatusUpdated', {
@@ -377,9 +391,7 @@
       $scope.close = function() {
         gnEditor.save(false)
           .then(function(form) {
-              // TODO: Should redirect to main page at some point ?
-              window.onbeforeunload = null;
-              window.close();
+              closeEditor();
             }, function(error) {
               $rootScope.$broadcast('StatusUpdated', {
                 title: $translate('saveMetadataError'),

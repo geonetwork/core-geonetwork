@@ -2,6 +2,37 @@
 @import "../lib/style/font-awesome-4.0.3/less/font-awesome.less";
 @import "gn_doc.less";
 
+
+/* An update to 3.2 could provide responsive class
+  for block or inline layout.
+  http://getbootstrap.com/css/#responsive-utilities
+
+  Display button label in top tool bar using inline mode.
+ */
+.gn-top-bar {
+  .visible-lg {
+    display: none !important;
+  }
+  @media (min-width: 1200px) {
+    .visible-lg {
+      display: inline !important;
+    }
+  }
+  .hidden-xs {
+    display: inline !important;
+  }
+  @media (max-width: 767px) {
+    .hidden-xs {
+      display: none !important;
+    }
+  }
+}
+
+a {
+  word-wrap: break-word;
+}
+
+
 /**
  * Nav bar title may be longer than default
  */

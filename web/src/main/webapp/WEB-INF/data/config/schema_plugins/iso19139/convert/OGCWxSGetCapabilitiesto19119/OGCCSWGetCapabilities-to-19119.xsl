@@ -272,7 +272,14 @@ Mapping between :
 		</resourceConstraints>
 		
 		<srv:serviceType>
-			<gco:LocalName codeSpace="www.w3c.org">discovery</gco:LocalName><!-- TODO INSPIRE classification ? -->
+			<gco:LocalName codeSpace="www.w3c.org">
+        <xsl:choose>
+          <xsl:when test="//*:ExtendedCapabilities/inspire_common:SpatialDataServiceType">
+            <xsl:value-of select="//*:ExtendedCapabilities/inspire_common:SpatialDataServiceType"/>
+          </xsl:when>
+          <xsl:otherwise>OGC:CSW</xsl:otherwise>
+        </xsl:choose>
+			</gco:LocalName>
 		</srv:serviceType>
 		<srv:serviceTypeVersion>
 			<gco:CharacterString>

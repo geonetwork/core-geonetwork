@@ -12,9 +12,9 @@
 										xmlns:ows11="http://www.opengis.net/ows/1.1"
 										xmlns:wcs="http://www.opengis.net/wcs"
 										xmlns:wms="http://www.opengis.net/wms"
-                                        xmlns:wps="http://www.opengeospatial.net/wps"
-                                        xmlns:wps1="http://www.opengis.net/wps/1.0.0"
-                                        xmlns:gml="http://www.opengis.net/gml"
+                    xmlns:wps="http://www.opengeospatial.net/wps"
+                    xmlns:wps1="http://www.opengis.net/wps/1.0.0"
+                    xmlns:gml="http://www.opengis.net/gml"
 										xmlns:math="http://exslt.org/math"
 										xmlns:exslt="http://exslt.org/common"
 										xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0"
@@ -138,8 +138,10 @@
 				</MD_Keywords>
 			</descriptiveKeywords>
 		</xsl:for-each>
-		
-		<xsl:for-each-group select="$s/wms:KeywordList/wms:Keyword" group-by="@vocabulary">
+
+
+    <!-- Add keyword part of a vocabulary -->
+		<xsl:for-each-group select="$s/wms:KeywordList/wms:Keyword[@vocabulary]" group-by="@vocabulary">
 			<descriptiveKeywords>
 				<MD_Keywords>
 					<xsl:for-each select="../wms:Keyword[@vocabulary = current-grouping-key()]">
@@ -166,7 +168,26 @@
 				</MD_Keywords>
 			</descriptiveKeywords>
 		</xsl:for-each-group>
-		
+
+
+    <!-- Add other WMS keywords -->
+    <xsl:if test="$s/wms:KeywordList/wms:Keyword[not(@vocabulary)]">
+      <descriptiveKeywords>
+        <MD_Keywords>
+          <xsl:for-each select="$s/wms:KeywordList/wms:Keyword[not(@vocabulary)]">
+            <keyword>
+              <gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+            </keyword>
+          </xsl:for-each>
+          <type>
+            <MD_KeywordTypeCode codeList="./resources/codeList.xml#MD_KeywordTypeCode" codeListValue="theme" />
+          </type>
+        </MD_Keywords>
+      </descriptiveKeywords>
+    </xsl:if>
+
+
+    <!-- Add INSPIRE classification of service -->
 		<xsl:for-each select="//*:ExtendedCapabilities/inspire_common:MandatoryKeyword[@xsi:type='inspire_common:classificationOfSpatialDataService']">
 			<descriptiveKeywords>
 				<MD_Keywords xmlns:gmx="http://www.isotc211.org/2005/gmx">
@@ -603,14 +624,17 @@
 		<!-- resMaint -->
 		<!-- graphOver -->
 		<!-- dsFormat-->
-		<xsl:for-each select="//Layer[Name=$Name]/KeywordList|keywords">
-			<descriptiveKeywords>
+		<xsl:for-each select="//Layer[Name=$Name]/KeywordList|
+                          keywords">
+      <descriptiveKeywords>
 				<MD_Keywords>
 					<xsl:apply-templates select="." mode="Keywords"/>
 				</MD_Keywords>
 			</descriptiveKeywords>
 		</xsl:for-each>
-		
+
+
+
 		
 		<xsl:for-each-group select="//wms:Layer[wms:Name=$Name]/wms:KeywordList/wms:Keyword|wms:Service/wms:KeywordList/wms:Keyword" 
 			group-by="@vocabulary">
@@ -659,7 +683,20 @@
 				</MD_Keywords>
 			</descriptiveKeywords>
 		</xsl:for-each>
-		
+    <xsl:if test="//wms:Layer[wms:Name=$Name]/wms:KeywordList/wms:Keyword[not(@vocabulary)]">
+      <descriptiveKeywords>
+        <MD_Keywords>
+          <xsl:for-each select="//wms:Layer[wms:Name=$Name]/wms:KeywordList/wms:Keyword[not(@vocabulary)]">
+            <keyword>
+              <gco:CharacterString><xsl:value-of select="."/></gco:CharacterString>
+            </keyword>
+          </xsl:for-each>
+          <type>
+            <MD_KeywordTypeCode codeList="./resources/codeList.xml#MD_KeywordTypeCode" codeListValue="theme" />
+          </type>
+        </MD_Keywords>
+      </descriptiveKeywords>
+    </xsl:if>
 		
 		<xsl:choose>
 		 	<xsl:when test="//wfs:FeatureType">

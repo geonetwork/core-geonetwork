@@ -53,8 +53,9 @@
           <xsl:otherwise>
             <!-- AngularJS application -->
             <div data-ng-cloak="" class="ng-cloak">
-              <div class="navbar navbar-default"
-                data-ng-include="'{$uiResourcesPath}templates/top-toolbar.html'"> </div>
+              <div class="navbar navbar-default gn-top-bar"
+                   data-ng-hide="layout.hideTopToolBar"
+                   data-ng-include="'{$uiResourcesPath}templates/top-toolbar.html'"></div>
 
               <xsl:apply-templates mode="content" select="."/>
 

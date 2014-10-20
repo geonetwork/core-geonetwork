@@ -750,7 +750,6 @@
     "keywords-mapper": "Keyword mapper",
     "urlPrefix": "URL prefix to search",
     "newUrlPrefix": "Replace prefix by",
-    "search": "Search",
     "replace": "Replace",
     "emailToSearch": "Email to search",
     "contactAsXML": "XML snippet to insert to replace the matching contact",
