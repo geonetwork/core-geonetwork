@@ -1,5 +1,114 @@
 ================================================================================
 ===
+=== GeoNetwork 2.10.4: List of changes
+===
+================================================================================
+
+- #655 Add search criteria in harvesters fails in Internet Explorer
+- Don't let map and about be repeatedly added to breadcrumbs
+- Restore pluginrepository but use mvnrepository.com
+- #548 CSW Harvester: Search filters returning queriables with apiso prefix causes harvester save to fail
+- #538 Harvesters doesn't update the change date of the local metadata.
+- #425 Transfer ownership doesn't add the permissions for the new user/group properly.
+- Html5ui: Remove wildcard on any search string - if the user wants that they can add it themselves.
+- Include login for pre 2.10.x geonetwork instances.
+- GeoNetwork can use Basic/Digest now (no need for xml.login service anymore).
+- Html5ui: Provide search form with a resetCb.
+- Html5ui: Hide advanced search panel when doing search.
+- Download URL hanging in classic interface viewer because URL.
+- Remove geonet: elements from metadata before commit.
+- Relax validation on responses and records in oaipmh.
+- Don't cause an exception if the schemaLocation is not defined for a schema - just log an error that we don't have a schemaLocation.
+- Avoid writing empty multipolygons to spatialindex.
+- Bring in commit from develop that fixes webdav uuid overwrite bug.
+- Don't display status if Unknown.
+- Add workflow status to fast search results so that it can be displayed in search summary.
+- Allow admin to set any status.
+- Remove logic that prevented a reviewer from modifying privileges on a record they are allowed to review.
+- hasEditPermission check not necessary
+- Status actions should use html5ui.
+- Include search on status for metadata workflow.
+- Fix bug in pdf output.
+- Fix excessive memory bug in XmlSearcher - if from-to not specified XmlSearcher may try and return the whole catalogue with rather bad results for memory consumption on the server.
+- Force indexsearchers to refresh so that results don't get out of date, etc.
+- Tidy pom file to provider versions for plugins.
+- Include output redirect for mef.export.
+- Add xml.mef.import and xml.mef.export.
+- Add in xml services interface from 2.8.x - dev doco for 2.8.x now applies to 2.10.x as well.
+- Restore Shibboleth auth on 2.10.x.
+- #582 CSW harvester: removing the search filter doesn't work.
+- #543 CSW Harvester: Hide the Add search criteria button if a search criteria is added (only 1 supported in each harvester).
+- #564 Update main pom.xml sections to point GitHub instead of old SVN/Trac.
+- #550 Metadata set thumbnail service doesn't use the preferred protocol.
+- #542 CSW harvester can't be saved with a search criteria defined. Occurs only if also an empty search criteria section exists.
+- #541 Changes in the scheduler of a harvester type affects all other harvester schedules of same type.
+- Html5ui: Remove trailing commas that can cause problems for IE.
+- #422 Harvesters break when the change date of metadata makes fail the ISODate parsing.
+- #535 Harvesters consuming database connections.
+- #354 ConcurrentModificationException in spring security interceptor when selecting metadata records.
+- #387 Postgres database loading hangs webapp when trying to drop services and serviceparameters table.
+- #534 html5ui: delete with record in viewer leaves viewer active.
+- #532 html5ui: login when viewing a record does not change actions menu.
+- #453 Suggestion processes (like inspire-add-conformity) that include thesaurus files doesn't work when running GeoNetwork in windows.
+- Html5ui: Display extra help in edit mode only.
+- Html5ui: Remove potential javascript error when looking for tabs in EditorPanel.
+- Always load results from subtemplate search, even if nothing returned, otherwise subtemplate search panel will hang.
+- #473 Widgets UI (htmlui): Sorting results issues. Fix identifier for sort order component.
+- Html5ui: Use default view defined on Settings.
+- Html5ui: Adding close button to help popup.
+- Html5ui: Add LinkTools to debug list of javascript files.
+- Html5ui: Adding default css. If this css is missing, the validation status is not shown.
+- Metadata editor: In descriptiveKeywords: Don't display anchor xlink:href unless the keyword/term is blank.
+- Metadata editor: descriptiveKeywords template should look up schema using $schema instead of hard coded iso19139.
+- Html5ui: Adding (deactivated by default) a button next to label fields to show a help pop-up.
+- #506 XLink processing on local:// fails due to null servlet context in detachXLinks.
+- #511 GetCurrentMDTab service should retrieve the default view from the settings.
+- Move thredds harvester to local://
+- Move fragment harvester from urls to local://
+- Allow failures to stop xlink processing for general usage.
+- Remove override that caused database connections to be consumed when calling local services.
+- XLinks not resolving because null Service Context in detachXLinks.
+- Html5ui: Set line-height on relationship descriptions (IE adopts something odd otherwise).
+- Html5ui: Update mappings from relationship types to CSS.
+- Html5ui: Move links from metadata viewer to util.LinkTools.js
+- Html5ui: Fix grid view - rows weren't displaying.
+- Html5ui: Re-organise icons to remove smart image directory.
+- Html5ui: Place harvesting icons in the place where GeoNetwork expects to find them.
+- Html5ui: Move text 20px to write to allow for background image.
+- Html5ui: Remove sprites and icons that have been replaced with fa stuff.
+- Html5ui: Fix spelling mistake in related resource table.
+- Html5ui: Anchor layout meant list of records to link to was not showing in related resources for parent, dataset etc.
+- Html5ui: Split styling for tag aside from main aside.
+- Html5ui: Re-organise home page: tag cloud into aside, latest and popular to use better width calculation and display 4 instead of 3.
+- Html5ui: Only add download selector/add button when more than one download link in metadata record. Ensure that mimetypes other than zip archives will trigger this button being added.
+- Html5ui: Clear out list of recently viewed/edited metadata records after logout.
+- Html5ui: Make sure ie doesn't calculate a different heights for the free text search box and submit search button.
+- Html5ui: Restore footer with config option to remove it if necessary.
+- Html5ui: Remove icon separator line from language menu.
+- Html5ui: Tidy up language menu to ensure that it fits with the rest of the outer header.
+- Html5ui: Include font-awesome.
+- Html5ui fixes and improvements.
+- #431 WAF harvester doesn't process folders.
+- Backport of pull request #463: Allow harvesting history to be accessible via an XML interface.
+- #465 html5ui metadata editor doesn't highlight in red mandatory elements if empty.
+- #455 Metadata share links in html5 UI are broken.
+- #441 Metadata editor can be accessed after user logout in html5ui.
+- Disable dtd capabilities that could be used inappropriately. Thanks to Graeme Glen, University of Auckland.
+- Enforce check on database connection before doing anything.
+- #413 Tab search widget UI doesn't show correct groups in the advanced search panel.
+- #403 Pagination buttons are not displayed on the top of the search results in the widgets UI (htmlui).
+- #394 ExtJs search and tabsearch apps doesn't show any message when login is not valid.
+- Html5ui: hide debug CSS style.
+- #382 Metadata delete service throws NumberFormatException if the uuid provided doesn't exist. Use a meaningful exception instead.
+- Update macosx launch4j.
+- Update windows launch4j.
+- Shortcuts failing to install on windows x64 so include correct shell link dll for x64.
+- Add extra files to be included with updated launch4j and to override windows default install path in izpack installer.
+- Update launch4j to build a windows exe file that will work with a 64bit.
+- CSW services documentation: Fix url for trasaction services and GeoNetwork camel case fixes.
+
+================================================================================
+===
 === GeoNetwork 2.10.3: List of changes
 ===
 ================================================================================
