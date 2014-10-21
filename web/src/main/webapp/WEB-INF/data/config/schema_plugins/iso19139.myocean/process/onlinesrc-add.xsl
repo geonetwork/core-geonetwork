@@ -150,7 +150,7 @@ attached it to the metadata for data.
                                                         </gmd:CI_OnlineResource>
                                                     </gmd:onLine>
                                                     
-                                                    <xsl:for-each select="tokenize($name, ',')">
+                                                    <xsl:for-each select="tokenize($name, ',,')">
                                                         <xsl:variable name="pos" select="position()" />
                                                         <gmd:onLine>
                                                             <xsl:if test="$uuidref">
@@ -174,7 +174,7 @@ attached it to the metadata for data.
                                                                 </gmd:name>
                                                                 <gmd:description>
                                                                     <gco:CharacterString>
-                                                                        <xsl:value-of select="tokenize($desc, ',')[position() = $pos]" />
+                                                                        <xsl:value-of select="tokenize($desc, ',,')[position() = $pos]" />
                                                                     </gco:CharacterString>
                                                                 </gmd:description>
                                                                 <gmd:function>
