@@ -2,6 +2,7 @@ package org.fao.geonet.services.metadata.format.groovy;
 
 import com.google.common.io.Files;
 import org.fao.geonet.Constants;
+import org.fao.geonet.SystemInfo;
 import org.fao.geonet.services.metadata.format.FormatIntegrationTest;
 import org.junit.Test;
 
@@ -16,6 +17,7 @@ public class TemplateCacheTest {
     @Test
     public void testCreateFileResult() throws Exception {
         final TemplateCache templateCache = new TemplateCache();
+        templateCache.systemInfo = new SystemInfo("production", "testing");
         templateCache.init();
         final File functionFile = new File(FormatIntegrationTest.class.getResource("functions.xsl").getFile());
         final FileResult fileResult = templateCache.createFileResult(functionFile.getParentFile(), functionFile.getParentFile(),

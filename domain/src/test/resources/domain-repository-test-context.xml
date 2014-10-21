@@ -12,6 +12,11 @@
         <property name="defaultNode" value="true" />
     </bean>
 
+    <bean id="systemInfo" class="org.fao.geonet.SystemInfo">
+        <constructor-arg value="development" />
+        <constructor-arg value="testing" />
+    </bean>
+
     <bean id="IS_DEFAULT_CONTEXT_BEAN" class="java.lang.Boolean">
         <constructor-arg index="0" value="true"/>
     </bean>

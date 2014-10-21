@@ -28,6 +28,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import org.apache.commons.io.FileUtils;
+import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
@@ -267,7 +268,7 @@ public class Format extends AbstractFormatService {
     }
 
     protected boolean isDevMode(ServiceContext context) {
-        return Geonet.StagingProfile.DEVELOPMENT.equals(context.getApplicationContext().getBean(Geonet.StagingProfile.BEAN_NAME));
+        return context.getApplicationContext().getBean(SystemInfo.class).isDevMode();
     }
 
 }

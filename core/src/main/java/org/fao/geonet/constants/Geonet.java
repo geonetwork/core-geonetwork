@@ -613,9 +613,4 @@ public final class Geonet {
         public static final Namespace GML = Namespace.getNamespace("gml", "http://www.opengis.net/gml");
         public static final Namespace SVRL = Namespace.getNamespace("svrl", "http://purl.oclc.org/dsdl/svrl");
     }
-
-    public class StagingProfile {
-        public static final String DEVELOPMENT = "development";
-        public static final String BEAN_NAME = "stagingProfile";
-    }
 }

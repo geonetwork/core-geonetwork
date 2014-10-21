@@ -1,9 +1,14 @@
 package org.fao.geonet.services.metadata.format.groovy;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.io.Files;
+import jeeves.server.dispatchers.ServiceInfo;
 import org.fao.geonet.Constants;
+import org.fao.geonet.SystemInfo;
+import org.fao.geonet.constants.Geonet;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -19,6 +24,10 @@ import javax.annotation.PostConstruct;
  */
 @Component
 public class TemplateCache {
+    @VisibleForTesting
+    @Autowired
+    SystemInfo systemInfo;
+
     private int maxSizeKB = 100000;
     Cache<String, String> canonicalFileNameToText;
     private int concurrencyLevel = 4;
@@ -60,20 +69,23 @@ public class TemplateCache {
                                              Map<String, Object> substitutions) throws IOException {
         File file = new File(formatterDir, path);
         String template = this.canonicalFileNameToText.getIfPresent(file.getCanonicalPath());
-        if (template != null) {
-            return new FileResult(file, template, substitutions);
-        }
 
-        file = new File(schemaDir, path);
-        template = this.canonicalFileNameToText.getIfPresent(file.getCanonicalPath());
-        if (template != null) {
-            return new FileResult(file, template, substitutions);
-        }
+        if (!this.systemInfo.isDevMode()) {
+            if (template != null) {
+                return new FileResult(file, template, substitutions);
+            }
 
-        file = new File(rootFormatterDir, path);
-        template = this.canonicalFileNameToText.getIfPresent(file.getCanonicalPath());
-        if (template != null) {
-            return new FileResult(file, template, substitutions);
+            file = new File(schemaDir, path);
+            template = this.canonicalFileNameToText.getIfPresent(file.getCanonicalPath());
+            if (template != null) {
+                return new FileResult(file, template, substitutions);
+            }
+
+            file = new File(rootFormatterDir, path);
+            template = this.canonicalFileNameToText.getIfPresent(file.getCanonicalPath());
+            if (template != null) {
+                return new FileResult(file, template, substitutions);
+            }
         }
 
         file = new File(formatterDir, path);
