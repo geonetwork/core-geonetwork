@@ -94,7 +94,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-translate="">views<b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{'views' | translate}}<b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li><a data-ng-click="saveMetadata('advanced')" data-translate="">defaultView</a></li>
                             <li class="divider"></li>
@@ -116,11 +116,11 @@
 
                     <li class="dropdown">
 
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-translate="">save<b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" >{{'saveCancel' | translate}}<b class="caret"></b></a>
                         <ul class="dropdown-menu">
+                            <li><a data-ng-click="stopEditing()" data-translate="">cancel</a></li>
                             <li><a data-ng-click="saveMetadata()" data-translate="">save</a></li>
                             <li><a data-ng-click="saveMetadataAndExit()" data-translate="">saveAndExit</a></li>
-                            <li><a data-ng-click="stopEditing()" data-translate="">cancel</a></li>
                         </ul>
                     </li>
                     <li>
