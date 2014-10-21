@@ -512,7 +512,15 @@
 		<xsl:variable name="title" select="normalize-space(gmd:name//gmd:LocalisedCharacterString[@locale=$langId])"/>
 		<xsl:variable name="desc" select="normalize-space(gmd:description//gmd:LocalisedCharacterString[@locale=$langId])"/>
 		<xsl:variable name="protocol" select="normalize-space(gmd:protocol/gco:CharacterString)"/>
-		<xsl:variable name="mimetype" select="geonet:protocolMimeType($linkage[1], $protocol, gmd:name/gmx:MimeFileType/@type)"/>
+
+        <xsl:variable name="mimetype">
+            <xsl:choose>
+                <xsl:when test="count($linkage) > 0">
+                    <xsl:value-of select="geonet:protocolMimeType($linkage[1], $protocol, gmd:name/gmx:MimeFileType/@type)"/>
+                </xsl:when>
+                <xsl:otherwise>n/a</xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
 		
 		<!-- ignore empty downloads -->
 		<xsl:if test="string($linkage)!='' and not(contains($linkage,$download_check))">  
