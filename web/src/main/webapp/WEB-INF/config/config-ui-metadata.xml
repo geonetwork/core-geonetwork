@@ -181,6 +181,21 @@
       <error sheet="../xslt/common/error.xsl"/>
     </service>
 
+      <service name="md.edit.commit">
+          <documentation>
+              <![CDATA[
+        Save a metadata record and return the new form.
+         This version will update the session with the new begin metadata so
+         that a cancel will rollback to this point.
+        ]]>
+          </documentation>
+          <class name=".services.metadata.Update">
+              <param name="starteditingsession" value="yes" />
+          </class>
+          <output forward="md.edit"/>
+          <error sheet="../xslt/common/error.xsl"/>
+      </service>
+
     <service name="md.element.add">
       <documentation><![CDATA[
                 Add an element or attribute to the metadata record.
