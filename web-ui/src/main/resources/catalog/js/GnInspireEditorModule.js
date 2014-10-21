@@ -340,7 +340,7 @@
           finalData = 'validate=false&'+finalData;
         }
         if (finish) {
-          finalData = 'finish=false&'+finalData;
+          finalData = 'finished=yes&'+finalData;
         }
         return $http({
           method: 'POST',
@@ -380,14 +380,23 @@
         });
       };
 
-      $scope.stopEditing = function() {
-        allowUnload = true;
-        window.location.href = 'metadata.show?id=' + mdId;
+      $scope.stopEditing = function(forget) {
+        $http({
+          method: 'POST',
+          url: $scope.url + "metadata.update.forgetandfinish?id=" + mdId + "&forget="+forget
+        }).success(function (data) {
+          allowUnload = true;
+          window.location.href = 'metadata.show?id=' + mdId;
+        }).error(function (data) {
+          allowUnload = true;
+          window.location.href = 'metadata.show?id=' + mdId;
+        });
+
       };
 
       $scope.saveMetadataAndExit = function (){
         $scope.saveMetadata(undefined, true).success(function(){
-          $scope.stopEditing();
+          $scope.stopEditing('yes');
         });
       };
 

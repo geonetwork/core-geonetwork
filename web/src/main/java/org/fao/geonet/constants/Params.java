@@ -27,6 +27,7 @@ package org.fao.geonet.constants;
  * Constants for service parameters (elements and attributes).
  */
 public class Params {
+    public static final String START_EDITING_SESSION = "starteditingsession";
     public static final String ACTION       = "action";
     public static final String ACCESS       = "access";
     public static final String BTN          = "btn";

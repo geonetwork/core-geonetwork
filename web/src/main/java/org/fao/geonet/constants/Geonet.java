@@ -164,6 +164,7 @@ public class Geonet {
 		public static final String SEARCH_REQUEST_ID 		= "search_request_id";		
 		public static final String METADATA_SHOW			= "metadata.show";
 		public static final String METADATA_EDITING		= "metadata.editing";
+        public static final String METADATA_BEFORE_ANY_CHANGES = "metadata.before.any.changes";
 		public static final String METADATA_POSITION  = "metadata.position";
 		public static final String SEARCH_KEYWORDS_RESULT	= "search.keywords.result";
 		public static final String SELECTED_RESULT          = "selected.result";
@@ -569,6 +570,7 @@ public class Geonet {
 	public static final String DATA_DIRECTORY = GEONETWORK + ".data.directory";
     public static final Version LUCENE_VERSION = Version.LUCENE_36;
     public static final String MONITORING   = GEONETWORK + ".monitoring";
+    public static final String EDITOR_SESSION = GEONETWORK + ".editor.session";
     
     
     public class BeanId {

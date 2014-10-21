@@ -175,7 +175,7 @@
         
         <!-- save button -->
         &#160;
-        <button class="content" id="btnSave" onclick="removeJustCreated();doSaveAction('metadata.update')" type="button">
+        <button class="content" id="btnSave" onclick="removeJustCreated();doSaveAction('metadata.update.restartedit')" type="button">
             <xsl:value-of select="/root/gui/strings/save"/>
         </button>
         

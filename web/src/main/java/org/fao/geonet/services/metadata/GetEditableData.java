@@ -78,6 +78,11 @@ public class GetEditableData implements Service
 
         //-----------------------------------------------------------------------
 		//--- get metadata
+        boolean starteditingsession = Util.getParam(params, Params.START_EDITING_SESSION, "no").equals("yes");
+        if (starteditingsession) {
+            dataMan.startEditingSession(context, id);
+        }
+
 		Element elMd = new AjaxEditUtils(context).getMetadataEmbedded(context, id, true, showValidationErrors);
 		if (elMd == null)
 			throw new IllegalArgumentException("Metadata not found --> " + id);

@@ -192,6 +192,16 @@
 			<error id="client" sheet="metadata-error.xsl" />
 		</service>
 
+		<service name="metadata.update.restartedit">
+			<class name=".services.metadata.Update">
+				<param name="starteditingsession" value="yes" />
+			</class>
+
+            <output forward="metadata.edit" />
+
+			<error id="client" sheet="metadata-error.xsl" />
+		</service>
+
 		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 		<!-- validates metadata in session -->
 

@@ -36,7 +36,6 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.ConcurrentUpdateEx;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.util.ISODate;
 import org.jdom.Element;
 
 //=============================================================================
@@ -77,13 +76,13 @@ public class Update implements Service
 		Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
 
 		String id         = Util.getParam(params, Params.ID);
-		String version    = Util.getParam(params, Params.VERSION);
 		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
 		String showValidationErrors = Util.getParam(params, Params.SHOWVALIDATIONERRORS, "false");
 		String title      = params.getChildText(Params.TITLE);
 		String data       = params.getChildText(Params.DATA);
         String minor      = Util.getParam(params, Params.MINOREDIT, "false");
 
+		boolean restartEditing = config.getValue(Params.START_EDITING_SESSION, "no").equals("yes");
 		boolean finished = config.getValue(Params.FINISHED, "no").equals("yes");
 		boolean forget   = config.getValue(Params.FORGET, "no").equals("yes");
 
@@ -112,7 +111,9 @@ public class Update implements Service
 			} else {
 				ajaxEditUtils.updateContent(params, true, true);
 			}
-		}
+		} else {
+            dataMan.cancelEditingSession(context, dbms, id);
+        }
 
 		//-----------------------------------------------------------------------
 		//--- update element and return status
@@ -129,7 +130,13 @@ public class Update implements Service
         //--- if finished then remove the XML from the session
 		if (finished) {
 			ajaxEditUtils.removeMetadataEmbedded(session, id);
+
+            dataMan.endEditingSession(id, session);
 		}
+
+        if (restartEditing) {
+            dataMan.startEditingSession(context, id);
+        }
 
 		return elResp;
 	}

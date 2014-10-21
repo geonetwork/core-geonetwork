@@ -9,6 +9,7 @@ import com.google.common.collect.Sets;
 import jeeves.interfaces.Service;
 import jeeves.resources.dbms.Dbms;
 import jeeves.server.ServiceConfig;
+import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.utils.Log;
 import jeeves.utils.Util;
@@ -161,6 +162,7 @@ public class Save implements Service {
         try {
             final String data = Util.getParam(params, PARAM_DATA);
             final String id = params.getChildText(Params.ID);
+            final boolean finish = Util.getParam(params, Params.FINISHED, false);
 
             GeonetContext handlerContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
             final SchemaManager schemaManager = handlerContext.getSchemamanager();
@@ -186,8 +188,7 @@ public class Save implements Service {
 
             editLib.removeEditingInfo(metadata);
             Element metadataToSave = (Element) metadata.clone();
-            saveMetadata(context, id, dataManager, metadataToSave);
-
+            saveMetadata(context, ajaxEditUtils, id, dataManager, metadataToSave, finish);
 
             return getResponse(params, context, id, editLib, metadata);
         } catch (Throwable t) {
@@ -1299,10 +1300,20 @@ public class Save implements Service {
     }
 
     @VisibleForTesting
-    protected void saveMetadata(ServiceContext context, String id, DataManager dataManager, Element metadata) throws Exception {
+    protected void saveMetadata(ServiceContext context, AjaxEditUtils ajaxEditUtils, String id, DataManager dataManager, Element metadata, boolean finished) throws Exception {
         Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         dataManager.updateMetadata(context, dbms, id, metadata, false, true, true, context.getLanguage(), null, true, true);
         context.getUserSession().setProperty(Geonet.Session.METADATA_EDITING + id, metadata);
+
+        if (finished) {
+            final UserSession session = context.getUserSession();
+            ajaxEditUtils.removeMetadataEmbedded(session, id);
+
+            dataManager.endEditingSession(id, session);
+        } else {
+            dataManager.startEditingSession(context, id);
+        }
+
     }
 
     @VisibleForTesting

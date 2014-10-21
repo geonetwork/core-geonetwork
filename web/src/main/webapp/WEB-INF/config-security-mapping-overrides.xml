@@ -20,7 +20,7 @@
 			    <sec:intercept-url pattern="/srv/.*/metadata.expired.email!?.*" access="hasRole('Administrator')"/>
 			    <sec:intercept-url pattern="/srv/.*/metadata.expired.unpublish!?.*" access="hasRole('Administrator')"/>
 			    <sec:intercept-url pattern="/srv/.*/metadata.expired.form!?.*" access="hasRole('Administrator')"/>
-		
+
 				<!-- Format facilities -->
 			    <sec:intercept-url pattern="/srv/.*/format.admin!?.*" access="hasRole('Administrator')"/>
 			    <sec:intercept-url pattern="/srv/.*/format!?.*" access="hasRole('Administrator')"/>
@@ -127,6 +127,7 @@
 			    <sec:intercept-url pattern="/srv/.*/inspire.edit!?.*" access="hasRole('Editor')" />
 			    <sec:intercept-url pattern="/srv/.*/inspire.edit.model!?.*" access="hasRole('Editor')" />
 			    <sec:intercept-url pattern="/srv/.*/inspire.edit.save!?.*" access="hasRole('Editor')" />
+                <sec:intercept-url pattern="/srv/.*/metadata.update.restartedit!?.*" access="hasRole('Editor')"/>
 
 
 			    <sec:intercept-url pattern="/srv/.*/metadata.validation.status!?.*" access="permitAll" />
