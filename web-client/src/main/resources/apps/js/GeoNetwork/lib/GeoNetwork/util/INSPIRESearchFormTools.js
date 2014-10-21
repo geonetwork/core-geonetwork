@@ -130,9 +130,9 @@ GeoNetwork.util.INSPIRESearchFormTools = {
             minChars : 1,
             hideTrigger : false,
             url : services.opensearchSuggest,
-            field : 'inspiretheme',
-            name : 'E_inspiretheme',
-            fieldLabel : OpenLayers.i18n('inspiretheme')
+            field : 'inspireTheme',
+            name : 'E_inspireTheme',
+            fieldLabel : OpenLayers.i18n('inspireTheme')
         });
         return inspiretheme;
     },
@@ -186,11 +186,11 @@ GeoNetwork.util.INSPIRESearchFormTools = {
 
         themesStore.load();
         var config = {
-                id : 'inspiretheme',
-                name : 'E_inspiretheme',
+                id : 'inspireTheme',
+                name : 'E_inspireTheme',
                 mode : 'local',
                 triggerAction : 'all',
-                fieldLabel : OpenLayers.i18n('inspiretheme'),
+                fieldLabel : OpenLayers.i18n('inspireTheme'),
                 store : themesStore,
                 valueField : 'value',
                 displayField : 'value'
