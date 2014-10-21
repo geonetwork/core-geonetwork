@@ -4,31 +4,17 @@
 
   var module = angular.module('gn_search_default_config', []);
 
-  module.config(['gnSearchSettings', 'gnViewerSettings',
+  module.run(['gnSearchSettings', 'gnViewerSettings', 'gnMap',
 
-    function(searchSettings, viewerSettings) {
+    function(searchSettings, viewerSettings, gnMap) {
 
       /** *************************************
        * Define mapviewer background layers
        */
       viewerSettings.bgLayers = [
-        new ol.layer.Tile({
-          style: 'Road',
-          source: new ol.source.MapQuest({layer: 'osm'}),
-          title: 'MapQuest'
-        }),
-        new ol.layer.Tile({
-          source: new ol.source.OSM(),
-          title: 'OpenStreetMap'
-        }),
-        new ol.layer.Tile({
-          preload: Infinity,
-          source: new ol.source.BingMaps({
-            key: 'Ak-dzM4wZjSqTlzveKz5u0d4IQ4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
-            imagerySet: 'Aerial'
-          }),
-          title: 'Bing Aerial'
-        })
+        gnMap.createLayerForType('mapquest'),
+        gnMap.createLayerForType('osm'),
+        gnMap.createLayerForType('bing_aerial')
       ];
       angular.forEach(viewerSettings.bgLayers, function(l) {
         l.displayInLayerManager = false;

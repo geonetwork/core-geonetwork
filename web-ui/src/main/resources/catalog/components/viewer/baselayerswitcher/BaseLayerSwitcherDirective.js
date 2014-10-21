@@ -26,6 +26,7 @@
         scope.layers = gnViewerSettings.bgLayers;
         scope.map.getLayers().insertAt(0, scope.layers[0]);
         scope.setBgLayer = function(layer) {
+          layer.setVisible(true);
           var layers = scope.map.getLayers();
           layers.removeAt(0);
           layers.insertAt(0, layer);
