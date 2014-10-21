@@ -1152,6 +1152,39 @@ public class Save implements Service {
             return;
         }
 
+        JSONArray nonEmptyContacts = new JSONArray();
+        for (int i = 0; i < contacts.length(); i++) {
+            JSONObject contact = contacts.getJSONObject(i);
+            final Iterator keys = contact.keys();
+            while (keys.hasNext()) {
+                String next = (String) keys.next();
+                if (!next.equals(Save.JSON_VALIDATED)) {
+                    final Object property = contact.get(next);
+                    if (property instanceof JSONObject) {
+                        JSONObject jsonObject = (JSONObject) property;
+                        if (jsonObject.length() > 0) {
+                            nonEmptyContacts.put(contact);
+                            break;
+                        }
+                    } else if (property instanceof String) {
+                        String s = (String) property;
+                        if (!s.trim().isEmpty()) {
+                            nonEmptyContacts.put(contact);
+                            break;
+                        }
+
+                    } else if (property != null) {
+                        nonEmptyContacts.put(contact);
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (nonEmptyContacts.length() == 0) {
+            return;
+        }
+
         String tagName = xpath;
         if (xpath.contains("/")) {
             tagName = xpath.substring(xpath.indexOf("/") + 1);
@@ -1160,8 +1193,8 @@ public class Save implements Service {
 
         int insertIndex = result.one();
 
-        for (int i = 0; i < contacts.length(); i++) {
-            JSONObject contact = contacts.getJSONObject(i);
+        for (int i = 0; i < nonEmptyContacts.length(); i++) {
+            JSONObject contact = nonEmptyContacts.getJSONObject(i);
             String contactId = contact.optString(JSON_CONTACT_ID, null);
             boolean validated = contact.getBoolean(JSON_VALIDATED);
             String role = contact.optString(JSON_CONTACT_ROLE, "pointOfContact");

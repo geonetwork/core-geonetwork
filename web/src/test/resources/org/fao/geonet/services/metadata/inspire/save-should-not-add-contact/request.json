@@ -1,0 +1,79 @@
+{
+  "refSys":[
+    {
+      "ref":"42",
+      "code":{
+        "ger":"EPSG:21782"
+      }
+    },
+    {
+      "ref":"52",
+      "code":{
+        "ger":""
+      }
+    }
+  ],
+  "distributionFormats":[],
+  "contact":[
+    {
+      "id":"",
+      "organization":{
+
+      },
+      "email":"",
+      "name":"",
+      "role":"",
+      "surname":"",
+      "validated":false
+    }
+  ],
+  "metadataIsXsdValid":false,
+  "characterSet":"utf8",
+  "hierarchyLevelName":"ViewService",
+  "constraints":{
+    "generic":[],
+    "legal":[],
+    "security":[]
+  },
+  "links":[ ],
+  "otherLanguages":[
+    "ger",
+    "fre",
+    "ita",
+    "eng"
+  ],
+  "hierarchyLevel":"service",
+  "identification":{
+    "abstract":{
+      "ger":"INSPIRE konformer WMS-Dienst"
+    },
+    "title":{
+      "ger":"test INSPIRE View Service Liechtenstein"
+    },
+    "pointOfContact":[
+      {
+        "id":"",
+        "organization":{
+
+        },
+        "email":"",
+        "name":"",
+        "role":"",
+        "surname":"",
+        "validated":false
+      }
+    ],
+    "citationIdentifier":"abi_INSPIRE_VIEW_SERVICE",
+    "topicCategory":[],
+    "language":"",
+    "serviceType":"",
+    "date":{
+      "dateTagName":"gmd:Date",
+      "dateType":"publication",
+      "date":"2013-08-31"
+    },
+    "type":"service",
+    "couplingType":"tight"
+  },
+  "language":"ger"
+}

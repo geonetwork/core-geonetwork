@@ -912,6 +912,24 @@ public class SaveTest {
         assertNotNull(scope);
     }
 
+    @Test
+    public void testShouldNotAddEmptyContacts() throws Exception {
+        testMetadata = Xml.loadFile(SaveTest.class.getResource("save-should-not-add-contact/metadata.xml"));
+        service.setTestMetadata(testMetadata);
+
+        final String jsonString = loadTestJson("save-should-not-add-contact/request.json");
+        JSONObject json = new JSONObject(jsonString);
+
+        final Element result = service.exec(new Element("request").addContent(Arrays.asList(
+                new Element("id").setText("12"),
+                new Element("data").setText(json.toString())
+        )), context);
+
+
+        assertEquals("data", result.getName());
+        assertEquals(0, Xml.selectNodes(service.getSavedMetadata(), "*//che:CHE_CI_ResponsibleParty", NS).size());
+    }
+
     private void assertSharedObject(Element identification, String elemName, String xlink, boolean validated) throws JDOMException {
         final Element obj = Xml.selectElement(identification, elemName + "[@xlink:href = '" + xlink + "']", NS);
         assertNotNull("No shared object found with href: " + xlink, obj);
