@@ -27,7 +27,9 @@
 	<def>
 		<hits>
       <item name="keyword" plural="keywords" indexKey="keyword" max="15"/>
-			<item name="inspireTheme" plural="inspireThemes" indexKey="inspiretheme" sortBy="value" sortOrder="asc" max="35"/>
+      <item name="inspireTheme" plural="inspireThemes" indexKey="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
+      <item name="inspireTheme_en" plural="inspireThemes_en" indexKey="inspireTheme_en" sortBy="value" sortOrder="asc" max="35"/>
+      <item name="inspireTheme_fr" plural="inspireThemes_fr" indexKey="inspireTheme_fr" sortBy="value" sortOrder="asc" max="35"/>
 			<item name="denominator" plural="denominators" indexKey="denominator" sortBy="numValue" sortOrder="desc"/>
 			<item name="spatialRepresentationType" plural="spatialRepresentationTypes" indexKey="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
 			<item name="orgName" plural="orgNames" indexKey="orgName" max="15"/>
@@ -54,7 +56,7 @@
 		</results>
 		<results_with_summary>
 			<item name="keyword" plural="keywords" indexKey="keyword" max="15"/>
-			<item name="inspiretheme" plural="inspirethemes" indexKey="inspiretheme" sortBy="value" sortOrder="asc" max="35"/>
+			<item name="inspireTheme" plural="inspireThemes" indexKey="inspireTheme" sortBy="value" sortOrder="asc" max="35"/>
 			<item name="denominator" plural="denominators" indexKey="denominator" sortBy="value" sortOrder="asc" max="20"/>
 			<item name="spatialRepresentationType" plural="spatialRepresentationTypes" indexKey="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
 			<item name="orgName" plural="orgNames" indexKey="orgName" max="15"/>
@@ -67,7 +69,7 @@
 		<suggestions>
 			<item name="keyword" plural="keywords" indexKey="keyword"/>
             <item name="title" plural="titles" indexKey="title" sortBy="freq" sortOrder="desc" max="100"/>
-			<item name="inspireTheme" plural="inspireThemes" indexKey="inspiretheme" sortBy="value" sortOrder="asc"/>
+			<item name="inspireTheme" plural="inspireThemes" indexKey="inspireTheme" sortBy="value" sortOrder="asc"/>
 			<item name="denominator" plural="denominators" indexKey="denominator" sortBy="value" sortOrder="asc"/>
 			<item name="spatialRepresentationType" plural="spatialRepresentationTypes" indexKey="spatialRepresentationType" translator="codelist:gmd:MD_SpatialRepresentationTypeCode"/>
 			<item name="orgName" plural="orgNames" indexKey="orgName" max="1000"/>
@@ -76,7 +78,8 @@
 			<item name="type" plural="types" indexKey="type" translator="codelist:gmd:MD_ScopeCode"/>
 			<item name="createDateYear" plural="createDateYears" indexKey="createDateYear"
 				sortOrder="asc"/>
-      <item name="inspiretheme_en" plural="inspirethemes_en" indexKey="inspiretheme_en" max="35"/>
+      <item name="inspireTheme_en" plural="inspireThemes_en" indexKey="inspireTheme_en" max="35"/>
+      <item name="inspireTheme_fr" plural="inspireThemes_fr" indexKey="inspireTheme_en" max="35"/>
       <item name="sextantTheme" plural="sextantThemes" indexKey="sextantTheme" max="200"/>
       <item name="keywordType-parameter" plural="keywordType-parameter" indexKey="keywordType-parameter" max="200"/>
       <item name="_groupPublished" plural="_groupPublished" indexKey="_groupPublished" max="300"/>

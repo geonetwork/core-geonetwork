@@ -919,6 +919,12 @@ cat.app = function() {
             facetConfig = GeoNetwork.Settings.facetListConfig;
           }
 
+          Ext.each(facetConfig, function(cfg) {
+            if(cfg.name == 'inspireThemes') {
+              cfg.name = 'inspireThemes_' + catalogue.lang.substr(0,2);
+            }
+          });
+
           facetsPanel = new GeoNetwork.FacetsPanel({
                 searchForm: searchForm,
                 breadcrumb: breadcrumb,

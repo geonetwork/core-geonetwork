@@ -61,7 +61,7 @@ GeoNetwork.Settings.privileges = {
 
 GeoNetwork.Settings.facetListConfig = [{name: 'orgNames'},
                                        {name: 'keywords'},
-//                                       {name: 'inspireThemes'},
+                                       {name: 'inspireThemes'},
                                        {name: 'denominators'},
                                        {name: 'createDateYears'}];
 GeoNetwork.Settings.facetMaxItems = 5;
