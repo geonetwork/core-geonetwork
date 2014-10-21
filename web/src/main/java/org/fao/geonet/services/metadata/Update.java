@@ -82,7 +82,7 @@ public class Update implements Service
 		String data       = params.getChildText(Params.DATA);
         String minor      = Util.getParam(params, Params.MINOREDIT, "false");
 
-		boolean restartEditing = config.getValue(Params.START_EDITING_SESSION, "no").equals("yes");
+		boolean commit = config.getValue(Params.START_EDITING_SESSION, "no").equals("yes");
 		boolean finished = config.getValue(Params.FINISHED, "no").equals("yes");
 		boolean forget   = config.getValue(Params.FORGET, "no").equals("yes");
 
@@ -134,7 +134,7 @@ public class Update implements Service
             dataMan.endEditingSession(id, session);
 		}
 
-        if (restartEditing) {
+        if (commit) {
             dataMan.startEditingSession(context, id);
         }
 

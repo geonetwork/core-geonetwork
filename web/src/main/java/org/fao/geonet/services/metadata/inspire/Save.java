@@ -163,6 +163,7 @@ public class Save implements Service {
             final String data = Util.getParam(params, PARAM_DATA);
             final String id = params.getChildText(Params.ID);
             final boolean finish = Util.getParam(params, Params.FINISHED, false);
+            final boolean commit = Util.getParam(params, Params.START_EDITING_SESSION, false);
 
             GeonetContext handlerContext = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
             final SchemaManager schemaManager = handlerContext.getSchemamanager();
@@ -188,7 +189,7 @@ public class Save implements Service {
 
             editLib.removeEditingInfo(metadata);
             Element metadataToSave = (Element) metadata.clone();
-            saveMetadata(context, ajaxEditUtils, id, dataManager, metadataToSave, finish);
+            saveMetadata(context, ajaxEditUtils, id, dataManager, metadataToSave, finish, commit);
 
             return getResponse(params, context, id, editLib, metadata);
         } catch (Throwable t) {
@@ -1300,7 +1301,8 @@ public class Save implements Service {
     }
 
     @VisibleForTesting
-    protected void saveMetadata(ServiceContext context, AjaxEditUtils ajaxEditUtils, String id, DataManager dataManager, Element metadata, boolean finished) throws Exception {
+    protected void saveMetadata(ServiceContext context, AjaxEditUtils ajaxEditUtils, String id, DataManager dataManager, Element metadata,
+                                boolean finished, boolean commitChange) throws Exception {
         Dbms dbms = (Dbms) context.getResourceManager().open(Geonet.Res.MAIN_DB);
         dataManager.updateMetadata(context, dbms, id, metadata, false, true, true, context.getLanguage(), null, true, true);
         context.getUserSession().setProperty(Geonet.Session.METADATA_EDITING + id, metadata);
@@ -1310,7 +1312,7 @@ public class Save implements Service {
             ajaxEditUtils.removeMetadataEmbedded(session, id);
 
             dataManager.endEditingSession(id, session);
-        } else {
+        } else if (commitChange) {
             dataManager.startEditingSession(context, id);
         }
 

@@ -253,7 +253,7 @@ class SaveServiceTestImpl extends Save {
 
     @Override
     protected void saveMetadata(ServiceContext context, AjaxEditUtils ajaxEditUtils, String id, DataManager dataManager,
-                                Element metadata, boolean finished) throws Exception {
+                                Element metadata, boolean finished, boolean commit) throws Exception {
         this.saved = true;
         this.savedMetadata = metadata;
     }

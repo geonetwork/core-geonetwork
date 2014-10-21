@@ -1015,7 +1015,7 @@ GeoNetwork.Catalogue = Ext.extend(Ext.util.Observable, {
                 url = this.services.mdCreate + '?id=' + id + '&group=' + group +
                     '&template=' + isTemplate + '&child=' + child;
             } else {
-                url = this.services.mdEdit + '?id=' + id;
+                url = this.services.mdEdit + '?id=' + id + '&starteditingsession=yes';
             }
             window.open(url, this.windowName, this.windowOption);
         }

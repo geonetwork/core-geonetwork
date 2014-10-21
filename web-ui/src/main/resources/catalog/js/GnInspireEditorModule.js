@@ -342,6 +342,10 @@
         if (finish) {
           finalData = 'finished=yes&'+finalData;
         }
+
+        if (!finish && !editTab) {
+          finalData = 'starteditingsession=true&'+finalData;
+        }
         return $http({
           method: 'POST',
           url: $scope.url + "inspire.edit.save@json",
