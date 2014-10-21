@@ -192,7 +192,11 @@
 			<error id="client" sheet="metadata-error.xsl" />
 		</service>
 
-		<service name="metadata.update.restartedit">
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+        <!-- save the metadata and reset the edit so that cancel will
+             rollback to this point -->
+
+        <service name="metadata.update.restartedit">
 			<class name=".services.metadata.Update">
 				<param name="starteditingsession" value="yes" />
 			</class>
