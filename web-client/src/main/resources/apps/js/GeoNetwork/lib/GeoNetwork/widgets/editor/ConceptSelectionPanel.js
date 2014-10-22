@@ -491,7 +491,8 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                             '?thesaurus=' + this.thesaurusIdentifier + 
                             '&id=' + ids.join(',') +
                             '&multiple=' + (ids.length > 1 ? true : false) +
-                            transfo;
+                            transfo+
+                            '&lang=eng,fre';;
         
         // Call transformation service
         Ext.Ajax.request({
@@ -858,7 +859,8 @@ GeoNetwork.editor.ConceptSelectionPanel.initThesaurusSelector = function (ref, t
                                                 '?thesaurus=' + thesaurus.get('id') + 
                                                 '&id=' + 
                                                 '&multiple=false' +
-                                                '&transformation=to-iso19139-keyword';
+                                                '&transformation=to-iso19139-keyword'+
+                                                '&lang=eng,fre';
                             
                             Ext.Ajax.request({
                                 url: url,

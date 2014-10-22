@@ -81,6 +81,14 @@ public class GetKeywordById implements Service {
             
             if (!multiple) {
                 kb = searcher.searchById(uri, sThesaurusName, lang);
+                for (Object key : kb.getValues().keySet()) {
+                    if(kb.getValues().get(key) != null) {
+                        kb.setDefaultLang((String)key);
+                        if(((String)key).equals(context.getLanguage())) {
+                            break;
+                        }
+                    }
+                }
                 if (kb == null) {
                     root = new Element("descKeys");
                 } else {
