@@ -128,6 +128,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
          *  ``String`` thesaurus to use.
          */
         thesaurus: null,
+
         /** api: config[initialKeyword] 
          *  ``Array`` A list of initial keywords
          */
@@ -166,15 +167,30 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
      *  ``Ext.data.Record`` A record object for the keyword
      */
     KeywordRecord: Ext.data.Record.create([{
-            name: 'value'
-        }, {
-            name: 'definition'
-        }, {
-            name: 'thesaurus',
-            mapping: 'thesaurus/key'
-        }, {
-            name: 'uri'
-        }]),
+      name: 'value',
+      convert: function (v, n) {
+        var valueNode = Ext.DomQuery.selectNode('values/value[language='+catalogue.lang+']',n);
+        var otherLang = catalogue.lang == 'fre' ? 'eng' : 'fre';
+        var value;
+
+        if(valueNode) {
+          value = catalogue.getNodeText(valueNode);
+        }
+        if(!value || value == '') {
+          valueNode = Ext.DomQuery.selectNode('values/value[language='+otherLang+']',n);
+          value = catalogue.getNodeText(valueNode);
+        }
+        return value;
+      }
+    }, {
+      name: 'definition'
+    }, {
+      name: 'thesaurus',
+      mapping: 'thesaurus/key'
+    }, {
+      name: 'uri'
+    }]),
+
     /** private: property[keywordStore] 
      *  ``Ext.data.Store`` Store of keywords in current search
      */
@@ -217,6 +233,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
         // Load all keyword for the current thesaurus
         this.keywordStore.baseParams.pThesauri = this.thesaurusIdentifier;
         this.keywordStore.baseParams.maxResults = this.maxKeywords;
+
         this.keywordStore.on('load', function (store, records) {
         	
         	// Insert a blank record on top
@@ -599,7 +616,8 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                 pNewSearch: true,
                 pTypeSearch: 1,
                 pThesauri: '',
-                pMode: 'searchBox'
+                pMode: 'searchBox',
+                pLang: ['eng', 'fre']
             },
             reader: new Ext.data.XmlReader({
                 record: 'keyword',
@@ -622,9 +640,8 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                 scope: this
             }
         });
-        
-        
-        
+
+
         // One store for current selected keyword
         // When a keyword is added or removed, a XML
         // snippet corresponding to the selection is asked to 
