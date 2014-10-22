@@ -58,7 +58,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
          *  
          *  TODO : add support for changing search language
          */
-        lang: null,
+        lang: ['eng', 'fre'],
         /** api: config[searchOnThesaurusSelection] 
          *  ``String`` trigger search when thesaurus change. Only for default mode. 
          *  if combo or list mode use, the list of keyword is loaded automatically.
@@ -618,7 +618,7 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
                 pTypeSearch: 1,
                 pThesauri: '',
                 pMode: 'searchBox',
-                pLang: ['eng', 'fre']
+                pLang: this.lang
             },
             reader: new Ext.data.XmlReader({
                 record: 'keyword',
@@ -712,7 +712,8 @@ GeoNetwork.editor.ConceptSelectionPanel = Ext.extend(Ext.Panel, {
             pNewSearch: true,
             pTypeSearch: 2, // Exact match
             pMode: 'searchBox',
-            pThesauri: thesaurus
+            pThesauri: thesaurus,
+            pLang: this.lang
         };
         
         if (this.identificationMode === 'uri') {
