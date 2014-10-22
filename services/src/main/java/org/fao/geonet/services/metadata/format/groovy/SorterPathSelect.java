@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
 public class SorterPathSelect extends Sorter {
     private final Pattern pathPattern;
 
-    public SorterPathSelect(Pattern pathPattern, ClosureComparator comparator) {
-    super(comparator);
+    public SorterPathSelect(int priority, Pattern pathPattern, ClosureComparator comparator) {
+        super(priority, comparator);
         this.pathPattern = pathPattern;
     }
 
@@ -25,5 +25,10 @@ public class SorterPathSelect extends Sorter {
         Handler.createPath(parentElement, path);
 
         return this.pathPattern.matcher(path.toString()).matches();
+    }
+
+    @Override
+    protected String extraToString() {
+        return ", pathPattern ~= /" + pathPattern + "/";
     }
 }

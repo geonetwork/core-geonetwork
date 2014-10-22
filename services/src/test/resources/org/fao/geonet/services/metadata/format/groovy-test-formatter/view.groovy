@@ -276,12 +276,12 @@ handlers.add select: {el -> el.name() == 'gmd:MD_DataIdentification' && env.para
  *
  * The data passed to be sorted are org.fao.geonet.services.metadata.format.groovy.SortData objects.
  */
-handlers.sort ~/.*/, {sd1, sd2 ->
-    sd1.el.name().compareTo(sd2.el.name())
+handlers.sort ~/.*/, {el1, el2 ->
+    el1.name().compareTo(el2.name())
 }
 
-def sortVal = { sd ->
-    switch (sd.el.name()) {
+def sortVal = { el ->
+    switch (el.name()) {
         case "gmd:abstract":
         case "gmd:pointOfContact":
             return 0
@@ -289,6 +289,6 @@ def sortVal = { sd ->
             return 1;
     }
 }
-handlers.sort select: 'gmd:MD_DataIdentification', priority: 5, {sd1, sd2 ->
-    sortVal(sd1) - sortVal(sd2)
+handlers.sort select: 'gmd:MD_DataIdentification', priority: 5, {el1, el2 ->
+    sortVal(el1) - sortVal(el2)
 }

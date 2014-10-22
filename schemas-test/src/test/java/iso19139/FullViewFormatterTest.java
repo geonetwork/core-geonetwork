@@ -69,7 +69,7 @@ public class FullViewFormatterTest extends AbstractServiceIntegrationTest {
             Text textEl = (Text) t;
             final String requiredText = textEl.getTextNormalize();
             if (!requiredText.isEmpty() && !view.contains(requiredText)) {
-                missingStrings.append("\n").append(getXPath(textEl)).append(" -> ").append(requiredText);
+                missingStrings.append("\n").append(getXPath(textEl).trim()).append(" -> ").append(requiredText);
             }
         }
 
@@ -79,14 +79,14 @@ public class FullViewFormatterTest extends AbstractServiceIntegrationTest {
     }
 
     private String getXPath(Content el) {
-        String path = "/";
+        String path = "";
         if (el.getParentElement() != null) {
             path = getXPath(el.getParentElement());
         }
         if (el instanceof Element) {
-            return path + ((Element) el).getQualifiedName();
+            return path + " > " + ((Element) el).getQualifiedName();
         } else {
-            return path + el.getClass().getSimpleName();
+            return path + " > " + el.getClass().getSimpleName();
         }
     }
 }

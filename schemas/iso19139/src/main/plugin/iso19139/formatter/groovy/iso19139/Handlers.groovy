@@ -23,12 +23,15 @@ public class Handlers {
         handlers.add matchers.isCodeListEl, isoCodeListEl
         handlers.add matchers.hasCodeListChild, applyToChild(isoCodeListEl, '*')
         handlers.add matchers.isRespParty, respPartyEl
+        handlers.add matchers.isContactInfo, contactInfoEl
+        handlers.add matchers.isAddress, addressEl
+
         handlers.add select: matchers.isContainerEl, processChildren: true, priority: -1, isoEntryEl
         commonHandlers.addDefaultStartAndEndHandlers()
 
-        handlers.sort 'gmd:MD_Metadata', {sd1, sd2 ->
-            def v1 = matchers.isContainerEl(sd1.el) ? 1 : -1;
-            def v2 = matchers.isContainerEl(sd2.el) ? 1 : -1;
+        handlers.sort 'gmd:MD_Metadata', {el1, el2 ->
+            def v1 = matchers.isContainerEl(el1.el) ? 1 : -1;
+            def v2 = matchers.isContainerEl(el2.el) ? 1 : -1;
             return v1 - v2
         }
     }
@@ -53,7 +56,7 @@ public class Handlers {
     def isoTextEl = { el ->
         f.html {
             it.span('class': 'md-text') {
-                dt(f.label(el))
+                dt(f.nodeLabel(el))
                 dd(isofunc.isoText(el))
             }
         }
@@ -62,7 +65,7 @@ public class Handlers {
     def isoUrlEl = { el ->
         f.html {
             it.span('class': 'md-text') {
-                dt(f.label(el))
+                dt(f.nodeLabel(el))
                 dd(el.'gmd:Url'.text())
             }
         }
@@ -71,7 +74,7 @@ public class Handlers {
     def isoCodeListEl = { el ->
         f.html {
             it.span('class': 'md-text') {
-                dt(f.label(el))
+                dt(f.nodeLabel(el))
                 dd(el['@codeListValue'].text())
             }
         }
@@ -79,7 +82,7 @@ public class Handlers {
 
     def isoEntryEl = { el, childData ->
         if (!childData.isEmpty()) {
-            return handlers.fileResult('html/2-level-entry.html', [label: f.label(el), childData: childData])
+            return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: childData])
         }
         return null
     }
@@ -89,30 +92,45 @@ public class Handlers {
      */
     def respPartyEl = {el ->
         def party = el.'gmd:CI_ResponsibleParty'
-        def contactData = []
-        def text = nonEmpty(isoTextEl)
-        contactData.add(text(party.'gmd:individualName'))
-        contactData.add(text(party.'gmd:organisationName'))
-        contactData.add(text(party.'gmd:positionName'))
-        contactData.add(nonEmpty(isoCodeListEl)(party.'gmd:role'.'*'))
-        contactData.add(nonEmpty(contactInfoEl)(party.'gmd:contactInfo'))
-        contactData = contactData.findAll{it != null}
-        return handlers.fileResult('html/2-level-entry.html', [label: f.label(el), childData: contactData.join("\n")])
+
+        def childrenToProcess = []
+        childrenToProcess.addAll(party.'gmd:individualName')
+        childrenToProcess.addAll(party.'gmd:organisationName')
+        childrenToProcess.addAll(party.'gmd:positionName')
+        childrenToProcess.addAll(party.'gmd:role')
+        childrenToProcess.addAll(party.'gmd:contactInfo'.'gmd:CI_Contact')
+        def contactData = handlers.processElement( childrenToProcess )
+
+        return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: contactData])
     }
 
     /**
      * el must be a parent of gmd:CI_Contact
      */
     def contactInfoEl = {el ->
-        def party = el.'gmd:CI_Contact'
         def contactData = []
         def text = nonEmpty(isoTextEl)
-        def phone = party.'gmd:phone'.'gmd:CI_Telephone'
+        def phone = el.'gmd:phone'.'gmd:CI_Telephone'
 
         phone.'gmd:voice'.each {contactData.add(text(it))}
         phone.'gmd:facsimile'.each {contactData.add(text(it))}
+
         contactData = contactData.findAll{it != null}
-        return handlers.fileResult('html/2-level-entry.html', [label: f.label(el), childData: contactData.join("\n")])
+        return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: contactData.join("\n")])
+    }
+
+    /**
+     * el must be a parent of gmd:CI_Contact
+     */
+    def addressEl = {el ->
+        def addresses = el.'gmd:address'.'gmd:CI_Address'
+        def contactData = []
+        def text = nonEmpty(isoTextEl)
+
+        addresses.'gmd:deliveryPoint'.each {contactData.add(text(it))}
+
+        contactData = contactData.findAll{it != null}
+        return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: contactData.join("\n")])
     }
 
 }

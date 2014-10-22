@@ -10,28 +10,19 @@ import java.util.Comparator;
  *
  * @author Jesse on 10/20/2014.
  */
-public abstract class Sorter implements Comparator<SortData>, Comparable<Sorter> {
-    private final Comparator<SortData> comparator;
-    private int priority;
+public abstract class Sorter extends Selectable implements Comparator<GPathResult>, Comparable<Sorter> {
+    private final Comparator<GPathResult> comparator;
 
-    protected Sorter(Comparator<SortData> comparator) {
+    protected Sorter(int priority, Comparator<GPathResult> comparator) {
+        super(priority);
         this.comparator = comparator;
     }
 
     /**
-     * Return true if the sorter should sort the children of the element.
-     */
-    public abstract boolean select(TransformationContext context, GPathResult result);
-
-    /**
      * This is essentially the same as a Comparator's compare method.
      */
-    public int compare(SortData sd1, SortData sd2) {
-        return this.comparator.compare(sd1, sd2);
-    }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
+    public int compare(GPathResult el1, GPathResult el2) {
+        return this.comparator.compare(el1, el2);
     }
 
     @Override

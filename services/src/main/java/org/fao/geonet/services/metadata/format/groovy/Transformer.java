@@ -1,8 +1,5 @@
 package org.fao.geonet.services.metadata.format.groovy;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import groovy.util.XmlSlurper;
 import groovy.util.slurpersupport.GPathResult;
@@ -15,14 +12,9 @@ import org.jdom.Namespace;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
 import java.util.Set;
-import javax.annotation.Nullable;
 
 /**
  * Transforms the metadata using the Groovy formatter.
@@ -84,7 +76,7 @@ public class Transformer {
         createPath(root.getParentElement(), path);
 
         context.setRootPath(path.toString());
-        handleElement(context, md, resultantXml);
+        handlers.processElement(context, md, resultantXml);
     }
 
     private void createPath(Element node, StringBuilder path) {
@@ -98,60 +90,4 @@ public class Transformer {
         path.append(node.getQualifiedName());
     }
 
-    private void processChildren(TransformationContext context, GPathResult md, StringBuilder resultantXml) throws IOException {
-        @SuppressWarnings("unchecked")
-        final List<GPathResult> children  = md.children().list();
-        if (children.isEmpty()) {
-            return;
-        }
-        Sorter sorter = handlers.findSorter(context, md);
-
-        if (sorter == null) {
-            for (GPathResult child : children) {
-                handleElement(context, child, resultantXml);
-            }
-        } else {
-            final Function<SortData, Object> toName = new Function<SortData, Object>() {
-                @Nullable
-                @Override
-                public Object apply(@Nullable SortData input) {
-                    return input.el.name();
-                }
-            };
-            PriorityQueue<SortData> sortData = new PriorityQueue<SortData>(md.children().size(), sorter);
-            for (GPathResult child : children) {
-                StringBuilder builder = new StringBuilder();
-                handleElement(context, child, builder);
-                final SortData data = new SortData(child, builder.toString());
-                sortData.add(data);
-            }
-            Collection<Object> names = Lists.newArrayList( Collections2.transform(sortData, toName));
-            ArrayList<SortData> resorted = Lists.newArrayList(sortData);
-            Collections.sort(resorted, sorter);
-            Collection<Object> resortedNames = Collections2.transform(resorted, toName);
-
-            for (SortData data : sortData) {
-                resultantXml.append(data.data);
-            }
-        }
-    }
-
-
-    private void handleElement(TransformationContext context, GPathResult elem, StringBuilder resultantXml) throws IOException {
-        boolean continueProcessing = true;
-        for (Handler handler : handlers.handlers) {
-            if (handler.select(context, elem)) {
-                StringBuilder childData = new StringBuilder();
-                if (handler.processChildren()) {
-                    processChildren(context, elem, childData);
-                }
-                handler.handle(context, elem, resultantXml, childData.toString());
-                continueProcessing = false;
-                break;
-            }
-        }
-        if (continueProcessing) {
-            processChildren(context, elem, resultantXml);
-        }
-    }
 }

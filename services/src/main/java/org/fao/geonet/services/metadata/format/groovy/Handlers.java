@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,8 +26,6 @@ import java.util.regex.Pattern;
  */
 public class Handlers {
     private static final String HANDLER_SELECT = "select";
-    private static final String HANDLER_PRIORITY = "priority";
-    private static final String HANDLER_PROCESS_CHILDREN = "processChildren";
 
     private final File formatterDir;
     private final File schemaDir;
@@ -164,41 +163,18 @@ public class Handlers {
     }
 
     /**
-     * Create a handler from a map of properties to values.  Allowed properties are:
-     * <ul>
-     *   <li>{@link #HANDLER_SELECT} - <strong>(Required)</strong> One of:
+     * Create a handler from a map of properties to values.  There must be a 'select' attribute which can be:
      *   <ul>
      *      <li>a function for determining if this handler should be applied</li>
      *      <li>a string for matching against the name</li>
      *      <li>a regular expression for matching against the path</li>
      *   </ul>
-     *   </li>
-     *   <li>
-     *       {@link #HANDLER_PRIORITY} - <strong>(Optional)</strong> handlers with a higher priority will be evaluated before
-     *       handlers with a lower priority
-     *   </li>
-     *   <li>
-     *     {@link #HANDLER_PROCESS_CHILDREN} - <strong>(Optional)</strong> if true the handler function takes at least 3 parameters
-     *     then all children of this node will be processed and that data passed to the function for use by the handler
-     *   </li>
-     * </ul>
+     *
+     *   In addition any JavaBean properties on the handler maybe set using the correct JavaBean semantics.
+     *   For example: priority, processChildren
      */
     public Handler add(Map<String, Object> properties, Closure handlerFunction) {
-        Object select = null;
-        int priority = 0;
-        boolean processChildren = false;
-        for (Map.Entry<String, Object> entry : properties.entrySet()) {
-            if (entry.getKey().equalsIgnoreCase(HANDLER_SELECT)) {
-                select = entry.getValue();
-            } else if (entry.getKey().equalsIgnoreCase(HANDLER_PRIORITY)) {
-                priority = Integer.parseInt(entry.getValue().toString());
-            } else if (entry.getKey().equalsIgnoreCase(HANDLER_PROCESS_CHILDREN)) {
-                processChildren = Boolean.parseBoolean(entry.getValue().toString());
-            } else {
-                throw new IllegalArgumentException("Handler's do not have a configurable property: " + entry.getKey() + " value = " +
-                                                   entry.getValue());
-            }
-        }
+        Object select = properties.get(HANDLER_SELECT);
 
         if (select == null) {
             throw new IllegalArgumentException("A property " + HANDLER_SELECT + " must be present in the properties map");
@@ -216,8 +192,7 @@ public class Handlers {
                     "The property " + HANDLER_SELECT + " is not a legal type.  Legal types are: Closure/function or String or " +
                     "Regular Expression(Pattern) but was " + select.getClass());
         }
-        handler.setPriority(priority);
-        handler.setProcessChildren(processChildren);
+        handler.configure(properties);
 
         return handler;
     }
@@ -267,7 +242,7 @@ public class Handlers {
      *                     must return a negative, 0 or positive number in the same way as a Comparator class.
      */
     public Sorter sort(Closure select, Closure sortFunction) {
-        final SorterFunctionSelect sorter = new SorterFunctionSelect(select, new ClosureComparator(sortFunction));
+        final SorterFunctionSelect sorter = new SorterFunctionSelect(0, select, new ClosureComparator(sortFunction));
         this.sorters.add(sorter);
         return sorter;
     }
@@ -280,7 +255,7 @@ public class Handlers {
      *                     must return a negative, 0 or positive number in the same way as a Comparator class.
      */
     public Sorter sort(String elemName, Closure sortFunction) {
-        final Sorter sorter = new SorterNameSelect(Pattern.compile(Pattern.quote(elemName)),
+        final Sorter sorter = new SorterNameSelect(1, Pattern.compile(Pattern.quote(elemName)),
                 new ClosureComparator(sortFunction));
         this.sorters.add(sorter);
         return sorter;
@@ -294,7 +269,7 @@ public class Handlers {
      *                     must return a negative, 0 or positive number in the same way as a Comparator class.
      */
     public Sorter sort(Pattern namePattern, Closure sortFunction) {
-        final Sorter sorter = new SorterNameSelect(namePattern,
+        final Sorter sorter = new SorterNameSelect(0, namePattern,
                 new ClosureComparator(sortFunction));
         this.sorters.add(sorter);
         return sorter;
@@ -307,12 +282,12 @@ public class Handlers {
      *                     must return a negative, 0 or positive number in the same way as a Comparator class.
      */
     public Sorter sortPathMatcher(Pattern pathSelect, Closure sortFunction) {
-        final Sorter sorter = new SorterPathSelect(pathSelect,
+        final Sorter sorter = new SorterPathSelect(0, pathSelect,
                 new ClosureComparator(sortFunction));
         this.sorters.add(sorter);
         return sorter;
     }
-    Sorter findSorter(TransformationContext context, GPathResult md) {
+    private Sorter findSorter(TransformationContext context, GPathResult md) {
         Sorter sorter = null;
         for (Sorter s : this.sorters) {
             if (s.select(context, md)) {
@@ -324,18 +299,7 @@ public class Handlers {
     }
 
     public Sorter sort(Map<String, Object> properties, Closure handlerFunction) {
-        Object select = null;
-        int priority = 0;
-        for (Map.Entry<String, Object> entry : properties.entrySet()) {
-            if (entry.getKey().equalsIgnoreCase(HANDLER_SELECT)) {
-                select = entry.getValue();
-            } else if (entry.getKey().equalsIgnoreCase(HANDLER_PRIORITY)) {
-                priority = Integer.parseInt(entry.getValue().toString());
-            } else {
-                throw new IllegalArgumentException("Sorters's do not have a configurable property: " + entry.getKey() + " value = " +
-                                                   entry.getValue());
-            }
-        }
+        Object select =  properties.get(HANDLER_SELECT);;
 
         if (select == null) {
             throw new IllegalArgumentException("A property " + HANDLER_SELECT + " must be present in the properties map");
@@ -353,8 +317,65 @@ public class Handlers {
                     "The property " + HANDLER_SELECT + " is not a legal type.  Legal types are: Closure/function or String or " +
                     "Regular Expression(Pattern) but was " + select.getClass());
         }
-        sorter.setPriority(priority);
+        sorter.configure(properties);
 
         return sorter;
+    }
+
+    public String processElement(Iterable selection) throws IOException {
+        StringBuilder resultantXml = new StringBuilder();
+        final TransformationContext context = TransformationContext.getContext();
+        for (Object el : selection) {
+            final GPathResult gpath = (GPathResult) el;
+            if (!gpath.isEmpty()) {
+                processElement(context, gpath, resultantXml);
+            }
+        }
+
+        return resultantXml.toString();
+    }
+
+    private void processChildren(TransformationContext context, GPathResult md, StringBuilder resultantXml) throws IOException {
+        final GPathResult childrenPath = md.children();
+        @SuppressWarnings("unchecked")
+        final Iterator children = childrenPath.iterator();
+        if (!children.hasNext()) {
+            return;
+        }
+
+        Sorter sorter = findSorter(context, md);
+
+        if (sorter == null) {
+            while (children.hasNext()) {
+                processElement(context, (GPathResult) children.next(), resultantXml);
+            }
+        } else {
+            @SuppressWarnings("unchecked")
+            List<GPathResult> sortedChildren = childrenPath.list();
+            Collections.sort(sortedChildren, sorter);
+
+            for (GPathResult child : sortedChildren) {
+                processElement(context, child, resultantXml);
+            }
+        }
+    }
+
+
+    void processElement(TransformationContext context, GPathResult elem, StringBuilder resultantXml) throws IOException {
+        boolean continueProcessing = true;
+        for (Handler handler : this.handlers) {
+            if (handler.select(context, elem)) {
+                StringBuilder childData = new StringBuilder();
+                if (handler.processChildren()) {
+                    processChildren(context, elem, childData);
+                }
+                handler.handle(context, elem, resultantXml, childData.toString());
+                continueProcessing = false;
+                break;
+            }
+        }
+        if (continueProcessing) {
+            processChildren(context, elem, resultantXml);
+        }
     }
 }

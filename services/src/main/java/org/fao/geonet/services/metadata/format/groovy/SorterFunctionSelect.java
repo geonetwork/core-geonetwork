@@ -14,13 +14,18 @@ public class SorterFunctionSelect extends Sorter {
     private final Closure select;
 
     @SuppressWarnings("unchecked")
-    public SorterFunctionSelect(Closure select, Comparator comparator) {
-        super(comparator);
+    public SorterFunctionSelect(int priority, Closure select, Comparator comparator) {
+        super(priority, comparator);
         this.select = select;
     }
 
     @Override
     public boolean select(TransformationContext context, GPathResult parentElement) {
         return (Boolean) this.select.call(parentElement);
+    }
+
+    @Override
+    protected String extraToString() {
+        return "";
     }
 }

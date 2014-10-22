@@ -10,23 +10,19 @@ import java.io.IOException;
  *
  * @author Jesse on 10/15/2014.
  */
-public abstract class Handler implements Comparable<Handler> {
-    protected int priority = 0;
-    private boolean processChildren = false;
+public abstract class Handler extends Selectable implements Comparable<Handler> {
+    protected boolean processChildren = false;
     private Closure handlerFunction;
 
     public Handler(int priority, Closure handlerFunction) {
-        this.priority = priority;
+        super(priority);
         this.handlerFunction = handlerFunction;
-
     }
 
     @Override
     public int compareTo(Handler o) {
         return Integer.compare(o.priority, this.priority);
     }
-
-    public abstract boolean select(TransformationContext rootPath, GPathResult element);
 
     public boolean processChildren() {
         return this.processChildren && this.handlerFunction.getMaximumNumberOfParameters() > 1;
@@ -81,11 +77,17 @@ public abstract class Handler implements Comparable<Handler> {
         path.append(element.name());
     }
 
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
+    /**
+     * If true the children of this node will be processed and passed to the handler function.
+     */
     public void setProcessChildren(boolean processChildren) {
         this.processChildren = processChildren;
     }
+
+    @Override
+    public final String extraToString() {
+        return ", processChildren=" + processChildren + handlerExtraToString();
+    }
+
+    protected abstract String handlerExtraToString();
 }

@@ -11,13 +11,18 @@ import java.util.regex.Pattern;
 public class SorterNameSelect extends Sorter {
     private final Pattern namePattern;
 
-    public SorterNameSelect(Pattern namePattern, ClosureComparator comparator) {
-        super(comparator);
+    public SorterNameSelect(int priority, Pattern namePattern, ClosureComparator comparator) {
+        super(priority, comparator);
         this.namePattern = namePattern;
     }
 
     @Override
     public boolean select(TransformationContext context, GPathResult result) {
         return namePattern.matcher(result.name()).matches();
+    }
+
+    @Override
+    protected String extraToString() {
+        return ", namePattern ~= /" + namePattern + "/";
     }
 }

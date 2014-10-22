@@ -25,7 +25,7 @@ public class HandlerNameSelect extends Handler {
     }
 
     @Override
-    public String toString() {
-        return "Name ~= /" + namePattern + "/, Priority=" + super.priority;
+    protected String handlerExtraToString() {
+        return ", namePattern ~= /" + namePattern + "/";
     }
 }

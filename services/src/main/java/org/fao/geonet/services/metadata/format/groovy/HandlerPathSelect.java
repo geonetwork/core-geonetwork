@@ -31,8 +31,8 @@ public class HandlerPathSelect extends Handler {
     }
 
     @Override
-    public String toString() {
-        return "Path ~= /" + pathPattern + "/, Priority=" + super.priority;
+    protected String handlerExtraToString() {
+        return ", pathPattern ~= /" + pathPattern + "/";
     }
 
 }
