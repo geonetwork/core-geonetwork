@@ -41,6 +41,7 @@
   "serviceType": "Service Type",
   "accessConstraints": "Access Constraints",
   "saveInProgress": "Save In Progress...",
+  "viewChange": "Switching Views...",
   "all": "All",
   "collapse": "Collapse",
   "unexpectedSaveError": "An unexpected error occurred while saving",

@@ -313,7 +313,11 @@
       $scope.saveMetadata = function(editTab, finish) {
         var waitDialog = $('#pleaseWaitDialog');
         if (waitDialog) {
-          waitDialog.find('h2').text($translate('saveInProgress'));
+          if (editTab) {
+            waitDialog.find('h2').text($translate('viewChange'));
+          } else {
+            waitDialog.find('h2').text($translate('saveInProgress'));
+          }
           waitDialog.modal();
         }
         var dataClone = angular.copy($scope.data);
