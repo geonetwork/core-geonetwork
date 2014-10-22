@@ -20,10 +20,6 @@ public class Matchers {
     def isRespParty = { el ->
         !el.'gmd:CI_ResponsibleParty'.isEmpty() || el.'gmd:CI_ResponsibleParty'['@gco:isoType'].text() == 'gmd:CI_ResponsibleParty'
     }
-    def isContactInfo = { el ->
-        !el.'gmd:CI_Contact'.isEmpty()
-    }
-    def isAddress = { el ->
-        !el.'gmd:CI_Address'.isEmpty()
-    }
+    def isContactInfo = 'gmd:CI_Contact'
+    def isAddress = 'gmd:CI_Address'
 }

@@ -188,14 +188,15 @@ handlers.add isRefSysCode, { el ->
 
 /*
  * This example illustrates another way of configuring a handler. this add method take a map of values and
- * constructs a handler from them.  The values that will be used from the map are:
+ * constructs a handler from them.  The values that will be used from the map are, select and any JavaBean properties
+ * in the object.  For example:
  *
- * - select - the function for determining if this handler should be applied
+ * - name - a name to help with logging and debugging
  * - priority - handlers with a higher priority will be evaluated before handlers with a lower priority
  * - processChildren - if true the handler function takes at least 2 parameters then all children of this node will be processed
  *                     and that data passed to the function for use by the handler
  */
-handlers.add select: { it.children().size() > 0 }, priority: -1, processChildren: true, { el, childData ->
+handlers.add name: 'container el', select: { it.children().size() > 0 }, priority: -1, processChildren: true, { el, childData ->
     /*
      * we are returning a FileResult which has a path to the file as first parameter and takes a map
      * of String -> Object which are the replacements.  When this is returned the file will be loaded
@@ -251,7 +252,7 @@ handlers.add 'gmd:CI_OnlineResource', { el ->
  *
  * The env (org.fao.geonet.services.metadata.format.groovy.Environment) object has a method for getting the parameters
  */
-handlers.add select: {el -> el.name() == 'gmd:MD_DataIdentification' && env.param('h2IdentInfo').toBool()},
+handlers.add name: 'h2IdentInfo option', select: {el -> el.name() == 'gmd:MD_DataIdentification' && env.param('h2IdentInfo').toBool()},
              processChildren: true, { el, childData ->
     f.html {
         it.div('class':'identificationInfo') {
@@ -289,6 +290,15 @@ def sortVal = { el ->
             return 1;
     }
 }
-handlers.sort select: 'gmd:MD_DataIdentification', priority: 5, {el1, el2 ->
+
+/*
+ * As with handlers sorters have priority and can be created using the map form
+ *
+ * Note:  Both handlers and sorters have a name parameter that is used during debugging and logging.  It does not
+ * have a functional function.
+ *
+ * For the map form of handler and handlers any
+ */
+handlers.sort name:'Sort data identification children', select: 'gmd:MD_DataIdentification', priority: 5, {el1, el2 ->
     sortVal(el1) - sortVal(el2)
 }

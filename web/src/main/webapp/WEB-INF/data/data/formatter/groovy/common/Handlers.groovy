@@ -21,6 +21,23 @@ public class Handlers {
         handlers.end htmlOrXmlEnd
     }
 
+    static def applyToChild(handlerFunc, name) {
+        {el ->
+            def children = el[name]
+            if (children.size() == 1) {
+                return handlerFunc(children[0])
+            } else {
+                throw new IllegalStateException("There is supposed to be only a single child when this method is called")
+            }
+        }
+    }
+    static def nonEmpty(handlerFunc) {
+        {el ->
+            if (!el.text().isEmpty()) {
+                return handlerFunc(el)
+            }
+        }
+    }
 
     def htmlOrXmlStart = {
         if (func.hasHtmlParam()) {

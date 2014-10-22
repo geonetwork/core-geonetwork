@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
  * @author Jesse on 10/15/2014.
  */
 public class Handlers {
-    private static final String HANDLER_SELECT = "select";
+    static final String HANDLER_SELECT = "select";
 
     private final File formatterDir;
     private final File schemaDir;

@@ -18,41 +18,24 @@ public class Handlers {
     }
 
     def addDefaultHandlers() {
-        handlers.add matchers.isTextEl, isoTextEl
-        handlers.add matchers.isUrlEl, isoUrlEl
-        handlers.add matchers.isCodeListEl, isoCodeListEl
-        handlers.add matchers.hasCodeListChild, applyToChild(isoCodeListEl, '*')
-        handlers.add matchers.isRespParty, respPartyEl
-        handlers.add matchers.isContactInfo, contactInfoEl
-        handlers.add matchers.isAddress, addressEl
+        handlers.add name: 'Text Elements', select: matchers.isTextEl, isoTextEl
+        handlers.add name: 'URL Elements', select: matchers.isUrlEl, isoUrlEl
+        handlers.add name: 'CodeList Elements', select: matchers.isCodeListEl, isoCodeListEl
+        handlers.add name: 'Elements with single Codelist child', select: matchers.hasCodeListChild, commonHandlers.applyToChild(isoCodeListEl, '*')
+        handlers.add name: 'ResponsibleParty Elements', select: matchers.isRespParty, respPartyEl
+        handlers.add name: 'ContactInfo Elements', select: matchers.isContactInfo, contactInfoEl
+        handlers.add name: 'Address Elements', select: matchers.isAddress, addressEl
 
-        handlers.add select: matchers.isContainerEl, processChildren: true, priority: -1, isoEntryEl
+        handlers.add name: 'Container Elements', select: matchers.isContainerEl, processChildren: true, priority: -1, isoEntryEl
         commonHandlers.addDefaultStartAndEndHandlers()
 
-        handlers.sort 'gmd:MD_Metadata', {el1, el2 ->
+        handlers.sort name: 'Text Elements', select: matchers.isContainerEl, priority: -1, {el1, el2 ->
             def v1 = matchers.isContainerEl(el1.el) ? 1 : -1;
             def v2 = matchers.isContainerEl(el2.el) ? 1 : -1;
             return v1 - v2
         }
     }
 
-    def applyToChild(handlerFunc, name) {
-        {el ->
-            def children = el[name]
-            if (children.size() == 1) {
-                return handlerFunc(children[0])
-            } else {
-                throw new IllegalStateException("There is supposed to be only a single child when this method is called")
-            }
-        }
-    }
-    def nonEmpty(handlerFunc) {
-        {el ->
-            if (!el.text().isEmpty()) {
-                return handlerFunc(el)
-            }
-        }
-    }
     def isoTextEl = { el ->
         f.html {
             it.span('class': 'md-text') {
@@ -109,7 +92,7 @@ public class Handlers {
      */
     def contactInfoEl = {el ->
         def contactData = []
-        def text = nonEmpty(isoTextEl)
+        def text = commonHandlers.nonEmpty(isoTextEl)
         def phone = el.'gmd:phone'.'gmd:CI_Telephone'
 
         phone.'gmd:voice'.each {contactData.add(text(it))}
@@ -125,7 +108,7 @@ public class Handlers {
     def addressEl = {el ->
         def addresses = el.'gmd:address'.'gmd:CI_Address'
         def contactData = []
-        def text = nonEmpty(isoTextEl)
+        def text = commonHandlers.nonEmpty(isoTextEl)
 
         addresses.'gmd:deliveryPoint'.each {contactData.add(text(it))}
 
