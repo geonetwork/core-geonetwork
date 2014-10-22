@@ -17,6 +17,7 @@ import java.util.Map;
 public abstract class Selectable {
     protected int priority = 0;
     protected String name;
+    protected String mode = Mode.DEFAULT;
 
     public Selectable(int priority) {
         this.priority = priority;

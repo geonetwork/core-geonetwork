@@ -28,7 +28,7 @@ public class Transformer {
 
     public Transformer(Handlers handlers, String formatterPath) {
         this.handlers = handlers;
-        handlers.prepareForTransformation();
+        handlers.prepareForTransformer();
         this.formatterPath = formatterPath;
     }
 

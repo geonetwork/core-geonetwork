@@ -3,7 +3,6 @@ package iso19139;
 import com.google.common.io.Files;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Constants;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
@@ -34,10 +33,9 @@ public class FullViewFormatterTest extends AbstractServiceIntegrationTest {
 
         final String mdFile = FullViewFormatterTest.class.getResource("/iso19139/example.xml").getFile();
         final String xml = Files.toString(new File(mdFile), Constants.CHARSET);
-
         final ByteArrayInputStream stream = new ByteArrayInputStream(xml.getBytes(Constants.ENCODING));
         final int id = importMetadataXML(serviceContext, "uuid", stream, MetadataType.METADATA,
-                ReservedGroup.all.getId(), Params.GENERATE_UUID);
+                ReservedGroup.all.getId(), "80f1c261-1495-4e3b-bd22-f32a5f0ad643");
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("html", "true");
