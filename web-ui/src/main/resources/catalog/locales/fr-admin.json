@@ -281,7 +281,7 @@
     "deleteHarvester": "Supprimer",
     "deleteHarvesterHelp": "Supprimer le noeud et tous les fiches associées",
     "deleteHarvesterHistory": "Supprimer",
-    "deleteHarvesterRecords": "Supprimer les fiches",
+    "deleteHarvesterRecords": "Supprimer <strong>{{records}}</strong> fiche(s)",
     "deleteHarvesterRecordsHelp": "Supprimer les fiches tout en conservant la configuration",
     "deleteThesaurus": "Supprimer",
     "deleteUser": "Supprimer",
@@ -808,9 +808,9 @@
     "thesaurusExternalHelp": "Les thésaurus externes sont en lecture seule.",
     "thesaurusIdentifier": "Identifiant",
     "thesaurusNamespace": "Espace de nommage",
-    "thesaurusPlaceHelp": "The Thesaurus of type place contient une bounding box pour chaque concept. They could be use to automatically compute record extent from keywords.",
+    "thesaurusPlaceHelp": "The Thesaurus of type place contient une bounding box pour chaque concept. They could be us
     "thesaurusTitle": "Titre",
-    "thesaurusUploadHelp": "Les thésaurus au <a href=\"http://www.w3.org/2004/02/skos/\">format SKOS</a> sont supportés. Les fichiers peuvent avoir une extension XML ou RDF.",
+    "thesaurusUploadHelp": "Les thésaurus au <a href=\"http://www.w3.org/2004/02/skos/\">format SKOS</a> sont supporté
     "thesaurusUrl": "URL",
     "thredds-DIF": "Extract DIF metadata elements and create ISO metadata",
     "thredds-UNIDATA": "Extract Unidata dataset discovery metadata using fragments",
@@ -820,7 +820,7 @@
     "thredds-createAtomicSubtemplatesHelp": " ",
     "thredds-createCollectionDatasetMd": "Créer des métadonnées pour les collections d'un ensemble de données",
     "thredds-createCollectionDatasetMdHelp": " ",
-    "thredds-createCollectionSubtemplates": "Créer des sous-modèles de fragments et de leurs XLink au niveau du modèle",
+    "thredds-createCollectionSubtemplates": "Créer des sous-modèles de fragments et de leurs XLink au niveau du modèle
     "thredds-createCollectionSubtemplatesHelp": " ",
     "thredds-createServiceMd": "Créer des métadonnées de type ISO19119 pour tous les services du catalogue",
     "thredds-createServiceMdHelp": " ",
@@ -839,6 +839,17 @@
     "thredds-templateIdHelp": " ",
     "thredds-topic": "Thème",
     "thredds-unidataCfg": "UNIDATA configuration",
+
+    "metadataschemaValidate" : "Validation",
+    "metadataschemaValidateDes" : "Configure what rules are applied for each schema metadata. If no rule defined for a schema, it will be applied always.",
+    "schematroncriteriagroup" : "Criteria Group",
+    "xpathlabel" : "xPath",
+    "xpathvalue" : "Value",
+    "toggleRequirement" : "Change Requirement",
+    "deleteCriteriaGroup" : "Delete Criteria Group",
+    "deleteCriteria" : "Delete Criteria",
+
+    "recordsRemoved": "fiche(s) supprimée(s)",
     "time": "Temps",
     "tools": "Outils",
     "totalNumberOfRecords": " fiches dans le catalogue",

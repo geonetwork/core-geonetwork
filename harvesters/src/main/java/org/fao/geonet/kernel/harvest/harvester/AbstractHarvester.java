@@ -883,6 +883,9 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         }
         return res;
     }
+    public void emptyResult() {
+        result = null;
+    }
 
     /**
      * Get the list of registered harvester
