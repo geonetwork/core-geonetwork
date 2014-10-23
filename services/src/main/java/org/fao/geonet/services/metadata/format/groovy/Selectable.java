@@ -85,4 +85,8 @@ public abstract class Selectable {
         }
         throw new IllegalArgumentException("Handler's do not have a configurable property: " + key + " value = " + value);
     }
+
+    public String getName() {
+        return name;
+    }
 }

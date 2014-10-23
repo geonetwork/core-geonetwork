@@ -84,7 +84,7 @@ public class ListFormatters extends AbstractFormatService implements Service {
                 boolean add = true;
                 if (formatterFilter.accept(xsl)) {
                     if (!schema.equalsIgnoreCase("all") && !assumeCorrectSchema) {
-                        ConfigFile config = new ConfigFile(xsl);
+                        ConfigFile config = new ConfigFile(xsl, false);
                         if (!config.listOfApplicableSchemas().contains(schema)) {
                             add = false;
                         }

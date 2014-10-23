@@ -11,7 +11,6 @@ import java.io.IOException;
  * @author Jesse on 10/15/2014.
  */
 public abstract class Handler extends Selectable implements Comparable<Handler> {
-    protected boolean processChildren = false;
     private Closure handlerFunction;
 
     public Handler(int priority, Closure handlerFunction) {
@@ -24,11 +23,7 @@ public abstract class Handler extends Selectable implements Comparable<Handler> 
         return Integer.compare(o.priority, this.priority);
     }
 
-    public boolean processChildren() {
-        return this.processChildren && this.handlerFunction.getMaximumNumberOfParameters() > 1;
-    }
-
-    public HandlerResult handle(TransformationContext context, GPathResult elem, StringBuilder resultantXml, String childData)
+    public HandlerResult handle(TransformationContext context, GPathResult elem, StringBuilder resultantXml)
             throws IOException {
         final int maximumNumberOfParameters = this.handlerFunction.getMaximumNumberOfParameters();
         Object result;
@@ -40,10 +35,7 @@ public abstract class Handler extends Selectable implements Comparable<Handler> 
                 result = this.handlerFunction.call(elem);
                 break;
             case 2:
-                result = this.handlerFunction.call(elem, childData);
-                break;
-            case 3:
-                result = this.handlerFunction.call(elem, childData, context);
+                result = this.handlerFunction.call(elem, context);
                 break;
             default:
                 throw new IllegalStateException("Too many arguments in handler '" + this + "' there are: " +
@@ -77,16 +69,9 @@ public abstract class Handler extends Selectable implements Comparable<Handler> 
         path.append(element.name());
     }
 
-    /**
-     * If true the children of this node will be processed and passed to the handler function.
-     */
-    public void setProcessChildren(boolean processChildren) {
-        this.processChildren = processChildren;
-    }
-
     @Override
     public final String extraToString() {
-        return ", processChildren=" + processChildren + handlerExtraToString();
+        return handlerExtraToString();
     }
 
     protected abstract String handlerExtraToString();

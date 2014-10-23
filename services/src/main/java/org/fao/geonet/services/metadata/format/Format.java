@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.metadata.format;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
@@ -32,6 +33,7 @@ import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
@@ -109,6 +111,19 @@ public class Format extends AbstractFormatService {
             @RequestParam(value = "hide_withheld", required = false) final Boolean hide_withheld,
             final HttpServletRequest request) throws Exception {
 
+        Pair<FormatterImpl, FormatterParams> result = createFormatterAndParams(lang, type, id, uuid, xslid, skipPopularity,
+                hide_withheld, request);
+        FormatterImpl formatter = result.one();
+        FormatterParams fparams = result.two();
+        return formatter.format(fparams);
+
+    }
+
+    @VisibleForTesting
+    Pair<FormatterImpl, FormatterParams> createFormatterAndParams(
+            final String lang, final String type, final String id, final String uuid, final String xslid,
+            final String skipPopularity, final Boolean hide_withheld, final HttpServletRequest request) throws Exception {
+
         ServiceContext context = this.serviceManager.createServiceContext("metadata.formatter" + type, lang, request);
         Element metadata = getMetadata(context, id, uuid, new ParamValue(skipPopularity), hide_withheld);
 
@@ -119,14 +134,11 @@ public class Format extends AbstractFormatService {
         }
         File formatDir = getAndVerifyFormatDir(geonetworkDataDirectory, "xsl", xslid, schemaDir);
 
-        ConfigFile config = new ConfigFile(formatDir);
+        ConfigFile config = new ConfigFile(formatDir, false);
 
         if (!isCompatibleMetadata(schema, config)) {
             throw new IllegalArgumentException("The bundle cannot format metadata with the " + schema + " schema");
         }
-
-        File viewXslFile = new File(formatDir, FormatterConstants.VIEW_XSL_FILENAME);
-        File viewGroovyFile = new File(formatDir, FormatterConstants.VIEW_GROOVY_FILENAME);
 
 
         FormatterParams fparams = new FormatterParams();
@@ -139,16 +151,20 @@ public class Format extends AbstractFormatService {
         fparams.schema = schema;
         fparams.url = settingManager.getSiteURL(lang);
 
+        File viewXslFile = new File(formatDir, FormatterConstants.VIEW_XSL_FILENAME);
+        File viewGroovyFile = new File(formatDir, FormatterConstants.VIEW_GROOVY_FILENAME);
+        FormatterImpl formatter;
         if (viewXslFile.exists()) {
             fparams.viewFile = viewXslFile.getCanonicalFile();
-            return Xml.getString(this.xsltFormatter.format(fparams));
+            formatter = this.xsltFormatter;
         } else if (viewGroovyFile.exists()){
             fparams.viewFile = viewGroovyFile.getCanonicalFile();
-            return this.groovyFormatter.format(fparams);
+            formatter = this.groovyFormatter;
         } else {
             throw new IllegalArgumentException("The 'xsl' parameter must be a valid id of a formatter");
         }
 
+        return Pair.read(formatter, fparams);
     }
 
     public Element getMetadata(ServiceContext context, String id, String uuid, ParamValue skipPopularity, Boolean hide_withheld)

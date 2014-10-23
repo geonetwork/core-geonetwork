@@ -25,19 +25,19 @@ public class SchemaLocalization {
         this.context = context;
     }
 
-    public Element getLabels() throws Exception {
-        return getXml("labels.xml");
+    public Element getLabels(String lang) throws Exception {
+        return getXml("labels.xml", lang);
     }
 
-    public Element getCodelists() throws Exception {
-        return getXml("codelists.xml");
+    public Element getCodelists(String lang) throws Exception {
+        return getXml("codelists.xml", lang);
     }
 
-    public Element getStrings() throws Exception {
-        return getXml("strings.xml");
+    public Element getStrings(String lang) throws Exception {
+        return getXml("strings.xml", lang);
     }
 
-    private Element getXml(String key) throws JDOMException, IOException {
-        return schemaInfo.get(key).getXml(context, context.getLanguage(), false);
+    private Element getXml(String key, String lang) throws JDOMException, IOException {
+        return schemaInfo.get(key).getXml(context, lang, false);
     }
 }

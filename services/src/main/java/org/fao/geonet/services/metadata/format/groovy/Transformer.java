@@ -1,5 +1,6 @@
 package org.fao.geonet.services.metadata.format.groovy;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import groovy.util.XmlSlurper;
 import groovy.util.slurpersupport.GPathResult;
@@ -90,4 +91,8 @@ public class Transformer {
         path.append(node.getQualifiedName());
     }
 
+    @VisibleForTesting
+    public Handlers getHandlers() {
+        return this.handlers;
+    }
 }

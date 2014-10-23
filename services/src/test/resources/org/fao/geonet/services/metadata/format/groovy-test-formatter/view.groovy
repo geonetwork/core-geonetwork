@@ -43,6 +43,10 @@ handlers.roots {
  * a root can also be added by calling:
  */
 handlers.root 'gmd:DataQuality'
+/**
+ * Adding another root
+ */
+handlers.root 'gmd:fileIdentifier'
 
 
 /*
@@ -61,12 +65,8 @@ handlers.root 'gmd:DataQuality'
  *
  * The parameters passed to the handler are:
  * - the GPathResult representing the current node
- * - a groovy.xml.MarkupBuilder - if null any data is written to this then all other return values are ignored
- * - A string representing the data obtained from processing all child data.
- *   Children are processed only if
- *     1. There are at least 2 parameters in the handler
- *     2. processChildren is true (the default) (see later example for configuring extra parameters on the handlers)
- *   If the child parameter is present but the handler is configured with processChildren as false then "" will be passed as childData
+ * - the current TransformationContext.  This contains information about the current state of the transformation.  it is not
+ *   normally of use in the closures.
  *
  * Like Javascript you only need to specify as many parameters as needed.
  *
@@ -193,10 +193,10 @@ handlers.add isRefSysCode, { el ->
  *
  * - name - a name to help with logging and debugging
  * - priority - handlers with a higher priority will be evaluated before handlers with a lower priority
- * - processChildren - if true the handler function takes at least 2 parameters then all children of this node will be processed
- *                     and that data passed to the function for use by the handler
  */
-handlers.add name: 'container el', select: { it.children().size() > 0 }, priority: -1, processChildren: true, { el, childData ->
+handlers.add name: 'container el', select: { it.children().size() > 0 }, priority: -1, { el ->
+    def childData = handlers.processElements(el.children(), el)
+
     /*
      * we are returning a FileResult which has a path to the file as first parameter and takes a map
      * of String -> Object which are the replacements.  When this is returned the file will be loaded
@@ -252,8 +252,10 @@ handlers.add 'gmd:CI_OnlineResource', { el ->
  *
  * The env (org.fao.geonet.services.metadata.format.groovy.Environment) object has a method for getting the parameters
  */
-handlers.add name: 'h2IdentInfo option', select: {el -> el.name() == 'gmd:MD_DataIdentification' && env.param('h2IdentInfo').toBool()},
-             processChildren: true, { el, childData ->
+handlers.add name: 'h2IdentInfo option',
+             select: {el -> el.name() == 'gmd:MD_DataIdentification' && env.param('h2IdentInfo').toBool()}, { el ->
+    def childData = handlers.processElements(el.children(), el)
+
     f.html {
         it.div('class':'identificationInfo') {
             h2 (f.nodeLabel(el))
@@ -267,6 +269,16 @@ handlers.add name: 'h2IdentInfo option', select: {el -> el.name() == 'gmd:MD_Dat
 }
 
 
+/*
+ * The config.properties file has a property: dependsOn: dublin-core which means all the classes and functions available in
+ * <schema_plugins>/dublin-core/formatter/groovy are also available to this formatter.
+ *
+ * For this test we have added a class DCFunctions to the dublin-core groovy directory we will test this functionality by
+ * using the static method that class contains.
+ */
+handlers.add name: 'codelist handler', select: DCFunctions.isFileId, {el ->
+    "<span class='fileId'>${el.text()}</span>"
+}
 
 /**
  * Sorters can be used to control the order in which the data is added to the resulting document.  When the children of an

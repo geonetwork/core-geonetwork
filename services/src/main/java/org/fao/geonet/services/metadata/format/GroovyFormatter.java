@@ -1,5 +1,6 @@
 package org.fao.geonet.services.metadata.format;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Maps;
@@ -13,6 +14,7 @@ import org.codehaus.groovy.control.CompilationFailedException;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.repository.IsoLanguageRepository;
 import org.fao.geonet.services.metadata.format.groovy.Environment;
 import org.fao.geonet.services.metadata.format.groovy.EnvironmentProxy;
 import org.fao.geonet.services.metadata.format.groovy.Functions;
@@ -28,6 +30,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 
 import static org.fao.geonet.services.metadata.format.FormatterConstants.GROOVY_SCRIPT_ROOT;
 import static org.fao.geonet.services.metadata.format.FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR;
@@ -38,7 +42,7 @@ import static org.fao.geonet.services.metadata.format.FormatterConstants.SCHEMA_
  * @author Jesse on 10/15/2014.
  */
 @Component
-public class GroovyFormatter {
+public class GroovyFormatter implements FormatterImpl {
 
     @Autowired
     GeonetworkDataDirectory dataDirectory;
@@ -48,6 +52,8 @@ public class GroovyFormatter {
     private IsoLanguagesMapper mapper;
     @Autowired
     private TemplateCache templateCache;
+    @Autowired
+    private IsoLanguageRepository isoLanguageRepository;
     private final Cache<String, Transformer> transformers = CacheBuilder.newBuilder().
             concurrencyLevel(1).
             maximumSize(40).
@@ -55,6 +61,15 @@ public class GroovyFormatter {
     private GroovyClassLoader baseClassLoader;
     private Map<String, GroovyClassLoader> schemaClassLoaders = Maps.newHashMap();
 
+    @VisibleForTesting
+    Transformer findTransformer(final FormatterParams fparams) throws ExecutionException {
+        return transformers.get(fparams.formatDir.getPath(), new Callable<Transformer>() {
+            @Override
+            public Transformer call() throws Exception {
+                return createTransformer(fparams);
+            }
+        });
+    }
     public String format(FormatterParams fparams) throws Exception {
         EnvironmentProxy.clearContext();
         final Transformer transformer = createTransformer(fparams);
@@ -74,7 +89,7 @@ public class GroovyFormatter {
 //        Transformer transformer;
         if (fparams.isDevMode() || transformer == null) {
             final File baseShared = new File(this.dataDirectory.getFormatterDir(), GROOVY_SCRIPT_ROOT);
-            final File schemaFormatterDir = new File(this.schemaManager.getSchemaDir(fparams.schema), SCHEMA_PLUGIN_FORMATTER_DIR);
+            final File schemaFormatterDir = getSchemaPluginFormatterDir(fparams.schema);
             final File schemaShared = new File(schemaFormatterDir, GROOVY_SCRIPT_ROOT);
             GroovyClassLoader cl = getParentClassLoader(fparams, baseShared, schemaShared);
 
@@ -86,8 +101,8 @@ public class GroovyFormatter {
             loadScripts(fparams.formatDir, groovyScriptEngine);
 
             Handlers handlers = new Handlers(fparams, schemaShared.getParentFile(), baseShared.getParentFile(), this.templateCache);
-            Functions functions = new Functions(fparams);
             Environment env = new EnvironmentProxy();
+            Functions functions = new Functions(fparams, env, isoLanguageRepository);
             Binding binding = new Binding();
             binding.setVariable("handlers", handlers);
             binding.setVariable("env", env);
@@ -103,17 +118,30 @@ public class GroovyFormatter {
         return transformer;
     }
 
+    private File getSchemaPluginFormatterDir(String schema) {
+        return new File(this.schemaManager.getSchemaDir(schema), SCHEMA_PLUGIN_FORMATTER_DIR);
+    }
+
     private GroovyClassLoader getParentClassLoader(FormatterParams fparams, File baseShared, File schemaShared) throws IOException,
             ResourceException, ScriptException {
         GroovyClassLoader cl = this.schemaClassLoaders.get(fparams.schema);
         if (fparams.isDevMode() || cl == null) {
-            String[] roots = new String[]{baseShared.toURI().toString()};
-            GroovyScriptEngine groovyScriptEngine = new GroovyScriptEngine(roots);
-            loadScripts(baseShared, groovyScriptEngine);
-            this.baseClassLoader = groovyScriptEngine.getGroovyClassLoader();
-
-            roots = new String[]{schemaShared.toURI().toString()};
-            groovyScriptEngine = new GroovyScriptEngine(roots, this.baseClassLoader);
+            final GroovyClassLoader parent;
+            final String dependOnSchema = fparams.config.dependOn();
+            if (dependOnSchema != null) {
+                File dependent = new File(getSchemaPluginFormatterDir(dependOnSchema), GROOVY_SCRIPT_ROOT);
+                parent = getParentClassLoader(createParamsForSchema(fparams, dependOnSchema), baseShared, dependent);
+            } else {
+                if (fparams.isDevMode() || this.baseClassLoader == null) {
+                    String[] roots = new String[]{baseShared.toURI().toString()};
+                    GroovyScriptEngine groovyScriptEngine = new GroovyScriptEngine(roots);
+                    loadScripts(baseShared, groovyScriptEngine);
+                    this.baseClassLoader = groovyScriptEngine.getGroovyClassLoader();
+                }
+                parent = this.baseClassLoader;
+            }
+            String[] roots = new String[]{schemaShared.toURI().toString()};
+            GroovyScriptEngine groovyScriptEngine = new GroovyScriptEngine(roots, parent);
 
 
             loadScripts(schemaShared, groovyScriptEngine);
@@ -122,6 +150,21 @@ public class GroovyFormatter {
         }
 
         return cl;
+    }
+
+    private FormatterParams createParamsForSchema(FormatterParams fparams, String schema) throws IOException {
+        ConfigFile newConfig = new ConfigFile(getSchemaPluginFormatterDir(schema), false);
+        final FormatterParams formatterParams = new FormatterParams();
+        formatterParams.config = newConfig;
+        formatterParams.params = fparams.params;
+        formatterParams.context = fparams.context;
+        formatterParams.format = fparams.format;
+        formatterParams.schema = fparams.schema;
+        formatterParams.metadata = fparams.metadata;
+        formatterParams.formatDir = fparams.formatDir;
+        formatterParams.url = fparams.url;
+        formatterParams.viewFile = fparams.viewFile;
+        return formatterParams;
     }
 
     private void loadScripts(File baseShared, GroovyScriptEngine gse) throws ResourceException, ScriptException {

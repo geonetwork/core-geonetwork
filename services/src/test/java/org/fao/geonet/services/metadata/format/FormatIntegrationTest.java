@@ -4,7 +4,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
 import org.eclipse.jetty.util.IO;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -25,6 +24,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import javax.annotation.Nullable;
 
 import static org.fao.geonet.domain.Pair.read;
@@ -45,6 +45,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
     private ServiceContext serviceContext;
     private int id;
     private String schema;
+    private String uuid;
 
     @Before
     public void setUp() throws Exception {
@@ -53,8 +54,9 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
         final Element sampleMetadataXml = getSampleMetadataXml();
         final ByteArrayInputStream stream = new ByteArrayInputStream(Xml.getString(sampleMetadataXml).getBytes("UTF-8"));
+        this.uuid = UUID.randomUUID().toString();
         this.id =  importMetadataXML(serviceContext, "uuid", stream, MetadataType.METADATA,
-                ReservedGroup.all.getId(), Params.GENERATE_UUID);
+                ReservedGroup.all.getId(), uuid);
         this.schema = schemaManager.autodetectSchema(sampleMetadataXml);
 
     }
@@ -89,7 +91,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
             @Nullable
             @Override
             public String apply(@Nullable Object input) {
-                return ((Element)input).getText();
+                return ((Element) input).getText();
             }
         });
 
@@ -125,23 +127,13 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         final String groovySharedClasses = "groovy";
         IO.copy(new File(testFormatter.getParentFile(), groovySharedClasses), new File(this.dataDirectory.getFormatterDir(), groovySharedClasses));
 
+
+        final File dublinCoreSchemaDir = new File(this.schemaManager.getSchemaDir("dublin-core"), "formatter/groovy");
+        dublinCoreSchemaDir.mkdirs();
+        IO.copy(new File(FormatIntegrationTest.class.getResource(formatterName+"/dublin-core-groovy").getFile()), new File(dublinCoreSchemaDir, "DCFunctions.groovy"));
+
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("h2IdentInfo", "true");
-//        long start = System.nanoTime();
-//        final long fiveSec = TimeUnit.SECONDS.toNanos(5);
-//        while (System.nanoTime() - start < fiveSec) {
-//            formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request);
-//        }
-//        final long thirtySec = TimeUnit.SECONDS.toNanos(30);
-//        start = System.nanoTime();
-//        int executions = 0;
-//        while (System.nanoTime() - start < thirtySec) {
-//            formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request);
-//            executions++;
-//        }
-//
-//        System.out.println("Executed " + executions + " in 30 seconds.  Average of " + (30000.0/executions) + "ms per execution");
-
 
         final String viewString = formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request);
 //        Files.write(viewString, new File("e:/tmp/view.html"), Constants.CHARSET);
@@ -186,6 +178,12 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         assertEquals(viewString, "shared", identificationElements.get(1).getAttributeValue("class"));
         assertEquals(viewString, "block", identificationElements.get(2).getAttributeValue("class"));
         assertEquals(viewString, "block", identificationElements.get(3).getAttributeValue("class"));
+        assertEquals(viewString, "block", identificationElements.get(3).getAttributeValue("class"));
+
+        // Verify that handler
+        // handlers.add name: 'codelist handler', select: isoHandlers.matchers.isCodeListEl, isoHandlers.isoCodeListEl
+        // is handled
+        assertElement(view, "body//p[@class = 'fileId']", this.uuid, 1);
     }
 
     private void assertElement(Element view, String onlineResourceHeaderXpath, String expected, int numberOfElements) throws JDOMException {

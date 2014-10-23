@@ -7,7 +7,8 @@ package org.fao.geonet;
  */
 public class SystemInfo {
     public static final String STAGE_DEVELOPMENT = "development";
-    private String stagingProfile = "production";
+    public static final String STAGE_PRODUCTION = "production";
+    private String stagingProfile = STAGE_PRODUCTION;
     private String buildDate;
 
     public SystemInfo(String stagingProfile, String buildDate) {

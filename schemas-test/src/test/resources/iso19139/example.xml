@@ -144,6 +144,7 @@
     <gmd:dataSetURI>
         <gco:CharacterString>Dataset URI</gco:CharacterString>
     </gmd:dataSetURI>
+
     <gmd:locale>
         <gmd:PT_Locale id="GER">
             <gmd:languageCode>
@@ -159,6 +160,7 @@
             </gmd:characterEncoding>
         </gmd:PT_Locale>
     </gmd:locale>
+
     <gmd:spatialRepresentationInfo>
         <gmd:MD_GridSpatialRepresentation>
             <gmd:numberOfDimensions>
@@ -340,7 +342,7 @@
                         <gco:CharacterString>Title</gco:CharacterString>
                         <gco:PT_FreeText xmlns:gco="http://www.isotc211.org/2005/gmd">
                             <gco:textGroup>
-                                <gmd:LocalisedCharacterString locale="#GER">GER Title</gmd:LocalisedCharacterString>
+                                <gmd:LocalisedCharacterString locale="#DE">GER Title</gmd:LocalisedCharacterString>
                             </gco:textGroup>
                         </gco:PT_FreeText>
                     </gmd:title>
@@ -372,7 +374,7 @@
                                         <gco:CharacterString/>
                                         <gco:PT_FreeText xmlns:gco="http://www.isotc211.org/2005/gmd">
                                             <gco:textGroup>
-                                                <gmd:LocalisedCharacterString locale="#GER">GER Citation Title</gmd:LocalisedCharacterString>
+                                                <gmd:LocalisedCharacterString locale="#DE">GER Citation Title</gmd:LocalisedCharacterString>
                                             </gco:textGroup>
                                         </gco:PT_FreeText>
                                     </gmd:title>
@@ -676,7 +678,7 @@
                                 <gco:CharacterString/>
                                 <gco:PT_FreeText xmlns:gco="http://www.isotc211.org/2005/gmd">
                                     <gco:textGroup>
-                                        <gmd:LocalisedCharacterString locale="#GER">Thesaurus name Citation Title</gmd:LocalisedCharacterString>
+                                        <gmd:LocalisedCharacterString locale="#DE">Thesaurus name Citation Title</gmd:LocalisedCharacterString>
                                     </gco:textGroup>
                                 </gco:PT_FreeText>
                             </gmd:title>
@@ -779,7 +781,7 @@
                                 <gco:CharacterString/>
                                 <gco:PT_FreeText xmlns:gco="http://www.isotc211.org/2005/gmd">
                                     <gco:textGroup>
-                                        <gmd:LocalisedCharacterString locale="#GER">Aggregate Datasetname Title</gmd:LocalisedCharacterString>
+                                        <gmd:LocalisedCharacterString locale="#DE">Aggregate Datasetname Title</gmd:LocalisedCharacterString>
                                     </gco:textGroup>
                                 </gco:PT_FreeText>
                             </gmd:title>
@@ -1144,7 +1146,7 @@
                                                         <gco:CharacterString/>
                                                         <gco:PT_FreeText xmlns:gco="http://www.isotc211.org/2005/gmd">
                                                             <gco:textGroup>
-                                                                <gmd:LocalisedCharacterString locale="#GER">Geographic identifier Authority Title</gmd:LocalisedCharacterString>
+                                                                <gmd:LocalisedCharacterString locale="#DE">Geographic identifier Authority Title</gmd:LocalisedCharacterString>
                                                             </gco:textGroup>
                                                         </gco:PT_FreeText>
                                                     </gmd:title>
@@ -1234,7 +1236,7 @@
                                                                 <gco:CharacterString>Scale Denominator</gco:CharacterString>
                                                                 <gco:PT_FreeText xmlns:gco="http://www.isotc211.org/2005/gmd">
                                                                     <gco:textGroup>
-                                                                        <gmd:LocalisedCharacterString locale="#GER">Scale Denominator</gmd:LocalisedCharacterString>
+                                                                        <gmd:LocalisedCharacterString locale="#DE">Scale Denominator</gmd:LocalisedCharacterString>
                                                                     </gco:textGroup>
                                                                 </gco:PT_FreeText>
                                                             </gmd:title>
@@ -1258,7 +1260,7 @@
                                                 <gco:CharacterString/>
                                                 <gco:PT_FreeText xmlns:gco="http://www.isotc211.org/2005/gmd">
                                                     <gco:textGroup>
-                                                        <gmd:LocalisedCharacterString locale="#GER">Source citation asd Title</gmd:LocalisedCharacterString>
+                                                        <gmd:LocalisedCharacterString locale="#DE">Source citation asd Title</gmd:LocalisedCharacterString>
                                                     </gco:textGroup>
                                                 </gco:PT_FreeText>
                                             </gmd:title>
@@ -1422,7 +1424,7 @@
                                         <gco:CharacterString/>
                                         <gco:PT_FreeText xmlns:gco="http://www.isotc211.org/2005/gmd">
                                             <gco:textGroup>
-                                                <gmd:LocalisedCharacterString locale="#GER">Result Conformance result Citation KJLKJ^%$%$@@##45</gmd:LocalisedCharacterString>
+                                                <gmd:LocalisedCharacterString locale="#DE">Result Conformance result Citation KJLKJ^%$%$@@##45</gmd:LocalisedCharacterString>
                                             </gco:textGroup>
                                         </gco:PT_FreeText>
                                     </gmd:title>
@@ -1510,7 +1512,7 @@
                         <gco:CharacterString/>
                         <gco:PT_FreeText xmlns:gco="http://www.isotc211.org/2005/gmd">
                             <gco:textGroup>
-                                <gmd:LocalisedCharacterString locale="#GER">Portrayal catalogue citation Title 981-203981298-0219839180asdf4589</gmd:LocalisedCharacterString>
+                                <gmd:LocalisedCharacterString locale="#DE">Portrayal catalogue citation Title 981-203981298-0219839180asdf4589</gmd:LocalisedCharacterString>
                             </gco:textGroup>
                         </gco:PT_FreeText>
                     </gmd:title>
@@ -1552,7 +1554,7 @@
                         <gco:CharacterString/>
                         <gco:PT_FreeText xmlns:gco="http://www.isotc211.org/2005/gmd">
                             <gco:textGroup>
-                                <gmd:LocalisedCharacterString locale="#GER">Application schema info  Application Schema Information (*&amp;^%^%^^%$^%$^%</gmd:LocalisedCharacterString>
+                                <gmd:LocalisedCharacterString locale="#DE">Application schema info  Application Schema Information (*&amp;^%^%^^%$^%$^%</gmd:LocalisedCharacterString>
                             </gco:textGroup>
                         </gco:PT_FreeText>
                     </gmd:title>

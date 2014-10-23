@@ -1,9 +1,11 @@
 package iso19139
 
+import org.fao.geonet.services.metadata.format.groovy.Environment
+
 public class Handlers {
-    def handlers;
-    def f
-    def env
+    private org.fao.geonet.services.metadata.format.groovy.Handlers handlers;
+    private org.fao.geonet.services.metadata.format.groovy.Functions f
+    private Environment env
     Matchers matchers
     Functions isofunc
     common.Handlers commonHandlers
@@ -20,54 +22,44 @@ public class Handlers {
     def addDefaultHandlers() {
         handlers.add name: 'Text Elements', select: matchers.isTextEl, isoTextEl
         handlers.add name: 'URL Elements', select: matchers.isUrlEl, isoUrlEl
+        handlers.add name: 'Simple Elements', select: matchers.isSimpleEl, isoSimpleEl
         handlers.add name: 'CodeList Elements', select: matchers.isCodeListEl, isoCodeListEl
+        handlers.add name: 'Date Elements', select: matchers.isDateEl, dateEl
+        handlers.add name: 'Elements with single Date child', select: matchers.hasDateChild, commonHandlers.applyToChild(isoCodeListEl, '*')
         handlers.add name: 'Elements with single Codelist child', select: matchers.hasCodeListChild, commonHandlers.applyToChild(isoCodeListEl, '*')
         handlers.add name: 'ResponsibleParty Elements', select: matchers.isRespParty, respPartyEl
-        handlers.add 'gmd:contactInfo', contactInfoEl
-        handlers.add 'gmd:address', addressEl
+        handlers.add 'gmd:contactInfo', commonHandlers.flattenedEntryEl({it.'gmd:CI_Contact'}, f.&nodeLabel)
+        handlers.add 'gmd:address', commonHandlers.flattenedEntryEl({it.'gmd:CI_Address'}, f.&nodeLabel)
+        handlers.add 'gmd:phone', commonHandlers.flattenedEntryEl({it.'gmd:CI_Telephone'}, f.&nodeLabel)
+        handlers.add 'gmd:onlineResource', commonHandlers.flattenedEntryEl({it.'gmd:CI_OnlineResource'}, f.&nodeLabel)
+        handlers.add 'gmd:CI_OnlineResource', commonHandlers.entryEl(f.&nodeLabel)
+        handlers.add 'gmd:locale', localeEl
 
-        handlers.add name: 'Container Elements', select: matchers.isContainerEl, processChildren: true, priority: -1, isoEntryEl
+        handlers.add name: 'Container Elements', select: matchers.isContainerEl, priority: -1, commonHandlers.entryEl(f.&nodeLabel)
         commonHandlers.addDefaultStartAndEndHandlers()
 
-        handlers.sort name: 'Text Elements', select: matchers.isContainerEl, priority: -1, {el1, el2 ->
-            def v1 = matchers.isContainerEl(el1.el) ? 1 : -1;
-            def v2 = matchers.isContainerEl(el2.el) ? 1 : -1;
+        handlers.sort name: 'Text Elements', select: 'gmd:MD_Metadata'/*matchers.isContainerEl*/, priority: -1, {el1, el2 ->
+            def v1 = matchers.isContainerEl(el1) ? 1 : -1;
+            def v2 = matchers.isContainerEl(el2) ? 1 : -1;
             return v1 - v2
         }
     }
 
-    def isoTextEl = { el ->
-        f.html {
-            it.span('class': 'md-text') {
-                dt(f.nodeLabel(el))
-                dd(isofunc.isoText(el))
-            }
-        }
-    }
+    def isoTextEl = { commonHandlers.func.textEl(f.nodeLabel(it), isofunc.isoText(it))}
+    def isoUrlEl = { commonHandlers.func.textEl(f.nodeLabel(it), it.'gmd:Url'.text())}
+    def isoCodeListEl = {commonHandlers.func.textEl(f.nodeLabel(it), f.codelistValueLabel(it))}
+    def isoSimpleEl = {commonHandlers.func.textEl(f.nodeLabel(it), it.'*'.text())}
+    def dateEl = { commonHandlers.func.textEl(f.nodeLabel(it), it.text()); }
 
-    def isoUrlEl = { el ->
-        f.html {
-            it.span('class': 'md-text') {
-                dt(f.nodeLabel(el))
-                dd(el.'gmd:Url'.text())
-            }
-        }
-    }
+    def localeEl = { el ->
+        def ptLocale = el.'gmd:PT_Locale'
+        def toHtml = commonHandlers.when(matchers.isCodeListEl, commonHandlers.span(f.&codelistValueLabel))
 
-    def isoCodeListEl = { el ->
-        f.html {
-            it.span('class': 'md-text') {
-                dt(f.nodeLabel(el))
-                dd(el['@codeListValue'].text())
-            }
-        }
-    }
+        def data = [toHtml(ptLocale.'gmd:languageCode'.'gmd:LanguageCode'),
+                    toHtml(ptLocale.'gmd:country'.'gmd:Country')]
 
-    def isoEntryEl = { el, childData ->
-        if (!childData.isEmpty()) {
-            return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: childData])
-        }
-        return null
+        def nonEmptyEls = data.findAll{it != null}
+        '<p> -- TODO Need widget for gmd:PT_Locale -- ' + nonEmptyEls.join("") + ' -- </p>'
     }
 
     /**
@@ -81,40 +73,10 @@ public class Handlers {
                 party.'gmd:organisationName',
                 party.'gmd:positionName',
                 party.'gmd:role',
-                party.'gmd:contactInfo']
-        def contactData = handlers.processElement( childrenToProcess )
+                party.'gmd:contactInfo'.'*'.'*']
+        def contactData = handlers.processElements( childrenToProcess )
 
         return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: contactData])
-    }
-
-    /**
-     * el must be a parent of gmd:contactInfo or a gmd:ContactInfo
-     */
-    def contactInfoEl = {el ->
-        def contact = el.name() == 'gmd:CI_Contact' ? el : el.'gmd:CI_Contact'
-        def phone = contact.'gmd:phone'.'gmd:CI_Telephone'
-
-        def childrenToProcess = [
-                phone.'gmd:voice',
-                phone.'gmd:facsimile',
-                phone.'gmd:address'.'gmd:CI_Address']
-        def contactData = handlers.processElement( childrenToProcess )
-
-        return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: contactData])
-    }
-
-    /**
-     * el must be a parent of gmd:CI_Address or a gmd:CI_Address
-     */
-    def addressEl = {el ->
-        def addresses = el.name() == 'gmd:CI_Address'? el : el.'gmd:CI_Address'
-        def contactData = []
-        def text = commonHandlers.nonEmpty(isoTextEl)
-
-        addresses.'gmd:deliveryPoint'.each {contactData.add(text(it))}
-
-        contactData = contactData.findAll{it != null}
-        return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: contactData.join("\n")])
     }
 
 }

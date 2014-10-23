@@ -27,14 +27,14 @@ import java.util.Set;
  * @author Jesse on 10/15/2014.
  */
 @Component
-public class XsltFormatter {
+public class XsltFormatter implements FormatterImpl {
     private Set<String> compiledXslt = Sets.newConcurrentHashSet();
     final Charset charset = Charset.forName(Constants.ENCODING);
 
     @Autowired
     GeonetworkDataDirectory dataDirectory;
 
-    public Element format(FormatterParams fparams) throws Exception {
+    public String format(FormatterParams fparams) throws Exception {
 
         final String viewFilePath = fparams.viewFile.getPath();
         if (fparams.isDevMode() || !this.compiledXslt.contains(viewFilePath)) {
@@ -70,20 +70,20 @@ public class XsltFormatter {
                     Element schemaEl = new Element(currentSchema);
                     schemas.addContent(schemaEl);
 
-                    schemaEl.addContent((Element) schemaLocalization.getLabels().clone());
-                    schemaEl.addContent((Element) schemaLocalization.getCodelists().clone());
-                    schemaEl.addContent((Element) schemaLocalization.getStrings().clone());
+                    schemaEl.addContent((Element) schemaLocalization.getLabels(fparams.context.getLanguage()).clone());
+                    schemaEl.addContent((Element) schemaLocalization.getCodelists(fparams.context.getLanguage()).clone());
+                    schemaEl.addContent((Element) schemaLocalization.getStrings(fparams.context.getLanguage()).clone());
                 }
             }
         }
         if (!"false".equalsIgnoreCase(fparams.param("debug", "false"))) {
-            return root;
+            return Xml.getString(root);
         }
         Element transformed = Xml.transform(root, fparams.viewFile.getAbsolutePath());
 
         Element response = new Element("metadata");
         response.addContent(transformed);
-        return response;
+        return Xml.getString(response);
     }
 
 

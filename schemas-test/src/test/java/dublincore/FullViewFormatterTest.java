@@ -1,4 +1,4 @@
-package iso19139;
+package dublincore;
 
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
@@ -33,8 +33,6 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
         Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
 
         List<String> excludes = Lists.newArrayList(
-                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:citation > gmd:CI_Citation > gmd:title > " +
-                "gco:PT_FreeText > gco:textGroup > gmd:LocalisedCharacterString > Text"
         );
 
         final List<?> text = Xml.selectNodes(Xml.loadString(xml, false), "*//text()");
@@ -69,7 +67,7 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
 
     @Override
     protected File getTestMetadataFile() {
-        final String mdFile = FullViewFormatterTest.class.getResource("/iso19139/example.xml").getFile();
+        final String mdFile = FullViewFormatterTest.class.getResource("/dublincore/example.xml").getFile();
         return new File(mdFile);
     }
 }

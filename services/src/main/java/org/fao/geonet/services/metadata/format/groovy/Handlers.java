@@ -2,6 +2,7 @@ package org.fao.geonet.services.metadata.format.groovy;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimaps;
 import com.google.common.collect.Sets;
@@ -238,15 +239,21 @@ public class Handlers {
      * See if the mode has a handler for the given element.
      */
     public boolean hasHandlerFor(String mode, GPathResult elem) {
+        return findHandlerFor(mode, elem) != null;
+    }
+
+    public Handler findHandlerFor(GPathResult elem) {
+        return findHandlerFor(Mode.DEFAULT, elem);
+    }
+    public Handler findHandlerFor(String mode, GPathResult elem) {
         for (Handler handler : this.handlers.get(mode)) {
             if (handler.select(TransformationContext.getContext(), elem)) {
-                return true;
+                return handler;
             }
         }
 
-        return false;
+        return null;
     }
-
     /**
      * Create a FileResult object as a result from a handler function.
      * See {@link org.fao.geonet.services.metadata.format.groovy.FileResult}
@@ -437,9 +444,90 @@ public class Handlers {
         return this.modes.get(id);
     }
 
-    public String processElement(Iterable selection) throws IOException {
+    /**
+     * Process/Transform all GPathResult objects in the selection.  Since a GPathResult can contain multiple elements, the selection
+     * will be iterated over and each element in each GPathResult will be iterated over.
+     *
+     * This version will not sort the element and will use the current transformation mode.
+     *
+     * @param selection a iterable of GPathResult objects
+     */
+    public String processElements(Iterable selection) throws IOException {
+        final TransformationContext context = TransformationContext.getContext();
+        return processElementsInMode(context.getCurrentMode(), selection, null);
+    }
+
+    /**
+     * Process/Transform all GPathResult objects in the selection.  Since a GPathResult can contain multiple elements, the selection
+     * will be iterated over and each element in each GPathResult will be iterated over.
+     *
+     * This version will not sort the element and will use the current transformation mode.
+     *
+     * @param selection a iterable of GPathResult objects
+     * @param sortByElement a GPathResult representing a single element which is used to look up a sorter.
+     *                      If null no sorting will be done
+     */
+    public String processElements(Iterable selection, GPathResult sortByElement) throws IOException {
+        final TransformationContext context = TransformationContext.getContext();
+        return processElementsInMode(context.getCurrentMode(), selection, sortByElement);
+    }
+
+    /**
+     * Process/Transform all GPathResult objects in the selection.  Since a GPathResult can contain multiple elements, the selection
+     * will be iterated over and each element in each GPathResult will be iterated over.
+     *
+     * This version will not sort the element and will use the declared mode transformation mode.
+     *
+     * @param mode the transformation mode to use
+     * @param selection a iterable of GPathResult objects
+     */
+    public String processElementsInMode(String mode, Iterable selection) throws IOException {
+        return processElementsInMode(mode, selection, null);
+    }
+
+    /**
+     * Process/Transform all GPathResult objects in the selection.  Since a GPathResult can contain multiple elements, the selection
+     * will be iterated over and each element in each GPathResult will be iterated over.
+     *
+     * This version will sort the element using the sorter that applies to the sortByElement.
+     * will use the declared mode transformation mode.
+     *
+     * @param mode the transformation mode to use
+     * @param selection a iterable of GPathResult objects
+     * @param sortByElement a GPathResult representing a single element which is used to look up a sorter.
+     *                      If null no sorting will be done
+     */
+    public String processElementsInMode(String mode, Iterable selection, GPathResult sortByElement) throws IOException {
         StringBuilder resultantXml = new StringBuilder();
         final TransformationContext context = TransformationContext.getContext();
+        String oldMode = context.getCurrentMode();
+        try {
+            context.setCurrentMode(mode);
+            Sorter sorter = null;
+            if (sortByElement != null) {
+                sorter = findSorter(context, sortByElement);
+            }
+            if (sorter == null) {
+                processUnsorted(selection, resultantXml, context);
+            } else {
+                processSorted(selection, resultantXml, context, sorter);
+            }
+
+            return resultantXml.toString();
+        } finally {
+            context.setCurrentMode(oldMode);
+        }
+    }
+
+    private void processSorted(Iterable selection, StringBuilder resultantXml, TransformationContext context, Sorter sorter) throws IOException {
+        List<GPathResult> flattenedSelection = flattenGPathResults(selection);
+        Collections.sort(flattenedSelection, sorter);
+        for (GPathResult el : flattenedSelection) {
+            processElement(context, el, resultantXml);
+        }
+    }
+
+    private void processUnsorted(Iterable selection, StringBuilder resultantXml, TransformationContext context) throws IOException {
         for (Object path : selection) {
             final GPathResult gpath = (GPathResult) path;
             if (!gpath.isEmpty()) {
@@ -448,29 +536,19 @@ public class Handlers {
                 }
             }
         }
-
-        return resultantXml.toString();
     }
 
-    public String processElement(String mode, Iterable selection) throws IOException {
-        StringBuilder resultantXml = new StringBuilder();
-        final TransformationContext context = TransformationContext.getContext();
-        String oldMode = context.getCurrentMode();
-        try {
-            context.setCurrentMode(mode);
-            for (Object path : selection) {
-                final GPathResult gpath = (GPathResult) path;
-                if (!gpath.isEmpty()) {
-                    for (Object el : gpath) {
-                        processElement(context, (GPathResult) el, resultantXml);
-                    }
+    private List<GPathResult> flattenGPathResults(Iterable selection) {
+        List<GPathResult> result = Lists.newArrayList();
+        for (Object path : selection) {
+            final GPathResult gpath = (GPathResult) path;
+            if (!gpath.isEmpty()) {
+                for (Object el : gpath) {
+                    result.add((GPathResult) el);
                 }
             }
-
-            return resultantXml.toString();
-        } finally {
-            context.setCurrentMode(oldMode);
         }
+        return result;
     }
 
     private void processChildren(TransformationContext context, GPathResult md, StringBuilder resultantXml) throws IOException {
@@ -500,19 +578,15 @@ public class Handlers {
 
 
     void processElement(TransformationContext context, GPathResult elem, StringBuilder resultantXml) throws IOException {
-        boolean continueProcessing = true;
+        boolean processChildren = true;
         for (Handler handler : this.handlers.get(context.getCurrentMode())) {
             if (handler.select(context, elem)) {
-                StringBuilder childData = new StringBuilder();
-                if (handler.processChildren()) {
-                    processChildren(context, elem, childData);
-                }
-                handler.handle(context, elem, resultantXml, childData.toString());
-                continueProcessing = false;
+                handler.handle(context, elem, resultantXml);
+                processChildren = false;
                 break;
             }
         }
-        if (continueProcessing) {
+        if (processChildren) {
             processChildren(context, elem, resultantXml);
         }
     }

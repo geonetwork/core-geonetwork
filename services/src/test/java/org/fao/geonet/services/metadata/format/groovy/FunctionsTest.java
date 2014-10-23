@@ -72,7 +72,7 @@ public class FunctionsTest {
             }
         };
 
-        functions = new Functions(fparams);
+        functions = new Functions(fparams, null, null);
     }
 
     @Test
@@ -86,13 +86,13 @@ public class FunctionsTest {
     @Test
     public void testCodeListValue() throws Exception {
 
-        assertEquals("Code One", functions.codelistLabel("gmd:codelist1", "code1"));
-        assertEquals("Code Three", functions.codelistLabel("gmd:codelist2", "code1"));
-        assertEquals("Desc Code One", functions.codelistDesc("gmd:codelist1", "code1"));
-        assertEquals("Desc Code Three", functions.codelistDesc("gmd:codelist2", "code1"));
+        assertEquals("Code One", functions.codelistValueLabel("gmd:codelist1", "code1"));
+        assertEquals("Code Three", functions.codelistValueLabel("gmd:codelist2", "code1"));
+        assertEquals("Desc Code One", functions.codelistValueDesc("gmd:codelist1", "code1"));
+        assertEquals("Desc Code Three", functions.codelistValueDesc("gmd:codelist2", "code1"));
         final GPathResult gPathResult = new XmlSlurper().parseText("<cl codeList='gmd:codelist1' codeListValue='code1'/>");
-        assertEquals("Code One", functions.codelistLabel(gPathResult));
-        assertEquals("Desc Code One", functions.codelistDesc(gPathResult));
+        assertEquals("Code One", functions.codelistValueLabel(gPathResult));
+        assertEquals("Desc Code One", functions.codelistValueDesc(gPathResult));
     }
     @Test
     public void testCodeList() throws Exception {
