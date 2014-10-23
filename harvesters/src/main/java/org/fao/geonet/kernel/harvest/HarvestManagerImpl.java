@@ -46,6 +46,8 @@ import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -341,7 +343,6 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 		// now add a new harvester based on the settings in the old
 		return addHarvesterReturnId(node, ownerId);
 	}
-
     /**
      * TODO javadoc.
      *
@@ -406,6 +407,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
             throw new RuntimeException(e);
         }
 	}
+
 
     /**
      * TODO Javadoc.
@@ -546,6 +548,25 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 	}
 
     /**
+     * Remove harvester information. For example, when records
+     * are removed, clean the last status information if any.
+     *
+     * @param id
+     * @param ownerId
+     * @throws Exception
+     */
+    public void removeInfo(String id, String ownerId) throws Exception {
+        // get the specified harvester from the settings table
+        Element node = get(id, context, null);
+        if (node != null) {
+            Element info = node.getChild("info");
+            if (info != null) {
+                info.removeContent();
+            }
+            update(node, ownerId);
+        }
+    }
+    /**
      *
      * @return
      */
@@ -578,19 +599,25 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         String harvesterUUID = ah.getParams().uuid;
 
         final Specification<Metadata> specification = MetadataSpecs.hasHarvesterUuid(harvesterUUID);
-        dataMan.batchDeleteMetadataAndUpdateIndex(specification);
+        int numberOfRecordsRemoved = dataMan.batchDeleteMetadataAndUpdateIndex(specification);
 
         elapsedTime = (System.currentTimeMillis() - elapsedTime) / 1000;
 
+        // clear last run info
+        removeInfo(id, context.getUserSession().getUserId());
+        ah.emptyResult();
+
         Element historyEl = new Element("result");
-        historyEl.addContent(new Element("cleared"));
-        ISODate lastRun = new ISODate(System.currentTimeMillis());
+        historyEl.addContent(new Element("cleared").
+                setAttribute("recordsRemoved", numberOfRecordsRemoved + ""));
+        final String lastRun = new DateTime().withZone(DateTimeZone.forID("UTC")).toString();
+        ISODate lastRunDate = new ISODate(lastRun);
 
         HarvestHistoryRepository historyRepository = context.getBean(HarvestHistoryRepository.class);
         HarvestHistory history = new HarvestHistory();
         history.setDeleted(true);
         history.setElapsedTime((int) elapsedTime);
-        history.setHarvestDate(lastRun);
+        history.setHarvestDate(lastRunDate);
         history.setHarvesterName(ah.getParams().name);
         history.setHarvesterType(ah.getType());
         history.setHarvesterUuid(ah.getParams().uuid);
@@ -598,6 +625,5 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         history.setParams(ah.getParams().node);
 
         historyRepository.save(history);
-
         return OperResult.OK;
     }}
