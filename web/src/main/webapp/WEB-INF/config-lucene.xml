@@ -13,12 +13,12 @@
     <MergeFactor>10</MergeFactor>
 
     <!-- Default Lucene version to use (mainly for Analyzer creation). -->
-    <luceneVersion>36</luceneVersion>
+    <luceneVersion>4_9</luceneVersion>
     <!-- How often to check if a commit is required -->
-    <commitInterval>30000</commitInterval>
+    <commitInterval>1000</commitInterval>
     <!-- If true then NRTManagerReopenThread will control how often the reader are reopened.
     	 If false then the reader will be opened everytime they are obtained.  -->
-    <useNRTManagerReopenThread>false</useNRTManagerReopenThread>
+    <useNRTManagerReopenThread>true</useNRTManagerReopenThread>
     <!-- 
     	Only applies if useNRTManagerReopenThread is true
     	Maximum time until a new  reader must be opened; this sets the upper bound 
@@ -180,6 +180,7 @@
   -->
   <fieldSpecificAnalyzer>
     <Field name="_uuid" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
+    <Field name="standardName" analyzer="org.apache.lucene.analysis.core.KeywordAnalyzer"/>
     <Field name="parentUuid" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
     <Field name="operatesOn" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>
     <Field name="operatesOnIdentifier" analyzer="org.fao.geonet.kernel.search.GeoNetworkAnalyzer"/>

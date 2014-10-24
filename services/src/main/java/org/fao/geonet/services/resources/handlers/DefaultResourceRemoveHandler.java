@@ -24,6 +24,7 @@
 package org.fao.geonet.services.resources.handlers;
 
 import jeeves.server.context.ServiceContext;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataFileUpload;
@@ -34,6 +35,8 @@ import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
 import java.io.File;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -86,4 +89,27 @@ public class DefaultResourceRemoveHandler implements IResourceRemoveHandler {
             Log.warning(Geonet.RESOURCES, "Delete file upload request: No upload request for (metadataid, file): (" + metadataId + "," + fileName + ")");
         }
     }
+
+	@Override
+	public void onDelete(ServiceContext context, HttpServletRequest request,
+			int metadataId, String fileName, String access)
+			throws ResourceHandlerException {
+
+        try {
+            // delete online resource
+            File dir  = new File(Lib.resource.getDir(context, access, metadataId));
+            File file = new File(dir, fileName);
+
+            if (file.exists() && !file.delete())
+                throw new OperationAbortedEx("unable to delete resource");
+
+            storeFileUploadDeleteRequest(context, metadataId, fileName);
+
+        } catch (Exception ex) {
+            Log.error(Geonet.RESOURCES, "DefaultResourceRemoveHandler (onDelete): " + ex.getMessage());
+            ex.printStackTrace();
+            throw new ResourceHandlerException(ex);
+        }
+		
+	}
 }

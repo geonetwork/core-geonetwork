@@ -4,7 +4,7 @@ var GeoNetworkadminUserPage = function() {
   this.users = {
     admin: {
       username: 'admin',
-      displayName: 'admin admin',
+      displayName: 'admin admin (Administrator)',
       index: 0
     },
     registeredUser: {
@@ -13,7 +13,7 @@ var GeoNetworkadminUserPage = function() {
       password: 'aaaaaa',
       name: 'Clotilde',
       surname: 'a registered user',
-      displayName: 'Clotilde a registered user',
+      displayName: 'Clotilde a registered user (Registered user)',
       profile: 'RegisteredUser',
       address: '313 chemin du four',
       city: 'SAINT JEOIRE PRIEURÉ',

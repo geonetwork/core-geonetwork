@@ -22,29 +22,32 @@
 //==============================================================================
 package org.fao.geonet.guiservices.csw.virtual;
 
-import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
-import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.responses.OkResponse;
 import org.fao.geonet.repository.ServiceRepository;
-import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Delete a virual CSW service configurations
  */
-public class Delete implements Service {
-    public void init(String appPath, ServiceConfig params) throws Exception {
-    }
+@Controller("admin.config.virtualcsw.remove")
+public class Delete {
+    @Autowired
+    private ServiceRepository serviceRepository;
 
-    public Element exec(Element params, ServiceContext context)
+    @RequestMapping(value = "/{lang}/admin.config.virtualcsw.remove", produces = {
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody
+    OkResponse exec(@RequestParam String id)
             throws Exception {
-        String id = Util.getParam(params, Params.ID);
         int iId = Integer.parseInt(id);
 
-        context.getBean(ServiceRepository.class).delete(iId);
+        serviceRepository.delete(iId);
 
-        return new Element(Jeeves.Elem.RESPONSE);
+        return new OkResponse();
     }
 }

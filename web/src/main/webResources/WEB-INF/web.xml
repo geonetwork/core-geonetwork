@@ -15,10 +15,6 @@
 	        org.springframework.web.context.request.RequestContextListener
 	    </listener-class>
     </listener>
-    <!--<context-param>-->
-        <!--<param-name>JSON_FACTORY_ATTRIBUTE</param-name>-->
-        <!--<param-value>Joe</param-value>-->
-    <!--</context-param>-->
   
     <!-- shut down java cache used for xlinks and spatial index -->
     <listener>
@@ -43,6 +39,10 @@
 	</listener>
 	
     <!-- Spring security -->
+<!--     <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter> -->
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>
         <filter-class>jeeves.config.springutil.JeevesDelegatingFilterProxy</filter-class>
@@ -55,6 +55,7 @@
             <param-value>localhost</param-value>
         </init-param>
     </filter>
+ 
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
@@ -90,7 +91,7 @@
             /rewrite-status). Note: must start with / -->
         <init-param>
             <param-name>statusPath</param-name>
-            <param-value>/status</param-value>
+            <param-value>/rewritestatus</param-value>
         </init-param>
     </filter>
     <filter-mapping>
@@ -255,30 +256,6 @@
     </servlet-mapping>
 
     <servlet>
-        <description>
-            Handles requests that should be redirected to the page in the correct local.
-            For example index.html or index.jsp or error pages
-        </description>
-        <servlet-name>localeRedirects</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>localeRedirects</servlet-name>
-        <url-pattern>/home</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>localeRedirects</servlet-name>
-        <url-pattern>/login.jsp</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>localeRedirects</servlet-name>
-        <url-pattern>/accessDenied.jsp</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>gn-servlet</servlet-name>
         <servlet-class>jeeves.server.sources.http.JeevesServlet</servlet-class>
         <!-- Specified what overrides to use if the
@@ -301,7 +278,7 @@
 
     <servlet-mapping>
         <servlet-name>gn-servlet</servlet-name>
-        <url-pattern>/srv/*</url-pattern>
+        <url-pattern>/nouse/*</url-pattern>
     </servlet-mapping>
 
     <!--
@@ -349,6 +326,40 @@
 
         <load-on-startup>0</load-on-startup>
     </servlet>
+
+        <!-- Spring dispatcher servlet -->
+    <servlet>
+        <servlet-name>spring</servlet-name>
+        <servlet-class>
+            jeeves.config.springutil.JeevesDispatcherServlet
+        </servlet-class>
+        <init-param>
+            <param-name>nodeId</param-name>
+            <param-value>srv</param-value>
+        </init-param>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>spring</servlet-name>
+        <url-pattern>/srv/*</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet-mapping>
+        <servlet-name>spring</servlet-name>
+        <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>spring</servlet-name>
+        <url-pattern>/login.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>spring</servlet-name>
+        <url-pattern>/accessDenied.jsp</url-pattern>
+    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>HttpProxy</servlet-name>

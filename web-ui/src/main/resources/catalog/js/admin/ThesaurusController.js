@@ -95,6 +95,8 @@
         creatingThesaurus = false;
         $scope.thesaurusSelected = t;
         $scope.thesaurusSelectedActivated = t.activated == 'y';
+
+        $('#keywordFilter').focus();
         searchThesaurusKeyword();
       };
 

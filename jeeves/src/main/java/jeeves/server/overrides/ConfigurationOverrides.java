@@ -578,7 +578,9 @@ public class ConfigurationOverrides {
 			return builder.toString();
     	} catch (FileNotFoundException e) {
     		return null;
-    	}
+    	} catch (NullPointerException e) { //If the url is null
+		return null;
+	}
 	}
 
 	private String lookupOverrideParamFromServlet(ServletContext context) throws IOException, JDOMException {

@@ -1,0 +1,18 @@
+<ul class="pager"
+    data-ng-show="numberOfPages() > 1">
+  <li>
+    <a href="" class="btn btn-default btn-xs"
+       data-ng-disabled="isFirstPage() ? 'disabled' : ''"
+       data-ng-click="decPage()"
+       data-translate>previous</a></li>
+  <li>{{paginator.currentPage+1}} / {{numberOfPages()}}</li>
+  <li>
+    <a href="" class="btn btn-default btn-xs"
+       data-ng-class="isLastPage() ? 'disabled' : ''"
+       data-ng-click="incPage()"
+      data-translate>next</a></li>
+  <!--<li>-->
+    <!--<select ng-model="paginator.pageSize"-->
+            <!--data-ng-options="size for size in pageSizeList"></select>-->
+  <!--</li>-->
+</ul>

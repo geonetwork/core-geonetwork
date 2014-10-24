@@ -161,6 +161,7 @@
           });
       return parameterValue;
     };
+
     return {
       scrollTo: scrollTo,
       isInView: isInView,

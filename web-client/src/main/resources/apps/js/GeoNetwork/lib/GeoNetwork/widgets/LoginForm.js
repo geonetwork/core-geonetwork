@@ -218,15 +218,6 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
                     },
                     scope: this
                 }
-            }),
-            new Ext.Button({
-                text: OpenLayers.i18n('updatePassword'),
-                listeners: {
-                    click: function () {
-                        this.catalogue.moveToURL(this.catalogue.services.updatePassword + this.catalogue.identifiedUser.username);
-                    },
-                    scope: this
-                }
             }));
         }
         
@@ -388,11 +379,14 @@ GeoNetwork.LoginForm = Ext.extend(Ext.FormPanel, {
             listeners: {
                 'render': function () {
                     this.userInfo.update(this.catalogue.identifiedUser);
+
+                    this.userInfo.getEl().on('click', function () {
+                        this.show();
+                    }, this.tooltipMenu);
                 },
                 scope: form
             }
         });
-        
         
         
         if (this.hideLoginLabels) {

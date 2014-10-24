@@ -34,6 +34,17 @@ public interface IResourceUploadHandler {
      * @param metadataId
      * @throws ResourceHandlerException
      */
+	@Deprecated
     public void onUpload(ServiceContext context, Element params, int metadataId,
-                         String fileName, double fileSize) throws ResourceHandlerException;
+            String fileName, double fileSize) throws ResourceHandlerException;
+    /**
+    * Spring way.
+    *
+    * @param context
+    * @param params
+    * @param metadataId
+    * @throws ResourceHandlerException
+    */
+    public void onUpload(ServiceContext context, String access, String overwrite, int metadataId,
+            String fileName, double fileSize) throws ResourceHandlerException;
 }

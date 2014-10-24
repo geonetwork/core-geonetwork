@@ -16,11 +16,12 @@
    * TODO: This could be used in other places
    * probably. Move to another common or language module ?
    */
-  module.directive('gnCountryPicker', ['gnHttp',
-    function(gnHttp) {
+  module.directive('gnCountryPicker', ['gnHttp', 'gnUtilityService',
+    function(gnHttp, gnUtilityService) {
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
+          element.attr('placeholder', '...');
           gnHttp.callService('country', {}, {
             cache: true
           }).success(function(response) {
@@ -35,13 +36,20 @@
               });
               country.name = country.label[scope.lang];
             });
-
-            $(element).typeahead({
-              name: 'countries',
-              valueKey: 'name',
+            var source = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
               local: data,
-              minLength: 0,
               limit: 30
+            });
+            source.initialize();
+            $(element).typeahead({
+              minLength: 0,
+              highlight: true
+            }, {
+              name: 'countries',
+              displayKey: 'name',
+              source: source.ttAdapter()
             }).on('typeahead:selected', function(event, datum) {
               if (angular.isFunction(scope.onRegionSelect)) {
                 scope.onRegionSelect(datum);
@@ -108,11 +116,21 @@
               gnRegionService.loadRegion(scope.regionType, scope.lang).then(
                   function(data) {
                     $(element).typeahead('destroy');
-                    $(element).typeahead({
-                      valueKey: 'name',
+                    var source = new Bloodhound({
+                      datumTokenizer:
+                          Bloodhound.tokenizers.obj.whitespace('name'),
+                      queryTokenizer: Bloodhound.tokenizers.whitespace,
                       local: data,
-                      minLength: 0,
                       limit: 30
+                    });
+                    source.initialize();
+                    $(element).typeahead({
+                      minLength: 0,
+                      highlight: true
+                    }, {
+                      name: 'countries',
+                      displayKey: 'name',
+                      source: source.ttAdapter()
                     }).on('typeahead:selected', function(event, datum) {
                       if (angular.isFunction(scope.onRegionSelect)) {
                         scope.onRegionSelect(datum);
@@ -144,6 +162,7 @@
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
+          element.attr('placeholder', '...');
           gnHttp.callService('lang', {}, {
             cache: true
           }).success(function(data) {
@@ -154,21 +173,92 @@
               lang.name = lang.label[scope.lang] || defaultName;
               lang.tokens = [lang.name, lang.code, defaultName];
             });
-
-            $(element).typeahead({
-              name: 'isoLanguages',
-              valueKey: 'code',
-              template: function(datum) {
-                return '<p>' + datum.name + ' (' + datum.code + ')</p>';
-              },
+            var source = new Bloodhound({
+              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
               local: data,
-              minLength: 0,
               limit: 30
+            });
+            source.initialize();
+            $(element).typeahead({
+              minLength: 0,
+              highlight: true
+            }, {
+              name: 'isoLanguages',
+              displayKey: 'code',
+              source: source.ttAdapter(),
+              templates: {
+                suggestion: function(datum) {
+                  return '<p>' + datum.name + ' (' + datum.code + ')</p>';
+                }
+              }
             });
           });
         }
       };
     }]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_fields_directive.directive:gnDirectoryEntryPicker
+   * @function
+   *
+   * @description
+   * Use the directory (aka subtemplate) search service
+   * to retrieve the list of entry available and provide autocompletion
+   * for the input field with that directive attached.
+   *
+   */
+  module.directive('gnDirectoryEntryPicker',
+      ['gnUrlUtils', 'gnSearchManagerService',
+       function(gnUrlUtils, gnSearchManagerService) {
+         return {
+           restrict: 'A',
+           link: function(scope, element, attrs) {
+             element.attr('placeholder', '...');
+
+             var url = gnUrlUtils.append('q@json',
+             gnUrlUtils.toKeyValue({
+               _isTemplate: 's',
+               any: '*QUERY*',
+               _root: 'gmd:CI_ResponsibleParty',
+               sortBy: 'title',
+               sortOrder: 'reverse',
+               resultType: 'subtemplates',
+               fast: 'index'
+             })
+             );
+             var parseResponse = function(data) {
+               var records = gnSearchManagerService.format(data);
+               return records.metadata;
+             };
+             var source = new Bloodhound({
+               datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+               queryTokenizer: Bloodhound.tokenizers.whitespace,
+               limit: 200,
+               remote: {
+                 wildcard: 'QUERY',
+                 url: url,
+                 filter: parseResponse
+               }
+             });
+             source.initialize();
+             $(element).typeahead({
+               minLength: 0,
+               highlight: true
+             }, {
+               name: 'directoryEntry',
+               displayKey: 'title',
+               source: source.ttAdapter(),
+               templates: {
+                 suggestion: function(datum) {
+                   return '<p>' + datum.title + '</p>';
+                 }
+               }
+             });
+           }
+         };
+       }]);
 
   /**
    * @ngdoc directive
@@ -239,10 +329,10 @@
         },
         link: function (scope, element, attrs, ngModelCtrl) {
 
-          var available = function(date) {
-            if(scope.dates && scope.dates[date.getFullYear()] &&
+          var available = function (date) {
+            if (scope.dates && scope.dates[date.getFullYear()] &&
                 scope.dates[date.getFullYear()][date.getMonth()] &&
-                $.inArray(date.getDate(), scope.dates[date.getFullYear()][date.getMonth()]) != -1 ) {
+                $.inArray(date.getDate(), scope.dates[date.getFullYear()][date.getMonth()]) != -1) {
               return '';
             } else {
               return 'disabled';
@@ -250,12 +340,10 @@
           };
 
           $(element).datepicker({
-            onRender:
-                function(dt,a,b)
-                {
-                  return available(dt);
-                }
-          }).on('changeDate', function(ev) {
+            onRender: function (dt, a, b) {
+              return available(dt);
+            }
+          }).on('changeDate', function (ev) {
             // view -> model
             scope.$apply(function () {
               scope.date = $(element).find('input')[0].value;
@@ -263,13 +351,115 @@
           });
 
           // model -> view
-          scope.$watch('date', function(v) {
-            if(angular.isUndefined(v)) {
-              v ='';
+          scope.$watch('date', function (v) {
+            if (angular.isUndefined(v)) {
+              v = '';
             }
             $(element).find('input')[0].value = v;
           });
         }
-      }
+      };
+    }]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_utility_directive.directive:gnPaginationList
+   * @function
+   *
+   * @description
+   * Adjust textarea size onload and when text change.
+   *
+   * Source: http://www.frangular.com/2012/12/
+   *  pagination-cote-client-directive-angularjs.html
+   */
+  module.factory('gnPaginationListStateCache', ['$cacheFactory',
+    function($cacheFactory) {
+      return $cacheFactory('gnPaginationListStateCache');
+    }]);
+  module.directive('gnPaginationList', ['gnPaginationListStateCache',
+    function(gnPaginationListStateCache) {
+      var pageSizeLabel = 'Page size';
+      return {
+        priority: 0,
+        restrict: 'A',
+        scope: {items: '&'},
+        templateUrl: '../../catalog/components/utility/' +
+            'partials/paginationlist.html',
+        replace: false,
+        compile: function compile(tElement, tAttrs) {
+          var cacheId = tAttrs.cache ? tAttrs.cache + '.paginator' : '';
+          return {
+            pre: function preLink(scope) {
+              scope.pageSizeList = [10, 20, 50, 100];
+              var defaultSettings = {
+                pageSize: 10,
+                currentPage: 0
+              };
+              scope.paginator = cacheId ?
+                  gnPaginationListStateCache.get(cacheId) || defaultSettings :
+                  defaultSettings;
+              if (cacheId) {
+                gnPaginationListStateCache.put(cacheId, scope.paginator);
+              }
+              scope.isFirstPage = function() {
+                return scope.paginator.currentPage == 0;
+              };
+              scope.isLastPage = function() {
+                if (scope.items()) {
+                  return scope.paginator.currentPage >=
+                      scope.items().length / scope.paginator.pageSize - 1;
+                } else {
+                  return false;
+                }
+              };
+              scope.incPage = function() {
+                if (!scope.isLastPage()) {
+                  scope.paginator.currentPage++;
+                }
+              };
+              scope.decPage = function() {
+                if (!scope.isFirstPage()) {
+                  scope.paginator.currentPage--;
+                }
+              };
+              scope.firstPage = function() {
+                scope.paginator.currentPage = 0;
+              };
+              scope.numberOfPages = function() {
+                if (scope.items()) {
+                  return Math.ceil(scope.items().length /
+                      scope.paginator.pageSize);
+                } else {
+                  return 0;
+                }
+              };
+              scope.$watch('paginator.pageSize',
+                  function(newValue, oldValue) {
+                    if (newValue != oldValue) {
+                      scope.firstPage();
+                    }
+                  });
+
+              // ---- Functions available in parent scope -----
+
+              scope.$parent.firstPage = function() {
+                scope.firstPage();
+              };
+              // Function that returns the reduced items list,
+              // to use in ng-repeat
+              scope.$parent.pageItems = function() {
+                if (scope.items()) {
+                  var start = scope.paginator.currentPage *
+                      scope.paginator.pageSize;
+                  var limit = scope.paginator.pageSize;
+                  return scope.items().slice(start, start + limit);
+                } else {
+                  return null;
+                }
+              };
+            }
+          };
+        }
+      };
     }]);
 })();

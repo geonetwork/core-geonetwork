@@ -476,7 +476,7 @@
               baseURL: 'http://a.tile.openstreetmap.org/',
               extension: 'png',
               maxExtent: layer.getSource().getExtent(),
-              resolutions:  layer.getSource().tileGrid.getResolutions(),
+              resolutions: layer.getSource().tileGrid.getResolutions(),
               tileSize: [
                 layer.getSource().tileGrid.getTileSize(),
                 layer.getSource().tileGrid.getTileSize()]

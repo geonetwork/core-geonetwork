@@ -8,53 +8,69 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
 " >
 
-    <import resource="config-security/config-security.xml"/>
-    <import resource="classpath:JZkitApplicationContext.xml"/>
+	<import resource="config-security/config-security.xml" />
+	<import resource="classpath:JZkitApplicationContext.xml" />
 
-    <import resource="config-db/initial_data.xml"/>
-    <import resource="config-print/config-spring-print.xml"/>
-
-
-    <!-- Uncomment if you want to use a non-shapefile datastore -->
-    <!--<import resource="config-db/postgis-shared-datasource.xml"/>-->
-    <!--<import resource="config-db/postgis-alternate-datasource.xml"/>-->
-
-    <!--
-        Import the versioning configuration (subversion etc...)
-    -->
-    <import resource="config-versioning.xml"/>
+	<import resource="config-db/initial_data.xml" />
+	<import resource="config-print/config-spring-print.xml" />
 
 
-    <bean id="scheduler"
-          class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-        <property name="applicationContextSchedulerContextKey" value="applicationContext"/>
-    </bean>
-    <bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory" lazy-init="true"/>
-    <bean id="httpRequestFactor" class="org.fao.geonet.utils.GeonetHttpRequestFactory">
-        <property name="numberOfConcurrentRequests" value="30" />
-    </bean>
+	<!-- Uncomment if you want to use a non-shapefile datastore -->
+	<!--<import resource="config-db/postgis-shared-datasource.xml"/> -->
+	<!--<import resource="config-db/postgis-alternate-datasource.xml"/> -->
 
-    <bean id="defaultLanguage" class="java.lang.String">
-        <constructor-arg index="0" value="eng" />
-    </bean>
-    <!-- Define the languages in the UI.  Seems like these should come from database at some point but at the moment they
-         are needed here.
-     -->
-    <util:set id="languages">
-        <value>ara</value>
-        <value>cat</value>
-        <value>chi</value>
-        <value>dut</value>
-        <value>eng</value>
-        <value>fin</value>
-        <value>fre</value>
-        <value>ger</value>
-        <value>ita</value>
-        <value>nor</value>
-        <value>pol</value>
-        <value>por</value>
-        <value>rus</value>
-        <value>spa</value>
-        <value>tur</value>
-    </util:set>
+	<!-- Import the versioning configuration (subversion etc...) -->
+	<import resource="config-versioning.xml" />
+
+
+	<bean id="scheduler"
+		class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="applicationContextSchedulerContextKey" value="applicationContext" />
+	</bean>
+
+	<bean id="luceneDirectoryFactory" class="org.fao.geonet.kernel.search.index.FSDirectoryFactory"
+		lazy-init="true" />
+
+	<bean id="httpRequestFactor" class="org.fao.geonet.utils.GeonetHttpRequestFactory">
+		<property name="numberOfConcurrentRequests" value="30" />
+	</bean>
+
+	<bean id="defaultLanguage" class="java.lang.String">
+		<constructor-arg index="0" value="eng" />
+	</bean>
+	<!-- Define the languages in the UI. Seems like these should come from database 
+		at some point but at the moment they are needed here. -->
+	<util:set id="languages">
+		<value>ara</value>
+		<value>cat</value>
+		<value>chi</value>
+		<value>dut</value>
+		<value>eng</value>
+		<value>fin</value>
+		<value>fre</value>
+		<value>ger</value>
+		<value>ita</value>
+		<value>nor</value>
+		<value>pol</value>
+		<value>por</value>
+		<value>rus</value>
+		<value>spa</value>
+		<value>tur</value>
+	</util:set>
+
+
+	<util:map id="jpaPropertyMap">
+		<entry key="shared-cache-mode" value="ENABLE_SELECTIVE" />
+		<entry key="javax.persistence.lock.timeout" value="30000" />
+		<entry key="org.hibernate.flushMode" value="AUTO" />
+		<entry key="access" value="PROPERTY" />
+		<entry key="hibernate.id.new_generator_mappings" value="true" />
+		<entry key="hibernate.cache.use_second_level_cache" value="true" />
+		<!--<entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.internal.NoCachingRegionFactory"/> -->
+		<entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.EhCacheRegionFactory" />
+		<entry key="hibernate.jdbc.batch_size" value="3" />
+		<entry key="hibernate.jdbc.batch_versioned_data" value="true" />
+		<entry key="hibernate.enable_lazy_load_no_trans" value="true" />
+	</util:map>
+
 </beans>

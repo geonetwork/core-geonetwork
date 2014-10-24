@@ -64,7 +64,11 @@ public class ServerLib
 		}
 
 		if(stream == null) {
-		    stream = new FileInputStream(appPath + (SERVER_PROPS.replace("/",File.separator)));
+		    if(appPath == null) { //In case of single tomcat with no appPath
+  		    	stream = new FileInputStream(SERVER_PROPS.replace("/",File.separator));
+		    } else {
+                        stream = new FileInputStream(appPath + (SERVER_PROPS.replace("/",File.separator)));
+                    }
 		}
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(stream, Constants.ENCODING));

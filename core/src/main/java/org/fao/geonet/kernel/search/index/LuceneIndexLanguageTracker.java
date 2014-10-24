@@ -5,7 +5,6 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.facet.taxonomy.CategoryPath;
 import org.apache.lucene.facet.taxonomy.TaxonomyWriter;
 import org.apache.lucene.index.*;
-import org.apache.lucene.search.NRTManager.TrackingIndexWriter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.fao.geonet.constants.Geonet;
@@ -17,7 +16,14 @@ import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -28,27 +34,30 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Keeps track of the lucene indexes that currently exist so that we don't have
  * to keep polling filesystem
- *
+ * 
  * @author jeichar
  */
 public class LuceneIndexLanguageTracker {
-    private final Map<String, Directory> dirs = new HashMap<String, Directory>();
-    private final Map<String, TrackingIndexWriter> trackingWriters = new HashMap<String, TrackingIndexWriter>();
-    private final Map<String, GeonetworkNRTManager> searchManagers = new HashMap<String, GeonetworkNRTManager>();
-    private final LuceneConfig luceneConfig;
-    private final DirectoryFactory _directoryFactory;
-    private Timer commitTimer = null;
-    private TaxonomyIndexTracker taxonomyIndexTracker;
-    private final SearcherVersionTracker versionTracker = new SearcherVersionTracker();
-    private AtomicBoolean initialized = new AtomicBoolean(false);
-    private Lock lock = new ReentrantLock();
-    private AtomicInteger _openReaderCounter = new AtomicInteger(0);
-
+	private final Map<String, Directory> dirs = new HashMap<String, Directory>();
+	private final Map<String, TrackingIndexWriter> trackingWriters = new HashMap<String, TrackingIndexWriter>();
+	private final Map<String, GeonetworkNRTManager> searchManagers = new HashMap<String, GeonetworkNRTManager>();
     @Autowired
-    public LuceneIndexLanguageTracker(DirectoryFactory directoryFactory, LuceneConfig luceneConfig)
-            throws Exception {
-        this.luceneConfig = luceneConfig;
+	private LuceneConfig luceneConfig;
+    @Autowired
+    private DirectoryFactory _directoryFactory;
+	private Timer commitTimer = null;
+	private TaxonomyIndexTracker taxonomyIndexTracker;
+	private final SearcherVersionTracker versionTracker = new SearcherVersionTracker();
+	private AtomicBoolean initialized = new AtomicBoolean(false);
+	private Lock lock = new ReentrantLock();
+	private AtomicInteger _openReaderCounter = new AtomicInteger(0);
+
+    public LuceneIndexLanguageTracker() {
+        // used by spring
+    }
+    public LuceneIndexLanguageTracker(FSDirectoryFactory directoryFactory, LuceneConfig luceneConfig) {
         this._directoryFactory = directoryFactory;
+        this.luceneConfig = luceneConfig;
     }
 
     private void lazyInit() {
@@ -98,7 +107,7 @@ public class LuceneIndexLanguageTracker {
             writer = new IndexWriter(cachedFSDir, conf);
             trackingIndexWriter = new TrackingIndexWriter(writer);
             nrtManager = new GeonetworkNRTManager(luceneConfig, indexId,
-                    trackingIndexWriter, null, true, taxonomyIndexTracker);
+                    trackingIndexWriter, writer, null, true, taxonomyIndexTracker);
         } catch (CorruptIndexException e) {
             IOUtils.closeQuietly(nrtManager);
             IOUtils.closeQuietly(writer);
@@ -235,10 +244,14 @@ public class LuceneIndexLanguageTracker {
             }
             open(language);
             // Add taxonomy first
-            if (categories.size() > 0) {
-                taxonomyIndexTracker.addDocument(doc, categories);
+            Document docAfterFacetBuild = doc;
+            docAfterFacetBuild = taxonomyIndexTracker.addDocument(doc, categories);
+            // Index the document returned after the facets are built by the taxonomy writer
+            if (docAfterFacetBuild == null) {
+                trackingWriters.get(language).addDocument(doc);
+            } else {
+                trackingWriters.get(language).addDocument(docAfterFacetBuild);
             }
-            trackingWriters.get(language).addDocument(doc);
         } finally {
             lock.unlock();
         }

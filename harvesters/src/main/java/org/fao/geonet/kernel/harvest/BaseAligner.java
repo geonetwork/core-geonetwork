@@ -111,17 +111,12 @@ public abstract class BaseAligner {
                 for (int opId: priv.getOperations()) {
                     name = dataMan.getAccessManager().getPrivilegeName(opId);
 
-                    //--- allow only: view, dynamic, featured
-                    if (opId == 0 || opId == 5 || opId == 6) {
+                    //--- all existing operation
+                    if (name != null) {
                         if(log.isDebugEnabled()) {
-                            log.debug("       --> "+ name);
+                            log.debug("       --> Operation: "+ name);
                         }
                         dataMan.setOperation(context, id, priv.getGroupId(), opId +"");
-                    }
-                    else {
-                        if(log.isDebugEnabled()) {
-                            log.debug("       --> "+ name +" (skipped)");
-                        }
                     }
                 }
             }

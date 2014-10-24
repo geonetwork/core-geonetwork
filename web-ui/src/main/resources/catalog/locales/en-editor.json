@@ -14,7 +14,7 @@
     "addLinks": "Add links",
     "addOnlinesrc": "Add an online resource",
     "addOnlinesrcTitle": "Link an online resource to the current metadata",
-    "addRecord": "Add dataset",
+    "addRecord": "Add record",
     "addThumbnail": "Add a thumbnail",
     "addThumbnailTitle": "Add an overview to the current metadata",
     "allChangesCanceled": "All changes cancelled.",
@@ -166,5 +166,7 @@
     "xsltToApply": "Apply XSLT conversion",
     "yearAndMonthMode": "Year and month",
     "yearMode": "Year only",
-    "yourMetadata": "Your metadata"
+    "yourMetadata": "Your metadata",
+    "searchKeyword": "Search keyword ...",
+    "searchOrTypeKeyword": "Type or search keyword ..."
 }

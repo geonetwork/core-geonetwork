@@ -27,6 +27,7 @@ package org.fao.geonet.constants;
  * Constants for service parameters (elements and attributes).
  */
 public final class Params {
+    public static final String BACKUP_FILE  = "backup_file";
 	public static final String ACCESS       = "access";
 	public static final String BTN          = "btn";
     public static final String RECURSE      = "recurse";

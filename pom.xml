@@ -182,6 +182,11 @@
             <encoding>UTF-8</encoding>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-eclipse-plugin</artifactId>
+          <version>2.9</version>
+        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -246,10 +251,10 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
+        <version>2.5.1</version>
         <configuration>
-          <source>1.6</source>  <!-- The -source argument for the Java compiler. -->
-          <target>1.6</target>  <!-- The -target argument for the Java compiler. -->
+          <source>1.7</source>  <!-- The -source argument for the Java compiler. -->
+          <target>1.7</target>  <!-- The -target argument for the Java compiler. -->
           <debug>true</debug>   <!-- Whether to include debugging information.   -->
           <encoding>UTF-8</encoding> <!-- The -encoding argument for the Java compiler. -->
           <compilerArgument>-proc:none</compilerArgument> <!-- disable automatic annotation processing accoring to: http://docs.jboss.org/hibernate/jpamodelgen/1.0/reference/en-US/html_single/#d0e261 -->
@@ -270,7 +275,7 @@
       <plugin>
         <groupId>org.codehaus.cargo</groupId>
         <artifactId>cargo-maven2-plugin</artifactId>
-        <version>1.4.8</version>
+        <version>1.4.9</version>
         <configuration>
           <container>
             <containerId>jetty7x</containerId>
@@ -361,11 +366,6 @@
   <!-- =========================================================== -->
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>net.sf.ehcache</groupId>
-        <artifactId>ehcache-core</artifactId>
-        <version>2.5.3</version>
-      </dependency>
       <!-- rewrite url servletfilter -->
       <dependency>
         <groupId>org.tuckey</groupId>
@@ -534,6 +534,11 @@
         <artifactId>batik-ext</artifactId>
         <version>1.6</version>
       </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.5</version>
+        </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-log4j12</artifactId>
@@ -824,7 +829,7 @@
       </dependency>
       <dependency>
         <groupId>org.mockito</groupId>
-        <artifactId>mockito-core</artifactId>
+        <artifactId>mockito-all</artifactId>
         <version>1.9.5</version>
         <scope>test</scope>
       </dependency>
@@ -971,8 +976,13 @@
     <dependency>
 	  <groupId>org.hibernate</groupId>
 	  <artifactId>hibernate-entitymanager</artifactId>
-	  <version>4.3.0.Beta5</version>
+	  <version>4.3.6.Final</version>
     </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-ehcache</artifactId>
+            <version>4.3.6.Final</version>
+        </dependency>
     <dependency>
       <groupId>org.springframework.data</groupId>
       <artifactId>spring-data-jpa</artifactId>
@@ -1037,9 +1047,7 @@
       <url>http://developer.k-int.com/maven2/</url>
     </repository>
 
-    <!-- Local repository which allow to handle temporarly local dependencies
-     // FIXME : Should be a remote repository -->
-    <!--
+    
     <repository>
       <snapshots>
         <enabled>true</enabled>
@@ -1047,24 +1055,11 @@
       <releases>
         <enabled>true</enabled>
       </releases>
-      <id>localGeoNetwork</id>
-      <name>GeoNetwork local repository</name>
-      <url>file://maven_repo</url>
+      <id>core-maven-repo</id>
+      <name>GeoNetwork remote repository</name>
+      <url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
     </repository>
-    -->
     
-    <repository>
-    	<snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    	<id>core-maven-repo</id>
-    	<name>GeoNetwork remote repository</name>
-    	<url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
-    </repository>
-
     <repository>
       <id>mvnrepository.com</id>
       <name>Repository that has juniversalchardet</name>
@@ -1102,6 +1097,7 @@
     <module>domain</module>
     <module>oaipmh</module>
     <module>core</module>
+    <module>schemas</module>
     <module>csw-server</module>
     <module>harvesters</module>
     <module>healthmonitor</module>
@@ -1156,7 +1152,7 @@
   <properties>
     <jetty.version>8.1.9.v20130131</jetty.version>
     <geotools.version>8.6</geotools.version>
-    <lucene.version>4.1.0</lucene.version>
+    <lucene.version>4.9.0</lucene.version>
     <spring.version>3.2.5.RELEASE</spring.version>
     <spring.security.version>3.1.4.RELEASE</spring.security.version>
     <metrics.version>2.1.1</metrics.version>

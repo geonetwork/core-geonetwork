@@ -42,14 +42,17 @@
               isInView = gnUtilityService.isInView,
               childrenSearch =
               (scope.allDepth == 'true' ?
-                  'fieldset > legend' : 'fieldset > fieldset > legend');
+              'fieldset > legend' : 'fieldset > fieldset > legend');
 
           scope.scrollTo = gnUtilityService.scrollTo;
           // Ordered list in an array of elements to spy
-          scope.spyElems = null;
+          scope.spyElems = [];
+          scope.isEnabled = true;
 
+          var previousLabel = '';
           var registerSpy = function() {
-            var id = $(this).attr('id'), currentDepth = $(this).parents(
+            var id = $(this).attr('id'),
+                currentDepth = $(this).parents(
                 'fieldset').length - 1 - rootElementDepth;
 
             if (currentDepth <= depth) {
@@ -76,17 +79,25 @@
                 // Skip on fieldset if requested
                 var parent =
                     scope.allDepth == 'true' ?
-                        $(this) : $(this).parent('fieldset');
+                    $(this) : $(this).parent('fieldset');
                 var parentFieldsetId = parent
-                    .parent('fieldset').parent('fieldset')
-                    .children('legend').attr('id');
+                  .parent('fieldset').parent('fieldset')
+                  .children('legend').attr('id');
                 if (parentFieldsetId) {
                   var parentSpy = $.grep(scope.spyElems, function(spy) {
                     return spy.id === '#' + parentFieldsetId;
                   });
 
-                  // Add the child
-                  parentSpy[0] && parentSpy[0].children.push(spy);
+                  // Only register section if not the same
+                  // label as the previous one. This may happen
+                  // a lot for service metadata record with numbers
+                  // of coupledResource or operatesOn elements.
+                  // Provide navigation to the first element only.
+                  if (previousLabel != spy.label) {
+                    // Add the child
+                    parentSpy[0] && parentSpy[0].children.push(spy);
+                    previousLabel = spy.label;
+                  }
                 }
               }
 
@@ -95,9 +106,17 @@
             }
           };
 
+          scope.toggle = function() {
+            scope.isEnabled = !scope.isEnabled;
+          };
+
+          // Look for fieldsets and register spy
           var init = function() {
-            // Look for fieldsets and register spy
-            scope.spyElems = [];
+            // Remove current spy elements
+            while (scope.spyElems.length) {
+              scope.spyElems.pop();
+            }
+
             rootElement = $('#' + scope.id);
 
             // Get the number of fieldset above the current element
@@ -114,22 +133,21 @@
 
             // Spy only first level of fieldsets
             rootElement.find('> fieldset > legend').each(registerSpy);
-
             $(window).scroll(function() {
-              scope.$apply(function() {
-                var firstFound = false;
-
-                // Check position of each first and second
-                // level element to spy and activate them
-                // if in the current viewport.
-                angular.forEach(scope.spyElems, function(spy) {
-                  spy.active = isInView(spy.elem) ? true : false;
-                  spy.children &&
-                      angular.forEach(spy.children, function(child) {
-                        child.active = isInView(child.elem) ? true : false;
-                      });
+              if (scope.isEnabled) {
+                scope.$apply(function() {
+                  // Check position of each first and second
+                  // level element to spy and activate them
+                  // if in the current viewport.
+                  angular.forEach(scope.spyElems, function(spy) {
+                    spy.active = isInView(spy.elem) ? true : false;
+                    spy.children &&
+                        angular.forEach(spy.children, function(child) {
+                          child.active = isInView(child.elem) ? true : false;
+                        });
+                  });
                 });
-              });
+              }
             });
           };
 
@@ -141,7 +159,7 @@
               // Wait for the template to render
               // FIXME: may not work properly ?
               $timeout(function() {
-                if (scope.spyElems === null) {
+                if (scope.spyElems.length === 0) {
                   init();
                 }
               }, 200);

@@ -36,6 +36,10 @@ import java.util.List;
  * TODO javadoc.
  */
 public final class Geonet {
+	
+	//FIXME When we migrate everything and get rid of Jeeves, just use this one
+	public static final String USER_SESSION_ATTRIBUTE_KEY = Jeeves.Elem.SESSION;
+	
 	public static final String CONTEXT_NAME = "contextName";
     // TODO make this configurable
 	public static final String DEFAULT_LANGUAGE = "eng";
@@ -574,7 +578,7 @@ public final class Geonet {
 	public static final String SEARCH_LOGGER = GEONETWORK + ".search-logger";
 	public static final String THREADPOOL = GEONETWORK + ".threadpool";
 	public static final String DATA_DIRECTORY = GEONETWORK + ".data.directory";
-    public static final Version LUCENE_VERSION = Version.LUCENE_41;
+    public static final Version LUCENE_VERSION = Version.LUCENE_4_9;
     public static final String FEEDBACK = GEONETWORK + ".feedback";
     public static final String GEOPUBLISH = GEONETWORK + ".geopublisher";
     public static final String FORMATTER = GEONETWORK + ".formatter";

@@ -6,8 +6,8 @@ import bak.pcj.map.ObjectKeyByteMap;
 import bak.pcj.map.ObjectKeyByteMapIterator;
 
 import org.apache.lucene.index.AtomicReaderContext;
+import org.apache.lucene.index.SortedDocValues;
 import org.apache.lucene.search.FieldCache;
-import org.apache.lucene.search.FieldCache.DocTermsIndex;
 import org.apache.lucene.search.FieldComparator;
 import org.apache.lucene.search.FieldComparatorSource;
 import org.apache.lucene.search.SortField;
@@ -52,7 +52,7 @@ public class LangSortField extends SortField {
         }
 
         private byte[] values;
-        private DocTermsIndex currentReaderValues;
+        private SortedDocValues currentReaderValues;
         // -2 indicates not set
         private int bottom = -2;
 
@@ -75,6 +75,17 @@ public class LangSortField extends SortField {
             return bottom - intValue(val2);
         }
 
+        public void setTopValue(String value) {
+            // LUCENE49FIX
+            // Used for deep paging we don't use.
+
+        }
+        public int compareTop(int doc) throws IOException {
+            // LUCENE49FIX
+            // Used for deep paging we don't use.
+            return -1;
+        }
+
         @Override
         public void copy( int slot, int doc ) {
             String locale = readerValue(doc);
@@ -83,7 +94,15 @@ public class LangSortField extends SortField {
 
         private String readerValue(int docID) {
             int ord = currentReaderValues.getOrd(docID);
-            return currentReaderValues.lookup(ord, new BytesRef(3)).utf8ToString();
+            //if ord < 0 then it is a missing value
+            if(ord < 0) {
+            	//Using default 0 instead of throwing an error
+            	ord = 0;
+            }
+            
+            System.out.println(ord + " -> " + currentReaderValues.lookupOrd(ord).utf8ToString());
+            
+            return currentReaderValues.lookupOrd(ord).utf8ToString();
         }
 
         private byte intValue( String locale ) {
@@ -105,11 +124,6 @@ public class LangSortField extends SortField {
         @Override
         public void setBottom( final int bottom ) {
             this.bottom = values[bottom];
-        }
-
-        @Override
-        public int compareDocToValue(int doc, String value) throws IOException {
-            return intValue(readerValue(doc)) - intValue(value);
         }
 
         @Override
