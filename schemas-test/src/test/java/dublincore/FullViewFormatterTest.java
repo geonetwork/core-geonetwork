@@ -33,7 +33,9 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
         List<String> excludes = Lists.newArrayList(
         );
 
-        final List<?> text = Xml.selectNodes(Xml.loadString(xml, false), "*//text()");
+        final Element xmlEl = Xml.loadString(xml, false);
+        final List text = Lists.newArrayList(Xml.selectNodes(xmlEl, "*//text()"));
+
         StringBuilder missingStrings = new StringBuilder();
         for (Object t : text) {
             Text textEl = (Text) t;

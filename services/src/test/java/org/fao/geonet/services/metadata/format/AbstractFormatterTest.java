@@ -96,7 +96,7 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
         }
     }
 
-    private Pair<FormatterImpl, FormatterParams> getFormatterFormatterParamsPair(MockHttpServletRequest request, String formatterId) throws Exception {
+    protected Pair<FormatterImpl, FormatterParams> getFormatterFormatterParamsPair(MockHttpServletRequest request, String formatterId) throws Exception {
         return this.formatService.createFormatterAndParams(getUILang(), getOutputType(),
                     "" + id, null, formatterId, "true", false, request);
     }
