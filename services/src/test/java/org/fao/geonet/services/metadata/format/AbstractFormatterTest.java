@@ -8,21 +8,29 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataDataInfo;
+import org.fao.geonet.domain.MetadataHarvestInfo;
+import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.ReservedGroup;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.metadata.format.groovy.EnvironmentProxy;
 import org.fao.geonet.services.metadata.format.groovy.Handler;
 import org.fao.geonet.services.metadata.format.groovy.Handlers;
 import org.fao.geonet.services.metadata.format.groovy.TransformationContext;
 import org.fao.geonet.services.metadata.format.groovy.Transformer;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
 import org.jdom.Namespace;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -39,7 +47,11 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
     @Autowired
     private IsoLanguagesMapper mapper;
     @Autowired
-    private GroovyFormatter groovyFormatter;
+    MetadataRepository metadataRepository;
+    @Autowired
+    SchemaManager schemaManager;
+    @Autowired
+    SettingManager settingManager;
 
     protected int id;
     protected String xml;
@@ -50,10 +62,24 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
         loginAsAdmin(serviceContext);
 
         this.xml = Files.toString(getTestMetadataFile(), Constants.CHARSET);
-        final ByteArrayInputStream stream = new ByteArrayInputStream(xml.getBytes(Constants.ENCODING));
-        this.id = importMetadataXML(serviceContext, "uuid", stream, MetadataType.METADATA,
-                ReservedGroup.all.getId(), UUID);
+        final Element md = Xml.loadString(this.xml, false);
+        final String schemaId = schemaManager.autodetectSchema(md);
 
+        Metadata metadata = new Metadata();
+        MetadataSourceInfo sourceInfo = new MetadataSourceInfo().setSourceId(settingManager.getSiteId());
+        metadata.setSourceInfo(sourceInfo);
+        MetadataDataInfo dataInfo = new MetadataDataInfo().
+                setChangeDate(new ISODate()).
+                setSchemaId(schemaId).
+                setCreateDate(new ISODate()).
+                setType(MetadataType.METADATA).
+                setRoot(md.getQualifiedName());
+        metadata.setDataInfo(dataInfo);
+        metadata.setUuid(UUID);
+        MetadataHarvestInfo harvestInfo = new MetadataHarvestInfo().setHarvested(false);
+        metadata.setHarvestInfo(harvestInfo);
+        metadata.setData(xml);
+        this.id = metadataRepository.save(metadata).getId();
     }
 
     protected abstract File getTestMetadataFile();

@@ -1,8 +1,6 @@
 package iso19139;
 
 import com.google.common.collect.Lists;
-import com.google.common.io.Files;
-import org.fao.geonet.Constants;
 import org.fao.geonet.services.metadata.format.AbstractFormatterTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
@@ -30,7 +28,7 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
 //        measureFormatterPerformance(request, formatterId);
 
         final String view = formatService.exec("eng", "html", "" + id, null, formatterId, "true", false, request);
-        Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
+//        Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
 
         List<String> excludes = Lists.newArrayList(
                 "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:citation > gmd:CI_Citation > gmd:title > " +
