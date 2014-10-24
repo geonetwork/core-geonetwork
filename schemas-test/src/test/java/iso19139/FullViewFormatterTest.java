@@ -27,7 +27,7 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
 
         final String formatterId = "full_view";
 
-        measureFormatterPerformance(request, formatterId);
+//        measureFormatterPerformance(request, formatterId);
 
         final String view = formatService.exec("eng", "html", "" + id, null, formatterId, "true", false, request);
         Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
