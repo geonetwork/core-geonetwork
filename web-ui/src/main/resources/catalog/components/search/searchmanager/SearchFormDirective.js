@@ -171,7 +171,7 @@
       angular.extend($scope.searchObj.params, params);
     };
 
-    this.resetSearch = function(searchParams) {
+    this.resetSearch = function(searchParams, htmlQuery) {
       if (searchParams) {
         $scope.searchObj.params = searchParams;
       } else {
@@ -183,6 +183,10 @@
       $scope.currentFacets = [];
       $scope.triggerSearch();
       $scope.$broadcast('resetSelection');
+
+      if(htmlQuery) {
+        $(htmlQuery).focus();
+      }
     };
     $scope.$on('resetSearch', function(evt, searchParams) {
       resetSearch(searchParams);
