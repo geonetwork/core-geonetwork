@@ -67,6 +67,9 @@
     <logger name="geonetwork.csw.search" additivity="false">
         <level value="WARN" />
     </logger>
+    <logger name="geonetwork.formatter" additivity="false">
+        <level value="WARN" />
+    </logger>
     <logger name="geonetwork.harvester" additivity="false">
         <level value="WARN" />
         <appender-ref ref="consoleAppender" />

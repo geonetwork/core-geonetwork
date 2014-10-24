@@ -154,16 +154,8 @@ public class GroovyFormatter implements FormatterImpl {
 
     private FormatterParams createParamsForSchema(FormatterParams fparams, String schema) throws IOException {
         ConfigFile newConfig = new ConfigFile(getSchemaPluginFormatterDir(schema), false);
-        final FormatterParams formatterParams = new FormatterParams();
+        final FormatterParams formatterParams = fparams.copy();
         formatterParams.config = newConfig;
-        formatterParams.params = fparams.params;
-        formatterParams.context = fparams.context;
-        formatterParams.format = fparams.format;
-        formatterParams.schema = fparams.schema;
-        formatterParams.metadata = fparams.metadata;
-        formatterParams.formatDir = fparams.formatDir;
-        formatterParams.url = fparams.url;
-        formatterParams.viewFile = fparams.viewFile;
         return formatterParams;
     }
 

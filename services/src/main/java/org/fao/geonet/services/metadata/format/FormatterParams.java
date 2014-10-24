@@ -22,6 +22,8 @@ public class FormatterParams {
     public String schema;
     public ConfigFile config;
     public String url;
+    public int metadataId;
+    public String metadataUUID;
 
     public String param(String paramName, String defaultVal) {
         String[] values = this.params.get(paramName);
@@ -51,5 +53,22 @@ public class FormatterParams {
     }
     public boolean isDevMode() {
         return this.format.isDevMode(this.context);
+    }
+
+    public FormatterParams copy() {
+        FormatterParams formatterParams = new FormatterParams();
+        formatterParams.config = this.config;
+        formatterParams.params = this.params;
+        formatterParams.context = this.context;
+        formatterParams.format = this.format;
+        formatterParams.schema = this.schema;
+        formatterParams.metadata = this.metadata;
+        formatterParams.formatDir = this.formatDir;
+        formatterParams.url = this.url;
+        formatterParams.viewFile = this.viewFile;
+        formatterParams.metadataId = this.metadataId;
+        formatterParams.metadataUUID = this.metadataUUID;
+
+        return formatterParams;
     }
 }

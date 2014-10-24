@@ -45,6 +45,16 @@ public class EnvironmentProxy implements Environment {
     }
 
     @Override
+    public int getMetadataId() {
+        return get().getMetadataId();
+    }
+
+    @Override
+    public String getMetadataUUID() {
+        return get().getMetadataUUID();
+    }
+
+    @Override
     public String getResourceUrl() {
         return get().getResourceUrl();
     }

@@ -25,6 +25,7 @@ public abstract class Handler extends Selectable implements Comparable<Handler> 
 
     public HandlerResult handle(TransformationContext context, GPathResult elem, StringBuilder resultantXml)
             throws IOException {
+        Logging.debug("Executing handler '%2$s' on element %1$s.", elem, this);
         final int maximumNumberOfParameters = this.handlerFunction.getMaximumNumberOfParameters();
         Object result;
         switch (maximumNumberOfParameters) {
@@ -55,7 +56,7 @@ public abstract class Handler extends Selectable implements Comparable<Handler> 
         }
 
         if (result instanceof String) {
-            resultantXml.append((String) result);
+            resultantXml.append(result);
         } else {
             resultantXml.append(result);
         }

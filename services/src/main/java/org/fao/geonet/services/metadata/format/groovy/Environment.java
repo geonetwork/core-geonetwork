@@ -26,6 +26,14 @@ public interface Environment {
      */
     public String getLang2();
     /**
+     * Return the id of the metadata
+     */
+    public int getMetadataId();
+    /**
+     * Return the UUID of the metadata
+     */
+    public String getMetadataUUID();
+    /**
      * The URL to use in the html when accessing resources in the formatter resource package.  Simply append the relative path of the
      * resource from the formatter bundle directory.
      */

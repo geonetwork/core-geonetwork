@@ -22,12 +22,15 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
 import static org.fao.geonet.domain.Pair.read;
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
+import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -53,9 +56,10 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         loginAsAdmin(serviceContext);
 
         final Element sampleMetadataXml = getSampleMetadataXml();
-        final ByteArrayInputStream stream = new ByteArrayInputStream(Xml.getString(sampleMetadataXml).getBytes("UTF-8"));
         this.uuid = UUID.randomUUID().toString();
-        this.id =  importMetadataXML(serviceContext, "uuid", stream, MetadataType.METADATA,
+        Xml.selectElement(sampleMetadataXml, "gmd:fileIdentifier/gco:CharacterString", Arrays.asList(GMD, GCO)).setText(this.uuid);
+        final ByteArrayInputStream stream = new ByteArrayInputStream(Xml.getString(sampleMetadataXml).getBytes("UTF-8"));
+        this.id =  importMetadataXML(serviceContext, uuid, stream, MetadataType.METADATA,
                 ReservedGroup.all.getId(), uuid);
         this.schema = schemaManager.autodetectSchema(sampleMetadataXml);
 
@@ -183,7 +187,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         // Verify that handler
         // handlers.add name: 'codelist handler', select: isoHandlers.matchers.isCodeListEl, isoHandlers.isoCodeListEl
         // is handled
-        assertElement(view, "body//p[@class = 'fileId']", this.uuid, 1);
+        assertElement(view, "body//span[@class = 'fileId']", this.uuid, 1);
     }
 
     private void assertElement(Element view, String onlineResourceHeaderXpath, String expected, int numberOfElements) throws JDOMException {

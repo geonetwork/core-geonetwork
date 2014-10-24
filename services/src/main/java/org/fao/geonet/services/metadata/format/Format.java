@@ -125,9 +125,11 @@ public class Format extends AbstractFormatService {
             final String skipPopularity, final Boolean hide_withheld, final HttpServletRequest request) throws Exception {
 
         ServiceContext context = this.serviceManager.createServiceContext("metadata.formatter" + type, lang, request);
-        Element metadata = getMetadata(context, id, uuid, new ParamValue(skipPopularity), hide_withheld);
+        final Pair<Element, Metadata> elementMetadataPair = getMetadata(context, id, uuid, new ParamValue(skipPopularity), hide_withheld);
+        Element metadata = elementMetadataPair.one();
+        Metadata metadataInfo = elementMetadataPair.two();
 
-        final String schema = schemaManager.autodetectSchema(metadata, null);
+        final String schema = metadataInfo.getDataInfo().getSchemaId();
         File schemaDir = null;
         if (schema != null) {
             schemaDir = new File(schemaManager.getSchemaDir(schema));
@@ -140,7 +142,6 @@ public class Format extends AbstractFormatService {
             throw new IllegalArgumentException("The bundle cannot format metadata with the " + schema + " schema");
         }
 
-
         FormatterParams fparams = new FormatterParams();
         fparams.config = config;
         fparams.format = this;
@@ -150,6 +151,8 @@ public class Format extends AbstractFormatService {
         fparams.metadata = metadata;
         fparams.schema = schema;
         fparams.url = settingManager.getSiteURL(lang);
+        fparams.metadataId = metadataInfo.getId();
+        fparams.metadataUUID = metadataInfo.getUuid();
 
         File viewXslFile = new File(formatDir, FormatterConstants.VIEW_XSL_FILENAME);
         File viewGroovyFile = new File(formatDir, FormatterConstants.VIEW_GROOVY_FILENAME);
@@ -167,7 +170,7 @@ public class Format extends AbstractFormatService {
         return Pair.read(formatter, fparams);
     }
 
-    public Element getMetadata(ServiceContext context, String id, String uuid, ParamValue skipPopularity, Boolean hide_withheld)
+    public Pair<Element, Metadata> getMetadata(ServiceContext context, String id, String uuid, ParamValue skipPopularity, Boolean hide_withheld)
             throws Exception {
 
         Metadata md = null;
@@ -204,7 +207,7 @@ public class Format extends AbstractFormatService {
         }
 
 
-        return metadata;
+        return Pair.read(metadata, md);
 
     }
     private boolean isCompatibleMetadata(String schemaName, ConfigFile config) throws Exception {

@@ -77,7 +77,7 @@ public class Transformer {
         createPath(root.getParentElement(), path);
 
         context.setRootPath(path.toString());
-        handlers.processElement(context, md, resultantXml);
+        handlers.transformationEngine.processElement(context, md, resultantXml);
     }
 
     private void createPath(Element node, StringBuilder path) {
