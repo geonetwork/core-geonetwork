@@ -171,7 +171,7 @@
       angular.extend($scope.searchObj.params, params);
     };
 
-    this.resetSearch = function(searchParams, htmlQuery) {
+    this.resetSearch = function(searchParams) {
       if (searchParams) {
         $scope.searchObj.params = searchParams;
       } else {
@@ -183,10 +183,6 @@
       $scope.currentFacets = [];
       $scope.triggerSearch();
       $scope.$broadcast('resetSelection');
-
-      if(htmlQuery) {
-        $(htmlQuery).focus();
-      }
     };
     $scope.$on('resetSearch', function(evt, searchParams) {
       resetSearch(searchParams);
@@ -221,9 +217,13 @@
         controllerAs: 'controller',
         link: function(scope, element, attrs) {
 
-          scope.resetSearch = function() {
+          scope.resetSearch = function(htmlQuery) {
             scope.controller.resetSearch();
+            //TODO: remove geocat ref
             $('.geocat-search').find('.bootstrap-tagsinput .tag').remove();
+            if(htmlQuery) {
+              $(htmlQuery).focus();
+            }
           };
 
           if (attrs.runsearch) {
