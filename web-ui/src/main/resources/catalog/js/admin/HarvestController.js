@@ -154,6 +154,9 @@
 
 
       $scope.saveHarvester = function() {
+        // Activate or disable it
+        $scope.setHarvesterSchedule();
+
         var body = window['gnHarvester' + $scope.harvesterSelected['@type']]
           .buildResponse($scope.harvesterSelected, $scope);
 
@@ -273,10 +276,11 @@
       };
 
       // Register status listener
-      unbindStatusListener = $scope.$watch('harvesterSelected.options.status',
-          function() {
-            $scope.setHarvesterSchedule();
-          });
+      //unbindStatusListener =
+      // $scope.$watch('harvesterSelected.options.status',
+      //    function() {
+      //      $scope.setHarvesterSchedule();
+      //    });
 
       loadHarvesters();
       loadHarvesterTypes();
