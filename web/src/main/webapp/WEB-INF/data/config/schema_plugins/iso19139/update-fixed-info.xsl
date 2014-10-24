@@ -432,7 +432,7 @@
                   select="count(ancestor-or-self::gmd:MD_Metadata/
                           gmd:distributionInfo/gmd:MD_Distribution/
                           gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/
-                          gmd:onLine[1]/gmd:CI_OnlineResource[gmd:name != '']/gmd:linkage) > 0"/>
+                          gmd:onLine[2]/gmd:CI_OnlineResource[gmd:name != '']/gmd:linkage) > 0"/>
     <!-- Compute resource identifier based on the following rules:
     if online resource available, concatenate the MEDSEA_<Online resource name>
     if not the identifier starts with MEDSEA_<whatever>
@@ -444,7 +444,7 @@
                         select="ancestor-or-self::gmd:MD_Metadata/
                             gmd:distributionInfo/gmd:MD_Distribution/
                             gmd:transferOptions[1]/gmd:MD_DigitalTransferOptions/
-                            gmd:onLine[1]/gmd:CI_OnlineResource/gmd:name"/>
+                            gmd:onLine[2]/gmd:CI_OnlineResource/gmd:name"/>
 
           <xsl:value-of select="concat($prefix, $linkageName)"/>
         </xsl:when>
