@@ -95,7 +95,7 @@
               var extent = gnMap.getBboxFromMd(rec[i]);
               if(extent) {
                 var proj = scope.map.getView().getProjection();
-                extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
+                extent = ol.extent.containsExtent(proj.getExtent(), extent) ?
                     ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
                     proj.getExtent();
                 var coords = gnMap.getPolygonFromExtent(extent);
@@ -175,7 +175,7 @@
             var extent = gnMap.getBboxFromMd(scope.md);
             if(extent) {
               var proj = scope.map.getView().getProjection();
-              extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
+              extent = ol.extent.containsExtent(proj.getExtent(), extent) ?
                   ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
                   proj.getExtent();
               var coords = gnMap.getPolygonFromExtent(extent);
@@ -204,7 +204,7 @@
             var extent = gnMap.getBboxFromMd(scope.md);
             if(extent) {
               var proj = scope.map.getView().getProjection();
-              extent = ol.extent.containsExtent(proj.getWorldExtent(), extent) ?
+              extent = ol.extent.containsExtent(proj.getExtent(), extent) ?
                   ol.proj.transformExtent(extent, 'EPSG:4326', proj) :
                   proj.getExtent();
               scope.map.getView().fitExtent(extent, scope.map.getSize());
