@@ -60,7 +60,14 @@
     <for name="gmd:distributor" addDirective="data-gn-directory-entry-selector"/>
     <for name="gmd:processor" addDirective="data-gn-directory-entry-selector"/>
     <for name="gmd:citedResponsibleParty" addDirective="data-gn-directory-entry-selector"/>
-    
+
+    <!--
+    This could be an option to use keywords to populate a field
+    but we only want this for MEDSEA records and with a specific
+    thesaurus. The configuration to create the challenge field
+    was done in layout-custom-fields-medsea.xsl.
+    <for name="gmd:hierarchyLevelName" use="data-gn-keyword-picker"/>-->
+
     <for name="gmd:descriptiveKeywords" addDirective="data-gn-thesaurus-selector"/>
   </fields>
 
@@ -1781,13 +1788,14 @@
           <!-- MedSea challenges
           TODO: Can't define to use Anchor mode by default
           in keyword selector.
-          -->
+
           <field
                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
                 'Challenges')]"/>
-
+          -->
+          <field name="challenge" xpath="/gmd:MD_Metadata/gmd:hierarchyLevelName"/>
           <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
 
           <!--<field name="lineage"

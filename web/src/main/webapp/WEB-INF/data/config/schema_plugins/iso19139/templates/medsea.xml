@@ -19,6 +19,9 @@
     <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_ScopeCode"
                       codeListValue="dataset"/>
   </gmd:hierarchyLevel>
+  <gmd:hierarchyLevelName gco:nilReason="missing">
+    <gco:CharacterString/>
+  </gmd:hierarchyLevelName>
   <gmd:contact>
     <gmd:CI_ResponsibleParty>
       <gmd:organisationName gco:nilReason="missing">

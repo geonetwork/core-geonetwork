@@ -358,7 +358,7 @@
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
-          scope.thesaurusKey = '';
+          scope.thesaurusKey = attrs.thesaurusKey || '';
           scope.max = gnThesaurusService.DEFAULT_NUMBER_OF_RESULTS;
           var initialized = false;
 
@@ -386,7 +386,10 @@
             // by scope)
             element.typeahead('destroy');
             element.attr('placeholder', $translate('searchOrTypeKeyword'));
-            if (!initialized) {
+
+            // Thesaurus selector is not added if the key is defined
+            // by configuration
+            if (!initialized && !attrs.thesaurusKey) {
               addThesaurusSelectorOnElement(element);
             }
             var keywordsAutocompleter =
