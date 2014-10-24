@@ -1,12 +1,18 @@
 package org.fao.geonet.services.metadata.format;
 
+import com.google.common.collect.ImmutableTable;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
+import org.fao.geonet.domain.Pair;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Contains all the translation/localization files for a particular schema.
@@ -17,6 +23,16 @@ public class SchemaLocalization {
     public final String schema;
     private final Map<String, XmlFile> schemaInfo;
     private final ServiceContext context;
+    /**
+     * A Map &lt;3CharlangId, Map&lt;elementName, Element containing label child and description child>>
+     */
+    private final Map<String, Map<String, Element>> labelIndex = Maps.newHashMap();
+    /**
+     * A Map &lt;3CharlangId, Table &lt;codeListName, code, Element containing label child and description child>>
+     *
+     * The codeListName has the prefix removed.
+     */
+    private final Map<String, ImmutableTable<String, String, Element>> codeListIndex = Maps.newHashMap();
 
 
     public SchemaLocalization(ServiceContext context, String schema, Map<String, XmlFile> schemaInfo) {
@@ -37,6 +53,73 @@ public class SchemaLocalization {
         return getXml("strings.xml", lang);
     }
 
+    /**
+     * Get a quick lookup for labels.  The returned map is
+     * Map&lt;elementName, Element containing label child and description child>
+     * @param lang
+     * @return
+     * @throws Exception
+     */
+    public synchronized Map<String, Element> getLabelIndex(String lang) throws Exception {
+        Map<String, Element> index = this.labelIndex.get(lang);
+        if (index == null) {
+            index = Maps.newHashMap();
+            final Element labels = getLabels(lang);
+
+            @SuppressWarnings("unchecked")
+            final List<Element> children = labels.getChildren("element");
+            for (Element element : children) {
+                index.put(element.getAttributeValue("name"), element);
+            }
+            this.labelIndex.put(lang, index);
+        }
+
+        return index;
+    }
+
+    /**
+     * Get a quick lookup table for finding codelist translations.  The returned table is
+     * Table &lt;codeListName, code, Element containing label child and description child>
+     *
+     * The codeListName has the prefix removed.
+     */
+    public ImmutableTable<String, String, Element> getCodeListIndex(String lang) throws Exception {
+        ImmutableTable<String, String, Element> index = this.codeListIndex.get(lang);
+        if (index == null) {
+            ImmutableTable.Builder<String, String, Element> indexBuilder = ImmutableTable.builder();
+            final Element codelistEls = getCodelists(lang);
+
+            Set<Pair<String, String>> added = Sets.newHashSet();
+            @SuppressWarnings("unchecked")
+            final List<Element> children = codelistEls.getChildren("codelist");
+            for (Element codelist : children) {
+                String codelistName = extractCodeListNameFromXml(codelist);
+                @SuppressWarnings("unchecked")
+                final List<Element> codes = codelist.getChildren("entry");
+                for (Element codeEl : codes) {
+                    String code = codeEl.getChildText("code");
+                    final Pair<String, String> key = Pair.read(codelistName, code);
+                    if (!added.contains(key)) {
+                        indexBuilder.put(codelistName, code, codeEl);
+                        added.add(key);
+                    }
+                }
+            }
+
+            index = indexBuilder.build();
+            this.codeListIndex.put(lang, index);
+        }
+
+        return index;
+    }
+    private String extractCodeListNameFromXml(Element child) {
+        String codeListNameFromLabel = child.getAttributeValue("name");
+        int endOfPrefix = codeListNameFromLabel.indexOf(":");
+        if (endOfPrefix > 0) {
+            codeListNameFromLabel = codeListNameFromLabel.substring(endOfPrefix + 1);
+        }
+        return codeListNameFromLabel;
+    }
     private Element getXml(String key, String lang) throws JDOMException, IOException {
         return schemaInfo.get(key).getXml(context, lang, false);
     }

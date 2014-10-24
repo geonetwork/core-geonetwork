@@ -1,7 +1,8 @@
 package org.fao.geonet.services.metadata.format.groovy;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableTable;
 import com.google.common.io.Closer;
 import com.vividsolutions.jts.util.Assert;
 import groovy.lang.Closure;
@@ -26,6 +27,7 @@ import java.util.List;
  * @author Jesse on 10/16/2014.
  */
 public class Functions {
+    protected static final String LANG_CODELIST_NS = "http://www.loc.gov/standards/iso639-2/";
     /**
      * Localization files from schema plugin
      */
@@ -53,13 +55,7 @@ public class Functions {
      * @param qualifiedNodeName the name to use as a key for the lookup
      */
     public String nodeLabel(String qualifiedNodeName) throws Exception {
-        String label = nodeTranslation(qualifiedNodeName, "label");
-
-        if (label == null) {
-            label = qualifiedNodeName;
-        }
-
-        return label;
+        return nodeTranslation(qualifiedNodeName, "label");
     }
 
     /**
@@ -75,24 +71,17 @@ public class Functions {
      * @param qualifiedNodeName the name to use as a key for the lookup
      */
     public String nodeDesc(String qualifiedNodeName) throws Exception {
-        String label = nodeTranslation(qualifiedNodeName, "description");
 
-        if (label == null) {
-            label = qualifiedNodeName;
-        }
-
-        return label;
+        return nodeTranslation(qualifiedNodeName, "description");
     }
 
     private String nodeTranslation(String qualifiedNodeName, String type) throws Exception {
-        @SuppressWarnings("unchecked")
-        final List<Element> children = this.schemaLocalizations.getLabels(this.env.getLang3()).getChildren("element");
-        for (Element child : children) {
-            if (qualifiedNodeName.equals(child.getAttributeValue("name"))) {
-                return child.getChildText(type);
-            }
+        final Element element = this.schemaLocalizations.getLabelIndex(this.env.getLang3()).get(qualifiedNodeName);
+        if (element != null) {
+            return element.getChildText(type);
         }
-        return null;
+
+        return qualifiedNodeName;
     }
 
     /**
@@ -109,13 +98,7 @@ public class Functions {
      * @param value the codelist value
      */
     public String codelistValueLabel(String codelist, String value) throws Exception {
-        String label = codelistTranslation(codelist, value, "label");
-
-        if (label == null) {
-            label = value;
-        }
-
-        return label;
+        return codelistTranslation(codelist, value, "label");
     }
 
     /**
@@ -133,41 +116,22 @@ public class Functions {
      * @param value the codelist value
      */
     public String codelistValueDesc(String codelist, String value) throws Exception {
-        String label = codelistTranslation(codelist, value, "description");
-
-        if (label == null) {
-            label = value;
-        }
-
-        return label;
+        return codelistTranslation(codelist, value, "description");
     }
 
     private String codelistTranslation(String codelist, String value, String type) throws Exception {
 
-        if ("http://www.loc.gov/standards/iso639-2/".equals(codelist)) {
+        if (LANG_CODELIST_NS.equals(codelist)) {
             return translateLanguageCode(value);
         }
 
         codelist = extractCodeListName(codelist);
 
-        @SuppressWarnings("unchecked")
-        final List<Element> children = this.schemaLocalizations.getCodelists(this.env.getLang3()).getChildren("codelist");
-        for (Element child : children) {
-            String codeListNameFromLabel = extractCodeListNameFromXml(child);
-
-            if (codelist.equals(codeListNameFromLabel)) {
-                @SuppressWarnings("unchecked")
-                final List<Element> values = child.getChildren("entry");
-                for (Element labelEl : values) {
-                    String code = labelEl.getChildText("code");
-                    if (value.equals(code)) {
-                        return labelEl .getChildText(type);
-                    }
-                }
-                break;
-            }
+        Element codelistEl = this.schemaLocalizations.getCodeListIndex(this.env.getLang3()).get(codelist, value);
+        if (codelistEl != null) {
+            return codelistEl.getChildText(type);
         }
-        return null;
+        return value;
     }
 
     private String translateLanguageCode(String value) {
@@ -175,6 +139,10 @@ public class Functions {
             return null;
         }
         List<IsoLanguage> lang;
+        if (value.equals("deu")) {
+            value = "ger";
+        }
+
         if (value.length() == 2) {
             lang = this.languageRepo.findAllByShortCode(value.toLowerCase());
         } else {
@@ -196,15 +164,6 @@ public class Functions {
         return value;
     }
 
-    private String extractCodeListNameFromXml(Element child) {
-        String codeListNameFromLabel = child.getAttributeValue("name");
-        int endOfPrefix = codeListNameFromLabel.indexOf(":");
-        if (endOfPrefix > 0) {
-            codeListNameFromLabel = codeListNameFromLabel.substring(endOfPrefix + 1);
-        }
-        return codeListNameFromLabel;
-    }
-
     private String extractCodeListName(String codelist) {
         final int indexOfPound = codelist.lastIndexOf('#');
         if (indexOfPound > 0) {
@@ -214,21 +173,13 @@ public class Functions {
     }
 
     public Collection<String> codelist(String codelistName) throws Exception {
-        List<String> codelistValues = Lists.newArrayList();
-
-        @SuppressWarnings("unchecked")
-        final List<Element> children = this.schemaLocalizations.getCodelists(this.env.getLang3()).getChildren("codelist");
-        for (Element child : children) {
-            if (codelistName.equals(child.getAttributeValue("name"))) {
-                @SuppressWarnings("unchecked")
-                final List<Element> entries = child.getChildren("entry");
-                for (Element entry : entries) {
-                    codelistValues.add(entry.getChildText("code"));
-                }
-                break;
-            }
+        int prefix = codelistName.indexOf(':');
+        if (prefix > -1) {
+            codelistName = codelistName.substring(prefix + 1);
         }
-        return codelistValues;
+        final ImmutableTable<String, String, Element> codeListIndex = this.schemaLocalizations.getCodeListIndex(this.env.getLang3());
+        final ImmutableMap<String, Element> codelist = codeListIndex.row(codelistName);
+        return codelist.keySet();
     }
 
     /**
