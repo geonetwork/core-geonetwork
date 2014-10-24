@@ -2399,8 +2399,8 @@
     <description>Quantitative value or values, content determined by the evaluation procedure
       used</description>
     <helper displayIf="ancestor::node()[
-              name()='gmd:MD_Metadata' and
-              contains(gmd:metadataStandardName/gco:CharacterString, 'MedSea')]">
+              name()='gmd:DQ_DomainConsistency' and
+              contains(gmd:nameOfMeasure/gco:CharacterString, 'Responsiveness')]">
       <option value="&lt;15mn (on-line download)">&lt;15mn (on-line download)</option>
       <option value="Less than 3 hours">Less than 3 hours</option>
       <option value="Less than 24 hours">Less than 24 hours</option>

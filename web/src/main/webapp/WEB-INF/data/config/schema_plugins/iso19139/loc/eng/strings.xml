@@ -119,6 +119,7 @@
   <dataFormats>Data formats*</dataFormats>
   <temporalExtent>Temporal extent*</temporalExtent>
   <responsiveness>Responsiveness*</responsiveness>
+  <reliability>Reliability</reliability>
   <medseaDataSourceCatalogueName>Catalog name</medseaDataSourceCatalogueName>
   <medseaDataSourceCatalogueURL>Catalog URL*</medseaDataSourceCatalogueURL>
   <medseaDataSourceIdentifier>Dataset identifier in the catalog</medseaDataSourceIdentifier>
@@ -131,9 +132,6 @@
   <p01-field-missing>
     <div class="text-danger">SeaDataNet Parameter Discovery Vocabulary P01 thesaurus is missing.</div>
   </p01-field-missing>
-  <reliability-field-missing>
-    <div class="text-danger">Reliability field is missing.</div>
-  </reliability-field-missing>
   <production-mode-field-missing>
     <div class="text-danger">Use resource maintenance to store production mode ?</div>
   </production-mode-field-missing>

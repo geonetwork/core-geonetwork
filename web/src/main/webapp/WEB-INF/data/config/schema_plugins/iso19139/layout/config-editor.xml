@@ -1715,7 +1715,10 @@
                     gmd:report/gmd:DQ_DomainConsistency[gmd:nameOfMeasure/gco:CharacterString = 'Responsiveness']/
                     gmd:result/gmd:DQ_QuantitativeResult/gmd:value"/>
 
-          <text ref="reliability-field-missing"/>
+          <field name="reliability"
+                 xpath="/gmd:MD_Metadata/gmd:dataQualityInfo/gmd:DQ_DataQuality/
+                    gmd:report/gmd:DQ_DomainConsistency[gmd:nameOfMeasure/gco:CharacterString = 'Reliability']/
+                    gmd:result/gmd:DQ_QuantitativeResult/gmd:value"/>
 
         </section>
       </tab>

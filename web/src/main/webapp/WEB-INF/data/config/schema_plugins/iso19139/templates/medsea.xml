@@ -593,6 +593,20 @@
           </gmd:result>
         </gmd:DQ_DomainConsistency>
       </gmd:report>
+      <gmd:report>
+        <gmd:DQ_DomainConsistency>
+          <gmd:nameOfMeasure>
+            <gco:CharacterString>Reliability</gco:CharacterString>
+          </gmd:nameOfMeasure>
+          <gmd:result>
+            <gmd:DQ_QuantitativeResult>
+              <gmd:value>
+                <gco:Record/>
+              </gmd:value>
+            </gmd:DQ_QuantitativeResult>
+          </gmd:result>
+        </gmd:DQ_DomainConsistency>
+      </gmd:report>
       <gmd:lineage>
         <gmd:LI_Lineage>
           <gmd:statement gco:nilReason="missing">
