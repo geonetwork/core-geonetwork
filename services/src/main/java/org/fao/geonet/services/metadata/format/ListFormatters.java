@@ -75,7 +75,7 @@ public class ListFormatters extends AbstractFormatService implements Service {
         return response;
     }
 
-    private void addFormatters(String schema, Element response, File root, File file, boolean assumeCorrectSchema) throws IOException {
+    private void addFormatters(String schema, Element response, File root, File file, boolean isSchemaPluginFormatter) throws IOException {
         File[] xslFormatters = file.listFiles();
         final FormatterFilter formatterFilter = new FormatterFilter();
 
@@ -83,8 +83,8 @@ public class ListFormatters extends AbstractFormatService implements Service {
             for (File xsl : xslFormatters) {
                 boolean add = true;
                 if (formatterFilter.accept(xsl)) {
-                    if (!schema.equalsIgnoreCase("all") && !assumeCorrectSchema) {
-                        ConfigFile config = new ConfigFile(xsl, false);
+                    if (!schema.equalsIgnoreCase("all") && !isSchemaPluginFormatter) {
+                        ConfigFile config = new ConfigFile(xsl, true, null);
                         if (!config.listOfApplicableSchemas().contains(schema)) {
                             add = false;
                         }
@@ -98,7 +98,7 @@ public class ListFormatters extends AbstractFormatService implements Service {
                         response.addContent(new Element(FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR).setText(path));
                     }
                 } else {
-                    addFormatters(schema, response, root, xsl, assumeCorrectSchema);
+                    addFormatters(schema, response, root, xsl, isSchemaPluginFormatter);
                 }
             }
         }

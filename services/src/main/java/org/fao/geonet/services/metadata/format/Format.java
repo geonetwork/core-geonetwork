@@ -136,7 +136,7 @@ public class Format extends AbstractFormatService {
         }
         File formatDir = getAndVerifyFormatDir(geonetworkDataDirectory, "xsl", xslid, schemaDir);
 
-        ConfigFile config = new ConfigFile(formatDir, false);
+        ConfigFile config = new ConfigFile(formatDir, true, schemaDir);
 
         if (!isCompatibleMetadata(schema, config)) {
             throw new IllegalArgumentException("The bundle cannot format metadata with the " + schema + " schema");

@@ -153,7 +153,7 @@ public class GroovyFormatter implements FormatterImpl {
     }
 
     private FormatterParams createParamsForSchema(FormatterParams fparams, String schema) throws IOException {
-        ConfigFile newConfig = new ConfigFile(getSchemaPluginFormatterDir(schema), false);
+        ConfigFile newConfig = new ConfigFile(getSchemaPluginFormatterDir(schema), false, null);
         final FormatterParams formatterParams = fparams.copy();
         formatterParams.config = newConfig;
         return formatterParams;

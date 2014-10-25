@@ -1,8 +1,8 @@
 package org.fao.geonet.services.metadata.format;
 
+import com.google.common.collect.Lists;
 import com.google.common.io.Closer;
 import org.fao.geonet.Constants;
-import org.jdom.Namespace;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -25,18 +25,25 @@ public class ConfigFile {
     private static final String DEPENDS_ON = "dependsOn";
 
     private Properties config;
-    private List<Namespace> namespaces;
 
-    public ConfigFile(File bundleDir) throws IOException {
-        this(bundleDir, true);
-    }
-    public ConfigFile(File bundleDir, boolean searchParentDir) throws IOException {
+    public ConfigFile(File bundleDir, boolean searchParentDir, File schemaDir) throws IOException {
         this.config = new Properties();
         File[] properties;
         if (searchParentDir) {
-            properties = new File[]{
-                    new File(bundleDir.getParentFile(), CONFIG_PROPERTIES_FILENAME),
-                    new File(bundleDir, CONFIG_PROPERTIES_FILENAME)};
+            if (schemaDir == null) {
+                properties = new File[]{
+                        new File(bundleDir.getParentFile(), CONFIG_PROPERTIES_FILENAME),
+                        new File(bundleDir, CONFIG_PROPERTIES_FILENAME)};
+
+            } else {
+                List<File> tmp = Lists.newArrayList();
+                File current = bundleDir;
+                while (!schemaDir.equals(current)) {
+                    tmp.add(new File(current, CONFIG_PROPERTIES_FILENAME));
+                    current = current.getParentFile();
+                }
+                properties = tmp.toArray(new File[tmp.size()]);
+            }
         } else {
             properties = new File[]{new File(bundleDir, CONFIG_PROPERTIES_FILENAME)};
         }
