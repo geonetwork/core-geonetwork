@@ -42,8 +42,11 @@ import java.util.Set;
  */
 public class ListFormatters extends AbstractFormatService implements Service {
 
+    private static final java.lang.String PLUGIN_ONLY = "pluginOnly";
+
     public Element exec(Element params, ServiceContext context) throws Exception {
         String schema = Util.getParam(params, Params.SCHEMA, null);
+        boolean pluginOnly = Util.getParam(params, PLUGIN_ONLY, false);
         if (Util.getParam(params, Params.ID, null) != null ||
         		Util.getParam(params, Params.UUID, null) != null) {
 	        try {
@@ -60,8 +63,10 @@ public class ListFormatters extends AbstractFormatService implements Service {
         
         Element response = new Element("formatters");
 
-        File userXslDir = context.getBean(GeonetworkDataDirectory.class).getFormatterDir();
-        addFormatters(schema, response, userXslDir,  userXslDir, false);
+        if (!pluginOnly) {
+            File userXslDir = context.getBean(GeonetworkDataDirectory.class).getFormatterDir();
+            addFormatters(schema, response, userXslDir, userXslDir, false);
+        }
 
         final SchemaManager schemaManager = context.getBean(SchemaManager.class);
         final Set<String> schemas = schemaManager.getSchemas();

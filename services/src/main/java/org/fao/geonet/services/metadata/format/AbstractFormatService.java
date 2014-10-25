@@ -91,7 +91,10 @@ abstract class AbstractFormatService {
     protected static class FormatterFilter implements FileFilter {
         @Override
         public boolean accept(File file) {
-            return file.isDirectory() && new File(file, VIEW_XSL_FILENAME).exists();
+            final boolean xslViewExists = new File(file, VIEW_XSL_FILENAME).exists();
+            final boolean groovyViewExists = new File(file, VIEW_GROOVY_FILENAME).exists();
+            boolean viewFileExists = xslViewExists || groovyViewExists;
+            return file.isDirectory() && viewFileExists;
         }
     }
     

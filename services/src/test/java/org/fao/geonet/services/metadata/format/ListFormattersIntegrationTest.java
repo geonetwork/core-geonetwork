@@ -35,18 +35,19 @@ public class ListFormattersIntegrationTest extends AbstractServiceIntegrationTes
 
         listService.init(dataDirectory.getWebappDir(), serviceConfig);
         assertFormattersForSchema("iso19139", listService, "full_view",
-                "by_package/metadata",
-                "by_package/identification",
-                "by_package/maintenance",
-                "by_package/constraints",
-                "by_package/spatial_info",
-                "by_package/reference_system",
-                "by_package/distribution",
-                "by_package/data_quality",
-                "by_package/app_schema",
-                "by_package/catalog",
-                "by_package/content_info",
-                "by_package/ext_info");
+                "package/1_metadata",
+                "package/2_identification",
+                "package/3_maintenance",
+                "package/4_constraints",
+                "package/5_spatial_info",
+                "package/6_reference_system",
+                "package/7_distribution",
+                "package/8_data_quality",
+                "package/9_app_schema",
+                "package/10_portrayal_catalog",
+                "package/11_content_info",
+                "package/12_extension_info");
+        assertFormattersForSchema("dublin-core", listService, "full_view");
     }
 
     private void assertFormattersForSchema(String schema, ListFormatters listService,
