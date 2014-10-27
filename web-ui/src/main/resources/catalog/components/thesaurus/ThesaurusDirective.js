@@ -358,7 +358,7 @@
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
-          scope.thesaurusKey = '';
+          scope.thesaurusKey = attrs.thesaurusKey || '';
           scope.max = gnThesaurusService.DEFAULT_NUMBER_OF_RESULTS;
           var initialized = false;
 
@@ -366,12 +366,12 @@
           // with a thesaurus selector on the right.
           var addThesaurusSelectorOnElement = function() {
             var inputGroup = angular.
-                element('<div class="input-group"></div>');
+              element('<div class="input-group"></div>');
             var dropDown = angular.
-                element('<div class="input-group-btn"></div>');
+              element('<div class="input-group-btn"></div>');
             // Thesaurus selector is a directive
             var thesaurusSel = '<span data-gn-thesaurus-selector="" ' +
-                'data-selector-only="true"></span>';
+              'data-selector-only="true"></span>';
 
             var input = element.replaceWith(inputGroup);
             inputGroup.append(input);
@@ -386,7 +386,10 @@
             // by scope)
             element.typeahead('destroy');
             element.attr('placeholder', $translate('searchOrTypeKeyword'));
-            if (!initialized) {
+
+            // Thesaurus selector is not added if the key is defined
+            // by configuration
+            if (!initialized && !attrs.thesaurusKey) {
               addThesaurusSelectorOnElement(element);
             }
             var keywordsAutocompleter =
