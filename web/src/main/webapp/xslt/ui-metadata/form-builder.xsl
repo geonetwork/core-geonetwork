@@ -304,6 +304,7 @@
     <xsl:param name="refToDelete" required="no"/>
     <!-- Parameters for custom add directive -->
     <xsl:param name="addDirective" required="no"/>
+    <xsl:param name="directiveAttributes" required="no"/>
     <xsl:param name="qname" required="no"/>
     <xsl:param name="parentRef" required="no"/>
     <!-- Label to display if element is missing. The field
@@ -368,7 +369,7 @@
                   <xsl:attribute name="data-dom-id" select="$id"/>
                   <xsl:attribute name="data-element-name" select="$qname"/>
                   <xsl:attribute name="data-element-ref" select="$parentRef"/>
-                  <xsl:attribute name="data-template-add-action" select="'true'"/>
+                  <xsl:copy-of select="$directiveAttributes/@*"/>
                 </div>
               </xsl:when>
               <xsl:otherwise>
@@ -632,6 +633,9 @@
                     <xsl:attribute name="data-dom-id" select="$id"/>
                     <xsl:attribute name="data-element-name" select="$qualifiedName"/>
                     <xsl:attribute name="data-element-ref" select="$parentEditInfo/@ref"/>
+                    <xsl:copy-of
+                            select="gn-fn-metadata:getFieldAddDirectiveAttributes($editorConfig,
+                                    $qualifiedName)"/>
                   </div>
                 </xsl:when>
                 <xsl:otherwise>

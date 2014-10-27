@@ -302,6 +302,15 @@
     />
   </xsl:function>
 
+  <xsl:function name="gn-fn-metadata:getFieldAddDirectiveAttributes"
+                as="attribute()*">
+    <xsl:param name="configuration" as="node()"/>
+    <xsl:param name="name" as="xs:string"/>
+
+    <xsl:copy-of select="$configuration/editor/fields/
+          for[@name = $name and @addDirective]/
+          directiveAttributes/@*"/>
+  </xsl:function>
 
   <!-- Return if a flat mode exception has been defined in the current view for a field. -->
   <xsl:function name="gn-fn-metadata:isFieldFlatModeException" as="xs:boolean">
