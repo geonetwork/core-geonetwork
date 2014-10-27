@@ -98,7 +98,7 @@ public class Metadata extends GeonetEntity {
      *
      * @return the uuid of the metadata.
      */
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @Nonnull
     public String getUuid() {
         return _uuid;
