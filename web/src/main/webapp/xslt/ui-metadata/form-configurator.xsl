@@ -467,6 +467,7 @@
         <xsl:with-param name="template" select="template"/>
         <xsl:with-param name="hasAddAction" select="true()"/>
         <xsl:with-param name="addDirective" select="@addDirective"/>
+        <xsl:with-param name="directiveAttributes" select="directiveAttributes"/>
         <xsl:with-param name="parentRef" select="$nonExistingChildParent/*[position() = last()]/gn:element/@ref"/>
         <xsl:with-param name="qname" select="concat($nonExistingChildParent/*[position() = last()]/gn:child[@name = $childName]/@prefix, ':', @or)"/>
         <xsl:with-param name="isFirst" select="@forceLabel or count($elementOfSameKind/*) = 0"/>

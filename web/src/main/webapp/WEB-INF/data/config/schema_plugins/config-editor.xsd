@@ -138,6 +138,9 @@
       <xs:documentation>A field configuration.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="directiveAttributes" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
       <xs:attribute name="name" type="xs:string" use="required">
         <xs:annotation>
           <xs:documentation>
@@ -394,6 +397,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="template" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="directiveAttributes" minOccurs="0" maxOccurs="1"/>
       </xs:sequence>
       <xs:attribute name="name" type="xs:string">
         <xs:annotation>
@@ -758,32 +762,7 @@
             </xs:attribute>
           </xs:complexType>
         </xs:element>
-        <xs:element name="directiveAttributes" minOccurs="0" maxOccurs="1">
-          <xs:annotation>
-            <xs:documentation>
-              <![CDATA[
-              Use directiveAttributes element to specify custom directive
-              attributes. For the time being only gn-date-picker directive
-              supports it.
-              
-              Example: data-tag-name attribute allows to define non 
-              standard attribute name (ie. not gco:Date and gco:DateTime).
-              
-              <pre>
-              <key label="endPosition"
-                  xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
-                  use="gn-date-picker"
-                >
-                  <directiveAttributes data-tag-name=""/>
-                </key>
-              </pre>
-              ]]>
-            </xs:documentation>
-          </xs:annotation>
-          <xs:complexType>
-            <xs:anyAttribute processContents="skip"/>
-          </xs:complexType>
-        </xs:element>
+        <xs:element ref="directiveAttributes" minOccurs="0" maxOccurs="1"/>
       </xs:choice>
       <xs:attribute name="label" type="xs:string" use="required">
         <xs:annotation>
@@ -813,8 +792,33 @@
       <xs:attribute ref="use"/>
     </xs:complexType>
   </xs:element>
+  <xs:element name="directiveAttributes">
+    <xs:annotation>
+      <xs:documentation>
+        <![CDATA[
+              Use directiveAttributes element to specify custom directive
+              attributes. For the time being only gn-date-picker directive
+              supports it.
 
-  <xs:element name="snippet" type="xs:anyType">
+              Example: data-tag-name attribute allows to define non
+              standard attribute name (ie. not gco:Date and gco:DateTime).
+
+              <pre>
+              <key label="endPosition"
+                  xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
+                  use="gn-date-picker"
+                >
+                  <directiveAttributes data-tag-name=""/>
+                </key>
+              </pre>
+              ]]>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:anyAttribute processContents="skip"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="snippet">
     <xs:annotation>
       <xs:documentation><![CDATA[
         An XML snippet with replacement for each key defined in that field. 
@@ -835,5 +839,10 @@
         
         ]]></xs:documentation>
     </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:any processContents="skip" namespace="##any"/>
+      </xs:sequence>
+    </xs:complexType>
   </xs:element>
 </xs:schema>
