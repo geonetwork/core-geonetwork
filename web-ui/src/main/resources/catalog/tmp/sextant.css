@@ -7579,6 +7579,28 @@ fieldset[disabled] [gn-main-viewer] .panel-tools .metadata:focus {
   padding-left: 15px;
   padding-right: 15px;
 }
+/* An update to 3.2 could provide responsive class
+  for block or inline layout.
+  http://getbootstrap.com/css/#responsive-utilities
+
+  Display button label in top tool bar using inline mode.
+ */
+.gn-top-bar .visible-lg {
+  display: none !important;
+}
+@media (min-width: 1200px) {
+  .gn-top-bar .visible-lg {
+    display: inline !important;
+  }
+}
+.gn-top-bar .hidden-xs {
+  display: inline !important;
+}
+@media (max-width: 767px) {
+  .gn-top-bar .hidden-xs {
+    display: none !important;
+  }
+}
 .gn-facet .list-group-item {
   border-width: 0;
   border-radius: 0;
@@ -7691,6 +7713,20 @@ select[multiple][hitsperpage-combo] select {
 .gn-advanced-searchform .panel.col-md-4 {
   padding-left: 0;
   padding-right: 0;
+}
+[gn-selection-widget] {
+  display: inline-block;
+  position: relative;
+}
+[gn-selection-widget] .md-checkbox {
+  position: absolute;
+  z-index: 10;
+  top: 1.3em;
+  left: 0.9em;
+}
+[gn-selection-widget] .btn-group [type=checkbox] {
+  visibility: hidden;
+  pointer-events: none;
 }
 [search-results] h4 {
   font-size: 15px;
