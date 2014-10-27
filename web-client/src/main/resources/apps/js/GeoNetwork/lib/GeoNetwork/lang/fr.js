@@ -213,6 +213,7 @@ GeoNetwork.Lang.fr = {
     'group': 'Groupe',
     'md': 'Métadonnée',
     'tpl': 'Modèle',
+    'subtpl': "Annuaire",
     'category': 'Catégorie',
     'advTextSearch': 'Options avancées',
     'eitherWords': 'Tous - au moins un des mots suivants',

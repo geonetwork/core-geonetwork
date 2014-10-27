@@ -211,6 +211,7 @@ GeoNetwork.Lang.en = {
     'chooseGroup': 'Select a group',
     'md': 'Metadata',
     'tpl': 'Template',
+    'subtpl': 'Directory entry',
     'category': 'Category',
     'advTextSearch': 'Advanced text search options',
     'eitherWords': 'Either of the words',
