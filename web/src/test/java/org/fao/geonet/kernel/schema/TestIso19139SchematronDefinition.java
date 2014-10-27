@@ -1,12 +1,14 @@
 package org.fao.geonet.kernel.schema;
 
-import org.fao.geonet.domain.Pair;
+import com.google.common.io.Files;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.xpath.XPath;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,30 +24,32 @@ import static org.junit.Assert.assertEquals;
  * Created by Jesse on 1/31/14.
  */
 public class TestIso19139SchematronDefinition extends AbstractSchematronTest {
+    @Autowired
+    private SchemaManager schemaManager;
+
 
     @SuppressWarnings("unchecked")
     @Test
     public void testAllSchematrons() throws Exception {
-        for (File file : new File(SCHEMA_PLUGINS, "iso19139/schematron").listFiles()) {
-            if (!file.getName().endsWith(".sch")) {
+        final String schemaDir = schemaManager.getSchemaDir("iso19139");
+        for (File schematronXsl : new File(schemaDir, "schematron").listFiles()) {
+            if (!schematronXsl.getName().endsWith(".xsl")) {
                 continue;
             }
 
-            final Pair<Element, File> compiledSchematron = compileSchematron(file);
-            Element schematronDefinition = compiledSchematron.one();
-            File schematronXsl = compiledSchematron.two();
-
             final Element validMetadata = loadValidMetadata();
 
-            Element results = Xml.transform(validMetadata, schematronXsl.getPath(), params);
-            assertEquals(file.getName(), 0, countFailures(results));
+            String schematronName = Files.getNameWithoutExtension(schematronXsl.getName());
+            Element results = Xml.transform(validMetadata, schematronXsl.getPath(), getParams(schematronName));
+            assertEquals(schematronName, 0, countFailures(results));
 
+            Element schematronDefinition = Xml.loadFile(new File(schematronXsl.getParentFile(), schematronName + ".sch"));
             final List<Element> declaredPattern = schematronDefinition.getChildren("pattern", SCH_NAMESPACE);
             final List<Element> xsltPattern = (List<Element>) Xml.selectNodes(results, "svrl:active-pattern", NAMESPACES);
             assertEquals(declaredPattern.size(), xsltPattern.size());
 
             for (Element pattern : declaredPattern) {
-                checkPattern(file, validMetadata, pattern);
+                checkPattern(schematronXsl, validMetadata, pattern);
             }
         }
     }

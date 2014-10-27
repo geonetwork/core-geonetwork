@@ -2,9 +2,14 @@ package org.fao.geonet.kernel.search.index;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.facet.taxonomy.CategoryPath;
 import org.apache.lucene.facet.taxonomy.TaxonomyWriter;
-import org.apache.lucene.index.*;
+import org.apache.lucene.index.ConcurrentMergeScheduler;
+import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.index.TrackingIndexWriter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.fao.geonet.constants.Geonet;
@@ -234,23 +239,23 @@ public class LuceneIndexLanguageTracker {
         }
     }
 
-    public void addDocument(String language, Document doc, Collection<CategoryPath> categories)
+    public void addDocument(IndexInformation info)
             throws IOException {
         lock.lock();
         try{
             lazyInit();
             if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-                Log.debug(Geonet.INDEX_ENGINE, "Adding document to " + language + " index");
+                Log.debug(Geonet.INDEX_ENGINE, "Adding document to " + info.language + " index");
             }
-            open(language);
+            open(info.language);
             // Add taxonomy first
-            Document docAfterFacetBuild = doc;
-            docAfterFacetBuild = taxonomyIndexTracker.addDocument(doc, categories);
+            Document docAfterFacetBuild = info.document;
+            docAfterFacetBuild = taxonomyIndexTracker.addDocument(info.document, info.taxonomy);
             // Index the document returned after the facets are built by the taxonomy writer
             if (docAfterFacetBuild == null) {
-                trackingWriters.get(language).addDocument(doc);
+                trackingWriters.get(info.language).addDocument(info.document);
             } else {
-                trackingWriters.get(language).addDocument(docAfterFacetBuild);
+                trackingWriters.get(info.language).addDocument(docAfterFacetBuild);
             }
         } finally {
             lock.unlock();

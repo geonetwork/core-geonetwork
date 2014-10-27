@@ -22,19 +22,11 @@
 
 package org.fao.geonet.kernel.search;
 
+import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.index.SpatialIndex;
-import org.apache.lucene.facet.FacetField;
-import org.apache.lucene.index.*;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.exceptions.JeevesException;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.Util;
-import org.fao.geonet.utils.Xml;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
@@ -48,18 +40,31 @@ import org.apache.lucene.document.FieldType.NumericType;
 import org.apache.lucene.document.FloatField;
 import org.apache.lucene.document.IntField;
 import org.apache.lucene.document.LongField;
+import org.apache.lucene.facet.FacetField;
 import org.apache.lucene.facet.taxonomy.CategoryPath;
+import org.apache.lucene.index.AtomicReader;
+import org.apache.lucene.index.AtomicReaderContext;
 import org.apache.lucene.index.FieldInfo.IndexOptions;
+import org.apache.lucene.index.SlowCompositeReaderWrapper;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.index.Terms;
+import org.apache.lucene.index.TermsEnum;
 import org.apache.lucene.search.Filter;
 import org.apache.lucene.util.BytesRef;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.LuceneConfig.FacetConfig;
 import org.fao.geonet.kernel.search.LuceneConfig.LuceneConfigNumericField;
 import org.fao.geonet.kernel.search.function.DocumentBoosting;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
+import org.fao.geonet.kernel.search.index.IndexInformation;
 import org.fao.geonet.kernel.search.index.LuceneIndexLanguageTracker;
 import org.fao.geonet.kernel.search.spatial.ContainsFilter;
 import org.fao.geonet.kernel.search.spatial.CrossesFilter;
@@ -69,12 +74,14 @@ import org.fao.geonet.kernel.search.spatial.IsFullyOutsideOfFilter;
 import org.fao.geonet.kernel.search.spatial.OgcGenericFilters;
 import org.fao.geonet.kernel.search.spatial.OrSpatialFilter;
 import org.fao.geonet.kernel.search.spatial.OverlapsFilter;
-import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialFilter;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.search.spatial.TouchesFilter;
 import org.fao.geonet.kernel.search.spatial.WithinFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.geotools.data.DataStore;
 import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureSource;
@@ -89,14 +96,27 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.capability.FilterCapabilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.TreeSet;
+import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -653,19 +673,17 @@ public class SearchManager {
      * @param forceRefreshReaders if true then block all searches until they can obtain a up-to-date reader
 	 * @throws Exception
 	 */
-	public void index(String schemaDir, Element metadata, String id, List<Element> moreFields, MetadataType metadataType, boolean forceRefreshReaders)
+	public void index(String schemaDir, Element metadata, String id, List<Element> moreFields,
+                      MetadataType metadataType, String root, boolean forceRefreshReaders)
             throws Exception {
         // Update spatial index first and if error occurs, record it to Lucene index
         indexGeometry(schemaDir, metadata, id, moreFields);
         
         // Update Lucene index
-        List<Pair<String, Pair<Document, Collection<CategoryPath>>>> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, metadataType, false);
+        List<IndexInformation> docs = buildIndexDocument(schemaDir, metadata, id, moreFields, metadataType, root);
         _tracker.deleteDocuments(new Term("_id", id));
-        for( Pair<String, Pair<Document, Collection<CategoryPath>>> document : docs ) {
-            _tracker.addDocument(document.one(), document.two().one(), document.two().two());
-            if(Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
-                Log.debug(Geonet.INDEX_ENGINE, "adding document in locale " + document.one());
-            }
+        for(IndexInformation document : docs ) {
+            _tracker.addDocument(document);
         }
         if (forceRefreshReaders) {
             _tracker.maybeRefreshBlocking();
@@ -714,28 +732,31 @@ public class SearchManager {
      * @param metadata
      * @param id
      * @param moreFields
-     * @param group
-     * @return
+     * @param metadataType
+     *@param root @return
      * @throws Exception
      */
-     private List<Pair<String,Pair<Document, Collection<CategoryPath>>>> buildIndexDocument(String schemaDir, Element metadata, String id,
-                                   List<Element> moreFields, MetadataType metadataType,
-                                   boolean group) throws Exception
+     private List<IndexInformation> buildIndexDocument(String schemaDir, Element metadata, String id,
+                                                       List<Element> moreFields, MetadataType metadataType,
+                                                       String root) throws Exception
      {
         if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
             Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n" + Xml.getString(metadata));
         }
+         File defaultLangStyleSheet = getIndexFieldsXsl(schemaDir, root, "");
+         File otherLocalesStyleSheet = getIndexFieldsXsl(schemaDir, root, "language-");
 
-        Element xmlDoc = getIndexFields(schemaDir, metadata);
+        Element xmlDoc = getIndexFields(metadata, defaultLangStyleSheet, otherLocalesStyleSheet);
 
         if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
             Log.debug(Geonet.INDEX_ENGINE, "Indexing fields:\n" + Xml.getString(xmlDoc));
         }
+
         @SuppressWarnings(value = "unchecked")
         List<Element> documentElements = xmlDoc.getContent();
         Collection<Field> multilingualSortFields = findMultilingualSortElements(documentElements);
 
-        List<Pair<String, Pair<Document, Collection<CategoryPath>>>> documents = new ArrayList<Pair<String, Pair<Document, Collection<CategoryPath>>>>();
+        List<IndexInformation> documents = Lists.newArrayList();
         for( Element doc : documentElements ) {
             // add _id field
             SearchManager.addField(doc, LuceneIndexField.ID, id, true, true);
@@ -746,12 +767,33 @@ public class SearchManager {
             }
 
             String locale = getLocaleFromIndexDoc(doc);
-            documents.add(Pair.read(locale, newDocument(doc, multilingualSortFields)));
+            documents.add(newDocument(locale, doc, multilingualSortFields));
         }
         if(Log.isDebugEnabled(Geonet.INDEX_ENGINE))
             Log.debug(Geonet.INDEX_ENGINE, "Lucene document:\n" + Xml.getString(xmlDoc));
         return documents;
 	}
+
+    private File getIndexFieldsXsl(String schemaDir, String root, String indexName) {
+        if (root == null) {
+            root = "";
+        }
+        root = root.toLowerCase();
+        if (root.contains(":")) {
+            root = root.split(":",2)[1];
+        }
+
+        final String basicName = "index-fields";
+        File defaultLangStyleSheet = new File(new File(schemaDir, basicName), indexName + root + ".xsl");
+        if (!defaultLangStyleSheet.exists()) {
+            defaultLangStyleSheet = new File(new File(schemaDir, basicName), indexName + "default.xsl");
+        }
+        if (!defaultLangStyleSheet.exists()) {
+            // backward compatibility
+            defaultLangStyleSheet = new File(schemaDir, indexName + basicName + ".xsl");
+        }
+        return defaultLangStyleSheet;
+    }
 
     private Collection<Field> findMultilingualSortElements(List<Element> documentElements) {
         Map<String, Field> multilingualSortFields = new HashMap<String, Field>();
@@ -1126,23 +1168,23 @@ public class SearchManager {
     /**
      * TODO javadoc.
      *
-     * @param schemaDir
      * @param xml
      * @return
      * @throws Exception
      */
-    Element getIndexFields(String schemaDir, Element xml) throws Exception {
+    Element getIndexFields(Element xml,
+                           File defaultLangStyleSheet,
+                           File otherLocalesStyleSheet) throws Exception {
         Element documents = new Element("Documents");
         try {
-            String defaultStyleSheet = new File(schemaDir, "index-fields.xsl").getAbsolutePath();
-            String otherLocalesStyleSheet = new File(schemaDir, "language-index-fields.xsl").getAbsolutePath();
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("inspire", Boolean.toString(isInspireEnabled()));
             params.put("thesauriDir", _geonetworkDataDirectory.getThesauriDir().getAbsolutePath());
-            Element defaultLang = Xml.transform(xml, defaultStyleSheet, params);
-            if (new File(otherLocalesStyleSheet).exists()) {
+
+            Element defaultLang = Xml.transform(xml, defaultLangStyleSheet.getAbsolutePath(), params);
+            if (otherLocalesStyleSheet.exists()) {
                 @SuppressWarnings(value = "unchecked")
-                List<Element> otherLanguages = Xml.transform(xml, otherLocalesStyleSheet, params).removeContent();
+                List<Element> otherLanguages = Xml.transform(xml, otherLocalesStyleSheet.getAbsolutePath(), params).removeContent();
                 mergeDefaultLang(defaultLang, otherLanguages);
                 documents.addContent(otherLanguages);
             }
@@ -1362,11 +1404,13 @@ public class SearchManager {
      * Creates a new {@link Document} for each input fields in xml taking {@link LuceneConfig} and field's attributes
      * for configuration.
      *
-     * @param xml	The list of field to be indexed.
-     * @param multilingualSortFields 
+     *
+     * @param locale
+     * @param xml    The list of field to be indexed.
+     * @param multilingualSortFields
      * @return
      */
-	private Pair<Document, Collection<CategoryPath>> newDocument(Element xml, Collection<Field> multilingualSortFields)
+	private IndexInformation newDocument(String language, Element xml, Collection<Field> multilingualSortFields)
 	{
 		Document doc = new Document();
 		Collection<CategoryPath> categories = new HashSet<CategoryPath>();
@@ -1471,7 +1515,7 @@ public class SearchManager {
            doc.add(new Field(Geonet.LUCENE_LOCALE_KEY,Geonet.DEFAULT_LANGUAGE, storeNotTokenizedFieldType));
         }
         
-        return Pair.write(doc, categories);
+        return new IndexInformation(language, doc, categories);
 
 	}
 
