@@ -1,6 +1,7 @@
 package org.fao.geonet.services.metadata.format.groovy;
 
 import com.google.common.collect.Multimap;
+import org.fao.geonet.services.metadata.format.FormatType;
 import org.springframework.security.core.Authentication;
 
 import java.util.Collection;
@@ -42,6 +43,10 @@ public interface Environment {
      * Get the current user's authentication information.
      */
     public Authentication getAuth();
+    /**
+     * Get the Format output type of this request. (html, xml, pdf, etc...)
+     */
+    public FormatType getFormatType();
     /**
      * Return the map of all parameters passed to the Format service.
      */

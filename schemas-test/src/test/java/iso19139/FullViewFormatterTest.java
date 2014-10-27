@@ -16,6 +16,7 @@ import org.jdom.Text;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.io.File;
 import java.util.List;
@@ -44,7 +45,9 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
 
 //        measureFormatterPerformance(request, formatterId);
 
-        final String view = formatService.exec("eng", "html", "" + id, null, formatterId, "true", false, request);
+        final MockHttpServletResponse response = new MockHttpServletResponse();
+        formatService.exec("eng", "html", "" + id, null, formatterId, "true", false, request, response);
+        final String view = response.getContentAsString();
 //        Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
 
         List<String> excludes = Lists.newArrayList(

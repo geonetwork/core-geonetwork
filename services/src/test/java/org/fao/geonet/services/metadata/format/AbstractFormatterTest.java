@@ -30,6 +30,7 @@ import org.jdom.Namespace;
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.io.File;
 import java.util.Map;
@@ -106,7 +107,8 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
         final long fiveSec = TimeUnit.SECONDS.toNanos(5);
         systemInfo.setStagingProfile(SystemInfo.STAGE_PRODUCTION);
         while (System.nanoTime() - start < fiveSec) {
-            formatService.exec(getUILang(), getOutputType(), "" + id, null, formatterId, "true", false, request);
+            formatService.exec(getUILang(), getOutputType().name(), "" + id, null, formatterId, "true", false, request, new
+                    MockHttpServletResponse());
         }
         System.out.println("Starting big run");
         final int secondsRan = 30;
@@ -114,7 +116,7 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
         start = System.nanoTime();
         double executions = 0;
         while (System.nanoTime() - start < thirtySec) {
-            formatService.exec(getUILang(), getOutputType(), "" + id, null, formatterId, "true", false, request);
+            formatService.exec(getUILang(), getOutputType().name(), "" + id, null, formatterId, "true", false, request, new MockHttpServletResponse());
             executions++;
         }
         long end = System.nanoTime();
@@ -125,8 +127,8 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
         System.out.println("   Average of " + round(executions / TimeUnit.NANOSECONDS.toSeconds(duration)) + " executions per second;");
     }
 
-    private String getOutputType() {
-        return "html";
+    private FormatType getOutputType() {
+        return FormatType.html;
     }
 
     private String getUILang() {

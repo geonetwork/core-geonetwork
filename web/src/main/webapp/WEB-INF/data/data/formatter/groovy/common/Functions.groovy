@@ -5,7 +5,9 @@ public class Functions {
     def f
     def env
 
-    def hasHtmlParam = { env.param('html').any{it.toBool()} }
+    def isHtmlOutput = {
+        env.formatType.name() == "html" || env.formatType.name() == "pdf"
+    }
 
     /**
      * Creates the default html for a label -> text pair.  This is the element for primitive/simple data.

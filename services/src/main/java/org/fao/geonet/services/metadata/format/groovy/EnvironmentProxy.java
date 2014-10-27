@@ -2,6 +2,7 @@ package org.fao.geonet.services.metadata.format.groovy;
 
 import com.google.common.collect.Multimap;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.metadata.format.FormatterParams;
 import org.springframework.security.core.Authentication;
 
@@ -62,6 +63,11 @@ public class EnvironmentProxy implements Environment {
     @Override
     public Authentication getAuth() {
         return get().getAuth();
+    }
+
+    @Override
+    public FormatType getFormatType() {
+        return get().getFormatType();
     }
 
     @Override

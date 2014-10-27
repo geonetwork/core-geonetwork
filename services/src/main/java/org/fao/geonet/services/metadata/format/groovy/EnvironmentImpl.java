@@ -3,6 +3,7 @@ package org.fao.geonet.services.metadata.format.groovy;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import org.fao.geonet.languages.IsoLanguagesMapper;
+import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.metadata.format.FormatterParams;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -23,14 +24,16 @@ public class EnvironmentImpl implements Environment {
     private final Multimap<String, ParamValue> params = ArrayListMultimap.create();
     private final int metadataId;
     private final String metadataUUID;
+    private final FormatType formatType;
 
     public EnvironmentImpl(FormatterParams fparams, IsoLanguagesMapper mapper) {
         this.lang3 = fparams.context.getLanguage();
         this.lang2 = mapper.iso639_2_to_iso639_1(lang3, "en");
 
+        this.formatType = fparams.formatType;
         this.resourceUrl = fparams.getLocUrl();
-        this.metadataId = fparams.metadataId;
-        this.metadataUUID = fparams.metadataUUID;
+        this.metadataId = fparams.metadataInfo.getId();
+        this.metadataUUID = fparams.metadataInfo.getUuid();
 
         for (Map.Entry<String, String[]> entry : fparams.params.entrySet()) {
             for (String value : entry.getValue()) {
@@ -112,5 +115,10 @@ public class EnvironmentImpl implements Environment {
             return context.getAuthentication();
         }
         return null;
+    }
+
+    @Override
+    public FormatType getFormatType() {
+        return this.formatType;
     }
 }

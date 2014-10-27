@@ -2,6 +2,7 @@ package org.fao.geonet.services.metadata.format;
 
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Metadata;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
@@ -22,8 +23,8 @@ public class FormatterParams {
     public String schema;
     public ConfigFile config;
     public String url;
-    public int metadataId;
-    public String metadataUUID;
+    public Metadata metadataInfo;
+    public FormatType formatType;
 
     public String param(String paramName, String defaultVal) {
         String[] values = this.params.get(paramName);
@@ -64,10 +65,10 @@ public class FormatterParams {
         formatterParams.schema = this.schema;
         formatterParams.metadata = this.metadata;
         formatterParams.formatDir = this.formatDir;
+        formatterParams.formatType = this.formatType;
         formatterParams.url = this.url;
         formatterParams.viewFile = this.viewFile;
-        formatterParams.metadataId = this.metadataId;
-        formatterParams.metadataUUID = this.metadataUUID;
+        formatterParams.metadataInfo = this.metadataInfo;
 
         return formatterParams;
     }

@@ -111,13 +111,13 @@ public class Handlers {
         }
     }
     def htmlOrXmlStart = {
-        if (func.hasHtmlParam()) {
+        if (func.isHtmlOutput()) {
             return '''
 <!DOCTYPE html>
 <html>
 <head lang="en">
     <meta charset="UTF-8"/>
-    <link rel="stylesheet" href="metadata.css"/>
+    <link rel="stylesheet" href="../../static/metadata_formatter.css"/>
 </head>
 <body>
 <div class="container" gn-metadata="">
@@ -129,11 +129,10 @@ public class Handlers {
         }
     }
     def htmlOrXmlEnd = {
-        if (func.hasHtmlParam()) {
+        if (func.isHtmlOutput()) {
             return '''
 </div>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="../../static/lib.js"></script>
 <script>
     $('.toggler').on('click', function() {
         $(this).toggleClass('closed');

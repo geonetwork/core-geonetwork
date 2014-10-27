@@ -10,6 +10,7 @@ import jeeves.server.dispatchers.guiservices.XmlFile;
 import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.repository.IsoLanguageRepository;
 import org.fao.geonet.services.metadata.format.Format;
+import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.metadata.format.FormatterParams;
 import org.fao.geonet.services.metadata.format.SchemaLocalization;
 import org.jdom.Element;
@@ -108,6 +109,11 @@ public class FunctionsTest {
 
             @Override
             public Authentication getAuth() {
+                return null;
+            }
+
+            @Override
+            public FormatType getFormatType() {
                 return null;
             }
 

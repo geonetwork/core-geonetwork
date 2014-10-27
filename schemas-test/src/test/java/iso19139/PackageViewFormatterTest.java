@@ -8,6 +8,7 @@ import org.fao.geonet.services.metadata.format.AbstractFormatterTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.io.File;
 
@@ -35,8 +36,10 @@ public class PackageViewFormatterTest extends AbstractFormatterTest {
             // just check that the formatter works
 
             String formatterId = iso19139Dir.getName() + "/" + aPackage.getName();
-            String view = formatService.exec("eng", "html", "" + id, null, formatterId, "true", false, request);
 
+            final MockHttpServletResponse response = new MockHttpServletResponse();
+            formatService.exec("eng", "html", "" + id, null, formatterId, "true", false, request, response);
+            final String view = response.getContentAsString();
             // for now the fact that there was no error is good enough
         }
 

@@ -18,6 +18,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -82,7 +83,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         IO.copy(new File(testFormatter.getParentFile(), functionsXslName), new File(this.dataDirectory.getFormatterDir(), functionsXslName));
 
         MockHttpServletRequest request = new MockHttpServletRequest();
-        formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request);
+        formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request, new MockHttpServletResponse());
     }
     @Test
     public void testExec() throws Exception {
@@ -101,8 +102,9 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
         for (String formatter : formatters) {
             MockHttpServletRequest request = new MockHttpServletRequest();
-            final Element view = Xml.loadString(formatService.exec("eng", "html", "" + id, null, formatter, null, null, request), false);
-            view.setName("body");
+            final MockHttpServletResponse response = new MockHttpServletResponse();
+            formatService.exec("eng", "html", "" + id, null, formatter, "true", false, request, response);
+            final String view = response.getContentAsString();
             Element html = new Element("html").addContent(view);
             assertFalse(html.getChildren().isEmpty());
         }
@@ -118,7 +120,11 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         IO.copy(new File(testFormatter.getParentFile(), functionsXslName), new File(this.dataDirectory.getFormatterDir(), functionsXslName));
 
         MockHttpServletRequest request = new MockHttpServletRequest();
-        final Element view = Xml.loadString(formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request), false);
+
+        final MockHttpServletResponse response = new MockHttpServletResponse();
+        formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, request, response);
+        final String viewXml = response.getContentAsString();
+        final Element view = Xml.loadString(viewXml, false);
         assertEqualsText("fromFunction", view, "*//p");
     }
 
@@ -139,7 +145,9 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("h2IdentInfo", "true");
 
-        final String viewString = formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request);
+        final MockHttpServletResponse response = new MockHttpServletResponse();
+        formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, request, response);
+        final String viewString = response.getContentAsString();
 //        Files.write(viewString, new File("e:/tmp/view.html"), Constants.CHARSET);
         final Element view = Xml.loadString(viewString, false);
         assertEquals("html", view.getName());
