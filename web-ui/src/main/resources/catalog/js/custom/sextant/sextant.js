@@ -27,11 +27,6 @@
       var searchMap = gnSearchSettings.searchMap;
 
       $scope.mainTabs = {
-        home :{
-          title: 'Home',
-          titleInfo: 0,
-          active: true
-        },
         search: {
           title: 'Search',
           titleInfo: 0,
