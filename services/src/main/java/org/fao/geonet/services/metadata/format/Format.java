@@ -72,7 +72,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author jeichar
  */
-@Controller("md.formatter")
+@Controller("md.formatter.type")
 public class Format extends AbstractFormatService {
 
     @Autowired
@@ -100,7 +100,7 @@ public class Format extends AbstractFormatService {
     private WeakHashMap<String, Element> pluginLocs = new WeakHashMap<String, Element>();
 
 
-    @RequestMapping(value = "/{lang}/md.formatter.{type}")
+    @RequestMapping(value = "/{lang}/md.format.{type}")
     public void exec(
             @PathVariable final String lang,
             @PathVariable final String type,
@@ -197,23 +197,7 @@ public class Format extends AbstractFormatService {
                                                Boolean hide_withheld)
             throws Exception {
 
-        Metadata md = null;
-        if (id != null) {
-            try {
-                md = metadataRepository.findOne(Integer.parseInt(id));
-            } catch (NumberFormatException e) {
-                md = metadataRepository.findOneByUuid(id);
-                uuid = id;
-            }
-        }
-
-        if (id == null && uuid != null) {
-            md = metadataRepository.findOneByUuid(uuid);
-        }
-
-        if (md == null) {
-            throw new IllegalArgumentException("Either '" + Params.UUID + "' or '" + Params.ID + "'is a required parameter");
-        }
+        Metadata md = loadMetadata(this.metadataRepository, id, uuid);
         Element metadata = xmlSerializer.removeHiddenElements(false, md);
 
 

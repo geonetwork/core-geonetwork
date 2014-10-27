@@ -1,7 +1,5 @@
 package org.fao.geonet.services.metadata.format;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
 import org.eclipse.jetty.util.IO;
 import org.fao.geonet.domain.MetadataType;
@@ -27,9 +25,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import javax.annotation.Nullable;
 
-import static org.fao.geonet.domain.Pair.read;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
 import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 import static org.junit.Assert.assertEquals;
@@ -44,6 +40,8 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
     private SchemaManager schemaManager;
     @Autowired
     private Format formatService;
+    @Autowired
+    private ListFormatters listService;
     @Autowired
     private IsoLanguagesMapper mapper;
     private ServiceContext serviceContext;
@@ -89,24 +87,15 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
     public void testExec() throws Exception {
 
 
-        final ListFormatters listService = new ListFormatters();
-        final Element formattersEl = listService.exec(createParams(read("schema", schema)), serviceContext);
+        final ListFormatters.FormatterDataResponse formatters = listService.exec(null, null, schema, false);
 
-        final List<String> formatters = Lists.transform(formattersEl.getChildren("formatter"), new Function() {
-            @Nullable
-            @Override
-            public String apply(@Nullable Object input) {
-                return ((Element) input).getText();
-            }
-        });
-
-        for (String formatter : formatters) {
+        for (ListFormatters.FormatterData formatter : formatters.getFormatters()) {
             MockHttpServletRequest request = new MockHttpServletRequest();
             final MockHttpServletResponse response = new MockHttpServletResponse();
-            formatService.exec("eng", "html", "" + id, null, formatter, "true", false, request, response);
+            formatService.exec("eng", "html", "" + id, null, formatter.getId(), "true", false, request, response);
             final String view = response.getContentAsString();
-            Element html = new Element("html").addContent(view);
-            assertFalse(html.getChildren().isEmpty());
+            Element html = new Element("html").addContent(Xml.loadString(view, false));
+            assertFalse(formatter.getSchema() + "/" + formatter.getId(), html.getChildren().isEmpty());
         }
     }
 

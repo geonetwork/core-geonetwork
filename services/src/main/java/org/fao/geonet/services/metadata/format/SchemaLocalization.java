@@ -24,12 +24,14 @@ public class SchemaLocalization {
     private final Map<String, XmlFile> schemaInfo;
     private final ServiceContext context;
     /**
-     * A Map &lt;3CharlangId, Map&lt;elementName, Element containing label child and description child>>
+     * A Map &lt;3CharlangId, Table&lt;elementName, parentElemName, Element containing label child and description child>>
+     * <p/>
+     * the parent may be "" if the labels.xml does not have a context attribute and thus the "" string will be a fallback
      */
-    private final Map<String, Map<String, Element>> labelIndex = Maps.newHashMap();
+    private final Map<String, ImmutableTable<String, String, Element>> labelIndex = Maps.newHashMap();
     /**
      * A Map &lt;3CharlangId, Table &lt;codeListName, code, Element containing label child and description child>>
-     *
+     * <p/>
      * The codeListName has the prefix removed.
      */
     private final Map<String, ImmutableTable<String, String, Element>> codeListIndex = Maps.newHashMap();
@@ -55,22 +57,31 @@ public class SchemaLocalization {
 
     /**
      * Get a quick lookup for labels.  The returned map is
-     * Map&lt;elementName, Element containing label child and description child>
+     * Table &lt;codeListName, code, Element containing label child and description child>>
+     * <p/>
+     * the parent may be "" if the labels.xml does not have a context attribute and thus the "" string will be a fallback
+     *
      * @param lang
      * @return
      * @throws Exception
      */
-    public synchronized Map<String, Element> getLabelIndex(String lang) throws Exception {
-        Map<String, Element> index = this.labelIndex.get(lang);
+    public synchronized ImmutableTable<String, String, Element> getLabelIndex(String lang) throws Exception {
+        ImmutableTable<String, String, Element> index = this.labelIndex.get(lang);
         if (index == null) {
-            index = Maps.newHashMap();
+            ImmutableTable.Builder<String, String, Element> indexBuilder = ImmutableTable.builder();
             final Element labels = getLabels(lang);
 
             @SuppressWarnings("unchecked")
             final List<Element> children = labels.getChildren("element");
             for (Element element : children) {
-                index.put(element.getAttributeValue("name"), element);
+                final String name = element.getAttributeValue("name");
+                String parent = element.getAttributeValue("context");
+                if (parent == null) {
+                    parent = "";
+                }
+                indexBuilder.put(name, parent, element);
             }
+            index = indexBuilder.build();
             this.labelIndex.put(lang, index);
         }
 
@@ -80,7 +91,7 @@ public class SchemaLocalization {
     /**
      * Get a quick lookup table for finding codelist translations.  The returned table is
      * Table &lt;codeListName, code, Element containing label child and description child>
-     *
+     * <p/>
      * The codeListName has the prefix removed.
      */
     public ImmutableTable<String, String, Element> getCodeListIndex(String lang) throws Exception {
@@ -112,6 +123,7 @@ public class SchemaLocalization {
 
         return index;
     }
+
     private String extractCodeListNameFromXml(Element child) {
         String codeListNameFromLabel = child.getAttributeValue("name");
         int endOfPrefix = codeListNameFromLabel.indexOf(":");
@@ -120,6 +132,7 @@ public class SchemaLocalization {
         }
         return codeListNameFromLabel;
     }
+
     private Element getXml(String key, String lang) throws JDOMException, IOException {
         return schemaInfo.get(key).getXml(context, lang, false);
     }

@@ -2,6 +2,7 @@ package org.fao.geonet.services.metadata.format.groovy;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.metadata.format.FormatterParams;
@@ -22,9 +23,8 @@ public class EnvironmentImpl implements Environment {
     private final String lang2;
     private final String resourceUrl;
     private final Multimap<String, ParamValue> params = ArrayListMultimap.create();
-    private final int metadataId;
-    private final String metadataUUID;
     private final FormatType formatType;
+    private final Metadata metadataInfo;
 
     public EnvironmentImpl(FormatterParams fparams, IsoLanguagesMapper mapper) {
         this.lang3 = fparams.context.getLanguage();
@@ -32,8 +32,7 @@ public class EnvironmentImpl implements Environment {
 
         this.formatType = fparams.formatType;
         this.resourceUrl = fparams.getLocUrl();
-        this.metadataId = fparams.metadataInfo.getId();
-        this.metadataUUID = fparams.metadataInfo.getUuid();
+        this.metadataInfo = fparams.metadataInfo;
 
         for (Map.Entry<String, String[]> entry : fparams.params.entrySet()) {
             for (String value : entry.getValue()) {
@@ -96,12 +95,13 @@ public class EnvironmentImpl implements Environment {
 
     @Override
     public int getMetadataId() {
-        return this.metadataId;
+        return this.metadataInfo.getId();
     }
 
     @Override
     public String getMetadataUUID() {
-        return this.metadataUUID;
+        return this.metadataInfo.getUuid();
+
     }
 
     public String getResourceUrl() {

@@ -38,7 +38,7 @@ public class ConfigFile {
             } else {
                 List<File> tmp = Lists.newArrayList();
                 File current = bundleDir;
-                while (!schemaDir.equals(current)) {
+                while (!schemaDir.equals(current) && current.getParentFile() != null) {
                     tmp.add(new File(current, CONFIG_PROPERTIES_FILENAME));
                     current = current.getParentFile();
                 }

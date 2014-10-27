@@ -1,12 +1,11 @@
 package org.fao.geonet.services.metadata.format;
 
 import jeeves.server.ServiceConfig;
-import jeeves.server.context.ServiceContext;
+import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.exceptions.BadParameterEx;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.services.Utils;
-import org.jdom.Element;
+import org.fao.geonet.repository.MetadataRepository;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -29,12 +28,6 @@ abstract class AbstractFormatService {
             throw new BadParameterEx(paramName, "Only the following are permitted in the id"+ FormatterConstants.ID_XSL_REGEX);
         }
     }
-	protected String getMetadataSchema(Element params, ServiceContext context) throws Exception {
-		String metadataId = Utils.getIdentifierFromParameters(params, context);
-		DataManager dm = context.getBean(DataManager.class);
-		String schema = dm.getMetadataSchema(metadataId);
-		return schema;
-	}
     protected static boolean containsFile(File container, File desiredFile) throws IOException {
         File canonicalDesired = desiredFile.getCanonicalFile();
         final File canonicalContainer = container.getCanonicalFile();
@@ -86,6 +79,27 @@ abstract class AbstractFormatService {
             }
         }
         return formatDir;
+    }
+
+    protected Metadata loadMetadata(MetadataRepository metadataRepository, String id, String uuid) {
+        Metadata md = null;
+        if (id != null) {
+            try {
+                md = metadataRepository.findOne(Integer.parseInt(id));
+            } catch (NumberFormatException e) {
+                md = metadataRepository.findOneByUuid(id);
+                uuid = id;
+            }
+        }
+
+        if (id == null && uuid != null) {
+            md = metadataRepository.findOneByUuid(uuid);
+        }
+
+        if (md == null) {
+            throw new IllegalArgumentException("Either '" + Params.UUID + "' or '" + Params.ID + "'is a required parameter");
+        }
+        return md;
     }
 
     protected static class FormatterFilter implements FileFilter {

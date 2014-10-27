@@ -12,7 +12,7 @@
         <param name="user_xsl_dir" value="user_xsl" />
       </class>
     </service>
-    
+
     <service name="md.formatter.list">
       <documentation><![CDATA[
         Return list of formatter available.
@@ -22,7 +22,7 @@
       </class>
       <error id="illegal-params" sheet="../xslt/error/error-xml.xsl"/>
     </service>
-    
+
     <service name="md.formatter.remove">
       <documentation><![CDATA[
         Remove a formatter.

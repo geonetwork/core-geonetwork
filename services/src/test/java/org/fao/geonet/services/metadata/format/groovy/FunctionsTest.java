@@ -53,8 +53,9 @@ public class FunctionsTest {
                 Map<String, SchemaLocalization> localizations = Maps.newHashMap();
                 Map<String, XmlFile> schemaInfo = Maps.newHashMap();
                 schemaInfo.put("labels.xml", createXmlFile(new Element("labels").addContent(Arrays.asList(
-                        createLabelElement("elem1", "Element One", "Desc Element One"),
-                        createLabelElement("elem2", "Element Two", "Desc Element Two")
+                        createLabelElement("elem1", "parent", "Element One", "Desc Element One"),
+                        createLabelElement("elem1", null, "Element One No Parent", "Desc Element One No Parent"),
+                        createLabelElement("elem2", null, "Element Two", "Desc Element Two")
                 ))));
                 schemaInfo.put("codelists.xml", createXmlFile(new Element("codelists").addContent(Arrays.asList(
                         createCodelistElement("gmd:codelist1", "code1", "Code One", "Desc Code One").addContent(
@@ -148,11 +149,28 @@ public class FunctionsTest {
 
     @Test
     public void testLabel() throws Exception {
-        assertEquals("Element One", functions.nodeLabel("elem1"));
-        assertEquals("Desc Element One", functions.nodeDesc("elem1"));
-        final GPathResult gPathResult = new XmlSlurper().parseText("<elem1>hi</elem1>");
-        assertEquals("Element One", functions.nodeLabel(gPathResult));
-        assertEquals("Desc Element One", functions.nodeDesc(gPathResult));
+        assertEquals("Element One", functions.nodeLabel("elem1", "parent"));
+        assertEquals("Element One No Parent", functions.nodeLabel("elem1", null));
+        assertEquals("Desc Element One No Parent", functions.nodeDesc("elem1", null));
+        assertEquals("Desc Element One No Parent", functions.nodeDesc("elem1", "random parent"));
+
+        GPathResult gPathResult = new XmlSlurper().parseText("<elem1>hi</elem1>");
+        assertEquals("Element One No Parent", functions.nodeLabel(gPathResult));
+        assertEquals("Desc Element One No Parent", functions.nodeDesc(gPathResult));
+
+        gPathResult = new XmlSlurper().parseText("<parent><elem1>hi</elem1></parent>");
+        assertEquals("Element One", functions.nodeLabel((GPathResult) gPathResult.children().getAt(0)));
+        assertEquals("Desc Element One", functions.nodeDesc((GPathResult) gPathResult.children().getAt(0)));
+
+
+        gPathResult = new XmlSlurper().parseText("<m><elem1>hi</elem1></m>");
+        assertEquals("Element One No Parent", functions.nodeLabel((GPathResult) gPathResult.children().getAt(0)));
+        assertEquals("Desc Element One No Parent", functions.nodeDesc((GPathResult) gPathResult.children().getAt(0)));
+
+
+        assertEquals("Desc Element Two", functions.nodeDesc("elem2", "random parent"));
+
+
     }
     @Test
     public void testCodeListValue() throws Exception {
@@ -192,8 +210,12 @@ public class FunctionsTest {
         return sort;
     }
 
-    private static Element createLabelElement(String name, String label, String desc) {
-        return new Element("element").setAttribute("name", name).addContent(Arrays.asList(
+    private static Element createLabelElement(String name, String parentName, String label, String desc) {
+        final Element element = new Element("element");
+        if (parentName != null) {
+            element.setAttribute("context", parentName);
+        }
+        return element.setAttribute("name", name).addContent(Arrays.asList(
                 new Element("label").setText(label),
                 new Element("description").setText(desc)
         ));

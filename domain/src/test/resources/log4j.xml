@@ -21,6 +21,9 @@
     <category name="geonetwork.formatter">
         <priority value="WARN"/>
     </category>
+    <category name="org.xhtmlrenderer">
+        <priority value="OFF"/>
+    </category>
     <root>
         <level value="WARN"/>
         <appender-ref ref="CA"/>

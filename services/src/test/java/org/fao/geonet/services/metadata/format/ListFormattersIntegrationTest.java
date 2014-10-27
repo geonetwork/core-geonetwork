@@ -6,7 +6,6 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
-import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,7 +14,6 @@ import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nullable;
 
-import static org.fao.geonet.domain.Pair.read;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -23,13 +21,14 @@ public class ListFormattersIntegrationTest extends AbstractServiceIntegrationTes
 
     @Autowired
     private GeonetworkDataDirectory dataDirectory;
+    @Autowired
+    private ListFormatters listService;
 
     @Test
     public void testExec() throws Exception {
         final ServiceContext serviceContext = createServiceContext();
         loginAsAdmin(serviceContext);
 
-        final ListFormatters listService = new ListFormatters();
         final ServiceConfig serviceConfig = new ServiceConfig();
         serviceConfig.setValue(FormatterConstants.USER_XSL_DIR, dataDirectory.getWebappDir() + "/formatters");
 
@@ -53,14 +52,13 @@ public class ListFormattersIntegrationTest extends AbstractServiceIntegrationTes
     private void assertFormattersForSchema(String schema, ListFormatters listService,
                                            String... expectedFormatters) throws Exception {
 
-        final ServiceContext serviceContext = createServiceContext();
-        final Element formattersEl = listService.exec(createParams(read("schema", schema)), serviceContext);
+        final ListFormatters.FormatterDataResponse response = listService.exec(null, null, schema, false);
 
-        final List<String> formatters = Lists.newArrayList(Lists.transform(formattersEl.getChildren("formatter"), new Function() {
+        final List<String> formatters = Lists.newArrayList(Lists.transform(response.getFormatters(), new Function<ListFormatters.FormatterData, String>() {
             @Nullable
             @Override
-            public String apply(@Nullable Object input) {
-                return ((Element) input).getText();
+            public String apply(@Nullable ListFormatters.FormatterData input) {
+                return input.getSchema() + "/" + input.getId();
             }
         }));
 
@@ -70,7 +68,7 @@ public class ListFormattersIntegrationTest extends AbstractServiceIntegrationTes
         assertEquals("Expected/Actual: \n" + Arrays.asList(expectedFormatters) + "\n" + formatters,
                 expectedFormatters.length, formatters.size());
         for (String expectedFormatter : expectedFormatters) {
-            assertTrue("Expected formatter: "+expectedFormatter, formatters.contains(expectedFormatter));
+            assertTrue("Expected formatter: "+expectedFormatter, formatters.contains(schema + "/" + expectedFormatter));
         }
     }
 }

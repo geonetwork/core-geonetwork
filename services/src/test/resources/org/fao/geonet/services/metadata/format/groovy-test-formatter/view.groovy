@@ -76,7 +76,7 @@ handlers.add 'gmd:abstract', { el ->
     // Don't need a return because last expression of a function is
     // always returned in groovy
     """<p class="abstract">
-         <span class="label">${f.nodeLabel('gmd:abstract')}</span>
+         <span class="label">${f.nodeLabel('gmd:abstract', el.parent().name())}</span>
          <span class="value">${el.'gco:CharacterString'.text()}</span>
        </p>"""
 }
@@ -180,7 +180,7 @@ handlers.add isRefSysCode, { el ->
      */
     f.html { html ->
         html.p('class': 'code') {
-            span('class': 'label', f.nodeLabel(el.name())) // translate is a method provided by framework
+            span('class': 'label', f.nodeLabel(el)) // translate is a method provided by framework
             span('class': 'value', isoText(el))
         }
     }
@@ -210,7 +210,7 @@ handlers.add name: 'container el', select: { it.children().size() > 0 }, priorit
      * - Finally look in the formatter directory for the file
      */
     if (!childData.isEmpty()) {
-        return handlers.fileResult("block.html", [label: f.nodeLabel(el.name()), childData: childData])
+        return handlers.fileResult("block.html", [label: f.nodeLabel(el), childData: childData])
     }
 
     // return null if we don't want to add this element, just because it matches doesn't mean it has to produce data

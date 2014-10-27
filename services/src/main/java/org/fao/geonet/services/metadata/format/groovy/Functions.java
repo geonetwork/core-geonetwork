@@ -1,6 +1,7 @@
 package org.fao.geonet.services.metadata.format.groovy;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.io.Closer;
@@ -47,15 +48,18 @@ public class Functions {
      * @param node the node to get a translation for.
      */
     public String nodeLabel(GPathResult node) throws Exception {
-        return nodeLabel(node.name());
+        String parentNodeName = parentNodeName(node);
+        return nodeLabel(node.name(), parentNodeName);
     }
 
     /**
      * Look up a translation in the schema's labels.xml file
      * @param qualifiedNodeName the name to use as a key for the lookup
+     * @param qualifiedParentNodeName the name of the parent, used as the second lookup key.  This can be null and the default value will
+     *                                be returned
      */
-    public String nodeLabel(String qualifiedNodeName) throws Exception {
-        return nodeTranslation(qualifiedNodeName, "label");
+    public String nodeLabel(String qualifiedNodeName, String qualifiedParentNodeName) throws Exception {
+        return nodeTranslation(qualifiedNodeName, qualifiedParentNodeName, "label");
     }
 
     /**
@@ -63,20 +67,45 @@ public class Functions {
      * @param node the node to get a description for.
      */
     public String nodeDesc(GPathResult node) throws Exception {
-        return nodeDesc(node.name());
+        String parentNodeName = parentNodeName(node);
+        return nodeDesc(node.name(), parentNodeName);
+    }
+
+    protected String parentNodeName(GPathResult node) {
+        GPathResult parentNode = node.parent();
+        String parentNodeName = null;
+        if (parentNode != node) {
+            parentNodeName = parentNode.name();
+        }
+        return parentNodeName;
     }
 
     /**
      * Look up a description in the schema's labels.xml file
      * @param qualifiedNodeName the name to use as a key for the lookup
+     * @param qualifiedParentNodeName the name of the parent, used as the second lookup key.  This can be null and the default value will
+     *                                be returned
      */
-    public String nodeDesc(String qualifiedNodeName) throws Exception {
+    public String nodeDesc(String qualifiedNodeName, String qualifiedParentNodeName) throws Exception {
 
-        return nodeTranslation(qualifiedNodeName, "description");
+        return nodeTranslation(qualifiedNodeName, qualifiedParentNodeName, "description");
     }
 
-    private String nodeTranslation(String qualifiedNodeName, String type) throws Exception {
-        final Element element = this.schemaLocalizations.getLabelIndex(this.env.getLang3()).get(qualifiedNodeName);
+    private String nodeTranslation(String qualifiedNodeName, String qualifiedParentNodeName,  String type) throws Exception {
+        if (qualifiedParentNodeName == null) {
+            qualifiedParentNodeName = "";
+        }
+        final ImmutableTable<String, String, Element> labelIndex = this.schemaLocalizations.getLabelIndex(this.env.getLang3());
+        Element element = labelIndex.get(qualifiedNodeName, qualifiedParentNodeName);
+        if (element == null) {
+            element = labelIndex.get(qualifiedNodeName, "");
+        }
+        if (element == null) {
+            final ImmutableCollection<Element> values = labelIndex.row(qualifiedNodeName).values();
+            if (!values.isEmpty()) {
+                element = values.iterator().next();
+            }
+        }
         if (element != null) {
             return element.getChildText(type);
         }
