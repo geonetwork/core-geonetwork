@@ -358,7 +358,7 @@
       return {
         restrict: 'A',
         link: function(scope, element, attrs) {
-          scope.thesaurusKey = attrs.thesaurusKey || '';
+          scope.thesaurusKey = attrs.thesaurusKey ||  '';
           scope.max = gnThesaurusService.DEFAULT_NUMBER_OF_RESULTS;
           var initialized = false;
 

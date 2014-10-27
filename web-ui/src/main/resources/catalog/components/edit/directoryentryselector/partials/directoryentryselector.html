@@ -1,6 +1,7 @@
 <span data-ng-search-form="">
-  <div class="input-group">
-    <div class="input-group-btn">
+  <div data-ng-class="templateAddAction == 'true' ? 'input-group' : ''">
+    <div class="input-group-btn"
+         data-ng-show="templateAddAction">
       <button class="btn btn-default" type="button" title="{{'add' | translate}}"
         data-ng-click="add();">
         <i class="fa fa-plus"/>
@@ -9,8 +10,10 @@
     </div>
 
     <!-- TODO: could be nice to filter by organisation -->
-    <input type="text" class="form-control" placeholder="{{'searchAContact' | translate}}"
-           data-ng-model="subtemplateFilter.any" data-ng-change="getEntries()"/>
+    <input type="text" class="form-control"
+           placeholder="{{('searchA' + templateType) | translate}}"
+           data-ng-model="subtemplateFilter.any"
+           data-ng-change="getEntries()"/>
 
     <!-- The autocomplete list -->
     <div class="list-group tt-dropdown-menu gn-autocomplete-list"
@@ -19,14 +22,31 @@
         <div class="tt-suggestion"
             data-ng-repeat="r in searchResults.records"> {{r.title}}
           <span class="pull-right">
+            <!-- Add action for simple subtemplates -->
+            <div class="btn btn-default"
+                 data-ng-hide="isContact"
+                  data-ng-click="addEntry(r)">
+              <i class="fa fa-plus"></i>
+              <!-- TODO: Add with XLink mode -->
+            </div>
+
+            <!-- Add action for contact with predefined contact role -->
+            <div class="btn btn-default"
+                 data-ng-show="isContact && !hasDynamicVariable"
+                 data-ng-click="addEntry(r)">
+              <i class="fa fa-plus"></i>
+            </div>
+
+            <!-- Add action for contact which allows to select contact role -->
             <div class="btn-group"
+                 data-ng-show="isContact && hasDynamicVariable"
                  title="{{'addContactAsText-help' | translate}}">
               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-plus"></i><span class="caret"></span>
               </button>
               <ul class="dropdown-menu" role="menu">
                 <li data-ng-repeat="role in roles" data-ng-hide="role['@hideInEditMode']">
-                  <a href="" data-ng-click="addContact(r, role.code)" title="{{role.description}}">
+                  <a href="" data-ng-click="addEntry(r, role.code)" title="{{role.description}}">
                     {{role.label}}
                   </a>
                 </li>
@@ -40,7 +60,7 @@
               </button>
               <ul class="dropdown-menu" role="menu">
                 <li data-ng-repeat="role in roles" data-ng-hide="role['@hideInEditMode']">
-                  <a href="" data-ng-click="addContact(r, role.code, true)" title="{{role.description}}">
+                  <a href="" data-ng-click="addEntry(r, role.code, true)" title="{{role.description}}">
                     {{role.label}}
                   </a>
                 </li>
