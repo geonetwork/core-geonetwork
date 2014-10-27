@@ -25,6 +25,7 @@ package org.fao.geonet.services.metadata.format;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
+import com.lowagie.text.DocumentException;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.dispatchers.guiservices.XmlFile;
@@ -45,6 +46,7 @@ import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.metadata.format.groovy.ParamValue;
+import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -53,6 +55,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.File;
 import java.io.IOException;
@@ -113,13 +116,30 @@ public class Format extends AbstractFormatService {
                 hide_withheld, request);
         FormatterImpl formatter = result.one();
         FormatterParams fparams = result.two();
-        final byte[] bytes = formatter.format(fparams).getBytes(Constants.CHARSET);
-        response.setContentLength(bytes.length);
 
         response.setContentType(formatType.contentType);
         String filename = "metadata." + formatType;
-        response.addHeader("Content-Disposition", "inline; filename=\""+filename+"\"");
-        response.getOutputStream().write(bytes);
+        response.addHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");
+        final String formattedMetadata = formatter.format(fparams);
+        if (formatType == FormatType.pdf) {
+            writerAsPDF(response, formattedMetadata, lang);
+        } else {
+            final byte[] bytes = formattedMetadata.getBytes(Constants.CHARSET);
+            response.setContentLength(bytes.length);
+            response.getOutputStream().write(bytes);
+        }
+    }
+
+    private void writerAsPDF(HttpServletResponse response, String htmlContent, String lang) throws IOException, DocumentException {
+        XslUtil.setNoScript();
+        ITextRenderer renderer = new ITextRenderer();
+        String siteUrl = this.settingManager.getSiteURL(lang);
+        renderer.getSharedContext().setReplacedElementFactory(new ImageReplacedElementFactory(siteUrl, renderer.getSharedContext()
+                .getReplacedElementFactory()));
+        renderer.getSharedContext().setDotsPerPixel(13);
+        renderer.setDocumentFromString(htmlContent, siteUrl);
+        renderer.layout();
+        renderer.createPDF(response.getOutputStream());
     }
 
     @VisibleForTesting
@@ -163,7 +183,7 @@ public class Format extends AbstractFormatService {
         if (viewXslFile.exists()) {
             fparams.viewFile = viewXslFile.getCanonicalFile();
             formatter = this.xsltFormatter;
-        } else if (viewGroovyFile.exists()){
+        } else if (viewGroovyFile.exists()) {
             fparams.viewFile = viewGroovyFile.getCanonicalFile();
             formatter = this.groovyFormatter;
         } else {
@@ -173,7 +193,8 @@ public class Format extends AbstractFormatService {
         return Pair.read(formatter, fparams);
     }
 
-    public Pair<Element, Metadata> getMetadata(ServiceContext context, String id, String uuid, ParamValue skipPopularity, Boolean hide_withheld)
+    public Pair<Element, Metadata> getMetadata(ServiceContext context, String id, String uuid, ParamValue skipPopularity,
+                                               Boolean hide_withheld)
             throws Exception {
 
         Metadata md = null;
@@ -213,6 +234,7 @@ public class Format extends AbstractFormatService {
         return Pair.read(metadata, md);
 
     }
+
     private boolean isCompatibleMetadata(String schemaName, ConfigFile config) throws Exception {
 
         List<String> applicable = config.listOfApplicableSchemas();
@@ -278,7 +300,7 @@ public class Format extends AbstractFormatService {
     protected Map<String, SchemaLocalization> getSchemaLocalizations(ServiceContext context)
             throws IOException, JDOMException {
 
-        Map<String, SchemaLocalization> localization =  Maps.newHashMap();
+        Map<String, SchemaLocalization> localization = Maps.newHashMap();
         final SchemaManager schemaManager = context.getBean(SchemaManager.class);
         final Set<String> allSchemas = schemaManager.getSchemas();
         for (String schema : allSchemas) {
