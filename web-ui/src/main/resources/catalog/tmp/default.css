@@ -7579,6 +7579,28 @@ fieldset[disabled] [gn-main-viewer] .panel-tools .metadata:focus {
   padding-left: 15px;
   padding-right: 15px;
 }
+/* An update to 3.2 could provide responsive class
+  for block or inline layout.
+  http://getbootstrap.com/css/#responsive-utilities
+
+  Display button label in top tool bar using inline mode.
+ */
+.gn-top-bar .visible-lg {
+  display: none !important;
+}
+@media (min-width: 1200px) {
+  .gn-top-bar .visible-lg {
+    display: inline !important;
+  }
+}
+.gn-top-bar .hidden-xs {
+  display: inline !important;
+}
+@media (max-width: 767px) {
+  .gn-top-bar .hidden-xs {
+    display: none !important;
+  }
+}
 .gn-facet .list-group-item {
   border-width: 0;
   border-radius: 0;
@@ -7808,26 +7830,22 @@ select[multiple][hitsperpage-combo] select {
 [ng-search-form] .panel-heading [hitsperpage-combo] {
   vertical-align: middle;
 }
-[data-ng-search-form] [gn-map-field],
-[ng-search-form] [gn-map-field] {
+[gn-map-field] {
   border: 1px solid #cccccc;
   border-radius: 3px;
   position: relative;
+  padding: 0;
 }
-[data-ng-search-form] [gn-map-field] [gn-draw-bbox-btn],
-[ng-search-form] [gn-map-field] [gn-draw-bbox-btn],
-[data-ng-search-form] [gn-map-field] .btn-group-vertical,
-[ng-search-form] [gn-map-field] .btn-group-vertical {
+[gn-map-field] [gn-draw-bbox-btn],
+[gn-map-field] .btn-group-vertical {
   position: absolute;
   top: 4px;
   z-index: 10;
 }
-[data-ng-search-form] [gn-map-field] .btn-group-vertical,
-[ng-search-form] [gn-map-field] .btn-group-vertical {
+[gn-map-field] .btn-group-vertical {
   right: 4px;
 }
-[data-ng-search-form] [gn-map-field] [gn-draw-bbox-btn],
-[ng-search-form] [gn-map-field] [gn-draw-bbox-btn] {
+[gn-map-field] [gn-draw-bbox-btn] {
   left: 4px;
 }
 .navbar {
@@ -7899,4 +7917,3 @@ select[multiple][hitsperpage-combo] select {
 [gn-main-viewer] [go-map] {
   height: 100%;
 }
-/*# sourceMappingURL=default.css.map */
