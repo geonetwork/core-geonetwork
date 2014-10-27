@@ -97,6 +97,7 @@
   <accessibility>Accessibility</accessibility>
   <programName>Program name</programName>
   <edmerpName>EDMREP name</edmerpName>
+  <edmoName>EDMO name</edmoName>
   <dataProvider>Data provider*</dataProvider>
   <uniqueIdentifier>Unique identifier*</uniqueIdentifier>
   <environmental-matrix>Environmental matrix*</environmental-matrix>

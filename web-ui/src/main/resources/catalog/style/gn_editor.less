@@ -226,7 +226,7 @@ form.gn-tab-inspire {
   }
 }
 
-form.gn-tab-datasources, form.gn-tab-characteristics,
+form.gn-tab-characteristics, form.gn-tab-datasources,
 form.gn-tab-overview, form.gn-tab-spatialCoverage,
 form.gn-tab-timeCoverage, form.gn-tab-accessibility,
 form.gn-tab-medsea-metadata {
@@ -235,12 +235,13 @@ form.gn-tab-medsea-metadata {
     color: inherit;
   }
 
-  /* Do not display remove control */
+  /* Do not display remove control ... */
   .btn.fa.fa-times.text-danger {
     display: none;
   }
 
-  /* Do not display thesaurus transformation selector */
+
+    /* Do not display thesaurus transformation selector */
   *[data-gn-keyword-selector='tagsinput'] * .dropdown-toggle {
     display: none;
   }
@@ -251,6 +252,20 @@ form.gn-tab-medsea-metadata {
   }
   .control-label {
     text-align: left !important;
+  }
+}
+
+/* ... except for EDMERP and EDMO fields */
+form.gn-tab-datasources {
+  div.gn-extra-field > label {
+    visibility: visible !important;
+  }
+  /* Display remove action for the third and fifth
+  form field in this tab. It should select EDMERP
+  and EDMO field if the record follow the guideline. */
+  .gn-field:nth-of-type(3) .btn.fa.fa-times.text-danger,
+  .gn-field:nth-of-type(5) .btn.fa.fa-times.text-danger {
+    display: block;
   }
 }
 

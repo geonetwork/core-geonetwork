@@ -1510,15 +1510,63 @@
           <field
                   name="programName"
                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:credit"/>
-          <field
+         <!--
+
+         Do not store EDMERP in keyword anymore. Use a contact with a specific role.
+         <field
                   name="edmerpName"
                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
-                'SDN EDMERP Identifier')]"/>
+                'SDN EDMERP Identifier')]"/>-->
+
+
+
+          <field name="edmerpName" templateModeOnly="true" notDisplayedIfMissing="true"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='author']"
+                 del="."
+                 if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+            <template>
+              <values readonlyIf="count(@xlink:href) > 0">
+                <key label="organisationName"
+                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+              </values>
+              <snippet>
+                <gmd:pointOfContact>
+                  <gmd:CI_ResponsibleParty>
+                    <gn:copy select="gmd:individualName"/>
+                    <gmd:organisationName>
+                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gn:copy select="gmd:positionName"/>
+                    <gn:copy select="gmd:contactInfo"/>
+                    <gn:copy select="gmd:role"/>
+                  </gmd:CI_ResponsibleParty>
+                </gmd:pointOfContact>
+              </snippet>
+            </template>
+          </field>
+
+
+          <action type="add"
+                  name="edmerpName"
+                  addDirective="data-gn-directory-entry-selector"
+                  or="pointOfContact"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='author']) = 0">
+            <directiveAttributes
+                    data-template-add-action="false"
+                    data-template-type="contact"
+                    data-filter='{"_groupOwner": "31276727"}'
+                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~author"/>
+          </action>
+
+
 
           <field name="dataProvider" templateModeOnly="true"
-                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact">
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[
+                 gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue != 'author' and
+                 gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue !=  'custodian']">
             <template>
               <values readonlyIf="count(@xlink:href) > 0">
                 <key label="organisationName"
@@ -1557,11 +1605,54 @@
             </template>
           </field>
 
-          <field
+          <!--<field
                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
-                'SDN EDMO Identifier')]"/>
+                'SDN EDMO Identifier')]"/>-->
+
+          <field name="edmoName" templateModeOnly="true" notDisplayedIfMissing="true"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']"
+                 del="."
+                 if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+            <template>
+              <values readonlyIf="count(@xlink:href) > 0">
+                <key label="organisationName"
+                     xpath="gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString"/>
+              </values>
+              <snippet>
+                <gmd:pointOfContact>
+                  <gmd:CI_ResponsibleParty>
+                    <gn:copy select="gmd:individualName"/>
+                    <gmd:organisationName>
+                      <gco:CharacterString>{{organisationName}}</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gn:copy select="gmd:positionName"/>
+                    <gn:copy select="gmd:contactInfo"/>
+                    <gn:copy select="gmd:role"/>
+                  </gmd:CI_ResponsibleParty>
+                </gmd:pointOfContact>
+              </snippet>
+            </template>
+          </field>
+          <action type="add"
+                  name="edmoName"
+                  forceLabel="true"
+                  addDirective="data-gn-directory-entry-selector"
+                  or="pointOfContact"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']) = 0">
+            <directiveAttributes
+                    data-template-add-action="false"
+                    data-template-type="contact"
+                    data-filter='{"_groupOwner": "31276728"}'
+                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~custodian"/>
+          </action>
+
+
+
+
+
           <field
               name="medseaTitle"
               xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title"/>
