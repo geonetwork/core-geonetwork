@@ -128,7 +128,7 @@
     "schematron-rules-inspire": "Règles INSPIRE",
     "schematron-rules-iso": "Règles ISO",
     "searchACRS": " ou rechercher un système de coordonnées ...",
-    "searchAContact": "Rechercher un contact ...",
+    "searchAcontact": "Rechercher un contact ...",
     "setAndReplaceExtent": "Remplacer les étendues existantes",
     "setCRS": "Définir le système de coordonnées",
     "setDynamicGraphicOverview": "Définir l'aperçu de la fiche à partir d'une requête GetMap sur le service associé",

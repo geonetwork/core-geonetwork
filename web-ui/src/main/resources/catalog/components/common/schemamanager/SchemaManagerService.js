@@ -14,7 +14,7 @@
     gts: 'http://www.isotc211.org/2005/gts',
     srv: 'http://www.isotc211.org/2005/srv',
     xlink: 'http://www.w3.org/1999/xlink',
-    mri: 'http://www.isotc211.org/2005/mri/1.0/2013-06-24'
+    cit: 'http://www.isotc211.org/namespace/cit/1.0/2014-07-11'
   });
 
   /**
@@ -71,7 +71,7 @@
                  return requestBody;
                };
 
-               $http.post('md.element.info@json', getPostRequestBody(), {
+               $http.post('md.element.info?_content_type=json', getPostRequestBody(), {
                  headers: {'Content-type': 'application/xml'}
                }).
                success(function(data) {

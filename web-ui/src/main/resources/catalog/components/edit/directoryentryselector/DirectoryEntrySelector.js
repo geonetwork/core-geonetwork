@@ -33,9 +33,20 @@
              elementName: '@',
              elementRef: '@',
              domId: '@',
-             tagName: '@',
-             paramName: '@',
-             templateAddAction: '@'
+             // Contact subtemplates allows definition
+             // of the contact role. For other cases
+             // only add action is provided
+             templateType: '@',
+             // If true, display button to add the element
+             // without using the subtemplate selector.
+             templateAddAction: '@',
+             // Search option to restrict the subtemplate
+             // search query
+             filter: '@',
+             // Parameters to be send when the subtemplate
+             // snippet is retrieved before insertion
+             // into the metadata records.
+             variables: '@'
            },
            templateUrl: '../../catalog/components/edit/' +
            'directoryentryselector/partials/' +
@@ -49,15 +60,13 @@
              var url = gnConfigService.getServiceURL() + 'eng/subtemplate';
              scope.gnConfig = gnConfig;
              scope.templateAddAction = scope.templateAddAction === 'true';
+             scope.isContact = scope.templateType === 'contact';
+             scope.hasDynamicVariable = scope.variables &&
+                    scope.variables.match('{.*}') !== null;
+             scope.subtemplateFilter = '';
 
              // Search only for contact subtemplate
-             scope.params = {
-               // TODO : sThis could use gnElementsMap to get the
-               // element name and if not available default to tagName.
-               _root: scope.tagName || 'gmd:CI_ResponsibleParty',
-               _isTemplate: 's',
-               fast: 'false'
-             };
+             // by default.
              scope.subtemplateFilter = {
                _isTemplate: 's',
                any: '',
@@ -66,6 +75,10 @@
                sortOrder: 'reverse',
                resultType: 'subtemplates'
              };
+             if (scope.filter) {
+               angular.extend(scope.subtemplateFilter,
+               angular.fromJson(scope.filter));
+             }
 
              scope.snippet = null;
              scope.snippetRef = gnEditor.
@@ -88,16 +101,16 @@
 
              // <request><codelist schema="iso19139"
              // name="gmd:CI_RoleCode" /></request>
-             scope.addContact = function(contact, role, usingXlink) {
-               if (!(contact instanceof Array)) {
-                 contact = [contact];
+             scope.addEntry = function(entry, role, usingXlink) {
+               if (!(entry instanceof Array)) {
+                 entry = [entry];
                }
 
                scope.snippet = '';
                var snippets = [];
 
                var checkState = function() {
-                 if (snippets.length === contact.length) {
+                 if (snippets.length === entry.length) {
                    scope.snippet = snippets.join(separator);
 
                    // Clean results
@@ -112,22 +125,35 @@
                  }
                };
 
-               angular.forEach(contact, function(c) {
+               angular.forEach(entry, function(c) {
                  var id = c['geonet:info'].id,
                  uuid = c['geonet:info'].uuid;
                  var params = {uuid: uuid};
 
-                 // Role parameter only works for contact subtemplates
-                 if (role) {
-                   params.process =
-                   scope.paramName + '~' + role;
+                 // For the time being only contact role
+                 // could be substitute in directory entry
+                 // selector. This is done using the process
+                 // parameter of the get subtemplate service.
+                 // eg. data-variables="gmd:role/gmd:CI_RoleCode
+                 //   /@codeListValue~{role}"
+                 // will set the role of the contact.
+                 // TODO: this could be applicable not only to contact role
+                 // No use case identified for now.
+                 if (scope.hasDynamicVariable && role) {
+                   params.process = scope.variables.replace('{role}', role);
+                 } else if (scope.variables) {
+                   params.process = scope.variables;
+                 } else {
+                   params.process = '';
                  }
                  gnHttp.callService(
                      'subtemplate', params).success(function(xml) {
                    if (usingXlink) {
                      snippets.push(gnEditorXMLService.
                      buildXMLForXlink(scope.elementName,
-                         url + '?uuid=' + uuid + '&process=' + params.process));
+                         url +
+                     '?uuid=' + uuid +
+                     '&process=' + params.process));
                    } else {
                      snippets.push(gnEditorXMLService.
                      buildXML(scope.elementName, xml));

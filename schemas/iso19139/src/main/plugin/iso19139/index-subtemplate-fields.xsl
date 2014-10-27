@@ -35,6 +35,14 @@
   </xsl:template>
 
 
+  <xsl:template mode="index" match="gmd:CI_OnlineResource[count(ancestor::node()) =  1]">
+    <Field name="_title"
+           string="{gmd:linkage/gmd:URL}"
+           store="true" index="true"/>
+
+    <xsl:call-template name="subtemplate-common-fields"/>
+  </xsl:template>
+
   <xsl:template mode="index" match="gmd:EX_Extent[count(ancestor::node()) =  1]">
     <Field name="_title"
       string="{gmd:description/gco:CharacterString}"
