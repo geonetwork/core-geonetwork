@@ -111,7 +111,7 @@
 
       /* Custom templates for search result views */
       searchSettings.resultViewTpls = [{
-        tplUrl: '../../catalog/components/search/resultsview/partials/viewtemplates/thumb.html',
+        tplUrl: '../../catalog/components/search/resultsview/partials/viewtemplates/title.html',
         tooltip: 'Simple',
         icon: 'fa-list'
       }, {

@@ -20,10 +20,10 @@
     <div class="categories clearfix">
 
       <div class="btn-group" ng-if="links.length > 0">
-        <button type="button" class="btn btn-success dropdown-toggle btn-xs" data-toggle="dropdown">
+        <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
           <span class="fa fa-link"></span>
           {{links.length}}
-          <ng-pluralize count="links.length" when="{'one': 'link', 'other': 'links'}"></ng-pluralize>
+          <ng-pluralize translate count="links.length" when="{'one': 'link', 'other': 'links'}"></ng-pluralize>
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
@@ -34,10 +34,9 @@
       </div>
 
       <div class="btn-group" ng-if="downloads.length > 0">
-        <button type="button" class="btn btn-success dropdown-toggle btn-xs" data-toggle="dropdown">
+        <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
           <span class="fa fa-download"></span>
-          {{downloads.length}}
-          <ng-pluralize count="downloads.length" when="{'one': 'download', 'other': 'downloads'}"></ng-pluralize>
+          <span translate>download</span>
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
@@ -49,10 +48,9 @@
       </div>
 
       <div class="btn-group" ng-if="layers.length > 0">
-        <button type="button" class="btn btn-success dropdown-toggle btn-xs" data-toggle="dropdown">
+        <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
           <span class="fa fa-globe"></span>
-          {{layers.length}}
-          <ng-pluralize count="layers.length" when="{'one': 'layer', 'other': 'layers'}"></ng-pluralize>
+          <span translate>visualize</span>
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
