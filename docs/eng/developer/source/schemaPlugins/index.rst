@@ -38,7 +38,7 @@ More information on the content of these directories and files will be given in 
 Schema Plugins
 ==============
 
-A schema plugin that can be used in GeoNetwork is a directory of stylesheets, XML schema descriptions (XSDs) and other information necessary for GeoNetwork to index, view and possibly edit content from XML metadata records. 
+A schema plugin that can be used in GeoNetwork is a directory of stylesheets (XSLs), XML schema descriptions (XSDs) and other information necessary for GeoNetwork to index, view and possibly edit content from XML metadata records.
 
 To be used in GeoNetwork, a schema directory can be manually placed in the 
 ``config/schema_plugins`` sub directory of 
@@ -65,7 +65,6 @@ When installed, a GeoNetwork schema is a directory.
 The following subdirectories can be present:
 
 - **convert**: (*Mandatory*) Directory of XSLTs to convert metadata from or to this schema. This could be to convert metadata to other schemas or to convert metadata from other schemas and formats to this schema. Eg. ``convert/oai_dc.xsl``
-- **docs**: (*Mandatory*) Directory of XSLTs to convert metadata from or to this schema. This could be to convert metadata to other schemas or to convert metadata from other schemas and formats to this schema. Eg. ``convert/oai_dc.xsl``
 - **loc**: (*Mandatory*) Directory of localized information: labels, codelists or schema specific strings. Eg. ``loc/eng/codelists.xml``
 - **present**: (*Mandatory*) contains XSLTs for presenting metadata in the viewer/editor and in response to CSW requests for brief, summary and full records.
 - **process**: (*Optional*) contains XSLTs for processing metadata elements by metadata suggestions mechanism (see **suggest.xsl** below).
@@ -104,13 +103,31 @@ To help in understanding what each of these components is and what is required, 
 Preparation
 ```````````
 
-In order to create a schema plugin for GeoNetwork, you should check out the schemaPlugins directory from the GeoNetwork sourceforge subversion repository. You can do this by installing subversion on your workstation and then executing the following command:
+In order to create a schema plugin for GeoNetwork, you should check out the ``schema-plugin`` repository from github.
+
+You can choose between ``git`` (recommended) and ``subversion``.
+
+git
+~~~
+
+Install `git <http://git-scm.com/downloads>`_ on your system and execute the following command:
 
 ::
 
-  svn co https://github.com/geonetwork/schema-plugins/branches/master schemaPlugins
+  git clone -b 2.10.x git@github.com:geonetwork/schema-plugins.git
 
-This will create a directory called schemaPlugins with some GeoNetwork schema plugins in it. To work with the example shown here, you should create your new schema plugin in a subdirectory of this directory.
+subversion (svn)
+~~~~~~~~~~~~~~~~
+
+Install subversion on your workstation and then execute the following command:
+
+::
+
+  svn co https://github.com/geonetwork/schema-plugins/branches/2.10.x schema-plugins
+
+
+Once the ``git`` (or ``svn``) command will complete its work, you'll have a directory called ``schema-plugins/`` with some GeoNetwork schema plugins in it.
+To work with the example shown here, you should create your new schema plugin in a subdirectory of this directory.
 
 
 Example - ISO19115/19139 Marine Community Profile (MCP)
@@ -357,12 +374,18 @@ After setting up schema-ident.xml, our new GeoNetwork plugin schema for MCP cont
 Creating the schema-conversions.xml file
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This file describes the converters that can be applied to metadata records that belong to the schema. Each converter must be manually defined as a GeoNetwork (Jeeves) service that can be called to transform a particular metadata record to a different schema. The schema-conversions.xml file for the MCP is as follows:
+This file describes the converters that can be applied to metadata records that belong to the schema.
+
+Each converter needs a GeoNetwork (Jeeves) service and a transformation XSL stylesheet.
+If you need a custom service, you will need to implement it, but this topic goes beyond the scope of this page;
+anyway usually you will only need an XSL file and one of the default GeoNetwork services.
+
+The schema-conversions.xml file for the MCP is as follows:
 
 ::
  
   <conversions>
-     <converter name="xml_iso19139.mcp" 
+     <converter name="xml_iso19139.mcp"
                 nsUri="http://bluenet3.antcrc.utas.edu.au/mcp"
                 schemaLocation="http://bluenet3.antcrc.utas.edu.au/mcp-1.5-experimental/schema.xsd"
                 xslt="xml_iso19139.mcp.xsl"/>
@@ -382,10 +405,33 @@ This file describes the converters that can be applied to metadata records that 
 
 Each converter has the following attributes:
 
-- **name** - the name of the converter. This is the service name of the GeoNetwork (Jeeves) service and should be unique (prefixing the service name with xml_<schema_name> is a good way to make this name unique).
-- **nsUri** - the primary namespace of the schema produced by the converter. eg. xml_iso19139.mcpTorifcs transforms metadata records from iso19139.mcp to the RIFCS schema. Metadata records in the RIFCS metadata schema have primary namespace URI of http://ands.org.au/standards/rif-cs/registryObjects.
-- **schemaLocation** - the location (URL) of the XML schema definition (XSD) corresponding to the nsURI.
-- **xslt** - the name of the XSLT that actually carries out the transformation. This XSLT should be located in the convert subdirectory of the schema plugin.
+name
+  The name of the converter. 
+  This name is used for UI localization: you will have an element using this name in ``loc/<LANG>/strings.xml`` file
+  (example `here <https://github.com/geonetwork/schema-plugins/blob/2.10.x/iso19139.mcp-1.4/loc/eng/strings.xml#L106>`_).
+
+service
+  Optional. If not defined, it will be set equal to the ``name``.
+
+  The ``service`` attribute is the service name of the GeoNetwork (Jeeves) service and should be unique
+  (prefixing the service name with ``xml_<schema_name>`` is a good way to make this name unique).
+
+  If you don't need any special server-side processing, and an XSL transformation is enough,
+  you can use the ``xml_csw-record`` service, since it simply applies the XSL without any further transformation.
+
+nsUri
+  The primary namespace of the schema produced by the converter.
+
+  eg. ``xml_iso19139.mcpTorifcs`` transforms metadata records from iso19139.mcp to the RIFCS schema.
+  Metadata records in the RIFCS metadata schema have primary namespace URI of ``http://ands.org.au/standards/rif-cs/registryObjects``.
+
+schemaLocation
+  The location (URL) of the XML schema definition (XSD) corresponding to the nsURI.
+
+xslt
+  The name of the XSLT file that actually carries out the transformation.
+  This file should be located in the ``convert/`` subdirectory of the schema plugin.
+
 
 After setting up schema-conversions.xml, our new GeoNetwork plugin schema for MCP contains:
 
