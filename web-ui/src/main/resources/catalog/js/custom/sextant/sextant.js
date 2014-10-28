@@ -121,4 +121,19 @@
       };
     }]);
 
-    })();
+  module.directive('sxtFixMdlinks', [
+    function() {
+
+      return {
+        restrict: 'A',
+        scope: false,
+        link: function (scope) {
+          scope.links = scope.md.getLinksByType('LINK');
+          scope.downloads = scope.md.getLinksByType('DOWNLOAD', 'FILE');
+          scope.layers = scope.md.getLinksByType('OGC', 'kml');
+
+        }
+      }
+    }]);
+
+})();

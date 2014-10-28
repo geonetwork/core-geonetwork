@@ -145,12 +145,12 @@
    * function, we have to load them once into the scope on rendering.
    */
   module.directive('gnFixMdlinks', [
-    function($compile, gnMap, gnSearchSettings) {
+    function() {
 
       return {
         restrict: 'A',
         scope: false,
-        link: function (scope, element, attrs, controller) {
+        link: function (scope) {
           scope.links = scope.md.getLinksByType('LINK');
           scope.downloads = scope.md.getLinksByType('DOWNLOAD');
           scope.layers = scope.md.getLinksByType('OGC', 'kml');
