@@ -90,31 +90,6 @@
       </output>
     </service>
 
-
-    <service name="metadata.processing.new">
-      <class name=".services.metadata.XslProcessing"/>
-      <output forward="edit"/>
-    </service>
-    
-    <service name="resource.upload.and.link">
-      <class name=".services.resources.UploadAndProcess"/>
-      
-      <!-- FIXME : this is a default success response XSL -->
-      <output sheet="admin-logo-add.xsl"/>
-      
-      <error sheet="error-modal.xsl">
-        <xml name="error" file="xml/file-upload-unsuccessful.xml"/>
-      </error>
-    </service>
-    
-    <service name="resource.del.and.detach">
-      <class name=".services.resources.RemoveAndProcess"/>
-      
-      <error sheet="error-modal.xsl">
-        <xml name="error" file="xml/file-upload-unsuccessful.xml"/>
-      </error>
-    </service>
-    
     <service name="metadata.create.new">
       <class name=".services.metadata.Create">
         <param name="editTab" value="true"/>

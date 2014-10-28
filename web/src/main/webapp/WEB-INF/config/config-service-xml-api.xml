@@ -69,11 +69,6 @@
       <class name=".services.main.Info" />
     </service>
 
-
-    <service name="xml.user.list" deprecated="true" xmlapi="true">
-      <class name=".services.user.List" />
-    </service>
-
     <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
     <service name="xml.usergroups.list" deprecated="true" xmlapi="true">
@@ -138,11 +133,6 @@
 
     <service name="xml.metadata.batch.update.privileges" deprecated="true" xmlapi="true">
       <class name=".services.metadata.BatchUpdatePrivileges" />
-    </service>
-
-    <service name="xml.metadata.processing" xmlapi="true">
-      <class name=".services.metadata.XslProcessing" />
-      <error sheet="xml-error.xsl" contentType="application/xml; charset=UTF-8" />
     </service>
 
     <service name="xml.metadata.status.set" xmlapi="true">
