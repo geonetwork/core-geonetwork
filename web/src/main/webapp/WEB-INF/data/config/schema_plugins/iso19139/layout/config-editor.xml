@@ -1557,7 +1557,7 @@
             <directiveAttributes
                     data-template-add-action="false"
                     data-template-type="contact"
-                    data-filter='{"_groupOwner": "31276727"}'
+                    data-filter='{"_groupOwner": "31184599"}'
                     data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~author"/>
           </action>
 
@@ -1645,7 +1645,7 @@
             <directiveAttributes
                     data-template-add-action="false"
                     data-template-type="contact"
-                    data-filter='{"_groupOwner": "31276728"}'
+                    data-filter='{"_groupOwner": "31184600"}'
                     data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~custodian"/>
           </action>
 
