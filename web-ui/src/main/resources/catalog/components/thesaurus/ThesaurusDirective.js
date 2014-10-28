@@ -35,7 +35,8 @@
              elementName: '@',
              elementRef: '@',
              domId: '@',
-             selectorOnly: '@'
+             selectorOnly: '@',
+             transformation: '@'
            },
            templateUrl: '../../catalog/components/thesaurus/' +
            'partials/thesaurusselector.html',
@@ -66,7 +67,8 @@
                          thesaurusIdentifier;
                } else {
                  gnThesaurusService
-                         .getXML(thesaurusIdentifier).then(
+                         .getXML(thesaurusIdentifier, null,
+                                 attrs.transformation).then(
                          function(data) {
                    // Add the fragment to the form
                    scope.snippet = gnEditorXMLService.
