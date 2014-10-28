@@ -68,7 +68,7 @@
   module.directive('gnLayermanagerTree', [
     'gnLayerFilters',
     '$filter',
-    function (gnLayerFilters, $filter, $compile, $templateCache, $http) {
+    function (gnLayerFilters, $filter) {
       return {
         restrict: 'A',
         templateUrl: '../../catalog/components/viewer/layermanager/' +

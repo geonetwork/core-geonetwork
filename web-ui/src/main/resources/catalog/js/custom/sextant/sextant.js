@@ -129,8 +129,8 @@
         scope: false,
         link: function (scope) {
           scope.links = scope.md.getLinksByType('LINK');
-          scope.downloads = scope.md.getLinksByType('DOWNLOAD', 'FILE');
-          scope.layers = scope.md.getLinksByType('OGC', 'kml');
+          scope.downloads = scope.md.getLinksByType('DOWNLOAD', 'FILE', 'DB', 'COPYFILE', 'WFS');
+          scope.layers = scope.md.getLinksByType('OGC');
 
         }
       }

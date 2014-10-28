@@ -4,7 +4,7 @@
     <div class="media">
 
       <a class="pull-left">
-        <img ng-src="../../images/logos/{{md.source}}.gif" class="media-object"/>
+        <img width="40" ng-src="../../images/logos/{{md.source}}.gif" class="media-object"/>
       </a>
 
       <div class="media-body">
@@ -28,8 +28,7 @@
         </button>
         <ul class="dropdown-menu" role="menu">
           <li ng-repeat="link in links">
-            <a href="" ng-click="resultviewFns.addMdLayerToPanier(link, md)">
-            <!--<a href="{{link.url}}" target="_blank">-->{{link.desc}}</a></li>
+            <a href="{{link.url}}" target="_blank">{{link.desc}}</a></li>
         </ul>
       </div>
 
