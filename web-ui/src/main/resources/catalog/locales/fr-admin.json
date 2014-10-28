@@ -808,9 +808,9 @@
     "thesaurusExternalHelp": "Les thésaurus externes sont en lecture seule.",
     "thesaurusIdentifier": "Identifiant",
     "thesaurusNamespace": "Espace de nommage",
-    "thesaurusPlaceHelp": "The Thesaurus of type place contient une bounding box pour chaque concept. They could be us
+    "thesaurusPlaceHelp": "The Thesaurus of type place contient une bounding box pour chaque concept. They could be use to automatically compute record extent from keywords.",
     "thesaurusTitle": "Titre",
-    "thesaurusUploadHelp": "Les thésaurus au <a href=\"http://www.w3.org/2004/02/skos/\">format SKOS</a> sont supporté
+    "thesaurusUploadHelp": "Les thésaurus au <a href=\"http://www.w3.org/2004/02/skos/\">format SKOS</a> sont supportés. Les fichiers peuvent avoir une extension XML ou RDF.",
     "thesaurusUrl": "URL",
     "thredds-DIF": "Extract DIF metadata elements and create ISO metadata",
     "thredds-UNIDATA": "Extract Unidata dataset discovery metadata using fragments",
