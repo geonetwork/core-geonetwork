@@ -1,8 +1,8 @@
-@import "gn.less";
 @import "../lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.less";
 @import "../lib/style/ol.css";
 @import "../lib/style/datetimepicker.css";
 @import "../lib/jquery.ext/jquery.fileupload-ui.css";
+@import "gn.less";
 
 body {
   
@@ -11,22 +11,6 @@ body {
 input[type=text], input[type=number], select {
   .form-control;
 }
-
-/* Cancel the rule above for tagsinput and typeahead */
-.bootstrap-tagsinput input,
-.bootstrap-tagsinput input:focus {
-  border: none;
-  box-shadow: none;
-  background: transparent;
-  padding: 0;
-  margin: 0;
-  width: auto !important;
-  max-width: inherit;
-}
-span.twitter-typeahead {
-  display: inline-block !important;
-}
-
 
 
 .gn-drawmap-panel {
@@ -75,6 +59,7 @@ span.twitter-typeahead {
 
 .gn-editor-container {
   padding: 10px;
+  margin-top: 45px;
 }
 
 form.gn-editor {

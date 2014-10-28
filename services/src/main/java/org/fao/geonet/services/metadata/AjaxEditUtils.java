@@ -141,7 +141,7 @@ public class AjaxEditUtils extends EditUtils {
                 continue;
             }
 
-            if (updatedLocalizedTextElement(md, ref, value, editLib)) {
+            if (updatedLocalizedTextElement(md, schema, ref, value, editLib)) {
                 continue;
             }
 

@@ -3,13 +3,18 @@
     <div class="panel panel-default">
       <div class="panel-heading" data-translate="">virtualCSW</div>
       <div class="panel-body">
-        <input class="form-control" data-ng-model="virtualCSWSearch.$" autofocus=""
+        <input class="form-control"
+               data-ng-show="cswVirtual > 1"
+               data-ng-model="virtualCSWSearch.$" autofocus=""
                placeholder="{{'filter' | translate}}"/>
         <input type="hidden" data-ng-model="virtualCSWSelected.id"/>
         <div class="list-group">
           <a href="" class="list-group-item"
-             data-ng-repeat="v in cswVirtual | filter:virtualCSWSearch | orderBy:'name'"
+             data-ng-repeat="v in pageItems()"
              data-ng-click="selectVirtualCSW(v)" title="{{v.description}}"> {{v.name}} </a>
+          <span data-gn-pagination-list=""
+                data-items="cswVirtual | filter:virtualCSWSearch | orderBy:'name'"
+                data-cache="cswVirtual"/>
         </div>
 
         <button type="button" class="btn btn-primary btn-block" data-ng-click="addVirtualCSW()">
@@ -47,7 +52,8 @@
                    value="{{virtualCSWSelected.id}}"/>
             <div data-ng-class="gnVirtualCSWEdit.servicename.$valid != true ? 'has-error' : ''">
               <label data-translate="">virtualCSWName</label>
-              <input type="text" name="servicename" class="form-control" required=""
+              <input type="text" id="servicename" name="servicename"
+                     class="form-control" required=""
                      data-ng-pattern="/csw-[\d\w]{1,}/" data-ng-model="virtualCSWSelected.name"/>
               <p class="help-block" data-translate="">virtualCSWNameHelp</p>
               <p class="help-block error"

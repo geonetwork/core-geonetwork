@@ -2,6 +2,7 @@ package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.domain.Setting_;
+import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -226,6 +227,13 @@ public class HarvesterSettingRepositoryTest extends AbstractSpringDataTest {
         assertEquals("3", list2.get(1).getName());
         assertEquals("2", list2.get(2).getName());
         assertEquals("1", list2.get(3).getName());
+    }
+
+    @Test
+    public void testFindAllAsXml() throws Exception {
+        _repo.save(newSetting().setName("4"));
+        final Element allAsXml = _repo.findAllAsXml();
+        //  No Exception... good
     }
 
     private HarvesterSetting newSetting() {

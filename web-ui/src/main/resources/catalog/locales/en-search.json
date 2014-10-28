@@ -26,6 +26,9 @@
   "layers": "layers",
   "mostPopular": "Most popular",
   "recentChanges": "Recent changes",
-  "homeTitle": "Search for geodata and geoservices"
+  "homeTitle": "Search for geodata and geoservices",
+  "download": "Download",
+  "visualize": "View",
+  "links": "Links"
 
 }

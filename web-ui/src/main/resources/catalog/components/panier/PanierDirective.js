@@ -21,7 +21,7 @@
         templateUrl: '../../catalog/components/panier/' +
             'partials/panier.html',
         controller: ['$scope', function($scope) {
-          this.delete = function(md) {
+          this.del = function(md) {
             $scope.panier.splice($scope.panier.indexOf(md), 1);
           }
         }],
@@ -115,8 +115,8 @@
 
               scope.formObj.push(scope.form);
 
-              scope.delete = function(md, form) {
-                controller.delete(md);
+              scope.del = function(md, form) {
+                controller.del(md);
                 scope.formObj.splice(scope.formObj.indexOf(form), 1);
               }
             }

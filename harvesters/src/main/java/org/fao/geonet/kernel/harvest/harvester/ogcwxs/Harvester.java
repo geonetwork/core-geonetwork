@@ -801,6 +801,21 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         // Usual GetMap url tested with mapserver and geoserver
 		// http://localhost:8080/geoserver/wms?service=WMS&request=GetMap&VERSION=1.1.1&
 		// 		LAYERS=gn:world&WIDTH=200&HEIGHT=200&FORMAT=image/png&BBOX=-180,-90,180,90&STYLES=
+        String crsParamName;
+        String bboxParamValue;
+        if (params.ogctype.substring(3).equals("1.3.0")) {
+            crsParamName = "CRS";
+            bboxParamValue = layer.miny + "," +
+                    layer.minx + "," +
+                    layer.maxy + "," +
+                    layer.maxx;
+        } else {
+            crsParamName = "SRS";
+            bboxParamValue = layer.minx + "," +
+                    layer.miny + "," +
+                    layer.maxx + "," +
+                    layer.maxy;
+        }
 		String url = 
         		getBaseUrl(params.url) +
         		"&SERVICE=" + params.ogctype.substring(0,3) +
@@ -808,21 +823,15 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
         		"&REQUEST=" + GETMAP + 
         		"&FORMAT=" + IMAGE_FORMAT + 
         		"&WIDTH=" + WIDTH +
-        		"&SRS=EPSG:4326" + 
+        		"&" + crsParamName + "=EPSG:4326" +
         		"&HEIGHT=" + r.intValue() +
         		"&LAYERS=" + layer.name + 
         		"&STYLES=" +
-        		"&BBOX=" + 
-        			layer.minx + "," +
-        			layer.miny + "," +
-        			layer.maxx + "," +
-        			layer.maxy
-        		;
-		// All is in Lat/Long epsg:4326
-		
-        HttpGet req = new HttpGet(url);
+        		"&BBOX=" + bboxParamValue;
 
         if(log.isDebugEnabled()) log.debug ("Retrieving remote document: " + url);
+
+         HttpGet req = new HttpGet(url);
 
 
 		try {

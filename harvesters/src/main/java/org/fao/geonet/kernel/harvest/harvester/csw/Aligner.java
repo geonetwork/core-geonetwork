@@ -297,7 +297,7 @@ public class Aligner extends BaseAligner
                 boolean ufo = false;
                 boolean index = false;
                 String language = context.getLanguage();
-                final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, false);
+                final Metadata metadata = dataMan.updateMetadata(context, id, md, validate, ufo, index, language, ri.changeDate, true);
 
                 OperationAllowedRepository repository = context.getBean(OperationAllowedRepository.class);
 				repository.deleteAllByIdAttribute(OperationAllowedId_.metadataId, Integer.parseInt(id));

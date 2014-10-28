@@ -35,6 +35,9 @@
         admin: 'admin.console',
         signin: 'catalog.signin'
       };
+      $scope.layout = {
+        hideTopToolBar: false
+      };
 
       /**
        * Number of selected metadata records.

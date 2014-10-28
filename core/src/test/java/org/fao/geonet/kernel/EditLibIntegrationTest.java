@@ -1,28 +1,25 @@
 package org.fao.geonet.kernel;
 
 import com.google.common.collect.Lists;
-import jeeves.server.ServiceConfig;
 import org.fao.geonet.AbstractCoreIntegrationTest;
-import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import static org.fao.geonet.Assert.*;
+import static junit.framework.TestCase.assertEquals;
+import static org.fao.geonet.Assert.assertFalse;
+import static org.fao.geonet.Assert.assertTrue;
+import static org.fao.geonet.Assert.fail;
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
 
@@ -613,4 +610,17 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
 
         assertTrue(updated);
         assertEqualsText(newValue, metadataElement, xpath, GMD, GCO);
-    }}
+    }
+
+    @Test
+    public void testStackOverflowFindLongestMatch() throws Exception {
+        final Element element = Xml.loadFile(EditLibIntegrationTest.class.getResource("editlib-stackoverflow-findlongestmatch.xml"));
+        List<String> xpathParts = Lists.newArrayList("gmd:distributionInfo", "gmd:MD_Distribution", "gmd:transferOptions",
+                "gmd:MD_DigitalTransferOptions", "gmd:onLine", "gmd:CI_OnlineResource", "gmd:linkage");
+        MetadataSchema schema = _schemaManager.getSchema("iso19139");
+        final EditLib editLib = new EditLib(_schemaManager);
+        final Pair<Element, String> longestMatch = editLib.findLongestMatch(element, schema, xpathParts);
+        assertEquals("gmd:MD_Distribution", longestMatch.one().getQualifiedName());
+        assertEquals("gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource/gmd:linkage", longestMatch.two());
+    }
+}

@@ -54,10 +54,7 @@ import java.io.*;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertTrue;
@@ -119,7 +116,8 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
         final GeonetworkDataDirectory geonetworkDataDirectory = _applicationContext.getBean(GeonetworkDataDirectory.class);
 
-        final SyncReport syncReport = synchronizeDataDirectory(new File(webappDir, "WEB-INF/data"));
+        final SyncReport syncReport = synchronizeDataDirectory(
+                new File(webappDir, "WEB-INF/data"));
 
         final ArrayList<Element> params = getServiceConfigParameterElements();
 
@@ -152,12 +150,15 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         _directoryFactory.resetIndex();
 
         final String schemaPluginsDir = geonetworkDataDirectory.getSchemaPluginsDir().getPath();
+
         final String resourcePath = geonetworkDataDirectory.getResourcesDir().getPath();
 
         final SchemaManager schemaManager = _applicationContext.getBean(SchemaManager.class);
         if (syncReport.updateSchemaManager || !schemaManager.existsSchema("iso19139")) {
+
             new File(_dataDirectory, "config/schemaplugin-uri-catalog.xml").delete();
             final String schemaPluginsCatalogFile = new File(schemaPluginsDir, "/schemaplugin-uri-catalog.xml").getPath();
+            deploySchema(webappDir, schemaPluginsDir);
 
             _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
             SchemaManager.registerXmlCatalogFiles(webappDir, schemaPluginsCatalogFile);
@@ -221,7 +222,6 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
             _dataDirContainer = new File(dir.getPath()+i);
 
-
             _dataDirectory = new File(_dataDirContainer, "defaultDataDir");
             _dataDirLockFile = new File(_dataDirContainer, DATA_DIR_LOCK_NAME);
         }
@@ -248,14 +248,20 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
                 String relativePath = dataDirFile.getPath().substring(prefixPathLength2);
                 final File srcFile = new File(srcDataDir, relativePath);
                 if (!srcFile.exists()) {
-                    if (srcFile.getParent().endsWith("schematron") && relativePath.contains("schema_plugins") && relativePath.endsWith(".xsl")) {
+                    if (srcFile.getParent().endsWith("schematron") &&
+                            relativePath.contains("schema_plugins") &&
+                            relativePath.endsWith(".xsl")) {
                         // don't copy because the schematron xsl files are generated.
                         // normally they shouldn't be here because they don't need to be in the
-                        // repository but some tests can generate them into the schemtrons folder
+                        // repository but some tests can generate them into the schematrons folder
                         // so ignore them here.
                         continue;
                     }
 
+                    if (relativePath.contains("/removed/")) {
+                        // Ignore removed files which may contains MEF files
+                        continue;
+                    }
                     if (relativePath.endsWith("schemaplugin-uri-catalog.xml")) {
                         // we will handle this special case later.
                         continue;
@@ -307,8 +313,25 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
                 report.updateSchemaManager |= relativePath.contains("schema_plugins");
             }
         }
-
         return report;
+    }
+
+    private void deploySchema(String srcDataDir, String schemaPluginPath) {
+        // Copy schema plugin
+        final String schemaModulePath = "schemas";
+        File schemaModuleDir = new File(srcDataDir + "/../../../../" + schemaModulePath);
+        if (schemaModuleDir.exists()) {
+            String[] listOfSchemaToLoad = {"iso19139", "dublin-core", "iso19115", "fgdc-std"};
+            for (String schema : listOfSchemaToLoad) {
+                String srcPath = schemaModuleDir + "/" + schema + "/src/main/plugin/" + schema;
+                String destPath = schemaPluginPath + "/" + schema;
+                try {
+                    BinaryFile.copyDirectory(new File(srcPath), new File(destPath));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     @After

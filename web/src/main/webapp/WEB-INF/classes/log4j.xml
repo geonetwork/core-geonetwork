@@ -183,11 +183,16 @@
         <appender-ref ref="fileAppender" />
     </logger>
     <logger name="org.hibernate.SQL" additivity="false">
-        <level value="DEBUG" />
+        <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
     <logger name="org.hibernate.type" additivity="false">
+        <level value="WARN" />
+        <appender-ref ref="consoleAppender" />
+        <appender-ref ref="fileAppender" />
+    </logger>
+    <logger name="org.hibernate.tool.hbm2ddl" additivity="false">
         <level value="WARN" />
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />

@@ -182,6 +182,11 @@
             <encoding>UTF-8</encoding>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-eclipse-plugin</artifactId>
+          <version>2.9</version>
+        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -246,10 +251,10 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
+        <version>2.5.1</version>
         <configuration>
-          <source>1.6</source>  <!-- The -source argument for the Java compiler. -->
-          <target>1.6</target>  <!-- The -target argument for the Java compiler. -->
+          <source>1.7</source>  <!-- The -source argument for the Java compiler. -->
+          <target>1.7</target>  <!-- The -target argument for the Java compiler. -->
           <debug>true</debug>   <!-- Whether to include debugging information.   -->
           <encoding>UTF-8</encoding> <!-- The -encoding argument for the Java compiler. -->
 					<excludes>
@@ -273,7 +278,7 @@
       <plugin>
         <groupId>org.codehaus.cargo</groupId>
         <artifactId>cargo-maven2-plugin</artifactId>
-        <version>1.4.8</version>
+        <version>1.4.9</version>
         <configuration>
           <container>
             <containerId>jetty7x</containerId>
@@ -1112,10 +1117,6 @@
       <name>Developer k-int repository</name>
       <url>http://developer.k-int.com/maven2/</url>
     </repository>
-    
-    <!-- Local repository which allow to handle temporarly local dependencies 
-     // FIXME : Should be a remote repository -->
-    <!--
     <repository>
       <snapshots>
         <enabled>true</enabled>
@@ -1123,29 +1124,16 @@
       <releases>
         <enabled>true</enabled>
       </releases>
-      <id>localGeoNetwork</id>
-      <name>GeoNetwork local repository</name>
-      <url>file://maven_repo</url>
+      <id>core-maven-repo</id>
+      <name>GeoNetwork remote repository</name>
+      <url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
     </repository>
-    -->
     
     <repository>
-    	<snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    	<id>core-maven-repo</id>
-    	<name>GeoNetwork remote repository</name>
-    	<url>https://raw.githubusercontent.com/geonetwork/core-maven-repo/master</url>
+      <id>mvnrepository.com</id>
+      <name>Repository that has juniversalchardet</name>
+      <url>http://mvnrepository.com/artifact</url>
     </repository>
-
-		<repository>
-			<id>mvnrepository.com</id>
-			<name>Repository that has juniversalchardet</name>
-			<url>http://mvnrepository.com/artifact</url>
-		</repository>
 
       <!-- seasar repo, has jsonic - used by langdetect -->
       <repository>
@@ -1178,6 +1166,7 @@
     <module>domain</module>
     <module>oaipmh</module>
     <module>core</module>
+    <module>schemas</module>
     <module>csw-server</module>
     <module>harvesters</module>
     <module>healthmonitor</module>

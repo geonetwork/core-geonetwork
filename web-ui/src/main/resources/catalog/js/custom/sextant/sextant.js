@@ -27,11 +27,6 @@
       var searchMap = gnSearchSettings.searchMap;
 
       $scope.mainTabs = {
-        home :{
-          title: 'Home',
-          titleInfo: 0,
-          active: true
-        },
         search: {
           title: 'Search',
           titleInfo: 0,
@@ -126,4 +121,19 @@
       };
     }]);
 
-    })();
+  module.directive('sxtFixMdlinks', [
+    function() {
+
+      return {
+        restrict: 'A',
+        scope: false,
+        link: function (scope) {
+          scope.links = scope.md.getLinksByType('LINK');
+          scope.downloads = scope.md.getLinksByType('DOWNLOAD', 'FILE');
+          scope.layers = scope.md.getLinksByType('OGC', 'kml');
+
+        }
+      }
+    }]);
+
+})();

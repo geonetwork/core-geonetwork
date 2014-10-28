@@ -23,41 +23,57 @@
 
 package org.fao.geonet.services.resources;
 
+import java.net.URL;
+
+import javax.servlet.http.HttpServletRequest;
+
 import jeeves.constants.Jeeves;
-import org.fao.geonet.exceptions.BadParameterEx;
-import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
-import org.fao.geonet.GeonetContext;
+import jeeves.services.ReadWriteController;
+
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.responses.IdResponse;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.services.NotInReadOnlyModeService;
-import org.fao.geonet.services.Utils;
 import org.fao.geonet.services.metadata.XslProcessing;
 import org.fao.geonet.services.metadata.XslProcessingReport;
 import org.fao.geonet.services.resources.handlers.IResourceRemoveHandler;
 import org.jdom.Element;
-
-import java.io.File;
-import java.net.URL;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Delete an uploaded file from the data directory and remote its
  * reference in the metadata record.
  */
-public class RemoveAndProcess extends NotInReadOnlyModeService {
+@ReadWriteController
+@Controller("resource.del.and.detach")
+public class RemoveAndProcess  {
     public void init(String appPath, ServiceConfig params) throws Exception {
     }
 
-    public Element serviceSpecificExec(Element params, ServiceContext context)
+    @Autowired 
+    private ServiceContext context;
+    @Autowired
+    private DataManager dm;
+    
+	@RequestMapping(value = "/{lang}/resource.del.and.detach", produces = {
+			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody IdResponse serviceSpecificExec(HttpServletRequest request, @RequestParam(value=Params.URL) String url, 
+    		@RequestParam(defaultValue="") String id, @RequestParam(defaultValue="") String uuid)
             throws Exception {
-        String id = Utils.getIdentifierFromParameters(params, context);
-        String url = Util.getParam(params, Params.URL);
-        
+        if(id.trim().isEmpty()){
+			id = dm.getMetadataId(uuid);
+        }
         Lib.resource.checkEditPrivilege(context, id);
         
         // Analyze the URL to extract file name and private/public folder
@@ -79,12 +95,11 @@ public class RemoveAndProcess extends NotInReadOnlyModeService {
 
         // Remove the file and update the file upload/downloads tables
         IResourceRemoveHandler removeHook = (IResourceRemoveHandler) context.getApplicationContext().getBean("resourceRemoveHandler");
-        removeHook.onDelete(context, params, Integer.parseInt(id), filename, access);
+        removeHook.onDelete(context, request, Integer.parseInt(id), filename, access);
 
         // Set parameter and process metadata to remove reference to the uploaded file
-        params.addContent(new Element("name").setText(filename));
-        params.addContent(new Element("protocol")
-                .setText("WWW:DOWNLOAD-1.0-http--download"));
+        request.getParameterMap().put("name", new String[]{filename});
+        request.getParameterMap().put("protocol", new String[]{"WWW:DOWNLOAD-1.0-http--download"});
 
         String process = "onlinesrc-remove";
         XslProcessingReport report = new XslProcessingReport(process);
@@ -92,8 +107,8 @@ public class RemoveAndProcess extends NotInReadOnlyModeService {
         Element processedMetadata;
         try {
             final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
-            processedMetadata = XslProcessing.process(id, process,
-                    true, context.getAppPath(), params, context, report, true, siteURL);
+            processedMetadata = XslProcessing.get().process(id, process,
+                    true, context.getAppPath(), report, true, siteURL, request);
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed", "Not found:"
                         + report.getNotFoundMetadataCount() + ", Not owner:" + report.getNotEditableMetadataCount()
@@ -103,8 +118,6 @@ public class RemoveAndProcess extends NotInReadOnlyModeService {
             throw e;
         }
 
-        Element response = new Element(Jeeves.Elem.RESPONSE)
-                .addContent(new Element(Geonet.Elem.ID).setText(id));
-        return response;
+        return new IdResponse(id);
     }
 }

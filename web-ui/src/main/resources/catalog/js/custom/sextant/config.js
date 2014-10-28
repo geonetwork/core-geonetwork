@@ -6,36 +6,26 @@
 
   module.constant('gnPanierSettings', {});
 
-  module.config(['gnSearchSettings', 'gnViewerSettings', 'gnPanierSettings',
+  module.run(['gnSearchSettings', 'gnViewerSettings', 'gnPanierSettings',
+      'gnMap',
 
-    function(searchSettings, viewerSettings, gnPanierSettings) {
+    function(searchSettings, viewerSettings, gnPanierSettings, gnMap) {
 
       /** *************************************
        * Define mapviewer background layers
        */
       viewerSettings.bgLayers = [
-        new ol.layer.Tile({
-          style: 'Road',
-          source: new ol.source.MapQuest({layer: 'osm'}),
-          title: 'MapQuest'
-        }),
-        new ol.layer.Tile({
-          source: new ol.source.OSM(),
-          title: 'OpenStreetMap'
-        }),
-        new ol.layer.Tile({
-          preload: Infinity,
-          source: new ol.source.BingMaps({
-            key: 'Ak-dzM4wZjSqTlzveKz5u0d4IQ4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
-            imagerySet: 'Aerial'
-          }),
-          title: 'Bing Aerial'
-        })
+        gnMap.createLayerForType('mapquest'),
+        gnMap.createLayerForType('osm'),
+        gnMap.createLayerForType('bing_aerial')
       ];
       angular.forEach(viewerSettings.bgLayers, function(l) {
         l.displayInLayerManager = false;
         l.background = true;
+        l.set('group', 'Background layers');
       });
+
+      viewerSettings.defaultContext = '../../catalog/data/defaultContext.xml';
 
       /** *************************************
        * Define OWS services url for Import WMS
@@ -121,7 +111,7 @@
 
       /* Custom templates for search result views */
       searchSettings.resultViewTpls = [{
-        tplUrl: '../../catalog/components/search/resultsview/partials/viewtemplates/thumb.html',
+        tplUrl: '../../catalog/components/search/resultsview/partials/viewtemplates/title.html',
         tooltip: 'Simple',
         icon: 'fa-list'
       }, {

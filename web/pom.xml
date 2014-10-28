@@ -90,6 +90,23 @@
          <version>${spring.version}</version>
       </dependency>
  
+ 	<!-- This is to avoid 406 error with spring -->
+	<dependency>
+	    <groupId>com.fasterxml.jackson.core</groupId>
+	    <artifactId>jackson-databind</artifactId>
+	   <version>2.1.2</version>
+	</dependency>
+ 	<dependency>  
+        <groupId>javax.xml.bind</groupId>  
+        <artifactId>jaxb-api</artifactId>  
+        <version>2.2.11</version>  
+    </dependency> 
+     <dependency>
+		<groupId>com.sun.xml.bind</groupId>
+		<artifactId>jaxb-impl</artifactId>
+		<version>2.2.7</version>
+	</dependency>
+ 
       <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
     <dependency>
       <groupId>org.dspace</groupId>
@@ -103,7 +120,7 @@
       <groupId>marc4j</groupId>
       <artifactId>marc4j</artifactId>
     </dependency>
-    
+
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-api</artifactId>
@@ -273,7 +290,7 @@
     <!-- ====================== -->
     <!-- Generated dependencies -->
     <dependency>
-      <groupId>org.geonetwork-opensource</groupId>
+      <groupId>${project.groupId}</groupId>
       <artifactId>jeeves</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -484,7 +501,21 @@
           <artifactId>wro4j</artifactId>
           <version>${project.version}</version>
       </dependency>
-	</dependencies>
+
+    <!-- Add dependencies to schema plugin
+    having a custom Bean to be loaded. -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>schema-iso19139</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>schema-dublin-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+  </dependencies>
 
   
   <build>
@@ -529,18 +560,6 @@
                    <directory>${basedir}/src/main/webResources</directory>
                    <filtering>true</filtering>
                    <targetPath>${build.webapp.resources}</targetPath>
-                   <excludes>
-                     <exclude>**/.svn</exclude>
-                   </excludes>
-                 </resource>
-                 <resource>
-                   <directory>${basedir}/src/main/webapp/scripts/lib/</directory>
-                   <filtering>false</filtering>
-                   <targetPath>${build.webapp.resources}/scripts/lib/</targetPath>
-                   <excludes>
-                     <exclude>**/.svn</exclude>
-                     <exclude>**/*.js</exclude>
-                   </excludes>
                  </resource>
                </resources>
                <filters>
@@ -550,6 +569,47 @@
                <overwrite>true</overwrite>
              </configuration>
            </execution>
+          <execution>
+            <id>copy-schemas</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <includeEmptyDirs>true</includeEmptyDirs>
+              <overwrite>true</overwrite>
+              <outputDirectory>${build.webapp.resources}</outputDirectory>
+              <resources>
+                <!-- Copy the schema folder to the webapp folder source directory
+                in order to be loaded by the application when running mvn jetty:run.
+                -->
+                <resource>
+                  <directory>${project.basedir}/../schemas/iso19139/src/main/plugin</directory>
+                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
+                </resource>
+                <resource>
+                  <directory>${project.basedir}/../schemas/iso19110/src/main/plugin</directory>
+                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
+                </resource>
+                <resource>
+                  <directory>${project.basedir}/../schemas/dublin-core/src/main/plugin</directory>
+                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
+                </resource>
+                <resource>
+                  <directory>${project.basedir}/../schemas/csw-record/src/main/plugin</directory>
+                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
+                </resource>
+                <resource>
+                  <directory>${project.basedir}/../schemas/iso19115/src/main/plugin</directory>
+                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
+                </resource>
+                <resource>
+                  <directory>${project.basedir}/../schemas/fgdc-std/src/main/plugin</directory>
+                  <targetPath>${basedir}/src/main/webapp/WEB-INF/data/config/schema_plugins</targetPath>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
          </executions>
       </plugin>
       <plugin> 
@@ -579,7 +639,14 @@
               (see src/main/filters) and copy them to the webapp -->
           <webResources>
             <resource>
-                <directory>${project.basedir}/../web-client/src/main/resources</directory>
+              <directory>${project.basedir}/../schemas</directory>
+              <includes>
+                <include>**/src/main/plugin/*</include>
+              </includes>
+              <targetPath>WEB-INF/data/config/schema_plugins</targetPath>
+            </resource>
+            <resource>
+              <directory>${project.basedir}/../web-client/src/main/resources</directory>
             </resource>
             <resource>
                   <directory>${project.basedir}/../web-ui/src/main/resources</directory>
@@ -663,7 +730,11 @@
             <contextPath>/geonetwork</contextPath>
             <descriptor>${project.build.directory}/WEB-INF/web.xml</descriptor>
             <baseResource implementation="org.eclipse.jetty.util.resource.ResourceCollection">
-            <resourcesAsCSV>${project.basedir}/src/main/webapp,${rootProjectDir}/web-ui/src/main/resources/,${build.webapp.resources},${rootProjectDir}/web-client/src/main/resources/</resourcesAsCSV>
+            <resourcesAsCSV>
+              ${project.basedir}/src/main/webapp,
+              ${rootProjectDir}/web-ui/src/main/resources/,
+              ${build.webapp.resources},
+              ${rootProjectDir}/web-client/src/main/resources/</resourcesAsCSV>
             </baseResource>
           </webApp>
           <stopKey>JETTY_TOP</stopKey>

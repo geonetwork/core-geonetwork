@@ -1,4 +1,4 @@
-<div class="navbar navbar-default" role="navigation"
+<div class="navbar navbar-default gn-top-bar" role="navigation"
      data-ng-include="'../../catalog/templates/top-toolbar.html'">
 </div>
 
@@ -6,23 +6,9 @@
   <div class="" data-ng-controller="gnsSextant">
 
     <tabset id="main-tabset" type="pills">
-      <tab heading="{{mainTabs.home.title}}" active="mainTabs.home.active">
-        <div class="jumbotron">
-          <h1>GeoNetwork</h1>
-          <p>Welcome to GeoNetwork 3.0 <span class="badge">beta</span></p>
-        </div>
-      </tab>
-      <tab select="displayMapTab()" active="mainTabs.map.active">
-        <tab-heading>
-          {{mainTabs.map.title}}
-          <span class="badge" ng-if="mainTabs.map.titleInfo">{{mainTabs.map.titleInfo}}</span>
-        </tab-heading>
-        <div gn-main-viewer="" map="searchObj.viewerMap">
-        </div>
-      </tab>
       <tab heading="{{mainTabs.search.title}}" active="mainTabs.search.active">
         <div class="container" data-ng-controller="gnsSextantSearch">
-          <form data-ng-search-form="" class="form-horizontal" role="form">
+          <form data-ng-search-form="" class="form-horizontal" role="form" runsearch="true">
 
             <!--ANY full text search input-->
             <div class="form-group row ">
@@ -133,6 +119,14 @@
             </div>
 
           </form>
+        </div>
+      </tab>
+      <tab select="displayMapTab()" active="mainTabs.map.active">
+        <tab-heading>
+          {{mainTabs.map.title}}
+          <span class="badge" ng-if="mainTabs.map.titleInfo">{{mainTabs.map.titleInfo}}</span>
+        </tab-heading>
+        <div gn-main-viewer="" map="searchObj.viewerMap">
         </div>
       </tab>
       <tab select="displayPanierTab()" active="mainTabs.panier.active">

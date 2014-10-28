@@ -217,9 +217,13 @@
         controllerAs: 'controller',
         link: function(scope, element, attrs) {
 
-          scope.resetSearch = function() {
+          scope.resetSearch = function(htmlQuery) {
             scope.controller.resetSearch();
+            //TODO: remove geocat ref
             $('.geocat-search').find('.bootstrap-tagsinput .tag').remove();
+            if(htmlQuery) {
+              $(htmlQuery).focus();
+            }
           };
 
           if (attrs.runsearch) {

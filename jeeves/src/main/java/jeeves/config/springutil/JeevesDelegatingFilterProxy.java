@@ -3,14 +3,10 @@ package jeeves.config.springutil;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.User;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.filter.GenericFilterBean;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
@@ -20,7 +16,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created with IntelliJ IDEA.
@@ -37,7 +39,11 @@ public class JeevesDelegatingFilterProxy extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if (request instanceof HttpServletRequest) {
             HttpServletRequest httpRequest = (HttpServletRequest) request;
-            final String nodeName = httpRequest.getServletPath().substring(1);
+            String servletPath = httpRequest.getServletPath();
+            if (servletPath.isEmpty()) {
+                servletPath = "/" + User.NODE_APPLICATION_CONTEXT_KEY;
+            }
+            final String nodeName = servletPath.substring(1);
             String nodeId = User.NODE_APPLICATION_CONTEXT_KEY + nodeName;
             if (getServletContext().getAttribute(nodeId) == null) {
                 nodeId =  User.NODE_APPLICATION_CONTEXT_KEY+request.getParameter("node");
@@ -80,13 +86,13 @@ public class JeevesDelegatingFilterProxy extends GenericFilterBean {
     }
 
     private String extractNodeIdFromUrl(String referer) {
-        final String[] split = referer.split(getServletContext().getContextPath(), 2);
+        final String[] split = referer.split(getServletContext().getContextPath() + "/", 2);
         if (split.length == 1) {    // Referer does not contains node information
             return null;
         } else {
             final int nextSlash = split[1].indexOf('/', 1);
             if (nextSlash > -1 ) {
-                return split[1].substring(1, nextSlash);
+                return split[1].substring(0, nextSlash);
             } else {
                 return null;
             }

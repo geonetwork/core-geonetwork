@@ -1,30 +1,31 @@
 package org.fao.geonet.kernel;
 
-import jeeves.xlink.Processor;
-import org.springframework.test.context.ContextConfiguration;
-
-
-
+import com.google.common.collect.Lists;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.sources.ServiceRequest;
+import jeeves.xlink.Processor;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Xml;
+import org.jdom.Content;
 import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 /**
  * Test local:// xlinks.
  *
@@ -63,14 +64,18 @@ public class LocalXLinksInMetadataIntegrationTest extends AbstractCoreIntegratio
               + "    </gmd:identificationInfo>\n"
               + "</gmd:MD_Metadata>";
 
-        final Element metadata = Xml.loadString(xml, false);
+        final List content = Lists.newArrayList(Xml.loadString(xml, false).getContent());
+        for (Object o : content) {
+            ((Content)o).detach();
+        }
+        final Element metadata = getSampleMetadataXml().setContent(content);
 
         ServiceContext context = createServiceContext();
         context.setAsThreadLocal();
         loginAsAdmin(context);
         _settingManager.setValue(SettingManager.SYSTEM_XLINKRESOLVER_ENABLE, true);
 
-        String schema = "iso19139";
+        String schema = _dataManager.autodetectSchema(metadata);
         String uuid = UUID.randomUUID().toString();
         int owner = context.getUserSession().getUserIdAsInt();
         String groupOwner = "" + ReservedGroup.intranet.getId();

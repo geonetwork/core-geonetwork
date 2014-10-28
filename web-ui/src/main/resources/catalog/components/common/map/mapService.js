@@ -14,7 +14,8 @@
       'goDecorateLayer',
       'gnOwsCapabilities',
       'gnConfig',
-      function(goDecorateLayer, gnOwsCapabilities, gnConfig) {
+      '$log',
+      function(goDecorateLayer, gnOwsCapabilities, gnConfig, $log) {
 
         var defaultMapConfig = {
           'useOSM': 'true',
@@ -294,6 +295,37 @@
               var newResolution = view.constrainResolution(currentResolution, delta);
               view.setResolution(newResolution);
             }
+          },
+
+          /**
+           * Creates an ol.layer for a given type. Useful for contexts
+           * @param type
+           * @returns {ol.layer}
+           */
+          createLayerForType: function(type) {
+            switch (type) {
+              case 'mapquest':
+                return new ol.layer.Tile({
+                  style: 'Road',
+                  source: new ol.source.MapQuest({layer: 'osm'}),
+                  title: 'MapQuest'
+                });
+              case 'osm':
+                return new ol.layer.Tile({
+                  source: new ol.source.OSM(),
+                  title: 'OpenStreetMap'
+                });
+              case 'bing_aerial':
+                return new ol.layer.Tile({
+                  preload: Infinity,
+                  source: new ol.source.BingMaps({
+                    key: 'Ak-dzM4wZjSqTlzveKz5u0d4IQ4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
+                    imagerySet: 'Aerial'
+                  }),
+                  title: 'Bing Aerial'
+                })
+            }
+            $log.warn('Unsupported layer type: ', type);
           }
         };
       }];

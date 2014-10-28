@@ -28,35 +28,44 @@
         tabs: []
       };
       $scope.harvesterTypes = {};
-      $scope.harvesters = {};
+      $scope.harvesters = null;
       $scope.harvesterSelected = null;
       $scope.harvesterUpdated = false;
       $scope.harvesterNew = false;
       $scope.harvesterHistory = {};
+      $scope.isLoadingHarvester = false;
+      $scope.isLoadingHarvesterHistory = false;
 
 
       var unbindStatusListener = null;
 
 
       function loadHarvesters() {
+        $scope.isLoadingHarvester = true;
+        $scope.harvesters = null;
         return $http.get('admin.harvester.list@json').success(function(data) {
           if (data != 'null') {
             $scope.harvesters = data;
             gnUtilityService.parseBoolean($scope.harvesters);
           }
+          $scope.isLoadingHarvester = false;
         }).error(function(data) {
           // TODO
+          $scope.isLoadingHarvester = false;
         });
       }
 
 
       function loadHistory() {
+        $scope.isLoadingHarvesterHistory = true;
         $scope.harvesterHistory = undefined;
         $http.get('admin.harvester.history@json?uuid=' +
             $scope.harvesterSelected.site.uuid).success(function(data) {
           $scope.harvesterHistory = data.harvesthistory;
+          $scope.isLoadingHarvesterHistory = false;
         }).error(function(data) {
           // TODO
+          $scope.isLoadingHarvesterHistory = false;
         });
       }
 
@@ -145,6 +154,9 @@
 
 
       $scope.saveHarvester = function() {
+        // Activate or disable it
+        $scope.setHarvesterSchedule();
+
         var body = window['gnHarvester' + $scope.harvesterSelected['@type']]
           .buildResponse($scope.harvesterSelected, $scope);
 
@@ -264,10 +276,11 @@
       };
 
       // Register status listener
-      unbindStatusListener = $scope.$watch('harvesterSelected.options.status',
-          function() {
-            $scope.setHarvesterSchedule();
-          });
+      //unbindStatusListener =
+      // $scope.$watch('harvesterSelected.options.status',
+      //    function() {
+      //      $scope.setHarvesterSchedule();
+      //    });
 
       loadHarvesters();
       loadHarvesterTypes();

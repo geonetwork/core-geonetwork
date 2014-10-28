@@ -1,18 +1,26 @@
 <div class="row" data-ng-controller="GnUserGroupController">
   <div class="col-lg-4">
     <div class="panel panel-default">
-      <div class="panel-heading" data-translate="">users</div>
+      <div class="panel-heading">
+        <span data-translate="">users</span>
+        <i data-ng-show="isLoadingUsers" class="fa fa-spinner fa-spin"></i>
+      </div>
       <div class="panel-body">
-        <input class="form-control" data-ng-model="userSearch.$" autofocus=""
-          placeholder="{{'filter' | translate}}"/>
+        <input class="form-control" data-ng-model="userSearch.$"
+               data-ng-show="users.length > 1"
+               autofocus=""
+               placeholder="{{'filter' | translate}}"/>
         <input type="hidden" data-ng-model="userSelected.id"/>
         <div class="list-group">
           <a href="" class="list-group-item"
-            data-ng-repeat="u in users | filter:userSearch | orderBy:'name'"
+            data-ng-repeat="u in pageItems()"
             data-ng-class="u.id === userSelected.id ? 'active' : ''" data-ng-click="selectUser(u)">
             <img class="img-circle" ng-src="http://gravatar.com/avatar/{{u.email | md5}}?s=18"/>
             {{u.name}} {{u.surname}} ({{u.profile | translate}})
           </a>
+          <span data-gn-pagination-list=""
+                data-items="users | filter:userSearch | orderBy:'name'"
+                data-cache="users"/>
         </div>
 
 
@@ -33,9 +41,10 @@
         <span data-ng-hide="userSelected.id != ''" data-translate="">newUser</span>
         <strong>{{userSelected.name}} {{userSelected.surname}}</strong>
         ({{userSelected.profile | translate}})
+          <span data-ng-show="userSelected.security.authtype"> - {{userSelected.security.authtype}}</span>
         <div class="btn-toolbar">
           <button type="button" class="btn btn-default pull-right fa fa-lock"
-            data-ng-hide="user.profile != 'Administrator'"
+            data-ng-hide="user.profile != 'Administrator' || userSelected.security.authtype == 'LDAP'"
             data-ng-click="resetPassword(userSelected.id)">
             <span data-translate=""
             >resetPassword</span></button>
@@ -45,7 +54,8 @@
             <span data-translate=""
             >saveUser</span></button>
           <button type="button" class="btn pull-right btn-danger fa fa-trash-o"
-            data-ng-disabled="searchResults.count > 0" data-ng-hide="userSelected.id == ''"
+            data-ng-disabled="searchResults.count > 0"
+            data-ng-hide="userSelected.id == ''"
             data-ng-click="deleteUser(userSelected.id)" id="gn-btn-user-delete">
             <span data-translate=""
             >deleteUser</span></button>
@@ -62,7 +72,7 @@
             <div data-ng-class="gnUserEdit.username.$error.required ? 'has-error' : ''" class="form-group">
               <label class="control-label col-sm-3" data-translate="">username</label>
               <div class="col-sm-9">
-                <input type="text" name="username" class="form-control"
+                <input type="text" id="username"  name="username" class="form-control"
                   data-ng-model="userSelected.username" data-ng-required="true"/>
                 <p class="help-block" data-translate="">usernameHelp</p>
               </div>

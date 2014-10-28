@@ -46,7 +46,7 @@
 
             var str = new XMLSerializer().serializeToString(xml);
             var base64 = base64EncArr(strToUTF8Arr(str));
-            $($event.target).attr('href', 'data:xml;base64,' + base64);
+            $($event.target).attr('href', 'data:text/xml;base64,' + base64);
           };
 
           var fileInput = element.find('input[type="file"]')[0];
@@ -65,10 +65,14 @@
           // load context from url or from storage
           if (gnViewerSettings.owsContext) {
             gnOwsContextService.loadContextFromUrl(gnViewerSettings.owsContext,
-              scope.map);
+              scope.map, true);
           } else if (window.localStorage.getItem('owsContext')) {
             var c = window.localStorage.getItem('owsContext');
             gnOwsContextService.loadContext(c, scope.map);
+          } else if (gnViewerSettings.defaultContext) {
+            gnOwsContextService.loadContextFromUrl(
+              gnViewerSettings.defaultContext,
+              scope.map);
           }
 
 

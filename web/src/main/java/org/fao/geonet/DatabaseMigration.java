@@ -290,7 +290,7 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
     private String newLookup(Statement statement, String key) throws SQLException {
         ResultSet results = null;
         try {
-            final String newGetVersion = "SELECT value FROM settings WHERE name = '" + key + "'";
+            final String newGetVersion = "SELECT value FROM Settings WHERE name = '" + key + "'";
             results = statement.executeQuery(newGetVersion);
             if (results.next()) {
                 return results.getString(1);
@@ -306,7 +306,7 @@ public class DatabaseMigration implements BeanPostProcessor, ApplicationContextA
     private String oldLookup(Statement statement, int key) throws SQLException {
         ResultSet results = null;
         try {
-            final String newGetVersion = "SELECT value FROM settings WHERE id = " + key;
+            final String newGetVersion = "SELECT value FROM Settings WHERE id = " + key;
             results = statement.executeQuery(newGetVersion);
             if (results.next()) {
                 return results.getString(1);

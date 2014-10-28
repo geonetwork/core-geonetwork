@@ -13,7 +13,7 @@
    */
   module.directive('gnMainViewer', [
       'gnMap',
-    function (goDecorateLayer, gnNcWms, gnMap) {
+    function (gnMap) {
       return {
         restrict: 'A',
         replace: true,
