@@ -71,6 +71,7 @@ public class SchemaLocalization {
             ImmutableTable.Builder<String, String, Element> indexBuilder = ImmutableTable.builder();
             final Element labels = getLabels(lang);
 
+            Set<Pair<String, String>> added = Sets.newHashSet();
             @SuppressWarnings("unchecked")
             final List<Element> children = labels.getChildren("element");
             for (Element element : children) {
@@ -79,7 +80,11 @@ public class SchemaLocalization {
                 if (parent == null) {
                     parent = "";
                 }
-                indexBuilder.put(name, parent, element);
+                final Pair<String, String> key = Pair.read(name, parent);
+                if (!added.contains(key)) {
+                    indexBuilder.put(name, parent, element);
+                    added.add(key);
+                }
             }
             index = indexBuilder.build();
             this.labelIndex.put(lang, index);
