@@ -7123,8 +7123,6 @@ button.close {
 }
 [gn-main-viewer] .panel-tools .list-group-item label {
   font-weight: normal;
-}
-[gn-main-viewer] .panel-tools .list-group-item > label {
   font-size: 90%;
   max-width: 82%;
 }
@@ -7916,4 +7914,16 @@ select[multiple][hitsperpage-combo] select {
 }
 [gn-main-viewer] [go-map] {
   height: 100%;
+}
+[gn-main-viewer] .panel-tools .nav-justified {
+  padding: 0 1em;
+}
+[gn-main-viewer] .panel-tools .nav-justified li a {
+  border-bottom-width: 0;
+}
+[gn-main-viewer] .panel-tools .nav-justified .active a {
+  background: transparent;
+}
+[gn-main-viewer] .layermanager-carousel .panel-carousel-container {
+  width: 200%;
 }
