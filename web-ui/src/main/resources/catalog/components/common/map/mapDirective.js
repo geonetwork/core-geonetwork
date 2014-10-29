@@ -119,7 +119,7 @@
                  bboxLayer
                ],
                renderer: 'canvas',
-               view: new ol.View2D({
+               view: new ol.View({
                  center: [0, 0],
                  projection: scope.projs.map,
                  zoom: 2

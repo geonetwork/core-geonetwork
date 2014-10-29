@@ -72,7 +72,7 @@
         <label for="protocol" class="col-sm-2 control-label">
           <span data-translate="">Protocol</span>
         </label>
-        <div class="col-sm-10" schema-info-combo="element"
+        <div class="col-sm-10" data-schema-info-combo="element"
           data-selected-info="params.protocol"
           data-gn-schema-info="gmd:protocol" lang="lang"></div>
       </div>
@@ -81,7 +81,7 @@
       <div class="form-group" data-ng-hide="schema === 'dublin-core'">
         <label for="onlinesrcDescr" class="col-sm-2 control-label">Description</label>
         <div class="col-sm-10">
-          <textarea rows="3" ng-model="params.desc"
+          <textarea rows="3" data-ng-model="params.desc"
             class="form-control input-sm" id="onlinesrcDescr"
             placeholder="Description" name="description" />
         </div>

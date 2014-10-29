@@ -62,7 +62,7 @@
              scope.templateAddAction = scope.templateAddAction === 'true';
              scope.isContact = scope.templateType === 'contact';
              scope.hasDynamicVariable = scope.variables &&
-                    scope.variables.match('{.*}') !== null;
+             scope.variables.match('{.*}') !== null;
              scope.subtemplateFilter = '';
 
              // Search only for contact subtemplate
