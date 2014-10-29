@@ -25,13 +25,15 @@ public class EnvironmentImpl implements Environment {
     private final Multimap<String, ParamValue> params = ArrayListMultimap.create();
     private final FormatType formatType;
     private final Metadata metadataInfo;
+    private final String locUrl;
 
     public EnvironmentImpl(FormatterParams fparams, IsoLanguagesMapper mapper) {
         this.lang3 = fparams.context.getLanguage();
         this.lang2 = mapper.iso639_2_to_iso639_1(lang3, "en");
 
         this.formatType = fparams.formatType;
-        this.resourceUrl = fparams.getLocUrl();
+        this.resourceUrl = fparams.getResourceUrl();
+        this.locUrl = fparams.getLocUrl();
         this.metadataInfo = fparams.metadataInfo;
 
         for (Map.Entry<String, String[]> entry : fparams.params.entrySet()) {
@@ -104,8 +106,14 @@ public class EnvironmentImpl implements Environment {
 
     }
 
+    @Override
     public String getResourceUrl() {
         return this.resourceUrl;
+    }
+
+    @Override
+    public String getLocalizedUrl() {
+        return this.locUrl;
     }
 
     @Override

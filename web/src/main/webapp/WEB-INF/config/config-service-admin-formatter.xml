@@ -71,15 +71,5 @@
       <error id="illegal-params" sheet="../xslt/error/error-xml.xsl"/>
     </service>
     
-    <service name="md.formatter.resource">
-      <documentation><![CDATA[
-        
-        ]]></documentation>
-      <class name=".services.metadata.format.Resource">
-        <param name="user_xsl_dir" value="user_xsl" />
-      </class>
-      <output file="true" />
-      <error id="illegal-params" sheet="../xslt/error/error-xml.xsl"/>
-    </service>
   </services>
 </geonet>

@@ -35,14 +35,14 @@ public class FormatterParams {
     }
     public String getResourceUrl() {
         String xslid = param("xsl", null);
-        String resourceUrl = getLocUrl() + "/metadata.formatter.resource?" + Params.SCHEMA + "=" + schema + "&" +
+        String resourceUrl = getLocUrl() + "/md.formatter.resource?" + Params.SCHEMA + "=" + schema + "&" +
                              Params.ID + "=" + xslid + "&" + Params.FNAME + "=";
 
         return resourceUrl;
     }
 
     public String getLocUrl() {
-        return url + "/" + context.getNodeId() + "/" + context.getLanguage() + "/";
+        return url;
     }
 
     public Map<String, SchemaLocalization> getSchemaLocalizations() throws IOException, JDOMException {

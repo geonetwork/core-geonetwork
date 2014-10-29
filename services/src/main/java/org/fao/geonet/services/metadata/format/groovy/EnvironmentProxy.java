@@ -61,6 +61,11 @@ public class EnvironmentProxy implements Environment {
     }
 
     @Override
+    public String getLocalizedUrl() {
+        return get().getLocalizedUrl();
+    }
+
+    @Override
     public Authentication getAuth() {
         return get().getAuth();
     }

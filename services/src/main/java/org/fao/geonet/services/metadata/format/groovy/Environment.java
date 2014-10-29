@@ -40,6 +40,11 @@ public interface Environment {
      */
     public String getResourceUrl();
     /**
+     * The url to use when making a service call.  This string will contain the full url up to but not including the servive
+     * for example: http://localhost:8080/geonetwork/srv/eng/
+     */
+    public String getLocalizedUrl();
+    /**
      * Get the current user's authentication information.
      */
     public Authentication getAuth();

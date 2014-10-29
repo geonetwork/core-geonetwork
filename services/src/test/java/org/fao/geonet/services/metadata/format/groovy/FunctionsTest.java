@@ -1,7 +1,6 @@
 package org.fao.geonet.services.metadata.format.groovy;
 
 import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
 import groovy.util.XmlSlurper;
 import groovy.util.slurpersupport.GPathResult;
 import jeeves.constants.ConfigFile;
@@ -10,7 +9,6 @@ import jeeves.server.dispatchers.guiservices.XmlFile;
 import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.repository.IsoLanguageRepository;
 import org.fao.geonet.services.metadata.format.Format;
-import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.metadata.format.FormatterParams;
 import org.fao.geonet.services.metadata.format.SchemaLocalization;
 import org.jdom.Element;
@@ -18,7 +16,6 @@ import org.jdom.JDOMException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.springframework.security.core.Authentication;
 
 import java.io.File;
 import java.io.IOException;
@@ -81,58 +78,10 @@ public class FunctionsTest {
             }
         };
 
-        Environment env = new Environment(){
+        Environment env = Mockito.mock(Environment.class);
+        Mockito.when(env.getLang3()).thenReturn("eng");
+        Mockito.when(env.getLang2()).thenReturn("#EN");
 
-            @Override
-            public String getLang3() {
-                return "eng";
-            }
-
-            @Override
-            public String getLang2() {
-                return "#EN";
-            }
-
-            @Override
-            public int getMetadataId() {
-                return 0;
-            }
-
-            @Override
-            public String getMetadataUUID() {
-                return null;
-            }
-
-            @Override
-            public String getResourceUrl() {
-                return null;
-            }
-
-            @Override
-            public Authentication getAuth() {
-                return null;
-            }
-
-            @Override
-            public FormatType getFormatType() {
-                return null;
-            }
-
-            @Override
-            public Multimap<String, ParamValue> params() {
-                return null;
-            }
-
-            @Override
-            public ParamValue param(String paramName) {
-                return null;
-            }
-
-            @Override
-            public Collection<ParamValue> paramValues(String paramName) {
-                return null;
-            }
-        };
         final IsoLanguageRepository repository = Mockito.mock(IsoLanguageRepository.class);
         Mockito.when(repository.findAllByCode("ger")).thenReturn(Arrays.asList(isoLang("German")));
         Mockito.when(repository.findAllByCode("eng")).thenReturn(Arrays.asList(isoLang("English")));
