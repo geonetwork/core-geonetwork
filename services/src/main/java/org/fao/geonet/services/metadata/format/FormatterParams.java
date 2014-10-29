@@ -21,10 +21,12 @@ public class FormatterParams {
     public File viewFile;
     public Element metadata;
     public String schema;
+    public File schemaDir;
     public ConfigFile config;
     public String url;
     public Metadata metadataInfo;
     public FormatType formatType;
+    public boolean formatterInSchemaPlugin;
 
     public String param(String paramName, String defaultVal) {
         String[] values = this.params.get(paramName);
@@ -35,7 +37,12 @@ public class FormatterParams {
     }
     public String getResourceUrl() {
         String xslid = param("xsl", null);
-        String resourceUrl = getLocUrl() + "/md.formatter.resource?" + Params.SCHEMA + "=" + schema + "&" +
+        String schemaParam = "";
+
+        if (formatterInSchemaPlugin) {
+            schemaParam = Params.SCHEMA + "=" + schema + "&";
+        }
+        String resourceUrl = getLocUrl() + "/md.formatter.resource?" + schemaParam +
                              Params.ID + "=" + xslid + "&" + Params.FNAME + "=";
 
         return resourceUrl;
@@ -69,6 +76,8 @@ public class FormatterParams {
         formatterParams.url = this.url;
         formatterParams.viewFile = this.viewFile;
         formatterParams.metadataInfo = this.metadataInfo;
+        formatterParams.schemaDir = this.schemaDir;
+        formatterParams.formatterInSchemaPlugin = this.formatterInSchemaPlugin;
 
         return formatterParams;
     }

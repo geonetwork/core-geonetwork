@@ -2,8 +2,9 @@ package org.fao.geonet.services.metadata.format.groovy;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableCollection;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableTable;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.common.io.Closer;
 import com.vividsolutions.jts.util.Assert;
 import groovy.lang.Closure;
@@ -12,15 +13,22 @@ import groovy.util.slurpersupport.GPathResult;
 import groovy.xml.MarkupBuilder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.IsoLanguage;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.repository.IsoLanguageRepository;
+import org.fao.geonet.services.metadata.format.ConfigFile;
 import org.fao.geonet.services.metadata.format.FormatterParams;
 import org.fao.geonet.services.metadata.format.SchemaLocalization;
 import org.jdom.Element;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Contains several functions and properties which can be used when implementing view.groovy formatter files (or the helper classes).
@@ -30,16 +38,35 @@ import java.util.List;
 public class Functions {
     protected static final String LANG_CODELIST_NS = "http://www.loc.gov/standards/iso639-2/";
     /**
-     * Localization files from schema plugin
+     * Localization files from schema plugin and the parents.  each file should be tried from the first to last.
      */
-    private final SchemaLocalization schemaLocalizations;
+    private final List<SchemaLocalization> schemaLocalizations;
     private final IsoLanguageRepository languageRepo;
     private final Environment env;
 
-    public Functions(FormatterParams fparams, Environment env, IsoLanguageRepository languageRepo) throws Exception {
+    public Functions(FormatterParams fparams, Environment env, IsoLanguageRepository languageRepo, SchemaManager schemaManager) throws Exception {
         this.languageRepo = languageRepo;
-        this.schemaLocalizations = fparams.getSchemaLocalizations().get(fparams.schema);
+        ArrayList<SchemaLocalization> tmpLocalizations = Lists.newArrayList();
+        final Map<String, SchemaLocalization> allLocalizations = fparams.getSchemaLocalizations();
+        tmpLocalizations.add(allLocalizations.get(fparams.schema));
+        addParentLocalizations(schemaManager, allLocalizations, tmpLocalizations, fparams.config);
+        this.schemaLocalizations = Collections.unmodifiableList(tmpLocalizations);
         this.env = env;
+    }
+
+    private void addParentLocalizations(SchemaManager schemaManager, Map<String, SchemaLocalization> allLocalizations, ArrayList<SchemaLocalization> tmpLocalizations, ConfigFile config) throws IOException {
+        if (config.dependOn() == null) {
+            return;
+        }
+
+        final SchemaLocalization schemaLocalization = allLocalizations.get(config.dependOn());
+        if (schemaLocalization != null) {
+            tmpLocalizations.add(schemaLocalization);
+        }
+
+        final File schemaDir = new File(schemaManager.getSchemaDir(config.dependOn()));
+        final ConfigFile parentConfig = new ConfigFile(schemaDir, false, null);
+        addParentLocalizations(schemaManager, allLocalizations, tmpLocalizations, parentConfig);
     }
 
 
@@ -95,20 +122,24 @@ public class Functions {
         if (qualifiedParentNodeName == null) {
             qualifiedParentNodeName = "";
         }
-        final ImmutableTable<String, String, Element> labelIndex = this.schemaLocalizations.getLabelIndex(this.env.getLang3());
-        Element element = labelIndex.get(qualifiedNodeName, qualifiedParentNodeName);
-        if (element == null) {
-            element = labelIndex.get(qualifiedNodeName, "");
-        }
-        if (element == null) {
-            final ImmutableCollection<Element> values = labelIndex.row(qualifiedNodeName).values();
-            if (!values.isEmpty()) {
-                element = values.iterator().next();
+
+        for (SchemaLocalization schemaLocalization : this.schemaLocalizations) {
+            final ImmutableTable<String, String, Element> labelIndex = schemaLocalization.getLabelIndex(this.env.getLang3());
+            Element element = labelIndex.get(qualifiedNodeName, qualifiedParentNodeName);
+            if (element == null) {
+                element = labelIndex.get(qualifiedNodeName, "");
+            }
+            if (element == null) {
+                final ImmutableCollection<Element> values = labelIndex.row(qualifiedNodeName).values();
+                if (!values.isEmpty()) {
+                    element = values.iterator().next();
+                }
+            }
+            if (element != null) {
+                return element.getChildText(type);
             }
         }
-        if (element != null) {
-            return element.getChildText(type);
-        }
+
 
         return qualifiedNodeName;
     }
@@ -156,9 +187,11 @@ public class Functions {
 
         codelist = extractCodeListName(codelist);
 
-        Element codelistEl = this.schemaLocalizations.getCodeListIndex(this.env.getLang3()).get(codelist, value);
-        if (codelistEl != null) {
-            return codelistEl.getChildText(type);
+        for (SchemaLocalization schemaLocalization : this.schemaLocalizations) {
+            Element codelistEl = schemaLocalization.getCodeListIndex(this.env.getLang3()).get(codelist, value);
+            if (codelistEl != null) {
+                return codelistEl.getChildText(type);
+            }
         }
         return value;
     }
@@ -206,9 +239,13 @@ public class Functions {
         if (prefix > -1) {
             codelistName = codelistName.substring(prefix + 1);
         }
-        final ImmutableTable<String, String, Element> codeListIndex = this.schemaLocalizations.getCodeListIndex(this.env.getLang3());
-        final ImmutableMap<String, Element> codelist = codeListIndex.row(codelistName);
-        return codelist.keySet();
+
+        Set<String> codelists = Sets.newHashSet();
+        for (SchemaLocalization schemaLocalization : this.schemaLocalizations) {
+            final ImmutableTable<String, String, Element> codeListIndex = schemaLocalization.getCodeListIndex(this.env.getLang3());
+            codelists.addAll(codeListIndex.row(codelistName).keySet());
+        }
+        return codelists;
     }
 
     /**
@@ -221,15 +258,21 @@ public class Functions {
     public String schemaString(String... key) throws Exception {
         Assert.isTrue(key.length > 0, "There must be at least one key value");
 
-        Element strings = this.schemaLocalizations.getStrings(this.env.getLang3());
-        for (int i = 0; i < key.length; i++) {
-            strings = strings.getChild(key[i]);
-            if (strings == null) {
-                return "[" + Joiner.on(',').join(key) + "]";
+
+        for (SchemaLocalization schemaLocalization : this.schemaLocalizations) {
+            Element strings = schemaLocalization.getStrings(this.env.getLang3());
+            for (int i = 0; i < key.length; i++) {
+                strings = strings.getChild(key[i]);
+                if (strings == null) {
+                    break;
+                }
+            }
+            if (strings != null) {
+                return strings.getTextNormalize();
             }
         }
 
-        return strings.getTextNormalize();
+        return "[" + Joiner.on(',').join(key) + "]";
     }
 
     /**

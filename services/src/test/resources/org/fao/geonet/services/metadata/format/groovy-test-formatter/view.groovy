@@ -277,7 +277,7 @@ handlers.add name: 'h2IdentInfo option',
  * using the static method that class contains.
  */
 handlers.add name: 'codelist handler', select: DCFunctions.isFileId, {el ->
-    "<span class='fileId'>${el.text()}</span>"
+    "<span class='fileId'>${el.text()}</span><span class='creatorTranslated'>${f.nodeLabel('dc:creator', null)}</span>"
 }
 
 /**

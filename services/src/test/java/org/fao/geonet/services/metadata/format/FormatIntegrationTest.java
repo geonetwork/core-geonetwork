@@ -185,6 +185,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         // handlers.add name: 'codelist handler', select: isoHandlers.matchers.isCodeListEl, isoHandlers.isoCodeListEl
         // is handled
         assertElement(view, "body//span[@class = 'fileId']", this.uuid, 1);
+        assertElement(view, "body//span[@class = 'creatorTranslated']", "Creator", 1);
     }
 
     private void assertElement(Element view, String onlineResourceHeaderXpath, String expected, int numberOfElements) throws JDOMException {

@@ -98,6 +98,7 @@ public class Format extends AbstractFormatService {
      * Map (canonical path to formatter dir -> Element containing all xml files in Formatter bundle's loc directory)
      */
     private WeakHashMap<String, Element> pluginLocs = new WeakHashMap<String, Element>();
+    private Map<String, Boolean> isFormatterInSchemaPluginMap = Maps.newHashMap();
 
 
     @RequestMapping(value = "/{lang}/md.format.{type}")
@@ -173,9 +174,11 @@ public class Format extends AbstractFormatService {
         fparams.formatDir = formatDir.getCanonicalFile();
         fparams.metadata = metadata;
         fparams.schema = schema;
+        fparams.schemaDir = schemaDir;
         fparams.formatType = type;
         fparams.url = settingManager.getSiteURL(lang);
         fparams.metadataInfo = metadataInfo;
+        fparams.formatterInSchemaPlugin = isFormatterInSchemaPlugin(formatDir, schemaDir);
 
         File viewXslFile = new File(formatDir, FormatterConstants.VIEW_XSL_FILENAME);
         File viewGroovyFile = new File(formatDir, FormatterConstants.VIEW_GROOVY_FILENAME);
@@ -191,6 +194,25 @@ public class Format extends AbstractFormatService {
         }
 
         return Pair.read(formatter, fparams);
+    }
+
+    private synchronized boolean isFormatterInSchemaPlugin(File formatterDir, File schemaDir) throws IOException {
+        final String canonicalPath = formatterDir.getCanonicalPath();
+        Boolean isInSchemaPlugin = this.isFormatterInSchemaPluginMap.get(canonicalPath);
+        if (isInSchemaPlugin == null) {
+            isInSchemaPlugin = false;
+            File current = formatterDir;
+            while (current.getParentFile() != null) {
+                if (current.equals(schemaDir)) {
+                    isInSchemaPlugin = true;
+                    break;
+                }
+                current = current.getParentFile();
+            }
+
+            this.isFormatterInSchemaPluginMap.put(canonicalPath, isInSchemaPlugin);
+        }
+        return isInSchemaPlugin;
     }
 
     public Pair<Element, Metadata> getMetadata(ServiceContext context, String id, String uuid, ParamValue skipPopularity,

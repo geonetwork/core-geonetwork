@@ -3,6 +3,7 @@ package org.fao.geonet.services.metadata.format;
 import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import org.fao.geonet.Constants;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.IsoLanguageRepository;
 import org.fao.geonet.services.metadata.format.groovy.Environment;
@@ -29,6 +30,8 @@ public class XmlViewFormatterTest extends AbstractFormatterTest {
     private IsoLanguagesMapper mapper;
     @Autowired
     private IsoLanguageRepository langRepo;
+    @Autowired
+    private SchemaManager schemaManager;
 
     @Test
     @SuppressWarnings("unchecked")
@@ -40,7 +43,7 @@ public class XmlViewFormatterTest extends AbstractFormatterTest {
         FormatterParams fparams = getFormatterFormatterParamsPair
                 (request, formatterId).two();
         Environment env = new EnvironmentImpl(fparams, mapper);
-        final Functions functions = new Functions(fparams, env, langRepo);
+        final Functions functions = new Functions(fparams, env, langRepo, schemaManager);
 
 //        measureFormatterPerformance(request, formatterId);
 

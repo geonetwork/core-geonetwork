@@ -1,7 +1,6 @@
 package org.fao.geonet.services.metadata.format;
 
 import jeeves.server.ServiceConfig;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -92,12 +91,12 @@ abstract class AbstractFormatService {
             }
         }
 
-        if (id == null && uuid != null) {
+        if (md == null && uuid != null) {
             md = metadataRepository.findOneByUuid(uuid);
         }
 
         if (md == null) {
-            throw new IllegalArgumentException("Either '" + Params.UUID + "' or '" + Params.ID + "'is a required parameter");
+            throw new IllegalArgumentException("No metadata found. id = " + id + ", uuid = " + uuid + ".  One of them must find a metadata");
         }
         return md;
     }
