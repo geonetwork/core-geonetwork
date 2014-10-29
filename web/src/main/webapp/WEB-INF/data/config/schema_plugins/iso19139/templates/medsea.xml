@@ -170,7 +170,7 @@
         </gmd:MD_MaintenanceInformation>
       </gmd:resourceMaintenance>
       <gmd:descriptiveKeywords>
-        <gmd:MD_Keywords xmlns:srv="http://www.isotc211.org/2005/srv">
+        <gmd:MD_Keywords>
           <gmd:type>
             <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
                                     codeListValue="theme"/>
@@ -194,7 +194,7 @@
               <gmd:identifier>
                 <gmd:MD_Identifier>
                   <gmd:code>
-                    <gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.medsea.challenges">geonetwork.thesaurus.external.theme.medsea.challenges</gmx:Anchor>
+                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.theme.medsea.challenges">geonetwork.thesaurus.external.theme.medsea.challenges</gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
               </gmd:identifier>
@@ -203,7 +203,7 @@
         </gmd:MD_Keywords>
       </gmd:descriptiveKeywords>
       <gmd:descriptiveKeywords>
-        <gmd:MD_Keywords xmlns:srv="http://www.isotc211.org/2005/srv">
+        <gmd:MD_Keywords>
           <gmd:type>
             <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
                                     codeListValue="theme"/>
@@ -227,7 +227,7 @@
               <gmd:identifier>
                 <gmd:MD_Identifier>
                   <gmd:code>
-                    <gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.medsea.environmental.matrix">geonetwork.thesaurus.external.theme.medsea.environmental.matrix</gmx:Anchor>
+                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.theme.medsea.environmental.matrix">geonetwork.thesaurus.external.theme.medsea.environmental.matrix</gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
               </gmd:identifier>
@@ -236,7 +236,40 @@
         </gmd:MD_Keywords>
       </gmd:descriptiveKeywords>
       <gmd:descriptiveKeywords>
-        <gmd:MD_Keywords xmlns:srv="http://www.isotc211.org/2005/srv">
+        <gmd:MD_Keywords>
+          <gmd:type>
+            <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
+                                    codeListValue="theme"/>
+          </gmd:type>
+          <gmd:thesaurusName>
+            <gmd:CI_Citation>
+              <gmd:title>
+                <gco:CharacterString>Production mode</gco:CharacterString>
+              </gmd:title>
+              <gmd:date>
+                <gmd:CI_Date>
+                  <gmd:date>
+                    <gco:Date>2014-08-11</gco:Date>
+                  </gmd:date>
+                  <gmd:dateType>
+                    <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
+                                         codeListValue="publication"/>
+                  </gmd:dateType>
+                </gmd:CI_Date>
+              </gmd:date>
+              <gmd:identifier>
+                <gmd:MD_Identifier>
+                  <gmd:code>
+                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.theme.medsea.environmental.matrix">geonetwork.thesaurus.external.theme.medsea.production.mode</gmx:Anchor>
+                  </gmd:code>
+                </gmd:MD_Identifier>
+              </gmd:identifier>
+            </gmd:CI_Citation>
+          </gmd:thesaurusName>
+        </gmd:MD_Keywords>
+      </gmd:descriptiveKeywords>
+      <gmd:descriptiveKeywords>
+        <gmd:MD_Keywords>
           <gmd:type>
             <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
                                     codeListValue="parameter"/>
@@ -260,7 +293,7 @@
               <gmd:identifier>
                 <gmd:MD_Identifier>
                   <gmd:code>
-                    <gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=local.parameter.seadatanet-ocean-discovery-parameter">geonetwork.thesaurus.local.parameter.seadatanet-ocean-discovery-parameter</gmx:Anchor>
+                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.parameter.seadatanet-ocean-discovery-parameter">geonetwork.thesaurus.local.parameter.seadatanet-ocean-discovery-parameter</gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
               </gmd:identifier>
@@ -269,7 +302,7 @@
         </gmd:MD_Keywords>
       </gmd:descriptiveKeywords>
       <gmd:descriptiveKeywords>
-        <gmd:MD_Keywords xmlns:srv="http://www.isotc211.org/2005/srv"
+        <gmd:MD_Keywords
                          xlink:href="local://eng/xml.keyword.get?thesaurus=external.theme.inspire-theme&amp;amp;id=http://rdfdata.eionet.europa.eu/inspirethemes/themes/5&amp;amp;multiple=false"
                          xlink:show="replace">
           <gmd:keyword>
@@ -298,7 +331,7 @@
               <gmd:identifier>
                 <gmd:MD_Identifier>
                   <gmd:code>
-                    <gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.inspire-theme">geonetwork.thesaurus.external.theme.inspire-theme</gmx:Anchor>
+                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.theme.inspire-theme">geonetwork.thesaurus.external.theme.inspire-theme</gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
               </gmd:identifier>
@@ -307,7 +340,7 @@
         </gmd:MD_Keywords>
       </gmd:descriptiveKeywords>
       <gmd:descriptiveKeywords>
-        <gmd:MD_Keywords xmlns:srv="http://www.isotc211.org/2005/srv">
+        <gmd:MD_Keywords>
           <gmd:type>
             <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
                                     codeListValue="theme"/>
@@ -331,7 +364,7 @@
               <gmd:identifier>
                 <gmd:MD_Identifier>
                   <gmd:code>
-                    <gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.medsea.level.of.characteristics">geonetwork.thesaurus.external.theme.medsea.level.of.characteristics</gmx:Anchor>
+                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.theme.medsea.level.of.characteristics">geonetwork.thesaurus.external.theme.medsea.level.of.characteristics</gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
               </gmd:identifier>
@@ -340,7 +373,7 @@
         </gmd:MD_Keywords>
       </gmd:descriptiveKeywords>
       <gmd:descriptiveKeywords>
-        <gmd:MD_Keywords xmlns:srv="http://www.isotc211.org/2005/srv">
+        <gmd:MD_Keywords>
           <gmd:type>
             <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
                                     codeListValue="theme"/>
@@ -364,7 +397,7 @@
               <gmd:identifier>
                 <gmd:MD_Identifier>
                   <gmd:code>
-                    <gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.medsea.sdn.edmerp.identifier">geonetwork.thesaurus.external.theme.medsea.sdn.edmerp.identifier</gmx:Anchor>
+                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.theme.medsea.sdn.edmerp.identifier">geonetwork.thesaurus.external.theme.medsea.sdn.edmerp.identifier</gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
               </gmd:identifier>
@@ -373,7 +406,7 @@
         </gmd:MD_Keywords>
       </gmd:descriptiveKeywords>
       <gmd:descriptiveKeywords>
-        <gmd:MD_Keywords xmlns:srv="http://www.isotc211.org/2005/srv">
+        <gmd:MD_Keywords>
           <gmd:type>
             <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
                                     codeListValue="contact"/>
@@ -397,7 +430,7 @@
               <gmd:identifier>
                 <gmd:MD_Identifier>
                   <gmd:code>
-                    <gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=local.contact.seadatanet.edmo">geonetwork.thesaurus.local.contact.seadatanet.edmo</gmx:Anchor>
+                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.contact.seadatanet.edmo">geonetwork.thesaurus.local.contact.seadatanet.edmo</gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
               </gmd:identifier>
@@ -406,7 +439,7 @@
         </gmd:MD_Keywords>
       </gmd:descriptiveKeywords>
       <gmd:descriptiveKeywords>
-        <gmd:MD_Keywords xmlns:srv="http://www.isotc211.org/2005/srv">
+        <gmd:MD_Keywords>
           <gmd:type>
             <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
                                     codeListValue="theme"/>
@@ -430,7 +463,7 @@
               <gmd:identifier>
                 <gmd:MD_Identifier>
                   <gmd:code>
-                    <gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=external.theme.medsea.data.delivery.mechanism">geonetwork.thesaurus.external.theme.medsea.data.delivery.mechanism</gmx:Anchor>
+                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.theme.medsea.data.delivery.mechanism">geonetwork.thesaurus.external.theme.medsea.data.delivery.mechanism</gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
               </gmd:identifier>
