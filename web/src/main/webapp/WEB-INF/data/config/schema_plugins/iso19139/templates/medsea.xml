@@ -157,7 +157,7 @@
           </gmd:contactInfo>
           <gmd:role>
             <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_RoleCode"
-                             codeListValue=""/>
+                             codeListValue="resourceProvider"/>
           </gmd:role>
         </gmd:CI_ResponsibleParty>
       </gmd:pointOfContact>

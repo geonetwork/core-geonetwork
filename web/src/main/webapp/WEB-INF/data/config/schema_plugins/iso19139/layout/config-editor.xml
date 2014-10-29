@@ -1553,12 +1553,12 @@
                   addDirective="data-gn-directory-entry-selector"
                   or="pointOfContact"
                   in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"
-                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='author']) = 0">
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='edmerp']) = 0">
             <directiveAttributes
                     data-template-add-action="false"
                     data-template-type="contact"
-                    data-filter='{"_groupOwner": "31184599"}'
-                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~author"/>
+                    data-filter='{"_groupPublished": "CONTACTS_EDMERP"}'
+                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~edmerp"/>
           </action>
 
 
@@ -1566,7 +1566,7 @@
           <field name="dataProvider" templateModeOnly="true"
                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[
                  gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue != 'author' and
-                 gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue !=  'custodian']">
+                 gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue !=  'resourceProvider']">
             <template>
               <values readonlyIf="count(@xlink:href) > 0">
                 <key label="organisationName"
@@ -1612,7 +1612,7 @@
                 'SDN EDMO Identifier')]"/>-->
 
           <field name="edmoName" templateModeOnly="true" notDisplayedIfMissing="true"
-                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='pointOfContact']"
                  del="."
                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
             <template>
@@ -1641,11 +1641,11 @@
                   addDirective="data-gn-directory-entry-selector"
                   or="pointOfContact"
                   in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"
-                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='custodian']) = 0">
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='edmo']) = 0">
             <directiveAttributes
                     data-template-add-action="false"
                     data-template-type="contact"
-                    data-filter='{"_groupOwner": "31184600"}'
+                    data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
                     data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~custodian"/>
           </action>
 
@@ -1926,8 +1926,13 @@
           </field>
 
           <action type="add" name="metadataPointOfContact"
-                  addDirective="data-gn-directory-entry-selector" or="contact" in="/gmd:MD_Metadata"/>
+                  addDirective="data-gn-directory-entry-selector" or="contact" in="/gmd:MD_Metadata">
 
+          <directiveAttributes
+                  data-template-add-action="false"
+                  data-template-type="contact"
+                  data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{{role}}"/>
+          </action>
 
           <!-- MedSea challenges
           TODO: Can't define to use Anchor mode by default
