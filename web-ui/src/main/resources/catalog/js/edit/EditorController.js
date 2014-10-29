@@ -344,9 +344,6 @@
               $scope.savedStatus = gnCurrentEdit.savedStatus;
               $scope.saveError = false;
               $scope.toggleAttributes();
-              $rootScope.$broadcast('StatusUpdated', {
-                title: $translate('saveMetadataSuccess')
-              });
             }, function(error) {
               $scope.savedStatus = gnCurrentEdit.savedStatus;
               $scope.saveError = true;
