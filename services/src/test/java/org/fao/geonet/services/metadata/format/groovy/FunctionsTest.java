@@ -68,7 +68,6 @@ public class FunctionsTest {
                        new Element("string2").addContent(new Element("part2").setText("String Two Part Two"))
                 ))));
 
-
                 SchemaLocalization sl = new SchemaLocalization(fparams.context, fparams.schema, schemaInfo);
                 localizations.put(fparams.schema, sl);
                 return localizations;

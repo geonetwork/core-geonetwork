@@ -1,6 +1,7 @@
 package iso19139;
 
 import com.google.common.collect.Lists;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.IsoLanguageRepository;
 import org.fao.geonet.services.metadata.format.AbstractFormatterTest;
@@ -30,6 +31,8 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
     private IsoLanguagesMapper mapper;
     @Autowired
     private IsoLanguageRepository langRepo;
+    @Autowired
+    private SchemaManager schemaManager;
 
     @Test
     @SuppressWarnings("unchecked")
@@ -41,7 +44,7 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
         FormatterParams fparams = getFormatterFormatterParamsPair
                 (request, formatterId).two();
         Environment env = new EnvironmentImpl(fparams, mapper);
-        final Functions functions = new Functions(fparams, env, langRepo);
+        final Functions functions = new Functions(fparams, env, langRepo, schemaManager);
 
 //        measureFormatterPerformance(request, formatterId);
 
