@@ -127,6 +127,7 @@
           <thesaurus key="external.theme.inspire-theme" maxTags="1"/>
           <thesaurus key="external.theme.medsea.level.of.characteristics" maxTags="1"/>
           <thesaurus key="external.theme.medsea.production.mode" maxTags="1"/>
+          <thesaurus key="geonetwork.thesaurus.external.theme.seadatanet.parameter.groups.P03" maxTags="1"/>
         </xsl:variable>
         <xsl:variable name="maxTags" select="if ($isMedSea)
          then $thesaurusConfig[@key = $thesaurusKey]/@maxTags
