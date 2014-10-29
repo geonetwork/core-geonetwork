@@ -2039,13 +2039,13 @@
 		<label>Resolution</label>
 		<description>Degree of detail in the grid dataset</description>
     <helper relAtt="uom">
-      <option value="3" title="second">3 seconds</option>
-      <option value="3" title="minute">3 minutes</option>
-      <option value="3" title="hour">3 hours</option>
-      <option value="3" title="hour">3 hours</option>
-      <option value="3" title="day">3 days</option>
-      <option value="3" title="month">3 months</option>
-      <option value="3" title="year">3 years</option>
+      <option value="" title="second">seconds</option>
+      <option value="" title="minute">minutes</option>
+      <option value="" title="hour">hours</option>
+      <option value="" title="hour">hours</option>
+      <option value="" title="day">days</option>
+      <option value="" title="month">months</option>
+      <option value="" title="year">years</option>
     </helper>
 	</element>
 	<element name="gmd:resourceConstraints" id="35.0">

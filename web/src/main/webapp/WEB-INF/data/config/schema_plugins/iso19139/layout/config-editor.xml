@@ -1523,7 +1523,7 @@
 
 
           <field name="edmerpName" templateModeOnly="true" notDisplayedIfMissing="true"
-                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='author']"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='edmerp']"
                  del="."
                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
             <template>
@@ -1565,8 +1565,7 @@
 
           <field name="dataProvider" templateModeOnly="true"
                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[
-                 gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue != 'author' and
-                 gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue !=  'resourceProvider']">
+                 gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue = 'resourceProvider']">
             <template>
               <values readonlyIf="count(@xlink:href) > 0">
                 <key label="organisationName"
@@ -1612,7 +1611,7 @@
                 'SDN EDMO Identifier')]"/>-->
 
           <field name="edmoName" templateModeOnly="true" notDisplayedIfMissing="true"
-                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='pointOfContact']"
+                 xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact[gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode/@codeListValue='edmo']"
                  del="."
                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
             <template>
@@ -1646,7 +1645,7 @@
                     data-template-add-action="false"
                     data-template-type="contact"
                     data-filter='{"_groupPublished": "CONTACTS_EDMO"}'
-                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~custodian"/>
+                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~edmo"/>
           </action>
 
 
