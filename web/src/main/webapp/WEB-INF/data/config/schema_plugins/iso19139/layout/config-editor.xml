@@ -1478,7 +1478,12 @@
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
                 'Processing level of characteristics')]"/>
 
-          <text ref="production-mode-field-missing"/>
+          <field
+                  name="environmental-matrix"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:descriptiveKeywords
+                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
+                'Production mode')]"/>
 
           <field name="medseaHierarchyLevel"
                  xpath="/gmd:MD_Metadata/gmd:hierarchyLevel"/>

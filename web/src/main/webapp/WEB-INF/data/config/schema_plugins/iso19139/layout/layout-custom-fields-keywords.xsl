@@ -5,6 +5,7 @@
   xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:gml="http://www.opengis.net/gml" xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:gn="http://www.fao.org/geonetwork"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
   xmlns:gn-fn-core="http://geonetwork-opensource.org/xsl/functions/core"
   xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
   xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
@@ -119,7 +120,17 @@
               * 'multiplelist' for multiple selection list
         -->
         <xsl:variable name="widgetMode" select="'tagsinput'"/>
-        <xsl:variable name="maxTags" select="''"/>
+        <xsl:variable name="isMedSea"
+                      select="contains($metadata/gmd:metadataStandardName/gco:CharacterString, 'MedSea')" as="xs:boolean"/>
+        <xsl:variable name="thesaurusConfig" as="element()*">
+          <thesaurus key="external.theme.medsea.environmental.matrix" maxTags="1"/>
+          <thesaurus key="external.theme.inspire-theme" maxTags="1"/>
+          <thesaurus key="external.theme.medsea.level.of.characteristics" maxTags="1"/>
+          <thesaurus key="external.theme.medsea.production.mode" maxTags="1"/>
+        </xsl:variable>
+        <xsl:variable name="maxTags" select="if ($isMedSea)
+         then $thesaurusConfig[@key = $thesaurusKey]/@maxTags
+         else ''"/>
         <!--
           Example: to restrict number of keyword to 1 for INSPIRE
           <xsl:variable name="maxTags" 
