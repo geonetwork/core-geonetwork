@@ -453,7 +453,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         
         UserRepository repository = this.context.getBean(UserRepository.class);
         User user = null;
-        if (ownerId != null) {
+        if (StringUtils.isNotEmpty(ownerId)) {
             user = repository.findOne(ownerId);
         }
         
