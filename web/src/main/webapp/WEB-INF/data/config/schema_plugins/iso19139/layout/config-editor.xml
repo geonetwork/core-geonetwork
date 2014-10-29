@@ -1449,19 +1449,24 @@
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
                 'Environmental matrix')]"/>
 
-          <!-- P03 thesaurus is missing TODO -->
-          <text ref="p03-field-missing"/>
-
-          <!-- A title in the thesaurus could be better -->
           <field
-              name="sdn-parameter-discovery"
               xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:descriptiveKeywords
+                [gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/* =
+                'geonetwork.thesaurus.external.theme.seadatanet.parameter.groups.P03']"/>
+
+          <field
+                  name="sdn-parameter-discovery"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
                 [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
                 'parameter.seadatanet-ocean-discovery-parameter.rdf')]"/>
 
-          <!-- P01 thesaurus is missing TODO -->
-          <text ref="p01-field-missing"/>
+          <field
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
+                gmd:descriptiveKeywords
+                [gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/* =
+                'geonetwork.thesaurus.external.theme.seadatanet.parameter.usage.P01']"/>
 
           <field
               name="inspireTheme"
