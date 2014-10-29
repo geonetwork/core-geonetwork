@@ -42,6 +42,7 @@ public class ConfigFile {
                     tmp.add(new File(current, CONFIG_PROPERTIES_FILENAME));
                     current = current.getParentFile();
                 }
+                tmp.add(new File(schemaDir, CONFIG_PROPERTIES_FILENAME));
                 properties = tmp.toArray(new File[tmp.size()]);
             }
         } else {
@@ -110,6 +111,9 @@ public class ConfigFile {
         return config.getProperty(SCHEMAS_TO_LOAD_PROP, "all");
     }
 
+    /**
+     * Get the schema ID of the schema this formatter depend on as a fallback for compiling, translations, resources, etc...
+     */
     @Nullable
     public String dependOn() {
         return config.getProperty(DEPENDS_ON, null);
