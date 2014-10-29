@@ -933,7 +933,7 @@ public class Aligner extends BaseAligner
 	
 	private String processName;
     private String preferredSchema;
-    private Map<String, String> processParams = new HashMap<String, String>();
+    private Map<String, Object> processParams = new HashMap<String, Object>();
 
     private HashMap<String, HashMap<String, String>> hmRemoteGroups = new HashMap<String, HashMap<String, String>>();
 }
