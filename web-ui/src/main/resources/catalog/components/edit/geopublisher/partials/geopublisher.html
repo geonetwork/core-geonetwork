@@ -1,4 +1,4 @@
-<div class="gn-geopublisher-panel">
+<div class="gn-geopublisher-panel" data-ng-show="nodes.length > 0">
   <div class="btn-group">
     <button type="button" class="btn btn-warning dropdown-toggle" 
       data-toggle="dropdown">
@@ -23,7 +23,7 @@
 
       <select data-ng-model="nodeId"
               data-ng-change="selectNode(nodeId)">
-        <option data-ng-repeat="node in nodes" value="{{node.id}}">
+        <option data-ng-repeat="node in nodes track by $index" value="{{node.id}}">
           {{node.name}}
         </option>
       </select>

@@ -28,8 +28,15 @@
               scope.hidden = true;
               scope.loaded = false;
               scope.hasStyler = false;
+              scope.nodes = null;
 
               var map, gsNode;
+              gnGeoPublisher.getList().success(function(data) {
+                if (data != 'null') {
+                  scope.nodes = data;
+                  scope.nodeId = data[0].id;
+                }
+              });
 
               var init = function() {
                 map = new ol.Map({
@@ -37,32 +44,25 @@
                     gnMap.getLayersFromConfig()
                   ],
                   renderer: 'canvas',
-                  view: new ol.View2D({
+                  view: new ol.View({
                     center: [0, 0],
                     projection: gnMap.getMapConfig().projection,
                     zoom: 2
                   })
                 });
 
-                gnGeoPublisher.getList().success(function(data) {
-                  if (data) {
-                    scope.nodes = data;
-                    scope.nodeId = data[0].id;
-                    scope.selectNode(scope.nodeId);
-                  }
+                scope.selectNode(scope.nodeId);
+                // we need to wait the scope.hidden binding is done
+                // before rendering the map.
+                map.setTarget(scope.mapId);
 
-                  // we need to wait the scope.hidden binding is done
-                  // before rendering the map.
-                  map.setTarget(scope.mapId);
-
-                  // TODO : Zoom to all extent if more than one defined
-                  if (angular.isArray(gnCurrentEdit.extent)) {
-                    map.getView().fitExtent(
-                        gnMap.reprojExtent(gnCurrentEdit.extent[0],
-                        'EPSG:4326', gnMap.getMapConfig().projection),
-                        map.getSize());
-                  }
-                });
+                // TODO : Zoom to all extent if more than one defined
+                if (angular.isArray(gnCurrentEdit.extent)) {
+                  map.getView().fitExtent(
+                      gnMap.reprojExtent(gnCurrentEdit.extent[0],
+                      'EPSG:4326', gnMap.getMapConfig().projection),
+                      map.getSize());
+                }
 
                 /**
                  * Protocols defined for the option
@@ -278,7 +278,11 @@
                 scope.resource = r;
 
                 if (!scope.loaded) {
-                  init();
+                  // Let the div be displayed and then
+                  // init the map.
+                  $timeout(function() {
+                    init();
+                  });
                   scope.loaded = true;
                 }
 
