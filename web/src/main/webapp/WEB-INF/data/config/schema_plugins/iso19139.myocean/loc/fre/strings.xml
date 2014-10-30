@@ -18,7 +18,8 @@
     <geoCoverage>Geographical extent</geoCoverage>
     <verticalCoverage>Vertical extent</verticalCoverage>
     <temporalCoverage>Temporal extent</temporalCoverage>
-    
+    <description>Description</description>
+
     <orgOriginator>Production center</orgOriginator>
     <orgCustodian>Product manager</orgCustodian>
     <orgServiceDesk>Local service desk</orgServiceDesk>

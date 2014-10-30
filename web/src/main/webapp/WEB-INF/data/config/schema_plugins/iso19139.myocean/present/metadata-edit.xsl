@@ -833,6 +833,20 @@
                             <gmd:extent>
                                 <gml:TimePeriod
 						-->
+
+            <!-- Using gmd:extent//gml:description or
+            gml:TimePeriod/*/gml:description instead of
+            gmd:extent/gml:TimePeriod/gml:description because in the
+            metadocument, an extra element <gml:TimePeriodTypeGROUP_ELEMENT0>
+            is added in between. -->
+            <xsl:apply-templates mode="iso19139" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/
+									gmd:EX_Extent/gmd:temporalElement/
+									gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:description">
+              <xsl:with-param name="schema" select="$schema"/>
+              <xsl:with-param name="edit"   select="$edit"/>
+              <xsl:with-param name="title"  select="/root/gui/schemas/*[name()=$schema]/strings/description"/>
+            </xsl:apply-templates>
+
 						<xsl:apply-templates mode="iso19139" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/
 							gmd:EX_Extent/gmd:temporalElement/
 							gmd:EX_TemporalExtent/gmd:extent//*[gml:beginPosition]">
@@ -1215,8 +1229,6 @@
 										</xsl:with-param>
 									</xsl:apply-templates>
 								</xsl:for-each>
-					
-								
 								
 								<!--<xsl:apply-templates mode="iso19139" select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/
 									gmd:EX_Extent[not(gmd:description)]/gmd:temporalElement[1]/

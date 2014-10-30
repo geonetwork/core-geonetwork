@@ -3813,7 +3813,27 @@
       <xsl:with-param name="class" select="$class" />
     </xsl:call-template>
   </xsl:template>
-  
+
+  <xsl:template mode="iso19139"
+                match="gml:description"
+                priority="2000"
+          >
+    <xsl:param name="schema" />
+    <xsl:param name="edit" />
+
+    <xsl:call-template name="iso19139String">
+      <xsl:with-param name="schema" select="$schema" />
+      <xsl:with-param name="edit" select="$edit" />
+      <xsl:with-param name="widget">
+
+        <xsl:call-template name="getElementText">
+          <xsl:with-param name="schema" select="$schema" />
+          <xsl:with-param name="edit" select="$edit" />
+          <xsl:with-param name="class" select="'medium'" />
+        </xsl:call-template>
+      </xsl:with-param>
+    </xsl:call-template>
+  </xsl:template>
   <!-- =====================================================================        
     * Anyway some elements should not be multilingual.
     
