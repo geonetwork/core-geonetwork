@@ -1,21 +1,22 @@
 package org.fao.geonet.kernel;
 
-import java.io.File;
-import java.io.IOException;
-
+import com.google.common.base.Joiner;
 import jeeves.server.ServiceConfig;
 import jeeves.server.sources.http.JeevesServlet;
-import org.apache.commons.io.FileUtils;
-import org.fao.geonet.Constants;
 import org.fao.geonet.NodeInfo;
-import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
-
-import org.fao.geonet.constants.Geonet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.stereotype.Component;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Iterator;
 
 /**
  * The GeoNetwork data directory is the location on the file system where
@@ -26,10 +27,12 @@ import org.springframework.stereotype.Component;
  * logos).
  */
 public class GeonetworkDataDirectory {
-	/**
+    private static final String[] GEONETWORK_DEFAULT_DATA_DIR_PARTS = {"WEB-INF", "data"};
+
+    /**
 	 * The default GeoNetwork data directory location.
 	 */
-	static final String GEONETWORK_DEFAULT_DATA_DIR = "WEB-INF" + File.separator + "data"  + File.separator;
+	static final String GEONETWORK_DEFAULT_DATA_DIR = Joiner.on(File.separator).join(GEONETWORK_DEFAULT_DATA_DIR_PARTS);
     /**
      * A suffix of the keys used to look up paths in system.properties or system.env or in Servlet context.
      */
@@ -43,17 +46,17 @@ public class GeonetworkDataDirectory {
      */
 	public static final String GEONETWORK_BEAN_KEY = "GeonetworkDataDirectory";
 
-    private String webappDir;
-    private String systemDataDir;
-    private File luceneDir;
-    private File spatialIndexPath;
-    private File configDir;
-    private File thesauriDir;
-    private File schemaPluginsDir;
-    private File metadataDataDir;
-    private File metadataRevisionDir;
-    private File resourcesDir;
-    private File htmlCacheDir;
+    private Path webappDir;
+    private Path systemDataDir;
+    private Path luceneDir;
+    private Path spatialIndexPath;
+    private Path configDir;
+    private Path thesauriDir;
+    private Path schemaPluginsDir;
+    private Path metadataDataDir;
+    private Path metadataRevisionDir;
+    private Path resourcesDir;
+    private Path htmlCacheDir;
     private String nodeId;
 
     @Autowired
@@ -81,11 +84,11 @@ public class GeonetworkDataDirectory {
 	 * 
 	 */
 	public void init(final String webappName, final String webappDir,
-                     final ServiceConfig handlerConfig, final JeevesServlet jeevesServlet) {
+                     final ServiceConfig handlerConfig, final JeevesServlet jeevesServlet) throws IOException {
         if (Log.isDebugEnabled(Geonet.DATA_DIRECTORY)) {
             Log.debug(Geonet.DATA_DIRECTORY, "Check and create if needed GeoNetwork data directory");
         }
-        this.webappDir = webappDir;
+        this.webappDir = Paths.get(webappDir);
         if (_applicationContext == null) {
             this.nodeId = "srv";
             this.isDefaultNode = true;
@@ -94,11 +97,11 @@ public class GeonetworkDataDirectory {
             this.isDefaultNode = nodeInfo.isDefaultNode();
             this.nodeId = nodeInfo.getId();
         }
-		setDataDirectory(jeevesServlet, webappName, webappDir, handlerConfig);
+		setDataDirectory(jeevesServlet, webappName, handlerConfig);
 	}
 	public void init(final String webappName, final String webappDir,  String systemDataDir,
-                     final ServiceConfig handlerConfig, final JeevesServlet jeevesServlet) {
-        this.systemDataDir = systemDataDir;
+                     final ServiceConfig handlerConfig, final JeevesServlet jeevesServlet) throws IOException {
+        this.systemDataDir = Paths.get(systemDataDir);
         this.init(webappName, webappDir, handlerConfig, jeevesServlet);
 	}
 
@@ -118,7 +121,7 @@ public class GeonetworkDataDirectory {
 	 * @return String The absolute path to the data directory, or
 	 *         <code>null</code> if it could not be found.
 	 */
-	private String lookupProperty(JeevesServlet jeevesServlet, ServiceConfig handlerConfig, String key) {
+	private Path lookupProperty(JeevesServlet jeevesServlet, ServiceConfig handlerConfig, String key) {
 
 		final String[] typeStrs = { "Java environment variable ",
 				"Servlet context parameter ", "Config.xml appHandler parameter", "System environment variable " };
@@ -177,27 +180,25 @@ public class GeonetworkDataDirectory {
 			dataDirStr = value;
 		}
 
-		return dataDirStr;
+		return dataDirStr == null ? null : Paths.get(dataDirStr);
 	}
 
-	private String setDataDirectory(JeevesServlet jeevesServlet, String webappName, String webappDir,
-                                    ServiceConfig handlerConfig) {
+	private Path setDataDirectory(JeevesServlet jeevesServlet, String webappName,
+                                    ServiceConfig handlerConfig) throws IOException {
 
-        if (systemDataDir == null) {
+        if (this.systemDataDir == null) {
             // System property defined according to webapp name
-            systemDataDir = lookupProperty(jeevesServlet, handlerConfig, webappName + KEY_SUFFIX);
+            this.systemDataDir = lookupProperty(jeevesServlet, handlerConfig, webappName + KEY_SUFFIX);
         }
 		// GEONETWORK.dir is default
-		if (systemDataDir == null) {
-			systemDataDir = lookupProperty(jeevesServlet, handlerConfig, GEONETWORK_DIR_KEY);
+		if (this.systemDataDir == null) {
+            this.systemDataDir = lookupProperty(jeevesServlet, handlerConfig, GEONETWORK_DIR_KEY);
 		}
 
 		boolean useDefaultDataDir = false;
-		Log.warning(Geonet.DATA_DIRECTORY, "   - Data directory initialization: " + systemDataDir);
-		
-		File systemDataFolder;
-		
-		if (systemDataDir == null) {
+		Log.warning(Geonet.DATA_DIRECTORY, "   - Data directory initialization: " + this.systemDataDir);
+
+        if (this.systemDataDir == null) {
 			Log.warning(Geonet.DATA_DIRECTORY,
 					"    - Data directory properties is not set. Use "
 							+ webappName + KEY_SUFFIX + " or " + GEONETWORK_DIR_KEY
@@ -205,21 +206,20 @@ public class GeonetworkDataDirectory {
 			useDefaultDataDir = true;
 		} else {
             updateSystemDataDirWithNodeSuffix();
-			systemDataFolder = new File(systemDataDir);
             try {
-                IO.mkdirs(systemDataFolder, "Error creating data directory for node: " + nodeId + ": " + systemDataFolder);
+                Files.createDirectories(this.systemDataDir, null);
             } catch (IOException e) {
-                Log.error(Geonet.DATA_DIRECTORY, "Error creating system data directory: " + systemDataFolder);
+                Log.error(Geonet.DATA_DIRECTORY, "Error creating system data directory: " + this.systemDataDir);
                 useDefaultDataDir = true;
             }
 
-            if (!systemDataFolder.exists()) {
+            if (!Files.exists(this.systemDataDir)) {
 				Log.warning(Geonet.DATA_DIRECTORY,
 						"    - Data directory does not exist. Create it first.");
 				useDefaultDataDir = true;
 			}
 	
-			if (!systemDataFolder.canWrite()) {
+			if (!Files.isWritable(this.systemDataDir)) {
 				Log.warning(
 						Geonet.DATA_DIRECTORY,
 						"    - Data directory is not writable. Set read/write privileges to user starting the catalogue (ie. "
@@ -227,7 +227,7 @@ public class GeonetworkDataDirectory {
 				useDefaultDataDir = true;
 			}
 	
-			if (!systemDataFolder.isAbsolute()) {
+			if (!this.systemDataDir.isAbsolute()) {
 				Log.warning(
 						Geonet.DATA_DIRECTORY,
 						"    - Data directory is not an absolute path. Relative path is not recommended.\n"
@@ -239,21 +239,17 @@ public class GeonetworkDataDirectory {
 		}
 		
 		if (useDefaultDataDir) {
-            systemDataDir = webappDir + GEONETWORK_DEFAULT_DATA_DIR;
+            systemDataDir = webappDir.resolve(GEONETWORK_DEFAULT_DATA_DIR);
             updateSystemDataDirWithNodeSuffix();
             Log.warning(Geonet.DATA_DIRECTORY,
 					"    - Data directory provided could not be used. Using default location: "
 							+ systemDataDir);
 		}
 
-		if (!systemDataDir.endsWith(File.separator)) {
-			systemDataDir += File.separator;
-		}
 
         try {
-            systemDataDir = new File(systemDataDir).getCanonicalPath() + File.separator;
-            systemDataFolder = new File(systemDataDir);
-            if (!systemDataFolder.exists()) {
+            this.systemDataDir = this.systemDataDir.toRealPath();
+            if (!Files.exists(this.systemDataDir)) {
                  Log.error(Geonet.DATA_DIRECTORY, "System Data Directory does not exist");
             }
         } catch (IOException e) {
@@ -263,87 +259,85 @@ public class GeonetworkDataDirectory {
 				+ systemDataDir);
 
 		// Set subfolder data directory
-		luceneDir = setDir(jeevesServlet, webappName, handlerConfig, systemDataDir, ".lucene" + KEY_SUFFIX,
+		luceneDir = setDir(jeevesServlet, webappName, handlerConfig, ".lucene" + KEY_SUFFIX,
                 "index", Geonet.Config.LUCENE_DIR);
-		spatialIndexPath = setDir(jeevesServlet, "", handlerConfig, systemDataDir, "spatial" + KEY_SUFFIX,
+		spatialIndexPath = setDir(jeevesServlet, "", handlerConfig, "spatial" + KEY_SUFFIX,
                 "spatialindex", null);
 
-		configDir = setDir(jeevesServlet, webappName, handlerConfig, systemDataDir, ".config" + KEY_SUFFIX,
+		configDir = setDir(jeevesServlet, webappName, handlerConfig, ".config" + KEY_SUFFIX,
                 "config", Geonet.Config.CONFIG_DIR);
-		thesauriDir = setDir(jeevesServlet, webappName, handlerConfig, systemDataDir,
+		thesauriDir = setDir(jeevesServlet, webappName, handlerConfig,
                 ".codeList" + KEY_SUFFIX, "config" + File.separator + "codelist",
                 Geonet.Config.CODELIST_DIR);
-		schemaPluginsDir = setDir(jeevesServlet, webappName, handlerConfig, systemDataDir, ".schema" + KEY_SUFFIX,
+		schemaPluginsDir = setDir(jeevesServlet, webappName, handlerConfig, ".schema" + KEY_SUFFIX,
                 "config" + File.separator + "schema_plugins",
                 Geonet.Config.SCHEMAPLUGINS_DIR);
-		metadataDataDir = setDir(jeevesServlet, webappName, handlerConfig, systemDataDir, ".data" + KEY_SUFFIX,
+		metadataDataDir = setDir(jeevesServlet, webappName, handlerConfig, ".data" + KEY_SUFFIX,
                 "data" + File.separator + "metadata_data",
                 Geonet.Config.DATA_DIR);
-		metadataRevisionDir = setDir(jeevesServlet, webappName, handlerConfig, systemDataDir, ".svn" + KEY_SUFFIX,
+		metadataRevisionDir = setDir(jeevesServlet, webappName, handlerConfig, ".svn" + KEY_SUFFIX,
                 "data" + File.separator + "metadata_subversion",
                 Geonet.Config.SUBVERSION_PATH);
-		resourcesDir = setDir(jeevesServlet, webappName, handlerConfig, systemDataDir,
+		resourcesDir = setDir(jeevesServlet, webappName, handlerConfig,
                 ".resources" + KEY_SUFFIX, "data" + File.separator + "resources",
                 Geonet.Config.RESOURCES_DIR);
 
-        htmlCacheDir = new File(handlerConfig.getValue(Geonet.Config.RESOURCES_DIR), "htmlcache");
-        handlerConfig.setValue(Geonet.Config.HTMLCACHE_DIR, htmlCacheDir.getAbsolutePath());
+        htmlCacheDir = Paths.get(handlerConfig.getValue(Geonet.Config.RESOURCES_DIR), "htmlcache");
+        handlerConfig.setValue(Geonet.Config.HTMLCACHE_DIR, htmlCacheDir.toAbsolutePath().toString());
         try {
-            IO.mkdirs(htmlCacheDir, "HTML Cache Directory");
+            Files.createDirectories(htmlCacheDir);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        handlerConfig.setValue(Geonet.Config.SYSTEM_DATA_DIR, systemDataDir);
+        handlerConfig.setValue(Geonet.Config.SYSTEM_DATA_DIR, this.systemDataDir.toString());
 
-		initDataDirectory(webappDir, handlerConfig);
+		initDataDirectory();
 
-		return systemDataDir;
+		return this.systemDataDir;
 	}
 
     private void updateSystemDataDirWithNodeSuffix() {
         if (!isDefaultNode) {
-            if (systemDataDir.endsWith(File.separator)) {
-                systemDataDir = systemDataDir.substring(0, systemDataDir.length() - 1);
-            }
-            systemDataDir += '_' + nodeId + File.separator;
+
+            final String newName = this.systemDataDir.getFileName().toString() + '_' + this.nodeId;
+            this.systemDataDir = this.systemDataDir.getParent().resolve(newName);
         }
     }
 
     /**
 	 * Checks if data directory is empty or not. If empty, add mandatory
 	 * elements (ie. codelist).
-	 * 
-	 * @param path
-	 */
-	private void initDataDirectory(String path, ServiceConfig handlerConfig) {
-		Log.info(Geonet.DATA_DIRECTORY, "   - Data directory initialization ...");
+     */
+	private void initDataDirectory() throws IOException {
+        Log.info(Geonet.DATA_DIRECTORY, "   - Data directory initialization ...");
 
-		if (!this.thesauriDir.exists() || this.thesauriDir.listFiles().length == 0) {
+		if (!Files.exists(this.thesauriDir) || IO.isEmptyDir(this.thesauriDir)) {
 			Log.info(Geonet.DATA_DIRECTORY, "     - Copying codelists directory ..." + thesauriDir);
 			try {
-				BinaryFile.copyDirectory(new File(path, GEONETWORK_DEFAULT_DATA_DIR + "config" + File.separator + "codelist"),
-                        this.thesauriDir);
+                final Path srcThesauri = webappDir.resolve(GEONETWORK_DEFAULT_DATA_DIR).resolve("config").resolve("codelist");
+                Files.copy(srcThesauri, this.thesauriDir);
 			} catch (IOException e) {
 				Log.error(Geonet.DATA_DIRECTORY, "     - Copy failed: " + e.getMessage(), e);
 			}
 		}
 
-		File schemaCatFile = new File(configDir, Geonet.File.SCHEMA_PLUGINS_CATALOG);
-		if (!schemaCatFile.exists()) {
+		Path schemaCatFile = configDir.resolve(Geonet.File.SCHEMA_PLUGINS_CATALOG);
+		if (!Files.exists(schemaCatFile)) {
 			Log.info(Geonet.DATA_DIRECTORY, "     - Copying schema plugin catalogue ...");
 			try {
-                final File srcFile = new File(path,  "WEB-INF" + File.separator + Geonet.File.SCHEMA_PLUGINS_CATALOG);
-                BinaryFile.copy(srcFile, schemaCatFile);
+                final Path srcFile = webappDir.resolve("WEB-INF").resolve(Geonet.File.SCHEMA_PLUGINS_CATALOG);
+                Files.copy(srcFile, schemaCatFile);
 
                 // Copy missing schema plugins
-                File srcPluginsDir = new File(path, GEONETWORK_DEFAULT_DATA_DIR + "config" + File.separator + "schema_plugins");
-                final File[] files = srcPluginsDir .listFiles();
-                if (files != null) {
-                    for (File dir : files) {
-                        File destDir = new File(schemaPluginsDir, dir.getName());
-                        if (!destDir.exists()) {
-                            BinaryFile.copyDirectory(dir, destDir);
+                Path srcPluginsDir = webappDir.resolve(GEONETWORK_DEFAULT_DATA_DIR).resolve("config").resolve("schema_plugins");
+                try (DirectoryStream<Path> schemaPlugins = Files.newDirectoryStream(srcPluginsDir)) {
+                    final Iterator<Path> pathIterator = schemaPlugins.iterator();
+                    while (pathIterator.hasNext()) {
+                        Path next =  pathIterator.next();
+                        Path destDir = this.schemaPluginsDir.resolve(next);
+                        if (!Files.exists(destDir)) {
+                            Files.copy(next, destDir);
                         }
                     }
                 }
@@ -364,39 +358,37 @@ public class GeonetworkDataDirectory {
 	 * <geonetwork.dir>/folder and set the system property value. Create the
 	 * folder if does not exist.
 	 * 
-	 *
-     * @param jeevesServlet
+	 *  @param jeevesServlet
      * @param webappName
      * @param handlerConfig
-     * @param systemDataDir
      * @param key
      * @param folder
-     * @param handlerKey       @return
-     * */
-	private File setDir(JeevesServlet jeevesServlet, String webappName,
-                        ServiceConfig handlerConfig, String systemDataDir, String key, String folder, String handlerKey) {
+     * @param handlerKey       @return     */
+	private Path setDir(JeevesServlet jeevesServlet, String webappName,
+                        ServiceConfig handlerConfig, String key, String folder, String handlerKey) {
 		String envKey = webappName + key;
-		String dir = lookupProperty(jeevesServlet, handlerConfig, envKey);
+		Path dir = lookupProperty(jeevesServlet, handlerConfig, envKey);
 		if (dir == null) {
-			dir = systemDataDir + folder;
+			dir = this.systemDataDir.resolve(folder);
 		} else {
-			if (!new File(dir).isAbsolute()) {
+			if (!dir.isAbsolute()) {
 				Log.info(Geonet.DATA_DIRECTORY, "    - " + envKey
 						+ " for directory " + dir
 						+ " is relative path. Use absolute path instead.");
 			}
 		}
 		if(handlerKey != null) {
-		    handlerConfig.setValue(handlerKey, dir);
+		    handlerConfig.setValue(handlerKey, dir.toString());
 		}
 		// Create directory if it does not exist
-		File file = new File(dir);
-		if (!file.exists() && !file.mkdirs()) {
-			throw new RuntimeException("Unable to create directory: " + file);
-		}
+        try {
+            Files.createDirectories(dir, null);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-		Log.info(Geonet.DATA_DIRECTORY, "    - " + envKey + " is " + dir);
-		return file;
+        Log.info(Geonet.DATA_DIRECTORY, "    - " + envKey + " is " + dir);
+		return dir;
 	}
 
     /**
@@ -404,26 +396,26 @@ public class GeonetworkDataDirectory {
      *
      * @return the root data dir for Geonetwork
      */
-    public String getSystemDataDir() {
+    public Path getSystemDataDir() {
         return systemDataDir;
     }
     /**
      * Set the root data dir for Geonetwork.  Typically other "data" directories are subdirectories to this.
      */
-    public void setSystemDataDir(String systemDataDir) {
+    public void setSystemDataDir(Path systemDataDir) {
         this.systemDataDir = systemDataDir;
     }
     /**
      * Get the directory to store the lucene indices in.
      * @return The directory to store the lucene indices in.
      */
-    public File getLuceneDir() {
+    public Path getLuceneDir() {
         return luceneDir;
     }
     /**
      * Set the directory to store the lucene indices in.
      */
-    public void setLuceneDir(File luceneDir) {
+    public void setLuceneDir(Path luceneDir) {
         this.luceneDir = luceneDir;
     }
 
@@ -432,13 +424,13 @@ public class GeonetworkDataDirectory {
      *
      * @return the directory to store the metadata spatial index
      */
-    public File getSpatialIndexPath() {
+    public Path getSpatialIndexPath() {
         return spatialIndexPath;
     }
     /**
      * Set the directory to store the metadata spatial index. If the spatial index is to be stored locally this is the directory to use.
      */
-    public void setSpatialIndexPath(File spatialIndexPath) {
+    public void setSpatialIndexPath(Path spatialIndexPath) {
         this.spatialIndexPath = spatialIndexPath;
     }
 
@@ -447,13 +439,13 @@ public class GeonetworkDataDirectory {
      *
      * @return the directory containing the configuration file.
      */
-    public File getConfigDir() {
+    public Path getConfigDir() {
         return configDir;
     }
     /**
      * Set the directory containing the configuration file.
      */
-    public void setConfigDir(File configDir) {
+    public void setConfigDir(Path configDir) {
         this.configDir = configDir;
     }
     /**
@@ -461,13 +453,13 @@ public class GeonetworkDataDirectory {
      *
      * @return the directory containing the thesauri.
      */
-    public File getThesauriDir() {
+    public Path getThesauriDir() {
         return thesauriDir;
     }
     /**
      * Set the directory containing the thesauri.
      */
-    public void setThesauriDir(File thesauriDir) {
+    public void setThesauriDir(Path thesauriDir) {
         this.thesauriDir = thesauriDir;
     }
 
@@ -476,13 +468,13 @@ public class GeonetworkDataDirectory {
      *
      * @return the schema plugins directory.
      */
-    public File getSchemaPluginsDir() {
+    public Path getSchemaPluginsDir() {
         return schemaPluginsDir;
     }
     /**
      * Set the schema plugins directory.
      */
-    public void setSchemaPluginsDir(File schemaPluginsDir) {
+    public void setSchemaPluginsDir(Path schemaPluginsDir) {
         this.schemaPluginsDir = schemaPluginsDir;
     }
     /**
@@ -490,26 +482,26 @@ public class GeonetworkDataDirectory {
      *
      * @return the directory that contain all the resources related to metadata (thumbnails, attachments, etc...).
      */
-    public File getMetadataDataDir() {
+    public Path getMetadataDataDir() {
         return metadataDataDir;
     }
     /**
      * Set the directory that contain all the resources related to metadata (thumbnails, attachments, etc...).
      */
-    public void setMetadataDataDir(File metadataDataDir) {
+    public void setMetadataDataDir(Path metadataDataDir) {
         this.metadataDataDir = metadataDataDir;
     }
     /**
      * Get the directory containing the metadata revision history if it is to be stored locally.
      * @return the directory containing the metadata revision history.
      */
-    public File getMetadataRevisionDir() {
+    public Path getMetadataRevisionDir() {
         return metadataRevisionDir;
     }
     /**
      * Set the directory containing the metadata revision history if it is to be stored locally.
      */
-    public void setMetadataRevisionDir(File metadataRevisionDir) {
+    public void setMetadataRevisionDir(Path metadataRevisionDir) {
         this.metadataRevisionDir = metadataRevisionDir;
     }
     /**
@@ -518,13 +510,13 @@ public class GeonetworkDataDirectory {
      * @see org.fao.geonet.resources.ResourceFilter
      * @return the directory that will contain the resources for the system.
      */
-    public File getResourcesDir() {
+    public Path getResourcesDir() {
         return resourcesDir;
     }
     /**
      * Set the directory that will contain the resources for the system.
      */
-    public void setResourcesDir(File resourcesDir) {
+    public void setResourcesDir(Path resourcesDir) {
         this.resourcesDir = resourcesDir;
     }
 
@@ -533,7 +525,7 @@ public class GeonetworkDataDirectory {
      *
      * @return the directory containing the webapplication.
      */
-    public String getWebappDir() {
+    public Path getWebappDir() {
         return webappDir;
     }
 
@@ -542,13 +534,13 @@ public class GeonetworkDataDirectory {
      *
      * @return directory for caching html data.
      */
-    public File getHtmlCacheDir() {
+    public Path getHtmlCacheDir() {
         return htmlCacheDir;
     }
     /**
      * Set directory for caching html data.
      */
-    public void setHtmlCacheDir(File htmlCacheDir) {
+    public void setHtmlCacheDir(Path htmlCacheDir) {
         this.htmlCacheDir = htmlCacheDir;
     }
 

@@ -23,6 +23,10 @@
 
 package org.fao.geonet.utils;
 
+import org.apache.commons.io.IOUtils;
+import org.fao.geonet.Constants;
+import org.fao.geonet.Logger;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,14 +34,18 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.io.IOUtils;
-import org.fao.geonet.Constants;
-import org.fao.geonet.Logger;
+import java.util.concurrent.TimeUnit;
 
 //=============================================================================
 
@@ -47,7 +55,22 @@ import org.fao.geonet.Logger;
  */
 public final class IO
 {
-	/**
+
+    public static final DirectoryStream.Filter<Path> DIRECTORIES_FILTER = new DirectoryStream.Filter<Path>() {
+        @Override
+        public boolean accept(Path entry) throws IOException {
+            return Files.isDirectory(entry);
+        }
+    };
+
+    public static final DirectoryStream.Filter<Path> FILES_FILTER = new DirectoryStream.Filter<Path>() {
+        @Override
+        public boolean accept(Path entry) throws IOException {
+            return Files.isRegularFile(entry);
+        }
+    };
+
+    /**
     * Default constructor.
     * Builds a IO.
     */
@@ -107,10 +130,9 @@ public final class IO
             if (dir.isFile()){
                 String msg = "Unable to make '"+desc+"': "+dir.getAbsolutePath()+". The file already exists and is a file";
                 throw new IOException(msg);
-                
+
             }
         }
-
 	}
 
 	/**
@@ -202,6 +224,46 @@ public final class IO
     	}		
     	return fileList;
     }
+
+    public static boolean isEmptyDir(Path dir) throws IOException {
+        try (DirectoryStream<Path> children = Files.newDirectoryStream(dir)) {
+            return children.iterator().hasNext();
+        }
+    }
+
+    public static void deleteFileOrDirectory(Path path) throws IOException {
+        if (Files.isDirectory(path)) {
+            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+
+            });
+        } else if (Files.isRegularFile(path)) {
+            Files.delete(path);
+        }
+    }
+    public static void touch(Path file) throws IOException{
+        long timestamp = System.currentTimeMillis();
+        touch(file,  FileTime.from(timestamp, TimeUnit.MILLISECONDS));
+    }
+
+    public static void touch(Path file, FileTime timestamp) throws IOException{
+        if (!Files.exists(file)) {
+            Files.createFile(file);
+        }
+
+        Files.setLastModifiedTime(file, timestamp);
+    }
+
 }
 
 //=============================================================================

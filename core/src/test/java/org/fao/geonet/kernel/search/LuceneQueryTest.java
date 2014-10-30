@@ -49,7 +49,7 @@ public class LuceneQueryTest {
         final GeonetworkDataDirectory dataDirectory = new GeonetworkDataDirectory();
         dataDirectory.init("test", appDir, new ServiceConfig(), null);
         LuceneConfig lc = new LuceneConfig();
-        lc._geonetworkDataDirectory = dataDirectory;
+        lc.geonetworkDataDirectory = dataDirectory;
         final ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext();
         lc._appContext = context;
         context.refresh();

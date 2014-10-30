@@ -40,16 +40,6 @@ import jeeves.TransactionAspect;
 import jeeves.TransactionTask;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.kernel.search.index.IndexingList;
-import org.fao.geonet.kernel.search.index.IndexingTask;
-import org.fao.geonet.repository.specification.*;
-import org.fao.geonet.repository.statistic.PathSpec;
-import org.fao.geonet.util.FileCopyMgr;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.utils.Xml.ErrorHandler;
-
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.util.ConcurrentHashSet;
@@ -102,6 +92,7 @@ import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.search.index.IndexingList;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.notifier.MetadataNotifierManager;
@@ -128,6 +119,7 @@ import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.repository.statistic.PathSpec;
 import org.fao.geonet.util.ThreadUtils;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.Xml.ErrorHandler;
@@ -184,7 +176,6 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 //@Transactional(propagation = Propagation.REQUIRED, noRollbackFor = {XSDValidationErrorEx.class, NoSchemaMatchesException.class})
 public class DataManager {
 
-    private static final String FS = File.separator;
     private static final int METADATA_BATCH_PAGE_SIZE = 100000;
 
     @PersistenceContext
@@ -212,10 +203,10 @@ public class DataManager {
     private ServiceContext servContext;
     private EditLib editLib;
 
-    private String dataDir;
-    private String thesaurusDir;
-    private String appPath;
-    private String stylePath;
+    private java.nio.file.Path dataDir;
+    private java.nio.file.Path thesaurusDir;
+    private java.nio.file.Path appPath;
+    private java.nio.file.Path stylePath;
 
 
     private String baseURL;
@@ -245,8 +236,8 @@ public class DataManager {
      **/
     public synchronized void init(ServiceContext context, Boolean force) throws Exception {
         this.servContext = context;
-        appPath = context.getAppPath();
-        stylePath = context.getAppPath() + FS + Geonet.Path.STYLESHEETS + FS;
+        appPath = context.getBean(GeonetworkDataDirectory.class).getWebappDir();
+        stylePath = appPath.resolve(Geonet.Path.STYLESHEETS);
         editLib = new EditLib(schemaMan);
         dataDir = _applicationContext.getBean(GeonetworkDataDirectory.class).getSystemDataDir();
         thesaurusDir = _applicationContext.getBean(ThesaurusManager.class).getThesauriDirectory();
@@ -2982,7 +2973,8 @@ public class DataManager {
             }
             if (metadataId.isPresent()) {
                 String metadataIdString = String.valueOf(metadataId.get());
-                env.addContent(new Element("datadir").setText(Lib.resource.getDir(context, Params.Access.PRIVATE, metadataIdString)));
+                final java.nio.file.Path resourceDir = Lib.resource.getDir(context, Params.Access.PRIVATE, metadataIdString);
+                env.addContent(new Element("datadir").setText(resourceDir.toString()));
             }
 
             // add original metadata to result
@@ -3420,10 +3412,9 @@ public class DataManager {
 
         for (Integer id: idsOfMetadataToDelete) {
             //--- remove metadata directory for each record
-            File pb = new File(Lib.resource.getMetadataDir(
-                    _applicationContext.getBean(GeonetworkDataDirectory.class).getMetadataDataDir().getPath(),
-                    id + ""));
-            FileCopyMgr.removeDirectoryOrFile(pb);
+            final java.nio.file.Path metadataDataDir = _applicationContext.getBean(GeonetworkDataDirectory.class).getMetadataDataDir();
+            java.nio.file.Path pb = Lib.resource.getMetadataDir(metadataDataDir, id + "");
+            IO.deleteFileOrDirectory(pb);
         }
 
         // Remove records from the index

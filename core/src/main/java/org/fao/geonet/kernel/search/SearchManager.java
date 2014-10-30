@@ -100,6 +100,9 @@ import org.springframework.context.ApplicationContext;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -139,8 +142,8 @@ public class SearchManager {
     private static final Configuration FILTER_2_0_0 = new org.geotools.filter.v2_0.FESConfiguration();
     public static final String FACET_FIELD_SUFFIX = "_facet";
 
-    private File _stylesheetsDir;
-    private static File _stopwordsDir;
+    private Path _stylesheetsDir;
+    private static Path _stopwordsDir;
 	Map<String, FacetConfig> _summaryConfigValues = null;
 
     /**
@@ -162,7 +165,7 @@ public class SearchManager {
 	private String _luceneTermsToExclude;
 	private boolean _logSpatialObject;
 	private static PerFieldAnalyzerWrapper _defaultAnalyzer;
-	private String _htmlCacheDir;
+	private Path _htmlCacheDir;
     private Spatial _spatial;
 
 	private boolean _logAsynch;
@@ -260,7 +263,7 @@ public class SearchManager {
 	 * Returns a default- (hardcoded) configured PerFieldAnalyzerWrapper, creating it if necessary.
      *
 	 */
-	private static void initHardCodedAnalyzers(char[] ignoreChars) {
+	private static void initHardCodedAnalyzers(char[] ignoreChars) throws IOException {
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "initializing hardcoded analyzers");
         // no default analyzer instantiated: create one
@@ -268,38 +271,38 @@ public class SearchManager {
             // create hardcoded default PerFieldAnalyzerWrapper w/o stopwords
             _defaultAnalyzer = SearchManager.createHardCodedPerFieldAnalyzerWrapper(null, ignoreChars);
         }
-        if (!_stopwordsDir.exists() || !_stopwordsDir.isDirectory()) {
-            Log.warning(Geonet.SEARCH_ENGINE, "Invalid stopwords directory " + _stopwordsDir.getAbsolutePath() +
+        if (!Files.isDirectory(_stopwordsDir)) {
+            Log.warning(Geonet.SEARCH_ENGINE, "Invalid stopwords directory " + _stopwordsDir.toAbsolutePath() +
                                               ", not using any stopwords.");
         } else {
             if (Log.isDebugEnabled(Geonet.LUCENE)) {
                 Log.debug(Geonet.LUCENE, "loading stopwords");
             }
-            File[] files = _stopwordsDir.listFiles();
-            if (files == null) {
-                files = new File[0];
-            }
 
-            for (File stopwordsFile : files) {
-                String language = stopwordsFile.getName().substring(0, stopwordsFile.getName().indexOf('.'));
-                if (language.length() != 2) {
-                    Log.info(Geonet.LUCENE, "invalid iso 639-1 code for language: " + language);
-                }
-                // look up stopwords for that language
-                Set<String> stopwordsForLanguage = StopwordFileParser.parse(stopwordsFile.getAbsolutePath());
-                if (stopwordsForLanguage != null) {
-                    if (Log.isDebugEnabled(Geonet.LUCENE)) {
-                        Log.debug(Geonet.LUCENE, "loaded # " + stopwordsForLanguage.size() + " stopwords for language " + language);
+            try (DirectoryStream<Path> paths = Files.newDirectoryStream(_stopwordsDir)) {
+                for (Path stopwordsFile : paths) {
+                    final String fileName = stopwordsFile.getFileName().toString();
+                    String language = fileName.substring(0, fileName.indexOf('.'));
+                    if (language.length() != 2) {
+                        Log.info(Geonet.LUCENE, "invalid iso 639-1 code for language: " + language);
                     }
-                    Analyzer languageAnalyzer = SearchManager.createHardCodedPerFieldAnalyzerWrapper(stopwordsForLanguage, ignoreChars);
-                    analyzerMap.put(language, languageAnalyzer);
-                } else {
-                    if (Log.isDebugEnabled(Geonet.LUCENE)) {
-                        Log.debug(Geonet.LUCENE, "failed to load any stopwords for language " + language);
+                    // look up stopwords for that language
+                    Set<String> stopwordsForLanguage = StopwordFileParser.parse(stopwordsFile.toAbsolutePath());
+                    if (stopwordsForLanguage != null) {
+                        if (Log.isDebugEnabled(Geonet.LUCENE)) {
+                            Log.debug(Geonet.LUCENE, "loaded # " + stopwordsForLanguage.size() + " stopwords for language " + language);
+                        }
+                        Analyzer languageAnalyzer = SearchManager.createHardCodedPerFieldAnalyzerWrapper(stopwordsForLanguage, ignoreChars);
+                        analyzerMap.put(language, languageAnalyzer);
+                    } else {
+                        if (Log.isDebugEnabled(Geonet.LUCENE)) {
+                            Log.debug(Geonet.LUCENE, "failed to load any stopwords for language " + language);
+                        }
                     }
+
                 }
             }
-        }        
+        }
 	}
 
     /**
@@ -371,7 +374,7 @@ public class SearchManager {
      *
 	 * If an error occurs instantiating an analyzer, GeoNetworkAnalyzer is used.
 	 */
-	public void createAnalyzer() {
+	public void createAnalyzer() throws IOException {
         String defaultAnalyzerClass = _luceneConfig.getDefaultAnalyzerClass();
         if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
             Log.debug(Geonet.SEARCH_ENGINE, "createAnalyzer start");
@@ -386,8 +389,8 @@ public class SearchManager {
 		} else {
             // there is an analyzer defined in lucene config
 
-            if (!_stopwordsDir.exists() || !_stopwordsDir.isDirectory()) {
-                Log.warning(Geonet.SEARCH_ENGINE, "Invalid stopwords directory " + _stopwordsDir.getAbsolutePath() +
+            if (!Files.isDirectory(_stopwordsDir)) {
+                Log.warning(Geonet.SEARCH_ENGINE, "Invalid stopwords directory " + _stopwordsDir.toAbsolutePath() +
                                                   ", not using any stopwords.");
             } else {
                 if (Log.isDebugEnabled(Geonet.LUCENE)) {
@@ -397,35 +400,35 @@ public class SearchManager {
                 // One per field analyzer is created for each stopword list available using GNA as default analyzer
                 // Configuration can't define different analyzer per language.
                 // TODO : http://trac.osgeo.org/geonetwork/ticket/900
-                File[] files = _stopwordsDir.listFiles();
-                if (files == null) {
-                    files = new File[0];
-                }
-                for (File stopwordsFile : files) {
-                    String language = stopwordsFile.getName().substring(0, stopwordsFile.getName().indexOf('.'));
-                    // TODO check for valid ISO 639-2 codes could be better than this
-                    if (language.length() != 3) {
-                        Log.warning(Geonet.LUCENE, "Stopwords file with incorrect ISO 639-2 language as filename: " + language);
-                    }
-                    // look up stopwords for that language
-                    Set<String> stopwordsForLanguage = StopwordFileParser.parse(stopwordsFile.getAbsolutePath());
-                    if (stopwordsForLanguage != null) {
-                        if (Log.isDebugEnabled(Geonet.LUCENE)) {
-                            Log.debug(Geonet.LUCENE, "Loaded # " + stopwordsForLanguage.size() + " stopwords for language " + language);
+                try (DirectoryStream<Path> files = Files.newDirectoryStream(_stopwordsDir)) {
+                    for (Path stopwordsFile : files) {
+                        final String fileName = stopwordsFile.getFileName().toString();
+                        String language = fileName.substring(0, fileName.indexOf('.'));
+                        // TODO check for valid ISO 639-2 codes could be better than this
+                        if (language.length() != 3) {
+                            Log.warning(Geonet.LUCENE, "Stopwords file with incorrect ISO 639-2 language as filename: " + language);
                         }
+                        // look up stopwords for that language
+                        Set<String> stopwordsForLanguage = StopwordFileParser.parse(stopwordsFile.toAbsolutePath());
+                        if (stopwordsForLanguage != null) {
+                            if (Log.isDebugEnabled(Geonet.LUCENE)) {
+                                Log.debug(Geonet.LUCENE, "Loaded # " + stopwordsForLanguage.size() + " stopwords for language " + language);
 
-                        // Configure per field analyzer and register them to language map of pfa
-                        // ... for indexing
-                        configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, _luceneConfig.getFieldSpecificAnalyzers(),
-                                analyzerMap, language, stopwordsForLanguage);
-                        
-                        // ... for searching
-                        configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, _luceneConfig.getFieldSpecificSearchAnalyzers(),
-                                searchAnalyzerMap, language, stopwordsForLanguage);
+                            }
 
-                    } else {
-                        if (Log.isDebugEnabled(Geonet.LUCENE)) {
-                            Log.debug(Geonet.LUCENE, "Failed to load any stopwords for language " + language);
+                            // Configure per field analyzer and register them to language map of pfa
+                            // ... for indexing
+                            configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, _luceneConfig.getFieldSpecificAnalyzers(),
+                                    analyzerMap, language, stopwordsForLanguage);
+
+                            // ... for searching
+                            configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, _luceneConfig.getFieldSpecificSearchAnalyzers(),
+                                    searchAnalyzerMap, language, stopwordsForLanguage);
+
+                        } else {
+                            if (Log.isDebugEnabled(Geonet.LUCENE)) {
+                                Log.debug(Geonet.LUCENE, "Failed to load any stopwords for language " + language);
+                            }
                         }
                     }
                 }
@@ -507,20 +510,20 @@ public class SearchManager {
                      int maxWritesInTransaction) throws Exception {
         _summaryConfigValues = _luceneConfig.getTaxonomy().get("hits");
 
-        String appPath = _geonetworkDataDirectory.getWebappDir();
-		_stylesheetsDir = new File(appPath, SEARCH_STYLESHEETS_DIR_PATH);
-        _stopwordsDir = new File(appPath + STOPWORDS_DIR_PATH);
+        Path appPath = _geonetworkDataDirectory.getWebappDir();
+		_stylesheetsDir = appPath.resolve(SEARCH_STYLESHEETS_DIR_PATH);
+        _stopwordsDir = appPath.resolve(STOPWORDS_DIR_PATH);
 
         createAnalyzer();
         createDocumentBoost();
         
-		if (!_stylesheetsDir.isDirectory()) {
+		if (!Files.isDirectory(_stylesheetsDir)) {
             throw new Exception("directory " + _stylesheetsDir + " not found");
         }
 
-		File htmlCacheDirTest   = _geonetworkDataDirectory.getHtmlCacheDir();
-		IO.mkdirs(htmlCacheDirTest, "Html cache directory");
-		_htmlCacheDir = htmlCacheDirTest.getAbsolutePath();
+		Path htmlCacheDirTest   = _geonetworkDataDirectory.getHtmlCacheDir();
+		Files.createDirectories(htmlCacheDirTest);
+		_htmlCacheDir = htmlCacheDirTest.toAbsolutePath();
 
 
         _spatial = new Spatial(_applicationContext.getBean(DataStore.class), maxWritesInTransaction);
@@ -569,7 +572,7 @@ public class SearchManager {
     /**
      * Reload Lucene configuration: update analyzer.
      */
-	public void reloadLuceneConfiguration () {
+	public void reloadLuceneConfiguration () throws IOException {
 		createAnalyzer();
 		createDocumentBoost();
 	}
@@ -645,7 +648,7 @@ public class SearchManager {
 	 */
 	private void endZ3950() {}
 
-	public String getHtmlCacheDir() {
+	public Path getHtmlCacheDir() {
 		return _htmlCacheDir;
 	}
 
@@ -663,7 +666,15 @@ public class SearchManager {
 	
 	// indexing methods
 
-	/**
+    /**
+     * Force the index to wait until all changes are processed and the next reader obtained will get the latest data.
+     * @throws IOException
+     */
+    public void forceIndexChanges() throws IOException {
+        _tracker.maybeRefreshBlocking();
+    }
+
+    /**
 	 * Indexes a metadata record.
      *
 	 * @param schemaDir
@@ -686,10 +697,10 @@ public class SearchManager {
             _tracker.addDocument(document);
         }
         if (forceRefreshReaders) {
-            _tracker.maybeRefreshBlocking();
+            forceIndexChanges();
         }
 	}
-	
+
     private void indexGeometry(String schemaDir, Element metadata, String id,
             List<Element> moreFields) throws Exception {
         try {
@@ -1179,7 +1190,7 @@ public class SearchManager {
         try {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("inspire", Boolean.toString(isInspireEnabled()));
-            params.put("thesauriDir", _geonetworkDataDirectory.getThesauriDir().getAbsolutePath());
+            params.put("thesauriDir", _geonetworkDataDirectory.getThesauriDir().toAbsolutePath());
 
             Element defaultLang = Xml.transform(xml, defaultLangStyleSheet.getAbsolutePath(), params);
             if (otherLocalesStyleSheet.exists()) {
@@ -1302,7 +1313,7 @@ public class SearchManager {
      */
 	Element transform(String styleSheetName, Element xml) throws Exception {
 		try {
-			String styleSheetPath = new File(_stylesheetsDir, styleSheetName).getAbsolutePath();
+			Path styleSheetPath = _stylesheetsDir.resolve(styleSheetName).toAbsolutePath();
 			return Xml.transform(xml, styleSheetPath);
 		} catch (Exception e) {
 			Log.error(Geonet.INDEX_ENGINE, "Search stylesheet contains errors : " + e.getMessage());

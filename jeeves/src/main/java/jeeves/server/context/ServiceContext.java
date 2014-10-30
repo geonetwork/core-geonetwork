@@ -132,7 +132,7 @@ public class ServiceContext extends BasicContext {
 	public String getLanguage()  { return _language;  }
 	public String getService()   { return _service;   }
 	public String getIpAddress() { return _ipAddress; }
-	public String getUploadDir() { return _uploadDir; }
+	public Path getUploadDir() { return _uploadDir; }
     public int getMaxUploadSize() { return _maxUploadSize; }
 
 	public UserSession    getUserSession()    { return _userSession; }

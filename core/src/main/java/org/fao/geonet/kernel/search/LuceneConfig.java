@@ -23,37 +23,35 @@
 
 package org.fao.geonet.kernel.search;
 
-import java.io.File;
-import java.io.FileInputStream;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.overrides.ConfigurationOverrides;
+import org.apache.lucene.facet.FacetsConfig;
+import org.apache.lucene.search.TopFieldCollector;
+import org.apache.lucene.util.NumericUtils;
+import org.apache.lucene.util.Version;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.servlet.ServletContext;
-
-import jeeves.server.context.ServiceContext;
-import jeeves.server.overrides.ConfigurationOverrides;
-import org.apache.lucene.facet.FacetsConfig;
-import org.apache.lucene.facet.taxonomy.CategoryPath;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
-
-import org.apache.lucene.search.TopFieldCollector;
-import org.apache.lucene.util.NumericUtils;
-import org.apache.lucene.util.Version;
-import org.fao.geonet.constants.Geonet;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 
 /**
  * Lucene configuration class load Lucene XML configuration file.
@@ -71,12 +69,12 @@ public class LuceneConfig {
 
 
     @Autowired
-    GeonetworkDataDirectory _geonetworkDataDirectory;
+    GeonetworkDataDirectory geonetworkDataDirectory;
     @Autowired
     ApplicationContext _appContext;
 
-	private File configurationFile;
-	private File taxonomyConfigurationFile;
+	private Path configurationFile;
+	private Path taxonomyConfigurationFile;
 
     public static class Facet {
         /**
@@ -359,7 +357,7 @@ public class LuceneConfig {
 	public void configure(String luceneConfigXmlFile) {
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "Loading Lucene configuration ...");
-		this.configurationFile = new File(_geonetworkDataDirectory.getWebappDir(), luceneConfigXmlFile);
+		this.configurationFile = geonetworkDataDirectory.getWebappDir().resolve(luceneConfigXmlFile);
         ServletContext servletContext;
         try {
             servletContext = _appContext.getBean(ServletContext.class);
@@ -368,17 +366,16 @@ public class LuceneConfig {
         }
 
         this.load(servletContext, luceneConfigXmlFile);
-		String taxonomyConfig = "WEB-INF/config-summary.xml";
-		this.taxonomyConfigurationFile = new File(_geonetworkDataDirectory.getWebappDir(), taxonomyConfig);
-		this.loadTaxonomy(servletContext, taxonomyConfig);
+		this.taxonomyConfigurationFile =this.geonetworkDataDirectory.getWebappDir().resolve("WEB-INF").resolve("config-summary.xml");
+		this.loadTaxonomy(servletContext);
 	}
 
 	private void load(ServletContext servletContext, String luceneConfigXmlFile) {
-		try {
-			luceneConfig = Xml.loadStream(new FileInputStream(
-					this.configurationFile));
+		try (InputStream in = Files.newInputStream(this.configurationFile)) {
+			luceneConfig = Xml.loadStream(in);
 			if (servletContext != null) {
-				ConfigurationOverrides.DEFAULT.updateWithOverrides(luceneConfigXmlFile, servletContext, _geonetworkDataDirectory.getWebappDir(), luceneConfig);
+				ConfigurationOverrides.DEFAULT.updateWithOverrides(luceneConfigXmlFile, servletContext,
+                        geonetworkDataDirectory.getWebappDir().toString(), luceneConfig);
 			}
 			
 			// Main Lucene index configuration option
@@ -624,13 +621,12 @@ public class LuceneConfig {
 		}
 	}
 	
-	private void loadTaxonomy(ServletContext servletContext,
-			String taxonomyConfigFile) {
+	private void loadTaxonomy(ServletContext servletContext) {
 		try {
-			Element taxonomyConfig = Xml.loadStream(new FileInputStream(
-					this.taxonomyConfigurationFile));
+			Element taxonomyConfig = Xml.loadFile(this.taxonomyConfigurationFile);
 			if (servletContext != null) {
-				ConfigurationOverrides.DEFAULT.updateWithOverrides(taxonomyConfigFile, servletContext, _geonetworkDataDirectory.getWebappDir(), taxonomyConfig);
+				ConfigurationOverrides.DEFAULT.updateWithOverrides(this.taxonomyConfigurationFile.toString(),
+                        servletContext, geonetworkDataDirectory.getWebappDir().toString(), taxonomyConfig);
 			}
 			
 			taxonomy = new HashMap<String, Map<String,FacetConfig>>();
@@ -744,12 +740,9 @@ public class LuceneConfig {
 						params[i] = LUCENE_VERSION;
 					} else if ("java.io.File".equals(paramType)
 							&& value != null) {
-						File f = new File(value);
-						if (!f.exists()) { // try relative to appPath
-							f = new File(_geonetworkDataDirectory.getWebappDir(), value);
-						}
-						if (f != null) {
-							params[i] = f;
+						Path f = Paths.get(value);
+						if (!Files.exists(f)) { // try relative to appPath
+							f = geonetworkDataDirectory.getWebappDir().resolve(value);
 						}
 					} else if ("double".equals(paramType) && value != null) {
 						params[i] = Double.parseDouble(value);

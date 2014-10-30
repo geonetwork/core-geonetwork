@@ -25,26 +25,30 @@ package org.fao.geonet.services.thumbnail;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.Util;
 import lizard.tiff.Tiff;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.exceptions.ConcurrentUpdateEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.NotInReadOnlyModeService;
+import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import javax.imageio.ImageIO;
 
 public class Set extends NotInReadOnlyModeService {
 	//--------------------------------------------------------------------------
@@ -100,9 +104,9 @@ public class Set extends NotInReadOnlyModeService {
         //-----------------------------------------------------------------------
 		//--- create destination directory
 
-		String dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
+		Path dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
 
-		IO.mkdirs(new File(dataDir), "Metadata data directory");
+        Files.createDirectories(dataDir);
 
 		//-----------------------------------------------------------------------
 		//--- create the small thumbnail, removing the old one
@@ -139,7 +143,7 @@ public class Set extends NotInReadOnlyModeService {
 		else
 		{
 			//--- move uploaded file to destination directory
-
+            Files.move(Paths.get())
 			File inFile  = new File(context.getUploadDir(), file);
 			File outFile = new File(dataDir,                file);
 

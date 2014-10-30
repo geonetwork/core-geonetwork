@@ -26,16 +26,16 @@ package jeeves.server.context;
 import jeeves.monitor.MonitorManager;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
-import org.fao.geonet.Constants;
 import org.fao.geonet.Logger;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.utils.Log;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import javax.annotation.Nonnull;
-import javax.persistence.EntityManager;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Map;
+import javax.annotation.Nonnull;
+import javax.persistence.EntityManager;
 
 //=============================================================================
 
@@ -47,11 +47,11 @@ public class BasicContext implements Logger {
 
     protected Logger logger = Log.createLogger(Log.JEEVES);
     private String baseUrl;
-    private String appPath;
 
     protected Map<String, Object> htContexts;
     private final ConfigurableApplicationContext jeevesApplicationContext;
     private EntityManager entityManager;
+    private Path appPath;
 
     //--------------------------------------------------------------------------
     //---
@@ -82,8 +82,8 @@ public class BasicContext implements Logger {
         return baseUrl;
     }
 
-    public String getAppPath() {
-        return appPath;
+    public Path getAppPath() {
+        return this.appPath;
     }
 
     //--------------------------------------------------------------------------
@@ -92,7 +92,7 @@ public class BasicContext implements Logger {
         baseUrl = name;
     }
 
-    public void setAppPath(String path) {
+    public void setAppPath(Path path) {
         appPath = path;
     }
 

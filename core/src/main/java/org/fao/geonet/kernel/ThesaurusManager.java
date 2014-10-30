@@ -22,24 +22,18 @@
 
 package org.fao.geonet.kernel;
 
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
 import jeeves.xlink.Processor;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.oaipmh.Lib;
-
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-
 import org.openrdf.sesame.Sesame;
 import org.openrdf.sesame.config.ConfigurationException;
 import org.openrdf.sesame.config.RepositoryConfig;
@@ -47,26 +41,28 @@ import org.openrdf.sesame.config.SailConfig;
 import org.openrdf.sesame.constants.RDFFormat;
 import org.openrdf.sesame.repository.local.LocalRepository;
 import org.openrdf.sesame.repository.local.LocalService;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import static com.google.common.io.Files.getNameWithoutExtension;
 
 //=============================================================================
 public class ThesaurusManager implements ThesaurusFinder {
 
 	private ConcurrentHashMap<String, Thesaurus> thesauriMap = new ConcurrentHashMap<String, Thesaurus>();
 	private LocalService service = null;
-	private String thesauriDirectory = null;
+	private Path thesauriDirectory = null;
     private boolean initialized = false;
 
 
@@ -74,11 +70,10 @@ public class ThesaurusManager implements ThesaurusFinder {
 	 * Initialize ThesaurusManager.
 	 *
      * @param context ServiceContext used to check when servlet is up only
-     * @param appPath to find conversion XSLTs etc
      * @param thesauriRepository
      * @throws Exception
 	 */
-	public synchronized void init(ServiceContext context, String appPath, String thesauriRepository)
+	public synchronized void init(ServiceContext context, String thesauriRepository)
 			throws Exception {
         if (this.initialized) {
             return;
@@ -87,14 +82,14 @@ public class ThesaurusManager implements ThesaurusFinder {
 		// Get Sesame interface
 		service = Sesame.getService();
 
-		File thesauriDir = new File(thesauriRepository);
+		Path thesauriDir = Paths.get(thesauriRepository);
 
-		if (!thesauriDir.exists()) {
-			thesauriDir = new File(appPath + thesauriDir);
+		if (!Files.exists(thesauriDir)) {
+			thesauriDir = context.getBean(GeonetworkDataDirectory.class).getWebappDir().resolve(thesauriDir);
         }
 
-        thesauriDir = thesauriDir.getAbsoluteFile();
-		thesauriDirectory = thesauriDir.getAbsolutePath();
+        thesauriDir = thesauriDir.toAbsolutePath();
+		thesauriDirectory = thesauriDir.toAbsolutePath();
 
 		batchBuildTable(context, thesauriDir);
 	}
@@ -105,7 +100,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 	 * @param context ServiceContext used to check when servlet is up only
 	 * @param thesauriDir directory containing thesauri
    */
-	private void batchBuildTable(ServiceContext context, File thesauriDir) {
+	private void batchBuildTable(ServiceContext context, Path thesauriDir) {
 		ExecutorService executor = Executors.newFixedThreadPool(1);
 		try {
 			Runnable worker = new InitThesauriTableTask(context, thesauriDir);
@@ -125,9 +120,9 @@ public class ThesaurusManager implements ThesaurusFinder {
   final class InitThesauriTableTask implements Runnable {
 
 		private final ServiceContext context;
-		private final File thesauriDir;
+		private final Path thesauriDir;
 
-		InitThesauriTableTask(ServiceContext context, File thesauriDir) {
+		InitThesauriTableTask(ServiceContext context, Path thesauriDir) {
 			this.context = context;
 			this.thesauriDir = thesauriDir;
 		}
@@ -157,47 +152,24 @@ public class ThesaurusManager implements ThesaurusFinder {
 	 * 
 	 * @param thesauriDirectory
 	 */
-	private void initThesauriTable(File thesauriDirectory, ServiceContext context) {
+	private void initThesauriTable(Path thesauriDirectory, ServiceContext context) throws IOException {
 
 		thesauriMap = new ConcurrentHashMap<String,Thesaurus>();
 		Log.info(Geonet.THESAURUS_MAN,"Scanning "+thesauriDirectory);
 
-		if (thesauriDirectory.isDirectory()) {
-			// init of external repositories
-			File externalThesauriDirectory = new File(thesauriDirectory,
-					Geonet.CodeList.EXTERNAL + File.separator + Geonet.CodeList.THESAURUS);
-			if (externalThesauriDirectory.isDirectory()) {
-				File[] rdfDataDirectory = externalThesauriDirectory.listFiles();
-                for (File aRdfDataDirectory : rdfDataDirectory) {
-                    if (aRdfDataDirectory.isDirectory()) {
-                        loadRepositories(aRdfDataDirectory, Geonet.CodeList.EXTERNAL, context);
+		if (Files.isDirectory(thesauriDirectory)) {
+            String[] types = {Geonet.CodeList.EXTERNAL, Geonet.CodeList.LOCAL, Geonet.CodeList.REGISTER};
+            for (String type : types) {
+                // init of external repositories
+                Path externalThesauriDirectory = thesauriDirectory.resolve (type).resolve(Geonet.CodeList.THESAURUS);
+                if (Files.isDirectory(externalThesauriDirectory)) {
+                    try (DirectoryStream<Path> paths = Files.newDirectoryStream(externalThesauriDirectory, IO.DIRECTORIES_FILTER)) {
+                        for (Path aRdfDataDirectory : paths) {
+                            loadRepositories(aRdfDataDirectory, type, context);
+                        }
                     }
                 }
-			}
-
-			// init of local repositories
-			File localThesauriDirectory = new File(thesauriDirectory, Geonet.CodeList.LOCAL
-					+ File.separator + Geonet.CodeList.THESAURUS);
-			if (localThesauriDirectory.isDirectory()) {
-				File[] rdfDataDirectory = localThesauriDirectory.listFiles();
-                for (File aRdfDataDirectory : rdfDataDirectory) {
-                    if (aRdfDataDirectory.isDirectory()) {
-                        loadRepositories(aRdfDataDirectory, Geonet.CodeList.LOCAL, context);
-                    }
-                }
-			}
-
-			// init of register repositories
-			File registerThesauriDirectory = new File(thesauriDirectory, Geonet.CodeList.REGISTER
-					+ File.separator + Geonet.CodeList.THESAURUS);
-			if (registerThesauriDirectory.isDirectory()) {
-				File[] rdfDataDirectory = registerThesauriDirectory.listFiles();
-                for (File aRdfDataDirectory : rdfDataDirectory) {
-                    if (aRdfDataDirectory.isDirectory()) {
-                        loadRepositories(aRdfDataDirectory, Geonet.CodeList.REGISTER, context);
-                    }
-                }
-			}
+            }
 		}
 	}
 
@@ -205,48 +177,46 @@ public class ThesaurusManager implements ThesaurusFinder {
 	 * 
 	 * @param thesauriDirectory
 	 */
-	private void loadRepositories(File thesauriDirectory, String root, ServiceContext context) {
-		
-		FilenameFilter filter = new FilenameFilter() {
-			public boolean accept(File dir, String name) {
-				return name.endsWith(".rdf");
-			}
-		};
+	private void loadRepositories(Path thesauriDirectory, String root, ServiceContext context) throws IOException {
 
-		String[] rdfDataFile = thesauriDirectory.list(filter);
+
         final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
 
-        for (String aRdfDataFile : rdfDataFile) {
+        try (DirectoryStream<Path> paths = Files.newDirectoryStream(thesauriDirectory, "*.rdf")) {
+            for (Path aRdfDataFile : paths) {
 
-            Thesaurus gst = null;
-            if (root.equals(Geonet.CodeList.REGISTER)) {
-                if (Log.isDebugEnabled(Geonet.THESAURUS_MAN))
-                    Log.debug(Geonet.THESAURUS_MAN, "Creating thesaurus : " + aRdfDataFile);
+                final String rdfFileName = aRdfDataFile.getFileName().toString();
+                final String thesaurusDirName = thesauriDirectory.getFileName().toString();
 
-                File outputRdf = new File(thesauriDirectory, aRdfDataFile);
-                String uuid = StringUtils.substringBefore(aRdfDataFile, ".rdf");
-                try {
-                    FileOutputStream outputRdfStream = new FileOutputStream(outputRdf);
-                    getRegisterMetadataAsRdf(uuid, outputRdfStream, context);
-                    outputRdfStream.close();
-                } catch (Exception e) {
-                    Log.error(Geonet.THESAURUS_MAN, "Register thesaurus " + aRdfDataFile + " could not be read/converted from ISO19135 "
-                                                    + "record in catalog - skipping");
-                    e.printStackTrace();
-                    continue;
+                final Thesaurus gst;
+                if (root.equals(Geonet.CodeList.REGISTER)) {
+                    if (Log.isDebugEnabled(Geonet.THESAURUS_MAN))
+                        Log.debug(Geonet.THESAURUS_MAN, "Creating thesaurus : " + aRdfDataFile);
+
+                    Path outputRdf = thesauriDirectory.resolve(aRdfDataFile);
+                    String uuid = getNameWithoutExtension(rdfFileName);
+                    try (OutputStream outputRdfStream = Files.newOutputStream(outputRdf)) {
+                        getRegisterMetadataAsRdf(uuid, outputRdfStream, context);
+                    } catch (Exception e) {
+                        Log.error(Geonet.THESAURUS_MAN, "Register thesaurus " + aRdfDataFile + " could not be read/converted from ISO19135 "
+
+                                                        + "record in catalog - skipping");
+                        e.printStackTrace();
+                        continue;
+                    }
+
+                    gst = new Thesaurus(context.getApplicationContext(), rdfFileName, root, thesaurusDirName, outputRdf, siteURL);
+
+                } else {
+                    gst = new Thesaurus(context.getApplicationContext(), rdfFileName, root, thesaurusDirName, thesauriDirectory.resolve(aRdfDataFile), siteURL);
                 }
 
-                gst = new Thesaurus(context.getApplicationContext(), aRdfDataFile, root, thesauriDirectory.getName(), outputRdf, siteURL);
-
-            } else {
-                gst = new Thesaurus(context.getApplicationContext(), aRdfDataFile, root, thesauriDirectory.getName(), new File(thesauriDirectory, aRdfDataFile), siteURL);
-            }
-
-            try {
-                addThesaurus(gst, false);
-            } catch (Exception e) {
-                e.printStackTrace();
-                // continue loading
+                try {
+                    addThesaurus(gst, false);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    // continue loading
+                }
             }
         }
     }
@@ -356,7 +326,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 	// =============================================================================
 	// PUBLIC SERVICES
 
-	public String getThesauriDirectory() {
+	public Path getThesauriDirectory() {
 		return thesauriDirectory;
 	}
 	
@@ -395,19 +365,15 @@ public class ThesaurusManager implements ThesaurusFinder {
 	  // check whether we have created a thesaurus for this register already
 		aRdfDataFile = uuid+".rdf";
         String thesaurusFile = buildThesaurusFilePath(aRdfDataFile, root, type);
-        File outputRdf = new File(thesaurusFile);
+        Path outputRdf = Paths.get(thesaurusFile);
         final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
         Thesaurus gst = new Thesaurus(context.getApplicationContext(), aRdfDataFile, root, type, outputRdf, siteURL);
 
-		FileOutputStream outputRdfStream = null;
-		try {
-            outputRdfStream = new FileOutputStream(outputRdf);
+		try (OutputStream outputRdfStream = Files.newOutputStream(outputRdf)){
 			getRegisterMetadataAsRdf(uuid, outputRdfStream, context);
 		} catch (Exception e) {
 			Log.error(Geonet.THESAURUS_MAN, "Register thesaurus "+aRdfDataFile+" could not be read/converted from ISO19135 record in catalog - skipping");
 			e.printStackTrace();
-		} finally {
-		    IOUtils.closeQuietly(outputRdfStream);
 		}
 
 		String theKey = gst.getKey();

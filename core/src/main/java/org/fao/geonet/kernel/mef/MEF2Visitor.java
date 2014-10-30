@@ -25,10 +25,10 @@ package org.fao.geonet.kernel.mef;
 
 import org.fao.geonet.exceptions.BadFormatEx;
 import org.fao.geonet.Logger;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.util.FileCopyMgr;
 import org.fao.geonet.util.ZipUtil;
 import org.jdom.Element;
 
@@ -64,7 +64,7 @@ public class MEF2Visitor implements IVisitor {
 		File unzipDir = new File(mefFile.getParentFile(), "unzipping");
 
 		if (unzipDir.exists())
-            FileCopyMgr.removeDirectoryOrFile(unzipDir);
+            IO.deleteFileOrDirectory(unzipDir.toPath());
 
 		ZipUtil.extract(new ZipFile(mefFile), unzipDir);
 
@@ -116,7 +116,7 @@ public class MEF2Visitor implements IVisitor {
             }
 		}
 
-		FileCopyMgr.removeDirectoryOrFile(unzipDir);
+		IO.deleteFileOrDirectory(unzipDir.toPath());
 
 		return info;
 	}

@@ -74,8 +74,8 @@ class MEFExporter {
         }
 
 		File file = File.createTempFile("mef-", ".mef");
-		String pubDir = Lib.resource.getDir(context, "public", record.getId());
-		String priDir = Lib.resource.getDir(context, "private", record.getId());
+		String pubDir = Lib.resource.getDir(context, "public", record.getId()).toString();
+		String priDir = Lib.resource.getDir(context, "private", record.getId()).toString();
 
 		FileOutputStream fos = new FileOutputStream(file);
 		ZipOutputStream zos = new ZipOutputStream(fos);

@@ -22,11 +22,11 @@
 //==============================================================================
 
 package org.fao.geonet.utils;
+
 import net.sf.json.JSON;
 import net.sf.json.xml.XMLSerializer;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.FeatureKeys;
-import org.apache.commons.io.IOUtils;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
@@ -58,7 +58,6 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,7 +75,16 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import javax.xml.XMLConstants;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -215,24 +223,30 @@ public final class Xml
      * @throws IOException
      * @throws JDOMException
      */
-	public static Element loadFile(File file) throws IOException, JDOMException
-	{
-		SAXBuilder builder = getSAXBuilderWithoutXMLResolver(false); //new SAXBuilder();
-
-		String convert = System.getProperty("jeeves.filecharsetdetectandconvert");
-
-		// detect charset and convert if required
-		if (convert != null && convert.equals("enabled")) { 
-			byte[] content = convertFileToUTF8ByteArray(file);
-			return loadStream(new ByteArrayInputStream(content));
-
-		// no charset detection and conversion allowed
-		} else { 
-			Document   jdoc    = builder.build(file);
-			return (Element) jdoc.getRootElement().detach();
-		}
-
+	public static Element loadFile(File file) throws IOException, JDOMException{
+		return loadFile(file.toPath());
 	}
+
+
+    public static Element loadFile(Path file) throws IOException, JDOMException {
+        SAXBuilder builder = getSAXBuilderWithoutXMLResolver(false); //new SAXBuilder();
+
+        String convert = System.getProperty("jeeves.filecharsetdetectandconvert");
+
+        // detect charset and convert if required
+        if (convert != null && convert.equals("enabled")) {
+            byte[] content = convertFileToUTF8ByteArray(file);
+            return loadStream(new ByteArrayInputStream(content));
+
+            // no charset detection and conversion allowed
+        } else {
+            try (InputStream in = Files.newInputStream(file)) {
+                Document jdoc = builder.build(in);
+                return (Element) jdoc.getRootElement().detach();
+            }
+        }
+
+    }
 
 	//--------------------------------------------------------------------------
 
@@ -246,37 +260,26 @@ public final class Xml
      * @throws CharacterCodingException
      */
 
-	public synchronized static byte[] convertFileToUTF8ByteArray(File file) throws IOException, CharacterCodingException {
-	        FileInputStream in = null;
-			DataInputStream inStream = null;
-			try {
-                in = new FileInputStream(file);
-                inStream = new DataInputStream(in);
-			byte[] buf = new byte[(int)file.length()];
-			int nrRead = inStream.read(buf);
-		
-			UniversalDetector detector = new UniversalDetector(null);
-			detector.handleData(buf, 0, nrRead);
-			detector.dataEnd();
+	public synchronized static byte[] convertFileToUTF8ByteArray(Path file) throws IOException {
+        try (DataInputStream inStream = new DataInputStream(Files.newInputStream(file))) {
+            byte[] buf = new byte[(int) Files.size(file)];
+            int nrRead = inStream.read(buf);
 
-			String encoding = detector.getDetectedCharset();
-			detector.reset();
-			if (encoding != null) {
-				if (!encoding.equals(ENCODING)) {
-					Log.error(Log.JEEVES,"Detected character set "+encoding+", converting to UTF-8");
-					return convertByteArrayToUTF8ByteArray(buf, encoding);
-				}
-			} 
-			return buf;
-			} finally {
-			    if(in != null) {
-			        IOUtils.closeQuietly(in);
-			    }
-			    if (inStream != null) {
-			        IOUtils.closeQuietly(inStream);
-			    }
-			}
-	}
+            UniversalDetector detector = new UniversalDetector(null);
+            detector.handleData(buf, 0, nrRead);
+            detector.dataEnd();
+
+            String encoding = detector.getDetectedCharset();
+            detector.reset();
+            if (encoding != null) {
+                if (!encoding.equals(ENCODING)) {
+                    Log.error(Log.JEEVES, "Detected character set " + encoding + ", converting to UTF-8");
+                    return convertByteArrayToUTF8ByteArray(buf, encoding);
+                }
+            }
+            return buf;
+        }
+    }
 
 	//--------------------------------------------------------------------------
 
@@ -376,10 +379,23 @@ public final class Xml
      * @return
      * @throws Exception
      */
+	public static Element transform(Element xml, Path styleSheetPath) throws Exception {
+        JDOMResult resXml = new JDOMResult();
+        transform(xml, styleSheetPath, resXml, null);
+        return (Element)resXml.getDocument().getRootElement().detach();
+    }
+    /**
+     * Transforms an xml tree into another using a stylesheet on disk.
+     *
+     * @param xml
+     * @param styleSheetPath
+     * @return
+     * @throws Exception
+     */
 	public static Element transform(Element xml, String styleSheetPath) throws Exception
 	{
 		JDOMResult resXml = new JDOMResult();
-		transform(xml, styleSheetPath, resXml, null);
+		transform(xml, Paths.get(styleSheetPath), resXml, null);
 		return (Element)resXml.getDocument().getRootElement().detach();
 	}
 
@@ -398,7 +414,7 @@ public final class Xml
 	public static Element transform(Element xml, String styleSheetPath, Map<String, Object> params) throws Exception
 	{
 		JDOMResult resXml = new JDOMResult();
-		transform(xml, styleSheetPath, resXml, params);
+		transform(xml, Paths.get(styleSheetPath), resXml, params);
 		return (Element)resXml.getDocument().getRootElement().detach();
 	}
 	//--------------------------------------------------------------------------
@@ -414,7 +430,7 @@ public final class Xml
 	public static void transform(Element xml, String styleSheetPath, OutputStream out) throws Exception
 	{
 		StreamResult resStream= new StreamResult(out);
-		transform(xml, styleSheetPath, resStream, null);
+		transform(xml, Paths.get(styleSheetPath), resStream, null);
 	}
 
 	//--------------------------------------------------------------------------
@@ -429,7 +445,7 @@ public final class Xml
      */
 	public static void transform(Element xml, String styleSheetPath, Result result) throws Exception
 	{
-		transform(xml, styleSheetPath, result, null);
+		transform(xml, Paths.get(styleSheetPath), result, null);
 	}
 
 
@@ -554,11 +570,10 @@ public final class Xml
      * @param params
      * @throws Exception
      */
-	public static void transform(Element xml, String styleSheetPath, Result result, Map<String, Object> params) throws Exception
+	public static void transform(Element xml, Path styleSheetPath, Result result, Map<String, Object> params) throws Exception
 	{
-		File styleSheet = new File(styleSheetPath);
 		Source srcXml   = new JDOMSource(new Document((Element)xml.detach()));
-		Source srcSheet = new StreamSource(styleSheet);
+        Source srcSheet = new StreamSource(styleSheetPath.toUri().toASCIIString());
 
 		// Dear old saxon likes to yell loudly about each and every XSLT 1.0
 		// stylesheet so switch it off but trap any exceptions because this
