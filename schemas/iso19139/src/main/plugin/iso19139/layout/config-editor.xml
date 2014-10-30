@@ -95,11 +95,16 @@
               data-filter='{"_root": "gmd:CI_OnlineResource"}'/>
     </for>
     -->
-    <for name="gmd:descriptiveKeywords" addDirective="data-gn-thesaurus-selector"/>
-    <!-- Example of configuration to disable free text keywords in the thesaurus selector -->
-    <!--for name="gmd:descriptiveKeywords" addDirective="data-gn-thesaurus-selector">
+    <for name="gmd:descriptiveKeywords" addDirective="data-gn-thesaurus-selector">
+      <!--
+      Example of configuration to disable free text keywords in the thesaurus selector
       <directiveAttributes data-allow-free-text-keywords="false" />
-    </for-->
+
+      To restrict the list of thesaurus allowed, set the include attribute
+      for the directive.
+      <directiveAttributes data-include="external.theme.inspire-theme,external.place.regions"/>
+      -->
+    </for>
   </fields>
 
 
@@ -1357,6 +1362,20 @@
         <for name="gmd:processor"/>
         <for name="gmd:citedResponsibleParty"/>
       </flatModeExceptions>
+
+      <!--
+      To configure the type of transformations
+      or the number of keyword allowed for e
+      thesaurus define a specific configuration:
+
+      eg. only 2 INSPIRE themes with Anchor.
+
+      <thesaurusList>
+        <thesaurus key="external.theme.inspire-theme"
+                   maxtags="2"
+                   transformations="to-iso19139-keyword-with-anchor"/>
+      </thesaurusList>
+      -->
     </view>
     <view name="advanced">
       <tab id="identificationInfo" default="true">

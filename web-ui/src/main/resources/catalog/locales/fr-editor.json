@@ -167,6 +167,7 @@
     "yearAndMonthMode": "Année et mois",
     "yearMode": "Année",
     "yourMetadata": "Vos métadonnées",
-    "searchKeyword": "Rechercher un mot clé ...",
-    "searchOrTypeKeyword": "Saisir ou rechercher un mot clé ..."
+    "searchKeyword": "Rechercher ...",
+    "searchOrTypeKeyword": "Saisir ou rechercher ...",
+    "tagsAllowed": " mot(s) clé(s) autorisé(s)"
 }
