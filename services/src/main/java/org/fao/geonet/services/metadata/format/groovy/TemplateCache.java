@@ -85,7 +85,6 @@ public class TemplateCache {
             if (template != null) {
                 return new FileResult(file, template, substitutions);
             }
-
             fromParentSchema = fromParentSchema(formatterDir, schemaDir, path);
             if (fromParentSchema != null) {
                 template = this.canonicalFileNameToText.getIfPresent(fromParentSchema.getCanonicalPath());
@@ -105,7 +104,11 @@ public class TemplateCache {
         if (!file.exists() && schemaDir != null) {
             file = new File(schemaDir, path);
         }
-        if (!file.exists() && fromParentSchema != null) {
+
+        if (!file.exists()) {
+            if (fromParentSchema == null) {
+                fromParentSchema = fromParentSchema(formatterDir, schemaDir, path);
+            }
             file = fromParentSchema;
         }
         if (!file.exists()) {
