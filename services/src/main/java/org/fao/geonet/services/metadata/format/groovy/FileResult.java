@@ -32,8 +32,7 @@ public class FileResult {
             String key = matcher.group(1).trim();
             Object value = this.substitutions.get(key);
             if (value == null) {
-                throw new IllegalArgumentException("A substitution {{" + key + "}} was found in " + this.file
-                                                   + " but no replacement was found in the substitutions map");
+                value = "";
             }
             finalData.append(template.substring(start, matcher.start()));
             finalData.append(value);
