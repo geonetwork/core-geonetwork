@@ -35,4 +35,7 @@ public class Matchers {
     def isBBox = { el ->
         el.name() == 'gmd:EX_GeographicBoundingBox'
     }
+    def isRoot = { el ->
+        el.parent() is el
+    }
 }

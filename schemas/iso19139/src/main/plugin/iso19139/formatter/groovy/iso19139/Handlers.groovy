@@ -40,6 +40,7 @@ public class Handlers {
         handlers.add 'gmd:CI_OnlineResource', commonHandlers.entryEl(f.&nodeLabel)
         handlers.add 'gmd:locale', localeEl
         handlers.add name: 'BBox Element', select: matchers.isBBox, bboxEl
+        handlers.add name: 'Root Element', select: matchers.isRoot, rootPackageEl
 
         handlers.add name: 'Container Elements', select: matchers.isContainerEl, priority: -1, commonHandlers.entryEl(f.&nodeLabel)
         commonHandlers.addDefaultStartAndEndHandlers()
@@ -96,6 +97,21 @@ public class Handlers {
 
             def bboxData = handlers.fileResult("html/bbox.html", replacements)
             return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: bboxData])
+    }
+
+
+    def rootPackageEl = {
+        el ->
+            def rootPackage = el.children().findAll { ch -> !this.packageViews.contains(ch.name()) }
+            def otherPackage = el.children().findAll { ch -> this.packageViews.contains(ch.name()) }
+
+            def rootPackageData = handlers.processElements(rootPackage, el);
+            def otherPackageData = handlers.processElements(otherPackage, el);
+
+            def rootPackageOutput = handlers.fileResult('html/2-level-entry.html',
+                    [label: f.nodeLabel(el), childData: rootPackageData])
+
+            return  rootPackageOutput.toString() + otherPackageData
     }
 
 }
