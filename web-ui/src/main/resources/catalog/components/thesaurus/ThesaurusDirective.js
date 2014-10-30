@@ -35,7 +35,9 @@
              elementName: '@',
              elementRef: '@',
              domId: '@',
-             selectorOnly: '@'
+             selectorOnly: '@',
+             // Comma separated values of thesaurus keys
+             include: '@'
            },
            templateUrl: '../../catalog/components/thesaurus/' +
            'partials/thesaurusselector.html',
@@ -44,13 +46,27 @@
              scope.thesaurusKey = null;
              scope.snippet = null;
              scope.snippetRef = null;
+             var restrictTo =
+                 scope.include ? (
+                     scope.include.indexOf(',') !== -1 ?
+                      scope.include.split(',') : [scope.include]) : [];
 
              // TODO: Remove from list existing thesaurus
              // in the record ?
              gnThesaurusService.getAll().then(
              function(listOfThesaurus) {
                // TODO: Sort them
-               scope.thesaurus = listOfThesaurus;
+               if (restrictTo.length > 0) {
+                 var filteredList = [];
+                 angular.forEach(listOfThesaurus, function(thesaurus) {
+                   if ($.inArray(thesaurus.getKey(), restrictTo) !== -1) {
+                     filteredList.push(thesaurus);
+                   }
+                 });
+                 scope.thesaurus = filteredList;
+               } else {
+                 scope.thesaurus = listOfThesaurus;
+               }
              });
 
              scope.add = function() {
@@ -142,8 +158,7 @@
              scope.transformationLists =
              scope.transformations.indexOf(',') !== -1 ?
              scope.transformations.split(',') : [scope.transformations];
-
-
+             scope.maxTagsLabel = scope.maxTags || '∞';
 
              // Check initial keywords are available in the thesaurus
              scope.sortKeyword = function(a, b) {
@@ -166,12 +181,22 @@
 
 
              var init = function() {
+
                // Nothing to load - init done
                scope.isInitialized = scope.initialKeywords.length === 0;
 
+               // If no keyword, set the default transformation
+               if (
+               $.inArray(scope.currentTransformation,
+                   scope.transformationLists) === -1 &&
+               scope.initialKeywords.length === 0) {
+
+                 scope.setTransformation(scope.transformationLists[0]);
+               }
                if (scope.isInitialized) {
                  checkState();
                } else {
+
                  // Check that all initial keywords are in the thesaurus
                  var counter = 0;
                  angular.forEach(scope.initialKeywords, function(keyword) {
@@ -310,8 +335,10 @@
                });
              };
              scope.setTransformation = function(t) {
-               scope.currentTransformation = t;
-               getSnippet();
+               $timeout(function() {
+                 scope.currentTransformation = t;
+                 getSnippet();
+               });
                return false;
              };
              scope.isCurrent = function(t) {
