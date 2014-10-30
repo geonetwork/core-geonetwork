@@ -1599,6 +1599,7 @@
                     data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~edmerp"/>
           </action>
 
+          <text ref="edmerp-help"/>
 
 
           <field name="dataProvider" templateModeOnly="true"
@@ -1641,6 +1642,7 @@
               </snippet>
             </template>
           </field>
+          <text ref="dataProvider-help"/>
 
           <!--<field
                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
@@ -1686,6 +1688,7 @@
                     data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~edmo"/>
           </action>
 
+          <text ref="dataCollection-help"/>
 
 
 
@@ -1713,6 +1716,9 @@
                   xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/
                   gmd:transferOptions/gmd:MD_DigitalTransferOptions/
                     gmd:onLine[2]/gmd:CI_OnlineResource/gmd:linkage"/>
+
+          <text ref="medsea-more-help"/>
+
         </section>
       </tab>
 

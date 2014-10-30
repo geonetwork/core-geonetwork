@@ -127,5 +127,44 @@
   <medseaDataSourceDOI>URL DOI*</medseaDataSourceDOI>
   <challenge>Challenge*</challenge>
 
+  <edmerp-help>
+    <div class="row">
+      <div class="col-xs-offset-2 col-xs-8">
+        <p class="help-block">The European Directory for Marine Environment Research Project (EDMERP) contains descriptions of many projects. This catalogue is maintained by Seadatanet. To take advantage of the existing descriptions, it is required to extract the Identifier associated to the project name from EDMERP.</p>
+        </div>
+    </div>
+  </edmerp-help>
+
+  <dataProvider-help>
+    <div class="row">
+      <div class="col-xs-offset-2 col-xs-8">
+        <p class="help-block">Give the name of the organization of the centre or division or laboratory which provides data.
+          <ul>
+              <li class="help-block">In the case of network infrastructures, it is recommended to mention the coordinating organisation in charge of the distribution of the dataset collection. For example, in the case of MyOcean, it would be one of the 5 Thematic Assembly Centers (Sea level, Color, SST, Ice &amp; Wind, In Situ) or of the 7 Monitoring and Forecasting Centers ( 1 global + 6 regional).
+              </li>
+              <li class="help-block">In the case of SeaDataNet, it is the coordinating organization of the project : Ifremer.</li>
+            </ul>
+          </p>
+      </div>
+    </div>
+  </dataProvider-help>
+
+  <dataCollection-help>
+    <div class="row">
+      <div class="col-xs-offset-2 col-xs-8">
+        <p class="help-block">This is the dataset or the dataset collection name as known by the data provider.</p>
+        <p class="help-block">In the case of in-situ observations, the number of datasets can be very high and undetermined. In such case (eg Seadatanet, Emodnet physics…),  use the name of the subset of the data collection available on the discovery services eg “Sea Level” of the Emodnet “Physics” ).</p>
+      </div>
+    </div>
+  </dataCollection-help>
+  
+  <medsea-more-help>
+    <div class="alert alert-info">
+      <strong>For more information</strong>, see the
+      <a href="">Methodology for classifying the existing upstream data
+        Guidelines</a>
+    </div>
+  </medsea-more-help>
+
 
 </strings>
