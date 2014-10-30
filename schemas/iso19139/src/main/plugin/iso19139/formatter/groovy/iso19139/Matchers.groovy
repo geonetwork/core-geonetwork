@@ -31,4 +31,8 @@ public class Matchers {
     def isRespParty = { el ->
         !el.'gmd:CI_ResponsibleParty'.isEmpty() || el.'gmd:CI_ResponsibleParty'['@gco:isoType'].text() == 'gmd:CI_ResponsibleParty'
     }
+
+    def isBBox = { el ->
+        el.name() == 'gmd:EX_GeographicBoundingBox'
+    }
 }

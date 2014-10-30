@@ -39,6 +39,7 @@ public class Handlers {
         handlers.add 'gmd:onlineResource', commonHandlers.flattenedEntryEl({it.'gmd:CI_OnlineResource'}, f.&nodeLabel)
         handlers.add 'gmd:CI_OnlineResource', commonHandlers.entryEl(f.&nodeLabel)
         handlers.add 'gmd:locale', localeEl
+        handlers.add name: 'BBox Element', select: matchers.isBBox, bboxEl
 
         handlers.add name: 'Container Elements', select: matchers.isContainerEl, priority: -1, commonHandlers.entryEl(f.&nodeLabel)
         commonHandlers.addDefaultStartAndEndHandlers()
@@ -82,6 +83,19 @@ public class Handlers {
         def contactData = handlers.processElements( childrenToProcess )
 
         return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: contactData])
+    }
+
+    def bboxEl = {
+        el ->
+            def replacements = [
+                    w: el.'gmd:westBoundLongitude'.'gco:Decimal'.text(),
+                    e: el.'gmd:eastBoundLongitude'.'gco:Decimal'.text(),
+                    s: el.'gmd:southBoundLatitude'.'gco:Decimal'.text(),
+                    n: el.'gmd:northBoundLatitude'.'gco:Decimal'.text()
+            ]
+
+            def bboxData = handlers.fileResult("html/bbox.html", replacements)
+            return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: bboxData])
     }
 
 }
