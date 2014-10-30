@@ -103,7 +103,13 @@
               data-filter='{"_root": "gmd:CI_OnlineResource"}'/>
     </for>
     -->
-    <for name="gmd:descriptiveKeywords" addDirective="data-gn-thesaurus-selector"/>
+    <for name="gmd:descriptiveKeywords" addDirective="data-gn-thesaurus-selector">
+      <!--
+      To restrict the list of thesaurus allowed, set the include attribute
+      for the directive.
+      <directiveAttributes data-include="external.theme.inspire-theme,external.place.regions"/>
+      -->
+    </for>
   </fields>
 
 
@@ -1361,6 +1367,20 @@
         <for name="gmd:processor"/>
         <for name="gmd:citedResponsibleParty"/>
       </flatModeExceptions>
+
+      <!--
+      To configure the type of transformations
+      or the number of keyword allowed for e
+      thesaurus define a specific configuration:
+
+      eg. only 2 INSPIRE themes with Anchor.
+
+      <thesaurusList>
+        <thesaurus key="external.theme.inspire-theme"
+                   maxtags="2"
+                   transformations="to-iso19139-keyword-with-anchor"/>
+      </thesaurusList>
+      -->
     </view>
     <view name="advanced">
       <tab id="identificationInfo" default="true">
@@ -1431,6 +1451,14 @@
 
     <view name="medsea" upAndDownControlHidden="true"
           displayIfRecord="contains(gmd:MD_Metadata/gmd:metadataStandardName/gco:CharacterString, 'MedSea')">
+
+      <thesaurusList>
+        <thesaurus key="external.theme.medsea.environmental.matrix" maxtags="1"/>
+        <thesaurus key="external.theme.inspire-theme" maxtags="1"/>
+        <thesaurus key="external.theme.medsea.level.of.characteristics" maxtags="1"/>
+        <thesaurus key="external.theme.medsea.production.mode" maxtags="1"/>
+        <thesaurus key="external.theme.seadatanet.parameter.groups.P03" maxtags="1"/>
+      </thesaurusList>
       <tab id="characteristics" mode="flat" default="true">
         <section>
           <field

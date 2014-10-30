@@ -199,6 +199,7 @@
           </xs:annotation>
         </xs:element>
         <xs:element minOccurs="0" maxOccurs="1" ref="flatModeExceptions"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="thesaurusList"/>
       </xs:sequence>
       <xs:attribute name="name" use="required" type="xs:string">
         <xs:annotation>
@@ -314,6 +315,35 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="1" maxOccurs="unbounded" ref="for"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="thesaurusList">
+    <xs:annotation>
+      <xs:documentation><![CDATA[
+              To configure the type of transformations
+      or the number of keyword allowed for e
+      thesaurus define a specific configuration:
+
+      eg. only 2 INSPIRE themes.
+
+      <thesaurusList>
+        <thesaurus key="external.theme.inspire-theme"
+                   maxtags="2"
+                   transformations=""/>
+      </thesaurusList>
+      ]]></xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="thesaurus" minOccurs="1" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:attribute name="key" type="xs:string" use="required"/>
+            <xs:attribute name="maxtags" type="xs:integer" use="optional"/>
+            <xs:attribute name="transformations" type="xs:string" use="optional"/>
+          </xs:complexType>
+        </xs:element>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
