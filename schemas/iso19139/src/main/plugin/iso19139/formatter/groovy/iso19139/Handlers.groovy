@@ -3,12 +3,13 @@ package iso19139
 import org.fao.geonet.services.metadata.format.groovy.Environment
 
 public class Handlers {
-    private org.fao.geonet.services.metadata.format.groovy.Handlers handlers;
-    private org.fao.geonet.services.metadata.format.groovy.Functions f
-    private Environment env
+    protected org.fao.geonet.services.metadata.format.groovy.Handlers handlers;
+    protected org.fao.geonet.services.metadata.format.groovy.Functions f
+    protected Environment env
     Matchers matchers
     Functions isofunc
     common.Handlers commonHandlers
+    String[] packageViews
 
     public Handlers(handlers, f, env) {
         this.handlers = handlers
@@ -17,6 +18,10 @@ public class Handlers {
         isofunc = new Functions(handlers: handlers, f:f, env:env)
         matchers =  new Matchers(handlers: handlers, f:f, env:env)
         commonHandlers = new common.Handlers(handlers, f, env)
+        packageViews = [
+                'gmd:identificationInfo', 'gmd:metadataMaintenance', 'gmd:metadataConstraints', 'gmd:spatialRepresentationInfo',
+                'gmd:distributionInfo', 'gmd:applicationSchemaInfo', 'gmd:dataQualityInfo', 'gmd:portrayalCatalogueInfo',
+                'gmd:contentInfo', 'gmd:metadataExtensionInfo']
     }
 
     def addDefaultHandlers() {
