@@ -30,9 +30,14 @@ public class Handlers {
     def entryEl(labeller) {
         return { el ->
             def childData = handlers.processElements(el.children(), el);
+            def replacement = [label: labeller(el), childData: childData, name:'']
 
+            def parent = el.parent()
+            if(el.parent().is(el) || parent.parent().is(parent)) {
+                replacement.name = el.name().replace(":","_");
+            }
             if (!childData.isEmpty()) {
-                return handlers.fileResult('html/2-level-entry.html', [label: labeller(el), childData: childData])
+                return handlers.fileResult('html/2-level-entry.html', replacement)
             }
             return null
         }
@@ -138,6 +143,14 @@ public class Handlers {
         $(this).toggleClass('closed');
         $(this).parent().nextAll('.target').first().toggle();
     });
+
+    $('.nav-pills a[rel]').on('click', function(e) {
+        $('.container > .entry').hide();
+        $($(this).attr('rel')).show();
+        e.preventDefault();
+    });
+
+    $
 </script>
 </body>
 </html>'''
