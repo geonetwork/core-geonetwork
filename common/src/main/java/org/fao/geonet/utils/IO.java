@@ -23,18 +23,13 @@
 
 package org.fao.geonet.utils;
 
-import org.apache.commons.io.IOUtils;
-import org.fao.geonet.Constants;
+import org.eclipse.core.runtime.Assert;
 import org.fao.geonet.Logger;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -43,8 +38,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 //=============================================================================
@@ -53,8 +47,8 @@ import java.util.concurrent.TimeUnit;
  * A container of I/O methods. <P>
  * 
  */
-public final class IO
-{
+public final class IO {
+    private static FileSystem defaultFs = FileSystems.getDefault();
 
     public static final DirectoryStream.Filter<Path> DIRECTORIES_FILTER = new DirectoryStream.Filter<Path>() {
         @Override
@@ -75,95 +69,19 @@ public final class IO
     * Builds a IO.
     */
    private IO() {}
-   
-   /**
-	 * Loads a text file, handling the exceptions
-	 * @param name
-	 * @return
-	 */
-	public static String loadFile(String name)
-	{
-		StringBuffer sb = new StringBuffer();
 
-		FileInputStream in = null;
-		BufferedReader	rdr = null;
-		try
-		{
-            in = new FileInputStream(name);
-            rdr = new BufferedReader(new InputStreamReader(in, Charset.forName(Constants.ENCODING)));
-
-			String inputLine;
-
-			while ((inputLine = rdr.readLine()) != null) {
-				sb.append(inputLine);
-				sb.append('\n');
-			}
-
-			return sb.toString();
-		}
-		catch (IOException e)
-		{
-			return null;
-		} finally {
-		    if (in != null) {
-		        IOUtils.closeQuietly(in);
-		    }
-		    if (rdr != null) {
-		        IOUtils.closeQuietly(rdr);
-		    }
-		}
-	}
-	
-	/**
-	 * Make a directory (and parent directories) if it does not exist.
-	 * If the directory cannot be made and does not exist or is a file an exception is thrown 
-	 * 
-	 * @param dir the directory to make
-	 * @param desc A short description of the directory being made.
-	 */
-	public static void mkdirs(File dir, String desc) throws IOException {
-        if(!dir.mkdirs()) {
-            if (!dir.exists()) {
-                String msg = "Unable to make '"+desc+"': "+dir.getAbsolutePath()+". Check permissions of parent directory";
-                throw new IOException(msg);
-            }
-            if (dir.isFile()){
-                String msg = "Unable to make '"+desc+"': "+dir.getAbsolutePath()+". The file already exists and is a file";
-                throw new IOException(msg);
-
-            }
-        }
-	}
-
-	/**
-	 * Set lastModified time if a failure log a warning.
-	 * 
-	 * @param file the file to set the time on
-	 * @param timeMillis the time in millis
-	 * @param loggerModule the module to log to
-	 */
-    public static void setLastModified(File file, long timeMillis, String loggerModule) {
-        if (!file.setLastModified(timeMillis)) {
-            Log.warning(loggerModule, "Unable to set the last modified time on: "+file.getAbsolutePath()+".  Check file permissions");
-        }
+    public static void deleteFile(Path file, boolean throwException, String loggerModule) {
+        deleteFile(file, throwException, Log.createLogger(loggerModule));
     }
 
-    public static void delete(File file, boolean throwException, String loggerModule) {
-        if (!file.delete() && file.exists()) {
+    public static void deleteFile(Path file, boolean throwException, Logger context) {
+        try {
+            Files.delete(file);
+        } catch (IOException e) {
             if(throwException) {
-                throw new RuntimeException("Unable to delete "+file.getAbsolutePath());
+                throw new RuntimeException(e);
             } else {
-                Log.warning(loggerModule, "Unable to delete "+file.getAbsolutePath());
-            }
-        }
-    }
-
-    public static void delete(File file, boolean throwException, Logger context) {
-        if (!file.delete() && file.exists()) {
-            if(throwException) {
-                throw new RuntimeException("Unable to delete "+file.getAbsolutePath());
-            } else {
-                context.warning("Unable to delete "+file.getAbsolutePath());
+                context.error(e);
             }
         }
     }
@@ -187,47 +105,46 @@ public final class IO
             }
         }
     }
+    public static void copyDirectoryOrFile(final Path from, final Path to) throws IOException {
+        if (Files.isDirectory(from)) {
+            Assert.isTrue(!Files.isRegularFile(to), "cannot copy a directory to a file. From: " + from + " to " + to);
+            Files.walkFileTree(from, new SimpleFileVisitor<Path>(){
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                    Files.createDirectory(relativeFile(dir, to, from));
+                    return FileVisitResult.CONTINUE;
+                }
 
-    /**
-     * Returns a list of all file names in a directory - if recurse is true, 
-     * processes all subdirectories too.
-     * @param directory
-     * @param recurse
-     * @return
-     */
-    public static List<File> getFilesInDirectory(File directory, boolean recurse, FilenameFilter filter) throws IOException {
-    	List<File> fileList = new ArrayList<File>();
-    	if(! directory.exists()) {
-    		throw new IOException("Directory does not exist: "+ directory.getAbsolutePath());
-    	}
-    	if(! directory.canRead()) {
-    		throw new IOException("Cannot read directory: "+ directory.getAbsolutePath());
-    	}
-    	if(! directory.isDirectory()) {
-    		throw new IOException("Directory is not a directory: "+ directory.getAbsolutePath());
-    	}
-    	for(File file : directory.listFiles(filter)) {
-    		if(file.isDirectory()) {
-    			if(recurse) { 
-    				// recurse
-    				fileList.addAll(getFilesInDirectory(file, recurse, filter));
-    			}
-    		}
-    		else {
-    			if(! file.canRead()) {
-    				throw new IOException("Cannot read file "+ file.getAbsolutePath());
-    			}
-    			else {
-    				fileList.add(file);
-    			}
-    		}
-    	}		
-    	return fileList;
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    Files.copy(file, relativeFile(file, to, from));
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } else {
+            final Path parent = to.getParent();
+            if (!Files.exists(parent)) {
+                Files.createDirectories(parent);
+            }
+            Files.copy(from, to);
+        }
     }
 
+    protected static Path relativeFile(Path dir, Path to, Path from) {
+        return to.resolve(from.relativize(dir));
+    }
+
+    public static void moveDirectoryOrFile(final Path from, final Path to) throws IOException {
+        final Path parent = to.getParent();
+        if (!Files.exists(parent)) {
+            Files.createDirectories(parent);
+        }
+        Files.move(from, to);
+    }
     public static boolean isEmptyDir(Path dir) throws IOException {
         try (DirectoryStream<Path> children = Files.newDirectoryStream(dir)) {
-            return children.iterator().hasNext();
+            final Iterator<Path> iterator = children.iterator();
+            return !iterator.hasNext();
         }
     }
 
@@ -258,10 +175,22 @@ public final class IO
 
     public static void touch(Path file, FileTime timestamp) throws IOException{
         if (!Files.exists(file)) {
+            Path parent = file.getParent();
+            if (!Files.exists(parent)) {
+                Files.createDirectories(parent);
+            }
             Files.createFile(file);
         }
 
         Files.setLastModifiedTime(file, timestamp);
+    }
+
+    public static Path toPath(String firstPart, String... more) {
+        return defaultFs.getPath(firstPart, more);
+    }
+
+    public static void setFileSystem(FileSystem newFileSystem) {
+        defaultFs = newFileSystem;
     }
 
 }

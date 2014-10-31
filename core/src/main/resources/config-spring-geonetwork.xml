@@ -13,6 +13,16 @@
     <aop:aspectj-autoproxy proxy-target-class="true"/>
     <tx:annotation-driven proxy-target-class="true"/>
 
+
+    <bean id="ProfileManager" class="jeeves.component.ProfileManager" lazy-init="true"/>
+    <bean id="MonitorManager" class="jeeves.monitor.MonitorManager" lazy-init="true"/>
+    <bean id="JeevesEngine" class="jeeves.server.JeevesEngine" lazy-init="true"/>
+    <bean id="ServiceManager" class="jeeves.server.dispatchers.ServiceManager" lazy-init="true"/>
+    <bean id="XmlCacheManager" class="jeeves.server.dispatchers.guiservices.XmlCacheManager" lazy-init="true"/>
+    <bean id="TransactionAspect" class="jeeves.TransactionAspect" />
+    <bean id="ServiceInfo" class="jeeves.server.dispatchers.ServiceInfo" scope="prototype"/>
+
+
     <bean id="AccessManager" class="org.fao.geonet.kernel.AccessManager" lazy-init="true" />
     <bean id="DataManager" class="org.fao.geonet.kernel.DataManager" lazy-init="true" />
     <bean id="GeonetworkDataDirectory" class="org.fao.geonet.kernel.GeonetworkDataDirectory" lazy-init="true" />

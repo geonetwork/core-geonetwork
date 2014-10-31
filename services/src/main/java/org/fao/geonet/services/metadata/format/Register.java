@@ -31,7 +31,7 @@ import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.util.ZipUtil;
+import org.fao.geonet.ZipUtil;
 import org.jdom.Element;
 
 import java.io.File;
@@ -94,7 +94,7 @@ public class Register extends AbstractFormatService {
 
             return response;
         } finally {
-            IO.delete(uploadedFile, false, Geonet.FORMATTER);
+            IO.deleteFile(uploadedFile, false, Geonet.FORMATTER);
         }
     }
 

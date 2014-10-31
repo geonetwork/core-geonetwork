@@ -250,7 +250,7 @@ public class Upload implements Service {
             Thesaurus gst = new Thesaurus(context.getApplicationContext(), fname, type, dir, newFile, siteURL);
 			thesaurusMan.addThesaurus(gst, false);
 		} else {
-			IO.delete(rdfFile, false, Geonet.THESAURUS);
+			IO.deleteFile(rdfFile, false, Geonet.THESAURUS);
 			throw new Exception("Unknown format (Must be in SKOS format).");
 		}
 

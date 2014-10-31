@@ -23,15 +23,11 @@
 
 package org.fao.geonet.utils;
 
-import com.google.common.collect.FluentIterable;
-import com.google.common.io.Files;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.UserInfo;
-
 import org.apache.commons.io.IOUtils;
-
 import org.fao.geonet.Constants;
 import org.globus.ftp.DataSink;
 import org.globus.ftp.FTPClient;
@@ -45,12 +41,12 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.Reader;
 import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 //=============================================================================
 
@@ -89,27 +85,20 @@ public final class BinaryFile
     static String readInput(String path) {
         StringBuffer buffer = new StringBuffer();
 
-        Reader in = null;
-
-        try {
-            FileInputStream fis = new FileInputStream(path);
-            InputStreamReader isr = new InputStreamReader(fis,"UTF8");
-            in = new BufferedReader(isr);
+        try (BufferedReader in = Files.newBufferedReader(IO.toPath(path), Constants.CHARSET)) {
             int ch;
             int numRead = 0;
-            while (((ch = in.read()) > -1) && (numRead < 2000))  {
-                buffer.append((char)ch);
+            while (((ch = in.read()) > -1) && (numRead < 2000)) {
+                buffer.append((char) ch);
                 numRead++;
             }
 
             return buffer.toString();
         } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-        } finally {
-            IOUtils.closeQuietly(in);
+            e.printStackTrace();
+            return null;
         }
-	}	
+    }
 
 	//---------------------------------------------------------------------------
 
@@ -487,34 +476,12 @@ public final class BinaryFile
 	 * @param targetLocation
 	 * @throws IOException
 	 */
-	public static void copyDirectory(File sourceLocation , File targetLocation)
-    throws IOException {
-        final int filePrefixToRemove = sourceLocation.getPath().length();
-        final FluentIterable<File> files = Files.fileTreeTraverser().preOrderTraversal(sourceLocation);
-
-        for (File file : files) {
-            if (file.isFile()) {
-                final String part = file.getPath().substring(filePrefixToRemove);
-                final File destFile = new File(targetLocation, part);
-                if (!destFile.getParentFile().mkdirs() && !destFile.getParentFile().exists()) {
-                    throw new IOException("Unable to create directory: "+destFile.getParentFile());
-                }
-                copyFile(file, destFile);
-            }
-        }
+	public static void copyDirectory(Path sourceLocation, Path targetLocation) throws IOException {
+        IO.copyDirectoryOrFile(sourceLocation, targetLocation);
     }
 
-    private static void copyFile(File file, File destFile) throws IOException {
-        FileInputStream in = null;
-        FileOutputStream out = null;
-        try {
-            in = new FileInputStream(file);
-            out = new FileOutputStream(destFile);
-            in.getChannel().transferTo(0, file.length(), out.getChannel());
-        } finally {
-            IOUtils.closeQuietly(in);
-            IOUtils.closeQuietly(out);
-        }
+    private static void copyFile(Path file, Path destFile) throws IOException {
+        IO.copyDirectoryOrFile(file, destFile);
     }
 
     //----------------------------------------------------------------------------
@@ -553,23 +520,10 @@ public final class BinaryFile
 			return("application/binary");
 	}
 
-    public static void copy(File srcFile, File destFile) throws IOException {
-        if(srcFile.isFile()) {
-            BinaryFile.copyFile(srcFile, destFile);
-        } else {
-            BinaryFile.copyDirectory(srcFile, destFile);
-            
-        }
-        
+    public static void copy(Path srcFile, Path destFile) throws IOException {
+        IO.copyDirectoryOrFile(srcFile, destFile);
     }
 
-    public static void moveTo(File inFile, File outFile, String operationDescription) throws IOException {
-        IO.mkdirs(outFile.getParentFile(), "Error creating Parent File for operation: "+operationDescription);
-        if (!inFile.renameTo(outFile)) {
-            copy(inFile, outFile);
-            IO.delete(inFile, false, "org.fao.geonet");
-        }
-    }
 }
 
 //=============================================================================

@@ -69,7 +69,7 @@ public class Delete extends NotInReadOnlyModeService {
 		
 		// Remove file
 		if (item.exists()) {
-			IO.delete(item, true, Geonet.THESAURUS);
+			IO.deleteFile(item, true, Geonet.THESAURUS);
 
             // Delete thesaurus record in the database
             ThesaurusActivationRepository repo = context.getBean(ThesaurusActivationRepository.class);

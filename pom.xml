@@ -1113,7 +1113,6 @@
   <modules>
     <module>common</module>
     <module>cachingxslt</module>
-    <module>jeeves</module>
     <module>sde</module>
     <module>web-ui</module>
     <module>web-ui-docs</module>

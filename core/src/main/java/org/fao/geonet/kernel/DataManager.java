@@ -695,7 +695,7 @@ public class DataManager {
      * @param name
      * @return
      */
-    public String getSchemaDir(String name) {
+    public Path getSchemaDir(String name) {
         return schemaMan.getSchemaDir(name);
     }
 

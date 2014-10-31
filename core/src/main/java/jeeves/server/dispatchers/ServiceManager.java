@@ -50,21 +50,30 @@ import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.NotAllowedEx;
 import org.fao.geonet.exceptions.ServiceNotFoundEx;
 import org.fao.geonet.exceptions.ServiceNotMatchedEx;
-import org.fao.geonet.utils.*;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.utils.BLOB;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.SOAPUtil;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletResponse;
 
 //=============================================================================
 public class ServiceManager {
@@ -74,9 +83,7 @@ public class ServiceManager {
     private List<GuiService> vDefaultGui = new ArrayList<GuiService>();
 
 
-    private String appPath;
     private String baseUrl;
-    private String uploadDir;
     private int maxUploadSize;
     private String defaultLang;
     private String defaultContType;
@@ -88,16 +95,15 @@ public class ServiceManager {
     private ConfigurableApplicationContext jeevesApplicationContext;
     @PersistenceContext
     private EntityManager entityManager;
+    @Autowired
+    private GeonetworkDataDirectory dataDir;
+
 
     //---------------------------------------------------------------------------
     //---
     //--- API methods
     //---
     //---------------------------------------------------------------------------
-
-    public void setAppPath(String path) {
-        appPath = path;
-    }
 
     public void setDefaultLang(String lang) {
         defaultLang = lang;
@@ -107,9 +113,6 @@ public class ServiceManager {
         defaultContType = type;
     }
 
-    public void setUploadDir(String dir) {
-        uploadDir = dir;
-    }
 
     public void setMaxUploadSize(int size) {
         maxUploadSize = size;
@@ -166,7 +169,6 @@ public class ServiceManager {
         String cache = srv.getAttributeValue(ConfigFile.Service.Attr.CACHE);
 
         ServiceInfo si = this.jeevesApplicationContext.getBean(ServiceInfo.class);
-        si.setAppPath(appPath);
         si.setMatch(match);
         si.setSheet(sheet);
         si.setCache(cache);
@@ -231,9 +233,13 @@ public class ServiceManager {
 
         Service service = (Service) Class.forName(name).newInstance();
 
-        service.init(appPath, new ServiceConfig(clas.getChildren(ConfigFile.Class.Child.PARAM)));
+        service.init(appPathAsString(), new ServiceConfig(clas.getChildren(ConfigFile.Class.Child.PARAM)));
 
         return service;
+    }
+
+    private String appPathAsString() {
+        return dataDir.getWebappDir().toString();
     }
 
     //---------------------------------------------------------------------------
@@ -275,7 +281,7 @@ public class ServiceManager {
             return new XmlFile(elem, defaultLang, defaultLocal);
 
         if (ConfigFile.Output.Child.CALL.equals(elem.getName()))
-            return new Call(elem, pack, appPath);
+            return new Call(elem, pack, appPathAsString());
 
         throw new IllegalArgumentException("Unknown GUI element : " + Xml.getString(elem));
     }
@@ -342,8 +348,6 @@ public class ServiceManager {
         context.setLanguage("?");
         context.setUserSession(null);
         context.setIpAddress("?");
-        context.setAppPath(appPath);
-        context.setUploadDir(uploadDir);
         context.setMaxUploadSize(maxUploadSize);
         context.setServlet(servlet);
 
@@ -366,8 +370,6 @@ public class ServiceManager {
 		context.setLanguage(req.getLanguage());
 		context.setUserSession(session);
 		context.setIpAddress(req.getAddress());
-		context.setAppPath(appPath);
-		context.setUploadDir(uploadDir);
         context.setMaxUploadSize(maxUploadSize);
 		context.setInputMethod(req.getInputMethod());
 		context.setOutputMethod(req.getOutputMethod());
@@ -613,7 +615,7 @@ public class ServiceManager {
 			if (outPage.getContentType().equals("application/pdf") && !outPage.getStyleSheet().equals("")) {
 
 				//--- build the xml data for the XSL/FO translation
-				String styleSheet = outPage.getStyleSheet();
+				Path styleSheet = IO.toPath(outPage.getStyleSheet());
                 Element guiElem;
                 TimerContext guiServicesTimerContext = context.getMonitorManager().getTimer(ServiceManagerGuiServicesTimer.class).time();
                 try {
@@ -636,9 +638,9 @@ public class ServiceManager {
 
 				//--- do an XSL transformation
 
-				styleSheet = appPath + Jeeves.Path.XSL + styleSheet;
+				styleSheet = dataDir.getWebappDir().resolve(Jeeves.Path.XSL).resolve(styleSheet);
 
-				if (!new File(styleSheet).exists())
+				if (!Files.exists(styleSheet))
                     error(" -> stylesheet not found on disk, aborting : " + styleSheet);
                 else {
                     info(" -> transforming with stylesheet : " + styleSheet);
@@ -646,14 +648,14 @@ public class ServiceManager {
                     try {
                         TimerContext timerContext = context.getMonitorManager().getTimer(ServiceManagerXslOutputTransformTimer.class)
                                 .time();
-                        String file;
+                        Path file;
                         try {
                             //--- first we do the transformation
-                            file = Xml.transformFOP(uploadDir, rootElem, styleSheet);
+                            file = Xml.transformFOP(this.dataDir.getUploadDir(), rootElem, styleSheet.toString());
                         } finally {
                             timerContext.stop();
                         }
-                        response = BinaryFile.encode(200, file, "document.pdf", true);
+                        response = BinaryFile.encode(200, file.toString(), "document.pdf", true);
                     } catch (Exception e) {
                         error(" -> exception during XSL/FO transformation for : " + req.getService());
                         error(" -> (C) stylesheet : " + styleSheet);
@@ -711,7 +713,7 @@ public class ServiceManager {
         else {
 			//--- build the xml data for the XSL translation
 
-            String styleSheet = outPage.getStyleSheet();
+            Path styleSheet = IO.toPath(outPage.getStyleSheet());
 			Element guiElem;
             TimerContext guiServicesTimerContext = getMonitorManager().getTimer(ServiceManagerGuiServicesTimer.class).time();
             try {
@@ -740,9 +742,9 @@ public class ServiceManager {
             } else {
 				//--- do an XSL transformation
 
-				styleSheet = appPath + Jeeves.Path.XSL + styleSheet;
+				styleSheet = this.dataDir.getWebappDir().resolve(Jeeves.Path.XSL).resolve(styleSheet);
 
-				if (!new File(styleSheet).exists())
+				if (!Files.exists(styleSheet))
                     error("     -> stylesheet not found on disk, aborting : " + styleSheet);
                 else {
                     info("     -> transforming with stylesheet : " + styleSheet);
@@ -812,7 +814,7 @@ public class ServiceManager {
 
 		//--- build the xml data for the XSL translation
 
-        String styleSheet = outPage.getStyleSheet();
+        Path styleSheet = IO.toPath(outPage.getStyleSheet());
         Element guiElem = outPage.invokeGuiServices(context, response, vDefaultGui);
 		
 		// Dispatch HTTP status code
@@ -830,7 +832,7 @@ public class ServiceManager {
         } else {
 			//--- do an XSL transformation
 
-			styleSheet = appPath + Jeeves.Path.XSL + styleSheet;
+			styleSheet = dataDir.getWebappDir().resolve(Jeeves.Path.XSL).resolve(styleSheet);
 
             info("     -> transforming with stylesheet : " + styleSheet);
 

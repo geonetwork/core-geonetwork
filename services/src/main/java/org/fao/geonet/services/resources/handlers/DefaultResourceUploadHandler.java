@@ -121,7 +121,7 @@ public class DefaultResourceUploadHandler implements IResourceUploadHandler {
             context.warning("Cannot move uploaded file");
             context.warning(" (C) Source : " + oldFile.getAbsolutePath());
             context.warning(" (C) Destin : " + newFile.getAbsolutePath());
-            IO.delete(oldFile, false, context);
+            IO.deleteFile(oldFile, false, context);
             throw new Exception(
                     "Unable to move uploaded file to destination directory");
         }

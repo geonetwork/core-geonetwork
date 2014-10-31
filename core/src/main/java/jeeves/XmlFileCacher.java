@@ -28,30 +28,38 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import javax.servlet.ServletContext;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
+import javax.servlet.ServletContext;
 
 //=============================================================================
 
 public class XmlFileCacher
 {
 	private ServletContext servletContext;
-    private String appPath;
+    private Path appPath;
+    private Path file;
+    private int  interval; //--- in secs
+    private long lastTime;
+    private FileTime lastModified;
+
+    private Element elem;
 
     //--------------------------------------------------------------------------
 	//---
 	//--- Constructor
 	//---
 	//--------------------------------------------------------------------------
-    public XmlFileCacher(File file, String appPath)
+    public XmlFileCacher(Path file, Path appPath)
     {
         this(file, null, appPath);
     }
     /**
      * @param servletContext if non-null the config-overrides can be applied to the xml file when it is loaded
      */
-	public XmlFileCacher(File file, ServletContext servletContext, String appPath)
+	public XmlFileCacher(Path file, ServletContext servletContext, Path appPath)
 	{
 		//--- 10 seconds as default interval
 		this(file, 10, servletContext, appPath);
@@ -61,7 +69,7 @@ public class XmlFileCacher
 	/**
 	 * @param servletContext if non-null the config-overrides can be applied to the xml file when it is loaded
 	 */
-	public XmlFileCacher(File file, int interval, ServletContext servletContext, String appPath)
+	public XmlFileCacher(Path file, int interval, ServletContext servletContext, Path appPath)
 	{
 		this.file     = file;
 		this.interval = interval;
@@ -81,7 +89,7 @@ public class XmlFileCacher
 		{
 			elem         = load();
 			lastTime     = System.currentTimeMillis();
-			lastModified = file.lastModified();
+			lastModified = Files.getLastModifiedTime(file);
 		}
 
 		else
@@ -91,9 +99,9 @@ public class XmlFileCacher
 
 			if((delta >= interval))
 			{
-				long fileModified = file.lastModified();
+				FileTime fileModified = Files.getLastModifiedTime(file);
 
-				if (lastModified != fileModified)
+				if (!lastModified.equals(fileModified))
 				{
 					elem         = load();
 					lastModified = fileModified;
@@ -118,22 +126,10 @@ public class XmlFileCacher
 	protected Element load() throws JDOMException, IOException
 	{
 		Element xml = Xml.loadFile(file);
-	    ConfigurationOverrides.DEFAULT.updateWithOverrides(file.getPath(), servletContext, appPath, xml);
+	    ConfigurationOverrides.DEFAULT.updateWithOverrides(file.toString(), servletContext,
+                appPath.toAbsolutePath().toString(), xml);
         return xml;
 	}
-
-	//--------------------------------------------------------------------------
-	//---
-	//--- Variables
-	//---
-	//--------------------------------------------------------------------------
-
-	private File file;
-	private int  interval; //--- in secs
-	private long lastTime;
-	private long lastModified;
-
-	private Element elem;
 }
 
 //=============================================================================

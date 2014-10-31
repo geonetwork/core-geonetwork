@@ -2,17 +2,18 @@ package jeeves.server.dispatchers.guiservices;
 
 import jeeves.XmlFileCacher;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletContext;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
+import javax.servlet.ServletContext;
 
 public class XmlCacheManager {
     WeakHashMap<String, Map<String, XmlFileCacher>> xmlCaches = new WeakHashMap<String, Map<String, XmlFileCacher>>();
@@ -30,18 +31,18 @@ public class XmlCacheManager {
 
         Map<String, XmlFileCacher> cacheMap = getCacheMap(localized, base, file);
         
-        String appPath = context.getAppPath();
-        String xmlFilePath;
+        Path appPath = context.getAppPath();
+        Path xmlFilePath;
 
-        boolean isBaseAbsolutePath = (new File(base)).isAbsolute();
-        String rootPath = (isBaseAbsolutePath) ? base : appPath + base;
+        boolean isBaseAbsolutePath = IO.toPath(base).isAbsolute();
+        Path rootPath = (isBaseAbsolutePath) ? IO.toPath(base) : appPath.resolve(base);
 
         if (localized) {
-            xmlFilePath = rootPath + File.separator + preferedLanguage +File.separator + file;
+            xmlFilePath = rootPath.resolve(preferedLanguage).resolve(file);
         } else {
-            xmlFilePath = rootPath + File.separator + file;
-            if (!new File(xmlFilePath).exists()) {
-                xmlFilePath = appPath + file;
+            xmlFilePath = rootPath.resolve(file);
+            if (!Files.exists(xmlFilePath)) {
+                xmlFilePath = appPath.resolve(file);
             }
         }
 
@@ -51,9 +52,9 @@ public class XmlCacheManager {
         }
         
         XmlFileCacher xmlCache = cacheMap.get(preferedLanguage);
-        File xmlFile = new File(xmlFilePath);
+        Path xmlFile = xmlFilePath;
         if (xmlCache == null){
-            xmlCache = new XmlFileCacher(xmlFile,servletContext,appPath);
+            xmlCache = new XmlFileCacher(xmlFile, servletContext, appPath);
             cacheMap.put(preferedLanguage, xmlCache);
         }
 
@@ -63,16 +64,13 @@ public class XmlCacheManager {
         } catch (Exception e) {
             Log.error(Log.RESOURCES, "Error cloning the cached data.  Attempted to get: "+xmlFilePath+"but failed so falling back to default language");
             Log.debug(Log.RESOURCES, "Error cloning the cached data.  Attempted to get: "+xmlFilePath+"but failed so falling back to default language", e);
-            String xmlDefaultLangFilePath = rootPath + File.separator + defaultLang + File.separator + file;
-            xmlCache = new XmlFileCacher(new File(xmlDefaultLangFilePath),servletContext, appPath);
+            Path xmlDefaultLangFilePath = rootPath.resolve(defaultLang).resolve(file);
+            xmlCache = new XmlFileCacher(xmlDefaultLangFilePath, servletContext, appPath);
             cacheMap.put(preferedLanguage, xmlCache);
             result = (Element)xmlCache.get().clone();
         }
-        String name = xmlFile.getName();
-        int lastIndexOfDot = name.lastIndexOf('.');
-        if (lastIndexOfDot > 0) {
-            name = name.substring(0,lastIndexOfDot);
-        }
+        String name = com.google.common.io.Files.getNameWithoutExtension(xmlFile.getFileName().toString());
+
         return result.setName(name);
     }
 

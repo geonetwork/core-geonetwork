@@ -58,7 +58,6 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -77,7 +76,6 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -156,7 +154,7 @@ public final class Xml
      */
 	public static Element loadFile(String file) throws IOException, JDOMException
 	{
-		return loadFile(new File(file));
+		return loadFile(IO.toPath(file));
 	}
 
 	//--------------------------------------------------------------------------
@@ -214,19 +212,6 @@ public final class Xml
 	}
 
 	//--------------------------------------------------------------------------
-
-    /**
-     * Loads an xml file and returns its root node.
-     *
-     * @param file
-     * @return
-     * @throws IOException
-     * @throws JDOMException
-     */
-	public static Element loadFile(File file) throws IOException, JDOMException{
-		return loadFile(file.toPath());
-	}
-
 
     public static Element loadFile(Path file) throws IOException, JDOMException {
         SAXBuilder builder = getSAXBuilderWithoutXMLResolver(false); //new SAXBuilder();
@@ -395,7 +380,7 @@ public final class Xml
 	public static Element transform(Element xml, String styleSheetPath) throws Exception
 	{
 		JDOMResult resXml = new JDOMResult();
-		transform(xml, Paths.get(styleSheetPath), resXml, null);
+		transform(xml, IO.toPath(styleSheetPath), resXml, null);
 		return (Element)resXml.getDocument().getRootElement().detach();
 	}
 
@@ -414,7 +399,7 @@ public final class Xml
 	public static Element transform(Element xml, String styleSheetPath, Map<String, Object> params) throws Exception
 	{
 		JDOMResult resXml = new JDOMResult();
-		transform(xml, Paths.get(styleSheetPath), resXml, params);
+		transform(xml, IO.toPath(styleSheetPath), resXml, params);
 		return (Element)resXml.getDocument().getRootElement().detach();
 	}
 	//--------------------------------------------------------------------------
@@ -427,10 +412,10 @@ public final class Xml
      * @param out
      * @throws Exception
      */
-	public static void transform(Element xml, String styleSheetPath, OutputStream out) throws Exception
+	public static void transform(Element xml, Path styleSheetPath, OutputStream out) throws Exception
 	{
 		StreamResult resStream= new StreamResult(out);
-		transform(xml, Paths.get(styleSheetPath), resStream, null);
+		transform(xml, styleSheetPath, resStream, null);
 	}
 
 	//--------------------------------------------------------------------------
@@ -445,7 +430,7 @@ public final class Xml
      */
 	public static void transform(Element xml, String styleSheetPath, Result result) throws Exception
 	{
-		transform(xml, Paths.get(styleSheetPath), result, null);
+		transform(xml, IO.toPath(styleSheetPath), result, null);
 	}
 
 
@@ -625,55 +610,50 @@ public final class Xml
    * on disk)
    */
 
-   public static String transformFOP(String uploadDir, Element xml, String styleSheetPath)
+   public static Path transformFOP(Path uploadDir, Element xml, String styleSheetPath)
            throws Exception {
-       String file = uploadDir + UUID.randomUUID().toString () + ".pdf";
+       Path file = uploadDir.resolve(UUID.randomUUID().toString() + ".pdf");
 
    // Step 1: Construct a FopFactory
    // (reuse if you plan to render multiple documents!)
    FopFactory fopFactory = FopFactory.newInstance();
    
    // Step 2: Set up output stream.
-   // Note: Using BufferedOutputStream for performance reasons (helpful
-   // with FileOutputStreams).
-   OutputStream out = new BufferedOutputStream(new FileOutputStream(
-           new File(file)));
-   
-   try {
+   // Note: Using BufferedOutputStream for performance reasons
+
+   try (OutputStream out = Files.newOutputStream(file);
+        OutputStream bufferedOut = new BufferedOutputStream(out)) {
        // Step 3: Construct fop with desired output format
-   Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, out);
+       Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, bufferedOut);
 
-   // Step 4: Setup JAXP using identity transformer
-   TransformerFactory factory = TransformerFactoryFactory.getTransformerFactory();
-	 factory.setURIResolver(new JeevesURIResolver());
-   Source xslt = new StreamSource(new File(styleSheetPath));
-		try {
-			factory.setAttribute(FeatureKeys.VERSION_WARNING,false);
-			factory.setAttribute(FeatureKeys.LINE_NUMBERING,true);
-			factory.setAttribute(FeatureKeys.RECOVERY_POLICY,Configuration.RECOVER_SILENTLY);
-		} catch (IllegalArgumentException e) {
-		    Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!");
-			//e.printStackTrace();
-		} finally {
-   		Transformer transformer = factory.newTransformer(xslt);
+       // Step 4: Setup JAXP using identity transformer
+       TransformerFactory factory = TransformerFactoryFactory.getTransformerFactory();
+       factory.setURIResolver(new JeevesURIResolver());
+       Source xslt = new StreamSource(new File(styleSheetPath));
+       try {
+           factory.setAttribute(FeatureKeys.VERSION_WARNING, false);
+           factory.setAttribute(FeatureKeys.LINE_NUMBERING, true);
+           factory.setAttribute(FeatureKeys.RECOVERY_POLICY, Configuration.RECOVER_SILENTLY);
+       } catch (IllegalArgumentException e) {
+           Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!");
+           //e.printStackTrace();
+       } finally {
+           Transformer transformer = factory.newTransformer(xslt);
 
-   		// Step 5: Setup input and output for XSLT transformation
-   		// Setup input stream
-			Source src = new JDOMSource(new Document((Element)xml.detach()));
-   
-   		// Resulting SAX events (the generated FO) must be piped through to
-   		// FOP
-   		Result res = new SAXResult(fop.getDefaultHandler());
+           // Step 5: Setup input and output for XSLT transformation
+           // Setup input stream
+           Source src = new JDOMSource(new Document((Element) xml.detach()));
 
-   		// Step 6: Start XSLT transformation and FOP processing
-      transformer.transform(src, res);
-		}
+           // Resulting SAX events (the generated FO) must be piped through to
+           // FOP
+           Result res = new SAXResult(fop.getDefaultHandler());
+
+           // Step 6: Start XSLT transformation and FOP processing
+           transformer.transform(src, res);
+       }
 
    }
-   finally {
-       // Clean-up
-           out.close();
-   }
+
        
        return file;
    }

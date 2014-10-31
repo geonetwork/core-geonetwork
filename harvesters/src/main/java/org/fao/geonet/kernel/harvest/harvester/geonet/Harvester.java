@@ -348,7 +348,7 @@ class Harvester implements IHarvester<HarvestResult> {
             context.warning("  (C) Logo  : " + logo);
             context.warning("  (C) Excep : " + e.getMessage());
 
-            IO.delete(logoFile, false, Geonet.GEONETWORK);
+            IO.deleteFile(logoFile, false, Geonet.GEONETWORK);
 
             Resources.copyUnknownLogo(context, uuid);
         }

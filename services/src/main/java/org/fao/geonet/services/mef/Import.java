@@ -91,7 +91,7 @@ public class Import extends NotInReadOnlyModeService {
 
         }
 
-        IO.delete(file, false, Geonet.MEF);
+        IO.deleteFile(file, false, Geonet.MEF);
 
 		Element result = null;
 

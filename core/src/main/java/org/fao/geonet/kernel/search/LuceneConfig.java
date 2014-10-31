@@ -31,6 +31,7 @@ import org.apache.lucene.util.NumericUtils;
 import org.apache.lucene.util.Version;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -740,7 +741,7 @@ public class LuceneConfig {
 						params[i] = LUCENE_VERSION;
 					} else if ("java.io.File".equals(paramType)
 							&& value != null) {
-						Path f = Paths.get(value);
+						Path f = IO.toPath(value);
 						if (!Files.exists(f)) { // try relative to appPath
 							f = geonetworkDataDirectory.getWebappDir().resolve(value);
 						}

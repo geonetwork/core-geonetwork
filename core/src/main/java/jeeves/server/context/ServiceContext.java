@@ -24,7 +24,6 @@
 package jeeves.server.context;
 
 import jeeves.component.ProfileManager;
-import jeeves.server.JeevesEngine;
 import jeeves.server.UserSession;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.dispatchers.guiservices.XmlCacheManager;
@@ -33,14 +32,16 @@ import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.JeevesServlet;
 import org.fao.geonet.Logger;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import javax.annotation.CheckForNull;
-import javax.persistence.EntityManager;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.CheckForNull;
+import javax.persistence.EntityManager;
 
 //=============================================================================
 
@@ -79,7 +80,6 @@ public class ServiceContext extends BasicContext {
 	private String _language;
 	private String _service;
 	private String _ipAddress;
-	private String _uploadDir;
 	private int _maxUploadSize;
 	private JeevesServlet _servlet;
 	private boolean _startupError = false;
@@ -132,7 +132,7 @@ public class ServiceContext extends BasicContext {
 	public String getLanguage()  { return _language;  }
 	public String getService()   { return _service;   }
 	public String getIpAddress() { return _ipAddress; }
-	public Path getUploadDir() { return _uploadDir; }
+	public Path getUploadDir() { return getBean(GeonetworkDataDirectory.class).getUploadDir(); }
     public int getMaxUploadSize() { return _maxUploadSize; }
 
 	public UserSession    getUserSession()    { return _userSession; }
@@ -155,7 +155,6 @@ public class ServiceContext extends BasicContext {
 	public void setLanguage(final String lang)    { _language = lang;    }
 	public void setServlet(final JeevesServlet serv)    { _servlet = serv;    }
 	public void setIpAddress(final String address) { _ipAddress = address; }
-	public void setUploadDir(final String dir)     { _uploadDir = dir;     }
     public void setMaxUploadSize(final int size)   { _maxUploadSize = size; }
     public void setStartupErrors(final Map<String,String> errs)   { _startupErrors = errs; _startupError = true; }
 

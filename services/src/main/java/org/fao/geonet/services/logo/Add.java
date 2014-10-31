@@ -89,7 +89,7 @@ public class Add implements ApplicationContextAware {
 			File serverFile = new File(logoDir,
 					fname.getOriginalFilename());
 			if (serverFile.exists()) {
-                IO.delete(serverFile, true, "Deleting server file");
+                IO.deleteFile(serverFile, true, "Deleting server file");
 				serverFile = new File(logoDir,
 						fname.getOriginalFilename());
 			}

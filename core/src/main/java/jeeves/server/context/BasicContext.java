@@ -28,6 +28,7 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.fao.geonet.Logger;
 import org.fao.geonet.NodeInfo;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Log;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -51,7 +52,6 @@ public class BasicContext implements Logger {
     protected Map<String, Object> htContexts;
     private final ConfigurableApplicationContext jeevesApplicationContext;
     private EntityManager entityManager;
-    private Path appPath;
 
     //--------------------------------------------------------------------------
     //---
@@ -83,17 +83,13 @@ public class BasicContext implements Logger {
     }
 
     public Path getAppPath() {
-        return this.appPath;
+        return this.jeevesApplicationContext.getBean(GeonetworkDataDirectory.class).getWebappDir();
     }
 
     //--------------------------------------------------------------------------
 
     public void setBaseUrl(String name) {
         baseUrl = name;
-    }
-
-    public void setAppPath(Path path) {
-        appPath = path;
     }
 
     //--------------------------------------------------------------------------

@@ -138,7 +138,7 @@ public class Set extends NotInReadOnlyModeService {
             try {
                 FileUtils.moveFile(inFile, outFile);
             } catch (Exception e) {
-                IO.delete(inFile, false, context);
+                IO.deleteFile(inFile, false, context);
                 throw new Exception(
                         "Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
             }
@@ -294,7 +294,7 @@ public class Set extends NotInReadOnlyModeService {
             try {
                 FileUtils.moveFile(inFile, outFile);
             } catch (Exception e) {
-                IO.delete(inFile, false, context);
+                IO.deleteFile(inFile, false, context);
                 throw new Exception("Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
             }
 

@@ -26,8 +26,6 @@ package org.fao.geonet.services.thumbnail;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import lizard.tiff.Tiff;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -43,11 +41,12 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import javax.imageio.ImageIO;
 
 public class Set extends NotInReadOnlyModeService {
@@ -93,9 +92,9 @@ public class Set extends NotInReadOnlyModeService {
 		if (version != null && !dataMan.getVersion(id).equals(version))
 			throw new ConcurrentUpdateEx(id);
 
-        boolean imageExists = testValidImage(new File(getFileName(file, true)), false);
-        imageExists |= testValidImage(new File(getFileName(file, false)), false);
-        imageExists |= testValidImage(new File(context.getUploadDir(), file), false);
+        boolean imageExists = testValidImage(getFileName(file, true), false);
+        imageExists |= testValidImage(getFileName(file, false), false);
+        imageExists |= testValidImage(context.getUploadDir().resolve(file), false);
 
         if (!imageExists) {
             throw new IllegalArgumentException("No image file uploaded");
@@ -113,13 +112,13 @@ public class Set extends NotInReadOnlyModeService {
 
 		if (createSmall)
 		{
-			String smallFile = getFileName(file, true);
-			String inFile    = context.getUploadDir() + file;
-			String outFile   = dataDir + smallFile;
+			Path smallFile = getFileName(file, true);
+			Path inFile    = context.getUploadDir().resolve(file);
+            Path outFile   = dataDir.resolve(smallFile);
 
 			removeOldThumbnail(context, id, "small", false);
 			createThumbnail(inFile, outFile, smallScalingFactor, smallScalingDir);
-			dataMan.setThumbnail(context, id, true, smallFile, false);
+			dataMan.setThumbnail(context, id, true, smallFile.toString(), false);
 		}
 
 		//-----------------------------------------------------------------------
@@ -129,34 +128,25 @@ public class Set extends NotInReadOnlyModeService {
 
 		if (scaling)
 		{
-			String newFile = getFileName(file, type.equals("small"));
-			String inFile  = context.getUploadDir() + file;
-			String outFile = dataDir + newFile;
+			Path newFile = getFileName(file, type.equals("small"));
+			Path inFile  = context.getUploadDir().resolve(file);
+			Path outFile = dataDir.resolve(newFile);
 
 			createThumbnail(inFile, outFile, scalingFactor, scalingDir);
 
-			if (!new File(inFile).delete())
-				context.error("Error while deleting thumbnail : "+inFile);
+            try {
+                Files.delete(inFile);
+            } catch (IOException e) {
+                context.error("Error while deleting thumbnail : "+inFile);
+            }
 
-			dataMan.setThumbnail(context, id, type.equals("small"), newFile, false);
+			dataMan.setThumbnail(context, id, type.equals("small"), newFile.toString(), false);
 		}
 		else
 		{
 			//--- move uploaded file to destination directory
-            Files.move(Paths.get())
-			File inFile  = new File(context.getUploadDir(), file);
-			File outFile = new File(dataDir,                file);
-
-			if(outFile.exists() && !outFile.delete()) {
-				throw new Exception("Unable to overwrite existing file: "+outFile);
-			}
-			try {
-				FileUtils.moveFile(inFile, outFile);
-			} catch (Exception e) {
-				IO.delete(inFile, false, context);
-				throw new Exception(
-						"Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
-			}
+            final Path outPath = context.getUploadDir().resolve(file);
+            Files.move(outPath, dataDir.resolve(file), StandardCopyOption.REPLACE_EXISTING);
 
 			dataMan.setThumbnail(context, id, type.equals("small"), file, false);
 		}
@@ -171,10 +161,10 @@ public class Set extends NotInReadOnlyModeService {
 		return response;
 	}
 
-    private boolean testValidImage(File inFile, boolean mustExistAndBeValid) throws IOException {
-        if (inFile != null && inFile.exists()) {
+    private boolean testValidImage(Path inFile, boolean mustExistAndBeValid) throws IOException {
+        if (inFile != null && Files.exists(inFile)) {
             // Test that file is an image before removing old files.
-            BufferedImage image = getImage(inFile.getAbsolutePath());
+            BufferedImage image = getImage(inFile);
             if (image == null) {
                 throw new IllegalArgumentException("Unable to create an image from: "+inFile);
             }
@@ -192,9 +182,11 @@ public class Set extends NotInReadOnlyModeService {
      * @param id
      * @param context
      */
-    private String createDataDir(String id, ServiceContext context) {
-        String dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
-        if (!new File(dataDir).mkdirs()) {
+    private Path createDataDir(String id, ServiceContext context) {
+        Path dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
+        try {
+            Files.createDirectories(dataDir);
+        } catch (IOException e) {
             context.error("Failed to make dir: " + dataDir);
         }
         return dataDir;
@@ -207,7 +199,7 @@ public class Set extends NotInReadOnlyModeService {
 							DataManager dataMan) throws Exception {
 
 		String  id            = Util.getParam     (params, Params.ID);
-        String dataDir = createDataDir(id, context);
+        Path dataDir = createDataDir(id, context);
 		
 		//-----------------------------------------------------------------------
 		//--- create the small thumbnail, removing the old one
@@ -219,23 +211,24 @@ public class Set extends NotInReadOnlyModeService {
         String  type          = Util.getParam     (params, Params.TYPE);
 //        String  version       = Util.getParam     (params, Params.VERSION);
 
-        boolean imageExists = testValidImage(new File(getFileName(file, true)), false);
-        imageExists |= testValidImage(new File(getFileName(file, false)), false);
-        imageExists |= testValidImage(new File(context.getUploadDir(), file), false);
+        boolean imageExists = testValidImage(getFileName(file, true), false);
+        imageExists |= testValidImage(getFileName(file, false), false);
+        imageExists |= testValidImage(context.getUploadDir().resolve(file), false);
 
         if (!imageExists) {
             throw new IllegalArgumentException("No image file uploaded");
         }
 
         if (createSmall) {
-			String smallFile = getFileName(file, true);
-			String inFile    = context.getUploadDir() + file;
-			String outFile   = dataDir + smallFile;
+			Path smallFile = getFileName(file, true);
+			Path inFile    = context.getUploadDir().resolve(file);
+			Path outFile   = dataDir.resolve(smallFile);
+
             String  smallScalingDir    = Util.getParam(params, Params.SMALL_SCALING_DIR,   "");
             int     smallScalingFactor = Util.getParam(params, Params.SMALL_SCALING_FACTOR, 0);
 			// FIXME should be done before removeOldThumbnail(context, dbms, id, "small");
 			createThumbnail(inFile, outFile, smallScalingFactor, smallScalingDir);
-            dataMan.setThumbnail(context, id, true, smallFile, false);
+            dataMan.setThumbnail(context, id, true, smallFile.toString(), false);
        }
 
 		//-----------------------------------------------------------------------
@@ -258,25 +251,31 @@ public class Set extends NotInReadOnlyModeService {
 	//---
 	//--------------------------------------------------------------------------
 
-    private void saveThumbnail(boolean scaling, String file, String type, String dataDir, String scalingDir,
+    private void saveThumbnail(boolean scaling, String file, String type, Path dataDir, String scalingDir,
                                int scalingFactor, DataManager dataMan, String id, ServiceContext context) throws Exception {
             if (scaling) {
-                String newFile = getFileName(file, type.equals("small"));
-                String inFile  = context.getUploadDir() + file;
-                String outFile = dataDir + newFile;
+                Path newFile = getFileName(file, type.equals("small"));
+                Path inFile  = context.getUploadDir().resolve(file);
+                Path outFile = dataDir.resolve(newFile);
                 
                 createThumbnail(inFile, outFile, scalingFactor, scalingDir);
-                if (!new File(inFile).delete()) context.error("Error while deleting thumbnail : "+inFile);
-                dataMan.setThumbnail(context, id, type.equals("small"), newFile, false);
-            } else {
-                //--- move uploaded file to destination directory
-                File inFile  = new File(context.getUploadDir(), file);
-                File outFile = new File(dataDir,                file);
 
                 try {
-                    FileUtils.moveFile(inFile, outFile);
+                    Files.delete(inFile);
+                } catch (IOException e) {
+                    context.error("Error while deleting thumbnail : " + inFile);
+                }
+
+                dataMan.setThumbnail(context, id, type.equals("small"), newFile.toString(), false);
+            } else {
+                //--- move uploaded file to destination directory
+                Path inFile  = context.getUploadDir().resolve(file);
+                Path outFile = dataDir.resolve(file);
+
+                try {
+                    Files.move(inFile, outFile);
                 } catch (Exception e) {
-                    IO.delete(inFile, false, context);
+                    IO.deleteFileOrDirectory(inFile);
                     throw new Exception("Unable to move uploaded thumbnail to destination: " + outFile + ". Error: " + e.getMessage());
                 }
 			
@@ -316,7 +315,7 @@ public class Set extends NotInReadOnlyModeService {
 
 	//--------------------------------------------------------------------------
 
-	private void createThumbnail(String inFile, String outFile, int scalingFactor,
+	private void createThumbnail(Path inFile, Path outFile, int scalingFactor,
 										  String scalingDir) throws IOException
 	{
 		BufferedImage origImg = getImage(inFile);
@@ -346,27 +345,36 @@ public class Set extends NotInReadOnlyModeService {
 		g.drawImage(thumb, 0, 0, null);
 		g.dispose();
 
-		ImageIO.write(bimg, IMAGE_TYPE, new File(outFile));
+        try (OutputStream out = Files.newOutputStream(outFile)) {
+            ImageIO.write(bimg, IMAGE_TYPE, out);
+        }
 	}
 
 	//--------------------------------------------------------------------------
 
-	private String getFileName(String file, boolean small)
+	private Path getFileName(String file, boolean small)
 	{
 		int pos = file.lastIndexOf('.');
 
-		if (pos != -1)
-			file = file.substring(0, pos);
+		if (pos != -1) {
+            file = file.substring(0, pos);
+        }
 
-		return small 	? file + SMALL_SUFFIX +"."+ IMAGE_TYPE
-							: file +"."+ IMAGE_TYPE;
+        final String path;
+        if (small) {
+            path = file + SMALL_SUFFIX + "." + IMAGE_TYPE;
+        } else {
+            path = file + "." + IMAGE_TYPE;
+        }
+
+        return IO.toPath(path);
 	}
 
 	//--------------------------------------------------------------------------
 
-	public BufferedImage getImage(String inFile) throws IOException
+	public BufferedImage getImage(Path inFile) throws IOException
 	{
-		String lcFile = inFile.toLowerCase();
+		String lcFile = inFile.getFileName().toString().toLowerCase();
 
 		if (lcFile.endsWith(".tif") || lcFile.endsWith(".tiff"))
 		{
@@ -384,26 +392,23 @@ public class Set extends NotInReadOnlyModeService {
 
 			return bimg;
 		}
-
-		return ImageIO.read(new File(inFile));
+        try (InputStream in = Files.newInputStream(inFile)) {
+            return ImageIO.read(in);
+        }
 	}
 
 	//--------------------------------------------------------------------------
 
-	private Image getTiffImage(String inFile) throws IOException
+	private Image getTiffImage(Path inFile) throws IOException
 	{
-	    FileInputStream fileInputStream = null;
-	    try {
+	    try (InputStream fileInputStream = Files.newInputStream(inFile)) {
     		Tiff t = new Tiff();
-            fileInputStream = new FileInputStream(inFile);
             t.readInputStream(fileInputStream);
     
     		if (t.getPageCount() == 0)
     			throw new IOException("No images inside TIFF file");
     
     		return t.getImage(0);
-	    } finally {
-	        IOUtils.closeQuietly(fileInputStream);
 	    }
 	}
 

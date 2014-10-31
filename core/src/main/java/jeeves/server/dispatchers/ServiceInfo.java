@@ -26,9 +26,12 @@ package jeeves.server.dispatchers;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import java.nio.file.Path;
 import java.util.Vector;
 
 //=============================================================================
@@ -37,7 +40,7 @@ import java.util.Vector;
  * A container class for a service. It collect the method and the filter
  */
 public class ServiceInfo {
-    private String appPath;
+
     private String match;
     private String sheet;
     private boolean cache = false;
@@ -45,16 +48,8 @@ public class ServiceInfo {
     private Vector<Service> vServices = new Vector<Service>();
     private Vector<OutputPage> vOutputs = new Vector<OutputPage>();
     private Vector<ErrorPage> vErrors = new Vector<ErrorPage>();
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Constructor
-    //---
-    //--------------------------------------------------------------------------
-
-    public void setAppPath(String appPath) {
-        this.appPath = appPath;
-    }
+    @Autowired
+    private GeonetworkDataDirectory geonetworkDataDirectory;
 
     //--------------------------------------------------------------------------
     //---
@@ -187,7 +182,7 @@ public class ServiceInfo {
         if (sheet == null)
             return request;
 
-        String styleSheet = appPath + Jeeves.Path.XSL + sheet;
+        Path styleSheet = this.geonetworkDataDirectory.getWebappDir().resolve(Jeeves.Path.XSL).resolve(sheet);
 
         ServiceManager.info("Transforming input with stylesheet : " + styleSheet);
 

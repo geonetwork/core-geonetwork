@@ -56,6 +56,6 @@ public abstract class BackupFileService extends NotInReadOnlyModeService {
             IOUtils.closeQuietly(is);
             IOUtils.closeQuietly(os);
         }
-        IO.delete(new File(file), false, Geonet.MEF);
+        IO.deleteFile(new File(file), false, Geonet.MEF);
     }
 }

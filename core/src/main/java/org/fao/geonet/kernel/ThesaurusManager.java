@@ -82,7 +82,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 		// Get Sesame interface
 		service = Sesame.getService();
 
-		Path thesauriDir = Paths.get(thesauriRepository);
+		Path thesauriDir = IO.toPath(thesauriRepository);
 
 		if (!Files.exists(thesauriDir)) {
 			thesauriDir = context.getBean(GeonetworkDataDirectory.class).getWebappDir().resolve(thesauriDir);
@@ -365,7 +365,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 	  // check whether we have created a thesaurus for this register already
 		aRdfDataFile = uuid+".rdf";
         String thesaurusFile = buildThesaurusFilePath(aRdfDataFile, root, type);
-        Path outputRdf = Paths.get(thesaurusFile);
+        Path outputRdf = IO.toPath(thesaurusFile);
         final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
         Thesaurus gst = new Thesaurus(context.getApplicationContext(), aRdfDataFile, root, type, outputRdf, siteURL);
 

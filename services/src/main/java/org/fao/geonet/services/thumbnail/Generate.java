@@ -87,7 +87,7 @@ public class Generate extends NotInReadOnlyModeService {
         try {
             FileUtils.moveFile(thumbnailFile, outFile);
         } catch (Exception e) {
-            IO.delete(thumbnailFile, false, context);
+            IO.deleteFile(thumbnailFile, false, context);
             throw new Exception(
                     "Unable to move uploaded thumbnail to destination: "
                             + outFile + ". Error: " + e.getMessage());

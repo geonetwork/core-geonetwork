@@ -23,21 +23,22 @@
 
 package org.fao.geonet.lib;
 
+import jeeves.server.overrides.ConfigurationOverrides;
+import org.fao.geonet.Constants;
+import org.fao.geonet.utils.IO;
+
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Properties;
-
 import javax.annotation.Nullable;
 import javax.servlet.ServletContext;
-
-import jeeves.server.overrides.ConfigurationOverrides;
-import org.fao.geonet.Constants;
 
 //=============================================================================
 
@@ -49,7 +50,7 @@ public class ServerLib
 	//---
 	//---------------------------------------------------------------------------
 
-	public ServerLib(@Nullable ServletContext servletContext, String appPath) throws IOException
+	public ServerLib(@Nullable ServletContext servletContext, Path appPath) throws IOException
 	{
 		this.appPath = appPath;
 
@@ -64,18 +65,17 @@ public class ServerLib
 		}
 
 		if(stream == null) {
-		    if(appPath == null) { //In case of single tomcat with no appPath
-  		    	stream = new FileInputStream(SERVER_PROPS.replace("/",File.separator));
-		    } else {
-                        stream = new FileInputStream(appPath + (SERVER_PROPS.replace("/",File.separator)));
-                    }
-		}
+            if (appPath == null) { //In case of single tomcat with no appPath
+                stream = Files.newInputStream(IO.toPath(SERVER_PROPS));
+            } else {
+                stream = Files.newInputStream(appPath.resolve(SERVER_PROPS));
+            }
+        }
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(stream, Constants.ENCODING));
 		
 		try {
-			List<String> lines = ConfigurationOverrides.DEFAULT.loadTextFileAndUpdate(
-                    SERVER_PROPS, servletContext, appPath, reader);
+			List<String> lines = ConfigurationOverrides.DEFAULT.loadTextFileAndUpdate(SERVER_PROPS, servletContext, appPath.toString(), reader);
 			StringBuilder b = new StringBuilder();
 			for (String string : lines) {
 				b.append(string);
@@ -94,7 +94,7 @@ public class ServerLib
 	//---
 	//---------------------------------------------------------------------------
 
-	public String getAppPath()    { return appPath; }
+	public Path getAppPath()    { return appPath; }
 	public String getVersion()    { return serverProps.getProperty("version",    "???"); }
 	public String getSubVersion() { return serverProps.getProperty("subVersion", "???"); }
 
@@ -104,7 +104,7 @@ public class ServerLib
 	//---
 	//---------------------------------------------------------------------------
 
-	private String     appPath;
+	private Path       appPath;
 	private Properties serverProps;
 
 	private static final String SERVER_PROPS = "/WEB-INF/server.prop";
