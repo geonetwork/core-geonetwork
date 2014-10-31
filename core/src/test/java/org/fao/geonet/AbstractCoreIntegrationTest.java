@@ -125,7 +125,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         }
         final String initializedString = "initialized";
         final String webappDir = getWebappDir(getClass());
-        _applicationContext.getBean(GeonetMockServletContext.class).setResourcePath(webappDir);
+        _applicationContext.getBean(GeonetMockServletContext.class).setTestClass(getClass());
 
         LanguageDetector.init(webappDir + _applicationContext.getBean(Geonet.Config.LANGUAGE_PROFILES_DIR, String.class));
 

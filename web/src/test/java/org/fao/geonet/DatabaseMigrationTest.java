@@ -1,9 +1,68 @@
 package org.fao.geonet;
 
 import org.apache.commons.io.FileUtils;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.IsoLanguage;
+import org.fao.geonet.domain.Language;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataRatingByIp;
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.Operation;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.OperationAllowedId;
+import org.fao.geonet.domain.Service;
+import org.fao.geonet.domain.Setting;
+import org.fao.geonet.domain.SettingDataType;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.AbstractSpringDataTest;
+import org.fao.geonet.repository.AddressRepository;
+import org.fao.geonet.repository.AddressRepositoryTest;
+import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepository;
+import org.fao.geonet.repository.CswCapabilitiesInfoFieldRepositoryTest;
+import org.fao.geonet.repository.CustomElementSetRepository;
+import org.fao.geonet.repository.CustomElementSetRepositoryTest;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.GroupRepositoryTest;
+import org.fao.geonet.repository.HarvestHistoryRepository;
+import org.fao.geonet.repository.HarvestHistoryRepositoryTest;
+import org.fao.geonet.repository.HarvesterSettingRepository;
+import org.fao.geonet.repository.HarvesterSettingRepositoryTest;
+import org.fao.geonet.repository.IsoLanguageRepository;
+import org.fao.geonet.repository.LanguageRepository;
+import org.fao.geonet.repository.LanguageRepositoryTest;
+import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.MetadataCategoryRepositoryTest;
+import org.fao.geonet.repository.MetadataNotificationRepository;
+import org.fao.geonet.repository.MetadataNotificationRepositoryTest;
+import org.fao.geonet.repository.MetadataNotifierRepository;
+import org.fao.geonet.repository.MetadataNotifierRepositoryTest;
+import org.fao.geonet.repository.MetadataRatingByIpRepository;
+import org.fao.geonet.repository.MetadataRatingByIpRepositoryTest;
+import org.fao.geonet.repository.MetadataRelationRepository;
+import org.fao.geonet.repository.MetadataRelationRepositoryTest;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.MetadataRepositoryTest;
+import org.fao.geonet.repository.MetadataStatusRepository;
+import org.fao.geonet.repository.MetadataStatusRepositoryTest;
+import org.fao.geonet.repository.MetadataValidationRepository;
+import org.fao.geonet.repository.MetadataValidationRepositoryTest;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.OperationRepository;
+import org.fao.geonet.repository.OperationRepositoryTest;
+import org.fao.geonet.repository.ServiceRepository;
+import org.fao.geonet.repository.ServiceRepositoryTest;
+import org.fao.geonet.repository.SettingRepository;
+import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.SourceRepositoryTest;
+import org.fao.geonet.repository.StatusValueRepository;
+import org.fao.geonet.repository.StatusValueRepositoryTest;
+import org.fao.geonet.repository.ThesaurusActivationRepository;
+import org.fao.geonet.repository.ThesaurusActivationRepositoryTest;
+import org.fao.geonet.repository.Updater;
+import org.fao.geonet.repository.UserGroupRepository;
+import org.fao.geonet.repository.UserGroupRepositoryTest;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.UserRepositoryTest;
 import org.fao.geonet.repository.statistic.SearchRequestParamRepository;
 import org.fao.geonet.repository.statistic.SearchRequestParamRepositoryTest;
 import org.fao.geonet.repository.statistic.SearchRequestRepository;
@@ -14,15 +73,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 
-import javax.annotation.Nonnull;
-import javax.annotation.PreDestroy;
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
+import javax.annotation.Nonnull;
+import javax.annotation.PreDestroy;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test migration from a 2.8.0 database to current.  The DatabaseMigration postprocessor is configured in the
@@ -36,9 +97,6 @@ import static org.junit.Assert.*;
 public class DatabaseMigrationTest extends AbstractSpringDataTest {
 
     public static final String DATABASE_MIGRATION_XML = "WEB-INF/config-db/database_migration.xml";
-
-    @Autowired
-    private DatabasePathLocator locator;
 
     @Autowired
     private MetadataRepository _mdRepo;
@@ -94,7 +152,6 @@ public class DatabaseMigrationTest extends AbstractSpringDataTest {
     private SearchRequestRepository _searchRequestRepo;
     @Autowired
     private SearchRequestParamRepository _searchRequestParamRepo;
-
 
     @Test
     public void testMigrate() throws Exception {
@@ -217,10 +274,10 @@ public class DatabaseMigrationTest extends AbstractSpringDataTest {
         }
     }
 
-    public static class MigrationConfigLoader implements Callable<LinkedHashMap<Integer, List<String>>> {
+    public static class MigrationConfigLoader implements Callable<LinkedHashMap<String, List<String>>> {
 
         @Override
-        public LinkedHashMap<Integer, List<String>> call() throws Exception {
+        public LinkedHashMap<String, List<String>> call() throws Exception {
             final String configLocation = new File(findwebappDir(), DATABASE_MIGRATION_XML).toURI().toString();
             ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(configLocation);
             return context.getBean(DatabaseMigration.class).getMigrationConfig();

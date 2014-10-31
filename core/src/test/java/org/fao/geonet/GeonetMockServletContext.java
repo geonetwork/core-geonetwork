@@ -13,8 +13,8 @@ public class GeonetMockServletContext extends MockServletContext {
         super(new FileSystemResourceLoader());
     }
 
-    public void setResourcePath(String resourcePath) {
-        this.resourcePath = resourcePath;
+    public void setTestClass(Class testClass) {
+        this.resourcePath = AbstractCoreIntegrationTest.getWebappDir(testClass);
         if (this.resourcePath.endsWith("/") || this.resourcePath.endsWith("\\")) {
             this.resourcePath = this.resourcePath.substring(0, this.resourcePath.length() - 1);
         }
