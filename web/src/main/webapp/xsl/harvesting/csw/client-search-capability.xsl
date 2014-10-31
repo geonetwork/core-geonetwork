@@ -36,7 +36,16 @@
 		<xsl:for-each select="/root/search/*">
 			<tr>
 				<td/>
-				<td class="padded"><xsl:value-of select="local-name()"/></td>
+				<td class="padded">
+
+          <!-- Queryable fields with a namespace are stored replacing : with __ to avoid issues in the SettingsManager -->
+          <xsl:choose>
+            <xsl:when test="contains(local-name(), '__')">
+              <xsl:value-of select="substring-after(local-name(), '__')"/>
+            </xsl:when>
+            <xsl:otherwise><xsl:value-of select="local-name()"/></xsl:otherwise>
+          </xsl:choose>
+				</td>
 				 <td class="padded">
 		<input type="text" >
 			<xsl:attribute name="id">
