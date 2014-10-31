@@ -79,7 +79,6 @@ import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.search.spatial.TouchesFilter;
 import org.fao.geonet.kernel.search.spatial.WithinFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
-import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.geotools.data.DataStore;
@@ -97,7 +96,6 @@ import org.opengis.filter.capability.FilterCapabilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.nio.file.DirectoryStream;
@@ -684,7 +682,7 @@ public class SearchManager {
      * @param forceRefreshReaders if true then block all searches until they can obtain a up-to-date reader
 	 * @throws Exception
 	 */
-	public void index(String schemaDir, Element metadata, String id, List<Element> moreFields,
+	public void index(Path schemaDir, Element metadata, String id, List<Element> moreFields,
                       MetadataType metadataType, String root, boolean forceRefreshReaders)
             throws Exception {
         // Update spatial index first and if error occurs, record it to Lucene index
@@ -701,7 +699,7 @@ public class SearchManager {
         }
 	}
 
-    private void indexGeometry(String schemaDir, Element metadata, String id,
+    private void indexGeometry(Path schemaDir, Element metadata, String id,
             List<Element> moreFields) throws Exception {
         try {
             _spatial.writer().delete(id);
@@ -738,24 +736,23 @@ public class SearchManager {
 	
     /**
      * TODO javadoc.
-     *
-     * @param schemaDir
+     *  @param schemaDir
      * @param metadata
      * @param id
      * @param moreFields
      * @param metadataType
-     *@param root @return
+     * @param root @return
      * @throws Exception
      */
-     private List<IndexInformation> buildIndexDocument(String schemaDir, Element metadata, String id,
+     private List<IndexInformation> buildIndexDocument(Path schemaDir, Element metadata, String id,
                                                        List<Element> moreFields, MetadataType metadataType,
                                                        String root) throws Exception
      {
         if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
             Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n" + Xml.getString(metadata));
         }
-         File defaultLangStyleSheet = getIndexFieldsXsl(schemaDir, root, "");
-         File otherLocalesStyleSheet = getIndexFieldsXsl(schemaDir, root, "language-");
+         Path defaultLangStyleSheet = getIndexFieldsXsl(schemaDir, root, "");
+         Path otherLocalesStyleSheet = getIndexFieldsXsl(schemaDir, root, "language-");
 
         Element xmlDoc = getIndexFields(metadata, defaultLangStyleSheet, otherLocalesStyleSheet);
 
@@ -785,7 +782,7 @@ public class SearchManager {
         return documents;
 	}
 
-    private File getIndexFieldsXsl(String schemaDir, String root, String indexName) {
+    private Path getIndexFieldsXsl(Path schemaDir, String root, String indexName) {
         if (root == null) {
             root = "";
         }
@@ -795,13 +792,13 @@ public class SearchManager {
         }
 
         final String basicName = "index-fields";
-        File defaultLangStyleSheet = new File(new File(schemaDir, basicName), indexName + root + ".xsl");
-        if (!defaultLangStyleSheet.exists()) {
-            defaultLangStyleSheet = new File(new File(schemaDir, basicName), indexName + "default.xsl");
+        Path defaultLangStyleSheet = schemaDir.resolve(basicName).resolve(indexName + root + ".xsl");
+        if (!Files.exists(defaultLangStyleSheet)) {
+            defaultLangStyleSheet = schemaDir.resolve(basicName).resolve(indexName + "default.xsl");
         }
-        if (!defaultLangStyleSheet.exists()) {
+        if (!Files.exists(defaultLangStyleSheet)) {
             // backward compatibility
-            defaultLangStyleSheet = new File(schemaDir, indexName + basicName + ".xsl");
+            defaultLangStyleSheet = schemaDir.resolve(indexName + basicName + ".xsl");
         }
         return defaultLangStyleSheet;
     }
@@ -1180,22 +1177,23 @@ public class SearchManager {
      * TODO javadoc.
      *
      * @param xml
-     * @return
+     * @param defaultLangStyleSheet
+     *@param otherLocalesStyleSheet @return
      * @throws Exception
      */
     Element getIndexFields(Element xml,
-                           File defaultLangStyleSheet,
-                           File otherLocalesStyleSheet) throws Exception {
+                           Path defaultLangStyleSheet,
+                           Path otherLocalesStyleSheet) throws Exception {
         Element documents = new Element("Documents");
         try {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("inspire", Boolean.toString(isInspireEnabled()));
             params.put("thesauriDir", _geonetworkDataDirectory.getThesauriDir().toAbsolutePath());
 
-            Element defaultLang = Xml.transform(xml, defaultLangStyleSheet.getAbsolutePath(), params);
-            if (otherLocalesStyleSheet.exists()) {
+            Element defaultLang = Xml.transform(xml, defaultLangStyleSheet, params);
+            if (Files.exists(otherLocalesStyleSheet)) {
                 @SuppressWarnings(value = "unchecked")
-                List<Element> otherLanguages = Xml.transform(xml, otherLocalesStyleSheet.getAbsolutePath(), params).removeContent();
+                List<Element> otherLanguages = Xml.transform(xml, defaultLangStyleSheet, params).removeContent();
                 mergeDefaultLang(defaultLang, otherLanguages);
                 documents.addContent(otherLanguages);
             }
@@ -1416,10 +1414,7 @@ public class SearchManager {
      * for configuration.
      *
      *
-     * @param locale
      * @param xml    The list of field to be indexed.
-     * @param multilingualSortFields
-     * @return
      */
 	private IndexInformation newDocument(String language, Element xml, Collection<Field> multilingualSortFields)
 	{

@@ -42,13 +42,11 @@ import org.openrdf.sesame.constants.RDFFormat;
 import org.openrdf.sesame.repository.local.LocalRepository;
 import org.openrdf.sesame.repository.local.LocalService;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -242,7 +240,7 @@ public class ThesaurusManager implements ThesaurusFinder {
         root.addContent(md);
         root.addContent(env);
 
-        String styleSheet = dataManager.getSchemaDir("iso19135") + "convert/" + Geonet.File.EXTRACT_SKOS_FROM_ISO19135;
+        Path styleSheet = dataManager.getSchemaDir("iso19135").resolve("convert").resolve(Geonet.File.EXTRACT_SKOS_FROM_ISO19135);
         Xml.transform(root, styleSheet, os);
 	}
 
@@ -253,14 +251,13 @@ public class ThesaurusManager implements ThesaurusFinder {
 	 * @param fname
 	 * @param type
 	 * @param dname
-	 * 
+	 *
 	 * @return the thesaurus file path.
 	 */
-	public String buildThesaurusFilePath(String fname, String type, String dname) throws IOException {
-		String dirPath = thesauriDirectory + File.separator + type + File.separator + Geonet.CodeList.THESAURUS + File.separator + dname;
-		File dir = new File(dirPath);
-		IO.mkdirs(dir, "Thesaurus dname specific directory");
-		return dirPath + File.separator + fname;
+	public Path buildThesaurusFilePath(String fname, String type, String dname) throws IOException {
+		Path dirPath = thesauriDirectory.resolve(type).resolve(Geonet.CodeList.THESAURUS).resolve(dname);
+		Files.createDirectories(dirPath);
+		return dirPath.resolve(fname);
 	}	
 
 	/**
@@ -308,7 +305,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 
 			SailConfig syncSail = new SailConfig("org.openrdf.sesame.sailimpl.sync.SyncRdfSchemaRepository");
 			SailConfig memSail = new org.openrdf.sesame.sailimpl.memory.RdfSchemaRepositoryConfig(
-			                                                   gst.getFile().getAbsolutePath(), RDFFormat.RDFXML);
+			                                                   gst.getFile().toAbsolutePath().toString(), RDFFormat.RDFXML);
 			repConfig.addSail(syncSail);
 			repConfig.addSail(memSail);
 			repConfig.setWorldReadable(true);
@@ -359,17 +356,15 @@ public class ThesaurusManager implements ThesaurusFinder {
 	 */
 	public String createUpdateThesaurusFromRegister(String uuid, String type, ServiceContext context) throws Exception {
 
-		String aRdfDataFile;
 		String root = Geonet.CodeList.REGISTER;
 
 	  // check whether we have created a thesaurus for this register already
-		aRdfDataFile = uuid+".rdf";
-        String thesaurusFile = buildThesaurusFilePath(aRdfDataFile, root, type);
-        Path outputRdf = IO.toPath(thesaurusFile);
+        String aRdfDataFile = uuid+".rdf";
+        Path thesaurusFile = buildThesaurusFilePath(aRdfDataFile, root, type);
         final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
-        Thesaurus gst = new Thesaurus(context.getApplicationContext(), aRdfDataFile, root, type, outputRdf, siteURL);
+        Thesaurus gst = new Thesaurus(context.getApplicationContext(), aRdfDataFile, root, type, thesaurusFile, siteURL);
 
-		try (OutputStream outputRdfStream = Files.newOutputStream(outputRdf)){
+		try (OutputStream outputRdfStream = Files.newOutputStream(thesaurusFile)){
 			getRegisterMetadataAsRdf(uuid, outputRdfStream, context);
 		} catch (Exception e) {
 			Log.error(Geonet.THESAURUS_MAN, "Register thesaurus "+aRdfDataFile+" could not be read/converted from ISO19135 record in catalog - skipping");

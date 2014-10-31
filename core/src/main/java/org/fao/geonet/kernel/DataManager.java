@@ -695,7 +695,7 @@ public class DataManager {
      * @param name
      * @return
      */
-    public Path getSchemaDir(String name) {
+    public java.nio.file.Path getSchemaDir(String name) {
         return schemaMan.getSchemaDir(name);
     }
 
@@ -821,7 +821,7 @@ public class DataManager {
 
     /**
      * Start an editing session. This will record the original metadata record
-     * in the session under the {@link Geonet.Session.METADATA_BEFORE_ANY_CHANGES} + id
+     * in the session under the {@link org.fao.geonet.constants.Geonet.Session#METADATA_BEFORE_ANY_CHANGES} + id
      * session property.
      * 
      * The record contains geonet:info element.
@@ -1011,8 +1011,7 @@ public class DataManager {
                 report.setAttribute("rule", ruleId,
                         Edit.NAMESPACE);
 
-                String schemaTronXmlXslt = metadataSchema.getSchemaDir() + File.separator
-                        + "schematron" + File.separator + rule;
+                java.nio.file.Path schemaTronXmlXslt = metadataSchema.getSchemaDir().resolve("schematron").resolve(rule);
                 try {
                     Map<String,Object> params = new HashMap<String,Object>();
                     params.put("lang", lang);
@@ -2048,7 +2047,7 @@ public class DataManager {
     public Element applyCustomSchematronRules(String schema, int metadataId, Element md,
                                               String lang, Map<String, Integer[]> valTypeAndStatus) {
         MetadataSchema metadataSchema = getSchema(schema);
-        final String schemaDir = this.schemaMan.getSchemaDir(schema);
+        final java.nio.file.Path schemaDir = this.schemaMan.getSchemaDir(schema);
 
         Element schemaTronXmlOut = new Element("schematronerrors", Edit.NAMESPACE);
         try {
@@ -2120,7 +2119,7 @@ public class DataManager {
                         params.put("rule", ruleId);
                         params.put("thesaurusDir", this.thesaurusDir);
 
-                        String file = schemaDir + SCHEMATRON_DIR + File.separator + schematron.getFile();
+                        java.nio.file.Path file = schemaDir.resolve(SCHEMATRON_DIR).resolve(schematron.getFile());
                         Element xmlReport = Xml.transform(md, file, params);
                         if (xmlReport != null) {
                             report.addContent(xmlReport);
@@ -3081,8 +3080,7 @@ public class DataManager {
 
             // --- do an XSL transformation
 
-            String styleSheet = getSchemaDir(parentSchema)
-                    + Geonet.File.UPDATE_CHILD_FROM_PARENT_INFO;
+            java.nio.file.Path styleSheet = getSchemaDir(parentSchema).resolve(Geonet.File.UPDATE_CHILD_FROM_PARENT_INFO);
             Element childForUpdate = Xml.transform(rootEl, styleSheet, params);
 
             xmlSerializer.update(childId, childForUpdate, new ISODate().toString(), true, null, srvContext);

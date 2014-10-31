@@ -46,6 +46,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 
 import java.io.*;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -180,7 +181,7 @@ public class MEFLib {
 
 	// --------------------------------------------------------------------------
 
-	public static void visit(File mefFile, IVisitor visitor, IMEFVisitor v)
+	public static void visit(Path mefFile, IVisitor visitor, IMEFVisitor v)
 			throws Exception {
 		visitor.visit(mefFile, v);
 	}

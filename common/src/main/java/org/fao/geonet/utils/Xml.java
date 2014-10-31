@@ -396,10 +396,10 @@ public final class Xml
      * @return
      * @throws Exception
      */
-	public static Element transform(Element xml, String styleSheetPath, Map<String, Object> params) throws Exception
+	public static Element transform(Element xml, Path styleSheetPath, Map<String, Object> params) throws Exception
 	{
 		JDOMResult resXml = new JDOMResult();
-		transform(xml, IO.toPath(styleSheetPath), resXml, params);
+		transform(xml, styleSheetPath, resXml, params);
 		return (Element)resXml.getDocument().getRootElement().detach();
 	}
 	//--------------------------------------------------------------------------

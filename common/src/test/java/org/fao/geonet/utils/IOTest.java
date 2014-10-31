@@ -141,6 +141,5 @@ public class IOTest {
         final Path zipPath = IO.toPath("part");
         assertEquals("jar:" + rootUri + "x.zip!/part".replaceAll("/+", "/"), zipPath.toUri().toString().replaceAll("/+", "/"));
 
-        assertEquals("x.xml", IO.toPath("file:x.xml").toString());
     }
 }
