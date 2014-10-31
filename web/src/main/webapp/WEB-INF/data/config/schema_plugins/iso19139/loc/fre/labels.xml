@@ -4883,4 +4883,14 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
     <element name="gml:realizationEpoch">
         <label>Époque de réalisation</label>
     </element>
+    <!-- ==================================================== -->
+    <element name="gml:TimePeriodTypeCHOICE_ELEMENT2">
+      <label>Begin time</label>
+      <description>Choose the begin time element</description>
+    </element>
+    <!-- ==================================================== -->
+    <element name="gml:TimePeriodTypeCHOICE_ELEMENT3">
+      <label>End Time</label>
+      <description>Choose the end time element</description>
+    </element>
 </labels>

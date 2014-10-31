@@ -2750,5 +2750,15 @@ elementi quali il software, il sistema operativo del computer, nome del file, e 
     <element name="gmx:fieldOfApplication"> 
         <label>Campo di applicazione</label> 
         <description>Campo di applicazione</description> 
-    </element> 
+    </element>
+    <!-- ==================================================== -->
+    <element name="gml:TimePeriodTypeCHOICE_ELEMENT2">
+      <label>Begin time</label>
+      <description>Choose the begin time element</description>
+    </element>
+    <!-- ==================================================== -->
+    <element name="gml:TimePeriodTypeCHOICE_ELEMENT3">
+      <label>End Time</label>
+      <description>Choose the end time element</description>
+    </element>
 </labels>

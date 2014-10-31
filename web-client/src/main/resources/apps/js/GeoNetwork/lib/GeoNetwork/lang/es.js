@@ -282,7 +282,7 @@ GeoNetwork.Lang.es = {
     'success':'Éxito',
     'failure':'Fracaso',
     'error':'Error',
-    'save':'Ahorrar',
+    'save':'Guardar',
     'reset':'Espalda',
     'fileProcessedMsg':'File ${res} procesado en el servidor.',
     'suggestion':'Propuesta',

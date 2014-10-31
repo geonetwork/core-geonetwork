@@ -2865,5 +2865,14 @@
     <element name="gmx:fieldOfApplication"> 
         <label>Field of application</label> 
         <description>Field of application</description> 
-    </element> 
+    </element>
+    <!-- ==================================================== -->
+    <element name="gml:TimePeriodTypeCHOICE_ELEMENT2">
+      <label>Fecha de inicio</label>
+      <description>Selecciona la fecha de inicio</description>
+    </element>
+    <element name="gml:TimePeriodTypeCHOICE_ELEMENT3">
+      <label>Fecha de fin</label>
+      <description>Selecciona la fecha de fin</description>
+    </element>
 </labels>

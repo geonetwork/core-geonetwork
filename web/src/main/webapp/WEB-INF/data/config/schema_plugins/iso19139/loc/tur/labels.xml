@@ -2533,5 +2533,15 @@
     <element name="gmx:fieldOfApplication"> 
         <label>Field of application</label> 
         <description>Field of application</description> 
-    </element> 
+    </element>
+    <!-- ==================================================== -->
+    <element name="gml:TimePeriodTypeCHOICE_ELEMENT2">
+      <label>Begin time</label>
+      <description>Choose the begin time element</description>
+    </element>
+    <!-- ==================================================== -->
+    <element name="gml:TimePeriodTypeCHOICE_ELEMENT3">
+      <label>End Time</label>
+      <description>Choose the end time element</description>
+    </element>
 </labels>
