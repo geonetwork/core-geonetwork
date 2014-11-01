@@ -574,7 +574,6 @@ GeoNetwork.app = function () {
             lang: this.lang,
             currTab: GeoNetwork.defaultViewMode || 'simple',
             printDefaultForTabs: GeoNetwork.printDefaultForTabs || false,
-            printUrl: GeoNetwork.printUrl || 'print.html',
             catalogue: this,
             maximized: maximized || false,
             metadataUuid: uuid,
