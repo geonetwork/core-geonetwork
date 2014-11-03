@@ -204,6 +204,55 @@
         <to type="permanent-redirect" last="true">%{context-path}$1/rss.search?sortBy=changeDate</to>
     </rule>
 
+
+    <rule>
+        <note>
+          INSPIRE Atom OpenSearchDescription
+        </note>
+        <from>^/opensearch/(.*)/(.*)/OpenSearchDescription.xml$</from>
+        <to type="forward">/srv/$1/atom.description?fileIdentifier=$2</to>
+    </rule>
+
+    <rule>
+        <note>
+          INSPIRE Atom search
+        </note>
+        <from>^/opensearch/(.*)/(.*)/search?(.*)$</from>
+        <to type="forward">/srv/$1/atom.search?fileIdentifier=$2</to>
+    </rule>
+
+    <rule>
+        <note>
+          INSPIRE Atom search
+        </note>
+        <from>^/opensearch/(.*)/search?(.*)$</from>
+        <to type="forward">/srv/$1/atom.search</to>
+    </rule>
+
+    <rule>
+        <note>
+          INSPIRE Atom Describe (service)
+        </note>
+        <from>^/opensearch/(.*)/(.*)/describe?(.*)$</from>
+        <to type="forward">/srv/$1/atom.describe?fileIdentifier=$2</to>
+    </rule>
+
+    <rule>
+        <note>
+          INSPIRE Atom DescribeBy
+        </note>
+        <from>^/opensearch/(.*)/describe?(.*)$</from>
+        <to type="forward">/srv/$1/atom.describe</to>
+    </rule>
+
+
+    <rule>
+        <note>
+          INSPIRE Atom GetData
+        </note>
+        <from>^/opensearch/(.*)/download?(.*)$</from>
+        <to type="forward">/srv/$1/atom.download</to>
+    </rule>
     
     <!-- hide jsession id from google bot -->
     <outbound-rule encodefirst="true">

@@ -44,6 +44,9 @@
       $scope.orderProperty = '@position';
       $scope.reverse = false;
 
+      $scope.loadTplReport = null;
+      $scope.atomFeedType = '';
+
       /**
          * Load catalog settings as a flat list and
          * extract firs and second level sections.
@@ -174,6 +177,22 @@
             '&newUrlPrefix=' + buildUrl($scope.settings));
       };
 
+
+      /**
+       * Execute Atom feed harvester
+       */
+      $scope.executeAtomHarvester = function() {
+        $http.get('atomharvester@json').success(function(data) {
+          $scope.loadTplReport = data;
+
+          $('#atomHarvesterModal').modal();
+
+        }).error(function(data) {
+          $scope.loadTplReport = data;
+
+          $('#atomHarvesterModal').modal();
+        });
+      };
 
       /**
          * Scroll to an element.
