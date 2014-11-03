@@ -75,7 +75,8 @@
                  return requestBody;
                };
 
-               $http.post('md.element.info?_content_type=json', getPostRequestBody(), {
+               $http.post('md.element.info?_content_type=json',
+               getPostRequestBody(), {
                  headers: {'Content-type': 'application/xml'}
                }).
                success(function(data) {

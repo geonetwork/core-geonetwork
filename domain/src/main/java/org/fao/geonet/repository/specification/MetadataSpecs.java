@@ -140,4 +140,16 @@ public final class MetadataSpecs {
             }
         };
     }
+
+
+    public static Specification<Metadata> isIso19139Schema() {
+        return new Specification<Metadata>() {
+            @Override
+            public Predicate toPredicate(Root<Metadata> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<String> schemaIdAttributePath =  root.get(Metadata_.dataInfo).get(MetadataDataInfo_.schemaId);
+                Predicate likeSchemaIdPredicate = cb.like(schemaIdAttributePath, cb.literal("iso19139"));
+                return likeSchemaIdPredicate;
+            }
+        };
+    }
 }

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="2.0"
+	xmlns:gmd="http://www.isotc211.org/2005/gmd"
+    xmlns:gco="http://www.isotc211.org/2005/gco"
+    xmlns:srv="http://www.isotc211.org/2005/srv"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:geonet="http://www.fao.org/geonetwork"
-	xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="exslt geonet">
+	xmlns:exslt="http://exslt.org/common" exclude-result-prefixes="exslt geonet gmd">
 	<xsl:include href="metadata/common.xsl" />
 	<xsl:output omit-xml-declaration="no" method="html"
 		doctype-public="html" indent="yes" encoding="UTF-8" />
@@ -17,7 +20,7 @@
            <xsl:attribute name="lang">
                 <xsl:value-of select="/root/gui/language" />
             </xsl:attribute>
-    
+
 			<head>
 				<meta http-equiv="Content-type" content="text/html;charset=UTF-8"></meta>
 				<meta http-equiv="X-UA-Compatible" content="IE=9,chrome=1"></meta>
@@ -26,6 +29,35 @@
                 <meta name="viewport" content="width=device-width"></meta>
 				<meta name="og:title" content="{$siteName}"/>
 				
+				<!-- if this page is loaded with ?uuid=xxx and the selected metadata is of a download service with atom attached, provide an opensearch option -->
+                <xsl:if test="/root/gui/env/inspire/enable = 'true' and /root/gui/env/inspire/atom != 'disabled'">
+                    <xsl:choose>
+                        <xsl:when test="//geonet:info/schema='iso19139'">
+                            <xsl:variable name="atomLink" select="//gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource[upper-case(gmd:protocol/gco:CharacterString)=upper-case(/root/gui/env/inspire/atomProtocol)]/gmd:linkage/gmd:URL"/>
+                            <xsl:if test="$atomLink!=''">
+                                <xsl:variable name="pagetitle">
+                                    <xsl:value-of select="$siteName" />
+                                    <xsl:choose>
+                                        <xsl:when test="//gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString!=''"><!-- iso19115 -->
+                                            <xsl:text> - </xsl:text><xsl:value-of select="//gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString[1]"/>
+                                        </xsl:when>
+                                        <xsl:when test="//gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString!=''"><!-- iso19119 -->
+                                            <xsl:text> - </xsl:text><xsl:value-of select="//gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString[1]"/>
+                                        </xsl:when>
+                                        <xsl:otherwise></xsl:otherwise>
+                                    </xsl:choose>
+                                </xsl:variable>
+
+                                <link rel="search" type="application/opensearchdescription+xml" title="{$pagetitle}" href="{/root/gui/url}/opensearch/{/root/gui/language}/{//geonet:info/uuid}/OpenSearchDescription.xml"></link>
+                            </xsl:if>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <link rel="search" type="application/opensearchdescription+xml" title="{$siteName}" href="{/root/gui/locService}/atom.description"></link>
+                        </xsl:otherwise>
+                    </xsl:choose>
+
+                </xsl:if>
+
 				<link rel="icon" type="image/gif" href="../../images/logos/favicon.gif" />
 				<link rel="alternate" type="application/rss+xml" title="{$siteName} - RSS" href="{$rssUrl}"/>
 				<link rel="search" href="{$serviceUrl}/portal.opensearch" type="application/opensearchdescription+xml" 
