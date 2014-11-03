@@ -3,15 +3,6 @@
 ALTER TABLE operations DROP COLUMN reserved;
 ALTER TABLE services DROP COLUMN id;
 
-INSERT INTO HarvesterSettings VALUES  (1,NULL,'harvesting',NULL);
--- Copy all harvester's root nodes config
-INSERT INTO HarvesterSettings SELECT id, 1, name, value FROM Settings WHERE parentId = 2;
--- Copy all harvester's properties (Greater than last 2.10.1 settings ie. keepMarkedElement)
-INSERT INTO HarvesterSettings SELECT * FROM Settings WHERE id > 958 AND parentId > 2;
--- Drop harvester config from Settings table
-DELETE FROM Settings WHERE id > 958;
-DELETE FROM Settings WHERE id=2;
-
 
 ALTER TABLE Settings ALTER name TYPE varchar(512);
 
