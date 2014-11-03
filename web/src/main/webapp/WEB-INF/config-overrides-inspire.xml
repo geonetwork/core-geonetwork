@@ -2,8 +2,6 @@
 	overrides used by inspire configuration.   
 -->
 <overrides>
-	<import file="/WEB-INF/server-props-overrides.xml"/>
-
 	<textFile name=".*/data/data-db-default.sql">
 		<!-- inspire-->
 		<update linePattern="(INSERT INTO Settings VALUES \(721,720,'enable',').+?('.*)">$1true$2</update>
