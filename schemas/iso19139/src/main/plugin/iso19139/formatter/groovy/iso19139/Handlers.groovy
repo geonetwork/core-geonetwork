@@ -22,7 +22,7 @@ public class Handlers {
         packageViews = [
                 'gmd:identificationInfo', 'gmd:metadataMaintenance', 'gmd:metadataConstraints', 'gmd:spatialRepresentationInfo',
                 'gmd:distributionInfo', 'gmd:applicationSchemaInfo', 'gmd:dataQualityInfo', 'gmd:portrayalCatalogueInfo',
-                'gmd:contentInfo', 'gmd:metadataExtensionInfo']
+                'gmd:contentInfo', 'gmd:metadataExtensionInfo', 'gmd:referenceSystemInfo']
     }
 
     def addDefaultHandlers() {
@@ -108,7 +108,7 @@ public class Handlers {
               <li><a href="" rel=".gmd_distributionInfo" >Distribution</a></li>
               <li><a href="" rel=".gmd_dataQualityInfo" >Quality</a></li>
               <li><a href="" rel=".gmd_spatialRepresentationInfo" >Spatial rep.</a></li>
-              <li><a href="" rel=".gmd_distributionInfo" >Ref. system</a></li>
+              <li><a href="" rel=".gmd_referenceSystemInfo" >Ref. system</a></li>
               <li><a href="" rel=".gmd_metadataExtensionInfo" >Extension</a></li>
               <li><a href="" rel=".gmd_MD_Metadata">Metadata</a></li>
               <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="" title="More information"><i class="fa fa-ellipsis-h"></i><b class="caret"></b></a><ul class="dropdown-menu">
