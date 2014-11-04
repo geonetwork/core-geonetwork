@@ -40,7 +40,12 @@ public class Handlers {
         handlers.add 'gmd:phone', commonHandlers.flattenedEntryEl(commonHandlers.selectIsotype('gmd:CI_Telephone'), f.&nodeLabel)
         handlers.add 'gmd:onlineResource', commonHandlers.flattenedEntryEl({it.'gmd:CI_OnlineResource'}, f.&nodeLabel)
         handlers.add 'gmd:CI_OnlineResource', commonHandlers.entryEl(f.&nodeLabel)
+
+        handlers.add 'gmd:referenceSystemIdentifier', commonHandlers.flattenedEntryEl({it.'gmd:RS_Identifier'}, f.&nodeLabel)
+
         handlers.add 'gmd:locale', localeEl
+        handlers.add 'gmd:CI_Date', ciDateEl
+        handlers.add 'gmd:CI_Citation', citationEl
         handlers.add name: 'BBox Element', select: matchers.isBBox, bboxEl
         handlers.add name: 'Root Element', select: matchers.isRoot, rootPackageEl
         handlers.add name: 'Skip Container', select: matchers.isSkippedContainer, skipContainer
@@ -59,7 +64,13 @@ public class Handlers {
     def isoUrlEl = { commonHandlers.func.textEl(f.nodeLabel(it), it.'gmd:Url'.text())}
     def isoCodeListEl = {commonHandlers.func.textEl(f.nodeLabel(it), f.codelistValueLabel(it))}
     def isoSimpleEl = {commonHandlers.func.textEl(f.nodeLabel(it), it.'*'.text())}
-    def dateEl = { commonHandlers.func.textEl(f.nodeLabel(it), it.text()); }
+    def dateEl = {commonHandlers.func.textEl(f.nodeLabel(it), it.text());}
+    def ciDateEl = {
+        if(!it.'gmd:date'.'gco:Date'.text().isEmpty()) {
+            def dateType = f.codelistValueLabel(it.'gmd:dateType'.'gmd:CI_DateTypeCode')
+            commonHandlers.func.textEl(dateType, it.'gmd:date'.'gco:Date'.text());
+        }
+    }
 
     def localeEl = { el ->
         def ptLocale = el.'gmd:PT_Locale'
@@ -76,6 +87,41 @@ public class Handlers {
         el ->
             handlers.processElements(el.children())
     }
+
+    def citationEl = { el ->
+        def output = '<div class="row">'
+        output += commonHandlers.func.textColEl(handlers.processElements([el.'gmd:title', el.'gmd:alternateTitle']), 8)
+        def dateContent = handlers.processElements(el.'gmd:date'.'gmd:CI_Date')
+        if (el.'gmd:edition' && el.'gmd:editionDate') {
+            dateContent += commonHandlers.func.textEl(el.'gmd:edition'.'gco:CharacterString'.text(),
+                    el.'gmd:editionDate'.'gco:Date'.text())
+        }
+        output += commonHandlers.func.textColEl(dateContent, 4)
+        output += '</div>'
+
+        output += '<div class="row">'
+        def infoContent = ''
+        if(!el.'gmd:identifier'.text().isEmpty()) {
+            infoContent += commonHandlers.func.textEl(f.nodeLabel(el.'gmd:identifier'),
+                    el.'gmd:identifier'.'gmd:MD_Identifier'.'gmd:code'.'gco:CharacterString'.text())
+        }
+        if(!el.'gmd:presentationForm'.text().isEmpty()) {
+            infoContent += commonHandlers.func.textEl(f.nodeLabel(el.'gmd:presentationForm'),
+                    f.codelistValueLabel(el.'gmd:presentationForm'.'gmd:CI_PresentationFormCode'))
+        }
+        infoContent += handlers.processElements([el.'gmd:ISBN', el.'gmd:ISSN'])
+        output += commonHandlers.func.textColEl(infoContent, 4)
+        output += '</div>'
+
+        def processedChildren = ['gmd:title', 'gmd:alternateTitle', 'gmd:identifier', 'gmd:ISBN', 'gmd:ISSN',
+                                 'gmd:date', 'gmd:edition', 'gmd:editionDate', 'gmd:presentationForm']
+
+        def otherChildrens = el.children().findAll { ch -> !processedChildren.contains(ch.name()) }
+        output += handlers.processElements(otherChildrens)
+
+        return output
+    }
+
     /**
      * El must be a parent of gmd:CI_ResponsibleParty
      */
