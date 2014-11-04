@@ -60,5 +60,20 @@
             return data[1];
           };
 
+          /**
+           * Must return an array of datum objects(id/name). It is contained
+           * in the second element of the json response.
+           *
+           * @param data
+           * @return {Array|null}
+           */
+          this.bhFilter = function(data) {
+            var datum = [];
+            data[1].forEach(function(item) {
+              datum.push({ id: item, name: item });
+            });
+            return datum;
+          };
+
         }]);
 })();

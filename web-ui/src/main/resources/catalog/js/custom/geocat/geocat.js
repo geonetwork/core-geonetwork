@@ -56,6 +56,7 @@
       callSearch('popularity', 5).then(function(data) {
         $scope.mostPopular = data.metadata;
       });
+
   }]);
 
   module.controller('gocatSearchFormCtrl', [
