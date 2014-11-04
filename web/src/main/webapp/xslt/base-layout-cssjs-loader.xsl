@@ -75,7 +75,7 @@
           <script src="{$uiResourcesPath}lib/nv.d3.js"></script>
         </xsl:if>
 
-        <xsl:if test="$angularApp = 'gn_viewer'">
+        <xsl:if test="$angularApp = 'gn_search'">
           <script src="{$uiResourcesPath}lib/zip/zip.js"></script>
           <script type="text/javascript">
             zip.workerScriptsPath = "../../catalog/lib/zip/";
