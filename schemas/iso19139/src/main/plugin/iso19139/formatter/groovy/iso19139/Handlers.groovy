@@ -34,9 +34,10 @@ public class Handlers {
         handlers.add name: 'Elements with single Date child', select: matchers.hasDateChild, commonHandlers.applyToChild(isoCodeListEl, '*')
         handlers.add name: 'Elements with single Codelist child', select: matchers.hasCodeListChild, commonHandlers.applyToChild(isoCodeListEl, '*')
         handlers.add name: 'ResponsibleParty Elements', select: matchers.isRespParty, respPartyEl
-        handlers.add 'gmd:contactInfo', commonHandlers.flattenedEntryEl({it.'gmd:CI_Contact'}, f.&nodeLabel)
-        handlers.add 'gmd:address', commonHandlers.flattenedEntryEl({it.'gmd:CI_Address'}, f.&nodeLabel)
-        handlers.add 'gmd:phone', commonHandlers.flattenedEntryEl({it.'gmd:CI_Telephone'}, f.&nodeLabel)
+        //handlers.add 'gmd:identificationInfo', commonHandlers.flattenedEntryEl(commonHandlers.selectIsotype('gmd:MD_DataIdentification'), f.&nodeLabel)
+        handlers.add 'gmd:contactInfo', commonHandlers.flattenedEntryEl(commonHandlers.selectIsotype('gmd:CI_Contact'), f.&nodeLabel)
+        handlers.add 'gmd:address', commonHandlers.flattenedEntryEl(commonHandlers.selectIsotype('gmd:CI_Address'), f.&nodeLabel)
+        handlers.add 'gmd:phone', commonHandlers.flattenedEntryEl(commonHandlers.selectIsotype('gmd:CI_Telephone'), f.&nodeLabel)
         handlers.add 'gmd:onlineResource', commonHandlers.flattenedEntryEl({it.'gmd:CI_OnlineResource'}, f.&nodeLabel)
         handlers.add 'gmd:CI_OnlineResource', commonHandlers.entryEl(f.&nodeLabel)
         handlers.add 'gmd:locale', localeEl

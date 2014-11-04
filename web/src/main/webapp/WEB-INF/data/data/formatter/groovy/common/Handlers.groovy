@@ -77,6 +77,15 @@ public class Handlers {
             }
         }
     }
+
+    def selectIsotype(name) {
+        return {
+            it.children().find { ch ->
+                ch.name() == name || ch['@gco:isoType'].text() == name
+            }
+        }
+    }
+
     /**
      * Returns a function that checks if the text is empty, if not then it executes the handlerFunction to process the
      * data from the element and returns that data.
