@@ -22,4 +22,9 @@ public class Functions {
             }
         }
     }
+
+    def textColEl(content, cols) {
+        return '<div class="col-md-' + cols + '">' + content + '</div>'
+    }
+
 }
