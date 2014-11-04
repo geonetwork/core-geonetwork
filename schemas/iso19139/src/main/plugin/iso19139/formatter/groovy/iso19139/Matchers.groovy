@@ -26,10 +26,11 @@ public class Matchers {
                 !isCodeListEl(el) && !hasCodeListChild(el) &&
                 !isDateEl(el) && !hasDateChild(el) &&
                 !el.children().isEmpty()
+                //!excludeContainer.any{it == el.name()}
     }
 
     def isRespParty = { el ->
-        !el.'gmd:CI_ResponsibleParty'.isEmpty() || el.'gmd:CI_ResponsibleParty'['@gco:isoType'].text() == 'gmd:CI_ResponsibleParty'
+        !el.'gmd:CI_ResponsibleParty'.isEmpty() || el.'*'['@gco:isoType'].text() == 'gmd:CI_ResponsibleParty'
     }
 
     def isBBox = { el ->

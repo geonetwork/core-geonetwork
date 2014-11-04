@@ -33,7 +33,7 @@ public class Handlers {
         handlers.add name: 'Date Elements', select: matchers.isDateEl, dateEl
         handlers.add name: 'Elements with single Date child', select: matchers.hasDateChild, commonHandlers.applyToChild(isoCodeListEl, '*')
         handlers.add name: 'Elements with single Codelist child', select: matchers.hasCodeListChild, commonHandlers.applyToChild(isoCodeListEl, '*')
-        handlers.add name: 'ResponsibleParty Elements', select: matchers.isRespParty, respPartyEl
+        handlers.add name: 'ResponsibleParty Elements', select: matchers.isRespParty, pointOfContactEl
         //handlers.add 'gmd:identificationInfo', commonHandlers.flattenedEntryEl(commonHandlers.selectIsotype('gmd:MD_DataIdentification'), f.&nodeLabel)
         handlers.add 'gmd:contactInfo', commonHandlers.flattenedEntryEl(commonHandlers.selectIsotype('gmd:CI_Contact'), f.&nodeLabel)
         handlers.add 'gmd:address', commonHandlers.flattenedEntryEl(commonHandlers.selectIsotype('gmd:CI_Address'), f.&nodeLabel)
@@ -74,18 +74,24 @@ public class Handlers {
     /**
      * El must be a parent of gmd:CI_ResponsibleParty
      */
-    def respPartyEl = {el ->
-        def party = el.'gmd:CI_ResponsibleParty'
+    def pointOfContactEl = { el ->
+
+        def party = el.children().find { ch ->
+            ch.name() == 'gmd:CI_ResponsibleParty' || ch['@gco:isoType'].text() == 'gmd:CI_ResponsibleParty'
+        }
 
         def childrenToProcess = [
                 party.'gmd:individualName',
                 party.'gmd:organisationName',
                 party.'gmd:positionName',
-                party.'gmd:role',
-                party.'gmd:contactInfo'.'*'.'*']
-        def contactData = handlers.processElements( childrenToProcess )
+                party.'gmd:role']
 
-        return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: contactData])
+        def output = '<div class="row">'
+        output += commonHandlers.func.textColEl(handlers.processElements(childrenToProcess), 6)
+        output += commonHandlers.func.textColEl(handlers.processElements([party.'gmd:contactInfo'.'*']), 6)
+        output += '</div>'
+
+        return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: output])
     }
 
     def bboxEl = {
