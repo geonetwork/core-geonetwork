@@ -60,7 +60,7 @@
         var layers = context.resourceList.layer;
         var i, j, olLayer, bgLayers = [];
         var self = this;
-        var re = /{.*type\s*=\s*(.*)\s*}/;
+        var re = /{.*type\s*=\s*([^\s]+)(?:,|})*/; ///{.*type\s*=\s*(.*)\s*}/;
         for (i = 0; i < layers.length; i++) {
           var layer = layers[i];
           if (layer.group == 'Background layers' && layer.name.match(re)) {
