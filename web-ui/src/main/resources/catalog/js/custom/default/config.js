@@ -12,7 +12,6 @@
        * Define mapviewer background layers
        */
       viewerSettings.bgLayers = [
-        gnMap.createLayerForType('wmts'),
         gnMap.createLayerForType('mapquest'),
         gnMap.createLayerForType('osm'),
         gnMap.createLayerForType('bing_aerial')
