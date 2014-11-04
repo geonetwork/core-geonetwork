@@ -43,6 +43,7 @@ public class Handlers {
         handlers.add 'gmd:locale', localeEl
         handlers.add name: 'BBox Element', select: matchers.isBBox, bboxEl
         handlers.add name: 'Root Element', select: matchers.isRoot, rootPackageEl
+        handlers.add name: 'Skip Container', select: matchers.isSkippedContainer, skipContainer
 
         handlers.add name: 'Container Elements', select: matchers.isContainerEl, priority: -1, commonHandlers.entryEl(f.&nodeLabel)
         addPackageNav();
@@ -71,6 +72,10 @@ public class Handlers {
         '<p> -- TODO Need widget for gmd:PT_Locale -- ' + nonEmptyEls.join("") + ' -- </p>'
     }
 
+    def skipContainer = {
+        el ->
+            handlers.processElements(el.children())
+    }
     /**
      * El must be a parent of gmd:CI_ResponsibleParty
      */

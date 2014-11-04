@@ -8,6 +8,9 @@ public class Matchers {
     def isUrlEl = {!it.'gmd:URL'.text().isEmpty()}
     def simpleElements = ['gco:Decimal', 'gco:Integer', 'gco:Scale', 'gco:Angle', 'gco:Measure', 'gco:Distance',
                           'gmd:MD_PixelOrientationCode', 'gts:TM_PeriodDuration']
+
+    def skipContainers = ['gmd:CI_Series', 'gmd:MD_ReferenceSystem']
+
     def isSimpleEl = {el ->
         el.children().size() == 1 && simpleElements.any{!el[it].text().isEmpty()}
     }
@@ -39,4 +42,9 @@ public class Matchers {
     def isRoot = { el ->
         el.parent() is el
     }
+
+    def isSkippedContainer = { el ->
+        skipContainers.any{it == el.name()}
+    }
+
 }
