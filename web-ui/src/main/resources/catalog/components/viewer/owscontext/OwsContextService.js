@@ -148,6 +148,8 @@
             name = "{type=mapquest}";
           } else if (source instanceof ol.source.BingMaps) {
             name = "{type=bing_aerial}";
+          } else if (source instanceof ol.source.WMTS) {
+            name = "{type=wmts}";
           } else {
             return;
           }
