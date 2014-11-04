@@ -322,7 +322,37 @@
                     imagerySet: 'Aerial'
                   }),
                   title: 'Bing Aerial'
-                })
+                });
+              case 'wmts':
+                var projection = ol.proj.get('EPSG:3857');
+                var projectionExtent = projection.getExtent();
+                var size = ol.extent.getWidth(projectionExtent) / 256;
+                var resolutions = new Array(16);
+                var matrixIds = new Array(16);
+                for (var z = 0; z < 16; ++z) {
+                  // generate resolutions and matrixIds arrays for this WMTS
+                  resolutions[z] = size / Math.pow(2, z);
+                  matrixIds[z] = 'EPSG:3857:'+z;
+                }
+
+                return new ol.layer.Tile({
+                  opacity: 0.7,
+                  extent: projectionExtent,
+                  title: 'Sextant',
+                  source: new ol.source.WMTS({
+                    url: 'http://visi-sextant.ifremer.fr:8080/geowebcache/service/wmts?',
+                    layer: 'Sextant',
+                    matrixSet: 'EPSG:3857',
+                    format: 'image/png',
+                    projection: projection,
+                    tileGrid: new ol.tilegrid.WMTS({
+                      origin: ol.extent.getTopLeft(projectionExtent),
+                      resolutions: resolutions,
+                      matrixIds: matrixIds
+                    }),
+                    style: 'default'
+                  })
+                });
             }
             $log.warn('Unsupported layer type: ', type);
           }
