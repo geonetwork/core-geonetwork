@@ -40,16 +40,14 @@
     'goDecorateLayer',
       function($scope, $timeout, gnNcWms, goDecorateLayer) {
 
+        var map = $scope.searchObj.viewerMap;
 
         // TODO : Move on layer load
         $scope.ncwmsLayer = gnNcWms.createNcWmsLayer();
         $scope.ncwmsLayer.displayInLayerManager = true;
         goDecorateLayer($scope.ncwmsLayer);
 
-        $scope.map.addLayer($scope.ncwmsLayer);
-
-
-        var map = $scope.searchObj.viewerMap;
+        map.addLayer($scope.ncwmsLayer);
 
         // Display pop up on feature over
         var div = document.createElement('div');
