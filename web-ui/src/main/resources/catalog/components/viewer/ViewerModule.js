@@ -36,20 +36,27 @@
   module.controller('gnViewerController', [
     '$scope',
     '$timeout',
-    'gnNcWms',
-    'goDecorateLayer',
-    'gnMap',
-    'gnMapConfig',
-      function($scope, $timeout, gnNcWms, goDecorateLayer, gnMap, gnMapConfig) {
+      function($scope, $timeout) {
+
+        var map = $scope.searchObj.viewerMap;
+
+        // Display pop up on feature over
+        var div = document.createElement('div');
+        div.className = 'overlay';
+        var overlay = new ol.Overlay({
+          element: div,
+          positioning: 'bottom-left'
+        });
+        map.addOverlay(overlay);
 
         var hidetimer;
         var hovering = false;
-        $($scope.map.getViewport()).on('mousemove', function(e) {
+        $(map.getViewport()).on('mousemove', function(e) {
           if (hovering) { return; }
           var f;
-          var pixel = $scope.map.getEventPixel(e.originalEvent);
-          var coordinate = $scope.map.getEventCoordinate(e.originalEvent);
-          $scope.map.forEachFeatureAtPixel(pixel, function(feature, layer) {
+          var pixel = map.getEventPixel(e.originalEvent);
+          var coordinate = map.getEventCoordinate(e.originalEvent);
+          map.forEachFeatureAtPixel(pixel, function(feature, layer) {
             if (!layer) { return; }
             $timeout.cancel(hidetimer);
             if (f != feature) {

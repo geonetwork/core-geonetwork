@@ -16,6 +16,7 @@
         gnMap.createLayerForType('osm'),
         gnMap.createLayerForType('bing_aerial')
       ];
+
       angular.forEach(viewerSettings.bgLayers, function(l) {
         l.displayInLayerManager = false;
         l.background = true;

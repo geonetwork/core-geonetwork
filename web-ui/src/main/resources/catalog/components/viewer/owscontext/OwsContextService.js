@@ -60,7 +60,7 @@
         var layers = context.resourceList.layer;
         var i, j, olLayer, bgLayers = [];
         var self = this;
-        var re = /{.*type\s*=\s*(.*)\s*}/;
+        var re = /{.*type\s*=\s*([^\s]+)(?:,|})*/; ///{.*type\s*=\s*(.*)\s*}/;
         for (i = 0; i < layers.length; i++) {
           var layer = layers[i];
           if (layer.group == 'Background layers' && layer.name.match(re)) {
@@ -148,6 +148,8 @@
             name = "{type=mapquest}";
           } else if (source instanceof ol.source.BingMaps) {
             name = "{type=bing_aerial}";
+          } else if (source instanceof ol.source.WMTS) {
+            name = "{type=wmts}";
           } else {
             return;
           }
@@ -215,6 +217,10 @@
        * Saves the map context to local storage
        */
       this.saveToLocalStorage = function(map) {
+        if (map.getSize()[0] == 0 || map.getSize()[1] == 0){
+          // don't save a map which has not been rendered yet
+          return;
+        }
         var xml = this.writeContext(map);
         var xmlString = (new XMLSerializer()).serializeToString(xml);
         window.localStorage.setItem("owsContext", xmlString);
