@@ -32,7 +32,7 @@
         </ul>
       </div>
 
-      <div class="btn-group" ng-if="downloads.length > 0">
+      <div class="btn-group" ng-if="downloads.length > 1">
         <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
           <span class="fa fa-download"></span>
           <span translate>download</span>
@@ -45,8 +45,14 @@
               {{link.desc}} </a></li>
         </ul>
       </div>
+      <button type="button" class="btn btn-default btn-sm"
+              ng-if="layers.length == 1" ng-click="resultviewFns.addMdLayerToPanier(downloads[0], md)">
+        <span class="fa fa-download"></span>
+        <span translate>download</span>
+      </button>
 
-      <div class="btn-group" ng-if="layers.length > 0">
+
+      <div class="btn-group" ng-if="layers.length > 1 ">
         <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
           <span class="fa fa-globe"></span>
           <span translate>visualize</span>
@@ -61,6 +67,11 @@
           <li><a href="#">Add all layers</a></li>
         </ul>
       </div>
+      <button type="button" class="btn btn-default btn-sm"
+              ng-if="layers.length == 1" ng-click="resultviewFns.addMdLayerToMap(layers[0])">
+        <span class="fa fa-globe"></span>
+        <span translate>visualize</span>
+      </button>
 
       <div class="pull-right" ng-if="md.category.length > 0">
         <i data-ng-repeat="cat in md.category" class="fa" data-ng-class="catIcons[cat]" title="{{cat}}">&nbsp;</i>
