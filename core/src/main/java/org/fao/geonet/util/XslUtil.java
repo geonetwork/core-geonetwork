@@ -15,6 +15,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.CodeListTranslator;
 import org.fao.geonet.kernel.search.Translator;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.constants.Geonet;
@@ -97,6 +98,30 @@ public final class XslUtil
         return "";
     }
 
+    /**
+     * Get a setting value
+     * @param key
+     * @return
+     */
+    public static String getSettingValue(String key) {
+        if (key == null) {
+            return "";
+        }
+
+        final ServiceContext serviceContext = ServiceContext.get();
+        if (serviceContext != null) {
+            SettingManager settingsMan = serviceContext.getBean(SettingManager.class);
+            if (settingsMan != null) {
+                String value = settingsMan.getValue(key);
+                if (value != null) {
+                    return value;
+                } else {
+                    return "";
+                }
+            }
+        }
+        return "";
+    }
     /** 
 	 * Check if bean is defined in the context
 	 * 

@@ -457,6 +457,8 @@
     "mapservers": "Map servers",
     "massive-content-update": "Batch replacer",
     "maxNumberOfKeywords": "Number of keywords returned",
+    "metadata/resourceIdentifierPrefix": "Resource identifier prefix",
+    "metadata/resourceIdentifierPrefix-help": "In the editor, a suggestion provides the capability to compute the resource identifier automatically. This identifier is computed by concatenating this prefix with the metadata identifier (eg. http://localhost:8080/geonetwork/srv/a1fd6bb7-6425-48b6-bca3-13c9e1bc4ab1).",
     "mdPopularity": "Most popular records",
     "mem.free": "Total free memory",
     "mem.total": "Total memory",
