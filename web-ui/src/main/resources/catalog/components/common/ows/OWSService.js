@@ -79,7 +79,7 @@
 
               //send request and decode result
               if (gnUrlUtils.isValid(url)) {
-                var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
+                var proxyUrl = gnViewerSettings.proxyUrl + encodeURIComponent(url);
                 $http.get(proxyUrl, {
                   cache: true
                 })
