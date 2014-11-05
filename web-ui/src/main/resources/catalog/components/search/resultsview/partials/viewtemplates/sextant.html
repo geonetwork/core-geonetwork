@@ -59,7 +59,7 @@
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu" role="menu">
-          <li ng-repeat="layer in layers"><a href="" ng-click="resultviewFns.addMdLayerToMap(layer)">
+          <li ng-repeat="layer in layers"><a href="" ng-click="resultviewFns.addMdLayerToMap(layer, md)">
             <span class="fa fa-google" ng-if="layer.contentType=='application/vnd.google-earth.kml+xml'"></span>
             <span class="fa fa-globe" ng-if="layer.contentType=='application/vnd.ogc.wms_xml'"></span>
             {{layer.desc}} </a></li>
@@ -68,7 +68,7 @@
         </ul>
       </div>
       <button type="button" class="btn btn-default btn-sm"
-              ng-if="layers.length == 1" ng-click="resultviewFns.addMdLayerToMap(layers[0])">
+              ng-if="layers.length == 1" ng-click="resultviewFns.addMdLayerToMap(layers[0], md)">
         <span class="fa fa-globe"></span>
         <span translate>visualize</span>
       </button>

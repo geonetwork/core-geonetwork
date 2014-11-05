@@ -5,12 +5,16 @@
   goog.require('gn_search');
   goog.require('gn_search_sextant_config');
   goog.require('sxt_panier_directive');
+  goog.require('gn_thesaurus');
 
   var module = angular.module('gn_search_sextant', [
     'gn_search',
     'gn_search_sextant_config',
-    'sxt_panier_directive'
+    'sxt_panier_directive',
+    'gn_thesaurus'
   ]);
+
+  module.value('sxtGlobals', {});
 
   module.controller('gnsSextant', [
     '$scope',
@@ -20,8 +24,10 @@
     'gnSearchSettings',
     'gnViewerSettings',
     'gnMap',
+    'gnThesaurusService',
+     'sxtGlobals',
     function($scope, $location, suggestService, $http, gnSearchSettings,
-        gnViewerSettings, gnMap) {
+        gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -86,6 +92,11 @@
         }
       });
 
+      // Manage sextantTheme thesaurus translation
+      gnThesaurusService.getKeywords(undefined, 'local.theme.sextant-theme', 200, 1).then(function(data) {
+        sxtGlobals.sextantTheme = data;
+      });
+
 ///////////////////////////////////////////////////////////////////
 
       angular.extend($scope.searchObj, {
@@ -100,13 +111,24 @@
       '$scope',
       'gnOwsCapabilities',
       'gnMap',
-    function($scope, gnOwsCapabilities, gnMap) {
+      'sxtGlobals',
+    function($scope, gnOwsCapabilities, gnMap, sxtGlobals) {
 
       $scope.resultviewFns = {
-        addMdLayerToMap: function(link) {
+        addMdLayerToMap: function(link, md) {
+
+          var label, theme = md.sextantTheme;
+          for(var i=0;i<sxtGlobals.sextantTheme.length;i++) {
+            var t = sxtGlobals.sextantTheme[i];
+            if(t.props.uri == theme) {
+              label = t.label;
+              break;
+            }
+          }
           gnOwsCapabilities.getCapabilities(link.url).then(function(capObj) {
             var layerInfo = gnOwsCapabilities.getLayerInfoFromCap(link.name, capObj);
-            gnMap.addWmsToMapFromCap($scope.searchObj.viewerMap, layerInfo);
+            layerInfo.group = label;
+            var layer = gnMap.addWmsToMapFromCap($scope.searchObj.viewerMap, layerInfo);
           });
           $scope.mainTabs.map.titleInfo += 1;
 
