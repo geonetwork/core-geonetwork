@@ -318,6 +318,9 @@ public class Resources {
 	private static Path locateResource(Path resourcesDir,
 			ServletContext context, Path appPath, String filename)
 			throws IOException {
+        if (filename.charAt(0) == '/' || filename.charAt(0) == '\\') {
+            filename = filename.substring(1);
+        }
         Path file = resourcesDir.resolve(filename);
 
 		if (!java.nio.file.Files.exists(file)) {

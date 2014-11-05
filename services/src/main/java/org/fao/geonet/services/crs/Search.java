@@ -36,6 +36,7 @@ import org.opengis.referencing.IdentifiedObject;
 import org.opengis.referencing.crs.CRSAuthorityFactory;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Set;
 
@@ -46,7 +47,7 @@ import java.util.Set;
  * @author francois
  */
 public class Search implements Service {
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
 
 	/**

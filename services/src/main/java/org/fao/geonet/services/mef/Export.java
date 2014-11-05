@@ -43,6 +43,7 @@ import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -53,7 +54,7 @@ public class Export implements Service {
 	private String stylePath;
 	private ServiceConfig _config;
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 		this.stylePath = appPath + Geonet.Path.SCHEMAS;
 		this._config = params;
 	}

@@ -1,9 +1,9 @@
 package org.fao.geonet.utils;
 
-import org.fao.geonet.JeevesJCS;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.xerces.dom.DOMInputImpl;
 import org.apache.xerces.util.XMLCatalogResolver;
+import org.fao.geonet.JeevesJCS;
 import org.jdom.Element;
 import org.w3c.dom.ls.LSInput;
 
@@ -38,7 +38,7 @@ public class XmlResolver extends XMLCatalogResolver {
    	super(catalogs, true);
 		this.proxyParams = proxyParams;
    }
-    
+
 	//--------------------------------------------------------------------------
   /**
     * <p>Resolves any public and system ids as well as URIs

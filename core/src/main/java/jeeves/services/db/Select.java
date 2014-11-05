@@ -32,6 +32,7 @@ import org.jdom.Element;
 
 import javax.sql.DataSource;
 import java.io.StringReader;
+import java.nio.file.Path;
 import java.sql.*;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -55,7 +56,7 @@ public class Select implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception
+	public void init(Path appPath, ServiceConfig params) throws Exception
 	{
 		query  = params.getMandatoryValue(Jeeves.Config.QUERY);
 		List<Element> inList = params.getChildren(Jeeves.Config.IN_FIELDS, Jeeves.Config.FIELD);

@@ -76,6 +76,7 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -108,24 +109,27 @@ public final class Xml
 {
 
 	public static final Namespace xsiNS = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
+    static final NioPathAwareEntityResolver PATH_RESOLVER = new NioPathAwareEntityResolver();
 
-   //--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
 
     /**
      *
      * @param validate
      * @return
      */
-	private static SAXBuilder getSAXBuilder(boolean validate) {
-		SAXBuilder builder = getSAXBuilderWithoutXMLResolver(validate);
+	private static SAXBuilder getSAXBuilder(boolean validate, Path base) {
+		SAXBuilder builder = getSAXBuilderWithPathXMLResolver(validate, base);
         Resolver resolver = ResolverWrapper.getInstance();
         builder.setEntityResolver(resolver.getXmlResolver());
         return builder;
 	}
 
-    private static SAXBuilder getSAXBuilderWithoutXMLResolver(boolean validate) {
+    private static SAXBuilder getSAXBuilderWithPathXMLResolver(boolean validate, Path base) {
         SAXBuilder builder = new SAXBuilder(validate);
         builder.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        NioPathHolder.setBase(base);
+        builder.setEntityResolver(Xml.PATH_RESOLVER);
         return builder;
     }
 
@@ -169,13 +173,24 @@ public final class Xml
      */
 	public static Element loadFile(URL url) throws IOException, JDOMException
 	{
-		SAXBuilder builder = getSAXBuilderWithoutXMLResolver(false);//new SAXBuilder();
+        Path path = pathFromUrl(url);
+        SAXBuilder builder = getSAXBuilderWithPathXMLResolver(false, path);//new SAXBuilder();
 		Document   jdoc    = builder.build(url);
 
 		return (Element) jdoc.getRootElement().detach();
 	}
 
-	//--------------------------------------------------------------------------
+    protected static Path pathFromUrl(URL url) {
+        Path path = null;
+        try {
+            path = Paths.get(url.toURI());
+        } catch (Exception e) {
+            // not a path
+        }
+        return path;
+    }
+
+    //--------------------------------------------------------------------------
 
     /**
      * Loads an xml file from a URL after posting content to the URL.
@@ -200,7 +215,8 @@ public final class Xml
 			out.print(getString(xmlQuery));
 			out.close();
 
-			SAXBuilder builder = getSAXBuilderWithoutXMLResolver(false);//new SAXBuilder();
+            Path path = pathFromUrl(url);
+			SAXBuilder builder = getSAXBuilderWithPathXMLResolver(false, path);//new SAXBuilder();
 			Document   jdoc    = builder.build(connection.getInputStream());
 
 			result = (Element)jdoc.getRootElement().detach();
@@ -214,7 +230,7 @@ public final class Xml
 	//--------------------------------------------------------------------------
 
     public static Element loadFile(Path file) throws IOException, JDOMException {
-        SAXBuilder builder = getSAXBuilderWithoutXMLResolver(false); //new SAXBuilder();
+        SAXBuilder builder = getSAXBuilderWithPathXMLResolver(false, file); //new SAXBuilder();
 
         String convert = System.getProperty("jeeves.filecharsetdetectandconvert");
 
@@ -324,7 +340,7 @@ public final class Xml
 												throws IOException, JDOMException
 	{
 		//SAXBuilder builder = new SAXBuilder(validate);
-		SAXBuilder builder = getSAXBuilderWithoutXMLResolver(validate); // oasis catalogs are used
+		SAXBuilder builder = getSAXBuilderWithPathXMLResolver(validate, null); // oasis catalogs are used
 		Document   jdoc    = builder.build(new StringReader(data));
 
 		return (Element) jdoc.getRootElement().detach();
@@ -342,7 +358,7 @@ public final class Xml
      */
 	public static Element loadStream(InputStream input) throws IOException, JDOMException
 	{
-		SAXBuilder builder = getSAXBuilderWithoutXMLResolver(false); //new SAXBuilder();
+		SAXBuilder builder = getSAXBuilderWithPathXMLResolver(false, null); //new SAXBuilder();
 		builder.setFeature("http://apache.org/xml/features/validation/schema",false);
 		builder.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd",false);
 		Document   jdoc    = builder.build(input);
@@ -369,21 +385,6 @@ public final class Xml
         transform(xml, styleSheetPath, resXml, null);
         return (Element)resXml.getDocument().getRootElement().detach();
     }
-    /**
-     * Transforms an xml tree into another using a stylesheet on disk.
-     *
-     * @param xml
-     * @param styleSheetPath
-     * @return
-     * @throws Exception
-     */
-	public static Element transform(Element xml, String styleSheetPath) throws Exception
-	{
-		JDOMResult resXml = new JDOMResult();
-		transform(xml, IO.toPath(styleSheetPath), resXml, null);
-		return (Element)resXml.getDocument().getRootElement().detach();
-	}
-
 	//--------------------------------------------------------------------------
 
     /**
@@ -502,10 +503,10 @@ public final class Xml
         }
         Source s = catResolver.resolve(href, base);
 
-         boolean isFile = false;
+         boolean isFile;
          try {
-             final File file = new File(s.getSystemId());
-             isFile = file.isFile();
+             final Path file = Paths.get(new URI(s.getSystemId()));
+             isFile = Files.isRegularFile(file);
          } catch (Exception e) {
              isFile = false;
          }
@@ -557,33 +558,37 @@ public final class Xml
      */
 	public static void transform(Element xml, Path styleSheetPath, Result result, Map<String, Object> params) throws Exception
 	{
+        NioPathHolder.setBase(styleSheetPath);
 		Source srcXml   = new JDOMSource(new Document((Element)xml.detach()));
-        Source srcSheet = new StreamSource(styleSheetPath.toUri().toASCIIString());
+        try (InputStream in = Files.newInputStream(styleSheetPath)) {
+            Source srcSheet = new StreamSource(in, styleSheetPath.toUri().toASCIIString());
 
-		// Dear old saxon likes to yell loudly about each and every XSLT 1.0
-		// stylesheet so switch it off but trap any exceptions because this
-		// code is run on transformers other than saxon 
-		TransformerFactory transFact = TransformerFactoryFactory.getTransformerFactory();
-		transFact.setURIResolver(new JeevesURIResolver());
-		try {
-			transFact.setAttribute(FeatureKeys.VERSION_WARNING,false);
-			transFact.setAttribute(FeatureKeys.LINE_NUMBERING,true);
-			transFact.setAttribute(FeatureKeys.PRE_EVALUATE_DOC_FUNCTION,false);
-			transFact.setAttribute(FeatureKeys.RECOVERY_POLICY,Configuration.RECOVER_SILENTLY);
-			// Add the following to get timing info on xslt transformations
-			//transFact.setAttribute(FeatureKeys.TIMING,true);
-		} catch (IllegalArgumentException e) {
-		    Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!");
-			//e.printStackTrace();
-		} finally {
-			Transformer t = transFact.newTransformer(srcSheet);
-			if (params != null) {
-				for (Map.Entry<String,Object> param : params.entrySet()) {
-					t.setParameter(param.getKey(),param.getValue());
-				}
-			}
-			t.transform(srcXml, result);
-		}
+            // Dear old saxon likes to yell loudly about each and every XSLT 1.0
+            // stylesheet so switch it off but trap any exceptions because this
+            // code is run on transformers other than saxon
+            TransformerFactory transFact = TransformerFactoryFactory.getTransformerFactory();
+            transFact.setURIResolver(new JeevesURIResolver());
+            try {
+                transFact.setAttribute(FeatureKeys.VERSION_WARNING, false);
+                transFact.setAttribute(FeatureKeys.LINE_NUMBERING, true);
+                transFact.setAttribute(FeatureKeys.PRE_EVALUATE_DOC_FUNCTION, false);
+                transFact.setAttribute(FeatureKeys.RECOVERY_POLICY, Configuration.RECOVER_SILENTLY);
+                // Add the following to get timing info on xslt transformations
+                //transFact.setAttribute(FeatureKeys.TIMING,true);
+            } catch (IllegalArgumentException e) {
+                Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!");
+                //e.printStackTrace();
+            } finally {
+                Transformer t = transFact.newTransformer(srcSheet);
+                transFact.setURIResolver(new JeevesURIResolver());
+                if (params != null) {
+                    for (Map.Entry<String, Object> param : params.entrySet()) {
+                        t.setParameter(param.getKey(), param.getValue());
+                    }
+                }
+                t.transform(srcXml, result);
+            }
+        }
 	}
 	//--------------------------------------------------------------------------
 
@@ -1112,7 +1117,7 @@ public final class Xml
      */
 	public synchronized static void validate(Document doc) throws Exception {
 		if (doc.getDocType() != null) { // assume DTD validation
-			SAXBuilder builder = getSAXBuilder(true);	
+			SAXBuilder builder = getSAXBuilder(true, null);
 			builder.build(new StringReader(getString(doc))); 
 		} 
 
@@ -1155,7 +1160,7 @@ public final class Xml
      * @param xml
      * @throws Exception
      */
-	public static void validate(String schemaPath, Element xml) throws Exception
+	public static void validate(Path schemaPath, Element xml) throws Exception
 	{
 		Element xsdXPaths = validateInfo(schemaPath,xml);
 		if (xsdXPaths != null && xsdXPaths.getContent().size() > 0) throw new XSDValidationErrorEx("XSD Validation error(s):\n"+getString(xsdXPaths), xsdXPaths);
@@ -1213,7 +1218,7 @@ public final class Xml
      * @return
      * @throws Exception
      */
-	public static Element validateInfo(String schemaPath, Element xml) throws Exception
+	public static Element validateInfo(Path schemaPath, Element xml) throws Exception
 	{
 		ErrorHandler eh = new ErrorHandler();
 		validateGuts(schemaPath, xml, eh);
@@ -1235,7 +1240,7 @@ public final class Xml
      * @return
      * @throws Exception
      */
-	public static Element validateInfo(String schemaPath, Element xml, ErrorHandler eh)
+	public static Element validateInfo(Path schemaPath, Element xml, ErrorHandler eh)
 			throws Exception {
 		validateGuts(schemaPath, xml, eh);
 		if (eh.errors()) {
@@ -1255,8 +1260,8 @@ public final class Xml
      * @param eh
      * @throws Exception
      */
-	private static void validateGuts(String schemaPath, Element xml, ErrorHandler eh) throws Exception {
-		StreamSource schemaFile = new StreamSource(new File(schemaPath));
+	private static void validateGuts(Path schemaPath, Element xml, ErrorHandler eh) throws Exception {
+		StreamSource schemaFile = new StreamSource(Files.newInputStream(schemaPath), schemaPath.toUri().toASCIIString());
 		Schema schema = factory().newSchema(schemaFile);
 		validateRealGuts(schema, xml, eh);
 	}

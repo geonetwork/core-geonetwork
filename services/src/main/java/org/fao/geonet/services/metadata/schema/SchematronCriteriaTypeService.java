@@ -21,6 +21,7 @@ import org.springframework.data.jpa.domain.Specification;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class SchematronCriteriaTypeService implements Service {
     private SchematronService schematronService = new SchematronService();
 
     @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     @Override

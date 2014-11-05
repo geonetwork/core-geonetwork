@@ -2,7 +2,6 @@ package jeeves.server.dispatchers.guiservices;
 
 import jeeves.XmlFileCacher;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -17,25 +16,25 @@ import javax.servlet.ServletContext;
 
 public class XmlCacheManager {
     WeakHashMap<String, Map<String, XmlFileCacher>> xmlCaches = new WeakHashMap<String, Map<String, XmlFileCacher>>();
-    private Map<String, XmlFileCacher> getCacheMap(boolean localized, String base, String file) {
+    private Map<String, XmlFileCacher> getCacheMap(boolean localized, Path base, String file) {
         String key = localized+":"+base+":"+file;
         Map<String, XmlFileCacher> cacheMap = xmlCaches.get(key);
         if(cacheMap == null) {
-            cacheMap = new HashMap<String, XmlFileCacher>(10);
+            cacheMap = new HashMap<>(10);
             xmlCaches.put(key, cacheMap);
         }
         
         return cacheMap;
     }
-    public synchronized Element get(ServiceContext context, boolean localized, String base, String file, String preferedLanguage, String defaultLang) throws JDOMException, IOException {
+    public synchronized Element get(ServiceContext context, boolean localized, Path base, String file, String preferedLanguage, String defaultLang) throws JDOMException, IOException {
 
         Map<String, XmlFileCacher> cacheMap = getCacheMap(localized, base, file);
         
         Path appPath = context.getAppPath();
         Path xmlFilePath;
 
-        boolean isBaseAbsolutePath = IO.toPath(base).isAbsolute();
-        Path rootPath = (isBaseAbsolutePath) ? IO.toPath(base) : appPath.resolve(base);
+        boolean isBaseAbsolutePath = base.isAbsolute();
+        Path rootPath = (isBaseAbsolutePath) ? base : appPath.resolve(base);
 
         if (localized) {
             xmlFilePath = rootPath.resolve(preferedLanguage).resolve(file);

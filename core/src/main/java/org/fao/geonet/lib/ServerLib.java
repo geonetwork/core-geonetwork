@@ -75,7 +75,7 @@ public class ServerLib
 		BufferedReader reader = new BufferedReader(new InputStreamReader(stream, Constants.ENCODING));
 		
 		try {
-			List<String> lines = ConfigurationOverrides.DEFAULT.loadTextFileAndUpdate(SERVER_PROPS, servletContext, appPath.toString(), reader);
+			List<String> lines = ConfigurationOverrides.DEFAULT.loadTextFileAndUpdate(SERVER_PROPS, servletContext, appPath, reader);
 			StringBuilder b = new StringBuilder();
 			for (String string : lines) {
 				b.append(string);

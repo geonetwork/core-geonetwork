@@ -17,7 +17,7 @@ import javax.persistence.Embeddable;
 public class MetadataSourceInfo {
     private String _sourceId;
     private Integer _groupOwner;
-    private int _owner;
+    private Integer _owner;
 
     /**
      * Get the source of the metadata. The source identifies where the metadata came from. It is usually a uuid but can be any identifier.
@@ -73,7 +73,7 @@ public class MetadataSourceInfo {
      * @return the id of the user that owns this metadata.
      */
     @Column(nullable = false)
-    public int getOwner() {
+    public Integer getOwner() {
         return _owner;
     }
 
@@ -82,7 +82,7 @@ public class MetadataSourceInfo {
      *
      * @param owner the id of the user that owns this metadata.
      */
-    public MetadataSourceInfo setOwner(int owner) {
+    public MetadataSourceInfo setOwner(Integer owner) {
         this._owner = owner;
         return this;
     }

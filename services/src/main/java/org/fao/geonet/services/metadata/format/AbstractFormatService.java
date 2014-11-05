@@ -16,6 +16,7 @@ import org.jdom.Element;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.regex.Pattern;
 
 /**
@@ -31,7 +32,7 @@ abstract class AbstractFormatService implements Service {
     protected volatile String userXslDir;
     protected volatile boolean initializedDir;
 
-    public void init(String appPath, ServiceConfig params) throws Exception
+    public void init(Path appPath, ServiceConfig params) throws Exception
     {
         userXslDir = params.getMandatoryValue(USER_XSL_DIR);
         if(!userXslDir.endsWith(File.separator)) {

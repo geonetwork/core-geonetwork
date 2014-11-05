@@ -42,6 +42,7 @@ import org.jdom.filter.ElementFilter;
 import org.jdom.input.SAXBuilder;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
 
@@ -65,7 +66,7 @@ public class Validate extends NotInReadOnlyModeService {
     //---
     //--------------------------------------------------------------------------
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     //--------------------------------------------------------------------------

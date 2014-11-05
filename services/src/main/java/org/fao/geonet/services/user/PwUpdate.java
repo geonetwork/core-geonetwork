@@ -35,6 +35,8 @@ import org.fao.geonet.util.PasswordUtil;
 import org.jdom.Element;
 import org.springframework.context.ApplicationContext;
 
+import java.nio.file.Path;
+
 /**
  * Update the password of logged user.
  */
@@ -45,7 +47,7 @@ public class PwUpdate extends NotInReadOnlyModeService {
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

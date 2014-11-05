@@ -4,6 +4,7 @@ package jeeves.server.overrides;
 import jeeves.config.springutil.JeevesApplicationContext;
 import org.apache.log4j.Level;
 import org.fao.geonet.Constants;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -12,28 +13,30 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLDecoder;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class ConfigurationOverridesTest {
 	private static final ClassLoader classLoader;
-    private static final String appPath;
-    private static final String falseAppPath;
+    private static final Path appPath;
+    private static final Path falseAppPath;
     private static final ConfigurationOverrides.ResourceLoader loader;
     
     static {
         try {
             classLoader = ConfigurationOverridesTest.class.getClassLoader();
-            String base = URLDecoder.decode(classLoader.getResource("test-config.xml").getFile(), Constants.ENCODING);
-            appPath = new File(new File(base).getParentFile(), "correct-webapp").getAbsolutePath();
-            falseAppPath = new File(new File(base).getParentFile(), "false-webapp").getAbsolutePath();
+            Path base = IO.toPath(classLoader.getResource("test-config.xml").toURI());
+            appPath = base.getParent().resolve("correct-webapp").toAbsolutePath();
+            falseAppPath = base.getParent().resolve("false-webapp").toAbsolutePath();
             loader = new ConfigurationOverrides.ServletResourceLoader(null, appPath);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -116,7 +119,7 @@ public class ConfigurationOverridesTest {
         JeevesApplicationContext applicationContext = new JeevesApplicationContext(configurationOverrides, null, "classpath:test-spring-config.xml"){
 
             @Override
-            protected String getAppPath() {
+            protected Path getAppPath() {
                 return appPath;
             }
         };

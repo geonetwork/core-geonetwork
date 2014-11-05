@@ -126,8 +126,7 @@ public class XmlFileCacher
 	protected Element load() throws JDOMException, IOException
 	{
 		Element xml = Xml.loadFile(file);
-	    ConfigurationOverrides.DEFAULT.updateWithOverrides(file.toString(), servletContext,
-                appPath.toAbsolutePath().toString(), xml);
+	    ConfigurationOverrides.DEFAULT.updateWithOverrides(file.toString(), servletContext, appPath, xml);
         return xml;
 	}
 }

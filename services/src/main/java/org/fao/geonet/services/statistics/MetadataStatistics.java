@@ -24,6 +24,7 @@ package org.fao.geonet.services.statistics;
 
 import static org.fao.geonet.repository.statistic.MetadataStatisticSpec.StandardSpecs.metadataCount;
 
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -47,7 +48,7 @@ import org.jdom.Element;
  */
 public class MetadataStatistics extends NotInReadOnlyModeService {
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
 

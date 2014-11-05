@@ -1,17 +1,19 @@
 package org.fao.geonet;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.TreeTraverser;
-import com.google.common.io.Files;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import jeeves.constants.ConfigFile;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.sources.ServiceRequest;
-import org.apache.commons.io.FileUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
@@ -22,9 +24,11 @@ import org.fao.geonet.kernel.search.index.DirectoryFactory;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.LanguageDetector;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.AbstractSpringDataTest;
+import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.util.ThreadUtils;
-import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.fao.geonet.utils.Xml;
@@ -37,6 +41,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.feature.type.Name;
@@ -44,22 +49,26 @@ import org.opengis.filter.Filter;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.net.URL;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
-import java.io.*;
-import java.lang.reflect.Constructor;
-import java.net.URL;
-import java.sql.Connection;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertTrue;
-
-import static org.junit.Assert.assertNotNull;
 
 /**
  * A helper class for testing services.  This super-class loads in the spring beans for Spring-data repositories and mocks for
@@ -86,22 +95,39 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     /**
      * Contain all datadirectories for all nodes.
      */
-    protected static File _dataDirContainer;
-    private static File _dataDirLockFile;
+    protected static Path _dataDirContainer;
+    private static Path _dataDirLockFile;
 
     /**
      * Default node data directory
      */
-    protected static File _dataDirectory;
+    protected static Path _dataDirectory;
+
+    @AfterClass
+    public static void tearDown() throws Exception {
+        if (_dataDirLockFile != null) {
+            Files.deleteIfExists(_dataDirLockFile);
+        }
+    }
+
     @Before
     public void configureAppContext() throws Exception {
 
         synchronized (AbstractCoreIntegrationTest.class) {
             setUpDataDirectory();
 
-            if (!_dataDirLockFile.exists()) {
-                FileUtils.touch(_dataDirLockFile);
-                _dataDirLockFile.deleteOnExit();
+            if (!Files.exists(_dataDirLockFile)) {
+                IO.touch(_dataDirLockFile);
+                Runtime.getRuntime().addShutdownHook(new Thread() {
+                    public void run()
+                    {
+                        try {
+                            Files.deleteIfExists(_dataDirLockFile);
+                        } catch (IOException e) {
+                            throw new Error(e);
+                        }
+                    }
+                });
             }
         }
 
@@ -111,14 +137,13 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
             ((FeatureStore<?, ?>) _datastore.getFeatureSource(name)).removeFeatures(Filter.INCLUDE);
         }
         final String initializedString = "initialized";
-        final String webappDir = getWebappDir(getClass());
-        LanguageDetector.init(webappDir + _applicationContext.getBean(Geonet.Config.LANGUAGE_PROFILES_DIR, String.class));
+        final Path webappDir = getWebappDir(getClass());
+        LanguageDetector.init(webappDir.resolve(_applicationContext.getBean(Geonet.Config.LANGUAGE_PROFILES_DIR, String.class)));
 
         final GeonetworkDataDirectory geonetworkDataDirectory = _applicationContext.getBean(GeonetworkDataDirectory.class);
 
-        final SyncReport syncReport = synchronizeDataDirectory(
-                new File(webappDir, "WEB-INF/data"));
-
+        Files.createDirectories(_dataDirContainer);
+        IO.copyDirectoryOrFile(webappDir.resolve("WEB-INF/data"), _dataDirectory);
         final ArrayList<Element> params = getServiceConfigParameterElements();
 
         final ServiceConfig serviceConfig = new ServiceConfig(params);
@@ -144,28 +169,24 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
         TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
 
-        geonetworkDataDirectory.init("geonetwork", webappDir, _dataDirectory.getAbsolutePath(),
-                serviceConfig, null);
+        geonetworkDataDirectory.init("geonetwork", webappDir, _dataDirectory, serviceConfig, null);
 
         _directoryFactory.resetIndex();
 
-        final String schemaPluginsDir = geonetworkDataDirectory.getSchemaPluginsDir().getPath();
+        final Path schemaPluginsDir = geonetworkDataDirectory.getSchemaPluginsDir();
 
-        final String resourcePath = geonetworkDataDirectory.getResourcesDir().getPath();
+        final Path resourcePath = geonetworkDataDirectory.getResourcesDir();
 
         final SchemaManager schemaManager = _applicationContext.getBean(SchemaManager.class);
-        if (syncReport.updateSchemaManager || !schemaManager.existsSchema("iso19139")) {
+        Files.deleteIfExists(_dataDirectory.resolve("config/schemaplugin-uri-catalog.xml"));
+        Path schemaPluginsCatalogFile = schemaPluginsDir.resolve("schemaplugin-uri-catalog.xml");
+        deploySchema(webappDir, schemaPluginsDir);
 
-            new File(_dataDirectory, "config/schemaplugin-uri-catalog.xml").delete();
-            final String schemaPluginsCatalogFile = new File(schemaPluginsDir, "/schemaplugin-uri-catalog.xml").getPath();
-            deploySchema(webappDir, schemaPluginsDir);
+        _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
+        SchemaManager.registerXmlCatalogFiles(webappDir, schemaPluginsCatalogFile);
 
-            _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
-            SchemaManager.registerXmlCatalogFiles(webappDir, schemaPluginsCatalogFile);
-
-            schemaManager.configure(_applicationContext, webappDir, resourcePath,
-                    schemaPluginsCatalogFile, schemaPluginsDir, "eng", "iso19139", true);
-        }
+        schemaManager.configure(_applicationContext, webappDir, resourcePath,
+                schemaPluginsCatalogFile, schemaPluginsDir, "eng", "iso19139", true);
 
         assertTrue(schemaManager.existsSchema("iso19139"));
         assertTrue(schemaManager.existsSchema("iso19115"));
@@ -174,7 +195,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         _applicationContext.getBean(SearchManager.class).init(false, false, "", 100);
         _applicationContext.getBean(DataManager.class).init(createServiceContext(), false);
 
-        String siteUuid = _dataDirectory.getName();
+        String siteUuid = _dataDirectory.getFileName().toString();
         _applicationContext.getBean(SettingManager.class).setSiteUuid(siteUuid);
         final SourceRepository sourceRepository = _applicationContext.getBean(SourceRepository.class);
         List<Source> sources = sourceRepository.findAll();
@@ -195,35 +216,38 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
 
     }
 
-    private void setUpDataDirectory() {
-        if (_dataDirLockFile != null && _dataDirLockFile.exists() &&
-            _dataDirLockFile.lastModified() < twoHoursAgo()) {
-            _dataDirLockFile.delete();
+    private void setUpDataDirectory() throws IOException {
+        if (_dataDirLockFile != null && Files.exists(_dataDirLockFile) &&
+            Files.getLastModifiedTime(_dataDirLockFile).toMillis() < twoHoursAgo()) {
+            Files.delete(_dataDirLockFile);
         }
-        if (_dataDirectory == null || _dataDirLockFile.exists()) {
-            File dir = getClassFile(getClass()).getParentFile();
+        if (_dataDirectory == null || _dataDirLockFile == null || !Files.exists(_dataDirLockFile)) {
+            Path dir = getClassFile(getClass()).getParentFile().toPath();
             final String pathToTargetDir = "core/target";
-            while(!new File(dir, pathToTargetDir).exists()) {
-                dir = dir.getParentFile();
+            while(!Files.exists(dir.resolve(pathToTargetDir))) {
+                dir = dir.getParent();
             }
-            dir = new File(dir, pathToTargetDir+"/integration-test-datadirs");
+            dir = dir.resolve(pathToTargetDir).resolve("integration-test-datadirs");
 
             int i = 0;
-            while (new File(dir.getPath()+i, DATA_DIR_LOCK_NAME).exists() && new File(dir.getPath()+i, DATA_DIR_LOCK_NAME).exists()) {
+            while (Files.exists(dir.resolve(String.valueOf(i)).resolve(DATA_DIR_LOCK_NAME))) {
                 i++;
             }
 
-            while (!new File(dir.getPath()+i).exists() && !new File(dir.getPath()+i).mkdirs()) {
-                i++;
-                if (i > 1000) {
-                    throw new Error("Unable to make test data directory");
+            while (i < 1000) {
+                try {
+                    Files.createDirectories(dir.resolve(String.valueOf(i)));
+                    break;
+                } catch (IOException e) {
+                    i++;
                 }
             }
 
-            _dataDirContainer = new File(dir.getPath()+i);
 
-            _dataDirectory = new File(_dataDirContainer, "defaultDataDir");
-            _dataDirLockFile = new File(_dataDirContainer, DATA_DIR_LOCK_NAME);
+            _dataDirContainer = dir.resolve(String.valueOf(i));
+
+            _dataDirectory = _dataDirContainer.resolve("defaultDataDir");
+            _dataDirLockFile = _dataDirContainer.resolve(DATA_DIR_LOCK_NAME);
         }
     }
 
@@ -233,119 +257,38 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         return calendar.getTimeInMillis();
     }
 
-    private SyncReport synchronizeDataDirectory(File srcDataDir) throws IOException {
-        SyncReport report = new SyncReport();
-
-        boolean deleteNewFilesFromDataDir = _dataDirectory.exists();
-
-        final TreeTraverser<File> fileTreeTraverser = Files.fileTreeTraverser();
-
-
-        if (deleteNewFilesFromDataDir ) {
-
-            final int prefixPathLength2 = _dataDirectory.getPath().length();
-            for (File dataDirFile : fileTreeTraverser.postOrderTraversal(_dataDirectory)) {
-                String relativePath = dataDirFile.getPath().substring(prefixPathLength2);
-                final File srcFile = new File(srcDataDir, relativePath);
-                if (!srcFile.exists()) {
-                    if (srcFile.getParent().endsWith("schematron") &&
-                            relativePath.contains("schema_plugins") &&
-                            relativePath.endsWith(".xsl")) {
-                        // don't copy because the schematron xsl files are generated.
-                        // normally they shouldn't be here because they don't need to be in the
-                        // repository but some tests can generate them into the schematrons folder
-                        // so ignore them here.
-                        continue;
-                    }
-
-                    if (relativePath.contains("/removed/")) {
-                        // Ignore removed files which may contains MEF files
-                        continue;
-                    }
-                    if (relativePath.endsWith("schemaplugin-uri-catalog.xml")) {
-                        // we will handle this special case later.
-                        continue;
-                    }
-
-                    if (relativePath.contains("resources" + File.separator + "xml" + File.separator + "schemas")) {
-                        // the schemas xml directory is copied by schema manager but since it is schemas we can reuse the directory.
-                        continue;
-                    }
-
-                    if (dataDirFile.isFile() || dataDirFile.list().length == 0) {
-                        if (!dataDirFile.delete()) {
-                            // a file is holding on to a reference so we can't properly clean the data directory.
-                            // this means we need a new one.
-                            _dataDirectory = null;
-                            setUpDataDirectory();
-                            break;
-                        }
-                    }
-                    report.updateSchemaManager |= relativePath.contains("schema_plugins");
-                }
-            }
-        }
-
-        final int prefixPathLength = srcDataDir.getPath().length();
-        for (File file : fileTreeTraverser.preOrderTraversal(srcDataDir)) {
-            String relativePath = file.getPath().substring(prefixPathLength);
-            final File dataDirFile = new File(_dataDirectory, relativePath);
-            if (file.isFile() && (!dataDirFile.exists() || dataDirFile.lastModified() != file.lastModified())) {
-                if (file.getParent().endsWith("schematron") && relativePath.contains("schema_plugins") && relativePath.endsWith(".xsl")) {
-                    // don't copy because the schematron xsl files are generated.
-                    // normally they shouldn't be here because they don't need to be in the
-                    // repository but some tests can generate them into the schemtrons folder
-                    // so ignore them here.
-                    continue;
-                }
-
-                if (relativePath.endsWith("schemaplugin-uri-catalog.xml")) {
-                    // we will handle this special case later.
-                    continue;
-                }
-
-                if (!dataDirFile.getParentFile().exists()) {
-                    Files.createParentDirs(dataDirFile);
-                }
-                BinaryFile.copy(file, dataDirFile);
-                dataDirFile.setLastModified(file.lastModified());
-
-                report.updateSchemaManager |= relativePath.contains("schema_plugins");
-            }
-        }
-        return report;
-    }
-
-    private void deploySchema(String srcDataDir, String schemaPluginPath) {
+    private void deploySchema(Path srcDataDir, Path schemaPluginPath) throws IOException {
         // Copy schema plugin
         final String schemaModulePath = "schemas";
-        File schemaModuleDir = new File(srcDataDir + "/../../../../" + schemaModulePath);
-        if (schemaModuleDir.exists()) {
-            String[] listOfSchemaToLoad = {"iso19139", "dublin-core", "iso19115", "fgdc-std"};
-            for (String schema : listOfSchemaToLoad) {
-                String srcPath = schemaModuleDir + "/" + schema + "/src/main/plugin/" + schema;
-                String destPath = schemaPluginPath + "/" + schema;
-                try {
-                    BinaryFile.copyDirectory(new File(srcPath), new File(destPath));
-                } catch (IOException e) {
-                    e.printStackTrace();
+        Path schemaModuleDir = srcDataDir.resolve("../../../../").resolve(schemaModulePath).normalize();
+        if (Files.exists(schemaModuleDir)) {
+            try (DirectoryStream<Path> paths = Files.newDirectoryStream(schemaModuleDir)) {
+                for (Path path : paths) {
+                    final Path srcSchemaPluginDir = path.resolve("src/main/plugin").resolve(path.getFileName());
+                    if (Files.exists(srcSchemaPluginDir)) {
+                        Path destPath = schemaPluginPath.resolve(path.getFileName());
+                        IO.copyDirectoryOrFile(srcSchemaPluginDir, destPath);
+                    }
                 }
             }
+        } else {
+            throw new AssertionError("Schemas module not found.  this must be a programming error");
         }
     }
 
     @After
     public void deleteNonDefaultNodeDataDirectories() throws IOException {
         synchronized (AbstractCoreIntegrationTest.class) {
-            final Iterable<File> children = Files.fileTreeTraverser().children(_dataDirContainer);
-            for (File child : children) {
-                if (!child.equals(_dataDirectory)) {
-                    for (File file : Files.fileTreeTraverser().postOrderTraversal(child)) {
-                        FileUtils.deleteQuietly(file);
-                    }
+            int i = 0;
+            while(i < 30) {
+                try {
+                    IO.deleteFileOrDirectory(_dataDirContainer);
+                    i = 100;
+                } catch (Exception e) {
+                    i ++;
                 }
             }
-            _dataDirLockFile.delete();
+            Files.deleteIfExists(_dataDirLockFile);
         }
 
     }
@@ -396,7 +339,6 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         context.setLogger(Log.createLogger("Test"));
         context.setMaxUploadSize(100);
         context.setOutputMethod(ServiceRequest.OutputMethod.DEFAULT);
-        context.setAppPath(getWebappDir(getClass()));
         context.setBaseUrl("geonetwork");
 
         return context;
@@ -427,10 +369,10 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         return request;
     }
 
-    public String getStyleSheets() {
-        final String file = getWebappDir(getClass());
+    public Path getStyleSheets() {
+        final Path file = getWebappDir(getClass());
 
-        return new File(file, "xsl/conversion").getPath();
+        return file.resolve("xsl/conversion");
     }
 
     /**
@@ -438,14 +380,14 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
      *
      * @return
      */
-    public static String getWebappDir(Class<?> cl) {
-        File here = getClassFile(cl);
-        while (!new File(here, "pom.xml").exists() && !new File(here.getParentFile(), "web/src/main/webapp/").exists()) {
+    public static Path getWebappDir(Class<?> cl) {
+        Path here = getClassFile(cl).toPath();
+        while (!Files.exists(here.resolve("pom.xml")) && !Files.exists(here.getParent().resolve("web/src/main/webapp/"))) {
 //            System.out.println("Did not find pom file in: "+here);
-            here = here.getParentFile();
+            here = here.getParent();
         }
 
-        return new File(here.getParentFile(), "web/src/main/webapp/").getAbsolutePath() + File.separator;
+        return here.getParent().resolve("web/src/main/webapp/");
     }
 
     protected static File getClassFile(Class<?> cl) {

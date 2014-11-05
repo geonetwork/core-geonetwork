@@ -366,6 +366,11 @@
   <!-- =========================================================== -->
   <dependencyManagement>
     <dependencies>
+        <dependency>
+            <groupId>com.google.jimfs</groupId>
+            <artifactId>jimfs</artifactId>
+            <version>1.0</version>
+        </dependency>
       <!-- rewrite url servletfilter -->
       <dependency>
         <groupId>org.tuckey</groupId>

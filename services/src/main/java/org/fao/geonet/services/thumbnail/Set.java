@@ -45,6 +45,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 
 public class Set extends NotInReadOnlyModeService {
     //--------------------------------------------------------------------------
@@ -53,7 +54,7 @@ public class Set extends NotInReadOnlyModeService {
     //---
     //--------------------------------------------------------------------------
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     //--------------------------------------------------------------------------

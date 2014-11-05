@@ -47,6 +47,7 @@ import org.fao.geonet.util.Sha1Encoder;
 import org.jdom.*;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -55,7 +56,7 @@ import java.util.*;
 public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 	private Map<String,List<Namespace>> namespaceList = new HashMap<String,List<Namespace>>();
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

@@ -27,18 +27,21 @@ import org.eclipse.core.runtime.Assert;
 import org.fao.geonet.Logger;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 //=============================================================================
@@ -49,6 +52,7 @@ import java.util.concurrent.TimeUnit;
  */
 public final class IO {
     private static FileSystem defaultFs = FileSystems.getDefault();
+    private static ThreadLocal<FileSystem> defaultFsThreadLocal = new InheritableThreadLocal<>();
 
     public static final DirectoryStream.Filter<Path> DIRECTORIES_FILTER = new DirectoryStream.Filter<Path>() {
         @Override
@@ -106,40 +110,61 @@ public final class IO {
         }
     }
     public static void copyDirectoryOrFile(final Path from, final Path to) throws IOException {
+        Objects.requireNonNull(from);
+        Objects.requireNonNull(to);
+
+        final Path actualTo;
+        if (Files.isDirectory(to)) {
+            actualTo = to.resolve(from.getFileName().toString());
+        } else {
+            actualTo = to;
+        }
+
+        if (from.equals(to)) {
+            return;
+        }
+
         if (Files.isDirectory(from)) {
-            Assert.isTrue(!Files.isRegularFile(to), "cannot copy a directory to a file. From: " + from + " to " + to);
+            Assert.isTrue(!Files.isRegularFile(actualTo), "cannot copy a directory to a file. From: " + from + " to " + actualTo);
             Files.walkFileTree(from, new SimpleFileVisitor<Path>(){
                 @Override
                 public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                    Files.createDirectory(relativeFile(dir, to, from));
+                    Files.createDirectory(relativeFile(dir, actualTo, from));
                     return FileVisitResult.CONTINUE;
                 }
 
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    Files.copy(file, relativeFile(file, to, from));
+                    Files.copy(file, relativeFile(file, actualTo, from));
                     return FileVisitResult.CONTINUE;
                 }
             });
         } else {
-            final Path parent = to.getParent();
+            final Path parent = actualTo.getParent();
             if (!Files.exists(parent)) {
                 Files.createDirectories(parent);
             }
-            Files.copy(from, to);
+            Files.copy(from, actualTo);
         }
     }
 
     protected static Path relativeFile(Path dir, Path to, Path from) {
-        return to.resolve(from.relativize(dir));
+        return to.resolve(from.relativize(dir).toString().replace('\\', '/'));
     }
 
     public static void moveDirectoryOrFile(final Path from, final Path to) throws IOException {
-        final Path parent = to.getParent();
+        final Path actualTo;
+        if (Files.isDirectory(to)) {
+            actualTo = to.resolve(from.getFileName());
+        } else {
+            actualTo = to;
+        }
+
+        final Path parent = actualTo.getParent();
         if (!Files.exists(parent)) {
             Files.createDirectories(parent);
         }
-        Files.move(from, to);
+        Files.move(from, actualTo);
     }
     public static boolean isEmptyDir(Path dir) throws IOException {
         try (DirectoryStream<Path> children = Files.newDirectoryStream(dir)) {
@@ -170,7 +195,7 @@ public final class IO {
     }
     public static void touch(Path file) throws IOException{
         long timestamp = System.currentTimeMillis();
-        touch(file,  FileTime.from(timestamp, TimeUnit.MILLISECONDS));
+        touch(file, FileTime.from(timestamp, TimeUnit.MILLISECONDS));
     }
 
     public static void touch(Path file, FileTime timestamp) throws IOException{
@@ -186,11 +211,23 @@ public final class IO {
     }
 
     public static Path toPath(String firstPart, String... more) {
-        return defaultFs.getPath(firstPart, more);
+        FileSystem fileSystem = defaultFsThreadLocal.get();
+        if (fileSystem == null) {
+            fileSystem = defaultFs;
+        }
+        return fileSystem.getPath(firstPart, more);
+    }
+
+    public static Path toPath(URI uri) {
+        return Paths.get(uri);
     }
 
     public static void setFileSystem(FileSystem newFileSystem) {
         defaultFs = newFileSystem;
+    }
+
+    public static void setFileSystemThreadLocal(FileSystem newFileSystem) {
+        defaultFsThreadLocal.set(newFileSystem);
     }
 
 }

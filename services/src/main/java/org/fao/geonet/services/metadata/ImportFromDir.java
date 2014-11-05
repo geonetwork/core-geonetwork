@@ -49,6 +49,7 @@ import org.jdom.Element;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -120,7 +121,7 @@ public class ImportFromDir extends NotInReadOnlyModeService {
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception
+	public void init(Path appPath, ServiceConfig params) throws Exception
 	{
 		this.stylePath = appPath + Geonet.Path.IMPORT_STYLESHEETS;
 	}

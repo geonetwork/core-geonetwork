@@ -28,11 +28,13 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 //=============================================================================
 
 public class Ping implements Service
 {
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

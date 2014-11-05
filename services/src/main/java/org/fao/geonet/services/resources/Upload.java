@@ -31,15 +31,12 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.resources.handlers.IResourceUploadHandler;
 import org.fao.geonet.Util;
-import org.apache.commons.io.FileUtils;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
-import java.io.File;
-import java.util.List;
+import java.nio.file.Path;
 
 //=============================================================================
 
@@ -55,7 +52,7 @@ public class Upload implements Service {
     // ---
     // ----------------------------------------------------------------------------
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     // ----------------------------------------------------------------------------

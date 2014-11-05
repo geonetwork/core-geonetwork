@@ -58,7 +58,6 @@ import org.springframework.context.ApplicationContext;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
@@ -96,23 +95,23 @@ public class SchemaManager {
     private static final Namespace GEONET_SCHEMA_NS = Namespace.getNamespace(GEONET_SCHEMA_URI);
 
     private Map<String, Schema> hmSchemas = new HashMap<String, Schema>();
-	private String[] fnames = { "labels.xml", "codelists.xml", "strings.xml" };
-    private Path   schemaPluginsDir;
-	private Path   schemaPluginsCat;
-	private boolean createOrUpdateSchemaCatalog;
-	private String	 defaultLang;
-	private String	 defaultSchema;
-	private	Path	 basePath;
-	private Path resourcePath;
-	private int numberOfCoreSchemasAdded = 0;
+	private String[] fnames = {"labels.xml", "codelists.xml", "strings.xml"};
+    private Path schemaPluginsDir;
+    private Path schemaPluginsCat;
+    private boolean createOrUpdateSchemaCatalog;
+    private String defaultLang;
+    private String defaultSchema;
+    private Path basePath;
+    private Path resourcePath;
+    private int numberOfCoreSchemasAdded = 0;
 
 	/** Active readers count */
 	private static int activeReaders = 0;
 	/** Active writers count */
 	private static int activeWriters = 0;
 
-    public static String registerXmlCatalogFiles(Path path, String schemapluginUriCatalog) {
-        String webapp = path + "WEB-INF" + File.separator;
+    public static Path registerXmlCatalogFiles(Path webappDir, Path schemapluginUriCatalog) {
+        Path webInf = webappDir.resolve("WEB-INF");
 
         //--- Set jeeves.xml.catalog.files property
         //--- this is critical to schema support so must be set correctly
@@ -123,15 +122,15 @@ public class SchemaManager {
         if (!catalogProp.equals("")) {
             Log.info(Geonet.SCHEMA_MANAGER, "Overriding " + Constants.XML_CATALOG_FILES + " property (was set to " + catalogProp + ")");
         }
-        catalogProp = webapp + "oasis-catalog.xml;" + schemapluginUriCatalog;
+        catalogProp = webInf.resolve("oasis-catalog.xml") + ";" + schemapluginUriCatalog;
         System.setProperty(Constants.XML_CATALOG_FILES, catalogProp);
         Log.info(Geonet.SCHEMA_MANAGER, Constants.XML_CATALOG_FILES + " property set to " + catalogProp);
 
-        String blankXSLFile = path + "xsl" + File.separator + "blanks.xsl";
-        System.setProperty(Constants.XML_CATALOG_BLANKXSLFILE, blankXSLFile);
+        Path blankXSLFile = webappDir.resolve("xsl").resolve("blanks.xsl");
+        System.setProperty(Constants.XML_CATALOG_BLANKXSLFILE, blankXSLFile.toString());
         Log.info(Geonet.SCHEMA_MANAGER, Constants.XML_CATALOG_BLANKXSLFILE + " property set to " + blankXSLFile);
 
-        return webapp;
+        return webInf;
     }
 
     //--------------------------------------------------------------------------
@@ -1472,7 +1471,7 @@ public class SchemaManager {
             return new ArrayList<Element>();
 		} else {
 			Element root = Xml.loadFile(xmlConvFile);
-			ConfigurationOverrides.DEFAULT.updateWithOverrides(xmlConvFile.toString(), null, basePath.toString(), root);
+			ConfigurationOverrides.DEFAULT.updateWithOverrides(xmlConvFile.toString(), null, basePath, root);
 			
 			if (root.getName() != "conversions") throw new IllegalArgumentException("Schema conversions file "+xmlConvFile+" is invalid, no <conversions> root element");
 			@SuppressWarnings("unchecked")
@@ -1760,13 +1759,6 @@ public class SchemaManager {
 	 * @param schemaPluginDir the directory containing the schema plugin
 	 */
 	private void copySchemaXSDsToWebApp(String name, Path schemaPluginDir) throws Exception {
-
-		FilenameFilter filter = new FilenameFilter() {
-			public boolean accept(File dir, String name) {
-				return name.endsWith(".xsd") || name.endsWith(".XSD");
-			}
-		};
-
 		Path schemasDir = resourcePath.resolve(Geonet.Path.SCHEMAS);
         Files.createDirectories(schemasDir);
 
@@ -1775,16 +1767,21 @@ public class SchemaManager {
         Files.createDirectories(webAppDirSchemaXSD);
 
 		// copy all XSDs from schema plugin dir to webapp schema dir
-		Path fileSchemaPluginDir = schemaPluginDir;
 
-        try (DirectoryStream<Path> paths = Files.newDirectoryStream(fileSchemaPluginDir)) {
-            Iterator<Path> pathIter = paths.iterator();
-            if (pathIter.hasNext()) {
-                while (pathIter.hasNext()) {
-                    Path schemaFile = pathIter.next();
-                    IO.copyDirectoryOrFile(schemaPluginDir.resolve(schemaFile), webAppDirSchemaXSD.resolve(schemaFile));
-                }
-            } else {
+        DirectoryStream.Filter<? super Path> xsdFilter = new DirectoryStream.Filter<Path>() {
+            @Override
+            public boolean accept(Path entry) throws IOException {
+                return entry.getFileName().toString().toLowerCase().endsWith(".xsd");
+            }
+        };
+        try (DirectoryStream<Path> schemaplugins = Files.newDirectoryStream(schemaPluginDir, xsdFilter)) {
+            boolean missingXsdFiles = true;
+            for (Path schemaplugin : schemaplugins) {
+                IO.copyDirectoryOrFile(schemaplugin, webAppDirSchemaXSD.resolve(schemaplugin));
+                missingXsdFiles = false;
+            }
+
+            if (missingXsdFiles) {
                 Log.error(Geonet.SCHEMA_MANAGER, "Schema "+name+" does not have any XSD files!");
             }
         }

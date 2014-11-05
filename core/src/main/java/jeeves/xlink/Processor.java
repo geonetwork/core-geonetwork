@@ -199,8 +199,7 @@ public final class Processor {
                     failures.add (System.currentTimeMillis());
                 }
 
-                Log.error(Log.XLINK_PROCESSOR,"Failed on " + uri
-                                              + " with exception message " + e.getMessage());
+                Log.error(Log.XLINK_PROCESSOR,"Failed on " + uri, e);
             }
 
             if (remoteFragment != null && !remoteFragment.getName().equalsIgnoreCase("error")) {

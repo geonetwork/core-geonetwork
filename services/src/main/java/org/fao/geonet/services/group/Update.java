@@ -26,6 +26,7 @@ package org.fao.geonet.services.group;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.UUID;
 
 import jeeves.constants.Jeeves;
@@ -51,7 +52,7 @@ import javax.imageio.ImageIO;
  * Update the information of a group.
  */
 public class Update extends NotInReadOnlyModeService {
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     //--------------------------------------------------------------------------

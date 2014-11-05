@@ -14,6 +14,7 @@ import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
 
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +47,7 @@ import java.util.Set;
  * </response>
  */
 public class ReportDataUploads implements Service {
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     // --------------------------------------------------------------------------

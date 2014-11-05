@@ -23,14 +23,9 @@
 
 package org.fao.geonet.kernel.oaipmh;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
-import org.fao.geonet.utils.Xml;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.oaipmh.services.GetRecord;
@@ -41,6 +36,7 @@ import org.fao.geonet.kernel.oaipmh.services.ListRecords;
 import org.fao.geonet.kernel.oaipmh.services.ListSets;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.Xml;
 import org.fao.oaipmh.exceptions.BadArgumentException;
 import org.fao.oaipmh.exceptions.OaiPmhException;
 import org.fao.oaipmh.requests.AbstractRequest;
@@ -48,6 +44,10 @@ import org.fao.oaipmh.responses.AbstractResponse;
 import org.fao.oaipmh.server.OaiPmhFactory;
 import org.fao.oaipmh.util.Lib;
 import org.jdom.Element;
+
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 
 //=============================================================================
 
@@ -146,7 +146,7 @@ public class OaiPmhDispatcher
 
 	private void validateResponse(ServiceContext context, Element response)
 	{
-		String schema = context.getAppPath() + Geonet.SchemaPath.OAI_PMH;
+		Path schema = context.getAppPath().resolve(Geonet.SchemaPath.OAI_PMH);
 
         if(context.isDebugEnabled())
             context.debug("Validating against : "+ schema);

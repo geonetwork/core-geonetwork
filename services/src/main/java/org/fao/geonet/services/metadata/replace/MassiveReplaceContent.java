@@ -10,6 +10,7 @@ import org.fao.geonet.kernel.*;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,7 +34,7 @@ import java.util.Set;
 public class MassiveReplaceContent extends NotInReadOnlyModeService {
     private boolean fullResponse = false;
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         // Used to return different response depending on UI invoking the service:
         //  - ExtJs UI: fullResponse = true
         //  - Angular UI: fullResponse = false or not provided

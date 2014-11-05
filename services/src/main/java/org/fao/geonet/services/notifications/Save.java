@@ -30,13 +30,11 @@ import org.fao.geonet.repository.MetadataNotificationRepository;
 import org.fao.geonet.repository.MetadataNotifierRepository;
 import org.fao.geonet.utils.Xml;
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.notifier.MetadataNotifierManager;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.notifications.domain.NotificationTarget;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +53,7 @@ public class Save extends NotInReadOnlyModeService {
      * @param params
      * @throws Exception
      */
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
     /**
      * Saves notification targets.

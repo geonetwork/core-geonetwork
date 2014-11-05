@@ -28,7 +28,10 @@ import jeeves.constants.ConfigFile;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.utils.IO;
 import org.jdom.Element;
+
+import java.nio.file.Path;
 
 //=============================================================================
 
@@ -39,7 +42,7 @@ public class XmlFile implements GuiService
 {
 	private final String  name;
 	private final String  file;
-	private final String  base;
+	private final Path base;
 	private final String  language;
 	private final String  defaultLang;
 	private final boolean localized;
@@ -56,7 +59,7 @@ public class XmlFile implements GuiService
 
 		name = Util.getAttrib(config, ConfigFile.Xml.Attr.NAME);
 		file = Util.getAttrib(config, ConfigFile.Xml.Attr.FILE);
-		base = Util.getAttrib(config, ConfigFile.Xml.Attr.BASE, "loc");
+		base = IO.toPath(Util.getAttrib(config, ConfigFile.Xml.Attr.BASE, "loc"));
 
 		language = config.getAttributeValue(ConfigFile.Xml.Attr.LANGUAGE);
 

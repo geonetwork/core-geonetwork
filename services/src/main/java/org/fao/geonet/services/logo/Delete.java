@@ -33,11 +33,12 @@ import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 
 import java.io.File;
+import java.nio.file.Path;
 
 public class Delete implements Service {
 	private volatile String logoDirectory;
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
 
 	public Element exec(Element params, ServiceContext context)

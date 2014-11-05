@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -53,7 +54,7 @@ public class Get implements Service {
     //---
     //--------------------------------------------------------------------------
 
-    public void init(final String appPath, final ServiceConfig params) throws Exception {
+    public void init(final Path appPath, final ServiceConfig params) throws Exception {
     }
 
     //--------------------------------------------------------------------------

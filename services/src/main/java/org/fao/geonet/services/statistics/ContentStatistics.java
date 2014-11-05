@@ -25,10 +25,8 @@ package org.fao.geonet.services.statistics;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
@@ -38,8 +36,9 @@ import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specifications;
 
+import java.nio.file.Path;
+
 import static org.fao.geonet.repository.specification.MetadataSpecs.isType;
-import static org.springframework.data.jpa.domain.Specifications.not;
 import static org.springframework.data.jpa.domain.Specifications.where;
 
 /**
@@ -51,7 +50,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  */
 public class ContentStatistics extends NotInReadOnlyModeService {
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
     

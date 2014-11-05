@@ -99,10 +99,10 @@ public class GeonetworkDataDirectory {
         }
         setDataDirectory(jeevesServlet, webappName, handlerConfig);
     }
-    public void init(final String webappName, final String webappDir,  String systemDataDir,
+    public void init(final String webappName, final Path webappDir,  Path systemDataDir,
                      final ServiceConfig handlerConfig, final JeevesServlet jeevesServlet) throws IOException {
-        this.systemDataDir = IO.toPath(systemDataDir);
-        this.init(webappName, IO.toPath(webappDir), handlerConfig, jeevesServlet);
+        this.systemDataDir = systemDataDir;
+        this.init(webappName, webappDir, handlerConfig, jeevesServlet);
     }
 
     /**
@@ -207,7 +207,7 @@ public class GeonetworkDataDirectory {
         } else {
             updateSystemDataDirWithNodeSuffix();
             try {
-                Files.createDirectories(this.systemDataDir, null);
+                Files.createDirectories(this.systemDataDir);
             } catch (IOException e) {
                 Log.error(Geonet.DATA_DIRECTORY, "Error creating system data directory: " + this.systemDataDir);
                 useDefaultDataDir = true;
@@ -382,7 +382,7 @@ public class GeonetworkDataDirectory {
         }
         // Create directory if it does not exist
         try {
-            Files.createDirectories(dir, null);
+            Files.createDirectories(dir);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -557,4 +557,10 @@ public class GeonetworkDataDirectory {
         return nodeId;
     }
 
+    public Path resolveWebResource(String resourcePath) {
+        if (resourcePath.charAt(0) == '/' || resourcePath.charAt(0) == '\\') {
+            resourcePath = resourcePath.substring(1);
+        }
+        return this.webappDir.resolve(resourcePath);
+    }
 }

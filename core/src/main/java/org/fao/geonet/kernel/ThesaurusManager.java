@@ -83,7 +83,7 @@ public class ThesaurusManager implements ThesaurusFinder {
 		Path thesauriDir = IO.toPath(thesauriRepository);
 
 		if (!Files.exists(thesauriDir)) {
-			thesauriDir = context.getBean(GeonetworkDataDirectory.class).getWebappDir().resolve(thesauriDir);
+			thesauriDir = context.getBean(GeonetworkDataDirectory.class).resolveWebResource(thesauriRepository);
         }
 
         thesauriDir = thesauriDir.toAbsolutePath();

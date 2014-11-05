@@ -51,6 +51,7 @@ import org.springframework.data.jpa.domain.Specifications;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 import static org.springframework.data.jpa.domain.Specifications.where;
@@ -61,7 +62,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 public class Create extends NotInReadOnlyModeService {
     boolean useEditTab = false;
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         useEditTab = params.getValue("editTab", "false").equals("true");
     }
     

@@ -30,6 +30,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
@@ -50,7 +51,7 @@ public class Put implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception
+	public void init(Path appPath, ServiceConfig params) throws Exception
 	{
 		groupName = params.getMandatoryValue(Jeeves.Config.GROUP);
 		List<Element> l = params.getChildren(Jeeves.Config.IN_FIELDS, Jeeves.Config.FIELD);

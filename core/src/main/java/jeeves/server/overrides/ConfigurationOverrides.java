@@ -5,26 +5,45 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.spi.LoggerRepository;
 import org.fao.geonet.Constants;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.XPath;
 import org.fao.geonet.utils.Xml;
-import org.jdom.*;
+import org.jdom.Attribute;
+import org.jdom.Content;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
+import org.jdom.Text;
 import org.jdom.filter.Filter;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 
-import javax.servlet.ServletContext;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.servlet.ServletContext;
 
 /**
  * This class assists JeevesEngine by allowing certain configurations to be overridden.
@@ -172,10 +191,10 @@ public class ConfigurationOverrides {
      * @param context the servlet context that is loaded (maybe null.  If null appPath is used to resolve configuration files like: /WEB-INF/configuration-overrides.xml
      * @param appPath The path to the webapplication root.  If servlet is null (and therefore getResource cannot be used, this path is used to file files)
      */
-    public void updateLoggingAsAccordingToOverrides(ServletContext context, String appPath) throws JDOMException, IOException {
+    public void updateLoggingAsAccordingToOverrides(ServletContext context, Path appPath) throws JDOMException, IOException {
         String resource = lookupOverrideParameter(context, appPath);
 
-        ServletResourceLoader loader = new ServletResourceLoader(context,appPath);
+        ServletResourceLoader loader = new ServletResourceLoader(context, appPath);
         Element xml = loader.loadXmlResource(resource);
         if (xml != null) {
             doUpdateLogging(xml, loader);
@@ -218,10 +237,10 @@ public class ConfigurationOverrides {
      * @param configElement the root element of the configuration (obtained by loading configFile)    @throws JDOMException
      * @throws IOException
      */
-    public void updateWithOverrides(String configFile, ServletContext context, String appPath, Element configElement) throws JDOMException, IOException {
+    public void updateWithOverrides(String configFile, ServletContext context, Path appPath, Element configElement) throws JDOMException, IOException {
         String resource = lookupOverrideParameter(context,appPath);
 
-        ServletResourceLoader loader = new ServletResourceLoader(context,appPath);
+        ServletResourceLoader loader = new ServletResourceLoader(context, appPath);
         updateConfig(loader,resource,configFile, configElement);
     }
 
@@ -527,7 +546,7 @@ public class ConfigurationOverrides {
         Log.debug(Log.JEEVES, msg);
     }
 
-    private String lookupOverrideParameter(ServletContext context,String appPath) throws JDOMException, IOException {
+    private String lookupOverrideParameter(ServletContext context, Path appPath) throws JDOMException, IOException {
         if (_overrides != null) {
             return _overrides;
         }
@@ -540,11 +559,11 @@ public class ConfigurationOverrides {
         return resource;
     }
 
-    private String lookupOverrideParamFromAppPath(String appPath) throws JDOMException, IOException {
-        File webInf = new File(appPath,"WEB-INF");
-		File webxmlFile = new File(webInf,"web.xml");
+    private String lookupOverrideParamFromAppPath(Path appPath) throws JDOMException, IOException {
+        final Path webInf = appPath.resolve("WEB-INF");
+        Path webxmlFile = webInf.resolve("web.xml");
         String resource = null;
-        if(webxmlFile.exists()) {
+        if(Files.exists(webxmlFile)) {
             Element webXML = Xml.loadFile(webxmlFile);
             Namespace namespace = webXML.getNamespace();
             String webappName = webXML.getChildTextTrim("display-name", namespace);
@@ -556,7 +575,7 @@ public class ConfigurationOverrides {
             
         }
         if (resource == null || resource.trim().isEmpty()) {
-        	resource = lookupOverrideParamFromConfigFile(new File(webInf,CONFIG_OVERRIDES_FILENAME).toURI().toURL());
+        	resource = lookupOverrideParamFromConfigFile(webInf.resolve(CONFIG_OVERRIDES_FILENAME).toUri().toURL());
         }
         if (resource == null || resource.trim().isEmpty()) {
             resource = System.getProperty(OVERRIDES_KEY);
@@ -600,14 +619,14 @@ public class ConfigurationOverrides {
 
     public static abstract class ResourceLoader {
         protected InputStream loadInputStream(String resource) throws IOException {
-            File file = resolveFile(resource);
+            Path file = resolveFile(resource);
             if(file == null) {
                 return fallbackInputStream(resource);
             } else {
-                return new FileInputStream(file);
+                return Files.newInputStream(file);
             }
         }
-        protected abstract File resolveFile(String resource) throws IOException;
+        protected abstract Path resolveFile(String resource) throws IOException;
         protected abstract InputStream fallbackInputStream(String resource) throws IOException;
         protected String resolveImportFileName(String importResource, String baseResource) {
             String resolved = resolveRelative(importResource, baseResource, File.separator);
@@ -766,33 +785,37 @@ public class ConfigurationOverrides {
 
     static class ServletResourceLoader extends ResourceLoader {
         private final ServletContext context;
-        private String appPath;
+        private Path appPath;
 
-        ServletResourceLoader(ServletContext context, String appPath) {
+        ServletResourceLoader(ServletContext context, Path appPath) {
             this.context = context;
             this.appPath = appPath;
         }
 
         @Override
-        protected File resolveFile(String resource) throws IOException {
-            File file = null;
-            File testPath = new File(resource);
+        protected Path resolveFile(String resource) throws IOException {
+            Path file = null;
+            Path testPath = IO.toPath(resource);
 
-            if(testPath.exists()) {
+            if(Files.exists(testPath)) {
                 file = testPath;
             }
-            if(file ==null && context!=null) {
+            if(file == null && context!=null) {
                 String path = context.getRealPath(resource);
                 if(path != null) {
-                    testPath = new File(path);
-                    if(testPath.exists()) {
+                    testPath = IO.toPath(path);
+                    if(Files.exists(testPath)) {
                         file = testPath;
                     }
                 }
             }
             if(file == null && appPath != null) {
-                File testFile = new File(appPath, resource);
-                if (testFile.exists()) {
+                String resourceNoFirstSlash = resource;
+                if (resourceNoFirstSlash.startsWith("/") || resourceNoFirstSlash.startsWith("\\")) {
+                    resourceNoFirstSlash = resourceNoFirstSlash.substring(1);
+                }
+                Path testFile = appPath.resolve(resourceNoFirstSlash);
+                if (Files.exists(testFile)) {
                     file = testFile;
                 }
             }
@@ -800,12 +823,12 @@ public class ConfigurationOverrides {
             if(file == null) {
                 URL url = Thread.currentThread().getContextClassLoader().getResource(resource);
                 if (url != null) {
-                    File testFile = new File(url.getFile());
-                    if (testFile.exists()) {
+                    Path testFile = IO.toPath(url.getFile());
+                    if (Files.exists(testFile)) {
                         file = testFile;
                     } else {
-                        testFile = new File(url.getPath());
-                        if (testFile.exists()) {
+                        testFile = IO.toPath(url.getPath());
+                        if (Files.exists(testFile)) {
                             file = testFile;
                         }
                     }
@@ -830,9 +853,9 @@ public class ConfigurationOverrides {
                             url = context.getResource(resource);
                         } else {
                             // fall back to appPath is servlet is null 
-                            File appBasedFile = new File(appPath,resource);
-                            if(appBasedFile.exists()) {
-                                url = appBasedFile.toURI().toURL();
+                            Path appBasedFile = appPath.resolve(resource);
+                            if(Files.exists(appBasedFile)) {
+                                url = appBasedFile.toUri().toURL();
                             } else {
                                 url = null;
                             }
@@ -841,13 +864,13 @@ public class ConfigurationOverrides {
                         url = null;
                     }
                     if (url == null) {
-                        File file = new File(resource);
-                        if (file.exists()) {
-                            in = new FileInputStream(file);
+                        Path file = IO.toPath(resource);
+                        if (Files.exists(file)) {
+                            in = Files.newInputStream(file);
                         } else {
-                        	file = new File(resource.replace('/', '\\'));
-                        	if(file.exists()) {
-                        		in = new FileInputStream(file);
+                        	file = IO.toPath(resource.replace('/', '\\'));
+                        	if(Files.exists(file)) {
+                        		in = Files.newInputStream(file);
                         	} else {
                         		throw new IllegalArgumentException("The resource file " + resource + " is not a file and not a web resource.  Perhaps a leading / was forgotten?");
                         	}
@@ -871,7 +894,7 @@ public class ConfigurationOverrides {
      * @return
      */
     public Element loadXmlFileAndUpdate(String servletRelativePath, ServletContext context) {
-        String appPath = context.getContextPath();
+        Path appPath = IO.toPath(context.getContextPath());
         Element elem = null;
         try {
             elem = Xml.loadFile(context.getRealPath(servletRelativePath));
@@ -902,7 +925,7 @@ public class ConfigurationOverrides {
      * @return the array of lines in the file.
      * @throws JDOMException 
      */
-	public List<String> loadTextFileAndUpdate(String configFilePath, ServletContext context, String appPath, BufferedReader reader) throws IOException {
+	public List<String> loadTextFileAndUpdate(String configFilePath, ServletContext context, Path appPath, BufferedReader reader) throws IOException {
 	    ServletResourceLoader loader = new ServletResourceLoader(context, appPath);
 	    
         try {
@@ -965,7 +988,7 @@ public class ConfigurationOverrides {
 	}
 
     @SuppressWarnings("unchecked")
-    public void importSpringConfigurations(XmlBeanDefinitionReader reader, ConfigurableBeanFactory beanFactory, ServletContext servletContext, String appPath) throws JDOMException, IOException {
+    public void importSpringConfigurations(XmlBeanDefinitionReader reader, ConfigurableBeanFactory beanFactory, ServletContext servletContext, Path appPath) throws JDOMException, IOException {
         String overridesResource = lookupOverrideParameter(servletContext, appPath);
 
         ResourceLoader loader = new ServletResourceLoader(servletContext, appPath);
@@ -984,9 +1007,9 @@ public class ConfigurationOverrides {
                 importFile = updatePropertiesInText(properties, importFile);
                 
                 Log.info(Log.JEEVES, "ConfigurationOverrides: importing spring file into application context: "+importFile);
-                File file = loader.resolveFile(importFile);
+                Path file = loader.resolveFile(importFile);
                 if(file != null) {
-                    Resource inputSource = new FileSystemResource(file);
+                    Resource inputSource = new InputStreamResource(Files.newInputStream(file));
                     reader.loadBeanDefinitions(inputSource);
                 } else {
                     InputStream inputStream = loader.loadInputStream(importFile);
@@ -1004,7 +1027,7 @@ public class ConfigurationOverrides {
     }
 
     public void postProcessSpringBeanFactory(ConfigurableListableBeanFactory beanFactory, ServletContext servletContext,
-                                             String appPath) throws JDOMException, IOException {
+                                             Path appPath) throws JDOMException, IOException {
 
         final SpringPropertyOverrides springPropertyOverrides = getSpringPropertyOverrides(servletContext, appPath);
         if (springPropertyOverrides == null) return;
@@ -1012,7 +1035,7 @@ public class ConfigurationOverrides {
     }
 
     public void onSpringApplicationContextFinishedRefresh(ConfigurableListableBeanFactory beanFactory, ServletContext servletContext,
-                                             String appPath) throws JDOMException, IOException {
+                                             Path appPath) throws JDOMException, IOException {
 
         final SpringPropertyOverrides springPropertyOverrides = getSpringPropertyOverrides(servletContext, appPath);
         if (springPropertyOverrides == null) return;
@@ -1020,7 +1043,7 @@ public class ConfigurationOverrides {
     }
 
     @SuppressWarnings("unchecked")
-    private synchronized SpringPropertyOverrides getSpringPropertyOverrides(ServletContext servletContext, String appPath) throws JDOMException, IOException {
+    private synchronized SpringPropertyOverrides getSpringPropertyOverrides(ServletContext servletContext, Path appPath) throws JDOMException, IOException {
         if (this.springPropertyOverrides == null) {
             String overridesResource = lookupOverrideParameter(servletContext, appPath);
 

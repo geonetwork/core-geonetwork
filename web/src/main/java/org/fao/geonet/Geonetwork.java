@@ -61,6 +61,7 @@ import org.fao.geonet.services.util.z3950.Repositories;
 import org.fao.geonet.services.util.z3950.Server;
 import org.fao.geonet.util.ThreadPool;
 import org.fao.geonet.util.ThreadUtils;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.ProxyInfo;
 import org.fao.geonet.utils.XmlResolver;
@@ -250,13 +251,13 @@ public class Geonetwork implements ApplicationHandler {
 
         logger.info("  - Schema manager...");
 
-        String schemaPluginsDir = dataDirectory.getSchemaPluginsDir().getAbsolutePath();
-        String schemaCatalogueFile = dataDirectory.getConfigDir()+File.separator+Geonet.File.SCHEMA_PLUGINS_CATALOG;
+        Path schemaPluginsDir = dataDirectory.getSchemaPluginsDir();
+        Path schemaCatalogueFile = dataDirectory.getConfigDir().resolve(Geonet.File.SCHEMA_PLUGINS_CATALOG);
         boolean createOrUpdateSchemaCatalog = handlerConfig.getMandatoryValue(Geonet.Config.SCHEMA_PLUGINS_CATALOG_UPDATE).equals("true");
         logger.info("			- Schema plugins directory: " + schemaPluginsDir);
         logger.info("			- Schema Catalog File     : " + schemaCatalogueFile);
         SchemaManager schemaMan = _applicationContext.getBean(SchemaManager.class);
-        schemaMan.configure(_applicationContext, appPath, Resources.locateResourcesDir(context), schemaCatalogueFile,
+        schemaMan.configure(_applicationContext, appPath, dataDirectory.getResourcesDir(), schemaCatalogueFile,
                 schemaPluginsDir, context.getLanguage(), handlerConfig.getMandatoryValue(Geonet.Config.PREFERRED_SCHEMA),
                 createOrUpdateSchemaCatalog);
 
@@ -517,12 +518,13 @@ public class Geonetwork implements ApplicationHandler {
     /**
      * Set system properties to those required
      *
-     * @param path webapp path
+     * @param webappDir webapp path
      */
-    private void setProps(Path path, ServiceConfig handlerConfig) {
+    private void setProps(Path webappDir, ServiceConfig handlerConfig) {
 
-        final String schemapluginUriCatalog = handlerConfig.getValue(Geonet.Config.CONFIG_DIR) + FS + "schemaplugin-uri-catalog.xml";
-        String webapp = SchemaManager.registerXmlCatalogFiles(path, schemapluginUriCatalog);
+        final Path configDir = IO.toPath(handlerConfig.getValue(Geonet.Config.CONFIG_DIR));
+        final Path schemapluginUriCatalog = configDir.resolve("schemaplugin-uri-catalog.xml");
+        Path webInf = SchemaManager.registerXmlCatalogFiles(webappDir, schemapluginUriCatalog);
 
         //--- Set mime-mappings
         String mimeProp = System.getProperty("mime-mappings");
@@ -530,7 +532,7 @@ public class Geonetwork implements ApplicationHandler {
         if (!mimeProp.equals("")) {
             logger.info("Overriding mime-mappings property (was set to " + mimeProp + ")");
         }
-        mimeProp = webapp + "mime-types.properties";
+        mimeProp = webInf.resolve("mime-types.properties").toString();
         System.setProperty("mime-mappings", mimeProp);
         logger.info("mime-mappings property set to " + mimeProp);
 

@@ -62,10 +62,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -233,14 +231,11 @@ public class ServiceManager {
 
         Service service = (Service) Class.forName(name).newInstance();
 
-        service.init(appPathAsString(), new ServiceConfig(clas.getChildren(ConfigFile.Class.Child.PARAM)));
+        service.init(dataDir.getWebappDir(), new ServiceConfig(clas.getChildren(ConfigFile.Class.Child.PARAM)));
 
         return service;
     }
 
-    private String appPathAsString() {
-        return dataDir.getWebappDir().toString();
-    }
 
     //---------------------------------------------------------------------------
 
@@ -281,7 +276,7 @@ public class ServiceManager {
             return new XmlFile(elem, defaultLang, defaultLocal);
 
         if (ConfigFile.Output.Child.CALL.equals(elem.getName()))
-            return new Call(elem, pack, appPathAsString());
+            return new Call(elem, pack, dataDir.getWebappDir());
 
         throw new IllegalArgumentException("Unknown GUI element : " + Xml.getString(elem));
     }
@@ -638,7 +633,7 @@ public class ServiceManager {
 
 				//--- do an XSL transformation
 
-				styleSheet = dataDir.getWebappDir().resolve(Jeeves.Path.XSL).resolve(styleSheet);
+				styleSheet = dataDir.resolveWebResource(Jeeves.Path.XSL).resolve(styleSheet);
 
 				if (!Files.exists(styleSheet))
                     error(" -> stylesheet not found on disk, aborting : " + styleSheet);
@@ -832,7 +827,7 @@ public class ServiceManager {
         } else {
 			//--- do an XSL transformation
 
-			styleSheet = dataDir.getWebappDir().resolve(Jeeves.Path.XSL).resolve(styleSheet);
+			styleSheet = dataDir.resolveWebResource(Jeeves.Path.XSL).resolve(styleSheet);
 
             info("     -> transforming with stylesheet : " + styleSheet);
 

@@ -36,6 +36,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.nio.file.Path;
 
 /**
  * Allows a user to display a metadata in PDF with a particular formatters
@@ -75,6 +76,6 @@ public class PDF implements Service {
     }
 
 	@Override
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
 }

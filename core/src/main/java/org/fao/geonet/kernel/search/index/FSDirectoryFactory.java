@@ -184,11 +184,13 @@ public class FSDirectoryFactory implements DirectoryFactory {
     @Override
     public Set<String> listIndices() throws IOException {
         init();
-        Set<String> indices = new HashSet<String>();
-        try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(this.indexFile)) {
-            for (Path file : dirStream) {
-                if (Files.exists(file.resolve("segments.gen"))) {
-                    indices.add(file.getFileName().toString());
+        Set<String> indices = new HashSet<>();
+        if (Files.exists(this.indexFile)) {
+            try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(this.indexFile)) {
+                for (Path file : dirStream) {
+                    if (Files.exists(file.resolve("segments.gen"))) {
+                        indices.add(file.getFileName().toString());
+                    }
                 }
             }
         }

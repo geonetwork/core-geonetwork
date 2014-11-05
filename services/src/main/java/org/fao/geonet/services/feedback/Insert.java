@@ -34,6 +34,8 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.util.MailSender;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 //=============================================================================
 
 /** Stores the feedback from a user into the database and sends an e-mail
@@ -47,7 +49,7 @@ public class Insert implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

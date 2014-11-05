@@ -52,6 +52,7 @@ import org.xml.sax.SAXException;
 import java.io.File;
 import java.io.FileFilter;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -67,7 +68,7 @@ public class Info implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig config) throws Exception
+	public void init(Path appPath, ServiceConfig config) throws Exception
 	{
 		importXslPath = new File(appPath + Geonet.Path.IMPORT_STYLESHEETS);
 		oaiSchema  = new File(appPath +"/xml/validation/oai/OAI-PMH.xsd");

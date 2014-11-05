@@ -44,6 +44,7 @@ import org.jdom.Element;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URI;
+import java.nio.file.Path;
 
 /**
  * Upload one thesaurus file using file upload or file URL. <br/>
@@ -56,7 +57,7 @@ public class Upload implements Service {
 
 	private String stylePath;
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 		this.stylePath = appPath + FS + Geonet.Path.STYLESHEETS + FS;
 	}
 

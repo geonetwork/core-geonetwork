@@ -1,7 +1,9 @@
 package jeeves.server.sources.http;
 
+import org.fao.geonet.utils.IO;
+
+import java.nio.file.Path;
 import javax.servlet.ServletContext;
-import java.io.File;
 
 /**
  * Look up all the paths that the ServletContext is needed to find.
@@ -12,8 +14,8 @@ import java.io.File;
  */
 public class ServletPathFinder {
     private final String _baseUrl;
-    private final String _configPath;
-    private final String _appPath;
+    private final Path _configPath;
+    private final Path _appPath;
 
     /**
      * Constructor.
@@ -21,10 +23,7 @@ public class ServletPathFinder {
      * @param servletContext a servletContext for the current webapp.
      */
     public ServletPathFinder(ServletContext servletContext) {
-        String appPath = new File(servletContext.getRealPath("/xsl")).getParent() + File.separator;
-
-        if (!appPath.endsWith(File.separator))
-            appPath += File.separator;
+        Path appPath = IO.toPath(servletContext.getRealPath("/xsl")).getParent();
 
         String baseUrl = "";
 
@@ -41,15 +40,14 @@ public class ServletPathFinder {
             }
         }
 
-        String configPath = servletContext.getRealPath("/WEB-INF/config.xml");
-        if (configPath == null) {
-            configPath = appPath + "WEB-INF" + File.separator;
+        String configPathString = servletContext.getRealPath("/WEB-INF/config.xml");
+        if (configPathString == null) {
+            this._configPath = appPath.resolve("WEB-INF");
         } else {
-            configPath = new File(configPath).getParent() + File.separator;
+            this._configPath = IO.toPath(configPathString).getParent();
         }
 
         this._baseUrl = baseUrl;
-        this._configPath = configPath;
         this._appPath = appPath;
     }
 
@@ -57,11 +55,11 @@ public class ServletPathFinder {
         return _baseUrl;
     }
 
-    public String getConfigPath() {
+    public Path getConfigPath() {
         return _configPath;
     }
 
-    public String getAppPath() {
+    public Path getAppPath() {
         return _appPath;
     }
 }

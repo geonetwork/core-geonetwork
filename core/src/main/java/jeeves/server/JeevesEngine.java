@@ -54,13 +54,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 import javax.annotation.PreDestroy;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.xml.transform.TransformerConfigurationException;
-import java.io.*;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 //=============================================================================
 
@@ -76,7 +88,7 @@ public class JeevesEngine {
 	private String _defaultLang;
     private String _uploadDir;
 	private int _maxUploadSize;
-	private String _appPath;
+	private Path _appPath;
     private boolean _debugFlag;
 	
 	/* true if the 'general' part has been loaded */
@@ -105,7 +117,7 @@ public class JeevesEngine {
 
 	/** Inits the engine, loading all needed data.
 	  */
-    public void init(final String appPath, final String configPath, final String baseUrl, final JeevesServlet servlet) throws ServletException
+    public void init(final Path appPath, final Path configPath, final String baseUrl, final JeevesServlet servlet) throws ServletException
 	{
         ServletContext servletContext = null;
         if (servlet != null) {
@@ -113,9 +125,9 @@ public class JeevesEngine {
         }
 
         try {
-            File log4jConfig = new File(configPath, "log4j.cfg");
-            if (log4jConfig.exists()) {
-                PropertyConfigurator.configure(log4jConfig.getAbsolutePath());
+            Path log4jConfig = configPath.resolve("log4j.cfg");
+            if (Files.exists(log4jConfig)) {
+                PropertyConfigurator.configure(log4jConfig.toUri().toURL());
             }
 
             ConfigurationOverrides.DEFAULT.updateLoggingAsAccordingToOverrides(servletContext, appPath);
@@ -151,7 +163,6 @@ public class JeevesEngine {
             info("Path    : " + appPath);
             info("BaseURL : " + baseUrl);
 
-            _serviceMan.setAppPath(appPath);
             _serviceMan.setBaseUrl(baseUrl);
             _serviceMan.setServlet(servlet);
 
@@ -257,7 +268,7 @@ public class JeevesEngine {
 	//---------------------------------------------------------------------------
 
 	@SuppressWarnings("unchecked")
-    private void loadConfigFile(ServletContext servletContext, String path, String file, ServiceManager serviceMan) throws Exception
+    private void loadConfigFile(ServletContext servletContext, Path path, String file, ServiceManager serviceMan) throws Exception
 	{
 		file = path + file;
 
@@ -364,7 +375,6 @@ public class JeevesEngine {
 
 		_debugFlag = "true".equals(general.getChildText(ConfigFile.General.Child.DEBUG));
 
-		serviceMan.setUploadDir(_uploadDir);
 		serviceMan.setMaxUploadSize(_maxUploadSize);
 	}
 

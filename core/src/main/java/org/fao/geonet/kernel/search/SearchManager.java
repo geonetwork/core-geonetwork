@@ -26,6 +26,7 @@ import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.index.SpatialIndex;
+import com.vividsolutions.jts.util.Assert;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
@@ -508,9 +509,8 @@ public class SearchManager {
                      int maxWritesInTransaction) throws Exception {
         _summaryConfigValues = _luceneConfig.getTaxonomy().get("hits");
 
-        Path appPath = _geonetworkDataDirectory.getWebappDir();
-		_stylesheetsDir = appPath.resolve(SEARCH_STYLESHEETS_DIR_PATH);
-        _stopwordsDir = appPath.resolve(STOPWORDS_DIR_PATH);
+		_stylesheetsDir = _geonetworkDataDirectory.resolveWebResource(SEARCH_STYLESHEETS_DIR_PATH);
+        _stopwordsDir = _geonetworkDataDirectory.resolveWebResource(STOPWORDS_DIR_PATH);
 
         createAnalyzer();
         createDocumentBoost();
@@ -1193,7 +1193,7 @@ public class SearchManager {
             Element defaultLang = Xml.transform(xml, defaultLangStyleSheet, params);
             if (Files.exists(otherLocalesStyleSheet)) {
                 @SuppressWarnings(value = "unchecked")
-                List<Element> otherLanguages = Xml.transform(xml, defaultLangStyleSheet, params).removeContent();
+                List<Element> otherLanguages = Xml.transform(xml, otherLocalesStyleSheet, params).removeContent();
                 mergeDefaultLang(defaultLang, otherLanguages);
                 documents.addContent(otherLanguages);
             }
@@ -1238,6 +1238,7 @@ public class SearchManager {
         Element toMerge = null;
 
         for( Element element : otherLanguages ) {
+            Assert.isTrue(element.getName().equals("Document"));
             String clangCode;
             if (element.getAttribute("locale") == null) {
                 clangCode = "";

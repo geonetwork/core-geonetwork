@@ -1,25 +1,24 @@
 package org.fao.geonet.kernel.mef;
 
-import static junit.framework.Assert.assertNotNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.io.File;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-
 import jeeves.server.context.ServiceContext;
-
-import org.apache.commons.io.FileUtils;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+
+import static junit.framework.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Test MEF.
@@ -44,14 +43,14 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
         final Metadata metadata = _metadataRepo.findOne(metadataIds.get(0));
 
         assertNotNull(metadata);
-        assertEquals(admin.getId(), metadata.getSourceInfo().getOwner());
+        assertEquals(admin.getId(), metadata.getSourceInfo().getOwner().intValue());
     }
 
     @Test
     public void testDoImportMefVersion2() throws Exception {
         ServiceContext context = createServiceContext();
 
-        final File resource = new File(MEFLibIntegrationTest.class.getResource("mef2-example-2md.zip").getFile());
+        final Path resource = IO.toPath(MEFLibIntegrationTest.class.getResource("mef2-example-2md.zip").toURI());
 
         final User admin = loginAsAdmin(context);
 
@@ -64,7 +63,7 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
             final Metadata metadata = _metadataRepo.findOne(metadataId);
 
             assertNotNull(metadata);
-            assertEquals(admin.getId(), metadata.getSourceInfo().getOwner());
+            assertEquals(admin.getId(), metadata.getSourceInfo().getOwner().intValue());
         }
     }
 
@@ -83,8 +82,8 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
     public static class ImportMetadata {
         private final AbstractCoreIntegrationTest testClass;
         private ServiceContext context;
-        private List<String> metadataIds = new ArrayList<String>();
-        private List<String> mefFilesToLoad = new ArrayList<String>();
+        private List<String> metadataIds = new ArrayList<>();
+        private List<String> mefFilesToLoad = new ArrayList<>();
 
         public ImportMetadata(AbstractCoreIntegrationTest testClass, ServiceContext context) {
             this.context = context;
@@ -101,10 +100,9 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
             testClass.loginAsAdmin(context);
 
             for (String mefFile : mefFilesToLoad) {
-                InputStream stream = MEFLibIntegrationTest.class.getResourceAsStream(mefFile);
-                final File mefTestFile = File.createTempFile("mefTestFile", ".mef");
-                FileUtils.copyInputStreamToFile(stream, mefTestFile);
-                stream.close();
+                final Path mefTestFile = Files.createTempFile("mefTestFile", ".mef");
+                final Path srcMefPath = IO.toPath(MEFLibIntegrationTest.class.getResource(mefFile).toURI());
+                Files.write(mefTestFile, Files.readAllBytes(srcMefPath));
 
                 Element params = new Element("request");
                 metadataIds.addAll(MEFLib.doImport(params, context, mefTestFile, testClass.getStyleSheets()));

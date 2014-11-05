@@ -4,10 +4,13 @@ import jeeves.server.JeevesEngine;
 import jeeves.server.UserSession;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.nio.file.Path;
 
 /**
  * Provides JVM-local running/invokation of Jeeves engine.
@@ -34,7 +37,7 @@ public class LocalJeeves
 	 */
 	public static void main(String[] args)
 	{
-		init(args[0], args[1], args[2]);
+		init(IO.toPath(args[0]), IO.toPath(args[1]), args[2]);
 		exit();
 		p("ALL OK");
 		System.exit(0);
@@ -115,7 +118,7 @@ public class LocalJeeves
 	/**
 	 * Create local Jeeves engine.
 	 */
-	static public void init(String appPath, String configPath, String baseUrl)
+	static public void init(Path appPath, Path configPath, String baseUrl)
 	{
 		try
 		{

@@ -43,6 +43,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -66,7 +67,7 @@ public class AddLimitations implements Service {
     //---
     //--------------------------------------------------------------------------
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         this.stylePath = appPath + FS + Geonet.Path.STYLESHEETS + FS;
     }
 

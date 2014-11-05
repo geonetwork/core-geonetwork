@@ -30,6 +30,7 @@ import org.fao.geonet.constants.Params;
 import org.jdom.Element;
 
 import java.io.File;
+import java.nio.file.Path;
 
 /**
  * List all formatters
@@ -74,7 +75,7 @@ public class ListFormatters extends AbstractFormatService {
     }
 
     @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
 

@@ -55,6 +55,7 @@ import javax.annotation.Nonnull;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -79,7 +80,7 @@ public class DownloadArchive implements Service
 	//---
 	//----------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 		this.stylePath = appPath + FS + Geonet.Path.STYLESHEETS + FS;
 	}
 

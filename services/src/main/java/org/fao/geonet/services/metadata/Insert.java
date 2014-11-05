@@ -43,6 +43,7 @@ import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -59,7 +60,7 @@ public class Insert extends NotInReadOnlyModeService {
 
     private String stylePath;
 
-	public void init(String appPath, ServiceConfig params) throws Exception
+	public void init(Path appPath, ServiceConfig params) throws Exception
     {
         this.stylePath = appPath + Geonet.Path.IMPORT_STYLESHEETS;
     }

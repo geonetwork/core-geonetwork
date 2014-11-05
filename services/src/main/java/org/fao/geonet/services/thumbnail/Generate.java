@@ -39,9 +39,10 @@ import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 
 import java.io.File;
+import java.nio.file.Path;
 
 public class Generate extends NotInReadOnlyModeService {
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     public Element serviceSpecificExec(Element params, ServiceContext context)

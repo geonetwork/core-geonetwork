@@ -8,6 +8,8 @@ import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.util.ThreadPool;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 /**
  * Configure geonetwork's thread pool to not add tasks to thread pool but instead execute them in calling thread.
  *
@@ -19,7 +21,7 @@ import org.jdom.Element;
  */
 public class SetSystemProperties implements Service {
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         // empty
     }
 

@@ -36,6 +36,7 @@ import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
 import java.io.File;
+import java.nio.file.Path;
 
 /**
  * Delete an uploaded file from the data directory.
@@ -43,7 +44,7 @@ import java.io.File;
  */
 public class Get extends NotInReadOnlyModeService {
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     public Element serviceSpecificExec(Element params, ServiceContext context)

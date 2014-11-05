@@ -18,6 +18,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -53,7 +54,7 @@ public class TableExport extends NotInReadOnlyModeService {
     // --- Init
     // ---
     // --------------------------------------------------------------------------
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
         // this.currentExportFormat = params.getValue("exportType");
         this.csvSep = params.getValue("csvSeparator");

@@ -37,6 +37,7 @@ import org.joda.time.Days;
 import org.joda.time.Months;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.nio.file.Path;
 import java.sql.SQLException;
 
 import static org.fao.geonet.repository.specification.SearchRequestSpecs.hasHits;
@@ -68,7 +69,7 @@ public class SearchStatistics extends NotInReadOnlyModeService {
 
     private static final String SERVICE_PARAM = "service";
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
 

@@ -36,7 +36,7 @@ import java.nio.file.Path;
 public interface IMEFVisitor {
 	public void handleMetadata(Element md, int index) throws Exception;
 
-	public void handleMetadataFiles(DirectoryStream<Path> File, Element info,
+	public void handleMetadataFiles(DirectoryStream<Path> files, Element info,
 			int index) throws Exception;
 
 	public void handleInfo(Element info, int index) throws Exception;

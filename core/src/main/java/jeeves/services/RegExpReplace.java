@@ -30,6 +30,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -60,7 +61,7 @@ public class RegExpReplace implements Service
 	//--------------------------------------------------------------------------
 
 	@SuppressWarnings("unchecked")
-	public void init(String appPath, ServiceConfig params) throws Exception
+	public void init(Path appPath, ServiceConfig params) throws Exception
 	{
 		String  file   = params.getMandatoryValue(Jeeves.Config.FILE);
 		Element config = Xml.loadFile(appPath + file);

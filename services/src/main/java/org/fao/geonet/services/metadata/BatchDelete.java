@@ -43,6 +43,7 @@ import org.fao.geonet.util.FileCopyMgr;
 import org.jdom.Element;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -51,7 +52,7 @@ import java.util.Set;
  * Removes a metadata from the system.
  */
 public class BatchDelete extends BackupFileService {
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
 

@@ -9,9 +9,10 @@ import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import javax.annotation.CheckForNull;
 import javax.servlet.ServletContext;
-import java.io.IOException;
 
 public class JeevesApplicationContext extends XmlWebApplicationContext  {
 
@@ -36,7 +37,7 @@ public class JeevesApplicationContext extends XmlWebApplicationContext  {
         try {
             final ServletContext servletContext = getServletContext();
 
-            String appPath = getAppPath();
+            Path appPath = getAppPath();
             if (_configurationOverrides != null) {
                 _configurationOverrides.postProcessSpringBeanFactory(beanFactory, servletContext, appPath);
             }
@@ -54,7 +55,7 @@ public class JeevesApplicationContext extends XmlWebApplicationContext  {
         try {
             final ServletContext servletContext = getServletContext();
 
-            String appPath = getAppPath();
+            Path appPath = getAppPath();
             if (_configurationOverrides != null) {
                 _configurationOverrides.onSpringApplicationContextFinishedRefresh(getBeanFactory(), servletContext, appPath);
             }
@@ -73,7 +74,7 @@ public class JeevesApplicationContext extends XmlWebApplicationContext  {
      *
      * This method is protected so tests can provide custom implementations.
      */
-    protected String getAppPath() {
+    protected Path getAppPath() {
         final ServletPathFinder pathFinder = new ServletPathFinder(getServletContext());
         return pathFinder.getAppPath();
     }
@@ -83,7 +84,7 @@ public class JeevesApplicationContext extends XmlWebApplicationContext  {
         reader.setValidating(false);
         super.loadBeanDefinitions(reader);
 
-        String appPath = getAppPath();
+        Path appPath = getAppPath();
         if (this._configurationOverrides != null) {
             try {
                 this._configurationOverrides.importSpringConfigurations(reader, (ConfigurableBeanFactory) reader.getBeanFactory(),

@@ -45,7 +45,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -358,7 +357,7 @@ public class LuceneConfig {
 	public void configure(String luceneConfigXmlFile) {
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "Loading Lucene configuration ...");
-		this.configurationFile = geonetworkDataDirectory.getWebappDir().resolve(luceneConfigXmlFile);
+		this.configurationFile = geonetworkDataDirectory.resolveWebResource(luceneConfigXmlFile);
         ServletContext servletContext;
         try {
             servletContext = _appContext.getBean(ServletContext.class);
@@ -376,7 +375,7 @@ public class LuceneConfig {
 			luceneConfig = Xml.loadStream(in);
 			if (servletContext != null) {
 				ConfigurationOverrides.DEFAULT.updateWithOverrides(luceneConfigXmlFile, servletContext,
-                        geonetworkDataDirectory.getWebappDir().toString(), luceneConfig);
+                        geonetworkDataDirectory.getWebappDir(), luceneConfig);
 			}
 			
 			// Main Lucene index configuration option
@@ -627,7 +626,7 @@ public class LuceneConfig {
 			Element taxonomyConfig = Xml.loadFile(this.taxonomyConfigurationFile);
 			if (servletContext != null) {
 				ConfigurationOverrides.DEFAULT.updateWithOverrides(this.taxonomyConfigurationFile.toString(),
-                        servletContext, geonetworkDataDirectory.getWebappDir().toString(), taxonomyConfig);
+                        servletContext, geonetworkDataDirectory.getWebappDir(), taxonomyConfig);
 			}
 			
 			taxonomy = new HashMap<String, Map<String,FacetConfig>>();
@@ -743,7 +742,7 @@ public class LuceneConfig {
 							&& value != null) {
 						Path f = IO.toPath(value);
 						if (!Files.exists(f)) { // try relative to appPath
-							f = geonetworkDataDirectory.getWebappDir().resolve(value);
+							f = geonetworkDataDirectory.resolveWebResource(value);
 						}
 					} else if ("double".equals(paramType) && value != null) {
 						params[i] = Double.parseDouble(value);

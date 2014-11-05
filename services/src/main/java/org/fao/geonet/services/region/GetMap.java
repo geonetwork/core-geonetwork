@@ -52,6 +52,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.List;
 
@@ -100,7 +101,7 @@ public class GetMap implements Service {
     private Map<String, String> _namedBackgrounds = new HashMap<String, String>();
     private SortedSet<ExpandFactor> _expandFactors = new TreeSet<ExpandFactor>();
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         this._format = params.getMandatoryValue("format");
         List<Element> expandFactors = params.getChildren("expandFactors");
         for (Element factorEl : expandFactors) {

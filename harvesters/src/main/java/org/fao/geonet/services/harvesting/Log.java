@@ -1,6 +1,7 @@
 package org.fao.geonet.services.harvesting;
 
 import java.io.File;
+import java.nio.file.Path;
 
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
@@ -18,7 +19,7 @@ import org.jdom.Element;
  * 
  */
 public class Log implements Service {
-    public void init(String appPath, ServiceConfig config) throws Exception {
+    public void init(Path appPath, ServiceConfig config) throws Exception {
 
     }
 

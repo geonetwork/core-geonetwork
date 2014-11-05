@@ -139,7 +139,7 @@ import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -162,7 +162,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 
 import static org.fao.geonet.kernel.schema.MetadataSchema.SCHEMATRON_DIR;
@@ -205,7 +204,6 @@ public class DataManager {
 
     private java.nio.file.Path dataDir;
     private java.nio.file.Path thesaurusDir;
-    private java.nio.file.Path appPath;
     private java.nio.file.Path stylePath;
 
 
@@ -236,8 +234,8 @@ public class DataManager {
      **/
     public synchronized void init(ServiceContext context, Boolean force) throws Exception {
         this.servContext = context;
-        appPath = context.getBean(GeonetworkDataDirectory.class).getWebappDir();
-        stylePath = appPath.resolve(Geonet.Path.STYLESHEETS);
+        final GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
+        stylePath = dataDirectory.resolveWebResource(Geonet.Path.STYLESHEETS);
         editLib = new EditLib(schemaMan);
         dataDir = _applicationContext.getBean(GeonetworkDataDirectory.class).getSystemDataDir();
         thesaurusDir = _applicationContext.getBean(ThesaurusManager.class).getThesauriDirectory();
@@ -695,7 +693,7 @@ public class DataManager {
      * @param name
      * @return
      */
-    public java.nio.file.Path getSchemaDir(String name) {
+    public Path getSchemaDir(String name) {
         return schemaMan.getSchemaDir(name);
     }
 
@@ -732,7 +730,7 @@ public class DataManager {
                 Xml.validate(md);
                 // otherwise use supplied schema name
             } else {
-                Xml.validate(getSchemaDir(schema) + Geonet.File.SCHEMA, md);
+                Xml.validate(getSchemaDir(schema).resolve(Geonet.File.SCHEMA), md);
             }
         }
     }
@@ -761,7 +759,7 @@ public class DataManager {
                 return Xml.validateInfo(md, eh);
                 // otherwise use supplied schema name
             } else {
-                return Xml.validateInfo(getSchemaDir(schema) + Geonet.File.SCHEMA, md, eh);
+                return Xml.validateInfo(getSchemaDir(schema).resolve(Geonet.File.SCHEMA), md, eh);
             }
         }
     }
@@ -1137,7 +1135,7 @@ public class DataManager {
      * @throws Exception
      */
     public String extractUUID(String schema, Element md) throws Exception {
-        String styleSheet = getSchemaDir(schema) + Geonet.File.EXTRACT_UUID;
+        Path styleSheet = getSchemaDir(schema).resolve(Geonet.File.EXTRACT_UUID);
         String uuid       = Xml.transform(md, styleSheet).getText().trim();
 
         if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
@@ -1158,7 +1156,7 @@ public class DataManager {
      * @throws Exception
      */
     public String extractDateModified(String schema, Element md) throws Exception {
-        String styleSheet = getSchemaDir(schema) + Geonet.File.EXTRACT_DATE_MODIFIED;
+        Path styleSheet = getSchemaDir(schema).resolve(Geonet.File.EXTRACT_DATE_MODIFIED);
         String dateMod    = Xml.transform(md, styleSheet).getText().trim();
 
         if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
@@ -1192,7 +1190,7 @@ public class DataManager {
 
         //--- do an XSL  transformation
 
-        String styleSheet = getSchemaDir(schema) + Geonet.File.SET_UUID;
+        Path styleSheet = getSchemaDir(schema).resolve(Geonet.File.SET_UUID);
 
         return Xml.transform(root, styleSheet);
     }
@@ -1204,7 +1202,7 @@ public class DataManager {
      * @throws Exception
      */
     public Element extractSummary(Element md) throws Exception {
-        String styleSheet = stylePath + Geonet.File.METADATA_BRIEF;
+        Path styleSheet = stylePath.resolve(Geonet.File.METADATA_BRIEF);
         Element summary       = Xml.transform(md, styleSheet);
         if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
             Log.debug(Geonet.DATA_MANAGER, "Extracted summary '\n"+Xml.getString(summary));
@@ -2047,7 +2045,7 @@ public class DataManager {
     public Element applyCustomSchematronRules(String schema, int metadataId, Element md,
                                               String lang, Map<String, Integer[]> valTypeAndStatus) {
         MetadataSchema metadataSchema = getSchema(schema);
-        final java.nio.file.Path schemaDir = this.schemaMan.getSchemaDir(schema);
+        final Path schemaDir = this.schemaMan.getSchemaDir(schema);
 
         Element schemaTronXmlOut = new Element("schematronerrors", Edit.NAMESPACE);
         try {
@@ -2119,7 +2117,7 @@ public class DataManager {
                         params.put("rule", ruleId);
                         params.put("thesaurusDir", this.thesaurusDir);
 
-                        java.nio.file.Path file = schemaDir.resolve(SCHEMATRON_DIR).resolve(schematron.getFile());
+                        Path file = schemaDir.resolve(SCHEMATRON_DIR).resolve(schematron.getFile());
                         Element xmlReport = Xml.transform(md, file, params);
                         if (xmlReport != null) {
                             report.addContent(xmlReport);
@@ -2236,7 +2234,7 @@ public class DataManager {
         // Logical delete for metadata file uploads
         PathSpec<MetadataFileUpload, String> deletedDatePathSpec = new PathSpec<MetadataFileUpload, String>() {
             @Override
-            public Path<String> getPath(Root<MetadataFileUpload> root) {
+            public javax.persistence.criteria.Path<String> getPath(Root<MetadataFileUpload> root) {
                 return root.get(MetadataFileUpload_.deletedDate);
             }
         };
@@ -2324,7 +2322,7 @@ public class DataManager {
         String schema = getMetadataSchema(metadataId);
 
         //--- do an XSL  transformation
-        String styleSheet = getSchemaDir(schema) + Geonet.File.EXTRACT_THUMBNAILS;
+        Path styleSheet = getSchemaDir(schema).resolve(Geonet.File.EXTRACT_THUMBNAILS);
 
         Element result = Xml.transform(md, styleSheet);
         result.addContent(new Element("id").setText(metadataId));
@@ -2431,9 +2429,9 @@ public class DataManager {
         root.addContent(env);
 
         //--- do an XSL  transformation
-        styleSheet = getSchemaDir(schema) + styleSheet;
+        Path styleSheetPath = getSchemaDir(schema).resolve(styleSheet);
 
-        md = Xml.transform(root, styleSheet);
+        md = Xml.transform(root, styleSheetPath);
         String changeDate = null;
         String uuid = null;
         if (schemaMan.getSchema(schema).isReadwriteUUID()) {
@@ -2972,7 +2970,7 @@ public class DataManager {
             }
             if (metadataId.isPresent()) {
                 String metadataIdString = String.valueOf(metadataId.get());
-                final java.nio.file.Path resourceDir = Lib.resource.getDir(context, Params.Access.PRIVATE, metadataIdString);
+                final Path resourceDir = Lib.resource.getDir(context, Params.Access.PRIVATE, metadataIdString);
                 env.addContent(new Element("datadir").setText(resourceDir.toString()));
             }
 
@@ -2991,7 +2989,7 @@ public class DataManager {
 
             result.addContent(env);
             // apply update-fixed-info.xsl
-            String styleSheet = getSchemaDir(schema) + Geonet.File.UPDATE_FIXED_INFO;
+            Path styleSheet = getSchemaDir(schema).resolve(Geonet.File.UPDATE_FIXED_INFO);
             result = Xml.transform(result, styleSheet);
             return result;
         } else {
@@ -3080,7 +3078,7 @@ public class DataManager {
 
             // --- do an XSL transformation
 
-            java.nio.file.Path styleSheet = getSchemaDir(parentSchema).resolve(Geonet.File.UPDATE_CHILD_FROM_PARENT_INFO);
+            Path styleSheet = getSchemaDir(parentSchema).resolve(Geonet.File.UPDATE_CHILD_FROM_PARENT_INFO);
             Element childForUpdate = Xml.transform(rootEl, styleSheet, params);
 
             xmlSerializer.update(childId, childForUpdate, new ISODate().toString(), true, null, srvContext);
@@ -3410,8 +3408,8 @@ public class DataManager {
 
         for (Integer id: idsOfMetadataToDelete) {
             //--- remove metadata directory for each record
-            final java.nio.file.Path metadataDataDir = _applicationContext.getBean(GeonetworkDataDirectory.class).getMetadataDataDir();
-            java.nio.file.Path pb = Lib.resource.getMetadataDir(metadataDataDir, id + "");
+            final Path metadataDataDir = _applicationContext.getBean(GeonetworkDataDirectory.class).getMetadataDataDir();
+            Path pb = Lib.resource.getMetadataDir(metadataDataDir, id + "");
             IO.deleteFileOrDirectory(pb);
         }
 

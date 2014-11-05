@@ -22,6 +22,7 @@
 //==============================================================================
 package org.fao.geonet.services.statistics;
 
+import java.nio.file.Path;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class RequestsByDateStatistics extends NotInReadOnlyModeService {
     static final String BY_DAY = "DAY";
     static final String BY_HOUR = "HOUR";
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
 
         queryFragments = new Hashtable<String, DateInterval>(4);

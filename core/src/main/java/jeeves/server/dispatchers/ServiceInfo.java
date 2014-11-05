@@ -182,7 +182,7 @@ public class ServiceInfo {
         if (sheet == null)
             return request;
 
-        Path styleSheet = this.geonetworkDataDirectory.getWebappDir().resolve(Jeeves.Path.XSL).resolve(sheet);
+        Path styleSheet = this.geonetworkDataDirectory.resolveWebResource(Jeeves.Path.XSL).resolve(sheet);
 
         ServiceManager.info("Transforming input with stylesheet : " + styleSheet);
 

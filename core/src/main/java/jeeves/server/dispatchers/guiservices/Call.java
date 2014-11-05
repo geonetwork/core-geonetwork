@@ -31,6 +31,8 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 
 //=============================================================================
 
@@ -45,7 +47,7 @@ public class Call implements GuiService {
     //--------------------------------------------------------------------------
 
     @SuppressWarnings("unchecked")
-    public Call(Element config, String pack, String appPath) throws Exception {
+    public Call(Element config, String pack, Path appPath) throws Exception {
         name = Util.getAttrib(config, ConfigFile.Call.Attr.NAME);
 
         //--- handle 'class' attrib

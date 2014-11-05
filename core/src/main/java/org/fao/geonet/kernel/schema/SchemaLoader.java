@@ -693,9 +693,7 @@ public class SchemaLoader
 
             if (name.equals("annotation")) {
                 
-            }
-
-            else if (name.equals("import") || name.equals("include")) {
+            } else if (name.equals("import") || name.equals("include")) {
                 String schemaLoc = elChild.getAttributeValue("schemaLocation");
 
                 //--- we must try to resolve imports from the web using the
@@ -703,19 +701,22 @@ public class SchemaLoader
                 Path scFile;
                 if (schemaLoc.startsWith("http:")) {
                     Resolver resolver = ResolverWrapper.getInstance();
-                    scFile = IO.toPath(resolver.getXmlResolver().resolveURI(schemaLoc));
+                    final String scPath = resolver.getXmlResolver().resolveURI(schemaLoc);
 
                     if (Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
-                          Log.debug(Geonet.SCHEMA_MANAGER, "Cats: " +
-                                  Arrays.toString(resolver.getXmlResolver().getCatalogList()) +
-                                  " Resolved " + schemaLoc +
-                                  " " + scFile);
+                          Log.debug(Geonet.SCHEMA_MANAGER,
+                                  "Cats: " + Arrays.toString(resolver.getXmlResolver().getCatalogList()) +
+                                  " Resolved " + schemaLoc + " " + scPath);
                     }
 
-                    if (scFile == null) { // what use is this? old behaviour
-                        Log.warning(Geonet.SCHEMA_MANAGER, "Cannot resolve " + schemaLoc +
-                                ": will append last component to current path (not sure it will help though!)");
-                        scFile = path.resolve(schemaLoc);
+                    if (scPath == null) {
+                        Log.warning(Geonet.SCHEMA_MANAGER,
+                                "Cannot resolve " + schemaLoc + ": will append last component to current path " +
+                                "(not sure it will help though!)");
+                        int lastSlash = schemaLoc.lastIndexOf('/');
+                        scFile = path.resolve(schemaLoc.substring(lastSlash + 1));
+                    } else {
+                        scFile = IO.toPath(scPath);
                     }
                 } else {
                     scFile = path.resolve(schemaLoc);
