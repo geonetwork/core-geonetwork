@@ -102,6 +102,7 @@
                     gnPopup.create({
                       title: activeTool,
                       url : url,
+                      target: '[gn-main-viewer]',
                       content: '<div class="gn-popup-iframe ' + activeTool + '">' +
                           '<img style="width:100%;height:100%;" src="{{options.url}}" />' +
                           '</div>'
