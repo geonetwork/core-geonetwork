@@ -104,18 +104,6 @@
         });
       }]);
 
-  var source = new ol.source.TileWMS({
-    params: {
-      LAYERS: 'ETOPO1_BATHY_R_3857,continent'
-    },
-    url: 'http://www.ifremer.fr/services/wms/wmsproxy_double.cgi?'
-  });
-  var sxtLayer = new ol.layer.Tile({
-    type: 'WMS',
-    source: source,
-    title: 'Sextant'
-  });
-
   module.controller('toolsController',
       ['$scope', 'gnMeasure',
         function($scope, gnMeasure) {
