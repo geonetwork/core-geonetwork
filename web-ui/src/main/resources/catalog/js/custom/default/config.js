@@ -72,7 +72,7 @@
       var mapsConfig = {
         center: [280274.03240585705, 6053178.654789996],
         zoom: 2,
-        maxResolution: '9783.93962050256'
+        maxResolution: 9783.93962050256
       };
 
       var viewerMap = new ol.Map({

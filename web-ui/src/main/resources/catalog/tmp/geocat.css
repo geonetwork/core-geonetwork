@@ -7680,6 +7680,18 @@ select[multiple][hitsperpage-combo] select {
 .bootstrap-tagsinput {
   width: 100%;
 }
+.tagsinput-clear,
+.tagsinput-trigger {
+  position: absolute;
+  top: 4px;
+  right: 36px;
+}
+.tagsinput-trigger {
+  top: .45em;
+  right: 20px;
+  font-size: 16px;
+  font-weight: normal;
+}
 .gn-resultview li:hover {
   cursor: pointer;
   background-color: #428bca;
@@ -7808,22 +7820,26 @@ select[multiple][hitsperpage-combo] select {
 [ng-search-form] .panel-heading [hitsperpage-combo] {
   vertical-align: middle;
 }
-[gn-map-field] {
+[data-ng-search-form] [gn-map-field],
+[ng-search-form] [gn-map-field] {
   border: 1px solid #cccccc;
   border-radius: 3px;
   position: relative;
-  padding: 0;
 }
-[gn-map-field] [gn-draw-bbox-btn],
-[gn-map-field] .btn-group-vertical {
+[data-ng-search-form] [gn-map-field] [gn-draw-bbox-btn],
+[ng-search-form] [gn-map-field] [gn-draw-bbox-btn],
+[data-ng-search-form] [gn-map-field] .btn-group-vertical,
+[ng-search-form] [gn-map-field] .btn-group-vertical {
   position: absolute;
   top: 4px;
   z-index: 10;
 }
-[gn-map-field] .btn-group-vertical {
+[data-ng-search-form] [gn-map-field] .btn-group-vertical,
+[ng-search-form] [gn-map-field] .btn-group-vertical {
   right: 4px;
 }
-[gn-map-field] [gn-draw-bbox-btn] {
+[data-ng-search-form] [gn-map-field] [gn-draw-bbox-btn],
+[ng-search-form] [gn-map-field] [gn-draw-bbox-btn] {
   left: 4px;
 }
 body {

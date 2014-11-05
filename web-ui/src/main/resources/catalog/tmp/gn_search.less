@@ -134,6 +134,25 @@
 /** Enf of typeahead styles */
 .bootstrap-tagsinput {
   width: 100%;
+  .tag-content {
+    display: inline-block;
+    max-width: 10em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+.tagsinput-clear,
+.tagsinput-trigger {
+  position: absolute;
+  top: 4px;
+  right: 26px;
+}
+.tagsinput-trigger {
+  top: .575em;
+  right: 20px;
+  font-size: 16px;
+  font-weight: normal;
 }
 
 .gn-resultview {
@@ -250,24 +269,23 @@
       vertical-align: middle;
     }
   }
-}
 
-[gn-map-field] {
-  border: 1px solid @btn-default-border;
-  border-radius: 3px;
-  position: relative;
-  padding: 0;
-  [gn-draw-bbox-btn],
-  .btn-group-vertical {
-    position: absolute;
-    top: 4px;
-    z-index: 10;
+  [gn-map-field] {
+    border: 1px solid @btn-default-border;
+    border-radius: 3px;
+    position: relative;
+    [gn-draw-bbox-btn],
+    .btn-group-vertical {
+      position: absolute;
+      top: 4px;
+      z-index: 10;
+    }
+    .btn-group-vertical {
+      right: 4px;
+    }
+    [gn-draw-bbox-btn] {
+      left: 4px;
+    }
   }
-  .btn-group-vertical {
-    right: 4px;
-  }
-  [gn-draw-bbox-btn] {
-    left: 4px;
-  }
-}
 
+}

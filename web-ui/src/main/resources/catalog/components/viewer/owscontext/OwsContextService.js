@@ -236,12 +236,11 @@
         var res = server.onlineResource[0];
         gnOwsCapabilities.getCapabilities(res.href).then(function(capObj) {
           var info = gnOwsCapabilities.getLayerInfoFromCap(obj.name, capObj);
+          info.group = obj.group;
           var layer = gnMap.addWmsToMapFromCap(map, info);
 
           layer.setOpacity(obj.opacity);
           layer.setVisible(!obj.hidden);
-          // TODO test this
-          layer.set('group', obj.group);
         });
       };
     }

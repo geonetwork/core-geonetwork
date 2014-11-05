@@ -218,7 +218,46 @@
             type: 'OSM',
             baseURL: 'http://a.tile.openstreetmap.org/',
             extension: 'png',
-            maxExtent: layer.getSource().getExtent(),
+            // Hack to return an extent for the base
+            // layer in case of undefined
+            maxExtent: layer.getExtent() ||
+                [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+            resolutions:  layer.getSource().tileGrid.getResolutions(),
+            tileSize: [
+              layer.getSource().tileGrid.getTileSize(),
+              layer.getSource().tileGrid.getTileSize()]
+          });
+          return enc;
+        },
+        'Bing': function(layer, config) {
+          var enc = self.encoders.
+              layers['Layer'].call(this, layer);
+          angular.extend(enc, {
+            type: 'OSM',
+            baseURL: 'http://a.tile.openstreetmap.org/',
+            extension: 'png',
+            // Hack to return an extent for the base
+            // layer in case of undefined
+            maxExtent: layer.getExtent() ||
+                [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+            resolutions:  layer.getSource().tileGrid.getResolutions(),
+            tileSize: [
+              layer.getSource().tileGrid.getTileSize(),
+              layer.getSource().tileGrid.getTileSize()]
+          });
+          return enc;
+        },
+        'MapQuest': function(layer, config) {
+          var enc = self.encoders.
+              layers['Layer'].call(this, layer);
+          angular.extend(enc, {
+            type: 'OSM',
+            baseURL: 'http://otile1-s.mqcdn.com/tiles/1.0.0/osm',
+            extension: 'png',
+            // Hack to return an extent for the base
+            // layer in case of undefined
+            maxExtent: layer.getExtent() ||
+                [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
             resolutions:  layer.getSource().tileGrid.getResolutions(),
             tileSize: [
               layer.getSource().tileGrid.getTileSize(),
@@ -227,26 +266,33 @@
           return enc;
         },
         'WMTS': function(layer, config) {
+          // sextant specific
           var enc = self.encoders.layers['Layer'].
               call(this, layer);
           var source = layer.getSource();
           var tileGrid = source.getTileGrid();
+          var matrixSet = 'EPSG:3857';
+          var matrixIds = new Array(tileGrid.getResolutions().length);
+          for (var z = 0; z < tileGrid.getResolutions().length; ++z) {
+            matrixIds[z] = {
+              identifier: tileGrid.getMatrixIds()[z],
+              resolution: tileGrid.getResolutions()[z],
+              tileSize: [tileGrid.getTileSize(), tileGrid.getTileSize()],
+              topLeftCorner: tileGrid.getOrigin(),
+              matrixSize: [Math.pow(2, z), Math.pow(2, z)]
+            };
+          }
+
           angular.extend(enc, {
             type: 'WMTS',
-            baseURL: location.protocol + '//wmts.geo.admin.ch',
-            layer: config.serverLayerName,
-            maxExtent: source.getExtent(),
-            tileOrigin: tileGrid.getOrigin(),
-            tileSize: [tileGrid.getTileSize(), tileGrid.getTileSize()],
-            resolutions: tileGrid.getResolutions(),
-            zoomOffset: tileGrid.getMinZoom(),
+            baseURL: 'http://visi-sextant.ifremer.fr:8080/geowebcache/service/wmts?',
+            layer: 'Sextant',
             version: '1.0.0',
-            requestEncoding: 'REST',
-            formatSuffix: config.format || 'jpeg',
+            requestEncoding: 'KVP',
+            format: 'image/png',
             style: 'default',
-            dimensions: ['TIME'],
-            params: {'TIME': source.getDimensions().Time},
-            matrixSet: '21781'
+            matrixSet: matrixSet,
+            matrixIds: matrixIds
           });
 
           return enc;

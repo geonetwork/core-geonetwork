@@ -1,37 +1,118 @@
 (function() {
+
   goog.provide('gn_form_fields_directive');
 
-  angular.module('gn_form_fields_directive', [
-  ])
-  .directive('groupsCombo', ['$http',
-        function($http) {
-          return {
-            restrict: 'A',
-            templateUrl: '../../catalog/components/search/formfields/' +
-                'partials/groupsCombo.html',
-            scope: {
-              ownerGroup: '=',
-              lang: '=',
-              groups: '='
-            },
-            link: function(scope, element, attrs) {
-              var url = 'info@json?type=groupsIncludingSystemGroups';
-              if (attrs.profile) {
-                url = 'info@json?type=groups&profile=' + attrs.profile;
-              }
-              $http.get(url, {cache: true}).
-                  success(function(data) {
-                    scope.groups = data !== 'null' ? data.group : null;
+  angular.module('gn_form_fields_directive', [])
+  /**
+   * @ngdoc directive
+   * @name gn_form_fields_directive.directive:gnTypeahead
+   * @restrict A
+   *
+   * @description
+   * It binds a tagsinput to the input for multi select.
+   * By default, the list is shown on click even if the input value is
+   * empty.
+   */
 
-                    // Select by default the first group.
-                    if ((angular.isUndefined(scope.ownerGroup) ||
-                         scope.ownerGroup === '') && data.group) {
-                      scope.ownerGroup = data.group[0]['@id'];
-                    }
-                  });
-            }
+  .directive('gnTypeahead', [ function() {
+    return {
+      restrict: 'A',
+      scope: {
+        options: '=gnTypeahead'
+      },
+      link: function(scope, element, attrs) {
+        var doLink = function(data, remote) {
+          var conf = {
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace
           };
-        }])
+
+          if (data) {
+            conf.limit = 5;
+            conf.local = data;
+          } else if (remote) {
+            conf.remote = remote;
+          }
+          var engine = new Bloodhound(conf);
+          engine.initialize();
+
+          $(element).tagsinput({
+            itemValue:'id',
+            itemText: 'name'
+          });
+
+          var field = $(element).tagsinput('input');
+          field.typeahead({
+            minLength: 0,
+            highlight: true
+          }, {
+            name: 'datasource',
+            displayKey: 'name',
+            source: engine.ttAdapter()
+          }).on('typeahead:selected', function(event, datum) {
+            field.typeahead('val', '');
+            $(element).tagsinput('add', datum);
+          });
+
+          var triggerElt = $('<span class="close tagsinput-trigger fa fa-ellipsis-v"></span>');
+          field.parent().after(triggerElt);
+          var resetElt = $('<span class="close tagsinput-clear">&times;</span>')
+            .on('click', function() {
+              $(element).tagsinput('removeAll').val('').trigger('change');
+            });
+          field.parent().after(resetElt);
+          resetElt.hide();
+
+          $(element).on('change', function() {
+            $(element).tagsinput('refresh');
+            resetElt.toggle($(element).val()!='');
+          });
+
+        };
+
+        if (scope.options.mode == 'prefetch') {
+          scope.options.promise.then(doLink);
+        } else if (scope.options.mode == 'remote') {
+          doLink(null, scope.options.remote);
+        };
+
+      }
+    }
+  }])
+
+
+    .directive('groupsCombo', ['$http', function($http) {
+      return {
+
+        restrict: 'A',
+        templateUrl: '../../catalog/components/search/formfields/' +
+        'partials/groupsCombo.html',
+        scope: {
+          ownerGroup: '=',
+          lang: '=',
+          groups: '='
+        },
+
+        link: function(scope, element, attrs) {
+          var url = 'info@json?type=groupsIncludingSystemGroups';
+          if (attrs.profile) {
+            url = 'info@json?type=groups&profile=' + attrs.profile;
+          }
+          $http.get(url, {cache: true}).
+          success(function(data) {
+            scope.groups = data !== 'null' ? data.group : null;
+
+            // Select by default the first group.
+            if ((angular.isUndefined(scope.ownerGroup) ||
+            scope.ownerGroup === '') && data.group) {
+              scope.ownerGroup = data.group[0]['@id'];
+            }
+          });
+        }
+
+      };
+    }])
+
   .directive('protocolsCombo', ['$http', 'gnSchemaManagerService',
         function($http, gnSchemaManagerService) {
           return {
