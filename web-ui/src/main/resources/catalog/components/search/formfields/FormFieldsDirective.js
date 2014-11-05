@@ -24,7 +24,7 @@
         var doLink = function(data, remote) {
           var conf = {
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            queryTokenizer: Bloodhound.tokenizers.whitespace
           };
 
           if (data) {
