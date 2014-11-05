@@ -31,7 +31,7 @@ public class GeonetworkDataDirectorySystemPropertyOnlySystemDataDirSetTest exten
      */
     @Override
     protected Path getDataDir() {
-        return _dataDirContainer.resolve("nonDefaultDataDir").toAbsolutePath().normalize();
+        return testFixture.getDataDirContainer().resolve("nonDefaultDataDir").toAbsolutePath().normalize();
     }
 
 

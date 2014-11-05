@@ -42,7 +42,7 @@ public class GeonetworkDataDirectoryMultiNodeServiceConfigOnlySystemDataDirSetTe
     }
 
     private Path getBaseDir() {
-        return _dataDirectory.toAbsolutePath().normalize();
+        return testFixture.getDataDirContainer().toAbsolutePath().normalize();
     }
 
 

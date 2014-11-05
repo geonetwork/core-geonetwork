@@ -27,6 +27,7 @@
 
 package org.fao.geonet.kernel;
 
+import com.google.common.annotations.VisibleForTesting;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import jeeves.server.overrides.ConfigurationOverrides;
@@ -133,12 +134,25 @@ public class SchemaManager {
         return webInf;
     }
 
-    //--------------------------------------------------------------------------
-	//---
-	//--- Constructor
-	//---
-	//--------------------------------------------------------------------------
+    @VisibleForTesting
+    public void configureFrom(SchemaManager schemaManager, Path basePath, GeonetworkDataDirectory dataDir) {
+        this.basePath = basePath;
+        this.resourcePath = dataDir.getResourcesDir();
+        this.schemaPluginsDir  = dataDir.getSchemaPluginsDir();
+        this.schemaPluginsCat = schemaPluginsDir.resolve("schemaplugin-uri-catalog.xml");
+        this.defaultLang = schemaManager.defaultLang;
+        this.defaultSchema = schemaManager.defaultSchema;
+        this.createOrUpdateSchemaCatalog = schemaManager.createOrUpdateSchemaCatalog;
 
+        this.hmSchemas.clear();
+        this.hmSchemas.putAll(schemaManager.hmSchemas);
+
+
+        fnames = new String[schemaManager.fnames.length];
+        System.arraycopy(schemaManager.fnames, 0, fnames, 0, fnames.length);
+        numberOfCoreSchemasAdded = schemaManager.numberOfCoreSchemasAdded;
+
+    }
 	/**
      * initialize and configure schema manager. should only be on startup.
 		*
@@ -156,10 +170,10 @@ public class SchemaManager {
 		this.basePath = basePath;
 		this.resourcePath = resourcePath;
 		this.schemaPluginsDir  = sPDir;
-		this.defaultLang = defaultLang;
-		this.defaultSchema = defaultSchema;
 		this.schemaPluginsCat = schemaPluginsCat;
-		this.createOrUpdateSchemaCatalog = createOrUpdateSchemaCatalog;
+        this.defaultLang = defaultLang;
+        this.defaultSchema = defaultSchema;
+        this.createOrUpdateSchemaCatalog = createOrUpdateSchemaCatalog;
 		
 		Element schemaPluginCatRoot = getSchemaPluginCatalogTemplate();
 
