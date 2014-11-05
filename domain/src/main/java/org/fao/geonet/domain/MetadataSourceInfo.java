@@ -88,33 +88,24 @@ public class MetadataSourceInfo {
     }
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + _groupOwner;
-        result = prime * result + _owner;
-        result = prime * result + ((_sourceId == null) ? 0 : _sourceId.hashCode());
-        return result;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MetadataSourceInfo that = (MetadataSourceInfo) o;
+
+        if (_groupOwner != null ? !_groupOwner.equals(that._groupOwner) : that._groupOwner != null) return false;
+        if (_owner != null ? !_owner.equals(that._owner) : that._owner != null) return false;
+        if (_sourceId != null ? !_sourceId.equals(that._sourceId) : that._sourceId != null) return false;
+
+        return true;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        MetadataSourceInfo other = (MetadataSourceInfo) obj;
-        if (!_groupOwner.equals(other._groupOwner))
-            return false;
-        if (_owner != other._owner)
-            return false;
-        if (_sourceId == null) {
-            if (other._sourceId != null)
-                return false;
-        } else if (!_sourceId.equals(other._sourceId))
-            return false;
-        return true;
+    public int hashCode() {
+        int result = _sourceId != null ? _sourceId.hashCode() : 0;
+        result = 31 * result + (_groupOwner != null ? _groupOwner.hashCode() : 0);
+        result = 31 * result + (_owner != null ? _owner.hashCode() : 0);
+        return result;
     }
 }
