@@ -269,6 +269,7 @@
                     label: layer.Title,
                     attribution: attribution,
                     legend: legend,
+                    group: layer.group,
                     metadata: metadata,
                     extent: gnOwsCapabilities.getLayerExtentFromGetCap(map, layer)
                   }
