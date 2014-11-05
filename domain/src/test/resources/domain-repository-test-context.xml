@@ -13,7 +13,12 @@
     </bean>
 
     <bean id="systemInfo" class="org.fao.geonet.SystemInfo">
-        <constructor-arg value="development" />
+        <constructor-arg value="testing" />
+        <constructor-arg value="testing" />
+        <constructor-arg value="3.0" />
+        <constructor-arg value="SNAPSHOT" />
+        <constructor-arg value="testing" />
+        <constructor-arg value="testing" />
         <constructor-arg value="testing" />
     </bean>
 
