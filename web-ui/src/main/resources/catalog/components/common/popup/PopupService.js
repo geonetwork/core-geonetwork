@@ -46,7 +46,8 @@
         this.destroyed = false;
 
         // Attach popup to body element
-        $(document.body).append(this.element);
+        var target = options.target || document.body;
+        $(target).append(this.element);
       };
 
       Popup.prototype.open = function(scope) {
