@@ -213,4 +213,47 @@
         }
       };
     }]);
+
+  module.directive('gnMetadataOpen',
+    [ '$http', '$sanitize',  '$compile', function($http, $sanitize, $compile) {
+      return {
+        restrict: 'A',
+        scope: {
+          md: '=gnMetadataOpen',
+          selector: '@gnMetadataOpenSelector'
+        },
+
+        link: function(scope, element, attrs, controller) {
+          element.on('click', function() {
+            var URI = '/geonetwork/srv/fre/view?currTab=simple&uuid=';
+            // var URI = 'http://localhost:8080/geonetwork/srv/fre/view?currTab=simple&uuid='
+            $http.get(URI + scope.md.getUuid()).then(function(response) {
+              scope.fragment = response.data.replace('<?xml version="1.0" encoding="UTF-8"?>', '');
+              var el = document.createElement('div');
+              el.setAttribute('gn-metadata-display', '');
+              $(scope.selector).append(el);
+              $compile(el)(scope);
+            });
+          });
+        }
+
+      };
+    }]
+  );
+
+  module.directive('gnMetadataDisplay', [ function() {
+      return {
+        templateUrl: '../../catalog/components/search/resultsview/partials/' +
+            'metadata.html',
+
+        link: function(scope, element, attrs, controller) {
+          scope.dismiss = function() {
+            element.remove();
+          };
+        }
+
+      };
+    }]
+  );
+
 })();
