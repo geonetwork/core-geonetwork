@@ -14,6 +14,8 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -229,11 +231,32 @@ public class DatabaseMigration implements BeanPostProcessor {
             DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(className).newInstance();
             task.update(conn);
             return false;
+        } catch (SQLException e) {
+            StringBuilder error = new StringBuilder();
+            formatSqlException(e, error);
+
+            SQLException next = e.getNextException();
+            while (next != null) {
+                formatSqlException(next, error);
+            }
+
+            ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
+            PrintStream writer = new PrintStream(byteArrayStream);
+            e.printStackTrace(writer);
+
+            error.append("\n    Stack Trace: \n").append(byteArrayStream.toString());
+            _logger.error("          Errors occurs during Java migration file: " + error);
+            return true;
         } catch (Throwable e) {
-            _logger.info("          Errors occurs during Java migration file: " + e.getMessage());
             e.printStackTrace();
             return true;
         }
+    }
+
+    private void formatSqlException(SQLException e, StringBuilder error) {
+        error.append("\n    SQLState: ").append(e.getSQLState());
+        error.append("\n    Error Code: ").append(e.getErrorCode());
+        error.append("\n    Message: ").append(e.getMessage());
     }
 
     /**
