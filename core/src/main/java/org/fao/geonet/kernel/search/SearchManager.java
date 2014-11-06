@@ -21,7 +21,6 @@
 //==============================================================================
 
 package org.fao.geonet.kernel.search;
-
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -95,9 +94,11 @@ import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.filter.capability.FilterCapabilities;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 
 import java.io.File;
+
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -113,11 +114,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.TreeSet;
 import java.util.Vector;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -180,7 +181,9 @@ public class SearchManager {
     private GeonetworkDataDirectory _geonetworkDataDirectory;
     @Autowired
     private LuceneConfig _luceneConfig;
-
+    @Qualifier("timerThreadPool")
+    @Autowired
+    private ScheduledThreadPoolExecutor timer;
 
     public SettingInfo getSettingInfo() {
         return _settingInfo;
@@ -579,12 +582,13 @@ public class SearchManager {
      *
      * @throws Exception
      */
-	public void end() throws Exception {
-		endZ3950();
-		_spatial.end();
-		_luceneOptimizerManager.cancel();
-		_tracker.close(TimeUnit.MINUTES.toMillis(1), true);
-	}
+    public void end() throws Exception {
+        endZ3950();
+        _spatial.end();
+        _luceneOptimizerManager.cancel();
+        _tracker.close(TimeUnit.MINUTES.toMillis(1), true);
+    }
+
 
     /**
      * TODO javadoc.
@@ -863,6 +867,8 @@ public class SearchManager {
 		field.setAttribute(LuceneFieldAttribute.INDEX.toString(), Boolean.toString(index));
 		return field;
 	}
+
+
     public enum LuceneFieldAttribute {
         NAME {
             @Override
@@ -1576,7 +1582,7 @@ public class SearchManager {
      */
 	public class Spatial {
 		private final DataStore _datastore;
-        private static final long 	TIME_BETWEEN_SPATIAL_COMMITS = 10000;
+        private static final long 	TIME_BETWEEN_SPATIAL_COMMITS_IN_SECONDS = 10;
         private final Map<String, Constructor<? extends SpatialFilter>> _types;
         {
             Map<String, Constructor<? extends SpatialFilter>> types = new HashMap<String, Constructor<? extends SpatialFilter>>();
@@ -1600,11 +1606,10 @@ public class SearchManager {
         }
         private final Transaction                     _transaction;
         private final int                             _maxWritesInTransaction;
-        private final Timer                           _timer;
         private final Parser                          _gmlParser;
         private final Lock                            _lock;
         private SpatialIndexWriter                    _writer;
-        private volatile Committer                             _committerTask;
+        private volatile Committer                    _committerTask;
 
         /**
          * TODO javadoc.
@@ -1628,7 +1633,6 @@ public class SearchManager {
             	_transaction = Transaction.AUTO_COMMIT;
             }
             _maxWritesInTransaction = maxWritesInTransaction;
-            _timer = new Timer(true);
             _gmlParser = new Parser(new GMLConfiguration());
             boolean rebuildIndex;
 
@@ -1767,14 +1771,10 @@ public class SearchManager {
             _lock.lock();
             try {
                 if (_committerTask != null) {
-                    try {
-                        _committerTask.cancel();
-                    } catch (IllegalStateException e) {
-                        // ignore, already done but hasn't updated variable yet
-                    }
+                    _committerTask.cancel();
                 }
                 _committerTask = new Committer();
-                _timer.schedule(_committerTask, TIME_BETWEEN_SPATIAL_COMMITS);
+                timer.schedule(_committerTask, TIME_BETWEEN_SPATIAL_COMMITS_IN_SECONDS, TimeUnit.SECONDS);
                 return writerNoLocking();
             }
             finally {
@@ -1836,9 +1836,14 @@ public class SearchManager {
          * TODO javadoc.
          *
          */
-        private class Committer extends TimerTask {
+        private class Committer implements Runnable {
+            private AtomicBoolean cancelled = new AtomicBoolean(false);
+
             @Override
             public void run() {
+                if (cancelled.get()) {
+                    return;
+                }
                 _lock.lock();
                 try {
                     if (_committerTask == this) {
@@ -1852,6 +1857,10 @@ public class SearchManager {
                 finally {
                     _lock.unlock();
                 }
+            }
+
+            public void cancel() {
+                this.cancelled.set(true);
             }
         }
     }
