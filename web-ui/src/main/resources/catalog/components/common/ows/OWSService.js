@@ -6,8 +6,8 @@
   ]);
 
   module.provider('gnOwsCapabilities', function () {
-    this.$get = ['$http', 'gnUrlUtils', '$q',
-      function ($http, gnUrlUtils, $q) {
+    this.$get = ['$http', 'gnUrlUtils', 'gnViewerSettings', '$q',
+      function ($http, gnUrlUtils, gnViewerSettings, $q) {
 
         var displayFileContent = function (data) {
           var layers = [];
