@@ -268,15 +268,18 @@ public class JeevesEngine {
 	//---------------------------------------------------------------------------
 
 	@SuppressWarnings("unchecked")
-    private void loadConfigFile(ServletContext servletContext, Path path, String file, ServiceManager serviceMan) throws Exception
+    private void loadConfigFile(ServletContext servletContext, Path path, String fileName, ServiceManager serviceMan) throws Exception
 	{
-		file = path + file;
+        if (fileName.charAt(0) == '/' || fileName.charAt(0) == '\\') {
+            fileName = fileName.substring(1);
+        }
+        Path file = path.resolve(fileName);
 
 		info("Loading : " + file);
 
 		Element configRoot = Xml.loadFile(file);
 
-        ConfigurationOverrides.DEFAULT.updateWithOverrides(file, servletContext, _appPath, configRoot);
+        ConfigurationOverrides.DEFAULT.updateWithOverrides(file.toString(), servletContext, _appPath, configRoot);
 
 		Element elGeneral = configRoot.getChild(ConfigFile.Child.GENERAL);
 		Element elDefault = configRoot.getChild(ConfigFile.Child.DEFAULT);

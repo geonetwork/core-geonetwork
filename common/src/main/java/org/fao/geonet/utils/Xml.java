@@ -149,18 +149,6 @@ public final class Xml
 	//---
 	//--------------------------------------------------------------------------
 
-    /**
-     *
-     * @param file
-     * @return
-     * @throws IOException
-     * @throws JDOMException
-     */
-	public static Element loadFile(String file) throws IOException, JDOMException
-	{
-		return loadFile(IO.toPath(file));
-	}
-
 	//--------------------------------------------------------------------------
 
     /**
@@ -183,7 +171,7 @@ public final class Xml
     protected static Path pathFromUrl(URL url) {
         Path path = null;
         try {
-            path = Paths.get(url.toURI());
+            path = IO.toPath(url.toURI());
         } catch (Exception e) {
             // not a path
         }
@@ -232,10 +220,10 @@ public final class Xml
     public static Element loadFile(Path file) throws IOException, JDOMException {
         SAXBuilder builder = getSAXBuilderWithPathXMLResolver(false, file); //new SAXBuilder();
 
-        String convert = System.getProperty("jeeves.filecharsetdetectandconvert");
+        String convert = System.getProperty("jeeves.filecharsetdetectandconvert", "");
 
         // detect charset and convert if required
-        if (convert != null && convert.equals("enabled")) {
+        if (convert.equals("enabled")) {
             byte[] content = convertFileToUTF8ByteArray(file);
             return loadStream(new ByteArrayInputStream(content));
 
@@ -556,7 +544,8 @@ public final class Xml
      * @param params
      * @throws Exception
      */
-	public static void transform(Element xml, Path styleSheetPath, Result result, Map<String, Object> params) throws Exception
+	public static void
+    transform(Element xml, Path styleSheetPath, Result result, Map<String, Object> params) throws Exception
 	{
         NioPathHolder.setBase(styleSheetPath);
 		Source srcXml   = new JDOMSource(new Document((Element)xml.detach()));

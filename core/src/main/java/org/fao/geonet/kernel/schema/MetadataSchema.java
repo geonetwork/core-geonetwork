@@ -377,7 +377,7 @@ public class MetadataSchema
         }
 
         if (Files.exists(schemaSchematronDir)) {
-            try (DirectoryStream<Path> paths = Files.newDirectoryStream(schemaSchematronDir)) {
+            try (DirectoryStream<Path> paths = Files.newDirectoryStream(schemaSchematronDir, "*.sch")) {
                 for (Path rule : paths) {
                     if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
                         Log.debug(Geonet.SCHEMA_MANAGER, "                - rule " + rule);

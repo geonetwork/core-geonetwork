@@ -223,6 +223,9 @@ public final class IO {
     }
 
     public static void setFileSystem(FileSystem newFileSystem) {
+        if (newFileSystem == null) {
+            newFileSystem = FileSystems.getDefault();
+        }
         defaultFs = newFileSystem;
     }
 

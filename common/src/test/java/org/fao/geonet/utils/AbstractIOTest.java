@@ -1,24 +1,27 @@
 package org.fao.geonet.utils;
 
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.net.URI;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractIOTest {
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
+    @After
+    public void resetIO() {
+        IO.setFileSystem(null);
+        IO.setFileSystemThreadLocal(null);
+    }
 
     @Test(expected = RuntimeException.class)
     public void testDeleteFileDir() throws Exception {

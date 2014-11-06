@@ -374,6 +374,10 @@ public class LuceneIndexLanguageTracker {
         }
     }
 
+    public void stopThreads() {
+        commitTimer.cancel();
+    }
+
     public void optimize() throws Exception {
         lock.lock();
         try{
@@ -409,6 +413,7 @@ public class LuceneIndexLanguageTracker {
             lock.unlock();
         }
     }
+
 
     private class CommitTimerTask extends TimerTask {
 

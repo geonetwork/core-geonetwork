@@ -47,7 +47,7 @@ public class ConfigurationOverridesTest {
         final Element overrides = Xml.loadFile(classLoader.getResource("correct-webapp/WEB-INF/overrides-config.xml"));
 
         ConfigurationOverrides.DEFAULT.doUpdateLogging(overrides, loader);
-        assertEquals(Level.DEBUG, org.apache.log4j.Logger.getRootLogger().getLevel());
+        assertEquals(Level.ERROR, org.apache.log4j.Logger.getRootLogger().getLevel());
     }
     @Test //@Ignore
     public void imports() throws JDOMException, IOException {

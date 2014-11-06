@@ -897,7 +897,8 @@ public class ConfigurationOverrides {
         Path appPath = IO.toPath(context.getContextPath());
         Element elem = null;
         try {
-            elem = Xml.loadFile(context.getRealPath(servletRelativePath));
+            final Path realPath = IO.toPath(context.getRealPath(servletRelativePath));
+            elem = Xml.loadFile(realPath);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

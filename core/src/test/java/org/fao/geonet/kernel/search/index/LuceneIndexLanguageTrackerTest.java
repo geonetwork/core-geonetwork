@@ -144,8 +144,6 @@ public class LuceneIndexLanguageTrackerTest {
         assertEquals(1, acquire3.indexReader.numDocs());
         acquire3.indexReader.releaseToNRTManager();
 
-        assertEquals(FSDirectoryFactory.NON_SPATIAL_DIR + "_" + 2, directoryFactory.getIndexDir().getFileName().toString());
-        assertEquals(FSDirectoryFactory.TAXONOMY_DIR + "_" + 2, directoryFactory.getTaxonomyDir().getFileName().toString());
 
         tracker2.reset(1000);
 

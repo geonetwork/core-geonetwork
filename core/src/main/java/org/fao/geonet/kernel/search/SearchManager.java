@@ -22,6 +22,7 @@
 
 package org.fao.geonet.kernel.search;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -122,6 +123,7 @@ import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import javax.annotation.PreDestroy;
 
 /**
  * Indexes metadata using Lucene.
@@ -507,34 +509,49 @@ public class SearchManager {
      */
 	public void init(boolean logAsynch, boolean logSpatialObject, String luceneTermsToExclude,
                      int maxWritesInTransaction) throws Exception {
-        _summaryConfigValues = _luceneConfig.getTaxonomy().get("hits");
+        initNonStaticData(logAsynch, logSpatialObject, luceneTermsToExclude, maxWritesInTransaction);
 
-		_stylesheetsDir = _geonetworkDataDirectory.resolveWebResource(SEARCH_STYLESHEETS_DIR_PATH);
         _stopwordsDir = _geonetworkDataDirectory.resolveWebResource(STOPWORDS_DIR_PATH);
 
         createAnalyzer();
         createDocumentBoost();
-        
-		if (!Files.isDirectory(_stylesheetsDir)) {
-            throw new Exception("directory " + _stylesheetsDir + " not found");
-        }
 
-		Path htmlCacheDirTest   = _geonetworkDataDirectory.getHtmlCacheDir();
-		Files.createDirectories(htmlCacheDirTest);
-		_htmlCacheDir = htmlCacheDirTest.toAbsolutePath();
+    }
+     @VisibleForTesting
+    public void initNonStaticData(boolean logAsynch, boolean logSpatialObject, String luceneTermsToExclude,
+                                     int maxWritesInTransaction) throws Exception {
+         _summaryConfigValues = _luceneConfig.getTaxonomy().get("hits");
 
+         _stylesheetsDir = _geonetworkDataDirectory.resolveWebResource(SEARCH_STYLESHEETS_DIR_PATH);
 
-        _spatial = new Spatial(_applicationContext.getBean(DataStore.class), maxWritesInTransaction);
+         if (!Files.isDirectory(_stylesheetsDir)) {
+             throw new Exception("directory " + _stylesheetsDir + " not found");
+         }
 
-     	 _logAsynch = logAsynch;
-		 _logSpatialObject = logSpatialObject;
-		 _luceneTermsToExclude = luceneTermsToExclude;
+         Path htmlCacheDirTest = _geonetworkDataDirectory.getHtmlCacheDir();
+         Files.createDirectories(htmlCacheDirTest);
+         _htmlCacheDir = htmlCacheDirTest.toAbsolutePath();
 
-		initLucene();
-		initZ3950();
-		
-		_luceneOptimizerManager = new LuceneOptimizerManager(this, _settingInfo);
-	}
+         _spatial = new Spatial(_applicationContext.getBean(DataStore.class), maxWritesInTransaction);
+
+         _logAsynch = logAsynch;
+         _logSpatialObject = logSpatialObject;
+         _luceneTermsToExclude = luceneTermsToExclude;
+
+         initLucene();
+         initZ3950();
+
+         _luceneOptimizerManager = new LuceneOptimizerManager(this, _settingInfo);
+    }
+
+    @PreDestroy
+    public void end() throws Exception {
+        endZ3950();
+        _spatial.end();
+        _luceneOptimizerManager.cancel();
+        _tracker.close(TimeUnit.MINUTES.toMillis(1), true);
+        _tracker.stopThreads();
+    }
 
     /**
      * TODO javadoc.
@@ -575,17 +592,6 @@ public class SearchManager {
 		createDocumentBoost();
 	}
 
-    /**
-     * TODO javadoc.
-     *
-     * @throws Exception
-     */
-	public void end() throws Exception {
-		endZ3950();
-		_spatial.end();
-		_luceneOptimizerManager.cancel();
-		_tracker.close(TimeUnit.MINUTES.toMillis(1), true);
-	}
 
     /**
      * TODO javadoc.
@@ -871,6 +877,8 @@ public class SearchManager {
 		field.setAttribute(LuceneFieldAttribute.INDEX.toString(), Boolean.toString(index));
 		return field;
 	}
+
+
     public enum LuceneFieldAttribute {
         NAME {
             @Override
@@ -1635,7 +1643,7 @@ public class SearchManager {
             	_transaction = Transaction.AUTO_COMMIT;
             }
             _maxWritesInTransaction = maxWritesInTransaction;
-            _timer = new Timer(true);
+            _timer = new Timer("SpatialIndexWriter Timer", true);
             _gmlParser = new Parser(new GMLConfiguration());
             boolean rebuildIndex;
 
@@ -1698,6 +1706,7 @@ public class SearchManager {
             }
             finally {
                 _lock.unlock();
+                _timer.cancel();
             }
         }
 

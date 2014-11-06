@@ -306,7 +306,7 @@ public class LuceneConfig {
             return LuceneConfig.this;
         }
 		
-	};
+	}
 
 	private Set<String> tokenizedFields = new HashSet<String>();
 	private Map<String, LuceneConfigNumericField> numericFields = new HashMap<String, LuceneConfigNumericField>();

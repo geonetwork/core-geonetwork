@@ -13,6 +13,7 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.SourceRepository;
@@ -33,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.net.URL;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -40,6 +42,8 @@ import java.util.HashMap;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * A helper class for testing services.  This super-class loads in the spring beans for Spring-data repositories and mocks for
@@ -118,7 +122,14 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         context.setOutputMethod(ServiceRequest.OutputMethod.DEFAULT);
         context.setBaseUrl("geonetwork");
 
+        assertDataDirInMemoryFS(context);
+
         return context;
+    }
+
+    protected void assertDataDirInMemoryFS(ServiceContext context) {
+        final Path systemDataDir = context.getBean(GeonetworkDataDirectory.class).getSystemDataDir();
+        assertTrue(systemDataDir.getFileSystem() != FileSystems.getDefault());
     }
 
     /**

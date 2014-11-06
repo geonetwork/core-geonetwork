@@ -1,5 +1,6 @@
 package org.fao.geonet;
 
+import com.google.common.collect.Lists;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import com.vividsolutions.jts.geom.MultiPolygon;
@@ -67,11 +68,17 @@ public class GeonetTestFixture {
      * Default node data directory
      */
     private Path _dataDirectory;
+    private static LuceneConfig templateLuceneConfig;
+    private static SearchManager templateSearchManager;
+
     public void tearDown() throws IOException {
+        IO.setFileSystemThreadLocal(null);
         currentFs.close();
     }
     public void setup(AbstractCoreIntegrationTest test) throws Exception {
         final Path webappDir = AbstractCoreIntegrationTest.getWebappDir(test.getClass());
+        TransformerFactoryFactory.init("de.fzi.dbs.xml.transform.CachingTransformerFactory");
+//        TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
 
         if (templateFs == null) {
             synchronized (GeonetTestFixture.class) {
@@ -84,28 +91,41 @@ public class GeonetTestFixture {
                     LanguageDetector.init(AbstractCoreIntegrationTest.getWebappDir(test.getClass()).resolve(_applicationContext.getBean
                             (LANGUAGE_PROFILES_DIR, String.class)));
 
-                    final GeonetworkDataDirectory geonetworkDataDirectory = configureDataDir(test, webappDir, templateDataDirectory);
+                    final GeonetworkDataDirectory geonetworkDataDirectory = _applicationContext.getBean(GeonetworkDataDirectory.class);
+                    final ServiceConfig serviceConfig = new ServiceConfig(Lists.<Element>newArrayList());
+                    geonetworkDataDirectory.init("geonetwork", webappDir, templateDataDirectory, serviceConfig, null);
+
                     templateSchemaManager = initSchemaManager(webappDir, geonetworkDataDirectory);
+
+                    _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
+                    _applicationContext.getBean(SearchManager.class).init(false, false, "", 100);
                 }
             }
         }
 
         final String fsName = test.getClass().getSimpleName().replaceAll("[^a-z0-9A-Z]", "") + UUID.randomUUID().toString();
         currentFs = Jimfs.newFileSystem(fsName, Configuration.unix());
+        IO.setFileSystemThreadLocal(currentFs);
         _dataDirContainer = currentFs.getPath("nodes");
         _dataDirectory = _dataDirContainer.resolve("default_data_dir");
-        Files.createDirectories(_dataDirectory);
+        Files.createDirectories(_dataDirContainer);
 
         IO.copyDirectoryOrFile(templateDataDirectory, _dataDirectory);
+
+        assertTrue(Files.isDirectory(_dataDirectory.resolve("config")));
+        assertTrue(Files.isDirectory(_dataDirectory.resolve("data")));
 
         System.setProperty(LuceneConfig.USE_NRT_MANAGER_REOPEN_THREAD, Boolean.toString(true));
         configureNodeId(test);
 
 
-        configureNewSchemaManager(test, webappDir);
+        final GeonetworkDataDirectory dataDir = configureDataDir(test, webappDir, _dataDirectory);
+        configureNewSchemaManager(dataDir, webappDir);
 
         _directoryFactory.resetIndex();
-        _applicationContext.getBean(SearchManager.class).init(false, false, "", 100);
+
+        _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
+        _applicationContext.getBean(SearchManager.class).initNonStaticData(false, false, "", 100);
         _applicationContext.getBean(DataManager.class).init(test.createServiceContext(), false);
 
 
@@ -123,8 +143,8 @@ public class GeonetTestFixture {
         }
     }
 
-    protected void configureNewSchemaManager(AbstractCoreIntegrationTest test, Path webappDir) throws IOException {
-        final GeonetworkDataDirectory dataDir = configureDataDir(test, webappDir, _dataDirectory);
+
+    protected void configureNewSchemaManager(GeonetworkDataDirectory dataDir, Path webappDir) throws IOException {
         final SchemaManager schemaManager = _applicationContext.getBean(SchemaManager.class);
         schemaManager.configureFrom(templateSchemaManager, webappDir, dataDir);
         assertRequiredSchemas(schemaManager);
@@ -148,7 +168,6 @@ public class GeonetTestFixture {
 
         final SchemaManager schemaManager = _applicationContext.getBean(SchemaManager.class);
 
-        _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
         SchemaManager.registerXmlCatalogFiles(webappDir, schemaPluginsCatalogFile);
         schemaManager.configure(_applicationContext, webappDir, resourcePath,
                 schemaPluginsCatalogFile, schemaPluginsDir, "eng", "iso19139", true);
@@ -168,8 +187,7 @@ public class GeonetTestFixture {
     protected GeonetworkDataDirectory configureDataDir(AbstractCoreIntegrationTest test, Path webappDir, Path dataDirectory) throws IOException {
         final GeonetworkDataDirectory geonetworkDataDirectory = _applicationContext.getBean(GeonetworkDataDirectory.class);
         final ServiceConfig serviceConfig = registerServiceConfigAndInitDatastoreTable(test);
-        TransformerFactoryFactory.init("net.sf.saxon.TransformerFactoryImpl");
-        geonetworkDataDirectory.init("geonetwork", webappDir, dataDirectory, serviceConfig, null);
+        geonetworkDataDirectory.init("geonetwork", webappDir, dataDirectory.toAbsolutePath(), serviceConfig, null);
         return geonetworkDataDirectory;
     }
 
