@@ -325,11 +325,22 @@ public class GeonetworkDataDirectory {
 				BinaryFile.copyDirectory(new File(path, GEONETWORK_DEFAULT_DATA_DIR + "config" + File.separator + "codelist"),
                         this.thesauriDir);
 			} catch (IOException e) {
-				Log.error(Geonet.DATA_DIRECTORY, "     - Copy failed: " + e.getMessage(), e);
+				Log.error(Geonet.DATA_DIRECTORY, "     - Thesaurus copy failed: " + e.getMessage(), e);
 			}
 		}
 
-		File schemaCatFile = new File(configDir, Geonet.File.SCHEMA_PLUGINS_CATALOG);
+        // Copy default logo to the harvesting folder
+        File logoDir = new File(this.resourcesDir, "images" + File.separator + "harvesting");
+        if (!logoDir.exists() || logoDir.listFiles().length == 0) {
+            Log.info(Geonet.DATA_DIRECTORY, "     - Copying logos ...");
+            try {
+                BinaryFile.copyDirectory(new File(path, "images" + File.separator + "harvesting"),
+                    logoDir);
+            } catch (IOException e) {
+                Log.error(Geonet.DATA_DIRECTORY, "     - Logo copy failed: " + e.getMessage(), e);
+            }
+        }
+        File schemaCatFile = new File(configDir, Geonet.File.SCHEMA_PLUGINS_CATALOG);
 		if (!schemaCatFile.exists()) {
 			Log.info(Geonet.DATA_DIRECTORY, "     - Copying schema plugin catalogue ...");
 			try {

@@ -304,6 +304,7 @@
     <xsl:param name="refToDelete" required="no"/>
     <!-- Parameters for custom add directive -->
     <xsl:param name="addDirective" required="no"/>
+    <xsl:param name="directiveAttributes" required="no"/>
     <xsl:param name="qname" required="no"/>
     <xsl:param name="parentRef" required="no"/>
     <!-- Label to display if element is missing. The field
@@ -368,7 +369,7 @@
                   <xsl:attribute name="data-dom-id" select="$id"/>
                   <xsl:attribute name="data-element-name" select="$qname"/>
                   <xsl:attribute name="data-element-ref" select="$parentRef"/>
-                  <xsl:attribute name="data-template-add-action" select="'true'"/>
+                  <xsl:copy-of select="$directiveAttributes/@*"/>
                 </div>
               </xsl:when>
               <xsl:otherwise>
@@ -633,6 +634,9 @@
                     <xsl:attribute name="data-dom-id" select="$id"/>
                     <xsl:attribute name="data-element-name" select="$qualifiedName"/>
                     <xsl:attribute name="data-element-ref" select="$parentEditInfo/@ref"/>
+                    <xsl:copy-of
+                            select="gn-fn-metadata:getFieldAddDirectiveAttributes($editorConfig,
+                                    $qualifiedName)"/>
                   </div>
                 </xsl:when>
                 <xsl:otherwise>
@@ -701,45 +705,90 @@
         </textarea>
       </xsl:when>
       <xsl:when test="$type = 'select'">
-        <select class="" id="gn-field-{$editInfo/@ref}" name="_{$name}">
-          <xsl:if test="$isRequired">
-            <xsl:attribute name="required" select="'required'"/>
-          </xsl:if>
-          <xsl:if test="$isDisabled">
-            <xsl:attribute name="disabled" select="'disabled'"/>
-          </xsl:if>
-          <xsl:if test="$tooltip">
-            <xsl:attribute name="data-gn-field-tooltip" select="$tooltip"/>
-          </xsl:if>
-          <xsl:if test="$lang">
-            <xsl:attribute name="lang" select="$lang"/>
-          </xsl:if>
-          <xsl:if test="$hidden">
-            <xsl:attribute name="display" select="'none'"/>
-          </xsl:if>
-          <xsl:for-each select="$listOfValues/entry">
-            <xsl:sort select="label"/>
-            <option value="{code}" title="{normalize-space(description)}">
-              <xsl:if test="$valueToEdit = code">
-                <xsl:attribute name="selected"/>
-              </xsl:if>
-              <xsl:value-of select="label"/>
-            </option>
-          </xsl:for-each>
-          <!-- Add the value if not defined in the codelist to not lose it
-             -->
-          <xsl:if test="count($listOfValues/entry[code = $valueToEdit]) = 0">
-            <option value="{$valueToEdit}" selected="selected">
-              <xsl:value-of select="$valueToEdit"/>
-            </option>
-          </xsl:if>
-          <!--
-            Add the value if not defined in the codelist to not lose it
-            <option value="{$valueToEdit}">
-                        <xsl:value-of select="$value"/>
-                    </option>-->
-        </select>
 
+        <!-- Codelist could be displayed using 2 modes:
+        1) simple combo box with list of values from codelist.xml.
+        If the record value is not in the codelist.xml, an extra element
+        is created with this value in order to preserve it.
+
+        2) radio more.
+        -->
+        <xsl:choose>
+          <xsl:when test="$listOfValues/@editorMode = 'radio'">
+
+            <xsl:for-each select="$listOfValues/entry">
+              <xsl:sort select="label"/>
+
+              <div class="radio row">
+                <div class="col-xs-12">
+                  <label>
+                    <input type="radio"
+                           name="_{$name}"
+                           value="{code}"
+                           title="{normalize-space(description)}">
+                      <xsl:if test="$valueToEdit = code">
+                        <xsl:attribute name="checked"/>
+                      </xsl:if>
+                    </input>
+                    <xsl:value-of select="label"/>
+                  </label>
+                </div>
+              </div>
+
+            </xsl:for-each>
+            <!-- Add the value if not defined in the codelist to not lose it
+               -->
+            <xsl:if test="count($listOfValues/entry[code = $valueToEdit]) = 0">
+
+              <div class="radio row">
+                <div class="col-xs-12">
+                  <label>
+                    <input type="radio"
+                           name="_{$name}"
+                           value="{$valueToEdit}"
+                           checked="checked"/>
+                    <xsl:value-of select="$valueToEdit"/>
+                  </label>
+                </div>
+              </div>
+            </xsl:if>
+          </xsl:when>
+          <xsl:otherwise>
+            <select class="" id="gn-field-{$editInfo/@ref}" name="_{$name}">
+              <xsl:if test="$isRequired">
+                <xsl:attribute name="required" select="'required'"/>
+              </xsl:if>
+              <xsl:if test="$isDisabled">
+                <xsl:attribute name="disabled" select="'disabled'"/>
+              </xsl:if>
+              <xsl:if test="$tooltip">
+                <xsl:attribute name="data-gn-field-tooltip" select="$tooltip"/>
+              </xsl:if>
+              <xsl:if test="$lang">
+                <xsl:attribute name="lang" select="$lang"/>
+              </xsl:if>
+              <xsl:if test="$hidden">
+                <xsl:attribute name="display" select="'none'"/>
+              </xsl:if>
+              <xsl:for-each select="$listOfValues/entry">
+                <xsl:sort select="label"/>
+                <option value="{code}" title="{normalize-space(description)}">
+                  <xsl:if test="$valueToEdit = code">
+                    <xsl:attribute name="selected"/>
+                  </xsl:if>
+                  <xsl:value-of select="label"/>
+                </option>
+              </xsl:for-each>
+              <!-- Add the value if not defined in the codelist to not lose it
+                 -->
+              <xsl:if test="count($listOfValues/entry[code = $valueToEdit]) = 0">
+                <option value="{$valueToEdit}" selected="selected">
+                  <xsl:value-of select="$valueToEdit"/>
+                </option>
+              </xsl:if>
+            </select>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:when>
       <xsl:when test="$type = 'checkbox'">
         <!-- Checkbox field is composed of an 
@@ -849,7 +898,7 @@
     <textarea id="{$elementRef}_config" class="hidden">
       <xsl:copy-of select="java-xsl-util:xmlToJson(
         saxon:serialize($listOfValues, 'default-serialize-mode'))"/></textarea>
-    <div 
+    <div
       data-gn-editor-helper="{$listOfValues/@editorMode}"
       data-ref="{$elementRef}"
       data-type="{$dataType}"

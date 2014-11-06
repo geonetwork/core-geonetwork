@@ -70,7 +70,7 @@ public class UserListIntegrationTest extends AbstractServiceIntegrationTest {
 
         java.util.List<JAXBElement<? extends User>> records = response.getUsers();
         assertEquals("Expected to find a record.", 1, records.size());
-        
+
         User user = records.get(0).getValue();
 
         assertEquals("record/username", editor.getUsername(), user.getUsername());

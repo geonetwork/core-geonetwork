@@ -15,10 +15,12 @@
             <xsl:message>Add servlet mappinf for <xsl:value-of select="$nodeId"/></xsl:message>
             <xsl:apply-templates select="*"/>
 
-            <j2e:servlet-mapping>
+            <xsl:if test="count(//j2e:servlet-mapping/j2e:url-pattern[text() = concat('/', $nodeId, '/*')]) = 0">
+              <j2e:servlet-mapping>
                 <j2e:servlet-name>gn-servlet</j2e:servlet-name>
                 <j2e:url-pattern>/<xsl:value-of select="$nodeId"/>/*</j2e:url-pattern>
-            </j2e:servlet-mapping>
+              </j2e:servlet-mapping>
+            </xsl:if>
         </xsl:copy>
     </xsl:template>
 

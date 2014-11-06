@@ -12,7 +12,6 @@
 <overrides xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:noNamespaceSchemaLocation="config-overrides.xsd">
 	<!-- an import can be used if many of the overrides are common between your different configurations -->
-	<import file="/WEB-INF/server-props-overrides.xml"/>
 	<properties>
 		<db.user>admin</db.user>
 		<db.pass>gnos</db.pass>

@@ -126,13 +126,14 @@
    * On submit, the metadata is saved, the thumbnail is added, then the form
    * and online resource list are refreshed.
    */
-   .directive('gnAddThumbnail', ['$http',
+   .directive('gnAddThumbnail', ['$http', '$rootScope', '$translate',
         'gnOnlinesrc',
         'gnEditor',
         'gnCurrentEdit',
         'gnConfig',
         'gnMap',
-        function($http, gnOnlinesrc, gnEditor, gnCurrentEdit,
+        function($http, $rootScope, $translate,
+                 gnOnlinesrc, gnEditor, gnCurrentEdit,
                  gnConfig, gnMap) {
           return {
             restrict: 'A',
@@ -154,8 +155,41 @@
               scope.popupid = attrs['gnPopupid'];
               scope.mapId = 'gn-thumbnail-maker-map';
               scope.loaded = false;
+              scope.layers = null;
+              scope.gnCurrentEdit = gnCurrentEdit;
 
-              scope.map;
+              scope.processing = false;
+              scope.map = null;
+
+              function loadLayers() {
+
+                // Reset map
+                angular.forEach(scope.map.getLayers(), function(layer) {
+                  scope.map.removeLayer(layer);
+                });
+
+                scope.map.addLayer(gnMap.getLayersFromConfig());
+
+                // Add each WMS layer to the map
+                angular.forEach(scope.gnCurrentEdit.layerConfig,
+                    function(layer) {
+                      scope.map.addLayer(new ol.layer.Tile({
+                        source: new ol.source.TileWMS({
+                          url: layer.url,
+                          params: {
+                            'LAYERS': layer.name,
+                            'URL': layer.url
+                          }
+                        })
+                      }));
+                    });
+                if (angular.isArray(scope.gnCurrentEdit.extent)) {
+                  scope.map.getView().fitExtent(
+                      gnMap.reprojExtent(scope.gnCurrentEdit.extent[0],
+                      'EPSG:4326', gnMap.getMapConfig().projection),
+                      scope.map.getSize());
+                }
+              };
 
               var init = function() {
 
@@ -164,7 +198,7 @@
                     scope.map = new ol.Map({
                       layers: [],
                       renderer: 'canvas',
-                      view: new ol.View2D({
+                      view: new ol.View({
                         center: [0, 0],
                         projection: gnMap.getMapConfig().projection,
                         zoom: 2
@@ -177,27 +211,9 @@
                     scope.loaded = true;
                   }
 
-                  scope.layers = gnCurrentEdit.layerConfig;
+                  loadLayers();
 
-                  // Reset map
-                  angular.forEach(scope.map.getLayers(), function(layer) {
-                    scope.map.removeLayer(layer);
-                  });
-
-                  scope.map.addLayer(gnMap.getLayersFromConfig());
-
-                  // Add each WMS layer to the map
-                  angular.forEach(scope.layers, function(layer) {
-                    scope.map.addLayer(new ol.layer.Tile({
-                      source: new ol.source.TileWMS({
-                        url: layer.url,
-                        params: {
-                          'LAYERS': layer.name,
-                          'URL': layer.url
-                        }
-                      })
-                    }));
-                  });
+                  scope.$watch('gnCurrentEdit.layerConfig', loadLayers);
                 }
               };
 
@@ -245,6 +261,7 @@
                       });
                 } else if (scope.mode == 'thumbnailMaker') {
                   getVersion();
+                  scope.processing = true;
                   gnEditor.save(false, true)
                     .then(function(data) {
                         scope.action = 'md.thumbnail.generate@json';
@@ -254,6 +271,19 @@
                                     'application/x-www-form-urlencoded'}
                             }).success(function(data) {
                           uploadOnlinesrcDone();
+                          scope.processing = false;
+                        }).error(function(data, status, headers, config) {
+                          $rootScope.$broadcast('StatusUpdated', {
+                            title: $translate('thumbnailCreationError'),
+                            // Hack to extract error message
+                            // from HTML page. At some point
+                            // the service should return JSON error
+                            error: {
+                              message: $(data).find('td[align=center]').text()
+                            },
+                            timeout: 0,
+                            type: 'danger'});
+                          scope.processing = false;
                         });
                       });
                 } else {

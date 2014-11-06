@@ -128,8 +128,10 @@
   </form>
   <div class="">
     <button type="button" class="btn navbar-btn btn-success"
-      data-ng-click="addThumbnail()">
+      data-ng-click="addThumbnail()"
+      data-ng-disabled="processing">
       <i class="fa fa-picture-o" /> <span data-translate="">addThumbnail</span>
+      <i data-ng-if="processing" class="fa fa-spinner fa-spin"/>
     </button>
   </div>
 

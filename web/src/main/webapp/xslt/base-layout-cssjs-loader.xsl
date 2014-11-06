@@ -51,7 +51,7 @@
         
         <script src="{$uiResourcesPath}lib/bootstrap-3.0.1.js"></script>
         <script src="{$uiResourcesPath}lib/proj4js-compressed.js"></script>
-        <script src="{$uiResourcesPath}lib/ol-whitespace.js"></script>
+        <script src="{$uiResourcesPath}lib/ol-debug.js"></script>
         <xsl:if test="$withD3">
           <script src="{$uiResourcesPath}lib/d3.v3.js"></script>
           <script src="{$uiResourcesPath}lib/nv.d3.js"></script>
@@ -65,7 +65,8 @@
         <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload-process.js"></script>
         <script src="{$uiResourcesPath}lib/jquery.ext/jquery.fileupload-angular.js"></script>
       
-        <script src="{$uiResourcesPath}lib/bootstrap.ext/typeahead.js/typeahead.js"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap.ext/typeahead.js/bloodhound.js"></script>
+        <script src="{$uiResourcesPath}lib/bootstrap.ext/typeahead.js/typeahead.bundle.js"></script>
         <script src="{$uiResourcesPath}lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.js"></script>
         <!--</xsl:if>-->
         

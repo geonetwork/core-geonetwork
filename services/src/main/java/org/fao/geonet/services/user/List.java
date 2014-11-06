@@ -63,14 +63,14 @@ import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
  */
 @Controller("admin.user.list")
 public class List {
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Init
-	// ---
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Init
+    // ---
+    // --------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
-	}
+    public void init(String appPath, ServiceConfig params) throws Exception {
+    }
 
 	// --------------------------------------------------------------------------
 	// ---
@@ -153,38 +153,38 @@ public class List {
 		return res;
 	}
 
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Private methods
-	// ---
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Private methods
+    // ---
+    // --------------------------------------------------------------------------
 
-	private Set<Integer> getGroups(final int id, final Profile profile)
-			throws Exception {
-		Set<Integer> hs = new HashSet<Integer>();
+    private Set<Integer> getGroups(final int id, final Profile profile)
+            throws Exception {
+        Set<Integer> hs = new HashSet<Integer>();
 
-		if (profile == Profile.Administrator) {
-			hs.addAll(groupRepository.findIds());
-		} else if (profile == Profile.UserAdmin) {
-			hs.addAll(userGroupRepo.findGroupIds(Specifications.where(
-					hasProfile(profile)).and(hasUserId(id))));
-		} else {
-			hs.addAll(userGroupRepo.findGroupIds(hasUserId(id)));
-		}
+        if (profile == Profile.Administrator) {
+            hs.addAll(groupRepository.findIds());
+        } else if (profile == Profile.UserAdmin) {
+            hs.addAll(userGroupRepo.findGroupIds(Specifications.where(
+                    hasProfile(profile)).and(hasUserId(id))));
+        } else {
+            hs.addAll(userGroupRepo.findGroupIds(hasUserId(id)));
+        }
 
-		return hs;
-	}
+        return hs;
+    }
 
-	@Autowired
-	private ConfigurableApplicationContext jeevesApplicationContext;
-	@PersistenceContext
-	private EntityManager entityManager;
-	@Autowired
-	private GroupRepository groupRepository;
-	@Autowired
-	private UserGroupRepository userGroupRepo;
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    private ConfigurableApplicationContext jeevesApplicationContext;
+    @PersistenceContext
+    private EntityManager entityManager;
+    @Autowired
+    private GroupRepository groupRepository;
+    @Autowired
+    private UserGroupRepository userGroupRepo;
+    @Autowired
+    private UserRepository userRepository;
 
 }
 

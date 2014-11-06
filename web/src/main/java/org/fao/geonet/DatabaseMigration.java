@@ -222,27 +222,17 @@ public class DatabaseMigration implements BeanPostProcessor {
     }
 
     private boolean runJavaMigration(Connection conn, String file) {
-        Statement statement = null;
         try {
             String className = file.substring(JAVA_MIGRATION_PREFIX.length());
             _logger.info("         - Java migration class:" + className);
 
-            statement = conn.createStatement();
             DatabaseMigrationTask task = (DatabaseMigrationTask) Class.forName(className).newInstance();
-            task.update(statement);
+            task.update(conn);
             return false;
         } catch (Throwable e) {
             _logger.info("          Errors occurs during Java migration file: " + e.getMessage());
             e.printStackTrace();
             return true;
-        } finally {
-            if (statement != null) {
-                try {
-                    statement.close();
-                } catch (SQLException e) {
-                    return true;
-                }
-            }
         }
     }
 
