@@ -37,12 +37,13 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 
 
@@ -60,6 +61,9 @@ public class MetadataNotifierManager {
     private MetadataNotifierRepository _metadataNotifierRepository;
     @Autowired
     private MetadataRepository _metadataRepository;
+    @Qualifier("timerThreadPool")
+    @Autowired
+    private ScheduledThreadPoolExecutor timer;
 
     /**
      * Updates all unregistered metadata.
@@ -118,8 +122,7 @@ public class MetadataNotifierManager {
      * @throws MetadataNotifierException
      */
     public void updateMetadata(Element ISO19139, String id, String uuid, ServiceContext context) throws MetadataNotifierException {
-        Timer t = new Timer("MetadataNotifierManager Timer");
-        t.schedule(new UpdateTask(ISO19139, id, uuid), 10);
+        this.timer.schedule(new UpdateTask(ISO19139, id, uuid), 10, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -130,8 +133,7 @@ public class MetadataNotifierManager {
      * @throws MetadataNotifierException
      */
     public void deleteMetadata(String id, String uuid, ServiceContext context) throws MetadataNotifierException {
-        Timer t = new Timer("Delete Metadata Timer");
-        t.schedule(new DeleteTask(id, uuid), 10);
+        this.timer.schedule(new DeleteTask(id, uuid), 10, TimeUnit.MILLISECONDS);
     }
 
 
@@ -151,7 +153,7 @@ public class MetadataNotifierManager {
         }
     }
 
-    class UpdateTask extends TimerTask {
+    class UpdateTask implements Runnable {
         private int metadataId;
         private Element ISO19139;
         private String uuid;
@@ -206,7 +208,7 @@ public class MetadataNotifierManager {
     }
 
 
-    class DeleteTask extends TimerTask {
+    class DeleteTask implements Runnable {
         private int metadataId;
         private String uuid;
 
