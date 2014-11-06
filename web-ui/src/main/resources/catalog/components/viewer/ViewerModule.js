@@ -43,11 +43,12 @@
         var map = $scope.searchObj.viewerMap;
 
         // TODO : Move on layer load
+/*
         $scope.ncwmsLayer = gnNcWms.createNcWmsLayer();
         $scope.ncwmsLayer.displayInLayerManager = true;
         goDecorateLayer($scope.ncwmsLayer);
-
         map.addLayer($scope.ncwmsLayer);
+*/
 
         // Display pop up on feature over
         var div = document.createElement('div');
@@ -110,8 +111,4 @@
           $scope.mInteraction = gnMeasure.create($scope.map, $scope.measureObj, $scope);
         }
       ]);
-
-  module.constant('gnViewerSettings', {
-    proxyUrl: '../../proxy?url='
-  });
 })();
