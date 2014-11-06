@@ -19,6 +19,7 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkNRTManager.AcquireResult;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -50,7 +52,10 @@ public class LuceneIndexLanguageTracker {
 	private LuceneConfig luceneConfig;
     @Autowired
     private DirectoryFactory _directoryFactory;
-	private Timer commitTimer = null;
+    @Qualifier("timerThreadPool")
+    @Autowired
+    private ScheduledThreadPoolExecutor timer;
+
 	private TaxonomyIndexTracker taxonomyIndexTracker;
 	private final SearcherVersionTracker versionTracker = new SearcherVersionTracker();
 	private AtomicBoolean initialized = new AtomicBoolean(false);
@@ -71,11 +76,11 @@ public class LuceneIndexLanguageTracker {
             try {
                 this.taxonomyIndexTracker = new TaxonomyIndexTracker(_directoryFactory, luceneConfig);
                 init();
-                this.commitTimer = new Timer("Lucene index commit timer", true);
-                commitTimer.scheduleAtFixedRate(new CommitTimerTask(), TimeUnit.SECONDS.toMillis(30), TimeUnit.SECONDS.toMillis(30));
-                commitTimer.scheduleAtFixedRate(new PurgeExpiredSearchersTask(), TimeUnit.SECONDS.toMillis(30),
-                        TimeUnit.SECONDS.toMillis(30));
 
+                if (timer != null) {
+                    timer.scheduleAtFixedRate(new CommitTimerTask(), 30, 30, TimeUnit.SECONDS);
+                    timer.scheduleAtFixedRate(new PurgeExpiredSearchersTask(), 30, 30, TimeUnit.SECONDS);
+                }
                 initialized.set(true);
             } catch (Throwable e) {
                 throw new RuntimeException(e);
@@ -410,7 +415,8 @@ public class LuceneIndexLanguageTracker {
         }
     }
 
-    private class CommitTimerTask extends TimerTask {
+
+    private class CommitTimerTask implements Runnable {
 
         @Override
         public void run() {
@@ -441,7 +447,7 @@ public class LuceneIndexLanguageTracker {
 
     }
 
-    private class PurgeExpiredSearchersTask extends TimerTask {
+    private class PurgeExpiredSearchersTask implements Runnable {
         @Override
         public void run() {
             lock.lock();
