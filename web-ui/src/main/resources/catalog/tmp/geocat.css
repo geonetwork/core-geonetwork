@@ -1866,6 +1866,8 @@ img {
   vertical-align: middle;
 }
 .img-responsive,
+.thumbnail > img,
+.thumbnail a > img,
 .carousel-inner > .item > img,
 .carousel-inner > .item > a > img {
   display: block;
@@ -5112,7 +5114,31 @@ a.list-group-item.active > .badge,
     font-size: 63px;
   }
 }
-/* @import "../lib/style/bootstrap/less/thumbnails.less"; */
+.thumbnail {
+  display: block;
+  padding: 4px;
+  margin-bottom: 20px;
+  line-height: 1.42857143;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+.thumbnail > img,
+.thumbnail a > img {
+  margin-left: auto;
+  margin-right: auto;
+}
+a.thumbnail:hover,
+a.thumbnail:focus,
+a.thumbnail.active {
+  border-color: #428bca;
+}
+.thumbnail .caption {
+  padding: 9px;
+  color: #333333;
+}
 .alert {
   padding: 15px;
   margin-bottom: 20px;
@@ -7579,6 +7605,28 @@ fieldset[disabled] [gn-main-viewer] .panel-tools .metadata:focus {
   padding-left: 15px;
   padding-right: 15px;
 }
+/* An update to 3.2 could provide responsive class
+  for block or inline layout.
+  http://getbootstrap.com/css/#responsive-utilities
+
+  Display button label in top tool bar using inline mode.
+ */
+.gn-top-bar .visible-lg {
+  display: none !important;
+}
+@media (min-width: 1200px) {
+  .gn-top-bar .visible-lg {
+    display: inline !important;
+  }
+}
+.gn-top-bar .hidden-xs {
+  display: inline !important;
+}
+@media (max-width: 767px) {
+  .gn-top-bar .hidden-xs {
+    display: none !important;
+  }
+}
 .gn-facet .list-group-item {
   border-width: 0;
   border-radius: 0;
@@ -7680,14 +7728,21 @@ select[multiple][hitsperpage-combo] select {
 .bootstrap-tagsinput {
   width: 100%;
 }
+.bootstrap-tagsinput .tag-content {
+  display: inline-block;
+  max-width: 10em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .tagsinput-clear,
 .tagsinput-trigger {
   position: absolute;
   top: 4px;
-  right: 36px;
+  right: 26px;
 }
 .tagsinput-trigger {
-  top: .45em;
+  top: .575em;
   right: 20px;
   font-size: 16px;
   font-weight: normal;
@@ -8098,6 +8153,13 @@ select[multiple].geocat-search .geotype {
   }
   .maincol .panel {
     position: relative;
+  }
+  .maincol .panel.metadata {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2050;
   }
   .maincol .panel .panel-footer {
     position: absolute;

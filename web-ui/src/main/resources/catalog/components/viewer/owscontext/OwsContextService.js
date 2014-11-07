@@ -60,7 +60,7 @@
         var layers = context.resourceList.layer;
         var i, j, olLayer, bgLayers = [];
         var self = this;
-        var re = /{.*type\s*=\s*([^\s]+)(?:,|})*/; ///{.*type\s*=\s*(.*)\s*}/;
+        var re = /type\s*=\s*([^,|^}|^\s]*)/;
         for (i = 0; i < layers.length; i++) {
           var layer = layers[i];
           if (layer.group == 'Background layers' && layer.name.match(re)) {
@@ -84,13 +84,18 @@
         // if there's at least one valid bg layer in the context use them for
         // the application otherwise use the defaults from config
         if (bgLayers.length > 0) {
+          // make sure we remove any existing bglayer
+          map.getLayers().removeAt(0);
           // first clear settings bgLayers
           gnViewerSettings.bgLayers.length = 0;
+
+          var firstVisibleBgLayer = true;
           $.each(bgLayers, function(index, item) {
             gnViewerSettings.bgLayers.push(item);
-            if (item.getVisible()) {
-              map.getLayers().removeAt(0);
+            // the first visible bg layer wins and get displayed in the map
+            if (item.getVisible() && firstVisibleBgLayer) {
               map.getLayers().insertAt(0, item);
+              firstVisibleBgLayer = false;
             }
           });
         }
