@@ -127,8 +127,8 @@ public class Info implements Service
 				else
 					throw new BadParameterEx("type", type);
 			} else if (name.equals("schema")||(name.equals("serviceType"))) { // do nothing
-			} else {
-					throw new BadParameterEx(name, type);
+//			} else {
+//					throw new BadParameterEx(name, type);
 			}
 		}
 				
