@@ -63,14 +63,14 @@
 
               var defaultParams = {
                 service: 'WMS',
-                request: 'getCapabilities'
+                request: 'GetCapabilities'
               };
 
               for(var p in urlParams){
                 defaultParams[p] = urlParams[p];
                 if(defaultParams.hasOwnProperty(p.toLowerCase()) &&
                     p != p.toLowerCase()){
-                      delete defaultParams[ptoLowerCase()];
+                      delete defaultParams[p.toLowerCase()];
                 }
               }
 

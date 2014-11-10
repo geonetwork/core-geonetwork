@@ -18,17 +18,20 @@
             this.createNcWmsLayer = function(capLayer) {
               var source = new ol.source.TileWMS({
                 params: {
-                  LAYERS:'NCOF_MRCS/POT'
+                  LAYERS:'TEMP'
                 },
-                url: 'http://behemoth.nerc-essc.ac.uk/ncWMS/wms'
+                url: 'http://tds0.ifremer.fr/thredds/wms/CORIOLIS-GLOBAL-CORA04.0-OBS_FULL_TIME_SERIE'
               });
               var layer = new ol.layer.Tile({
-                url: 'http://behemoth.nerc-essc.ac.uk/ncWMS/wms',
+                url: 'http://tds0.ifremer.fr/thredds/wms/CORIOLIS-GLOBAL-CORA04.0-OBS_FULL_TIME_SERIE',
                 type: 'WMS',
                 source: source,
                 label: 'Super NCWMS'
               });
 
+            };
+
+            this.feedOlLayer = function(layer) {
               var url = this.getMetadataUrl(layer);
               var proxyUrl = '../../proxy?url=' + encodeURIComponent(url);
 
@@ -36,7 +39,6 @@
                   .success(function (json) {
                     layer.ncInfo = json;
                   });
-
               return layer;
             };
 
