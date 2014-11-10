@@ -650,7 +650,7 @@ public class ServiceManager {
                         } finally {
                             timerContext.stop();
                         }
-                        response = BinaryFile.encode(200, file.toString(), "document.pdf", true);
+                        response = BinaryFile.encode(200, file, "document.pdf", true).getElement();
                     } catch (Exception e) {
                         error(" -> exception during XSL/FO transformation for : " + req.getService());
                         error(" -> (C) stylesheet : " + styleSheet);
@@ -664,14 +664,15 @@ public class ServiceManager {
 				}
 
 				
-			} 
-			String contentType = BinaryFile.getContentType(response);
+			}
+            final BinaryFile binaryFile = new BinaryFile(response);
+            String contentType = binaryFile.getContentType();
 
 			if (contentType == null)
 				contentType = "application/octet-stream";
 
-			String contentDisposition = BinaryFile.getContentDisposition(response);
-            String contentLength = BinaryFile.getContentLength(response);
+			String contentDisposition = binaryFile.getContentDisposition();
+            String contentLength = binaryFile.getContentLength();
 
 			int cl = (contentLength == null) ? -1 : Integer.parseInt(contentLength);
 
@@ -680,9 +681,9 @@ public class ServiceManager {
                 ((ServiceRequest) req).setStatusCode(context.getStatusCode());
             }
 			req.beginStream(contentType, cl, contentDisposition, cache);
-			BinaryFile.write(response, req.getOutputStream());
+            binaryFile.write(req.getOutputStream());
 			req.endStream();
-			BinaryFile.removeIfTheCase(response);
+            binaryFile.removeIfTheCase();
 		}
 
 		//--- BLOB output

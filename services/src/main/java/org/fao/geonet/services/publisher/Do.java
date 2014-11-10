@@ -230,9 +230,7 @@ public class Do implements Service {
     		        return addExternalFile(action, gs, file, metadataUuid, metadataTitle, metadataAbstract);
     		    } else {
     		        // Get ZIP file from data directory
-                    File dir = new File(Lib.resource
-                            .getDir(context, access, metadataId));
-                    File f = new File(dir, file);
+                    Path f = Lib.resource.getDir(context, access, metadataId).resolve(file);
                     return addZipFile(action, gs, f, file, metadataUuid, metadataTitle, metadataAbstract);
     		    }
     		}
@@ -350,11 +348,11 @@ public class Do implements Service {
 	 * 
 	 * @param action
 	 * @param gs
-	 * @param file
-	 * @return
+	 * @param f
+     *@param file  @return
 	 * @throws java.io.IOException
 	 */
-	private Element addZipFile(ACTION action, GeoServerRest gs, File f, String file, String metadataUuid, String metadataTitle, String metadataAbstract)
+	private Element addZipFile(ACTION action, GeoServerRest gs, Path f, String file, String metadataUuid, String metadataTitle, String metadataAbstract)
 			throws IOException {
 		if (f == null) {
 			return report(EXCEPTION, null,
@@ -427,9 +425,9 @@ public class Do implements Service {
 		return report;
 	}
 
-	private boolean publishVector(File f, GeoServerRest g, ACTION action, String metadataUuid, String metadataTitle, String metadataAbstract) {
+	private boolean publishVector(Path f, GeoServerRest g, ACTION action, String metadataUuid, String metadataTitle, String metadataAbstract) {
 
-		String ds = f.getName();
+		String ds = f.getFileName().toString();
 		String dsName = ds.substring(0, ds.lastIndexOf("."));
 		try {
 			if (action.equals(ACTION.CREATE)) {
@@ -516,8 +514,8 @@ public class Do implements Service {
         }
         return false;
     }
-	private boolean publishRaster(File f, GeoServerRest g, ACTION action, String metadataUuid, String metadataTitle, String metadataAbstract) {
-		String cs = f.getName();
+	private boolean publishRaster(Path f, GeoServerRest g, ACTION action, String metadataUuid, String metadataTitle, String metadataAbstract) {
+		String cs = f.getFileName().toString();
 		String csName = cs.substring(0, cs.lastIndexOf("."));
 		try {
 			if (action.equals(ACTION.CREATE)) {

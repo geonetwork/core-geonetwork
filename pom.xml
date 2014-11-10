@@ -366,11 +366,6 @@
   <!-- =========================================================== -->
   <dependencyManagement>
     <dependencies>
-        <dependency>
-            <groupId>com.google.jimfs</groupId>
-            <artifactId>jimfs</artifactId>
-            <version>1.0</version>
-        </dependency>
       <!-- rewrite url servletfilter -->
       <dependency>
         <groupId>org.tuckey</groupId>
@@ -1028,6 +1023,12 @@
       <!-- The version number is specified above. -->
       <scope>test</scope>
     </dependency>
+      <dependency>
+          <groupId>com.google.jimfs</groupId>
+          <artifactId>jimfs</artifactId>
+          <version>1.0</version>
+          <scope>test</scope>
+      </dependency>
   </dependencies>
 
   <!-- ================================================================== -->

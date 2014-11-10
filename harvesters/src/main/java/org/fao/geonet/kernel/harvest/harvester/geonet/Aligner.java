@@ -24,19 +24,27 @@
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.OperationAllowedId_;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
-import org.fao.geonet.kernel.harvest.harvester.*;
+import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
+import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestError;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.HarvesterUtil;
+import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
+import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.mef.IMEFVisitor;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.mef.MEFVisitor;
-import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
@@ -44,17 +52,24 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.repository.Updater;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
-import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.io.OutputStream;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 //=============================================================================
 
@@ -204,7 +219,7 @@ public class Aligner extends BaseAligner
 
 		//--- import metadata from MEF file
 
-		File mefFile = retrieveMEF(ri.uuid);
+		Path mefFile = retrieveMEF(ri.uuid);
 
 		try
 		{
@@ -217,7 +232,7 @@ public class Aligner extends BaseAligner
 
 				//--------------------------------------------------------------------
 				
-				public void handleMetadataFiles(File[] files, Element info, int index) throws Exception {}
+				public void handleMetadataFiles(DirectoryStream<Path> files, Element info, int index) throws Exception {}
 				
 				//--------------------------------------------------------------------
 
@@ -233,16 +248,12 @@ public class Aligner extends BaseAligner
                     if (id[index] == null) return;
 
                     if(log.isDebugEnabled()) log.debug("    - Adding remote public file with name:"+ file);
-					String pubDir = Lib.resource.getDir(context, "public", id[index]);
+					Path pubDir = Lib.resource.getDir(context, "public", id[index]);
 
-					File outFile = new File(pubDir, file);
-					FileOutputStream os = null;
-					try {
-                        os = new FileOutputStream(outFile);
+					Path outFile = pubDir.resolve(file);
+					try (OutputStream os = Files.newOutputStream(outFile)){
     					BinaryFile.copy(is, os);
-    					IO.setLastModified(outFile, new ISODate(changeDate).getTimeInSeconds() * 1000, log.getModule());
-					} finally {
-					    IOUtils.closeQuietly(os);
+    					IO.touch(outFile, FileTime.from(new ISODate(changeDate).getTimeInSeconds(), TimeUnit.SECONDS));
 					}
 				}
 				
@@ -256,15 +267,11 @@ public class Aligner extends BaseAligner
 				    if (params.mefFormatFull) {
                         if(log.isDebugEnabled())
                             log.debug("    - Adding remote private file with name:" + file + " available for download for user used for harvester.");
-	                    String dir = Lib.resource.getDir(context, "private", id[index]);
-	                    File outFile = new File(dir, file);
-	                    FileOutputStream os = null;
-	                    try {
-                            os = new FileOutputStream(outFile);
+	                    Path dir = Lib.resource.getDir(context, "private", id[index]);
+	                    Path outFile = dir.resolve(file);
+	                    try (OutputStream os = Files.newOutputStream(outFile)){
     	                    BinaryFile.copy(is, os);
-    	                    IO.setLastModified(outFile, new ISODate(changeDate).getTimeInSeconds() * 1000, log.getModule());
-	                    } finally {
-	                        IOUtils.closeQuietly(os);
+    	                    IO.touch(outFile, FileTime.from(new ISODate(changeDate).getTimeInSeconds(), TimeUnit.SECONDS));
 	                    }
 				    }
 				}
@@ -280,7 +287,9 @@ public class Aligner extends BaseAligner
 		}
 		finally
 		{
-		     if (!mefFile.delete() && mefFile.exists()) {
+            try {
+                Files.deleteIfExists(mefFile);
+            } catch (IOException e) {
 		         log.warning("Unable to delete mefFile: "+mefFile);
 		     }
 		}
@@ -350,11 +359,11 @@ public class Aligner extends BaseAligner
         }
 
 
-		String pubDir = Lib.resource.getDir(context, "public",  id);
-		String priDir = Lib.resource.getDir(context, "private", id);
+		Path pubDir = Lib.resource.getDir(context, "public",  id);
+        Path priDir = Lib.resource.getDir(context, "private", id);
 
-		IO.mkdirs(new File(pubDir), "Geonet Aligner public resources directory for metadata " + id);
-		IO.mkdirs(new File(priDir), "Geonet Aligner private resources directory for metadata " + id);
+        Files.createDirectories(pubDir);
+        Files.createDirectories(priDir);
 
         if (params.createRemoteCategory) {
     		Element categs = info.getChild("categories");
@@ -514,7 +523,7 @@ public class Aligner extends BaseAligner
             if(log.isDebugEnabled())
                 log.debug("  - Skipped metadata managed by another harvesting node. uuid:"+ ri.uuid +", name:"+ params.name);
         } else {
-			File mefFile = retrieveMEF(ri.uuid);
+			Path mefFile = retrieveMEF(ri.uuid);
 
 			try
 			{
@@ -527,7 +536,7 @@ public class Aligner extends BaseAligner
 
 					//-----------------------------------------------------------------
 					
-					public void handleMetadataFiles(File[] files, Element info, int index) throws Exception
+					public void handleMetadataFiles(DirectoryStream<Path> files, Element info, int index) throws Exception
 					{
 						//md[index] = mdata;
 					}
@@ -566,7 +575,9 @@ public class Aligner extends BaseAligner
 			}
 			finally
 			{
-	             if (!mefFile.delete() && mefFile.exists()) {
+                try{
+                    Files.deleteIfExists(mefFile);
+                } catch (IOException e) {
 	                 log.warning("Unable to delete mefFile: "+mefFile);
 	             }
 
@@ -682,23 +693,24 @@ public class Aligner extends BaseAligner
 
 	private void removeOldFile(String id, Element infoFiles, String dir)
 	{
-		File resourcesDir = new File(Lib.resource.getDir(context, dir, id));
+		Path resourcesDir = Lib.resource.getDir(context, dir, id);
 
-		File files[] = resourcesDir.listFiles();
-
-		if (files == null)
-			log.error("  - Cannot scan directory for " + dir + " files : "+ resourcesDir.getAbsolutePath());
-
-		else for (File file : files)
-			if (!existsFile(file.getName(), infoFiles))
-			{
-                if(log.isDebugEnabled()) {
-                    log.debug("  - Removing old " + dir + " file with name="+ file.getName());
+        try (DirectoryStream<Path> paths = Files.newDirectoryStream(resourcesDir)) {
+            for (Path file : paths) {
+                if (!existsFile(file.getFileName().toString(), infoFiles)) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("  - Removing old " + dir + " file with name=" + file.getFileName());
+                    }
+                    try {
+                        Files.delete(file);
+                    } catch (IOException e) {
+                        log.warning("Unable to delete file: " + file);
+                    }
                 }
-                if (!file.delete() && file.exists()) {
-                    log.warning("Unable to delete file: "+file);
-                }
-			}
+            }
+        } catch (IOException e) {
+            log.error("  - Cannot scan directory for " + dir + " files : "+ resourcesDir.toAbsolutePath().normalize());
+        }
 	}
 
 	//--------------------------------------------------------------------------
@@ -724,23 +736,18 @@ public class Aligner extends BaseAligner
 	private void updateChangedFile(String id, String file, String dir,
 											 String changeDate, InputStream is) throws IOException
 	{
-		String resourcesDir  = Lib.resource.getDir(context, dir, id);
-		File   locFile = new File(resourcesDir, file);
+		Path resourcesDir  = Lib.resource.getDir(context, dir, id);
+		Path   locFile = resourcesDir.resolve(file);
 
-		ISODate locIsoDate = new ISODate(locFile.lastModified(), false);
+		ISODate locIsoDate = new ISODate(Files.getLastModifiedTime(locFile).toMillis(), false);
 		ISODate remIsoDate = new ISODate(changeDate);
 
-		if (!locFile.exists() || remIsoDate.timeDifferenceInSeconds(locIsoDate) > 0)
-		{
+		if (!Files.exists(locFile) || remIsoDate.timeDifferenceInSeconds(locIsoDate) > 0) {
             if(log.isDebugEnabled()){ log.debug("  - Adding remote " + dir + "  file with name:"+ file);}
 
-			FileOutputStream os = null;
-			try {
-                os = new FileOutputStream(locFile);
+			try (OutputStream os = Files.newOutputStream(locFile)) {
     			BinaryFile.copy(is, os);
-    			IO.setLastModified(locFile, remIsoDate.getTimeInSeconds() * 1000, log.getModule());
-			} finally {
-			    IOUtils.closeQuietly(os);
+    			IO.touch(locFile, FileTime.from(remIsoDate.getTimeInSeconds(), TimeUnit.SECONDS));
 			}
 		}
 		else
@@ -768,7 +775,7 @@ public class Aligner extends BaseAligner
 
 	//--------------------------------------------------------------------------
 
-	private File retrieveMEF(String uuid) throws IOException
+	private Path retrieveMEF(String uuid) throws IOException
 	{
 		request.clearParams();
 		request.addParam("uuid",   uuid);
@@ -776,7 +783,7 @@ public class Aligner extends BaseAligner
 
 		request.setAddress(params.getServletPath() +"/srv/en/"+ Geonet.Service.MEF_EXPORT);
 
-		File tempFile = File.createTempFile("temp-", ".dat");
+		Path tempFile = Files.createTempFile("temp-", ".dat");
 		request.executeLarge(tempFile);
 
 		return tempFile;

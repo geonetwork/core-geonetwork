@@ -26,8 +26,8 @@ package org.fao.geonet.services.thesaurus;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.ThesaurusActivation;
@@ -38,7 +38,6 @@ import org.fao.geonet.repository.ThesaurusActivationRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
-import java.io.File;
 import java.nio.file.Path;
 
 /**
@@ -74,9 +73,8 @@ public class Add extends NotInReadOnlyModeService {
 		
 		ThesaurusManager tm = gc.getBean(ThesaurusManager.class);
 
-		String filePath = tm.buildThesaurusFilePath(fname, type, dname);
+		Path rdfFile = tm.buildThesaurusFilePath(fname, type, dname);
 		
-		File rdfFile = new File(filePath);
         final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
         Thesaurus thesaurus = new Thesaurus(context.getApplicationContext(), fname, tname, tnamespace, type, dname, rdfFile, siteURL, false);
 		tm.addThesaurus(thesaurus, true);

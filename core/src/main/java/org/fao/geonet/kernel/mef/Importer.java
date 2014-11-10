@@ -82,10 +82,7 @@ public class Importer {
         final DataManager dm = context.getBean(DataManager.class);
 
         // Load preferred schema and set to iso19139 by default
-        String preferredSchema = context.getBean(ServiceConfig.class).getMandatoryValue("preferredSchema");
-        if (preferredSchema == null) {
-            preferredSchema = "iso19139";
-        }
+        String preferredSchema = context.getBean(ServiceConfig.class).getValue("preferredSchema", "iso19139");
 
         final List<String> metadataIdMap = new ArrayList<String>();
         final List<Element> md = new ArrayList<Element>();
@@ -254,8 +251,9 @@ public class Importer {
                 String style = Util.getParam(params, Params.STYLESHEET,
                         "_none_");
 
-                if (!style.equals("_none_"))
+                if (!style.equals("_none_") && stylePath != null) {
                     md.add(index, Xml.transform(md.get(index), stylePath.resolve(style)));
+                }
 
 
                 final Element metadata = md.get(index);

@@ -178,7 +178,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         return here.getParent().resolve("web/src/main/webapp/");
     }
 
-    protected static File getClassFile(Class<?> cl) {
+    public static File getClassFile(Class<?> cl) {
         final String testClassName = cl.getSimpleName();
         return new File(cl.getResource(testClassName + ".class").getFile());
     }

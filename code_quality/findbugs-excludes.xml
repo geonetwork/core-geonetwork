@@ -154,6 +154,11 @@
         <Class name="org.fao.geonet.utils.Xml" />
         <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE" />
     </Match>
+	<Match>
+        <Class name="org.fao.geonet.services.thumbnail.Set" />
+        <Method name="getImage"/>
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE" />
+    </Match>
 
 
 <!-- The following bugs are hard to fix should be fixed because they can cause problems in servers with multiple geonetworks running -->	

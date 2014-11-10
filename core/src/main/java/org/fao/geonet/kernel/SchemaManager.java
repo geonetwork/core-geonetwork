@@ -1050,7 +1050,7 @@ public class SchemaManager {
 			}
 
 			// -- if already mapped then exit
-			if (uri.getAttributeValue("uri").equals(ourUri)) index = root.indexOf(uri); 
+			if (uri.getAttributeValue("uri").equals(ourUri.toString())) index = root.indexOf(uri);
 		}
 
 		if (index != -1) root.removeContent(index);
@@ -1087,7 +1087,7 @@ public class SchemaManager {
 			}
 
 			// -- if already mapped then exit
-			if (uri.getAttributeValue("rewritePrefix").equals(ourUri)) return -1; 
+			if (uri.getAttributeValue("rewritePrefix").equals(ourUri.toString())) return -1;
 			
 			String nameAttr = uri.getAttributeValue("uriStartString");
 			if (nameAttr.startsWith(Geonet.File.METADATA_BLANK)) {

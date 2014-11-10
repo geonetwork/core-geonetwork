@@ -33,6 +33,7 @@ import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.IO;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.io.File;
@@ -149,27 +150,33 @@ public class ResourceLib {
 	 * @return the absolute path of the folder choosen to store all deleted
 	 *         metadata
 	 */
-	public String getRemovedDir(ServiceContext context) {
+	public Path getRemovedDir(ServiceContext context) {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		String remDir = gc.getBean(SettingManager.class).getValue(
+		String remDirPath = gc.getBean(SettingManager.class).getValue(
 				"system/removedMetadata/dir");
 
-		if (!new File(remDir).isAbsolute())
-			remDir = context.getAppPath() + remDir;
+        Path remDir;
+        if (remDirPath == null) {
+            remDir = context.getAppPath().resolve("WEB-INF/data/removed").toAbsolutePath().normalize();
+        } else {
+            remDir = IO.toPath(remDirPath);
+        }
+		if (!remDir.isAbsolute())
+			remDir = context.getAppPath().resolve(remDir.toString());
 
 		return remDir;
 	}
 
 	/**
-	 * See {@link #getRemovedDir(String, String)}
+	 * See {@link #getRemovedDir(Path, String)}
 	 * 
 	 * @param context
 	 * @param id
 	 * @return
 	 */
-	public String getRemovedDir(ServiceContext context, String id) {
+	public Path getRemovedDir(ServiceContext context, String id) {
 		return getRemovedDir(getRemovedDir(context), id);
 	}
 
@@ -177,11 +184,11 @@ public class ResourceLib {
 	 * @return the absolute path of the folder where the given metadata should
 	 *         be stored when it is removed
 	 */
-	public String getRemovedDir(String removedDir, String id) {
+	public Path getRemovedDir(Path removedDir, String id) {
 		String group = pad(Integer.parseInt(id) / 100, 3);
 		String groupDir = group + "00-" + group + "99";
 
-		return removedDir + "/" + groupDir + "/";
+		return removedDir.resolve(groupDir);
 	}
 
 	// -----------------------------------------------------------------------------

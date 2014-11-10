@@ -58,12 +58,12 @@ public class XmlSearch implements Service
 
 	/**
 	 * Run a search and return results as XML.
-	 * 
+	 *
 	 * @param params	All search parameters defined in {@link LuceneIndexField}.
 	 * <br/>
-	 * To return only results summary, set summaryOnly parameter to 1. 
+	 * To return only results summary, set summaryOnly parameter to 1.
 	 * Default is 0 (ie.results and summary).
-	 * 
+	 *
 	 */
 	public Element exec(Element params, ServiceContext context) throws Exception {
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);

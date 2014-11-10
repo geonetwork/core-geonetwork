@@ -41,7 +41,7 @@ import java.nio.file.Path;
 
 public class GetImportXSLs implements Service
 {
-	private String appPath;
+	private Path appPath;
 
 	//--------------------------------------------------------------------------
 	//---

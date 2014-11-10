@@ -27,6 +27,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 
@@ -143,17 +145,12 @@ public class Resources {
 	 * {@link #locateHarvesterLogosDir(ServletContext, ConfigurableApplicationContext, java.nio.file.Path)}
 	 * but for Spring MVC
 	 */
-	public static String locateHarvesterLogosDirSMVC(ApplicationContext applicationContext) {
-		String path = locateResourcesDir(null, applicationContext)
-				+ File.separator + "images" + File.separator + "harvesting";
+	public static Path locateHarvesterLogosDirSMVC(ApplicationContext applicationContext) throws IOException {
+		Path path = locateResourcesDir(null, applicationContext).resolve("images").resolve("harvesting");
 
-		File file = new File(path);
-		if (!file.exists() && !file.mkdirs()) {
-			throw new AssertionError(
-					"Unable to create the harvester logos directory. Permissions problem? "
-							+ path);
-		}
-		return path;
+        java.nio.file.Files.createDirectories(path);
+
+        return path;
 	}
 
 	/**
@@ -306,24 +303,21 @@ public class Resources {
 		return loadResource(null, context, appPath, filename, defaultValue, -1);
 	}
 
-	public static Pair<byte[], Long> loadImage(ApplicationContext context,
-			String filename, byte[] defaultValue) throws IOException {
-		final GeonetworkDataDirectory gnDataDir = context
-				.getBean(GeonetworkDataDirectory.class);
-		Path resourceDir = gnDataDir.getResourcesDir();
-        Path appPath = gnDataDir.getWebappDir();
-		return loadResource(resourceDir, null, appPath, filename, defaultValue, -1);
-	}
-
-	private static Path locateResource(Path resourcesDir,
-			ServletContext context, Path appPath, String filename)
+	private static Path locateResource(@Nullable Path resourcesDir,
+			ServletContext context, Path appPath, @Nonnull String filename)
 			throws IOException {
         if (filename.charAt(0) == '/' || filename.charAt(0) == '\\') {
             filename = filename.substring(1);
         }
-        Path file = resourcesDir.resolve(filename);
 
-		if (!java.nio.file.Files.exists(file)) {
+        Path file;
+        if (resourcesDir != null) {
+            file = resourcesDir.resolve(filename);
+        } else {
+            file = IO.toPath(filename);
+        }
+
+        if (!java.nio.file.Files.exists(file)) {
 			Path webappCopy = null;
 			if (context != null) {
 				final String realPath = context.getRealPath(filename);

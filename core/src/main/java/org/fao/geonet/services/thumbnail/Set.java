@@ -40,6 +40,7 @@ import org.jdom.Element;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,10 +48,17 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 
 public class Set extends NotInReadOnlyModeService {
-	//--------------------------------------------------------------------------
+    private static final ImageObserver IMAGE_OBSERVER = new ImageObserver() {
+        @Override
+        public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
+            return false;
+        }
+    };
+    //--------------------------------------------------------------------------
 	//---
 	//--- Init
 	//---
@@ -164,10 +172,7 @@ public class Set extends NotInReadOnlyModeService {
     private boolean testValidImage(Path inFile, boolean mustExistAndBeValid) throws IOException {
         if (inFile != null && Files.exists(inFile)) {
             // Test that file is an image before removing old files.
-            BufferedImage image = getImage(inFile);
-            if (image == null) {
-                throw new IllegalArgumentException("Unable to create an image from: "+inFile);
-            }
+            getImage(inFile);
             return true;
         } else {
             if (mustExistAndBeValid) {
@@ -371,7 +376,7 @@ public class Set extends NotInReadOnlyModeService {
 	}
 
 	//--------------------------------------------------------------------------
-
+    @Nonnull
 	public BufferedImage getImage(Path inFile) throws IOException
 	{
 		String lcFile = inFile.getFileName().toString().toLowerCase();
@@ -382,8 +387,8 @@ public class Set extends NotInReadOnlyModeService {
 
 			Image image = getTiffImage(inFile);
 
-			int width = image.getWidth(null);
-			int height= image.getHeight(null);
+			int width = image.getWidth(IMAGE_OBSERVER);
+			int height= image.getHeight(IMAGE_OBSERVER);
 
 			BufferedImage bimg = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
 			Graphics2D g = bimg.createGraphics();
@@ -401,9 +406,9 @@ public class Set extends NotInReadOnlyModeService {
 
 	private Image getTiffImage(Path inFile) throws IOException
 	{
-	    try (InputStream fileInputStream = Files.newInputStream(inFile)) {
+	    try (InputStream fin = Files.newInputStream(inFile)) {
     		Tiff t = new Tiff();
-            t.readInputStream(fileInputStream);
+            t.readInputStream(fin);
     
     		if (t.getPageCount() == 0)
     			throw new IOException("No images inside TIFF file");

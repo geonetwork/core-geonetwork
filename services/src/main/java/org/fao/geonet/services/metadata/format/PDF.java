@@ -34,8 +34,8 @@ import org.jdom.output.XMLOutputter;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
@@ -56,10 +56,9 @@ public class PDF implements Service {
         File tempDir = (File) context.getServlet().getServletContext().
         	       getAttribute( "javax.servlet.context.tempdir" );
 
-        File tempFile = File.createTempFile(TMP_PDF_FILE, ".pdf", tempDir);
-        OutputStream os = new FileOutputStream(tempFile);
-        
-        try {
+        Path tempFile = Files.createTempFile(tempDir.toPath(), TMP_PDF_FILE, ".pdf");
+
+        try (OutputStream os = Files.newOutputStream(tempFile)) {
 	        ITextRenderer renderer = new ITextRenderer();
             String siteUrl = context.getBean(SettingManager.class).getSiteURL(context);
             renderer.getSharedContext().setReplacedElementFactory(new ImageReplacedElementFactory(siteUrl, renderer.getSharedContext().getReplacedElementFactory()));
@@ -67,12 +66,8 @@ public class PDF implements Service {
 	        renderer.layout();
 	        renderer.createPDF(os);
         }
-        finally {
-        	os.close();
-        }
-        
-        Element res = BinaryFile.encode(200, tempFile.getAbsolutePath(), true);
-        return res;
+
+        return BinaryFile.encode(200, tempFile.toAbsolutePath().normalize(), true).getElement();
     }
 
 	@Override

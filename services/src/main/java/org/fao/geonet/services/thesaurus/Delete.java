@@ -26,18 +26,18 @@ package org.fao.geonet.services.thesaurus;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.repository.ThesaurusActivationRepository;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.repository.ThesaurusActivationRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
+import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 
-import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
@@ -63,13 +63,13 @@ public class Delete extends NotInReadOnlyModeService {
 
 		// Load file
 		Thesaurus thesaurus = manager.getThesaurusByName(name);
-		File item = thesaurus.getFile();
+		Path item = thesaurus.getFile();
 		
 		// Remove old file from thesaurus manager
 		manager.remove(name);
 		
 		// Remove file
-		if (item.exists()) {
+		if (Files.exists(item)) {
 			IO.deleteFile(item, true, Geonet.THESAURUS);
 
             // Delete thesaurus record in the database

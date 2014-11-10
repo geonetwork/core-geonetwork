@@ -187,7 +187,7 @@ public class SelfRegister extends NotInReadOnlyModeService {
 	    root.addContent(new Element("password").setText(password));
 	    
 		String template = Util.getParam(params, Params.TEMPLATE, PASSWORD_EMAIL_XSLT);
-	    String emailXslt = stylePath + template;
+	    Path emailXslt = stylePath.resolve(template);
 	    Element elEmail = Xml.transform(root, emailXslt);
 	    
 		String email = Util.getParam(params, Params.EMAIL);
@@ -218,7 +218,7 @@ public class SelfRegister extends NotInReadOnlyModeService {
 	    root.addContent((Element)params.clone());
 	    
 		String profileTemplate = Util.getParam(params, PROFILE_TEMPLATE, PROFILE_EMAIL_XSLT);
-	    String emailXslt = stylePath + profileTemplate;
+	    Path emailXslt = stylePath.resolve(profileTemplate);
 	    Element elEmail = Xml.transform(root, emailXslt);
 	    
 	    String subject = elEmail.getChildText("subject");

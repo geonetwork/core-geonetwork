@@ -18,9 +18,9 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
@@ -81,7 +81,7 @@ public class SchematronCriteriaTypeService implements Service {
         return results;
     }
 
-    private void addTitleToSchematronElement(ServiceContext context, XmlCacheManager cacheManager, Element element, String schemaDir) throws JDOMException, IOException {
+    private void addTitleToSchematronElement(ServiceContext context, XmlCacheManager cacheManager, Element element, Path schemaDir) throws JDOMException, IOException {
         final String ruleName = element.getChildText("rulename");
         final Element strings = loadTranslations(context, schemaDir, ruleName + ".xml", cacheManager);
         String title = ruleName;
@@ -99,13 +99,13 @@ public class SchematronCriteriaTypeService implements Service {
 
     private void addCriteriaTypeDefinition(ServiceContext context, SchemaManager schemaManager, Element schemaEl, String schemaName) throws IOException, JDOMException {
 
-        final String schemaDir = schemaManager.getSchemaDir(schemaName);
-        File file = new File(schemaDir, "schematron" + File.separator + "criteria-type.xml");
+        final Path schemaDir = schemaManager.getSchemaDir(schemaName);
+        Path file = schemaDir.resolve("schematron").resolve("criteria-type.xml");
 
         final XmlCacheManager cacheManager = context.getBean(XmlCacheManager.class);
         Element criteriaTypeTranslations = loadTranslations(context, schemaDir, "criteria-type.xml", cacheManager);
 
-        if (file.exists()) {
+        if (Files.exists(file)) {
             Element criteriaType = Xml.loadFile(file);
             criteriaType.setName("criteriaTypes");
             criteriaType.addContent(alwaysAcceptCriteriaType());
@@ -124,11 +124,10 @@ public class SchematronCriteriaTypeService implements Service {
         }
     }
 
-    private Element loadTranslations(ServiceContext context, String schemaDir, String translationFile, XmlCacheManager cacheManager) throws JDOMException, IOException {
+    private Element loadTranslations(ServiceContext context, Path schemaDir, String translationFile, XmlCacheManager cacheManager) throws JDOMException, IOException {
         Element criteriaTypeTranslations;
         try {
-            criteriaTypeTranslations = cacheManager.get(context, true, schemaDir + File.separator + "loc",
-                    translationFile, context.getLanguage(), Geonet.DEFAULT_LANGUAGE);
+            criteriaTypeTranslations = cacheManager.get(context, true, schemaDir.resolve("loc"), translationFile, context.getLanguage(), Geonet.DEFAULT_LANGUAGE);
         } catch (FileNotFoundException e) {
             // there is a case where the schematron plugin doesn't have any translations for the criteria (maybe there aren't any criteria).
             criteriaTypeTranslations = new Element("strings");

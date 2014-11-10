@@ -48,7 +48,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * A container of I/O methods. <P>
- * 
+ *
  */
 public final class IO {
     private static FileSystem defaultFs = FileSystems.getDefault();
@@ -129,13 +129,13 @@ public final class IO {
             Files.walkFileTree(from, new SimpleFileVisitor<Path>(){
                 @Override
                 public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                    Files.createDirectory(relativeFile(dir, actualTo, from));
+                    Files.createDirectory(relativeFile(from, dir, actualTo));
                     return FileVisitResult.CONTINUE;
                 }
 
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    Files.copy(file, relativeFile(file, actualTo, from));
+                    Files.copy(file, relativeFile(from, file, actualTo));
                     return FileVisitResult.CONTINUE;
                 }
             });
@@ -148,8 +148,8 @@ public final class IO {
         }
     }
 
-    protected static Path relativeFile(Path dir, Path to, Path from) {
-        return to.resolve(from.relativize(dir).toString().replace('\\', '/'));
+    public static Path relativeFile(Path relativeToDirectory, Path fileOrDirectory, Path newRelativeTo) {
+        return newRelativeTo.resolve(relativeToDirectory.relativize(fileOrDirectory).toString().replace('\\', '/'));
     }
 
     public static void moveDirectoryOrFile(final Path from, final Path to) throws IOException {
@@ -233,6 +233,42 @@ public final class IO {
         defaultFsThreadLocal.set(newFileSystem);
     }
 
+    public static void printDirectoryTree(Path dir) throws IOException {
+        Files.walkFileTree(dir, new SimpleFileVisitor<Path>(){
+            int depth = 0;
+
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                StringBuilder builder = newStringBuilder();
+                builder.append("> ").append(dir.getFileName()).append(" (").append(dir.getParent()).append("):");
+                System.out.println(builder.toString());
+                depth += 4;
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                StringBuilder builder = newStringBuilder();
+                builder.append("- ").append(file.getFileName());
+                System.out.println(builder.toString());
+                return FileVisitResult.CONTINUE;
+            }
+
+            protected StringBuilder newStringBuilder() {
+                StringBuilder builder = new StringBuilder();
+                for (int j = 0; j < depth; j++) {
+                    builder.append(" ");
+                }
+                return builder;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                depth -=4;
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
 }
 
 //=============================================================================

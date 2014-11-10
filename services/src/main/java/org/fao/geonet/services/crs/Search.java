@@ -52,7 +52,7 @@ public class Search implements Service {
 
 	/**
 	 * Search for CRS
-	 * 
+	 *
 	 * @param params
 	 *            Parameter "name" is a list of word separated by spaces.
 	 *            Parameter "maxResults" is the max number of CRS returned.

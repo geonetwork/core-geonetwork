@@ -39,7 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class Home implements Service {
     private ServiceConfig _config;
-    private String _appPath;
+    private Path _appPath;
 
     /**
      * Save the initialize parameters. They are used if there is some metadata

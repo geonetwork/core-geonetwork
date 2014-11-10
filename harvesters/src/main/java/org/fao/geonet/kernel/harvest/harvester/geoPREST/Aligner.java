@@ -24,7 +24,6 @@
 package org.fao.geonet.kernel.harvest.harvester.geoPREST;
 
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
@@ -33,7 +32,12 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
-import org.fao.geonet.kernel.harvest.harvester.*;
+import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
+import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestError;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
+import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.Updater;
@@ -42,10 +46,11 @@ import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.Nonnull;
 
 //=============================================================================
 
@@ -304,8 +309,8 @@ public class Aligner extends BaseAligner
 
 			// transform it here if requested
 			if (!params.importXslt.equals("none")) {
-				String thisXslt = context.getAppPath() + Geonet.Path.IMPORT_STYLESHEETS + "/";
-				thisXslt = thisXslt + params.importXslt;
+				Path thisXslt = context.getAppPath().resolve(Geonet.Path.IMPORT_STYLESHEETS).
+                        resolve(params.importXslt);
 				try {
 					response = Xml.transform(response, thisXslt);
 				} catch (Exception e) {

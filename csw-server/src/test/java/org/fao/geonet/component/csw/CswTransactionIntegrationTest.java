@@ -18,6 +18,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -328,7 +329,7 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         metadata.setUuid(PHOTOGRAPHIC_UUID);
         metadata.setDataAndFixCR(Xml.loadStream(CswTransactionIntegrationTest.class.getResourceAsStream("metadata-photographic.xml")));
         metadata = _metadataRepository.save(metadata);
-        final String schemaDir = _schemaManager.getSchemaDir("iso19139");
+        final Path schemaDir = _schemaManager.getSchemaDir("iso19139");
         List<Element> extras = Lists.newArrayList(
                 SearchManager.makeField("_uuid", PHOTOGRAPHIC_UUID, false, true),
                 SearchManager.makeField("_isTemplate", "n", true, true),

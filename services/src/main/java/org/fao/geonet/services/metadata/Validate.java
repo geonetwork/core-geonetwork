@@ -41,7 +41,8 @@ import org.jdom.Element;
 import org.jdom.filter.ElementFilter;
 import org.jdom.input.SAXBuilder;
 
-import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
@@ -102,17 +103,19 @@ public class Validate extends NotInReadOnlyModeService {
         final List<Schematron> schematrons = schematronRepository.findAllBySchemaName(schemaName);
 
         MetadataSchema metadataSchema = dataMan.getSchema(schemaName);
-        String schemaDir = metadataSchema.getSchemaDir();
+        Path schemaDir = metadataSchema.getSchemaDir();
         SAXBuilder builder = new SAXBuilder();
 
         for (Schematron schematron : schematrons) {
             // it contains absolute path to the xsl file
             String rule = schematron.getRuleName();
 
-            String file = schemaDir + File.separator + "loc" + File.separator
-                          + context.getLanguage() + "/" + rule + ".xml";
+            Path file = schemaDir.resolve("loc").resolve(context.getLanguage()).resolve(rule + ".xml");
 
-            Document document = builder.build(file);
+            Document document;
+            try (InputStream in = Files.newInputStream(file)) {
+                document = builder.build(in);
+            }
             Element element = document.getRootElement();
 
             Element s = new Element(rule);

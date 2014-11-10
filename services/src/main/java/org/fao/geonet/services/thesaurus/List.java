@@ -101,7 +101,7 @@ public class List implements Service
 	{
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
-		String THESAURUS_DIR = thesaurusMan.getThesauriDirectory();
+		Path THESAURUS_DIR = thesaurusMan.getThesauriDirectory();
 			
 		Element thesauriList = new Element("thesaurusList");
 	
@@ -153,8 +153,6 @@ public class List implements Service
 	/**
 	 * Browse directory tree and return thesaurus in xml and rdf format
 	 * 
-	 * @param params
-	 * @param context
 	 * @return
 	 * @throws Exception
 	 */

@@ -23,14 +23,8 @@
 
 package org.fao.geonet.services.metadata;
 
-import java.util.Iterator;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import jeeves.server.ServiceConfig;
 import jeeves.services.ReadWriteController;
-
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.SelectionManager;
@@ -42,6 +36,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.nio.file.Path;
+import java.util.Iterator;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * Process a metadata with an XSL transformation declared for the metadata
@@ -64,7 +63,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller("md.processing.batch")
 @ReadWriteController
 public class BatchXslProcessing { // extends NotInReadOnlyModeService {
-	private String _appPath;
+	private Path _appPath;
 
 	@Autowired
 	private DataManager dataMan;
@@ -73,7 +72,7 @@ public class BatchXslProcessing { // extends NotInReadOnlyModeService {
 	@Autowired
 	private SelectionManager selectionManager;
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 		_appPath = appPath;
 
 		// TODO : here we could register process on startup
@@ -88,8 +87,6 @@ public class BatchXslProcessing { // extends NotInReadOnlyModeService {
 
 	/**
 	 * 
-	 * @param params
-	 * @param context
 	 * @return
 	 * @throws Exception
 	 */
@@ -130,13 +127,13 @@ public class BatchXslProcessing { // extends NotInReadOnlyModeService {
 		Iterator<String> iter;
 		String process;
 		String siteURL;
-		String appPath;
+		Path appPath;
 		HttpSession session;
 		XslProcessingReport xslProcessingReport;
 		HttpServletRequest request;
 
 		public BatchXslMetadataReindexer(DataManager dm, Iterator<String> iter,
-				String process, String appPath, HttpSession session,
+				String process, Path appPath, HttpSession session,
 				String siteURL, XslProcessingReport xslProcessingReport,
 				HttpServletRequest request) {
 			super(dm);

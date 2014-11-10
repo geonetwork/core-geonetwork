@@ -24,6 +24,8 @@
 package org.fao.geonet.services.metadata;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -92,10 +94,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller("metadata.processing")
 @ReadWriteController
 public class XslProcessing { //extends NotInReadOnlyModeService {
-    private String _appPath;
+    private Path _appPath;
     private static XslProcessing instance;
     
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         _appPath = appPath;
 
         // TODO : here we could register process on startup
@@ -115,8 +117,6 @@ public class XslProcessing { //extends NotInReadOnlyModeService {
 
     /**
      *
-     * @param params
-     * @param context
      * @return
      * @throws Exception
      */
@@ -159,17 +159,15 @@ public class XslProcessing { //extends NotInReadOnlyModeService {
      * Process a metadata record and add information about the processing
      * to one or more sets for reporting.
      *
-     * @param id		The metadata identifier corresponding to the metadata record to process
-     * @param process	The process name
-     * @param appPath	The application path (use to get the process XSL)
-     * @param params	The input parameters
-     * @param context	The current context
+     * @param id        The metadata identifier corresponding to the metadata record to process
+     * @param process    The process name
+     * @param appPath    The application path (use to get the process XSL)
      * @param report
      * @return
      * @throws Exception
      */
     public Element process(String id, String process, boolean save,
-                                  String appPath,
+                                  Path appPath,
                                   XslProcessingReport report, boolean useIndexGroup,
                                   String siteUrl,
                                   HttpServletRequest request) throws Exception {
@@ -197,10 +195,10 @@ public class XslProcessing { //extends NotInReadOnlyModeService {
             // --- check processing exist for current schema
             String schema = info.getDataInfo().getSchemaId();
 
-            String filePath = schemaMan.getSchemaDir(schema) + "/process/" + process + ".xsl";
-            File xslProcessing = new File(filePath);
-            if (!xslProcessing.exists()) {
-                Log.info("org.fao.geonet.services.metadata","  Processing instruction not found for " + schema + " schema. Looking for "+filePath);
+            Path xslProcessing = schemaMan.getSchemaDir(schema).resolve("process").resolve(process + ".xsl");
+            if (!Files.exists(xslProcessing)) {
+                Log.info("org.fao.geonet.services.metadata","  Processing instruction not found for " + schema +
+                                                            " schema. Looking for " + xslProcessing);
                 report.addNoProcessFoundMetadataId(iId);
                 return null;
             }
@@ -243,7 +241,7 @@ public class XslProcessing { //extends NotInReadOnlyModeService {
 	
 	            xslParameter.put("siteUrl", siteUrl);
 	
-	            processedMetadata = Xml.transform(md, filePath, xslParameter);
+	            processedMetadata = Xml.transform(md, xslProcessing, xslParameter);
 	
 	            // --- save metadata and return status
 	            if (save) {

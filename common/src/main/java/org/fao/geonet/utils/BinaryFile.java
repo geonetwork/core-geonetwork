@@ -35,7 +35,6 @@ import org.globus.ftp.Session;
 import org.jdom.Element;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -55,25 +54,31 @@ import java.nio.file.Path;
 
 public final class BinaryFile
 {
-   /**
+    private Element element = new Element("response");
+
+    /**
     * Default constructor.
     * Builds a BinaryFile.
     */
-   private BinaryFile(){}
+    public BinaryFile(){}
    
-	private static final int BUF_SIZE = 8192;
-	private static boolean remoteFile = false;
-	private static String remoteUser = "";
-	private static String remotePassword = "";
-	private static String remoteSite = "";
-	private static String remotePath = "";
-	private static String remoteProtocol = "";
-	
-	/**
+	private final static int BUF_SIZE = 8192;
+	private boolean remoteFile = false;
+	private String remoteUser = "";
+	private String remotePassword = "";
+	private String remoteSite = "";
+	private String remotePath = "";
+	private String remoteProtocol = "";
+
+    public BinaryFile(Element element) {
+        this.element = element;
+    }
+
+    /**
 	 * Gets the remotePassword.
 	 * @return the remotePassword.
 	 */
-	public static String getRemotePassword() {
+    private String getRemotePassword() {
 	   return remotePassword;
 	}
 	
@@ -82,27 +87,19 @@ public final class BinaryFile
 	// file is remote
 
 
-    static String readInput(String path) {
-        StringBuffer buffer = new StringBuffer();
+    private String readInput(Path path) {
 
-        try (BufferedReader in = Files.newBufferedReader(IO.toPath(path), Constants.CHARSET)) {
-            int ch;
-            int numRead = 0;
-            while (((ch = in.read()) > -1) && (numRead < 2000)) {
-                buffer.append((char) ch);
-                numRead++;
-            }
-
-            return buffer.toString();
+        try {
+            return new String(Files.readAllBytes(path), Constants.CHARSET);
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.error("geonetwork", "Error reading file: " + path);
             return null;
         }
     }
 
 	//---------------------------------------------------------------------------
 
-	private static String getRemoteProtocol(String header) {
+	private String getRemoteProtocol(String header) {
 		String remoteProtocol;
 
 		if (header.startsWith("#geonetworkremotescp")) { 
@@ -117,7 +114,7 @@ public final class BinaryFile
 
 	//---------------------------------------------------------------------------
 
-	private static void checkForRemoteFile(String path) {
+	private void checkForRemoteFile(Path path) {
 		String fileContents = readInput(path);
 		if ((fileContents != null) && (fileContents.toLowerCase().startsWith("#geonetworkremotescp") || fileContents.toLowerCase().startsWith("#geonetworkremoteftp"))) {
 				String[] tokens = fileContents.split("\n");
@@ -141,51 +138,54 @@ public final class BinaryFile
 
 	//---------------------------------------------------------------------------
 
-	public static Element encode(int responseCode, String path, String name, boolean remove)
-	{
-		Element response = encode(responseCode, path, remove);
-		response.setAttribute("name", name);
-		return response;
-	}
+    public static BinaryFile encode(int responseCode, Path path, String name, boolean remove) {
+        BinaryFile response = encode(responseCode, path, remove);
+        response.getElement().setAttribute("name", name);
+        return response;
+    }
 
 	//---------------------------------------------------------------------------
 	
-	public static Element encode(int responseCode, String path)
+	public static BinaryFile encode(int responseCode, Path path)
 	{
 		return encode(responseCode, path, false);
 	}
 
 	//---------------------------------------------------------------------------
 
-	public static Element encode(int responseCode, String path, boolean remove)
+	public static BinaryFile encode(int responseCode, Path path, boolean remove)
 	{
-		Element response = new Element("response");
-		checkForRemoteFile(path);
-
-		response.setAttribute("responseCode", responseCode + "");
-		response.setAttribute("path", path);
-		response.setAttribute("remove", remove ? "y" : "n");
-		if (remoteFile) {
-			response.setAttribute("remotepath", remoteUser+"@"+remoteSite+":"+remotePath);
-			response.setAttribute("remotefile", new File(remotePath).getName());
-		}
-		return response;
+        final BinaryFile binaryFile = new BinaryFile();
+        binaryFile.doEncode(responseCode, path, remove);
+		return binaryFile;
 	}
 
-	//---------------------------------------------------------------------------
+    private void doEncode(int responseCode, Path path, boolean remove) {
+        checkForRemoteFile(path);
 
-	public static String getContentType(Element response)
+        element.setAttribute("responseCode", responseCode + "");
+        element.setAttribute("path", path.toString());
+        element.setAttribute("remove", remove ? "y" : "n");
+        if (remoteFile) {
+            element.setAttribute("remotepath", remoteUser+"@"+remoteSite+":"+remotePath);
+            element.setAttribute("remotefile", new File(remotePath).getName());
+        }
+    }
+
+    //---------------------------------------------------------------------------
+
+	public String getContentType()
 	{
-		String path = response.getAttributeValue("path");
+		String path = element.getAttributeValue("path");
 		if (path == null) return null;
 		return getContentType(path);
 	}
 
 	//---------------------------------------------------------------------------
 
-	public static String getContentLength(Element response)
+	public String getContentLength()
 	{
-		String path = response.getAttributeValue("path");
+		String path = element.getAttributeValue("path");
 		if (path == null) return null;
 		String length = "-1";
 		if (!remoteFile) {
@@ -197,13 +197,13 @@ public final class BinaryFile
 
 	//---------------------------------------------------------------------------
 
-	public static void removeIfTheCase(Element response)
+	public void removeIfTheCase()
 	{
-		boolean remove = "y".equals(response.getAttributeValue("remove"));
+		boolean remove = "y".equals(element.getAttributeValue("remove"));
 
 		if (remove)
 		{
-			String path = response.getAttributeValue("path");
+			String path = element.getAttributeValue("path");
 			File file = new File(path);
             if (!file.delete() && file.exists()) {
                 Log.warning(Log.JEEVES, "["+BinaryFile.class.getName()+"#removeIfTheCase]"+"Unable to remove binary file after sending to user.");
@@ -213,12 +213,11 @@ public final class BinaryFile
 
 	//---------------------------------------------------------------------------
 
-	public static String getContentDisposition(Element response)
+	public String getContentDisposition()
 	{
-		String name = response.getAttributeValue("name");
-		if (name == null)
-		{
-			name = response.getAttributeValue("path");
+		String name = element.getAttributeValue("name");
+		if (name == null) {
+			name = element.getAttributeValue("path");
 			if (name == null) return null;
 			name = new File(name).getName();
 		}
@@ -228,15 +227,7 @@ public final class BinaryFile
 
 	//---------------------------------------------------------------------------
 
-	public static int getResponseCode(Element response)
-	{
-		return Integer.parseInt(response.getAttributeValue("responseCode"));
-	}
-
-	//---------------------------------------------------------------------------
-
-	public static void write(Element response, OutputStream output) throws IOException
-	{
+	public void write(OutputStream output) throws IOException {
 		//----------------------------------------------------------------------
 		// Local class required by jsch for scp
 		class MyUserInfo implements UserInfo {
@@ -291,7 +282,7 @@ public final class BinaryFile
     	}
 		}
 
-		String path = response.getAttributeValue("path");
+		String path = element.getAttributeValue("path");
 		if (path == null) return;
 		if (!remoteFile) {
 			File f = new File(path);
@@ -351,8 +342,7 @@ public final class BinaryFile
 	//----------------------------------------------------------------------------
 	// copies an input stream from a JSch object to an output stream
 
-	private static int checkAck(InputStream in) throws IOException
-  {
+	private static int checkAck(InputStream in) throws IOException {
     int b=in.read();
     // b may be 0 for success,
     //          1 for error,
@@ -469,21 +459,6 @@ public final class BinaryFile
 		}
 	}
 
-	/**
-	 * Copy a directory from one location to another.
-	 * 
-	 * @param sourceLocation
-	 * @param targetLocation
-	 * @throws IOException
-	 */
-	public static void copyDirectory(Path sourceLocation, Path targetLocation) throws IOException {
-        IO.copyDirectoryOrFile(sourceLocation, targetLocation);
-    }
-
-    private static void copyFile(Path file, Path destFile) throws IOException {
-        IO.copyDirectoryOrFile(file, destFile);
-    }
-
     //----------------------------------------------------------------------------
 	// Returns the mime-type corresponding to the given file extension
 
@@ -520,10 +495,9 @@ public final class BinaryFile
 			return("application/binary");
 	}
 
-    public static void copy(Path srcFile, Path destFile) throws IOException {
-        IO.copyDirectoryOrFile(srcFile, destFile);
+    public Element getElement() {
+        return element;
     }
-
 }
 
 //=============================================================================

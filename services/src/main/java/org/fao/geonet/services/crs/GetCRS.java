@@ -50,7 +50,7 @@ public class GetCRS implements Service {
 
 	/**
 	 * Get CRS
-	 * 
+	 *
 	 * @param params
 	 *            Parameter "id" is a list of word separated by spaces.
 	 */

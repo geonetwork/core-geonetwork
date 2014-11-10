@@ -32,8 +32,11 @@ import org.springframework.context.ConfigurableApplicationContext;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystem;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +44,7 @@ import java.util.UUID;
 import javax.sql.DataSource;
 
 import static org.fao.geonet.constants.Geonet.Config.LANGUAGE_PROFILES_DIR;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -73,7 +77,9 @@ public class GeonetTestFixture {
 
     public void tearDown() throws IOException {
         IO.setFileSystemThreadLocal(null);
-        currentFs.close();
+        if (currentFs != null) {
+            currentFs.close();
+        }
     }
     public void setup(AbstractCoreIntegrationTest test) throws Exception {
         final Path webappDir = AbstractCoreIntegrationTest.getWebappDir(test.getClass());
@@ -86,7 +92,7 @@ public class GeonetTestFixture {
                     templateFs = Jimfs.newFileSystem("template", Configuration.unix());
                     templateDataDirectory = templateFs.getPath("data");
                     IO.copyDirectoryOrFile(webappDir.resolve("WEB-INF/data"), templateDataDirectory);
-                    Path schemaPluginsDir = templateFs.getPath("config/schema_plugins");
+                    Path schemaPluginsDir = templateDataDirectory.resolve("config/schema_plugins");
                     deploySchema(webappDir, schemaPluginsDir);
                     LanguageDetector.init(AbstractCoreIntegrationTest.getWebappDir(test.getClass()).resolve(_applicationContext.getBean
                             (LANGUAGE_PROFILES_DIR, String.class)));
@@ -240,5 +246,50 @@ public class GeonetTestFixture {
 
     public Path getDataDirContainer() {
         return this._dataDirContainer;
+    }
+
+    public void assertCorrectDataDir() throws Exception {
+        synchronized (GeonetTestFixture.class) {
+            final GeonetworkDataDirectory dataDirectory = _applicationContext.getBean(GeonetworkDataDirectory.class);
+            final SchemaManager newSM = initSchemaManager(dataDirectory.getWebappDir(), dataDirectory);
+            assertEquals("Expected Schemas: " + templateSchemaManager.getSchemas() + "\nActual Schemas: "+ newSM.getSchemas(),
+                    templateSchemaManager.getSchemas().size(), newSM.getSchemas().size());
+            for (String templateName : templateSchemaManager.getSchemas()) {
+                assertTrue(templateName, newSM.existsSchema(templateName));
+            }
+
+            Files.walkFileTree(templateDataDirectory, new CompareDataDirectory(templateDataDirectory, _dataDirectory));
+            Files.walkFileTree(_dataDirectory, new CompareDataDirectory(_dataDirectory, templateDataDirectory));
+        }
+    }
+
+    private static final class CompareDataDirectory extends SimpleFileVisitor<Path> {
+        private final Path _dataDirectory;
+        private final Path templateDataDirectory;
+
+        public CompareDataDirectory(Path templateDataDirectory, Path dataDirectory) {
+            this._dataDirectory = dataDirectory;
+            this.templateDataDirectory = templateDataDirectory;
+        }
+
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            final Path path = IO.relativeFile(templateDataDirectory, file, _dataDirectory);
+            assertTrue(file.toString(), Files.exists(path));
+            if (file.getFileName().toString().equals("schemaplugin-uri-catalog.xml")) {
+                // this file has different paths so it is naturally different.  check it is non-null and move on
+                assertTrue(Files.size(file) > 0);
+            } else {
+                assertEquals(file.toString(), Files.size(file), Files.size(path));
+            }
+            return FileVisitResult.CONTINUE;
+        }
+
+        @Override
+        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+            final Path path = IO.relativeFile(templateDataDirectory, dir, _dataDirectory);
+            assertTrue(dir.toString(), Files.exists(path));
+            return FileVisitResult.CONTINUE;
+        }
     }
 }

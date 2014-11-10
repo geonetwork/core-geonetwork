@@ -79,7 +79,7 @@ public class Convert implements Service
 
 		//--- get metadata info and create an env that works with oai translators
         final Metadata metadata = context.getBean(MetadataRepository.class).findOne(id);
-		String schemaDir = sm.getSchemaDir(metadata.getDataInfo().getSchemaId());
+		Path  schemaDir = sm.getSchemaDir(metadata.getDataInfo().getSchemaId());
         final String baseUrl = context.getBaseUrl();
         final ISODate changeDate = metadata.getDataInfo().getChangeDate();
         final String uuid = metadata.getUuid();
