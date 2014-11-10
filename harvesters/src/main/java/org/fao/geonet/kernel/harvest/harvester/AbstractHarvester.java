@@ -23,8 +23,20 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
+import static org.quartz.JobKey.jobKey;
+
+import java.io.File;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
 import jeeves.server.UserSession;
-import jeeves.server.context.BasicContext;
 import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.lang.StringUtils;
@@ -33,7 +45,12 @@ import org.apache.log4j.PatternLayout;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.HarvestHistory;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.JeevesException;
@@ -44,7 +61,11 @@ import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.Common.Status;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.HarvestHistoryRepository;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.services.harvesting.notifier.SendNotification;
@@ -59,19 +80,6 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specifications;
-
-import java.io.File;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
-import static org.quartz.JobKey.jobKey;
 
 /**
  * Represents a harvester job. Used to launch harvester workers.
@@ -102,7 +110,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         }
 
         try {
-            AbstractHarvester ah = context.getApplicationContext().getBean(type, AbstractHarvester.class);
+            AbstractHarvester<?> ah = context.getApplicationContext().getBean(type, AbstractHarvester.class);
             ah.setContext(context);
 
             return ah;

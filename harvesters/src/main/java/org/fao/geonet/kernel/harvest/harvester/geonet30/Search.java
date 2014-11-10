@@ -21,7 +21,7 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester.geonet;
+package org.fao.geonet.kernel.harvest.harvester.geonet30;
 
 import java.util.Iterator;
 
@@ -64,7 +64,7 @@ class Search
 		sourceName = Util.getParam(source, "name", "");
 	}
 
-	//----------------------------------------------------	-----------------------
+	//---------------------------------------------------------------------------
 	//---
 	//--- API methods
 	//---

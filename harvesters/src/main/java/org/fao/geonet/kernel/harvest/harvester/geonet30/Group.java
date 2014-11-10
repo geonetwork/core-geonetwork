@@ -21,11 +21,16 @@
 //===	Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 
-package org.fao.geonet.kernel.harvest.harvester;
+package org.fao.geonet.kernel.harvest.harvester.geonet30;
+
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.MissingParameterEx;
+import org.jdom.Element;
 
 //=============================================================================
 
-class Executor extends Thread
+class Group
 {
 	//---------------------------------------------------------------------------
 	//---
@@ -33,12 +38,34 @@ class Executor extends Thread
 	//---
 	//---------------------------------------------------------------------------
 
-	public Executor(AbstractHarvester<?> ah)
+	Group() {}
+
+	//---------------------------------------------------------------------------
+
+	public Group(Element group) throws BadInputEx
 	{
-		terminate  = false;
-		status     = WAITING;
-		harvester  = ah;
-		timeout    = -1;
+		name = group.getAttributeValue("name");
+
+		if (name == null)
+			throw new MissingParameterEx("attribute:name", group);
+
+		String t = group.getAttributeValue("policy");
+
+		if (t == null)
+			throw new MissingParameterEx("attribute:policy", group);
+
+		policy = CopyPolicy.parse(t);
+
+		if (policy == null)
+			throw new BadParameterEx("attribute:policy", policy);
+
+		//--- '1' is the 'All' group
+
+		if (policy == CopyPolicy.COPY_TO_INTRANET && !isAllGroup())
+			throw new BadParameterEx("attribute:policy", policy);
+
+		if (policy == CopyPolicy.CREATE_AND_COPY && isAllGroup())
+			throw new BadParameterEx("attribute:policy", policy);
 	}
 
 	//---------------------------------------------------------------------------
@@ -47,68 +74,19 @@ class Executor extends Thread
 	//---
 	//---------------------------------------------------------------------------
 
-	public void setTimeout(int minutes)
+	public Group copy()
 	{
-		timeout = minutes;
+		Group m = new Group();
+
+		m.name   = name;
+		m.policy = policy;
+
+		return m;
 	}
 
 	//---------------------------------------------------------------------------
 
-	public void terminate()
-	{
-		terminate = true;
-		interrupt();
-		harvester = null;
-	}
-
-	//---------------------------------------------------------------------------
-
-	public boolean isRunning() { return status == RUNNING; }
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Executor's main loop
-	//---
-	//---------------------------------------------------------------------------
-
-	public void run()
-	{
-		while (!terminate)
-		{
-			if (timeout == -1)
-				await(1);
-			else
-			{
-				await(timeout);
-
-				if (!terminate && harvester != null)
-				{
-					status = RUNNING;
-					harvester.harvest();
-					status = WAITING;
-				}
-			}
-		}
-	}
-
-	//---------------------------------------------------------------------------
-	//---
-	//--- Private methods
-	//---
-	//---------------------------------------------------------------------------
-
-	private boolean await(int minutes)
-	{
-		try
-		{
-			sleep((long)minutes * 60 * 1000);
-			return false;
-		}
-		catch (InterruptedException e)
-		{
-			return true;
-		}
-	}
+	public boolean isAllGroup() { return name.equals("all"); }
 
 	//---------------------------------------------------------------------------
 	//---
@@ -116,16 +94,44 @@ class Executor extends Thread
 	//---
 	//---------------------------------------------------------------------------
 
-	private static final int WAITING = 0;
-	private static final int RUNNING = 1;
+	public String     name;
+	public CopyPolicy policy;
 
 	//---------------------------------------------------------------------------
+	//---
+	//--- CopyType
+	//---
+	//---------------------------------------------------------------------------
 
-	private boolean terminate;
-	private int     status;
-	private int     timeout;
+	public enum CopyPolicy
+	{
+		COPY("copy"),
+		CREATE_AND_COPY("createAndCopy"),
+		COPY_TO_INTRANET("copyToIntranet");
 
-	private AbstractHarvester<?> harvester;
+		//------------------------------------------------------------------------
+
+		private CopyPolicy(String policy) { this.policy = policy; }
+
+		//------------------------------------------------------------------------
+
+		public String toString() { return policy; }
+
+		//------------------------------------------------------------------------
+
+		public static CopyPolicy parse(String policy)
+		{
+			if (policy.equals(COPY            .toString())) return COPY;
+			if (policy.equals(CREATE_AND_COPY .toString())) return CREATE_AND_COPY;
+			if (policy.equals(COPY_TO_INTRANET.toString())) return COPY_TO_INTRANET;
+
+			return null;
+		}
+
+		//------------------------------------------------------------------------
+
+		private String policy;
+	}
 }
 
 //=============================================================================

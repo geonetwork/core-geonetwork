@@ -351,6 +351,8 @@
     "harvester-geonetwork": "GeoNetwork",
     "harvester-geonetwork20": "GeoNetwork (Old node)",
     "harvester-geonetwork20Help": "Harvest GeoNetwork node in 2.0 or lower version. Please notice that harvesting old GeoNetwork nodes is unsafe. The old nodes do not have unique site ids and this could cause unpredictable results (like removing nodes from other harvestings).",
+    "harvester-geonetwork30": "GeoNetwork 3.x",
+    "harvester-geonetwork30Help": "Harvest GeoNetwork node in 3.x version.",
     "harvester-geonetworkHelp": "Harvest from another GeoNetwork catalog.",
     "harvester-oaipmh": "OAI/PMH",
     "harvester-oaipmhHelp": "Harvest using OAI Protocol for metadata harvesting 2.0",

@@ -11,6 +11,7 @@
     <!-- The id of the beans is the same as the type in the harvester settings table and thus should not be changed -->
     <bean id="geonetwork" class="org.fao.geonet.kernel.harvest.harvester.geonet.GeonetHarvester" scope="prototype"/>
     <bean id="geonetwork20" class="org.fao.geonet.kernel.harvest.harvester.geonet20.Geonet20Harvester" scope="prototype"/>
+    <bean id="geonetwork30" class="org.fao.geonet.kernel.harvest.harvester.geonet30.GeonetHarvester" scope="prototype"/>
     <bean id="geoPREST" class="org.fao.geonet.kernel.harvest.harvester.geoPREST.GeoPRESTHarvester" scope="prototype"/>
     <bean id="webdav" class="org.fao.geonet.kernel.harvest.harvester.webdav.WebDavHarvester" scope="prototype"/>
     <bean id="csw" class="org.fao.geonet.kernel.harvest.harvester.csw.CswHarvester" scope="prototype"/>
