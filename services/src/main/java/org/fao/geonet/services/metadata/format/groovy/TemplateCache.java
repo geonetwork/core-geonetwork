@@ -109,7 +109,9 @@ public class TemplateCache {
             if (fromParentSchema == null) {
                 fromParentSchema = fromParentSchema(formatterDir, schemaDir, path);
             }
-            file = fromParentSchema;
+            if (fromParentSchema != null) {
+                file = fromParentSchema;
+            }
         }
         if (!file.exists()) {
             file = new File(rootFormatterDir, path);
