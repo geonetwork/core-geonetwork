@@ -219,6 +219,7 @@
               metadata: options.metadata,
               label: options.label,
               group: options.group,
+              isNcwms: options.isNcwms,
               cextent: options.extent
             });
             goDecorateLayer(olLayer);
@@ -262,6 +263,15 @@
               if(angular.isArray(layer.MetadataURL)) {
                 metadata = layer.MetadataURL[0].OnlineResource;
               }
+              var isNcwms = false;
+              if(angular.isArray(layer.Dimension)) {
+                for (var i=0;i<layer.Dimension.length;i++) {
+                  if(layer.Dimension[i].name == 'elevation') {
+                    isNcwms = true;
+                    break;
+                  }
+                }
+              }
 
               return this.addWmsToMap(map, {
                     LAYERS: layer.Name
@@ -272,6 +282,7 @@
                     legend: legend,
                     group: layer.group,
                     metadata: metadata,
+                    isNcwms: isNcwms,
                     extent: gnOwsCapabilities.getLayerExtentFromGetCap(map, layer)
                   }
               );
