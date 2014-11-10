@@ -35,16 +35,16 @@ public class TemplateCacheTest {
         String[] stagingProfiles = {SystemInfo.STAGE_TESTING, SystemInfo.STAGE_DEVELOPMENT, SystemInfo.STAGE_PRODUCTION};
 
         final File file0 = new File(FormatIntegrationTest.class.getResource("template-cache-test/formatter/file0.html").getFile());
-        final File file1 = new File(FormatIntegrationTest.class.getResource("template-cache-test/schema1/file1.html").getFile());
-        final File file2 = new File(FormatIntegrationTest.class.getResource("template-cache-test/schema2/file2.html").getFile());
+        final File file1 = new File(FormatIntegrationTest.class.getResource("template-cache-test/schema1/formatter/file1.html").getFile());
+        final File file2 = new File(FormatIntegrationTest.class.getResource("template-cache-test/schema2/formatter/file2.html").getFile());
         final File file3 = new File(FormatIntegrationTest.class.getResource("template-cache-test/file3.html").getFile());
 
         for (String profile : stagingProfiles) {
             final TemplateCache templateCache = new TemplateCache();
             templateCache.systemInfo = SystemInfo.createForTesting(profile);
             templateCache.schemaManager = Mockito.mock(SchemaManager.class);
-            Mockito.when(templateCache.schemaManager.getSchemaDir("schema1")).thenReturn(file1.getParentFile().getAbsolutePath());
-            Mockito.when(templateCache.schemaManager.getSchemaDir("schema2")).thenReturn(file2.getParentFile().getAbsolutePath());
+            Mockito.when(templateCache.schemaManager.getSchemaDir("schema1")).thenReturn(file1.getParentFile().getParentFile().getAbsolutePath());
+            Mockito.when(templateCache.schemaManager.getSchemaDir("schema2")).thenReturn(file2.getParentFile().getParentFile().getAbsolutePath());
             templateCache.init();
 
             final File schemaAndRootDir = file0.getParentFile().getParentFile();

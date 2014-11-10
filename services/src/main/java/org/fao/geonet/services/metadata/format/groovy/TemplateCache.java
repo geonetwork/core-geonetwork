@@ -8,6 +8,7 @@ import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.services.metadata.format.ConfigFile;
+import org.fao.geonet.services.metadata.format.FormatterConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -140,7 +141,7 @@ public class TemplateCache {
 
         final String schemaName = configFile.dependOn();
         if (schemaName != null) {
-            File parentSchema = new File(this.schemaManager.getSchemaDir(schemaName));
+            File parentSchema = new File(this.schemaManager.getSchemaDir(schemaName), FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR);
 
             File file = new File(parentSchema, path);
             if (file.exists()) {
