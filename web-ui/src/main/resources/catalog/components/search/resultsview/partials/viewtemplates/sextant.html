@@ -42,11 +42,11 @@
           <li ng-repeat="link in downloads">
             <a href="" ng-click="resultviewFns.addMdLayerToPanier(link, md)">
               <span class="fa fa-file-zip-o" ng-if="link.contentType=='application/zip'"></span>
-              {{link.desc}} </a></li>
+              {{link.desc || (link.name + ' - ' + link.contentType) }} </a></li>
         </ul>
       </div>
       <button type="button" class="btn btn-default btn-sm"
-              ng-if="layers.length == 1" ng-click="resultviewFns.addMdLayerToPanier(downloads[0], md)">
+              ng-if="downloads.length == 1" ng-click="resultviewFns.addMdLayerToPanier(downloads[0], md)">
         <span class="fa fa-download"></span>
         <span translate>download</span>
       </button>
