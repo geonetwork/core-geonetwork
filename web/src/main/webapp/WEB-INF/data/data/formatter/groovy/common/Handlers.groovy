@@ -134,11 +134,11 @@ public class Handlers {
     <link rel="stylesheet" href="../../static/metadata_formatter.css"/>
 </head>
 <body>
-<div class="container" gn-metadata="">
+<div class="container gn-metadata-view">
 '''
         } else {
             return '''
-<div class="container" gn-metadata="">
+<div class="gn-metadata-view">
 '''
         }
     }
