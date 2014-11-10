@@ -26,8 +26,9 @@
     'gnMap',
     'gnThesaurusService',
      'sxtGlobals',
+      'gnNcWms',
     function($scope, $location, suggestService, $http, gnSearchSettings,
-        gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals) {
+        gnViewerSettings, gnMap, gnThesaurusService, sxtGlobals, gnNcWms) {
 
       var viewerMap = gnSearchSettings.viewerMap;
       var searchMap = gnSearchSettings.searchMap;
@@ -89,6 +90,14 @@
           setTimeout(function(){
             searchMap.updateSize();
           }, 0);
+        }
+      });
+
+      //Check if a added layer is NcWMS
+      viewerMap.getLayers().on('add', function(e) {
+        var layer = e.element;
+        if(layer.get('isNcwms') == true) {
+          gnNcWms.feedOlLayer(layer);
         }
       });
 
