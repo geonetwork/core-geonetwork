@@ -141,8 +141,8 @@
       return {
         restrict: 'A',
         link: function (scope, element, attrs) {
-          element.find('.btn-group button').bind('click', function() {
-            element.find('.btn-group button').removeClass('active');
+          element.find('.btn-group.flux button').bind('click', function() {
+            element.find('.btn-group.flux button').removeClass('active');
             element.addClass('active');
             $(this).addClass('active');
             element.find('.layers').addClass('collapsed');
