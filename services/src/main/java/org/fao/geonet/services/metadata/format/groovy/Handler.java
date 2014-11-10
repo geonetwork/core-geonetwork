@@ -63,11 +63,13 @@ public abstract class Handler extends Selectable implements Comparable<Handler> 
     }
 
     protected static void createPath(GPathResult element, StringBuilder path) {
-        if (element.parent() != element) {
-            createPath(element.parent(), path);
-            path.append(">");
+        if(element != null) {
+            if (element.parent() != element) {
+                createPath(element.parent(), path);
+                path.append(">");
+            }
+            path.append(element.name());
         }
-        path.append(element.name());
     }
 
     @Override
