@@ -25,6 +25,9 @@ public class Logging {
     }
 
     public static String createPath(GPathResult element) {
+        if (element == null) {
+            return "null";
+        }
         StringBuilder pathBuilder = new StringBuilder();
         Handler.createPath(element, pathBuilder);
         String rootPath = "";

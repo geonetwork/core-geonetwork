@@ -1,7 +1,9 @@
 package org.fao.geonet.services.metadata.format;
 
 import jeeves.server.context.ServiceContext;
+import org.apache.log4j.Level;
 import org.eclipse.jetty.util.IO;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
@@ -82,6 +84,35 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request, new MockHttpServletResponse());
+    }
+    @Test
+    public void testLoggingNullPointerBug() throws Exception {
+        final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(Geonet.FORMATTER);
+        Level level = logger.getLevel();
+        logger.setLevel(Level.ALL);
+        try {
+            final FormatterParams fparams = new FormatterParams();
+            fparams.context = this.serviceContext;
+            fparams.params = Collections.emptyMap();
+            // make sure context is cleared
+            EnvironmentProxy.setCurrentEnvironment(fparams, mapper);
+
+
+            final String formatterName = "logging-null-pointer";
+            final URL testFormatterViewFile = FormatIntegrationTest.class.getResource(formatterName + "/view.groovy");
+            final File testFormatter = new File(testFormatterViewFile.getFile()).getParentFile();
+            IO.copy(testFormatter, new File(this.dataDirectory.getFormatterDir(), formatterName));
+            final String functionsXslName = "functions.xsl";
+            IO.copy(new File(testFormatter.getParentFile(), functionsXslName), new File(this.dataDirectory.getFormatterDir(), functionsXslName));
+
+
+            MockHttpServletRequest request = new MockHttpServletRequest();
+            formatService.exec("eng", "html", "" + id, null, formatterName, null, null, request, new MockHttpServletResponse());
+
+            // no Error is success
+        } finally {
+            logger.setLevel(level);
+        }
     }
     @Test
     public void testExec() throws Exception {
