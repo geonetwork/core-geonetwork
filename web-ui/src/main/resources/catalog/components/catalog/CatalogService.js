@@ -471,8 +471,15 @@
         angular.forEach(this.link, function(link) {
           var linkInfo = formatLink(link);
           types.forEach(function(type) {
-            if (linkInfo.protocol.indexOf(type) >= 0) {
-              ret.push(linkInfo);
+            if(type.substr(0,1) == '#') {
+              if (linkInfo.protocol == type.substr(1,type.length-1)) {
+                ret.push(linkInfo);
+              }
+            }
+            else {
+              if (linkInfo.protocol.indexOf(type) >= 0) {
+                ret.push(linkInfo);
+              }
             }
           });
         });
