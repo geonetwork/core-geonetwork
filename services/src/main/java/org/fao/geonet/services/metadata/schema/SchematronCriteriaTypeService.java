@@ -18,9 +18,9 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
@@ -128,7 +128,7 @@ public class SchematronCriteriaTypeService implements Service {
         Element criteriaTypeTranslations;
         try {
             criteriaTypeTranslations = cacheManager.get(context, true, schemaDir.resolve("loc"), translationFile, context.getLanguage(), Geonet.DEFAULT_LANGUAGE);
-        } catch (FileNotFoundException e) {
+        } catch (NoSuchFileException e) {
             // there is a case where the schematron plugin doesn't have any translations for the criteria (maybe there aren't any criteria).
             criteriaTypeTranslations = new Element("strings");
         }

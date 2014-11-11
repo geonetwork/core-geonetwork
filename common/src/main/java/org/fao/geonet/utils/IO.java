@@ -43,6 +43,8 @@ import java.sql.Statement;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 //=============================================================================
 
@@ -109,7 +111,20 @@ public final class IO {
             }
         }
     }
-    public static void copyDirectoryOrFile(final Path from, final Path to) throws IOException {
+    public static void copyDirectoryOrFile(@Nonnull final Path from,
+                                           @Nonnull final Path to) throws IOException {
+        copyDirectoryOrFile(from, to, null);
+    }
+
+    /**
+     * Copy a file or directories from the from path to the to path.
+     * @param from the source
+     * @param to the destination
+     * @param filter a filter to control which files to copy.  May be null
+     * @throws IOException
+     */
+    public static void copyDirectoryOrFile(@Nonnull final Path from,
+                                           @Nonnull final Path to, @Nullable final DirectoryStream.Filter<Path> filter) throws IOException {
         Objects.requireNonNull(from);
         Objects.requireNonNull(to);
 
@@ -126,25 +141,19 @@ public final class IO {
 
         if (Files.isDirectory(from)) {
             Assert.isTrue(!Files.isRegularFile(actualTo), "cannot copy a directory to a file. From: " + from + " to " + actualTo);
-            Files.walkFileTree(from, new SimpleFileVisitor<Path>(){
-                @Override
-                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                    Files.createDirectory(relativeFile(from, dir, actualTo));
-                    return FileVisitResult.CONTINUE;
-                }
-
-                @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    Files.copy(file, relativeFile(from, file, actualTo));
-                    return FileVisitResult.CONTINUE;
-                }
-            });
-        } else {
-            final Path parent = actualTo.getParent();
-            if (!Files.exists(parent)) {
-                Files.createDirectories(parent);
+            if (filter == null) {
+                Files.walkFileTree(from, new CopyAllFiles(from, actualTo));
+            } else {
+                Files.walkFileTree(from, new CopyAcceptedFiles(from, actualTo, filter));
             }
-            Files.copy(from, actualTo);
+        } else {
+            if (filter == null || filter.accept(from)) {
+                final Path parent = actualTo.getParent();
+                if (!Files.exists(parent)) {
+                    Files.createDirectories(parent);
+                }
+                Files.copy(from, actualTo);
+            }
         }
     }
 
@@ -233,7 +242,7 @@ public final class IO {
         defaultFsThreadLocal.set(newFileSystem);
     }
 
-    public static void printDirectoryTree(Path dir) throws IOException {
+    public static void printDirectoryTree(Path dir, final boolean printFileSize) throws IOException {
         Files.walkFileTree(dir, new SimpleFileVisitor<Path>(){
             int depth = 0;
 
@@ -250,6 +259,10 @@ public final class IO {
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 StringBuilder builder = newStringBuilder();
                 builder.append("- ").append(file.getFileName());
+                if (printFileSize) {
+                    final int KB = 1024;
+                    builder.append(" (").append(Files.size(file) / KB).append(" kb)");
+                }
                 System.out.println(builder.toString());
                 return FileVisitResult.CONTINUE;
             }
@@ -268,6 +281,62 @@ public final class IO {
                 return FileVisitResult.CONTINUE;
             }
         });
+    }
+
+    private static class CopyAllFiles extends SimpleFileVisitor<Path> {
+        private final Path from;
+        private final Path actualTo;
+
+        public CopyAllFiles(Path from, Path actualTo) {
+            this.from = from;
+            this.actualTo = actualTo;
+        }
+
+        @Override
+        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+            Files.createDirectory(relativeFile(from, dir, actualTo));
+            return FileVisitResult.CONTINUE;
+        }
+
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            Files.copy(file, relativeFile(from, file, actualTo));
+            return FileVisitResult.CONTINUE;
+        }
+    }
+    private static class CopyAcceptedFiles extends SimpleFileVisitor<Path> {
+        private final Path from;
+        private final Path actualTo;
+        private final DirectoryStream.Filter<Path> filter;
+
+        public CopyAcceptedFiles(@Nonnull Path from, @Nonnull Path actualTo, @Nonnull DirectoryStream.Filter<Path> filter) {
+            this.from = from;
+            this.actualTo = actualTo;
+            this.filter = filter;
+        }
+
+        @Override
+        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+            Files.createDirectory(relativeFile(from, dir, actualTo));
+            return FileVisitResult.CONTINUE;
+        }
+
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            if (filter.accept(file)) {
+                Files.copy(file, relativeFile(from, file, actualTo));
+            }
+            return FileVisitResult.CONTINUE;
+        }
+
+        @Override
+        public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+            final Path destDir = relativeFile(from, dir, actualTo);
+            if (IO.isEmptyDir(destDir)) {
+                Files.delete(destDir);
+            }
+            return FileVisitResult.CONTINUE;
+        }
     }
 }
 

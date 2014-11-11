@@ -9,6 +9,7 @@ import org.fao.geonet.domain.Source;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.DirectoryFactory;
@@ -19,6 +20,7 @@ import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.TransformerFactoryFactory;
+import org.fao.geonet.utils.Xml;
 import org.geotools.data.DataStore;
 import org.geotools.feature.AttributeTypeBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
@@ -29,6 +31,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystem;
@@ -91,7 +94,16 @@ public class GeonetTestFixture {
                 if (templateFs == null) {
                     templateFs = Jimfs.newFileSystem("template", Configuration.unix());
                     templateDataDirectory = templateFs.getPath("data");
-                    IO.copyDirectoryOrFile(webappDir.resolve("WEB-INF/data"), templateDataDirectory);
+                    IO.copyDirectoryOrFile(webappDir.resolve("WEB-INF/data"), templateDataDirectory, new DirectoryStream.Filter<Path>() {
+                        @Override
+                        public boolean accept(Path entry) throws IOException {
+                            return !entry.toString().contains("schema_plugins") &&
+                                   !entry.getFileName().toString().startsWith(".") &&
+                                   !entry.getFileName().toString().endsWith(".iml") &&
+                                   !entry.toString().contains("metadata_data") &&
+                                   !entry.toString().contains("resources" + File.separator + "xml");
+                        }
+                    });
                     Path schemaPluginsDir = templateDataDirectory.resolve("config/schema_plugins");
                     deploySchema(webappDir, schemaPluginsDir);
                     LanguageDetector.init(AbstractCoreIntegrationTest.getWebappDir(test.getClass()).resolve(_applicationContext.getBean
@@ -105,6 +117,7 @@ public class GeonetTestFixture {
 
                     _applicationContext.getBean(LuceneConfig.class).configure("WEB-INF/config-lucene.xml");
                     _applicationContext.getBean(SearchManager.class).init(false, false, "", 100);
+                    Files.createDirectories(templateDataDirectory.resolve("data/resources/htmlcache"));
                 }
             }
         }
@@ -252,14 +265,29 @@ public class GeonetTestFixture {
         synchronized (GeonetTestFixture.class) {
             final GeonetworkDataDirectory dataDirectory = _applicationContext.getBean(GeonetworkDataDirectory.class);
             final SchemaManager newSM = initSchemaManager(dataDirectory.getWebappDir(), dataDirectory);
+            final SchemaManager thisContextSM = _applicationContext.getBean(SchemaManager.class);
+
+
+            Xml.loadFile(templateSchemaManager.getSchemaDir("iso19139").resolve("schematron/criteria-type.xml"));
+            Xml.loadFile(newSM.getSchemaDir("iso19139").resolve("schematron/criteria-type.xml"));
+            Xml.loadFile(thisContextSM.getSchemaDir("iso19139").resolve("schematron/criteria-type.xml"));
+
             assertEquals("Expected Schemas: " + templateSchemaManager.getSchemas() + "\nActual Schemas: "+ newSM.getSchemas(),
                     templateSchemaManager.getSchemas().size(), newSM.getSchemas().size());
+            assertEquals("Expected Schemas: " + templateSchemaManager.getSchemas() + "\nActual Schemas: "+ thisContextSM.getSchemas(),
+                    templateSchemaManager.getSchemas().size(), thisContextSM.getSchemas().size());
             for (String templateName : templateSchemaManager.getSchemas()) {
                 assertTrue(templateName, newSM.existsSchema(templateName));
+                assertTrue(templateName, thisContextSM.existsSchema(templateName));
+                Path thisContextSchemaDir = thisContextSM.getSchemaDir(templateName);
+                final Path templateSchemaDir = templateSchemaManager.getSchemaDir(templateName);
+                Files.walkFileTree(thisContextSchemaDir, new CompareDataDirectory(thisContextSchemaDir, templateSchemaDir));
+                Files.walkFileTree(templateSchemaDir, new CompareDataDirectory(templateSchemaDir, thisContextSchemaDir));
             }
 
             Files.walkFileTree(templateDataDirectory, new CompareDataDirectory(templateDataDirectory, _dataDirectory));
             Files.walkFileTree(_dataDirectory, new CompareDataDirectory(_dataDirectory, templateDataDirectory));
+
         }
     }
 
