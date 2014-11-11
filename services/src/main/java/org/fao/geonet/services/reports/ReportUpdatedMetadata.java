@@ -75,18 +75,22 @@ public class ReportUpdatedMetadata implements Service {
         // Process the records
         for (Metadata metadata : records) {
             User userOwner = context.getBean(UserRepository.class).findOne(metadata.getSourceInfo().getOwner());
-            Group groupOwner = context.getBean(GroupRepository.class).findOne(metadata.getSourceInfo().getGroupOwner());
+            final Integer mdGroupOwner = metadata.getSourceInfo().getGroupOwner();
+            String groupOwnerName = "";
+            String groupOwnerMail = "";
+            if (mdGroupOwner != null) {
+                Group groupOwner = context.getBean(GroupRepository.class).findOne(mdGroupOwner);
+                groupOwnerName = (groupOwner.getLabelTranslations().get(context.getLanguage()) != null?
+                        groupOwner.getLabelTranslations().get(context.getLanguage()): groupOwner.getName());
+                groupOwnerMail = (groupOwner.getEmail() != null?groupOwner.getEmail():"");
+            }
 
             String userOwnerUsername= userOwner.getUsername();
             String userOwnerName= (userOwner.getName() != null?userOwner.getName():"");
             String userOwnerSurname= (userOwner.getSurname() != null?userOwner.getSurname():"");
             String userOwnerMail = (userOwner.getEmail() != null?userOwner.getEmail():"");
 
-            String groupOwnerName = (groupOwner.getLabelTranslations().get(context.getLanguage()) != null?
-                    groupOwner.getLabelTranslations().get(context.getLanguage()): groupOwner.getName());
-            String groupOwnerMail = (groupOwner.getEmail() != null?groupOwner.getEmail():"");
             String mdTitle = ReportUtils.retrieveMetadataTitle(context, metadata.getId());
-
 
             // Build the record element with the information for the report
             Element metadataEl = new Element("record");
