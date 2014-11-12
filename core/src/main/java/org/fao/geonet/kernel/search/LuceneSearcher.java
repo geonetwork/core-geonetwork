@@ -1399,7 +1399,7 @@ public class LuceneSearcher extends MetaSearcher implements MetadataRecordSelect
                     }
                     elSummary.addContent(facetsSummaryElement);
                 } else {
-                    Log.warning(
+                    Log.debug(
                             Geonet.FACET_ENGINE,
                             "Null facet results for field " + facetConfig.getIndexKey());
                 }

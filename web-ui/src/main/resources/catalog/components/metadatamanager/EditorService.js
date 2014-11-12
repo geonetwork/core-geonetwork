@@ -65,7 +65,28 @@
              }
            }
          };
+         // When adding a new element, the down control
+         // of the previous element must be enabled and
+         // the up control enabled only if the previous
+         // element is not on top.
+         var checkMoveControls = function(element) {
+           var previousElement = element.prev();
+           if (previousElement !== undefined) {
+             var findExp = 'div.gn-move';
+             var previousElementCtrl = $(previousElement
+               .find(findExp).get(0)).children();
 
+             // Up control is enabled if the previous element is
+             // not on top.
+             var upCtrl = previousElementCtrl.get(0);
+             var isTop = isFirstElementOfItsKind(previousElement.get(0));
+             $(upCtrl).toggleClass('invisible', isTop);
+
+             // Down control is on because we have a new element below.
+             var downCtrl = previousElementCtrl.get(1);
+             $(downCtrl).removeClass('invisible');
+           }
+         };
          var setStatus = function(status) {
            gnCurrentEdit.savedStatus = $translate(status.msg);
            gnCurrentEdit.savedTime = moment();
@@ -276,30 +297,6 @@
 
              var attributeAction = attribute ? '&child=geonet:attribute' : '';
 
-
-             // When adding a new element, the down control
-             // of the previous element must be enabled and
-             // the up control enabled only if the previous
-             // element is not on top.
-             var checkMoveControls = function(element) {
-               var previousElement = element.prev();
-               if (previousElement !== undefined) {
-                 var findExp = 'div.gn-move';
-                 var previousElementCtrl = $(previousElement
-                  .find(findExp).get(0)).children();
-
-                 // Up control is enabled if the previous element is
-                 // not on top.
-                 var upCtrl = previousElementCtrl.get(0);
-                 var isTop = isFirstElementOfItsKind(previousElement.get(0));
-                 $(upCtrl).toggleClass('invisible', isTop);
-
-                 // Down control is on because we have a new element below.
-                 var downCtrl = previousElementCtrl.get(1);
-                 $(downCtrl).removeClass('invisible');
-               }
-             };
-
              var defer = $q.defer();
              $http.get(this.buildEditUrlPrefix('md.element.add') +
              '&ref=' + ref + '&name=' + name + attributeAction)
@@ -346,7 +343,15 @@
                var target = $('#gn-el-' + insertRef);
                var snippet = $(data);
 
-               target[position || 'before'](snippet);
+               if (target.hasClass('gn-add-field')) {
+                 target.addClass('gn-extra-field');
+               }
+               snippet.css('display', 'none');   // Hide
+               target[position || 'before'](snippet); // Insert
+               snippet.slideDown(duration, function() {});   // Slide
+
+               // Adapt the move element
+               checkMoveControls(snippet);
 
                $compile(snippet)(gnCurrentEdit.formScope);
                defer.resolve(snippet);

@@ -2,16 +2,16 @@ package org.fao.geonet.kernel;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.sources.http.JeevesServlet;
-import org.fao.geonet.NodeInfo;
+
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ConfigurableApplicationContext;
-
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
+import org.springframework.context.ConfigurableApplicationContext;
 import java.nio.file.Path;
 import java.util.Iterator;
 
@@ -35,11 +35,11 @@ public class GeonetworkDataDirectory {
     /**
      * The full key of the geonetwork data directory.
      */
-    public static final String GEONETWORK_DIR_KEY = "geonetwork.dir";
+	public static final String GEONETWORK_DIR_KEY = "geonetwork.dir";
     /**
      * The id used when registering this object in a spring application context.
      */
-    public static final String GEONETWORK_BEAN_KEY = "GeonetworkDataDirectory";
+	public static final String GEONETWORK_BEAN_KEY = "GeonetworkDataDirectory";
 
     private Path webappDir;
     private Path systemDataDir;
@@ -301,26 +301,37 @@ public class GeonetworkDataDirectory {
     }
 
     /**
-     * Checks if data directory is empty or not. If empty, add mandatory
-     * elements (ie. codelist).
-     */
+	 * Checks if data directory is empty or not. If empty, add mandatory
+	 * elements (ie. codelist).
+	 */
     private void initDataDirectory() throws IOException {
-        Log.info(Geonet.DATA_DIRECTORY, "   - Data directory initialization ...");
+		Log.info(Geonet.DATA_DIRECTORY, "   - Data directory initialization ...");
 
         if (!Files.exists(this.thesauriDir) || IO.isEmptyDir(this.thesauriDir)) {
-            Log.info(Geonet.DATA_DIRECTORY, "     - Copying codelists directory ..." + thesauriDir);
-            try {
+			Log.info(Geonet.DATA_DIRECTORY, "     - Copying codelists directory ..." + thesauriDir);
+			try {
                 final Path srcThesauri = getDefaultDataDir(webappDir).resolve("config").resolve("codelist");
                 IO.copyDirectoryOrFile(srcThesauri, this.thesauriDir);
+			} catch (IOException e) {
+				Log.error(Geonet.DATA_DIRECTORY, "     - Thesaurus copy failed: " + e.getMessage(), e);
+			}
+		}
+
+        // Copy default logo to the harvesting folder
+        File logoDir = new File(this.resourcesDir, "images" + File.separator + "harvesting");
+        if (!logoDir.exists() || logoDir.listFiles().length == 0) {
+            Log.info(Geonet.DATA_DIRECTORY, "     - Copying logos ...");
+            try {
+                BinaryFile.copyDirectory(new File(path, "images" + File.separator + "harvesting"),
+                    logoDir);
             } catch (IOException e) {
-                Log.error(Geonet.DATA_DIRECTORY, "     - Copy failed: " + e.getMessage(), e);
+                Log.error(Geonet.DATA_DIRECTORY, "     - Logo copy failed: " + e.getMessage(), e);
             }
         }
-
         Path schemaCatFile = configDir.resolve(Geonet.File.SCHEMA_PLUGINS_CATALOG);
         if (!Files.exists(schemaCatFile)) {
-            Log.info(Geonet.DATA_DIRECTORY, "     - Copying schema plugin catalogue ...");
-            try {
+			Log.info(Geonet.DATA_DIRECTORY, "     - Copying schema plugin catalogue ...");
+			try {
                 final Path srcFile = webappDir.resolve("WEB-INF").resolve(Geonet.File.SCHEMA_PLUGINS_CATALOG);
                 IO.copyDirectoryOrFile(srcFile, schemaCatFile);
 
@@ -337,15 +348,15 @@ public class GeonetworkDataDirectory {
                     }
                 }
 
-            } catch (IOException e) {
-                Log.info(
+			} catch (IOException e) {
+				Log.info(
                         Geonet.DATA_DIRECTORY,
                         "      - Error copying schema plugin catalogue: "
                         + e.getMessage());
-            }
-        }
+			}
+		}
 
-    }
+	}
 
     private Path getDefaultDataDir(Path webappDir) {
         return webappDir.resolve("WEB-INF").resolve("data");

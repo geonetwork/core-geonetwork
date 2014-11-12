@@ -25,7 +25,8 @@
             <jsSource webappPath="catalog/lib/jquery.ext/jquery.fileupload.js"/>
             <jsSource webappPath="catalog/lib/jquery.ext/jquery.fileupload-process.js"/>
             <jsSource webappPath="catalog/lib/jquery.ext/jquery.fileupload-angular.js"/>
-            <jsSource webappPath="catalog/lib/bootstrap.ext/typeahead.js/typeahead.min.js"/>
+            <jsSource webappPath="catalog/lib/bootstrap.ext/typeahead.js/bloodhound.js"/>
+            <jsSource webappPath="catalog/lib/bootstrap.ext/typeahead.js/typeahead.bundle.js"/>
             <jsSource webappPath="catalog/lib/bootstrap.ext/tagsinput/bootstrap-tagsinput.min.js"/>
     </declarative>
     

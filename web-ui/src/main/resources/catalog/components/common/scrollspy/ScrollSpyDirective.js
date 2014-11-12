@@ -49,8 +49,10 @@
           scope.spyElems = [];
           scope.isEnabled = true;
 
+          var previousLabel = '';
           var registerSpy = function() {
-            var id = $(this).attr('id'), currentDepth = $(this).parents(
+            var id = $(this).attr('id'),
+                currentDepth = $(this).parents(
                 'fieldset').length - 1 - rootElementDepth;
 
             if (currentDepth <= depth) {
@@ -86,8 +88,16 @@
                     return spy.id === '#' + parentFieldsetId;
                   });
 
-                  // Add the child
-                  parentSpy[0] && parentSpy[0].children.push(spy);
+                  // Only register section if not the same
+                  // label as the previous one. This may happen
+                  // a lot for service metadata record with numbers
+                  // of coupledResource or operatesOn elements.
+                  // Provide navigation to the first element only.
+                  if (previousLabel != spy.label) {
+                    // Add the child
+                    parentSpy[0] && parentSpy[0].children.push(spy);
+                    previousLabel = spy.label;
+                  }
                 }
               }
 

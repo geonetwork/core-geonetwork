@@ -1,6 +1,7 @@
 package org.fao.geonet.services.region;
 
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.KeywordBean;
 import org.fao.geonet.kernel.SingleThesaurusFinder;
 import org.fao.geonet.kernel.Thesaurus;
@@ -13,7 +14,9 @@ import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchParamsBuilder;
 import org.fao.geonet.kernel.search.keyword.KeywordSearchType;
 import org.fao.geonet.util.LangUtils;
+import org.fao.geonet.utils.Log;
 import org.geotools.geometry.jts.ReferencedEnvelope;
+import org.jdom.JDOMException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 
 import java.util.*;
@@ -124,8 +127,19 @@ public class ThesaurusRequest extends Request {
             }
             Map<String, String> categoryLabels = categoryTranslations.get(categoryLabelKey);
             if(categoryLabels == null) {
-                categoryLabels = LangUtils.translate(serviceContext, "categories", categoryLabelKey);
-                categoryTranslations.put(categoryLabelKey, categoryLabels);
+                try {
+                    categoryLabels = LangUtils.translate(serviceContext, "categories", categoryLabelKey);
+                    categoryTranslations.put(categoryLabelKey, categoryLabels);
+                } catch (JDOMException e) {
+                    Log.debug(Geonet.THESAURUS_MAN,
+                            String.format("Category key %s is not valid for JDOM element." +
+                                            "Region thesaurus should use rdf:about element " +
+                                            "with the following structure <prefix>#<id> " +
+                                            "where the id could be a valid XML element name. " +
+                                            "Error is %s.",
+                                    categoryLabelKey, e.getMessage()));
+                    categoryLabels = new WeakHashMap<String, String>();
+                }
             }
             if (categoryLabels.isEmpty()) {
                 for (String loc : localesToLoad) {

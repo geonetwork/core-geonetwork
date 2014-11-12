@@ -81,26 +81,28 @@
         <button type="button" class="btn btn-primary pull-right fa fa-play"
                 data-ng-hide="harvesterSelected['@id'] == ''"
                 data-ng-click="runHarvester(harvesterSelected['@id'])"
-                data-ng-disabled="harvesterSelected.info.running === true"
-                data-translate=""
-            >runHarvester</button>
+                data-ng-disabled="harvesterSelected.info.running === true">
+          <span data-translate="">runHarvester</span>
+        </button>
         <button type="button" class="btn btn-primary pull-right fa fa-save"
-                data-ng-click="saveHarvester('#gn-harvester-edit')"
-                data-translate=""
-            >saveHarvester</button>
-        <button type="button" class="btn btn-warning pull-right fa fa-trash"
+                data-ng-click="saveHarvester('#gn-harvester-edit')">
+          <span data-translate="">saveHarvester</span></button>
+        <button type="button" class="btn btn-warning pull-right fa fa-trash-o"
                 data-ng-hide="harvesterSelected['@id'] == ''"
                 data-ng-click="deleteHarvesterRecord(harvesterSelected['@id'])"
                 data-ng-disabled="harvesterSelected.info.running === true"
-                title="{{'deleteHarvesterRecordsHelp' | translate}}"
-                data-translate=""
-            >deleteHarvesterRecords</button>
+                title="{{'deleteHarvesterRecordsHelp' | translate}}">
+          <span data-translate=""
+                  data-translate-values="{records: '{{harvesterSelected.info.result.total}}'}">
+            deleteHarvesterRecords</span>
+        </button>
         <button type="button" class="btn btn-danger pull-right fa fa-trash-o"
                 data-ng-hide="harvesterSelected['@id'] == ''"
                 data-ng-click="deleteHarvester(harvesterSelected['@id'])"
                 data-ng-disabled="harvesterSelected.info.running === true"
-                title="{{'deleteHarvesterHelp' | translate}}"
-                data-translate="">deleteHarvester</button>
+                title="{{'deleteHarvesterHelp' | translate}}">
+          <span data-translate="">deleteHarvester</span>
+        </button>
       </div>
     </div>
     <div class="panel-body">
@@ -125,8 +127,10 @@
       <i data-ng-show="isLoadingHarvesterHistory" class="fa fa-spinner fa-spin"></i>
       <div class="btn-toolbar">
         <button type="button" class="btn btn-primary pull-right btn-danger fa fa-trash-o"
-                data-ng-hide="harvesterHistory.length === 0" data-ng-click="deleteHarvesterHistory()"
-                data-translate="">deleteHarvesterHistory</button>
+                data-ng-hide="harvesterHistory.length === 0"
+                data-ng-click="deleteHarvesterHistory()">
+          <span data-translate="">deleteHarvesterHistory</span>
+        </button>
       </div>
     </div>
     <div class="panel-body">
@@ -135,10 +139,11 @@
       </div>
       <ul class="timeline timeline-1-col" data-ng-show="harvesterHistory.length !== 0">
         <li class="timeline-inverted"
-            data-ng-repeat="h in harvesterHistory">
+            data-ng-repeat="h in harvesterHistory | orderBy:'h.harvestdate'">
           <div class="timeline-badge"
-               data-ng-class="h.info[0]['stack'] ? 'danger' : 'success'">
-            <i class="fa fa-chevron-right"></i>
+               data-ng-class="h.deleted == 'true' ? 'warning' : (h.info[0]['stack'] ? 'danger' : 'success')">
+            <i class="fa"
+               data-ng-class="h.deleted == 'true' ? 'fa-trash-o' : 'fa-chevron-right'"></i>
           </div>
           <div class="timeline-panel">
             <div class="timeline-heading" data-ng-if="h.info[0]['stack'] !== undefined">
@@ -160,10 +165,13 @@
             </div>
 
             <div class="timeline-heading" data-ng-if="h.info[0]['stack'] === undefined">
-              <h4 class="timeline-title" >
-                {{h.info[0].total}}
+              <h4 data-ng-show="h.deleted == 'true'">
+                <strong>{{h.info[0][0]['@recordsRemoved']}}</strong>
+                <span data-translate="">recordsRemoved</span></h4>
+              <h4 data-ng-show="h.deleted == 'false'" class="timeline-title" >
+                <strong>{{h.info[0].total}}</strong>
                 <span data-translate="">recordsHarvestedIn</span>
-                {{h.elapsedtime}}
+                <strong>{{h.elapsedtime}}</strong>
                 <span data-translate="">seconds</span>
               </h4>
               <p>

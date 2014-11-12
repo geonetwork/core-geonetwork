@@ -33,11 +33,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
-import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -60,9 +61,9 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     @PersistenceContext
     protected EntityManager _entityManager;
     @Autowired
-    protected UserRepository _userRepo;
-    @Autowired
     protected GeonetTestFixture testFixture;
+    @Autowired
+    protected UserRepository _userRepo;
 
     @Before
     public void setup() throws Exception {
@@ -72,6 +73,11 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     @After
     public void tearDown() throws Exception {
         testFixture.tearDown();
+    }
+
+    protected void assertDataDirInMemoryFS(ServiceContext context) {
+        final Path systemDataDir = context.getBean(GeonetworkDataDirectory.class).getSystemDataDir();
+        assertTrue(systemDataDir.getFileSystem() != FileSystems.getDefault());
     }
 
     protected boolean isDefaultNode() {
@@ -125,11 +131,6 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         assertDataDirInMemoryFS(context);
 
         return context;
-    }
-
-    protected void assertDataDirInMemoryFS(ServiceContext context) {
-        final Path systemDataDir = context.getBean(GeonetworkDataDirectory.class).getSystemDataDir();
-        assertTrue(systemDataDir.getFileSystem() != FileSystems.getDefault());
     }
 
     /**

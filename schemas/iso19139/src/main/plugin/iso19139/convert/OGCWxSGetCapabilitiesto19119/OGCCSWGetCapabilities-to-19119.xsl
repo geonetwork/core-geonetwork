@@ -8,7 +8,9 @@ Mapping between :
 	xmlns="http://www.isotc211.org/2005/gmd" xmlns:ows="http://www.opengis.net/ows"
 	xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:ogc="http://www.opengis.net/ogc"
 	xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:xlink="http://www.w3.org/1999/xlink"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" extension-element-prefixes="csw">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" extension-element-prefixes="csw"
+	xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0"
+	xmlns:inspire_ds="http://inspire.ec.europa.eu/schemas/inspire_ds/1.0">
 
 	<xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
 
@@ -208,20 +210,53 @@ Mapping between :
 				</MD_Format>
 			</resourceFormat>
 		</xsl:for-each-group>
-		<xsl:for-each select="ows:Keywords">
 			<descriptiveKeywords>
-				<MD_Keywords>
-					<xsl:for-each select="ows:Keyword">
-						<keyword>
-							<gco:CharacterString>
-								<xsl:value-of select="."/>
-							</gco:CharacterString>
-						</keyword>
-					</xsl:for-each>
-				</MD_Keywords>
+				<xsl:for-each select="ows:Keywords">
+					<MD_Keywords>
+						<xsl:for-each select="ows:Keyword">
+							<keyword>
+								<gco:CharacterString>
+									<xsl:value-of select="."/>
+								</gco:CharacterString>
+							</keyword>
+						</xsl:for-each>
+					</MD_Keywords>
+				</xsl:for-each>
+				<xsl:for-each select="//inspire_ds:ExtendedCapabilities/inspire_common:MandatoryKeyword[@xsi:type='inspire_common:classificationOfSpatialDataService']">
+					<MD_Keywords xmlns:gmx="http://www.isotc211.org/2005/gmx">
+						<xsl:for-each select="inspire_common:KeywordValue">
+							<keyword>
+								<gco:CharacterString>
+									<xsl:value-of select="."/>
+								</gco:CharacterString>
+							</keyword>
+						</xsl:for-each>
+						<type>
+							<MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme"/>
+						</type>
+						<thesaurusName>
+							<CI_Citation>
+								<title>
+									<gco:CharacterString>INSPIRE Service taxonomy</gco:CharacterString>
+								</title>
+								<alternateTitle gco:nilReason="missing">
+									<gco:CharacterString/>
+								</alternateTitle>
+								<date>
+									<CI_Date>
+										<date>
+											<gco:Date>2010-04-22</gco:Date>
+										</date>
+										<dateType>
+											<CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+										</dateType>
+									</CI_Date>
+								</date>
+							</CI_Citation>
+						</thesaurusName>
+					</MD_Keywords>
+				</xsl:for-each>	
 			</descriptiveKeywords>
-		</xsl:for-each>
-		
 		<resourceConstraints>
 			<MD_LegalConstraints>
 				<useLimitation>
@@ -237,7 +272,14 @@ Mapping between :
 		</resourceConstraints>
 		
 		<srv:serviceType>
-			<gco:LocalName codeSpace="www.w3c.org">OGC:CSW</gco:LocalName><!-- TODO INSPIRE classification ? -->
+			<gco:LocalName codeSpace="www.w3c.org">
+        <xsl:choose>
+          <xsl:when test="//*:ExtendedCapabilities/inspire_common:SpatialDataServiceType">
+            <xsl:value-of select="//*:ExtendedCapabilities/inspire_common:SpatialDataServiceType"/>
+          </xsl:when>
+          <xsl:otherwise>OGC:CSW</xsl:otherwise>
+        </xsl:choose>
+			</gco:LocalName>
 		</srv:serviceType>
 		<srv:serviceTypeVersion>
 			<gco:CharacterString>

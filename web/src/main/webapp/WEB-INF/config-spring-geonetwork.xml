@@ -11,6 +11,7 @@
 	<import resource="config-security/config-security.xml" />
 	<import resource="classpath:JZkitApplicationContext.xml" />
 
+	<import resource="config-spring-env.xml" />
 	<import resource="config-db/initial_data.xml" />
 	<import resource="config-print/config-spring-print.xml" />
 

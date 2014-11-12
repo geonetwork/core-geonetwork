@@ -12,46 +12,46 @@
 
     <util:map id="migrationMap"
               map-class="java.util.LinkedHashMap"
-              key-type="java.lang.Integer"
+              key-type="java.lang.String"
               value-type="java.lang.String">
-        <entry key="243">
+        <entry key="2.4.3">
             <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v243/migrate-</value>
             </list>
         </entry>
-        <entry key="260">
+        <entry key="2.6.0">
             <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v260/migrate-db-</value>
                 <value>WEB-INF/classes/setup/sql/migrate/v260/migrate-</value>
             </list>
         </entry>
-        <entry key="261">
+        <entry key="2.6.1">
             <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v261/migrate-</value>
             </list>
         </entry>
-        <entry key="262">
+        <entry key="2.6.2">
             <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v262/migrate-</value>
             </list>
         </entry>
-        <entry key="263">
+        <entry key="2.6.3">
             <list>
                 <value>WEB-INF/classes/setup/sql/migrate/vv263243/migrate-</value>
             </list>
         </entry>
-        <entry key="264">
+        <entry key="2.6.4">
             <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v264/migrate-db-</value>
                 <value>WEB-INF/classes/setup/sql/migrate/v264/migrate-</value>
             </list>
         </entry>
-        <entry key="265">
+        <entry key="2.6.5">
             <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v265/migrate-</value>
             </list>
         </entry>
-        <entry key="280">
+        <entry key="2.8.0">
             <list>
                 <value>java:v280.MoveHarvesterSettingsToHigherNumber</value>
                 <value>WEB-INF/classes/setup/sql/migrate/v280/migrate-db-</value>
@@ -74,16 +74,17 @@
                 <value>WEB-INF/classes/setup/sql/migrate/v280/loc-pol-</value>
             </list>
         </entry>
-        <entry key="2100">
+        <entry key="2.10.0">
             <list>
                 <value>java:v280.MoveHarvesterSettingsToHigherNumber</value>
                 <value>WEB-INF/classes/setup/sql/migrate/v2100/migrate-db-</value>
                 <value>WEB-INF/classes/setup/sql/migrate/v2100/migrate-</value>
             </list>
         </entry>
-        <entry key="2110">
+        <entry key="2.11.0">
             <list>
                 <value>WEB-INF/classes/setup/sql/migrate/v2110/1-migrate-db-</value>
+                <value>java:v2110.MoveHarvesterSettings</value>
                 <value>WEB-INF/classes/setup/sql/migrate/v2110/2-migrate-</value>
                 <value>WEB-INF/classes/setup/sql/migrate/v2110/3-create-tmp-tables-</value>
                 <value>WEB-INF/classes/setup/sql/migrate/v2110/4-copy-to-tmp-</value>

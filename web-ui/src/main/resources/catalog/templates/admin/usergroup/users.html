@@ -41,9 +41,10 @@
         <span data-ng-hide="userSelected.id != ''" data-translate="">newUser</span>
         <strong>{{userSelected.name}} {{userSelected.surname}}</strong>
         ({{userSelected.profile | translate}})
+          <span data-ng-show="userSelected.security.authtype"> - {{userSelected.security.authtype}}</span>
         <div class="btn-toolbar">
           <button type="button" class="btn btn-default pull-right fa fa-lock"
-            data-ng-hide="user.profile != 'Administrator'"
+            data-ng-hide="user.profile != 'Administrator' || userSelected.security.authtype == 'LDAP'"
             data-ng-click="resetPassword(userSelected.id)">
             <span data-translate=""
             >resetPassword</span></button>
@@ -53,7 +54,8 @@
             <span data-translate=""
             >saveUser</span></button>
           <button type="button" class="btn pull-right btn-danger fa fa-trash-o"
-            data-ng-disabled="searchResults.count > 0" data-ng-hide="userSelected.id == ''"
+            data-ng-disabled="searchResults.count > 0"
+            data-ng-hide="userSelected.id == ''"
             data-ng-click="deleteUser(userSelected.id)" id="gn-btn-user-delete">
             <span data-translate=""
             >deleteUser</span></button>

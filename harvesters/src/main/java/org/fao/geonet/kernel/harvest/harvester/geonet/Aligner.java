@@ -23,40 +23,35 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
+import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.Pair;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.kernel.harvest.harvester.HarvesterUtil;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
-import org.fao.geonet.kernel.mef.IMEFVisitor;
-import org.fao.geonet.kernel.mef.Importer;
-import org.fao.geonet.kernel.mef.MEFLib;
-import org.fao.geonet.kernel.mef.MEFVisitor;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.harvest.BaseAligner;
+import org.fao.geonet.kernel.mef.*;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.utils.BinaryFile;
-import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.XmlRequest;
+import org.fao.geonet.utils.*;
 import org.jdom.Element;
-
-import java.io.IOException;
-import java.io.InputStream;
+import org.jdom.JDOMException;
 import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -70,6 +65,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.io.IOException;
+import java.io.InputStream;
 
 //=============================================================================
 
@@ -137,7 +134,7 @@ public class Aligner extends BaseAligner
 	{
 		log.info("Start of alignment for : "+ params.name);
 
-		//-----------------------------------------------------------------------
+        //-----------------------------------------------------------------------
 		//--- retrieve all local categories and groups
 		//--- retrieve harvested uuids for given harvesting node
 
@@ -170,12 +167,21 @@ public class Aligner extends BaseAligner
 
 		//-----------------------------------------------------------------------
 		//--- insert/update new metadata
+// Load preferred schema and set to iso19139 by default
+        preferredSchema = context.getBean(ServiceConfig.class).getMandatoryValue("preferredSchema");
+        if (preferredSchema == null) {
+            preferredSchema = "iso19139";
+        }
 
-		for(RecordInfo ri : records)
+        for(RecordInfo ri : records)
 		{
 			result.totalMetadata++;
 
-			if (!dataMan.existsSchema(ri.schema))
+            // Mef full format provides ISO19139 records in both the profile
+            // and ISO19139 so we could be able to import them as far as
+            // ISO19139 schema is installed by default.
+			if (!dataMan.existsSchema(ri.schema) &&
+                !ri.schema.startsWith("iso19139."))
 			{
                 if(log.isDebugEnabled())
                     log.debug("  - Metadata skipped due to unknown schema. uuid:"+ ri.uuid
@@ -211,7 +217,91 @@ public class Aligner extends BaseAligner
 	//--- Private methods : addMetadata
 	//---
 	//--------------------------------------------------------------------------
+    private Element extractValidMetadataForImport (File[] files, Element info) throws IOException, JDOMException {
+        Element metadataValidForImport;
+        final String finalPreferredSchema = preferredSchema;
 
+        String infoSchema = "_none_";
+        if (info != null && info.getContentSize() != 0) {
+            Element general = info.getChild("general");
+            if (general != null && general.getContentSize() != 0) {
+                if (general.getChildText("schema") != null) {
+                    infoSchema = general.getChildText("schema");
+                }
+            }
+        }
+
+        String lastUnknownMetadataFolderName = null;
+
+        if (Log.isDebugEnabled(Geonet.MEF))
+            Log.debug(Geonet.MEF, "Multiple metadata files");
+
+        Map<String, Pair<String, Element>> mdFiles =
+                new HashMap<String, Pair<String, Element>>();
+        for (File file : files) {
+            if (file != null && !file.isDirectory()) {
+                Element metadata = Xml.loadFile(file);
+                try {
+                    String metadataSchema = dataMan.autodetectSchema(metadata, null);
+                    // If local node doesn't know metadata
+                    // schema try to load next xml file.
+                    if (metadataSchema == null) {
+                        continue;
+                    }
+
+                    String currFile = "Found metadata file " +
+                            file.getParentFile().getParentFile().getName() + File.separator +
+                            file.getParentFile().getName() + File.separator +
+                            file.getName();
+                    mdFiles.put(metadataSchema, Pair.read(currFile, metadata));
+
+                } catch (NoSchemaMatchesException e) {
+                    // Important folder name to identify metadata should be ../../
+                    lastUnknownMetadataFolderName =
+                            file.getParentFile().getParentFile().getName() + File.separator +
+                                    file.getParentFile().getName() + File.separator;
+                    log.debug("No schema match for "
+                            + lastUnknownMetadataFolderName + file.getName()
+                            + ".");
+                }
+            }
+        }
+
+        if (mdFiles.size() == 0) {
+            log.debug("No valid metadata file found" +
+                    ((lastUnknownMetadataFolderName == null) ?
+                            "" :
+                            (" in " + lastUnknownMetadataFolderName)
+                    ) + ".");
+            return null;
+        }
+
+        // 1st: Select metadata with schema in info file
+        Pair<String,Element> mdInform = mdFiles.get(infoSchema);
+        if (mdInform != null) {
+            log.debug(mdInform.one()
+                    + " with info.xml schema (" + infoSchema + ").");
+            metadataValidForImport = mdInform.two();
+            return metadataValidForImport;
+        }
+        // 2nd: Select metadata with preferredSchema
+        mdInform = mdFiles.get(finalPreferredSchema);
+        if (mdInform != null) {
+            log.debug(mdInform.one()
+                    + " with preferred schema (" + finalPreferredSchema + ").");
+            metadataValidForImport = mdInform.two();
+            return metadataValidForImport;
+        }
+
+        // Lastly: Select the first metadata in the map
+        String metadataSchema = (String)mdFiles.keySet().toArray()[0];
+        mdInform = mdFiles.get(metadataSchema);
+        log.debug(mdInform.one()
+                + " with known schema (" + metadataSchema + ").");
+        metadataValidForImport = mdInform.two();
+
+        return metadataValidForImport;
+    }
 	private void addMetadata(final RecordInfo ri, final boolean localRating) throws Exception
 	{
 		final String  id[] = { null };
@@ -221,10 +311,17 @@ public class Aligner extends BaseAligner
 
 		Path mefFile = retrieveMEF(ri.uuid);
 
-		try
+		try {
+            String fileType = "mef";
+            MEFLib.Version version = MEFLib.getMEFVersion(mefFile);
+            if (version != null && version.equals(MEFLib.Version.V2)) {
+                fileType = "mef2";
+            }
+
+            IVisitor visitor = fileType.equals("mef2") ? new MEF2Visitor() : new MEFVisitor();
+
+            MEFLib.visit(mefFile, visitor, new IMEFVisitor()
 		{
-			MEFLib.visit(mefFile, new MEFVisitor(), new IMEFVisitor()
-			{
 				public void handleMetadata(Element mdata, int index) throws Exception
 				{
 					md[index] = mdata;
@@ -232,12 +329,31 @@ public class Aligner extends BaseAligner
 
 				//--------------------------------------------------------------------
 				
-				public void handleMetadataFiles(DirectoryStream<Path> files, Element info, int index) throws Exception {}
+                public void handleMetadataFiles(DirectoryStream<Path> files, Element info, int index) throws Exception {
+                    // Import valid metadata
+                    Element metadataValidForImport = extractValidMetadataForImport(files, info);
+				
+                    if (metadataValidForImport != null) {
+                        handleMetadata(metadataValidForImport, index);
+                    }
+                }
 				
 				//--------------------------------------------------------------------
 
 				public void handleInfo(Element info, int index) throws Exception
 				{
+
+                    final Element metadata = md[index];
+                    String schema = dataMan.autodetectSchema(metadata, null);
+                    if (info != null && info.getContentSize() != 0) {
+                        Element general = info.getChild("general");
+                        if (general != null && general.getContentSize() != 0) {
+                            Element schemaInfo = general.getChild("schema");
+                            if (schemaInfo != null) {
+                                schemaInfo.setText(schema);
+                            }
+                        }
+                    }
 					id[index] = addMetadata(ri, md[index], info, localRating);
 				}
 
@@ -306,6 +422,7 @@ public class Aligner extends BaseAligner
 		String isTemplate = general.getChildText("isTemplate");
 		String siteId     = general.getChildText("siteId");
 		String popularity = general.getChildText("popularity");
+        String schema = general.getChildText("schema");
 
 		if ("true".equals(isTemplate))	isTemplate = "y";
 			else 									isTemplate = "n";
@@ -331,7 +448,7 @@ public class Aligner extends BaseAligner
         // If MEF format is full, private file links needs to be updated
         boolean ufo = params.mefFormatFull;
         boolean indexImmediate = false;
-        String id = dataMan.insertMetadata(context, ri.schema, md, ri.uuid, Integer.parseInt(params.ownerId), group, siteId,
+        String id = dataMan.insertMetadata(context, schema, md, ri.uuid, Integer.parseInt(params.ownerId), group, siteId,
                          isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
 
 		int iId = Integer.parseInt(id);
@@ -527,7 +644,15 @@ public class Aligner extends BaseAligner
 
 			try
 			{
-				MEFLib.visit(mefFile, new MEFVisitor(), new IMEFVisitor()
+                String fileType = "mef";
+                MEFLib.Version version = MEFLib.getMEFVersion(mefFile);
+                if (version != null && version.equals(MEFLib.Version.V2)) {
+                    fileType = "mef2";
+                }
+
+                IVisitor visitor = fileType.equals("mef2") ? new MEF2Visitor() : new MEFVisitor();
+
+                MEFLib.visit(mefFile, visitor, new IMEFVisitor()
 				{
 					public void handleMetadata(Element mdata, int index) throws Exception
 					{
@@ -538,8 +663,13 @@ public class Aligner extends BaseAligner
 					
 					public void handleMetadataFiles(DirectoryStream<Path> files, Element info, int index) throws Exception
 					{
-						//md[index] = mdata;
+                        // Import valid metadata
+                        Element metadataValidForImport = extractValidMetadataForImport(files, info);
+
+                        if (metadataValidForImport != null) {
+                            handleMetadata(metadataValidForImport, index);
 					}
+                    }
 					
 					public void handleInfo(Element info, int index) throws Exception
 					{
@@ -781,6 +911,11 @@ public class Aligner extends BaseAligner
 		request.addParam("uuid",   uuid);
 		request.addParam("format", (params.mefFormatFull ? "full" : "partial"));
 
+        // Request MEF2 format - if remote node is old
+        // it will ignore this parameter and return a MEF1 format
+        // which will be handle in addMetadata/updateMetadata.
+        request.addParam("version", "2");
+        request.addParam("relation", "false");
 		request.setAddress(params.getServletPath() +"/srv/en/"+ Geonet.Service.MEF_EXPORT);
 
 		Path tempFile = Files.createTempFile("temp-", ".dat");
@@ -807,6 +942,7 @@ public class Aligner extends BaseAligner
 	private UUIDMapper     localUuids;
 	
 	private String processName;
+    private String preferredSchema;
     private Map<String, Object> processParams = new HashMap<String, Object>();
 
     private HashMap<String, HashMap<String, String>> hmRemoteGroups = new HashMap<String, HashMap<String, String>>();

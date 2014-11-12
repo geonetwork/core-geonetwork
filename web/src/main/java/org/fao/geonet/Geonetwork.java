@@ -53,7 +53,6 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
 import org.fao.geonet.languages.LanguageDetector;
 import org.fao.geonet.lib.DbLib;
-import org.fao.geonet.lib.ServerLib;
 import org.fao.geonet.notifier.MetadataNotifierControl;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.resources.Resources;
@@ -140,9 +139,9 @@ public class Geonetwork implements ApplicationHandler {
         if (context.getServlet() != null) {
             servletContext = context.getServlet().getServletContext();
         }
-        ServerLib sl = new ServerLib(servletContext, appPath);
-        String version = sl.getVersion();
-        String subVersion = sl.getSubVersion();
+        final SystemInfo systemInfo = _applicationContext.getBean(SystemInfo.class);
+        String version = systemInfo.getVersion();
+        String subVersion = systemInfo.getSubVersion();
 
         logger.info("Initializing GeoNetwork " + version + "." + subVersion + " ...");
 
