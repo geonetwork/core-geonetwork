@@ -99,10 +99,6 @@ public class DoActions implements Service
 			URL url = DoActions.class.getResource("/"+log4jProp + ".xml");
 			if (url != null) {
 				DOMConfigurator.configure(url);
-				context.debug("DEBUG Message");
-				context.warning("WARN Message");
-				context.info("INFO Message"); 
-				context.error("ERROR Message");
 				
 			} else {
 				throw new OperationAbortedEx("Parameters saved but cannot set level log: file \""+log4jProp+".xml\" doesn't exist.");
