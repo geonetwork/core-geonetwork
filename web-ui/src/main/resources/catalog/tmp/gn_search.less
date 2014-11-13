@@ -105,7 +105,7 @@
 
 .tt-dropdown-menu {
   width: 422px;
-  margin-top: 7px;
+  margin-top: 4px;
   margin-left: -8px;
   padding: 8px 0;
   background-color: #fff;
@@ -117,6 +117,9 @@
   -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
   -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
   box-shadow: 0 5px 10px rgba(0,0,0,.2);
+  overflow: auto;
+  max-height: 70vh;
+  width: inherit;
 }
 
 .tt-suggestion {
@@ -130,6 +133,23 @@
 
 .tt-suggestion p {
   margin: 0;
+  margin-top:2px;
+  line-height: normal;
+
+}
+.tt-hint {
+  color: #999;
+  width: 100% !important;
+  border: none !important;
+}
+.tt-suggestion.tt-cursor {
+  color: #fff;
+  background-color: #0097cf;
+  cursor: pointer;
+}
+.bootstrap-tagsinput .tt-input {
+  width: 100% !important;
+  border: none !important;
 }
 /** Enf of typeahead styles */
 .bootstrap-tagsinput {

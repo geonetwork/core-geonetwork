@@ -41,9 +41,11 @@
             itemText: 'name'
           });
 
+
           var field = $(element).tagsinput('input');
           field.typeahead({
-            minLength: 0,
+            minLength: 1,
+            hint: true,
             highlight: true
           }, {
             name: 'datasource',
