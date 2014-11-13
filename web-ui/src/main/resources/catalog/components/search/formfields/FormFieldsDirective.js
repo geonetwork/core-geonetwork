@@ -1,8 +1,8 @@
 (function() {
 
-  goog.provide('gn_form_fields_directive');
+  goog.provide('gn_formfields_directive');
 
-  angular.module('gn_form_fields_directive', [])
+  angular.module('gn_formfields_directive', [])
   /**
    * @ngdoc directive
    * @name gn_form_fields_directive.directive:gnTypeahead
