@@ -444,6 +444,8 @@ function doNewElementAjax(action, ref, name, child, id, what, max, orElement)
 
 function disableEditForm()
 {
+	if (!$('editFormTable')) return;
+
 	var editorOverlay = new Element("div", { id: "editorOverlay" });
 	$('editFormTable').insert({'top':editorOverlay});
 	$('editorOverlay').setStyle({opacity: "0.65"});
