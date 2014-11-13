@@ -1,9 +1,9 @@
-package jeeves;
+package jeeves.transaction;
 
 import org.springframework.transaction.TransactionStatus;
 
 /**
- * A task to run in a transaction as part of {@link org.fao.geonet.TransactionAspect}.
+ * A task to run in a transaction as part of {@link TransactionManager}.
  *
  * Created by Jesse on 3/11/14.
  */

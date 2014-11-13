@@ -2,16 +2,16 @@ package org.fao.geonet.kernel;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.sources.http.JeevesServlet;
-
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.NodeInfo;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
+
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
-import org.springframework.context.ConfigurableApplicationContext;
 import java.nio.file.Path;
 import java.util.Iterator;
 
@@ -318,12 +318,11 @@ public class GeonetworkDataDirectory {
 		}
 
         // Copy default logo to the harvesting folder
-        File logoDir = new File(this.resourcesDir, "images" + File.separator + "harvesting");
-        if (!logoDir.exists() || logoDir.listFiles().length == 0) {
+        Path logoDir = this.resourcesDir.resolve("images").resolve("harvesting");
+        if (!Files.exists(logoDir) || IO.isEmptyDir(logoDir)) {
             Log.info(Geonet.DATA_DIRECTORY, "     - Copying logos ...");
             try {
-                BinaryFile.copyDirectory(new File(path, "images" + File.separator + "harvesting"),
-                    logoDir);
+                IO.copyDirectoryOrFile(this.webappDir.resolve("images").resolve("harvesting"), logoDir);
             } catch (IOException e) {
                 Log.error(Geonet.DATA_DIRECTORY, "     - Logo copy failed: " + e.getMessage(), e);
             }

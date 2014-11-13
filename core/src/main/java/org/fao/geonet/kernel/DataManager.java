@@ -36,8 +36,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
-import jeeves.TransactionAspect;
-import jeeves.TransactionTask;
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
@@ -3391,15 +3391,15 @@ public class DataManager {
     }
 
     public void flush() {
-        TransactionAspect.runInTransaction("DataManager flush()", _applicationContext,
-                TransactionAspect.TransactionRequirement.CREATE_ONLY_WHEN_NEEDED,
-                TransactionAspect.CommitBehavior.ALWAYS_COMMIT, false, new TransactionTask<Object>() {
-            @Override
-            public Object doInTransaction(TransactionStatus transaction) throws Throwable {
-                _entityManager.flush();
-                return null;
-            }
-        });
+        TransactionManager.runInTransaction("DataManager flush()", _applicationContext,
+                TransactionManager.TransactionRequirement.CREATE_ONLY_WHEN_NEEDED,
+                TransactionManager.CommitBehavior.ALWAYS_COMMIT, false, new TransactionTask<Object>() {
+                    @Override
+                    public Object doInTransaction(TransactionStatus transaction) throws Throwable {
+                        _entityManager.flush();
+                        return null;
+                    }
+                });
 
     }
 

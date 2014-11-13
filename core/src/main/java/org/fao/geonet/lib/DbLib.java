@@ -23,8 +23,8 @@
 
 package org.fao.geonet.lib;
 
-import jeeves.TransactionAspect;
-import jeeves.TransactionTask;
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
@@ -62,8 +62,8 @@ public class DbLib {
             Log.debug(Geonet.DB, "Filling database tables");
 
 		final List<String> data = loadSqlDataFile(servletContext, context.getApplicationContext(), appPath, filePath, filePrefix);
-        TransactionAspect.runInTransaction("insert data into database from file", context.getApplicationContext(),
-                TransactionAspect.TransactionRequirement.CREATE_ONLY_WHEN_NEEDED, TransactionAspect.CommitBehavior.ALWAYS_COMMIT, false,
+        TransactionManager.runInTransaction("insert data into database from file", context.getApplicationContext(),
+                TransactionManager.TransactionRequirement.CREATE_ONLY_WHEN_NEEDED, TransactionManager.CommitBehavior.ALWAYS_COMMIT, false,
                 new TransactionTask<Object>() {
                     @Override
                     public Object doInTransaction(TransactionStatus transaction) throws Throwable {

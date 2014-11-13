@@ -23,18 +23,7 @@
 
 package org.fao.geonet.kernel.setting;
 
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-
-import javax.annotation.Nonnull;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.domain.Setting;
@@ -45,6 +34,15 @@ import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import javax.annotation.Nonnull;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  * A convenience class for updating and accessing settings.  One of the primary needs of this
@@ -92,9 +90,7 @@ public class SettingManager {
 
         for (Setting setting : settings) {
             if (asTree) {
-                if (setting.getName().startsWith("system")) {
-                    buildXmlTree(env, pathElements, setting);
-                }
+                buildXmlTree(env, pathElements, setting);
             } else {
                 Element settingEl = new Element("setting");
                 settingEl.setAttribute("name", setting.getName());

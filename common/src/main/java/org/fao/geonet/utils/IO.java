@@ -294,7 +294,7 @@ public final class IO {
 
         @Override
         public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-            Files.createDirectory(relativeFile(from, dir, actualTo));
+            Files.createDirectories(relativeFile(from, dir, actualTo));
             return FileVisitResult.CONTINUE;
         }
 
@@ -317,7 +317,7 @@ public final class IO {
 
         @Override
         public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-            Files.createDirectory(relativeFile(from, dir, actualTo));
+            Files.createDirectories(relativeFile(from, dir, actualTo));
             return FileVisitResult.CONTINUE;
         }
 

@@ -1,7 +1,7 @@
 package jeeves;
 
-import jeeves.TransactionAspect;
-import jeeves.TransactionTask;
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.domain.SettingDataType;
 import org.fao.geonet.repository.AbstractSpringDataTest;
@@ -14,20 +14,25 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import java.util.UUID;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.TransactionalException;
-import java.util.UUID;
 
-import static jeeves.TransactionAspect.CommitBehavior.ALWAYS_COMMIT;
-import static jeeves.TransactionAspect.CommitBehavior.ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS;
-import static jeeves.TransactionAspect.TransactionRequirement.*;
-import static org.junit.Assert.*;
+import static jeeves.transaction.TransactionManager.CommitBehavior.ALWAYS_COMMIT;
+import static jeeves.transaction.TransactionManager.CommitBehavior.ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS;
+import static jeeves.transaction.TransactionManager.TransactionRequirement.CREATE_NEW;
+import static jeeves.transaction.TransactionManager.TransactionRequirement.CREATE_ONLY_WHEN_NEEDED;
+import static jeeves.transaction.TransactionManager.TransactionRequirement.THROW_EXCEPTION_IF_NOT_PRESENT;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 /**
- * Test the basic functionality of the {@link jeeves.TransactionAspect#runInTransaction(String,
- * org.springframework.context.ApplicationContext, jeeves.TransactionAspect.TransactionRequirement,
- * jeeves.TransactionAspect.CommitBehavior, boolean, TransactionTask)}
+ * Test the basic functionality of the {@link jeeves.transaction.TransactionManager#runInTransaction(String,
+ * org.springframework.context.ApplicationContext, jeeves.transaction.TransactionManager.TransactionRequirement,
+ * jeeves.transaction.TransactionManager.CommitBehavior, boolean, TransactionTask)}
  * <p/>
  * Created by Jesse on 3/10/14.
  */
@@ -49,7 +54,7 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
                 final String name = UUID.randomUUID().toString();
                 try {
                     final TransactionInformation info = new TransactionInformation();
-                    TransactionAspect.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_NEW, ALWAYS_COMMIT,
+                    TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_NEW, ALWAYS_COMMIT,
                             false,
                             new TransactionTask<Object>() {
                                 @Override
@@ -80,7 +85,7 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
             public void run() throws Exception {
                 final String name = UUID.randomUUID().toString();
                 final TransactionInformation info = new TransactionInformation();
-                TransactionAspect.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_NEW, ALWAYS_COMMIT,
+                TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_NEW, ALWAYS_COMMIT,
                         false,
                         new TransactionTask<Object>() {
                             @Override
@@ -111,7 +116,7 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
                 try {
                     final TransactionInformation info = new TransactionInformation();
 
-                    TransactionAspect.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_NEW,
+                    TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_NEW,
                             ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS,
                             false,
                             new TransactionTask<Object>() {
@@ -145,7 +150,7 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
                 final String name = UUID.randomUUID().toString();
                 final TransactionInformation info = new TransactionInformation();
 
-                TransactionAspect.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_NEW,
+                TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_NEW,
                         ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS, false,
                         new TransactionTask<Object>() {
                             @Override
@@ -176,7 +181,7 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
                 try {
                     final TransactionInformation info = new TransactionInformation();
                     final String name = UUID.randomUUID().toString();
-                    TransactionAspect.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_NEW, ALWAYS_COMMIT,
+                    TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_NEW, ALWAYS_COMMIT,
                             true,
                             new TransactionTask<Object>() {
                                 @Override
@@ -210,7 +215,7 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
                 try {
                     final TransactionInformation info = new TransactionInformation();
 
-                    TransactionAspect.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_ONLY_WHEN_NEEDED,
+                    TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_ONLY_WHEN_NEEDED,
                             ALWAYS_COMMIT, false,
                             new TransactionTask<Object>() {
                                 @Override
@@ -242,7 +247,7 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
                 final String name = UUID.randomUUID().toString();
                 final TransactionInformation info = new TransactionInformation();
 
-                TransactionAspect.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_ONLY_WHEN_NEEDED,
+                TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_ONLY_WHEN_NEEDED,
                         ALWAYS_COMMIT, false,
                         new TransactionTask<Object>() {
                             @Override
@@ -273,7 +278,7 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
                 final String name = UUID.randomUUID().toString();
                 try {
                     final TransactionInformation info = new TransactionInformation();
-                    TransactionAspect.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_ONLY_WHEN_NEEDED,
+                    TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_ONLY_WHEN_NEEDED,
                             ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS, false,
                             new TransactionTask<Object>() {
                                 @Override
@@ -304,7 +309,7 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
                 final String name = UUID.randomUUID().toString();
                 final TransactionInformation info = new TransactionInformation();
 
-                TransactionAspect.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_ONLY_WHEN_NEEDED,
+                TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, CREATE_ONLY_WHEN_NEEDED,
                         ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS, false,
                         new TransactionTask<Object>() {
                             @Override
@@ -335,7 +340,7 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
                 try {
                     final TransactionInformation info = new TransactionInformation();
                     try {
-                        TransactionAspect.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext,
+                        TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext,
                                 CREATE_ONLY_WHEN_NEEDED,
                                 ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS, false,
                                 new TransactionTask<Object>() {
@@ -367,7 +372,8 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
             @Override
             public void run() throws Exception {
                 final String name = UUID.randomUUID().toString();
-                TransactionAspect.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext, THROW_EXCEPTION_IF_NOT_PRESENT,
+                TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext,
+                        THROW_EXCEPTION_IF_NOT_PRESENT,
                         ALWAYS_COMMIT, false,
                         new TransactionTask<Object>() {
                             @Override
@@ -392,7 +398,7 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
                 final String name = UUID.randomUUID().toString();
                 try {
                     final TransactionInformation info = new TransactionInformation();
-                    TransactionAspect.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext,
+                    TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext,
                             THROW_EXCEPTION_IF_NOT_PRESENT,
                             ALWAYS_COMMIT, false,
                             new TransactionTask<Object>() {
@@ -431,7 +437,7 @@ public class TransactionAspectDoRunInTransactionTest extends AbstractSpringDataT
                 final String name = UUID.randomUUID().toString();
                 final TransactionInformation info = new TransactionInformation();
                 try {
-                    TransactionAspect.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext,
+                    TransactionManager.runInTransaction("testRunInTransactionSimpleWrite", _applicationContext,
                             THROW_EXCEPTION_IF_NOT_PRESENT,
                             ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS, false,
                             new TransactionTask<Object>() {

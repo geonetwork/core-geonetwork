@@ -1,17 +1,13 @@
-package jeeves;
+package jeeves.transaction;
 
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
 import org.fao.geonet.utils.Log;
-import org.jdom.Element;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import java.util.Collection;
 import javax.annotation.Nullable;
 
 /**
@@ -20,8 +16,7 @@ import javax.annotation.Nullable;
  * <p/>
  * Created by Jesse on 3/10/14.
  */
-@Aspect
-public class TransactionAspect {
+public class TransactionManager {
     public static enum TransactionRequirement {
         CREATE_ONLY_WHEN_NEEDED(TransactionDefinition.PROPAGATION_REQUIRED),
         THROW_EXCEPTION_IF_NOT_PRESENT(TransactionDefinition.PROPAGATION_MANDATORY),
@@ -36,9 +31,6 @@ public class TransactionAspect {
     public static enum CommitBehavior {
         ALWAYS_COMMIT, ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS
     }
-
-    @Autowired
-    ApplicationContext _applicationContext;
 
     public static <V> V runInTransaction(String name,
                                          ApplicationContext context,
@@ -59,6 +51,13 @@ public class TransactionAspect {
             transaction = transactionManager.getTransaction(definition);
             isNewTransaction = transaction.isNewTransaction();
 
+            if (isNewTransaction) {
+                Collection<NewTransactionListener> listeners = context.getBeansOfType(NewTransactionListener.class).values();
+                for (NewTransactionListener listener : listeners) {
+                    listener.newTransaction(transaction);
+                }
+            }
+            
             result = action.doInTransaction(transaction);
 
         } catch (Throwable e) {
@@ -66,17 +65,17 @@ public class TransactionAspect {
                 exception[0] = e;
             }
             rolledBack = true;
-            doRollback(transactionManager, transaction);
+            doRollback(context, transactionManager, transaction);
         } finally {
             try {
                 if (readOnly) {
-                    doRollback(transactionManager, transaction);
+                    doRollback(context, transactionManager, transaction);
                 } else if (!rolledBack && (isNewTransaction || commitBehavior == CommitBehavior.ALWAYS_COMMIT)) {
-                    transactionManager.commit(transaction);
+                    doCommit(context, transactionManager, transaction);
                 }
             } catch (Throwable t) {
                 Log.error(Log.JEEVES, "ERROR committing transaction, will try to rollback", t);
-                doRollback(transactionManager, transaction);
+                doRollback(context, transactionManager, transaction);
             }
         }
 
@@ -92,31 +91,44 @@ public class TransactionAspect {
         return result;
     }
 
-    private static void doRollback(PlatformTransactionManager transactionManager,
+    protected static void doCommit(ApplicationContext context, PlatformTransactionManager transactionManager, TransactionStatus transaction) {
+
+        for (BeforeCommitTransactionListener listener : context.getBeansOfType(BeforeCommitTransactionListener.class).values()) {
+            listener.beforeCommit(transaction);
+        }
+
+        transactionManager.commit(transaction);
+
+        for (AfterCommitTransactionListener listener : context.getBeansOfType(AfterCommitTransactionListener.class).values()) {
+            listener.afterCommit(transaction);
+        }
+    }
+
+    private static void doRollback(ApplicationContext context,
+                                   PlatformTransactionManager transactionManager,
                                    @Nullable TransactionStatus transaction) {
         try {
+            if (transaction != null && !transaction.isCompleted()) {
 
-
-			if (transaction != null && !transaction.isCompleted()) {
-				transactionManager.rollback(transaction);
+                try {
+                    Collection<BeforeRollbackTransactionListener> listeners = context.getBeansOfType
+                            (BeforeRollbackTransactionListener.class).values();
+                    for (BeforeRollbackTransactionListener listener : listeners) {
+                        listener.beforeRollback(transaction);
+                    }
+                } finally {
+                    transactionManager.rollback(transaction);
+                    Collection<AfterRollbackTransactionListener> listeners = context.getBeansOfType(
+                            AfterRollbackTransactionListener.class).values();
+                    for (AfterRollbackTransactionListener listener : listeners) {
+                        listener.afterRollback(transaction);
+                    }
+                }
 			} 
 			//what if the transaction is completed?
 			//maybe then we shouldn't be here
         } catch (Throwable t) {
             Log.error(Log.JEEVES, "ERROR rolling back transaction", t);
         }
-    }
-
-    @Around("execution(org.jdom.Element jeeves.server.dispatchers.ServiceInfo.execServices(..))")
-    public Element aroundServiceManagerDispatch(final ProceedingJoinPoint joinPoint) throws Throwable {
-        return runInTransaction("ServiceManager.dispatch", _applicationContext,
-                TransactionRequirement.CREATE_ONLY_WHEN_NEEDED,
-                CommitBehavior.ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS,
-                false, new TransactionTask<Element>() {
-            @Override
-            public Element doInTransaction(TransactionStatus transaction) throws Throwable {
-                return (Element) joinPoint.proceed();
-            }
-        });
     }
 }

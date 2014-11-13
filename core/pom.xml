@@ -93,10 +93,6 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
         </dependency>
-        <dependency>
-            <groupId>aspectj</groupId>
-            <artifactId>aspectjweaver</artifactId>
-        </dependency>
 
         <!-- Monitoring libraries -->
         <dependency>

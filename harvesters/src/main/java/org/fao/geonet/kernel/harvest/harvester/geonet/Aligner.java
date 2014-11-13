@@ -30,28 +30,40 @@ import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.exceptions.NoSchemaMatchesException;
+import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
-import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.kernel.harvest.harvester.HarvesterUtil;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.harvest.BaseAligner;
-import org.fao.geonet.kernel.mef.*;
+import org.fao.geonet.kernel.mef.IMEFVisitor;
+import org.fao.geonet.kernel.mef.IVisitor;
+import org.fao.geonet.kernel.mef.Importer;
+import org.fao.geonet.kernel.mef.MEF2Visitor;
+import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.kernel.mef.MEFVisitor;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.utils.*;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -65,8 +77,6 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.io.IOException;
-import java.io.InputStream;
 
 //=============================================================================
 
@@ -217,7 +227,7 @@ public class Aligner extends BaseAligner
 	//--- Private methods : addMetadata
 	//---
 	//--------------------------------------------------------------------------
-    private Element extractValidMetadataForImport (File[] files, Element info) throws IOException, JDOMException {
+    private Element extractValidMetadataForImport (DirectoryStream<Path> files, Element info) throws IOException, JDOMException {
         Element metadataValidForImport;
         final String finalPreferredSchema = preferredSchema;
 
@@ -231,15 +241,15 @@ public class Aligner extends BaseAligner
             }
         }
 
-        String lastUnknownMetadataFolderName = null;
+        Path lastUnknownMetadataFolderName = null;
 
         if (Log.isDebugEnabled(Geonet.MEF))
             Log.debug(Geonet.MEF, "Multiple metadata files");
 
         Map<String, Pair<String, Element>> mdFiles =
                 new HashMap<String, Pair<String, Element>>();
-        for (File file : files) {
-            if (file != null && !file.isDirectory()) {
+        for (Path file : files) {
+            if (Files.isDirectory(file)) {
                 Element metadata = Xml.loadFile(file);
                 try {
                     String metadataSchema = dataMan.autodetectSchema(metadata, null);
@@ -249,20 +259,13 @@ public class Aligner extends BaseAligner
                         continue;
                     }
 
-                    String currFile = "Found metadata file " +
-                            file.getParentFile().getParentFile().getName() + File.separator +
-                            file.getParentFile().getName() + File.separator +
-                            file.getName();
+                    String currFile = "Found metadata file " + file.getParent().getParent().relativize(file);
                     mdFiles.put(metadataSchema, Pair.read(currFile, metadata));
 
                 } catch (NoSchemaMatchesException e) {
                     // Important folder name to identify metadata should be ../../
-                    lastUnknownMetadataFolderName =
-                            file.getParentFile().getParentFile().getName() + File.separator +
-                                    file.getParentFile().getName() + File.separator;
-                    log.debug("No schema match for "
-                            + lastUnknownMetadataFolderName + file.getName()
-                            + ".");
+                    lastUnknownMetadataFolderName =  file.getParent().getParent().relativize(file.getParent());
+                    log.debug("No schema match for " + lastUnknownMetadataFolderName + file.getFileName() + ".");
                 }
             }
         }

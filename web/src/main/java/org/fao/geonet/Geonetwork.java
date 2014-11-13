@@ -80,10 +80,10 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.util.List;
@@ -325,15 +325,15 @@ public class Geonetwork implements ApplicationHandler {
 
         if (xmlSerializer instanceof XmlSerializerSvn && svnManager != null) {
             svnManager.setContext(context);
-            String subversionPath = dataDirectory.getMetadataRevisionDir().getCanonicalPath();
-            svnManager.setSubversionPath(subversionPath);
+            Path subversionPath = dataDirectory.getMetadataRevisionDir().toAbsolutePath().normalize();
+            svnManager.setSubversionPath(subversionPath.toString());
             svnManager.init();
         }
 
         /**
          * Initialize language detector
          */
-        LanguageDetector.init(appPath + _applicationContext.getBean(Geonet.Config.LANGUAGE_PROFILES_DIR, String.class));
+        LanguageDetector.init(appPath.resolve(_applicationContext.getBean(Geonet.Config.LANGUAGE_PROFILES_DIR, String.class)));
 
         //------------------------------------------------------------------------
         //--- Initialize thesaurus
@@ -415,8 +415,8 @@ public class Geonetwork implements ApplicationHandler {
                     final DbLib dbLib = new DbLib();
                     for (Pair<String, String> pair : importData) {
                         final ServletContext servletContext = context.getServlet().getServletContext();
-                        final String appPath = context.getAppPath();
-                        final String filePath = pair.one();
+                        final Path appPath = context.getAppPath();
+                        final Path filePath = IO.toPath(pair.one());
                         final String filePrefix = pair.two();
                         Log.warning(Geonet.DB, "Executing SQL from: " + filePath + " " + filePrefix);
                         dbLib.insertData(servletContext, context, appPath, filePath, filePrefix);
@@ -496,18 +496,14 @@ public class Geonetwork implements ApplicationHandler {
      * @param context
      * @param appPath
      */
-    private void createSiteLogo(String nodeUuid, ServiceContext context, String appPath) {
+    private void createSiteLogo(String nodeUuid, ServiceContext context, Path appPath) {
         try {
-            String logosDir = Resources.locateLogosDir(context);
-            File logo = new File(logosDir, nodeUuid + ".gif");
-            if (!logo.exists()) {
-                FileOutputStream os = new FileOutputStream(logo);
-                try {
-                    os.write(Resources.loadImage(context.getServlet().getServletContext(), appPath, "images/logos/dummy.gif", new byte[0]).one());
-                    logger.info("      Setting catalogue logo for current node identified by: " + nodeUuid);
-                } finally {
-                    os.close();
-                }
+            Path logosDir = Resources.locateLogosDir(context);
+            Path logo =logosDir.resolve(nodeUuid + ".gif");
+            if (!Files.exists(logo)) {
+                final ServletContext servletContext = context.getServlet().getServletContext();
+                byte[] logoData = Resources.loadImage(servletContext, appPath, "images/logos/dummy.gif", new byte[0]).one();
+                Files.write(logo, logoData);
             }
         } catch (Throwable e) {
             logger.error("      Error when setting the logo: " + e.getMessage());

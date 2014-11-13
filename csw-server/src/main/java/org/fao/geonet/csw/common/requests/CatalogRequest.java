@@ -23,33 +23,22 @@
 
 package org.fao.geonet.csw.common.requests;
 
-import static org.fao.geonet.utils.AbstractHttpRequest.Method;
 import jeeves.server.context.ServiceContext;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.fao.geonet.utils.GeonetHttpRequestFactory;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.Util;
-
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
-import org.fao.geonet.csw.common.util.Xml;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.XmlRequest;
-import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+
+import static org.fao.geonet.utils.AbstractHttpRequest.Method;
 
 //=============================================================================
 
@@ -346,7 +335,9 @@ public abstract class CatalogRequest {
 
 	protected void addParam(String name, Object value, String prefix)
 	{
-        client.addParam(name, prefix+value.toString());
+        if (value != null) {
+            client.addParam(name, prefix + value.toString());
+        }
 	}
 
 	protected String outputSchema;

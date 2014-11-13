@@ -1,9 +1,8 @@
 package jeeves.config.springutil;
 
-import jeeves.TransactionAspect;
-import jeeves.TransactionTask;
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
 import org.fao.geonet.domain.User;
-import org.jdom.Element;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -22,17 +21,17 @@ public class JeevesDispatcherServlet extends DispatcherServlet{
     @Override
     protected void doDispatch(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
 
-        TransactionAspect.runInTransaction("jeevesDispatchServlet", getWebApplicationContext(),
-                TransactionAspect.TransactionRequirement.CREATE_ONLY_WHEN_NEEDED,
-                TransactionAspect.CommitBehavior.ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS,
+        TransactionManager.runInTransaction("jeevesDispatchServlet", getWebApplicationContext(),
+                TransactionManager.TransactionRequirement.CREATE_ONLY_WHEN_NEEDED,
+                TransactionManager.CommitBehavior.ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS,
                 false, new TransactionTask<Void>() {
-            @Override
-            public Void doInTransaction(TransactionStatus transaction) throws Throwable {
-                JeevesDispatcherServlet.super.doDispatch(request, response);
+                    @Override
+                    public Void doInTransaction(TransactionStatus transaction) throws Throwable {
+                        JeevesDispatcherServlet.super.doDispatch(request, response);
 
-                return null;
-            }
-        });
+                        return null;
+                    }
+                });
     }
 
     @Override

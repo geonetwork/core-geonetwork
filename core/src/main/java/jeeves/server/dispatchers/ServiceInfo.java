@@ -23,6 +23,8 @@
 
 package jeeves.server.dispatchers;
 
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.context.ServiceContext;
@@ -30,6 +32,7 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.TransactionStatus;
 
 import java.nio.file.Path;
 import java.util.Vector;
@@ -109,7 +112,19 @@ public class ServiceInfo {
 
     //--------------------------------------------------------------------------
 
-    public Element execServices(Element params, ServiceContext context) throws Exception {
+    public Element execServices(final Element params, final ServiceContext context) throws Exception {
+        return TransactionManager.runInTransaction("ServiceManager.dispatch", context.getApplicationContext(),
+                TransactionManager.TransactionRequirement.CREATE_ONLY_WHEN_NEEDED,
+                TransactionManager.CommitBehavior.ONLY_COMMIT_NEWLY_CREATED_TRANSACTIONS,
+                false, new TransactionTask<Element>() {
+                    @Override
+                    public Element doInTransaction(TransactionStatus transaction) throws Throwable {
+                        return noTransactionExec(params, context);
+                    }
+                });
+    }
+
+    private Element noTransactionExec(Element params, ServiceContext context) throws Exception {
         if (params == null)
             params = new Element(Jeeves.Elem.REQUEST);
 
