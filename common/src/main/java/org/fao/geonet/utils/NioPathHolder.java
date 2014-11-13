@@ -31,19 +31,34 @@ public class NioPathHolder {
     }
 
     static InputSource resolveEntity(String publicId, String systemId) throws IOException {
-        if (ACTUAL_RELATIVE_TO.get() != null && systemId.startsWith("file:/")) {
-            try {
-                final Path srcPath = Paths.get(new URI(systemId));
+        Path resource = resolveResource(publicId, systemId);
+        if (resource != null) {
+            return new InputSource(Files.newInputStream(resource));
+        }
+        return null;
+    }
 
-                final Path relativePath = SYS_ID_RELATIVE_TO.get().relativize(srcPath);
-                Path finalPath = ACTUAL_RELATIVE_TO.get().resolve(relativePath.toString());
-                if (Files.isRegularFile(finalPath)) {
-                    return new InputSource(Files.newInputStream(finalPath));
+    public static Path resolveResource(String publicId, String systemId) {
+        if (ACTUAL_RELATIVE_TO.get() != null) {
+            if (systemId.startsWith("file:/") || systemId.startsWith(ACTUAL_RELATIVE_TO.get().toUri().getScheme())) {
+                try {
+                    Path srcPath = Paths.get(new URI(systemId));
+                    final Path relativePath = SYS_ID_RELATIVE_TO.get().relativize(srcPath);
+                    Path finalPath = ACTUAL_RELATIVE_TO.get().resolve(relativePath.toString());
+                    if (Files.isRegularFile(finalPath)) {
+                        return finalPath;
+                    }
+                } catch (URISyntaxException e) {
+                    // failed
                 }
-            } catch (URISyntaxException e) {
-                // ignore
+            } else {
+                Path srcPath = ACTUAL_RELATIVE_TO.get().resolve(systemId);
+                if (Files.isRegularFile(srcPath)) {
+                    return srcPath;
+                }
             }
         }
+
         return null;
     }
 }

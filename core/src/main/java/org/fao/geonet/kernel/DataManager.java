@@ -1848,7 +1848,7 @@ public class DataManager {
         catch (Exception x) {
             // do not print stacktrace as this is 'normal' program flow
             if(Log.isDebugEnabled(Geonet.DATA_MANAGER))
-                Log.debug(Geonet.DATA_MANAGER, "invalid metadata: " + x.getMessage());
+                Log.debug(Geonet.DATA_MANAGER, "invalid metadata: " + x.getMessage(), x);
             return false;
         }
     }
@@ -1863,7 +1863,7 @@ public class DataManager {
      * @return
      */
     public boolean doValidate(String schema, String metadataId, Document doc, String lang) {
-        HashMap <String, Integer[]> valTypeAndStatus = new HashMap<String, Integer[]>();
+        HashMap <String, Integer[]> valTypeAndStatus = new HashMap<>();
         boolean valid = true;
 
         if (doc.getDocType() != null) {

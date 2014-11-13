@@ -557,7 +557,7 @@
       <dependency>
         <groupId>xerces</groupId>
         <artifactId>xercesImpl</artifactId>
-        <version>2.7.1</version>
+        <version>2.11.0</version>
       </dependency>
 			<!-- Patched XML Resolver 1.2 from apache xml-commons - fixes problems
 			     with windows URLs -->

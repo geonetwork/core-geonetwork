@@ -1251,7 +1251,11 @@ public final class Xml
      */
 	private static void validateGuts(Path schemaPath, Element xml, ErrorHandler eh) throws Exception {
 		StreamSource schemaFile = new StreamSource(Files.newInputStream(schemaPath), schemaPath.toUri().toASCIIString());
-		Schema schema = factory().newSchema(schemaFile);
+        final SchemaFactory factory = factory();
+        NioPathHolder.setBase(schemaPath);
+        Resolver resolver = ResolverWrapper.getInstance();
+        factory.setResourceResolver(resolver.getXmlResolver());
+        Schema schema = factory.newSchema(schemaFile);
 		validateRealGuts(schema, xml, eh);
 	}
 
@@ -1265,7 +1269,6 @@ public final class Xml
      * @throws Exception
      */
 	private static void validateRealGuts(Schema schema, Element xml, ErrorHandler eh) throws Exception {
-
 		Resolver resolver = ResolverWrapper.getInstance();
 
 		ValidatorHandler vh = schema.newValidatorHandler();
