@@ -78,5 +78,24 @@
         })()
       };
 
+      $scope.sourcesOptions = {
+        mode: 'prefetch',
+        promise: (function(){
+          var defer = $q.defer();
+          $http.get(suggestService.getInfoUrl('sources')).success(function(data) {
+            var res = [];
+            var a = data['sources']
+            for(var i=0; i<a.length;i++) {
+              res.push({
+                id: a[i]['@id'],
+                name : a[i].name
+              });
+            }
+            defer.resolve(res);
+          });
+          return defer.promise;
+        })()
+      };
+
     }]);
 })();
