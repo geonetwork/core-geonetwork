@@ -22,6 +22,10 @@ public class GeonetMockServletContext extends MockServletContext {
 
     @Override
     protected String getResourceLocation(String path) {
-        return this.resourcePath.resolve(super.getResourceLocation(path)).toString();
+        String resourceLocation = super.getResourceLocation(path);
+        if (resourceLocation.startsWith("/") || resourceLocation.startsWith("\\")) {
+            resourceLocation = resourceLocation.substring(1);
+        }
+        return this.resourcePath.resolve(resourceLocation).toString();
     }
 }

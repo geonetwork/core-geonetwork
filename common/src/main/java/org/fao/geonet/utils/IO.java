@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystem;
+import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -228,7 +229,16 @@ public final class IO {
     }
 
     public static Path toPath(URI uri) {
-        return Paths.get(uri);
+        try {
+            return Paths.get(uri);
+        } catch (FileSystemNotFoundException e) {
+            if (uri.toString().startsWith("jar:")) {
+                throw new IllegalStateException("The zip file references in URI: " + uri + " has not been opened.  " +
+                                                "Before you can create this path you must first call ZipUtil.openZipFS with the url to " +
+                                                "the zip file");
+            }
+            throw new FileSystemNotFoundException("No filesystem found for the uri: " + uri);
+        }
     }
 
     public static void setFileSystem(FileSystem newFileSystem) {

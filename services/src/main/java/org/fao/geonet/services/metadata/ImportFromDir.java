@@ -47,8 +47,6 @@ import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileVisitResult;
@@ -75,18 +73,6 @@ import java.util.concurrent.Future;
  * Import all metadata found inside a given directory.
  */
 public class ImportFromDir extends NotInReadOnlyModeService {
-	private FilenameFilter filter = new FilenameFilter()
-	{
-		public boolean accept(File dir, String name)
-		{
-			if (name.equals(CONFIG_FILE))
-				return false;
-
-			return !name.startsWith(".");
-		}
-	};
-
-
 	//--------------------------------------------------------------------------
 
 	private Path stylePath;

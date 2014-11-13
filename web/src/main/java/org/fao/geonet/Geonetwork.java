@@ -30,6 +30,7 @@ import jeeves.server.JeevesEngine;
 import jeeves.server.JeevesProxyInfo;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.sources.http.ServletPathFinder;
 import jeeves.xlink.Processor;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
@@ -103,7 +104,6 @@ public class Geonetwork implements ApplicationHandler {
     private SearchManager searchMan;
     private MetadataNotifierControl metadataNotifierControl;
     private ThreadPool threadPool;
-    private String FS = File.separator;
     private ConfigurableApplicationContext _applicationContext;
 
     //---------------------------------------------------------------------------
@@ -130,15 +130,12 @@ public class Geonetwork implements ApplicationHandler {
         this._applicationContext = context.getApplicationContext();
         ConfigurableListableBeanFactory beanFactory = context.getApplicationContext().getBeanFactory();
 
-        appPath = context.getAppPath();
+        ServletPathFinder finder = new ServletPathFinder(this._applicationContext.getBean(ServletContext.class));
+        appPath = finder.getAppPath();
         String baseURL = context.getBaseUrl();
         String webappName = baseURL.substring(1);
         // TODO : if webappName is "". ie no context
 
-        ServletContext servletContext = null;
-        if (context.getServlet() != null) {
-            servletContext = context.getServlet().getServletContext();
-        }
         final SystemInfo systemInfo = _applicationContext.getBean(SystemInfo.class);
         String version = systemInfo.getVersion();
         String subVersion = systemInfo.getSubVersion();
@@ -171,7 +168,7 @@ public class Geonetwork implements ApplicationHandler {
         @SuppressWarnings("unchecked")
         Class<StatusActions> statusActionsClass = (Class<StatusActions>) Class.forName(statusActionsClassName);
 
-        JeevesJCS.setConfigFilename(appPath + "WEB-INF/classes/cache.ccf");
+        JeevesJCS.setConfigFilename(appPath.resolve("WEB-INF/classes/cache.ccf"));
 
         // force caches to be config'd so shutdown hook works correctly
         JeevesJCS.getInstance(Processor.XLINK_JCS);

@@ -30,7 +30,6 @@ import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.jdom.Element;
 
-import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -45,7 +44,6 @@ public class EditFile extends AbstractFormatService {
         ensureInitializedDir(context);
 
         String xslid = Util.getParam(params, Params.ID);
-        String file = URLDecoder.decode(Util.getParam(params, Params.FNAME), Constants.ENCODING);
 
         Path formatDir = getAndVerifyFormatDir(Params.ID, xslid);
 

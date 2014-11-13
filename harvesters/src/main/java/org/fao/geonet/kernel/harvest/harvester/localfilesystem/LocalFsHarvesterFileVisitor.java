@@ -176,7 +176,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                     }
                 }
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             log.error("An error occurred while harvesting a local file:" + file);
         }
         return FileVisitResult.CONTINUE;

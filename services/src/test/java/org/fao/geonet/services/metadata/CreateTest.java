@@ -8,7 +8,6 @@ import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.jdom.Element;
 import org.junit.Test;
@@ -41,8 +40,6 @@ public class CreateTest extends AbstractServiceIntegrationTest {
     private MetadataRepository _metadataRepo;
     @Autowired
     private GroupRepository _groupRepo;
-    @Autowired
-    private SourceRepository _sourceRepo;
 
     @Test
     public void testCreateNormalMetadata() throws Exception {

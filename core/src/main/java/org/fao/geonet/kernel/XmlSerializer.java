@@ -169,7 +169,7 @@ public abstract class XmlSerializer {
 			xpath(buffer, next.getParentElement());
 			buffer.append("/");
 		}
-		
+
 		String name = next.getName();
 		Namespace namespace = next.getNamespace();
 		buffer.append(namespace.getPrefix()).append(":").append(name);

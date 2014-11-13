@@ -149,7 +149,7 @@
             <gmd:spatialRepresentationType>
                 <gmd:MD_SpatialRepresentationTypeCode codeListValue="vector" codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/ML_gmxCodelists.xml#MD_SpatialRepresentationTypeCode"/>
             </gmd:spatialRepresentationType>
-            <gmd:spatialResolution gco:nilReason="withheld">
+            <gmd:spatialResolution gco:nilReason="withheld" xlink:href='xyz'>
                 <gmd:MD_Resolution>
                     <gmd:equivalentScale>
                         <gmd:MD_RepresentativeFraction>

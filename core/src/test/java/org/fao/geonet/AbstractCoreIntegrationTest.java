@@ -18,6 +18,7 @@ import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.util.ThreadPool;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -33,14 +34,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
+import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -114,7 +115,12 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         final HashMap<String, Object> contexts = new HashMap<String, Object>();
         final Constructor<?> constructor = GeonetContext.class.getDeclaredConstructors()[0];
         constructor.setAccessible(true);
-        GeonetContext gc = (GeonetContext) constructor.newInstance(_applicationContext, false, null, null);
+        GeonetContext gc = (GeonetContext) constructor.newInstance(_applicationContext, false, null, new ThreadPool(){
+            @Override
+            public void runTask(Runnable task, int delayBeforeStart, TimeUnit unit) {
+                task.run();
+            }
+        });
 
 
         contexts.put(Geonet.CONTEXT_NAME, gc);

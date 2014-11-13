@@ -2,6 +2,7 @@ package org.fao.geonet.kernel.mef;
 
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
+import org.fao.geonet.ZipUtil;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.MetadataRepository;
@@ -11,6 +12,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.net.URI;
+import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -101,9 +104,19 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
 
             for (String mefFile : mefFilesToLoad) {
                 final Path mefTestFile = Files.createTempFile("mefTestFile", ".mef");
-                final Path srcMefPath = IO.toPath(MEFLibIntegrationTest.class.getResource(mefFile).toURI());
-                Files.write(mefTestFile, Files.readAllBytes(srcMefPath));
-
+                URI uri = MEFLibIntegrationTest.class.getResource(mefFile).toURI();
+                if (uri.toString().startsWith("jar:")) {
+                    int exclamation = uri.toString().indexOf("!", 2);
+                    URI zipFsUri = new URI(uri.toString().substring("jar:".length(), exclamation));
+                    //noinspection UnusedDeclaration
+                    try (FileSystem zipFS = ZipUtil.openZipFs(IO.toPath(zipFsUri))) {
+                        final Path srcMefPath = IO.toPath(uri);
+                        Files.write(mefTestFile, Files.readAllBytes(srcMefPath));
+                    }
+                } else {
+                    final Path srcMefPath = IO.toPath(uri);
+                    Files.write(mefTestFile, Files.readAllBytes(srcMefPath));
+                }
                 Element params = new Element("request");
                 metadataIds.addAll(MEFLib.doImport(params, context, mefTestFile, testClass.getStyleSheets()));
             }
