@@ -45,6 +45,7 @@ import org.fao.geonet.Logger;
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.Service;
 import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.repository.ServiceRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.TransformerFactoryFactory;
@@ -86,9 +87,6 @@ public class JeevesEngine {
     private String _defaultSrv;
 	private String _startupErrorSrv;
 	private String _defaultLang;
-    private String _uploadDir;
-	private int _maxUploadSize;
-	private Path _appPath;
     private boolean _debugFlag;
 	
 	/* true if the 'general' part has been loaded */
@@ -107,6 +105,10 @@ public class JeevesEngine {
     private List<Element> _appHandList = new ArrayList<Element>();
     private Vector<ApplicationHandler> _appHandlers = new Vector<ApplicationHandler>();
     private List<Element> _dbServices = new ArrayList<Element>();
+    @Autowired
+    private GeonetworkDataDirectory dataDirectory;
+    private Path _appPath;
+    private int _maxUploadSize;
 
 
     //---------------------------------------------------------------------------
@@ -350,7 +352,6 @@ public class JeevesEngine {
 	{
 		info("Initializing general configuration...");
 
-		_uploadDir = Util.getParam(general, ConfigFile.General.Child.UPLOAD_DIR);
 		try {
 		    _maxUploadSize = Integer.parseInt(Util.getParam(general, ConfigFile.General.Child.MAX_UPLOAD_SIZE));
 		} catch (Exception e) {
@@ -360,21 +361,6 @@ public class JeevesEngine {
             error("   Message   : " + e.getMessage());
             error("   Stack     : " + Util.getStackTrace(e));
         }
-
-        if (!new File(_uploadDir).isAbsolute()) {
-            _uploadDir = _appPath + _uploadDir;
-        }
-
-        if (!_uploadDir.endsWith("/")) {
-            _uploadDir += "/";
-        }
-
-		File uploadDirFile = new File(_uploadDir);
-		if (!uploadDirFile.mkdirs() && !uploadDirFile.exists()) {
-		    throw new RuntimeException("Unable to make upload directory: " + uploadDirFile);
-		} else {
-		    Log.info(Log.JEEVES, "Upload directory is: " + _uploadDir);
-		}
 
 		_debugFlag = "true".equals(general.getChildText(ConfigFile.General.Child.DEBUG));
 
@@ -521,7 +507,7 @@ public class JeevesEngine {
 			info("   Adding service : " + name);
 			
 			try {
-				_serviceMan.addService(pack, service);
+				_serviceMan.addService(pack, service, this._appPath);
 			} catch (Exception e) {
 				warning("Raised exception while registering service. Skipped.");
 				warning("   Service   : " + name);
@@ -581,7 +567,7 @@ public class JeevesEngine {
 	//---
 	//---------------------------------------------------------------------------
 
-	public String getUploadDir() { return _uploadDir; }
+	public Path getUploadDir() { return this.dataDirectory.getUploadDir(); }
 
 	//---------------------------------------------------------------------------
 

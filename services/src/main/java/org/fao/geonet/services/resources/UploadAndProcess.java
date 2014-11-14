@@ -55,13 +55,12 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Controller("resource.upload.and.link")
 public class UploadAndProcess {
-    public void init(String appPath, ServiceConfig params) throws Exception {
-    }
-    
     @Autowired
     private ServiceContext context;
     @Autowired
     private DataManager dm;
+    @Autowired
+    private XslProcessing xslProcessing;
 
 	@RequestMapping(value = {"/{lang}/resource.upload.and.link", "/{lang}/resource-onlinesrc-upload"}, produces = {
 			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
@@ -107,8 +106,8 @@ public class UploadAndProcess {
         Element processedMetadata;
         try {
             final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
-            processedMetadata = XslProcessing.get().process(id, process,
-                    true, context.getAppPath(), report, true, siteURL, request);
+            processedMetadata = xslProcessing.process(id, process,
+                    true, report, siteURL, request);
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed", "Not found:"
                         + report.getNotFoundMetadataCount() + ", Not owner:" + report.getNotEditableMetadataCount()

@@ -58,7 +58,6 @@ import org.jdom.filter.ElementFilter;
 import org.springframework.context.ApplicationContext;
 
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
@@ -128,7 +127,7 @@ public class SchemaManager {
         Log.info(Geonet.SCHEMA_MANAGER, Constants.XML_CATALOG_FILES + " property set to " + catalogProp);
 
         Path blankXSLFile = webappDir.resolve("xsl").resolve("blanks.xsl");
-        System.setProperty(Constants.XML_CATALOG_BLANKXSLFILE, blankXSLFile.toString());
+        System.setProperty(Constants.XML_CATALOG_BLANKXSLFILE, blankXSLFile.toUri().toASCIIString());
         Log.info(Geonet.SCHEMA_MANAGER, Constants.XML_CATALOG_BLANKXSLFILE + " property set to " + blankXSLFile);
 
         return webInf;
@@ -356,41 +355,41 @@ public class SchemaManager {
 	  */
 	public Attribute getSchemaLocation(String name, ServiceContext context) {
 
-		Attribute out = null;
+        Attribute out = null;
 
-		beforeRead();
-		try {
-			Schema schema = hmSchemas.get(name);	
+        beforeRead();
+        try {
+            Schema schema = hmSchemas.get(name);
 
-			if (schema == null)
-				throw new IllegalArgumentException("Schema not registered : " + name);
+            if (schema == null)
+                throw new IllegalArgumentException("Schema not registered : " + name);
 
-			String nsUri = schema.getMetadataSchema().getPrimeNS();
-			String schemaLoc  = schema.getSchemaLocation();
-			String schemaFile = schema.getDir() + "schema.xsd";
+            String nsUri = schema.getMetadataSchema().getPrimeNS();
+            String schemaLoc = schema.getSchemaLocation();
+            Path schemaFile = schema.getDir().resolve("schema.xsd");
 
-      if (schemaLoc.equals("")) {
-				if (new File(schemaFile).exists()) { // build one 
-					String schemaUrl = getSchemaUrl(context, name);
-					if (nsUri == null || nsUri.equals("")) {
-						out = new Attribute("noNamespaceSchemaLocation", schemaUrl, Geonet.Namespaces.XSI);
-					} else {
-						schemaLoc = nsUri +" "+ schemaUrl;
-						out = new Attribute("schemaLocation", schemaLoc, Geonet.Namespaces.XSI);
-          }
-				} // else return null - no schema xsd exists - could be dtd
-      } else {
-				if (nsUri == null || nsUri.equals("")) {
-					out = new Attribute("noNamespaceSchemaLocation", schemaLoc, Geonet.Namespaces.XSI);
-				} else {
-        	out = new Attribute("schemaLocation", schemaLoc, Geonet.Namespaces.XSI);
-				}
-      }
-			return out;
-		} finally {
-			afterRead();
-		}
-	}
+            if (schemaLoc.equals("")) {
+                if (Files.exists(schemaFile)) { // build one
+                    String schemaUrl = getSchemaUrl(context, name);
+                    if (nsUri == null || nsUri.equals("")) {
+                        out = new Attribute("noNamespaceSchemaLocation", schemaUrl, Geonet.Namespaces.XSI);
+                    } else {
+                        schemaLoc = nsUri + " " + schemaUrl;
+                        out = new Attribute("schemaLocation", schemaLoc, Geonet.Namespaces.XSI);
+                    }
+                } // else return null - no schema xsd exists - could be dtd
+            } else {
+                if (nsUri == null || nsUri.equals("")) {
+                    out = new Attribute("noNamespaceSchemaLocation", schemaLoc, Geonet.Namespaces.XSI);
+                } else {
+                    out = new Attribute("schemaLocation", schemaLoc, Geonet.Namespaces.XSI);
+                }
+            }
+            return out;
+        } finally {
+            afterRead();
+        }
+    }
 
 	/**
      * Returns the schema templatesdirectory.

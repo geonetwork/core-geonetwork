@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.metadata;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -32,12 +31,9 @@ import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
-import jeeves.constants.Jeeves;
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
@@ -45,6 +41,7 @@ import org.fao.geonet.domain.responses.IdResponse;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
@@ -53,7 +50,9 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -93,39 +92,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller("metadata.processing")
 @ReadWriteController
-public class XslProcessing { //extends NotInReadOnlyModeService {
-    private Path _appPath;
-    private static XslProcessing instance;
-    
-    public void init(Path appPath, ServiceConfig params) throws Exception {
-        _appPath = appPath;
+public class XslProcessing {
 
-        // TODO : here we could register process on startup
-        // in order to not to check process each time.
-    }
-    
-    /**
-     * To replace static calls
-     * @return
-     */
-    public static XslProcessing get() {
-    	if(XslProcessing.instance == null) {
-    		XslProcessing.instance = new XslProcessing();
-    	}
-    	return XslProcessing.instance;
-    }
-
-    /**
-     *
-     * @return
-     * @throws Exception
-     */
-    public @ResponseBody Response serviceSpecificExec(@RequestParam(defaultValue= Params.PROCESS) String process, 
-    		@RequestParam(defaultValue=Params.SAVE) Boolean save, 
-    		@RequestParam(defaultValue="") String id, 
+    @RequestMapping(value = {"/{lang}/md.processing", "/{lang}/xml.metadata.processing", "/{lang}/metadata.processing.new"}, produces = {
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    @ResponseBody
+    public Response xmlProcessing(@RequestParam(defaultValue= Params.PROCESS) String process,
+    		@RequestParam(defaultValue=Params.SAVE) Boolean save,
+    		@RequestParam(defaultValue="") String id,
     		@RequestParam(defaultValue="") String uuid,
     		HttpServletRequest request)
-            throws Exception {        
+            throws Exception {
         XslProcessingReport xslProcessingReport = new XslProcessingReport(process);
 
         if(id.isEmpty()) {
@@ -134,7 +111,7 @@ public class XslProcessing { //extends NotInReadOnlyModeService {
         Element processedMetadata;
         try {
             final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
-            processedMetadata = process(id, process, save, _appPath, xslProcessingReport, false, siteURL, request);
+            processedMetadata = process(id, process, save, xslProcessingReport, siteURL, request);
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed", "Not found:"
                         + xslProcessingReport.getNotFoundMetadataCount() + 
@@ -152,7 +129,6 @@ public class XslProcessing { //extends NotInReadOnlyModeService {
         }
         
         return res;
-
     }
 
     /**
@@ -161,16 +137,14 @@ public class XslProcessing { //extends NotInReadOnlyModeService {
      *
      * @param id        The metadata identifier corresponding to the metadata record to process
      * @param process    The process name
-     * @param appPath    The application path (use to get the process XSL)
      * @param report
      * @return
      * @throws Exception
      */
     public Element process(String id, String process, boolean save,
-                                  Path appPath,
-                                  XslProcessingReport report, boolean useIndexGroup,
-                                  String siteUrl,
-                                  HttpServletRequest request) throws Exception {
+                           XslProcessingReport report,
+                           String siteUrl,
+                           HttpServletRequest request) throws Exception {
 
         report.incrementProcessedRecords();
         

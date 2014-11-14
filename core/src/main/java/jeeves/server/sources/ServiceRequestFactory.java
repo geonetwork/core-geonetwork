@@ -42,6 +42,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,7 +69,7 @@ public final class ServiceRequestFactory
 	  */
 
 	public static ServiceRequest create(HttpServletRequest req, HttpServletResponse res,
-													String uploadDir, int maxUploadSize) throws Exception
+													Path uploadDir, int maxUploadSize) throws Exception
 	{
 		String url = req.getPathInfo();
 
@@ -264,7 +266,7 @@ public final class ServiceRequestFactory
 	//---------------------------------------------------------------------------
 
 	@SuppressWarnings("unchecked")
-	private static Element extractParameters(HttpServletRequest req, String uploadDir, int maxUploadSize) throws Exception
+	private static Element extractParameters(HttpServletRequest req, Path uploadDir, int maxUploadSize) throws Exception
 	{
 		//--- set parameters from multipart request
 
@@ -293,7 +295,7 @@ public final class ServiceRequestFactory
 
 	//---------------------------------------------------------------------------
 
-	private static Element getMultipartParams(HttpServletRequest req, String uploadDir, int maxUploadSize) throws Exception
+	private static Element getMultipartParams(HttpServletRequest req, Path uploadDir, int maxUploadSize) throws Exception
 	{
 		Element params = new Element("params");
 
@@ -315,7 +317,6 @@ public final class ServiceRequestFactory
 					String type = item.getContentType();
 					long   size = item.getSize();
 
-
                     if(Log.isDebugEnabled(Log.REQUEST))
                         Log.debug(Log.REQUEST, "Uploading file "+file+" type: "+type+" size: "+size);
 					//--- remove path information from file (some browsers put it, like IE)
@@ -325,7 +326,7 @@ public final class ServiceRequestFactory
                         Log.debug(Log.REQUEST, "File is called "+file+" after simplification");
 
 					//--- we could get troubles if 2 users upload files with the same name
-					item.write(new File(uploadDir, file));
+                    Files.write(uploadDir.resolve(file), item.get());
 
 					Element elem = new Element(name)
 											.setAttribute("type", "file")

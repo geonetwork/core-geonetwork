@@ -51,7 +51,7 @@ public class Add implements ApplicationContextAware {
 		this.context = context;
 	}
 
-	@RequestMapping(value = "/{lang}/admin.logo.upload@json", 
+	@RequestMapping(value = "/{lang}/admin.logo.upload",
 			consumes = { MediaType.ALL_VALUE }, 
 			produces = { MediaType.APPLICATION_JSON_VALUE })
 	public @ResponseBody

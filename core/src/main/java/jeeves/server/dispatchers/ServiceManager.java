@@ -160,7 +160,7 @@ public class ServiceManager {
     //---------------------------------------------------------------------------
 
     @SuppressWarnings("unchecked")
-    public ServiceInfo addService(String pack, Element srv) throws Exception {
+    public ServiceInfo addService(String pack, Element srv, Path appPath) throws Exception {
         String name = srv.getAttributeValue(ConfigFile.Service.Attr.NAME);
         String match = srv.getAttributeValue(ConfigFile.Service.Attr.MATCH);
         String sheet = srv.getAttributeValue(ConfigFile.Service.Attr.SHEET);
@@ -174,12 +174,12 @@ public class ServiceManager {
         ArrayList<ServiceInfo> al = htServices.get(name);
 
         if (al == null) {
-            al = new ArrayList<ServiceInfo>();
+            al = new ArrayList<>();
             htServices.put(name, al);
         } else {
             info("Service " + name + " already exist, re-register it.");
             htServices.remove(name);
-            al = new ArrayList<ServiceInfo>();
+            al = new ArrayList<>();
             htServices.put(name, al);
         }
 
@@ -190,7 +190,7 @@ public class ServiceManager {
         List<Element> classes = srv.getChildren(ConfigFile.Service.Child.CLASS);
 
         for (Element classe : classes) {
-            si.addService(buildService(pack, classe));
+            si.addService(buildService(pack, classe, appPath));
         }
 
         //--- parse output pages
@@ -214,7 +214,7 @@ public class ServiceManager {
     //---------------------------------------------------------------------------
 
     @SuppressWarnings("unchecked")
-    private Service buildService(String pack, Element clas) throws Exception {
+    private Service buildService(String pack, Element clas, Path appPath) throws Exception {
         //--- get class name
 
         String name = clas.getAttributeValue(ConfigFile.Class.Attr.NAME);
@@ -231,7 +231,7 @@ public class ServiceManager {
 
         Service service = (Service) Class.forName(name).newInstance();
 
-        service.init(dataDir.getWebappDir(), new ServiceConfig(clas.getChildren(ConfigFile.Class.Child.PARAM)));
+        service.init(appPath, new ServiceConfig(clas.getChildren(ConfigFile.Class.Child.PARAM)));
 
         return service;
     }

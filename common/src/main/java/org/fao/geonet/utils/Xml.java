@@ -31,7 +31,6 @@ import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
 import org.apache.xml.resolver.tools.CatalogResolver;
-import org.eclipse.core.runtime.URIUtil;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.jdom.Attribute;
 import org.jdom.Content;
@@ -74,6 +73,7 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
+import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -217,22 +217,26 @@ public final class Xml
 
 	//--------------------------------------------------------------------------
 
-    public static Element loadFile(Path file) throws IOException, JDOMException {
-        SAXBuilder builder = getSAXBuilderWithPathXMLResolver(false, file); //new SAXBuilder();
+    public static Element loadFile(Path file) {
+        try {
+            SAXBuilder builder = getSAXBuilderWithPathXMLResolver(false, file); //new SAXBuilder();
 
-        String convert = System.getProperty("jeeves.filecharsetdetectandconvert", "");
+            String convert = System.getProperty("jeeves.filecharsetdetectandconvert", "");
 
-        // detect charset and convert if required
-        if (convert.equals("enabled")) {
-            byte[] content = convertFileToUTF8ByteArray(file);
-            return loadStream(new ByteArrayInputStream(content));
+            // detect charset and convert if required
+            if (convert.equals("enabled")) {
+                byte[] content = convertFileToUTF8ByteArray(file);
+                return loadStream(new ByteArrayInputStream(content));
 
-            // no charset detection and conversion allowed
-        } else {
-            try (InputStream in = Files.newInputStream(file)) {
-                Document jdoc = builder.build(in);
-                return (Element) jdoc.getRootElement().detach();
+                // no charset detection and conversion allowed
+            } else {
+                try (InputStream in = Files.newInputStream(file)) {
+                    Document jdoc = builder.build(in);
+                    return (Element) jdoc.getRootElement().detach();
+                }
             }
+        } catch (Throwable e) {
+            throw new RuntimeException("Error occurred while trying to load an xml file: " + file, e);
         }
 
     }
@@ -507,16 +511,25 @@ public final class Xml
                 if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
                     Log.debug(Log.XML_RESOLVER, "  Check if exist " + s.getSystemId());
                 }
-                File f = URIUtil.toFile(new URI(s.getSystemId()));
+
+                Path f;
+                final String systemId = s.getSystemId().replaceAll("%5C", "/");
+                try {
+                    f = IO.toPath(new URI(systemId));
+                } catch (FileSystemNotFoundException e) {
+                    f = IO.toPath(systemId);
+                }
                 if(Log.isDebugEnabled(Log.XML_RESOLVER))
-                    Log.debug(Log.XML_RESOLVER, "Check on "+f.getPath()+" exists returned: "+f.exists());
+                    Log.debug(Log.XML_RESOLVER, "Check on "+f+" exists returned: "+Files.exists(f));
                 // If the resolved resource does not exist, set it to blank file path to not trigger FileNotFound Exception
 
-                if (f == null || !(f.exists())) {
+                if (!Files.exists(f)) {
                     if(Log.isDebugEnabled(Log.XML_RESOLVER)) {
                         Log.debug(Log.XML_RESOLVER, "  Resolved resource " + s.getSystemId() + " does not exist. blankXSLFile returned instead.");
                     }
                     s.setSystemId(blankXSLFile);
+                } else {
+                    s.setSystemId(f.toUri().toASCIIString());
                 }
             }
             catch (URISyntaxException e) {
@@ -993,7 +1006,7 @@ public final class Xml
                             e.getChildText(elementName, elementNamespace) :
                             e.getAttributeValue(attributeName)
                     );
-            if (!"".equals(uuid)) {
+            if (uuid != null && !uuid.isEmpty()) {
                 values.add(uuid);
             }
         }

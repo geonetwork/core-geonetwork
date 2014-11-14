@@ -23,12 +23,10 @@
 
 package org.fao.geonet.services.metadata;
 
-import jeeves.server.ServiceConfig;
 import jeeves.services.ReadWriteController;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.MetadataIndexerProcessor;
 import org.fao.geonet.kernel.SelectionManager;
-import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -37,7 +35,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.nio.file.Path;
 import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -63,21 +60,12 @@ import javax.servlet.http.HttpSession;
 @Controller("md.processing.batch")
 @ReadWriteController
 public class BatchXslProcessing { // extends NotInReadOnlyModeService {
-	private Path _appPath;
-
 	@Autowired
 	private DataManager dataMan;
 	@Autowired
-	private SettingManager settingManager;
-	@Autowired
 	private SelectionManager selectionManager;
-
-	public void init(Path appPath, ServiceConfig params) throws Exception {
-		_appPath = appPath;
-
-		// TODO : here we could register process on startup
-		// in order to not to check process each time.
-	}
+    @Autowired
+    private XslProcessing xslProcessing;
 
 	// --------------------------------------------------------------------------
 	// ---
@@ -108,7 +96,7 @@ public class BatchXslProcessing { // extends NotInReadOnlyModeService {
 					"metadata").size());
 			BatchXslMetadataReindexer m = new BatchXslMetadataReindexer(
 					dataMan, selectionManager.getSelection("metadata")
-							.iterator(), process, _appPath, session, siteURL,
+							.iterator(), process, xslProcessing, session, siteURL,
 					xslProcessingReport, request);
 			m.process();
 		}
@@ -127,13 +115,13 @@ public class BatchXslProcessing { // extends NotInReadOnlyModeService {
 		Iterator<String> iter;
 		String process;
 		String siteURL;
-		Path appPath;
+		XslProcessing xslProcessing;
 		HttpSession session;
 		XslProcessingReport xslProcessingReport;
 		HttpServletRequest request;
 
 		public BatchXslMetadataReindexer(DataManager dm, Iterator<String> iter,
-				String process, Path appPath, HttpSession session,
+				String process, XslProcessing xslProcessing, HttpSession session,
 				String siteURL, XslProcessingReport xslProcessingReport,
 				HttpServletRequest request) {
 			super(dm);
@@ -142,7 +130,7 @@ public class BatchXslProcessing { // extends NotInReadOnlyModeService {
 			this.session = session;
 			this.siteURL = siteURL;
 			this.request = request;
-			this.appPath = appPath;
+			this.xslProcessing = xslProcessing;
 			this.xslProcessingReport = xslProcessingReport;
 		}
 
@@ -155,12 +143,9 @@ public class BatchXslProcessing { // extends NotInReadOnlyModeService {
 				Log.info("org.fao.geonet.services.metadata",
 						"Processing metadata with id:" + id);
 
-				XslProcessing.get().process(id, process, true, appPath,
-						xslProcessingReport, true, siteURL, request);
+                xslProcessing.process(id, process, true, xslProcessingReport, siteURL, request);
 
-				this.session.setAttribute("BATCH_PROCESSING_REPORT",
-						xslProcessingReport);
-
+				this.session.setAttribute("BATCH_PROCESSING_REPORT", xslProcessingReport);
 			}
 		}
 	}
