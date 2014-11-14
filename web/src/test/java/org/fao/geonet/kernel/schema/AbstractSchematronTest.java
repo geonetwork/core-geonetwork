@@ -61,7 +61,7 @@ public class AbstractSchematronTest {
         try {
             final Path targetUtilsFnFile = temporaryFolder.getRoot().toPath().resolve("xsl/utils-fn.xsl");
             Files.createDirectories(targetUtilsFnFile.getParent());
-            IO.copyDirectoryOrFile(WEBAPP_DIR.resolve("xsl/utils-fn.xsl"), targetUtilsFnFile);
+            IO.copyDirectoryOrFile(WEBAPP_DIR.resolve("xsl/utils-fn.xsl"), targetUtilsFnFile, false);
         } catch (Throwable t) {
             throw new RuntimeException(t);
         }
@@ -97,7 +97,7 @@ public class AbstractSchematronTest {
 
             final Path testLoc = outputFile.getParent().getParent().resolve("loc/eng");
             if (!Files.exists(testLoc)) {
-                IO.copyDirectoryOrFile(sourceFile.getParent().getParent().resolve("loc/eng"), testLoc);
+                IO.copyDirectoryOrFile(sourceFile.getParent().getParent().resolve("loc/eng"), testLoc, false);
             }
 
             return Pair.read(schematron, outputFile);

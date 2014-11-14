@@ -75,6 +75,7 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -217,7 +218,7 @@ public final class Xml
 
 	//--------------------------------------------------------------------------
 
-    public static Element loadFile(Path file) throws JDOMException {
+    public static Element loadFile(Path file) throws JDOMException, NoSuchFileException {
         try {
             SAXBuilder builder = getSAXBuilderWithPathXMLResolver(false, file); //new SAXBuilder();
 
@@ -237,6 +238,8 @@ public final class Xml
             }
         } catch (JDOMException e) {
             throw new JDOMException("Error occurred while trying to load an xml file: " + file, e);
+        } catch (NoSuchFileException e) {
+            throw e;
         } catch (Throwable e) {
             throw new RuntimeException("Error occurred while trying to load an xml file: " + file, e);
         }

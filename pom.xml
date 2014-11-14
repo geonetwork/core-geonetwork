@@ -331,29 +331,9 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <version>2.16</version>
             <configuration>
-                <excludes>
-                    <exclude>**/*IntegrationTest.java</exclude>
-                </excludes>
-                <argLine>-Dfile.encoding=UTF-8</argLine>
-                <forkCount>1</forkCount>
+                <argLine>-Dfile.encoding=UTF-8  -Xmx512M -XX:MaxPermSize=128M</argLine>
+                <forkCount>4</forkCount>
             </configuration>
-            <executions>
-                <execution>
-                    <id>integration-test</id>
-                    <goals>
-                        <goal>test</goal>
-                    </goals>
-                    <phase>integration-test</phase>
-                    <configuration>
-                        <excludes>
-                            <exclude>none</exclude>
-                        </excludes>
-                        <includes>
-                            <include>**/*IntegrationTest.java</include>
-                        </includes>
-                    </configuration>
-                </execution>
-            </executions>
         </plugin>
     </plugins>
   </build>
@@ -366,21 +346,6 @@
   <!-- =========================================================== -->
   <dependencyManagement>
     <dependencies>
-        <dependency>
-            <groupId>de.schlichtherle.truezip</groupId>
-            <artifactId>truezip-path</artifactId>
-            <version>7.7.6</version>
-        </dependency>
-        <dependency>
-            <groupId>de.schlichtherle.truezip</groupId>
-            <artifactId>truezip-file</artifactId>
-            <version>7.7.6</version>
-        </dependency>
-        <dependency>
-            <groupId>de.schlichtherle.truezip</groupId>
-            <artifactId>truezip-driver-file</artifactId>
-            <version>7.7.6</version>
-        </dependency>
       <!-- rewrite url servletfilter -->
       <dependency>
         <groupId>org.tuckey</groupId>

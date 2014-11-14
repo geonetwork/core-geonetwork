@@ -60,12 +60,12 @@ public abstract class AbstractIOTest {
         Files.createDirectories(java);
 
         final Path to1 = java.resolve(file.getFileName());
-        IO.copyDirectoryOrFile(file, to1);
+        IO.copyDirectoryOrFile(file, to1, false);
         assertTrue(Files.exists(file));
         assertTrue(Files.exists(to1));
 
         final Path to2 = getRootPath().resolve("to");
-        IO.copyDirectoryOrFile(getRootPath().resolve("src"), to2);
+        IO.copyDirectoryOrFile(getRootPath().resolve("src"), to2, true);
         assertTrue(Files.exists(to1));
         assertTrue(Files.exists(to2));
         assertTrue(Files.exists(to2.resolve("main")));
@@ -82,14 +82,14 @@ public abstract class AbstractIOTest {
         final Path java = getRootPath().resolve("src/main/java");
         Files.createDirectories(java);
 
-        IO.copyDirectoryOrFile(file, java);
+        IO.copyDirectoryOrFile(file, java, true);
         assertTrue(Files.exists(file));
         assertTrue(Files.exists(java));
 
         final Path to2 = getRootPath().resolve("to");
         Files.createDirectories(to2);
         final Path src = getRootPath().resolve("src");
-        IO.copyDirectoryOrFile(src, to2);
+        IO.copyDirectoryOrFile(src, to2, true);
         assertTrue(Files.exists(src));
         assertTrue(Files.exists(to2));
         assertTrue(Files.exists(to2.resolve("src")));
@@ -109,12 +109,12 @@ public abstract class AbstractIOTest {
         Files.createDirectories(java);
 
         final Path to1 = java.resolve(file.getFileName());
-        IO.moveDirectoryOrFile(file, to1);
+        IO.moveDirectoryOrFile(file, to1, true);
         assertFalse(Files.exists(file));
         assertTrue(Files.exists(to1));
 
         final Path to2 = getRootPath().resolve("to");
-        IO.moveDirectoryOrFile(getRootPath().resolve("src"), to2);
+        IO.moveDirectoryOrFile(getRootPath().resolve("src"), to2, true);
         assertFalse(Files.exists(to1));
         assertTrue(Files.exists(to2));
         assertTrue(Files.exists(to2.resolve("main")));
@@ -132,7 +132,7 @@ public abstract class AbstractIOTest {
         final Path java = getRootPath().resolve("src/main/java");
         Files.createDirectories(java);
 
-        IO.moveDirectoryOrFile(file, java);
+        IO.moveDirectoryOrFile(file, java, true);
         assertFalse(Files.exists(file));
         assertTrue(Files.exists(java));
         assertTrue(Files.exists(java.resolve(file.getFileName())));
@@ -140,7 +140,7 @@ public abstract class AbstractIOTest {
         final Path to2 = getRootPath().resolve("to");
         Files.createDirectories(to2);
         final Path src = getRootPath().resolve("src");
-        IO.moveDirectoryOrFile(src, to2);
+        IO.moveDirectoryOrFile(src, to2, true);
         assertFalse(Files.exists(src));
         assertTrue(Files.exists(to2));
         assertTrue(Files.exists(to2.resolve("src")));

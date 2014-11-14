@@ -59,7 +59,7 @@ public class MEFVisitor implements IVisitor {
             Element md = null;
             Element info = null;
 
-        try (FileSystem zipFs = ZipUtil.openZipFs(mefFile, false)) {
+        try (FileSystem zipFs = ZipUtil.openZipFs(mefFile)) {
             Path fileMdFile = zipFs.getPath(FILE_METADATA);
             Path infoMdFile = zipFs.getPath(FILE_INFO);
 
@@ -111,7 +111,7 @@ public class MEFVisitor implements IVisitor {
 		}
 
 
-        try (FileSystem zipFs = ZipUtil.openZipFs(mefFile, false)) {
+        try (FileSystem zipFs = ZipUtil.openZipFs(mefFile)) {
             Path pubPath = zipFs.getPath(DIR_PUBLIC);
             if (Files.isDirectory(pubPath)) {
                 try (DirectoryStream<Path> paths = Files.newDirectoryStream(pubPath)) {

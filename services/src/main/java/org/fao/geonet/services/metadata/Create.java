@@ -147,7 +147,7 @@ public class Create extends NotInReadOnlyModeService {
         final Path destDir = Lib.resource.getDir(context, access, newId);
 
         if (Files.exists(sourceDir)) {
-            IO.copyDirectoryOrFile(sourceDir, destDir);
+            IO.copyDirectoryOrFile(sourceDir, destDir, false);
         }
     }
 }

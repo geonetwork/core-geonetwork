@@ -277,7 +277,7 @@ public class GeonetworkDataDirectory {
                 ".resources" + KEY_SUFFIX, Geonet.Config.RESOURCES_DIR, "data", "resources"
         );
         uploadDir = setDir(jeevesServlet, webappName, handlerConfig,
-                ".upload" + KEY_SUFFIX, Geonet.Config.RESOURCES_DIR, "data", "upload"
+                ".upload" + KEY_SUFFIX, Geonet.Config.UPLOAD_DIR, "data", "upload"
         );
         htmlCacheDir = IO.toPath(handlerConfig.getValue(Geonet.Config.RESOURCES_DIR), "htmlcache");
         handlerConfig.setValue(Geonet.Config.HTMLCACHE_DIR, htmlCacheDir.toAbsolutePath().toString());
@@ -307,55 +307,55 @@ public class GeonetworkDataDirectory {
 	 * elements (ie. codelist).
 	 */
     private void initDataDirectory() throws IOException {
-		Log.info(Geonet.DATA_DIRECTORY, "   - Data directory initialization ...");
+        Log.info(Geonet.DATA_DIRECTORY, "   - Data directory initialization ...");
 
         if (!Files.exists(this.thesauriDir) || IO.isEmptyDir(this.thesauriDir)) {
-			Log.info(Geonet.DATA_DIRECTORY, "     - Copying codelists directory ..." + thesauriDir);
-			try {
+            Log.info(Geonet.DATA_DIRECTORY, "     - Copying codelists directory ..." + thesauriDir);
+            try {
                 final Path srcThesauri = getDefaultDataDir(webappDir).resolve("config").resolve("codelist");
-                IO.copyDirectoryOrFile(srcThesauri, this.thesauriDir);
-			} catch (IOException e) {
-				Log.error(Geonet.DATA_DIRECTORY, "     - Thesaurus copy failed: " + e.getMessage(), e);
-			}
-		}
+                IO.copyDirectoryOrFile(srcThesauri, this.thesauriDir, false);
+            } catch (IOException e) {
+                Log.error(Geonet.DATA_DIRECTORY, "     - Thesaurus copy failed: " + e.getMessage(), e);
+            }
+        }
 
         // Copy default logo to the harvesting folder
         Path logoDir = this.resourcesDir.resolve("images").resolve("harvesting");
         if (!Files.exists(logoDir) || IO.isEmptyDir(logoDir)) {
             Log.info(Geonet.DATA_DIRECTORY, "     - Copying logos ...");
             try {
-                IO.copyDirectoryOrFile(this.webappDir.resolve("images").resolve("harvesting"), logoDir);
+                IO.copyDirectoryOrFile(this.webappDir.resolve("images").resolve("harvesting"), logoDir, false);
             } catch (IOException e) {
                 Log.error(Geonet.DATA_DIRECTORY, "     - Logo copy failed: " + e.getMessage(), e);
             }
         }
         Path schemaCatFile = configDir.resolve(Geonet.File.SCHEMA_PLUGINS_CATALOG);
         if (!Files.exists(schemaCatFile)) {
-			Log.info(Geonet.DATA_DIRECTORY, "     - Copying schema plugin catalogue ...");
-			try {
+            Log.info(Geonet.DATA_DIRECTORY, "     - Copying schema plugin catalogue ...");
+            try {
                 final Path srcFile = webappDir.resolve("WEB-INF").resolve(Geonet.File.SCHEMA_PLUGINS_CATALOG);
-                IO.copyDirectoryOrFile(srcFile, schemaCatFile);
+                IO.copyDirectoryOrFile(srcFile, schemaCatFile, false);
 
                 // Copy missing schema plugins
                 Path srcPluginsDir = getDefaultDataDir(webappDir).resolve("config").resolve("schema_plugins");
                 try (DirectoryStream<Path> schemaPlugins = Files.newDirectoryStream(srcPluginsDir)) {
                     final Iterator<Path> pathIterator = schemaPlugins.iterator();
                     while (pathIterator.hasNext()) {
-                        Path next =  pathIterator.next();
+                        Path next = pathIterator.next();
                         Path destDir = this.schemaPluginsDir.resolve(next.toString());
                         if (!Files.exists(destDir)) {
-                            IO.copyDirectoryOrFile(next, destDir);
+                            IO.copyDirectoryOrFile(next, destDir, false);
                         }
                     }
                 }
 
-			} catch (IOException e) {
-				Log.info(
+            } catch (IOException e) {
+                Log.info(
                         Geonet.DATA_DIRECTORY,
                         "      - Error copying schema plugin catalogue: "
                         + e.getMessage());
-			}
-		}
+            }
+        }
 
 	}
 

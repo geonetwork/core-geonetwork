@@ -70,7 +70,7 @@ class MEF2Exporter {
 			Format format, boolean skipUUID, Path stylePath, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
 
 		Path file = Files.createTempFile("mef-", ".mef");
-        try (FileSystem zipFs = ZipUtil.openZipFs(file, true)) {
+        try (FileSystem zipFs = ZipUtil.createZipFs(file)) {
             for (Object uuid1 : uuids) {
                 String uuid = (String) uuid1;
                 createMetadataFolder(context, uuid, zipFs, skipUUID, stylePath,
@@ -149,13 +149,13 @@ class MEF2Exporter {
 		// --- save thumbnails and maps
 
 		if (format == Format.PARTIAL || format == Format.FULL) {
-            IO.copyDirectoryOrFile(metadataRootDir, pubDir);
+            IO.copyDirectoryOrFile(pubDir, metadataRootDir, true);
         }
 
 		if (format == Format.FULL) {
 			try {
                 Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
-                IO.copyDirectoryOrFile(metadataRootDir, priDir);
+                IO.copyDirectoryOrFile(priDir, metadataRootDir, true);
 			} catch (Exception e) {
 				// Current user could not download private data
 			}

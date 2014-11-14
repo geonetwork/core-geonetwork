@@ -42,7 +42,7 @@ public class IOMemoryFsTest extends AbstractIOTest {
     public void testCopyFromAnotherFs() throws Exception {
         Path path = Paths.get(XmlTest.class.getResource("xmltest").toURI());
 
-        IO.copyDirectoryOrFile(path, root);
+        IO.copyDirectoryOrFile(path, root, true);
 
         assertTrue(Files.isDirectory(root.resolve("xmltest/xsl")));
         assertTrue(Files.isRegularFile(root.resolve("xmltest/xml.xsd")));

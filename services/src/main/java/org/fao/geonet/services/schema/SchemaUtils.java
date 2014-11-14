@@ -149,7 +149,7 @@ public class SchemaUtils {
 
         // -- supply the stream containing the schema zip archive to the schema
         // -- manager
-        try (FileSystem zipFs = ZipUtil.openZipFs(zipArchive, false)) {
+        try (FileSystem zipFs = ZipUtil.openZipFs(zipArchive)) {
             if (add) {
                 scm.addPluginSchema(context.getApplicationContext(), schema, zipFs);
             } else {

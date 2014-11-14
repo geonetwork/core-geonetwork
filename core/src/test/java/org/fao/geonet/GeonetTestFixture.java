@@ -94,13 +94,15 @@ public class GeonetTestFixture {
                 if (templateFs == null) {
                     templateFs = Jimfs.newFileSystem("template", Configuration.unix());
                     templateDataDirectory = templateFs.getPath("data");
-                    IO.copyDirectoryOrFile(webappDir.resolve("WEB-INF/data"), templateDataDirectory, new DirectoryStream.Filter<Path>() {
+                    IO.copyDirectoryOrFile(webappDir.resolve("WEB-INF/data"), templateDataDirectory, true, new DirectoryStream.Filter<Path>() {
                         @Override
                         public boolean accept(Path entry) throws IOException {
                             return !entry.toString().contains("schema_plugins") &&
                                    !entry.getFileName().toString().startsWith(".") &&
                                    !entry.getFileName().toString().endsWith(".iml") &&
                                    !entry.toString().contains("metadata_data") &&
+                                   !entry.toString().contains("metadata_subversion") &&
+                                   !entry.toString().contains("upload") &&
                                    !entry.toString().contains("resources" + File.separator + "xml");
                         }
                     });
@@ -129,7 +131,7 @@ public class GeonetTestFixture {
         _dataDirectory = _dataDirContainer.resolve("default_data_dir");
         Files.createDirectories(_dataDirContainer);
 
-        IO.copyDirectoryOrFile(templateDataDirectory, _dataDirectory);
+        IO.copyDirectoryOrFile(templateDataDirectory, _dataDirectory, true);
 
         assertTrue(Files.isDirectory(_dataDirectory.resolve("config")));
         assertTrue(Files.isDirectory(_dataDirectory.resolve("data")));
@@ -242,7 +244,7 @@ public class GeonetTestFixture {
                     final Path srcSchemaPluginDir = path.resolve("src/main/plugin").resolve(path.getFileName());
                     if (Files.exists(srcSchemaPluginDir)) {
                         Path destPath = schemaPluginPath.resolve(path.getFileName().toString());
-                        IO.copyDirectoryOrFile(srcSchemaPluginDir, destPath);
+                        IO.copyDirectoryOrFile(srcSchemaPluginDir, destPath, true);
                     }
                 }
             }
@@ -309,9 +311,13 @@ public class GeonetTestFixture {
 
         @Override
         public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-            final Path path = IO.relativeFile(templateDataDirectory, dir, _dataDirectory);
-            assertTrue(dir.toString(), Files.exists(path));
-            return FileVisitResult.CONTINUE;
+            if (!dir.getFileName().toString().contains("upload")) {
+                final Path path = IO.relativeFile(templateDataDirectory, dir, _dataDirectory);
+                assertTrue(dir.toString() + " does not exist as expected: " + path, Files.exists(path));
+                return FileVisitResult.CONTINUE;
+            } else {
+                return FileVisitResult.SKIP_SUBTREE;
+            }
         }
     }
 }

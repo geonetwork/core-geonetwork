@@ -92,7 +92,7 @@ public class Upload implements Service {
 
 
         IResourceUploadHandler uploadHook = (IResourceUploadHandler) context.getApplicationContext().getBean("resourceUploadHandler");
-        uploadHook.onUpload(context, params, Integer.parseInt(id), fname, new Double(fsize).doubleValue());
+        uploadHook.onUpload(context, params, Integer.parseInt(id), fname, Double.parseDouble(fsize));
 
         context.info("UPLOADED:" + fname + "," + id + "," + mdUuid + ","
                 + context.getIpAddress() + "," + username);

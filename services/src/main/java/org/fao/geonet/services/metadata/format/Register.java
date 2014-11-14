@@ -74,7 +74,7 @@ public class Register extends AbstractFormatService {
 
         try {
 
-            try (FileSystem zipFs = ZipUtil.openZipFs(uploadedFile, false)){
+            try (FileSystem zipFs = ZipUtil.openZipFs(uploadedFile)){
                 Path viewFile = findViewFile(zipFs);
                 if (viewFile == null) {
                     throw new IllegalArgumentException(
@@ -156,6 +156,6 @@ public class Register extends AbstractFormatService {
 
     private void handleRawXsl(Path uploadedFile, Path dir) throws IOException {
         Files.createDirectories(dir);
-        IO.moveDirectoryOrFile(uploadedFile, dir.resolve(VIEW_XSL_FILENAME));
+        IO.moveDirectoryOrFile(uploadedFile, dir.resolve(VIEW_XSL_FILENAME), false);
     }
 }

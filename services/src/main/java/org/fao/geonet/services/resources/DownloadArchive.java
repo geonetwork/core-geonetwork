@@ -154,7 +154,7 @@ public class DownloadArchive implements Service
 
 		// set up zip output stream
 		Path zFile = Files.createTempFile(username+"_"+info.getUuid(),".zip");
-        try (FileSystem zipFs = ZipUtil.openZipFs(zFile, false)) {
+        try (FileSystem zipFs = ZipUtil.openZipFs(zFile)) {
             //--- now add the files chosen from the interface and record in 'downloaded'
             Element downloaded = new Element("downloaded");
             Path dir = Lib.resource.getDir(context, access, id);

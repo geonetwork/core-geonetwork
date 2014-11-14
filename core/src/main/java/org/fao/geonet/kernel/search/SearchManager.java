@@ -512,15 +512,15 @@ public class SearchManager {
      */
 	public void init(boolean logAsynch, boolean logSpatialObject, String luceneTermsToExclude,
                      int maxWritesInTransaction) throws Exception {
-        initNonStaticData(logAsynch, logSpatialObject, luceneTermsToExclude, maxWritesInTransaction);
-
         _stopwordsDir = _geonetworkDataDirectory.resolveWebResource(STOPWORDS_DIR_PATH);
 
         createAnalyzer();
         createDocumentBoost();
 
+        initNonStaticData(logAsynch, logSpatialObject, luceneTermsToExclude, maxWritesInTransaction);
     }
-     @VisibleForTesting
+
+    @VisibleForTesting
     public void initNonStaticData(boolean logAsynch, boolean logSpatialObject, String luceneTermsToExclude,
                                      int maxWritesInTransaction) throws Exception {
          _summaryConfigValues = _luceneConfig.getTaxonomy().get("hits");

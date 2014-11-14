@@ -76,7 +76,7 @@ class MEFExporter {
 		Path pubDir = Lib.resource.getDir(context, "public", record.getId());
 		Path priDir = Lib.resource.getDir(context, "private", record.getId());
 
-        try (FileSystem zipFs = ZipUtil.openZipFs(file, true)) {
+        try (FileSystem zipFs = ZipUtil.createZipFs(file)) {
             // --- save metadata
             if (!record.getData().startsWith("<?xml")) {
                 record.setData("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n" + record.getData());
@@ -94,13 +94,18 @@ class MEFExporter {
             // --- save thumbnails and maps
 
             if (format == Format.PARTIAL || format == Format.FULL) {
-                IO.copyDirectoryOrFile(pubDir, zipFs.getPath(pubDir.getFileName().toString()));
+                if (Files.exists(pubDir) && !IO.isEmptyDir(pubDir)) {
+                    IO.copyDirectoryOrFile(pubDir, zipFs.getPath(pubDir.getFileName().toString()), false);
+                }
             }
 
             if (format == Format.FULL) {
                 try {
                     Lib.resource.checkPrivilege(context, "" + record.getId(), ReservedOperation.download);
-                    IO.copyDirectoryOrFile(priDir, zipFs.getPath(priDir.getFileName().toString()));
+                    if (Files.exists(priDir) && !IO.isEmptyDir(priDir)) {
+                        IO.copyDirectoryOrFile(priDir, zipFs.getPath(priDir.getFileName().toString()), false);
+                    }
+
                 } catch (Exception e) {
                     // Current user could not download private data
                     Log.warning(Geonet.MEF, "Error encounteres while trying to import private resources of MEF file. MEF UUID: " + uuid, e);

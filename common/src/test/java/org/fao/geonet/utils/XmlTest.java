@@ -82,7 +82,7 @@ public class XmlTest {
     protected Path setupMemoryFs(Path path) throws IOException {
         FileSystem fs = Jimfs.newFileSystem(Configuration.unix());
         final Path test = fs.getPath("test");
-        IO.copyDirectoryOrFile(path.getParent(), test);
+        IO.copyDirectoryOrFile(path.getParent(), test, false);
         return test;
     }
 

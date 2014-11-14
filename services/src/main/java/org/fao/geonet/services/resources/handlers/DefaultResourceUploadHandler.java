@@ -113,7 +113,7 @@ public class DefaultResourceUploadHandler implements IResourceUploadHandler {
 
         // move uploaded file to destination directory - have two goes
         try {
-            IO.moveDirectoryOrFile(oldFile, newFile);
+            IO.moveDirectoryOrFile(oldFile, newFile, false);
         } catch (Exception e) {
             context.warning("Cannot move uploaded file");
             context.warning(" (C) Source : " + oldFile);

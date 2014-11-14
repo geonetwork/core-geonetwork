@@ -1790,7 +1790,7 @@ public class SchemaManager {
         try (DirectoryStream<Path> schemaplugins = Files.newDirectoryStream(schemaPluginDir, xsdFilter)) {
             boolean missingXsdFiles = true;
             for (Path schemaplugin : schemaplugins) {
-                IO.copyDirectoryOrFile(schemaplugin, webAppDirSchemaXSD.resolve(schemaplugin));
+                IO.copyDirectoryOrFile(schemaplugin, webAppDirSchemaXSD.resolve(schemaplugin), false);
                 missingXsdFiles = false;
             }
 
@@ -1801,7 +1801,7 @@ public class SchemaManager {
 
 		Path fileSchemaDir = schemaPluginDir.resolve("schema");
 		if (Files.exists(fileSchemaDir)) {
-		    IO.copyDirectoryOrFile(fileSchemaDir, webAppDirSchemaXSD.resolve("schema"));
+		    IO.copyDirectoryOrFile(fileSchemaDir, webAppDirSchemaXSD.resolve("schema"), false);
 		}
 
 	}

@@ -23,17 +23,9 @@
 
 package org.fao.geonet.services.metadata;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.servlet.http.HttpServletRequest;
-
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 import jeeves.services.ReadWriteController;
-
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
@@ -41,7 +33,6 @@ import org.fao.geonet.domain.responses.IdResponse;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
@@ -52,9 +43,20 @@ import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Process a metadata with an XSL transformation declared for the metadata
@@ -94,57 +96,75 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ReadWriteController
 public class XslProcessing {
 
+    @Autowired
+    private DataManager dataMan;
+    @Autowired
+    private SchemaManager schemaMan;
+    @Autowired
+    private AccessManager accessMan;
+    @Autowired
+    private SettingManager settingsMan;
+    @Autowired
+    private MetadataRepository metadataRepository;
+    @Autowired
+    private ServiceManager serviceManager;
+
     @RequestMapping(value = {"/{lang}/md.processing", "/{lang}/xml.metadata.processing", "/{lang}/metadata.processing.new"}, produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
-    public Response xmlProcessing(@RequestParam(defaultValue= Params.PROCESS) String process,
-    		@RequestParam(defaultValue=Params.SAVE) Boolean save,
-    		@RequestParam(defaultValue="") String id,
-    		@RequestParam(defaultValue="") String uuid,
-    		HttpServletRequest request)
+    public IdResponse xmlProcessing(@RequestParam(value = Params.PROCESS) String process,
+                                  @PathVariable String lang,
+                                  @RequestParam(value = Params.SAVE, defaultValue = "1") String saveParam,
+                                  @RequestParam(defaultValue = "") String id,
+                                  @RequestParam(defaultValue = "") String uuid,
+                                  HttpServletRequest request)
             throws Exception {
+        ServiceContext context = serviceManager.createServiceContext("md.processing", lang, request);
         XslProcessingReport xslProcessingReport = new XslProcessingReport(process);
 
-        if(id.isEmpty()) {
-			id = dataMan.getMetadataId(uuid);
+        if (id.isEmpty()) {
+            id = dataMan.getMetadataId(uuid);
         }
+        final boolean save = "1".equals(saveParam);
         Element processedMetadata;
         try {
-            final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
-            processedMetadata = process(id, process, save, xslProcessingReport, siteURL, request);
+            final String siteURL = settingsMan.getSiteURL(context);
+            processedMetadata = process(context, id, process, save, xslProcessingReport, siteURL, request.getParameterMap());
             if (processedMetadata == null) {
                 throw new BadParameterEx("Processing failed", "Not found:"
-                        + xslProcessingReport.getNotFoundMetadataCount() + 
-                        ", Not owner:" + xslProcessingReport.getNotEditableMetadataCount() + 
-                        ", No process found:" + xslProcessingReport.getNoProcessFoundCount() + ".");
+                                                              + xslProcessingReport.getNotFoundMetadataCount() +
+                                                              ", Not owner:" + xslProcessingReport.getNotEditableMetadataCount() +
+                                                              ", No process found:" + xslProcessingReport.getNoProcessFoundCount() + ".");
             }
         } catch (Exception e) {
             throw e;
         }
         // -- return the processed metadata id
-        Response res = new Response(id);
+
         // and the processed metadata if not saved.
         if (!save) {
-            //response.addContent(new Element("record").addContent(processedMetadata));
+            return new Response(id, Xml.getString(processedMetadata));
+        } else {
+            return new IdResponse(id);
         }
-        
-        return res;
     }
 
     /**
      * Process a metadata record and add information about the processing
      * to one or more sets for reporting.
      *
+     *
+     * @param context
      * @param id        The metadata identifier corresponding to the metadata record to process
      * @param process    The process name
      * @param report
      * @return
      * @throws Exception
      */
-    public Element process(String id, String process, boolean save,
+    public Element process(ServiceContext context, String id, String process, boolean save,
                            XslProcessingReport report,
                            String siteUrl,
-                           HttpServletRequest request) throws Exception {
+                           Map<String, String[]> params) throws Exception {
 
         report.incrementProcessedRecords();
         
@@ -184,14 +204,14 @@ public class XslProcessing {
                 boolean forEditing = false, withValidationErrors = false, keepXlinkAttributes = true;
 	            Element md = dataMan.getMetadata(context, id, forEditing, withValidationErrors, keepXlinkAttributes);
 	
-	            Map<String, Object> xslParameter = new HashMap<String, Object>();
+	            Map<String, Object> xslParameter = new HashMap<>();
 
 	            xslParameter.put("guiLang", context.getLanguage());
 	            xslParameter.put("baseUrl", context.getBaseUrl());
                 xslParameter.put("catalogUrl", settingsMan.getSiteURL(context));
                 xslParameter.put("nodeId", context.getNodeId());
                 
-	            for (Entry<String, String[]> parameter : request.getParameterMap().entrySet()) {
+	            for (Entry<String, String[]> parameter : params.entrySet()) {
 	            	String value = parameter.getValue()[0].trim();
 	            	String key = parameter.getKey();
 	                // Add extra metadata
@@ -244,25 +264,20 @@ public class XslProcessing {
         }
         return null;
     }
-    
-    @Autowired
-    private DataManager dataMan;
-    @Autowired
-    private SchemaManager schemaMan;
-    @Autowired
-    private AccessManager accessMan;
-    @Autowired
-    private SettingManager settingsMan;
-    @Autowired
-    private MetadataRepository metadataRepository;
-    @Autowired
-    private ServiceContext context;
 }
 
-class Response  extends IdResponse{
+@XmlRootElement(name = "response")
+@XmlAccessorType(XmlAccessType.PROPERTY)
+class Response extends IdResponse{
 
-    public Response(String id) {
+    private String processedMetadata;
 
+    public Response(String id, String processedMetadata) {
+        super(id);
+        this.processedMetadata = processedMetadata;
     }
-	
+
+    public String getProcessedMetadata() {
+        return processedMetadata;
+    }
 }

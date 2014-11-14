@@ -71,6 +71,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 //=============================================================================
@@ -343,6 +344,19 @@ public class ServiceManager {
         context.setLanguage("?");
         context.setUserSession(null);
         context.setIpAddress("?");
+        context.setMaxUploadSize(maxUploadSize);
+        context.setServlet(servlet);
+
+        return context;
+    }
+
+    public ServiceContext createServiceContext(String name, String lang, HttpServletRequest request) {
+        ServiceContext context = new ServiceContext(name, jeevesApplicationContext, htContexts,
+                entityManager);
+
+        context.setBaseUrl(baseUrl);
+        context.setLanguage(lang);
+        context.setIpAddress(request.getRemoteAddr());
         context.setMaxUploadSize(maxUploadSize);
         context.setServlet(servlet);
 

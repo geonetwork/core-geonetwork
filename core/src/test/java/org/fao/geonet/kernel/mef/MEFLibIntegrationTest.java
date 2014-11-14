@@ -8,7 +8,6 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.IO;
 import org.jdom.Element;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,7 +20,6 @@ import java.util.List;
 
 import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * Test MEF.
@@ -70,18 +68,6 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
         }
     }
 
-    @Test
-    @Ignore
-    public void testDoExport() throws Exception {
-        fail("to implement");
-    }
-
-    @Test
-    @Ignore
-    public void testDoMEF2Export() throws Exception {
-        fail("to implement");
-    }
-
     public static class ImportMetadata {
         private final AbstractCoreIntegrationTest testClass;
         private ServiceContext context;
@@ -109,7 +95,7 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
                     int exclamation = uri.toString().indexOf("!", 2);
                     URI zipFsUri = new URI(uri.toString().substring("jar:".length(), exclamation));
                     //noinspection UnusedDeclaration
-                    try (FileSystem zipFS = ZipUtil.openZipFs(IO.toPath(zipFsUri), false)) {
+                    try (FileSystem zipFS = ZipUtil.openZipFs(IO.toPath(zipFsUri))) {
                         final Path srcMefPath = IO.toPath(uri);
                         Files.write(mefTestFile, Files.readAllBytes(srcMefPath));
                     }

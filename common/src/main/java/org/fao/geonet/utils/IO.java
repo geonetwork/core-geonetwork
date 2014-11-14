@@ -113,8 +113,9 @@ public final class IO {
         }
     }
     public static void copyDirectoryOrFile(@Nonnull final Path from,
-                                           @Nonnull final Path to) throws IOException {
-        copyDirectoryOrFile(from, to, null);
+                                           @Nonnull final Path to,
+                                           boolean copyInto) throws IOException {
+        copyDirectoryOrFile(from, to, copyInto, null);
     }
 
     /**
@@ -125,12 +126,14 @@ public final class IO {
      * @throws IOException
      */
     public static void copyDirectoryOrFile(@Nonnull final Path from,
-                                           @Nonnull final Path to, @Nullable final DirectoryStream.Filter<Path> filter) throws IOException {
+                                           @Nonnull final Path to,
+                                           boolean copyInto,
+                                           @Nullable final DirectoryStream.Filter<Path> filter) throws IOException {
         Objects.requireNonNull(from);
         Objects.requireNonNull(to);
 
         final Path actualTo;
-        if (Files.isDirectory(to)) {
+        if (copyInto && Files.isDirectory(to)) {
             actualTo = to.resolve(from.getFileName().toString());
         } else {
             actualTo = to;
@@ -150,7 +153,7 @@ public final class IO {
         } else {
             if (filter == null || filter.accept(from)) {
                 final Path parent = actualTo.getParent();
-                if (!Files.exists(parent)) {
+                if (parent != null && !Files.exists(parent)) {
                     Files.createDirectories(parent);
                 }
                 Files.copy(from, actualTo);
@@ -162,9 +165,9 @@ public final class IO {
         return newRelativeTo.resolve(relativeToDirectory.relativize(fileOrDirectory).toString().replace('\\', '/'));
     }
 
-    public static void moveDirectoryOrFile(final Path from, final Path to) throws IOException {
+    public static void moveDirectoryOrFile(final Path from, final Path to, boolean copyInto) throws IOException {
         final Path actualTo;
-        if (Files.isDirectory(to)) {
+        if (copyInto && Files.isDirectory(to)) {
             actualTo = to.resolve(from.getFileName());
         } else {
             actualTo = to;

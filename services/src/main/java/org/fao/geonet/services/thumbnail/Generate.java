@@ -83,7 +83,7 @@ public class Generate extends NotInReadOnlyModeService {
         Files.deleteIfExists(outFile);
 
         try {
-            IO.moveDirectoryOrFile(thumbnailFile, outFile);
+            IO.moveDirectoryOrFile(thumbnailFile, outFile, false);
         } catch (Exception e) {
             IO.deleteFile(thumbnailFile, false, context);
             throw new Exception(
