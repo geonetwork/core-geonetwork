@@ -32,6 +32,18 @@
 
 	<dependencies>
         <dependency>
+            <groupId>de.schlichtherle.truezip</groupId>
+            <artifactId>truezip-path</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.schlichtherle.truezip</groupId>
+            <artifactId>truezip-file</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.schlichtherle.truezip</groupId>
+            <artifactId>truezip-driver-file</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.jdom</groupId>
             <artifactId>jdom</artifactId>
         </dependency>

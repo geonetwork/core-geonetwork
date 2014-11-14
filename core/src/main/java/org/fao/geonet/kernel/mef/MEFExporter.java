@@ -76,7 +76,7 @@ class MEFExporter {
 		Path pubDir = Lib.resource.getDir(context, "public", record.getId());
 		Path priDir = Lib.resource.getDir(context, "private", record.getId());
 
-        try (FileSystem zipFs = ZipUtil.openZipFs(file)) {
+        try (FileSystem zipFs = ZipUtil.openZipFs(file, true)) {
             // --- save metadata
             if (!record.getData().startsWith("<?xml")) {
                 record.setData("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n" + record.getData());

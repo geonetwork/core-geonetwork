@@ -366,6 +366,21 @@
   <!-- =========================================================== -->
   <dependencyManagement>
     <dependencies>
+        <dependency>
+            <groupId>de.schlichtherle.truezip</groupId>
+            <artifactId>truezip-path</artifactId>
+            <version>7.7.6</version>
+        </dependency>
+        <dependency>
+            <groupId>de.schlichtherle.truezip</groupId>
+            <artifactId>truezip-file</artifactId>
+            <version>7.7.6</version>
+        </dependency>
+        <dependency>
+            <groupId>de.schlichtherle.truezip</groupId>
+            <artifactId>truezip-driver-file</artifactId>
+            <version>7.7.6</version>
+        </dependency>
       <!-- rewrite url servletfilter -->
       <dependency>
         <groupId>org.tuckey</groupId>

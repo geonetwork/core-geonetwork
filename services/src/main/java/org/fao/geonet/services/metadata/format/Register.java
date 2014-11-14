@@ -74,7 +74,7 @@ public class Register extends AbstractFormatService {
 
         try {
 
-            try (FileSystem zipFs = ZipUtil.openZipFs(uploadedFile)){
+            try (FileSystem zipFs = ZipUtil.openZipFs(uploadedFile, false)){
                 Path viewFile = findViewFile(zipFs);
                 if (viewFile == null) {
                     throw new IllegalArgumentException(

@@ -1,5 +1,6 @@
 package org.fao.geonet;
 
+import de.schlichtherle.truezip.nio.file.TPath;
 import org.fao.geonet.utils.IO;
 
 import java.io.IOException;
@@ -16,10 +17,6 @@ import java.util.Collections;
  * 
  */
 public class ZipUtil {
-
-	// Buffer size
-	private static final int BUFFER = 8192;
-
 	/**
 	 * Extracts a zip file to a specified directory.
 	 * 
@@ -40,8 +37,14 @@ public class ZipUtil {
     /**
      * FileSystem must be closed when done.  This method should always be called in a try (resource) {} block
      */
-    public static FileSystem openZipFs(Path path) throws IOException, URISyntaxException {
-        URI uri = new URI("jar:" + path.toUri());
-        return FileSystems.newFileSystem(uri, Collections.singletonMap("create", "false"));
+    public static FileSystem openZipFs(Path path, boolean create) throws IOException, URISyntaxException {
+        if (create) {
+            TPath zipFile = new TPath(path);
+            return zipFile.getFileSystem();
+        } else {
+            URI uri = new URI("jar:" + path.toUri());
+
+            return FileSystems.newFileSystem(uri, Collections.singletonMap("create", "false"));
+        }
     }
 }

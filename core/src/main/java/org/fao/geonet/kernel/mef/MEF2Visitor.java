@@ -66,7 +66,7 @@ public class MEF2Visitor implements IVisitor {
         Element info = new Element("info");
 
 
-        try (FileSystem zipFs = ZipUtil.openZipFs(mefFile)) {
+        try (FileSystem zipFs = ZipUtil.openZipFs(mefFile, false)) {
             Path root = zipFs.getRootDirectories().iterator().next();
             // Get the metadata depth
             if (IO.isEmptyDir(root)) {

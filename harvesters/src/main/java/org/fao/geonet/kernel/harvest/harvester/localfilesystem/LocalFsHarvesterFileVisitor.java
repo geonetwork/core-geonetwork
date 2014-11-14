@@ -74,7 +74,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> {
                     e.printStackTrace();
                     result.badFormat++;
                     return FileVisitResult.CONTINUE; // skip this one
-                } catch (Exception e) { // some other error
+                } catch (Throwable e) { // some other error
                     log.debug("Error retrieving XML from file " + filePath + ", ignoring");
                     e.printStackTrace();
                     result.unretrievable++;

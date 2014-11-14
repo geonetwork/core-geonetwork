@@ -59,7 +59,7 @@ public class GeoFile {
 	GeoFile(Path f) throws IOException {
 		file = f;
 		try {
-			zipFile = ZipUtil.openZipFs(file);
+			zipFile = ZipUtil.openZipFs(file, false);
 		} catch (IOException | URISyntaxException e) {
 			zipFile = null;
 		}

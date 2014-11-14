@@ -271,16 +271,11 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
 			sc.addContent(schema);
 			return sc;
 
-    	} catch (IOException e) {
+    	} catch (Throwable e) {
 			context.error("Cannot get schema file : "+ dir);
 			context.error("  (C) StackTrace\n"+ Util.getStackTrace(e));
 			
 			throw new NoApplicableCodeEx("Cannot get schema file for : "+ tname);
-		} catch (JDOMException e) {
-			context.error("Schema file is not well formed : "+ dir);
-			context.error("  (C) StackTrace\n"+ Util.getStackTrace(e));
-
-			throw new NoApplicableCodeEx("Schema file not well formed : "+ tname);
 		}
 	}
 

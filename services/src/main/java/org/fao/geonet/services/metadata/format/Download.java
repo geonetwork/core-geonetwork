@@ -56,7 +56,7 @@ public class Download extends AbstractFormatService {
                     .getAttribute("javax.servlet.context.tempdir");
             Path zippedFile = Files.createTempFile(tmpDir.toPath(), xslid, ".zip");
 
-            try (FileSystem zipFs = ZipUtil.openZipFs(zippedFile);
+            try (FileSystem zipFs = ZipUtil.openZipFs(zippedFile, true);
                  DirectoryStream<Path> paths = Files.newDirectoryStream(formatDir)) {
                 Path root = zipFs.getRootDirectories().iterator().next();
                 for (Path path : paths) {

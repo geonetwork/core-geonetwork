@@ -109,7 +109,7 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
                     int exclamation = uri.toString().indexOf("!", 2);
                     URI zipFsUri = new URI(uri.toString().substring("jar:".length(), exclamation));
                     //noinspection UnusedDeclaration
-                    try (FileSystem zipFS = ZipUtil.openZipFs(IO.toPath(zipFsUri))) {
+                    try (FileSystem zipFS = ZipUtil.openZipFs(IO.toPath(zipFsUri), false)) {
                         final Path srcMefPath = IO.toPath(uri);
                         Files.write(mefTestFile, Files.readAllBytes(srcMefPath));
                     }

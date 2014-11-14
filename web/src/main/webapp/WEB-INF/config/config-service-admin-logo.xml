@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <geonet>
-  <services>
+  <services package="org.fao.geonet">
     <service name="admin.logo.remove">
       <documentation><![CDATA[Remove a logo]]></documentation>
       <class name=".services.logo.Delete"/>

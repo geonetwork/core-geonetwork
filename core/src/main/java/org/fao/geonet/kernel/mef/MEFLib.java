@@ -204,7 +204,7 @@ public class MEFLib {
 	 * @return v1
 	 */
 	public static Version getMEFVersion(Path mefFile) {
-        try (FileSystem fileSystem = ZipUtil.openZipFs(mefFile)) {
+        try (FileSystem fileSystem = ZipUtil.openZipFs(mefFile, false)) {
             final Path metadataXmlFile = fileSystem.getPath("metadata.xml");
             final Path infoXmlFile = fileSystem.getPath("info.xml");
             if (Files.exists(metadataXmlFile) || Files.exists(infoXmlFile)) {

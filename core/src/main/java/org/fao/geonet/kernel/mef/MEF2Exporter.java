@@ -70,7 +70,7 @@ class MEF2Exporter {
 			Format format, boolean skipUUID, Path stylePath, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
 
 		Path file = Files.createTempFile("mef-", ".mef");
-        try (FileSystem zipFs = ZipUtil.openZipFs(file)) {
+        try (FileSystem zipFs = ZipUtil.openZipFs(file, true)) {
             for (Object uuid1 : uuids) {
                 String uuid = (String) uuid1;
                 createMetadataFolder(context, uuid, zipFs, skipUUID, stylePath,

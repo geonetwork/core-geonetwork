@@ -217,7 +217,7 @@ public final class Xml
 
 	//--------------------------------------------------------------------------
 
-    public static Element loadFile(Path file) {
+    public static Element loadFile(Path file) throws JDOMException {
         try {
             SAXBuilder builder = getSAXBuilderWithPathXMLResolver(false, file); //new SAXBuilder();
 
@@ -235,6 +235,8 @@ public final class Xml
                     return (Element) jdoc.getRootElement().detach();
                 }
             }
+        } catch (JDOMException e) {
+            throw new JDOMException("Error occurred while trying to load an xml file: " + file, e);
         } catch (Throwable e) {
             throw new RuntimeException("Error occurred while trying to load an xml file: " + file, e);
         }
