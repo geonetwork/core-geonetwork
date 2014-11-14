@@ -330,7 +330,7 @@
         link: function (scope, element, attrs, ngModelCtrl) {
 
           var available = function (date) {
-            if (scope.dates && scope.dates[date.getFullYear()] &&
+            if (scope.dates[date.getFullYear()] &&
                 scope.dates[date.getFullYear()][date.getMonth()] &&
                 $.inArray(date.getDate(), scope.dates[date.getFullYear()][date.getMonth()]) != -1) {
               return '';
@@ -340,7 +340,7 @@
           };
 
           $(element).datepicker({
-            onRender: function (dt, a, b) {
+            onRender: angular.isUndefined(scope.dates) ? function() {} : function (dt, a, b) {
               return available(dt);
             }
           }).on('changeDate', function (ev) {
