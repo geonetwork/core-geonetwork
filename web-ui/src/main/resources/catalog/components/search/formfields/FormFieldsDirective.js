@@ -21,6 +21,7 @@
         options: '=gnTypeahead'
       },
       link: function(scope, element, attrs) {
+        var config = scope.options.config || {};
         var doLink = function(data, remote) {
           var conf = {
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
@@ -41,17 +42,16 @@
             itemText: 'name'
           });
 
-
           var field = $(element).tagsinput('input');
           field.typeahead({
             minLength: 1,
-            hint: true,
+            hint: false,
             highlight: true
-          }, {
+          }, angular.extend({
             name: 'datasource',
             displayKey: 'name',
             source: engine.ttAdapter()
-          }).on('typeahead:selected', function(event, datum) {
+          }, config)).on('typeahead:selected', function(event, datum) {
             field.typeahead('val', '');
             $(element).tagsinput('add', datum);
           });
@@ -76,7 +76,9 @@
           scope.options.promise.then(doLink);
         } else if (scope.options.mode == 'remote') {
           doLink(null, scope.options.remote);
-        };
+        } else if (scope.options.mode == 'local') {
+          doLink(scope.options.data);
+        }
 
       }
     }
