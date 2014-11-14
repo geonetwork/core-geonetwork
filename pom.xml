@@ -332,7 +332,7 @@
             <version>2.16</version>
             <configuration>
                 <argLine>-Dfile.encoding=UTF-8  -Xmx512M -XX:MaxPermSize=128M</argLine>
-                <forkCount>4</forkCount>
+                <forkCount>.5C</forkCount>
             </configuration>
         </plugin>
     </plugins>
