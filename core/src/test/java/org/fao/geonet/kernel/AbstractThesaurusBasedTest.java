@@ -1,11 +1,12 @@
 package org.fao.geonet.kernel;
 
-import org.fao.geonet.kernel.rdf.QueryBuilder;
 import org.fao.geonet.kernel.search.keyword.KeywordRelation;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.utils.IO;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.TemporaryFolder;
 import org.openrdf.sesame.Sesame;
 import org.openrdf.sesame.config.ConfigurationException;
 import org.openrdf.sesame.config.RepositoryConfig;
@@ -27,6 +28,9 @@ public abstract class AbstractThesaurusBasedTest {
 			_isoLanguagesMap639.put("it", "ita");
 		}
 	};
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
+
     protected Path thesaurusFile;
     protected Thesaurus thesaurus;
     
@@ -40,15 +44,14 @@ public abstract class AbstractThesaurusBasedTest {
     
     @Before
     public void beforeTest() throws Exception {
-        generateTestThesaurus();
+        createTestThesaurus();
 
         if(!readonly) {
             final String className = getClass().getSimpleName() + ".class";
-            Path directory = IO.toPath(getClass().getResource(className).toURI()).getParent();
             Path template = thesaurusFile;
             
             // Now make copy for this test
-            this.thesaurusFile = directory.resolve(getClass().getSimpleName()+"TestThesaurus.rdf");
+            this.thesaurusFile = this.folder.getRoot().toPath().resolve(getClass().getSimpleName()+"TestThesaurus.rdf");
 
             Files.copy(template, thesaurusFile);
             GenericXmlApplicationContext appContext = new GenericXmlApplicationContext();
@@ -67,7 +70,7 @@ public abstract class AbstractThesaurusBasedTest {
         }
     }
     
-    private void generateTestThesaurus() throws Exception {
+    private void createTestThesaurus() throws Exception {
         final String className = AbstractThesaurusBasedTest.class.getSimpleName() + ".class";
         Path directory = IO.toPath(AbstractThesaurusBasedTest.class.getResource(className).toURI()).getParent();
 
@@ -77,18 +80,6 @@ public abstract class AbstractThesaurusBasedTest {
         this.thesaurus = new Thesaurus(appContext, thesaurusFile.getFileName().toString(), null, null, "test", "test",
                 thesaurusFile, "http://concept", true);
         setRepository(this.thesaurus);
-        
-        if (Files.exists(thesaurusFile) && Files.size(thesaurusFile) > 0) {
-            try {
-            	QueryBuilder.builder().selectId().limit(1).build().rawExecute(thesaurus);
-            } catch (Exception e) {
-                Files.deleteIfExists(this.thesaurusFile);
-                populateThesaurus();
-            }
-        } else {
-            populateThesaurus();
-        }
-        thesaurus.getRepository().shutDown();
     }
 
 	protected static void setRepository(Thesaurus thesaurus) throws ConfigurationException {
@@ -106,7 +97,7 @@ public abstract class AbstractThesaurusBasedTest {
         thesaurus.setRepository(thesaurusRepository);
 	}
 	private void populateThesaurus() throws Exception {
-	    populateThesaurus(this.thesaurus, keywords, THESAURUS_KEYWORD_NS, "testValue", "testNote",languages);
+	    populateThesaurus(this.thesaurus, keywords, THESAURUS_KEYWORD_NS, "testValue", "testNote", languages);
 	}
 	/**
 	 * Generate a thesaurus with the provided number of words etc...
