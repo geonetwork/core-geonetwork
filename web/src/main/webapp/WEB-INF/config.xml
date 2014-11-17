@@ -1496,6 +1496,14 @@
             </output>
         </service>
 
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		<!-- Versioning log                                                -->
+		<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+		<service name="versioning.logdata">
+			<class name=".guiservices.versioning.Get"/>
+			<output sheet="xmlToJson.xsl" contentType="application/json; charset=UTF-8" />
+		</service>
 	</services>
 
 	<!-- ====================================================================== -->

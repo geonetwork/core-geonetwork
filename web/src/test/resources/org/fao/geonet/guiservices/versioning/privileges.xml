@@ -1,0 +1,14 @@
+<response>
+    <record>
+        <group_id>2</group_id>
+        <group_name>sample</group_name>
+        <operation_id>0</operation_id>
+        <operation_name>view</operation_name>
+    </record>
+    <record>
+        <group_id>2</group_id>
+        <group_name>sample</group_name>
+        <operation_id>3</operation_id>
+        <operation_name>notify</operation_name>
+    </record>
+</response>

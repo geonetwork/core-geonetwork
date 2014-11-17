@@ -112,6 +112,8 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/logo.set!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/debug.openconnection.accessors!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/debug.filehandles!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/versioning.log!?.*" access="hasRole('Administrator')"></sec:intercept-url>
+                <sec:intercept-url pattern="/srv/[a-z]{2,3}/versioning.logdata!?.*" access="hasRole('Administrator')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/harvesting!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.harvesting.get!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>
                 <sec:intercept-url pattern="/srv/[a-z]{2,3}/xml.harvesting.add!?.*" access="hasRole('UserAdmin')"></sec:intercept-url>

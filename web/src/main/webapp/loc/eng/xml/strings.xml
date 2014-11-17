@@ -32,7 +32,7 @@
 	<categoryForSubtemplate>Category for subtemplates</categoryForSubtemplate>
 	<makeChanges>I really want to do this!</makeChanges>
 	<dontMakeChanges>By default, this operation will not make any changes to the database ie. it runs in test mode. Checking this box switches test mode off and changes will be made to the database.</dontMakeChanges>
-
+    <metadata-versioning-log>Metadata versioning log</metadata-versioning-log>
 	<defaultStatusChangeMessage>No information</defaultStatusChangeMessage>
 	<createThesaurus>Create/Update Thesaurus</createThesaurus>
 	<thesaurusType>Thesaurus Type</thesaurusType>
