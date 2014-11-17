@@ -29,7 +29,7 @@
           };
 
           if (data) {
-            conf.limit = 5;
+            conf.limit = 10000000;
             conf.local = data;
           } else if (remote) {
             conf.remote = remote;
@@ -44,7 +44,7 @@
 
           var field = $(element).tagsinput('input');
           field.typeahead({
-            minLength: 1,
+            minLength: 0,
             hint: false,
             highlight: true
           }, angular.extend({
