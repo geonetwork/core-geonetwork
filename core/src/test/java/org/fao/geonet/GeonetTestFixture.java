@@ -94,6 +94,8 @@ public class GeonetTestFixture {
             synchronized (GeonetTestFixture.class) {
                 if (templateFs == null) {
                     templateFs = Jimfs.newFileSystem("template", Configuration.unix());
+                    IO.setFileSystemThreadLocal(templateFs);
+
                     templateDataDirectory = templateFs.getPath("data");
                     IO.copyDirectoryOrFile(webappDir.resolve("WEB-INF/data"), templateDataDirectory, true, new DirectoryStream.Filter<Path>() {
                         @Override
@@ -240,7 +242,7 @@ public class GeonetTestFixture {
         final String schemaModulePath = "schemas";
         Path schemaModuleDir = srcDataDir.resolve("../../../../").resolve(schemaModulePath).normalize();
         if (Files.exists(schemaModuleDir)) {
-            try (DirectoryStream<Path> paths = Files.newDirectoryStream(schemaModuleDir)) {
+            try (DirectoryStream<Path> paths = Files.newDirectoryStream(schemaModuleDir, IO.DIRECTORIES_FILTER)) {
                 for (Path path : paths) {
                     final Path srcSchemaPluginDir = path.resolve("src/main/plugin").resolve(path.getFileName());
                     if (Files.exists(srcSchemaPluginDir)) {
