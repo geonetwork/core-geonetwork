@@ -32,9 +32,9 @@ import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import java.io.IOException;
-
 import java.net.URI;
+
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 
@@ -64,6 +64,7 @@ public class XmlFile implements GuiService
 
 		name = Util.getAttrib(config, ConfigFile.Xml.Attr.NAME);
 		file = Util.getAttrib(config, ConfigFile.Xml.Attr.FILE);
+
         final String loc = Util.getAttrib(config, ConfigFile.Xml.Attr.BASE, "loc");
         Path basePath;
         try {
@@ -72,6 +73,7 @@ public class XmlFile implements GuiService
             basePath = IO.toPath(loc);
         }
         base = basePath;
+
 		language = config.getAttributeValue(ConfigFile.Xml.Attr.LANGUAGE);
 
 		//--- handle localized attrib

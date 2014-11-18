@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
-
 import javax.xml.transform.Source;
 
 import static org.junit.Assert.assertEquals;

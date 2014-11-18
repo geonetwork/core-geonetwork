@@ -202,6 +202,20 @@ public abstract class AbstractIOTest {
         assertEquals(text, Resources.toString(url, Constants.CHARSET));
     }
 
+    @Test
+    public void testtoURL() throws Exception {
+        final Path rootPath = getRootPath();
+        final Path textFile = rootPath.resolve("text");
+        final String text = "Hello";
+        Files.write(textFile, text.getBytes(Constants.CHARSET));
+
+        final URL url1 = IO.toURL(textFile);
+        assertEquals(text, Resources.toString(url1, Constants.CHARSET));
+
+        final URL url2 = IO.toURL(textFile.toUri());
+        assertEquals(text, Resources.toString(url2, Constants.CHARSET));
+    }
+
     protected URI getFileUri() {
         return new File("part").toURI();
     }

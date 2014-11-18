@@ -20,6 +20,7 @@ import org.fao.geonet.services.metadata.format.groovy.Functions;
 import org.fao.geonet.services.metadata.format.groovy.Handlers;
 import org.fao.geonet.services.metadata.format.groovy.TemplateCache;
 import org.fao.geonet.services.metadata.format.groovy.Transformer;
+import org.fao.geonet.utils.IO;
 import org.jdom.Namespace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -98,7 +99,7 @@ public class GroovyFormatter implements FormatterImpl {
             GroovyClassLoader cl = getParentClassLoader(fparams, baseShared, schemaShared);
 
             URL[] roots = new URL[]{
-                    fparams.formatDir.toRealPath().toUri().toURL()
+                    IO.toURL(fparams.formatDir)
             };
             GroovyScriptEngine groovyScriptEngine = new GroovyScriptEngine(roots, cl);
 
@@ -137,16 +138,16 @@ public class GroovyFormatter implements FormatterImpl {
                 parent = getParentClassLoader(createParamsForSchema(fparams, dependOnSchema), baseShared, dependent);
             } else {
                 if (fparams.isDevMode() || this.baseClassLoader == null) {
-                    URL[] roots = new URL[]{baseShared.toUri().toURL()};
+                    URL[] roots = new URL[]{IO.toURL(baseShared)};
                     GroovyScriptEngine groovyScriptEngine = new GroovyScriptEngine(roots);
                     loadScripts(baseShared, groovyScriptEngine);
                     this.baseClassLoader = groovyScriptEngine.getGroovyClassLoader();
                 }
                 parent = this.baseClassLoader;
             }
-            URL[] roots = new URL[]{schemaShared.toUri().toURL()};
-            GroovyScriptEngine groovyScriptEngine = new GroovyScriptEngine(roots, parent);
 
+            URL[] roots = new URL[]{IO.toURL(schemaShared)};
+            GroovyScriptEngine groovyScriptEngine = new GroovyScriptEngine(roots, parent);
 
             loadScripts(schemaShared, groovyScriptEngine);
             cl = groovyScriptEngine.getGroovyClassLoader();
@@ -170,7 +171,7 @@ public class GroovyFormatter implements FormatterImpl {
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
                 try (DirectoryStream<Path> paths = Files.newDirectoryStream(dir, "*.groovy")) {
                     for (Path path : paths) {
-                        if (Files.isDirectory(path)) {
+                        if (!Files.isDirectory(path)) {
                             try {
                                 gse.loadScriptByName(path.toUri().toString());
                             } catch (CompilationFailedException e) {

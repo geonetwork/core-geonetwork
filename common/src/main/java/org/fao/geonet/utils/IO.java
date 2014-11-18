@@ -27,7 +27,9 @@ import org.eclipse.core.runtime.Assert;
 import org.fao.geonet.Logger;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystemNotFoundException;
@@ -54,8 +56,8 @@ import javax.annotation.Nullable;
  *
  */
 public final class IO {
-    private static FileSystem defaultFs = FileSystems.getDefault();
-    private static ThreadLocal<FileSystem> defaultFsThreadLocal = new InheritableThreadLocal<>();
+    static FileSystem defaultFs = FileSystems.getDefault();
+    static ThreadLocal<FileSystem> defaultFsThreadLocal = new InheritableThreadLocal<>();
 
     public static final DirectoryStream.Filter<Path> DIRECTORIES_FILTER = new DirectoryStream.Filter<Path>() {
         @Override
@@ -296,6 +298,38 @@ public final class IO {
         });
     }
 
+    public static URL toURL(Path textFile) throws MalformedURLException {
+        return toURL(textFile.toUri());
+    }
+
+    /**
+     * Convert the URI to a URL.  If the file system is not a default one the URL scheme may not be registered so
+     * we need to make the URL in such a way that the scheme is registered in its url context.
+     */
+    public static URL toURL(URI uri) throws MalformedURLException {
+        try {
+            return uri.toURL();
+        } catch (MalformedURLException e) {
+            URL url = createFsSpecificURL(uri, defaultFs);
+            if (url != null) {
+                return url;
+            }
+            url = createFsSpecificURL(uri, defaultFsThreadLocal.get());
+            if (url != null) {
+                return url;
+            }
+
+            throw e;
+        }
+    }
+
+    private static URL createFsSpecificURL(URI uri, FileSystem fileSystem) throws MalformedURLException {
+        if (fileSystem != null && uri.getScheme().equals(fileSystem.getPath(".").toUri().getScheme())) {
+            return new URL(null, uri.toString(), new FileSystemSpecificStreamHandler());
+        }
+        return null;
+    }
+
     private static class CopyAllFiles extends SimpleFileVisitor<Path> {
         private final Path from;
         private final Path actualTo;
@@ -351,6 +385,7 @@ public final class IO {
             return FileVisitResult.CONTINUE;
         }
     }
+
 }
 
 //=============================================================================
