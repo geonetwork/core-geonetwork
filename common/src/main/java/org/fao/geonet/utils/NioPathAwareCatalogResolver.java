@@ -7,6 +7,7 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -43,8 +44,14 @@ class NioPathAwareCatalogResolver extends CatalogResolver {
     @Override
     public Source resolve(String href, String base) throws TransformerException {
         try {
-            final Path basePath = Paths.get(new URI(base));
-            final Path resolvedResource = basePath.getParent().resolve(href);
+            Path resolvedResource;
+            try {
+                resolvedResource = IO.toPath(new URI(href));
+            } catch (URISyntaxException | IllegalArgumentException e) {
+                final Path basePath = Paths.get(new URI(base));
+                resolvedResource = basePath.getParent().resolve(href);
+            }
+
             if (Files.isRegularFile(resolvedResource)) {
                 return new StreamSource(Files.newInputStream(resolvedResource), resolvedResource.toUri().toASCIIString());
             }

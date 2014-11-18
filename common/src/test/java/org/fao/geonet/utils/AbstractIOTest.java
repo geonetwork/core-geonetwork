@@ -1,5 +1,7 @@
 package org.fao.geonet.utils;
 
+import com.google.common.io.Resources;
+import org.fao.geonet.Constants;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
@@ -7,9 +9,11 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.net.URI;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -185,6 +189,20 @@ public abstract class AbstractIOTest {
 
         IO.touch(file);
         assertTrue(Files.exists(file));
+    }
+
+    @Test
+    public void testtoURL() throws Exception {
+        final Path rootPath = getRootPath();
+        final Path textFile = rootPath.resolve("text");
+        final String text = "Hello";
+        Files.write(textFile, text.getBytes(Constants.CHARSET));
+
+        final URL url1 = IO.toURL(textFile);
+        assertEquals(text, Resources.toString(url1, Constants.CHARSET));
+
+        final URL url2 = IO.toURL(textFile.toUri());
+        assertEquals(text, Resources.toString(url2, Constants.CHARSET));
     }
 
     protected URI getFileUri() {

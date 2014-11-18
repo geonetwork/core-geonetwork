@@ -31,6 +31,8 @@ import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 
 //=============================================================================
@@ -59,7 +61,15 @@ public class XmlFile implements GuiService
 
 		name = Util.getAttrib(config, ConfigFile.Xml.Attr.NAME);
 		file = Util.getAttrib(config, ConfigFile.Xml.Attr.FILE);
-		base = IO.toPath(Util.getAttrib(config, ConfigFile.Xml.Attr.BASE, "loc"));
+
+        final String loc = Util.getAttrib(config, ConfigFile.Xml.Attr.BASE, "loc");
+        Path basePath;
+        try {
+            basePath = IO.toPath(new URI(loc));
+        } catch (URISyntaxException | IllegalArgumentException e) {
+            basePath = IO.toPath(loc);
+        }
+        base = basePath;
 
 		language = config.getAttributeValue(ConfigFile.Xml.Attr.LANGUAGE);
 
