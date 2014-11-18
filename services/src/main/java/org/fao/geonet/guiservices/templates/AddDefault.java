@@ -27,20 +27,20 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.Util;
-import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.UUID;
 
 /**
@@ -50,7 +50,7 @@ import java.util.UUID;
  */
 public class AddDefault implements Service {
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
 
 	/**
@@ -84,64 +84,56 @@ public class AddDefault implements Service {
 
 			Element schema = new Element(schemaName);
 
-			String schemaDir = schemaMan.getSchemaTemplatesDir(schemaName);
-			if (schemaDir == null) {
+			Path templatesDir = schemaMan.getSchemaTemplatesDir(schemaName);
+			if (templatesDir == null) {
 				Log.error(Geonet.DATA_MANAGER, "Skipping - No templates?");
 				continue;
 			}
-
-			File templateFiles[] = new File(schemaDir).listFiles();
-			List<File> templateFilesList = new ArrayList<File>();
-
-			if (templateFiles != null) {
-				for (File file : templateFiles)
-					if (file.getName().endsWith(".xml"))
-						templateFilesList.add(file);
-			}
-
             final String prefix = "sub-";
             final int prefixLength = prefix.length();
-            for (File temp : templateFilesList) {
-                String status = "failed";
-                String templateName = temp.getName();
+            try (DirectoryStream<Path> newDirectoryStream = Files.newDirectoryStream(templatesDir, "*.xml")) {
+                for (Path temp : newDirectoryStream) {
+                    String status = "failed";
+                    String templateName = temp.getFileName().toString();
 
-                Element template = new Element("template");
-                template.setAttribute("name", templateName);
+                    Element template = new Element("template");
+                    template.setAttribute("name", templateName);
 
-                if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
-                    Log.debug(Geonet.DATA_MANAGER,
-                            " - Adding template file (for schema " + schemaName + "): " + templateName);
+                    if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
+                        Log.debug(Geonet.DATA_MANAGER,
+                                " - Adding template file (for schema " + schemaName + "): " + templateName);
+                    }
+
+                    try {
+                        Element xml = Xml.loadFile(temp);
+                        String uuid = UUID.randomUUID().toString();
+                        String isTemplate = "y";
+                        String title = null;
+
+                        if (templateName.startsWith(prefix)) {
+                            isTemplate = "s";
+                            title = templateName.substring(prefixLength,
+                                    templateName.length() - prefixLength);
+                        }
+                        //
+                        // insert metadata
+                        //
+                        String groupOwner = "1";
+                        String docType = null, category = null, createDate = null, changeDate = null;
+                        boolean ufo = true, indexImmediate = true;
+                        dataMan.insertMetadata(context, schemaName, xml, uuid, owner, groupOwner, siteId,
+                                isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
+
+                        status = "loaded";
+                    } catch (Exception e) {
+                        serviceStatus = "false";
+                        Log.error(Geonet.DATA_MANAGER, "Error loading template: "
+                                                       + e.getMessage());
+                    }
+                    template.setAttribute("status", status);
+                    schema.addContent(template);
                 }
-
-                try {
-                    Element xml = Xml.loadFile(temp);
-                    String uuid = UUID.randomUUID().toString();
-                    String isTemplate = "y";
-                    String title = null;
-
-                    if (templateName.startsWith(prefix)) {
-						isTemplate = "s";
-						title = templateName.substring(prefixLength,
-								templateName.length() - prefixLength);
-					}
-                    //
-                    // insert metadata
-                    //
-                    String groupOwner = "1";
-                    String docType = null, category = null, createDate = null, changeDate = null;
-                    boolean ufo = true, indexImmediate = true;
-					dataMan.insertMetadata(context, schemaName, xml, uuid, owner, groupOwner, siteId,
-                                           isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
-
-					status = "loaded";
-				} catch (Exception e) {
-					serviceStatus = "false";
-					Log.error(Geonet.DATA_MANAGER, "Error loading template: "
-							+ e.getMessage());
-				}
-				template.setAttribute("status", status);
-				schema.addContent(template);
-			}
+            }
 			result.addContent(schema);
 		}
 		result.setAttribute("status", serviceStatus);

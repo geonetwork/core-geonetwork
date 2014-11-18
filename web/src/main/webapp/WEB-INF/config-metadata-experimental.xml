@@ -16,13 +16,6 @@
       <class name=".services.metadata.GetSuggestion"/>
     </service>
 
-
-    <service name="metadata.thumbnail.set.new">
-      <class name=".services.thumbnail.Set"/>
-      <!-- FIXME : this is a default success response XSL -->
-      <output sheet="admin-logo-add.xsl"/>
-    </service>
-
     <service name="metadata.thumbnail.unset.new">
       <class name=".services.thumbnail.Unset"/>
       <output sheet="admin-logo-add.xsl"/>
@@ -97,8 +90,6 @@
 
       <output forward="edit"/>
     </service>
-
-
 
     <service name="resources.del.new">
       <class name=".services.resources.Remove"/>

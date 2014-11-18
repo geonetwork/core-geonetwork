@@ -33,6 +33,8 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 //=============================================================================
 
 /** Force rebuild Lucene index 
@@ -48,7 +50,7 @@ public class IndexRebuild implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig config) throws Exception {
+	public void init(Path appPath, ServiceConfig config) throws Exception {
 		_config = config;
 	}
 

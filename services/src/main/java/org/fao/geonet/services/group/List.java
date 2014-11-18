@@ -32,7 +32,8 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.specification.GroupSpecs;
 import org.jdom.Element;
-import org.springframework.stereotype.Controller;
+
+import java.nio.file.Path;
 
 //=============================================================================
 
@@ -41,7 +42,7 @@ import org.springframework.stereotype.Controller;
  */
 
 public class List implements Service {
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
 
 	// --------------------------------------------------------------------------

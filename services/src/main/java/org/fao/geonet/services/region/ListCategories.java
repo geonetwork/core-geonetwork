@@ -30,6 +30,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.Collection;
 
 //=============================================================================
@@ -40,7 +41,7 @@ import java.util.Collection;
 
 public class ListCategories implements Service {
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     // --------------------------------------------------------------------------

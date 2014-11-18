@@ -25,12 +25,12 @@ package org.fao.geonet.kernel.oaipmh.services;
 
 import jeeves.server.context.ServiceContext;
 import jeeves.server.overrides.ConfigurationOverrides;
-import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.oaipmh.OaiPmhService;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.Xml;
 import org.fao.oaipmh.requests.AbstractRequest;
 import org.fao.oaipmh.requests.ListMetadataFormatsRequest;
 import org.fao.oaipmh.responses.AbstractResponse;
@@ -41,7 +41,6 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -119,7 +118,7 @@ public class ListMetadataFormats implements OaiPmhService
 	private List<MetadataFormat> getConvertFormats(ServiceContext context) throws IOException, JDOMException
 	{
 	
-		Element elem = Xml.loadFile(context.getAppPath() + DEFAULT_PREFIXES_FILE);
+		Element elem = Xml.loadFile(context.getAppPath().resolve(DEFAULT_PREFIXES_FILE));
 		if (context.getServlet() != null && context.getServlet().getServletContext() != null) {
 			ConfigurationOverrides.DEFAULT.updateWithOverrides(DEFAULT_PREFIXES_FILE, context.getServlet().getServletContext(), context.getAppPath(), elem);
 		}
@@ -140,7 +139,7 @@ public class ListMetadataFormats implements OaiPmhService
 	//---
 	//---------------------------------------------------------------------------
 
-	private static final String DEFAULT_PREFIXES_FILE = "WEB-INF" + File.separator + "config-oai-prefixes.xml";
+	private static final String DEFAULT_PREFIXES_FILE = "WEB-INF/config-oai-prefixes.xml";
 }
 
 //=============================================================================

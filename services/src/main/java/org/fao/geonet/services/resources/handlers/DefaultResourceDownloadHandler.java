@@ -2,23 +2,25 @@ package org.fao.geonet.services.resources.handlers;
 
 
 import jeeves.server.context.ServiceContext;
-
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataFileDownload;
+import org.fao.geonet.domain.MetadataFileUpload;
+import org.fao.geonet.repository.MetadataFileDownloadRepository;
+import org.fao.geonet.repository.MetadataFileUploadRepository;
 import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
-import java.io.*;
+import java.nio.file.Path;
 import java.util.List;
 
 public class DefaultResourceDownloadHandler implements IResourceDownloadHandler {
 
-    public Element onDownload(ServiceContext context, Element params, int metadataId,
-                              String fileName, File file) throws ResourceHandlerException {
+    public BinaryFile onDownload(ServiceContext context, Element params, int metadataId,
+                              String fileName, Path file) throws ResourceHandlerException {
 
 
         try {
@@ -33,7 +35,7 @@ public class DefaultResourceDownloadHandler implements IResourceDownloadHandler 
             storeFileDownloadRequest(context, metadataId, fileName, requesterName, requesterMail, requesterOrg,
                     requesterComments, downloadDate);
 
-            return BinaryFile.encode(200, file.getAbsolutePath());
+            return BinaryFile.encode(200, file.toAbsolutePath());
 
         } catch (Exception ex) {
             Log.error(Geonet.RESOURCES, "DefaultResourceDownloadHandler (onDownload): " + ex.getMessage());

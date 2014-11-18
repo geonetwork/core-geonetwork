@@ -24,16 +24,17 @@
 package org.fao.geonet.services.metadata.format;
 
 import jeeves.interfaces.Service;
+
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
-import org.apache.commons.io.FileUtils;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.jdom.Element;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * Allows a user to delete a previously inserted user's xsl stylesheet
@@ -44,17 +45,17 @@ public class Remove extends AbstractFormatService implements Service {
 
     public Element exec(Element params, ServiceContext context) throws Exception {
         String xslid = Util.getParam(params, Params.ID, null);
-
+        
         String schema = Util.getParam(params, Params.SCHEMA, null);
-        File schemaDir = null;
+        Path schemaDir = null;
         if (schema != null) {
-            schemaDir = new File(context.getBean(SchemaManager.class).getSchemaDir(schema));
+            schemaDir = context.getBean(SchemaManager.class).getSchemaDir(schema);
         }
-        File formatDir = getAndVerifyFormatDir(context.getBean(GeonetworkDataDirectory.class), Params.ID, xslid, schemaDir);
+        Path formatDir = getAndVerifyFormatDir(context.getBean(GeonetworkDataDirectory.class), Params.ID, xslid, schemaDir);
         
         try {
-            FileUtils.deleteDirectory(formatDir);
-            if(formatDir.exists()) throw new Error("Unable to delete formatter "+xslid);
+            IO.deleteFileOrDirectory(formatDir);
+
             return new Element("response").addContent("ok");
         } catch (IOException e) {
             throw new IllegalArgumentException("Error occured while trying to remove the stylesheet. Incorrect ID?");

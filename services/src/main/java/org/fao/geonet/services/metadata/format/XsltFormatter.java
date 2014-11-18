@@ -1,20 +1,24 @@
 package org.fao.geonet.services.metadata.format;
 
 import com.google.common.collect.Sets;
-import com.google.common.io.Files;
 import org.fao.geonet.Constants;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
+
+import static com.google.common.io.Files.getNameWithoutExtension;
+import static java.nio.file.Files.getLastModifiedTime;
+import static java.nio.file.Files.readAllBytes;
 
 /**
  * Strategy for formatting using an xslt based formatter.
@@ -29,14 +33,13 @@ import java.util.Set;
 @Component
 public class XsltFormatter implements FormatterImpl {
     private Set<String> compiledXslt = Sets.newConcurrentHashSet();
-    final Charset charset = Charset.forName(Constants.ENCODING);
 
     @Autowired
     GeonetworkDataDirectory dataDirectory;
 
     public String format(FormatterParams fparams) throws Exception {
 
-        final String viewFilePath = fparams.viewFile.getPath();
+        final String viewFilePath = fparams.viewFile.toString();
         if (fparams.isDevMode() || !this.compiledXslt.contains(viewFilePath)) {
             compileFunctionsFile(fparams.viewFile, viewFilePath);
         }
@@ -79,7 +82,7 @@ public class XsltFormatter implements FormatterImpl {
         if (!"false".equalsIgnoreCase(fparams.param("debug", "false"))) {
             return Xml.getString(root);
         }
-        Element transformed = Xml.transform(root, fparams.viewFile.getAbsolutePath());
+        Element transformed = Xml.transform(root, fparams.viewFile);
 
         Element response = new Element("metadata");
         response.addContent(transformed);
@@ -87,19 +90,19 @@ public class XsltFormatter implements FormatterImpl {
     }
 
 
-    private synchronized void compileFunctionsFile(File viewXslFile,
+    private synchronized void compileFunctionsFile(Path viewXslFile,
                                                    String canonicalPath) throws IOException, JDOMException {
         this.compiledXslt.add(canonicalPath);
 
-        final String baseName = Files.getNameWithoutExtension(viewXslFile.getName());
-        final File lastUpdateFile = new File(viewXslFile.getParentFile(), baseName + ".lastUpdate");
-        if (lastUpdateFile.lastModified() < viewXslFile.lastModified()) {
-            final String xml = Files.toString(viewXslFile, charset);
+        final String baseName = getNameWithoutExtension(viewXslFile.getFileName().toString());
+        final Path lastUpdateFile = viewXslFile.getParent().resolve(baseName + ".lastUpdate");
+        if (!Files.exists(lastUpdateFile) || getLastModifiedTime(lastUpdateFile).toMillis() < getLastModifiedTime(viewXslFile).toMillis()) {
+            final String xml = new String(readAllBytes(viewXslFile), Constants.CHARSET);
 
-            String updated = xml.replace("@@formatterDir@@", this.dataDirectory.getFormatterDir().toURI().toString());
+            String updated = xml.replace("@@formatterDir@@", this.dataDirectory.getFormatterDir().toUri().toString());
 
-            Files.write(updated, viewXslFile, charset);
-            Files.touch(lastUpdateFile);
+            Files.write(viewXslFile, updated.getBytes(Constants.CHARSET));
+            IO.touch(lastUpdateFile);
         }
     }
 }

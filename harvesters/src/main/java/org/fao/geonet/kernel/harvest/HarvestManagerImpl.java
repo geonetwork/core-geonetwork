@@ -52,6 +52,7 @@ import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -72,7 +73,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     private HarvesterSettingsManager settingMan;
     @Autowired
     private DataManager    dataMan;
-    private String         xslPath;
+    private Path xslPath;
     private ServiceContext context;
     private boolean readOnly;
 
@@ -98,7 +99,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 		this.context = context;
         this.readOnly = isReadOnly;
         Log.debug(Geonet.HARVEST_MAN, "HarvesterManager initializing, READONLYMODE is " + this.readOnly);
-		xslPath    = context.getAppPath() + Geonet.Path.STYLESHEETS+ "/xml/harvesting/";
+		xslPath    = context.getAppPath().resolve(Geonet.Path.STYLESHEETS).resolve("xml/harvesting/");
 		AbstractHarvester.getScheduler().getListenerManager().addJobListener(
 		        HarversterJobListener.getInstance(this));
 		
@@ -133,7 +134,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("sortField", sortField);
 
-		return Xml.transform(nodes, xslPath + Geonet.File.SORT_HARVESTERS, params);
+		return Xml.transform(nodes, xslPath.resolve(Geonet.File.SORT_HARVESTERS), params);
 	}
 
     /**
@@ -146,7 +147,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
 	private Element transform(Element node) throws Exception {
 		String type = node.getChildText("value");
 		node = (Element) node.clone();
-		return Xml.transform(node, xslPath + type +".xsl");
+		return Xml.transform(node, xslPath.resolve(type +".xsl"));
 	}
 
     /**

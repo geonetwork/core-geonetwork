@@ -31,13 +31,15 @@ import org.fao.geonet.kernel.region.Region;
 import org.fao.geonet.services.region.List;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 //=============================================================================
 
 public class Get implements Service
 {
 	private Element regions;
 
-    public void init(String appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

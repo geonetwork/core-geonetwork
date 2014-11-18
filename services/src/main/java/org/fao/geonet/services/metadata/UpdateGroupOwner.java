@@ -37,12 +37,11 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.Updater;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
-import javax.annotation.Nonnull;
+import java.nio.file.Path;
 
 /**
  * Update the metadata group owner.
@@ -56,7 +55,7 @@ public class UpdateGroupOwner extends NotInReadOnlyModeService {
      * @param params
      * @throws Exception
      */
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     /**

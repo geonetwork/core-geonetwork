@@ -6,12 +6,13 @@ import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.UUID;
 
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
 import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
@@ -48,7 +49,7 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractC
                         final DataManager dm = DataManagerWorksWithoutTransactionIntegrationTest.this.dataManager;
                         String schema = dm.autodetectSchema(sampleMetadataXml);
                         final String mdId = dm.insertMetadata(serviceContext, schema, sampleMetadataXml,
-                                "uuid" + _inc.incrementAndGet(), userIdAsInt, "2", "source",
+                                UUID.randomUUID().toString(), userIdAsInt, "2", "source",
                                 MetadataType.METADATA.codeString, null, metadataCategory, new ISODate().getDateAndTime(),
                                 new ISODate().getDateAndTime(), false, false);
                         Element newMd = new Element(sampleMetadataXml.getName(), sampleMetadataXml.getNamespace()).addContent(new Element("fileIdentifier",

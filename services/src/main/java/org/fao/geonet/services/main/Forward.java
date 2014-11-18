@@ -36,6 +36,7 @@ import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.List;
 
 //=============================================================================
@@ -48,7 +49,7 @@ public class Forward implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig config) throws Exception {}
+	public void init(Path appPath, ServiceConfig config) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

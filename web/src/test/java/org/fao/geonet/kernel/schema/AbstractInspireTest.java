@@ -1,11 +1,10 @@
 package org.fao.geonet.kernel.schema;
 
-import com.google.common.io.Files;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
 
-import java.io.File;
+import java.nio.file.Path;
 
 import static org.junit.Assert.assertEquals;
 
@@ -17,14 +16,14 @@ import static org.junit.Assert.assertEquals;
 public abstract class AbstractInspireTest extends AbstractSchematronTest {
     protected static final String INSPIRE_VALID_ISO19139_XML = "inspire-valid-iso19139.xml";
 
-    protected abstract File getSchematronXsl();
+    protected abstract Path getSchematronXsl();
+
 
     @Test
     public void testValid() throws Exception {
-        final String schematronName = Files.getNameWithoutExtension(getSchematronXsl().getName());
         final Element validMetadata = Xml.loadStream(AbstractInspireTest.class.getResourceAsStream(INSPIRE_VALID_ISO19139_XML));
 
-        Element results = Xml.transform(validMetadata, getSchematronXsl().getPath(), getParams(schematronName));
+        Element results = Xml.transform(validMetadata, getSchematronXsl(), params);
         assertEquals(0, countFailures(results));
     }
 

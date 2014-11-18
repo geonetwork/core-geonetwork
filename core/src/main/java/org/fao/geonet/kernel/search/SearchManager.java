@@ -21,10 +21,13 @@
 //==============================================================================
 
 package org.fao.geonet.kernel.search;
+
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.index.SpatialIndex;
+import com.vividsolutions.jts.util.Assert;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
@@ -78,7 +81,6 @@ import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
 import org.fao.geonet.kernel.search.spatial.TouchesFilter;
 import org.fao.geonet.kernel.search.spatial.WithinFilter;
 import org.fao.geonet.kernel.setting.SettingInfo;
-import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.geotools.data.DataStore;
@@ -97,10 +99,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 
-import java.io.File;
-
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -121,6 +124,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import javax.annotation.PreDestroy;
 
 /**
  * Indexes metadata using Lucene.
@@ -140,8 +144,8 @@ public class SearchManager {
     private static final Configuration FILTER_2_0_0 = new org.geotools.filter.v2_0.FESConfiguration();
     public static final String FACET_FIELD_SUFFIX = "_facet";
 
-    private File _stylesheetsDir;
-    private static File _stopwordsDir;
+    private Path _stylesheetsDir;
+    private static Path _stopwordsDir;
 	Map<String, FacetConfig> _summaryConfigValues = null;
 
     /**
@@ -163,7 +167,7 @@ public class SearchManager {
 	private String _luceneTermsToExclude;
 	private boolean _logSpatialObject;
 	private static PerFieldAnalyzerWrapper _defaultAnalyzer;
-	private String _htmlCacheDir;
+	private Path _htmlCacheDir;
     private Spatial _spatial;
 
 	private boolean _logAsynch;
@@ -263,7 +267,7 @@ public class SearchManager {
 	 * Returns a default- (hardcoded) configured PerFieldAnalyzerWrapper, creating it if necessary.
      *
 	 */
-	private static void initHardCodedAnalyzers(char[] ignoreChars) {
+	private static void initHardCodedAnalyzers(char[] ignoreChars) throws IOException {
         if(Log.isDebugEnabled(Geonet.SEARCH_ENGINE))
             Log.debug(Geonet.SEARCH_ENGINE, "initializing hardcoded analyzers");
         // no default analyzer instantiated: create one
@@ -271,38 +275,38 @@ public class SearchManager {
             // create hardcoded default PerFieldAnalyzerWrapper w/o stopwords
             _defaultAnalyzer = SearchManager.createHardCodedPerFieldAnalyzerWrapper(null, ignoreChars);
         }
-        if (!_stopwordsDir.exists() || !_stopwordsDir.isDirectory()) {
-            Log.warning(Geonet.SEARCH_ENGINE, "Invalid stopwords directory " + _stopwordsDir.getAbsolutePath() +
+        if (!Files.isDirectory(_stopwordsDir)) {
+            Log.warning(Geonet.SEARCH_ENGINE, "Invalid stopwords directory " + _stopwordsDir.toAbsolutePath() +
                                               ", not using any stopwords.");
         } else {
             if (Log.isDebugEnabled(Geonet.LUCENE)) {
                 Log.debug(Geonet.LUCENE, "loading stopwords");
             }
-            File[] files = _stopwordsDir.listFiles();
-            if (files == null) {
-                files = new File[0];
-            }
 
-            for (File stopwordsFile : files) {
-                String language = stopwordsFile.getName().substring(0, stopwordsFile.getName().indexOf('.'));
-                if (language.length() != 2) {
-                    Log.info(Geonet.LUCENE, "invalid iso 639-1 code for language: " + language);
-                }
-                // look up stopwords for that language
-                Set<String> stopwordsForLanguage = StopwordFileParser.parse(stopwordsFile.getAbsolutePath());
-                if (stopwordsForLanguage != null) {
-                    if (Log.isDebugEnabled(Geonet.LUCENE)) {
-                        Log.debug(Geonet.LUCENE, "loaded # " + stopwordsForLanguage.size() + " stopwords for language " + language);
+            try (DirectoryStream<Path> paths = Files.newDirectoryStream(_stopwordsDir)) {
+                for (Path stopwordsFile : paths) {
+                    final String fileName = stopwordsFile.getFileName().toString();
+                    String language = fileName.substring(0, fileName.indexOf('.'));
+                    if (language.length() != 2) {
+                        Log.info(Geonet.LUCENE, "invalid iso 639-1 code for language: " + language);
                     }
-                    Analyzer languageAnalyzer = SearchManager.createHardCodedPerFieldAnalyzerWrapper(stopwordsForLanguage, ignoreChars);
-                    analyzerMap.put(language, languageAnalyzer);
-                } else {
-                    if (Log.isDebugEnabled(Geonet.LUCENE)) {
-                        Log.debug(Geonet.LUCENE, "failed to load any stopwords for language " + language);
+                    // look up stopwords for that language
+                    Set<String> stopwordsForLanguage = StopwordFileParser.parse(stopwordsFile.toAbsolutePath());
+                    if (stopwordsForLanguage != null) {
+                        if (Log.isDebugEnabled(Geonet.LUCENE)) {
+                            Log.debug(Geonet.LUCENE, "loaded # " + stopwordsForLanguage.size() + " stopwords for language " + language);
+                        }
+                        Analyzer languageAnalyzer = SearchManager.createHardCodedPerFieldAnalyzerWrapper(stopwordsForLanguage, ignoreChars);
+                        analyzerMap.put(language, languageAnalyzer);
+                    } else {
+                        if (Log.isDebugEnabled(Geonet.LUCENE)) {
+                            Log.debug(Geonet.LUCENE, "failed to load any stopwords for language " + language);
+                        }
                     }
+
                 }
             }
-        }        
+        }
 	}
 
     /**
@@ -374,7 +378,7 @@ public class SearchManager {
      *
 	 * If an error occurs instantiating an analyzer, GeoNetworkAnalyzer is used.
 	 */
-	public void createAnalyzer() {
+	public void createAnalyzer() throws IOException {
         String defaultAnalyzerClass = _luceneConfig.getDefaultAnalyzerClass();
         if (Log.isDebugEnabled(Geonet.SEARCH_ENGINE)) {
             Log.debug(Geonet.SEARCH_ENGINE, "createAnalyzer start");
@@ -389,8 +393,8 @@ public class SearchManager {
 		} else {
             // there is an analyzer defined in lucene config
 
-            if (!_stopwordsDir.exists() || !_stopwordsDir.isDirectory()) {
-                Log.warning(Geonet.SEARCH_ENGINE, "Invalid stopwords directory " + _stopwordsDir.getAbsolutePath() +
+            if (!Files.isDirectory(_stopwordsDir)) {
+                Log.warning(Geonet.SEARCH_ENGINE, "Invalid stopwords directory " + _stopwordsDir.toAbsolutePath() +
                                                   ", not using any stopwords.");
             } else {
                 if (Log.isDebugEnabled(Geonet.LUCENE)) {
@@ -400,35 +404,35 @@ public class SearchManager {
                 // One per field analyzer is created for each stopword list available using GNA as default analyzer
                 // Configuration can't define different analyzer per language.
                 // TODO : http://trac.osgeo.org/geonetwork/ticket/900
-                File[] files = _stopwordsDir.listFiles();
-                if (files == null) {
-                    files = new File[0];
-                }
-                for (File stopwordsFile : files) {
-                    String language = stopwordsFile.getName().substring(0, stopwordsFile.getName().indexOf('.'));
-                    // TODO check for valid ISO 639-2 codes could be better than this
-                    if (language.length() != 3) {
-                        Log.warning(Geonet.LUCENE, "Stopwords file with incorrect ISO 639-2 language as filename: " + language);
-                    }
-                    // look up stopwords for that language
-                    Set<String> stopwordsForLanguage = StopwordFileParser.parse(stopwordsFile.getAbsolutePath());
-                    if (stopwordsForLanguage != null) {
-                        if (Log.isDebugEnabled(Geonet.LUCENE)) {
-                            Log.debug(Geonet.LUCENE, "Loaded # " + stopwordsForLanguage.size() + " stopwords for language " + language);
+                try (DirectoryStream<Path> files = Files.newDirectoryStream(_stopwordsDir)) {
+                    for (Path stopwordsFile : files) {
+                        final String fileName = stopwordsFile.getFileName().toString();
+                        String language = fileName.substring(0, fileName.indexOf('.'));
+                        // TODO check for valid ISO 639-2 codes could be better than this
+                        if (language.length() != 3) {
+                            Log.warning(Geonet.LUCENE, "Stopwords file with incorrect ISO 639-2 language as filename: " + language);
                         }
+                        // look up stopwords for that language
+                        Set<String> stopwordsForLanguage = StopwordFileParser.parse(stopwordsFile.toAbsolutePath());
+                        if (stopwordsForLanguage != null) {
+                            if (Log.isDebugEnabled(Geonet.LUCENE)) {
+                                Log.debug(Geonet.LUCENE, "Loaded # " + stopwordsForLanguage.size() + " stopwords for language " + language);
 
-                        // Configure per field analyzer and register them to language map of pfa
-                        // ... for indexing
-                        configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, _luceneConfig.getFieldSpecificAnalyzers(),
-                                analyzerMap, language, stopwordsForLanguage);
-                        
-                        // ... for searching
-                        configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, _luceneConfig.getFieldSpecificSearchAnalyzers(),
-                                searchAnalyzerMap, language, stopwordsForLanguage);
+                            }
 
-                    } else {
-                        if (Log.isDebugEnabled(Geonet.LUCENE)) {
-                            Log.debug(Geonet.LUCENE, "Failed to load any stopwords for language " + language);
+                            // Configure per field analyzer and register them to language map of pfa
+                            // ... for indexing
+                            configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, _luceneConfig.getFieldSpecificAnalyzers(),
+                                    analyzerMap, language, stopwordsForLanguage);
+
+                            // ... for searching
+                            configurePerFieldAnalyzerWrapper(defaultAnalyzerClass, _luceneConfig.getFieldSpecificSearchAnalyzers(),
+                                    searchAnalyzerMap, language, stopwordsForLanguage);
+
+                        } else {
+                            if (Log.isDebugEnabled(Geonet.LUCENE)) {
+                                Log.debug(Geonet.LUCENE, "Failed to load any stopwords for language " + language);
+                            }
                         }
                     }
                 }
@@ -508,35 +512,48 @@ public class SearchManager {
      */
 	public void init(boolean logAsynch, boolean logSpatialObject, String luceneTermsToExclude,
                      int maxWritesInTransaction) throws Exception {
-        _summaryConfigValues = _luceneConfig.getTaxonomy().get("hits");
-
-        String appPath = _geonetworkDataDirectory.getWebappDir();
-		_stylesheetsDir = new File(appPath, SEARCH_STYLESHEETS_DIR_PATH);
-        _stopwordsDir = new File(appPath + STOPWORDS_DIR_PATH);
+        _stopwordsDir = _geonetworkDataDirectory.resolveWebResource(STOPWORDS_DIR_PATH);
 
         createAnalyzer();
         createDocumentBoost();
-        
-		if (!_stylesheetsDir.isDirectory()) {
-            throw new Exception("directory " + _stylesheetsDir + " not found");
-        }
 
-		File htmlCacheDirTest   = _geonetworkDataDirectory.getHtmlCacheDir();
-		IO.mkdirs(htmlCacheDirTest, "Html cache directory");
-		_htmlCacheDir = htmlCacheDirTest.getAbsolutePath();
+        initNonStaticData(logAsynch, logSpatialObject, luceneTermsToExclude, maxWritesInTransaction);
+    }
 
+    @VisibleForTesting
+    public void initNonStaticData(boolean logAsynch, boolean logSpatialObject, String luceneTermsToExclude,
+                                     int maxWritesInTransaction) throws Exception {
+         _summaryConfigValues = _luceneConfig.getTaxonomy().get("hits");
 
-        _spatial = new Spatial(_applicationContext.getBean(DataStore.class), maxWritesInTransaction);
+         _stylesheetsDir = _geonetworkDataDirectory.resolveWebResource(SEARCH_STYLESHEETS_DIR_PATH);
 
-     	 _logAsynch = logAsynch;
-		 _logSpatialObject = logSpatialObject;
-		 _luceneTermsToExclude = luceneTermsToExclude;
+         if (!Files.isDirectory(_stylesheetsDir)) {
+             throw new Exception("directory " + _stylesheetsDir + " not found");
+         }
 
-		initLucene();
-		initZ3950();
-		
-		_luceneOptimizerManager = new LuceneOptimizerManager(this, _settingInfo);
-	}
+         Path htmlCacheDirTest = _geonetworkDataDirectory.getHtmlCacheDir();
+         Files.createDirectories(htmlCacheDirTest);
+         _htmlCacheDir = htmlCacheDirTest.toAbsolutePath();
+
+         _spatial = new Spatial(_applicationContext.getBean(DataStore.class), maxWritesInTransaction);
+
+         _logAsynch = logAsynch;
+         _logSpatialObject = logSpatialObject;
+         _luceneTermsToExclude = luceneTermsToExclude;
+
+         initLucene();
+         initZ3950();
+
+         _luceneOptimizerManager = new LuceneOptimizerManager(this, _settingInfo);
+    }
+
+    @PreDestroy
+    public void end() throws Exception {
+        endZ3950();
+        _spatial.end();
+        _luceneOptimizerManager.cancel();
+        _tracker.close(TimeUnit.MINUTES.toMillis(1), true);
+    }
 
     /**
      * TODO javadoc.
@@ -572,22 +589,10 @@ public class SearchManager {
     /**
      * Reload Lucene configuration: update analyzer.
      */
-	public void reloadLuceneConfiguration () {
+	public void reloadLuceneConfiguration () throws IOException {
 		createAnalyzer();
 		createDocumentBoost();
 	}
-
-    /**
-     * TODO javadoc.
-     *
-     * @throws Exception
-     */
-    public void end() throws Exception {
-        endZ3950();
-        _spatial.end();
-        _luceneOptimizerManager.cancel();
-        _tracker.close(TimeUnit.MINUTES.toMillis(1), true);
-    }
 
 
     /**
@@ -649,7 +654,7 @@ public class SearchManager {
 	 */
 	private void endZ3950() {}
 
-	public String getHtmlCacheDir() {
+	public Path getHtmlCacheDir() {
 		return _htmlCacheDir;
 	}
 
@@ -667,7 +672,15 @@ public class SearchManager {
 	
 	// indexing methods
 
-	/**
+    /**
+     * Force the index to wait until all changes are processed and the next reader obtained will get the latest data.
+     * @throws IOException
+     */
+    public void forceIndexChanges() throws IOException {
+        _tracker.maybeRefreshBlocking();
+    }
+
+    /**
 	 * Indexes a metadata record.
      *
 	 * @param schemaDir
@@ -677,7 +690,7 @@ public class SearchManager {
      * @param forceRefreshReaders if true then block all searches until they can obtain a up-to-date reader
 	 * @throws Exception
 	 */
-	public void index(String schemaDir, Element metadata, String id, List<Element> moreFields,
+	public void index(Path schemaDir, Element metadata, String id, List<Element> moreFields,
                       MetadataType metadataType, String root, boolean forceRefreshReaders)
             throws Exception {
         // Update spatial index first and if error occurs, record it to Lucene index
@@ -690,11 +703,11 @@ public class SearchManager {
             _tracker.addDocument(document);
         }
         if (forceRefreshReaders) {
-            _tracker.maybeRefreshBlocking();
+            forceIndexChanges();
         }
 	}
-	
-    private void indexGeometry(String schemaDir, Element metadata, String id,
+
+    private void indexGeometry(Path schemaDir, Element metadata, String id,
             List<Element> moreFields) throws Exception {
         try {
             _spatial.writer().delete(id);
@@ -731,24 +744,23 @@ public class SearchManager {
 	
     /**
      * TODO javadoc.
-     *
-     * @param schemaDir
+     *  @param schemaDir
      * @param metadata
      * @param id
      * @param moreFields
      * @param metadataType
-     *@param root @return
+     * @param root @return
      * @throws Exception
      */
-     private List<IndexInformation> buildIndexDocument(String schemaDir, Element metadata, String id,
+     private List<IndexInformation> buildIndexDocument(Path schemaDir, Element metadata, String id,
                                                        List<Element> moreFields, MetadataType metadataType,
                                                        String root) throws Exception
      {
         if (Log.isDebugEnabled(Geonet.INDEX_ENGINE)) {
             Log.debug(Geonet.INDEX_ENGINE, "Metadata to index:\n" + Xml.getString(metadata));
         }
-         File defaultLangStyleSheet = getIndexFieldsXsl(schemaDir, root, "");
-         File otherLocalesStyleSheet = getIndexFieldsXsl(schemaDir, root, "language-");
+         Path defaultLangStyleSheet = getIndexFieldsXsl(schemaDir, root, "");
+         Path otherLocalesStyleSheet = getIndexFieldsXsl(schemaDir, root, "language-");
 
         Element xmlDoc = getIndexFields(metadata, defaultLangStyleSheet, otherLocalesStyleSheet);
 
@@ -778,7 +790,7 @@ public class SearchManager {
         return documents;
 	}
 
-    private File getIndexFieldsXsl(String schemaDir, String root, String indexName) {
+    private Path getIndexFieldsXsl(Path schemaDir, String root, String indexName) {
         if (root == null) {
             root = "";
         }
@@ -788,13 +800,13 @@ public class SearchManager {
         }
 
         final String basicName = "index-fields";
-        File defaultLangStyleSheet = new File(new File(schemaDir, basicName), indexName + root + ".xsl");
-        if (!defaultLangStyleSheet.exists()) {
-            defaultLangStyleSheet = new File(new File(schemaDir, basicName), indexName + "default.xsl");
+        Path defaultLangStyleSheet = schemaDir.resolve(basicName).resolve(indexName + root + ".xsl");
+        if (!Files.exists(defaultLangStyleSheet)) {
+            defaultLangStyleSheet = schemaDir.resolve(basicName).resolve(indexName + "default.xsl");
         }
-        if (!defaultLangStyleSheet.exists()) {
+        if (!Files.exists(defaultLangStyleSheet)) {
             // backward compatibility
-            defaultLangStyleSheet = new File(schemaDir, indexName + basicName + ".xsl");
+            defaultLangStyleSheet = schemaDir.resolve(indexName + basicName + ".xsl");
         }
         return defaultLangStyleSheet;
     }
@@ -1175,22 +1187,23 @@ public class SearchManager {
      * TODO javadoc.
      *
      * @param xml
-     * @return
+     * @param defaultLangStyleSheet
+     *@param otherLocalesStyleSheet @return
      * @throws Exception
      */
     Element getIndexFields(Element xml,
-                           File defaultLangStyleSheet,
-                           File otherLocalesStyleSheet) throws Exception {
+                           Path defaultLangStyleSheet,
+                           Path otherLocalesStyleSheet) throws Exception {
         Element documents = new Element("Documents");
         try {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("inspire", Boolean.toString(isInspireEnabled()));
-            params.put("thesauriDir", _geonetworkDataDirectory.getThesauriDir().getAbsolutePath());
+            params.put("thesauriDir", _geonetworkDataDirectory.getThesauriDir().toAbsolutePath());
 
-            Element defaultLang = Xml.transform(xml, defaultLangStyleSheet.getAbsolutePath(), params);
-            if (otherLocalesStyleSheet.exists()) {
+            Element defaultLang = Xml.transform(xml, defaultLangStyleSheet, params);
+            if (Files.exists(otherLocalesStyleSheet)) {
                 @SuppressWarnings(value = "unchecked")
-                List<Element> otherLanguages = Xml.transform(xml, otherLocalesStyleSheet.getAbsolutePath(), params).removeContent();
+                List<Element> otherLanguages = Xml.transform(xml, otherLocalesStyleSheet, params).removeContent();
                 mergeDefaultLang(defaultLang, otherLanguages);
                 documents.addContent(otherLanguages);
             }
@@ -1235,6 +1248,7 @@ public class SearchManager {
         Element toMerge = null;
 
         for( Element element : otherLanguages ) {
+            Assert.isTrue(element.getName().equals("Document"));
             String clangCode;
             if (element.getAttribute("locale") == null) {
                 clangCode = "";
@@ -1308,7 +1322,7 @@ public class SearchManager {
      */
 	Element transform(String styleSheetName, Element xml) throws Exception {
 		try {
-			String styleSheetPath = new File(_stylesheetsDir, styleSheetName).getAbsolutePath();
+			Path styleSheetPath = _stylesheetsDir.resolve(styleSheetName).toAbsolutePath();
 			return Xml.transform(xml, styleSheetPath);
 		} catch (Exception e) {
 			Log.error(Geonet.INDEX_ENGINE, "Search stylesheet contains errors : " + e.getMessage());
@@ -1411,10 +1425,7 @@ public class SearchManager {
      * for configuration.
      *
      *
-     * @param locale
      * @param xml    The list of field to be indexed.
-     * @param multilingualSortFields
-     * @return
      */
 	private IndexInformation newDocument(String language, Element xml, Collection<Field> multilingualSortFields)
 	{

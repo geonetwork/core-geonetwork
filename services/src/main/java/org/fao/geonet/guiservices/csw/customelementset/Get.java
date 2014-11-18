@@ -24,11 +24,8 @@ package org.fao.geonet.guiservices.csw.customelementset;
 
 import org.fao.geonet.domain.CustomElementSet;
 import org.fao.geonet.domain.responses.CustomElementSetsListResponse;
-import org.fao.geonet.repository.CustomElementSetRepository;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.CustomElementSetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;

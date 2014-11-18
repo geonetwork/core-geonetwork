@@ -1,6 +1,6 @@
 package org.fao.geonet.services.metadata.format.groovy;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,9 +15,9 @@ public class FileResult {
     private static final Pattern KEY_PATTERN = Pattern.compile("\\$\\{([^{}]+)}");
     private final String template;
     private final Map<String, Object> substitutions;
-    private final File file;
+    private final Path file;
 
-    public FileResult(File file, String template, Map<String, Object> substitutions) {
+    public FileResult(Path file, String template, Map<String, Object> substitutions) {
         this.file = file;
         this.template = template;
         this.substitutions = substitutions;

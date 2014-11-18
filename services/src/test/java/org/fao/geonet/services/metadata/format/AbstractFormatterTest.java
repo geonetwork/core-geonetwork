@@ -67,7 +67,7 @@ public abstract class AbstractFormatterTest extends AbstractCoreIntegrationTest 
         final String schemaId = schemaManager.autodetectSchema(md);
 
         Metadata metadata = new Metadata();
-        MetadataSourceInfo sourceInfo = new MetadataSourceInfo().setSourceId(settingManager.getSiteId());
+        MetadataSourceInfo sourceInfo = new MetadataSourceInfo().setSourceId(settingManager.getSiteId()).setOwner(1);
         metadata.setSourceInfo(sourceInfo);
         MetadataDataInfo dataInfo = new MetadataDataInfo().
                 setChangeDate(new ISODate()).

@@ -13,6 +13,7 @@ import org.jdom.Namespace;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,9 +26,9 @@ import java.util.Set;
 public class Transformer {
 
     private final Handlers handlers;
-    private final String formatterPath;
+    private final Path formatterPath;
 
-    public Transformer(Handlers handlers, String formatterPath) {
+    public Transformer(Handlers handlers, Path formatterPath) {
         this.handlers = handlers;
         handlers.prepareForTransformer();
         this.formatterPath = formatterPath;

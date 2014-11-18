@@ -15,6 +15,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.ByteArrayOutputStream;
+
+import java.nio.file.Path;
 import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -62,7 +64,7 @@ public class DatabaseMigration implements BeanPostProcessor {
                 String version;
                 String subVersion;
                 ServletContext servletContext;
-                String path;
+                Path path;
 
 
                 try {
@@ -99,7 +101,7 @@ public class DatabaseMigration implements BeanPostProcessor {
         this._migration = migration;
     }
 
-    private void migrateDatabase(ServletContext servletContext, String path, final DataSource dataSource, final String webappVersion,
+    private void migrateDatabase(ServletContext servletContext, Path path, final DataSource dataSource, final String webappVersion,
                                  final String subVersion) throws Exception {
         _logger.info("  - Migration ...");
 
@@ -123,7 +125,7 @@ public class DatabaseMigration implements BeanPostProcessor {
         }
     }
 
-    boolean doMigration(String webappVersion, String subVersion, ServletContext servletContext, String path, Connection conn,
+    boolean doMigration(String webappVersion, String subVersion, ServletContext servletContext, Path path, Connection conn,
                         Statement statement) throws Exception {
         // Get db version and subversion
         Pair<String, String> dbVersionInfo = getDatabaseVersion(statement);
@@ -177,9 +179,9 @@ public class DatabaseMigration implements BeanPostProcessor {
                             } else {
                                 int lastSep = file.lastIndexOf('/');
                                 Assert.isTrue(lastSep > -1, file + " has the wrong format");
-                                String filePath = path + file.substring(0, lastSep);
+                                Path filePath = path.resolve(file.substring(0, lastSep));
 
-                                String filePrefix = file.substring(lastSep);
+                                String filePrefix = file.substring(lastSep + 1);
                                 anyMigrationAction = true;
                                 _logger.info("         - SQL migration file:" + filePath + " prefix:" + filePrefix + " ...");
                                 try {
@@ -218,6 +220,8 @@ public class DatabaseMigration implements BeanPostProcessor {
                 }
                 // TODO : Maybe some migration stuff has to be done in Java ?
                 break;
+            default:
+                throw new Error("Unrecognized value: " + to.compareTo(from));
         }
 
         return anyMigrationError;
@@ -334,7 +338,10 @@ public class DatabaseMigration implements BeanPostProcessor {
             case 0 :
                 number += ".0.0";
                 break;
-            case 1 :number += ".0";
+            case 1 :
+                number += ".0";
+                break;
+            default:
                 break;
         }
 
@@ -390,6 +397,28 @@ public class DatabaseMigration implements BeanPostProcessor {
                 return micro - o.micro;
             }
             return 0;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Version version = (Version) o;
+
+            if (major != version.major) return false;
+            if (micro != version.micro) return false;
+            if (minor != version.minor) return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = major;
+            result = 31 * result + minor;
+            result = 31 * result + micro;
+            return result;
         }
 
         @Override

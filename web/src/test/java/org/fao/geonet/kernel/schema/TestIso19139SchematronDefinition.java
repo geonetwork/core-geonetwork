@@ -1,17 +1,17 @@
 package org.fao.geonet.kernel.schema;
 
-import com.google.common.io.Files;
-import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.xpath.XPath;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,41 +24,38 @@ import static org.junit.Assert.assertEquals;
  * Created by Jesse on 1/31/14.
  */
 public class TestIso19139SchematronDefinition extends AbstractSchematronTest {
-    @Autowired
-    private SchemaManager schemaManager;
-
 
     @SuppressWarnings("unchecked")
     @Test
     public void testAllSchematrons() throws Exception {
-        final String schemaDir = schemaManager.getSchemaDir("iso19139");
-        for (File schematronXsl : new File(schemaDir, "schematron").listFiles()) {
-            if (!schematronXsl.getName().endsWith(".xsl")) {
-                continue;
-            }
+        try (DirectoryStream<Path> schematronFiles = Files.newDirectoryStream(getSchematronDir("iso19139"), "*.sch")) {
+            for (Path schematronFile : schematronFiles) {
+                final Pair<Element, Path> compiledSchematron = compileSchematron(schematronFile);
+                Element schematronDefinition = compiledSchematron.one();
+                Path schematronXsl = compiledSchematron.two();
 
-            final Element validMetadata = loadValidMetadata();
+                final Element validMetadata = loadValidMetadata();
 
-            String schematronName = Files.getNameWithoutExtension(schematronXsl.getName());
-            Element results = Xml.transform(validMetadata, schematronXsl.getPath(), getParams(schematronName));
-            assertEquals(schematronName, 0, countFailures(results));
+                Element results = Xml.transform(validMetadata, schematronXsl, params);
+                assertEquals(schematronFile.getFileName().toString(), 0, countFailures(results));
 
-            Element schematronDefinition = Xml.loadFile(new File(schematronXsl.getParentFile(), schematronName + ".sch"));
-            final List<Element> declaredPattern = schematronDefinition.getChildren("pattern", SCH_NAMESPACE);
-            final List<Element> xsltPattern = (List<Element>) Xml.selectNodes(results, "svrl:active-pattern", NAMESPACES);
-            assertEquals(declaredPattern.size(), xsltPattern.size());
+                final List<Element> declaredPattern = schematronDefinition.getChildren("pattern", SCH_NAMESPACE);
+                final List<Element> xsltPattern = (List<Element>) Xml.selectNodes(results, "svrl:active-pattern", NAMESPACES);
+                assertEquals(declaredPattern.size(), xsltPattern.size());
 
-            for (Element pattern : declaredPattern) {
-                checkPattern(schematronXsl, validMetadata, pattern);
+                for (Element pattern : declaredPattern) {
+                    checkPattern(schematronFile, validMetadata, pattern);
+                }
+
             }
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void checkPattern(File file, Element validMetadata, Element pattern) throws JDOMException {
+    private void checkPattern(Path file, Element validMetadata, Element pattern) throws JDOMException {
         final List<Element> declaredRules = pattern.getChildren("rule", SCH_NAMESPACE);
 
-        Map<Element, List<Element>> xml = new IdentityHashMap<Element, List<Element>>();
+        Map<Element, List<Element>> xml = new IdentityHashMap<>();
 
         for (Element declaredRule : declaredRules) {
             String context = declaredRule.getAttributeValue("context");
@@ -84,11 +81,11 @@ public class TestIso19139SchematronDefinition extends AbstractSchematronTest {
         }
     }
 
-    private void throwDuplicateContextRule(File file, String titleOfRule, Map.Entry<Element, List<Element>> previouslyLoadedNodes) {
+    private void throwDuplicateContextRule(Path file, String titleOfRule, Map.Entry<Element, List<Element>> previouslyLoadedNodes) {
         final String ruleTitle = createRuleTitle(previouslyLoadedNodes.getKey());
 
         String errorDescription = "A problem was found with the rules in the schematron :'" +
-                                  file.getPath().substring(file.getParent().length() + 1) + "' \n\n";
+                                  file.getFileName() + "' \n\n";
 
         String fixExplanation =
                 "Each rule in a pattern must select different nodes in the metadata because,\n" +

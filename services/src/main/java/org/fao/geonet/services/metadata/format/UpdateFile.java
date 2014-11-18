@@ -26,7 +26,6 @@ package org.fao.geonet.services.metadata.format;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.io.FileUtils;
 import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -35,8 +34,10 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.jdom.Element;
 
-import java.io.File;
 import java.net.URLDecoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collections;
 
 /**
  * Allows a user to set the xsl used for displaying metadata
@@ -51,16 +52,16 @@ public class UpdateFile extends AbstractFormatService implements Service {
         String xslid = Util.getParam(params, Params.ID);
         String data =  Util.getParam(params, Params.DATA);
         String schema = Util.getParam(params, Params.SCHEMA, null);
-        File schemaDir = null;
+        Path schemaDir = null;
         if (schema != null) {
-            schemaDir = new File(context.getBean(SchemaManager.class).getSchemaDir(schema));
+            schemaDir = context.getBean(SchemaManager.class).getSchemaDir(schema);
         }
 
-        File formatDir = getAndVerifyFormatDir(context.getBean(GeonetworkDataDirectory.class), Params.ID, xslid, schemaDir);
+        Path formatDir = getAndVerifyFormatDir(context.getBean(GeonetworkDataDirectory.class), Params.ID, xslid, schemaDir);
         
-        File toUpdate = new File(formatDir, fileName.replaceAll("/", File.separator));
+        Path toUpdate = formatDir.resolve(fileName);
         
-        FileUtils.write(toUpdate, data);
+        Files.write(toUpdate, Collections.singleton(data), Constants.CHARSET);
 
         Element elResp = new Element(Jeeves.Elem.RESPONSE);
         elResp.addContent(new Element(Geonet.Elem.ID).setText(xslid));

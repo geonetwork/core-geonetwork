@@ -1,14 +1,13 @@
 package org.fao.geonet.services.metadata.format;
 
 import com.google.common.collect.Lists;
-import com.google.common.io.Closer;
 import org.fao.geonet.Constants;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,38 +25,33 @@ public class ConfigFile {
 
     private Properties config;
 
-    public ConfigFile(File bundleDir, boolean searchParentDir, File schemaDir) throws IOException {
+    public ConfigFile(Path bundleDir, boolean searchParentDir, Path schemaDir) throws IOException {
         this.config = new Properties();
-        File[] properties;
+        Path[] properties;
         if (searchParentDir) {
             if (schemaDir == null) {
-                properties = new File[]{
-                        new File(bundleDir.getParentFile(), CONFIG_PROPERTIES_FILENAME),
-                        new File(bundleDir, CONFIG_PROPERTIES_FILENAME)};
+                properties = new Path[]{
+                        bundleDir.getParent().resolve(CONFIG_PROPERTIES_FILENAME),
+                        bundleDir.resolve(CONFIG_PROPERTIES_FILENAME)};
 
             } else {
-                List<File> tmp = Lists.newArrayList();
-                File current = bundleDir;
-                while (!schemaDir.equals(current) && current.getParentFile() != null) {
-                    tmp.add(new File(current, CONFIG_PROPERTIES_FILENAME));
-                    current = current.getParentFile();
+                List<Path> tmp = Lists.newArrayList();
+                Path current = bundleDir;
+                while (current.getParent() != null && !schemaDir.equals(current) && Files.exists(current.getParent())) {
+                    tmp.add(current.resolve(CONFIG_PROPERTIES_FILENAME));
+                    current = current.getParent();
                 }
-                tmp.add(new File(schemaDir, CONFIG_PROPERTIES_FILENAME));
-                properties = tmp.toArray(new File[tmp.size()]);
+                tmp.add(schemaDir.resolve(CONFIG_PROPERTIES_FILENAME));
+                properties = tmp.toArray(new Path[tmp.size()]);
             }
         } else {
-            properties = new File[]{new File(bundleDir, CONFIG_PROPERTIES_FILENAME)};
+            properties = new Path[]{bundleDir.resolve(CONFIG_PROPERTIES_FILENAME)};
         }
 
-        for (File file : properties) {
-            if (file.exists()) {
-                Closer closer = Closer.create();
-                try {
-                    final FileInputStream fileInputStream = closer.register(new FileInputStream(file));
-                    InputStreamReader reader = closer.register(new InputStreamReader(fileInputStream, Constants.ENCODING));
+        for (Path file : properties) {
+            if (Files.exists(file)) {
+                try (InputStreamReader reader = new InputStreamReader(Files.newInputStream(file), Constants.ENCODING)) {
                     config.load(reader);
-                } finally {
-                    closer.close();
                 }
             }
         }
@@ -119,11 +113,10 @@ public class ConfigFile {
         return config.getProperty(DEPENDS_ON, null);
     }
 
-    public static void generateDefault(File bundleDir) throws IOException {
-        File configFile = new File(bundleDir, CONFIG_PROPERTIES_FILENAME);
-        if (!configFile.exists()) {
-            PrintStream out = new PrintStream(configFile, Constants.ENCODING);
-            try {
+    public static void generateDefault(Path bundleDir) throws IOException {
+        Path configFile = bundleDir.resolve(CONFIG_PROPERTIES_FILENAME);
+        if (!Files.exists(configFile)) {
+            try (PrintStream out = new PrintStream(Files.newOutputStream(configFile), true, Constants.ENCODING)) {
                 out.println("# Generated as part of download");
                 out.println("# This file is an example of a metadata formatter configuration file");
                 out.println("# Uncomment lines of interest");
@@ -153,8 +146,6 @@ public class ConfigFile {
                 out.println("# current formatter.  For example iso19139.che depends on iso19139.  This means that the");
                 out.println("# files in iso19139 are accessible by iso19139.che formatter.");
                 out.println("# " + DEPENDS_ON + "=iso19139");
-            } finally {
-                out.close();
             }
         }
     }

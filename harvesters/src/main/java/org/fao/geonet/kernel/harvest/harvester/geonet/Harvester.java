@@ -28,7 +28,11 @@ import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Source;
-import org.fao.geonet.exceptions.*;
+import org.fao.geonet.exceptions.BadServerResponseEx;
+import org.fao.geonet.exceptions.BadSoapResponseEx;
+import org.fao.geonet.exceptions.BadXmlResponseEx;
+import org.fao.geonet.exceptions.OperationAbortedEx;
+import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
@@ -43,10 +47,10 @@ import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -339,7 +343,7 @@ class Harvester implements IHarvester<HarvestResult> {
         Lib.net.setupProxy(context, req);
         req.setAddress(req.getAddress() + "/images/logos/" + logo);
 
-        File logoFile = new File(Resources.locateLogosDir(context) + File.separator + logo);
+        Path logoFile = Resources.locateLogosDir(context).resolve(logo);
 
         try {
             req.executeLarge(logoFile);
@@ -348,7 +352,7 @@ class Harvester implements IHarvester<HarvestResult> {
             context.warning("  (C) Logo  : " + logo);
             context.warning("  (C) Excep : " + e.getMessage());
 
-            IO.delete(logoFile, false, Geonet.GEONETWORK);
+            IO.deleteFile(logoFile, false, Geonet.GEONETWORK);
 
             Resources.copyUnknownLogo(context, uuid);
         }

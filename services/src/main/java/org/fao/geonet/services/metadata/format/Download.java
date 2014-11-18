@@ -24,19 +24,23 @@
 package org.fao.geonet.services.metadata.format;
 
 import jeeves.interfaces.Service;
-import jeeves.server.context.ServiceContext;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.Util;
-import org.apache.commons.io.FileUtils;
-import org.apache.tools.zip.ZipEntry;
-import org.apache.tools.zip.ZipOutputStream;
+import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Allows a user to download as a zip file a format and all of the associated data
@@ -48,40 +52,28 @@ public class Download extends AbstractFormatService implements Service {
     public Element exec(Element params, ServiceContext context) throws Exception {
         String xslid = Util.getParam(params, Params.ID, null);
         String schema = Util.getParam(params, Params.SCHEMA, null);
-        File schemaDir = null;
+        Path schemaDir = null;
         if (schema != null) {
-            schemaDir = new File(context.getBean(SchemaManager.class).getSchemaDir(schema));
+            schemaDir = context.getBean(SchemaManager.class).getSchemaDir(schema);
         }
-        File formatDir = getAndVerifyFormatDir(context.getBean(GeonetworkDataDirectory.class), Params.ID, xslid, schemaDir);
+        Path formatDir = getAndVerifyFormatDir(context.getBean(GeonetworkDataDirectory.class), Params.ID, xslid, schemaDir);
         
         try {
             
-            File tmpDir = (File) context.getServlet().getServletContext()
-                    .getAttribute("javax.servlet.context.tempdir");
-            File zippedFile = File.createTempFile(xslid, ".zip", tmpDir);
-            ZipOutputStream zipOut = new ZipOutputStream(zippedFile);
-            try {
-                zipDir(xslid, formatDir, zipOut);
-            } finally {
-                zipOut.close();
+            File tmpDir = (File) context.getServlet().getServletContext().getAttribute("javax.servlet.context.tempdir");
+            Path zippedFile = Files.createTempFile(tmpDir.toPath(), xslid, ".zip");
+
+            try (FileSystem zipFs = ZipUtil.createZipFs(zippedFile);
+                 DirectoryStream<Path> paths = Files.newDirectoryStream(formatDir)) {
+                Path root = zipFs.getRootDirectories().iterator().next();
+                for (Path path : paths) {
+                    IO.copyDirectoryOrFile(path, root, true);
+                }
             }
             
-            return BinaryFile.encode(200, zippedFile.getAbsolutePath(), xslid+".zip", true);
+            return BinaryFile.encode(200, zippedFile, xslid + ".zip", true).getElement();
         } catch (IOException e) {
             throw new RuntimeException("Error occured while trying to download file");
-        }
-
-    }
-
-    private void zipDir(String basePath, File formatDir, ZipOutputStream zipOut) throws IOException {
-        for(File f : formatDir.listFiles()) {
-            if(f.isFile()) {
-                ZipEntry nextExtry = new ZipEntry(basePath + File.separator + f.getName());
-                zipOut.putNextEntry(nextExtry );
-                FileUtils.copyFile(f, zipOut);
-            } else {
-                zipDir(basePath + File.separator + f.getName(), f, zipOut);
-            }
         }
     }
 }

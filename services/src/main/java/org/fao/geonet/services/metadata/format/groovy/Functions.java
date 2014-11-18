@@ -20,9 +20,9 @@ import org.fao.geonet.services.metadata.format.FormatterParams;
 import org.fao.geonet.services.metadata.format.SchemaLocalization;
 import org.jdom.Element;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -64,7 +64,7 @@ public class Functions {
             tmpLocalizations.add(schemaLocalization);
         }
 
-        final File schemaDir = new File(schemaManager.getSchemaDir(config.dependOn()));
+        final Path schemaDir = schemaManager.getSchemaDir(config.dependOn());
         final ConfigFile parentConfig = new ConfigFile(schemaDir, false, null);
         addParentLocalizations(schemaManager, allLocalizations, tmpLocalizations, parentConfig);
     }

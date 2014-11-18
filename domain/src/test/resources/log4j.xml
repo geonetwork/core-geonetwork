@@ -6,8 +6,17 @@
             <param name="ConversionPattern" value="%-4r [%t] %-5p %c %x - %m%n"/>
         </layout>
     </appender>
-    <category name="org.springframework.aop.framework.CglibAopProxy" additivity="false">
+    <category name="org.springframework.aop.framework.CglibAopProxy">
         <priority value="ERROR" />
+    </category>
+    <category name="net.sf.ehcache.config.ConfigurationFactory">
+        <priority value="ERROR" />
+    </category>
+    <category name="org.apache.jcs.auxiliary">
+        <priority value="ERROR" />
+    </category>
+    <category name="org.hibernate">
+        <priority value="ERROR"/>
     </category>
     <category name="org.hibernate.SQL">
         <priority value="WARN"/>

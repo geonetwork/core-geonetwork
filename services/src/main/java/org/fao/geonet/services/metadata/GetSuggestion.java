@@ -26,19 +26,20 @@ package org.fao.geonet.services.metadata;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.Utils;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +80,7 @@ public class GetSuggestion implements Service {
 
     private static final String XSL_SUGGEST = "suggest.xsl";
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     public Element exec(Element params, ServiceContext context)
@@ -111,14 +112,11 @@ public class GetSuggestion implements Service {
         // List or analyze all suggestions process registered for this schema
         if ("list".equals(action) || "analyze".equals(action)) {
             MetadataSchema metadataSchema = dm.getSchema(mdInfo.getDataInfo().getSchemaId());
-            String filePath = metadataSchema.getSchemaDir() + "/"
-                    + XSL_SUGGEST;
-            File xslProcessing = new File(filePath);
-            if (xslProcessing.exists()) {
+            Path xslProcessing = metadataSchema.getSchemaDir().resolve(XSL_SUGGEST);
+            if (Files.exists(xslProcessing)) {
                 // -- here we send parameters set by user from
                 // URL if needed.
-                Element processList = Xml.transform(md, filePath, xslParameter);
-                return processList;
+                return Xml.transform(md, xslProcessing, xslParameter);
             } else {
                 return response;
             }

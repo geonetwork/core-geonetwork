@@ -26,16 +26,17 @@ package org.fao.geonet.services.thesaurus;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.BinaryFile;
-import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.utils.BinaryFile;
 import org.jdom.Element;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 //=============================================================================
 
@@ -51,7 +52,7 @@ public class Download implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception	{}
+	public void init(Path appPath, ServiceConfig params) throws Exception	{}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -61,7 +62,6 @@ public class Download implements Service
 
 	/**
 	 *  @param params must contain
-	 * 	@see Params.NAME key value
 	 */
 	public Element exec(Element params, ServiceContext context) throws Exception
 	{
@@ -74,11 +74,11 @@ public class Download implements Service
 		if (directory == null)
 			throw new IllegalArgumentException("Thesaurus not found --> " + name);
 		
-		File directoryFile = directory.getFile();
-		if (!directoryFile.exists())
+		Path directoryFile = directory.getFile();
+		if (!Files.exists(directoryFile))
 			throw new IllegalArgumentException("Thesaurus file not found --> " + name);
 
-		return BinaryFile.encode(200,directoryFile.getAbsolutePath());
+		return BinaryFile.encode(200,directoryFile).getElement();
 	}
 
 }

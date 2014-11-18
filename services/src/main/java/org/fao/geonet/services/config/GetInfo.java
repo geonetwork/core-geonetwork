@@ -25,26 +25,28 @@ package org.fao.geonet.services.config;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.resources.Stats;
 import org.apache.commons.dbcp.BasicDataSource;
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.kernel.search.LuceneConfig;
-import org.fao.geonet.utils.TransformerFactoryFactory;
-import org.apache.commons.io.FileUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.search.LuceneConfig;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.jdom.Element;
 
-import javax.sql.DataSource;
-import javax.xml.transform.TransformerFactory;
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import javax.sql.DataSource;
+import javax.xml.transform.TransformerFactory;
 
 /**
  * Retrieve various type of information about the system (eg. Java version, XSLT
@@ -63,7 +65,7 @@ public class GetInfo implements Service {
 
 	final Properties properties = System.getProperties();
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
 
 	public Element exec(Element params, ServiceContext context)
@@ -146,25 +148,38 @@ public class GetInfo implements Service {
 	 *
      * @param context
      */
-	private void loadIndexInfo(ServiceContext context) {
+	private void loadIndexInfo(ServiceContext context) throws IOException {
         final GeonetworkDataDirectory dataDirectory = context.getBean(GeonetworkDataDirectory.class);
-        File luceneDir = dataDirectory.getLuceneDir();
-		indexProperties.put("index.path", luceneDir.getAbsolutePath());
-		File lDir = dataDirectory.getSpatialIndexPath();
-		if (luceneDir.exists()) {
-			long size = FileUtils.sizeOfDirectory(luceneDir) / 1024;
+        Path luceneDir = dataDirectory.getLuceneDir();
+		indexProperties.put("index.path", luceneDir.toAbsolutePath().normalize().toString());
+        Path lDir = dataDirectory.getSpatialIndexPath();
+		if (Files.exists(luceneDir)) {
+			long size = sizeOfDirectory(luceneDir) / 1024;
 			indexProperties.put("index.size", "" + size); // lucene + Shapefile
 															// if exist
         }
 
-        if (lDir.exists()) {
-            long size = FileUtils.sizeOfDirectory(lDir) / 1024;
+        if (Files.exists(lDir)) {
+            long size = sizeOfDirectory(lDir) / 1024;
             indexProperties.put("index.size.lucene", "" + size);
         }
 		indexProperties.put("index.lucene.config", context.getBean(LuceneConfig.class).toString());
 	}
-	
-	/**
+
+    private long sizeOfDirectory(Path lDir) throws IOException {
+        final long[] size = new long[]{0};
+        Files.walkFileTree(lDir, new SimpleFileVisitor<Path>(){
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                size[0] += Files.size(file);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+
+        return size[0];
+    }
+
+    /**
 	 * Compute information about database.
 	 * 
 	 * @param context

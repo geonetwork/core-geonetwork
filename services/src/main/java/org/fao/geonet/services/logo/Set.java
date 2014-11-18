@@ -23,27 +23,29 @@
 
 package org.fao.geonet.services.logo;
 
-import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.BinaryFile;
-import org.fao.geonet.Util;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.utils.BinaryFile;
 import org.jdom.Element;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
+import javax.imageio.ImageIO;
 
 /**
  * Set the logo of the current node.
@@ -52,10 +54,10 @@ import java.io.IOException;
  * 
  */
 public class Set implements Service {
-    private volatile String harvestingLogoDirectory;
-    private volatile String nodeLogoDirectory = null;
+    private volatile Path harvestingLogoDirectory;
+    private volatile Path nodeLogoDirectory = null;
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     public Element exec(Element params, ServiceContext context)

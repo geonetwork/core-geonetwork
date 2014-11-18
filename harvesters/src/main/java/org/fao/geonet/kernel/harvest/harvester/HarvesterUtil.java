@@ -6,7 +6,8 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,14 +63,11 @@ public class HarvesterUtil {
                                           Map<String, Object> processParams,
                                           Logger log) {
 
-        String filePath = metadataSchema.getSchemaDir() +
-                "/process/" + processName + ".xsl";
-        File xslProcessing = new File(filePath);
-        if (!xslProcessing.exists()) {
-            log.info("     processing instruction not found for " +
-                    metadataSchema.getName() + " schema. metadata not filtered.");
+        Path filePath = metadataSchema.getSchemaDir().resolve("process").resolve(processName + ".xsl");
+        if (!Files.exists(filePath)) {
+            log.info("     processing instruction not found for " + metadataSchema.getName() + " schema. metadata not filtered.");
         } else {
-            Element processedMetadata = null;
+            Element processedMetadata;
             try {
                 processedMetadata = Xml.transform(md, filePath, processParams);
                 if(log.isDebugEnabled()) log.debug("     metadata filtered.");

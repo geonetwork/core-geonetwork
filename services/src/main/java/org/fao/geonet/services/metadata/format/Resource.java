@@ -23,7 +23,6 @@
 
 package org.fao.geonet.services.metadata.format;
 
-import com.google.common.io.Files;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
@@ -32,8 +31,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import javax.servlet.http.HttpServletResponse;
+
+import static com.google.common.io.Files.getFileExtension;
 
 /**
  * Allows a user load a file from the identified formatter bundle. Typically used for reading images
@@ -56,25 +58,26 @@ public class Resource extends AbstractFormatService {
             @RequestParam(value = Params.SCHEMA, required = false) String schema,
             HttpServletResponse response
             ) throws Exception {
-        File schemaDir = null;
+        Path schemaDir = null;
         if (schema != null) {
-            schemaDir = new File(schemaManager.getSchemaDir(schema));
+            schemaDir = schemaManager.getSchemaDir(schema);
         }
 
-        File formatDir = getAndVerifyFormatDir(dataDirectory, Params.ID, xslid, schemaDir);
-        File desiredFile = new File(formatDir, fileName.replace("/", File.separator));
-        
-        if(!containsFile(formatDir, desiredFile)) {
-            response.sendError(403, fileName+" does not identify a file in the "+xslid+" format bundle");
-            return;
-        }
-        if(!desiredFile.exists() || !desiredFile.isFile()) {
+        Path formatDir = getAndVerifyFormatDir(dataDirectory, Params.ID, xslid, schemaDir);
+        Path desiredFile = formatDir.resolve(fileName);
+
+        if(!Files.isRegularFile(desiredFile)) {
             response.sendError(404, fileName+" does not identify a file in formatter bundle: " + xslid);
             return;
         }
 
+        if(!containsFile(formatDir, desiredFile)) {
+            response.sendError(403, fileName+" does not identify a file in the "+xslid+" format bundle");
+            return;
+        }
+        
         response.setStatus(200);
-        setContentType(response, Files.getFileExtension(desiredFile.getName()));
+        setContentType(response, getFileExtension(desiredFile.getFileName().toString()));
 
         Files.copy(desiredFile, response.getOutputStream());
     }

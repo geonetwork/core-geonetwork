@@ -11,8 +11,8 @@ import groovy.util.ClosureComparator;
 import groovy.util.slurpersupport.GPathResult;
 import org.fao.geonet.services.metadata.format.FormatterParams;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
@@ -28,9 +28,9 @@ import java.util.regex.Pattern;
 public class Handlers {
     static final String HANDLER_SELECT = "select";
 
-    private final File formatterDir;
-    private final File schemaDir;
-    private final File rootFormatterDir;
+    private final Path formatterDir;
+    private final Path schemaDir;
+    private final Path rootFormatterDir;
     private final TemplateCache templateCache;
     private Set<String> roots = Sets.newHashSet();
     private Callable<Iterable<Object>> functionRoots = null;
@@ -53,7 +53,7 @@ public class Handlers {
     StartEndHandler startHandler = new StartEndHandler(null);
     StartEndHandler endHandler = new StartEndHandler(null);
 
-    public Handlers(FormatterParams fparams, File schemaDir, File rootFormatterDir,
+    public Handlers(FormatterParams fparams, Path schemaDir, Path rootFormatterDir,
                     TemplateCache templateCache) {
         this.formatterDir = fparams.formatDir;
         this.schemaDir = schemaDir;

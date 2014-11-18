@@ -1,15 +1,16 @@
 package org.fao.geonet.services.metadata.format;
 
-import com.google.common.io.Files;
-import org.eclipse.jetty.util.IO;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
+import org.fao.geonet.utils.IO;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import java.io.File;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -24,8 +25,8 @@ public class ResourceTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void testExec() throws Exception {
-        final File testFormatter = getFile("view.groovy").getParentFile();
-        IO.copy(testFormatter, new File(this.dataDirectory.getFormatterDir(), RESOURCE_TEST_DIR));
+        final Path testFormatter = getFile("view.groovy").getParent();
+        IO.copyDirectoryOrFile(testFormatter, this.dataDirectory.getFormatterDir().resolve(RESOURCE_TEST_DIR), false);
 
         assertCorrectExec("test.js", 200, "application/javascript");
         assertCorrectExec("css/test.css", 200, "text/css");
@@ -48,9 +49,9 @@ public class ResourceTest extends AbstractServiceIntegrationTest {
 
     }
 
-    protected File getFile(String fileName) {
+    protected Path getFile(String fileName) throws URISyntaxException {
         final URL testFormatterViewFile = FormatIntegrationTest.class.getResource(RESOURCE_TEST_DIR + "/" + fileName);
-        return new File(testFormatterViewFile.getFile());
+        return IO.toPath(testFormatterViewFile.toURI());
     }
 
     protected void assertCorrectExec(String fileName, int expectedCode, String expectedContentType) throws Exception {
@@ -64,7 +65,7 @@ public class ResourceTest extends AbstractServiceIntegrationTest {
         assertEquals(fileName + " returned content type", expectedContentType, response.getContentType());
 
         if (expectedContentType != null) {
-            assertArrayEquals(fileName + " does not return the expected data", Files.toByteArray(getFile(fileName)),
+            assertArrayEquals(fileName + " does not return the expected data", Files.readAllBytes(getFile(fileName)),
                     response.getContentAsByteArray());
         }
     }

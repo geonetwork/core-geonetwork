@@ -33,7 +33,6 @@ import org.apache.commons.io.FileUtils;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
@@ -59,7 +58,11 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -98,7 +101,7 @@ public class Format extends AbstractFormatService {
      * Map (canonical path to formatter dir -> Element containing all xml files in Formatter bundle's loc directory)
      */
     private WeakHashMap<String, Element> pluginLocs = new WeakHashMap<String, Element>();
-    private Map<String, Boolean> isFormatterInSchemaPluginMap = Maps.newHashMap();
+    private Map<Path, Boolean> isFormatterInSchemaPluginMap = Maps.newHashMap();
 
 
     @RequestMapping(value = "/{lang}/md.format.{type}")
@@ -154,11 +157,11 @@ public class Format extends AbstractFormatService {
         Metadata metadataInfo = elementMetadataPair.two();
 
         final String schema = metadataInfo.getDataInfo().getSchemaId();
-        File schemaDir = null;
+        Path schemaDir = null;
         if (schema != null) {
-            schemaDir = new File(schemaManager.getSchemaDir(schema));
+            schemaDir = schemaManager.getSchemaDir(schema);
         }
-        File formatDir = getAndVerifyFormatDir(geonetworkDataDirectory, "xsl", xslid, schemaDir);
+        Path formatDir = getAndVerifyFormatDir(geonetworkDataDirectory, "xsl", xslid, schemaDir);
 
         ConfigFile config = new ConfigFile(formatDir, true, schemaDir);
 
@@ -171,7 +174,7 @@ public class Format extends AbstractFormatService {
         fparams.format = this;
         fparams.params = request.getParameterMap();
         fparams.context = context;
-        fparams.formatDir = formatDir.getCanonicalFile();
+        fparams.formatDir = formatDir.toRealPath();
         fparams.metadata = metadata;
         fparams.schema = schema;
         fparams.schemaDir = schemaDir;
@@ -180,14 +183,14 @@ public class Format extends AbstractFormatService {
         fparams.metadataInfo = metadataInfo;
         fparams.formatterInSchemaPlugin = isFormatterInSchemaPlugin(formatDir, schemaDir);
 
-        File viewXslFile = new File(formatDir, FormatterConstants.VIEW_XSL_FILENAME);
-        File viewGroovyFile = new File(formatDir, FormatterConstants.VIEW_GROOVY_FILENAME);
+        Path viewXslFile = formatDir.resolve(FormatterConstants.VIEW_XSL_FILENAME);
+        Path viewGroovyFile = formatDir.resolve(FormatterConstants.VIEW_GROOVY_FILENAME);
         FormatterImpl formatter;
-        if (viewXslFile.exists()) {
-            fparams.viewFile = viewXslFile.getCanonicalFile();
+        if (Files.exists(viewXslFile)) {
+            fparams.viewFile = viewXslFile.toRealPath();
             formatter = this.xsltFormatter;
-        } else if (viewGroovyFile.exists()) {
-            fparams.viewFile = viewGroovyFile.getCanonicalFile();
+        } else if (Files.exists(viewGroovyFile)) {
+            fparams.viewFile = viewGroovyFile.toRealPath();
             formatter = this.groovyFormatter;
         } else {
             throw new IllegalArgumentException("The 'xsl' parameter must be a valid id of a formatter");
@@ -196,18 +199,18 @@ public class Format extends AbstractFormatService {
         return Pair.read(formatter, fparams);
     }
 
-    private synchronized boolean isFormatterInSchemaPlugin(File formatterDir, File schemaDir) throws IOException {
-        final String canonicalPath = formatterDir.getCanonicalPath();
+    private synchronized boolean isFormatterInSchemaPlugin(Path formatterDir, Path schemaDir) throws IOException {
+        final Path canonicalPath = formatterDir.toRealPath();
         Boolean isInSchemaPlugin = this.isFormatterInSchemaPluginMap.get(canonicalPath);
         if (isInSchemaPlugin == null) {
             isInSchemaPlugin = false;
-            File current = formatterDir;
-            while (current.getParentFile() != null) {
+            Path current = formatterDir;
+            while (current.getParent() != null && Files.exists(current.getParent())) {
                 if (current.equals(schemaDir)) {
                     isInSchemaPlugin = true;
                     break;
                 }
-                current = current.getParentFile();
+                current = current.getParent();
             }
 
             this.isFormatterInSchemaPluginMap.put(canonicalPath, isInSchemaPlugin);
@@ -247,11 +250,11 @@ public class Format extends AbstractFormatService {
         return applicable.contains(schemaName) || applicable.contains("all");
     }
 
-    Element getStrings(String appPath, String lang) throws IOException, JDOMException {
-        File baseLoc = new File(appPath, "loc");
-        File locDir = findLocDir(lang, baseLoc);
-        if (locDir.exists()) {
-            return Xml.loadFile(new File(locDir, "xml" + File.separator + "strings.xml"));
+    Element getStrings(Path appPath, String lang) throws IOException, JDOMException {
+        Path baseLoc = appPath.resolve("loc");
+        Path locDir = findLocDir(lang, baseLoc);
+        if (Files.exists(locDir)) {
+            return Xml.loadFile(locDir.resolve("xml").resolve("strings.xml"));
         }
         return new Element("strings");
     }
@@ -260,23 +263,25 @@ public class Format extends AbstractFormatService {
      * Get the localization files from current format plugin.  It will load all xml file in the loc/lang/ directory as children
      * of the returned element.
      */
-    protected synchronized Element getPluginLocResources(ServiceContext context, File formatDir, String lang) throws Exception {
-        final String formatDirPath = formatDir.getPath();
+    protected synchronized Element getPluginLocResources(ServiceContext context, Path formatDir, String lang) throws Exception {
+        final String formatDirPath = formatDir.toString();
         Element resources = this.pluginLocs.get(formatDirPath);
         if (isDevMode(context) || resources == null) {
             resources = new Element("loc");
-            File baseLoc = new File(formatDir, "loc");
-            File locDir = findLocDir(lang, baseLoc);
+            Path baseLoc = formatDir.resolve("loc");
+            Path locDir = findLocDir(lang, baseLoc);
 
-            resources.addContent(new Element("iso639_2").setAttribute("codeLength", "3").setText(locDir.getName()));
-            String iso639_1 = context.getBean(IsoLanguagesMapper.class).iso639_2_to_iso639_1(locDir.getName());
+            final String locDirName = locDir.getFileName().toString();
+            resources.addContent(new Element("iso639_2").setAttribute("codeLength", "3").setText(locDirName));
+            String iso639_1 = context.getBean(IsoLanguagesMapper.class).iso639_2_to_iso639_1(locDirName);
 
             resources.addContent(new Element("iso639_1").setAttribute("codeLength", "2").setText(iso639_1));
 
-            if (locDir.exists()) {
-                Collection<File> files = FileUtils.listFiles(locDir, new String[]{"xml"}, false);
-                for (File file : files) {
-                    resources.addContent(Xml.loadFile(file));
+            if (Files.exists(locDir)) {
+                try (DirectoryStream<Path> paths = Files.newDirectoryStream(locDir, "*.xml")) {
+                    for (Path file : paths) {
+                        resources.addContent(Xml.loadFile(file));
+                    }
                 }
             }
             this.pluginLocs.put(formatDirPath, resources);
@@ -284,15 +289,17 @@ public class Format extends AbstractFormatService {
         return resources;
     }
 
-    private File findLocDir(String lang, File baseLoc) {
-        File locDir = new File(baseLoc, lang);
-        if (!locDir.exists()) {
-            locDir = new File(baseLoc, Geonet.DEFAULT_LANGUAGE);
+    private Path findLocDir(String lang, Path baseLoc) throws IOException {
+        Path locDir = baseLoc.resolve(lang);
+        if (!Files.exists(locDir)) {
+            locDir = baseLoc.resolve(Geonet.DEFAULT_LANGUAGE);
         }
-        if (!locDir.exists()) {
-            File[] files = baseLoc.listFiles();
-            if (files != null && files.length > 0 && files[0].isDirectory()) {
-                locDir = files[0];
+        if (!Files.exists(locDir) && Files.exists(baseLoc)) {
+            try (DirectoryStream<Path> paths = Files.newDirectoryStream(baseLoc)) {
+                final Iterator<Path> pathIterator = paths.iterator();
+                if (pathIterator.hasNext()) {
+                    locDir = pathIterator.next();
+                }
             }
         }
         return locDir;

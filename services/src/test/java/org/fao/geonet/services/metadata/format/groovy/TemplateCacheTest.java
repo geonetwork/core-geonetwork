@@ -1,15 +1,17 @@
 package org.fao.geonet.services.metadata.format.groovy;
 
-import com.google.common.io.Files;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.services.metadata.format.FormatIntegrationTest;
+import org.fao.geonet.utils.IO;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -21,51 +23,51 @@ public class TemplateCacheTest {
         final TemplateCache templateCache = new TemplateCache();
         templateCache.systemInfo = SystemInfo.createForTesting(SystemInfo.STAGE_PRODUCTION);
         templateCache.init();
-        final File functionFile = new File(FormatIntegrationTest.class.getResource("functions.xsl").getFile());
-        final FileResult fileResult = templateCache.createFileResult(functionFile.getParentFile(), functionFile.getParentFile(),
-                functionFile.getParentFile(),
-                functionFile.getName(), Collections.<String, Object>emptyMap());
+        final Path functionFile = IO.toPath(FormatIntegrationTest.class.getResource("functions.xsl").toURI());
+        final FileResult fileResult = templateCache.createFileResult(functionFile.getParent(), functionFile.getParent(),
+                functionFile.getParent(), functionFile.getFileName().toString(), Collections.<String, Object>emptyMap());
 
-        assertEquals(Files.toString(functionFile, Constants.CHARSET).length(), fileResult.toString().length());
-        assertNotNull(templateCache.canonicalFileNameToText.getIfPresent(functionFile.getCanonicalPath()));
+        assertEquals(new String(Files.readAllBytes(functionFile), Constants.CHARSET).length(), fileResult.toString().length());
+        assertNotNull(templateCache.canonicalFileNameToText.getIfPresent(functionFile.toRealPath()));
     }
 
     @Test
     public void testFallback() throws Exception {
         String[] stagingProfiles = {SystemInfo.STAGE_TESTING, SystemInfo.STAGE_DEVELOPMENT, SystemInfo.STAGE_PRODUCTION};
 
-        final File file0 = new File(FormatIntegrationTest.class.getResource("template-cache-test/formatter/file0.html").getFile());
-        final File file1 = new File(FormatIntegrationTest.class.getResource("template-cache-test/schema1/formatter/file1.html").getFile());
-        final File file2 = new File(FormatIntegrationTest.class.getResource("template-cache-test/schema2/formatter/file2.html").getFile());
-        final File file3 = new File(FormatIntegrationTest.class.getResource("template-cache-test/file3.html").getFile());
+        final Path file0 = IO.toPath(FormatIntegrationTest.class.getResource("template-cache-test/formatter/file0.html").toURI());
+        final Path file1 = IO.toPath(FormatIntegrationTest.class.getResource("template-cache-test/schema1/formatter/file1.html").toURI());
+        final Path file2 = IO.toPath(FormatIntegrationTest.class.getResource("template-cache-test/schema2/formatter/file2.html").toURI());
+        final Path file3 = IO.toPath(FormatIntegrationTest.class.getResource("template-cache-test/file3.html").toURI());
 
         for (String profile : stagingProfiles) {
             final TemplateCache templateCache = new TemplateCache();
             templateCache.systemInfo = SystemInfo.createForTesting(profile);
             templateCache.schemaManager = Mockito.mock(SchemaManager.class);
-            Mockito.when(templateCache.schemaManager.getSchemaDir("schema1")).thenReturn(file1.getParentFile().getParentFile().getAbsolutePath());
-            Mockito.when(templateCache.schemaManager.getSchemaDir("schema2")).thenReturn(file2.getParentFile().getParentFile().getAbsolutePath());
+            Mockito.when(templateCache.schemaManager.getSchemaDir("schema1")).thenReturn(file1.getParent().getParent());
+            Mockito.when(templateCache.schemaManager.getSchemaDir("schema2")).thenReturn(file2.getParent().getParent());
             templateCache.init();
 
-            final File schemaAndRootDir = file0.getParentFile().getParentFile();
+            final Path schemaAndRootDir = file0.getParent().getParent();
 
-            FileResult fileResult = templateCache.createFileResult(file0.getParentFile(), schemaAndRootDir,
-                    schemaAndRootDir, file0.getName(), Collections.<String, Object>emptyMap());
-            assertEquals(Files.toString(file0, Constants.CHARSET).length(), fileResult.toString().length());
+            final Map<String, Object> emptyMap = Collections.emptyMap();
+            FileResult fileResult = templateCache.createFileResult(file0.getParent(), schemaAndRootDir,
+                    schemaAndRootDir, file0.getFileName().toString(), emptyMap);
+            assertEquals(new String(Files.readAllBytes(file0), Constants.CHARSET).length(), fileResult.toString().length());
 
-            fileResult = templateCache.createFileResult(file0.getParentFile(), schemaAndRootDir,
-                    schemaAndRootDir, file1.getName(), Collections.<String, Object>emptyMap());
-            assertEquals(Files.toString(file1, Constants.CHARSET).length(), fileResult.toString().length());
-
-
-            fileResult = templateCache.createFileResult(file0.getParentFile(), schemaAndRootDir,
-                    schemaAndRootDir, file2.getName(), Collections.<String, Object>emptyMap());
-            assertEquals(Files.toString(file2, Constants.CHARSET).length(), fileResult.toString().length());
+            fileResult = templateCache.createFileResult(file0.getParent(), schemaAndRootDir,
+                    schemaAndRootDir, file1.getFileName().toString(), emptyMap);
+            assertEquals(new String(Files.readAllBytes(file1), Constants.CHARSET).length(), fileResult.toString().length());
 
 
-            fileResult = templateCache.createFileResult(file0.getParentFile(), schemaAndRootDir,
-                    schemaAndRootDir, file3.getName(), Collections.<String, Object>emptyMap());
-            assertEquals(Files.toString(file3, Constants.CHARSET).length(), fileResult.toString().length());
+            fileResult = templateCache.createFileResult(file0.getParent(), schemaAndRootDir,
+                    schemaAndRootDir, file2.getFileName().toString(), emptyMap);
+            assertEquals(new String(Files.readAllBytes(file2), Constants.CHARSET).length(), fileResult.toString().length());
+
+
+            fileResult = templateCache.createFileResult(file0.getParent(), schemaAndRootDir,
+                    schemaAndRootDir, file3.getFileName().toString(), emptyMap);
+            assertEquals(new String(Files.readAllBytes(file3), Constants.CHARSET).length(), fileResult.toString().length());
 
         }
 

@@ -2,26 +2,35 @@ package org.fao.geonet.resources;
 
 import com.google.common.io.Files;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import javax.imageio.ImageIO;
-import javax.servlet.ServletContext;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.channels.Channels;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.imageio.ImageIO;
+import javax.servlet.ServletContext;
 
 /**
  * Utility methods for managing resources that are site dependent. In other
@@ -62,7 +71,7 @@ public class Resources {
 	 * 
 	 * @return locateResourcesDir(...) + FS + "images" + FS + "logos"
 	 */
-	public static String locateLogosDir(ServiceContext context) {
+	public static Path locateLogosDir(ServiceContext context) {
 		ServletContext servletContext = null;
 		if (context.getServlet() != null) {
 			servletContext = context.getServlet().getServletContext();
@@ -80,19 +89,15 @@ public class Resources {
 	 * 
 	 * @return locateResourcesDir(...) + FS + "images" + FS + "logos"
 	 */
-	public static String locateLogosDir(ServletContext context,
-			ConfigurableApplicationContext applicationContext, String appDir) {
-		String path = (context == null ? appDir : locateResourcesDir(context,
-				applicationContext))
-				+ File.separator
-				+ "images"
-				+ File.separator + "logos";
-		File file = new File(path);
-		if (!file.exists() && !file.mkdirs()) {
-			throw new AssertionError(
-					"Unable to create the images/logos directory. Permissions problem? "
-							+ path);
-		}
+	public static Path locateLogosDir(ServletContext context,
+			ConfigurableApplicationContext applicationContext, Path appDir) {
+        final Path base = context == null ? appDir : locateResourcesDir(context, applicationContext);
+        Path path = base.resolve("images").resolve("logos");
+        try {
+            java.nio.file.Files.createDirectories(path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 		return path;
 	}
 
@@ -105,7 +110,7 @@ public class Resources {
 	 * 
 	 * @return locateResourcesDir(...) + FS + "images" + FS + "harvesting"
 	 */
-	public static String locateHarvesterLogosDir(ServiceContext context) {
+	public static Path locateHarvesterLogosDir(ServiceContext context) {
 		ServletContext servletContext = null;
 		if (context.getServlet() != null) {
 			servletContext = context.getServlet().getServletContext();
@@ -123,38 +128,29 @@ public class Resources {
 	 * 
 	 * @return locateResourcesDir(...) + FS + "images" + FS + "harvesting"
 	 */
-	public static String locateHarvesterLogosDir(ServletContext context,
-			ConfigurableApplicationContext applicationContext, String appDir) {
-		String path = (context == null ? appDir : locateResourcesDir(context,
-				applicationContext))
-				+ File.separator
-				+ "images"
-				+ File.separator + "harvesting";
-		File file = new File(path);
-		if (!file.exists() && !file.mkdirs()) {
-			throw new AssertionError(
-					"Unable to create the harvester logos directory. Permissions problem? "
-							+ path);
-		}
+	public static Path locateHarvesterLogosDir(ServletContext context,
+			ConfigurableApplicationContext applicationContext, Path appDir) {
+        final Path base = context == null ? appDir : locateResourcesDir(context, applicationContext);
+        Path path = base.resolve("images").resolve("harvesting");
+        try {
+            java.nio.file.Files.createDirectories(path);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 		return path;
 	}
 
 	/**
 	 * The same as
-	 * {@link #locateHarvesterLogosDir(ServletContext, ConfigurableApplicationContext, String)}
+	 * {@link #locateHarvesterLogosDir(ServletContext, ConfigurableApplicationContext, java.nio.file.Path)}
 	 * but for Spring MVC
 	 */
-	public static String locateHarvesterLogosDirSMVC(ApplicationContext applicationContext) {
-		String path = locateResourcesDir(null, applicationContext)
-				+ File.separator + "images" + File.separator + "harvesting";
+	public static Path locateHarvesterLogosDirSMVC(ApplicationContext applicationContext) throws IOException {
+		Path path = locateResourcesDir(null, applicationContext).resolve("images").resolve("harvesting");
 
-		File file = new File(path);
-		if (!file.exists() && !file.mkdirs()) {
-			throw new AssertionError(
-					"Unable to create the harvester logos directory. Permissions problem? "
-							+ path);
-		}
-		return path;
+        java.nio.file.Files.createDirectories(path);
+
+        return path;
 	}
 
 	/**
@@ -169,14 +165,12 @@ public class Resources {
 	 * @return the root of data images. Subdirectories such as logos and
 	 *         harvesting likely contain the actual images
 	 */
-	public static String locateResourcesDir(ServiceContext context) {
+	public static Path locateResourcesDir(ServiceContext context) {
 		if (context.getServlet() != null) {
-			return locateResourcesDir(context.getServlet().getServletContext(),
-					context.getApplicationContext());
+			return locateResourcesDir(context.getServlet().getServletContext(), context.getApplicationContext());
 		}
 
-		return context.getBean(GeonetworkDataDirectory.class).getResourcesDir()
-				.getAbsolutePath();
+		return context.getBean(GeonetworkDataDirectory.class).getResourcesDir();
 	}
 
 	/**
@@ -191,19 +185,20 @@ public class Resources {
 	 * @return the root of data images. Subdirectories such as logos and
 	 *         harvesting likely contain the actual images
 	 */
-	public static String locateResourcesDir(ServletContext context,
+	public static Path locateResourcesDir(ServletContext context,
 			ApplicationContext applicationContext) {
-		String property = null;
+		Path property = null;
 		try {
-			property = applicationContext
-					.getBean(GeonetworkDataDirectory.class).getResourcesDir()
-					.getPath();
+			property = applicationContext.getBean(GeonetworkDataDirectory.class).getResourcesDir();
 		} catch (NoSuchBeanDefinitionException e) {
-			property = context.getRealPath("/WEB-INF/data/resources");
+            final String realPath = context.getRealPath("/WEB-INF/data/resources");
+            if (realPath != null) {
+                property = IO.toPath(realPath);
+            }
 		}
 
 		if (property == null) {
-			return "resources";
+			return IO.toPath("resources");
 		} else {
 			return property;
 		}
@@ -251,18 +246,19 @@ public class Resources {
 	 *         </ul>
 	 *         The defaultValue will be returned
 	 */
-	static Pair<byte[], Long> loadResource(String resourcesDir,
-			ServletContext context, String appPath, String filename,
+	static Pair<byte[], Long> loadResource(Path resourcesDir,
+			ServletContext context, Path appPath, String filename,
 			byte[] defaultValue, long loadSince) throws IOException {
-		File file = locateResource(resourcesDir, context, appPath, filename);
+		Path file = locateResource(resourcesDir, context, appPath, filename);
 
-		if (file.exists()) {
+		if (java.nio.file.Files.exists(file)) {
 
 			try {
-				if (loadSince < 0 || file.lastModified() > loadSince) {
+                final long lastModified = java.nio.file.Files.getLastModifiedTime(file).to(TimeUnit.MILLISECONDS);
+                if (loadSince < 0 || lastModified > loadSince) {
 					ByteArrayOutputStream data = new ByteArrayOutputStream();
-					transferTo(file, data, true);
-					return Pair.read(data.toByteArray(), file.lastModified());
+					java.nio.file.Files.copy(file, data);
+					return Pair.read(data.toByteArray(), lastModified);
 				} else {
 					Pair.read(defaultValue, loadSince);
 				}
@@ -302,83 +298,76 @@ public class Resources {
 	 * @return the bytes of the actual image or defaultValue
 	 */
 	public static Pair<byte[], Long> loadImage(ServletContext context,
-			String appPath, String filename, byte[] defaultValue)
+			Path appPath, String filename, byte[] defaultValue)
 			throws IOException {
 		return loadResource(null, context, appPath, filename, defaultValue, -1);
 	}
 
-	public static Pair<byte[], Long> loadImage(ApplicationContext context,
-			String filename, byte[] defaultValue) throws IOException {
-		final GeonetworkDataDirectory gnDataDir = context
-				.getBean(GeonetworkDataDirectory.class);
-		String resourceDir = gnDataDir.getResourcesDir().getAbsolutePath();
-		String appPath = gnDataDir.getWebappDir();
-		return loadResource(resourceDir, null, appPath, filename, defaultValue,
-				-1);
-	}
-
-	private static File locateResource(String resourcesDir,
-			ServletContext context, String appPath, String filename)
+	private static Path locateResource(@Nullable Path resourcesDir,
+			ServletContext context, Path appPath, @Nonnull String filename)
 			throws IOException {
-		File file = new File(resourcesDir, filename);
+        if (filename.charAt(0) == '/' || filename.charAt(0) == '\\') {
+            filename = filename.substring(1);
+        }
 
-		if (!file.exists()) {
-			File webappCopy = null;
+        Path file;
+        if (resourcesDir != null) {
+            file = resourcesDir.resolve(filename);
+        } else {
+            file = IO.toPath(filename);
+        }
+
+        if (!java.nio.file.Files.exists(file)) {
+			Path webappCopy = null;
 			if (context != null) {
 				final String realPath = context.getRealPath(filename);
 				if (realPath != null) {
-					webappCopy = new File(realPath);
+					webappCopy = IO.toPath(realPath);
 				}
 			}
 
 			if (webappCopy == null) {
-				webappCopy = new File(appPath, filename);
+				webappCopy = appPath.resolve(filename);
 			}
-			if (webappCopy.exists()) {
-				IO.mkdirs(file.getParentFile(),
-						"The resources container directory for the file: "
-								+ filename);
-				transferTo(webappCopy, new FileOutputStream(file), true);
+			if (java.nio.file.Files.exists(webappCopy)) {
+                IO.copyDirectoryOrFile(webappCopy, file, false);
 			}
 
-			final int indexOfDot = file.getName().lastIndexOf(".");
-			final String suffixless;
-			String suffix;
-			if (indexOfDot == -1) {
-				suffixless = file.getName();
-				suffix = ".png";
-			} else {
-				suffixless = file.getName().substring(0, indexOfDot);
-				suffix = file.getName().substring(indexOfDot + 1);
-			}
-			if (!file.exists()
-					&& IMAGE_WRITE_SUFFIXES.contains(suffix.toLowerCase())) {
+            final String fileName = file.getFileName().toString();
+            final int indexOfDot = fileName.lastIndexOf(".");
+            final String suffixless = Files.getNameWithoutExtension(fileName);
+			final String suffix = Files.getFileExtension(fileName);
+
+			if (!java.nio.file.Files.exists(file) && IMAGE_WRITE_SUFFIXES.contains(suffix.toLowerCase())) {
 				// find a different format and convert it to our desired format
-				File[] found = file.getParentFile().listFiles(
-						new FilenameFilter() {
+                DirectoryStream.Filter<Path> filter = new DirectoryStream.Filter<Path>() {
 
-							@Override
-							public boolean accept(final File arg0,
-									final String name) {
-								boolean startsWith = name
-										.startsWith(suffixless);
-								final String ext = Files.getFileExtension(name)
-										.toLowerCase();
-								boolean canReadImage = name.length() > indexOfDot
-										&& IMAGE_READ_SUFFIXES.contains(ext);
-								return startsWith && canReadImage;
-							}
-						});
-
-				if (found != null && found.length > 0) {
-					BufferedImage image = ImageIO.read(found[0]);
-					try {
-						ImageIO.write(image, suffix, file);
-					} catch (IOException e) {
-						context.log("Unable to convert image from " + found[0]
-								+ " to " + file, e);
-					}
-				}
+                    @Override
+                    public boolean accept(Path entry) throws IOException {
+                        String name = entry.getFileName().toString();
+                        boolean startsWith = name.startsWith(suffixless);
+                        final String ext = Files.getFileExtension(name).toLowerCase();
+                        boolean canReadImage = name.length() > indexOfDot && IMAGE_READ_SUFFIXES.contains(ext);
+                        return startsWith && canReadImage;
+                    }
+                };
+                try (DirectoryStream<Path> paths = java.nio.file.Files.newDirectoryStream(file.getParent(), filter)) {
+                    Iterator<Path> iter = paths.iterator();
+                    if (iter.hasNext()) {
+                        Path path = iter.next();
+                        try (
+                                InputStream in = java.nio.file.Files.newInputStream(path);
+                                OutputStream out = java.nio.file.Files.newOutputStream(file)
+                        ) {
+                            try {
+                                BufferedImage image = ImageIO.read(in);
+                                ImageIO.write(image, suffix, out);
+                            } catch (IOException e) {
+                                context.log("Unable to convert image from " + path + " to " + file, e);
+                            }
+                        }
+                    }
+                }
 			}
 		}
 
@@ -420,34 +409,23 @@ public class Resources {
 		if (context.getServlet() != null) {
 			servletContext = context.getServlet().getServletContext();
 		}
-		String appDir = context.getAppPath();
+		Path appDir = context.getAppPath();
 
-		File des = null;
-		FileInputStream is = null;
-		FileOutputStream os = null;
+		Path des = null;
 		try {
-			File src = Resources.locateResource(
+			Path src = Resources.locateResource(
 					Resources.locateResourcesDir(context), servletContext,
 					appDir, icon);
 
-			int extIdx = src.getName().lastIndexOf('.');
-			String extension = src.getName().substring(extIdx);
-			des = new File(Resources.locateLogosDir(context), destName
-					+ extension);
-
-			is = new FileInputStream(src);
-			os = new FileOutputStream(des);
-
-			BinaryFile.copy(is, os);
+			String extension = Files.getFileExtension(src.getFileName().toString());
+			des = Resources.locateLogosDir(context).resolve(destName + extension);
+            IO.copyDirectoryOrFile(src, des, false);
 		} catch (IOException e) {
 			// --- we ignore exceptions here, just log them
 
 			context.warning("Cannot copy icon -> " + e.getMessage());
 			context.warning(" (C) Source : " + icon);
 			context.warning(" (C) Destin : " + des);
-		} finally {
-			IOUtils.closeQuietly(is);
-			IOUtils.closeQuietly(os);
 		}
 	}
 
@@ -468,7 +446,7 @@ public class Resources {
 	/**
 	 * List all the files in the provided logosDir (eg. "logos", "harvesting").
 	 * 
-	 * Searches {@linkplain #locateDataImagesDir(ServiceContext)/logosDir} and
+	 * Searches #locateDataImagesDir(ServiceContext)/logosDir and
 	 * adds all the files that are found.
 	 * 
 	 * The search is not recursive.
@@ -484,30 +462,29 @@ public class Resources {
 	 * @return all files in {@linkplain #locateResourcesDir(ServiceContext)
 	 *         /logosDir} that match the iconFitler
 	 */
-	public static Set<File> listFiles(ServiceContext context, String logosDir,
-			FileFilter iconFilter) {
-		String folderPath = "images" + File.separator + logosDir;
-		File dir = new File(locateResourcesDir(context), folderPath);
-		HashSet<String> names = new HashSet<String>();
-		HashSet<File> result = new HashSet<File>();
+	public static Set<Path> listFiles(ServiceContext context, String logosDir,
+                                      DirectoryStream.Filter<Path> iconFilter) {
+		Path dir = locateResourcesDir(context).resolve("images").resolve(logosDir);
+		HashSet<Path> result = new HashSet<>();
 
-		addFiles(iconFilter, dir, names, result);
+		addFiles(iconFilter, dir, result);
 
 		return result;
 	}
 
-	private static void addFiles(FileFilter iconFilter, File webappDir,
-			HashSet<String> names, HashSet<File> result) {
-		File[] files;
-		files = webappDir.listFiles(iconFilter);
-		if (files != null) {
-			for (File file : files) {
-				if (!names.contains(file.getName())) {
-					result.add(file);
-					names.add(file.getName());
-				}
-			}
-		}
+	private static void addFiles(DirectoryStream.Filter<Path> iconFilter, Path webappDir,HashSet<Path> result) {
+
+        HashSet<Path> names = new HashSet<>();
+        try (DirectoryStream<Path> paths = java.nio.file.Files.newDirectoryStream(webappDir, iconFilter)) {
+            for (Path file : paths) {
+                if (!names.contains(file.getFileName())) {
+                    result.add(file);
+                    names.add(file.getFileName());
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 	}
 
 }

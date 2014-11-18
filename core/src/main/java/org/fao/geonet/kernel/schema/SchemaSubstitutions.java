@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.schema;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -42,7 +43,7 @@ public class SchemaSubstitutions
 	//---
 	//--------------------------------------------------------------------------
 
-	public SchemaSubstitutions(String xmlSubstitutionFile) throws Exception {
+	public SchemaSubstitutions(Path xmlSubstitutionFile) throws Exception {
 		if (xmlSubstitutionFile != null) {
 			Element subs = Xml.loadFile(xmlSubstitutionFile);
 

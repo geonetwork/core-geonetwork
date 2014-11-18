@@ -6,11 +6,12 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.HarvestHistory_;
-import org.fao.geonet.exceptions.ObjectNotFoundEx;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.repository.HarvestHistoryRepository;
 import org.jdom.Element;
 import org.springframework.data.domain.Sort;
+
+import java.nio.file.Path;
 
 import static org.fao.geonet.repository.SortUtils.createPath;
 import static org.fao.geonet.repository.specification.HarvestHistorySpecs.hasHarvesterUuid;
@@ -23,7 +24,7 @@ public class History  implements Service {
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig config) throws Exception
+	public void init(Path appPath, ServiceConfig config) throws Exception
 	{
 
 	}

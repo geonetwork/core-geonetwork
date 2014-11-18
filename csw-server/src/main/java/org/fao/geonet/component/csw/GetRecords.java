@@ -24,10 +24,6 @@
 package org.fao.geonet.component.csw;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.kernel.setting.SettingInfo;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.search.Sort;
 import org.fao.geonet.GeonetContext;
@@ -43,6 +39,7 @@ import org.fao.geonet.csw.common.exceptions.MissingParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.domain.CustomElementSet;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
@@ -51,9 +48,10 @@ import org.fao.geonet.kernel.csw.services.getrecords.FieldMapper;
 import org.fao.geonet.kernel.csw.services.getrecords.SearchController;
 import org.fao.geonet.kernel.search.LuceneSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.domain.Pair;
 import org.fao.geonet.repository.CustomElementSetRepository;
 import org.fao.geonet.util.xml.NamespaceUtils;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -62,6 +60,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -219,7 +218,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
         if(resultType == ResultType.VALIDATE) {
             //String schema = context.getAppPath() + Geonet.Path.VALIDATION + "csw/2.0.2/csw-2.0.2.xsd";
-            String schema = context.getAppPath() + Geonet.Path.VALIDATION + "csw202_apiso100/csw/2.0.2/CSW-discovery.xsd";
+            Path schema = context.getAppPath().resolve(Geonet.Path.VALIDATION).resolve("csw202_apiso100/csw/2.0.2/CSW-discovery.xsd");
 
             if(Log.isDebugEnabled(Geonet.CSW))
                 Log.debug(Geonet.CSW, "Validating request against " + schema);

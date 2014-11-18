@@ -3,7 +3,7 @@ package org.fao.geonet.services.metadata.format.groovy;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.common.io.Files;
+import java.nio.file.Files;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.kernel.SchemaManager;
@@ -14,8 +14,11 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Map;
 import javax.annotation.PostConstruct;
+
+import static org.fao.geonet.services.metadata.format.FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR;
 
 /**
  * A Cache for the template files that are loaded by FileResult objects.  This is intended to reduce the number of files that
@@ -34,7 +37,7 @@ public class TemplateCache {
 
 
     private int maxSizeKB = 100000;
-    Cache<String, String> canonicalFileNameToText;
+    Cache<Path, String> canonicalFileNameToText;
     private int concurrencyLevel = 4;
 
     @PostConstruct
@@ -55,10 +58,10 @@ public class TemplateCache {
                 build();
     }
 
-    private class StringLengthWeigher implements com.google.common.cache.Weigher<String, String> {
+    private class StringLengthWeigher implements com.google.common.cache.Weigher<Path, String> {
         @Override
-        public int weigh(String key, String value) {
-            return key.length() + value.length();
+        public int weigh(Path key, String value) {
+            return key.toString().length() + value.length();
         }
     }
 
@@ -70,43 +73,43 @@ public class TemplateCache {
         this.concurrencyLevel = concurrencyLevel;
     }
 
-    synchronized FileResult createFileResult(File formatterDir, File schemaDir, File rootFormatterDir, String path,
+    synchronized FileResult createFileResult(Path formatterDir, Path schemaDir, Path rootFormatterDir, String path,
                                              Map<String, Object> substitutions) throws IOException {
-        File file = new File(formatterDir, path);
-        String template = this.canonicalFileNameToText.getIfPresent(file.getCanonicalPath());
-        File fromParentSchema = null;
+        Path file = formatterDir.resolve(path);
+        String template = this.canonicalFileNameToText.getIfPresent(toRealPath(file));
+        Path fromParentSchema = null;
 
         if (!this.systemInfo.isDevMode()) {
             if (template != null) {
                 return new FileResult(file, template, substitutions);
             }
 
-            file = new File(schemaDir, path);
-            template = this.canonicalFileNameToText.getIfPresent(file.getCanonicalPath());
+            file = schemaDir.resolve(path);
+            template = this.canonicalFileNameToText.getIfPresent(toRealPath(file));
             if (template != null) {
                 return new FileResult(file, template, substitutions);
             }
             fromParentSchema = fromParentSchema(formatterDir, schemaDir, path);
             if (fromParentSchema != null) {
-                template = this.canonicalFileNameToText.getIfPresent(fromParentSchema.getCanonicalPath());
+                template = this.canonicalFileNameToText.getIfPresent(toRealPath(fromParentSchema));
                 if (template != null) {
                     return new FileResult(fromParentSchema, template, substitutions);
                 }
             }
 
-            file = new File(rootFormatterDir, path);
-            template = this.canonicalFileNameToText.getIfPresent(file.getCanonicalPath());
+            file = rootFormatterDir.resolve(path);
+            template = this.canonicalFileNameToText.getIfPresent(toRealPath(file));
             if (template != null) {
                 return new FileResult(file, template, substitutions);
             }
         }
 
-        file = new File(formatterDir, path);
-        if (!file.exists() && schemaDir != null) {
-            file = new File(schemaDir, path);
+        file = formatterDir.resolve(path);
+        if (!Files.exists(file) && schemaDir != null) {
+            file = schemaDir.resolve(path);
         }
 
-        if (!file.exists()) {
+        if (!Files.exists(file)) {
             if (fromParentSchema == null) {
                 fromParentSchema = fromParentSchema(formatterDir, schemaDir, path);
             }
@@ -114,10 +117,10 @@ public class TemplateCache {
                 file = fromParentSchema;
             }
         }
-        if (!file.exists()) {
-            file = new File(rootFormatterDir, path);
+        if (!Files.exists(file)) {
+            file = rootFormatterDir.resolve(path);
         }
-        if (!file.exists()) {
+        if (!Files.exists(file)) {
             throw new IllegalArgumentException("There is no file: " + path + " in any of: \n" +
                                                "\t * " + formatterDir + "\n" +
                                                "\t * " + schemaDir + "\n" +
@@ -125,13 +128,21 @@ public class TemplateCache {
                                                "\t * " + rootFormatterDir);
         }
 
-        template = Files.toString(file, Constants.CHARSET);
-        this.canonicalFileNameToText.put(file.getCanonicalPath(), template);
+        template = new String(Files.readAllBytes(file), Constants.CHARSET);
+        this.canonicalFileNameToText.put(toRealPath(file), template);
 
         return new FileResult(file, template, substitutions);
     }
 
-    private File fromParentSchema(File formatterDir, File schemaDir, String path) throws IOException {
+    private Path toRealPath(Path file) throws IOException {
+        if (Files.exists(file)) {
+            return file.toRealPath();
+        } else {
+            return file.toAbsolutePath().normalize();
+        }
+    }
+
+    private Path fromParentSchema(Path formatterDir, Path schemaDir, String path) throws IOException {
         final ConfigFile configFile;
         if (formatterDir != null) {
             configFile = new ConfigFile(formatterDir, true, schemaDir);
@@ -141,10 +152,10 @@ public class TemplateCache {
 
         final String schemaName = configFile.dependOn();
         if (schemaName != null) {
-            File parentSchema = new File(this.schemaManager.getSchemaDir(schemaName), FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR);
+            Path parentSchema = this.schemaManager.getSchemaDir(schemaName).resolve(SCHEMA_PLUGIN_FORMATTER_DIR);
 
-            File file = new File(parentSchema, path);
-            if (file.exists()) {
+            Path file = parentSchema.resolve(path);
+            if (Files.exists(file)) {
                 return file;
             }
 

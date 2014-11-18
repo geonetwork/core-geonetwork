@@ -22,10 +22,10 @@
 //==============================================================================
 
 package org.fao.geonet.kernel.setting;
+import org.fao.geonet.NodeInfo;
+import jeeves.server.sources.http.ServletPathFinder;
 
 import jeeves.server.context.ServiceContext;
-import jeeves.server.sources.http.ServletPathFinder;
-import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.domain.Setting;
@@ -107,9 +107,7 @@ public class SettingManager {
 
         for (Setting setting : settings) {
             if (asTree) {
-                if (setting.getName().startsWith("system")) {
-                    buildXmlTree(env, pathElements, setting);
-                }
+                buildXmlTree(env, pathElements, setting);
             } else {
                 Element settingEl = new Element("setting");
                 settingEl.setAttribute("name", setting.getName());

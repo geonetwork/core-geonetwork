@@ -69,8 +69,6 @@
       <class name=".services.main.Info" />
     </service>
 
-    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
     <service name="xml.usergroups.list" deprecated="true" xmlapi="true">
       <class name=".services.user.UserGroups" />
     </service>

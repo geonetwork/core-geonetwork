@@ -27,6 +27,7 @@ import com.google.common.collect.Lists;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.IO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -34,15 +35,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import static org.fao.geonet.services.metadata.format.FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR;
 
 /**
  * List all formatters
@@ -55,56 +60,15 @@ public class ListFormatters extends AbstractFormatService {
     @Autowired
     private MetadataRepository repository;
     @Autowired
-    private GeonetworkDataDirectory dataDirectory;
-    @Autowired
     private SchemaManager schemaManager;
+    @Autowired
+    private GeonetworkDataDirectory dataDirectory;
 
-    @RequestMapping(value = "/{lang}/md.formatter.list", produces = {
-            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    @ResponseBody
-    public FormatterDataResponse exec(
-            @RequestParam(required = false) final String id,
-            @RequestParam(required = false) final String uuid,
-            @RequestParam(defaultValue = "all") String schema,
-            @RequestParam(defaultValue = "false") boolean pluginOnly
-            ) throws Exception {
-        if (id != null || uuid != null) {
-	        try {
-	        	loadMetadata(this.repository, id, uuid);
-	        } catch (Throwable e) {
-	        	// its ok.  just can't use metadata
-	        }
-        }
-
-        if (schema == null)
-        	schema = "all";
-        
-        schema = schema.trim();
-
-        FormatterDataResponse response = new FormatterDataResponse();
-        if (!pluginOnly) {
-            File userXslDir = this.dataDirectory.getFormatterDir();
-            addFormatters(schema, response, userXslDir, userXslDir, false);
-        }
-
-        final Set<String> schemas = this.schemaManager.getSchemas();
-        for (String schemaName : schemas) {
-            if (schema.equals("all") || schema.equals(schemaName)) {
-                final String schemaDir = this.schemaManager.getSchemaDir(schemaName);
-                final File formatterDir = new File(schemaDir, FormatterConstants.SCHEMA_PLUGIN_FORMATTER_DIR);
-                addFormatters(schemaName, response, formatterDir, formatterDir, true);
-            }
-        }
-        return response;
-    }
-
-    private void addFormatters(String schema, FormatterDataResponse response, File root, File file, boolean isSchemaPluginFormatter) throws IOException {
-        File[] children = file.listFiles();
-        final FormatterFilter formatterFilter = new FormatterFilter();
-        if (children != null) {
-            for (File formatter : children) {
+    private void addFormatters(String schema, FormatterDataResponse response, Path root, Path file, boolean isSchemaPluginFormatter) throws IOException {
+        try (DirectoryStream<Path> paths = Files.newDirectoryStream(file, IO.DIRECTORIES_FILTER)) {
+            for (Path formatter : paths) {
                 boolean add = true;
-                if (formatterFilter.accept(formatter)) {
+                if (FORMATTER_FILTER.accept(formatter)) {
                     ConfigFile config = new ConfigFile(formatter, true, null);
                     List<String> applicableSchemas = config.listOfApplicableSchemas();
 
@@ -115,7 +79,7 @@ public class ListFormatters extends AbstractFormatService {
                     }
 
                     if (add) {
-                        String path = formatter.getPath().substring(root.getPath().length()).replace("\\", "/");
+                        String path = root.relativize(formatter).toString().replace("\\", "/");
                         if (path.startsWith("/")) {
                             path = path.substring(1);
                         }
@@ -182,6 +146,45 @@ public class ListFormatters extends AbstractFormatService {
         public String getId() {
             return id;
         }
+    }
+
+    @RequestMapping(value = "/{lang}/md.formatter.list", produces = {
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    @ResponseBody
+    public FormatterDataResponse exec(
+            @RequestParam(required = false) final String id,
+            @RequestParam(required = false) final String uuid,
+            @RequestParam(defaultValue = "all") String schema,
+            @RequestParam(defaultValue = "false") boolean pluginOnly
+            ) throws Exception {
+        if (id != null || uuid != null) {
+	        try {
+	        	loadMetadata(this.repository, id, uuid);
+	        } catch (Throwable e) {
+	        	// its ok.  just can't use metadata
+	        }
+        }
+
+        if (schema == null)
+        	schema = "all";
+        
+        schema = schema.trim();
+        
+        FormatterDataResponse response = new FormatterDataResponse();
+        if (!pluginOnly) {
+            Path userXslDir = this.dataDirectory.getFormatterDir();
+            addFormatters(schema, response, userXslDir, userXslDir, false);
+            		}
+
+        final Set<String> schemas = this.schemaManager.getSchemas();
+        for (String schemaName : schemas) {
+            if (schema.equals("all") || schema.equals(schemaName)) {
+                final Path schemaDir = this.schemaManager.getSchemaDir(schemaName);
+                final Path formatterDir = schemaDir.resolve(SCHEMA_PLUGIN_FORMATTER_DIR);
+                addFormatters(schemaName, response, formatterDir, formatterDir, true);
+            	}
+            }
+        return response;
     }
 
 }

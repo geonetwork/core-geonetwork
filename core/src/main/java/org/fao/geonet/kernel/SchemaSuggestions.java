@@ -26,6 +26,7 @@ package org.fao.geonet.kernel;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -42,7 +43,7 @@ public class SchemaSuggestions
 	//---
 	//--------------------------------------------------------------------------
 
-	public SchemaSuggestions(String xmlSuggestFile) throws Exception
+	public SchemaSuggestions(Path xmlSuggestFile) throws Exception
 	{
 		Element sugg = Xml.loadFile(xmlSuggestFile);
 		// TODO: it could be good to check that suggested elements are 

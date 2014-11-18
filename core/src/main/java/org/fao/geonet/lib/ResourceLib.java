@@ -23,20 +23,21 @@
 
 package org.fao.geonet.lib;
 
-import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.fao.geonet.exceptions.OperationNotAllowedEx;
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Operation;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.AccessManager;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.utils.IO;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Set;
 
 /**
@@ -46,25 +47,10 @@ import java.util.Set;
  */
 public class ResourceLib {
 	/**
-	 * Get GeoNetwork data directory defined on startup
-	 *
-	 * @param context
-	 * @return
-	 */
-	public String getDataDir(ServiceContext context) {
-		GeonetContext gc = (GeonetContext) context
-				.getHandlerContext(Geonet.CONTEXT_NAME);
-		String dataDir = gc.getBean(ServiceConfig.class).getMandatoryValue(
-				Geonet.Config.DATA_DIR);
-
-		return dataDir;
-	}
-
-	/**
 	 * Get metadata public or private data directory. See
 	 * {@link #getDir(jeeves.server.context.ServiceContext, String, int)}.
 	 */
-	public String getDir(ServiceContext context, String access, String id) {
+	public Path getDir(ServiceContext context, String access, String id) {
 		return getDir(context, access, Integer.valueOf(id));
 	}
 
@@ -79,14 +65,14 @@ public class ResourceLib {
      *            The metadata identifier
      * @return The data directory
 	 */
-	public String getDir(ServiceContext context, String access, int id) {
-		String mdDir = getMetadataDir(context, id);
+	public Path getDir(ServiceContext context, String access, int id) {
+        Path mdDir = getMetadataDir(context, id);
 		String subDir = (access != null && access.equals(Params.Access.PUBLIC)) ? Params.Access.PUBLIC
 				: Params.Access.PRIVATE;
-		return mdDir + subDir + "/";
+		return mdDir.resolve(subDir);
 	}
 
-    private String getMetadataDir(ServiceContext context, int id) {
+    private Path getMetadataDir(ServiceContext context, int id) {
         return getMetadataDir(context, id+"");
     }
 
@@ -97,8 +83,8 @@ public class ResourceLib {
 	 *            The metadata identifier
 	 * @return The metadata data directory
 	 */
-	public String getMetadataDir(ServiceContext context, String id) {
-		String dataDir = context.getBean(GeonetworkDataDirectory.class).getMetadataDataDir().getPath();
+	public Path getMetadataDir(ServiceContext context, String id) {
+        Path dataDir = context.getBean(GeonetworkDataDirectory.class).getMetadataDataDir();
         return getMetadataDir(dataDir, id);
 	}
 
@@ -109,10 +95,10 @@ public class ResourceLib {
      *            The metadata identifier
      * @return The metadata data directory
      */
-    public String getMetadataDir(String dataDir, String id) {
+    public Path getMetadataDir(Path dataDir, String id) {
         String group = pad(Integer.parseInt(id) / 100, 3);
         String groupDir = group + "00-" + group + "99";
-        return dataDir + "/" + groupDir + "/" + id + "/";
+        return dataDir.resolve(groupDir).resolve(id);
     }
 	/**
 	 * Check that the operation is allowed for current user. See
@@ -161,27 +147,33 @@ public class ResourceLib {
 	 * @return the absolute path of the folder choosen to store all deleted
 	 *         metadata
 	 */
-	public String getRemovedDir(ServiceContext context) {
+	public Path getRemovedDir(ServiceContext context) {
 		GeonetContext gc = (GeonetContext) context
 				.getHandlerContext(Geonet.CONTEXT_NAME);
 
-		String remDir = gc.getBean(SettingManager.class).getValue(
+		String remDirPath = gc.getBean(SettingManager.class).getValue(
 				"system/removedMetadata/dir");
 
-		if (!new File(remDir).isAbsolute())
-			remDir = context.getAppPath() + remDir;
+        Path remDir;
+        if (remDirPath == null) {
+            remDir = context.getAppPath().resolve("WEB-INF/data/removed").toAbsolutePath().normalize();
+        } else {
+            remDir = IO.toPath(remDirPath);
+        }
+		if (!remDir.isAbsolute())
+			remDir = context.getAppPath().resolve(remDir.toString());
 
 		return remDir;
 	}
 
 	/**
-	 * See {@link #getRemovedDir(String, String)}
+	 * See {@link #getRemovedDir(Path, String)}
 	 * 
 	 * @param context
 	 * @param id
 	 * @return
 	 */
-	public String getRemovedDir(ServiceContext context, String id) {
+	public Path getRemovedDir(ServiceContext context, String id) {
 		return getRemovedDir(getRemovedDir(context), id);
 	}
 
@@ -189,11 +181,11 @@ public class ResourceLib {
 	 * @return the absolute path of the folder where the given metadata should
 	 *         be stored when it is removed
 	 */
-	public String getRemovedDir(String removedDir, String id) {
+	public Path getRemovedDir(Path removedDir, String id) {
 		String group = pad(Integer.parseInt(id) / 100, 3);
 		String groupDir = group + "00-" + group + "99";
 
-		return removedDir + "/" + groupDir + "/";
+		return removedDir.resolve(groupDir);
 	}
 
 	// -----------------------------------------------------------------------------

@@ -21,25 +21,28 @@
 //===   Rome - Italy. email: geonetwork@osgeo.org
 //==============================================================================
 package org.fao.geonet.services.subtemplate;
+import com.google.common.collect.Sets;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
+
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.Util;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Element;
-import org.jdom.Namespace;
 
 import java.util.Iterator;
-import java.util.List;
+import org.jdom.Namespace;
+
+import java.nio.file.Path;
 import java.util.Set;
+import java.util.List;
 
 /**
  * Retrieve sub template from metadata table
@@ -50,7 +53,7 @@ public class Get implements Service {
 
     private static final char SEPARATOR = '~';
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     /**

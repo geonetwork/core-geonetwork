@@ -6,8 +6,8 @@ import org.fao.geonet.domain.Metadata;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Map;
 
 /**
@@ -17,11 +17,11 @@ public class FormatterParams {
     public Format format;
     public  Map<String,String[]> params;
     public ServiceContext context;
-    public File formatDir;
-    public File viewFile;
+    public Path formatDir;
+    public Path viewFile;
     public Element metadata;
     public String schema;
-    public File schemaDir;
+    public Path schemaDir;
     public ConfigFile config;
     public String url;
     public Metadata metadataInfo;

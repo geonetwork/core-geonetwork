@@ -36,6 +36,7 @@ import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.Iterator;
 
 //=============================================================================
@@ -50,7 +51,7 @@ public class SelectionSearch implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig config) throws Exception
+	public void init(Path appPath, ServiceConfig config) throws Exception
 	{
 		_config = config;
 	}

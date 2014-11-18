@@ -32,6 +32,8 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.search.MetaSearcher;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 //=============================================================================
 
 /** remote.result service. Returns just one metadata formatted like the local search
@@ -47,7 +49,7 @@ public class RemoteShow implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig config) throws Exception
+	public void init(Path appPath, ServiceConfig config) throws Exception
 	{
 		_config = config;
 	}

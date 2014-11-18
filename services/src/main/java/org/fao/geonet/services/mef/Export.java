@@ -43,6 +43,7 @@ import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -50,17 +51,17 @@ import java.util.*;
  * format. See http ://trac.osgeo.org/geonetwork/wiki/MEF for more details.
  */
 public class Export implements Service {
-	private String stylePath;
+	private Path stylePath;
 	private ServiceConfig _config;
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
-		this.stylePath = appPath + Geonet.Path.SCHEMAS;
+	public void init(Path appPath, ServiceConfig params) throws Exception {
+		this.stylePath = appPath.resolve(Geonet.Path.SCHEMAS);
 		this._config = params;
 	}
 
 	/**
 	 * Service to do a MEF export.
-	 * 
+	 *
 	 * @param params
 	 *            Service input parameters:
 	 *            <ul>
@@ -81,7 +82,7 @@ public class Export implements Service {
 			throws Exception {
 
 		// Get parameters
-		String file = null;
+		Path file = null;
 		String uuid = Util.getParam(params, "uuid", null);
 		String format = Util.getParam(params, "format", "full");
 		String version = Util.getParam(params, "version", null);
@@ -169,19 +170,16 @@ public class Export implements Service {
 					}
 				}
 
-				if (selectionManger.addAllSelection(
-						SelectionManager.SELECTION_METADATA, tmpUuid))
-					Log.info(Geonet.MEF,
-							"Child and services added into the selection");
+				if (selectionManger.addAllSelection(SelectionManager.SELECTION_METADATA, tmpUuid)) {
+                    Log.info(Geonet.MEF, "Child and services added into the selection");
+                }
 			}
 
-			uuids = selectionManger
-					.getSelection(SelectionManager.SELECTION_METADATA);
+			uuids = selectionManger.getSelection(SelectionManager.SELECTION_METADATA);
 			Log.info(Geonet.MEF, "Building MEF2 file with " + uuids.size()
-					+ " records.");
+                                 + " records.");
 
-			file = MEFLib
-					.doMEF2Export(context, uuids, format, false, stylePath, resolveXlink, removeXlinkAttribute);
+			file = MEFLib.doMEF2Export(context, uuids, format, false, stylePath, resolveXlink, removeXlinkAttribute);
 		}
 
 		// -- Reset selection manager
@@ -191,8 +189,7 @@ public class Export implements Service {
 
 		String fname = String.valueOf(Calendar.getInstance().getTimeInMillis());
 
-		return BinaryFile.encode(200, file, "export-" + format + "-" + fname
-				+ ".zip", true);
+		return BinaryFile.encode(200, file, "export-" + format + "-" + fname + ".zip", true).getElement();
 	}
 
 	/**

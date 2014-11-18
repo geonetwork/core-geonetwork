@@ -36,7 +36,8 @@ import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Set;
 
 //=============================================================================
@@ -117,9 +118,9 @@ public class Z3950Config
 		// detect the schema
 		String schema = schemaMan.autodetectSchema(md);
 
-		String convert19119ToJZKitRepo = schemaMan.getSchemaDir(schema) + Geonet.Path.ISO19119TOJZKIT_STYLESHEET;
+		Path convert19119ToJZKitRepo = schemaMan.getSchemaDir(schema).resolve(Geonet.Path.ISO19119TOJZKIT_STYLESHEET);
 
-		if (new File(convert19119ToJZKitRepo).exists()) {
+		if (Files.exists(convert19119ToJZKitRepo)) {
 			Element repoElem = Xml.transform(md, convert19119ToJZKitRepo);
 			if (repoElem.getName().equals("Repository")) {
 				Repositories.addRepo(context, uuid, repoElem);
