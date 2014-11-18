@@ -192,17 +192,6 @@ public abstract class AbstractIOTest {
     }
 
     @Test
-    public void testFileSystemURLHandler() throws Exception {
-        final Path rootPath = getRootPath();
-        final Path textFile = rootPath.resolve("text");
-        final String text = "Hello";
-        Files.write(textFile, text.getBytes(Constants.CHARSET));
-
-        final URL url = textFile.toUri().toURL();
-        assertEquals(text, Resources.toString(url, Constants.CHARSET));
-    }
-
-    @Test
     public void testtoURL() throws Exception {
         final Path rootPath = getRootPath();
         final Path textFile = rootPath.resolve("text");

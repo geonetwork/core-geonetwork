@@ -3,17 +3,16 @@ package org.fao.geonet.services.metadata.format.groovy;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import java.nio.file.Files;
+import com.google.common.cache.Weigher;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.services.metadata.format.ConfigFile;
-import org.fao.geonet.services.metadata.format.FormatterConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -28,6 +27,13 @@ import static org.fao.geonet.services.metadata.format.FormatterConstants.SCHEMA_
  */
 @Component
 public class TemplateCache {
+    private static final Weigher<Path, String> STRING_LENGTH_WEIGHER = new Weigher<Path, String>()  {
+        @Override
+        public int weigh(Path key, String value) {
+            return key.toString().length() + value.length();
+        }
+    };
+
     @VisibleForTesting
     @Autowired
     SystemInfo systemInfo;
@@ -54,15 +60,8 @@ public class TemplateCache {
                 concurrencyLevel(this.concurrencyLevel).
                 initialCapacity(100).
                 maximumWeight((int) maxSize). // allow caching roughly 100MB maximum
-                weigher(new StringLengthWeigher()).
+                weigher(STRING_LENGTH_WEIGHER).
                 build();
-    }
-
-    private class StringLengthWeigher implements com.google.common.cache.Weigher<Path, String> {
-        @Override
-        public int weigh(Path key, String value) {
-            return key.toString().length() + value.length();
-        }
     }
 
     public void setMaxSizeKB(int maxSizeKB) {

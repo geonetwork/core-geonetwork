@@ -165,6 +165,9 @@ public class GroovyFormatter implements FormatterImpl {
     }
 
     private void loadScripts(Path baseShared, final GroovyScriptEngine gse) throws ResourceException, ScriptException, IOException {
+        if (!Files.exists(baseShared)) {
+            return;
+        }
         final Map<Path, Throwable> compileErrors = Maps.newHashMap();
         Files.walkFileTree(baseShared, new SimpleFileVisitor<Path>(){
             @Override

@@ -15,9 +15,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.io.ByteArrayOutputStream;
-
-import java.nio.file.Path;
 import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -221,7 +221,7 @@ public class DatabaseMigration implements BeanPostProcessor {
                 // TODO : Maybe some migration stuff has to be done in Java ?
                 break;
             default:
-                throw new Error("Unrecognized value: " + to.compareTo(from));
+                throw new Error("Unrecognized value: " + to.compareTo(from) + " when comparing " + to + " -> " + from);
         }
 
         return anyMigrationError;
@@ -242,13 +242,18 @@ public class DatabaseMigration implements BeanPostProcessor {
             SQLException next = e.getNextException();
             while (next != null) {
                 formatSqlException(next, error);
+                next = e.getNextException();
             }
 
-            ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
-            PrintStream writer = new PrintStream(byteArrayStream);
-            e.printStackTrace(writer);
+            try {
+                ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
+                PrintStream writer = new PrintStream(byteArrayStream, true, Constants.ENCODING);
+                e.printStackTrace(writer);
 
-            error.append("\n    Stack Trace: \n").append(byteArrayStream.toString());
+                error.append("\n    Stack Trace: \n").append(byteArrayStream.toString(Constants.ENCODING));
+            } catch (UnsupportedEncodingException e1) {
+                // skip
+            }
             _logger.error("          Errors occurs during Java migration file: " + error);
             return true;
         } catch (Throwable e) {

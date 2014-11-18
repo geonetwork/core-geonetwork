@@ -55,11 +55,7 @@ public abstract class Handler extends Selectable implements Comparable<Handler> 
             return;
         }
 
-        if (result instanceof String) {
-            resultantXml.append(result);
-        } else {
-            resultantXml.append(result);
-        }
+        resultantXml.append(result);
     }
 
     protected static void createPath(GPathResult element, StringBuilder path) {
