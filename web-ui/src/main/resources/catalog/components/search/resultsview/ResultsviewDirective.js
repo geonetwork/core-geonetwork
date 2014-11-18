@@ -225,7 +225,8 @@
 
         link: function(scope, element, attrs, controller) {
           element.on('click', function() {
-            var URI = '/geonetwork/srv/fre/view?currTab=simple&uuid=';
+            //var URI = '/geonetwork/srv/fre/view?currTab=simple&uuid=';
+            var URI = '/geonetwork/srv/eng/md.format.xml?xsl=full_view&schema=iso19139.che&id=';
             // var URI = 'http://localhost:8080/geonetwork/srv/fre/view?currTab=simple&uuid='
             $http.get(URI + scope.md.getUuid()).then(function(response) {
               scope.fragment = response.data.replace('<?xml version="1.0" encoding="UTF-8"?>', '');
@@ -236,17 +237,49 @@
             });
           });
         }
-
       };
     }]
   );
 
-  module.directive('gnMetadataDisplay', [ function() {
+  module.directive('gnMetadataDisplay', ['$timeout', function($timeout) {
       return {
         templateUrl: '../../catalog/components/search/resultsview/partials/' +
             'metadata.html',
-
         link: function(scope, element, attrs, controller) {
+
+          var domRendered = false;
+
+          var addEvents = function() {
+            element.find('.toggler').on('click', function() {
+              $(this).toggleClass('closed');
+              $(this).parent().nextAll('.target').first().toggle();
+            });
+
+            element.find('.nav-pills a[rel]').on('click', function(e) {
+              element.find('.gn-metadata-view > .entry').hide();
+              $($(this).attr('rel')).show();
+              e.preventDefault();
+            });
+
+          };
+
+          // We need to wait that the HTML is rendered into ng-bind-html directive.
+          // Angular can't tell us so we must do a timeout
+          var callTimeout = function() {
+            return $timeout(function() {
+              console.log('loop');
+              if(element.find('.toggler').length > 0){
+                domRendered = true;
+                addEvents();
+              }
+            }, 100).then(function() {
+              if(!domRendered) {
+                callTimeout();
+              }
+            });
+          };
+          callTimeout();
+
           scope.dismiss = function() {
             element.remove();
           };
