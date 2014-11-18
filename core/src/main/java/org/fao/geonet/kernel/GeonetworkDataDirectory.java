@@ -342,7 +342,7 @@ public class GeonetworkDataDirectory {
                     final Iterator<Path> pathIterator = schemaPlugins.iterator();
                     while (pathIterator.hasNext()) {
                         Path next = pathIterator.next();
-                        Path destDir = this.schemaPluginsDir.resolve(next.toString());
+                        Path destDir = this.schemaPluginsDir.resolve(next.getFileName().toString());
                         if (!Files.exists(destDir)) {
                             IO.copyDirectoryOrFile(next, destDir, false);
                         }
