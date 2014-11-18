@@ -26,6 +26,7 @@
           var conf = {
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
+            limit: 10000000,
             sorter: function(a,b) {
               if(a.name< b.name) return -1;
               else if(a.name>b.name) return 1;
@@ -34,7 +35,6 @@
           };
 
           if (data) {
-            conf.limit = 10000000;
             conf.local = data;
           } else if (remote) {
             conf.remote = remote;
@@ -50,7 +50,7 @@
           var field = $(element).tagsinput('input');
           field.typeahead({
             minLength: 0,
-            hint: false,
+            hint: true,
             highlight: true
           }, angular.extend({
             name: 'datasource',
