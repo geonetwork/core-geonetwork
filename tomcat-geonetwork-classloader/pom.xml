@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>geonetwork</artifactId>
+    <groupId>org.geonetwork-opensource</groupId>
+    <version>2.10.3-0</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- =========================================================== -->
+  <!--     Module Description                                      -->
+  <!-- =========================================================== -->
+  <artifactId>tomcat-geonetwork-classloader</artifactId>
+  <packaging>jar</packaging>
+  <name>Tomcat GeoNetwork classloader</name>
+  <description>
+    GeoNetwork custom class loader for Tomcat to prioritize local Apache Xerces over the version in
+    Tomcat endorsed folder to avoid issues with xml-resolver.
+  </description>
+
+  <licenses>
+    <license>
+      <name>General Public License (GPL)</name>
+      <url>http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-catalina</artifactId>
+      <version>7.0.42</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+</project>
