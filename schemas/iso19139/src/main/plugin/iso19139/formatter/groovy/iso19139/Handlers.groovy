@@ -1,6 +1,4 @@
 package iso19139
-
-import groovy.xml.XmlUtil
 import org.fao.geonet.services.metadata.format.groovy.Environment
 
 public class Handlers {
@@ -51,7 +49,8 @@ public class Handlers {
         handlers.add name: 'Skip Container', select: matchers.isSkippedContainer, skipContainer
 
         handlers.add name: 'Container Elements', select: matchers.isContainerEl, priority: -1, commonHandlers.entryEl(f.&nodeLabel)
-        addPackageNav();
+
+        commonHandlers.addDefaultStartAndEndHandlers();
 
         handlers.sort name: 'Text Elements', select: 'gmd:MD_Metadata'/*matchers.isContainerEl*/, priority: -1, {el1, el2 ->
             def v1 = matchers.isContainerEl(el1) ? 1 : -1;
@@ -158,30 +157,6 @@ public class Handlers {
             return handlers.fileResult('html/2-level-entry.html', [label: f.nodeLabel(el), childData: bboxData])
     }
 
-    def addPackageNav() {
-        def navBar = '''
-            <ul class="nav nav-pills">
-
-              <li><a href="" rel=".gmd_identificationInfo">Identification</a></li>
-              <li><a href="" rel=".gmd_distributionInfo" >Distribution</a></li>
-              <li><a href="" rel=".gmd_dataQualityInfo" >Quality</a></li>
-              <li><a href="" rel=".gmd_spatialRepresentationInfo" >Spatial rep.</a></li>
-              <li><a href="" rel=".gmd_referenceSystemInfo" >Ref. system</a></li>
-              <li><a href="" rel=".gmd_metadataExtensionInfo" >Extension</a></li>
-              <li><a href="" rel=".gmd_MD_Metadata">Metadata</a></li>
-              <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="" title="More information"><i class="fa fa-ellipsis-h"></i><b class="caret"></b></a><ul class="dropdown-menu">
-                    <li><a href="" rel=".gmd_contentInfo">Content</a></li>
-                    <li><a href="" rel=".gmd_portrayalCatalogueInfo">Portrayal</a></li>
-                    <li><a href="" rel=".gmd_metadataConstraints">Md. constraints</a></li>
-                    <li><a href="" rel=".gmd_metadataMaintenance">Md. maintenance</a></li>
-                    <li><a href="" rel=".gmd_applicationSchemaInfo">Schema info</a></li>
-                 </ul>
-              </li>
-           </ul>
-        '''
-        handlers.start { commonHandlers.htmlOrXmlStart() + navBar }
-        handlers.end {commonHandlers.htmlOrXmlEnd() }
-    }
 
     def rootPackageEl = {
         el ->

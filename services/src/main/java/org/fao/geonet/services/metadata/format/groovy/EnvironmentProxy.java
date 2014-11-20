@@ -4,6 +4,7 @@ import com.google.common.collect.Multimap;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.metadata.format.FormatterParams;
+import org.jdom.Element;
 import org.springframework.security.core.Authentication;
 
 import java.util.Collection;
@@ -90,4 +91,13 @@ public class EnvironmentProxy implements Environment {
         return get().paramValues(paramName);
     }
 
+    @Override
+    public Element getMetadataElement() {
+        return get().getMetadataElement();
+    }
+
+    @Override
+    public <T> T getBean(Class<T> clazz) {
+        return get().getBean(clazz);
+    }
 }

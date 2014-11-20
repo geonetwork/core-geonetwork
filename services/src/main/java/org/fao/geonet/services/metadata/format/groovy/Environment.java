@@ -2,6 +2,7 @@ package org.fao.geonet.services.metadata.format.groovy;
 
 import com.google.common.collect.Multimap;
 import org.fao.geonet.services.metadata.format.FormatType;
+import org.jdom.Element;
 import org.springframework.security.core.Authentication;
 
 import java.util.Collection;
@@ -64,4 +65,17 @@ public interface Environment {
      * Return ALL values of parameter with the provided name.
      */
     public Collection<ParamValue> paramValues(String paramName);
+    /**
+     * Return the metadata document as a jdom Element.  json is the XML API used typically in geonetwork.  This is useful
+     * when one needs to call back into the Geonetwork classes.
+     */
+    public Element getMetadataElement();
+
+    /**
+     * Get a Spring Bean from Spring Application Context.
+     *
+     * @param clazz the type of bean to look up.
+     */
+    public <T> T getBean(Class<T> clazz);
+
 }

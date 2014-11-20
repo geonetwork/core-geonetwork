@@ -91,10 +91,10 @@
       <class name=".services.metadata.Delete" />
     </service>
 
-    <service name="xml.relation" deprecated="true" xmlapi="true">
-      <class name=".guiservices.metadata.GetRelated" />
-      <output sheet="metadata/relation.xsl" contentType="text/xml; charset=UTF-8" />
-    </service>
+    <!--<service name="xml.relation" deprecated="true" xmlapi="true">-->
+      <!--<class name=".guiservices.metadata.GetRelated" />-->
+      <!--<output sheet="metadata/relation.xsl" contentType="text/xml; charset=UTF-8" />-->
+    <!--</service>-->
 
     <service name="xml.relation.get" xmlapi="true">
       <class name=".services.relations.Get" />

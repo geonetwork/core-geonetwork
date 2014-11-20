@@ -45,6 +45,6 @@ public class Matchers {
 
     def isSkippedContainer = { el ->
         skipContainers.any{it == el.name()}
-    }
+}
 
 }

@@ -1,6 +1,10 @@
 package iso19139;
 
 import com.google.common.collect.Lists;
+import com.google.common.io.Files;
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.Constants;
+import org.fao.geonet.guiservices.metadata.GetRelated;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.IsoLanguageRepository;
@@ -14,8 +18,8 @@ import org.jdom.Attribute;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Text;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -35,15 +39,21 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
     @Autowired
     private SchemaManager schemaManager;
 
-    @Test @Ignore
+    @Test //@Ignore
     @SuppressWarnings("unchecked")
-    public void testBasicFormat() throws Exception {
+    public void testPrintFormat() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("html", "true");
+        request.addParameter("print", "true");
+
+        GetRelated related = Mockito.mock(GetRelated.class);
+        Element relatedXml = Xml.loadFile(FullViewFormatterTest.class.getResource("relations.xml"));
+        Mockito.when(related.getRelated(Mockito.<ServiceContext>any(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString(),
+                Mockito.anyInt(), Mockito.anyInt(), Mockito.anyBoolean())).thenReturn(relatedXml);
+        _applicationContext.getBeanFactory().registerSingleton("getRelated", related);
 
         final String formatterId = "full_view";
-        FormatterParams fparams = getFormatterFormatterParamsPair
-                (request, formatterId).two();
+        FormatterParams fparams = getFormatterFormatterParamsPair(request, formatterId).two();
         Environment env = new EnvironmentImpl(fparams, mapper);
         final Functions functions = new Functions(fparams, env, langRepo, schemaManager);
 
@@ -52,12 +62,9 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
         final MockHttpServletResponse response = new MockHttpServletResponse();
         formatService.exec("eng", "html", "" + id, null, formatterId, "true", false, request, response);
         final String view = response.getContentAsString();
-//        Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
+        Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
 
-        List<String> excludes = Lists.newArrayList(
-                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:citation > gmd:CI_Citation > gmd:title > " +
-                "gco:PT_FreeText > gco:textGroup > gmd:LocalisedCharacterString > Text"
-        );
+        List<String> excludes = excludes();
 
         final Element xmlEl = Xml.loadString(xml, false);
         final List text = Lists.newArrayList(Xml.selectNodes(xmlEl, "*//node()[not(@codeList)]/text()"));
@@ -89,6 +96,13 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
         if (missingStrings.length() > 0) {
             throw new AssertionError("The following text elements are missing from the view:" + missingStrings);
         }
+    }
+
+    protected List<String> excludes() {
+        return Lists.newArrayList(
+                "> gmd:MD_Metadata > gmd:identificationInfo > gmd:MD_DataIdentification > gmd:citation > gmd:CI_Citation > gmd:title > " +
+                "gco:PT_FreeText > gco:textGroup > gmd:LocalisedCharacterString > Text"
+        );
     }
 
     private String getXPath(Content el) {

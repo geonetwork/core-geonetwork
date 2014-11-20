@@ -49,6 +49,11 @@
             <artifactId>schema-iso19139</artifactId>
             <version>${version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

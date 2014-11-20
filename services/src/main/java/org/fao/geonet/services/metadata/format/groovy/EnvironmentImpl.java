@@ -6,6 +6,8 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.format.FormatType;
 import org.fao.geonet.services.metadata.format.FormatterParams;
+import org.jdom.Element;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,8 +28,11 @@ public class EnvironmentImpl implements Environment {
     private final FormatType formatType;
     private final Metadata metadataInfo;
     private final String locUrl;
+    private final Element jdomMetadata;
+    private final ApplicationContext applicationContext;
 
     public EnvironmentImpl(FormatterParams fparams, IsoLanguagesMapper mapper) {
+        jdomMetadata = fparams.metadata;
         this.lang3 = fparams.context.getLanguage();
         this.lang2 = mapper.iso639_2_to_iso639_1(lang3, "en");
 
@@ -41,6 +46,8 @@ public class EnvironmentImpl implements Environment {
                 this.params.put(entry.getKey(), new ParamValue(value));
             }
         }
+
+        this.applicationContext = fparams.context.getApplicationContext();
     }
 
     /**
@@ -128,5 +135,15 @@ public class EnvironmentImpl implements Environment {
     @Override
     public FormatType getFormatType() {
         return this.formatType;
+    }
+
+    @Override
+    public Element getMetadataElement() {
+        return this.jdomMetadata;
+    }
+
+    @Override
+    public <T> T getBean(Class<T> clazz) {
+        return this.applicationContext.getBean(clazz);
     }
 }

@@ -65,6 +65,9 @@ public class ListFormatters extends AbstractFormatService {
     private GeonetworkDataDirectory dataDirectory;
 
     private void addFormatters(String schema, FormatterDataResponse response, Path root, Path file, boolean isSchemaPluginFormatter) throws IOException {
+        if (!Files.exists(file)) {
+            return;
+        }
         try (DirectoryStream<Path> paths = Files.newDirectoryStream(file, IO.DIRECTORIES_FILTER)) {
             for (Path formatter : paths) {
                 boolean add = true;

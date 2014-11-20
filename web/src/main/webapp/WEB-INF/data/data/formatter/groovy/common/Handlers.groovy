@@ -1,9 +1,11 @@
 package common
 
+import org.fao.geonet.services.metadata.format.groovy.Environment
+
 public class Handlers {
-    private def handlers;
-    private def f
-    private def env
+    private org.fao.geonet.services.metadata.format.groovy.Handlers handlers;
+    private org.fao.geonet.services.metadata.format.groovy.Functions f
+    private Environment env
 
     common.Matchers matchers
     common.Functions func
@@ -124,6 +126,7 @@ public class Handlers {
             }
         }
     }
+
     def htmlOrXmlStart = {
         if (func.isHtmlOutput()) {
             return '''

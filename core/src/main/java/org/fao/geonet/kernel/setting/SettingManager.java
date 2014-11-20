@@ -333,7 +333,7 @@ public class SettingManager {
         String protocol = getValue(Geonet.Settings.SERVER_PROTOCOL);
         String host    = getValue(Geonet.Settings.SERVER_HOST);
         String port    = getValue(Geonet.Settings.SERVER_PORT);
-        String locServ = baseURL +"/"+ this.nodeInfo.getId() +"/" + language;
+        String locServ = baseURL +"/"+ this.nodeInfo.getId() +"/" + language + "/";
 
         return protocol + "://" + host + (port.equals("80") ? "" : ":" + port) + locServ;
     }

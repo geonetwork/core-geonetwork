@@ -11,14 +11,18 @@ import groovy.lang.Closure;
 import groovy.util.IndentPrinter;
 import groovy.util.slurpersupport.GPathResult;
 import groovy.xml.MarkupBuilder;
+import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.IsoLanguage;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.repository.IsoLanguageRepository;
 import org.fao.geonet.services.metadata.format.ConfigFile;
 import org.fao.geonet.services.metadata.format.FormatterParams;
 import org.fao.geonet.services.metadata.format.SchemaLocalization;
+import org.fao.geonet.util.LangUtils;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -43,6 +47,7 @@ public class Functions {
     private final List<SchemaLocalization> schemaLocalizations;
     private final IsoLanguageRepository languageRepo;
     private final Environment env;
+    private SchemaPlugin schemaPlugin;
 
     public Functions(FormatterParams fparams, Environment env, IsoLanguageRepository languageRepo, SchemaManager schemaManager) throws Exception {
         this.languageRepo = languageRepo;
@@ -52,6 +57,7 @@ public class Functions {
         addParentLocalizations(schemaManager, allLocalizations, tmpLocalizations, fparams.config);
         this.schemaLocalizations = Collections.unmodifiableList(tmpLocalizations);
         this.env = env;
+        this.schemaPlugin = SchemaManager.getSchemaPlugin(fparams.context, fparams.schema);
     }
 
     private void addParentLocalizations(SchemaManager schemaManager, Map<String, SchemaLocalization> allLocalizations, ArrayList<SchemaLocalization> tmpLocalizations, ConfigFile config) throws IOException {
@@ -299,4 +305,27 @@ public class Functions {
         }
     }
 
+    /**
+     * Obtain strings from the web/src/main/webapp/loc/???/formatter.xml .
+     *
+     * @param key the key to use for looking up the translation
+     */
+    public String translate(String key) throws JDOMException, IOException {
+        final Map<String, String> translations = LangUtils.translate(ServiceContext.get(), "formatter", key);
+        String value = translations.get(env.getLang3());
+        if (value == null) {
+            value = translations.get(Geonet.DEFAULT_LANGUAGE);
+        }
+        if (value == null && !translations.isEmpty()) {
+            value = translations.values().iterator().next();
+        }
+        if (value == null || value.isEmpty()) {
+            return key;
+        }
+        return value;
+    }
+
+    public SchemaPlugin getSchemaPlugin() {
+        return this.schemaPlugin;
+    }
 }
