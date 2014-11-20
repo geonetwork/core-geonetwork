@@ -9,6 +9,18 @@ import java.io.IOException;
 /**
  * @author Jesse on 11/20/2014.
  */
-public interface LinkBlock {
-    String linksHtml(StringBuilder xml, Functions functions, Environment env) throws JDOMException, IOException;
+public abstract class LinkBlock {
+    /**
+     * The translation key for the name of this section.
+     */
+    public final String nameKey;
+    public LinkBlock(String nameKey) {
+        this.nameKey = nameKey;
+    }
+
+    public String getName() throws JDOMException, IOException {
+        return nameKey;
+    }
+    public abstract boolean isEmpty();
+    public abstract void linksHtml(StringBuilder xml, Functions functions, Environment env) throws JDOMException, IOException;
 }

@@ -15,32 +15,20 @@ import java.util.Map;
  *
  * @author Jesse on 11/20/2014.
  */
-public class StaticLinkBlock implements LinkBlock {
-    /**
-     * The translation key for the name of this section.
-     */
-    public final String nameKey;
+public class StaticLinkBlock extends LinkBlock {
     public Multimap<LinkType, Link> links = LinkedHashMultimap.create();
 
     public StaticLinkBlock(String nameKey) {
-        this.nameKey = nameKey;
+        super(nameKey);
     }
 
     @Override
-    public String linksHtml(StringBuilder xml, Functions functions, Environment env) throws JDOMException, IOException {
-        if (links.isEmpty()) {
-            return "";
-        }
-        xml.append('\n');
-        xml.append("    <h3>\n");
-        xml.append("        <button type=\"button\" class=\"btn btn-default toggler\">\n");
-        xml.append("            <i class=\"fa fa-arrow-circle-down\"></i>\n");
-        xml.append("        </button>\n");
-        xml.append("        ").append(functions.translate(nameKey)).append("\n");
-        xml.append("    </h3>\n");
-        xml.append("    <div class=\"row target\" style=\"border-top: 1px solid #D9AF71; border-bottom: 1px solid #D9AF71;\">\n");
+    public boolean isEmpty() {
+        return links.isEmpty();
+    }
 
-
+    @Override
+    public void linksHtml(StringBuilder xml, Functions functions, Environment env) throws JDOMException, IOException {
         for (Map.Entry<LinkType, Collection<Link>> entry : links.asMap().entrySet()) {
             LinkType linkType = entry.getKey();
             xml.append("        <div class=\"col-xs-12\" style=\"background-color: #F7EEE1;\">");
@@ -75,6 +63,6 @@ public class StaticLinkBlock implements LinkBlock {
         }
 
         xml.append("        </div>\n");
-        return xml.toString();
     }
+
 }

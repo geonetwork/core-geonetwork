@@ -21,7 +21,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -502,8 +506,18 @@ public class GeonetWroModelFactory implements WroModelFactory {
 
     private void addTemplateResourceFrom(List<Resource> group, ClosureRequireDependencyManager.Node dep) {
         if(dep.path.toLowerCase().endsWith(TEMPLATE_PATTERN)) {
-            String dirPath = new File(dep.path).getParent();
-            String prefix = TemplatesUriLocator.URI_PREFIX + dirPath + "/partials";
+            Path dir;
+            if (dep.path.startsWith("file:/")) {
+                try {
+                    dir = Paths.get(new URI(dep.path)).getParent();
+                } catch (URISyntaxException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                dir = Paths.get(dep.path).getParent();
+            }
+            String dirPath = dir.resolve("partials").toString().replace('\\', '/');
+            String prefix = TemplatesUriLocator.URI_PREFIX + dirPath;
             group.add(getTemplateResource(prefix));
         }
     }

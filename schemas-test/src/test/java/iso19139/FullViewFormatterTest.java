@@ -18,6 +18,7 @@ import org.jdom.Attribute;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Text;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
     @Autowired
     private SchemaManager schemaManager;
 
-    @Test //@Ignore
+    @Test @Ignore
     @SuppressWarnings("unchecked")
     public void testPrintFormat() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();

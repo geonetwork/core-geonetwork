@@ -27,13 +27,13 @@ public class Summary {
     protected final Environment env;
     protected final Functions functions;
 
-    public String logo;
-    public String smallThumbnail;
-    public String largeThumbnail;
-    public String title = "";
-    public String abstr = "";
-    public String navBar = "";
-    public String content = "";
+    private String logo;
+    private String smallThumbnail;
+    private String largeThumbnail;
+    private String title = "";
+    private String abstr = "";
+    private String navBar = "";
+    private String content = "";
 
     public List<LinkBlock> links = Lists.newArrayList();
 
@@ -63,7 +63,22 @@ public class Summary {
     protected void addLinks(HashMap<String, Object> params) throws JDOMException, IOException {
         StringBuilder linksHtml = new StringBuilder();
         for (LinkBlock link : links) {
-            link.linksHtml(linksHtml, functions, env);
+            if (!link.isEmpty()) {
+
+                linksHtml.append('\n');
+                linksHtml.append("    <div class=\"summary-links-").append(link.getName()).append("\" >");
+                linksHtml.append("      <h3>\n");
+                linksHtml.append("        <button type=\"button\" class=\"btn btn-default toggler\">\n");
+                linksHtml.append("            <i class=\"fa fa-arrow-circle-down\"></i>\n");
+                linksHtml.append("        </button>\n");
+                linksHtml.append("        ").append(functions.translate(link.getName())).append("\n");
+                linksHtml.append("      </h3>\n");
+                linksHtml.append("      <div class=\"row target\" style=\"border-top: 1px solid #D9AF71; border-bottom: 1px solid #D9AF71;\">\n");
+
+
+                link.linksHtml(linksHtml, functions, env);
+                linksHtml.append("    </div>");
+            }
         }
 
         params.put("links", linksHtml);
@@ -114,5 +129,33 @@ public class Summary {
         } else {
             return "<i class=\"fa fa-arrow-circle-down\"></i>";
         }
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public void setSmallThumbnail(String smallThumbnail) {
+        this.smallThumbnail = smallThumbnail;
+    }
+
+    public void setLargeThumbnail(String largeThumbnail) {
+        this.largeThumbnail = largeThumbnail;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAbstr(String abstr) {
+        this.abstr = abstr;
+    }
+
+    public void setNavBar(String navBar) {
+        this.navBar = navBar;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

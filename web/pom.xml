@@ -471,8 +471,15 @@
           <version>${project.version}</version>
       </dependency>
 
-    <!-- Add dependencies to schema plugin
-    having a custom Bean to be loaded. -->
+      <dependency>
+          <groupId>ro.isdc.wro4j</groupId>
+          <artifactId>wro4j-maven-plugin</artifactId>
+          <version>${wro.version}</version>
+          <scope>test</scope>
+      </dependency>
+
+      <!-- Add dependencies to schema plugin
+      having a custom Bean to be loaded. -->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>schema-iso19139</artifactId>

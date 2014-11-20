@@ -1,11 +1,10 @@
 package iso19139
+
 import jeeves.server.context.ServiceContext
 import org.fao.geonet.constants.Geonet
 import org.fao.geonet.guiservices.metadata.GetRelated
-import org.fao.geonet.services.metadata.format.groovy.util.Link
-import org.fao.geonet.services.metadata.format.groovy.util.LinkType
-import org.fao.geonet.services.metadata.format.groovy.util.StaticLinkBlock
-import org.fao.geonet.services.metadata.format.groovy.util.Summary
+import org.fao.geonet.services.metadata.format.groovy.util.*
+
 /**
  * Creates the {@link org.fao.geonet.services.metadata.format.groovy.util.Summary} instance for the iso19139 class.
  *
@@ -13,7 +12,7 @@ import org.fao.geonet.services.metadata.format.groovy.util.Summary
  */
 class SummaryFactory {
     static void summaryHandler(select, isoHandler) {
-        isoHandler.handlers.add select, {create(it, isoHandler).getResult()}
+        isoHandler.handlers.add name: "Summary Handler", select: select, {create(it, isoHandler).getResult()}
     }
     static Summary create(metadata, isoHandler) {
         def handlers = isoHandler.handlers;
@@ -59,9 +58,9 @@ class SummaryFactory {
         def uuid = isoHandler.env.metadataUUID
         def id = isoHandler.env.metadataId
 
-        StaticLinkBlock hierarchy = new StaticLinkBlock("hierarchy")
-        summary.links.add(hierarchy);
-//        if (isoHandler.env.param('print').toBool()) {
+        if (isoHandler.env.param('print').toBool()) {
+            StaticLinkBlock hierarchy = new StaticLinkBlock("hierarchy")
+            summary.links.add(hierarchy);
             def bean = isoHandler.env.getBean(GetRelated.class)
             def related = bean.getRelated(ServiceContext.get(), id, uuid, relatedTypes, 1, 1000, true)
 
@@ -79,9 +78,10 @@ class SummaryFactory {
                     hierarchy.links.put(linkType, new Link(href, title))
                 }
             }
-//        } else {
-//
-//        }
+        } else {
+            RawHtmlLinkBlock linkBlock = new RawHtmlLinkBlock("hierarchy", "")
+        }
+
 
     }
 

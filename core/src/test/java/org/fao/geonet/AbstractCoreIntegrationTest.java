@@ -94,43 +94,6 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         throw new Error("No Method " + method.getName() + " found in " + e, e);
     }
 
-    /**
-     * This test looks for methods in the current class with the ReadOnlyTest annotation and will execute all of those methods
-     * in this one test.  This allows the tests to execute quicker.  It has the disadvantage (at the moment) of not providing a JUnit
-     * test report per test but has the advantage of executing very quickly.
-     *
-     * Note it is important that all changes (metadata import etc...) are done in the @Before and @After methods and the @ReadOnlyTest
-     * method makes no changes to the system that will affect any of the tests because there is no ordering of the tests.
-     */
-    protected void runReadOnlyTests() throws InvocationTargetException, IllegalAccessException {
-        StringBuilder errors = new StringBuilder();
-        StringBuilder summary = new StringBuilder();
-
-        final Method[] methods = getClass().getMethods();
-        for (Method method : methods) {
-            if (method.getAnnotation(ReadOnlyTest.class) != null) {
-                try {
-                    method.invoke(this);
-                } catch (Throwable e) {
-                    summary.append("\n").append(getClass().getName()).append("#").append(method.getName()).
-                            append("() failed with error: ").append(e.getMessage());
-                    summary.append("\n    ").append(lineInMethod(e, method));
-                    errors.append("\n\n").append(getClass().getName()).append("#").append(method.getName()).
-                            append("() failed with error: ").append(e.getMessage());
-                    final StringWriter out = new StringWriter();
-                    final PrintWriter writer = new PrintWriter(out);
-                    e.printStackTrace(writer);
-                    errors.append("\n").append(out);
-                }
-            }
-        }
-
-        if (summary.length() > 0) {
-            throw new AssertionError(errors.toString() + "\n\n" + summary.toString());
-        }
-
-    }
-
     protected boolean isDefaultNode() {
         return true;
     }
