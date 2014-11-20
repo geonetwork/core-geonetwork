@@ -1,9 +1,10 @@
 package iso19139
-
 import jeeves.server.context.ServiceContext
 import org.fao.geonet.constants.Geonet
 import org.fao.geonet.guiservices.metadata.GetRelated
 import org.fao.geonet.services.metadata.format.groovy.util.Link
+import org.fao.geonet.services.metadata.format.groovy.util.LinkType
+import org.fao.geonet.services.metadata.format.groovy.util.StaticLinkBlock
 import org.fao.geonet.services.metadata.format.groovy.util.Summary
 /**
  * Creates the {@link org.fao.geonet.services.metadata.format.groovy.util.Summary} instance for the iso19139 class.
@@ -58,19 +59,24 @@ class SummaryFactory {
         def uuid = isoHandler.env.metadataUUID
         def id = isoHandler.env.metadataId
 
+        StaticLinkBlock hierarchy = new StaticLinkBlock("hierarchy")
+        summary.links.add(hierarchy);
 //        if (isoHandler.env.param('print').toBool()) {
             def bean = isoHandler.env.getBean(GetRelated.class)
             def related = bean.getRelated(ServiceContext.get(), id, uuid, relatedTypes, 1, 1000, true)
 
             related.getChildren("relation").each {rel ->
-                def type = rel.getAttributeValue("type");
+                def type = rel.getAttributeValue("type")
+                def icon = isoHandler.env.localizedUrl + "../../images/" + type + ".png";
+
+                def linkType = new LinkType(type, icon)
                 rel.getChildren("metadata").each {md ->
                     def href = createShowMetadataHref(isoHandler, md.getChild("info", Geonet.Namespaces.GEONET).getChildText("uuid"))
                     def title = md.getChildText("title")
                     if (title != null) {
                         title = md.getChildText("defaultTitle")
                     }
-                    summary.hierarchy.put(type, new Link(href, title))
+                    hierarchy.links.put(linkType, new Link(href, title))
                 }
             }
 //        } else {

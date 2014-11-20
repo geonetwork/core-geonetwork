@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * @author Jesse on 11/20/2014.
  */
-public class StaticLinkBlock {
+public class StaticLinkBlock implements LinkBlock {
     /**
      * The translation key for the name of this section.
      */
@@ -26,7 +26,8 @@ public class StaticLinkBlock {
         this.nameKey = nameKey;
     }
 
-    String linksHtml(StringBuilder xml, Functions functions, Environment env) throws JDOMException, IOException {
+    @Override
+    public String linksHtml(StringBuilder xml, Functions functions, Environment env) throws JDOMException, IOException {
         if (links.isEmpty()) {
             return "";
         }
