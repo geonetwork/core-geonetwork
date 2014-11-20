@@ -61,12 +61,12 @@ div#advSearchTabs .x-panel-header {
 }
 
 #bread-crumb-app a {
-	color: #3D4F5E;
+	color: #fff;
 }
 
 #bread-crumb-app .current,div#advSearchTabs .x-panel-header,div#resultsPanel .x-panel-bbar table.x-toolbar-ct
 	{
-	color: black;
+	color: white;
 }
 
 .main aside,#footer footer,.title,.chromeframe {

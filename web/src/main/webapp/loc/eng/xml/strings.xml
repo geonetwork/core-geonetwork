@@ -339,7 +339,7 @@
 	<selectedCRS js="true">Selected coordinate systems</selectedCRS>
 	<foundCRS js="true">Available coordinate systems</foundCRS>
 	
-	<about>About</about>
+	<about>About this site</about>
 	<abstract>Abstract</abstract>
 	<accept>Accept</accept>
 	<actionOnSelect>actions on selection</actionOnSelect>
