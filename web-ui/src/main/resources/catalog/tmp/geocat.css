@@ -6442,6 +6442,7 @@ button.close {
   background-color: transparent;
   padding: 0;
   margin: 0;
+  width: auto !important;
   max-width: inherit;
 }
 .bootstrap-tagsinput input:focus {
@@ -7699,7 +7700,6 @@ select[multiple][hitsperpage-combo] select {
   pointer-events: none;
 }
 .tt-dropdown-menu {
-  width: 422px;
   margin-top: 4px;
   margin-left: -8px;
   padding: 8px 0;
@@ -7712,12 +7712,12 @@ select[multiple][hitsperpage-combo] select {
   -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  overflow: auto;
-  max-height: 70vh;
+  max-height: 350px;
   width: inherit;
+  overflow-y: auto;
 }
 .tt-suggestion {
-  padding: 3px 20px;
+  padding: 3px 10px;
 }
 .tt-suggestion.tt-is-under-cursor {
   color: #fff;
@@ -7790,6 +7790,13 @@ select[multiple][hitsperpage-combo] select {
 [gn-selection-widget] .btn-group [type=checkbox] {
   visibility: hidden;
   pointer-events: none;
+}
+[go-map] {
+  width: 100%;
+  height: 200px;
+}
+.collapse-text-toggle {
+  color: grey;
 }
 [search-results] h4 {
   font-size: 15px;
@@ -7914,289 +7921,5 @@ select[multiple][hitsperpage-combo] select {
 [data-ng-search-form] [gn-map-field] [gn-draw-bbox-btn],
 [ng-search-form] [gn-map-field] [gn-draw-bbox-btn] {
   left: 4px;
-}
-body {
-  font-family: Arial, "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-.navbar .navbar-brand {
-  padding: 0 15px;
-  line-height: 50px;
-}
-.navbar img {
-  max-height: 50px;
-}
-.navbar .navbar-form input {
-  width: 7em;
-}
-.navbar [gn-language-switcher] {
-  margin-left: 1em;
-}
-.twitter-typeahead {
-  width: 100%;
-}
-[ng-search-form] .relative {
-  position: relative;
-}
-[ng-search-form] .search-top {
-  position: relative;
-  padding-top: .65em;
-}
-[ng-search-form] .inner-spinner {
-  position: absolute;
-  top: 1.3em;
-  right: 1.6em;
-}
-.more {
-  margin: 0 0 0 15px;
-  font-style: italic;
-}
-.basic,
-.advanced,
-.administrative {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height ease 0.25s;
-}
-.basic.active,
-.advanced.active,
-.administrative.active {
-  max-height: 70em;
-  overflow: visible;
-}
-.administrative.active {
-  max-height: 5em;
-}
-.basic.active {
-  max-height: 6em;
-}
-.geocat-search {
-  font-size: 90%;
-}
-.geocat-search .backtonormal {
-  margin-bottom: -20px;
-}
-.geocat-search label {
-  font-weight: normal;
-}
-.geocat-search input,
-.geocat-search select {
-  height: 30px;
-  padding: 5px 10px;
-  font-size: 12px;
-  line-height: 1.5;
-  border-radius: 3px;
-}
-select.geocat-search input,
-select.geocat-search select {
-  height: 30px;
-  line-height: 30px;
-}
-textarea.geocat-search input,
-textarea.geocat-search select,
-select[multiple].geocat-search input,
-select[multiple].geocat-search select {
-  height: auto;
-}
-.geocat-search .form-group {
-  margin-bottom: 10px;
-}
-.geocat-search .bootstrap-tagsinput {
-  padding: 0;
-}
-.geocat-search .advanced .bootstrap-tagsinput {
-  margin-bottom: 0;
-}
-.geocat-search .tt-dropdown-menu {
-  left: 6px !important;
-  width: 100%;
-}
-.geocat-search legend {
-  font-size: 1em;
-  font-style: italic;
-  padding-top: .4em;
-  margin-bottom: 12px;
-}
-.geocat-search .bootstrap-tagsinput .label {
-  background-color: #428bca;
-  font-size: 12px;
-  font-weight: normal;
-  margin: 2px;
-}
-.geocat-search .bootstrap-tagsinput .label[href]:hover,
-.geocat-search .bootstrap-tagsinput .label[href]:focus {
-  background-color: #3071a9;
-}
-.geocat-search .geotype {
-  display: block;
-  width: 100%;
-  height: 34px;
-  padding: 6px 12px;
-  font-size: 14px;
-  line-height: 1.42857143;
-  color: #555555;
-  background-color: #ffffff;
-  background-image: none;
-  border: 1px solid #cccccc;
-  border-radius: 4px;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-  -webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-  transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
-  height: 30px;
-  padding: 5px 10px;
-  font-size: 12px;
-  line-height: 1.5;
-  border-radius: 3px;
-  width: 50%;
-  margin: 0 0 1em 25%;
-  z-index: 2000;
-}
-.geocat-search .geotype:focus {
-  border-color: #66afe9;
-  outline: 0;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
-  box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
-}
-.geocat-search .geotype::-moz-placeholder {
-  color: #999999;
-  opacity: 1;
-}
-.geocat-search .geotype:-ms-input-placeholder {
-  color: #999999;
-}
-.geocat-search .geotype::-webkit-input-placeholder {
-  color: #999999;
-}
-.geocat-search .geotype[disabled],
-.geocat-search .geotype[readonly],
-fieldset[disabled] .geocat-search .geotype {
-  cursor: not-allowed;
-  background-color: #eeeeee;
-  opacity: 1;
-}
-textarea.geocat-search .geotype {
-  height: auto;
-}
-select.geocat-search .geotype {
-  height: 30px;
-  line-height: 30px;
-}
-textarea.geocat-search .geotype,
-select[multiple].geocat-search .geotype {
-  height: auto;
-}
-.geocat-search [gn-draw-bbox-extent] {
-  display: none;
-}
-.datepicker {
-  height: auto;
-}
-.loading {
-  position: absolute;
-  top: 1.8em;
-  font-size: 40px;
-  left: 50%;
-  margin-left: 20px;
-  text-shadow: 0 0 1px white;
-  z-index: 200;
-  background: rgba(255, 255, 255, 0.7);
-  border-radius: 1em;
-  padding: .2em;
-}
-[search-results] .list-group-item.row {
-  margin-left: 0;
-  margin-right: 0;
-  padding-left: 13px;
-}
-[search-results] .list-group-item.row .pull-left {
-  margin-right: .8em;
-}
-.submit {
-  text-align: right;
-}
-.submit .btn-link {
-  color: #999999;
-}
-.aside {
-  font-size: 90%;
-}
-.aside .well {
-  margin-bottom: .5em;
-}
-.aside .well .fa {
-  font-size: 110%;
-  margin-left: .5em;
-}
-.aside .btn-group {
-  clear: both;
-  display: block;
-  width: 100%;
-}
-.aside .btn-group .fa {
-  color: #428bca;
-}
-.aside .btn-group .btn-default {
-  border-color: transparent;
-  background: inherit;
-  width: 100%;
-  text-align: left;
-}
-.aside .btn-group .btn-default:hover {
-  border-color: rgba(0, 0, 0, 0.15);
-  background-color: white;
-}
-.aside .btn-group .btn-default .caret {
-  position: absolute;
-  top: 1.1em;
-  right: 1em;
-}
-.aside .btn-group .dropdown-menu {
-  right: 0;
-  left: auto;
-}
-[data-gn-facet-list] {
-  font-size: 90%;
-}
-@media (min-width: 1200px) {
-  html,
-  body,
-  body > div,
-  .container-fluid,
-  .hfull {
-    height: 100%;
-    overflow: hidden;
-  }
-  .container-fluid {
-    height: calc(100% - 6em);
-  }
-  .maincol .panel {
-    position: relative;
-  }
-  .maincol .panel.metadata {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 2050;
-  }
-  .maincol .panel .panel-footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    z-index: 2000;
-  }
-  .maincol .panel [search-results],
-  .maincol .panel .panel-body {
-    height: calc(100% - 7.4em);
-    overflow: auto;
-  }
-  .maincol .panel .geocat-search {
-    height: calc(100% - 10em - 200px);
-  }
-  .maincol .panel [gn-map-field] {
-    position: absolute;
-    bottom: 5.7em;
-    width: calc(100% - 30px);
-  }
 }
 /*# sourceMappingURL=geocat.css.map */
