@@ -1,17 +1,16 @@
 package org.fao.geonet.kernel.search;
 
-import org.fao.geonet.utils.Log;
-
-import org.apache.commons.io.IOUtils;
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.Log;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
@@ -30,7 +29,7 @@ public class StopwordFileParser {
      * @param filepath path to stopwords file
      * @return set of stopwords, or null if none found
      */
-    public static Set<String> parse(String filepath) {
+    public static Set<String> parse(Path filepath) {
         if (filepath.endsWith("README.txt")) {
             return null;
         }
@@ -38,15 +37,13 @@ public class StopwordFileParser {
             Log.debug(Geonet.INDEX_ENGINE, "StopwordParser parsing file: " + filepath);
         Set<String> stopwords = null;
         try {
-            File file = new File(filepath);
-            if (file.exists() && !file.isDirectory()) {
-                FileInputStream fin = null;
-                Reader reader = null;
-                Scanner scanner = null;
-                try {
-                    fin = new FileInputStream(file);
-                    reader = new BufferedReader(new InputStreamReader(fin, Constants.ENCODING));
-                    scanner = new Scanner(reader);
+            Path file = filepath;
+            if (Files.isRegularFile(file)) {
+                try (
+                        InputStream fin = Files.newInputStream(file);
+                        Reader reader = new BufferedReader(new InputStreamReader(fin, Constants.ENCODING));
+                        Scanner scanner = new Scanner(reader)){
+
                     while (scanner.hasNextLine()) {
                         Set<String> stopwordsFromLine = parseLine(scanner.nextLine());
                         if (stopwordsFromLine != null) {
@@ -57,17 +54,10 @@ public class StopwordFileParser {
                         }
                     }
                 }
-                finally {
-                    IOUtils.closeQuietly(reader);
-                    IOUtils.closeQuietly(fin);
-                    if(scanner!=null) {
-                        scanner.close();
-                    }
-                }
             }
             // file does not exist or is a directory
             else {
-                Log.warning(Geonet.INDEX_ENGINE, "Invalid stopwords file: " + file.getAbsolutePath());
+                Log.warning(Geonet.INDEX_ENGINE, "Invalid stopwords file: " + file.toAbsolutePath());
             }
         }
         catch (IOException x) {

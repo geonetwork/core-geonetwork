@@ -36,7 +36,7 @@ public class SelectionManager {
 	public static final int DEFAULT_MAXHITS = 1000;
 
     private static final String ADD_ALL_SELECTED = "add-all";
-	private static final String REMOVE_ALL_SELECTED = "remove-all";
+	public static final String REMOVE_ALL_SELECTED = "remove-all";
 	private static final String ADD_SELECTED = "add";
 	private static final String REMOVE_SELECTED = "remove";
 	private static final String CLEAR_ADD_SELECTED = "clear-add";

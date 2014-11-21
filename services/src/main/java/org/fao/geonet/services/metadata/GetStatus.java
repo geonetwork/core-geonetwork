@@ -33,11 +33,11 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -56,7 +56,7 @@ public class GetStatus implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

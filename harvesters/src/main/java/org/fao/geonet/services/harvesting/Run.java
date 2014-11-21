@@ -30,6 +30,8 @@ import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 //=============================================================================
 
 public class Run implements Service
@@ -40,7 +42,7 @@ public class Run implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

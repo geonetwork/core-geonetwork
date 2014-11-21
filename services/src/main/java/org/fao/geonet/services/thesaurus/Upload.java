@@ -23,27 +23,31 @@
 
 package org.fao.geonet.services.thesaurus;
 
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.utils.Xml;
-import org.fao.geonet.exceptions.BadParameterEx;
-import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.*;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
+import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Document;
 import org.jdom.Element;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Upload one thesaurus file using file upload or file URL. <br/>
@@ -52,17 +56,15 @@ import java.net.URI;
  * 
  */
 public class Upload implements Service {
-	static String FS = System.getProperty("file.separator", "/");
+	private Path stylePath;
 
-	private String stylePath;
-
-	public void init(String appPath, ServiceConfig params) throws Exception {
-		this.stylePath = appPath + FS + Geonet.Path.STYLESHEETS + FS;
+	public void init(Path appPath, ServiceConfig params) throws Exception {
+		this.stylePath = appPath.resolve(Geonet.Path.STYLESHEETS);
 	}
 
 	/**
 	 * Load a thesaurus to GeoNetwork codelist directory.
-	 * 
+	 *
 	 * @param params
 	 *            <ul>
 	 *            <li>fname: if set, do a file upload</li>
@@ -73,7 +75,7 @@ public class Upload implements Service {
 	 *            <li>stylesheet: XSL to be use to convert the thesaurus before
 	 *            load. Default _none_.</li>
 	 *            </ul>
-	 * 
+	 *
 	 */
 	public Element exec(Element params, ServiceContext context)
 			throws Exception {
@@ -97,22 +99,15 @@ public class Upload implements Service {
 
 	}
 
-	/**
-	 * 
-	 * @param params
-	 * @param context
-	 * @return
-	 * @throws Exception
-	 */
 	private Element upload(Element params, ServiceContext context)
 			throws Exception {
-		String uploadDir = context.getUploadDir();
-		Element uploadResult = null;
+		Path uploadDir = context.getUploadDir();
+		Element uploadResult;
 
 		// Upload RDF file
 		String fname = null;
-		String url = null;
-		File rdfFile = null;
+		String url;
+		Path rdfFile = null;
 
 		Element param = params.getChild(Params.FNAME);
 		if (param == null) {
@@ -125,7 +120,7 @@ public class Upload implements Service {
                 }
 
 				URI uri = new URI(url);
-				rdfFile = File.createTempFile("thesaurus", ".rdf");
+				rdfFile = Files.createTempFile("thesaurus", ".rdf");
 
 				XmlRequest httpReq = context.getBean(GeonetHttpRequestFactory.class).
                         createXmlRequest(uri.toURL());
@@ -152,7 +147,7 @@ public class Upload implements Service {
 				throw new BadParameterEx("Invalid character found in thesaurus name.", fname);
 			}
 			
-			rdfFile = new File(uploadDir, fname);
+			rdfFile = uploadDir.resolve(fname);
             fname = fname.replaceAll("\\s+", "");
 		}
 
@@ -161,9 +156,9 @@ public class Upload implements Service {
 					"File upload from URL or file return null.");
 		}
 
-		long fsize = 0;
-		if (rdfFile != null && rdfFile.exists()) {
-			fsize = rdfFile.length();
+		long fsize;
+		if (rdfFile != null && Files.exists(rdfFile)) {
+			fsize = Files.size(rdfFile);
 		} else {
 			throw new OperationAbortedEx("Thesaurus file doesn't exist");
 		}
@@ -218,16 +213,16 @@ public class Upload implements Service {
 	 * @return Element thesaurus uploaded
 	 * @throws Exception
 	 */
-	private Element uploadThesaurus(File rdfFile, String style,
+	private Element uploadThesaurus(Path rdfFile, String style,
                                     ServiceContext context, String fname, String type, String dir)
 			throws Exception {
 
-		Element tsXml = null;
+		Element tsXml;
 		Element xml = Xml.loadFile(rdfFile);
 		xml.detach();
 
 		if (!style.equals("_none_")) {
-			tsXml = Xml.transform(xml, stylePath + "/" + style);
+			tsXml = Xml.transform(xml, stylePath.resolve(style));
 			tsXml.detach();
 		} else
 			tsXml = xml;
@@ -241,16 +236,16 @@ public class Upload implements Service {
 			ThesaurusManager thesaurusMan = gc.getBean(ThesaurusManager.class);
 
 			// copy to directory according to type
-			String path = thesaurusMan.buildThesaurusFilePath(fname, type, dir);
-			File newFile = new File(path);
-			Xml.writeResponse(new Document(tsXml), new FileOutputStream(
-					newFile));
+			Path path = thesaurusMan.buildThesaurusFilePath(fname, type, dir);
+			try (OutputStream out = Files.newOutputStream(path)) {
+                Xml.writeResponse(new Document(tsXml), out);
+            }
 
             final String siteURL = context.getBean(SettingManager.class).getSiteURL(context);
-            Thesaurus gst = new Thesaurus(context.getApplicationContext(), fname, type, dir, newFile, siteURL);
+            Thesaurus gst = new Thesaurus(context.getApplicationContext(), fname, type, dir, path, siteURL);
 			thesaurusMan.addThesaurus(gst, false);
 		} else {
-			IO.delete(rdfFile, false, Geonet.THESAURUS);
+			IO.deleteFile(rdfFile, false, Geonet.THESAURUS);
 			throw new Exception("Unknown format (Must be in SKOS format).");
 		}
 

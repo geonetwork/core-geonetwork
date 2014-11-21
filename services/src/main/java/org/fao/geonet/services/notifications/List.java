@@ -27,9 +27,10 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.repository.MetadataNotificationRepository;
 import org.jdom.Element;
+
+import java.nio.file.Path;
 
 
 /**
@@ -45,7 +46,7 @@ public class List implements Service {
      * @param params
      * @throws Exception
      */
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
         // nothing to do.
     }
 

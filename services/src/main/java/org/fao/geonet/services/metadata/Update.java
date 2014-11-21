@@ -30,10 +30,8 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.DataManager;
@@ -42,6 +40,8 @@ import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
+
+import java.nio.file.Path;
 
 /**
  * For editing : update leaves information. Access is restricted.
@@ -55,7 +55,7 @@ public class Update extends NotInReadOnlyModeService {
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception
+	public void init(Path appPath, ServiceConfig params) throws Exception
 	{
 		config = params;
 	}

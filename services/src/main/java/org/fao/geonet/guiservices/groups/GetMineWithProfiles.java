@@ -29,17 +29,15 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.repository.specification.GroupSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specifications;
 
-import java.util.List;
+import java.nio.file.Path;
 
 import static org.fao.geonet.repository.specification.GroupSpecs.isReserved;
 import static org.springframework.data.jpa.domain.Specifications.not;
@@ -49,7 +47,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  * Service used to return all groups and profiles for current user.
  */
 public class GetMineWithProfiles implements Service {
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
 
 	public Element exec(Element params, ServiceContext context)

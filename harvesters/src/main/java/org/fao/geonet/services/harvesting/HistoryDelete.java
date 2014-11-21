@@ -13,6 +13,7 @@ import org.jdom.Element;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class HistoryDelete implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig config) throws Exception {}
+	public void init(Path appPath, ServiceConfig config) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

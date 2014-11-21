@@ -27,27 +27,39 @@ import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataDataInfo;
-import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.utils.Xml;
 import jeeves.xlink.XLink;
-
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataDataInfo;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.util.Sha1Encoder;
-import org.jdom.*;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Attribute;
+import org.jdom.Comment;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.Namespace;
+import org.jdom.Text;
 
-import java.io.File;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Extracts subtemplates from a set of selected metadata records.
@@ -55,7 +67,7 @@ import java.util.*;
 public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 	private Map<String,List<Namespace>> namespaceList = new HashMap<String,List<Namespace>>();
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -77,10 +89,14 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 		// Get xpath, extract-title XSLT name, category and test from args
 		String xpath = Util.getParam(params, Params.XPATH);
 
-		String getTit = Util.getParam(params, Params.EXTRACT_TITLE, "");
+		String getTitString = Util.getParam(params, Params.EXTRACT_TITLE, "");
+        Path getTit = null;
+        if (!getTitString.isEmpty()) {
+            getTit = IO.toPath(getTitString);
+        }
 		String xpathTit = Util.getParam(params, Params.XPATH_TITLE, "");
-		if (getTit.length() > 0) {
-			if (!(new File(getTit).exists())) {
+		if (getTit != null) {
+			if (!Files.exists(getTit)) {
 				throw new IllegalArgumentException("Cannot find xslt "+getTit+" to extract a title field from a subtemplate");
 			}
 		} else {
@@ -147,7 +163,7 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 	//---
 	//--------------------------------------------------------------------------
 
-	private void processRecord(ServiceContext context, String uuid, String category, String xpath, String getTit, String xpathTit, boolean doChanges, Set<Integer> metadata, Set<Integer> notFound, Set<Integer> notOwner, Set<Integer> subtemplates, Element response) throws Exception {
+	private void processRecord(ServiceContext context, String uuid, String category, String xpath, Path getTit, String xpathTit, boolean doChanges, Set<Integer> metadata, Set<Integer> notFound, Set<Integer> notOwner, Set<Integer> subtemplates, Element response) throws Exception {
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 		DataManager   dataMan   = gc.getBean(DataManager.class);
@@ -175,7 +191,7 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 	}
 
 	@SuppressWarnings("unchecked")
-    private void extractSubtemplates(ServiceContext context, DataManager dataMan, Metadata metadataEntity, String category, String xpath, String getTit, String xpathTit, boolean doChanges, Set<Integer> metadata, Set<Integer> subtemplates, Element response) throws Exception {
+    private void extractSubtemplates(ServiceContext context, DataManager dataMan, Metadata metadataEntity, String category, String xpath, Path getTit, String xpathTit, boolean doChanges, Set<Integer> metadata, Set<Integer> subtemplates, Element response) throws Exception {
 
 		GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
@@ -221,7 +237,7 @@ public class BatchExtractSubtemplates extends NotInReadOnlyModeService {
 
 				// extract title from node
 				String title = null;
-				if (getTit.length() > 0) { // use xslt path in getTit
+				if (getTit != null) { // use xslt path in getTit
 					Element xmlTitle = Xml.transform((Element)elem.clone(), getTit);
 					if (context.isDebugEnabled() || !doChanges) {
 						context.debug("Test: Title \n"+Xml.getString(xmlTitle));

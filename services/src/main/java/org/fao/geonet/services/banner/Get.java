@@ -33,6 +33,8 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 //=============================================================================
 
 /** This service returns all information needed to build the banner with XSL
@@ -40,7 +42,7 @@ import org.jdom.Element;
 
 public class Get implements Service
 {
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

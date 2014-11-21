@@ -27,8 +27,6 @@ import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Constants;
 import org.fao.geonet.domain.ThesaurusActivation;
 import org.fao.geonet.kernel.Thesaurus;
@@ -38,6 +36,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Map;
@@ -52,7 +51,7 @@ import java.util.Map;
  *
  */
 public class GetList implements Service {
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
 
 	// --------------------------------------------------------------------------

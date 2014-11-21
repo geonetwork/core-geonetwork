@@ -805,9 +805,9 @@
     "thesaurusExternalHelp": "External thesaurus are in read only mode.",
     "thesaurusIdentifier": "Identifier",
     "thesaurusNamespace": "Namespace",
-    "thesaurusPlaceHelp": "Thesaurus of type place contains bounding box of each concept. They could be use to automat
+    "thesaurusPlaceHelp": "Thesaurus of type place contains bounding box of each concept. They could be use to automatically compute record extent from keywords.",
     "thesaurusTitle": "Title",
-    "thesaurusUploadHelp": "Thesaurus in <a href=\"http://www.w3.org/2004/02/skos/\">SKOS format</a> are supported. Fi
+    "thesaurusUploadHelp": "Thesaurus in <a href=\"http://www.w3.org/2004/02/skos/\">SKOS format</a> are supported. File could have xml or rdf extensions.",
     "thesaurusUrl": "URL",
 
     "recordsRemoved": "record(s) removed",

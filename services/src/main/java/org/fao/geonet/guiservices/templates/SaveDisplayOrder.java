@@ -22,6 +22,7 @@
 //==============================================================================
 package org.fao.geonet.guiservices.templates;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +43,7 @@ import org.jdom.Element;
  * 
  */
 public class SaveDisplayOrder implements Service {
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	public Element exec(Element params, ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);

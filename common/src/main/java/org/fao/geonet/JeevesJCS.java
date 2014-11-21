@@ -23,17 +23,17 @@
 
 package org.fao.geonet;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
 import org.apache.jcs.access.GroupCacheAccess;
 import org.apache.jcs.access.exception.CacheException;
 import org.apache.jcs.engine.behavior.ICompositeCacheAttributes;
 import org.apache.jcs.engine.control.CompositeCache;
 import org.apache.jcs.engine.control.CompositeCacheManager;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Properties;
 
 /**
  * @author jeichar
@@ -43,7 +43,7 @@ public class JeevesJCS extends GroupCacheAccess
 
     /** The manager returns cache instances. */
     private static CompositeCacheManager cacheMgr;
-    private static String configFilename;
+    private static Path configFilename;
 
     protected JeevesJCS(CompositeCache cacheControl)
     {
@@ -108,39 +108,10 @@ public class JeevesJCS extends GroupCacheAccess
 
         Properties props = new Properties();
 
-        InputStream is;
-        try {
-            is = new FileInputStream(configFilename);
-        } catch (FileNotFoundException e) {
-            is=null;
-        }
-
-        if ( is != null )
-        {
-            try
-            {
-                props.load( is );
-
-            }
-            catch ( IOException ex )
-            {
-                throw new IllegalStateException( "Unable to load cache configuration from: "+configFilename,ex );
-            }
-            finally
-            {
-                try
-                {
-                    is.close();
-                }
-                catch ( Exception ignore )
-                {
-                    // Ignored
-                }
-            }
-        }
-        else
-        {
-            throw new IllegalStateException( "Failed to load properties for name [" + configFilename + "]" );
+        try (Reader is = Files.newBufferedReader(configFilename, Constants.CHARSET)) {
+            props.load( is );
+        } catch (IOException e) {
+            throw new IllegalStateException( "Unable to load cache configuration from: "+configFilename, e);
         }
 
         cacheMgr.configure( props );
@@ -152,7 +123,7 @@ public class JeevesJCS extends GroupCacheAccess
      * <p>
      * @param configFilename
      */
-    public static void setConfigFilename( String configFilename )
+    public static void setConfigFilename( Path configFilename )
     {
         cacheMgr=null;
         JeevesJCS.configFilename = configFilename;

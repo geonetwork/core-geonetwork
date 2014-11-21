@@ -25,9 +25,10 @@ package org.fao.geonet.kernel.mef;
 
 import org.jdom.Element;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Path;
 
 /**
  * Register XML or binary file to process for a MEF file.
@@ -35,7 +36,7 @@ import java.io.InputStream;
 public interface IMEFVisitor {
 	public void handleMetadata(Element md, int index) throws Exception;
 
-	public void handleMetadataFiles(File[] File, Element info, 
+	public void handleMetadataFiles(DirectoryStream<Path> files, Element info,
 			int index) throws Exception;
 
 	public void handleInfo(Element info, int index) throws Exception;

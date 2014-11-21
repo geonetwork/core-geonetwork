@@ -24,33 +24,31 @@
 package org.fao.geonet.services.metadata;
 
 import jeeves.constants.Jeeves;
-
-import org.apache.commons.io.FileUtils;
-import org.fao.geonet.domain.UserGroup;
-import org.fao.geonet.exceptions.BadInputEx;
-import org.fao.geonet.exceptions.ServiceNotAllowedEx;
-
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
-import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.exceptions.ServiceNotAllowedEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specifications;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import static org.springframework.data.jpa.domain.Specifications.where;
@@ -61,7 +59,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
 public class Create extends NotInReadOnlyModeService {
     boolean useEditTab = false;
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         useEditTab = params.getValue("editTab", "false").equals("true");
     }
     
@@ -78,8 +76,8 @@ public class Create extends NotInReadOnlyModeService {
 
 		String child = Util.getParam(params, Params.CHILD, "n");
 		String isTemplate = Util.getParam(params, Params.TEMPLATE, "n");
-		String id = "";
-		String uuid = "";
+		String id;
+		String uuid;
 		boolean haveAllRights = Boolean.valueOf(Util.getParam(params, Params.FULL_PRIVILEGES, "false"));
 		
 		// does the request contain a UUID ?
@@ -145,14 +143,11 @@ public class Create extends NotInReadOnlyModeService {
 	}
 
     private void copyDataDir(ServiceContext context, String oldId, String newId, String access) throws IOException {
-        final String sourceDir = Lib.resource.getDir(context, access, oldId);
-        final String destDir = Lib.resource.getDir(context, access, newId);
-        if (new File(sourceDir).exists()) {
-            if (!new File(destDir).mkdirs()){
-                Log.warning(Geonet.GEONETWORK, "Error creating the metadata data directory.");
-            }
+        final Path sourceDir = Lib.resource.getDir(context, access, oldId);
+        final Path destDir = Lib.resource.getDir(context, access, newId);
 
-            FileUtils.copyDirectory(new File(sourceDir), new File(destDir));
+        if (Files.exists(sourceDir)) {
+            IO.copyDirectoryOrFile(sourceDir, destDir, false);
         }
     }
 }

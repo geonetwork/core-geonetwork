@@ -30,6 +30,7 @@ package org.fao.geonet.kernel.schema;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +56,7 @@ class AttributeEntry
 	//---
 	//---------------------------------------------------------------------------
 
-	public AttributeEntry(Element el, String file, String targetNS, String targetNSPrefix)
+	public AttributeEntry(Element el, Path file, String targetNS, String targetNSPrefix)
 	{
 		this(new ElementInfo(el, file, targetNS, targetNSPrefix));
 	}

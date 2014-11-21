@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.user;
 
+import com.google.common.collect.Sets;
 import jeeves.server.ServiceConfig;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
@@ -36,7 +37,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -59,123 +63,128 @@ import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
  */
 @Controller("admin.user.list")
 public class List {
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Init
-	// ---
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Init
+    // ---
+    // --------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
-	}
+    public void init(String appPath, ServiceConfig params) throws Exception {
+    }
 
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Service
-	// ---
-	// --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Service
+    // ---
+    // --------------------------------------------------------------------------
 
-	@RequestMapping(value = "/{lang}/admin.user.list", produces = {
-			MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-	public @ResponseBody
-	UserList exec() throws Exception {
-		User me = userRepository.findOneByUsername(SecurityContextHolder
-				.getContext().getAuthentication().getName());
+    @RequestMapping(value = "/{lang}/admin.user.list", produces = {
+            MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public @ResponseBody
+    UserList exec() throws Exception {
+        final SecurityContext context = SecurityContextHolder.getContext();
+        if (context == null || context.getAuthentication() == null) {
+            throw new AuthenticationCredentialsNotFoundException("User needs to log in");
+        }
+        User me = userRepository.findOneByUsername(context.getAuthentication().getName());
 
-		Set<Integer> hsMyGroups = getGroups(me.getId(), me.getProfile());
+        if (me == null) {
+            throw new AccessDeniedException(SecurityContextHolder.class.getSimpleName() + " has a user that is not in the database: " +
+                                            context.getAuthentication());
+        }
 
-		Collection<? extends GrantedAuthority> roles = SecurityContextHolder
-				.getContext().getAuthentication().getAuthorities();
+        Set<Integer> hsMyGroups = getGroups(me.getId(), me.getProfile());
 
-		Set<String> profileSet = new HashSet<String>();
+        Collection<? extends GrantedAuthority> roles = me.getAuthorities();
 
-		for (GrantedAuthority rol : roles) {
-			profileSet.add(rol.getAuthority());
-		}
+        Set<String> profileSet = Sets.newHashSet();
 
-		// --- retrieve all users
-		final java.util.List<User> all = userRepository.findAll(SortUtils
-				.createSort(User_.username));
+        for (GrantedAuthority rol : roles) {
+            profileSet.add(rol.getAuthority());
+        }
 
-		// --- now filter them
+        // --- retrieve all users
+        final java.util.List<User> all = userRepository.findAll(SortUtils
+                .createSort(User_.username));
 
-		java.util.Set<Integer> usersToRemove = new HashSet<Integer>();
+        // --- now filter them
 
-		if (!profileSet.contains(Profile.Administrator.name())) {
+        java.util.Set<Integer> usersToRemove = new HashSet<Integer>();
 
-			for (User user : all) {
-				int userId = user.getId();
-				Profile profile = user.getProfile();
+        if (!profileSet.contains(Profile.Administrator.name())) {
 
-				// TODO is this already equivalent to ID?
-				if (user.getName().equals(
-						SecurityContextHolder.getContext().getAuthentication()
-								.getName())) {
-					// user is permitted to access his/her own user information
-					continue;
-				}
-				Set<Integer> userGroups = getGroups(userId, profile);
-				// Is user belong to one of the current user admin group?
-				boolean isInCurrentUserAdminGroups = false;
-				for (Integer userGroup : userGroups) {
-					if (hsMyGroups.contains(userGroup)) {
-						isInCurrentUserAdminGroups = true;
-						break;
-					}
-				}
-				// if (!hsMyGroups.containsAll(userGroups))
-				if (!isInCurrentUserAdminGroups) {
-					usersToRemove.add(user.getId());
-				}
+            for (User user : all) {
+                int userId = user.getId();
+                Profile profile = user.getProfile();
 
-				if (!profileSet.contains(profile.name())) {
-					usersToRemove.add(user.getId());
-				}
-			}
-		}
-		UserList res = new UserList();
+                // TODO is this already equivalent to ID?
+                if (user.getUsername().equals(context.getAuthentication().getName())) {
+                    // user is permitted to access his/her own user information
+                    continue;
+                }
+                Set<Integer> userGroups = getGroups(userId, profile);
+                // Is user belong to one of the current user admin group?
+                boolean isInCurrentUserAdminGroups = false;
+                for (Integer userGroup : userGroups) {
+                    if (hsMyGroups.contains(userGroup)) {
+                        isInCurrentUserAdminGroups = true;
+                        break;
+                    }
+                }
+                // if (!hsMyGroups.containsAll(userGroups))
+                if (!isInCurrentUserAdminGroups) {
+                    usersToRemove.add(user.getId());
+                }
 
-		for (User u : Collections.unmodifiableList(all)) {
-			if (!usersToRemove.contains(u.getId())) {
-				res.addUser(u);
-			}
-		}
+                if (!profileSet.contains(profile.name())) {
+                    usersToRemove.add(user.getId());
+                }
+            }
+        }
+        UserList res = new UserList();
 
-		
-		return res;
-	}
+        for (User u : Collections.unmodifiableList(all)) {
+            if (!usersToRemove.contains(u.getId())) {
+                res.addUser(u);
+            }
+        }
 
-	// --------------------------------------------------------------------------
-	// ---
-	// --- Private methods
-	// ---
-	// --------------------------------------------------------------------------
 
-	private Set<Integer> getGroups(final int id, final Profile profile)
-			throws Exception {
-		Set<Integer> hs = new HashSet<Integer>();
+        return res;
+    }
 
-		if (profile == Profile.Administrator) {
-			hs.addAll(groupRepository.findIds());
-		} else if (profile == Profile.UserAdmin) {
-			hs.addAll(userGroupRepo.findGroupIds(Specifications.where(
-					hasProfile(profile)).and(hasUserId(id))));
-		} else {
-			hs.addAll(userGroupRepo.findGroupIds(hasUserId(id)));
-		}
+    // --------------------------------------------------------------------------
+    // ---
+    // --- Private methods
+    // ---
+    // --------------------------------------------------------------------------
 
-		return hs;
-	}
+    private Set<Integer> getGroups(final int id, final Profile profile)
+            throws Exception {
+        Set<Integer> hs = new HashSet<Integer>();
 
-	@Autowired
-	private ConfigurableApplicationContext jeevesApplicationContext;
-	@PersistenceContext
-	private EntityManager entityManager;
-	@Autowired
-	private GroupRepository groupRepository;
-	@Autowired
-	private UserGroupRepository userGroupRepo;
-	@Autowired
-	private UserRepository userRepository;
+        if (profile == Profile.Administrator) {
+            hs.addAll(groupRepository.findIds());
+        } else if (profile == Profile.UserAdmin) {
+            hs.addAll(userGroupRepo.findGroupIds(Specifications.where(
+                    hasProfile(profile)).and(hasUserId(id))));
+        } else {
+            hs.addAll(userGroupRepo.findGroupIds(hasUserId(id)));
+        }
+
+        return hs;
+    }
+
+    @Autowired
+    private ConfigurableApplicationContext jeevesApplicationContext;
+    @PersistenceContext
+    private EntityManager entityManager;
+    @Autowired
+    private GroupRepository groupRepository;
+    @Autowired
+    private UserGroupRepository userGroupRepo;
+    @Autowired
+    private UserRepository userRepository;
 
 }
 

@@ -29,11 +29,13 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.repository.IsoLanguageRepository;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 //=============================================================================
 
 public class Get implements Service
 {
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

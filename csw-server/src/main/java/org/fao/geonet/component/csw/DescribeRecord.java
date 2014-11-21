@@ -25,7 +25,6 @@ package org.fao.geonet.component.csw;
 
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
-import org.fao.geonet.utils.Xml;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
@@ -34,6 +33,7 @@ import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.kernel.csw.CatalogConfiguration;
 import org.fao.geonet.kernel.csw.CatalogService;
 import org.fao.geonet.kernel.csw.services.AbstractOperation;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -42,6 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -256,10 +257,10 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
     private Element loadSchemaComponent(ServiceContext context, String tname, String schemafile) 
     throws NoApplicableCodeEx {
     
-    	String dir = context.getAppPath() + Geonet.Path.VALIDATION + "csw202_apiso100/csw/2.0.2/";
+    	Path dir = context.getAppPath().resolve(Geonet.Path.VALIDATION).resolve("csw202_apiso100/csw/2.0.2/");
     	
     	try {
-			Element schema = Xml.loadFile(dir+schemafile);
+			Element schema = Xml.loadFile(dir.resolve(schemafile));
 			Element sc = new Element("SchemaComponent", Csw.NAMESPACE_CSW);
 			
 			// Add required attributes to SchemaComponent
@@ -270,16 +271,11 @@ public class DescribeRecord extends AbstractOperation implements CatalogService
 			sc.addContent(schema);
 			return sc;
 
-    	} catch (IOException e) {
+    	} catch (Throwable e) {
 			context.error("Cannot get schema file : "+ dir);
 			context.error("  (C) StackTrace\n"+ Util.getStackTrace(e));
 			
 			throw new NoApplicableCodeEx("Cannot get schema file for : "+ tname);
-		} catch (JDOMException e) {
-			context.error("Schema file is not well formed : "+ dir);
-			context.error("  (C) StackTrace\n"+ Util.getStackTrace(e));
-
-			throw new NoApplicableCodeEx("Schema file not well formed : "+ tname);
 		}
 	}
 

@@ -44,6 +44,7 @@ import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.nio.file.Path;
 import java.util.*;
 
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasGroupId;
@@ -55,7 +56,7 @@ import static org.springframework.data.jpa.domain.Specifications.where;
  * Sets new owner for a set of metadata records.
  */
 public class BatchNewOwner extends NotInReadOnlyModeService {
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     //--------------------------------------------------------------------------

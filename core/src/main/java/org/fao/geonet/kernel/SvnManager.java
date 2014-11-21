@@ -25,17 +25,30 @@ package org.fao.geonet.kernel;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.transaction.AfterCommitTransactionListener;
+import jeeves.transaction.BeforeRollbackTransactionListener;
 import org.apache.commons.lang.StringUtils;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataStatus;
+import org.fao.geonet.domain.Operation;
+import org.fao.geonet.domain.OperationAllowed;
+import org.fao.geonet.domain.OperationAllowedId;
+import org.fao.geonet.domain.OperationAllowedId_;
+import org.fao.geonet.domain.OperationAllowed_;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.setting.SettingManager;
-import org.fao.geonet.repository.*;
+import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.OperationRepository;
+import org.fao.geonet.repository.SortUtils;
+import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -45,22 +58,34 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.tmatesoft.svn.core.*;
+import org.tmatesoft.svn.core.SVNCommitInfo;
+import org.tmatesoft.svn.core.SVNDirEntry;
+import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.SVNNodeKind;
+import org.tmatesoft.svn.core.SVNProperties;
+import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
 import org.tmatesoft.svn.core.io.ISVNEditor;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 
-import javax.sql.DataSource;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.sql.Connection;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.annotation.Nonnull;
+import javax.sql.DataSource;
 
-@Aspect
-public class SvnManager {
+public class SvnManager implements AfterCommitTransactionListener, BeforeRollbackTransactionListener {
 
     @Autowired
     OperationAllowedRepository _operationAllowedRepository;
@@ -209,12 +234,11 @@ public class SvnManager {
     /**
      * Spring Aspect Oriented programming for intercepting transaction commits.
      */
-    @After("execution(* commit(org.springframework.transaction.TransactionStatus))")
-    public void commitJoinPointHandler(JoinPoint joinPoint) {
+    public void afterCommit(TransactionStatus status) {
         if (!_enabled) {
             return;
         }
-        TransactionStatus status = (TransactionStatus) joinPoint.getArgs()[0];
+
         SvnTask task = tasks.get(status);
 
         ISVNEditor editor = null;
@@ -251,13 +275,11 @@ public class SvnManager {
     /**
      * Spring Aspect Oriented programming for intercepting transaction rollbacks.
      */
-    @Before("execution(* rollback(org.springframework.transaction.TransactionStatus))")
-    public void rollbackJoinPointHandler(JoinPoint joinPoint) {
+    public void beforeRollback(@Nonnull final TransactionStatus status) {
         if (!_enabled) {
             return;
         }
 
-        TransactionStatus status = (TransactionStatus) joinPoint.getArgs()[0];
         tasks.remove(status);
     }
 

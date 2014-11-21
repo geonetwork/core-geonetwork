@@ -26,7 +26,6 @@ package org.fao.geonet.services.metadata.format;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.io.FileUtils;
 import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -35,6 +34,9 @@ import org.jdom.Element;
 
 import java.io.File;
 import java.net.URLDecoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collections;
 
 /**
  * Allows a user to set the xsl used for displaying metadata
@@ -50,11 +52,11 @@ public class UpdateFile extends AbstractFormatService {
         String xslid = Util.getParam(params, Params.ID);
         String data =  Util.getParam(params, Params.DATA);
         
-        File formatDir = getAndVerifyFormatDir(Params.ID, xslid);
-        
-        File toUpdate = new File(formatDir, fileName.replaceAll("/", File.separator));
-        
-        FileUtils.write(toUpdate, data);
+        Path formatDir = getAndVerifyFormatDir(Params.ID, xslid);
+
+        Path toUpdate = formatDir.resolve(fileName.replaceAll("/", File.separator));
+
+        Files.write(toUpdate, Collections.singleton(data), Constants.CHARSET);
 
         Element elResp = new Element(Jeeves.Elem.RESPONSE);
         elResp.addContent(new Element(Geonet.Elem.ID).setText(xslid));
@@ -64,7 +66,7 @@ public class UpdateFile extends AbstractFormatService {
     }
 
     @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
 

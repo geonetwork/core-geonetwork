@@ -23,16 +23,9 @@
 
 package org.fao.geonet.services.group;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.UUID;
-
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
-import org.apache.commons.io.FileUtils;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Group;
@@ -44,6 +37,11 @@ import org.fao.geonet.resources.Resources;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.UUID;
 import javax.imageio.ImageIO;
 
 
@@ -51,7 +49,7 @@ import javax.imageio.ImageIO;
  * Update the information of a group.
  */
 public class Update extends NotInReadOnlyModeService {
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     //--------------------------------------------------------------------------
@@ -123,13 +121,14 @@ public class Update extends NotInReadOnlyModeService {
             // IE returns complete path of file, while FF only the name (strip path for IE)
             logoFile = stripPath(logoFile);
 
-            File input = new File(context.getUploadDir(), logoFile);
-			BufferedImage bufferedImage = ImageIO.read(input);
-            String logoDir = Resources.locateLogosDir(context);
+            Path input = context.getUploadDir().resolve(logoFile);
+            try (InputStream in = Files.newInputStream(input)) {
+                ImageIO.read(in); // check it parses
+            }
+            Path logoDir = Resources.locateLogosDir(context);
             logoUUID = UUID.randomUUID().toString();
-            File output = new File(logoDir, logoUUID + ".png");
-			ImageIO.write(bufferedImage, "png", output);
-            FileUtils.copyFile(input, output);
+            Path output = logoDir.resolve(logoUUID + ".png");
+            Files.copy(input, output);
         }
 
         return logoUUID;

@@ -37,6 +37,8 @@ import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.services.util.SearchDefaults;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 //=============================================================================
 
 /** main.search service. Perform a search
@@ -52,7 +54,7 @@ public class Search implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig config) throws Exception
+	public void init(Path appPath, ServiceConfig config) throws Exception
 	{
 		_config = config;
 	}

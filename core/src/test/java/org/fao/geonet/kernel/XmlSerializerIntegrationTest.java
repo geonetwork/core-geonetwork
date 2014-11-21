@@ -1,11 +1,20 @@
 package org.fao.geonet.kernel;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import jeeves.server.context.ServiceContext;
+import org.apache.commons.io.IOUtils;
+import org.fao.geonet.AbstractCoreIntegrationTest;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+import org.jdom.Namespace;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -14,22 +23,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jeeves.server.context.ServiceContext;
-import org.fao.geonet.AbstractCoreIntegrationTest;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.utils.Xml;
-
-import org.apache.commons.io.IOUtils;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Metadata;
-import org.jdom.Element;
-import org.jdom.Namespace;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
     @Autowired
@@ -60,7 +59,8 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
                     .setSchemaId("iso19139");
 
             metadata.getSourceInfo()
-                    .setSourceId("sourceid");
+                    .setSourceId("sourceid")
+                    .setOwner(1);
 
         } catch (Exception e) {
 			throw new RuntimeException(e);

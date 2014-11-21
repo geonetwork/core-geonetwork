@@ -146,7 +146,25 @@
         <Bug pattern="OS_OPEN_STREAM" />
     </Match>
 
-	
+	<Match>
+        <Class name="org.fao.geonet.utils.NioPathAwareCatalogResolver" />
+        <Bug pattern="REC_CATCH_EXCEPTION" />
+    </Match>
+	<Match>
+        <Class name="org.fao.geonet.utils.Xml" />
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE" />
+    </Match>
+	<Match>
+        <Class name="org.fao.geonet.services.thumbnail.Set" />
+        <Method name="getImage"/>
+        <Bug pattern="RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE" />
+    </Match>
+    <Match>
+        <Class name="v280.MoveHarvesterSettingsToHigherNumber$HarvesterSetting" />
+        <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" />
+    </Match>
+
+
 <!-- The following bugs are hard to fix should be fixed because they can cause problems in servers with multiple geonetworks running -->	
 	<Match>
 		<Or>

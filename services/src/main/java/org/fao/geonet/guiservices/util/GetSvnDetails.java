@@ -34,13 +34,15 @@ import org.fao.geonet.kernel.SvnManager;
 import org.jdom.Element;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 
+import java.nio.file.Path;
+
 //=============================================================================
 
 /**
  * This service returns useful information about the subversion manager
  */
 public class GetSvnDetails implements Service {
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     // --------------------------------------------------------------------------

@@ -25,7 +25,6 @@ package org.fao.geonet.services.thumbnail;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.io.FileUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
@@ -38,10 +37,11 @@ import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class Generate extends NotInReadOnlyModeService {
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     public Element serviceSpecificExec(Element params, ServiceContext context)
@@ -70,24 +70,22 @@ public class Generate extends NotInReadOnlyModeService {
         }
 
 
-        File thumbnailFile = thumbnailMaker.generateThumbnail(
+        Path thumbnailFile = thumbnailMaker.generateThumbnail(
                 jsonConfig,
                 rotationAngle);
 
         //--- create destination directory
-        String dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
+        Path dataDir = Lib.resource.getDir(context, Params.Access.PUBLIC, id);
+        Files.createDirectories(dataDir);
 
-        IO.mkdirs(new File(dataDir), "Metadata data directory");
+        Path outFile = dataDir.resolve(file);
 
-        File outFile = new File(dataDir, file);
+        Files.deleteIfExists(outFile);
 
-        if (outFile.exists() && !outFile.delete()) {
-            throw new Exception("Unable to overwrite existing file: " + outFile);
-        }
         try {
-            FileUtils.moveFile(thumbnailFile, outFile);
+            IO.moveDirectoryOrFile(thumbnailFile, outFile, false);
         } catch (Exception e) {
-            IO.delete(thumbnailFile, false, context);
+            IO.deleteFile(thumbnailFile, false, context);
             throw new Exception(
                     "Unable to move uploaded thumbnail to destination: "
                             + outFile + ". Error: " + e.getMessage());

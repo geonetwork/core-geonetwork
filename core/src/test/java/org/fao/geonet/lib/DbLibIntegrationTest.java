@@ -6,6 +6,8 @@ import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.nio.file.Path;
+
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -24,7 +26,7 @@ public class DbLibIntegrationTest extends AbstractCoreIntegrationTest {
             @Override
             public void run() throws Exception {
                 ServiceContext context = createServiceContext();
-                String filePath = getClassFile(DbLibIntegrationTest.class).getParentFile().getPath();
+                Path filePath = getClassFile(DbLibIntegrationTest.class).getParentFile().toPath();
                 String filePrefix = "db-test-";
                 new DbLib().insertData(null, context, getWebappDir(DbLibIntegrationTest.class), filePath, filePrefix);
             }

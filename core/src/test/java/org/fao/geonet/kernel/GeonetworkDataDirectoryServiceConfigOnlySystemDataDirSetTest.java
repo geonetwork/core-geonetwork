@@ -1,9 +1,8 @@
 package org.fao.geonet.kernel;
 
 import org.jdom.Element;
-import org.junit.Before;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 /**
@@ -19,7 +18,7 @@ public class GeonetworkDataDirectoryServiceConfigOnlySystemDataDirSetTest extend
     @Override
     protected ArrayList<Element> getServiceConfigParameterElements() {
         ArrayList<Element> list = super.getServiceConfigParameterElements();
-        list.add(createServiceConfigParam(GeonetworkDataDirectory.GEONETWORK_DIR_KEY, getDataDir()));
+        list.add(createServiceConfigParam(GeonetworkDataDirectory.GEONETWORK_DIR_KEY, getDataDir().toString()));
         return list;
     }
 
@@ -27,8 +26,8 @@ public class GeonetworkDataDirectoryServiceConfigOnlySystemDataDirSetTest extend
      * Get The expected data directory
      */
     @Override
-    protected String getDataDir() {
-        return new File(_dataDirContainer, "nonDefaultDataDir").getAbsolutePath() + File.separator;
+    protected Path getDataDir() {
+        return testFixture.getDataDirContainer().resolve("nonDefaultDataDir").toAbsolutePath().normalize();
     }
 
 

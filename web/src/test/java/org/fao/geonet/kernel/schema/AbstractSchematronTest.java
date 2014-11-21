@@ -1,23 +1,34 @@
 package org.fao.geonet.kernel.schema;
 
 import com.google.common.collect.Lists;
-import org.apache.commons.io.FileUtils;
+import org.fao.geonet.AbstractCoreIntegrationTest;
+import org.fao.geonet.Constants;
 import org.fao.geonet.domain.Pair;
-import org.fao.geonet.utils.BinaryFile;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.filter.ElementFilter;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import static org.fao.geonet.constants.Geonet.Namespaces.*;
+import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
+import static org.fao.geonet.constants.Geonet.Namespaces.GEONET;
+import static org.fao.geonet.constants.Geonet.Namespaces.GMD;
+import static org.fao.geonet.constants.Geonet.Namespaces.GML;
+import static org.fao.geonet.constants.Geonet.Namespaces.GMX;
+import static org.fao.geonet.constants.Geonet.Namespaces.SRV;
 
 /**
  * Test.
@@ -33,53 +44,61 @@ public class AbstractSchematronTest {
     protected static final List<Namespace> NAMESPACES = Lists.newArrayList(GMD, GCO, SVRL_NAMESPACE, SCH_NAMESPACE,GEONET, GML,
             GMX, SRV);
 
-    protected static final String CLASS_NAME = AbstractSchematronTest.class.getSimpleName() + ".class";
-    protected final static File CLASS_FILE = new File(AbstractSchematronTest.class.getResource(CLASS_NAME).getFile());
-
-    protected final static File WEBAPP_DIR = findWebappDir(CLASS_FILE);
-    protected final static File SCHEMATRON_COMPILATION_FILE = new File(WEBAPP_DIR, "WEB-INF/classes/schematron/iso_svrl_for_xslt2.xsl");
-    protected final static File SCHEMA_PLUGINS = new File(WEBAPP_DIR, "WEB-INF/data/config/schema_plugins/");
+    protected final static Path WEBAPP_DIR = AbstractCoreIntegrationTest.getWebappDir(AbstractSchematronTest.class);
+    protected final static Path SCHEMATRON_COMPILATION_FILE = WEBAPP_DIR.resolve("WEB-INF/classes/schematron/iso_svrl_for_xslt2.xsl");
     protected Map<String, Object> params = new HashMap<String, Object>();
 
-    protected static File THESAURUS_DIR;
+    protected static Path THESAURUS_DIR;
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     @BeforeClass
-    public static void beforeClass() {
-        THESAURUS_DIR = new File(AbstractSchematronTest.class.getResource("/thesaurus").getFile());
+    public static void beforeClass() throws URISyntaxException {
+        THESAURUS_DIR = IO.toPath(AbstractSchematronTest.class.getResource("/thesaurus").toURI());
     }
     @Before
     public void before (){
         try {
-            final File targetUtilsFnFile = new File(temporaryFolder.getRoot(), "xsl/utils-fn.xsl");
-            targetUtilsFnFile.getParentFile().mkdirs();
-            FileUtils.copyFile(new File(WEBAPP_DIR, "xsl/utils-fn.xsl"), targetUtilsFnFile);
-
+            final Path targetUtilsFnFile = temporaryFolder.getRoot().toPath().resolve("xsl/utils-fn.xsl");
+            Files.createDirectories(targetUtilsFnFile.getParent());
+            IO.copyDirectoryOrFile(WEBAPP_DIR.resolve("xsl/utils-fn.xsl"), targetUtilsFnFile, false);
         } catch (Throwable t) {
             throw new RuntimeException(t);
         }
     }
 
-    protected Pair<Element, File> compileSchematron(File sourceFile) {
+    protected Path getSchematronFile(String schema, String schematronFile) {
+        return getSchematronDir(schema).resolve(schematronFile);
+    }
+
+    protected Path getSchematronDir(String schema) {
+        return WEBAPP_DIR.resolve("../../../../schemas").normalize().resolve(schema).resolve("src/main/plugin").resolve(schema).
+                resolve("schematron");
+    }
+
+    protected Pair<Element, Path> compileSchematron(Path sourceFile) {
         try {
             Element schematron = Xml.loadFile(sourceFile);
-            Element xsl = Xml.transform(schematron, SCHEMATRON_COMPILATION_FILE.getAbsolutePath());
+            Element xsl = Xml.transform(schematron, SCHEMATRON_COMPILATION_FILE);
 
-            final String ruleName = sourceFile.getName().substring(0, sourceFile.getName().indexOf('.'));
+            final String sourceFileName = sourceFile.getFileName().toString();
+            final String ruleName = sourceFileName.substring(0, sourceFileName.indexOf('.'));
 
             params.clear();
             params.put("lang", "eng");
-            params.put("thesaurusDir", THESAURUS_DIR.getPath());
+            params.put("thesaurusDir", THESAURUS_DIR.toAbsolutePath().toString().replace("\\", "/"));
             params.put("rule", ruleName+".xsl");
 
-            File outputFile = new File(temporaryFolder.getRoot(), "path/requiredtoFind/utilsfile/" + ruleName + ".xsl");
-            outputFile.getParentFile().mkdirs();
+            Path outputFile = temporaryFolder.getRoot().toPath().resolve("path/requiredtoFind/utilsfile/" + ruleName + ".xsl");
+            Files.createDirectories(outputFile.getParent());
 
             final String string = Xml.getString(xsl);
-            FileUtils.write(outputFile, string);
+            Files.write(outputFile, string.getBytes(Constants.CHARSET));
 
-            BinaryFile.copyDirectory(new File(sourceFile.getParentFile().getParentFile(), "loc/eng"), new File(outputFile.getParentFile().getParentFile(), "loc/eng"));
+            final Path testLoc = outputFile.getParent().getParent().resolve("loc/eng");
+            if (!Files.exists(testLoc)) {
+                IO.copyDirectoryOrFile(sourceFile.getParent().getParent().resolve("loc/eng"), testLoc, false);
+            }
 
             return Pair.read(schematron, outputFile);
         } catch (Exception e) {

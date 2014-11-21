@@ -25,23 +25,26 @@ package org.fao.geonet.services.metadata.format;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.Util;
-import org.fao.geonet.utils.Xml;
-import org.apache.commons.io.FileUtils;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.metadata.Show;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 /**
  * Allows a user to display a metadata with a particular formatters
@@ -64,11 +67,11 @@ public class Format extends AbstractFormatService {
             throw new IllegalArgumentException("Either '" + Params.UUID + "' or '" + Params.ID + "'is a required parameter");
         }
 
-        File formatDir = getAndVerifyFormatDir("xsl", xslid);
+        Path formatDir = getAndVerifyFormatDir("xsl", xslid);
 
-        File viewXslFile = new File(formatDir, VIEW_XSL_FILENAME);
+        Path viewXslFile = formatDir.resolve(VIEW_XSL_FILENAME);
 
-        if (!viewXslFile.exists())
+        if (!Files.exists(viewXslFile))
             throw new IllegalArgumentException("The 'xsl' parameter must be a valid URL");
 
         Element metadata = showService.exec(params, context);
@@ -124,7 +127,7 @@ public class Format extends AbstractFormatService {
         // verify xsl is a valid file before loading metadata and increasing
         // popularity
         Xml.loadFile(viewXslFile);
-        Element transformed = Xml.transform(root, viewXslFile.getAbsolutePath());
+        Element transformed = Xml.transform(root, viewXslFile);
         Element response = new Element("metadata");
         response.addContent(transformed);
         return response;
@@ -138,43 +141,45 @@ public class Format extends AbstractFormatService {
 		
 	}
 
-	private Element getStrings(String appPath, String lang) throws IOException, JDOMException {
-        File baseLoc = new File(appPath, "loc");
-        File locDir = findLocDir(lang, baseLoc);
-        if(locDir.exists()) {
-            return Xml.loadFile(new File(locDir, "xml"+File.separator+"strings.xml"));
+	private Element getStrings(Path appPath, String lang) throws IOException, JDOMException {
+        Path baseLoc = appPath.resolve("loc");
+        Path locDir = findLocDir(lang, baseLoc);
+        if(Files.exists(locDir)) {
+            return Xml.loadFile(locDir.resolve("xml").resolve("strings.xml"));
         }
         return new Element("strings");
     }
 
-    private Element getResources(ServiceContext context, File formatDir, String lang) throws Exception {
+    private Element getResources(ServiceContext context, Path formatDir, String lang) throws Exception {
         Element resources = new Element("loc");
-        File baseLoc = new File(formatDir, "loc");
-        File locDir = findLocDir(lang, baseLoc);
+        Path baseLoc = formatDir.resolve("loc");
+        Path locDir = findLocDir(lang, baseLoc);
 
-        resources.addContent(new Element("iso639_2").setAttribute("codeLength","3").setText(locDir.getName()));
-        String iso639_1 = context.getBean(IsoLanguagesMapper.class).iso639_2_to_iso639_1(locDir.getName());
+        resources.addContent(new Element("iso639_2").setAttribute("codeLength","3").setText(locDir.getFileName().toString()));
+        String iso639_1 = context.getBean(IsoLanguagesMapper.class).iso639_2_to_iso639_1(locDir.getFileName().toString());
 
         resources.addContent(new Element("iso639_1").setAttribute("codeLength","2").setText(iso639_1 ));
 
-        if(locDir.exists()) {
-            Collection<File> files = FileUtils.listFiles(locDir, new String[]{"xml"}, false);
-            for (File file : files) {
-                resources.addContent(Xml.loadFile(file));
+        if(Files.exists(locDir)) {
+            try (DirectoryStream<Path> paths = Files.newDirectoryStream(locDir, "*.xml")) {
+                for (Path path : paths) {
+                    resources.addContent(Xml.loadFile(path));
+                }
             }
         }
         return resources;
     }
 
-    private File findLocDir(String lang, File baseLoc) {
-        File locDir = new File(baseLoc, lang);
-        if(!locDir.exists()) {
-            locDir = new File(baseLoc, Geonet.DEFAULT_LANGUAGE);
+    private Path findLocDir(String lang, Path baseLoc) throws IOException {
+        Path locDir = baseLoc.resolve(lang);
+        if(!Files.exists(locDir)) {
+            locDir = baseLoc.resolve(Geonet.DEFAULT_LANGUAGE);
         }
-        if(!locDir.exists()) {
-            File[] files = baseLoc.listFiles();
-            if(files != null && files.length > 0 && files[0].isDirectory()) {
-                locDir = files[0];
+        if(!Files.exists(locDir)) {
+            try (DirectoryStream<Path> paths = Files.newDirectoryStream(baseLoc)) {
+                for (Path path : paths) {
+                    return path;
+                }
             }
         }
         return locDir;
@@ -186,9 +191,9 @@ public class Format extends AbstractFormatService {
         if(localization == null) {
             SchemaManager schemamanager = gc.getBean(SchemaManager.class);
             Set<String> schemas = schemamanager.getSchemas();
-            localization = new ArrayList<SchemaLocalization>(schemas.size());
+            localization = new ArrayList<>(schemas.size());
             for (String schema : schemas) {
-                String schemaLocDir = schemamanager.getSchemaDir(schema)+File.separator+"loc"+File.separator+lang+File.separator;
+                Path schemaLocDir = schemamanager.getSchemaDir(schema).resolve("loc").resolve(lang);
                 localization.add(new SchemaLocalization(schema, schemaLocDir));
                 labels.put(lang, localization);
             }
@@ -198,7 +203,7 @@ public class Format extends AbstractFormatService {
     }
 
     @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
 
         showService = new Show();
@@ -211,11 +216,11 @@ public class Format extends AbstractFormatService {
         private final Element codelists;
         private final Element labels;
         
-        private SchemaLocalization(String schema, String schemaLocDir) throws IOException, JDOMException {
+        private SchemaLocalization(String schema, Path schemaLocDir) throws IOException, JDOMException {
             this.schema = schema;
-            this.strings = Xml.loadFile(schemaLocDir+"strings.xml").setName("strings");
-            this.codelists = Xml.loadFile(schemaLocDir+"codelists.xml").setName("codelists");
-            this.labels = Xml.loadFile(schemaLocDir+"labels.xml").setName("labels");
+            this.strings = Xml.loadFile(schemaLocDir.resolve("strings.xml")).setName("strings");
+            this.codelists = Xml.loadFile(schemaLocDir.resolve("codelists.xml")).setName("codelists");
+            this.labels = Xml.loadFile(schemaLocDir.resolve("labels.xml")).setName("labels");
         }
         
     }

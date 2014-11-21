@@ -7,7 +7,7 @@ import org.jdom.Element;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -19,19 +19,18 @@ import static org.junit.Assert.assertTrue;
  * Created by Jesse on 1/31/14.
  */
 public class BasicInspireTest extends AbstractInspireTest {
-    protected File schematronXsl;
+    protected Path schematronXsl;
     protected Element inspire_schematron;
 
     @Before
     public void before() {
         super.before();
-        String schematronFile = "iso19139/schematron/schematron-rules-inspire.disabled.sch";
-        Pair<Element,File> compiledResult = compileSchematron(new File(SCHEMA_PLUGINS, schematronFile));
+        Pair<Element,Path> compiledResult = compileSchematron(getSchematronFile("iso19139", "schematron-rules-inspire.disabled.sch"));
         inspire_schematron = compiledResult.one();
         schematronXsl = compiledResult.two();
     }
 
-    protected File getSchematronXsl() {
+    protected Path getSchematronXsl() {
         return schematronXsl;
     }
 
@@ -46,7 +45,7 @@ public class BasicInspireTest extends AbstractInspireTest {
             content.detach();
         }
 
-        Element results = Xml.transform(testMetadata, getSchematronXsl().getPath(), params);
+        Element results = Xml.transform(testMetadata, getSchematronXsl(), params);
         assertEquals(1, countFailures(results));
 
         Element failure = (Element) results.getDescendants(FAILURE_FILTER).next();
@@ -65,7 +64,7 @@ public class BasicInspireTest extends AbstractInspireTest {
             content.detach();
         }
 
-        Element results = Xml.transform(testMetadata, getSchematronXsl().getPath(), params);
+        Element results = Xml.transform(testMetadata, getSchematronXsl(), params);
         assertEquals(1, countFailures(results));
 
         Element failure = (Element) results.getDescendants(FAILURE_FILTER).next();
@@ -86,7 +85,7 @@ public class BasicInspireTest extends AbstractInspireTest {
             content.detach();
         }
 
-        Element results = Xml.transform(testMetadata, getSchematronXsl().getPath(), params);
+        Element results = Xml.transform(testMetadata, getSchematronXsl(), params);
         assertEquals(1, countFailures(results));
 
         Element failure = (Element) results.getDescendants(FAILURE_FILTER).next();

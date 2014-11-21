@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.mef;
 
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Constants;
+import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -32,15 +33,13 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.zip.ZipOutputStream;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PRIVATE;
-import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PUBLIC;
 import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
 import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
 
@@ -60,67 +59,61 @@ class MEFExporter {
 	 * @param uuid
 	 *            UUID of the metadata record to export.
 	 * @param format
-	 *            {@link Format}
+	 *            {@link org.fao.geonet.kernel.mef.MEFLib.Format}
 	 * @param skipUUID
 	 * @return the path of the generated MEF file.
 	 * @throws Exception
 	 */
-	public static String doExport(ServiceContext context, String uuid,
-			Format format, boolean skipUUID, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
+	public static Path doExport(ServiceContext context, String uuid,
+                                Format format, boolean skipUUID, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
 		Metadata record = MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute);
 
 		if (record.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
 			throw new Exception("Cannot export sub template");
         }
 
-		File file = File.createTempFile("mef-", ".mef");
-		String pubDir = Lib.resource.getDir(context, "public", record.getId());
-		String priDir = Lib.resource.getDir(context, "private", record.getId());
+		Path file = Files.createTempFile("mef-", ".mef");
+		Path pubDir = Lib.resource.getDir(context, "public", record.getId());
+		Path priDir = Lib.resource.getDir(context, "private", record.getId());
 
-		FileOutputStream fos = new FileOutputStream(file);
-		ZipOutputStream zos = new ZipOutputStream(fos);
+        try (FileSystem zipFs = ZipUtil.createZipFs(file)) {
+            // --- save metadata
+            if (!record.getData().startsWith("<?xml")) {
+                record.setData("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n" + record.getData());
+            }
 
-		// --- create folders
+            byte[] binData = record.getData().getBytes(Constants.ENCODING);
+            Files.write(zipFs.getPath(FILE_METADATA), binData);
 
-		MEFLib.createDir(zos, DIR_PUBLIC);
-		MEFLib.createDir(zos, DIR_PRIVATE);
+            // --- save info file
 
-		// --- save metadata
+            binData = MEFLib.buildInfoFile(context, record, format, pubDir, priDir,
+                    skipUUID).getBytes(Constants.ENCODING);
+            Files.write(zipFs.getPath(FILE_INFO), binData);
 
-		if (!record.getData().startsWith("<?xml")) {
-			record.setData("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n" + record.getData());
+            // --- save thumbnails and maps
+
+            if (format == Format.PARTIAL || format == Format.FULL) {
+                if (Files.exists(pubDir) && !IO.isEmptyDir(pubDir)) {
+                    IO.copyDirectoryOrFile(pubDir, zipFs.getPath(pubDir.getFileName().toString()), false);
+                }
+            }
+
+            if (format == Format.FULL) {
+                try {
+                    Lib.resource.checkPrivilege(context, "" + record.getId(), ReservedOperation.download);
+                    if (Files.exists(priDir) && !IO.isEmptyDir(priDir)) {
+                        IO.copyDirectoryOrFile(priDir, zipFs.getPath(priDir.getFileName().toString()), false);
+                    }
+
+                } catch (Exception e) {
+                    // Current user could not download private data
+                    Log.warning(Geonet.MEF, "Error encounteres while trying to import private resources of MEF file. MEF UUID: " + uuid, e);
+
+                }
+            }
         }
-
-		byte[] binData = record.getData().getBytes(Constants.ENCODING);
-
-		MEFLib.addFile(zos, FILE_METADATA, new ByteArrayInputStream(binData));
-
-		// --- save info file
-
-		binData = MEFLib.buildInfoFile(context, record, format, pubDir, priDir,
-				skipUUID).getBytes(Constants.ENCODING);
-
-		MEFLib.addFile(zos, FILE_INFO, new ByteArrayInputStream(binData));
-
-		// --- save thumbnails and maps
-
-		if (format == Format.PARTIAL || format == Format.FULL)
-			MEFLib.savePublic(zos, pubDir, null);
-
-		if (format == Format.FULL) {
-			try {
-                Lib.resource.checkPrivilege(context, "" + record.getId(), ReservedOperation.download);
-				MEFLib.savePrivate(zos, priDir, null);
-			} catch (Exception e) {
-				// Current user could not download private data
-                Log.warning(Geonet.MEF, "Error encounteres while trying to import private resources of MEF file. MEF UUID: "+uuid, e);
-			}
-		}
-		// --- cleanup and exit
-
-		zos.close();
-
-		return file.getAbsolutePath();
+		return file;
 	}
 }
 

@@ -24,7 +24,6 @@
 package org.fao.geonet.kernel.harvest.harvester.oaipmh;
 
 import jeeves.server.context.ServiceContext;
-
 import org.eclipse.emf.common.command.AbortExecutionException;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
@@ -60,14 +59,15 @@ import org.fao.oaipmh.responses.ListIdentifiersResponse;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import javax.annotation.Nonnull;
 
 //=============================================================================
 
@@ -412,7 +412,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
 	private Element toDublinCore(Element md)
 	{
-		String styleSheet = context.getAppPath() +"conversion/oai_dc-to-dublin-core/main.xsl";
+		Path styleSheet = context.getAppPath().resolve("conversion/oai_dc-to-dublin-core/main.xsl");
 
 		try
 		{

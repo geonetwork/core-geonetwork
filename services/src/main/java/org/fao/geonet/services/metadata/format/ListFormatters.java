@@ -29,7 +29,9 @@ import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
 import org.jdom.Element;
 
-import java.io.File;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * List all formatters
@@ -56,25 +58,24 @@ public class ListFormatters extends AbstractFormatService {
         schema = schema.trim();
         
         Element response = new Element("formatters");
-        File[] xslFormatters = new File(userXslDir).listFiles(new FormatterFilter());
-        if (xslFormatters != null) {
-            for (File xsl : xslFormatters) {
-            	boolean add = true;
-            	if(!schema.equalsIgnoreCase("all")) {
-            		ConfigFile config = new ConfigFile(xsl);
-            		if(!config.listOfApplicableSchemas().contains(schema)){
-            			add = false;
-            		}
-            	}
-            	if (add)
-            		response.addContent(new Element("formatter").setText(xsl.getName()));
+        try (DirectoryStream<Path> newDirectoryStream = Files.newDirectoryStream(userXslDir)) {
+            for (Path xsl : newDirectoryStream) {
+                boolean add = true;
+                if(!schema.equalsIgnoreCase("all")) {
+                    ConfigFile config = new ConfigFile(xsl);
+                    if(!config.listOfApplicableSchemas().contains(schema)){
+                        add = false;
+                    }
+                }
+                if (add)
+                    response.addContent(new Element("formatter").setText(xsl.getFileName().toString()));
             }
         }
         return response;
     }
 
     @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
 

@@ -32,7 +32,7 @@ public class ReportUtils {
             if (!StringUtils.isEmpty(group)) requestedGroups.add(Integer.parseInt(group));
         }
 
-        if (context.getUserSession().getProfile().equals(Profile.Administrator)) {
+        if (context.getUserSession().getProfile() !=null && context.getUserSession().getProfile().equals(Profile.Administrator)) {
             return requestedGroups;
 
         } else {

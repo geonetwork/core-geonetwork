@@ -42,7 +42,8 @@ import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -55,8 +56,7 @@ import java.util.List;
  */
 
 public class AddLimitations implements Service {
-    private static String FS = File.separator;
-    private String stylePath;
+    private Path stylePath;
 
     // This shouldn't be static because DateFormat is not thread safe
     private final SimpleDateFormat _dateFormat = createDateFormatter();
@@ -66,8 +66,8 @@ public class AddLimitations implements Service {
     //---
     //--------------------------------------------------------------------------
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
-        this.stylePath = appPath + FS + Geonet.Path.STYLESHEETS + FS;
+    public void init(Path appPath, ServiceConfig params) throws Exception {
+        this.stylePath = appPath.resolve(Geonet.Path.STYLESHEETS);
     }
 
     //--------------------------------------------------------------------------
@@ -96,7 +96,7 @@ public class AddLimitations implements Service {
 
         //--- now add the files chosen from the interface and record in 'downloaded'
         Element downloaded = new Element("downloaded");
-        File dir = new File(Lib.resource.getDir(context, access, id));
+        Path dir = Lib.resource.getDir(context, access, id);
 
         @SuppressWarnings("unchecked")
         List<Element> files = params.getChildren(Params.FNAME);
@@ -109,20 +109,21 @@ public class AddLimitations implements Service {
                 continue;    // Avoid unsecured file name
             }
 
-            File file = new File(dir, fname);
+            Path file = dir.resolve(fname);
 
             Element fileInfo = new Element("file");
 
-            Element details = BinaryFile.encode(200, file.getAbsolutePath(), false);
+            BinaryFile bFile = BinaryFile.encode(200, file, false);
+            Element details = bFile.getElement();
             String remoteURL = details.getAttributeValue("remotepath");
             if (remoteURL != null) {
                 fileInfo.setAttribute("size", "unknown");
                 fileInfo.setAttribute("datemodified", "unknown");
                 fileInfo.setAttribute("name", remoteURL);
             } else {
-                fileInfo.setAttribute("size", file.length() + "");
+                fileInfo.setAttribute("size", Files.size(file) + "");
                 fileInfo.setAttribute("name", fname);
-                Date date = new Date(file.lastModified());
+                Date date = new Date(Files.getLastModifiedTime(file).toMillis());
                 fileInfo.setAttribute("datemodified", _dateFormat.format(date));
             }
             downloaded.addContent(fileInfo);
@@ -143,7 +144,7 @@ public class AddLimitations implements Service {
         response.addContent(md);
 
         //--- transform record into brief version
-        String briefXslt = stylePath + Geonet.File.METADATA_BRIEF;
+        Path briefXslt = stylePath.resolve(Geonet.File.METADATA_BRIEF);
         Element elBrief = Xml.transform(elMd, briefXslt);
 
         //--- create root element for passing all the info we've gathered
@@ -158,7 +159,7 @@ public class AddLimitations implements Service {
 
         //--- create the license annex html using the info in root element and
         //--- add it to response under license element
-        String licenseAnnexXslt = stylePath + Geonet.File.LICENSE_ANNEX_XSL;
+        Path licenseAnnexXslt = stylePath.resolve(Geonet.File.LICENSE_ANNEX_XSL);
         Element license = Xml.transform(root, licenseAnnexXslt);
         response.addContent(new Element("license").addContent(license));
 

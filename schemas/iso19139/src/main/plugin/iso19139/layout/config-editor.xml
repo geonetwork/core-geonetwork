@@ -54,27 +54,57 @@
 
     <for name="gmd:referenceSystemInfo" addDirective="data-gn-crs-selector"/>
 
+
     <for name="gmd:contact" addDirective="data-gn-directory-entry-selector">
-      <directiveAttributes data-tag-name="gmd:CI_ResponsibleParty" data-param-name="gmd:role/gmd:CI_RoleCode/@codeListValue"/>
+      <directiveAttributes
+              data-template-add-action="true"
+              data-template-type="contact"
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:pointOfContact" addDirective="data-gn-directory-entry-selector">
-      <directiveAttributes data-tag-name="gmd:CI_ResponsibleParty" data-param-name="gmd:role/gmd:CI_RoleCode/@codeListValue"/>
+      <directiveAttributes
+              data-template-add-action="true"
+              data-template-type="contact"
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:distributor" addDirective="data-gn-directory-entry-selector">
-      <directiveAttributes data-tag-name="gmd:CI_ResponsibleParty" data-param-name="gmd:role/gmd:CI_RoleCode/@codeListValue"/>
+      <directiveAttributes
+              data-template-add-action="true"
+              data-template-type="contact"
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:processor" addDirective="data-gn-directory-entry-selector">
-      <directiveAttributes data-tag-name="gmd:CI_ResponsibleParty" data-param-name="gmd:role/gmd:CI_RoleCode/@codeListValue"/>
+      <directiveAttributes
+              data-template-add-action="true"
+              data-template-type="contact"
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:citedResponsibleParty" addDirective="data-gn-directory-entry-selector">
-      <directiveAttributes data-tag-name="gmd:CI_ResponsibleParty" data-param-name="gmd:role/gmd:CI_RoleCode/@codeListValue"/>
+      <directiveAttributes
+              data-template-add-action="false"
+              data-template-type="contact"
+              data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
-    
-    <for name="gmd:descriptiveKeywords" addDirective="data-gn-thesaurus-selector"/>
-    <!-- Example of configuration to disable free text keywords in the thesaurus selector -->
-    <!--for name="gmd:descriptiveKeywords" addDirective="data-gn-thesaurus-selector">
+
+
+    <!-- Example configuration: Add onLine source from subtemplate
+    <for name="gmd:onLine" addDirective="data-gn-directory-entry-selector">
+      <directiveAttributes
+              data-template-add-action="true"
+              data-template-type="onLine"
+              data-filter='{"_root": "gmd:CI_OnlineResource"}'/>
+    </for>
+    -->
+    <for name="gmd:descriptiveKeywords" addDirective="data-gn-thesaurus-selector">
+      <!--
+      Example of configuration to disable free text keywords in the thesaurus selector
       <directiveAttributes data-allow-free-text-keywords="false" />
-    </for-->
+
+      To restrict the list of thesaurus allowed, set the include attribute
+      for the directive.
+      <directiveAttributes data-include="external.theme.inspire-theme,external.place.regions"/>
+      -->
+    </for>
   </fields>
 
 
@@ -320,6 +350,7 @@
           <action type="batch" process="add-resource-id"
                   if="count(gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/
             gmd:identifier[ends-with(gmd:MD_Identifier/gmd:code/gco:CharacterString, //gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString)]) = 0"/>
+
 
 
 
@@ -1147,7 +1178,12 @@
 
           <action type="add" name="pointOfContact" addDirective="data-gn-directory-entry-selector"
             or="pointOfContact"
-            in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"> </action>
+            in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+            <directiveAttributes
+                    data-template-add-action="true"
+                    data-template-type="contact"
+                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+          </action>
 
 
           <field name="pointOfContact" templateModeOnly="true" notDisplayedIfMissing="true"
@@ -1209,7 +1245,12 @@
 
           <action type="add" name="pointOfContact" addDirective="data-gn-directory-entry-selector"
             or="pointOfContact"
-            in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification"> </action>
+            in="/gmd:MD_Metadata/gmd:identificationInfo/srv:SV_ServiceIdentification">
+            <directiveAttributes
+                    data-template-add-action="true"
+                    data-template-type="contact"
+                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+          </action>
 
         </section>
 
@@ -1270,9 +1311,13 @@
             </template>
           </field>
 
-
           <action type="add" name="metadataPointOfContact"
-            addDirective="data-gn-directory-entry-selector" or="contact" in="/gmd:MD_Metadata"/>
+            addDirective="data-gn-directory-entry-selector" or="contact" in="/gmd:MD_Metadata">
+            <directiveAttributes
+                    data-template-add-action="true"
+                    data-template-type="contact"
+                    data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
+          </action>
 
 
           <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
@@ -1317,6 +1362,20 @@
         <for name="gmd:processor"/>
         <for name="gmd:citedResponsibleParty"/>
       </flatModeExceptions>
+
+      <!--
+      To configure the type of transformations
+      or the number of keyword allowed for e
+      thesaurus define a specific configuration:
+
+      eg. only 2 INSPIRE themes with Anchor.
+
+      <thesaurusList>
+        <thesaurus key="external.theme.inspire-theme"
+                   maxtags="2"
+                   transformations="to-iso19139-keyword-with-anchor"/>
+      </thesaurusList>
+      -->
     </view>
     <view name="advanced">
       <tab id="identificationInfo" default="true">

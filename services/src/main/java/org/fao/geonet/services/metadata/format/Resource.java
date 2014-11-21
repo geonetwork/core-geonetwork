@@ -23,14 +23,15 @@
 
 package org.fao.geonet.services.metadata.format;
 
-import org.fao.geonet.exceptions.BadParameterEx;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.BinaryFile;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.utils.BinaryFile;
 import org.jdom.Element;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Allows a user load a file from the identified formatter bundle. Typically used for reading images
@@ -45,16 +46,16 @@ public class Resource extends AbstractFormatService {
         String xslid = Util.getParam(params, Params.ID);
         String fileName = Util.getParam(params, Params.FNAME);
 
-        File formatDir = getAndVerifyFormatDir(Params.ID, xslid);
-        File desiredFile = new File(formatDir, fileName.replace("/", File.separator));
+        Path formatDir = getAndVerifyFormatDir(Params.ID, xslid);
+        Path desiredFile = formatDir.resolve(fileName);
         
         if(!containsFile(formatDir, desiredFile)) {
             throw new BadParameterEx(Params.FNAME, fileName+" does not identify a file in the "+xslid+" format bundle");
         }
-        if(!desiredFile.exists() || !desiredFile.isFile()) {
+        if(!Files.isRegularFile(desiredFile)) {
             throw new BadParameterEx(Params.FNAME, fileName+" does not identify a file");
         }
         
-        return BinaryFile.encode(200, desiredFile.getAbsolutePath(), fileName, false);
+        return BinaryFile.encode(200, desiredFile, fileName, false).getElement();
     }
 }

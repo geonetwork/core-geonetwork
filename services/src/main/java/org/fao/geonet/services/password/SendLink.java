@@ -44,6 +44,7 @@ import org.fao.geonet.util.MailUtil;
 import org.jdom.Element;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -61,8 +62,8 @@ public class SendLink extends MailSendingService {
 	// ---
 	// --------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
-        this.stylePath = appPath + Geonet.Path.XSLT_FOLDER + FS + "services" + FS + "account" + FS;
+	public void init(Path appPath, ServiceConfig params) throws Exception {
+        this.stylePath = appPath.resolve(Geonet.Path.XSLT_FOLDER).resolve("services").resolve("account");
 	}
 
 	// --------------------------------------------------------------------------
@@ -116,7 +117,7 @@ public class SendLink extends MailSendingService {
 		root.addContent(new Element("siteURL").setText(siteURL));
 		root.addContent(new Element("changeKey").setText(changeKey));
 		
-		String emailXslt = stylePath + template;
+		Path emailXslt = stylePath.resolve(template);
 		Element elEmail = Xml.transform(root, emailXslt);
 
 		String subject = elEmail.getChildText("subject");
@@ -132,7 +133,7 @@ public class SendLink extends MailSendingService {
 	}
 
 	private static String FS = File.separator;
-	private String stylePath;
+	private Path stylePath;
 	private static final String CHANGE_EMAIL_XSLT = "password-forgotten-email.xsl";
 	public static final String DATE_FORMAT = "yyyy-MM-dd";
 

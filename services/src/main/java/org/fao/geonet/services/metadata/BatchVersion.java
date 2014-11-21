@@ -35,6 +35,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SelectionManager;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -46,7 +47,7 @@ import java.util.Set;
 
 public class BatchVersion implements Service
 {
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---
