@@ -7,10 +7,67 @@
 
     <tabset id="main-tabset" type="pills">
       <tab heading="{{mainTabs.search.title}}" active="mainTabs.search.active">
-        <div class="container" data-ng-controller="gnsSextantSearch">
-          <form data-ng-search-form="" class="form-horizontal" role="form" runsearch="true">
 
-            <!--ANY full text search input-->
+        <div class="container-fluid" data-ng-controller="gnsSextantSearch">
+
+          <form data-ng-search-form="" class="hfull" role="form" runsearch="true">
+
+            <div class="row hfull">
+              <div class="col-md-3 maincol hfull">
+                <div class="panel panel-default hfull">
+                  <div class="panel-heading search-top">
+                  </div>
+                  <div class="panel-body gn-searchform">
+                    <div data-ng-include="'../../catalog/templates/search/sextant/searchForm.html'"></div>
+                  </div>
+                  <div class="panel-footer">
+                    <div class="submit">
+                      <button type="button" data-ng-click="resetSearch();" class="btn btn-link" data-translate>Reset</button>
+                      <button type="button" data-ng-click="triggerSearch()" class="btn btn-primary">
+                        <i class="fa fa-search"></i> <span data-translate>Search</span></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div ng-class="(!collapsed) ? 'col-md-7' : 'col-md-9'" class="maincol hfull">
+                <div class="panel panel-default hfull" ng-show="!initial">
+                  <div class="panel-heading">
+                    <button class="btn btn-default filter" ng-class="{ active: !collapsed }"
+                            ng-click="collapsed=!collapsed"><i class="fa fa-filter"></i></button>
+                    <div gn-results-tpl-switcher template-url="resultTemplate" class="pull-right"></div>
+                    <div gn-selection-widget results="searchResults"></div>
+                    <div sortby-combo params="searchObj.params"></div>
+                  </div>
+                  <span class="loading fa fa-spinner fa-spin" ng-show="searching"></span>
+                  <div gn-results-container search-results="searchResults" template-url="resultTemplate" map="searchObj.searchMap">
+                  </div>
+                  <div class="panel-footer">
+                    <div class="pull-right" hitsperpage-combo pagination-cfg="paginationInfo"></div>
+                    <div data-gn-pagination="paginationInfo"></div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div ng-class="(!collapsed) ? 'col-md-2' : 'whidden'" class="maincol hfull">
+                <div class="panel panel-default hfull">
+                  <div class="panel-heading">
+                    <span data-translate>Refine search</span>
+                  </div>
+                  <div class="panel-body">
+                    <div data-gn-facet-breadcrumb="currentFacets"></div>
+                    <div data-gn-facet-list="searchResults.facet"
+                         data-facet-config="facetsConfig"
+                         data-current-facets="currentFacets">
+                    </div>
+                  </div>
+                </div>
+</div>
+
+              <!--ANY full text search input-->
+<!--
             <div class="form-group row ">
               <div class="gn-top-search relative">
                 <input type="text" ng-model="searchObj.params.any" placeholder="{{'anyPlaceHolder' | translate}}"
@@ -27,8 +84,10 @@
                 </label>
               </div>
             </div>
+-->
 
             <!--Advanced search form-->
+<!--
             <div data-ng-show="searchObj.advancedMode" class="gn-advanced-searchform panel panel-primary clearfix">
 
               <div class="panel-heading">Advanced search</div>
@@ -117,7 +176,8 @@
               </div>
 
             </div>
-
+-->
+            </div>
           </form>
         </div>
       </tab>
