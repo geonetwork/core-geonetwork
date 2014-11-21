@@ -87,7 +87,7 @@
         ],
         view: new ol.View({
           center: mapsConfig.center,
-          zoom: 0
+          zoom: 2
         })
       });
 
