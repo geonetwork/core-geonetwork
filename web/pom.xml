@@ -40,6 +40,11 @@
       </dependency>
 
     <dependency>
+          <groupId>org.antlr</groupId>
+          <artifactId>antlr-runtime</artifactId>
+          <version>3.5.2</version>
+      </dependency>
+    <dependency>
       <groupId>xalan</groupId>
       <artifactId>xalan</artifactId>
     </dependency>
@@ -466,8 +471,15 @@
           <version>${project.version}</version>
       </dependency>
 
-    <!-- Add dependencies to schema plugin
-    having a custom Bean to be loaded. -->
+      <dependency>
+          <groupId>ro.isdc.wro4j</groupId>
+          <artifactId>wro4j-maven-plugin</artifactId>
+          <version>${wro.version}</version>
+          <scope>test</scope>
+      </dependency>
+
+      <!-- Add dependencies to schema plugin
+      having a custom Bean to be loaded. -->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>schema-iso19139</artifactId>

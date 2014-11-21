@@ -24,7 +24,6 @@ public class GeonetLessCompilerProcessor
 
     public static final String ALIAS = "geonetLessCompiler";
     private static final String LESS_EXT = ".less";
-    private static final String CSS_EXT = ".css";
 
     @Override
     public void process(Reader reader, Writer writer) throws IOException {

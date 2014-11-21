@@ -27,6 +27,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.HarvesterSetting;
 import org.fao.geonet.domain.Setting;
+import org.fao.geonet.domain.SettingDataType;
 import org.fao.geonet.domain.Setting_;
 import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.SettingRepository;
@@ -116,8 +117,15 @@ public class SettingManager {
                 currentElement.setAttribute("name", path.substring(1));
                 currentElement.setAttribute("position", String.valueOf(setting.getPosition()));
                 if (i == segments.length - 1) {
-                    currentElement.setAttribute("datatype", String.valueOf(setting.getDataType().ordinal()));
-                    currentElement.setAttribute("datatypeName", setting.getDataType().name());
+                    final SettingDataType dataType;
+                    if (setting.getDataType() != null) {
+                        dataType = setting.getDataType();
+                    } else {
+                        dataType = SettingDataType.STRING;
+                    }
+                    currentElement.setAttribute("datatype", String.valueOf(dataType.ordinal()));
+                    currentElement.setAttribute("datatypeName", dataType.name());
+
                     currentElement.setText(setting.getValue());
                 }
                 parent.addContent(currentElement);
