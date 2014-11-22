@@ -40,7 +40,6 @@ public class EnvironmentImpl implements Environment {
         this.resourceUrl = fparams.getResourceUrl();
         this.locUrl = fparams.getLocUrl();
         this.metadataInfo = fparams.metadataInfo;
-
         for (Map.Entry<String, String[]> entry : fparams.params.entrySet()) {
             for (String value : entry.getValue()) {
                 this.params.put(entry.getKey(), new ParamValue(value));

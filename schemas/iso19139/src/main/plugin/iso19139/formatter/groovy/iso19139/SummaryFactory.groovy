@@ -3,6 +3,8 @@ package iso19139
 import jeeves.server.context.ServiceContext
 import org.fao.geonet.constants.Geonet
 import org.fao.geonet.guiservices.metadata.GetRelated
+import org.fao.geonet.services.metadata.format.FormatType
+import org.fao.geonet.services.metadata.format.groovy.Environment
 import org.fao.geonet.services.metadata.format.groovy.util.*
 
 /**
@@ -58,8 +60,11 @@ class SummaryFactory {
         def uuid = isoHandler.env.metadataUUID
         def id = isoHandler.env.metadataId
 
-        if (isoHandler.env.param('print').toBool()) {
-            StaticLinkBlock hierarchy = new StaticLinkBlock("hierarchy")
+        Environment env = isoHandler.env
+
+        def linkBlockName = "hierarchy"
+        if (env.formatType == FormatType.pdf) {
+            StaticLinkBlock hierarchy = new StaticLinkBlock(linkBlockName)
             summary.links.add(hierarchy);
             def bean = isoHandler.env.getBean(GetRelated.class)
             def related = bean.getRelated(ServiceContext.get(), id, uuid, relatedTypes, 1, 1000, true)
@@ -79,7 +84,70 @@ class SummaryFactory {
                 }
             }
         } else {
-            RawHtmlLinkBlock linkBlock = new RawHtmlLinkBlock("hierarchy", "")
+            def placeholderId = "link-placeholder-" + linkBlockName
+            def js = """
+\$(function() {
+  \$('${LinkBlock.CSS_CLASS_PREFIX + linkBlockName}').hide();
+  \$.ajax('xml.relation?id=${env.metadataId}&type=$relatedTypes', {
+    accepts:'application/json',
+    success: function (data) {
+      var types = {};
+
+      \$.each(data.relation, function (rel) {
+        var type = rel['@type'];
+        \$.each(rel.metadata, function (md) {
+          var uuid = md['geonet:info'].uuid;
+          var title = md.title ? md.title : md.defaultTitle;
+          if (!title) {
+            title = uuid;
+          }
+
+          var url;
+          if (uuid) {
+            url = "javascript:open('md.format.html?xsl=full_view&amp;schema=iso19139&amp;uuid=' + encodeURIComponent(uuid), 'related');"
+          } else {
+            url = "javascript:alert('${isoHandler.f.translate("noUuidInLink")}');"
+          }
+
+          var obj = { url: url, title: title};
+
+          if (title && uuid) {
+            if (types.type) {
+              types.type.push (obj);
+            } else {
+              types.type = [obj];
+            }
+          }
+        });
+      });
+
+      var placeholder = \$('$placeholderId');
+
+      \$.each(types, function (key, value) {
+        var html = '<div class="col-xs-12" style="background-color: #F7EEE1;">' +
+                   '  <img src="${isoHandler.env.localizedUrl + "../../images/"}' + key + '.png"/>';
+        \$.each(value, function (rel) {
+          html += '  <div class="col-xs-6 col-md-4"><a href="' + rel.url + '">' + rel.title + '</a></div>';
+        });
+        html += '</div>';
+        placeholder.add(html);
+      });
+
+      \$('${LinkBlock.CSS_CLASS_PREFIX + linkBlockName}').show();
+    },
+    error: function (req, status, error) {
+      \$('$placeholderId').add('<h3>Error loading related metadata</h3><p>' + error + '</p>');
+      \$('${LinkBlock.CSS_CLASS_PREFIX + linkBlockName}').show();
+    }
+  })
+});
+"""
+            def html = """
+<script type="text/javascript">$js</script>
+<div id="$placeholderId"> </div>
+"""
+            RawHtmlLinkBlock linkBlock = new RawHtmlLinkBlock(linkBlockName, html)
+            summary.links.add(linkBlock)
         }
 
 
@@ -89,7 +157,7 @@ class SummaryFactory {
         if (uuid.trim().isEmpty()) {
             return "javascript:alert('" + isoHandler.f.translate("noUuidInLink") + "');"
         } else {
-            return "javascript:open('md.format.html?xsl=full_view&amp;schema=iso19139&amp;uuid=" + URLEncoder.encode(uuid, "UTF-8") + "', 'related');"
+            return isoHandler.env.localizedUrl + "md.format.html?xsl=full_view&amp;schema=iso19139&amp;uuid=" + URLEncoder.encode(uuid, "UTF-8")
         }
     }
 

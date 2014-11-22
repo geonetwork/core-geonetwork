@@ -1776,8 +1776,10 @@ public class SchemaManager {
         Files.createDirectories(schemasDir);
 
 		Path webAppDirSchemaXSD = schemasDir.resolve(name);
-		IO.deleteFileOrDirectory(webAppDirSchemaXSD);
-        Files.createDirectories(webAppDirSchemaXSD);
+		IO.deleteFileOrDirectory(webAppDirSchemaXSD, true);
+        if (!Files.exists(webAppDirSchemaXSD)) {
+            Files.createDirectories(webAppDirSchemaXSD);
+        }
 
 		// copy all XSDs from schema plugin dir to webapp schema dir
 

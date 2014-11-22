@@ -66,7 +66,7 @@ public class Summary {
             if (!link.isEmpty()) {
 
                 linksHtml.append('\n');
-                linksHtml.append("    <div class=\"summary-links-").append(link.getName()).append("\" >");
+                linksHtml.append("    <div class=\"").append(LinkBlock.CSS_CLASS_PREFIX).append(link.getName()).append("\" >");
                 linksHtml.append("      <h3>\n");
                 linksHtml.append("        <button type=\"button\" class=\"btn btn-default toggler\">\n");
                 linksHtml.append("            <i class=\"fa fa-arrow-circle-down\"></i>\n");

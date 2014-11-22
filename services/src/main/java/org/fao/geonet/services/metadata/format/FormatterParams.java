@@ -42,10 +42,9 @@ public class FormatterParams {
         if (formatterInSchemaPlugin) {
             schemaParam = Params.SCHEMA + "=" + schema + "&";
         }
-        String resourceUrl = getLocUrl() + "/md.formatter.resource?" + schemaParam +
-                             Params.ID + "=" + xslid + "&" + Params.FNAME + "=";
 
-        return resourceUrl;
+        return getLocUrl() + "/md.formatter.resource?" + schemaParam +
+                             Params.ID + "=" + xslid + "&" + Params.FNAME + "=";
     }
 
     public String getLocUrl() {

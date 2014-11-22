@@ -29,6 +29,7 @@ import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
+import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
@@ -203,14 +204,17 @@ public class GetRelated implements Service, RelatedMetadata {
         Path relatedXsl = dataDirectory.getWebappDir().resolve("xsl/metadata/relation.xsl");
 
         final Element transform = Xml.transform(raw, relatedXsl);
+        final String acceptContentType = request.getHeader("Accept");
 
         byte[] response;
         String contentType;
-        if (request.getContentType() == null || request.getContentType().contains("xml")) {
-            response = Xml.getString(transform).getBytes(request.getCharacterEncoding());
+        if (acceptContentType == null ||
+            acceptContentType.contains("xml")||
+            acceptContentType.equalsIgnoreCase("text/plain")) {
+            response = Xml.getString(transform).getBytes(Constants.CHARSET);
             contentType = "application/xml";
-        } else if (request.getContentType().contains("json")) {
-            response = Xml.getJSON(transform).getBytes(request.getCharacterEncoding());
+        } else if (acceptContentType.contains("json")) {
+            response = Xml.getJSON(transform).getBytes(Constants.CHARSET);
             contentType = "application/json";
         } else {
             throw new IllegalArgumentException(request.getContentType() + " is not supported");

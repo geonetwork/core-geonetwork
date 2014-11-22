@@ -10,6 +10,7 @@ import java.io.IOException;
  * @author Jesse on 11/20/2014.
  */
 public abstract class LinkBlock {
+    public static String CSS_CLASS_PREFIX = "summary-links-";
     /**
      * The translation key for the name of this section.
      */

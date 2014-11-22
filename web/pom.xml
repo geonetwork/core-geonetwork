@@ -590,7 +590,7 @@
       <plugin> 
         <groupId>org.codehaus.mojo</groupId> 
         <artifactId>buildnumber-maven-plugin</artifactId> 
-        <version>1.0</version> 
+        <version>1.3</version>
         <executions> 
           <execution> 
             <phase>validate</phase> 
@@ -602,7 +602,8 @@
         <configuration> 
           <timestampFormat>{0,date,MM/dd/yyyy hh:mm:ss a}</timestampFormat> 
           <doCheck>false</doCheck> 
-          <doUpdate>false</doUpdate> 
+          <doUpdate>false</doUpdate>
+          <revisionOnScmFailure>true</revisionOnScmFailure>
         </configuration> 
       </plugin>
 

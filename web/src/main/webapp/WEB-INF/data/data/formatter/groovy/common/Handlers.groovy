@@ -135,6 +135,7 @@ public class Handlers {
 <head lang="en">
     <meta charset="UTF-8"/>
     <link rel="stylesheet" href="../../static/metadata_formatter.css"/>
+    <script src="../../static/lib.js"></script>
 </head>
 <body>
 <div class="container gn-metadata-view">
@@ -149,7 +150,6 @@ public class Handlers {
         if (func.isHtmlOutput()) {
             return '''
 </div>
-<script src="../../static/lib.js"></script>
 <script>
     $('.toggler').on('click', function() {
         $(this).toggleClass('closed');
