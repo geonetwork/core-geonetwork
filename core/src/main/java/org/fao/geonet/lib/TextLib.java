@@ -26,18 +26,16 @@ package org.fao.geonet.lib;
 import jeeves.server.overrides.ConfigurationOverrides;
 import org.fao.geonet.Util;
 
-import javax.servlet.ServletContext;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import javax.servlet.ServletContext;
 
 //=============================================================================
 
@@ -51,37 +49,28 @@ public class TextLib
 	//---
 	//---------------------------------------------------------------------------
 
-	public List<String> load(ServletContext servletContext, String appPath, String file) throws FileNotFoundException, IOException
+	public List<String> load(ServletContext servletContext, Path appPath, Path file) throws IOException
 	{
 		return load(servletContext, appPath, file, "ISO-8859-1");
 	}
 
-	public List<String> load(ServletContext servletContext, String appPath, String file, String encoding) throws FileNotFoundException, IOException
+	public List<String> load(ServletContext servletContext, Path appPath, Path file, String encoding) throws IOException
 	{
-		FileInputStream is = new FileInputStream(file);
-		BufferedReader  ir = new BufferedReader(new InputStreamReader(is, encoding));
+        BufferedReader ir = Files.newBufferedReader(file, Charset.forName(encoding));
 
-		return ConfigurationOverrides.DEFAULT.loadTextFileAndUpdate(file, servletContext, appPath, ir);
+		return ConfigurationOverrides.DEFAULT.loadTextFileAndUpdate(file.toString(), servletContext, appPath, ir);
 	}
 	
 	//---------------------------------------------------------------------------
 
-	public void save(String file, List<String> lines) throws FileNotFoundException, IOException
+	public void save(Path file, List<String> lines) throws IOException
 	{
-		FileOutputStream os = new FileOutputStream(file);
-		BufferedWriter   ow = new BufferedWriter(new OutputStreamWriter(os, "ISO-8859-1"));
-
-		try
-		{
+		try (BufferedWriter ow = Files.newBufferedWriter(file, Charset.forName("ISO-8859-1"))) {
 			for (String line : lines)
 			{
 				ow.write(line);
 				ow.newLine();
 			}
-		}
-		finally
-		{
-			ow.close();
 		}
 	}
 

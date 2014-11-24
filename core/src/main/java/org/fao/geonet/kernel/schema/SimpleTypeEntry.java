@@ -30,6 +30,7 @@ package org.fao.geonet.kernel.schema;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +52,7 @@ class SimpleTypeEntry extends BaseHandler
 	//---
 	//---------------------------------------------------------------------------
 
-	public SimpleTypeEntry(Element el, String file, String targetNS, String targetNSPrefix)
+	public SimpleTypeEntry(Element el, Path file, String targetNS, String targetNSPrefix)
 	{
 		this(new ElementInfo(el, file, targetNS, targetNSPrefix));
 	}

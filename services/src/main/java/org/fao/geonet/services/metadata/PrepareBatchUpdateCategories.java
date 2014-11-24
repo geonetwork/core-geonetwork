@@ -31,6 +31,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.List;
 
 //=============================================================================
@@ -46,7 +47,7 @@ public class PrepareBatchUpdateCategories implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

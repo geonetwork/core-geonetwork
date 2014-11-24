@@ -23,29 +23,30 @@
 
 package org.fao.geonet.services.resources;
 
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.exceptions.BadParameterEx;
-import org.fao.geonet.exceptions.ResourceNotFoundEx;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.services.resources.handlers.IResourceDownloadHandler;
-import org.fao.geonet.Util;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.ResourceNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.services.Utils;
+import org.fao.geonet.services.resources.handlers.IResourceDownloadHandler;
 import org.fao.geonet.util.MailSender;
 import org.jdom.Element;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 //=============================================================================
@@ -61,7 +62,7 @@ public class Download implements Service
 	//---
 	//-----------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//-----------------------------------------------------------------------------
 	//---
@@ -88,12 +89,12 @@ public class Download implements Service
 		}
 
 		// Build the response
-		File dir = new File(Lib.resource.getDir(context, access, id));
-		File file= new File(dir, fname);
+		Path dir = Lib.resource.getDir(context, access, id);
+		Path file= dir.resolve(fname);
 
 		context.info("File is : " +file);
 
-		if (!file.exists())
+		if (!Files.exists(file))
 			throw new ResourceNotFoundEx(fname);
 
 		GeonetContext  gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -114,11 +115,11 @@ public class Download implements Service
 
 			String fromDescr = "GeoNetwork administrator";
 
-			if (host.trim().length() == 0 || from.trim().length() == 0)
-                if(context.isDebugEnabled())
+			if (host.trim().length() == 0 || from.trim().length() == 0) {
+                if (context.isDebugEnabled()) {
                     context.debug("Skipping email notification");
-			else
-			{
+                }
+            } else {
                 if(context.isDebugEnabled()) {
                     context.debug("Sending email notification for file : "+ file);
                 }
@@ -163,7 +164,7 @@ public class Download implements Service
 		}
 
         IResourceDownloadHandler downloadHook = (IResourceDownloadHandler) context.getApplicationContext().getBean("resourceDownloadHandler");
-        return downloadHook.onDownload(context, params, Integer.parseInt(id), fname, file);
+        return downloadHook.onDownload(context, params, Integer.parseInt(id), fname, file).getElement();
 	}
 }
 

@@ -254,12 +254,13 @@ USA.
             <!-- Check that INSPIRE theme are available.
                 Use INSPIRE thesaurus available on SVN to check keywords in all EU languages.
             -->
-            <sch:let name="inspire-thesaurus" value="document(concat('file:///', $thesaurusDir, '/external/thesauri/theme/inspire-theme.rdf'))"/>
+            <sch:let name="thesaurusURL" value="concat('file:///', $thesaurusDir, '/external/thesauri/theme/inspire-theme.rdf')"/>
+            <sch:let name="inspire-thesaurus" value="document($thesaurusURL)"/>
             <sch:let name="inspire-theme" value="$inspire-thesaurus//skos:Concept"/>
 
             <!-- Display error if INSPIRE Theme thesaurus is not available. -->
             <sch:assert test="count($inspire-theme) > 0">
-                INSPIRE Theme thesaurus not found. Check installation in codelist/external/thesauri/theme.
+                INSPIRE Theme thesaurus not found (at <sch:value-of select="$thesaurusURL" />. Check installation in codelist/external/thesauri/theme.
                 Download thesaurus from https://geonetwork.svn.sourceforge.net/svnroot/geonetwork/utilities/gemet/thesauri/.
             </sch:assert>
 

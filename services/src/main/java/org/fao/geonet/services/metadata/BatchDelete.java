@@ -23,6 +23,7 @@
 
 package org.fao.geonet.services.metadata;
 
+import com.google.common.collect.Sets;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
@@ -39,19 +40,18 @@ import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.util.FileCopyMgr;
+import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 /**
  * Removes a metadata from the system.
  */
 public class BatchDelete extends BackupFileService {
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
 
@@ -67,59 +67,55 @@ public class BatchDelete extends BackupFileService {
 		AccessManager accessMan = gc.getBean(AccessManager.class);
 		UserSession   session   = context.getUserSession();
 
-		Set<Integer> metadata = new HashSet<Integer>();
-		Set<Integer> notFound = new HashSet<Integer>();
-		Set<Integer> notOwner = new HashSet<Integer>();
+		Set<String> metadata = new HashSet<>();
+		Set<String> notFound = new HashSet<>();
+		Set<String> notOwner = new HashSet<>();
         boolean backupFile = Util.getParam(params, Params.BACKUP_FILE, true);
 
-        if(context.isDebugEnabled())
+        if(context.isDebugEnabled()) {
             context.debug("Get selected metadata");
+        }
 		SelectionManager sm = SelectionManager.getManager(session);
+        final Set<String> selection;
+        synchronized(sm.getSelection(SelectionManager.SELECTION_METADATA)) {
+            selection = Sets.newHashSet(sm.getSelection(SelectionManager.SELECTION_METADATA));
 
-		synchronized(sm.getSelection("metadata")) {
-		for (Iterator<String> iter = sm.getSelection("metadata").iterator(); iter.hasNext();) {
-			String uuid = (String) iter.next();
-            if(context.isDebugEnabled())
-                context.debug("Deleting metadata with uuid:"+ uuid);
+            // Clear the selection after delete
+            Element clearSelectionParams = params.addContent(new Element("selected").setText(SelectionManager.REMOVE_ALL_SELECTED));
+            SelectionManager.updateSelection("metadata", session, clearSelectionParams, context);
+        }
 
-			String id   = dataMan.getMetadataId(uuid);
-			//--- Metadata may have been deleted since selection
-			if (id != null) {
-				//-----------------------------------------------------------------------
-				//--- check access
-	
-				Metadata info = context.getBean(MetadataRepository.class).findOne(id);
-	
-				if (info == null) {
-					notFound.add(Integer.valueOf(id));
-				} else if (!accessMan.isOwner(context, id)) {
-					notOwner.add(Integer.valueOf(id));
-				} else {
-	
-					//--- backup metadata in 'removed' folder
-					if (backupFile && info.getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
-						backupFile(context, id, info.getUuid(), MEFLib.doExport(context, info.getUuid(), "full", false, true, false));
-					}
-			
-					//--- remove the metadata directory
-					File pb = new File(Lib.resource.getMetadataDir(context, id));
-					FileCopyMgr.removeDirectoryOrFile(pb);
-	
-					//--- delete metadata and return status
-					dataMan.deleteMetadata(context, id);
-                    if(context.isDebugEnabled())
-                        context.debug("  Metadata with id " + id + " deleted.");
-					metadata.add(Integer.valueOf(id));
-				}
-			} else
-            if(context.isDebugEnabled())
-                context.debug("  Metadata not found in db:"+ uuid);
-				// TODO : add to notFound set
-			}
-		}
-		// Clear the selection after delete
-		SelectionManager.updateSelection("metadata", session, params.addContent(new Element("selected").setText("remove-all")), context);
-		
+        final MetadataRepository metadataRepository = context.getBean(MetadataRepository.class);
+        for (String uuid : selection) {
+            if (context.isDebugEnabled()) {
+                context.debug("Deleting metadata with uuid:" + uuid);
+            }
+
+            Metadata info = metadataRepository.findOneByUuid(uuid);
+            if (info == null) {
+                notFound.add(uuid);
+            } else if (!accessMan.isOwner(context, String.valueOf(info.getId()))) {
+                notOwner.add(uuid);
+            } else {
+                String idString = String.valueOf(info.getId());
+
+                //--- backup metadata in 'removed' folder
+                if (backupFile && info.getDataInfo().getType() != MetadataType.SUB_TEMPLATE) {
+                    backupFile(context, idString, info.getUuid(), MEFLib.doExport(context, info.getUuid(), "full", false, true, false));
+                }
+
+                //--- remove the metadata directory
+                Path pb = Lib.resource.getMetadataDir(context, idString);
+                IO.deleteFileOrDirectory(pb);
+
+                //--- delete metadata and return status
+                dataMan.deleteMetadata(context, idString);
+                if (context.isDebugEnabled())
+                    context.debug("  Metadata with id " + idString + " deleted.");
+                metadata.add(uuid);
+            }
+        }
+
 		// -- for the moment just return the sizes - we could return the ids
 		// -- at a later stage for some sort of result display
 		return new Element(Jeeves.Elem.RESPONSE)

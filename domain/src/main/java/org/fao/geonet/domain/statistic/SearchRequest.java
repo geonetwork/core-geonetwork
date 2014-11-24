@@ -5,9 +5,23 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.entitylistener.SearchRequestEntityListenerManager;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.AttributeOverride;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 /**
  * An entity representing a search request that was made by a user. This is part of the statistics tracing.
@@ -81,9 +95,11 @@ public class SearchRequest {
      * Set the parameters object associated with this request entity.
      *
      * @param params the parameters object associated with this request entity.
+     * @return this SearchRequest object
      */
-    public void setParams(List<SearchRequestParam> params) {
+    public SearchRequest setParams(List<SearchRequestParam> params) {
         this._params = params;
+        return this;
     }
 
     /**
@@ -100,9 +116,11 @@ public class SearchRequest {
      * Set the date and time that the request was executed.
      *
      * @param requestDate the date and time that the request was executed.
+     * @return this SearchRequest object
      */
-    public void setRequestDate(ISODate requestDate) {
+    public SearchRequest setRequestDate(ISODate requestDate) {
         this._requestDate = requestDate;
+        return this;
     }
 
     /**
@@ -119,9 +137,11 @@ public class SearchRequest {
      * Set the IP address of the requester.
      *
      * @param ipAddress the IP address of the requester.
+     * @return this SearchRequest object
      */
-    public void setIpAddress(String ipAddress) {
+    public SearchRequest setIpAddress(String ipAddress) {
         this._ipAddress = ipAddress;
+        return this;
     }
 
     /**
@@ -140,9 +160,11 @@ public class SearchRequest {
      * Set the search query data sent by the user. The query should be a lucene query in string form.
      *
      * @param luceneQuery the query data sent by the user. The query should be a lucene query in string form.
+     * @return this SearchRequest object
      */
-    public void setLuceneQuery(String luceneQuery) {
+    public SearchRequest setLuceneQuery(String luceneQuery) {
         this._luceneQuery = luceneQuery;
+        return this;
     }
 
     /**
@@ -159,9 +181,11 @@ public class SearchRequest {
      * Set the number of hits (metadata elements found by query).
      *
      * @param hits the number of hits (metadata elements found by query).
+     * @return this SearchRequest object
      */
-    public void setHits(int hits) {
+    public SearchRequest setHits(int hits) {
         this._hits = hits;
+        return this;
     }
 
     /**
@@ -178,9 +202,11 @@ public class SearchRequest {
      * The language the search was made in.
      *
      * @param lang the language the search was made in.
+     * @return this SearchRequest object
      */
-    public void setLang(String lang) {
+    public SearchRequest setLang(String lang) {
         this._lang = lang;
+        return this;
     }
 
     /**
@@ -197,9 +223,11 @@ public class SearchRequest {
      * Set the sortby parameter used in the request.
      *
      * @param sortBy the sortby parameter used in the request.
+     * @return this SearchRequest object
      */
-    public void setSortBy(String sortBy) {
+    public SearchRequest setSortBy(String sortBy) {
         this._sortBy = sortBy;
+        return this;
     }
 
     /**
@@ -218,9 +246,11 @@ public class SearchRequest {
      * Set the spatial filter used to further refine the search. The value is in OGC filter spec XML.
      *
      * @param spatialFilter the spatial filter used to further refine the search. The value is in OGC filter spec XML.
+     * @return this SearchRequest object
      */
-    public void setSpatialFilter(String spatialFilter) {
+    public SearchRequest setSpatialFilter(String spatialFilter) {
         this._spatialFilter = spatialFilter;
+        return this;
     }
 
     /**
@@ -239,9 +269,11 @@ public class SearchRequest {
      * Set the type of metadata requested.
      *
      * @param type the type of metadata requested.
+     * @return this SearchRequest object
      */
-    public void setMetadataType(String type) {
+    public SearchRequest setMetadataType(String type) {
         this._metadataType = type;
+        return this;
     }
 
     /**
@@ -257,9 +289,11 @@ public class SearchRequest {
      * Set the service used to make the request.
      *
      * @param service the service used to make the request.
+     * @return this SearchRequest object
      */
-    public void setService(String service) {
+    public SearchRequest setService(String service) {
         this._service = service;
+        return this;
     }
 
     /**
@@ -284,9 +318,11 @@ public class SearchRequest {
      * (any, type, _isTemplate, _locale, _owner, _op*) then its an advanced query
      *
      * @param simple true if query is a simple query
+     * @return this SearchRequest object
      */
-    public void setSimple(boolean simple) {
+    public SearchRequest setSimple(boolean simple) {
         this._simple = simple;
+        return this;
     }
 
     /**
@@ -306,9 +342,12 @@ public class SearchRequest {
      *
      * @param autogenerated true if the query was not made by a client but rather by the system itself, for example
      *                      by a guiservice.
+     *
+     * @return this SearchRequest object
      */
-    public void setAutogenerated(boolean autogenerated) {
+    public SearchRequest setAutogenerated(boolean autogenerated) {
         this._autogenerated = autogenerated;
+        return this;
     }
 
     /**

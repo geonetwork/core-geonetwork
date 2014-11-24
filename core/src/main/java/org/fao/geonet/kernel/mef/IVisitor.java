@@ -28,6 +28,7 @@ import org.jdom.Element;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 
 /**
  * Register XML or binary file to process.
@@ -37,12 +38,12 @@ public interface IVisitor
 	/**
 	 * Register XML or binary file to process.
 	 */
-	public void visit(File mefFile, IMEFVisitor v) throws Exception;
+	public void visit(Path mefFile, IMEFVisitor v) throws Exception;
 
 	/**
 	 * Register XML files.
 	 */
-	public Element handleXml(File mefFile, IMEFVisitor v) throws Exception ;
+	public Element handleXml(Path mefFile, IMEFVisitor v) throws Exception ;
 
 	/**
 	 * Register binary file.
@@ -53,7 +54,7 @@ public interface IVisitor
 	 * @param index			the index to store the results
 	 * @throws Exception
 	 */
-	public void handleBin(File mefFile, IMEFVisitor v, Element info, int index) throws Exception ;
+	public void handleBin(Path mefFile, IMEFVisitor v, Element info, int index) throws Exception ;
 
 }
 

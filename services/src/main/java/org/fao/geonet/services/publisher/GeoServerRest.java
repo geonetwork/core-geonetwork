@@ -24,28 +24,32 @@ package org.fao.geonet.services.publisher;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.auth.AuthenticationException;
-import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
-import org.fao.geonet.utils.GeonetHttpRequestFactory;
-import org.fao.geonet.utils.Log;
+import org.apache.http.impl.auth.BasicScheme;
 import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.util.Xml;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.http.client.ClientHttpResponse;
 
-import javax.annotation.CheckReturnValue;
-
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import javax.annotation.CheckReturnValue;
 
 /**
  * This class uses GeoServer's management REST APIs for creating, updating and
@@ -173,10 +177,10 @@ public class GeoServerRest {
 	 * @return
 	 * @throws java.io.IOException
 	 */
-	public boolean createCoverage(String ws, String cs, File f, String metadataUuid, String metadataTitle, String metadataAbstract)
+	public boolean createCoverage(String ws, String cs, Path f, String metadataUuid, String metadataTitle, String metadataAbstract)
 			throws IOException {
 		String contentType = "image/tiff";
-		if (f.getName().toLowerCase().endsWith(".zip")) {
+		if (f.getFileName().toString().toLowerCase().endsWith(".zip")) {
 			contentType = "application/zip";
 		}
 		int status = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
@@ -280,7 +284,7 @@ public class GeoServerRest {
 	 * @return
 	 * @throws java.io.IOException
 	 */
-	public boolean createCoverage(String cs, File f, String metadataUuid, String metadataTitle, String metadataAbstract) throws IOException {
+	public boolean createCoverage(String cs, Path f, String metadataUuid, String metadataTitle, String metadataAbstract) throws IOException {
 		// TODO : check default workspace is not null ?
 		return createCoverage(getDefaultWorkspace(), cs, f, metadataUuid, metadataTitle, metadataAbstract);
 	}
@@ -306,7 +310,7 @@ public class GeoServerRest {
 	 * @return
 	 * @throws java.io.IOException
 	 */
-	public boolean updateCoverage(String ws, String ds, File f, String metadataUuid, String metadataTitle, String metadataAbstract)
+	public boolean updateCoverage(String ws, String ds, Path f, String metadataUuid, String metadataTitle, String metadataAbstract)
 			throws IOException {
 		return createCoverage(ws, ds, f, metadataUuid, metadataTitle, metadataAbstract);
 	}
@@ -317,7 +321,7 @@ public class GeoServerRest {
 	 * @return
 	 * @throws java.io.IOException
 	 */
-	public boolean updateCoverage(String ds, File f, String metadataUuid, String metadataTitle, String metadataAbstract) throws IOException {
+	public boolean updateCoverage(String ds, Path f, String metadataUuid, String metadataTitle, String metadataAbstract) throws IOException {
 		return createCoverage(getDefaultWorkspace(), ds, f, metadataUuid, metadataTitle, metadataAbstract);
 	}
 
@@ -366,7 +370,7 @@ public class GeoServerRest {
 	 * @return
 	 * @throws java.io.IOException
 	 */
-	public boolean createDatastore(String ws, String ds, File f,
+	public boolean createDatastore(String ws, String ds, Path f,
 			boolean createStyle) throws IOException {
 		int status = sendREST(GeoServerRest.METHOD_PUT, "/workspaces/" + ws
 				+ "/datastores/" + ds + "/file.shp", null, f,
@@ -409,7 +413,7 @@ public class GeoServerRest {
 	 * @return
 	 * @throws java.io.IOException
 	 */
-	public boolean createDatastore(String ds, File f, boolean createStyle)
+	public boolean createDatastore(String ds, Path f, boolean createStyle)
 			throws IOException {
 		return createDatastore(getDefaultWorkspace(), ds, f, createStyle);
 	}
@@ -649,7 +653,7 @@ public class GeoServerRest {
 	 * @throws java.io.IOException
 	 */
 	public @CheckReturnValue int sendREST(String method, String urlParams, String postData,
-			File file, String contentType, Boolean saveResponse)
+			Path file, String contentType, Boolean saveResponse)
 			throws IOException {
 
 		response = "";
@@ -664,7 +668,8 @@ public class GeoServerRest {
 		if (method.equals(METHOD_PUT)) {
 			m = new HttpPut(url);
 			if (file != null) {
-                ((HttpPut) m).setEntity(new FileEntity(file));
+                ((HttpPut) m).setEntity(new InputStreamEntity(Files.newInputStream(file), Files.size(file),
+                        ContentType.create(contentType, Constants.ENCODING)));
 			}
 
 			if (postData != null) {

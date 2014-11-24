@@ -1,6 +1,5 @@
 package org.fao.geonet.kernel.mef;
 
-import com.google.common.base.Optional;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.Pair;
@@ -8,9 +7,7 @@ import org.fao.geonet.kernel.GeonetworkExtension;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import java.io.InputStream;
-import java.util.Iterator;
-import java.util.List;
+import java.nio.file.Path;
 
 /**
  * An extension point called to create files to export as part of the MEF export.
@@ -40,7 +37,7 @@ public abstract class ExportFormat implements GeonetworkExtension {
      * @return ByteArrayInputStream
      * @throws Exception
      */
-    public static String formatData(Metadata metadata, boolean transform, String stylePath) throws Exception {
+    public static String formatData(Metadata metadata, boolean transform, Path stylePath) throws Exception {
         String xmlData = metadata.getData();
 
         Element md = Xml.loadString(xmlData, false);

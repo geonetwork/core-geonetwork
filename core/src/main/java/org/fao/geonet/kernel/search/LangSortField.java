@@ -4,14 +4,12 @@ import bak.pcj.map.MapDefaults;
 import bak.pcj.map.ObjectKeyByteChainedHashMap;
 import bak.pcj.map.ObjectKeyByteMap;
 import bak.pcj.map.ObjectKeyByteMapIterator;
-
 import org.apache.lucene.index.AtomicReaderContext;
 import org.apache.lucene.index.SortedDocValues;
 import org.apache.lucene.search.FieldCache;
 import org.apache.lucene.search.FieldComparator;
 import org.apache.lucene.search.FieldComparatorSource;
 import org.apache.lucene.search.SortField;
-import org.apache.lucene.util.BytesRef;
 
 import java.io.IOException;
 
@@ -99,9 +97,7 @@ public class LangSortField extends SortField {
             	//Using default 0 instead of throwing an error
             	ord = 0;
             }
-            
-            System.out.println(ord + " -> " + currentReaderValues.lookupOrd(ord).utf8ToString());
-            
+
             return currentReaderValues.lookupOrd(ord).utf8ToString();
         }
 

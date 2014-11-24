@@ -147,7 +147,7 @@
 
               // mode can be 'url' or 'upload'
               scope.mode = 'url';
-              scope.action = 'md.thumbnail.upload@json';
+              scope.action = 'md.thumbnail.upload';
 
               // the form params that will be submited
               scope.params = {};

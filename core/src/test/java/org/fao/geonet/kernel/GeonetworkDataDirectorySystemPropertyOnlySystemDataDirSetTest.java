@@ -2,9 +2,8 @@ package org.fao.geonet.kernel;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 
-import java.io.File;
+import java.nio.file.Path;
 
 /**
  * Test the logic of calculating the Geonetwork data directories when the node id is the default and the system data directory
@@ -19,7 +18,7 @@ public class GeonetworkDataDirectorySystemPropertyOnlySystemDataDirSetTest exten
 
     @Before
     public void setSystemProperties() {
-        System.setProperty(GeonetworkDataDirectory.GEONETWORK_DIR_KEY, getDataDir());
+        System.setProperty(GeonetworkDataDirectory.GEONETWORK_DIR_KEY, getDataDir().toString());
     }
 
     @After
@@ -31,8 +30,8 @@ public class GeonetworkDataDirectorySystemPropertyOnlySystemDataDirSetTest exten
      * Get The expected data directory
      */
     @Override
-    protected String getDataDir() {
-        return new File(_dataDirContainer, "nonDefaultDataDir").getAbsolutePath() + File.separator;
+    protected Path getDataDir() {
+        return testFixture.getDataDirContainer().resolve("nonDefaultDataDir").toAbsolutePath().normalize();
     }
 
 

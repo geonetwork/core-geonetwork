@@ -29,6 +29,8 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 //=============================================================================
 
 public class SearchResult implements Service
@@ -39,7 +41,7 @@ public class SearchResult implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig config) throws Exception
+	public void init(Path appPath, ServiceConfig config) throws Exception
 	{
 		search.init(appPath, config);
 		result.init(appPath, config);

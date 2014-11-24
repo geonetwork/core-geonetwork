@@ -31,12 +31,14 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 /**
  * Returns the list of selected keywords 
  */
 
 public class GetSelectedKeywords implements Service {
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
 
 	// --------------------------------------------------------------------------

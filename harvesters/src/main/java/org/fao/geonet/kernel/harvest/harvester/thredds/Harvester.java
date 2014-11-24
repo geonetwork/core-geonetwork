@@ -42,7 +42,13 @@ import org.fao.geonet.exceptions.BadXmlResponseEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.harvest.BaseAligner;
-import org.fao.geonet.kernel.harvest.harvester.*;
+import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
+import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestError;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
+import org.fao.geonet.kernel.harvest.harvester.IHarvester;
+import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
+import org.fao.geonet.kernel.harvest.harvester.UriMapper;
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester;
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.FragmentParams;
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.HarvestSummary;
@@ -50,14 +56,22 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.Updater;
-import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.util.Sha1Encoder;
+import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
-import thredds.catalog.*;
+import thredds.catalog.InvAccess;
+import thredds.catalog.InvCatalogFactory;
+import thredds.catalog.InvCatalogImpl;
+import thredds.catalog.InvCatalogRef;
+import thredds.catalog.InvDataset;
+import thredds.catalog.InvMetadata;
+import thredds.catalog.InvService;
+import thredds.catalog.ServiceType;
+import thredds.catalog.ThreddsMetadata;
 import thredds.catalog.dl.DIFWriter;
 import ucar.nc2.Attribute;
 import ucar.nc2.dataset.NetcdfDataset;
@@ -66,8 +80,6 @@ import ucar.nc2.ncml.NcMLWriter;
 import ucar.nc2.units.DateType;
 import ucar.unidata.util.StringUtil;
 
-import javax.annotation.Nonnull;
-import javax.net.ssl.SSLHandshakeException;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -76,9 +88,18 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Nonnull;
+import javax.net.ssl.SSLHandshakeException;
 
 //=============================================================================
 /** 
@@ -310,7 +331,9 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 
 		//--- display catalog read in log file
 		log.info("Catalog read from "+params.url+" is \n"+factory.writeXML(catalog));
-		String serviceStyleSheet = context.getAppPath() + Geonet.Path.IMPORT_STYLESHEETS + "/ThreddsCatalog-to-ISO19119_ISO19139.xsl"; 
+		Path serviceStyleSheet = context.getAppPath().
+                resolve(Geonet.Path.IMPORT_STYLESHEETS).
+                resolve("ThreddsCatalog-to-ISO19119_ISO19139.xsl");
 
 		//--- Get base host url
 	    URL url = new URL(params.url);
@@ -617,10 +640,10 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 			//--- Create fragments using provided stylesheet
 
 			String schema = ds.hasNestedDatasets() ? params.outputSchemaOnCollectionsFragments : params.outputSchemaOnAtomicsFragments;
-			fragmentStylesheetDirectory = schemaMan.getSchemaDir(schema) + Geonet.Path.TDS_STYLESHEETS;
+			fragmentStylesheetDirectory = schemaMan.getSchemaDir(schema).resolve(Geonet.Path.TDS_STYLESHEETS);
 			String stylesheet = ds.hasNestedDatasets() ? params.collectionFragmentStylesheet : params.atomicFragmentStylesheet;
 
-			Element fragments = Xml.transform(dsMetadata, fragmentStylesheetDirectory + "/" + stylesheet);
+			Element fragments = Xml.transform(dsMetadata, fragmentStylesheetDirectory.resolve(stylesheet));
             if(log.isDebugEnabled()) log.debug("Fragments generated for dataset:"+Xml.getString(fragments));
 			
 			//--- remove any previously harvested metadata/sub-templates
@@ -748,11 +771,15 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 			//--- supplied to the user for choice)
 			Element md = null;
 			if (isCollection) {
-				String difToIsoStyleSheet = schemaMan.getSchemaDir(params.outputSchemaOnCollectionsDIF) + Geonet.Path.DIF_STYLESHEETS + "/DIFToISO.xsl";
+				Path difToIsoStyleSheet = schemaMan.getSchemaDir(params.outputSchemaOnCollectionsDIF).
+                        resolve(Geonet.Path.DIF_STYLESHEETS).
+                        resolve("DIFToISO.xsl");
 				log.info("Transforming collection dataset to "+params.outputSchemaOnCollectionsDIF);
 				md = Xml.transform(dif, difToIsoStyleSheet);
 			} else {
-				String difToIsoStyleSheet = schemaMan.getSchemaDir(params.outputSchemaOnAtomicsDIF) + Geonet.Path.DIF_STYLESHEETS + "/DIFToISO.xsl";
+				Path difToIsoStyleSheet = schemaMan.getSchemaDir(params.outputSchemaOnAtomicsDIF).
+                        resolve(Geonet.Path.DIF_STYLESHEETS).
+                        resolve("DIFToISO.xsl");
 				log.info("Transforming atomic dataset to "+params.outputSchemaOnAtomicsDIF);
 				md = Xml.transform(dif, difToIsoStyleSheet);
 			}
@@ -872,20 +899,22 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 	 */
 	private void setCoordsStyleSheet(boolean isCollection) {
 
-		String schemaDir;
+		Path schemaDir;
 		if (!isCollection) {
 			schemaDir = schemaMan.getSchemaDir(params.outputSchemaOnAtomicsDIF);
 		} else {
 			schemaDir = schemaMan.getSchemaDir(params.outputSchemaOnCollectionsDIF);
 		}
 
-		cdmCoordsToIsoKeywordsStyleSheet = schemaDir + Geonet.Path.DIF_STYLESHEETS + "/CDMCoords-to-ISO19139Keywords.xsl";
+		cdmCoordsToIsoKeywordsStyleSheet = schemaDir.resolve(Geonet.Path.DIF_STYLESHEETS).
+                resolve("CDMCoords-to-ISO19139Keywords.xsl");
 
 		// -- FIXME: This is still schema dependent and needs to be improved
 		// -- What we wait upon is finalization of the new coverage data parameters
 		// -- metadata elements (inside MD_ContentInformation) in ISO19115/19139
-		if (schemaDir.contains("iso19139.mcp")) {
-			cdmCoordsToIsoMcpDataParametersStyleSheet = schemaDir + Geonet.Path.DIF_STYLESHEETS + "/CDMCoords-to-ISO19139MCPDataParameters.xsl";
+		if (schemaDir.toString().contains("iso19139.mcp")) {
+			cdmCoordsToIsoMcpDataParametersStyleSheet = schemaDir.resolve(Geonet.Path.DIF_STYLESHEETS).
+                    resolve("/CDMCoords-to-ISO19139MCPDataParameters.xsl");
 		} else {
 			cdmCoordsToIsoMcpDataParametersStyleSheet = null;
 		}
@@ -1053,7 +1082,7 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 	 * @param	serviceStyleSheet	name of the stylesheet to produce 19119
 	 **/
 	
-	private void processServices(Element cata, String serviceStyleSheet) throws Exception {
+	private void processServices(Element cata, Path serviceStyleSheet) throws Exception {
 
 		for (String sUrl : services.keySet()) {
 		
@@ -1323,11 +1352,11 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 	private HarvestResult  result;
 	private String         hostUrl;
 	private HashSet<String> harvestUris = new HashSet<String>();
-	private String				 cdmCoordsToIsoKeywordsStyleSheet; 
-	private String				 cdmCoordsToIsoMcpDataParametersStyleSheet;
-	private String				 fragmentStylesheetDirectory;
-	private String	 			 metadataGetService;
-	private Map<String,ThreddsService> services = new HashMap<String, Harvester.ThreddsService>();
+    private Path cdmCoordsToIsoKeywordsStyleSheet;
+    private Path cdmCoordsToIsoMcpDataParametersStyleSheet;
+    private Path fragmentStylesheetDirectory;
+    private String metadataGetService;
+    private Map<String,ThreddsService> services = new HashMap<String, Harvester.ThreddsService>();
 	private InvCatalogImpl catalog;
 	
 	private FragmentHarvester atomicFragmentHarvester;

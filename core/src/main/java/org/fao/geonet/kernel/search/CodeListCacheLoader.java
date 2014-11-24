@@ -1,18 +1,18 @@
 package org.fao.geonet.kernel.search;
 
-import java.io.File;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
-
-import org.fao.geonet.utils.Xml;
-
-import org.fao.geonet.kernel.SchemaManager;
-import org.jdom.Element;
-import org.jdom.JDOMException;
 
 public final class CodeListCacheLoader implements Callable<Map<String, String>> {
     private final String langCode;
@@ -31,8 +31,8 @@ public final class CodeListCacheLoader implements Callable<Map<String, String>> 
         Set<String> schemas = schemaManager.getSchemas();
         for (String schema : schemas) {
             
-            String schemaDir = schemaManager.getSchemaDir(schema);
-            addCodeLists(codeListName, _codeList, new File(schemaDir + "/loc/" + langCode + "/codelists.xml"));
+            Path schemaDir = schemaManager.getSchemaDir(schema);
+            addCodeLists(codeListName, _codeList, schemaDir.resolve("loc").resolve(langCode).resolve("codelists.xml"));
         }
         return _codeList;
     }
@@ -42,8 +42,8 @@ public final class CodeListCacheLoader implements Callable<Map<String, String>> 
     }
 
     @SuppressWarnings("unchecked")
-    private void addCodeLists(String codeListName, Map<String, String> codeList, File file) throws IOException, JDOMException {
-        if (file.exists()) {
+    private void addCodeLists(String codeListName, Map<String, String> codeList, Path file) throws IOException, JDOMException {
+        if (Files.exists(file)) {
             Element xmlDoc = Xml.loadFile(file);
 
             List<Element> codelists = xmlDoc.getChildren("codelist");

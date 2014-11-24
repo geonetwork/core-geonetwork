@@ -165,7 +165,7 @@ public class LuceneIndexLanguageTracker {
 
 
             long finalVersion = versionToken;
-            Map<AcquireResult, GeonetworkNRTManager> searchers = new HashMap<AcquireResult, GeonetworkNRTManager>(
+            Map<AcquireResult, GeonetworkNRTManager> searchers = new HashMap<>(
                     (int) (searchManagers.size() * 1.5));
             IndexReader[] readers = new IndexReader[searchManagers.size()];
             int i = 1;

@@ -23,19 +23,23 @@
 
 package org.fao.geonet.kernel.mef;
 
-import org.fao.geonet.exceptions.BadFormatEx;
 import org.fao.geonet.Logger;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.BadFormatEx;
+import org.fao.geonet.ZipUtil;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.util.FileCopyMgr;
-import org.fao.geonet.util.ZipUtil;
 import org.jdom.Element;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Iterator;
 import java.util.List;
-import java.util.zip.ZipFile;
 
 import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
 
@@ -44,7 +48,7 @@ import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
  */
 public class MEF2Visitor implements IVisitor {
 
-	public void visit(File mefFile, IMEFVisitor v) throws Exception {
+	public void visit(Path mefFile, IMEFVisitor v) throws Exception {
 		handleXml(mefFile, v);
 	}
 
@@ -52,79 +56,71 @@ public class MEF2Visitor implements IVisitor {
 	 * Read the input MEF file and for each metadata found, check structure for
 	 * metadata.xml, info.xml and optional feature catalogue files.
 	 */
-	public Element handleXml(File mefFile, IMEFVisitor v) throws Exception {
+	public Element handleXml(Path mefFile, IMEFVisitor v) throws Exception {
 
-		Logger log = Log.createLogger(Geonet.MEF);
+        Logger log = Log.createLogger(Geonet.MEF);
 
-		int nbMetadata = 0;
-		Element fc;
+        int nbMetadata = 0;
+        Element fc;
 
-		Element info = new Element("info");
+        Element info = new Element("info");
 
-		File unzipDir = new File(mefFile.getParentFile(), "unzipping");
 
-		if (unzipDir.exists())
-            FileCopyMgr.removeDirectoryOrFile(unzipDir);
+        try (FileSystem zipFs = ZipUtil.openZipFs(mefFile)) {
+            Path root = zipFs.getRootDirectories().iterator().next();
+            // Get the metadata depth
+            if (IO.isEmptyDir(root)) {
+                log.debug("Metadata folder is directly under the unzip temporary folder.");
+            } else {
+                try (DirectoryStream<Path> paths = Files.newDirectoryStream(root)) {
+                    for (Path file : paths) {
+                        if (Files.isDirectory(file)) {
+                            // Handle metadata file
+                            Path metadataDir = file.resolve("metadata");
 
-		ZipUtil.extract(new ZipFile(mefFile), unzipDir);
+                            if (IO.isEmptyDir(metadataDir)) {
+                                throw new BadFormatEx(
+                                        "Missing XML document in metadata folder " + metadataDir + "in MEF file "
+                                        + mefFile + ".");
+                            }
 
-		// Get the metadata depth
-		File metadata = getMetadataDirectory(unzipDir);
+                            // Handle feature catalog
+                            Path fcFile = getFeatureCalalogFile(file);
+                            if (fcFile != null) {
+                                fc = Xml.loadFile(fcFile);
+                            } else {
+                                fc = null;
+                            }
 
-		if (metadata.getParentFile().equals(unzipDir)) {
-			log
-					.debug("Metadata folder is directly under the unzip temporary folder.");
-		} else {
-			File[] lstmdDir = metadata.getParentFile().getParentFile()
-					.listFiles();
-            for (File file : lstmdDir) {
-                if (file != null && file.isDirectory()) {
-                    // Handle metadata file
-                    File metadataDir = new File(file, "metadata");
+                            // Handle info file
+                            Path fileInfo = file.resolve(FILE_INFO);
+                            if (Files.exists(fileInfo)) {
+                                info = Xml.loadFile(fileInfo);
+                            }
 
-                    File[] xmlFiles = metadataDir.listFiles();
+                            try (DirectoryStream<Path> xmlFiles = Files.newDirectoryStream(metadataDir)) {
+                                v.handleMetadataFiles(xmlFiles, info, nbMetadata);
+                            }
+                            v.handleFeatureCat(fc, nbMetadata);
+                            v.handleInfo(info, nbMetadata);
 
-                    if (xmlFiles == null || xmlFiles.length < 1) {
-                        throw new BadFormatEx(
-                                "Missing XML document in metadata folder " + file.getName() + "/metadata in MEF file "
-                                        + mefFile.getName() + ".");
+                            // Handle binaries
+                            handleBin(file, v, info, nbMetadata);
+
+                            nbMetadata++;
+                        }
                     }
-
-                    // Handle feature catalog
-                    File fcFile = getFeatureCalalogFile(file);
-                    if (fcFile != null) {
-                        fc = Xml.loadFile(fcFile);
-                    } else {
-                        fc = null;
-                    }
-
-                    // Handle info file
-                    File fileInfo = new File(file, FILE_INFO);
-                    if (fileInfo.exists()) {
-                        info = Xml.loadFile(fileInfo);
-                    }
-
-                    v.handleMetadataFiles(xmlFiles, info, nbMetadata);
-                    v.handleFeatureCat(fc, nbMetadata);
-                    v.handleInfo(info, nbMetadata);
-
-                    // Handle binaries
-                    handleBin(file, v, info, nbMetadata);
-
-                    nbMetadata++;
                 }
             }
-		}
+        }
 
-		FileCopyMgr.removeDirectoryOrFile(unzipDir);
-
-		return info;
-	}
+        return info;
+    }
 
 	/**
 	 * Check binary files to import.
 	 */
-	public void handleBin(File file, IMEFVisitor v, Element info, int index)
+	public void handleBin(Path file, IMEFVisitor v, Element info, int index)
 			throws Exception {
 
 		List<Element> pubFiles = null;
@@ -139,31 +135,35 @@ public class MEF2Visitor implements IVisitor {
 			prvFiles = tmpPrv;
 		}
 
-		File publicFile = new File(file, MEFConstants.DIR_PUBLIC);
-		File privateFile = new File(file, MEFConstants.DIR_PRIVATE);
-
-		String fname;
+		Path publicFile = file.resolve(MEFConstants.DIR_PUBLIC);
+        Path privateFile = file.resolve(MEFConstants.DIR_PRIVATE);
 
 		// Handle public binaries files
-		if (publicFile.exists() && pubFiles != null && pubFiles.size() != 0) {
-			File[] files = publicFile.listFiles();
-			for (File f : files) {
-				fname = f.getName();
-				v.handlePublicFile(fname,
-						MEFLib.getChangeDate(pubFiles, fname),
-						new FileInputStream(f), index);
-			}
+		if (Files.exists(publicFile) && pubFiles != null && pubFiles.size() != 0) {
+            try (DirectoryStream<Path> paths = Files.newDirectoryStream(publicFile)) {
+                for (Path path : paths) {
+                    String fileName = path.getFileName().toString();
+                    try (InputStream in = Files.newInputStream(path)) {
+                        v.handlePublicFile(fileName,
+                                MEFLib.getChangeDate(pubFiles, fileName),
+                                in, index);
+                    }
+                }
+            }
 		}
 
 		// Handle private binaries files
-		if (privateFile.exists() && prvFiles != null && prvFiles.size() != 0) {
-			File[] files = privateFile.listFiles();
-			for (File f : files) {
-				fname = f.getName();
-				v.handlePrivateFile(fname, MEFLib
-						.getChangeDate(prvFiles, fname),
-						new FileInputStream(f), index);
-			}
+		if (Files.exists(privateFile) && prvFiles != null && prvFiles.size() != 0) {
+            try (DirectoryStream<Path> paths = Files.newDirectoryStream(privateFile)) {
+                for (Path path : paths) {
+                    String fileName = path.getFileName().toString();
+                    try (InputStream in = Files.newInputStream(path)) {
+                        v.handlePrivateFile(fileName,
+                                MEFLib.getChangeDate(prvFiles, fileName),
+                                in, index);
+                    }
+                }
+            }
 		}
 	}
 
@@ -171,24 +171,27 @@ public class MEF2Visitor implements IVisitor {
 
 	/**
 	 * getFeatureCalalogFile method return feature catalog xml file if exists
-	 * 
+	 *
 	 * @param file
 	 * @return File
 	 */
-	private File getFeatureCalalogFile(File file) {
-		File tmp = null;
-		File fcRepo = new File(file, MEFConstants.SCHEMA);
+	private Path getFeatureCalalogFile(Path file) throws IOException {
+        Path tmp = null;
+        Path fcRepo = file.resolve(MEFConstants.SCHEMA);
 
-		if (fcRepo.exists()) {
-			File fc = new File(fcRepo, MEFConstants.FILE_METADATA);
-			if (fc.exists())
+		if (Files.exists(fcRepo)) {
+            Path fc = fcRepo.resolve(MEFConstants.FILE_METADATA);
+			if (Files.exists(fc))
 				tmp = fc;
 			else {
-				File[] files = fcRepo.listFiles();
-				// Retrieve first files into applschema directory, without any
-				// tests.
-				if (files.length != 0)
-					tmp = files[0];
+                try (DirectoryStream<Path> paths = Files.newDirectoryStream(fcRepo)) {
+                    final Iterator<Path> iterator = paths.iterator();
+                    // Retrieve first files into applschema directory, without any
+                    // tests.
+                    if (iterator.hasNext()) {
+                        tmp = iterator.next();
+                    }
+                }
 			}
 		}
 		return tmp;
@@ -196,14 +199,15 @@ public class MEF2Visitor implements IVisitor {
 
 	// --------------------------------------------------------------------------
 
-	public File getMetadataDirectory(File dir) {
-		File metadata = new File(dir, "metadata");
+	public Path getMetadataDirectory(Path dir) throws IOException {
+        Path metadata = dir.resolve("metadata");
 
-		if (!(metadata.exists() && metadata.isDirectory())) {
-			File[] list = dir.listFiles();
-            for (File file : list) {
-                if (file.isDirectory()) {
-                    metadata = getMetadataDirectory(file);
+		if (!Files.isDirectory(metadata)) {
+            try (DirectoryStream<Path> paths = Files.newDirectoryStream(dir)) {
+                for (Path path : paths) {
+                    if (Files.isDirectory(path)) {
+                        metadata = getMetadataDirectory(path);
+                    }
                 }
             }
 		}

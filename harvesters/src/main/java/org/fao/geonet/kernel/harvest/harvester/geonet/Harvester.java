@@ -28,7 +28,11 @@ import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Source;
-import org.fao.geonet.exceptions.*;
+import org.fao.geonet.exceptions.BadServerResponseEx;
+import org.fao.geonet.exceptions.BadSoapResponseEx;
+import org.fao.geonet.exceptions.BadXmlResponseEx;
+import org.fao.geonet.exceptions.OperationAbortedEx;
+import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.IHarvester;
@@ -43,10 +47,10 @@ import org.fao.geonet.utils.Xml;
 import org.fao.geonet.utils.XmlRequest;
 import org.jdom.Element;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -93,8 +97,9 @@ class Harvester implements IHarvester<HarvestResult> {
 				log.info("Login into : "+ params.name);
 				req.setCredentials(params.username, params.password);
                 req.setPreemptiveBasicAuth(true);
-				req.setAddress(params.getServletPath()+"/srv/eng/xml.info");
-                req.addParam("type", "me");
+			req.setAddress(params.getServletPath() + "/" + params.getNode()
+					+ "/eng/xml.info");
+            req.addParam("type", "me");
 
 				Element response = req.execute();
 				if(!response.getName().equals("info") || response.getChild("me") == null) {
@@ -112,7 +117,8 @@ class Harvester implements IHarvester<HarvestResult> {
 
 		log.info("Retrieving information from : "+ params.host);
 
-		req.setAddress(params.getServletPath() +"/srv/en/"+ Geonet.Service.XML_INFO);
+		req.setAddress(params.getServletPath() + "/" + params.getNode()
+				+ "/en/" + Geonet.Service.XML_INFO);
 		req.clearParams();
 		req.addParam("type", "sources");
 		req.addParam("type", "groups");
@@ -175,7 +181,7 @@ class Harvester implements IHarvester<HarvestResult> {
 	private void pre29Login(XmlRequest req) throws IOException, BadXmlResponseEx, BadSoapResponseEx, UserNotFoundEx {
 		log.info("Failed to login using basic auth (geonetwork 2.9+) trying pre-geonetwork 2.9 login: "+ params.name);
 		// try old authentication
-		req.setAddress(params.getServletPath() + "/srv/en/"+ Geonet.Service.XML_LOGIN);
+		req.setAddress(params.getServletPath() + "/" + params.getNode() + "/en/"+ Geonet.Service.XML_LOGIN);
 		req.addParam("username", params.username);
 		req.addParam("password", params.password);
 		
@@ -228,7 +234,8 @@ class Harvester implements IHarvester<HarvestResult> {
 
 	private Element doSearch(XmlRequest request, Search s) throws OperationAbortedEx
 	{
-		request.setAddress(params.getServletPath() +"/srv/eng/"+ Geonet.Service.XML_SEARCH);
+		request.setAddress(params.getServletPath() + "/" + params.getNode()
+				+ "/eng/" + Geonet.Service.XML_SEARCH);
 		request.clearParams();
 		try
 		{
@@ -339,7 +346,7 @@ class Harvester implements IHarvester<HarvestResult> {
         Lib.net.setupProxy(context, req);
         req.setAddress(req.getAddress() + "/images/logos/" + logo);
 
-        File logoFile = new File(Resources.locateLogosDir(context) + File.separator + logo);
+        Path logoFile = Resources.locateLogosDir(context).resolve(logo);
 
         try {
             req.executeLarge(logoFile);
@@ -348,7 +355,7 @@ class Harvester implements IHarvester<HarvestResult> {
             context.warning("  (C) Logo  : " + logo);
             context.warning("  (C) Excep : " + e.getMessage());
 
-            IO.delete(logoFile, false, Geonet.GEONETWORK);
+            IO.deleteFile(logoFile, false, Geonet.GEONETWORK);
 
             Resources.copyUnknownLogo(context, uuid);
         }

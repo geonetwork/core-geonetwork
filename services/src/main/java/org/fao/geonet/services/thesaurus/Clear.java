@@ -35,6 +35,8 @@ import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 
 /**
  * Activate a thesaurus. Parameters:
@@ -44,7 +46,7 @@ import org.jdom.Element;
  * </ul>
  */
 public class Clear implements Service {
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     public Element exec(Element params, ServiceContext context) throws Exception {

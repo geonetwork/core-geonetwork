@@ -26,15 +26,15 @@ package org.fao.geonet.services.mef;
 import jeeves.constants.Jeeves;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.IO;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.services.NotInReadOnlyModeService;
+import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
 
@@ -43,7 +43,7 @@ import java.util.List;
  * 
  */
 public class Import extends NotInReadOnlyModeService {
-	private String stylePath;
+	private Path stylePath;
 
     /**
      *
@@ -52,9 +52,9 @@ public class Import extends NotInReadOnlyModeService {
      * @throws Exception
      */
     @Override
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
-		this.stylePath = appPath + Geonet.Path.IMPORT_STYLESHEETS;
+		this.stylePath = appPath.resolve(Geonet.Path.IMPORT_STYLESHEETS);
 	}
 
 	/**
@@ -77,9 +77,9 @@ public class Import extends NotInReadOnlyModeService {
 			throws Exception {
 		String mefFile = Util.getParam(params, "mefFile");
         String fileType = Util.getParam(params, "file_type", "mef");
-		String uploadDir = context.getUploadDir();
+		Path uploadDir = context.getUploadDir();
 
-		File file = new File(uploadDir, mefFile);
+		Path file = uploadDir.resolve(mefFile);
 
 		List<String> id = MEFLib.doImport(params, context, file, stylePath);
         StringBuilder ids = new StringBuilder();
@@ -91,7 +91,7 @@ public class Import extends NotInReadOnlyModeService {
 
         }
 
-        IO.delete(file, false, Geonet.MEF);
+        IO.deleteFile(file, false, Geonet.MEF);
 
 		Element result = null;
 

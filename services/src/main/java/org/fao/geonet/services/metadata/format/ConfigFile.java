@@ -1,12 +1,14 @@
 package org.fao.geonet.services.metadata.format;
 
-import org.apache.commons.io.FileUtils;
 import org.fao.geonet.Constants;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.io.Reader;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,15 +23,14 @@ public class ConfigFile {
 
 	private Properties config;
 
-	public ConfigFile(File bundleDir) throws IOException {
+	public ConfigFile(Path bundleDir) throws IOException {
 		this.config = new Properties();
-        for (File file: FileUtils.listFiles(bundleDir, new String[]{"properties"}, false)) {
-            if(file.getName().equalsIgnoreCase(CONFIG_PROPERTIES_FILENAME)){
-                FileInputStream inStream = new FileInputStream (file);
-                try {
-                    config.load(inStream);
-                } finally {
-                    inStream.close();
+        try (DirectoryStream<Path> paths = Files.newDirectoryStream(bundleDir)) {
+            for (Path path : paths) {
+                if(path.getFileName().toString().equalsIgnoreCase(CONFIG_PROPERTIES_FILENAME)){
+                    try (Reader inStream = new InputStreamReader(Files.newInputStream(path), Constants.ENCODING)) {
+                        config.load(inStream);
+                    }
                 }
             }
         }
@@ -78,11 +79,11 @@ public class ConfigFile {
 		return config.getProperty(SCHEMAS_TO_LOAD_PROP, "all");
 	}
 
-	public static void generateDefault(File bundleDir) throws IOException {
-        File configFile = new File(bundleDir, CONFIG_PROPERTIES_FILENAME);
-        if(!configFile.exists()) {
-            PrintStream out = new PrintStream(configFile, Constants.ENCODING);
-            try {
+	public static void generateDefault(Path bundleDir) throws IOException {
+        Path configFile = bundleDir.resolve(CONFIG_PROPERTIES_FILENAME);
+        if(!Files.exists(configFile)) {
+
+            try (PrintStream out = new PrintStream(Files.newOutputStream(configFile), true, Constants.ENCODING)) {
                 out.println("# Generated as part of download");
                 out.println("# This file is an example of a metadata formatter configuration file");
                 out.println("# Uncomment lines of interest");
@@ -102,8 +103,6 @@ public class ConfigFile {
                 out.println("# For example one can specify only iso19139 or a comma separated list of schemas (or all)");
                 out.println("# "+APPLICABLE_SCHEMAS+"=iso19115,fgdc-std,iso19139,csw-record,iso19110");
                 out.println(APPLICABLE_SCHEMAS+"=all");
-            } finally {
-                out.close();
             }
         }
 	}

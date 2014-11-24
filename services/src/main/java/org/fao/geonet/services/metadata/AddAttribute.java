@@ -33,12 +33,14 @@ import org.fao.geonet.exceptions.ConcurrentUpdateEx;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 
 /**
  * For editing : adds an attribute to a metadata. Access is restricted.
  */
 public class AddAttribute extends NotInReadOnlyModeService {
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
 

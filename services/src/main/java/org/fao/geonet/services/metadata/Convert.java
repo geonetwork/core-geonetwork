@@ -40,6 +40,8 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 //=============================================================================
 
 /** Converts a particular metadata using the supplied XSLT name.
@@ -53,7 +55,7 @@ public class Convert implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -77,7 +79,7 @@ public class Convert implements Service
 
 		//--- get metadata info and create an env that works with oai translators
         final Metadata metadata = context.getBean(MetadataRepository.class).findOne(id);
-		String schemaDir = sm.getSchemaDir(metadata.getDataInfo().getSchemaId());
+		Path  schemaDir = sm.getSchemaDir(metadata.getDataInfo().getSchemaId());
         final String baseUrl = context.getBaseUrl();
         final ISODate changeDate = metadata.getDataInfo().getChangeDate();
         final String uuid = metadata.getUuid();

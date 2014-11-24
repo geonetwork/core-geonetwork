@@ -34,6 +34,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -51,7 +52,7 @@ public class CswPublicationDispatcher extends NotInReadOnlyModeService {
      * @throws Exception
      */
     @Override
-	public void init(String appPath, ServiceConfig config) throws Exception {
+	public void init(Path appPath, ServiceConfig config) throws Exception {
         super.init(appPath, config);
 		cswServiceSpecificContraint = config.getValue(Geonet.Elem.FILTER);
 	}

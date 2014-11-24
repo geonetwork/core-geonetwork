@@ -30,6 +30,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.services.ownership.OwnershipUtils;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.List;
 
 //=============================================================================
@@ -42,7 +43,7 @@ public class PrepareBatchNewOwner implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig config) throws Exception {}
+	public void init(Path appPath, ServiceConfig config) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

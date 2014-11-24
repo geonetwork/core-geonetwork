@@ -23,8 +23,6 @@
 
 package org.fao.geonet.services.user;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
 import jeeves.constants.Jeeves;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.User;
@@ -42,9 +40,8 @@ import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.jdom.Element;
-import org.springframework.data.jpa.domain.Specifications;
 
-import javax.annotation.Nullable;
+import java.nio.file.Path;
 import java.util.List;
 
 import static org.springframework.data.jpa.domain.Specifications.*;
@@ -62,7 +59,7 @@ public class UserGroups implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

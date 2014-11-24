@@ -36,11 +36,10 @@ import org.fao.geonet.domain.UserGroupId_;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
-import org.springframework.data.jpa.domain.Specifications;
 
+import java.nio.file.Path;
 import java.util.*;
 import java.util.List;
 
@@ -57,7 +56,7 @@ public class Remove extends NotInReadOnlyModeService {
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception {}
+	public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

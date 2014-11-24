@@ -32,13 +32,15 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 /**
  * Select a list of keywords stored in session
  * Returns status 
  */
 
 public class SelectKeywords implements Service {
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
 
 	// --------------------------------------------------------------------------

@@ -23,17 +23,18 @@
 
 package org.fao.geonet.kernel.mef;
 
+import org.fao.geonet.ZipUtil;
 import org.fao.geonet.exceptions.BadFormatEx;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PRIVATE;
 import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PUBLIC;
@@ -44,7 +45,7 @@ import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
  * MEF version 1 visitor to process and load MEF files.
  */
 public class MEFVisitor implements IVisitor {
-	public void visit(File mefFile, IMEFVisitor v) throws Exception {
+	public void visit(Path mefFile, IMEFVisitor v) throws Exception {
 		Element info = handleXml(mefFile, v);
 		handleBin(mefFile, v, info, 0);
 	}
@@ -54,29 +55,21 @@ public class MEFVisitor implements IVisitor {
 	 * Read the input MEF file and check structure for metadata.xml and info.xml
 	 * files.
 	 */
-	public Element handleXml(File mefFile, IMEFVisitor v) throws Exception {
-		ZipInputStream zis = new ZipInputStream(new FileInputStream(mefFile));
-		InputStreamBridge isb = new InputStreamBridge(zis);
+	public Element handleXml(Path mefFile, IMEFVisitor v) throws Exception {
+            Element md = null;
+            Element info = null;
 
-		ZipEntry entry;
+        try (FileSystem zipFs = ZipUtil.openZipFs(mefFile)) {
+            Path fileMdFile = zipFs.getPath(FILE_METADATA);
+            Path infoMdFile = zipFs.getPath(FILE_INFO);
 
-		Element md = null;
-		Element info = null;
-
-		try {
-			while ((entry = zis.getNextEntry()) != null) {
-				String name = entry.getName();
-
-				if (name.equals(FILE_METADATA))
-					md = Xml.loadStream(isb);
-				else if (name.equals(FILE_INFO))
-					info = Xml.loadStream(isb);
-
-				zis.closeEntry();
-			}
-		} finally {
-			safeClose(zis);
-		}
+            if (Files.exists(fileMdFile)) {
+                md = Xml.loadFile(fileMdFile);
+            }
+            if (Files.exists(infoMdFile)) {
+                info = Xml.loadFile(infoMdFile);
+            }
+        }
 
 		if (md == null)
 			throw new BadFormatEx("Missing metadata file : " + FILE_METADATA);
@@ -95,12 +88,10 @@ public class MEFVisitor implements IVisitor {
 	 * private folders. All binary files MUST be registered in the information
 	 * document (ie. info.xml).
 	 */
-	public void handleBin(File mefFile, IMEFVisitor v, Element info, int index)
+	public void handleBin(Path mefFile, IMEFVisitor v, Element info, int index)
 			throws Exception {
-		ZipInputStream zis = new ZipInputStream(new FileInputStream(mefFile));
-		InputStreamBridge isb = new InputStreamBridge(zis);
 
-		// yes they must be registered but make sure we don't crash if the 
+		// yes they must be registered but make sure we don't crash if the
 		// public/private elements don't exist
 		List<Element> pubFiles;
 		if (info.getChild("public") != null) {
@@ -108,7 +99,7 @@ public class MEFVisitor implements IVisitor {
             List<Element> tmp = info.getChild("public").getChildren();
 			pubFiles = tmp;
 		} else {
-			pubFiles = new ArrayList<Element>();
+			pubFiles = new ArrayList<>();
 		}
 		List<Element> prvFiles;
 		if (info.getChild("private") != null) {
@@ -116,41 +107,36 @@ public class MEFVisitor implements IVisitor {
             List<Element> tmp = info.getChild("private").getChildren();
 			prvFiles = tmp;
 		} else {
-			prvFiles = new ArrayList<Element>();
+			prvFiles = new ArrayList<>();
 		}
 
-		ZipEntry entry;
 
-		try {
-			while ((entry = zis.getNextEntry()) != null) {
-				String fullName = entry.getName();
-				String simpleName = new File(fullName).getName();
-
-				if (fullName.equals(DIR_PUBLIC) || fullName.equals(DIR_PRIVATE))
-					continue;
-
-				if (fullName.startsWith(DIR_PUBLIC) || fullName.startsWith("/" + DIR_PUBLIC))
-					v.handlePublicFile(simpleName, MEFLib.getChangeDate(
-							pubFiles, simpleName), isb, 0);
-
-				else if (fullName.startsWith(DIR_PRIVATE) || fullName.startsWith("/" + DIR_PRIVATE))
-					v.handlePrivateFile(simpleName, MEFLib.getChangeDate(
-							prvFiles, simpleName), isb, 0);
-
-				zis.closeEntry();
-			}
-		} finally {
-			safeClose(zis);
-		}
+        try (FileSystem zipFs = ZipUtil.openZipFs(mefFile)) {
+            Path pubPath = zipFs.getPath(DIR_PUBLIC);
+            if (Files.isDirectory(pubPath)) {
+                try (DirectoryStream<Path> paths = Files.newDirectoryStream(pubPath)) {
+                    for (Path path : paths) {
+                        String simpleName = path.getFileName().toString();
+                        try (InputStream isb = Files.newInputStream(path)) {
+                            v.handlePublicFile(simpleName, MEFLib.getChangeDate(pubFiles, simpleName), isb, 0);
+                        }
+                    }
+                }
+            }
+            Path priPath = zipFs.getPath(DIR_PRIVATE);
+            if (Files.isDirectory(priPath)) {
+                try (DirectoryStream<Path> paths = Files.newDirectoryStream(priPath)) {
+                    for (Path path : paths) {
+                        String simpleName = path.getFileName().toString();
+                        try (InputStream isb = Files.newInputStream(path)) {
+                            v.handlePrivateFile(simpleName, MEFLib.getChangeDate(prvFiles, simpleName), isb, 0);
+                        }
+                    }
+                }
+            }
+        }
 	}
 
-	private static void safeClose(ZipInputStream zis) {
-		try {
-			zis.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 }
 
 // =============================================================================
