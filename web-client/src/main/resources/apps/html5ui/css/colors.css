@@ -11,7 +11,7 @@ html,button,input,select,textarea {
 
 div#resultsPanel .x-panel-bbar table.x-toolbar-ct,.x-panel-header,div#big-map .x-panel-tbar table.x-toolbar-ct,div#resultsPanel table.x-toolbar-ct,.main aside
 	{
-	background: #47A8DD;
+	background: #0065A2;
 	color: white;
 }
 
@@ -34,7 +34,7 @@ nav a.selected {
 }
 
 div#advSearchTabs .x-panel-header {
-	background: #47A8DD;
+	background: #0065A2;
 }
 
 #header {
@@ -133,13 +133,13 @@ div#tabs .x-tab-strip-active .x-tab-right {
 }
 
 #search-submit {
-  background-color: #47a8dd !important;
+  background-color: #0065A2 !important;
   color:#fff !important;
 }
 
 #show-advanced,#hide-advanced {
 	color: white;
-	background-color: #47A8DD;
+	background-color: #0065A2;
 }
 
 /**

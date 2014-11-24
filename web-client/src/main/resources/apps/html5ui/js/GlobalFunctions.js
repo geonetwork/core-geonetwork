@@ -52,12 +52,10 @@ function showBrowse() {
 
     show("main");
     hide("search-form");
-
     hideAbout();
     hideSearch();
     hideBigMap();
     hideMetadata();
-
     show("browser");
     //show("latest-metadata");
     //show("popular-metadata");
@@ -65,9 +63,9 @@ function showBrowse() {
     app.breadcrumb.setPrevious([]);
     app.breadcrumb.setCurrent(app.breadcrumb.defaultSteps[0]);
 
-    Ext.each(Ext.query('a', Ext.get("main-navigation").dom), function(a) {
-        Ext.get(a).removeClass("selected");
-    });
+//    Ext.each(Ext.query('a', Ext.get("main-navigation").dom), function(a) {
+//        Ext.get(a).removeClass("selected");
+//    });
 
     Ext.get("browse-tab").addClass("selected");
 }
@@ -90,9 +88,9 @@ function showAbout() {
 
     app.breadcrumb.setCurrent(app.breadcrumb.defaultSteps[2]);
 
-    Ext.each(Ext.query('a', Ext.get("main-navigation").dom), function(a) {
-        Ext.get(a).removeClass("selected");
-    });
+//    Ext.each(Ext.query('a', Ext.get("main-navigation").dom), function(a) {
+//        Ext.get(a).removeClass("selected");
+//    });
 
     Ext.get("about-tab").addClass("selected");
 }
@@ -125,9 +123,9 @@ function showBigMap() {
     app.mapApp.initPrint();
     
 
-    Ext.each(Ext.query('a', Ext.get("main-navigation").dom), function(a) {
-        Ext.get(a).removeClass("selected");
-    });
+//    Ext.each(Ext.query('a', Ext.get("main-navigation").dom), function(a) {
+//        Ext.get(a).removeClass("selected");
+//    });
 
     Ext.get("map-tab").addClass("selected");
 }
@@ -158,9 +156,9 @@ function showSearch() {
     }
 
 
-    Ext.each(Ext.query('a', Ext.get("main-navigation").dom), function(a) {
-        Ext.get(a).removeClass("selected");
-    });
+//    Ext.each(Ext.query('a', Ext.get("main-navigation").dom), function(a) {
+//        Ext.get(a).removeClass("selected");
+//    });
 
     Ext.get("catalog-tab").addClass("selected");
     
@@ -186,9 +184,9 @@ function showMetadata() {
 
     app.breadcrumb.setDefaultPrevious(2);
 
-    Ext.each(Ext.query('a', Ext.get("main-navigation").dom), function(a) {
-        Ext.get(a).removeClass("selected");
-    });
+//    Ext.each(Ext.query('a', Ext.get("main-navigation").dom), function(a) {
+//        Ext.get(a).removeClass("selected");
+//    });
 
     Ext.get("catalog-tab").addClass("selected");
 }
@@ -208,9 +206,11 @@ function resizeResultsPanel() {
 //        resultsPanel.setWidth(Ext.getBody().getWidth()
 //                - Ext.get("main-aside").getWidth() - 320);
 //    } else {
-        resultsPanel.setWidth(Ext.getBody().getWidth()
-                - Ext.get("main-aside").getWidth());
+//        resultsPanel.setWidth(Ext.getBody().getWidth()
+//                - Ext.get("main-aside").getWidth());
 //    }
+        
+    resultsPanel.setWidth(Ext.get("page-container").getWidth()-20);
     
     Ext.get("result-panel").setWidth(resultsPanel.getWidth());
     Ext.each(resultsPanel.dom.children, function(div) {
@@ -249,7 +249,8 @@ function resizeMap() {
                 }
             });
         };
-        var height = Ext.getBody().getHeight() - Ext.get("footer").getHeight()
+        var height = Ext.getBody().getHeight() 
+        		- Ext.get("EC-footer").getHeight()
                 - Ext.get("header").getHeight()
                 - Ext.get("search-form").getHeight() - 20;
 

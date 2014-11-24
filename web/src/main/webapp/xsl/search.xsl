@@ -131,7 +131,12 @@
 			<body class="euShortContent">
 				<div class="layout" id="layout">
 					<div class="lang-en" id="header">
-						  <p class="banner-flag"><img alt="European Commission logo" id="banner-flag" src="/geonetwork/apps/html5ui/images/logo_en.gif"></img></p>
+						  <p class="banner-flag">
+						  <img alt="European Commission logo" id="banner-flag">
+						  <xsl:attribute name="src"><xsl:value-of
+								select="$baseUrl" />/apps/html5ui/images/logo_en.gif</xsl:attribute>
+						  </img>
+						  </p>
 	          			  <p id="banner-title-text">European Commission<br/><span>Inspire@EC Geoportal</span></p><span id="banner-image-right"></span><span class="title-en" id="banner-image-title"></span><p class="off-screen">Service tools</p>
 							<ul class="reset-list" id="services">
 								<li>
@@ -214,9 +219,23 @@
 					 			 </span>
 					 			</li>
 				            </ul>
-							<a class="reset-list language-selector" href="javascript:toggle('lang-form');"><span id="current-lang">English</span>&#160;<i class="fa fa-angle-double-down"></i>
-								<div id="lang-form" style="display:none;"> </div>
-							</a>
+				            
+				            
+						             <p class="off-screen mob-title" id="language-selector-title">Language selector</p>
+
+
+						                       <a class="reset-list language-selector-title" href="javascript:toggle('lang-form');"><span id="current-lang">English</span>&#160;<i class="fa fa-angle-double-down"></i>
+													<div id="lang-form" style="display:none;"> </div>
+												</a>
+
+				
+					
+					
+					
+<!-- 							<a class="reset-list language-selector" href="javascript:toggle('lang-form');"><span id="current-lang">English</span>&#160;<i class="fa fa-angle-double-down"></i> -->
+<!-- 								<div id="lang-form" style="display:none;"> </div> -->
+<!-- 							</a> -->
+					
 					</div>		
 					
 					 <div id="page-container">
@@ -267,21 +286,26 @@
 			                                <div id="ck2"/>
 			                                <div id="ck3"/>
 		                                </div>
-		                                
+
+		                                <div id="advanced-search-options" >
+		                                    <div id="advanced-search-options-content"></div>
+		                                </div>
+		                                		                     
 		                                <div id="show-advanced" onclick="showAdvancedSearch()">
 		                                    <span class="button"><xsl:value-of select="/root/gui/strings/advancedOptions.show" />&#160;<i class="fa fa-angle-double-down fa-2x show-advanced-icon"></i></span>
 		                                </div>
+		                    
 		                                <div id="hide-advanced" onclick="hideAdvancedSearch(true)" style="display: none;">
 		                                    <span class="button"><xsl:value-of select="/root/gui/strings/advancedOptions.hide" />&#160;<i class="fa fa-angle-double-up fa-2x hide-advanced-icon"></i></span>
-		                                </div>
-		                                <div id="advanced-search-options" >
-		                                    <div id="advanced-search-options-content"></div>
 		                                </div>
 		                            </fieldset>
 		                        </div>
 							
 		
 			                    <div id="browser">
+			                     <div id="welcome-text">
+			                      	  <xsl:copy-of select="/root/gui/strings/welcome.text"/>
+								</div>
 		                        <aside class="tag-aside">
 			                    	  <div id="welcome-text">
 			                      	  <xsl:copy-of select="/root/gui/strings/welcome.text"/>
@@ -322,9 +346,9 @@
 									</aside>
 									<article>
 										<aside id="secondary-aside" class="secondary-aside" style="display:none;">
-											<header><xsl:value-of select="/root/gui/strings/recentlyViewed" /></header>
-		                  <div id="recent-viewed-div"></div>
-		                  <div id="mini-map"></div>
+<!-- 											<header><xsl:value-of select="/root/gui/strings/recentlyViewed" /></header> -->
+<!-- 		                  <div id="recent-viewed-div"></div> -->
+		            	      <div id="mini-map"></div>
 										</aside>
 										<header>
 										</header>
@@ -591,7 +615,7 @@
 						</xsl:for-each>
 					</div>
 					
-					<div class="layout-footer">
+					<div class="layout-footer" id="EC-footer">
 	                  <ul class="footer-items">
 	                     <li class="modification-date"><span>Last update: 20/11/2014</span></li>
 	                     <li><a id="browse-tab" class="selected" href="javascript:showBrowse();">Home</a></li>
