@@ -41,6 +41,8 @@ import org.fao.geonet.services.Utils;
 import org.jdom.Attribute;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 //=============================================================================
 
 /** Retrieves a particular metadata. Access is restricted
@@ -54,7 +56,7 @@ public class Show extends ShowViewBaseService
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig params) throws Exception{
+	public void init(Path appPath, ServiceConfig params) throws Exception{
 		super.init(appPath, params);
 		cache = "y".equalsIgnoreCase(params.getValue("cache", "n"));
 	}

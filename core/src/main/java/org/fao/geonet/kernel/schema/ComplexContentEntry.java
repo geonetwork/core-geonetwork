@@ -29,6 +29,7 @@ package org.fao.geonet.kernel.schema;
 
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,7 @@ class ComplexContentEntry extends BaseHandler
 	//---
 	//---------------------------------------------------------------------------
 
-	public ComplexContentEntry(Element el, String file, String targetNS, String targetNSPrefix)
+	public ComplexContentEntry(Element el, Path file, String targetNS, String targetNSPrefix)
 	{
 		this(new ElementInfo(el, file, targetNS, targetNSPrefix));
 	}

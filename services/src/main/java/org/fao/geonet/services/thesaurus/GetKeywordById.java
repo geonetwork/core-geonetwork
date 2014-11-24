@@ -35,6 +35,7 @@ import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +48,7 @@ import java.util.List;
  * @author mcoudert
  */
 public class GetKeywordById implements Service {
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     public Element exec(Element params, ServiceContext context)

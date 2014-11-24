@@ -29,6 +29,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.List;
 
 //=============================================================================
@@ -41,7 +42,7 @@ public class Editors implements Service
 	//---
 	//--------------------------------------------------------------------------
 
-	public void init(String appPath, ServiceConfig config) throws Exception {}
+	public void init(Path appPath, ServiceConfig config) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---

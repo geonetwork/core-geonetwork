@@ -24,7 +24,11 @@ package org.fao.geonet.notifier;
 
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataNotification;
+import org.fao.geonet.domain.MetadataNotificationAction;
+import org.fao.geonet.domain.MetadataNotificationId;
+import org.fao.geonet.domain.MetadataNotifier;
 import org.fao.geonet.repository.MetadataNotificationRepository;
 import org.fao.geonet.repository.MetadataNotifierRepository;
 import org.fao.geonet.repository.MetadataRepository;
@@ -34,10 +38,13 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import java.util.*;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**

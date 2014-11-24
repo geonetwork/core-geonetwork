@@ -23,125 +23,74 @@
 
 package org.fao.geonet.utils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
+import org.eclipse.core.runtime.Assert;
+import org.fao.geonet.Logger;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystemNotFoundException;
+import java.nio.file.FileSystems;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.io.IOUtils;
-import org.fao.geonet.Constants;
-import org.fao.geonet.Logger;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 //=============================================================================
 
 /**
  * A container of I/O methods. <P>
- * 
+ *
  */
-public final class IO
-{
-	/**
+public final class IO {
+    static FileSystem defaultFs = FileSystems.getDefault();
+    static ThreadLocal<FileSystem> defaultFsThreadLocal = new InheritableThreadLocal<>();
+
+    public static final DirectoryStream.Filter<Path> DIRECTORIES_FILTER = new DirectoryStream.Filter<Path>() {
+        @Override
+        public boolean accept(Path entry) throws IOException {
+            return Files.isDirectory(entry);
+        }
+    };
+
+    public static final DirectoryStream.Filter<Path> FILES_FILTER = new DirectoryStream.Filter<Path>() {
+        @Override
+        public boolean accept(Path entry) throws IOException {
+            return Files.isRegularFile(entry);
+        }
+    };
+
+    /**
     * Default constructor.
     * Builds a IO.
     */
    private IO() {}
-   
-   /**
-	 * Loads a text file, handling the exceptions
-	 * @param name
-	 * @return
-	 */
-	public static String loadFile(String name)
-	{
-		StringBuffer sb = new StringBuffer();
 
-		FileInputStream in = null;
-		BufferedReader	rdr = null;
-		try
-		{
-            in = new FileInputStream(name);
-            rdr = new BufferedReader(new InputStreamReader(in, Charset.forName(Constants.ENCODING)));
-
-			String inputLine;
-
-			while ((inputLine = rdr.readLine()) != null) {
-				sb.append(inputLine);
-				sb.append('\n');
-			}
-
-			return sb.toString();
-		}
-		catch (IOException e)
-		{
-			return null;
-		} finally {
-		    if (in != null) {
-		        IOUtils.closeQuietly(in);
-		    }
-		    if (rdr != null) {
-		        IOUtils.closeQuietly(rdr);
-		    }
-		}
-	}
-	
-	/**
-	 * Make a directory (and parent directories) if it does not exist.
-	 * If the directory cannot be made and does not exist or is a file an exception is thrown 
-	 * 
-	 * @param dir the directory to make
-	 * @param desc A short description of the directory being made.
-	 */
-	public static void mkdirs(File dir, String desc) throws IOException {
-        if(!dir.mkdirs()) {
-            if (!dir.exists()) {
-                String msg = "Unable to make '"+desc+"': "+dir.getAbsolutePath()+". Check permissions of parent directory";
-                throw new IOException(msg);
-            }
-            if (dir.isFile()){
-                String msg = "Unable to make '"+desc+"': "+dir.getAbsolutePath()+". The file already exists and is a file";
-                throw new IOException(msg);
-                
-            }
-        }
-
-	}
-
-	/**
-	 * Set lastModified time if a failure log a warning.
-	 * 
-	 * @param file the file to set the time on
-	 * @param timeMillis the time in millis
-	 * @param loggerModule the module to log to
-	 */
-    public static void setLastModified(File file, long timeMillis, String loggerModule) {
-        if (!file.setLastModified(timeMillis)) {
-            Log.warning(loggerModule, "Unable to set the last modified time on: "+file.getAbsolutePath()+".  Check file permissions");
-        }
+    public static void deleteFile(Path file, boolean throwException, String loggerModule) {
+        deleteFile(file, throwException, Log.createLogger(loggerModule));
     }
 
-    public static void delete(File file, boolean throwException, String loggerModule) {
-        if (!file.delete() && file.exists()) {
+    public static void deleteFile(Path file, boolean throwException, Logger context) {
+        try {
+            Files.delete(file);
+        } catch (IOException e) {
             if(throwException) {
-                throw new RuntimeException("Unable to delete "+file.getAbsolutePath());
+                throw new RuntimeException(e);
             } else {
-                Log.warning(loggerModule, "Unable to delete "+file.getAbsolutePath());
-            }
-        }
-    }
-
-    public static void delete(File file, boolean throwException, Logger context) {
-        if (!file.delete() && file.exists()) {
-            if(throwException) {
-                throw new RuntimeException("Unable to delete "+file.getAbsolutePath());
-            } else {
-                context.warning("Unable to delete "+file.getAbsolutePath());
+                context.error(e);
             }
         }
     }
@@ -165,43 +114,278 @@ public final class IO
             }
         }
     }
+    public static void copyDirectoryOrFile(@Nonnull final Path from,
+                                           @Nonnull final Path to,
+                                           boolean copyInto) throws IOException {
+        copyDirectoryOrFile(from, to, copyInto, null);
+    }
 
     /**
-     * Returns a list of all file names in a directory - if recurse is true, 
-     * processes all subdirectories too.
-     * @param directory
-     * @param recurse
-     * @return
+     * Copy a file or directories from the from path to the to path.
+     * @param from the source
+     * @param to the destination
+     * @param filter a filter to control which files to copy.  May be null
+     * @throws IOException
      */
-    public static List<File> getFilesInDirectory(File directory, boolean recurse, FilenameFilter filter) throws IOException {
-    	List<File> fileList = new ArrayList<File>();
-    	if(! directory.exists()) {
-    		throw new IOException("Directory does not exist: "+ directory.getAbsolutePath());
-    	}
-    	if(! directory.canRead()) {
-    		throw new IOException("Cannot read directory: "+ directory.getAbsolutePath());
-    	}
-    	if(! directory.isDirectory()) {
-    		throw new IOException("Directory is not a directory: "+ directory.getAbsolutePath());
-    	}
-    	for(File file : directory.listFiles(filter)) {
-    		if(file.isDirectory()) {
-    			if(recurse) { 
-    				// recurse
-    				fileList.addAll(getFilesInDirectory(file, recurse, filter));
-    			}
-    		}
-    		else {
-    			if(! file.canRead()) {
-    				throw new IOException("Cannot read file "+ file.getAbsolutePath());
-    			}
-    			else {
-    				fileList.add(file);
-    			}
-    		}
-    	}		
-    	return fileList;
+    public static void copyDirectoryOrFile(@Nonnull final Path from,
+                                           @Nonnull final Path to,
+                                           boolean copyInto,
+                                           @Nullable final DirectoryStream.Filter<Path> filter) throws IOException {
+        Objects.requireNonNull(from);
+        Objects.requireNonNull(to);
+
+        final Path actualTo;
+        if (copyInto && Files.isDirectory(to)) {
+            actualTo = to.resolve(from.getFileName().toString());
+        } else {
+            actualTo = to;
+        }
+
+        if (from.equals(to)) {
+            return;
+        }
+
+        if (Files.isDirectory(from)) {
+            Assert.isTrue(!Files.isRegularFile(actualTo), "cannot copy a directory to a file. From: " + from + " to " + actualTo);
+            if (filter == null) {
+                Files.walkFileTree(from, new CopyAllFiles(from, actualTo));
+            } else {
+                Files.walkFileTree(from, new CopyAcceptedFiles(from, actualTo, filter));
+            }
+        } else {
+            if (filter == null || filter.accept(from)) {
+                final Path parent = actualTo.getParent();
+                if (parent != null && !Files.exists(parent)) {
+                    Files.createDirectories(parent);
+                }
+                Files.copy(from, actualTo);
+            }
+        }
     }
+
+    public static Path relativeFile(Path relativeToDirectory, Path fileOrDirectory, Path newRelativeTo) {
+        return newRelativeTo.resolve(relativeToDirectory.relativize(fileOrDirectory).toString().replace('\\', '/'));
+    }
+
+    public static void moveDirectoryOrFile(final Path from, final Path to, boolean copyInto) throws IOException {
+        final Path actualTo;
+        if (copyInto && Files.isDirectory(to)) {
+            actualTo = to.resolve(from.getFileName());
+        } else {
+            actualTo = to;
+        }
+
+        final Path parent = actualTo.getParent();
+        if (!Files.exists(parent)) {
+            Files.createDirectories(parent);
+        }
+        Files.move(from, actualTo);
+    }
+    public static boolean isEmptyDir(Path dir) throws IOException {
+        try (DirectoryStream<Path> children = Files.newDirectoryStream(dir)) {
+            final Iterator<Path> iterator = children.iterator();
+            return !iterator.hasNext();
+        }
+    }
+
+    public static void deleteFileOrDirectory(Path path) throws IOException {
+        if (Files.isDirectory(path)) {
+            Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    Files.delete(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+
+            });
+        } else if (Files.isRegularFile(path)) {
+            Files.delete(path);
+        }
+    }
+    public static void touch(Path file) throws IOException{
+        long timestamp = System.currentTimeMillis();
+        touch(file, FileTime.from(timestamp, TimeUnit.MILLISECONDS));
+    }
+
+    public static void touch(Path file, FileTime timestamp) throws IOException{
+        if (!Files.exists(file)) {
+            Path parent = file.getParent();
+            if (!Files.exists(parent)) {
+                Files.createDirectories(parent);
+            }
+            Files.createFile(file);
+        }
+
+        Files.setLastModifiedTime(file, timestamp);
+    }
+
+    public static Path toPath(String firstPart, String... more) {
+        FileSystem fileSystem = defaultFsThreadLocal.get();
+        if (fileSystem == null) {
+            fileSystem = defaultFs;
+        }
+        return fileSystem.getPath(firstPart, more);
+    }
+
+    public static Path toPath(URI uri) {
+        try {
+            return Paths.get(uri);
+        } catch (FileSystemNotFoundException e) {
+            if (uri.toString().startsWith("jar:")) {
+                throw new IllegalStateException("The zip file references in URI: " + uri + " has not been opened.  " +
+                                                "Before you can create this path you must first call ZipUtil.openZipFS with the url to " +
+                                                "the zip file");
+            }
+            throw new FileSystemNotFoundException("No filesystem found for the uri: " + uri);
+        }
+    }
+
+    public static void setFileSystem(FileSystem newFileSystem) {
+        if (newFileSystem == null) {
+            newFileSystem = FileSystems.getDefault();
+        }
+        defaultFs = newFileSystem;
+    }
+
+    public static void setFileSystemThreadLocal(FileSystem newFileSystem) {
+        defaultFsThreadLocal.set(newFileSystem);
+    }
+
+    public static void printDirectoryTree(Path dir, final boolean printFileSize) throws IOException {
+        Files.walkFileTree(dir, new SimpleFileVisitor<Path>(){
+            int depth = 0;
+
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                StringBuilder builder = newStringBuilder();
+                builder.append("> ").append(dir.getFileName()).append(" (").append(dir.getParent()).append("):");
+                System.out.println(builder.toString());
+                depth += 4;
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                StringBuilder builder = newStringBuilder();
+                builder.append("- ").append(file.getFileName());
+                if (printFileSize) {
+                    final int KB = 1024;
+                    builder.append(" (").append(Files.size(file) / KB).append(" kb)");
+                }
+                System.out.println(builder.toString());
+                return FileVisitResult.CONTINUE;
+            }
+
+            protected StringBuilder newStringBuilder() {
+                StringBuilder builder = new StringBuilder();
+                for (int j = 0; j < depth; j++) {
+                    builder.append(" ");
+                }
+                return builder;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                depth -=4;
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+
+    public static URL toURL(Path textFile) throws MalformedURLException {
+        return toURL(textFile.toUri());
+    }
+
+    /**
+     * Convert the URI to a URL.  If the file system is not a default one the URL scheme may not be registered so
+     * we need to make the URL in such a way that the scheme is registered in its url context.
+     */
+    public static URL toURL(URI uri) throws MalformedURLException {
+        try {
+            return uri.toURL();
+        } catch (MalformedURLException e) {
+            URL url = createFsSpecificURL(uri, defaultFs);
+            if (url != null) {
+                return url;
+            }
+            url = createFsSpecificURL(uri, defaultFsThreadLocal.get());
+            if (url != null) {
+                return url;
+            }
+
+            throw e;
+        }
+    }
+
+    private static URL createFsSpecificURL(URI uri, FileSystem fileSystem) throws MalformedURLException {
+        if (fileSystem != null && uri.getScheme().equals(fileSystem.getPath(".").toUri().getScheme())) {
+            return new URL(null, uri.toString(), new FileSystemSpecificStreamHandler());
+        }
+        return null;
+    }
+
+    private static class CopyAllFiles extends SimpleFileVisitor<Path> {
+        private final Path from;
+        private final Path actualTo;
+
+        public CopyAllFiles(Path from, Path actualTo) {
+            this.from = from;
+            this.actualTo = actualTo;
+        }
+
+        @Override
+        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+            Files.createDirectories(relativeFile(from, dir, actualTo));
+            return FileVisitResult.CONTINUE;
+        }
+
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            Files.copy(file, relativeFile(from, file, actualTo));
+            return FileVisitResult.CONTINUE;
+        }
+    }
+    private static class CopyAcceptedFiles extends SimpleFileVisitor<Path> {
+        private final Path from;
+        private final Path actualTo;
+        private final DirectoryStream.Filter<Path> filter;
+
+        public CopyAcceptedFiles(@Nonnull Path from, @Nonnull Path actualTo, @Nonnull DirectoryStream.Filter<Path> filter) {
+            this.from = from;
+            this.actualTo = actualTo;
+            this.filter = filter;
+        }
+
+        @Override
+        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+            Files.createDirectories(relativeFile(from, dir, actualTo));
+            return FileVisitResult.CONTINUE;
+        }
+
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            if (filter.accept(file)) {
+                Files.copy(file, relativeFile(from, file, actualTo));
+            }
+            return FileVisitResult.CONTINUE;
+        }
+
+        @Override
+        public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+            final Path destDir = relativeFile(from, dir, actualTo);
+            if (IO.isEmptyDir(destDir)) {
+                Files.delete(destDir);
+            }
+            return FileVisitResult.CONTINUE;
+        }
+    }
+
 }
 
 //=============================================================================

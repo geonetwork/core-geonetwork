@@ -2,13 +2,19 @@ package org.fao.geonet.wro4j;
 
 import com.google.common.io.Files;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.annotation.Nonnull;
 
 /**
  * Reads Javascript files to determine the dependency graph between javascript files and allow searching the dependency graph for all

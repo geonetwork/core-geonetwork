@@ -24,10 +24,11 @@ package org.fao.geonet.languages;
 import com.cybozu.labs.langdetect.Detector;
 import com.cybozu.labs.langdetect.DetectorFactory;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.Log;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.utils.Log;
+
+import java.nio.file.Path;
 
 /**
  * Automatic language detector using http://code.google.com/p/language-detection/.
@@ -120,7 +121,7 @@ public class LanguageDetector {
      * @param path path to profiles directory
      * @throws Exception hmm
      */
-    public static void init(String path) throws Exception {
+    public static void init(Path path) throws Exception {
         if(!LanguageDetector.languageLevelSupported) {
             throw new Exception(LanguageDetector.upgradeMessage);
         }
@@ -128,7 +129,7 @@ public class LanguageDetector {
             //
             // initialize DetectorFactory. NOTE this can only happen once, otherwise an exception is thrown.
             //
-            DetectorFactory.loadProfile(path);
+            DetectorFactory.loadProfile(path.toFile());
             LanguageDetector.profilesLoaded = true;
         }
     }

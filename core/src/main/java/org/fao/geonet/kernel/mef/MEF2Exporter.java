@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.mef;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataRelation;
@@ -36,16 +37,20 @@ import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRelationRepository;
+import org.fao.geonet.utils.IO;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.zip.ZipOutputStream;
 
-import static org.fao.geonet.kernel.mef.MEFConstants.*;
+import static org.fao.geonet.Constants.CHARSET;
+import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
+import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
+import static org.fao.geonet.kernel.mef.MEFConstants.MD_DIR;
+import static org.fao.geonet.kernel.mef.MEFConstants.SCHEMA;
 
 class MEF2Exporter {
 	/**
@@ -61,23 +66,19 @@ class MEF2Exporter {
 	 * @return MEF2 File
 	 * @throws Exception
 	 */
-	public static String doExport(ServiceContext context, Set<String> uuids,
-			Format format, boolean skipUUID, String stylePath, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
+	public static Path doExport(ServiceContext context, Set<String> uuids,
+			Format format, boolean skipUUID, Path stylePath, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
 
-		File file = File.createTempFile("mef-", ".mef");
-		FileOutputStream fos = new FileOutputStream(file);
-		ZipOutputStream zos = new ZipOutputStream(fos);
-
-        for (Object uuid1 : uuids) {
-            String uuid = (String) uuid1;
-            createMetadataFolder(context, uuid, zos, skipUUID, stylePath,
-                    format, resolveXlink, removeXlinkAttribute);
+		Path file = Files.createTempFile("mef-", ".mef");
+        try (FileSystem zipFs = ZipUtil.createZipFs(file)) {
+            for (Object uuid1 : uuids) {
+                String uuid = (String) uuid1;
+                createMetadataFolder(context, uuid, zipFs, skipUUID, stylePath,
+                        format, resolveXlink, removeXlinkAttribute);
+            }
         }
 
-		// --- cleanup and exit
-		zos.close();
-
-		return file.getAbsolutePath();
+		return file;
 	}
 
 	/**
@@ -90,7 +91,7 @@ class MEF2Exporter {
 	 * @param context
 	 * @param uuid
 	 *            Metadata record to export
-	 * @param zos
+	 * @param zipFs
 	 *            Zip file to add new record
 	 * @param skipUUID
 	 * @param stylePath
@@ -98,10 +99,11 @@ class MEF2Exporter {
 	 * @throws Exception
 	 */
 	private static void createMetadataFolder(ServiceContext context,
-			String uuid, ZipOutputStream zos, boolean skipUUID,
-			String stylePath, Format format, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
+			String uuid, FileSystem zipFs, boolean skipUUID,
+			Path stylePath, Format format, boolean resolveXlink, boolean removeXlinkAttribute) throws Exception {
 
-		MEFLib.createDir(zos, uuid + FS);
+        final Path metadataRootDir = zipFs.getPath(uuid);
+        Files.createDirectories(metadataRootDir);
 
 		Metadata record = MEFLib.retrieveMetadata(context, uuid, resolveXlink, removeXlinkAttribute);
 
@@ -111,49 +113,49 @@ class MEF2Exporter {
 		if (!"y".equals(isTemp) && !"n".equals(isTemp))
 			throw new Exception("Cannot export sub template");
 
-		String pubDir = Lib.resource.getDir(context, "public", id);
-		String priDir = Lib.resource.getDir(context, "private", id);
+		Path pubDir = Lib.resource.getDir(context, "public", id);
+        Path priDir = Lib.resource.getDir(context, "private", id);
 
-		// --- create folders
-		MEFLib.createDir(zos, uuid + FS + DIR_PUBLIC);
-		MEFLib.createDir(zos, uuid + FS + DIR_PRIVATE);
+        final Path metadataXmlDir = metadataRootDir.resolve(MD_DIR);
+        Files.createDirectories(metadataXmlDir);
 
         Collection<ExportFormat> formats = context.getApplicationContext().getBeansOfType(ExportFormat.class).values();
         for (ExportFormat exportFormat : formats) {
             for (Pair<String, String> output : exportFormat.getFormats(context, record)) {
-                MEFLib.addFile(zos,uuid + FS + MD_DIR + output.one(), output.two());
+                Files.write(metadataXmlDir.resolve(output.one()), output.two().getBytes(CHARSET));
             }
         }
 
 		// --- save native metadata
-		String data = ExportFormat.formatData(record, false, "");
-		MEFLib.addFile(zos, uuid + FS + MD_DIR + FILE_METADATA, data);
+		String data = ExportFormat.formatData(record, false, null);
+        Files.write(metadataXmlDir.resolve(FILE_METADATA), data.getBytes(CHARSET));
 
 		// --- save Feature Catalog
 		String ftUUID = getFeatureCatalogID(context, record.getId());
 		if (!ftUUID.equals("")) {
 			Metadata ft = MEFLib.retrieveMetadata(context, ftUUID, resolveXlink, removeXlinkAttribute);
-			String ftData = ExportFormat.formatData(ft, false, "");
-			MEFLib.addFile(zos, uuid + FS + SCHEMA + FILE_METADATA, ftData);
-		}
+			String ftData = ExportFormat.formatData(ft, false, null);
+            Path featureMdDir = metadataRootDir.resolve(SCHEMA);
+            Files.createDirectories(featureMdDir);
+            Files.write(featureMdDir.resolve(FILE_METADATA), ftData.getBytes(CHARSET));
+        }
 
 		// --- save info file
 		byte[] binData = MEFLib.buildInfoFile(context, record, format, pubDir,
 				priDir, skipUUID).getBytes(Constants.ENCODING);
 
-		MEFLib.addFile(zos, uuid + FS + FILE_INFO, new ByteArrayInputStream(
-				binData));
+        Files.write(metadataRootDir.resolve(FILE_INFO), binData);
 
 		// --- save thumbnails and maps
 
 		if (format == Format.PARTIAL || format == Format.FULL) {
-			MEFLib.savePublic(zos, pubDir, uuid);
+            IO.copyDirectoryOrFile(pubDir, metadataRootDir, true);
         }
 
 		if (format == Format.FULL) {
 			try {
                 Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
-				MEFLib.savePrivate(zos, priDir, uuid);
+                IO.copyDirectoryOrFile(priDir, metadataRootDir, true);
 			} catch (Exception e) {
 				// Current user could not download private data
 			}

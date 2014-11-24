@@ -6,6 +6,8 @@ import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 /**
  * Provides the Distpatch API for the different actions available to all the services.
  *
@@ -15,7 +17,7 @@ public abstract class AbstractSchematronService implements Service {
     private SchematronServiceAction _action = SchematronServiceAction.LIST;
 
     @Override
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         this._action = SchematronServiceAction.lookup(params);
     }
 

@@ -33,12 +33,14 @@ import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 /**
  * This service returns some useful information about GeoNetwork.
  */
 public class Env implements Service {
     private static final String READ_ONLY = "readonly";
-    public void init(String appPath, ServiceConfig params) throws Exception {}
+    public void init(Path appPath, ServiceConfig params) throws Exception {}
 
 	//--------------------------------------------------------------------------
 	//---
@@ -62,6 +64,9 @@ public class Env implements Service {
         // of settings
         Element system = response.getChild("system");
         system.addContent(readOnly);
+        if (response.getChild("map") != null) {
+            system.addContent(response.getChild("map").detach());
+        }
         return (Element) system.clone();
 	}
 }

@@ -24,7 +24,6 @@
 package org.fao.geonet.services.resources;
 
 import jeeves.constants.Jeeves;
-import org.fao.geonet.exceptions.OperationAbortedEx;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Util;
@@ -35,7 +34,8 @@ import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Delete an uploaded file from the data directory.
@@ -43,7 +43,7 @@ import java.io.File;
  */
 public class Get extends NotInReadOnlyModeService {
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     public Element serviceSpecificExec(Element params, ServiceContext context)
@@ -55,14 +55,11 @@ public class Get extends NotInReadOnlyModeService {
         Lib.resource.checkEditPrivilege(context, id);
 
         // delete the file
-        File dir = new File(Lib.resource.getDir(context, access, id));
-        File file = new File(dir, filename);
+        Path file = Lib.resource.getDir(context, access, id).resolve(filename);
 
-        if (file.exists() && !file.delete())
-            throw new OperationAbortedEx("unable to delete resource");
+        Files.deleteIfExists(file);
 
-        Element response = new Element(Jeeves.Elem.RESPONSE)
+        return new Element(Jeeves.Elem.RESPONSE)
                 .addContent(new Element(Geonet.Elem.ID).setText(id));
-        return response;
     }
 }

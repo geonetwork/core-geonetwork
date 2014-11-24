@@ -24,29 +24,34 @@ package org.fao.geonet.kernel.harvest.harvester.localfilesystem;
 
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Logger;
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.OperationAllowedId_;
+import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.kernel.harvest.BaseAligner;
-import org.fao.geonet.kernel.harvest.harvester.*;
+import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
+import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
+import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
+import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
+import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.Updater;
 import org.fao.geonet.resources.Resources;
-import org.fao.geonet.util.XMLExtensionFilenameFilter;
 import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 
-import javax.annotation.Nonnull;
 import java.io.File;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import javax.annotation.Nonnull;
 
 /**
  * Harvester for local filesystem.
@@ -94,172 +99,52 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 		return id;
 	}
 
-	/**
-	 * Aligns new results from filesystem harvesting. Contrary to practice in e.g. CSW Harvesting,
-	 * files removed from the harvesting source are NOT removed from the database. Also, no checks
-	 * on modification date are done; the result gets inserted or replaced if the result appears to
-	 * be in a supported schema.
-	 * @param listOfFiles
-	 * @throws Exception
-	 */
-	private HarvestResult align(List<File> listOfFiles) throws Exception {
-		log.debug("Start of alignment for : "+ params.name);
-		result = new HarvestResult();
-
-		boolean transformIt = false;
-		String thisXslt = context.getAppPath() + Geonet.Path.IMPORT_STYLESHEETS + "/";
-		if (!params.importXslt.equals("none")) {
-			thisXslt = thisXslt + params.importXslt;
-			transformIt = true;
-		}
-
-		//----------------------------------------------------------------
-		//--- retrieve all local categories and groups
-		//--- retrieve harvested uuids for given harvesting node
-		CategoryMapper localCateg = new CategoryMapper(context);
-		GroupMapper localGroups = new GroupMapper(context);
-
-		List<String> idsForHarvestingResult = new ArrayList<String>();
-		//-----------------------------------------------------------------------
-		//--- insert/update new metadata
-
-		for(File file : listOfFiles) {
-			result.totalMetadata++;
-			Element xml;
-			String filePath = file.getCanonicalPath();
-			
-			try {
-				log.debug("reading file: " + filePath);	
-				xml = Xml.loadFile(file);
-			} catch (JDOMException e) { // JDOM problem
-				log.debug("Error loading XML from file " + filePath +", ignoring");	
-				e.printStackTrace();
-				result.badFormat++;
-				continue; // skip this one
-			} catch (Exception e) { // some other error
-				log.debug("Error retrieving XML from file " + filePath +", ignoring");	
-				e.printStackTrace();
-				result.unretrievable++;
-				continue; // skip this one
-			}
-
-			// validate it here if requested
-			if (params.validate) {
-				try {
-					Xml.validate(xml);
-				} catch (Exception e) {
-					log.debug("Cannot validate XML from file " + filePath +", ignoring. Error was: "+e.getMessage());
-					result.doesNotValidate++;
-					continue; // skip this one
-				}
-			}
-			
-			// transform using importxslt if not none
-			if (transformIt) {
-				try {
-					xml = Xml.transform(xml, thisXslt);
-				} catch (Exception e) {
-					log.debug("Cannot transform XML from file " + filePath+", ignoring. Error was: "+e.getMessage());
-					result.badFormat++;
-					continue; // skip this one
-				}
-			}
-
-			String schema = dataMan.autodetectSchema(xml, null);
-			if(schema == null) {
-				result.unknownSchema++;
-			}
-			else {
-				String uuid = dataMan.extractUUID(schema, xml);
-				if(uuid == null || uuid.equals("")) {
-					result.badFormat++;
-				}
-				else {
-					String id = dataMan.getMetadataId( uuid);
-					if (id == null)	{
-					    // For new record change date will be the time of metadata xml date change or the date when
-					    // the record was harvested (if can't be obtained the metadata xml date change)
-                        String createDate = null;
-                        // or the last modified date of the file
-                        if (params.checkFileLastModifiedForUpdate) {
-                            createDate = new ISODate(file.lastModified(), false).getDateAndTime();
-					    } else {
-                            try {
-                                createDate = dataMan.extractDateModified(schema, xml);
-                            } catch (Exception ex) {
-                                log.error("LocalFilesystemHarvester - addMetadata - can't get metadata modified date for metadata uuid= " +
-                                        uuid + ", using current date for modified date");
-                                createDate = new ISODate().toString();
-                            }
-                        }
-                        
-						log.debug("adding new metadata");
-						id = addMetadata(xml, uuid, schema, localGroups, localCateg, createDate);
-						result.addedMetadata++;
-					} else {
-					    // Check last modified date of the file with the record change date
-					    // to check if an update is required
-					    if (params.checkFileLastModifiedForUpdate) {
-    					    Date fileDate = new Date(file.lastModified());
-
-                            final Metadata metadata = context.getBean(MetadataRepository.class).findOne(id);
-                            final ISODate modified = metadata.getDataInfo().getChangeDate();
-                            Date recordDate = modified.toDate();
-
-                            String changeDate = new ISODate(file.lastModified(), false).getDateAndTime();
-
-    					    log.debug(" File date is: " + fileDate.toString() + " / record date is: " + modified);
-    					    if (recordDate.before(fileDate)) {
-    					        log.debug("  Db record is older than file. Updating record with id: " + id);
-    					        updateMetadata(xml, id, localGroups, localCateg, changeDate);
-                                result.updatedMetadata ++;
-    					    } else {
-    					        log.debug("  Db record is not older than last modified date of file. No need for update.");
-    					        result.unchangedMetadata ++;
-    					    }
-					    } else {
-    					    log.debug("  updating existing metadata, id is: " + id);
-
-                            String changeDate;
-
-                            try {
-                                changeDate = dataMan.extractDateModified(schema, xml);
-                            } catch (Exception ex) {
-                                log.error("LocalFilesystemHarvester - updateMetadata - can't get metadata modified date for metadata id= " +
-                                        id + ", using current date for modified date");
-                                changeDate = new ISODate().toString();
-                            }
-
-    						updateMetadata(xml, id, localGroups, localCateg, changeDate);
-    						result.updatedMetadata++;
-					    }
-					}
-					idsForHarvestingResult.add(id);
-				}
-			}
-		}
-
-		if(!params.nodelete) {
-			//
-			// delete locally existing metadata from the same source if they were
-			// not in this harvesting result
-			//
+    /**
+     * Aligns new results from filesystem harvesting. Contrary to practice in e.g. CSW Harvesting,
+     * files removed from the harvesting source are NOT removed from the database. Also, no checks
+     * on modification date are done; the result gets inserted or replaced if the result appears to
+     * be in a supported schema.
+     *
+     * @param root the directory to visit
+     * @throws Exception
+     */
+    private HarvestResult align(Path root) throws Exception {
+        log.debug("Start of alignment for : " + params.name);
+        final LocalFsHarvesterFileVisitor visitor = new LocalFsHarvesterFileVisitor(context, params, log, this);
+        if (params.recurse) {
+            Files.walkFileTree(root, visitor);
+        } else {
+            try (DirectoryStream<Path> paths = Files.newDirectoryStream(root)) {
+                for (Path path : paths) {
+                    if (Files.isRegularFile(path)) {
+                        visitor.visitFile(path, Files.readAttributes(path, BasicFileAttributes.class));
+                    }
+                }
+            }
+        }
+        result = visitor.getResult();
+        List<String> idsForHarvestingResult = visitor.getIdsForHarvestingResult();
+        if (!params.nodelete) {
+            //
+            // delete locally existing metadata from the same source if they were
+            // not in this harvesting result
+            //
             List<Metadata> existingMetadata = context.getBean(MetadataRepository.class).findAllByHarvestInfo_Uuid(params.uuid);
-			for(Metadata existingId : existingMetadata) {
-				String ex$ = String.valueOf(existingId.getId());
-				if(!idsForHarvestingResult.contains(ex$)) {
-				    log.debug("  Removing: " + ex$);
-					dataMan.deleteMetadata(context, ex$);
-					result.locallyRemoved++;
-				}
-			}			
-		}
-		log.debug("End of alignment for : "+ params.name);
-		return result;
-	}
+            for (Metadata existingId : existingMetadata) {
+                String ex$ = String.valueOf(existingId.getId());
+                if (!idsForHarvestingResult.contains(ex$)) {
+                    log.debug("  Removing: " + ex$);
+                    dataMan.deleteMetadata(context, ex$);
+                    result.locallyRemoved++;
+                }
+            }
+        }
+        log.debug("End of alignment for : " + params.name);
+        return result;
+    }
 
-	private void updateMetadata(Element xml, final String id, GroupMapper localGroups,
-                                final CategoryMapper localCateg, String changeDate) throws Exception {
+	void updateMetadata(Element xml, final String id, GroupMapper localGroups,
+                        final CategoryMapper localCateg, String changeDate) throws Exception {
 		log.debug("  - Updating metadata with id: "+ id);
 
         //
@@ -296,7 +181,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 	 * @param createDate TODO
 	 * @throws Exception
 	 */
-	private String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, final CategoryMapper localCateg, String createDate) throws Exception {
+    String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, final CategoryMapper localCateg, String createDate) throws Exception {
 		log.debug("  - Adding metadata with remote uuid: "+ uuid);
 
 		String source = params.uuid;
@@ -330,10 +215,8 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
 	@Override
     public void doHarvest(Logger l) throws Exception {
 		log.debug("LocalFilesystem doHarvest: top directory is " + params.directoryname + ", recurse is " + params.recurse);
-		File directory = new File(params.directoryname);
-		List<File> results = IO.getFilesInDirectory(directory, params.recurse, new XMLExtensionFilenameFilter(XMLExtensionFilenameFilter.ACCEPT_DIRECTORIES));
-		log.debug("LocalFilesystem doHarvest: found #" + results.size() + " XML files.");
-		this.result = align(results);
+		Path directory = IO.toPath(params.directoryname);
+		this.result = align(directory);
 	}
 
 	@Override

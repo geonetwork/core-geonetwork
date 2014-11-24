@@ -24,15 +24,10 @@
 package org.fao.geonet.kernel.csw.services.getrecords;
 
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.kernel.search.LuceneSearcher;
-import org.fao.geonet.kernel.search.SearchManager;
-import org.fao.geonet.kernel.setting.SettingInfo;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.Util;
-import org.fao.geonet.utils.Xml;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.search.Sort;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
@@ -42,17 +37,22 @@ import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.domain.Pair;
+import org.fao.geonet.kernel.search.LuceneSearcher;
+import org.fao.geonet.kernel.search.SearchManager;
+import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.geotools.gml2.GMLConfiguration;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.context.ApplicationContext;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -231,9 +231,9 @@ public class SearchController {
 		// --- If this occur user should probably migrate the catalogue from iso19115 to iso19139.
 		// --- But sometimes you could harvest remote node in iso19115 and make them available through CSW
 		if (schema.equals("iso19115")) {
-			res = Xml.transform(res, new StringBuilder().append(context.getAppPath()).append("xsl")
-                    .append(File.separator).append("conversion").append(File.separator).append("import")
-                    .append(File.separator).append("ISO19115-to-ISO19139.xsl").toString());
+            Path styleSheetPath =
+                    context.getAppPath().resolve("xsl").resolve("conversion").resolve("import").resolve("ISO19115-to-ISO19139.xsl");
+            res = Xml.transform(res, styleSheetPath);
 			schema = "iso19139";
 		}
 		
@@ -298,8 +298,8 @@ public class SearchController {
             throw new InvalidParameterValueEx("outputSchema not supported for metadata " + id + " schema.", schema);
         }
 
-		String schemaDir  = schemaManager.getSchemaCSWPresentDir(schema)+ File.separator;
-		String styleSheet = schemaDir + prefix +"-"+ elementSetName +".xsl";
+		Path schemaDir  = schemaManager.getSchemaCSWPresentDir(schema);
+		Path styleSheet = schemaDir.resolve(prefix +"-"+ elementSetName +".xsl");
 
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("lang", displayLanguage);

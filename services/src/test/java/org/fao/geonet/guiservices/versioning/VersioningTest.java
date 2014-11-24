@@ -1,14 +1,13 @@
 package org.fao.geonet.guiservices.versioning;
 
 import org.apache.commons.io.FileUtils;
-
+import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.jdom.JDOMException;
-
-import junit.framework.TestCase;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.tmatesoft.svn.core.SVNDepth;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
@@ -19,44 +18,37 @@ import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNRevision;
 import org.tmatesoft.svn.core.wc.SVNUpdateClient;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
  * Unit tests for SVN versioning service
  */
-public class VersioningTest extends TestCase {
-    private static String FS = File.separator;
-    private static String resources = getRootPath() + FS + "src" + FS + "test" + FS + "resources" + FS + "org" + FS + "fao" + FS + "geonet" + FS + "guiservices" + FS + "versioning/";
-    private final String tempDir = System.getProperty("java.io.tmpdir");
+public class VersioningTest {
+    private static String resources = AbstractCoreIntegrationTest.getClassFile(VersioningTest.class).getParent();
     private SVNURL tgtURL;
-    private final File LOCAL_REPO = new File(tempDir + "/GNTestRepo");
-    private final File WORKING_COPY = new File(tempDir + "/GNTestSVNWorkingCopy");
+    @Rule
+    public TemporaryFolder localRepo = new TemporaryFolder();
+    @Rule
+    public TemporaryFolder workingFolder = new TemporaryFolder();
 
-
-    public VersioningTest(String name) {
-        super(name);
-    }
 
     @Before
     public void setUp() throws Exception {
         SVNRepositoryFactoryImpl.setup();
-        tgtURL = SVNRepositoryFactory.createLocalRepository(LOCAL_REPO, true, true);
-        FileUtils.forceMkdir(WORKING_COPY);
+        tgtURL = SVNRepositoryFactory.createLocalRepository(localRepo.getRoot(), true, true);
+        FileUtils.forceMkdir(workingFolder.getRoot());
     }
 
-    @After
-    public void tearDown() throws IOException {
-        FileUtils.deleteDirectory(LOCAL_REPO);
-        FileUtils.deleteDirectory(WORKING_COPY);
-    }
 
+    @Test
     public void testConversion() throws SVNException, IOException {
         SVNClientManager ourClientManager = SVNClientManager.newInstance();
         // checkout working copy
         SVNUpdateClient updateClient = ourClientManager.getUpdateClient();
         updateClient.setIgnoreExternals(false);
-        updateClient.doCheckout(tgtURL, WORKING_COPY, SVNRevision.UNDEFINED, SVNRevision.HEAD, SVNDepth.INFINITY, true);
+        updateClient.doCheckout(tgtURL, workingFolder.getRoot(), SVNRevision.UNDEFINED, SVNRevision.HEAD, SVNDepth.INFINITY, true);
         // add file under version control
         int id1 = 45;
         create(ourClientManager, id1);
@@ -89,12 +81,13 @@ public class VersioningTest extends TestCase {
         ourClientManager.dispose();
     }
 
+    @Test
     public void testTitleAdding() throws SVNException, IOException, JDOMException {
         SVNClientManager ourClientManager = SVNClientManager.newInstance();
         // checkout working copy
         SVNUpdateClient updateClient = ourClientManager.getUpdateClient();
         updateClient.setIgnoreExternals(false);
-        updateClient.doCheckout(tgtURL, WORKING_COPY, SVNRevision.UNDEFINED, SVNRevision.HEAD, SVNDepth.INFINITY, true);
+        updateClient.doCheckout(tgtURL, workingFolder.getRoot(), SVNRevision.UNDEFINED, SVNRevision.HEAD, SVNDepth.INFINITY, true);
         // add file under version control
         int id = 1;
         create(ourClientManager, id);
@@ -141,7 +134,7 @@ public class VersioningTest extends TestCase {
      * @throws org.tmatesoft.svn.core.SVNException
      */
     private void create(SVNClientManager ourClientManager, int id) throws IOException, SVNException {
-        File dir = new File(WORKING_COPY.getPath() + "/" + id + "/");
+        File dir = new File(workingFolder.getRoot().getPath() + "/" + id + "/");
         FileUtils.forceMkdir(dir);
         // add directory
         ourClientManager.getWCClient().doAdd(dir, false, false, true, SVNDepth.FILES, false, true, true);
@@ -150,13 +143,13 @@ public class VersioningTest extends TestCase {
         ourClientManager.getCommitClient().doCommit(new File[]{dir}, false, dirMsg, null, null, true, true, SVNDepth.INFINITY);
         //put files in working copy
         final String pfn = "privileges.xml";
-        File privileges = new File(resources+ pfn);
+        File privileges = new File(resources, pfn);
         final String mfn = "metadata.xml";
-        File metadata = new File(resources+ mfn);
+        File metadata = new File(resources, mfn);
         final String cfn = "categories.xml";
-        File categories = new File(resources+ cfn);
+        File categories = new File(resources, cfn);
         final String ofn = "owner.xml";
-        File owner = new File(resources+ ofn);
+        File owner = new File(resources, ofn);
         FileUtils.copyFileToDirectory(privileges, dir);
         FileUtils.copyFileToDirectory(metadata, dir);
         FileUtils.copyFileToDirectory(categories, dir);
@@ -178,10 +171,10 @@ public class VersioningTest extends TestCase {
      * @throws org.tmatesoft.svn.core.SVNException
      */
     private void modify(SVNClientManager ourClientManager, int id) throws IOException, SVNException {
-        File dir = new File(WORKING_COPY.getPath() + "/" + id + "/");
+        File dir = new File(workingFolder.getRoot().getPath() + "/" + id + "/");
         final String mfn = "modifiedmetadata.xml";
-        File metadata = new File(resources+ mfn);
-        final File fileToBeCommited = new File(dir.getPath() + "/metadata.xml");
+        File metadata = new File(resources, mfn);
+        final File fileToBeCommited = new File(dir.getPath(), "metadata.xml");
         FileUtils.copyFile(metadata, fileToBeCommited);
         String fileMsg = "GeoNetwork service: metadata.update.finish GeoNetwork User 1 (Username: admin Name: admin admin) Executed from IP address 0:0:0:0:0:0:0:1 (committing dbms session jeeves.resources.dbms.Dbms@199d1e1)";
         ourClientManager.getCommitClient().doCommit(new File[]{fileToBeCommited}, false, fileMsg, null, null, true, false, SVNDepth.FILES);
@@ -195,17 +188,10 @@ public class VersioningTest extends TestCase {
      * @throws org.tmatesoft.svn.core.SVNException
      */
     private void delete(SVNClientManager ourClientManager, int id) throws IOException, SVNException {
-        final String dirPath = WORKING_COPY.getPath() + "/" + id + "/";
-        final File dir = new File(dirPath);
+        final File dir = new File(workingFolder.getRoot(), ""+id);
         ourClientManager.getWCClient().doDelete(dir, false, true, false);
         String delMsg = "GeoNetwork service: metadata.batch.delete GeoNetwork User 1 (Username: admin Name: admin admin) Executed from IP address 0:0:0:0:0:0:0:1 deleting directory for metadata " + id;
-        ourClientManager.getUpdateClient().doUpdate(WORKING_COPY, SVNRevision.HEAD, SVNDepth.INFINITY, false, false);
-        ourClientManager.getCommitClient().doCommit(new File[]{WORKING_COPY}, false, delMsg, null, null, false, false, SVNDepth.INFINITY);
-    }
-    private static String getRootPath() {
-        String basedir = System.getProperty("basedir");
-    if (basedir == null) {
-        return "core";
-    } else return basedir;
+        ourClientManager.getUpdateClient().doUpdate(workingFolder.getRoot(), SVNRevision.HEAD, SVNDepth.INFINITY, false, false);
+        ourClientManager.getCommitClient().doCommit(new File[]{workingFolder.getRoot()}, false, delMsg, null, null, false, false, SVNDepth.INFINITY);
     }
 }

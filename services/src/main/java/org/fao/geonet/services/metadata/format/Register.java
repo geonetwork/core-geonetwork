@@ -23,24 +23,23 @@
 
 package org.fao.geonet.services.metadata.format;
 
+import com.vividsolutions.jts.util.Assert;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.utils.IO;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.fao.geonet.Constants;
 import org.fao.geonet.Util;
+import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
-import org.fao.geonet.util.ZipUtil;
+import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 
-import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Collection;
-import java.util.zip.ZipException;
-import java.util.zip.ZipFile;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Iterator;
 
 /**
  * Upload a formatter bundle.  Uploaded file can be a single xsl or a zip file containing
@@ -66,26 +65,31 @@ public class Register extends AbstractFormatService {
         }
 
         checkLegalId(Params.ID, xslid);
-        File file = new File(userXslDir + xslid);
-        
-        File uploadedFile = new File(context.getUploadDir(), fileName);
-        if (file.exists()) {
-            FileUtils.deleteDirectory(file);
-        }
-        IO.mkdirs(file, "Formatter directory");
+        Path newBundle = userXslDir.resolve(xslid);
+        IO.deleteFileOrDirectory(newBundle);
+
+        Path uploadedFile = context.getUploadDir().resolve(fileName);
+
+        Files.createDirectories(newBundle);
 
         try {
-            try {
-                ZipFile zipFile = new ZipFile(uploadedFile);
-                handleZipFile(zipFile, file);
-            } catch (ZipException e) {
-                handleRawXsl(uploadedFile, file);
-            } catch (IllegalStateException e){
-                FileUtils.deleteDirectory(file);
+
+            try (FileSystem zipFs = ZipUtil.openZipFs(uploadedFile)){
+                Path viewFile = findViewFile(zipFs);
+                if (viewFile == null) {
+                    throw new IllegalArgumentException(
+                            "A formatter zip file must contain a " + VIEW_XSL_FILENAME + " file as one of its root files");
+                }
+                ZipUtil.extract(zipFs, newBundle);
+
+            } catch (IOException e) {
+                handleRawXsl(uploadedFile, newBundle);
+            } catch (Exception e){
+                IO.deleteFileOrDirectory(newBundle);
                 throw e;
             }
 
-            addOptionalFiles(file);
+            addOptionalFiles(newBundle);
             
             Element response = new Element("result");
             Element idElem = new Element("id");
@@ -94,18 +98,48 @@ public class Register extends AbstractFormatService {
 
             return response;
         } finally {
-            IO.delete(uploadedFile, false, Geonet.FORMATTER);
+            IO.deleteFile(uploadedFile, false, Geonet.FORMATTER);
         }
     }
 
-    private void addOptionalFiles(File file) throws IOException {
+    private Path findViewFile(FileSystem zipFs) throws IOException {
+        Path rootView = zipFs.getPath(VIEW_XSL_FILENAME);
+        if (Files.exists(rootView)) {
+            return rootView;
+        }
+        final String groovyView = "view.groovy";
+        rootView = zipFs.getPath(groovyView);
+        if (Files.exists(rootView)) {
+            return rootView;
+        }
+        final Path rootDir = zipFs.getRootDirectories().iterator().next();
+        try (DirectoryStream<Path> dirs = Files.newDirectoryStream(rootDir, IO.DIRECTORIES_FILTER)) {
+            Iterator<Path> dirIter = dirs.iterator();
+            if (dirIter.hasNext()) {
+                Path next = dirIter.next();
+                Assert.isTrue(!dirIter.hasNext(),
+                        "The formatter/view zip file must either have a single root directory which contains the view file or " +
+                        "it must have all formatter resources at the root of the directory");
+                rootView = next.resolve(VIEW_XSL_FILENAME);
+                if (Files.exists(rootView)) {
+                    return rootView;
+                }
+                rootView = next.resolve(groovyView);
+                if (Files.exists(rootView)) {
+                    return rootView;
+                }
+            }
+        }
+        return null;
+    }
+
+    private void addOptionalFiles(Path file) throws IOException {
     	ConfigFile.generateDefault(file);
 
-        if (!new File(file, "loc").exists()) {
-            IO.mkdirs(new File(file, "loc"), "Localization directory");
-            PrintStream out = null;
-            try {
-                out = new PrintStream(new File(file, "loc"+File.separator+"README"), Constants.ENCODING);
+        final Path locDir = file.resolve("loc");
+        if (!Files.exists(locDir)) {
+            Files.createDirectories(locDir);
+            try (PrintStream out = new PrintStream(Files.newOutputStream(locDir.resolve("README")), true, Constants.ENCODING)) {
                 out.println("If a formatter requires localization that cannot be found in strings or schema ");
                 out.println("localization the format bundle can have a loc subfolder containing translations.");
                 out.println("");
@@ -116,50 +150,12 @@ public class Register extends AbstractFormatService {
                 out.println("if the default language also does not exist then the first localization will be used");
                 out.println("but it is recommended to always have the default language localization");
                 out.println("(unless language is fixed in the config.properties)");
-            } finally {
-                IOUtils.closeQuietly(out);
             }
         }
     }
 
-    private void handleRawXsl(File uploadedFile, File dir) throws IOException {
-        FileUtils.moveFile(uploadedFile, new File(dir, VIEW_XSL_FILENAME));
-    }
-
-    private void handleZipFile(ZipFile zipFile, File dir) throws IOException {
-        ZipUtil.extract(zipFile, dir);
-        removeTopDir(dir);
-        Collection<File> xslFiles = FileUtils.listFiles(dir, new String[]{"xsl"}, false);
-        File toRename = null;
-        for (File file : xslFiles) {
-            if (file.getName().equals(VIEW_XSL_FILENAME)) return;
-            toRename = file;
-        }
-        
-        if (xslFiles.size() > 1 || toRename == null) {
-            throw new IllegalStateException("Uploaded zip file must have a view.xsl file or only a single xsl file");
-        }
-        
-        FileUtils.moveFile(toRename, new File(dir, VIEW_XSL_FILENAME));
-    }
-
-    private void removeTopDir(File dir) throws IOException {
-        File[] files = dir.listFiles(new FileFilter(){
-            @Override
-            public boolean accept(File file) {
-                if (file.isDirectory() && !file.getName().startsWith(".") 
-                        && !FileUtils.listFiles(file, new String[]{"xsl"}, false).isEmpty()) {
-                    return true;
-                }
-                return false;
-            }
-        });
-        
-        if (files.length == 1) {
-            for ( File f : files[0].listFiles()) {
-                FileUtils.moveToDirectory(f, dir, true);
-            }
-            FileUtils.deleteDirectory(files[0]);
-        }
+    private void handleRawXsl(Path uploadedFile, Path dir) throws IOException {
+        Files.createDirectories(dir);
+        IO.moveDirectoryOrFile(uploadedFile, dir.resolve(VIEW_XSL_FILENAME), false);
     }
 }

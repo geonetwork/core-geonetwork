@@ -22,15 +22,7 @@
 //==============================================================================
 package org.fao.geonet.kernel.security.ldap;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.fao.geonet.utils.Log;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.LDAPUser;
 import org.fao.geonet.domain.Profile;
@@ -38,6 +30,7 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -48,6 +41,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -153,6 +153,9 @@ public abstract class AbstractLDAPUserDetailsContextMapper implements
             GroupRepository groupRepo = applicationContext.getBean(GroupRepository.class);
             UserGroupRepository userGroupRepo = applicationContext.getBean(UserGroupRepository.class);
             LDAPUtils.saveUser(userDetails, userRepo, groupRepo, userGroupRepo, importPrivilegesFromLdap, createNonExistingLdapGroup);
+
+            NodeInfo nodeInfo = applicationContext.getBean(NodeInfo.class);
+            userDetails.getUser().getSecurity().setNodeId(nodeInfo.getId());
         } catch (Exception e) {
             throw new AuthenticationServiceException(
                     "Unexpected error while saving/updating LDAP user in database",

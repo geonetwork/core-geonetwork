@@ -22,14 +22,8 @@
 //==============================================================================
 package org.fao.geonet.services.statistics;
 
-import static org.fao.geonet.repository.statistic.MetadataStatisticSpec.StandardSpecs.metadataCount;
-
-import java.util.Map;
-import java.util.Map.Entry;
-
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.MetadataCategory;
@@ -42,12 +36,18 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.services.NotInReadOnlyModeService;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import static org.fao.geonet.repository.statistic.MetadataStatisticSpec.StandardSpecs.metadataCount;
+
 /**
  * Service to get statistics on metadata record
  */
 public class MetadataStatistics extends NotInReadOnlyModeService {
 
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
         super.init(appPath, params);
     }
 

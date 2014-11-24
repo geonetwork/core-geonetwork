@@ -28,10 +28,12 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
+import java.nio.file.Path;
+
 public class GetNotificationSettings implements Service {
 
 	@Override
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 
 	}
 

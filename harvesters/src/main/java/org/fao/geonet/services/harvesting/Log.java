@@ -1,15 +1,14 @@
 package org.fao.geonet.services.harvesting;
 
-import java.io.File;
-
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-
 import opendap.servlet.BadURLException;
-
 import org.fao.geonet.utils.BinaryFile;
 import org.jdom.Element;
+
+import java.io.File;
+import java.nio.file.Path;
 
 /**
  * Download a logfile from harvesting
@@ -18,7 +17,7 @@ import org.jdom.Element;
  * 
  */
 public class Log implements Service {
-    public void init(String appPath, ServiceConfig config) throws Exception {
+    public void init(Path appPath, ServiceConfig config) throws Exception {
 
     }
 
@@ -53,7 +52,7 @@ public class Log implements Service {
                     "Couldn't find or read the logfile. Somebody moved it? " + file.getAbsolutePath());
         }
 
-        return BinaryFile.encode(200, file.getAbsolutePath(), false);
+        return BinaryFile.encode(200, file.toPath().toAbsolutePath().normalize(), false).getElement();
     }
 
 }

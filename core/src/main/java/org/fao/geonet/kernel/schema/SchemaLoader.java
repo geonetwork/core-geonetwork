@@ -27,29 +27,28 @@
 
 package org.fao.geonet.kernel.schema;
 
-import java.io.File;
+import org.fao.geonet.constants.Edit;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
+import org.fao.geonet.repository.SchematronRepository;
+import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Resolver;
+import org.fao.geonet.utils.ResolverWrapper;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-
-import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
-import org.fao.geonet.repository.SchematronRepository;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.utils.Xml;
-
-import org.fao.geonet.constants.Edit;
-import org.fao.geonet.constants.Geonet;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
-import org.fao.geonet.utils.ResolverWrapper;
-import org.fao.geonet.utils.Resolver;
-
-import java.net.URI;
-import java.util.*;
 
 //==============================================================================
 
@@ -95,19 +94,19 @@ public class SchemaLoader
 	//---
 	//---------------------------------------------------------------------------
 
-	public MetadataSchema load(String xmlSchemaFile, String xmlSubstitutionsFile, SchematronRepository schemaRepo,
+	public MetadataSchema load(Path xmlSchemaFile, Path xmlSubstitutionsFile, SchematronRepository schemaRepo,
                                SchematronCriteriaGroupRepository criteriaGroupRepository) throws Exception
 	{
 		ssOverRides = new SchemaSubstitutions(xmlSubstitutionsFile);
 
-		if (!new File(xmlSchemaFile).exists()) return new MetadataSchema(schemaRepo, criteriaGroupRepository);
+		if (!Files.exists(xmlSchemaFile)) return new MetadataSchema(schemaRepo, criteriaGroupRepository);
 
 		//--- PHASE 1 : pre-processing
 		//---
 		//--- the xml file is parsed and simplified. Xml schema subtrees are
 		//--- wrapped in some classes
 
-		List<ElementInfo> alElementFiles = loadFile(xmlSchemaFile, new HashSet<String>());
+		List<ElementInfo> alElementFiles = loadFile(xmlSchemaFile, new HashSet<Path>());
 
 		parseElements(alElementFiles);
 
@@ -642,11 +641,11 @@ public class SchemaLoader
 
 	/** Loads the xml-schema file, removes annotations and resolve imports/includes */
 
-	private List<ElementInfo> loadFile(String xmlSchemaFile, HashSet<String> loadedFiles) throws Exception
+	private List<ElementInfo> loadFile(Path xmlSchemaFile, HashSet<Path> loadedFiles) throws Exception
 	{
-		loadedFiles.add(new File(xmlSchemaFile).getCanonicalPath());
+		loadedFiles.add(xmlSchemaFile.toAbsolutePath().normalize());
 
-		String path = new File(xmlSchemaFile).getParent() + "/";
+		Path path = xmlSchemaFile.getParent();
 
 		//--- load xml-schema
         Log.debug(Geonet.SCHEMA_MANAGER, "Loading schema " + xmlSchemaFile);
@@ -675,7 +674,11 @@ public class SchemaLoader
 		// namespace is as shown in the if statement then getAdditionalNamespaces 
 		// doesn't return the namespaces and we can't get a prefix - this fix gets
 		// around that bug
-		if ((xmlSchemaFile.contains("xml.xsd") || xmlSchemaFile.contains("xml-mod.xsd")) && targetNS.equals("http://www.w3.org/XML/1998/namespace")) targetNSPrefix="xml";
+		if ((xmlSchemaFile.toString().contains("xml.xsd") ||
+             xmlSchemaFile.toString().contains("xml-mod.xsd")) &&
+            targetNS.equals("http://www.w3.org/XML/1998/namespace")) {
+            targetNSPrefix="xml";
+        }
 
 		@SuppressWarnings("unchecked")
         List<Element> children = elRoot.getChildren();
@@ -690,37 +693,35 @@ public class SchemaLoader
 
             if (name.equals("annotation")) {
                 
-            }
-
-            else if (name.equals("import") || name.equals("include")) {
+            } else if (name.equals("import") || name.equals("include")) {
                 String schemaLoc = elChild.getAttributeValue("schemaLocation");
 
                 //--- we must try to resolve imports from the web using the
                 //--- oasis catalog
-                String scFile;
+                Path scFile;
                 if (schemaLoc.startsWith("http:")) {
                     Resolver resolver = ResolverWrapper.getInstance();
-                    scFile = resolver.getXmlResolver().resolveURI(schemaLoc);
+                    final String scPath = resolver.getXmlResolver().resolveURI(schemaLoc);
 
                     if (Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
-                          Log.debug(Geonet.SCHEMA_MANAGER, "Cats: " +
-                                  Arrays.toString(resolver.getXmlResolver().getCatalogList()) +
-                                  " Resolved " + schemaLoc +
-                                  " " + scFile);
+                          Log.debug(Geonet.SCHEMA_MANAGER,
+                                  "Cats: " + Arrays.toString(resolver.getXmlResolver().getCatalogList()) +
+                                  " Resolved " + schemaLoc + " " + scPath);
                     }
 
-                    if (scFile == null) { // what use is this? old behaviour
-                        Log.warning(Geonet.SCHEMA_MANAGER, "Cannot resolve " + schemaLoc +
-                                ": will append last component to current path (not sure it will help though!)");
+                    if (scPath == null) {
+                        Log.warning(Geonet.SCHEMA_MANAGER,
+                                "Cannot resolve " + schemaLoc + ": will append last component to current path " +
+                                "(not sure it will help though!)");
                         int lastSlash = schemaLoc.lastIndexOf('/');
-                        scFile = path + schemaLoc.substring(lastSlash + 1);
-                    } else {  // this is good - get the path of resolved URI
-                        scFile = new URI(scFile).getPath();
+                        scFile = path.resolve(schemaLoc.substring(lastSlash + 1));
+                    } else {
+                        scFile = IO.toPath(scPath);
                     }
                 } else {
-                    scFile = path + schemaLoc;
+                    scFile = path.resolve(schemaLoc);
                 }
-                if (!loadedFiles.contains(new File(scFile).getCanonicalPath())) {
+                if (!loadedFiles.contains(scFile.toAbsolutePath().normalize())) {
                     alElementFiles.addAll(loadFile(scFile, loadedFiles));
                 }
             }
@@ -1197,13 +1198,13 @@ public class SchemaLoader
 class ElementInfo
 {
 	public Element element;
-	public String  file;
+	public Path  file;
 	public String  targetNS;
 	public String  targetNSPrefix;
 
 	//---------------------------------------------------------------------------
 
-	public ElementInfo(Element e, String f, String tns, String tnsp)
+	public ElementInfo(Element e, Path f, String tns, String tnsp)
 	{
 		element        = e;
 		file           = f;

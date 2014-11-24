@@ -23,30 +23,9 @@
 
 package org.fao.geonet.kernel.csw.services.getrecords;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
-
-import javax.annotation.Nonnull;
-
+import com.vividsolutions.jts.geom.Geometry;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.kernel.setting.SettingInfo;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.Constants;
-import org.fao.geonet.Util;
-import org.fao.geonet.utils.Xml;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.document.Document;
@@ -68,13 +47,16 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
+import org.fao.geonet.Constants;
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.SearchExpiredEx;
 import org.fao.geonet.kernel.AccessManager;
@@ -90,8 +72,10 @@ import org.fao.geonet.kernel.search.LuceneUtils;
 import org.fao.geonet.kernel.search.MetadataRecordSelector;
 import org.fao.geonet.kernel.search.SearchManager;
 import org.fao.geonet.kernel.search.index.GeonetworkMultiReader;
-import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.search.spatial.SpatialIndexWriter;
+import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.geotools.gml2.GMLConfiguration;
 import org.geotools.xml.Encoder;
 import org.jdom.Attribute;
@@ -100,7 +84,21 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.springframework.context.ApplicationContext;
 
-import com.vividsolutions.jts.geom.Geometry;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
+import javax.annotation.Nonnull;
 
 //=============================================================================
 
@@ -292,8 +290,7 @@ public class CatalogSearcher implements MetadataRecordSelector {
 		if (filterExpr == null)
 			return null;
 
-		String styleSheet = context.getAppPath() + Geonet.Path.CSW
-				+ Geonet.File.FILTER_TO_LUCENE;
+		Path styleSheet = context.getAppPath().resolve(Geonet.Path.CSW).resolve(Geonet.File.FILTER_TO_LUCENE);
 
 		try {
 			Element result = Xml.transform(filterExpr, styleSheet);

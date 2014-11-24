@@ -16,6 +16,8 @@ import org.jdom.Element;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.regex.Pattern;
 
 /**
@@ -28,16 +30,13 @@ abstract class AbstractFormatService implements Service {
     protected static final Pattern ID_XSL_REGEX = Pattern.compile("[\\w0-9\\-_]+");
     protected static final String VIEW_XSL_FILENAME = "view.xsl";
 
-    protected volatile String userXslDir;
+    protected volatile Path userXslDir;
     protected volatile boolean initializedDir;
 
-    public void init(String appPath, ServiceConfig params) throws Exception
+    public void init(Path appPath, ServiceConfig params) throws Exception
     {
-        userXslDir = params.getMandatoryValue(USER_XSL_DIR);
-        if(!userXslDir.endsWith(File.separator)) {
-            userXslDir = userXslDir + File.separator;
-        }
-        
+        userXslDir = IO.toPath(params.getMandatoryValue(USER_XSL_DIR));
+
         Log.info(Geonet.DATA_DIRECTORY, "Custom Metadata format XSL directory set to initial value of: "+userXslDir);
     }
 
@@ -45,15 +44,11 @@ abstract class AbstractFormatService implements Service {
         if (!initializedDir) {
             synchronized (this) {
                 if (!initializedDir) {
-                    if (!new File(userXslDir).isAbsolute()) {
-                        String systemDataDir = context.getBean(GeonetworkDataDirectory.class).getSystemDataDir();
-
-                        if (!systemDataDir.endsWith(File.separator)) {
-                            systemDataDir = systemDataDir + File.separator;
-                        }
-                        userXslDir = systemDataDir + "data" + File.separator + userXslDir;
+                    if (!userXslDir.isAbsolute()) {
+                        Path systemDataDir = context.getBean(GeonetworkDataDirectory.class).getSystemDataDir();
+                        userXslDir = systemDataDir.resolve("data").resolve(userXslDir);
                     }
-                    IO.mkdirs(new File(userXslDir), "Formatter directory");
+                    Files.createDirectories(userXslDir);
 
                     Log.info(Geonet.DATA_DIRECTORY, "Final Custom Metadata format XSL directory set to: " + userXslDir);
 
@@ -77,32 +72,28 @@ abstract class AbstractFormatService implements Service {
 		String schema = dm.getMetadataSchema(metadataId);
 		return schema;
 	}
-    protected static boolean containsFile(File container, File desiredFile) throws IOException {
-        String canonicalDesired = desiredFile.getCanonicalPath();
-        String canonicalContainer = container.getCanonicalPath();
+    protected static boolean containsFile(Path container, Path desiredFile) throws IOException {
+        Path canonicalDesired = desiredFile.toAbsolutePath().normalize();
+        Path canonicalContainer = container.toAbsolutePath().normalize();
         return canonicalDesired.startsWith(canonicalContainer);
     }
-    protected File getAndVerifyFormatDir(String paramName, String xslid) throws BadParameterEx, IOException {
+    protected Path getAndVerifyFormatDir(String paramName, String xslid) throws BadParameterEx, IOException {
         if (xslid == null) {
             throw new BadParameterEx(paramName, "missing "+paramName+" param");
         }
         
         checkLegalId(paramName, xslid);
-        File formatDir = new File(userXslDir + xslid);
-        
-        if(!formatDir.exists()) {
-            throw new BadParameterEx(paramName, "Format bundle "+xslid+" does not exist");
+        Path formatDir = userXslDir.resolve(xslid);
+
+        if(!Files.isDirectory(formatDir)) {
+            throw new BadParameterEx(paramName, "Format bundle "+xslid+" is not a legal bundle");
         }
         
-        if(!formatDir.isDirectory()) {
-            throw new BadParameterEx(paramName, "Format bundle "+xslid+" is not a directory");
-        }
-        
-        if(!new File(formatDir, VIEW_XSL_FILENAME).exists()) {
+        if(!Files.exists(formatDir.resolve(VIEW_XSL_FILENAME))) {
             throw new BadParameterEx(paramName, "Format bundle "+xslid+" is not a valid format bundle because it does not have a "+VIEW_XSL_FILENAME+" file");
         }
         
-        if (!containsFile(new File(userXslDir), formatDir)) {
+        if (!containsFile(userXslDir, formatDir)) {
             throw new BadParameterEx(paramName, "Format bundle "+xslid+" is not a format bundle id because it does not reference a file contained within the userXslDir");
         }
         return formatDir;

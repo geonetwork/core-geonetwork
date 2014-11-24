@@ -23,21 +23,10 @@
 
 package org.fao.geonet.component.csw;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.servlet.ServletContext;
-
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.overrides.ConfigurationOverrides;
-
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
@@ -66,8 +55,16 @@ import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.servlet.ServletContext;
 
 /**
  * TODO javadoc.
@@ -116,13 +113,12 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
 
 		//--- return capabilities
 
-		String FS   = File.separator;
-		String file;
+		Path file;
 
         if (inspireEnabled){
-            file = context.getAppPath() +"xml"+ FS +"csw"+ FS +"capabilities_inspire.xml";
+            file = context.getAppPath().resolve("xml").resolve("csw").resolve("capabilities_inspire.xml");
         } else {
-            file = context.getAppPath() +"xml"+ FS +"csw"+ FS +"capabilities.xml";
+            file = context.getAppPath().resolve("xml").resolve("csw").resolve("capabilities.xml");
         }
 
 		try
@@ -132,7 +128,7 @@ public class GetCapabilities extends AbstractOperation implements CatalogService
             if(context.getServlet() != null) {
                 servletContext = context.getServlet().getServletContext();
             }
-			ConfigurationOverrides.DEFAULT.updateWithOverrides(file, servletContext, context.getAppPath(), capabilities);
+			ConfigurationOverrides.DEFAULT.updateWithOverrides(file.toString(), servletContext, context.getAppPath(), capabilities);
 
             String cswServiceSpecificContraint = request.getChildText(Geonet.Elem.FILTER);
 			setKeywords(capabilities, context, cswServiceSpecificContraint);

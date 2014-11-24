@@ -34,6 +34,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
@@ -58,7 +59,7 @@ public class CswDiscoveryDispatcher implements Service {
      */
 	private String cswServiceSpecificContraint;
 
-	public void init(String appPath, ServiceConfig config) throws Exception {
+	public void init(Path appPath, ServiceConfig config) throws Exception {
 		cswServiceSpecificContraint = config.getValue(Geonet.Elem.FILTER);
 	}
 

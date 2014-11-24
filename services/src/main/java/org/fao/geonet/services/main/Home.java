@@ -29,6 +29,7 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.services.metadata.View;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -38,13 +39,13 @@ import javax.servlet.http.HttpServletResponse;
 
 public class Home implements Service {
     private ServiceConfig _config;
-    private String _appPath;
+    private Path _appPath;
 
     /**
      * Save the initialize parameters. They are used if there is some metadata
      * to show
      */
-    public void init(String appPath, ServiceConfig config) throws Exception {
+    public void init(Path appPath, ServiceConfig config) throws Exception {
         this._config = config;
         this._appPath = appPath;
     }

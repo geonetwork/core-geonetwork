@@ -1,15 +1,10 @@
 package org.fao.geonet.services.main;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import jeeves.constants.Jeeves;
 import jeeves.server.JeevesEngine;
 import jeeves.server.UserSession;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequestFactory;
-
 import org.fao.geonet.Util;
 import org.fao.geonet.exceptions.FileUploadTooBigEx;
 import org.fao.geonet.utils.Log;
@@ -19,6 +14,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.nio.file.Path;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class GenericController {
@@ -76,11 +76,10 @@ public class GenericController {
 
 		ServiceRequest srvReq = null;
 
-		JeevesEngine jeeves = jeevesApplicationContext
-				.getBean(JeevesEngine.class);
+		JeevesEngine jeeves = jeevesApplicationContext.getBean(JeevesEngine.class);
 		try {
-			srvReq = ServiceRequestFactory.create(request, response,
-					jeeves.getUploadDir(), jeeves.getMaxUploadSize());
+            final Path uploadDir = jeeves.getUploadDir();
+            srvReq = ServiceRequestFactory.create(request, response, uploadDir, jeeves.getMaxUploadSize());
 		} catch (FileUploadTooBigEx e) {
 			StringBuffer sb = new StringBuffer();
 			sb.append("File upload too big - exceeds "

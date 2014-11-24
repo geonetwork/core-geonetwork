@@ -23,15 +23,11 @@
 
 package org.fao.geonet.utils;
 
-import com.google.common.collect.FluentIterable;
-import com.google.common.io.Files;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.UserInfo;
-
 import org.apache.commons.io.IOUtils;
-
 import org.fao.geonet.Constants;
 import org.globus.ftp.DataSink;
 import org.globus.ftp.FTPClient;
@@ -39,18 +35,17 @@ import org.globus.ftp.Session;
 import org.jdom.Element;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.Reader;
 import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 //=============================================================================
 
@@ -59,25 +54,31 @@ import java.nio.charset.Charset;
 
 public final class BinaryFile
 {
-   /**
+    private Element element = new Element("response");
+
+    /**
     * Default constructor.
     * Builds a BinaryFile.
     */
-   private BinaryFile(){}
+    public BinaryFile(){}
    
-	private static final int BUF_SIZE = 8192;
-	private static boolean remoteFile = false;
-	private static String remoteUser = "";
-	private static String remotePassword = "";
-	private static String remoteSite = "";
-	private static String remotePath = "";
-	private static String remoteProtocol = "";
-	
-	/**
+	private final static int BUF_SIZE = 8192;
+	private boolean remoteFile = false;
+	private String remoteUser = "";
+	private String remotePassword = "";
+	private String remoteSite = "";
+	private String remotePath = "";
+	private String remoteProtocol = "";
+
+    public BinaryFile(Element element) {
+        this.element = element;
+    }
+
+    /**
 	 * Gets the remotePassword.
 	 * @return the remotePassword.
 	 */
-	public static String getRemotePassword() {
+    private String getRemotePassword() {
 	   return remotePassword;
 	}
 	
@@ -86,34 +87,19 @@ public final class BinaryFile
 	// file is remote
 
 
-    static String readInput(String path) {
-        StringBuffer buffer = new StringBuffer();
-
-        Reader in = null;
+    private String readInput(Path path) {
 
         try {
-            FileInputStream fis = new FileInputStream(path);
-            InputStreamReader isr = new InputStreamReader(fis,"UTF8");
-            in = new BufferedReader(isr);
-            int ch;
-            int numRead = 0;
-            while (((ch = in.read()) > -1) && (numRead < 2000))  {
-                buffer.append((char)ch);
-                numRead++;
-            }
-
-            return buffer.toString();
+            return new String(Files.readAllBytes(path), Constants.CHARSET);
         } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-        } finally {
-            IOUtils.closeQuietly(in);
+            Log.error("geonetwork", "Error reading file: " + path);
+            return null;
         }
-	}	
+    }
 
 	//---------------------------------------------------------------------------
 
-	private static String getRemoteProtocol(String header) {
+	private String getRemoteProtocol(String header) {
 		String remoteProtocol;
 
 		if (header.startsWith("#geonetworkremotescp")) { 
@@ -128,7 +114,7 @@ public final class BinaryFile
 
 	//---------------------------------------------------------------------------
 
-	private static void checkForRemoteFile(String path) {
+	private void checkForRemoteFile(Path path) {
 		String fileContents = readInput(path);
 		if ((fileContents != null) && (fileContents.toLowerCase().startsWith("#geonetworkremotescp") || fileContents.toLowerCase().startsWith("#geonetworkremoteftp"))) {
 				String[] tokens = fileContents.split("\n");
@@ -152,51 +138,54 @@ public final class BinaryFile
 
 	//---------------------------------------------------------------------------
 
-	public static Element encode(int responseCode, String path, String name, boolean remove)
-	{
-		Element response = encode(responseCode, path, remove);
-		response.setAttribute("name", name);
-		return response;
-	}
+    public static BinaryFile encode(int responseCode, Path path, String name, boolean remove) {
+        BinaryFile response = encode(responseCode, path, remove);
+        response.getElement().setAttribute("name", name);
+        return response;
+    }
 
 	//---------------------------------------------------------------------------
 	
-	public static Element encode(int responseCode, String path)
+	public static BinaryFile encode(int responseCode, Path path)
 	{
 		return encode(responseCode, path, false);
 	}
 
 	//---------------------------------------------------------------------------
 
-	public static Element encode(int responseCode, String path, boolean remove)
+	public static BinaryFile encode(int responseCode, Path path, boolean remove)
 	{
-		Element response = new Element("response");
-		checkForRemoteFile(path);
-
-		response.setAttribute("responseCode", responseCode + "");
-		response.setAttribute("path", path);
-		response.setAttribute("remove", remove ? "y" : "n");
-		if (remoteFile) {
-			response.setAttribute("remotepath", remoteUser+"@"+remoteSite+":"+remotePath);
-			response.setAttribute("remotefile", new File(remotePath).getName());
-		}
-		return response;
+        final BinaryFile binaryFile = new BinaryFile();
+        binaryFile.doEncode(responseCode, path, remove);
+		return binaryFile;
 	}
 
-	//---------------------------------------------------------------------------
+    private void doEncode(int responseCode, Path path, boolean remove) {
+        checkForRemoteFile(path);
 
-	public static String getContentType(Element response)
+        element.setAttribute("responseCode", responseCode + "");
+        element.setAttribute("path", path.toString());
+        element.setAttribute("remove", remove ? "y" : "n");
+        if (remoteFile) {
+            element.setAttribute("remotepath", remoteUser+"@"+remoteSite+":"+remotePath);
+            element.setAttribute("remotefile", new File(remotePath).getName());
+        }
+    }
+
+    //---------------------------------------------------------------------------
+
+	public String getContentType()
 	{
-		String path = response.getAttributeValue("path");
+		String path = element.getAttributeValue("path");
 		if (path == null) return null;
 		return getContentType(path);
 	}
 
 	//---------------------------------------------------------------------------
 
-	public static String getContentLength(Element response)
+	public String getContentLength()
 	{
-		String path = response.getAttributeValue("path");
+		String path = element.getAttributeValue("path");
 		if (path == null) return null;
 		String length = "-1";
 		if (!remoteFile) {
@@ -208,13 +197,13 @@ public final class BinaryFile
 
 	//---------------------------------------------------------------------------
 
-	public static void removeIfTheCase(Element response)
+	public void removeIfTheCase()
 	{
-		boolean remove = "y".equals(response.getAttributeValue("remove"));
+		boolean remove = "y".equals(element.getAttributeValue("remove"));
 
 		if (remove)
 		{
-			String path = response.getAttributeValue("path");
+			String path = element.getAttributeValue("path");
 			File file = new File(path);
             if (!file.delete() && file.exists()) {
                 Log.warning(Log.JEEVES, "["+BinaryFile.class.getName()+"#removeIfTheCase]"+"Unable to remove binary file after sending to user.");
@@ -224,12 +213,11 @@ public final class BinaryFile
 
 	//---------------------------------------------------------------------------
 
-	public static String getContentDisposition(Element response)
+	public String getContentDisposition()
 	{
-		String name = response.getAttributeValue("name");
-		if (name == null)
-		{
-			name = response.getAttributeValue("path");
+		String name = element.getAttributeValue("name");
+		if (name == null) {
+			name = element.getAttributeValue("path");
 			if (name == null) return null;
 			name = new File(name).getName();
 		}
@@ -239,15 +227,7 @@ public final class BinaryFile
 
 	//---------------------------------------------------------------------------
 
-	public static int getResponseCode(Element response)
-	{
-		return Integer.parseInt(response.getAttributeValue("responseCode"));
-	}
-
-	//---------------------------------------------------------------------------
-
-	public static void write(Element response, OutputStream output) throws IOException
-	{
+	public void write(OutputStream output) throws IOException {
 		//----------------------------------------------------------------------
 		// Local class required by jsch for scp
 		class MyUserInfo implements UserInfo {
@@ -302,7 +282,7 @@ public final class BinaryFile
     	}
 		}
 
-		String path = response.getAttributeValue("path");
+		String path = element.getAttributeValue("path");
 		if (path == null) return;
 		if (!remoteFile) {
 			File f = new File(path);
@@ -362,8 +342,7 @@ public final class BinaryFile
 	//----------------------------------------------------------------------------
 	// copies an input stream from a JSch object to an output stream
 
-	private static int checkAck(InputStream in) throws IOException
-  {
+	private static int checkAck(InputStream in) throws IOException {
     int b=in.read();
     // b may be 0 for success,
     //          1 for error,
@@ -480,43 +459,6 @@ public final class BinaryFile
 		}
 	}
 
-	/**
-	 * Copy a directory from one location to another.
-	 * 
-	 * @param sourceLocation
-	 * @param targetLocation
-	 * @throws IOException
-	 */
-	public static void copyDirectory(File sourceLocation , File targetLocation)
-    throws IOException {
-        final int filePrefixToRemove = sourceLocation.getPath().length();
-        final FluentIterable<File> files = Files.fileTreeTraverser().preOrderTraversal(sourceLocation);
-
-        for (File file : files) {
-            if (file.isFile()) {
-                final String part = file.getPath().substring(filePrefixToRemove);
-                final File destFile = new File(targetLocation, part);
-                if (!destFile.getParentFile().mkdirs() && !destFile.getParentFile().exists()) {
-                    throw new IOException("Unable to create directory: "+destFile.getParentFile());
-                }
-                copyFile(file, destFile);
-            }
-        }
-    }
-
-    private static void copyFile(File file, File destFile) throws IOException {
-        FileInputStream in = null;
-        FileOutputStream out = null;
-        try {
-            in = new FileInputStream(file);
-            out = new FileOutputStream(destFile);
-            in.getChannel().transferTo(0, file.length(), out.getChannel());
-        } finally {
-            IOUtils.closeQuietly(in);
-            IOUtils.closeQuietly(out);
-        }
-    }
-
     //----------------------------------------------------------------------------
 	// Returns the mime-type corresponding to the given file extension
 
@@ -553,22 +495,8 @@ public final class BinaryFile
 			return("application/binary");
 	}
 
-    public static void copy(File srcFile, File destFile) throws IOException {
-        if(srcFile.isFile()) {
-            BinaryFile.copyFile(srcFile, destFile);
-        } else {
-            BinaryFile.copyDirectory(srcFile, destFile);
-            
-        }
-        
-    }
-
-    public static void moveTo(File inFile, File outFile, String operationDescription) throws IOException {
-        IO.mkdirs(outFile.getParentFile(), "Error creating Parent File for operation: "+operationDescription);
-        if (!inFile.renameTo(outFile)) {
-            copy(inFile, outFile);
-            IO.delete(inFile, false, "org.fao.geonet");
-        }
+    public Element getElement() {
+        return element;
     }
 }
 

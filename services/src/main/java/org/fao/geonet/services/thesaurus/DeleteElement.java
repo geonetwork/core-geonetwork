@@ -37,6 +37,7 @@ import org.fao.geonet.kernel.ThesaurusManager;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.jdom.Element;
 
+import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
 
@@ -48,7 +49,7 @@ import java.util.List;
  * Access is restricted
  */
 public class DeleteElement implements Service {
-    public void init(String appPath, ServiceConfig params) throws Exception {
+    public void init(Path appPath, ServiceConfig params) throws Exception {
     }
 
     public Element exec(Element params, ServiceContext context) throws Exception {

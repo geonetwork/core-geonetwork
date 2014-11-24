@@ -23,23 +23,24 @@
 
 package org.fao.geonet.guiservices.sampledata;
 
+import com.google.common.collect.Lists;
 import jeeves.constants.Jeeves;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.utils.Log;
-import org.fao.geonet.Util;
-
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 
-import java.io.File;
-import java.util.ArrayList;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -49,7 +50,7 @@ import java.util.List;
  */
 public class Add implements Service {
 
-	public void init(String appPath, ServiceConfig params) throws Exception {
+	public void init(Path appPath, ServiceConfig params) throws Exception {
 	}
 
 	/**
@@ -77,30 +78,29 @@ public class Add implements Service {
 		for (String schemaName : schemas) {
 			Log.info(Geonet.DATA_MANAGER, "Loading sample data for schema "
 					+ schemaName);
-			String schemaDir = schemaMan.getSchemaSampleDataDir(schemaName);
+			Path schemaDir = schemaMan.getSchemaSampleDataDir(schemaName);
 			if (schemaDir == null) {
 				Log.error(Geonet.DATA_MANAGER, "Skipping - No sample data?");
                 result.addContent(new Element(schemaName).setText("0"));
 				continue;
 			}
 
-            if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
+            if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                 Log.debug(Geonet.DATA_MANAGER, "Searching for mefs in: " + schemaDir);
-			File sampleDataFiles[] = new File(schemaDir).listFiles();
-			List<File> sampleDataFilesList = new ArrayList<File>();
+            }
 
-			if (sampleDataFiles != null) {
-				for (File file : sampleDataFiles)
-					if (file.getName().endsWith(".mef"))
-						sampleDataFilesList.add(file);
-			}
+            List<Path> sampleDataFilesList;
+            try (DirectoryStream<Path> newDirectoryStream = Files.newDirectoryStream(schemaDir, "*.mef")) {
+                sampleDataFilesList = Lists.newArrayList(newDirectoryStream);
+            }
+
             int schemaCount = 0;
-            for (final File file : sampleDataFilesList) {
+            for (final Path file : sampleDataFilesList) {
                 try {
                     if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                         Log.debug(Geonet.DATA_MANAGER, "Loading sample data: " + file);
                     }
-                    schemaCount += MEFLib.doImport(params, context, file, "").size();
+                    schemaCount += MEFLib.doImport(params, context, file, null).size();
                 } catch (Exception e) {
                     e.printStackTrace();
                     serviceStatus[0] = "false";

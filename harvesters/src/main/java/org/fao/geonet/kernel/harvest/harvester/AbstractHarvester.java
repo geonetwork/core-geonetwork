@@ -38,7 +38,6 @@ import java.util.concurrent.TimeUnit;
 
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.DailyRollingFileAppender;
 import org.apache.log4j.PatternLayout;
@@ -80,6 +79,10 @@ import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specifications;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Represents a harvester job. Used to launch harvester workers.
@@ -670,10 +673,12 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
     }
 
     private void removeIcon(String uuid) {
-        File icon = new File(Resources.locateLogosDir(context), uuid+ ".gif");
+        Path icon = Resources.locateLogosDir(context).resolve(uuid+ ".gif");
 
-        if (!icon.delete() && icon.exists()) {
-            Log.warning(Geonet.HARVESTER + "." + getType(), "Unable to delete icon: " + icon);
+        try {
+            Files.deleteIfExists(icon);
+        } catch (IOException e) {
+            Log.warning(Geonet.HARVESTER + "." + getType(), "Unable to delete icon: " + icon, e);
         }
     }
 

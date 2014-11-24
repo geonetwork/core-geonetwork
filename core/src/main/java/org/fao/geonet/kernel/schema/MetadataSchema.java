@@ -27,21 +27,32 @@
 
 package org.fao.geonet.kernel.schema;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.util.*;
-
-import org.fao.geonet.domain.*;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.domain.SchematronCriteria;
+import org.fao.geonet.domain.SchematronCriteriaGroup;
+import org.fao.geonet.domain.SchematronCriteriaGroupId;
+import org.fao.geonet.domain.SchematronCriteriaType;
 import org.fao.geonet.repository.SchematronCriteriaGroupRepository;
 import org.fao.geonet.repository.SchematronRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-
-import org.fao.geonet.constants.Geonet;
 import org.jdom.Element;
 import org.jdom.Namespace;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 //==============================================================================
 
@@ -60,7 +71,7 @@ public class MetadataSchema
     private Map<String, Pair<String, Element>> hmOperationFilters =
             new HashMap<String, Pair<String, Element>>();
 	private String	schemaName;
-	private String	schemaDir;
+	private Path schemaDir;
 	private String	primeNS;
 	private String[] schematronRules;
 	private boolean canEdit = false;
@@ -122,7 +133,7 @@ public class MetadataSchema
 	 * 
 	 * @return
 	 */
-	public String getSchemaDir() {
+	public Path getSchemaDir() {
 		return schemaDir;
 	}
 
@@ -131,7 +142,7 @@ public class MetadataSchema
 	 * 
 	 * @param schemaDir
 	 */
-	public void setSchemaDir(String schemaDir) {
+	public void setSchemaDir(Path schemaDir) {
 		this.schemaDir = schemaDir;
 	}
 	
@@ -354,42 +365,43 @@ public class MetadataSchema
         return mapNs;
     }
 
-	public void buildchematronRules(String basePath) {
-        String schematronResourceDir = basePath + "WEB-INF" 
-                + File.separator + "classes" + File.separator + SCHEMATRON_DIR + File.separator ;
-        String schemaSchematronDir = schemaDir + File.separator + SCHEMATRON_DIR;
-        String schematronCompilationFile = schematronResourceDir + "iso_svrl_for_xslt2.xsl";
+	public void buildchematronRules(Path basePath) {
+        Path schematronResourceDir = basePath.resolve("WEB-INF").resolve("classes").resolve(SCHEMATRON_DIR);
+        Path schemaSchematronDir = schemaDir.resolve(SCHEMATRON_DIR);
+        Path schematronCompilationFile = schematronResourceDir.resolve("iso_svrl_for_xslt2.xsl");
         
         if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
             Log.debug(Geonet.SCHEMA_MANAGER, "     Schematron compilation for schema " + schemaName);
             Log.debug(Geonet.SCHEMA_MANAGER, "          - compiling with " + schematronCompilationFile);
             Log.debug(Geonet.SCHEMA_MANAGER, "          - rules location is " + schemaSchematronDir);
         }
-        
-        File schematronFolder = new File(schemaSchematronDir);
-        if (schematronFolder.exists()) {
-            String rules[] = schematronFolder.list(new SchematronReportRulesSCHFilter());
-            for (String rule : rules) {
-                if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
-                    Log.debug(Geonet.SCHEMA_MANAGER, "                - rule " + rule);
+
+        if (Files.exists(schemaSchematronDir)) {
+            try (DirectoryStream<Path> paths = Files.newDirectoryStream(schemaSchematronDir, "*.sch")) {
+                for (Path rule : paths) {
+                    if(Log.isDebugEnabled(Geonet.SCHEMA_MANAGER)) {
+                        Log.debug(Geonet.SCHEMA_MANAGER, "                - rule " + rule);
+                    }
+
+                    // Compile all schematron rules
+                    final String xslPath = rule.toAbsolutePath().toString().replace(SCH_FILE_EXTENSION, XSL_FILE_EXTENSION);
+                    Path schematronXslFilePath = rule.getFileSystem().getPath(xslPath);
+
+                    try (OutputStream schematronXsl = Files.newOutputStream(schematronXslFilePath)) {
+                        Element schematronRule = Xml.loadFile(schemaSchematronDir.resolve(rule));
+                        Xml.transform(schematronRule, schematronCompilationFile, schematronXsl);
+                    } catch (FileNotFoundException e) {
+                        Log.error(Geonet.SCHEMA_MANAGER, "     Schematron rule file not found " + schematronXslFilePath
+                                                         + ". Error is " + e.getMessage());
+                    } catch (Exception e) {
+                        Log.error(Geonet.SCHEMA_MANAGER, "     Schematron rule compilation failed for " + schematronXslFilePath
+                                                         + ". Error is " + e.getMessage());
+                    }
+
                 }
-                
-                // Compile all schematron rules
-                FileOutputStream schematronXsl;
-                String schematronXslFilePath = schemaSchematronDir 
-                        + File.separator + rule.replaceAll(SCH_FILE_EXTENSION, XSL_FILE_EXTENSION);
-                try {
-                    schematronXsl = new FileOutputStream(schematronXslFilePath);
-                    Element schematronRule = Xml.loadFile(schemaSchematronDir 
-                            + File.separator + rule);
-                    Xml.transform(schematronRule, schematronCompilationFile, schematronXsl);
-                } catch (FileNotFoundException e) {
-                    Log.error(Geonet.SCHEMA_MANAGER, "     Schematron rule file not found " + schematronXslFilePath 
-                            + ". Error is " + e.getMessage());
-                } catch (Exception e) {
-                    Log.error(Geonet.SCHEMA_MANAGER, "     Schematron rule compilation failed for " + schematronXslFilePath 
-                            + ". Error is " + e.getMessage());
-                }
+            } catch (IOException e) {
+                Log.error(Geonet.SCHEMA_MANAGER, "     Schematron rule file not found " + schemaSchematronDir
+                                                 + ". Error is " + e.getMessage());
             }
         }
     }
@@ -398,10 +410,8 @@ public class MetadataSchema
      * Compile and register all schematron rules available for current schema.
      * Schematron rules files are in schema schematron directory
      * and start with "schematron-rules" prefix.
-     *
-     * @return
      */
-    public void loadSchematronRules(String basePath) {
+    public void loadSchematronRules(Path basePath) {
         // Compile schema schematron rules
         buildchematronRules(basePath);
 
