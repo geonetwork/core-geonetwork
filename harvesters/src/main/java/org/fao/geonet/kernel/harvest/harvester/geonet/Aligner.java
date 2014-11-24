@@ -919,7 +919,8 @@ public class Aligner extends BaseAligner
         // which will be handle in addMetadata/updateMetadata.
         request.addParam("version", "2");
         request.addParam("relation", "false");
-		request.setAddress(params.getServletPath() +"/srv/en/"+ Geonet.Service.MEF_EXPORT);
+		request.setAddress(params.getServletPath() + "/" + params.getNode()
+				+ "/en/" + Geonet.Service.MEF_EXPORT);
 
 		Path tempFile = Files.createTempFile("temp-", ".dat");
 		request.executeLarge(tempFile);
