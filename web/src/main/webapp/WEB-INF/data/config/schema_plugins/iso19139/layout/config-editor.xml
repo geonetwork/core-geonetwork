@@ -1457,6 +1457,7 @@
         <thesaurus key="external.theme.inspire-theme" maxtags="1"/>
         <thesaurus key="external.theme.medsea.level.of.characteristics" maxtags="1"/>
         <thesaurus key="external.theme.medsea.production.mode" maxtags="1"/>
+        <thesaurus key="external.theme.medsea.data.delivery.mechanism" maxtags="1"/>
         <thesaurus key="external.theme.seadatanet.parameter.groups.P03" maxtags="1"/>
       </thesaurusList>
       <tab id="characteristics" mode="flat" default="true">
