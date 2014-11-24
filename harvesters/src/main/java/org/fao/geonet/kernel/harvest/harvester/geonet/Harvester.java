@@ -97,8 +97,9 @@ class Harvester implements IHarvester<HarvestResult> {
 				log.info("Login into : "+ params.name);
 				req.setCredentials(params.username, params.password);
                 req.setPreemptiveBasicAuth(true);
-				req.setAddress(params.getServletPath()+"/srv/eng/xml.info");
-                req.addParam("type", "me");
+			req.setAddress(params.getServletPath() + "/" + params.getNode()
+					+ "/eng/xml.info");
+            req.addParam("type", "me");
 
 				Element response = req.execute();
 				if(!response.getName().equals("info") || response.getChild("me") == null) {
@@ -116,7 +117,8 @@ class Harvester implements IHarvester<HarvestResult> {
 
 		log.info("Retrieving information from : "+ params.host);
 
-		req.setAddress(params.getServletPath() +"/srv/en/"+ Geonet.Service.XML_INFO);
+		req.setAddress(params.getServletPath() + "/" + params.getNode()
+				+ "/en/" + Geonet.Service.XML_INFO);
 		req.clearParams();
 		req.addParam("type", "sources");
 		req.addParam("type", "groups");
@@ -179,7 +181,7 @@ class Harvester implements IHarvester<HarvestResult> {
 	private void pre29Login(XmlRequest req) throws IOException, BadXmlResponseEx, BadSoapResponseEx, UserNotFoundEx {
 		log.info("Failed to login using basic auth (geonetwork 2.9+) trying pre-geonetwork 2.9 login: "+ params.name);
 		// try old authentication
-		req.setAddress(params.getServletPath() + "/srv/en/"+ Geonet.Service.XML_LOGIN);
+		req.setAddress(params.getServletPath() + "/" + params.getNode() + "/en/"+ Geonet.Service.XML_LOGIN);
 		req.addParam("username", params.username);
 		req.addParam("password", params.password);
 		
@@ -232,7 +234,8 @@ class Harvester implements IHarvester<HarvestResult> {
 
 	private Element doSearch(XmlRequest request, Search s) throws OperationAbortedEx
 	{
-		request.setAddress(params.getServletPath() +"/srv/eng/"+ Geonet.Service.XML_SEARCH);
+		request.setAddress(params.getServletPath() + "/" + params.getNode()
+				+ "/eng/" + Geonet.Service.XML_SEARCH);
 		request.clearParams();
 		try
 		{

@@ -16,6 +16,7 @@ var gnHarvestergeonetwork = {
           "password": ""
         },
         "host": [],
+              "node": "srv",
         "createRemoteCategory": "false",
         "mefFormatFull": "false",
         "xslfilter": []
@@ -65,7 +66,8 @@ var gnHarvestergeonetwork = {
       + '  <site>'
       + '    <name>' + h.site.name + '</name>'
       + '    <host>' + h.site.host.replace(/&/g, '&amp;') + '</host>'
-      + '    <createRemoteCategory>' + h.site.createRemoteCategory + '</createRemoteCategory>'
+      + '    <node>' + h.site.node + '</node>'
+     + '    <createRemoteCategory>' + h.site.createRemoteCategory + '</createRemoteCategory>'
       + '    <icon>' + h.site.icon + '</icon>'
       + '    <mefFormatFull>' + h.site.mefFormatFull + '</mefFormatFull>'
       + '    <xslfilter>' + h.site.xslfilter + '</xslfilter>'
