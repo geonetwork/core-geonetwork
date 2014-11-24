@@ -277,7 +277,7 @@
           <gmd:thesaurusName>
             <gmd:CI_Citation>
               <gmd:title>
-                <gco:CharacterString>SeaDataNet Parameter Discovery Vocabulary</gco:CharacterString>
+                <gco:CharacterString>SeaDataNet Parameter Discovery Vocabulary (P02)</gco:CharacterString>
               </gmd:title>
               <gmd:date>
                 <gmd:CI_Date>
@@ -513,7 +513,7 @@
           <gmd:thesaurusName>
             <gmd:CI_Citation>
               <gmd:title>
-                <gco:CharacterString>SeaDataNet Agreed Parameter Groups</gco:CharacterString>
+                <gco:CharacterString>SeaDataNet Agreed Parameter Groups (P03)</gco:CharacterString>
               </gmd:title>
               <gmd:date>
                 <gmd:CI_Date>
