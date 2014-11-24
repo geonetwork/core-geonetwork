@@ -56,7 +56,7 @@ class SummaryFactory {
 
     private static void configureHierarchy(isoHandler, Summary summary) {
 
-        def relatedTypes = "service|children|related|parent|dataset|fcat|siblings|associated|source|hassource";
+        def relatedTypes = ["service","children","related","parent","dataset","fcat","siblings","associated","source","hassource"]
         def uuid = isoHandler.env.metadataUUID
         def id = isoHandler.env.metadataId
 
@@ -67,7 +67,7 @@ class SummaryFactory {
             StaticLinkBlock hierarchy = new StaticLinkBlock(linkBlockName)
             summary.links.add(hierarchy);
             def bean = isoHandler.env.getBean(GetRelated.class)
-            def related = bean.getRelated(ServiceContext.get(), id, uuid, relatedTypes, 1, 1000, true)
+            def related = bean.getRelated(ServiceContext.get(), id, uuid, relatedTypes.join("|"), 1, 1000, true)
 
             related.getChildren("relation").each {rel ->
                 def type = rel.getAttributeValue("type")
@@ -85,17 +85,40 @@ class SummaryFactory {
             }
         } else {
             def placeholderId = "link-placeholder-" + linkBlockName
+            def typeTranslations = new StringBuilder()
+            relatedTypes.eachWithIndex {type, i ->
+                typeTranslations.append("\t'").append(type).append("': '").append(isoHandler.f.translate(type)).append('\'')
+                if (i != relatedTypes.size() - 1) {
+                    typeTranslations.append(",\n");
+                }
+            }
             def js = """
 \$(function() {
-  \$('${LinkBlock.CSS_CLASS_PREFIX + linkBlockName}').hide();
-  \$.ajax('xml.relation?id=${env.metadataId}&type=$relatedTypes', {
-    accepts:'application/json',
+  \$('.${LinkBlock.CSS_CLASS_PREFIX + linkBlockName}').hide();
+  var typeTranslations = {
+$typeTranslations
+  };
+  \$.ajax('xml.relation?id=${env.metadataId}&type=${relatedTypes.join("|")}', {
+    dataType: "json",
     success: function (data) {
       var types = {};
+      if (!data.relation) {
+        return;
+      }
+      var relations = data.relation instanceof Array ? data.relation : [data.relation];
 
-      \$.each(data.relation, function (rel) {
+      \$.each(relations, function (idx, rel) {
         var type = rel['@type'];
-        \$.each(rel.metadata, function (md) {
+        var md;
+        if (!rel.metadata) {
+          return;
+        }
+        if (rel.metadata instanceof Array) {
+          md = rel.metadata;
+        } else {
+          md = [rel.metadata];
+        }
+        \$.each(md, function (mdIdx, md) {
           var uuid = md['geonet:info'].uuid;
           var title = md.title ? md.title : md.defaultTitle;
           if (!title) {
@@ -104,7 +127,7 @@ class SummaryFactory {
 
           var url;
           if (uuid) {
-            url = "javascript:open('md.format.html?xsl=full_view&amp;schema=iso19139&amp;uuid=' + encodeURIComponent(uuid), 'related');"
+            url = "javascript:window.open('md.format.html?xsl=full_view&amp;schema=iso19139&amp;uuid=" + encodeURIComponent(uuid) + "', '"+uuid+"');"
           } else {
             url = "javascript:alert('${isoHandler.f.translate("noUuidInLink")}');"
           }
@@ -112,32 +135,33 @@ class SummaryFactory {
           var obj = { url: url, title: title};
 
           if (title && uuid) {
-            if (types.type) {
-              types.type.push (obj);
+            if (types[type]) {
+              types[type].push (obj);
             } else {
-              types.type = [obj];
+              types[type] = [obj];
             }
           }
         });
       });
 
-      var placeholder = \$('$placeholderId');
+      var placeholder = \$('#$placeholderId');
 
       \$.each(types, function (key, value) {
+        var typeTitle = typeTranslations[key] ? typeTranslations[key] : key;
         var html = '<div class="col-xs-12" style="background-color: #F7EEE1;">' +
-                   '  <img src="${isoHandler.env.localizedUrl + "../../images/"}' + key + '.png"/>';
-        \$.each(value, function (rel) {
+                   '  <img src="${isoHandler.env.localizedUrl + "../../images/"}' + key + '.png"/>' +
+                   '  ' + typeTitle + '</div>';
+        \$.each(value, function (idx, rel) {
           html += '  <div class="col-xs-6 col-md-4"><a href="' + rel.url + '">' + rel.title + '</a></div>';
         });
-        html += '</div>';
-        placeholder.add(html);
+        placeholder.append(html);
       });
 
-      \$('${LinkBlock.CSS_CLASS_PREFIX + linkBlockName}').show();
+      \$('.${LinkBlock.CSS_CLASS_PREFIX + linkBlockName}').show();
     },
     error: function (req, status, error) {
-      \$('$placeholderId').add('<h3>Error loading related metadata</h3><p>' + error + '</p>');
-      \$('${LinkBlock.CSS_CLASS_PREFIX + linkBlockName}').show();
+      \$('#$placeholderId').append('<h3>Error loading related metadata</h3><p>' + error + '</p>');
+      \$('.${LinkBlock.CSS_CLASS_PREFIX + linkBlockName}').show();
     }
   })
 });

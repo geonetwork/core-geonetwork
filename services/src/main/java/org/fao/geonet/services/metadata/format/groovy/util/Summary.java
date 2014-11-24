@@ -48,6 +48,7 @@ public class Summary {
 
         params.put("logo", logoHtml());
         params.put("title", title != null ? title : "");
+        params.put("pageTitle", title != null ? title.replace('"', '\'') : "");
         params.put("abstract", abstrHtml());
         params.put("thumbnail", thumbnailHtml());
         addLinks(params);
