@@ -327,7 +327,15 @@ public class GeonetworkDataDirectory {
                 final Path srcLogo = this.webappDir.resolve("images").resolve("harvesting");
 
                 if (Files.exists(srcLogo)) {
-                    IO.copyDirectoryOrFile(srcLogo, logoDir, false);
+                    try (DirectoryStream<Path> paths = Files.newDirectoryStream(srcLogo)) {
+                        for (Path path : paths) {
+                            final Path relativePath = srcLogo.relativize(path);
+                            final Path dest = logoDir.resolve(relativePath.toString());
+                            if (!Files.exists(dest)) {
+                                IO.copyDirectoryOrFile(path, dest, false);
+                            }
+                        }
+                    }
                 }
 
             } catch (IOException e) {

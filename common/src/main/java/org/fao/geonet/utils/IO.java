@@ -39,12 +39,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Objects;
+import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -258,15 +263,25 @@ public final class IO {
     }
 
     public static void printDirectoryTree(Path dir, final boolean printFileSize) throws IOException {
-        Files.walkFileTree(dir, new SimpleFileVisitor<Path>(){
+        final Map<Path, Long> fileSizes = new HashMap<>();
+        final TreeSet<Path> largestFiles = new TreeSet<>(new Comparator<Path>() {
+            @Override
+            public int compare(Path o1, Path o2) {
+                return Long.compare(fileSizes.get(o2), fileSizes.get(o1));
+            }
+        });
+
+        Files.walkFileTree(dir, new SimpleFileVisitor<Path>() {
             int depth = 0;
+            long dirSize = 0;
 
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
                 StringBuilder builder = newStringBuilder();
                 builder.append("> ").append(dir.getFileName()).append(" (").append(dir.getParent()).append("):");
                 System.out.println(builder.toString());
-                depth += 4;
+                depth += 1;
+                dirSize = 0;
                 return FileVisitResult.CONTINUE;
             }
 
@@ -274,17 +289,22 @@ public final class IO {
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 StringBuilder builder = newStringBuilder();
                 builder.append("- ").append(file.getFileName());
+                final long fileSize = Files.size(file);
+                dirSize += fileSize;
+                fileSizes.put(file, fileSize);
                 if (printFileSize) {
                     final int KB = 1024;
-                    builder.append(" (").append(Files.size(file) / KB).append(" kb)");
+                    builder.append(" (").append(fileSize / KB).append(" kb)");
                 }
+                largestFiles.add(file);
                 System.out.println(builder.toString());
                 return FileVisitResult.CONTINUE;
             }
 
             protected StringBuilder newStringBuilder() {
                 StringBuilder builder = new StringBuilder();
-                for (int j = 0; j < depth; j++) {
+                final int indent = depth * 4;
+                for (int j = 0; j < indent; j++) {
                     builder.append(" ");
                 }
                 return builder;
@@ -292,10 +312,20 @@ public final class IO {
 
             @Override
             public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                depth -=4;
+                fileSizes.put(dir, dirSize);
+                depth -= 1;
                 return FileVisitResult.CONTINUE;
             }
         });
+
+        final StringBuilder summary = new StringBuilder("The following files/directories are the 10 largest.");
+        summary.append("A directory's size is calculated sum of the files (not directories) it contains.");
+        Iterator<Path> iter = largestFiles.iterator();
+        for (int i = 0; i < 10 && iter.hasNext(); i++) {
+            final Path path = iter.next();
+            summary.append("\n\t - ").append(path).append(": ").append(fileSizes.get(path));
+        }
+        System.out.println(summary);
     }
 
     public static URL toURL(Path textFile) throws MalformedURLException {
@@ -347,7 +377,7 @@ public final class IO {
 
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-            Files.copy(file, relativeFile(from, file, actualTo));
+            Files.copy(file, relativeFile(from, file, actualTo), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
             return FileVisitResult.CONTINUE;
         }
     }
@@ -364,14 +394,16 @@ public final class IO {
 
         @Override
         public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-            Files.createDirectories(relativeFile(from, dir, actualTo));
+            final Path newDir = relativeFile(from, dir, actualTo);
+            Files.createDirectories(newDir);
+            Files.setLastModifiedTime(newDir, Files.getLastModifiedTime(dir));
             return FileVisitResult.CONTINUE;
         }
 
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
             if (filter.accept(file)) {
-                Files.copy(file, relativeFile(from, file, actualTo));
+                Files.copy(file, relativeFile(from, file, actualTo), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
             }
             return FileVisitResult.CONTINUE;
         }
