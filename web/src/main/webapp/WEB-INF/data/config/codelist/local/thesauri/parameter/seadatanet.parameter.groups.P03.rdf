@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:dc="http://purl.org/dc/terms/" xmlns:dce="http://purl.org/dc/elements/1.1/" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:grg="http://www.isotc211.org/schemas/grg/" xmlns:owl="http://www.w3.org/2002/07/owl#" xmlns:void="http://rdfs.org/ns/void#">
 <skos:Collection rdf:about="http://vocab.nerc.ac.uk/collection/P03/current/">
-<skos:prefLabel>SeaDataNet Agreed Parameter Groups</skos:prefLabel>
-<dc:title>SeaDataNet Agreed Parameter Groups</dc:title>
+<skos:prefLabel>SeaDataNet Agreed Parameter Groups (P03)</skos:prefLabel>
+<dc:title>SeaDataNet Agreed Parameter Groups (P03)</dc:title>
 <skos:altLabel>SeaDataNet APG</skos:altLabel>
 <dc:alternative>SeaDataNet APG</dc:alternative>
 <dc:description>Terms agreed within the EU SeaDataNet community to describe coarse-grained groupings of related measurement phenomena.</dc:description>
