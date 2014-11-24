@@ -48,4 +48,10 @@
     <skos:prefLabel xml:lang="fr">Marine environment</skos:prefLabel>
     <skos:definition xml:lang="fr"></skos:definition>
   </skos:Concept>
+  <skos:Concept rdf:about="http://www.emodnet-mediterranean.eu/project/medsea/challenges#river-inputs">
+    <skos:prefLabel xml:lang="en">River inputs</skos:prefLabel>
+    <skos:definition xml:lang="en"></skos:definition>
+    <skos:prefLabel xml:lang="fr">River inputs</skos:prefLabel>
+    <skos:definition xml:lang="fr"></skos:definition>
+  </skos:Concept>
 </rdf:RDF>
