@@ -472,7 +472,7 @@
         </gmd:MD_Keywords>
       </gmd:descriptiveKeywords>
       <gmd:descriptiveKeywords>
-        <gmd:MD_Keywords xmlns:srv="http://www.isotc211.org/2005/srv">
+        <gmd:MD_Keywords>
           <gmd:type>
             <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
                                     codeListValue="theme"/>
@@ -480,12 +480,12 @@
           <gmd:thesaurusName>
             <gmd:CI_Citation>
               <gmd:title>
-                <gco:CharacterString>BODC Parameter Usage Vocabulary</gco:CharacterString>
+                <gco:CharacterString>BODC Parameter Usage Vocabulary (P01)</gco:CharacterString>
               </gmd:title>
               <gmd:date>
                 <gmd:CI_Date>
                   <gmd:date>
-                    <gco:DateTime>2014-10-29T18:58:07</gco:DateTime>
+                    <gco:DateTime>2014-11-25T09:05:00</gco:DateTime>
                   </gmd:date>
                   <gmd:dateType>
                     <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#CI_DateTypeCode"
@@ -496,7 +496,7 @@
               <gmd:identifier>
                 <gmd:MD_Identifier>
                   <gmd:code>
-                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.theme.seadatanet.parameter.usage.P01">geonetwork.thesaurus.external.theme.seadatanet.parameter.usage.P01</gmx:Anchor>
+                    <gmx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/eng/thesaurus.download?ref=local.parameter.seadatanet.parameter.usage.P01">geonetwork.thesaurus.local.parameter.seadatanet.parameter.usage.P01</gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
               </gmd:identifier>
@@ -505,7 +505,7 @@
         </gmd:MD_Keywords>
       </gmd:descriptiveKeywords>
       <gmd:descriptiveKeywords>
-        <gmd:MD_Keywords xmlns:srv="http://www.isotc211.org/2005/srv">
+        <gmd:MD_Keywords>
           <gmd:type>
             <gmd:MD_KeywordTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/ML_gmxCodelists.xml#MD_KeywordTypeCode"
                                     codeListValue="theme"/>
@@ -529,7 +529,7 @@
               <gmd:identifier>
                 <gmd:MD_Identifier>
                   <gmd:code>
-                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=external.theme.seadatanet.parameter.groups.P03">geonetwork.thesaurus.external.theme.seadatanet.parameter.groups.P03</gmx:Anchor>
+                    <gmx:Anchor xlink:href="http://sextant.ifremer.fr/geonetwork/srv/eng/thesaurus.download?ref=local.theme.seadatanet.parameter.groups.P03">geonetwork.thesaurus.local.parameter.seadatanet.parameter.groups.P03</gmx:Anchor>
                   </gmd:code>
                 </gmd:MD_Identifier>
               </gmd:identifier>
