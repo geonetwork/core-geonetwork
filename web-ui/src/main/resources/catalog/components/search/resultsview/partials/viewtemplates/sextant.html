@@ -3,23 +3,31 @@
           sxt-fix-mdlinks="">
     <div class="media">
 
-      <a class="pull-left">
-        <img width="40" ng-src="../../images/logos/{{md.source}}.gif" class="media-object"/>
-      </a>
+      <!-- Thumbnail -->
+      <div class="pull-left gn-md-thumbnail">
+        <span ng-if="!md.getThumbnails().small" translate>noThumbnail</span>
+        <img ng-src="{{md.getThumbnails().small}}" class="img-thumbnail" ng-if="md.getThumbnails().small"/>
+      </div>
+
+      <!-- Icon for types -->
+      <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('dataset')>=0" class="gn-md-type pull-right fa fa-database " title="dataset"></span>
+      <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('software')>=0" class="gn-md-type pull-right fa fa-hdd-o" title="software"></span>
+      <span data-placement="right" gn-tooltip ng-if="md.type.indexOf('basicgeodata')>=0" class="gn-md-type pull-right fa fa-globe" title="geodata"></span>
 
       <div class="media-body">
         <h4>
           {{md.title || md.defaultTitle}}
         </h4>
-        <img ng-src="{{md.getThumbnails().small}}" class="img-thumbnail pull-right" ng-if="md.getThumbnails().small"/>
-        <p class="text-justify">{{md.abstract}}</p>
-        <blockquote ng-if="md.getContacts().resource">{{md.getContacts().resource}}</blockquote>
+        <p class="text-justify" dd-text-collapse dd-text-collapse-max-length="350" dd-text-collapse-text="{{(md.abstract || md.defaultAbstract) | striptags}}"></p>
+        <p ng-if="md.credit" class="text-justify gn-md-credit">Sources:  {{md.credit}}</p>
       </div>
+
+      <!-- Buttons (download - view - admin) -->
+
     </div>
+    <div class="clearfix gn-md-links">
 
-    <div class="categories clearfix">
-
-      <div class="btn-group" ng-if="links.length > 0">
+      <div class="btn-group pull-right" ng-if="links.length > 0">
         <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
           <span class="fa fa-link"></span>
           {{links.length}}
@@ -32,7 +40,7 @@
         </ul>
       </div>
 
-      <div class="btn-group" ng-if="downloads.length > 1">
+      <div class="btn-group pull-right" ng-if="downloads.length > 1">
         <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
           <span class="fa fa-download"></span>
           <span translate>download</span>
@@ -45,14 +53,14 @@
               {{link.desc || (link.name + ' - ' + link.contentType) }} </a></li>
         </ul>
       </div>
-      <button type="button" class="btn btn-default btn-sm"
+      <button type="button" class="btn btn-default btn-sm pull-right"
               ng-if="downloads.length == 1" ng-click="resultviewFns.addMdLayerToPanier(downloads[0], md)">
         <span class="fa fa-download"></span>
         <span translate>download</span>
       </button>
 
 
-      <div class="btn-group" ng-if="layers.length > 1 ">
+      <div class="btn-group pull-right" ng-if="layers.length > 1 ">
         <button type="button" class="btn btn-default dropdown-toggle btn-sm" data-toggle="dropdown">
           <span class="fa fa-globe"></span>
           <span translate>visualize</span>
@@ -67,15 +75,12 @@
           <li><a href="#">Add all layers</a></li>
         </ul>
       </div>
-      <button type="button" class="btn btn-default btn-sm"
+      <button type="button" class="btn btn-default btn-sm pull-right"
               ng-if="layers.length == 1" ng-click="resultviewFns.addMdLayerToMap(layers[0], md)">
         <span class="fa fa-globe"></span>
         <span translate>visualize</span>
       </button>
-
-      <div class="pull-right" ng-if="md.category.length > 0">
-        <i data-ng-repeat="cat in md.category" class="fa" data-ng-class="catIcons[cat]" title="{{cat}}">&nbsp;</i>
-      </div>
     </div>
+
   </li>
 </ul>

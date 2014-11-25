@@ -2,13 +2,13 @@
      data-ng-include="'../../catalog/templates/top-toolbar.html'">
 </div>
 
-<div class="gn-search-page" data-ng-controller="GnSearchController">
-  <div class="" data-ng-controller="gnsSextant">
+<div class="gn-search-page container-fluid" data-ng-controller="GnSearchController">
+  <div class="hfull" data-ng-controller="gnsSextant">
 
-    <tabset id="main-tabset" type="pills">
+    <tabset class="hfull" id="main-tabset" type="pills">
       <tab heading="{{mainTabs.search.title}}" active="mainTabs.search.active">
 
-        <div class="container-fluid" data-ng-controller="gnsSextantSearch">
+        <div class="hfull" data-ng-controller="gnsSextantSearch">
 
           <form data-ng-search-form="" class="hfull" role="form" runsearch="true">
 
