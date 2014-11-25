@@ -34,11 +34,14 @@
           // If not datetimepicker.js is used (it will not
           // support year or month only mode in this case)
           scope.dateTypeSupported = Modernizr.inputtypes.date;
-
+          scope.isValidDate = true;
           var namespaces = {
             gco: 'http://www.isotc211.org/2005/gco',
             gml: 'http://www.opengis.net/gml'
-          };
+          }, datePattern = new RegExp('^\\d{4}$|' +
+              '^\\d{4}-\\d{2}$|' +
+              '^\\d{4}-\\d{2}-\\d{2}$|' +
+              '^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}$');
           // Format date when datetimepicker is used.
           scope.formatFromDatePicker = function(date) {
             var format = 'YYYY-MM-DDTHH:mm:ss';
@@ -98,6 +101,11 @@
             var namespace = tag.split(':')[0];
 
             if (scope.dateTypeSupported !== true) {
+              // Check date against simple date pattern
+              // to add a css class to highlight error.
+              // Input will be saved anyway.
+              scope.isValidDate =
+                  scope.dateInput.match(datePattern) !== null;
 
               if (scope.dateInput === undefined) {
                 return;
