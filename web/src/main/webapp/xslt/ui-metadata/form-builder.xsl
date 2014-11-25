@@ -566,9 +566,10 @@
     <xsl:if test="not($isDisabled)">
       <xsl:variable name="id" select="generate-id()"/>
       <xsl:variable name="qualifiedName" select="concat($childEditInfo/@prefix, ':', $childEditInfo/@name)"/>
-  
+      <xsl:variable name="isRequired" select="$childEditInfo/@min = 1 and $childEditInfo/@max = 1"/>
+
       <!-- This element is replaced by the content received when clicking add -->
-      <div class="form-group gn-field {if ($isFirst) then '' else 'gn-extra-field'} gn-add-field"
+      <div class="form-group gn-field {if ($isRequired) then 'gn-required' else ''} {if ($isFirst) then '' else 'gn-extra-field'} gn-add-field"
            id="gn-el-{$id}">
         <label class="col-sm-2 control-label"
           data-gn-field-tooltip="{$schema}|{$qualifiedName}|{name(..)}|">
@@ -577,7 +578,6 @@
           </xsl:if>
         </label>
         <div class="col-sm-9">
-          
           <xsl:choose>
             <!-- When element have different types, provide
                   a list of those types to be selected. The type list
