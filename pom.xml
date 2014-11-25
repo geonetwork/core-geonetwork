@@ -936,6 +936,7 @@
       <url>http://developer.k-int.com/maven2/</url>
     </repository>
 
+
     <!-- Local repository which allow to handle temporarly local dependencies
      // FIXME : Should be a remote repository -->
     <repository>
@@ -966,6 +967,14 @@
 	   </snapshots>
 	</repository>
     
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>core-maven-repo</id>
+      <name>core maven repository</name>
+	  <url>https://github.com/geonetwork/core-maven-repo/raw/master/</url>      
+    </repository>
 
   </repositories>
 
