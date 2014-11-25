@@ -31,8 +31,11 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
+import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -119,10 +122,17 @@ public class AddDefault implements Service {
                         // insert metadata
                         //
                         String groupOwner = "1";
-                        String docType = null, category = null, createDate = null, changeDate = null;
-                        boolean ufo = true, indexImmediate = true;
-                        dataMan.insertMetadata(context, schemaName, xml, uuid, owner, groupOwner, siteId,
-                                isTemplate, docType, category, createDate, changeDate, ufo, indexImmediate);
+                        Metadata metadata = new Metadata().setUuid(uuid);
+                        metadata.getDataInfo().
+                                setSchemaId(schemaName).
+                                setRoot(xml.getQualifiedName()).
+                                setType(MetadataType.lookup(isTemplate));
+                        metadata.getSourceInfo().
+                                setSourceId(siteId).
+                                setOwner(owner).
+                                setGroupOwner(1);
+
+                        dataMan.insertMetadata(context, metadata, xml, true, true, true, UpdateDatestamp.NO, false, false);
 
                         status = "loaded";
                     } catch (Exception e) {

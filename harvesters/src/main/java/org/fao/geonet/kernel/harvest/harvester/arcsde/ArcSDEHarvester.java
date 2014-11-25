@@ -32,6 +32,7 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
@@ -274,42 +275,41 @@ public class ArcSDEHarvester extends AbstractHarvester<HarvestResult> {
         //
         // insert metadata
         //
-        String source = params.uuid;
-        String createDate = null;
+        ISODate createDate = null;
         try {
-            createDate = dataMan.extractDateModified(schema, xml);
+            createDate = new ISODate(dataMan.extractDateModified(schema, xml));
         } catch (Exception ex) {
             log.error("ArcSDEHarverter - addMetadata - can't get metadata modified date for metadata with uuid= " +
                     uuid + ", using current date for modified date");
-            createDate = new ISODate().toString();
+            createDate = new ISODate();
         }
 
-        String docType = null, title = null, isTemplate = null, group = null, category = null;
-        boolean ufo = false, indexImmediate = false;
+        Metadata metadata = new Metadata().setUuid(uuid);
+        metadata.getDataInfo().
+                setSchemaId(schema).
+                setRoot(xml.getQualifiedName()).
+                setType(MetadataType.METADATA).
+                setCreateDate(createDate).
+                setChangeDate(createDate);
+        metadata.getSourceInfo().
+                setSourceId(params.uuid).
+                setOwner(Integer.parseInt(params.ownerId));
+        metadata.getHarvestInfo().
+                setHarvested(true).
+                setUuid(params.uuid);
 
+        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null);
 
-        String id = dataMan.insertMetadata(context, schema, xml, uuid, Integer.parseInt(params.ownerId), group, source,
-                         isTemplate, docType, category, createDate, createDate, ufo, indexImmediate);
+        metadata = dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
 
-
-
-		int iId = Integer.parseInt(id);
-		dataMan.setTemplateExt(iId, MetadataType.METADATA);
-		dataMan.setHarvestedExt(iId, source);
+        String id = String.valueOf(metadata.getId());
 
         aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-        context.getBean(MetadataRepository.class).update(iId, new Updater<Metadata>() {
-            @Override
-            public void apply(@Nonnull Metadata entity) {
-                aligner.addCategories(entity, params.getCategories(), localCateg, context, log, null);
-            }
-        });
-
-        dataMan.flush();
 
         dataMan.indexMetadata(id, false);
-		return id;
-	}
+
+        return id;
+    }
 	
 	@Override
 	protected void doInit(Element entry, ServiceContext context) throws BadInputEx {

@@ -28,16 +28,20 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.exceptions.BadXmlResponseEx;
 import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
 import org.fao.geonet.kernel.setting.SettingInfo;
+import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.Updater;
@@ -46,11 +50,17 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import javax.annotation.Nonnull;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import javax.annotation.Nonnull;
 
 //=============================================================================
 /** 
@@ -362,31 +372,30 @@ public class FragmentHarvester extends BaseAligner {
      * 
      */
 	private void createSubtemplate(String schema, Element md, String uuid) throws Exception {
-		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
-		Date date = new Date();
-		
-//		if(log.isDebugEnabled()) log.debug("  - Adding metadata fragment with " + uuid + " schema is set to " + schema + " XML is "+ Xml.getString(md));
-		
         //
         // insert metadata
         //
-        String group= null, isTemplate= null, docType= null, category= null;
-        boolean ufo= false, indexImmediate= false;
-        String id = dataMan.insertMetadata(context, schema, md, uuid, Integer.parseInt(params.owner), group, params.uuid,
-                         isTemplate, docType, category, df.format(date), df.format(date), ufo, indexImmediate);
+        Metadata metadata = new Metadata().setUuid(uuid);
+        metadata.getDataInfo().
+                setSchemaId(schema).
+                setRoot(md.getQualifiedName()).
+                setType(MetadataType.SUB_TEMPLATE);
+        metadata.getSourceInfo().
+                setSourceId(params.uuid).
+                setOwner(Integer.parseInt(params.owner));
+        metadata.getHarvestInfo().
+                setHarvested(true).
+                setUuid(params.uuid).
+                setUri(harvestUri);
 
-		int iId = Integer.parseInt(id);
+        addCategories(metadata, params.categories, localCateg, context, log, null);
+
+        metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+
+        String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.privileges, localGroups, dataMan, context, log);
-        context.getBean(MetadataRepository.class).update(iId, new Updater<Metadata>() {
-            @Override
-            public void apply(@Nonnull Metadata entity) {
-                addCategories(entity, params.categories, localCateg, context, log, null);
-            }
-        });
 
-        dataMan.setTemplateExt(iId, MetadataType.SUB_TEMPLATE);
-		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(harvestUri));
 		dataMan.indexMetadata(id, false);
 
         dataMan.flush();
@@ -598,21 +607,35 @@ public class FragmentHarvester extends BaseAligner {
         //
         // insert metadata
         //
-        String group = null, isTemplate = null, docType = null, title = null, category = null;
-        boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, params.outputSchema, template, recUuid, Integer.parseInt(params.owner), group, params.uuid,
-                isTemplate, docType, category, df.format(date), df.format(date), ufo, indexImmediate);
+        Metadata metadata = new Metadata().setUuid(recUuid);
+        metadata.getDataInfo().
+                setSchemaId(params.outputSchema).
+                setRoot(template.getQualifiedName()).
+                setType(MetadataType.METADATA);
+        metadata.getSourceInfo().
+                setSourceId(params.uuid).
+                setOwner(Integer.parseInt(params.owner));
+        metadata.getHarvestInfo().
+                setHarvested(true).
+                setUuid(params.uuid).
+                setUri(harvestUri);
+        if (params.isoCategory != null) {
+            MetadataCategory metadataCategory = context.getBean(MetadataCategoryRepository.class).findOneByName(params.isoCategory);
 
-		int iId = Integer.parseInt(id);
+            if (metadataCategory == null) {
+                throw new IllegalArgumentException("No category found with name: " + params.isoCategory);
+            }
+            metadata.getCategories().add(metadataCategory);
+        }
+        metadata = dataMan.insertMetadata(context, metadata, template, true, false, false, UpdateDatestamp.NO, false, false);
+
+        String id = String.valueOf(metadata.getId());
 
         if(log.isDebugEnabled()){
             log.debug("	- Set privileges, category, template and harvested");
         }
         addPrivileges(id, params.privileges, localGroups, dataMan, context, log);
-        dataMan.setCategory(context, id, params.isoCategory);
-		
-		dataMan.setTemplateExt(iId, MetadataType.METADATA);
-		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(harvestUri));
+
 		dataMan.indexMetadata(id, false);
 
         if(log.isDebugEnabled()) {

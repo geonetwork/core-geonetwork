@@ -24,11 +24,13 @@ package org.fao.geonet.kernel.harvest.harvester.localfilesystem;
 
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Logger;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.OperationAllowedId_;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadInputEx;
+import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
@@ -184,27 +186,31 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
     String addMetadata(Element xml, String uuid, String schema, GroupMapper localGroups, final CategoryMapper localCateg, String createDate) throws Exception {
 		log.debug("  - Adding metadata with remote uuid: "+ uuid);
 
-		String source = params.uuid;
 		
         //
         // insert metadata
         //
-        String group = null, isTemplate = null, docType = null, title = null, category = null;
-        boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, schema, xml, uuid, Integer.parseInt(params.ownerId), group, source,
-                         isTemplate, docType, category, createDate, createDate, ufo, indexImmediate);
+        Metadata metadata = new Metadata().setUuid(uuid);
+        metadata.getDataInfo().
+                setSchemaId(schema).
+                setRoot(xml.getQualifiedName()).
+                setType(MetadataType.METADATA).
+                setCreateDate(new ISODate(createDate)).
+                setChangeDate(new ISODate(createDate));
+        metadata.getSourceInfo().
+                setSourceId(params.uuid).
+                setOwner(Integer.parseInt(params.ownerId));
+        metadata.getHarvestInfo().
+                setHarvested(true).
+                setUuid(params.uuid);
 
-		int iId = Integer.parseInt(id);
-		dataMan.setTemplateExt(iId, MetadataType.METADATA);
-		dataMan.setHarvestedExt(iId, source);
+        aligner.addCategories(metadata, params.getCategories(), localCateg, context, log, null);
+
+        metadata = dataMan.insertMetadata(context, metadata, xml, true, false, false, UpdateDatestamp.NO, false, false);
+
+        String id = String.valueOf(metadata.getId());
 
         aligner.addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-        context.getBean(MetadataRepository.class).update(iId, new Updater<Metadata>() {
-            @Override
-            public void apply(@Nonnull Metadata entity) {
-                aligner.addCategories(entity, params.getCategories(), localCateg, context, log, null);
-            }
-        });
 
         dataMan.flush();
 

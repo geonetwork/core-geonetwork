@@ -1580,7 +1580,7 @@ public class DataManager {
         return String.valueOf(finalId);
     }
 
-    private Metadata insertMetadata(ServiceContext context, Metadata newMetadata, Element metadataXml, boolean notifyChange,
+    public Metadata insertMetadata(ServiceContext context, Metadata newMetadata, Element metadataXml, boolean notifyChange,
                                     boolean index, boolean updateFixedInfo, UpdateDatestamp updateDatestamp,
                                     boolean fullRightsForGroup, boolean forceRefreshReaders) throws Exception {
         final String schema = newMetadata.getDataInfo().getSchemaId();

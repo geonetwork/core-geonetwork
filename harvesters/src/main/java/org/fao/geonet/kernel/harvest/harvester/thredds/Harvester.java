@@ -26,7 +26,6 @@
 
 package org.fao.geonet.kernel.harvest.harvester.thredds;
 
-import com.google.common.base.Optional;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 import org.apache.commons.io.IOUtils;
@@ -41,6 +40,7 @@ import org.fao.geonet.exceptions.BadServerCertificateEx;
 import org.fao.geonet.exceptions.BadXmlResponseEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
@@ -54,8 +54,6 @@ import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.Fragme
 import org.fao.geonet.kernel.harvest.harvester.fragment.FragmentHarvester.HarvestSummary;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.Updater;
 import org.fao.geonet.util.Sha1Encoder;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.Xml;
@@ -89,8 +87,6 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.file.Path;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -98,7 +94,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Nonnull;
 import javax.net.ssl.SSLHandshakeException;
 
 //=============================================================================
@@ -446,30 +441,31 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 		}
 
 		log.info("  - Adding metadata with " + uuid + " schema is set to " + schema + "\n XML is "+ Xml.getString(md));
-		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
-		Date date = new Date();
-		
+
 		deleteExistingMetadata(uri);
 
 		//
         // insert metadata
         //
-        String group = null, isTemplate = null, docType = null, title = null, category = null;
-        boolean ufo = false, indexImmediate = false;
-        String id = dataMan.insertMetadata(context, schema, md, uuid, Integer.parseInt(params.ownerId), group, params.uuid,
-                     isTemplate, docType, category, df.format(date), df.format(date), ufo, indexImmediate);
+        Metadata metadata = new Metadata().setUuid(uuid);
+        metadata.getDataInfo().
+                setSchemaId(schema).
+                setRoot(md.getQualifiedName()).
+                setType(MetadataType.METADATA);
+        metadata.getSourceInfo().
+                setSourceId(params.uuid).
+                setOwner(Integer.parseInt(params.ownerId));
+        metadata.getHarvestInfo().
+                setHarvested(true).
+                setUuid(params.uuid).
+                setUri(uri);
 
-		int iId = Integer.parseInt(id);
+        addCategories(metadata, params.getCategories(), localCateg, context, log, null);
+        metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
+
+        String id = String.valueOf(metadata.getId());
+
         addPrivileges(id, params.getPrivileges(), localGroups, dataMan, context, log);
-        context.getBean(MetadataRepository.class).update(iId, new Updater<Metadata>() {
-            @Override
-            public void apply(@Nonnull Metadata entity) {
-                addCategories(entity, params.getCategories(), localCateg, context, log, null);
-            }
-        });
-
-		dataMan.setTemplateExt(iId, MetadataType.METADATA);
-		dataMan.setHarvestedExt(iId, params.uuid, Optional.of(uri));
 
         dataMan.indexMetadata(id, false);
 
