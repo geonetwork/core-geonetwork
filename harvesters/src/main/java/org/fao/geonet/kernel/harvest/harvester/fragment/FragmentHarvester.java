@@ -600,9 +600,7 @@ public class FragmentHarvester extends BaseAligner {
 		// now add any record built from template with linked in fragments
         if(log.isDebugEnabled())
             log.debug("	- Attempting to insert metadata record with link");
-		DateFormat df = new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
-		Date date = new Date();
-		template = dataMan.setUUID(params.outputSchema, recUuid, template); 
+		template = dataMan.setUUID(params.outputSchema, recUuid, template);
 
         //
         // insert metadata

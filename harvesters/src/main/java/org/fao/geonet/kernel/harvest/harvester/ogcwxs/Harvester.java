@@ -24,7 +24,6 @@
 package org.fao.geonet.kernel.harvest.harvester.ogcwxs;
 
 import com.google.common.base.Function;
-import com.google.common.base.Optional;
 import jeeves.server.context.ServiceContext;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -49,7 +48,6 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.Updater;
 import org.fao.geonet.services.thumbnail.Set;
 import org.fao.geonet.util.Sha1Encoder;
 import org.fao.geonet.utils.BinaryFile;
@@ -71,15 +69,11 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 
@@ -501,23 +495,20 @@ class Harvester extends BaseAligner implements IHarvester<HarvestResult>
 	private WxSLayerRegistry addLayerMetadata (Element layer, Element capa) throws JDOMException
 	{
 		
-		DateFormat df 		= new SimpleDateFormat ("yyyy-MM-dd'T'HH:mm:ss");
-		Date dt 			= new Date ();
 		WxSLayerRegistry reg= new WxSLayerRegistry ();
 		String schema;
 		String mdXml;
-		String date 		= df.format (dt);
 		//--- Loading stylesheet
 		Path styleSheet 	= schemaMan.getSchemaDir(params.outputSchema).
                 resolve(Geonet.Path.CONVERT_STYLESHEETS).
                 resolve("OGCWxSGetCapabilitiesto19119").
                 resolve("OGC" + params.ogctype.substring(0, 3) + "GetCapabilitiesLayer-to-19139.xsl");
 		Element xml 		= null;
-		
-		boolean exist;
-		boolean loaded 		= false;
-		
-		if (params.ogctype.substring(0,3).equals("WMS")) {
+
+        boolean exist;
+        boolean loaded = false;
+
+        if (params.ogctype.substring(0,3).equals("WMS")) {
 			Element name;
 			if (params.ogctype.substring(3,8).equals("1.3.0")) {
 				Namespace wms = Namespace.getNamespace("http://www.opengis.net/wms");

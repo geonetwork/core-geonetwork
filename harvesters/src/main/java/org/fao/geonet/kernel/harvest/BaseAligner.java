@@ -2,7 +2,6 @@ package org.fao.geonet.kernel.harvest;
 
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Logger;
-
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.DataManager;
@@ -10,12 +9,9 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.CategoryMapper;
 import org.fao.geonet.kernel.harvest.harvester.GroupMapper;
 import org.fao.geonet.kernel.harvest.harvester.Privileges;
-import org.fao.geonet.kernel.search.MetadataRecordSelector;
 import org.fao.geonet.repository.MetadataCategoryRepository;
-import org.fao.geonet.repository.MetadataRepository;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -81,7 +77,6 @@ public abstract class BaseAligner {
                 }
             }
         }
-        context.getBean(MetadataRepository.class).save(metadata);
     }
 
     /**
