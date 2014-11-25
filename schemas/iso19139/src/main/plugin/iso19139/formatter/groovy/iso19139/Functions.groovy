@@ -16,4 +16,7 @@ public class Functions {
         ""
     }
 
+    def isoURL = {urlEl ->
+        def charString = urlEl.'gco:CharacterString'
+    }
 }

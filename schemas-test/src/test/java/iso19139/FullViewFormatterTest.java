@@ -18,7 +18,6 @@ import org.jdom.Attribute;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Text;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,12 +39,11 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
     @Autowired
     private SchemaManager schemaManager;
 
-    @Test @Ignore
+    @Test //@Ignore
     @SuppressWarnings("unchecked")
     public void testPrintFormat() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("html", "true");
-        request.addParameter("print", "true");
 
         GetRelated related = Mockito.mock(GetRelated.class);
         Element relatedXml = Xml.loadFile(FullViewFormatterTest.class.getResource("relations.xml"));
@@ -61,7 +59,7 @@ public class FullViewFormatterTest extends AbstractFormatterTest {
 //        measureFormatterPerformance(request, formatterId);
 
         final MockHttpServletResponse response = new MockHttpServletResponse();
-        formatService.exec("eng", "html", "" + id, null, formatterId, "true", false, request, response);
+        formatService.exec("eng", "pdf", "" + id, null, formatterId, "true", false, request, response);
         final String view = response.getContentAsString();
         Files.write(view, new File("e:/tmp/view.html"), Constants.CHARSET);
 

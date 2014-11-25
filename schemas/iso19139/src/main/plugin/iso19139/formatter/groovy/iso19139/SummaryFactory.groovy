@@ -1,5 +1,6 @@
 package iso19139
 
+import groovy.util.slurpersupport.GPathResult
 import jeeves.server.context.ServiceContext
 import org.fao.geonet.constants.Geonet
 import org.fao.geonet.guiservices.metadata.GetRelated
@@ -27,6 +28,7 @@ class SummaryFactory {
         summary.abstr = isoHandler.isofunc.isoText(metadata.'gmd:identificationInfo'.'*'.'gmd:abstract')
 
         configureLogos(metadata, summary)
+        configureLinks(metadata, isoHandler, summary)
         configureHierarchy(isoHandler, summary)
 
         summary.navBar = '''
@@ -54,6 +56,21 @@ class SummaryFactory {
         return summary
     }
 
+    static def configureLinks(GPathResult metadata, iso19139.Handlers isoHandler, Summary summary) {
+        def links = metadata.'gmd:distributionInfo'.'*'.'gmd:transferOptions'.'*'.'gmd:onLine'.'*'.children{
+            it.name().endsWith(":linkage")
+        }
+        if (!links.isEmpty()) {
+            StaticLinkBlock linkBlock = new StaticLinkBlock("links");
+            summary.links.add(linkBlock)
+            links.each { link ->
+                def href = isoHandler.isofunc.isoURL(link)
+                linkBlock.links.put("", new Link(href, text))
+            }
+        }
+
+    }
+
     private static void configureHierarchy(isoHandler, Summary summary) {
 
         def relatedTypes = ["service","children","related","parent","dataset","fcat","siblings","associated","source","hassource"]
@@ -64,35 +81,25 @@ class SummaryFactory {
 
         def linkBlockName = "hierarchy"
         if (env.formatType == FormatType.pdf) {
-            StaticLinkBlock hierarchy = new StaticLinkBlock(linkBlockName)
-            summary.links.add(hierarchy);
-            def bean = isoHandler.env.getBean(GetRelated.class)
-            def related = bean.getRelated(ServiceContext.get(), id, uuid, relatedTypes.join("|"), 1, 1000, true)
-
-            related.getChildren("relation").each {rel ->
-                def type = rel.getAttributeValue("type")
-                def icon = isoHandler.env.localizedUrl + "../../images/" + type + ".png";
-
-                def linkType = new LinkType(type, icon)
-                rel.getChildren("metadata").each {md ->
-                    def href = createShowMetadataHref(isoHandler, md.getChild("info", Geonet.Namespaces.GEONET).getChildText("uuid"))
-                    def title = md.getChildText("title")
-                    if (title != null) {
-                        title = md.getChildText("defaultTitle")
-                    }
-                    hierarchy.links.put(linkType, new Link(href, title))
-                }
-            }
+            createStaticHierarchyHtml(relatedTypes, uuid, id, linkBlockName, summary, isoHandler)
         } else {
-            def placeholderId = "link-placeholder-" + linkBlockName
-            def typeTranslations = new StringBuilder()
-            relatedTypes.eachWithIndex {type, i ->
-                typeTranslations.append("\t'").append(type).append("': '").append(isoHandler.f.translate(type)).append('\'')
-                if (i != relatedTypes.size() - 1) {
-                    typeTranslations.append(",\n");
-                }
+            createDynamicHierarchyHtml(relatedTypes, uuid, id, linkBlockName, summary, isoHandler, env)
+        }
+
+
+    }
+
+    static void createDynamicHierarchyHtml(List<String> relatedTypes, String uuid, int id, String linkBlockName,
+                                           Summary summary, isoHandler, Environment env) {
+        def placeholderId = "link-placeholder-" + linkBlockName
+        def typeTranslations = new StringBuilder()
+        relatedTypes.eachWithIndex {type, i ->
+            typeTranslations.append("\t'").append(type).append("': '").append(isoHandler.f.translate(type)).append('\'')
+            if (i != relatedTypes.size() - 1) {
+                typeTranslations.append(",\n");
             }
-            def js = """
+        }
+        def js = """
 \$(function() {
   \$('.${LinkBlock.CSS_CLASS_PREFIX + linkBlockName}').hide();
   var typeTranslations = {
@@ -166,15 +173,34 @@ $typeTranslations
   })
 });
 """
-            def html = """
+        def html = """
 <script type="text/javascript">$js</script>
 <div id="$placeholderId"> </div>
 """
-            RawHtmlLinkBlock linkBlock = new RawHtmlLinkBlock(linkBlockName, html)
-            summary.links.add(linkBlock)
+        RawHtmlLinkBlock linkBlock = new RawHtmlLinkBlock(linkBlockName, html)
+        summary.links.add(linkBlock)
+    }
+
+    static void createStaticHierarchyHtml(relatedTypes, uuid, id, linkBlockName, summary, isoHandler) {
+        StaticLinkBlock hierarchy = new StaticLinkBlock(linkBlockName)
+        summary.links.add(hierarchy);
+        def bean = isoHandler.env.getBean(GetRelated.class)
+        def related = bean.getRelated(ServiceContext.get(), id, uuid, relatedTypes.join("|"), 1, 1000, true)
+
+        related.getChildren("relation").each {rel ->
+            def type = rel.getAttributeValue("type")
+            def icon = isoHandler.env.localizedUrl + "../../images/" + type + ".png";
+
+            def linkType = new LinkType(type, icon)
+            rel.getChildren("metadata").each {md ->
+                def href = createShowMetadataHref(isoHandler, md.getChild("info", Geonet.Namespaces.GEONET).getChildText("uuid"))
+                def title = md.getChildText("title")
+                if (title != null) {
+                    title = md.getChildText("defaultTitle")
+                }
+                hierarchy.links.put(linkType, new Link(href, title))
+            }
         }
-
-
     }
 
     private static String createShowMetadataHref(isoHandler, String uuid) {
