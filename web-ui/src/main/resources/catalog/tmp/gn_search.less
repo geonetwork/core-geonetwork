@@ -178,13 +178,6 @@
   font-weight: normal;
 }
 
-.gn-resultview {
-  li:hover {
-    cursor: pointer;
-    background-color:  #428bca;
-  }
-}
-
 [gn-bootstrap-datepicker].input-group[class*="col-"] {
   padding-left: 15px;
   padding-right: 15px;
@@ -291,10 +284,6 @@
         padding: .3em .4em .3em .6em;
     }
   }
-  .img-thumbnail {
-    margin-left: 1em;
-    max-height: 140px;
-  }
   p {
     font-size: .9em;
   }
@@ -304,7 +293,8 @@
   }
   li:hover {
     background: lighten(spin(@state-info-bg, -10), 7%);
-
+    cursor: pointer;
+    background-color:  #428bca;
   }
 }
 
