@@ -152,10 +152,10 @@ public class ThesaurusManager implements ThesaurusFinder {
 	 */
 	private void initThesauriTable(Path thesauriDirectory, ServiceContext context) throws IOException {
 
-		thesauriMap = new ConcurrentHashMap<String,Thesaurus>();
+		thesauriMap = new ConcurrentHashMap<>();
 		Log.info(Geonet.THESAURUS_MAN,"Scanning "+thesauriDirectory);
 
-		if (Files.isDirectory(thesauriDirectory)) {
+		if (thesauriDirectory != null && Files.isDirectory(thesauriDirectory)) {
             String[] types = {Geonet.CodeList.EXTERNAL, Geonet.CodeList.LOCAL, Geonet.CodeList.REGISTER};
             for (String type : types) {
                 // init of external repositories

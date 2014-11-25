@@ -118,7 +118,7 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult> {
         } else {
             try (DirectoryStream<Path> paths = Files.newDirectoryStream(root)) {
                 for (Path path : paths) {
-                    if (Files.isRegularFile(path)) {
+                    if (path != null && Files.isRegularFile(path)) {
                         visitor.visitFile(path, Files.readAttributes(path, BasicFileAttributes.class));
                     }
                 }
