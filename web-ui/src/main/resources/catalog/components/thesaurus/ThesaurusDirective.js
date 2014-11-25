@@ -289,11 +289,16 @@
 
                    // When clicking the element trigger input
                    // to show autocompletion list.
-                   field.on('click', function() {
-                     if (field.val() == '') {
-                       field.val('*').trigger('input');
+                   // https://github.com/twitter/typeahead.js/issues/798
+                   field.on('typeahead:opened', function() {
+                     var initial = field.val(),
+                     ev = $.Event('keydown');
+                     ev.keyCode = ev.which = 40;
+                     field.trigger(ev);
+                     if (field.val() != initial) {
                        field.val('');
                      }
+                     return true;
                    });
                  });
                });
@@ -441,12 +446,16 @@
 
             // When clicking the element trigger input
             // to show autocompletion list.
-            element.on('click', function() {
-              if (element.val() == '') {
-                element.val('*').trigger('input');
-                // FIXME : does not properly reset value
+            // https://github.com/twitter/typeahead.js/issues/798
+            element.on('typeahead:opened', function() {
+              var initial = element.val(),
+                  ev = $.Event('keydown');
+              ev.keyCode = ev.which = 40;
+              element.trigger(ev);
+              if (element.val() != initial) {
                 element.val('');
               }
+              return true;
             });
             initialized = true;
           };
