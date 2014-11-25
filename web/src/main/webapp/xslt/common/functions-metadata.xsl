@@ -37,13 +37,24 @@
     <xsl:message>#<xsl:value-of select="$xpath"/></xsl:message>
     <xsl:message>#<xsl:value-of select="$parent"/></xsl:message>-->
     
+    <xsl:variable name="escapedName">
+      <xsl:choose>
+        <xsl:when test="matches($name, '.*CHOICE_ELEMENT.*')">
+          <xsl:value-of select="substring-before($name, 'CHOICE_ELEMENT')"/>
+        </xsl:when>
+        <xsl:when test="matches($name, '.*GROUP_ELEMENT.*')">
+          <xsl:value-of select="substring-before($name, 'GROUP_ELEMENT')"/>
+        </xsl:when>
+        <xsl:otherwise><xsl:value-of select="$name"/></xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     
     <!-- Name with context in current schema -->
     <xsl:variable name="schemaLabelWithContext"
-      select="$labels/element[@name=$name and (@context=$xpath or @context=$parent or @context=$parentIsoType)]"/>
+      select="$labels/element[@name=$escapedName and (@context=$xpath or @context=$parent or @context=$parentIsoType)]"/>
     
     <!-- Name in current schema -->
-    <xsl:variable name="schemaLabel" select="$labels/element[@name=$name and not(@context)]"/>
+    <xsl:variable name="schemaLabel" select="$labels/element[@name=$escapedName and not(@context)]"/>
 
     <xsl:choose>
       <xsl:when test="$schemaLabelWithContext">
@@ -61,7 +72,7 @@
           <xsl:otherwise>
             <element>
               <label>
-                <xsl:value-of select="$name"/>
+                <xsl:value-of select="$escapedName"/>
               </label>
             </element>
             <xsl:message>gn-fn-metadata:getLabel | missing translation in schema <xsl:value-of
