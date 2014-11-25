@@ -40,7 +40,9 @@ GeoNetwork.app = function() {
             Ext.ux.Lightbox.register('a[rel^=lightbox]');
         });
         var p = new Ext.Panel({
-            border : false,
+          	shadow: 'drop',
+            shadowOffset: 10,
+            border : true,
             bodyCssClass : 'md-view',
             items : latestView,
             renderTo : 'latest-metadata'
@@ -88,7 +90,9 @@ GeoNetwork.app = function() {
             Ext.ux.Lightbox.register('a[rel^=lightbox]');
         });
         var p = new Ext.Panel({
-            border : false,
+          	shadow: 'drop',
+            shadowOffset: 10,
+            border : true,
             bodyCssClass : 'md-view',
             items : latestView,
             renderTo : 'popular-metadata'

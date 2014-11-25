@@ -155,11 +155,6 @@ function showSearch() {
         Ext.getCmp('advanced-search-options-content-form').fireEvent('search');
     }
 
-
-//    Ext.each(Ext.query('a', Ext.get("main-navigation").dom), function(a) {
-//        Ext.get(a).removeClass("selected");
-//    });
-
     Ext.get("catalog-tab").addClass("selected");
     
 }

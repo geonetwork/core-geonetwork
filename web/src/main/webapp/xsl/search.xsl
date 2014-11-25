@@ -186,7 +186,7 @@
 									</a>
 									<label id="username_label">
 										<xsl:if test="string(/root/gui/session/userId)!=''">
-											<xsl:value-of select="concat(/root/gui/session/name,' ')"/>
+											<xsl:value-of select="concat(' - ',/root/gui/session/name,' ')"/>
 										</xsl:if>
 									</label>
 									<label id="name_label">
@@ -196,7 +196,7 @@
 									</label>
 									<label id="profile_label">
 										<xsl:if test="string(/root/gui/session/userId)!=''">
-											<xsl:value-of select="concat('(',/root/gui/session/profile,')')"/>	
+											<xsl:value-of select="concat('(',/root/gui/session/profile,') ')"/>	
 										</xsl:if>
 									</label>
 									<a href="javascript:catalogue.admin();" id="administration-button">
@@ -307,9 +307,9 @@
 			                      	  <xsl:copy-of select="/root/gui/strings/welcome.text"/>
 								</div>
 		                        <aside class="tag-aside">
-			                    	  <div id="welcome-text">
-			                      	  <xsl:copy-of select="/root/gui/strings/welcome.text"/>
-														  </div>
+<!-- 			                    	  <div id="welcome-text"> -->
+<!-- 			                      		  <xsl:copy-of select="/root/gui/strings/welcome.text"/> -->
+<!-- 									  </div> -->
 		                          <div id="tags">
 		                            <header><h1><span><xsl:value-of select="/root/gui/strings/tag_label" /></span></h1></header>
 		                            <div id="cloud-tag"></div>
@@ -321,6 +321,7 @@
 		                              <div id="latest-metadata">
 		                                <header><h1><span><xsl:value-of select="/root/gui/strings/latestDatasets" /></span></h1></header>
 		                              </div>
+		                              <br/>
 		                              <div id="popular-metadata">
 		                                <header><h1><span><xsl:value-of select="/root/gui/strings/popularDatasets" /></span></h1></header>
 		                              </div>

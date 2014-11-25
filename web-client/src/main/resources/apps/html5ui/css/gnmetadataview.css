@@ -5,6 +5,7 @@
 .md-view {
 	background-color: #FFFFFF;
 	text-shadow: 0 1px 0 #FFFFFF;
+	box-shadow: 10px 10px 5px #888888;
 }
 
 .md-view ul {

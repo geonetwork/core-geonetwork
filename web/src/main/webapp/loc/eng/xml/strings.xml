@@ -1397,10 +1397,11 @@
 
 	<advancedOptions.show>show advanced options</advancedOptions.show>
 	<advancedOptions.hide>hide advanced options</advancedOptions.hide>
-	<latestDatasets>Latest</latestDatasets>
-	<popularDatasets>Popular</popularDatasets>
+	<latestDatasets>Recently Added Data</latestDatasets>
+	<popularDatasets>Popular Data</popularDatasets>
 	<filter>Filter</filter>
-	<welcome.text>Welcome to INSPIRE@EC Portal</welcome.text>
+	<welcome.text>Welcome to the new INSPIRE@EC Portal giving you access to relevant INSPIRE SDI metadata. The new portal replaces the <a href="https://webgate.acceptance.ec.europa.eu/inspire/geoportal/" target="_blank">old INSPIRE@EC Portal</a>.<br/>
+	</welcome.text>
 	<tag_label>Tags</tag_label>
 	<map_label>Map</map_label>
   <about.text>About this site</about.text>

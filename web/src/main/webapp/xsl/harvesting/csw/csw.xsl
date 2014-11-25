@@ -58,7 +58,7 @@
 				<td class="padded">
 					<select id="csw.icon" class="content" name="icon" size="1"/>
 					&#xA0;
-					<img id="csw.icon.image" src="" alt="" class="logo"/>
+					<img id="csw.icon.image" src="/geonetwork/images/harvesting/default.gif" alt="" class="logo"/>
 				</td>
 			</tr>
 			
