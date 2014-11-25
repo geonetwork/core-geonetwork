@@ -1481,21 +1481,21 @@
           <field
               xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
-                [gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/* =
-                'geonetwork.thesaurus.external.theme.seadatanet.parameter.groups.P03']"/>
+                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
+                'seadatanet.parameter.groups.P03')]"/>
 
           <field
                   name="sdn-parameter-discovery"
                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
-                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString,
-                'parameter.seadatanet-ocean-discovery-parameter.rdf')]"/>
+                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
+                'seadatanet-ocean-discovery-parameter')]"/>
 
           <field
                   xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/
                 gmd:descriptiveKeywords
-                [gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/* =
-                'geonetwork.thesaurus.external.theme.seadatanet.parameter.usage.P01']"/>
+                [contains(gmd:MD_Keywords/gmd:thesaurusName/gmd:CI_Citation/gmd:identifier/gmd:MD_Identifier/gmd:code/*/text(),
+                'seadatanet.parameter.usage.P01')]"/>
 
           <field
               name="inspireTheme"
