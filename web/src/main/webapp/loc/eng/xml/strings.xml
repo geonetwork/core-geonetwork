@@ -339,7 +339,7 @@
 	<selectedCRS js="true">Selected coordinate systems</selectedCRS>
 	<foundCRS js="true">Available coordinate systems</foundCRS>
 	
-	<about>About</about>
+	<about>About this site</about>
 	<abstract>Abstract</abstract>
 	<accept>Accept</accept>
 	<actionOnSelect>actions on selection</actionOnSelect>
@@ -1400,7 +1400,7 @@
 	<latestDatasets>Latest</latestDatasets>
 	<popularDatasets>Popular</popularDatasets>
 	<filter>Filter</filter>
-	<welcome.text>Welcome to GeoNetwork</welcome.text>
+	<welcome.text>Welcome to INSPIRE@EC Portal</welcome.text>
 	<tag_label>Tags</tag_label>
 	<map_label>Map</map_label>
   <about.text>About this site</about.text>
