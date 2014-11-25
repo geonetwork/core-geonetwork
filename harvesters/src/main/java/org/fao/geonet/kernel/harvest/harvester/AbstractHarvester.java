@@ -23,6 +23,19 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
+import static org.quartz.JobKey.jobKey;
+
+import java.io.File;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
@@ -67,21 +80,9 @@ import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specifications;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
-import static org.quartz.JobKey.jobKey;
 
 /**
  * Represents a harvester job. Used to launch harvester workers.
@@ -112,7 +113,7 @@ public abstract class AbstractHarvester<T extends HarvestResult> {
         }
 
         try {
-            AbstractHarvester ah = context.getApplicationContext().getBean(type, AbstractHarvester.class);
+            AbstractHarvester<?> ah = context.getApplicationContext().getBean(type, AbstractHarvester.class);
             ah.setContext(context);
 
             return ah;

@@ -52,7 +52,7 @@ import javax.xml.parsers.ParserConfigurationException;
  * Time: 8:28 AM
  */
 public class GeonetWroModelFactory implements WroModelFactory {
-    private static final Logger LOG = java.util.logging.Logger.getLogger(GeonetWroModelFactory.class.getName());
+    private static final Logger LOG = Logger.getLogger(GeonetWroModelFactory.class.getName());
 
     public static final String WRO_SOURCES_KEY = "wroSources";
     public static final String JS_SOURCE_EL = "jsSource";

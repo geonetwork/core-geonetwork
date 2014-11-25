@@ -327,7 +327,20 @@ public class GeonetworkDataDirectory {
         if (!Files.exists(logoDir) || IO.isEmptyDir(logoDir)) {
             Log.info(Geonet.DATA_DIRECTORY, "     - Copying logos ...");
             try {
-                IO.copyDirectoryOrFile(this.webappDir.resolve("images").resolve("harvesting"), logoDir, false);
+                final Path srcLogo = this.webappDir.resolve("images").resolve("harvesting");
+
+                if (Files.exists(srcLogo)) {
+                    try (DirectoryStream<Path> paths = Files.newDirectoryStream(srcLogo)) {
+                        for (Path path : paths) {
+                            final Path relativePath = srcLogo.relativize(path);
+                            final Path dest = logoDir.resolve(relativePath.toString());
+                            if (!Files.exists(dest)) {
+                                IO.copyDirectoryOrFile(path, dest, false);
+                            }
+                        }
+                    }
+                }
+
             } catch (IOException e) {
                 Log.error(Geonet.DATA_DIRECTORY, "     - Logo copy failed: " + e.getMessage(), e);
             }

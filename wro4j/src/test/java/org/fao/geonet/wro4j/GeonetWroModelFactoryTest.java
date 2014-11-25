@@ -24,11 +24,27 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.fao.geonet.wro4j.ClosureDependencyUriLocator.PATH_TO_WEBAPP_BASE_FROM_CLOSURE_BASE_JS_FILE;
-import static org.fao.geonet.wro4j.GeonetWroModelFactory.*;
-import static org.junit.Assert.*;
+import static org.fao.geonet.wro4j.GeonetWroModelFactory.CLASSPATH_PREFIX;
+import static org.fao.geonet.wro4j.GeonetWroModelFactory.CSS_SOURCE_EL;
+import static org.fao.geonet.wro4j.GeonetWroModelFactory.GROUP_NAME_CLOSURE_DEPS;
+import static org.fao.geonet.wro4j.GeonetWroModelFactory.INCLUDE_EL;
+import static org.fao.geonet.wro4j.GeonetWroModelFactory.JS_SOURCE_EL;
+import static org.fao.geonet.wro4j.GeonetWroModelFactory.PATH_ON_DISK_ATT;
+import static org.fao.geonet.wro4j.GeonetWroModelFactory.REQUIRE_EL;
+import static org.fao.geonet.wro4j.GeonetWroModelFactory.WEBAPP_ATT;
+import static org.fao.geonet.wro4j.GeonetWroModelFactory.WRO_SOURCES_KEY;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test GeonetWroModelFactory.
