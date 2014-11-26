@@ -107,6 +107,9 @@ handlers.end {
 </html>
 '''
 }
+
+handlers.skip('gmd:referenceSystemInfo', {it.'gmd:MD_ReferenceSystem'.'gmd:referenceSystemIdentifier'})
+
 /*
  * In addition to matching an element name exactly a regexp can be used for the matching
  * Like Javascript regular expression in groovy start and end with /

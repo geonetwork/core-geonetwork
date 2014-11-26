@@ -44,6 +44,11 @@ public class Handlers {
             return null
         }
     }
+    def processChildren(childSelector) {
+        return {el ->
+            handlers.processElements(childSelector(el), el);
+        }
+    }
     /**
      * Creates a function which will:
      *

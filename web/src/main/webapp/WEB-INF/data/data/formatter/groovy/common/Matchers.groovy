@@ -5,4 +5,7 @@ public class Matchers {
     def f
     def env
 
+    def hasChild(childName) {
+        return { !it.children().find {it.name() == childName}.isEmpty() }
+    }
 }

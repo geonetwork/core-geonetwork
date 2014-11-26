@@ -27,6 +27,7 @@ public class Handlers {
         handlers.add name: 'Text Elements', select: matchers.isTextEl, isoTextEl
         handlers.add name: 'URL Elements', select: matchers.isUrlEl, isoUrlEl
         handlers.add name: 'Simple Elements', select: matchers.isSimpleEl, isoSimpleEl
+        handlers.add name: 'Boolean Elements', select: matchers.isBooleanEl, isoBooleanEl
         handlers.add name: 'CodeList Elements', select: matchers.isCodeListEl, isoCodeListEl
         handlers.add name: 'Date Elements', select: matchers.isDateEl, dateEl
         handlers.add name: 'Elements with single Date child', select: matchers.hasDateChild, commonHandlers.applyToChild(isoCodeListEl, '*')
@@ -40,17 +41,18 @@ public class Handlers {
         handlers.add 'gmd:CI_OnlineResource', commonHandlers.entryEl(f.&nodeLabel)
 
         handlers.add 'gmd:referenceSystemIdentifier', commonHandlers.flattenedEntryEl({it.'gmd:RS_Identifier'}, f.&nodeLabel)
+        handlers.add 'gmd:identificationInfo', commonHandlers.processChildren{it.children()}
 
         handlers.add 'gmd:locale', localeEl
         handlers.add 'gmd:CI_Date', ciDateEl
         handlers.add 'gmd:CI_Citation', citationEl
-        handlers.add name: 'BBox Element', select: matchers.isBBox, bboxEl
         handlers.add name: 'Root Element', select: matchers.isRoot, rootPackageEl
         handlers.add name: 'Skip Container', select: matchers.isSkippedContainer, skipContainer
 
         handlers.add name: 'Container Elements', select: matchers.isContainerEl, priority: -1, commonHandlers.entryEl(f.&nodeLabel)
 
         commonHandlers.addDefaultStartAndEndHandlers();
+        addExtentHandlers()
 
         handlers.sort name: 'Text Elements', select: 'gmd:MD_Metadata'/*matchers.isContainerEl*/, priority: -1, {el1, el2 ->
             def v1 = matchers.isContainerEl(el1) ? 1 : -1;
@@ -59,11 +61,32 @@ public class Handlers {
         }
     }
 
+    def addExtentHandlers() {
+        handlers.add commonHandlers.matchers.hasChild('gmd:EX_Extent'), commonHandlers.flattenedEntryEl({it.'gmd:EX_Extent'}, f.&nodeLabel)
+        handlers.add name: 'BBox Element', select: matchers.isBBox, bboxEl
+        handlers.add 'gmd:geographicElement', commonHandlers.processChildren{it.children()}
+        handlers.add 'gmd:extentTypeCode', extentTypeCodeEl
+    }
+
     def isoTextEl = { commonHandlers.func.textEl(f.nodeLabel(it), isofunc.isoText(it))}
     def isoUrlEl = { commonHandlers.func.textEl(f.nodeLabel(it), it.'gmd:Url'.text())}
     def isoCodeListEl = {commonHandlers.func.textEl(f.nodeLabel(it), f.codelistValueLabel(it))}
     def isoSimpleEl = {commonHandlers.func.textEl(f.nodeLabel(it), it.'*'.text())}
+    def parseBool(text) {
+        switch (text.trim().toLowerCase()){
+            case "1":
+            case "true":
+            case "y":
+                return true;
+            default:
+                return false;
+        }
+    }
+    def isoBooleanEl = {commonHandlers.func.textEl(f.nodeLabel(it), parseBool(it.'*'.text()).toString())}
     def dateEl = {commonHandlers.func.textEl(f.nodeLabel(it), it.text());}
+    def extentTypeCodeEl = {
+        commonHandlers.func.textEl(f.nodeLabel(it), parseBool(it.text()) ? 'include' : 'excluded')
+    }
     def ciDateEl = {
         if(!it.'gmd:date'.'gco:Date'.text().isEmpty()) {
             def dateType = f.codelistValueLabel(it.'gmd:dateType'.'gmd:CI_DateTypeCode')
