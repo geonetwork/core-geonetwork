@@ -428,23 +428,6 @@
       <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
-    
-    <dependency>
-		<groupId>org.xhtmlrenderer</groupId>
-		<artifactId>flying-saucer-core</artifactId>
-		<version>9.0.1</version>
-	</dependency>
-	<dependency>
-		<groupId>org.xhtmlrenderer</groupId>
-		<artifactId>flying-saucer-pdf</artifactId>
-		<version>9.0.1</version>
-	</dependency>
-	<dependency>
-		<groupId>org.xhtmlrenderer</groupId>
-		<artifactId>flying-saucer-pdf-itext5</artifactId>
-		<version>9.0.1</version>
-	</dependency>
-
       <dependency>
           <groupId>org.springframework</groupId>
           <artifactId>spring-test</artifactId>
