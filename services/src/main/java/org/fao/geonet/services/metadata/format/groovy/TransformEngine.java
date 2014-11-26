@@ -76,8 +76,14 @@ class TransformEngine {
         return result;
     }
 
-    private void processChildren(TransformationContext context, GPathResult md, StringBuilder resultantXml) throws IOException {
-        final GPathResult childrenPath = md.children();
+    private void processChildren(TransformationContext context, GPathResult md,
+                                 StringBuilder resultantXml, SkipElement skipElement) throws IOException {
+        final GPathResult childrenPath;
+        if (skipElement == null) {
+            childrenPath = md.children();
+        } else {
+            childrenPath = skipElement.selectChildren(md);
+        }
         if (Logging.isDebugMode()) {
             Logging.debug("Starting to process %2$d children of: %1$s.", md, childrenPath.size());
         }
@@ -108,16 +114,26 @@ class TransformEngine {
     void processElement(TransformationContext context, GPathResult elem, StringBuilder resultantXml) throws IOException {
         Logging.debug("Starting to process element: %s", elem);
         boolean processChildren = true;
-        for (Handler handler : this.handlers.getHandlers().get(context.getCurrentMode())) {
-            if (handler.select(context, elem)) {
-                handler.handle(context, elem, resultantXml);
+        for (SkipElement skipElement : this.handlers.getSkipElements()) {
+            if (skipElement.select(context, elem)) {
+                processChildren(context, elem, resultantXml, skipElement);
                 processChildren = false;
-                break;
             }
         }
+
+        if (processChildren) {
+            for (Handler handler : this.handlers.getHandlers().get(context.getCurrentMode())) {
+                if (handler.select(context, elem)) {
+                    handler.handle(context, elem, resultantXml);
+                    processChildren = false;
+                    break;
+                }
+            }
+        }
+
         if (processChildren) {
             Logging.debug("No Handler found for element: %s", elem);
-            processChildren(context, elem, resultantXml);
+            processChildren(context, elem, resultantXml, null);
         }
     }
 }

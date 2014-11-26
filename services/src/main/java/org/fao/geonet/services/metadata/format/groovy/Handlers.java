@@ -2,6 +2,7 @@ package org.fao.geonet.services.metadata.format.groovy;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimaps;
 import com.google.common.collect.Sets;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -33,6 +35,7 @@ public class Handlers {
     private final Path rootFormatterDir;
     private final TemplateCache templateCache;
     private Set<String> roots = Sets.newHashSet();
+    private List<SkipElement> skipElements = Lists.newArrayList();
     private Callable<Iterable<Object>> functionRoots = null;
     TransformEngine transformationEngine = new TransformEngine(this);
     /**
@@ -125,6 +128,39 @@ public class Handlers {
         this.roots.add(xpath.toString());
     }
 
+    /**
+     * Add an "skip element".  A skip element is an element that shouldn't be processed but some of its children should be.  For
+     * example a formatter for iso19139 may not want to show the informationInfo elements but does want to display its children.
+     * The match can be gmd:informationInfo and the childSelector can be the closure {it.children()}
+     *
+     * @param select a string which is the element name of the element to skip or a closure that takes an element and returns boolean
+     * @param childSelector a closure that returns the children to process.  The element selected by 'select' will be passed to the
+     *                      closure
+     */
+    public void skip(Object select, Closure childSelector) {
+        skip(select, childSelector, 0);
+    }
+    /**
+     * Add an "skip element".  A skip element is an element that shouldn't be processed but some of its children should be.  For
+     * example a formatter for iso19139 may not want to show the informationInfo elements but does want to display its children.
+     * The match can be gmd:informationInfo and the childSelector can be the closure {it.children()}
+     *
+     * @param select a string which is the element name of the element to skip or a closure that takes an element and returns boolean
+     * @param childSelector a closure that returns the children to process.  The element selected by 'select' will be passed to the
+     *                      closure
+     * @param priority priority of the skipElement
+     */
+    public void skip(Object select, Closure childSelector, int priority) {
+        if (select instanceof String) {
+            String nameEl = (String) select;
+            this.skipElements.add(new SkipElementName(nameEl, priority, childSelector));
+        } else if (select instanceof Closure) {
+            Closure closure = (Closure) select;
+            this.skipElements.add(new SkipElementClosure(closure, priority, childSelector));
+        } else {
+            throw new IllegalArgumentException("select must either be a string or a closure but was a: " + select.getClass());
+        }
+    }
     /**
      * Add a handler with the priority 1 which will exactly match element name and prefix.
      *
@@ -504,5 +540,9 @@ public class Handlers {
 
     ListMultimap<String, Handler> getHandlers() {
         return handlers;
+    }
+
+    public List<SkipElement> getSkipElements() {
+        return skipElements;
     }
 }

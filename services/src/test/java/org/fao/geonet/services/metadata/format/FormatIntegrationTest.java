@@ -2,6 +2,7 @@ package org.fao.geonet.services.metadata.format;
 
 import jeeves.server.context.ServiceContext;
 import org.apache.log4j.Level;
+import org.fao.geonet.Constants;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
@@ -21,6 +22,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,6 +37,7 @@ import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
@@ -128,6 +131,7 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
             MockHttpServletRequest request = new MockHttpServletRequest();
             MockHttpServletResponse response = new MockHttpServletResponse();
             formatService.exec("eng", "html", "" + id, null, formatter.getId(), "true", false, request, response);
+
             final String view = response.getContentAsString();
             try {
                 Element html = Xml.loadString(view, false);
@@ -189,7 +193,8 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         final MockHttpServletResponse response = new MockHttpServletResponse();
         formatService.exec("eng", "html", "" + id, null, formatterName, "true", false, request, response);
         final String viewString = response.getContentAsString();
-//        Files.write(viewString, new File("e:/tmp/view.html"), Constants.CHARSET);
+        com.google.common.io.Files.write(viewString, new File("e:/tmp/view.html"), Constants.CHARSET);
+
         final Element view = Xml.loadString(viewString, false);
         assertEquals("html", view.getName());
         assertNotNull("body", view.getChild("body"));
@@ -238,6 +243,8 @@ public class FormatIntegrationTest extends AbstractServiceIntegrationTest {
         // is handled
         assertElement(view, "body//span[@class = 'fileId']", this.uuid, 1);
         assertElement(view, "body//span[@class = 'creatorTranslated']", "Creator", 1);
+
+        assertNull(Xml.selectElement(view, "body//h1[text() = 'Reference System Information']"));
     }
 
     private void assertElement(Element view, String onlineResourceHeaderXpath, String expected, int numberOfElements) throws JDOMException {
