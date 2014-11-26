@@ -33,10 +33,11 @@ public abstract class BaseAligner {
      * @param categories
      * @param localCateg
      * @param log
+     * @param saveMetadata
      * @throws Exception
      */
     public void addCategories(Metadata metadata, Iterable<String> categories, CategoryMapper localCateg, ServiceContext context,
-                              Logger log, String serverCategory) {
+                              Logger log, String serverCategory, boolean saveMetadata) {
 
         final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
         Map<String, MetadataCategory> nameToCategoryMap = new HashMap<String, MetadataCategory>();

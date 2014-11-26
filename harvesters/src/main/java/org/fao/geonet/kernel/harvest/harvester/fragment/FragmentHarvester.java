@@ -28,7 +28,6 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataType;
@@ -44,7 +43,6 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.Updater;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -60,7 +58,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import javax.annotation.Nonnull;
 
 //=============================================================================
 /** 
@@ -388,7 +385,7 @@ public class FragmentHarvester extends BaseAligner {
                 setUuid(params.uuid).
                 setUri(harvestUri);
 
-        addCategories(metadata, params.categories, localCateg, context, log, null);
+        addCategories(metadata, params.categories, localCateg, context, log, null, false);
 
         metadata = dataMan.insertMetadata(context, metadata, md, true, false, false, UpdateDatestamp.NO, false, false);
 
@@ -577,7 +574,7 @@ public class FragmentHarvester extends BaseAligner {
          addPrivileges(id, params.privileges, localGroups, dataMan, context, log);
 
          metadata.getCategories().clear();
-         addCategories(metadata, params.categories, localCateg, context, log, null);
+         addCategories(metadata, params.categories, localCateg, context, log, null, true);
 
          if(doExt) {
              dataMan.setTemplateExt(iId, MetadataType.SUB_TEMPLATE);
