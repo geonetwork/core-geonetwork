@@ -321,17 +321,5 @@
       <output sheet="../xslt/services/metadata/validate.xsl" contentType="text/xml; charset=UTF-8"/>
     </service>
 
-    <service name="md.layer.select">
-      <documentation><![CDATA[
-         Access to layer selection manager. Allow to put, remove, or get layers from the session
-         selection.
-        ]]></documentation>
-      <class name=".services.main.LayerSelect">
-        <param name="type" value="wms" />
-        <param name="action" value="update" />
-      </class>
-    </service>
-
-
   </services>
 </geonet>
